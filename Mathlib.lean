@@ -68,3 +68,4 @@ import Mathlib.Tactic.SudoSetOption
 import Mathlib.Tactic.TryThis
 import Mathlib.Util.Export
 import Mathlib.Util.Time
+import Mathlib.Util.While
