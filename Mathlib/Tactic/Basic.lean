@@ -87,27 +87,30 @@ h₂ : b = c
 ```
 -/
 syntax (name := introv) "introv " (colGt binderIdent)* : tactic
-@[tactic introv] partial def evalIntrov : Tactic := fun stx => do
-  match stx with
-  | `(tactic| introv)                     => introsDep
+
+namespace Mathlib.Tactic
+
+def intro1PStep : TacticM Unit :=
+  liftMetaTactic fun mvarId => do
+    let (_, mvarId) ← Meta.intro1P mvarId
+    pure [mvarId]
+
+partial def introsDep : TacticM Unit := do
+  if let Expr.forallE _ _ e _ ← getMainTarget then
+    if e.hasLooseBVars then
+      intro1PStep
+      introsDep
+
+elab_rules : tactic
+  | `(tactic| introv) => introsDep
+
+macro_rules
   | `(tactic| introv $h:ident $hs:binderIdent*) =>
-    evalTactic (← `(tactic| introv; intro $h:ident; introv $hs:binderIdent*))
+    `(tactic| introv; intro $h:ident; introv $hs:binderIdent*)
   | `(tactic| introv _%$tk $hs:binderIdent*) =>
-    evalTactic (← `(tactic| introv; intro _%$tk; introv $hs:binderIdent*))
-  | _ => throwUnsupportedSyntax
-where
-  introsDep : TacticM Unit := do
-    let t ← getMainTarget
-    match t with
-    | Expr.forallE _ _ e _ =>
-      if e.hasLooseBVars then
-        intro1PStep
-        introsDep
-    | _ => ()
-  intro1PStep : TacticM Unit :=
-    liftMetaTactic fun mvarId => do
-      let (_, mvarId) ← Meta.intro1P mvarId
-      pure [mvarId]
+    `(tactic| introv; intro _%$tk; introv $hs:binderIdent*)
+
+end Mathlib.Tactic
 
 /-- Try calling `assumption` on all goals; succeeds if it closes at least one goal. -/
 macro "assumption'" : tactic => `(any_goals assumption)
