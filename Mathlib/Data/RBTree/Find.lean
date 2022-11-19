@@ -43,15 +43,15 @@ theorem find.induction {p : RBNode α → Prop} (lt) [DecidableRel lt] (t x) (h�
 --     ∀ {lo hi} (hs : IsSearchable lt t lo hi), Mem lt x t ↔ ∃ y, find lt t x = some y ∧ x ≈[lt]y :=
 --     sorry
 
-theorem mem_of_mem_exact {lt} [IsIrrefl α lt] {x t} : MemExact x t → Mem lt x t := sorry
+-- theorem mem_of_mem_exact {lt} [IsIrrefl α lt] {x t} : MemExact x t → Mem lt x t := sorry
 
-theorem find_correct_exact {t : RBNode α} {lt x} [DecidableRel lt] [IsStrictWeakOrder α lt] :
-    ∀ {lo hi} (hs : IsSearchable lt t lo hi), MemExact x t ↔ find lt t x = some x := sorry
+-- theorem find_correct_exact {t : RBNode α} {lt x} [DecidableRel lt] [IsStrictWeakOrder α lt] :
+--     ∀ {lo hi} (hs : IsSearchable lt t lo hi), MemExact x t ↔ find lt t x = some x := sorry
 
-theorem eqv_of_find_some {t : RBNode α} {lt x y} [DecidableRel lt] :
-    ∀ {lo hi} (hs : IsSearchable lt t lo hi) (he : find lt t x = some y), x ≈[lt]y := sorry
+-- theorem eqv_of_find_some {t : RBNode α} {lt x y} [DecidableRel lt] :
+--     ∀ {lo hi} (hs : IsSearchable lt t lo hi) (he : find lt t x = some y), x ≈[lt]y := sorry
 
-theorem find_eq_find_of_eqv {lt a b} [DecidableRel lt] [IsStrictWeakOrder α lt] {t : RBNode α} :
-    ∀ {lo hi} (hs : IsSearchable lt t lo hi) (heqv : a ≈[lt]b), find lt t a = find lt t b := sorry
+-- theorem find_eq_find_of_eqv {lt a b} [DecidableRel lt] [IsStrictWeakOrder α lt] {t : RBNode α} :
+--     ∀ {lo hi} (hs : IsSearchable lt t lo hi) (heqv : a ≈[lt]b), find lt t a = find lt t b := sorry
 
 end RBNode

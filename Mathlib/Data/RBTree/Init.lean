@@ -19,6 +19,9 @@ universe u v
 
 section
 set_option linter.deprecated false
+-- FIXME: remove this when the sorries are gone
+set_option warningAsError false
+
 
 /-- Nodes of an Red Black Tree-/
 @[deprecated Std.RBNode] inductive RBNode (α : Type u) where
@@ -33,8 +36,8 @@ set_option linter.deprecated false
 
 def MemExact : α → RBNode α → Prop := sorry
 def Mem : α → RBNode α → Prop := sorry
+def depth (f : Nat → Nat → Nat) : RBNode α → Nat := sorry
 
-namespace RBTree
 
 /-- Note changed from `def` to `structure` to simplify the
     previous autoparameter tactic issues -/
@@ -43,4 +46,8 @@ namespace RBTree
 
 #align rbtree Std.RBMap
 
+namespace RBTree
+
+
 end RBTree
+end

@@ -39,8 +39,6 @@ section IsSearchableLemmas
 
 variable {lt : α → α → Prop}
 
---FIXME: commented to silence errors
-
 theorem lo_lt_hi {t : RBNode α} {lt} [IsTrans α lt] :
     ∀ {lo hi}, IsSearchable lt t lo hi → Lift lt lo hi := sorry
 
@@ -68,20 +66,20 @@ theorem is_searchable_some_high_of_is_searchable_of_lt {t} [IsTrans α lt] :
 theorem is_searchable_none_high_of_is_searchable_some_high {t} :
     ∀ {lo y} (hlt : IsSearchable lt t lo (some y)), IsSearchable lt t lo none := sorry
 
+-- FIXME -- commented to stop errors
+-- theorem range [IsStrictWeakOrder α lt] {t : RBNode α} {x} :
+--     ∀ {lo hi}, IsSearchable lt t lo hi →
+--       Mem lt x t → Lift lt lo (some x) ∧ Lift lt (some x) hi := sorry
 
-theorem range [IsStrictWeakOrder α lt] {t : RBNode α} {x} :
-    ∀ {lo hi}, IsSearchable lt t lo hi →
-      Mem lt x t → Lift lt lo (some x) ∧ Lift lt (some x) hi := sorry
+-- theorem lt_of_mem_left [IsStrictWeakOrder α lt] {y : α} {t l r : RBNode α} :
+--     ∀ {lo hi}, IsSearchable lt t lo hi → IsNodeOf t l y r → ∀ {x}, Mem lt x l → lt x y := sorry
 
-theorem lt_of_mem_left [IsStrictWeakOrder α lt] {y : α} {t l r : RBNode α} :
-    ∀ {lo hi}, IsSearchable lt t lo hi → IsNodeOf t l y r → ∀ {x}, Mem lt x l → lt x y := sorry
+-- theorem lt_of_mem_right [IsStrictWeakOrder α lt] {y : α} {t l r : RBNode α} :
+--     ∀ {lo hi}, IsSearchable lt t lo hi → IsNodeOf t l y r → ∀ {z}, Mem lt z r → lt y z := sorry
 
-theorem lt_of_mem_right [IsStrictWeakOrder α lt] {y : α} {t l r : RBNode α} :
-    ∀ {lo hi}, IsSearchable lt t lo hi → IsNodeOf t l y r → ∀ {z}, Mem lt z r → lt y z := sorry
-
-theorem lt_of_mem_left_right [IsStrictWeakOrder α lt] {y : α} {t l r : RBNode α} :
-    ∀ {lo hi}, IsSearchable lt t lo hi →
-      IsNodeOf t l y r → ∀ {x z}, Mem lt x l → Mem lt z r → lt x z := sorry
+-- theorem lt_of_mem_left_right [IsStrictWeakOrder α lt] {y : α} {t l r : RBNode α} :
+--     ∀ {lo hi}, IsSearchable lt t lo hi →
+--       IsNodeOf t l y r → ∀ {x z}, Mem lt x l → Mem lt z r → lt x z := sorry
 
 end IsSearchableLemmas
 
@@ -89,13 +87,15 @@ inductive IsRedBlack : RBNode α → Color → Nat → Prop where
 
 open IsRedBlack
 
-theorem depth_min : ∀ {c n} {t : RBNode α}, IsRedBlack t c n → n ≤ depth min t := sorry
+-- FIXME -- commented to stop errors
 
-theorem depth_max' : ∀ {c n} {t : RBNode α}, IsRedBlack t c n → depth max t ≤ upper c n := sorry
+-- theorem depth_min : ∀ {c n} {t : RBNode α}, IsRedBlack t c n → n ≤ depth min t := sorry
 
-theorem depth_max {c n} {t : RBNode α} (h : IsRedBlack t c n) : depth max t ≤ 2 * n + 1 := sorry
+-- theorem depth_max' : ∀ {c n} {t : RBNode α}, IsRedBlack t c n → depth max t ≤ upper c n := sorry
 
-theorem balanced {c n} {t : RBNode α} (h : IsRedBlack t c n) :
-    depth max t ≤ 2 * depth min t + 1 := sorry
+-- theorem depth_max {c n} {t : RBNode α} (h : IsRedBlack t c n) : depth max t ≤ 2 * n + 1 := sorry
+
+-- theorem balanced {c n} {t : RBNode α} (h : IsRedBlack t c n) :
+--     depth max t ≤ 2 * depth min t + 1 := sorry
 
 --end RBNode
