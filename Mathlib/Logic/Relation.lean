@@ -139,15 +139,15 @@ theorem comp_assoc : (r ∘r p) ∘r q = r ∘r p ∘r q := by
   funext a d
   apply propext
   constructor
-  exact fun ⟨c, ⟨b, hab, hbc⟩, hcd⟩ ↦ ⟨b, hab, c, hbc, hcd⟩
-  exact fun ⟨b, hab, c, hbc, hcd⟩ ↦ ⟨c, ⟨b, hab, hbc⟩, hcd⟩
+  · exact fun ⟨c, ⟨b, hab, hbc⟩, hcd⟩ ↦ ⟨b, hab, c, hbc, hcd⟩
+  · exact fun ⟨b, hab, c, hbc, hcd⟩ ↦ ⟨c, ⟨b, hab, hbc⟩, hcd⟩
 
 theorem flip_comp : flip (r ∘r p) = flip p ∘r flip r := by
   funext c a
   apply propext
   constructor
-  exact fun ⟨b, hab, hbc⟩ ↦ ⟨b, hbc, hab⟩
-  exact fun ⟨b, hbc, hab⟩ ↦ ⟨b, hab, hbc⟩
+  · exact fun ⟨b, hab, hbc⟩ ↦ ⟨b, hbc, hab⟩
+  · exact fun ⟨b, hbc, hab⟩ ↦ ⟨b, hab, hbc⟩
 
 end Comp
 
@@ -236,17 +236,17 @@ namespace ReflTransGen
 
 @[trans]
 theorem trans (hab : ReflTransGen r a b) (hbc : ReflTransGen r b c) : ReflTransGen r a c := by
-  induction hbc
-  case refl => assumption
-  case tail c d _ hcd hac => exact hac.tail hcd
+  induction hbc with
+  | refl => assumption
+  | tail _ hcd hac => exact hac.tail hcd
 
 theorem single (hab : r a b) : ReflTransGen r a b :=
   refl.tail hab
 
 theorem head (hab : r a b) (hbc : ReflTransGen r b c) : ReflTransGen r a c := by
-  induction hbc
-  case refl => exact refl.tail hab
-  case tail c d _ hcd hac => exact hac.tail hcd
+  induction hbc with
+  | refl => exact refl.tail hab
+  | tail _ hcd hac => exact hac.tail hcd
 
 theorem symmetric (h : Symmetric r) : Symmetric (ReflTransGen r) := by
   intro x y h
@@ -261,11 +261,11 @@ theorem cases_tail : ReflTransGen r a b → b = a ∨ ∃ c, ReflTransGen r a c 
 theorem head_induction_on {P : ∀ a : α, ReflTransGen r a b → Prop} {a : α} (h : ReflTransGen r a b)
     (refl : P b refl)
     (head : ∀ {a c} (h' : r a c) (h : ReflTransGen r c b), P c h → P a (h.head h')) : P a h := by
-  induction h
-  case refl => exact refl
-  case tail b c _ hbc ih =>
+  induction h with
+  | refl => exact refl
+  | tail _ hbc ih =>
   -- Porting note: Lean 3 figured out the motive and `apply ih` worked
-  refine @ih (λ {a : α} (hab : ReflTransGen r a b) => P a (ReflTransGen.tail hab hbc)) ?_ ?_
+  refine @ih (λ {a : α} (hab : ReflTransGen r a _) => P a (ReflTransGen.tail hab hbc)) ?_ ?_
   { exact head hbc _ refl }
   { exact fun h1 h2 ↦ head h1 (h2.tail hbc) }
 
@@ -274,9 +274,9 @@ theorem trans_induction_on {P : ∀ {a b : α}, ReflTransGen r a b → Prop} {a 
     (h : ReflTransGen r a b) (ih₁ : ∀ a, @P a a refl) (ih₂ : ∀ {a b} (h : r a b), P (single h))
     (ih₃ : ∀ {a b c} (h₁ : ReflTransGen r a b) (h₂ : ReflTransGen r b c), P h₁ → P h₂ →
      P (h₁.trans h₂)) : P h := by
-  induction h
-  case refl => exact ih₁ a
-  case tail b c hab hbc ih => exact ih₃ hab (single hbc) ih (ih₂ hbc)
+  induction h with
+  | refl => exact ih₁ a
+  | tail hab hbc ih => exact ih₃ hab (single hbc) ih (ih₂ hbc)
 
 theorem cases_head (h : ReflTransGen r a b) : a = b ∨ ∃ c, r a c ∧ ReflTransGen r c b := by
   induction h using Relation.ReflTransGen.head_induction_on
@@ -314,9 +314,9 @@ theorem to_reflTransGen {a b} (h : TransGen r a b) : ReflTransGen r a b := by
 #align relation.trans_gen.to_refl Relation.TransGen.to_reflTransGen
 
 theorem trans_left (hab : TransGen r a b) (hbc : ReflTransGen r b c) : TransGen r a c := by
-  induction hbc
-  case refl => assumption
-  case tail c d _ hcd hac => exact hac.tail hcd
+  induction hbc with
+  | refl => assumption
+  | tail _ hcd hac => exact hac.tail hcd
 
 instance : Trans (TransGen r) (ReflTransGen r) (TransGen r) :=
   ⟨trans_left⟩
@@ -332,9 +332,9 @@ theorem head' (hab : r a b) (hbc : ReflTransGen r b c) : TransGen r a c :=
   trans_left (single hab) hbc
 
 theorem tail' (hab : ReflTransGen r a b) (hbc : r b c) : TransGen r a c := by
-  induction hab generalizing c
-  case refl => exact single hbc
-  case tail _ _ _ hdb IH => exact tail (IH hdb) hbc
+  induction hab generalizing c with
+  | refl => exact single hbc
+  | tail _ hdb IH => exact tail (IH hdb) hbc
 
 theorem head (hab : r a b) (hbc : TransGen r b c) : TransGen r a c :=
   head' hab hbc.to_reflTransGen
@@ -343,13 +343,13 @@ theorem head (hab : r a b) (hbc : TransGen r b c) : TransGen r a c :=
 theorem head_induction_on {P : ∀ a : α, TransGen r a b → Prop} {a : α} (h : TransGen r a b)
     (base : ∀ {a} (h : r a b), P a (single h))
     (ih : ∀ {a c} (h' : r a c) (h : TransGen r c b), P c h → P a (h.head h')) : P a h := by
-  induction h
-  case single a h => exact base h
-  case tail b c _ hbc h_ih =>
-  -- Lean 3 could figure out the motive and `apply h_ih` worked
-  refine @h_ih (λ {a : α} (hab : @TransGen α r a b) => P a (TransGen.tail hab hbc)) ?_ ?_;
-  exact fun h ↦ ih h (single hbc) (base hbc)
-  exact fun hab hbc ↦ ih hab _
+  induction h with
+  | single h => exact base h
+  | tail _ hbc h_ih =>
+    -- Lean 3 could figure out the motive and `apply h_ih` worked
+    refine @h_ih (λ {a : α} (hab : @TransGen α r a _) => P a (TransGen.tail hab hbc)) ?_ ?_;
+    · exact fun h ↦ ih h (single hbc) (base hbc)
+    · exact fun hab hbc ↦ ih hab _
 
 @[elab_as_elim]
 theorem trans_induction_on {P : ∀ {a b : α}, TransGen r a b → Prop} {a b : α} (h : TransGen r a b)
@@ -361,9 +361,9 @@ theorem trans_induction_on {P : ∀ {a b : α}, TransGen r a b → Prop} {a b : 
   | tail hab hbc h_ih => exact ih hab (single hbc) h_ih (base hbc)
 
 theorem trans_right (hab : ReflTransGen r a b) (hbc : TransGen r b c) : TransGen r a c := by
-  induction hbc
-  case single c hbc => exact tail' hab hbc
-  case tail c d _ hcd hac => exact hac.tail hcd
+  induction hbc with
+  | single hbc => exact tail' hab hbc
+  | tail _ hcd hac => exact hac.tail hcd
 
 instance : Trans (ReflTransGen r) (TransGen r) (TransGen r) :=
   ⟨trans_right⟩
@@ -376,11 +376,11 @@ theorem tail'_iff : TransGen r a c ↔ ∃ b, ReflTransGen r a b ∧ r b c := by
 
 theorem head'_iff : TransGen r a c ↔ ∃ b, r a b ∧ ReflTransGen r b c := by
   refine' ⟨fun h ↦ _, fun ⟨b, hab, hbc⟩ ↦ head' hab hbc⟩
-  induction h
-  case single c hac => exact ⟨_, hac, by rfl⟩
-  case tail b c _ hbc IH =>
-  rcases IH with ⟨d, had, hdb⟩
-  exact ⟨_, had, hdb.tail hbc⟩
+  induction h with
+  | single hac => exact ⟨_, hac, by rfl⟩
+  | tail _ hbc IH =>
+    rcases IH with ⟨d, had, hdb⟩
+    exact ⟨_, had, hdb.tail hbc⟩
 
 end TransGen
 
@@ -404,9 +404,9 @@ section TransGen
 theorem transGen_eq_self (trans : Transitive r) : TransGen r = r :=
   funext fun a ↦ funext fun b ↦ propext <|
     ⟨fun h ↦ by
-      induction h
-      case single _ hc => exact hc
-      case tail c d _ hcd hac => exact trans hac hcd, TransGen.single⟩
+      induction h with
+      | single hc => exact hc
+      | tail _ hcd hac => exact trans hac hcd, TransGen.single⟩
 #align relation.trans_gen_eq_self Relation.transGen_eq_self
 
 theorem transitive_transGen : Transitive (TransGen r) := fun _ _ _ ↦ TransGen.trans
@@ -421,9 +421,9 @@ theorem transGen_idem : TransGen (TransGen r) = TransGen r :=
 
 theorem TransGen.lift {p : β → β → Prop} {a b : α} (f : α → β) (h : ∀ a b, r a b → p (f a) (f b))
     (hab : TransGen r a b) : TransGen p (f a) (f b) := by
-  induction hab
-  case single c hac => exact TransGen.single (h a c hac)
-  case tail c d _ hcd hac => exact TransGen.tail hac (h c d hcd)
+  induction hab with
+  | single hac => exact TransGen.single (h _ _ hac)
+  | tail _ hcd hac => exact TransGen.tail hac (h _ _ hcd)
 
 theorem TransGen.lift' {p : β → β → Prop} {a b : α} (f : α → β)
     (h : ∀ a b, r a b → TransGen p (f a) (f b)) (hab : TransGen r a b) :
