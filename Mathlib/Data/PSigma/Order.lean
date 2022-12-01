@@ -33,8 +33,7 @@ variable {ι : Type _} {α : ι → Type _}
 
 namespace PSigma
 
--- mathport name: «exprΣₗ' , »
-/-- The notation `Σₗ' i, α i` refers to a sigma type which is locall equipped with the
+/-- The notation `Σₗ' i, α i` refers to a sigma type which is locally equipped with the
 lexicographic order.-/
 notation3 "Σₗ' "(...)", "r:(scoped p => _root_.Lex (PSigma p)) => r
 
@@ -50,31 +49,30 @@ instance lt [LT ι] [∀ i, LT (α i)] : LT (Σₗ' i, α i) :=
   ⟨Lex (· < ·) fun _ => (· < ·)⟩
 #align psigma.lex.has_lt PSigma.Lex.lt
 
-instance preorder [Preorder ι] [∀ i, Preorder (α i)] : Preorder (Σₗ' i, α i) :=
-  { Lex.le, Lex.lt with
-    le_refl := fun ⟨i, a⟩ => Lex.right _ le_rfl,
-    le_trans := by
-      rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ ⟨a₃, b₃⟩ ⟨h₁r⟩ ⟨h₂r⟩
-      · left
-        apply lt_trans
-        repeat' assumption
-      · left
-        assumption
-      · left
-        assumption
-      · right
-        apply le_trans
-        repeat' assumption,
-    lt_iff_le_not_le := by
-      refine' fun a b => ⟨fun hab => ⟨hab.mono_right fun i a b => le_of_lt, _⟩, _⟩
-      · rintro (⟨i, a, hji⟩ | ⟨i, hba⟩) <;> obtain ⟨_, _, hij⟩ | ⟨_, hab⟩ := hab
-        · exact hij.not_lt hji
-        · exact lt_irrefl _ hji
-        · exact lt_irrefl _ hij
-        · exact hab.not_le hba
-      · rintro ⟨⟨j, b, hij⟩ | ⟨i, hab⟩, hba⟩
-        · exact Lex.left _ _ hij
-        · exact Lex.right _ (hab.lt_of_not_le fun h => hba <| Lex.right _ h) }
+instance preorder [Preorder ι] [∀ i, Preorder (α i)] : Preorder (Σₗ' i, α i) where
+  __ := Lex.le
+  __ := Lex.lt
+  le_refl := fun ⟨i, a⟩ => Lex.right _ le_rfl
+  le_trans := by
+    rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ ⟨a₃, b₃⟩ ⟨h₁r⟩ ⟨h₂r⟩
+    · left
+      apply lt_trans <;> assumption
+    · left
+      assumption
+    · left
+      assumption
+    · right
+      apply le_trans <;> assumption
+  lt_iff_le_not_le a b := by
+    refine ⟨fun hab => ⟨hab.mono_right fun i a b => le_of_lt, ?_⟩, ?_⟩
+    · rintro (⟨i, a, hji⟩ | ⟨i, hba⟩) <;> obtain ⟨_, _, hij⟩ | ⟨_, hab⟩ := hab
+      · exact hij.not_lt hji
+      · exact lt_irrefl _ hji
+      · exact lt_irrefl _ hij
+      · exact hab.not_le hba
+    · rintro ⟨⟨j, b, hij⟩ | ⟨i, hab⟩, hba⟩
+      · exact Lex.left _ _ hij
+      · exact Lex.right _ (hab.lt_of_not_le fun h => hba <| Lex.right _ h)
 #align psigma.lex.preorder PSigma.Lex.preorder
 
 /-- Dictionary / lexicographic partial_order for dependent pairs. -/

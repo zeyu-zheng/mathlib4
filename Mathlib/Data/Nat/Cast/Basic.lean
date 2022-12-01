@@ -11,7 +11,7 @@ import Mathlib.Data.Nat.Basic
 # Cast of natural numbers (additional theorems)
 
 This file proves additional properties about the *canonical* homomorphism from
-the natural numbers into an additive monoid with a one (`nat.cast`).
+the natural numbers into an additive monoid with a one (`Nat.cast`).
 
 This is an ad-hoc port file.
 

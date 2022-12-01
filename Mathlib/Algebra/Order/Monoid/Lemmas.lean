@@ -946,9 +946,9 @@ theorem mul_eq_one_iff' [CovariantClass α α (· * ·) (· ≤ ·)]
   a₂ * b₂ ≤ a₁ * b₁ ↔ a₁ = a₂ ∧ b₁ = b₂ := by
   refine' ⟨fun h ↦ _, by rintro ⟨rfl, rfl⟩; rfl⟩
   simp only [eq_iff_le_not_lt, ha, hb, true_and]
-  refine' ⟨fun ha ↦ h.not_lt _, fun hb ↦ h.not_lt _⟩
-  { exact mul_lt_mul_of_lt_of_le ha hb }
-  { exact mul_lt_mul_of_le_of_lt ha hb }
+  refine ⟨fun ha ↦ h.not_lt ?_, fun hb ↦ h.not_lt ?_⟩
+  · exact mul_lt_mul_of_lt_of_le ha hb
+  · exact mul_lt_mul_of_le_of_lt ha hb
 
 section Left
 

@@ -59,9 +59,7 @@ variable {V}
 instance : HasReverse (Symmetrify V) :=
   ⟨fun e ↦ e.swap⟩
 
-instance :
-    HasInvolutiveReverse
-      (Symmetrify V) where
+instance : HasInvolutiveReverse (Symmetrify V) where
   toHasReverse := ⟨fun e ↦ e.swap⟩
   inv' e := congr_fun Sum.swap_swap_eq e
 

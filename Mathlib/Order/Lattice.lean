@@ -794,7 +794,7 @@ theorem eq_of_inf_eq_sup_eq {α : Type u} [DistribLattice α] {a b c : α} (h₁
 #align eq_of_inf_eq_sup_eq eq_of_inf_eq_sup_eq
 
 end DistribLattice
-#print OrderDual.distribLattice
+
 -- See note [reducible non-instances]
 /-- Prove distributivity of an existing lattice from the dual distributive law. -/
 @[reducible]
