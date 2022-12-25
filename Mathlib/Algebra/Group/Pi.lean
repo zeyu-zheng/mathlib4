@@ -55,7 +55,7 @@ namespace Pi
 
 @[to_additive]
 instance semigroup [∀ i, Semigroup <| f i] : Semigroup (∀ i : I, f i) :=
-  { mul := (· * ·)
+  { mul := Mul.mul
     --pi_instance
     mul_assoc := by intros; ext; exact mul_assoc _ _ _ }
 #align pi.semigroup Pi.semigroup
@@ -64,6 +64,7 @@ instance semigroup [∀ i, Semigroup <| f i] : Semigroup (∀ i : I, f i) :=
 @[to_additive]
 instance commSemigroup [∀ i, CommSemigroup <| f i] : CommSemigroup (∀ i : I, f i) :=
   { semigroup with
+    mul := Mul.mul
     --pi_instance
     mul_comm := by intros; ext; exact mul_comm _ _
   }
@@ -73,7 +74,7 @@ instance commSemigroup [∀ i, CommSemigroup <| f i] : CommSemigroup (∀ i : I,
 @[to_additive]
 instance mulOneClass [∀ i, MulOneClass <| f i] : MulOneClass (∀ i : I, f i) :=
   { one := (1 : ∀ i, f i)
-    mul := (· * ·)
+    mul := Mul.mul
     --pi_instance
     one_mul := by intros; ext; exact one_mul _
     mul_one := by intros; ext; exact mul_one _
@@ -84,6 +85,8 @@ instance mulOneClass [∀ i, MulOneClass <| f i] : MulOneClass (∀ i : I, f i) 
 @[to_additive]
 instance monoid [∀ i, Monoid <| f i] : Monoid (∀ i : I, f i) :=
   { semigroup, mulOneClass with
+    one := (1 : ∀ i, f i)
+    mul := Mul.mul
     npow := fun n x i => x i ^ n
     --pi_instance
     npow_zero := by intros; ext; exact Monoid.npow_zero _
@@ -94,6 +97,9 @@ instance monoid [∀ i, Monoid <| f i] : Monoid (∀ i : I, f i) :=
 
 instance addMonoidWithOne [∀ i, AddMonoidWithOne <| f i] : AddMonoidWithOne (∀ i : I, f i) :=
   { addMonoid with
+    zero := (0 : ∀ i, f i)
+    add := Add.add
+    nsmul := SMul.smul
     natCast := fun n _ => n
     natCast_zero := funext fun _ => AddMonoidWithOne.natCast_zero
     natCast_succ := fun n => funext fun _ => AddMonoidWithOne.natCast_succ n
@@ -108,8 +114,11 @@ instance commMonoid [∀ i, CommMonoid <| f i] : CommMonoid (∀ i : I, f i) :=
 @[to_additive Pi.subNegMonoid]
 instance divInvMonoid [∀ i, DivInvMonoid <| f i] : DivInvMonoid (∀ i : I, f i) :=
   { monoid with
+    one := (1 : ∀ i, f i)
+    mul := Mul.mul
     inv := Inv.inv
     div := Div.div
+    npow := fun n x i => x i ^ n
     zpow := fun z x i => x i ^ z
     --pi_instance
     div_eq_mul_inv := by intros; ext; exact div_eq_mul_inv _ _
@@ -128,6 +137,12 @@ instance involutiveInv [∀ i, InvolutiveInv <| f i] : InvolutiveInv (∀ i, f i
 @[to_additive Pi.subtractionMonoid]
 instance divisionMonoid [∀ i, DivisionMonoid <| f i] : DivisionMonoid (∀ i, f i) :=
   { divInvMonoid, involutiveInv with
+    one := (1 : ∀ i, f i)
+    mul := Mul.mul
+    inv := Inv.inv
+    div := Div.div
+    npow := fun n x i => x i ^ n
+    zpow := fun z x i => x i ^ z
     --pi_instance
     mul_inv_rev := by intros; ext; exact mul_inv_rev _ _
     inv_eq_of_mul := by
@@ -136,11 +151,23 @@ instance divisionMonoid [∀ i, DivisionMonoid <| f i] : DivisionMonoid (∀ i, 
 
 @[to_additive Pi.subtractionCommMonoid]
 instance [∀ i, DivisionCommMonoid <| f i] : DivisionCommMonoid (∀ i, f i) :=
-  { divisionMonoid, commSemigroup with }
+  { divisionMonoid, commSemigroup with
+    one := (1 : ∀ i, f i)
+    mul := Mul.mul
+    inv := Inv.inv
+    div := Div.div
+    npow := fun n x i => x i ^ n
+    zpow := fun z x i => x i ^ z }
 
 @[to_additive]
 instance group [∀ i, Group <| f i] : Group (∀ i : I, f i) :=
   { divInvMonoid with
+    one := (1 : ∀ i, f i)
+    mul := Mul.mul
+    inv := Inv.inv
+    div := Div.div
+    npow := fun n x i => x i ^ n
+    zpow := fun z x i => x i ^ z
     --pi_instance
     mul_left_inv := by intros; ext; exact mul_left_inv _
     }
@@ -149,6 +176,12 @@ instance group [∀ i, Group <| f i] : Group (∀ i : I, f i) :=
 
 instance addGroupWithOne [∀ i, AddGroupWithOne <| f i] : AddGroupWithOne (∀ i : I, f i) :=
   { addGroup, addMonoidWithOne with
+    zero := (0 : ∀ i, f i)
+    add := Add.add
+    sub := Sub.sub
+    neg := Neg.neg
+    nsmul := SMul.smul
+    zsmul := SMul.smul
     intCast := fun z _ => z
     intCast_ofNat := fun n => funext fun _ => AddGroupWithOne.intCast_ofNat n
     intCast_negSucc := fun n => funext fun _ => AddGroupWithOne.intCast_negSucc n
