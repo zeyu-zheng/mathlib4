@@ -426,8 +426,9 @@ instance ring : Ring (CauSeq β abv) :=
     (by intros; rfl) (by intros; rfl)
 
 instance {β : Type _} [CommRing β] {abv : β → α} [IsAbsoluteValue abv] : CommRing (CauSeq β abv) :=
-  { CauSeq.ring with
-    mul_comm := fun a b => ext $ fun n => by simp [mul_left_comm, mul_comm] }
+  Function.Injective.commRing Subtype.val Subtype.val_injective (by rfl) (by rfl) coe_add coe_mul
+    coe_neg coe_sub (by intros; exact coe_smul _ _) (by intros; exact coe_smul _ _) coe_pow
+    (by intros; rfl) (by intros; rfl)
 
 /-- `LimZero f` holds when `f` approaches 0. -/
 def LimZero {abv : β → α} (f : CauSeq β abv) : Prop :=
@@ -588,8 +589,8 @@ theorem mul_equiv_mul {f1 f2 g1 g2 : CauSeq β abv} (hf : f1 ≈ f2) (hg : g1 �
   change LimZero (f1 * g1 - f2 * g2)
   convert add_lim_zero (mul_lim_zero_left g1 hf) (mul_lim_zero_right f2 hg) using 1
   rw [mul_sub, sub_mul]
-  -- doesn't work with `rw`, but did in Lean 3
-  exact (sub_add_sub_cancel (f1*g1) (f2*g1) (f2*g2)).symm
+  -- doesn't work with `rw`, but did in Lean
+  rw [(sub_add_sub_cancel (f1*g1) (f2*g1) (f2*g2)).symm]
   -- was:
   /-
   simpa only [mul_sub, sub_mul, sub_add_sub_cancel] using

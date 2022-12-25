@@ -189,7 +189,13 @@ instance addGroupWithOne [∀ i, AddGroupWithOne <| f i] : AddGroupWithOne (∀ 
 
 @[to_additive]
 instance commGroup [∀ i, CommGroup <| f i] : CommGroup (∀ i : I, f i) :=
-  { group, commMonoid with }
+  { group, commMonoid with
+    one := (1 : ∀ i, f i)
+    mul := Mul.mul
+    inv := Inv.inv
+    div := Div.div
+    npow := fun n x i => x i ^ n
+    zpow := fun z x i => x i ^ z }
 #align pi.comm_group Pi.commGroup
 #align pi.add_comm_group Pi.addCommGroup
 
