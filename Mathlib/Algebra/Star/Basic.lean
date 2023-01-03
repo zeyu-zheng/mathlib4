@@ -322,7 +322,7 @@ end
 /-- `star` as a ring automorphism, for commutative `R`. -/
 @[simps apply]
 def starRingAut [CommSemiring R] [StarRing R] : RingAut R :=
-  { starAddEquiv, starMulAut with toFun := star }
+  { starAddEquiv, starMulAut (R := R) with toFun := star }
 #align star_ring_aut starRingAut
 
 variable (R)

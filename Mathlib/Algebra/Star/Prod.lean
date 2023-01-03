@@ -52,7 +52,7 @@ instance [AddMonoid R] [AddMonoid S] [StarAddMonoid R] [StarAddMonoid S] : StarA
 
 instance [NonUnitalSemiring R] [NonUnitalSemiring S] [StarRing R] [StarRing S] : StarRing (R × S) :=
   { (show StarAddMonoid (R × S) by infer_instance),
-    (show StarSemigroup (R × S) by infer_instance) with }
+    (show StarSemigroup (R × S) by infer_instance) with star_mul }
 
 instance {α : Type w} [SMul α R] [SMul α S] [Star α] [Star R] [Star S]
     [StarModule α R] [StarModule α S] : StarModule α (R × S)
