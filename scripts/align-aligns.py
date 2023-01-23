@@ -7,6 +7,10 @@ import re
 import json
 from pathlib import Path
 
+# Download a recent artifact.zip from https://github.com/leanprover-community/doc-gen/actions,
+# unzip it to obtain export.json (~200MB) and then run
+# jq '[ .decls[] | {name: .name, filename: .filename, attributes: .attributes, is_meta: .is_meta } ]' < export.json > 2.json
+
 LEAN3REPO = "/home/lean/.elan/toolchains/leanprover-community--lean---3.50.3/lib/lean/library/"
 MATHLIB3REPO = "/home/lean/actions-runner/_work/doc-gen/doc-gen/mathlib/src/"
 
