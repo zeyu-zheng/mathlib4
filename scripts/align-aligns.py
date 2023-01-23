@@ -10,7 +10,8 @@ from pathlib import Path
 LEAN3REPO = "/home/lean/.elan/toolchains/leanprover-community--lean---3.50.3/lib/lean/library/"
 MATHLIB3REPO = "/home/lean/actions-runner/_work/doc-gen/doc-gen/mathlib/src/"
 
-MYREPO = "/home/rb1083/math/lean/mathlib/master/src/"
+MYLEANREPO = "lean/library/"
+MYMATHLIBREPO = "mathlib/src/"
 
 mathlib4_root = 'Mathlib/'
 
@@ -54,6 +55,9 @@ for path4 in Path(mathlib4_root).glob('**/*.lean'):
     for p in contents.split(sep='\n#align')[1:]:
         n3, n4, *_ = p.split(maxsplit=2)
         lean3_names.add(n3)
+    for p in contents.split(sep='\n#noalign')[1:]:
+        n3, *_ = p.split(maxsplit=1)
+        lean3_names.add(n3)
 
     aligned_defs[lean3_filename] = lean3_names
 
@@ -85,11 +89,11 @@ for f in aligned_defs:
     printed_header = False
 
     if not original_defs[f] <= aligned_defs[f]:
-        print("\n===== File", f.replace(MATHLIB3REPO, MYREPO), "=====")
+        print("\n===== File", f.replace(MATHLIB3REPO, MYMATHLIBREPO).replace(LEAN3REPO, MYLEANREPO), "=====")
         printed_header = True
         print("Missing aligns:", original_defs[f] - aligned_defs[f])
 
     if not aligned_defs[f] <= original_defs[f] | optional_defs[f]:
         if not printed_header:
-            print("\n===== File", f.replace(MATHLIB3REPO, MYREPO), "=====")
+            print("\n===== File", f.replace(MATHLIB3REPO, MYMATHLIBREPO).replace(LEAN3REPO, MYLEANREPO), "=====")
         print("Phantom aligns:", aligned_defs[f] - (original_defs[f] | optional_defs[f]))
