@@ -107,7 +107,7 @@ lemma lt_of_le_of_ne' [PartialOrder A] :
     (a : A) ≤ b → b ≠ a → a < b := fun h₁ h₂ => lt_of_le_of_ne h₁ h₂.symm
 
 lemma pos_of_isNat [StrictOrderedSemiring A]
-    (h : NormNum.IsNat e n) (w : Nat.ble 1 n = true) : 0 < (e : A) := by
+    (h : NormNum.IsNat e n) (w : Nat.ble 1 n) : 0 < (e : A) := by
   rw [NormNum.IsNat.to_eq h rfl]
   apply Nat.cast_pos.2
   simpa using w
@@ -118,7 +118,7 @@ lemma nonneg_of_isNat [OrderedSemiring A]
   exact Nat.cast_nonneg n
 
 lemma nz_of_isNegNat [StrictOrderedRing A]
-    (h : NormNum.IsInt e (.negOfNat n)) (w : Nat.ble 1 n = true) : (e : A) ≠ 0 := by
+    (h : NormNum.IsInt e (.negOfNat n)) (w : Nat.ble 1 n) : (e : A) ≠ 0 := by
   rw [NormNum.IsInt.neg_to_eq h rfl]
   simp only [ne_eq, neg_eq_zero]
   apply ne_of_gt

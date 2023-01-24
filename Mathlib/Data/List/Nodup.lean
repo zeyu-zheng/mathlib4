@@ -322,7 +322,7 @@ theorem Nodup.diff [DecidableEq α] : l₁.Nodup → (l₁.diff l₂).Nodup :=
 #align list.nodup.diff List.Nodup.diff
 
 theorem Nodup.mem_erase_iff [DecidableEq α] (d : Nodup l) : a ∈ l.erase b ↔ a ≠ b ∧ a ∈ l := by
-  rw [d.erase_eq_filter, mem_filter, and_comm, decide_eq_true_iff]
+  rw [d.erase_eq_filter, mem_filter, and_comm, Bool.asProp_decide]
 #align list.nodup.mem_erase_iff List.Nodup.mem_erase_iff
 
 theorem Nodup.not_mem_erase [DecidableEq α] (h : Nodup l) : a ∉ l.erase a := fun H =>
@@ -392,12 +392,11 @@ theorem Nodup.diff_eq_filter [DecidableEq α] :
   | l₁, [], _ => by simp
   | l₁, a :: l₂, hl₁ => by
     rw [diff_cons, (hl₁.erase _).diff_eq_filter, hl₁.erase_eq_filter, filter_filter]
-    simp only [decide_not, Bool.not_eq_true', decide_eq_false_iff_not, ne_eq, and_comm,
-      Bool.decide_and, find?, mem_cons, not_or]
+    simp [find?, not_or, and_comm]
 #align list.nodup.diff_eq_filter List.Nodup.diff_eq_filter
 
 theorem Nodup.mem_diff_iff [DecidableEq α] (hl₁ : l₁.Nodup) : a ∈ l₁.diff l₂ ↔ a ∈ l₁ ∧ a ∉ l₂ := by
-  rw [hl₁.diff_eq_filter, mem_filter, decide_eq_true_iff]
+  rw [hl₁.diff_eq_filter, mem_filter, Bool.asProp_decide]
 #align list.nodup.mem_diff_iff List.Nodup.mem_diff_iff
 
 protected theorem Nodup.set :

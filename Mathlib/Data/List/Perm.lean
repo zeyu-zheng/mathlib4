@@ -1267,8 +1267,8 @@ private theorem DecEq_eq {α : Type _} [DecidableEq α] :
      instBEqList = @instBEq (List α) instDecidableEqList :=
   congr_arg BEq.mk <| by
     funext l₁ l₂
-    rw [Bool.eq_iff_eq_true_iff, @beq_iff_eq _ (instBEqList),
-      @beq_iff_eq _ (@instBEq (List α) instDecidableEqList)]
+    apply Bool.eq_of_asProp_eq
+    rw [@beq_iff_eq _ (instBEqList), @beq_iff_eq _ (@instBEq (List α) instDecidableEqList)]
 
 theorem perm_permutations'Aux_comm (a b : α) (l : List α) :
     (permutations'Aux a l).bind (permutations'Aux b) ~

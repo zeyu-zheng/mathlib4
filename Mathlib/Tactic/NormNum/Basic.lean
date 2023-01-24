@@ -475,17 +475,17 @@ such that `norm_num` successfully recognises `a`. -/
 -/
 
 theorem isNat_eq_true [AddMonoidWithOne α] : {a b : α} → {a' b' : ℕ} →
-    IsNat a a' → IsNat b b' → Nat.beq a' b' = true → a = b
-  | _, _, _, _, ⟨rfl⟩, ⟨rfl⟩, h => congr_arg Nat.cast <| Nat.eq_of_beq_eq_true h
+    IsNat a a' → IsNat b b' → Nat.beq a' b' → a = b
+  | _, _, _, _, ⟨rfl⟩, ⟨rfl⟩, h => congr_arg Nat.cast <| Nat.eq_of_beq h
 
 theorem isNat_le_true [OrderedSemiring α] : {a b : α} → {a' b' : ℕ} →
-    IsNat a a' → IsNat b b' → Nat.ble a' b' = true → a ≤ b
-  | _, _, _, _, ⟨rfl⟩, ⟨rfl⟩, h => Nat.mono_cast (Nat.le_of_ble_eq_true h)
+    IsNat a a' → IsNat b b' → Nat.ble a' b' → a ≤ b
+  | _, _, _, _, ⟨rfl⟩, ⟨rfl⟩, h => Nat.mono_cast (Nat.le_of_ble h)
 
 theorem isNat_lt_true [OrderedSemiring α] [CharZero α] : {a b : α} → {a' b' : ℕ} →
     IsNat a a' → IsNat b b' → Nat.ble b' a' = false → a < b
   | _, _, _, _, ⟨rfl⟩, ⟨rfl⟩, h =>
-    Nat.cast_lt.2 <| Nat.not_le.1 <| Nat.not_le_of_not_ble_eq_true <| ne_true_of_eq_false h
+    Nat.cast_lt.2 <| Nat.not_le.1 <| Nat.not_le_of_not_ble <| ne_true_of_eq_false h
 
 theorem isNat_eq_false [AddMonoidWithOne α] [CharZero α] : {a b : α} → {a' b' : ℕ} →
     IsNat a a' → IsNat b b' → Nat.beq a' b' = false → ¬a = b
@@ -496,7 +496,7 @@ theorem isNat_le_false [OrderedSemiring α] [CharZero α] {a b : α} {a' b' : �
   not_le_of_lt (isNat_lt_true hb ha h)
 
 theorem isNat_lt_false [OrderedSemiring α] {a b : α} {a' b' : ℕ}
-    (ha : IsNat a a') (hb : IsNat b b') (h : Nat.ble b' a' = true) : ¬a < b :=
+    (ha : IsNat a a') (hb : IsNat b b') (h : Nat.ble b' a') : ¬a < b :=
   not_lt_of_le (isNat_le_true hb ha h)
 
 theorem isInt_eq_true [Ring α] : {a b : α} → {z : ℤ} → IsInt a z → IsInt b z → a = b
