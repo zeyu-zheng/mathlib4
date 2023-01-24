@@ -3723,9 +3723,9 @@ theorem reduceOption_length_eq_iff {l : List (Option α)} :
 theorem reduceOption_length_lt_iff {l : List (Option α)} :
     l.reduceOption.length < l.length ↔ none ∈ l := by
   rw [(reduceOption_length_le l).lt_iff_ne, Ne, reduceOption_length_eq_iff]
-  induction l <;> simp [*]
-  rw [@eq_comm _ none, ← Option.not_isSome_iff_eq_none, Decidable.imp_iff_not_or]
-  simp [Option.isNone_iff_eq_none]
+  induction l
+  case nil => simp
+  case cons head _ tail_ih => cases head <;> simp [← tail_ih]
 #align list.reduce_option_length_lt_iff List.reduceOption_length_lt_iff
 
 theorem reduceOption_singleton (x : Option α) : [x].reduceOption = x.toList := by cases x <;> rfl
@@ -4020,7 +4020,7 @@ variable [DecidableEq α]
 
 @[simp] theorem length_erase_add_one {a : α} {l : List α} (h : a ∈ l) :
     (l.erase a).length + 1 = l.length := by
-  rw [erase_eq_eraseP, length_eraseP_add_one h (decide_eq_true rfl)]
+  rw [erase_eq_eraseP, length_eraseP_add_one h (cast Bool.asProp_decide.symm rfl)]
 #align list.length_erase_add_one List.length_erase_add_oneₓ -- DecidableEq -> BEq
 
 #align list.erase_append_left List.erase_append_leftₓ -- DecidableEq -> BEq

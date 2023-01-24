@@ -81,8 +81,8 @@ theorem Injective.eq_iff (I : Injective f) {a b : α} : f a = f b ↔ a = b :=
   ⟨@I _ _, congr_arg f⟩
 
 theorem Injective.beq_eq [BEq α] [LawfulBEq α] [BEq β] [LawfulBEq β]
-    (I : Injective f) {a b : α} : (f a == f b) = (a == b) := by
-  by_cases h : a == b <;> simp [h] <;> simpa [I.eq_iff] using h
+    (I : Injective f) {a b : α} : (f a == f b) = (a == b) :=
+  Bool.eq_of_asProp_eq (by simpa using I.eq_iff)
 
 theorem Injective.eq_iff' (I : Injective f) {a b : α} {c : β} (h : f b = c) : f a = c ↔ a = b :=
   h ▸ I.eq_iff

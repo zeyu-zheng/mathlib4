@@ -221,7 +221,7 @@ theorem pairwise_filter (p : α → Prop) [DecidablePred p] {l : List α} :
     Pairwise R (filter p l) ↔ Pairwise (fun x y => p x → p y → R x y) l := by
   rw [← filterMap_eq_filter, pairwise_filterMap]
   apply Pairwise.iff; intros
-  simp only [decide_eq_true_eq, Option.mem_def, Option.guard_eq_some, and_imp, forall_eq']
+  simp only [Bool.asProp_decide, Option.mem_def, Option.guard_eq_some, and_imp, forall_eq']
 #align list.pairwise_filter List.pairwise_filter
 
 --Porting note: changed Prop to Bool

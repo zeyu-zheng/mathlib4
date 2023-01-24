@@ -45,18 +45,20 @@ theorem join_append (L₁ L₂ : List (List α)) : join (L₁ ++ L₂) = join L�
 theorem join_concat (L : List (List α)) (l : List α) : join (L.concat l) = join L ++ l := by simp
 #align list.join_concat List.join_concat
 
+@[simp]
+theorem join_filter_not_isEmpty :
+    ∀ {L : List (List α)}, join (L.filter fun l => !l.isEmpty) = L.join
+  | [] => rfl
+  | [] :: L | (a :: l) :: L => by
+    simp [join_filter_not_isEmpty (L := L), isEmpty_iff_eq_nil]
+
 -- Porting note: `ff/tt` should be translated to `false/true`.
 -- Porting note: `List.filter` now takes a `Bool` not a `Prop`.
 --     Should the correct spelling now be `== false` instead?
 @[simp]
-theorem join_filter_isEmpty_eq_false [DecidablePred fun l : List α => l.isEmpty = false] :
-    ∀ {L : List (List α)}, join (L.filter fun l => l.isEmpty = false) = L.join
-  | [] => rfl
-  | [] :: L => by
-      simp [join_filter_isEmpty_eq_false (L := L), isEmpty_iff_eq_nil]
-  | (a :: l) :: L => by
-      have cons_not_empty : isEmpty (a :: l) = false := rfl
-      simp [join_filter_isEmpty_eq_false (L := L), cons_not_empty]
+theorem join_filter_isEmpty_eq_false {L : List (List α)} :
+    join (L.filter fun l => l.isEmpty = false) = L.join := by
+  simp [Bool.eq_false_iff]
 #align list.join_filter_empty_eq_ff List.join_filter_isEmpty_eq_false
 
 @[simp]

@@ -524,7 +524,7 @@ def punitEquivPUnit : PUnit.{v} ≃ PUnit.{w} :=
 noncomputable def propEquivBool : Prop ≃ Bool where
   toFun p := @decide p (Classical.propDecidable _)
   invFun b := b
-  left_inv p := by simp [@Bool.decide_iff p (Classical.propDecidable _)]
+  left_inv p := by simp [@Bool.asProp_decide p (Classical.propDecidable _)]
   right_inv b := by cases b <;> simp
 
 section

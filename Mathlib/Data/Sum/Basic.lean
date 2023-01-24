@@ -117,7 +117,7 @@ theorem not_isLeft (x : Sum α β) : not x.isLeft = x.isRight := by cases x <;> 
 theorem isLeft_eq_false : x.isLeft = false ↔ x.isRight := by cases x <;> simp
 #align sum.is_left_eq_ff Sum.isLeft_eq_false
 
-theorem Not_isLeft : ¬x.isLeft ↔ x.isRight := by simp
+theorem Not_isLeft : ¬x.isLeft ↔ x.isRight := by cases x <;> simp
 #align sum.not_is_left Sum.Not_isLeft
 
 @[simp]
@@ -128,7 +128,7 @@ theorem not_isRight (x : Sum α β) : !x.isRight = x.isLeft := by cases x <;> rf
 theorem isRight_eq_false : x.isRight = false ↔ x.isLeft := by cases x <;> simp
 #align sum.is_right_eq_ff Sum.isRight_eq_false
 
-theorem Not_isRight : ¬x.isRight ↔ x.isLeft := by simp
+theorem Not_isRight : ¬x.isRight ↔ x.isLeft := by cases x <;> simp
 #align sum.not_is_right Sum.Not_isRight
 
 theorem isLeft_iff : x.isLeft ↔ ∃ y, x = Sum.inl y := by cases x <;> simp

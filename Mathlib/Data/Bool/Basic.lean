@@ -92,7 +92,7 @@ theorem beq_eq_decide_eq [DecidableEq α]
 
 -- Porting note: new theorem
 theorem beq_comm [BEq α] [LawfulBEq α] {a b : α} : (a == b) = (b == a) :=
-  eq_iff_eq_true_iff.2 (by simp [@eq_comm α])
+  Bool.eq_of_asProp_eq (by simp [eq_comm])
 
 @[simp]
 theorem default_bool : default = false :=
