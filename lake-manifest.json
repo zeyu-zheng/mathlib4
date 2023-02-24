@@ -2,6 +2,12 @@
  "packagesDir": "lake-packages",
  "packages":
  [{"git":
+   {"url": "https://github.com/alexkeizer/lean-naming-lint",
+    "subDir?": null,
+    "rev": "6906589521ab21a2ab3a147a1b3c626007738d74",
+    "name": "namingLint",
+    "inputRev?": "main"}},
+  {"git":
    {"url": "https://github.com/gebner/quote4",
     "subDir?": null,
     "rev": "7ac99aa3fac487bec1d5860e751b99c7418298cf",
