@@ -432,7 +432,7 @@ def toContinuousMap (e : α ≃ₜ β) : C(α, β) :=
 #align homeomorph.to_continuous_map Homeomorph.toContinuousMap
 
 /-- `Homeomorph.toContinuousMap` as a coercion. -/
-instance : Coe (α ≃ₜ β) C(α, β) :=
+instance : CoeOut (α ≃ₜ β) C(α, β) :=
   ⟨Homeomorph.toContinuousMap⟩
 
 -- Porting note: Syntactic tautology

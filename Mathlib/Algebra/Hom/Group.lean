@@ -560,7 +560,7 @@ attribute [coe] AddMonoidHom.toZeroHom
 /-- `MonoidHom` down-cast to a `OneHom`, forgetting the multiplicative property. -/
 @[to_additive "`AddMonoidHom` down-cast to a `ZeroHom`, forgetting the additive property"]
 instance MonoidHom.coeToOneHom {_ : MulOneClass M} {_ : MulOneClass N} :
-  Coe (M →* N) (OneHom M N) := ⟨MonoidHom.toOneHom⟩
+  CoeOut (M →* N) (OneHom M N) := ⟨MonoidHom.toOneHom⟩
 #align monoid_hom.has_coe_to_one_hom MonoidHom.coeToOneHom
 #align add_monoid_hom.has_coe_to_zero_hom AddMonoidHom.coeToZeroHom
 
@@ -570,7 +570,7 @@ attribute [coe] AddMonoidHom.toAddHom
 /-- `MonoidHom` down-cast to a `MulHom`, forgetting the 1-preserving property. -/
 @[to_additive "`AddMonoidHom` down-cast to an `AddHom`, forgetting the 0-preserving property."]
 instance MonoidHom.coeToMulHom {_ : MulOneClass M} {_ : MulOneClass N} :
-  Coe (M →* N) (M →ₙ* N) := ⟨MonoidHom.toMulHom⟩
+  CoeOut (M →* N) (M →ₙ* N) := ⟨MonoidHom.toMulHom⟩
 #align monoid_hom.has_coe_to_mul_hom MonoidHom.coeToMulHom
 #align add_monoid_hom.has_coe_to_add_hom AddMonoidHom.coeToAddHom
 
@@ -578,14 +578,14 @@ attribute [coe] MonoidWithZeroHom.toMonoidHom
 
 /-- `MonoidWithZeroHom` down-cast to a `MonoidHom`, forgetting the 0-preserving property. -/
 instance MonoidWithZeroHom.coeToMonoidHom {_ : MulZeroOneClass M} {_ : MulZeroOneClass N} :
-  Coe (M →*₀ N) (M →* N) := ⟨MonoidWithZeroHom.toMonoidHom⟩
+  CoeOut (M →*₀ N) (M →* N) := ⟨MonoidWithZeroHom.toMonoidHom⟩
 #align monoid_with_zero_hom.has_coe_to_monoid_hom MonoidWithZeroHom.coeToMonoidHom
 
 attribute [coe] MonoidWithZeroHom.toZeroHom
 
 /-- `MonoidWithZeroHom` down-cast to a `ZeroHom`, forgetting the monoidal property. -/
 instance MonoidWithZeroHom.coeToZeroHom {_ : MulZeroOneClass M} {_ : MulZeroOneClass N} :
-  Coe (M →*₀ N) (ZeroHom M N) := ⟨MonoidWithZeroHom.toZeroHom⟩
+  CoeOut (M →*₀ N) (ZeroHom M N) := ⟨MonoidWithZeroHom.toZeroHom⟩
 #align monoid_with_zero_hom.has_coe_to_zero_hom MonoidWithZeroHom.coeToZeroHom
 
 -- these must come after the coe_toFun definitions

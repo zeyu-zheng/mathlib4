@@ -78,12 +78,12 @@ theorem Equiv.toEmbedding_apply (a : α) : f.toEmbedding a = f a :=
   rfl
 #align equiv.to_embedding_apply Equiv.toEmbedding_apply
 
-instance Equiv.coeEmbedding : Coe (α ≃ β) (α ↪ β) :=
+instance Equiv.coeEmbedding : CoeOut (α ≃ β) (α ↪ β) :=
   ⟨Equiv.toEmbedding⟩
 #align equiv.coe_embedding Equiv.coeEmbedding
 
 @[reducible]
-instance Equiv.Perm.coeEmbedding : Coe (Equiv.Perm α) (α ↪ α) :=
+instance Equiv.Perm.coeEmbedding : CoeOut (Equiv.Perm α) (α ↪ α) :=
   Equiv.coeEmbedding
 #align equiv.perm.coe_embedding Equiv.Perm.coeEmbedding
 

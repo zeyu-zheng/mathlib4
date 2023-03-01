@@ -233,7 +233,7 @@ def toRelHom (f : r ↪r s) : r →r s where
   map_rel' := (map_rel_iff' f).mpr
 #align rel_embedding.to_rel_hom RelEmbedding.toRelHom
 
-instance : Coe (r ↪r s) (r →r s) :=
+instance : CoeOut (r ↪r s) (r →r s) :=
   ⟨toRelHom⟩
 
 -- see Note [function coercion]
@@ -579,11 +579,11 @@ instance : CoeOut (r ≃r s) (r ↪r s) :=
 
 -- see Note [function coercion]
 instance : CoeFun (r ≃r s) fun _ => α → β :=
-  ⟨fun f => f⟩
+  ⟨fun f => f.toRelEmbedding⟩
 
 -- TODO: define and instantiate a `RelIsoClass` when `EquivLike` is defined
 instance : RelHomClass (r ≃r s) r s where
-  coe := fun x => x
+  coe := fun x => x.toRelEmbedding
   coe_injective' := Equiv.coe_fn_injective.comp toEquiv_injective
   map_rel f _ _ := Iff.mpr (map_rel_iff' f)
 

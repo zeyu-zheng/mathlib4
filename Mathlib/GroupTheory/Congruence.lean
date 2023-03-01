@@ -790,7 +790,7 @@ def ofSubmonoid (N : Submonoid (M × M)) (H : Equivalence fun x y => (x, y) ∈ 
 @[to_additive "Coercion from a congruence relation `c` on an `AddMonoid` `M`
 to the `add_submonoid` of `M × M` whose elements are `(x, y)` such that `x`
 is related to `y` by `c`."]
-instance toSubmonoid : Coe (Con M) (Submonoid (M × M)) :=
+instance toSubmonoid : CoeOut (Con M) (Submonoid (M × M)) :=
   ⟨fun c => c.submonoid⟩
 #align con.to_submonoid Con.toSubmonoid
 #align add_con.to_add_submonoid AddCon.toAddSubmonoid

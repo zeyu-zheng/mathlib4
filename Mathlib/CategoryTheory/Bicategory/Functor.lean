@@ -99,7 +99,7 @@ namespace PrelaxFunctor
 
 attribute [coe] CategoryTheory.PrelaxFunctor.toPrefunctor
 
-instance hasCoeToPrefunctor : Coe (PrelaxFunctor B C) (Prefunctor B C) :=
+instance hasCoeToPrefunctor : CoeOut (PrelaxFunctor B C) (Prefunctor B C) :=
   ⟨toPrefunctor⟩
 #align category_theory.prelax_functor.has_coe_to_prefunctor
   CategoryTheory.PrelaxFunctor.hasCoeToPrefunctor
@@ -248,7 +248,7 @@ attribute [nolint docBlame] CategoryTheory.OplaxFunctor.mapId
   CategoryTheory.OplaxFunctor.map₂_leftUnitor
   CategoryTheory.OplaxFunctor.map₂_rightUnitor
 
-instance hasCoeToPrelax : Coe (OplaxFunctor B C) (PrelaxFunctor B C) :=
+instance hasCoeToPrelax : CoeOut (OplaxFunctor B C) (PrelaxFunctor B C) :=
   ⟨toPrelaxFunctor⟩
 #align category_theory.oplax_functor.has_coe_to_prelax CategoryTheory.OplaxFunctor.hasCoeToPrelax
 
@@ -436,7 +436,7 @@ attribute [nolint docBlame] CategoryTheory.Pseudofunctor.mapId
   CategoryTheory.Pseudofunctor.map₂_left_unitor
   CategoryTheory.Pseudofunctor.map₂_right_unitor
 
-instance hasCoeToPrelaxFunctor : Coe (Pseudofunctor B C) (PrelaxFunctor B C) :=
+instance hasCoeToPrelaxFunctor : CoeOut (Pseudofunctor B C) (PrelaxFunctor B C) :=
   ⟨toPrelaxFunctor⟩
 #align category_theory.pseudofunctor.has_coe_to_prelax_functor
   CategoryTheory.Pseudofunctor.hasCoeToPrelaxFunctor
@@ -463,7 +463,7 @@ def toOplax : OplaxFunctor B C :=
     mapComp := fun f g => (F.mapComp f g).hom }
 #align category_theory.pseudofunctor.to_oplax CategoryTheory.Pseudofunctor.toOplax
 
-instance hasCoeToOplax : Coe (Pseudofunctor B C) (OplaxFunctor B C) :=
+instance hasCoeToOplax : CoeOut (Pseudofunctor B C) (OplaxFunctor B C) :=
   ⟨toOplax⟩
 #align category_theory.pseudofunctor.has_coe_to_oplax CategoryTheory.Pseudofunctor.hasCoeToOplax
 

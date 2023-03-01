@@ -665,7 +665,7 @@ def toLinearMap (fₗ : M →+[R] M₂) : M →ₗ[R] M₂ :=
   { fₗ with }
 #align distrib_mul_action_hom.to_linear_map DistribMulActionHom.toLinearMap
 
-instance : Coe (M →+[R] M₂) (M →ₗ[R] M₂) :=
+instance : CoeOut (M →+[R] M₂) (M →ₗ[R] M₂) :=
   ⟨toLinearMap⟩
 
 -- Porting note: because coercions get unfolded, there is no need for this rewrite

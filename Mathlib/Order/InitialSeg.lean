@@ -63,7 +63,7 @@ infixl:25 " ≼i " => InitialSeg
 
 namespace InitialSeg
 
-instance : Coe (r ≼i s) (r ↪r s) :=
+instance : CoeOut (r ≼i s) (r ↪r s) :=
   ⟨InitialSeg.toRelEmbedding⟩
 
 instance : EmbeddingLike (r ≼i s) α β :=
@@ -249,7 +249,7 @@ instance : CoeOut (r ≺i s) (r ↪r s) :=
   ⟨PrincipalSeg.toRelEmbedding⟩
 
 instance : CoeFun (r ≺i s) fun _ => α → β :=
-  ⟨fun f => f⟩
+  ⟨fun f => f.toRelEmbedding⟩
 
 @[simp]
 theorem coe_fn_mk (f : r ↪r s) (t o) : (@PrincipalSeg.mk _ _ r s f t o : α → β) = f :=
@@ -269,7 +269,7 @@ theorem init [IsTrans β s] (f : r ≺i s) {a : α} {b : β} (h : s b (f a)) : �
 #align principal_seg.init PrincipalSeg.init
 
 /-- A principal segment is in particular an initial segment. -/
-instance hasCoeInitialSeg [IsTrans β s] : Coe (r ≺i s) (r ≼i s) :=
+instance hasCoeInitialSeg [IsTrans β s] : CoeOut (r ≺i s) (r ≼i s) :=
   ⟨fun f => ⟨f.toRelEmbedding, fun _ _ => f.init⟩⟩
 #align principal_seg.has_coe_initial_seg PrincipalSeg.hasCoeInitialSeg
 

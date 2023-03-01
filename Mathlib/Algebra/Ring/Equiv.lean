@@ -589,7 +589,7 @@ theorem toNonUnitalRingHom_injective :
 
 /- The instance priority is lowered here so that in the case when `R` and `S` are both unital, Lean
 will first find and use `RingEquiv.instCoeToRingHom`. -/
-instance (priority := 900) instCoeToNonUnitalRingHom : Coe (R ≃+* S) (R →ₙ+* S) :=
+instance (priority := 900) instCoeToNonUnitalRingHom : CoeOut (R ≃+* S) (R →ₙ+* S) :=
   ⟨RingEquiv.toNonUnitalRingHom⟩
 #align ring_equiv.has_coe_to_non_unital_ring_hom RingEquiv.instCoeToNonUnitalRingHom
 
@@ -660,7 +660,7 @@ theorem toRingHom_injective : Function.Injective (toRingHom : R ≃+* S → R �
   RingEquiv.ext (RingHom.ext_iff.1 h)
 #align ring_equiv.to_ring_hom_injective RingEquiv.toRingHom_injective
 
-instance instCoeToRingHom : Coe (R ≃+* S) (R →+* S) :=
+instance instCoeToRingHom : CoeOut (R ≃+* S) (R →+* S) :=
   ⟨RingEquiv.toRingHom⟩
 #align ring_equiv.has_coe_to_ring_hom RingEquiv.instCoeToRingHom
 

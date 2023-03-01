@@ -475,7 +475,7 @@ theorem coe_coe {F : Type _} [RingHomClass F α β] (f : F) : ((f : α →+* β)
 
 attribute [coe] RingHom.toMonoidHom
 
-instance coeToMonoidHom : Coe (α →+* β) (α →* β) :=
+instance coeToMonoidHom : CoeOut (α →+* β) (α →* β) :=
   ⟨RingHom.toMonoidHom⟩
 #align ring_hom.has_coe_monoid_hom RingHom.coeToMonoidHom
 

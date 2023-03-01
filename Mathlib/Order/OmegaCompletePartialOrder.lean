@@ -598,7 +598,7 @@ infixr:25 " →𝒄 " => ContinuousHom
 instance : CoeFun (α →𝒄 β) fun _ => α → β :=
   ⟨fun f => f.toOrderHom.toFun⟩
 
-instance : Coe (α →𝒄 β) (α →o β) where coe := ContinuousHom.toOrderHom
+instance : CoeOut (α →𝒄 β) (α →o β) where coe := ContinuousHom.toOrderHom
 
 instance : PartialOrder (α →𝒄 β) :=
   (PartialOrder.lift fun f => f.toOrderHom.toFun) <| by rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩ h; congr

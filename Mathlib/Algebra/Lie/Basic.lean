@@ -292,7 +292,7 @@ variable [LieRing L₃] [LieAlgebra R L₃]
 
 attribute [coe] LieHom.toLinearMap
 
-instance : Coe (L₁ →ₗ⁅R⁆ L₂) (L₁ →ₗ[R] L₂) :=
+instance : CoeOut (L₁ →ₗ⁅R⁆ L₂) (L₁ →ₗ[R] L₂) :=
   ⟨LieHom.toLinearMap⟩
 
 instance : FunLike (L₁ →ₗ⁅R⁆ L₂) L₁ (fun _ => L₂) :=
@@ -548,11 +548,11 @@ def toLinearEquiv (f : L₁ ≃ₗ⁅R⁆ L₂) : L₁ ≃ₗ[R] L₂ :=
   { f.toLieHom, f with }
 #align lie_equiv.to_linear_equiv LieEquiv.toLinearEquiv
 
-instance hasCoeToLieHom : Coe (L₁ ≃ₗ⁅R⁆ L₂) (L₁ →ₗ⁅R⁆ L₂) :=
+instance hasCoeToLieHom : CoeOut (L₁ ≃ₗ⁅R⁆ L₂) (L₁ →ₗ⁅R⁆ L₂) :=
   ⟨toLieHom⟩
 #align lie_equiv.has_coe_to_lie_hom LieEquiv.hasCoeToLieHom
 
-instance hasCoeToLinearEquiv : Coe (L₁ ≃ₗ⁅R⁆ L₂) (L₁ ≃ₗ[R] L₂) :=
+instance hasCoeToLinearEquiv : CoeOut (L₁ ≃ₗ⁅R⁆ L₂) (L₁ ≃ₗ[R] L₂) :=
   ⟨toLinearEquiv⟩
 #align lie_equiv.has_coe_to_linear_equiv LieEquiv.hasCoeToLinearEquiv
 
@@ -1000,7 +1000,7 @@ instance hasCoeToEquiv : CoeOut (M ≃ₗ⁅R,L⁆ N) (M ≃ N) :=
   ⟨toEquiv⟩
 #align lie_module_equiv.has_coe_to_equiv LieModuleEquiv.hasCoeToEquiv
 
-instance hasCoeToLieModuleHom : Coe (M ≃ₗ⁅R,L⁆ N) (M →ₗ⁅R,L⁆ N) :=
+instance hasCoeToLieModuleHom : CoeOut (M ≃ₗ⁅R,L⁆ N) (M →ₗ⁅R,L⁆ N) :=
   ⟨toLieModuleHom⟩
 #align lie_module_equiv.has_coe_to_lie_module_hom LieModuleEquiv.hasCoeToLieModuleHom
 
