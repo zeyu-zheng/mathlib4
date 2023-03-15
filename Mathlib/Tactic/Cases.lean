@@ -48,13 +48,27 @@ def ElimApp.evalNames (elimInfo : ElimInfo) (alts : Array ElimApp.Alt) (withArg 
     let numFields ← getAltNumFields elimInfo altName
     let (altVarNames, names') := names.splitAtD numFields (Unhygienic.run `(_))
     names := names'
+    logInfo m!"1 {g} {altVarNames}"
+    logInfo m!"1 {toString <| ← g.getType}"
+    let g ← g.change (← instantiateMVars (← g.getType))
     let (fvars, g) ← g.introN numFields <| altVarNames.map (getNameOfIdent' ·[0])
+    g.withContext <| logInfo m!"2 {g} {fvars.map Expr.fvar} {(← g.getDecl).lctx.getFVarIds.map Expr.fvar} {(← g.getDecl).localInstances.map (·.fvar)}"
+    g.withContext <| do
+      let gDecl ← g.getDecl
+      for fvarId in gDecl.lctx.getFVarIds do
+        let decl ← fvarId.getDecl
+        logInfo m!"{Expr.fvar fvarId} {toString decl.type} {decl.isImplementationDetail}"
     let some (g, subst) ← Cases.unifyEqs? numEqs g {} | pure ()
+    logInfo m!"3 {g}"
     let (_, g) ← g.introNP numGeneralized
+    logInfo m!"{numFields} {numGeneralized}"
+    logInfo m!"4 {g}"
     let g ← liftM $ toClear.foldlM (·.tryClear) g
     for fvar in fvars, stx in altVarNames do
       g.withContext <| (subst.apply <| .fvar fvar).addLocalVarInfoForBinderIdent ⟨stx⟩
+    logInfo m!"5 {g} {(← g.getDecl).localInstances.map (·.fvar)}"
     subgoals := subgoals.push g
+  logInfo m!"{subgoals}"
   pure subgoals
 
 open private getElimNameInfo generalizeTargets generalizeVars in evalInduction in
@@ -110,3 +124,14 @@ elab (name := cases') "cases' " tgts:(casesTarget,+) usingArg:((" using " ident)
       let subgoals ← ElimApp.evalNames elimInfo result.alts withArg
          (numEqs := targets.size) (toClear := targetsNew)
       setGoals <| subgoals.toList ++ gs
+
+example (h : ∃ x : Nat, Nonempty Empty) : False := by
+  cases' h with x h
+  have : Nonempty Empty := inferInstance
+
+example (h : ∃ x, Nonempty Empty) : ∀ (w : Nat) (h_1 : Nonempty Empty), h = (x_ : ∃ x, Nonempty Empty) → False := by
+  intro x w
+  -- sorry
+  -- revert h
+  -- intros h
+  -- have : Nonempty Empty := inferInstance
