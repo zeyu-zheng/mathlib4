@@ -61,12 +61,11 @@ theorem CharP.addOrderOf_one (R) [Semiring R] : CharP R (addOrderOf (1 : R)) :=
 
 theorem CharP.int_cast_eq_zero_iff [AddGroupWithOne R] (p : ℕ) [CharP R p] (a : ℤ) :
     (a : R) = 0 ↔ (p : ℤ) ∣ a := by
-  rcases lt_trichotomy a 0 with (h | rfl | h)
+  rcases lt_or_le a 0 with (h|h)
   · rw [← neg_eq_zero, ← Int.cast_neg, ← dvd_neg]
     lift -a to ℕ using neg_nonneg.mpr (le_of_lt h) with b
     rw [Int.cast_ofNat, CharP.cast_eq_zero_iff R p, Int.coe_nat_dvd]
-  · simp only [Int.cast_zero, eq_self_iff_true, dvd_zero]
-  · lift a to ℕ using le_of_lt h with b
+  · lift a to ℕ using h with b
     rw [Int.cast_ofNat, CharP.cast_eq_zero_iff R p, Int.coe_nat_dvd]
 #align char_p.int_cast_eq_zero_iff CharP.int_cast_eq_zero_iff
 
@@ -84,31 +83,21 @@ instance CharP.ofCharZero [AddMonoidWithOne R] [CharZero R] : CharP R 0 :=
   ⟨fun x => by rw [zero_dvd_iff, ← Nat.cast_zero, Nat.cast_inj]⟩
 #align char_p.of_char_zero CharP.ofCharZero
 
-theorem CharP.exists [NonAssocSemiring R] : ∃ p, CharP R p :=
+theorem CharP.exists [NonAssocSemiring R] : ∃ p, CharP R p := by
   letI := Classical.decEq R
-  by_cases
-    (fun H : ∀ p : ℕ, (p : R) = 0 → p = 0 =>
-      ⟨0, ⟨fun x => by rw [zero_dvd_iff]; exact ⟨H x, by rintro rfl; simp⟩⟩⟩)
-    fun H =>
-    ⟨Nat.find (not_forall.1 H),
-      ⟨fun x =>
-        ⟨fun H1 =>
-          Nat.dvd_of_mod_eq_zero
-            (by_contradiction fun H2 =>
-              Nat.find_min (not_forall.1 H)
-                (Nat.mod_lt x <|
-                  Nat.pos_of_ne_zero <| not_of_not_imp <| Nat.find_spec (not_forall.1 H))
-                (not_imp_of_and_not
-                  ⟨by
-                    rwa [← Nat.mod_add_div x (Nat.find (not_forall.1 H)), Nat.cast_add,
-                      Nat.cast_mul,
-                      of_not_not (not_not_of_not_imp <| Nat.find_spec (not_forall.1 H)),
-                      MulZeroClass.zero_mul, add_zero] at H1,
-                    H2⟩)),
-          fun H1 => by
-          rw [← Nat.mul_div_cancel' H1, Nat.cast_mul,
-            of_not_not (not_not_of_not_imp <| Nat.find_spec (not_forall.1 H)),
-            MulZeroClass.zero_mul]⟩⟩⟩
+  by_cases H : ∀ p : ℕ, (p : R) = 0 → p = 0
+  · exact ⟨0, ⟨fun x => by rw [zero_dvd_iff]; exact ⟨H x, by rintro rfl; simp⟩⟩⟩
+  · refine ⟨Nat.find (not_forall.1 H), ⟨fun x => ⟨fun H1 => Nat.dvd_of_mod_eq_zero ?_, fun H1 => ?_⟩⟩⟩
+    · by_contra H2
+      refine Nat.find_min
+        (not_forall.1 H)
+        (Nat.mod_lt x <| Nat.pos_of_ne_zero <| not_of_not_imp <| Nat.find_spec (not_forall.1 H))
+        (not_imp_of_and_not ⟨?_, H2⟩)
+      rwa [← Nat.mod_add_div x (Nat.find (not_forall.1 H)), Nat.cast_add, Nat.cast_mul,
+        of_not_not (not_not_of_not_imp <| Nat.find_spec (not_forall.1 H)), MulZeroClass.zero_mul,
+        add_zero] at H1
+    · rw [← Nat.mul_div_cancel' H1, Nat.cast_mul,
+        of_not_not (not_not_of_not_imp <| Nat.find_spec (not_forall.1 H)), MulZeroClass.zero_mul]
 #align char_p.exists CharP.exists
 
 theorem CharP.exists_unique [NonAssocSemiring R] : ∃! p, CharP R p :=
@@ -239,17 +228,10 @@ theorem eq_iff_modEq_int [Ring R] (p : ℕ) [CharP R p] (a b : ℤ) : (a : R) = 
 theorem CharP.neg_one_ne_one [Ring R] (p : ℕ) [CharP R p] [Fact (2 < p)] : (-1 : R) ≠ (1 : R) := by
   suffices (2 : R) ≠ 0 by
     intro h
-    symm at h
-    rw [← sub_eq_zero, sub_neg_eq_add] at h
-    norm_num at h
-    exact this h
-    -- porting note: this could probably be golfed
-  intro h
-  rw [show (2 : R) = (2 : ℕ) by norm_cast] at h
-  have := (CharP.cast_eq_zero_iff R p 2).mp h
-  have := Nat.le_of_dvd (by decide) this
-  rw [fact_iff] at *
-  linarith
+    apply this
+    rwa [eq_comm, ← sub_eq_zero, sub_neg_eq_add, one_add_one_eq_two] at h
+  rw [show (2 : R) = (2 : ℕ) by norm_cast, Ne, CharP.cast_eq_zero_iff R p 2]
+  exact Nat.not_dvd_of_pos_of_lt zero_lt_two (Fact.elim ‹_›)
 #align char_p.neg_one_ne_one CharP.neg_one_ne_one
 
 theorem CharP.neg_one_pow_char [CommRing R] (p : ℕ) [CharP R p] [Fact p.Prime] :
@@ -278,7 +260,7 @@ section CommSemiring
 variable [CommSemiring R] {S : Type v} [CommSemiring S] (f : R →* S) (g : R →+* S) (p : ℕ)
   [Fact p.Prime] [CharP R p] [CharP S p] (x y : R)
 
-/-- The frobenius map that sends x to x^p -/
+/-- The frobenius map that sends $x$ to $x^p$ -/
 def frobenius : R →+* R where
   toFun x := x ^ p
   map_one' := one_pow p
@@ -417,7 +399,6 @@ theorem cast_eq_mod (p : ℕ) [CharP R p] (k : ℕ) : (k : R) = (k % p : ℕ) :=
   calc
     (k : R) = ↑(k % p + p * (k / p)) := by rw [Nat.mod_add_div]
     _ = ↑(k % p) := by simp [cast_eq_zero]
-
 #align char_p.cast_eq_mod CharP.cast_eq_mod
 
 /-- The characteristic of a finite ring cannot be zero. -/
@@ -612,7 +593,6 @@ theorem charP_of_ne_zero (hn : Fintype.card R = n) (hR : ∀ i < n, (i : R) = 0 
 theorem charP_of_prime_pow_injective (R) [Ring R] [Fintype R] (p : ℕ) [hp : Fact p.Prime] (n : ℕ)
     (hn : Fintype.card R = p ^ n) (hR : ∀ i ≤ n, (p ^ i : R) = 0 → i = n) : CharP R (p ^ n) := by
   obtain ⟨c, hc⟩ := CharP.exists R
-  skip
   have hcpn : c ∣ p ^ n := by rw [← CharP.cast_eq_zero_iff R c, ← hn, CharP.cast_card_eq_zero]
   obtain ⟨i, hi, hc⟩ : ∃ i ≤ n, c = p ^ i := by rwa [Nat.dvd_prime_pow hp.1] at hcpn
   obtain rfl : i = n := by
