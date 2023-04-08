@@ -58,7 +58,7 @@ namespace FinCategory
 variable (α : Type _) [Fintype α] [SmallCategory α] [FinCategory α]
 
 /-- A FinCategory `α` is equivalent to a category with objects in `Type`. -/
---@[nolint unused_arguments]
+@[nolint unusedArguments]
 abbrev ObjAsType : Type :=
   InducedCategory α (Fintype.equivFin α).symm
 #align category_theory.fin_category.obj_as_type CategoryTheory.FinCategory.ObjAsType
@@ -72,7 +72,7 @@ noncomputable def objAsTypeEquiv : ObjAsType α ≌ α :=
 #align category_theory.fin_category.obj_as_type_equiv CategoryTheory.FinCategory.objAsTypeEquiv
 
 /-- A FinCategory `α` is equivalent to a fin_category with in `Type`. -/
---@[nolint unused_arguments]
+@[nolint unusedArguments]
 abbrev AsType : Type :=
   Fin (Fintype.card α)
 #align category_theory.fin_category.as_type CategoryTheory.FinCategory.AsType

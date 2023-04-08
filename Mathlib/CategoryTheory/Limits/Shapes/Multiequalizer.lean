@@ -39,14 +39,14 @@ open CategoryTheory
 universe w v u
 
 /-- The type underlying the multiequalizer diagram. -/
---@[nolint unused_arguments]
+@[nolint unusedArguments]
 inductive WalkingMulticospan {L R : Type w} (fst snd : R → L) : Type w
   | left : L → WalkingMulticospan fst snd
   | right : R → WalkingMulticospan fst snd
 #align category_theory.limits.walking_multicospan CategoryTheory.Limits.WalkingMulticospan
 
 /-- The type underlying the multiecoqualizer diagram. -/
---@[nolint unused_arguments]
+@[nolint unusedArguments]
 inductive WalkingMultispan {L R : Type w} (fst snd : L → R) : Type w
   | left : L → WalkingMultispan fst snd
   | right : R → WalkingMultispan fst snd
