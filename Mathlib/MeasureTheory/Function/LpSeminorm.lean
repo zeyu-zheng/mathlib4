@@ -46,7 +46,7 @@ open TopologicalSpace MeasureTheory Filter
 
 open NNReal ENNReal BigOperators Topology MeasureTheory
 
-variable {α E F G : Type _} {m m0 : MeasurableSpace α} {p : ℝ≥0∞} {q : ℝ} {μ ν : Measure α}
+variable {α E F G : Type _} {m m0 : MeasurableSpace α} {p : ℝ≥0∞} {q : ℝ} {μ ν :Measure α}
   [NormedAddCommGroup E] [NormedAddCommGroup F] [NormedAddCommGroup G]
 
 namespace MeasureTheory

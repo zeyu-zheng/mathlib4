@@ -267,7 +267,7 @@ section LayercakeLT
 
 open MeasureTheory
 
-variable {α : Type _} [MeasurableSpace α] (μ : Measure α)
+variable {α : Type _} [MeasurableSpace α] (μ :Measure α)
 
 variable {β : Type _} [MeasurableSpace β] [MeasurableSingletonClass β]
 

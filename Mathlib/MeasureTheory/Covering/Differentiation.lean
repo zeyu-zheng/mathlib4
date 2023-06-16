@@ -86,7 +86,7 @@ open MeasureTheory Metric Set Filter TopologicalSpace MeasureTheory.Measure
 
 open scoped Filter ENNReal MeasureTheory NNReal Topology
 
-variable {α : Type _} [MetricSpace α] {m0 : MeasurableSpace α} {μ : Measure α} (v : VitaliFamily μ)
+variable {α : Type _} [MetricSpace α] {m0 : MeasurableSpace α} {μ :Measure α} (v : VitaliFamily μ)
   {E : Type _} [NormedAddCommGroup E]
 
 namespace VitaliFamily
@@ -159,7 +159,7 @@ theorem measure_le_of_frequently_le [SecondCountableTopology α] [BorelSpace α]
 
 section
 
-variable [SecondCountableTopology α] [BorelSpace α] [IsLocallyFiniteMeasure μ] {ρ : Measure α}
+variable [SecondCountableTopology α] [BorelSpace α] [IsLocallyFiniteMeasure μ] {ρ :Measure α}
   [IsLocallyFiniteMeasure ρ]
 
 /-- If a measure `ρ` is singular with respect to `μ`, then for `μ` almost every `x`, the ratio

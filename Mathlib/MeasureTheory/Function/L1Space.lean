@@ -56,7 +56,7 @@ open Classical Topology BigOperators ENNReal MeasureTheory NNReal
 
 open Set Filter TopologicalSpace ENNReal EMetric MeasureTheory
 
-variable {α β γ δ : Type _} {m : MeasurableSpace α} {μ ν : Measure α} [MeasurableSpace δ]
+variable {α β γ δ : Type _} {m : MeasurableSpace α} {μ ν :Measure α} [MeasurableSpace δ]
 
 variable [NormedAddCommGroup β]
 
@@ -1156,7 +1156,7 @@ end IsROrC
 
 section Trim
 
-variable {H : Type _} [NormedAddCommGroup H] {m0 : MeasurableSpace α} {μ' : Measure α} {f : α → H}
+variable {H : Type _} [NormedAddCommGroup H] {m0 : MeasurableSpace α} {μ' :Measure α} {f : α → H}
 
 theorem Integrable.trim (hm : m ≤ m0) (hf_int : Integrable f μ') (hf : StronglyMeasurable[m] f) :
     Integrable f (μ'.trim hm) := by

@@ -38,7 +38,7 @@ namespace MeasureTheory
 
 open Measure Function Set
 
-variable {μa : Measure α} {μb : Measure β} {μc : Measure γ} {μd : Measure δ}
+variable {μa :Measure α} {μb :Measure β} {μc :Measure γ} {μd :Measure δ}
 
 /-- `f` is a measure preserving map w.r.t. measures `μa` and `μb` if `f` is measurable
 and `map f μa = μb`. -/
@@ -136,7 +136,7 @@ protected theorem iterate {f : α → α} (hf : MeasurePreserving f μa μa) :
   | n + 1 => (MeasurePreserving.iterate hf n).comp hf
 #align measure_theory.measure_preserving.iterate MeasureTheory.MeasurePreserving.iterate
 
-variable {μ : Measure α} {f : α → α} {s : Set α}
+variable {μ :Measure α} {f : α → α} {s : Set α}
 
 /-- If `μ univ < n * μ s` and `f` is a map preserving measure `μ`,
 then for some `x ∈ s` and `0 < m < n`, `f^[m] x ∈ s`. -/
