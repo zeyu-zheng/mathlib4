@@ -998,7 +998,7 @@ protected theorem le_add_right (h : μ ≤ ν) : μ ≤ ν + ν' := fun s hs => 
 
 section sInf
 
-variable {m : Set(Measure α)}
+variable {m : Set  (Measure α)}
 
 theorem sInf_caratheodory (s : Set α) (hs : MeasurableSet s) :
     MeasurableSet[(sInf (toOuterMeasure '' m)).caratheodory] s := by
