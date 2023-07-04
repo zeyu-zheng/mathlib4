@@ -334,4 +334,56 @@ instance Subtype.BooleanAlgebra [FaithfulSMul M X] :
             sub_zero])).le
     sdiff_eq := fun P Q => Subtype.ext <| by rw [coe_sdiff, ← coe_compl, coe_inf] }
 
+lemma le_norm [FaithfulSMul M X] {P Q : { P : M // IsLprojection X P }} (x : X) (h : P ≤ Q) :
+  ‖(Q : M) • x‖ = ‖(P : M) • x‖ + ‖(Q : M) • x - (P : M) • x‖ := by
+  rw [le_def, coe_inf] at h
+  rw [P.prop.Lnorm, sub_smul, one_smul, ← mul_smul, ← h]
+
+lemma le_norm' [FaithfulSMul M X] {P Q : { P : M // IsLprojection X P }} (x : X) (h : P ≤ Q) :
+  ‖(Q : M) • x - (P : M) • x‖ = ‖(Q : M) • x‖ - ‖(P : M) • x‖ := by
+  rw [(le_norm x h)]
+  abel
+
+lemma monotone_seq_Cauchy [FaithfulSMul M X] {u : ℕ → { P : M // IsLprojection X P }} (x : X)
+  (h : Monotone u) : CauchySeq (fun n => (u n : M ) • x) := by
+  have nc: CauchySeq (fun n => ‖(u n : M ) • x‖) := sorry
+  rw [NormedAddCommGroup.cauchySeq_iff]
+  intros ε hε
+  rw [NormedAddCommGroup.cauchySeq_iff] at nc
+  obtain ⟨N,hN⟩ := nc ε hε
+  use N
+  intros m hm n hn
+  cases' le_or_gt n m with hnm hmn
+  . rw [le_norm' x (h hnm)]
+    --have test: ‖‖(u m : M) • x‖ - ‖(u n : M) • x‖‖ < ε := sorry
+    exact lt_of_abs_lt (hN m hm n hn)
+  . rw [norm_sub_rev, le_norm' x (h (Nat.le_of_lt hmn))]
+    exact lt_of_abs_lt (hN n hn m hm)
+
+
+#check DirectedOn (· ≤ ·)
+-- HWW p9
+
+-- Behrends p20
+
+-- https://leanprover-community.github.io/mathlib_docs/topology/uniform_space/uniform_convergence.html
+
+-- https://github.com/leanprover-community/mathlib4/blob/master/Mathlib/Analysis/NormedSpace/OperatorNorm.lean#L1552
+
+/-
+instance [FaithfulSMul M X] : CompleteSemilatticeSup { P : M // IsLprojection X P } := {
+
+}
+-/
+
+#check BooleanAlgebra
+
+#check CompleteBooleanAlgebra
+
+/-
+instance [FaithfulSMul M X] :  CompleteBooleanAlgebra { P : M // IsLprojection X P } := {
+
+  }
+-/
+
 end IsLprojection
