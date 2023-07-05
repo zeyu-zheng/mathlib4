@@ -11,6 +11,7 @@ Authors: Christopher Hoskin
 import Mathlib.Algebra.Ring.Idempotents
 import Mathlib.Analysis.Normed.Group.Basic
 import Mathlib.Tactic.NoncommRing
+import Mathlib.Topology.Algebra.Order.MonotoneConvergence
 
 /-!
 # M-structure
@@ -344,9 +345,24 @@ lemma le_norm' [FaithfulSMul M X] {P Q : { P : M // IsLprojection X P }} (x : X)
   rw [(le_norm x h)]
   abel
 
+open Filter Topology
+
 lemma monotone_seq_Cauchy [FaithfulSMul M X] {u : ℕ → { P : M // IsLprojection X P }} (x : X)
   (h : Monotone u) : CauchySeq (fun n => (u n : M ) • x) := by
-  have nc: CauchySeq (fun n => ‖(u n : M ) • x‖) := sorry
+  have nc1: Tendsto (fun n => ‖(u n : M ) • x‖) atTop (𝓝 (⨆ n, ‖(u n : M ) • x‖)) := by
+    apply tendsto_atTop_ciSup _ _
+    intros n m hnm
+    simp
+    rw [le_norm x (h hnm), le_add_iff_nonneg_right]
+    apply norm_nonneg
+    use ‖x‖
+    intros a ha
+    rw [Set.mem_range] at ha
+    obtain ⟨n,hn⟩ := ha
+    rw [←hn, (u n).prop.Lnorm x, le_add_iff_nonneg_right]
+    apply norm_nonneg
+  have nc: CauchySeq (fun n => ‖(u n : M ) • x‖) := by
+    apply Tendsto.cauchySeq nc1
   rw [NormedAddCommGroup.cauchySeq_iff]
   intros ε hε
   rw [NormedAddCommGroup.cauchySeq_iff] at nc
@@ -355,7 +371,6 @@ lemma monotone_seq_Cauchy [FaithfulSMul M X] {u : ℕ → { P : M // IsLprojecti
   intros m hm n hn
   cases' le_or_gt n m with hnm hmn
   . rw [le_norm' x (h hnm)]
-    --have test: ‖‖(u m : M) • x‖ - ‖(u n : M) • x‖‖ < ε := sorry
     exact lt_of_abs_lt (hN m hm n hn)
   . rw [norm_sub_rev, le_norm' x (h (Nat.le_of_lt hmn))]
     exact lt_of_abs_lt (hN n hn m hm)
