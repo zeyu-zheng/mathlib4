@@ -59,6 +59,9 @@ instance (priority := 100) NormedSpace.boundedSMul [NormedSpace α β] : Bounded
   BoundedSMul.of_norm_smul_le NormedSpace.norm_smul_le
 #align normed_space.has_bounded_smul NormedSpace.boundedSMul
 
+instance NormedSpace.continuousConstSMul [NormedSpace α β] : ContinuousConstSMul α β :=
+  inferInstance
+
 instance NormedField.toNormedSpace : NormedSpace α α where norm_smul_le a b := norm_mul_le a b
 #align normed_field.to_normed_space NormedField.toNormedSpace
 

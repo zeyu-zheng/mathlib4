@@ -35,7 +35,7 @@ noncomputable section
 open Classical NNReal Topology
 
 -- the `ₗ` subscript variables are for special cases about linear (as opposed to semilinear) maps
-variable {𝕜 𝕜₂ 𝕜₃ E Eₗ F Fₗ G Gₗ 𝓕 : Type _}
+variable {𝕜 𝕜₂ 𝕜₃ E Eₗ F Fₗ G Gₗ 𝓕 : Type}
 
 section SemiNormed
 
@@ -818,12 +818,10 @@ theorem flip_smul (c : 𝕜₃) (f : E →SL[σ₁₃] F →SL[σ₂₃] G) : (c
 
 variable (E F G σ₁₃ σ₂₃)
 
-set_option maxHeartbeats 300000 in
-set_option synthInstance.maxHeartbeats 25000 in
 /-- Flip the order of arguments of a continuous bilinear map.
 This is a version bundled as a `LinearIsometryEquiv`.
 For an unbundled version see `ContinuousLinearMap.flip`. -/
-def flipₗᵢ' : (E →SL[σ₁₃] F →SL[σ₂₃] G) ≃ₗᵢ[𝕜₃] F →SL[σ₂₃] E →SL[σ₁₃] G where
+noncomputable def flipₗᵢ' : (E →SL[σ₁₃] F →SL[σ₂₃] G) ≃ₗᵢ[𝕜₃] F →SL[σ₂₃] E →SL[σ₁₃] G where
   toFun := flip
   invFun := flip
   map_add' := flip_add
@@ -835,13 +833,11 @@ def flipₗᵢ' : (E →SL[σ₁₃] F →SL[σ₂₃] G) ≃ₗᵢ[𝕜₃] F �
 
 variable {E F G σ₁₃ σ₂₃}
 
-set_option synthInstance.maxHeartbeats 25000 in
 @[simp]
 theorem flipₗᵢ'_symm : (flipₗᵢ' E F G σ₂₃ σ₁₃).symm = flipₗᵢ' F E G σ₁₃ σ₂₃ :=
   rfl
 #align continuous_linear_map.flipₗᵢ'_symm ContinuousLinearMap.flipₗᵢ'_symm
 
-set_option synthInstance.maxHeartbeats 75000 in
 @[simp]
 theorem coe_flipₗᵢ' : ⇑(flipₗᵢ' E F G σ₂₃ σ₁₃) = flip :=
   rfl
@@ -849,7 +845,6 @@ theorem coe_flipₗᵢ' : ⇑(flipₗᵢ' E F G σ₂₃ σ₁₃) = flip :=
 
 variable (𝕜 E Fₗ Gₗ)
 
-set_option maxHeartbeats 250000 in
 /-- Flip the order of arguments of a continuous bilinear map.
 This is a version bundled as a `LinearIsometryEquiv`.
 For an unbundled version see `ContinuousLinearMap.flip`. -/
@@ -870,7 +865,6 @@ theorem flipₗᵢ_symm : (flipₗᵢ 𝕜 E Fₗ Gₗ).symm = flipₗᵢ 𝕜 F
   rfl
 #align continuous_linear_map.flipₗᵢ_symm ContinuousLinearMap.flipₗᵢ_symm
 
-set_option synthInstance.maxHeartbeats 60000 in
 @[simp]
 theorem coe_flipₗᵢ : ⇑(flipₗᵢ 𝕜 E Fₗ Gₗ) = flip :=
   rfl
@@ -1010,9 +1004,9 @@ section Prod
 
 universe u₁ u₂ u₃ u₄
 
-variable (M₁ : Type u₁) [SeminormedAddCommGroup M₁] [NormedSpace 𝕜 M₁] (M₂ : Type u₂)
-  [SeminormedAddCommGroup M₂] [NormedSpace 𝕜 M₂] (M₃ : Type u₃) [SeminormedAddCommGroup M₃]
-  [NormedSpace 𝕜 M₃] (M₄ : Type u₄) [SeminormedAddCommGroup M₄] [NormedSpace 𝕜 M₄]
+variable (M₁ : Type) [SeminormedAddCommGroup M₁] [NormedSpace 𝕜 M₁] (M₂ : Type)
+  [SeminormedAddCommGroup M₂] [NormedSpace 𝕜 M₂] (M₃ : Type) [SeminormedAddCommGroup M₃]
+  [NormedSpace 𝕜 M₃] (M₄ : Type) [SeminormedAddCommGroup M₄] [NormedSpace 𝕜 M₄]
 
 variable {Eₗ} (𝕜)
 
