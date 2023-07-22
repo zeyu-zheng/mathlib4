@@ -2,17 +2,14 @@
 Copyright (c) 2022 Xavier Roblot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex J. Best, Xavier Roblot
-
-! This file was ported from Lean 3 source module number_theory.number_field.embeddings
-! leanprover-community/mathlib commit caa58cbf5bfb7f81ccbaca4e8b8ac4bc2b39cc1c
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathlib.Analysis.Complex.Polynomial
 import Mathlib.FieldTheory.Minpoly.IsIntegrallyClosed
 import Mathlib.NumberTheory.NumberField.Basic
 import Mathlib.RingTheory.Norm
 import Mathlib.Topology.Instances.Complex
+
+#align_import number_theory.number_field.embeddings from "leanprover-community/mathlib"@"caa58cbf5bfb7f81ccbaca4e8b8ac4bc2b39cc1c"
 
 /-!
 # Embeddings of number fields
@@ -129,7 +126,7 @@ theorem pow_eq_one_of_norm_eq_one {x : K} (hxi : IsIntegral ℤ x) (hx : ∀ φ 
     rw [← Nat.sub_add_cancel hlt.le, pow_add, mul_left_eq_self₀] at h
     refine h.resolve_right fun hp => ?_
     specialize hx (IsAlgClosed.lift (NumberField.isAlgebraic K)).toRingHom
-    rw [pow_eq_zero hp, map_zero, norm_zero] at hx ; norm_num at hx
+    rw [pow_eq_zero hp, map_zero, norm_zero] at hx; norm_num at hx
 #align number_field.embeddings.pow_eq_one_of_norm_eq_one NumberField.Embeddings.pow_eq_one_of_norm_eq_one
 
 end Bounded

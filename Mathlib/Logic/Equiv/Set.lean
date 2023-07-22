@@ -2,14 +2,11 @@
 Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Mario Carneiro
-
-! This file was ported from Lean 3 source module logic.equiv.set
-! leanprover-community/mathlib commit aba57d4d3dae35460225919dcd82fe91355162f9
-! Please do not edit these lines, except to modify the commit id
-! if you have ported upstream changes.
 -/
 import Mathlib.Data.Set.Function
 import Mathlib.Logic.Equiv.Defs
+
+#align_import logic.equiv.set from "leanprover-community/mathlib"@"aba57d4d3dae35460225919dcd82fe91355162f9"
 
 /-!
 # Equivalences and sets
@@ -668,8 +665,8 @@ theorem preimage_piEquivPiSubtypeProd_symm_pi {α : Type _} {β : α → Type _}
   -- Porting note: Two lines below were `by_cases hi <;> simp [hi]`
   -- This regression is https://github.com/leanprover/lean4/issues/1926
   by_cases hi : p i
-  . simp [forall_prop_of_true hi, forall_prop_of_false (not_not.2 hi), hi]
-  . simp [forall_prop_of_false hi, hi, forall_prop_of_true hi]
+  · simp [forall_prop_of_true hi, forall_prop_of_false (not_not.2 hi), hi]
+  · simp [forall_prop_of_false hi, hi, forall_prop_of_true hi]
 #align equiv.preimage_pi_equiv_pi_subtype_prod_symm_pi Equiv.preimage_piEquivPiSubtypeProd_symm_pi
 
 -- See also `Equiv.sigmaFiberEquiv`.
