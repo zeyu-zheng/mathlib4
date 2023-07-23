@@ -79,7 +79,7 @@ theorem MonovaryOn.sum_smul_comp_perm_le_sum_smul (hfg : MonovaryOn f g s)
         · exact mem_of_mem_insert_of_ne (hσ fun h ↦ hax <| h.symm.trans h₁) hax
       · exact (hx <| σ.injective h₂.symm).elim
       · exact mem_of_mem_insert_of_ne (hσ hx) (ne_of_apply_ne _ h₂)
-    specialize hind (hfg.subset <| subset_insert _ _) hτs
+    specialize hind (hfg.subset <| coe_subset.2 <| subset_insert _ _) hτs
     simp_rw [sum_insert has]
     refine' le_trans _ (add_le_add_left hind _)
     obtain hσa | hσa := eq_or_ne a (σ a)

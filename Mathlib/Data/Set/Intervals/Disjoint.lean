@@ -37,12 +37,12 @@ theorem Iic_disjoint_Ioi (h : a ≤ b) : Disjoint (Iic a) (Ioi b) :=
 
 @[simp]
 theorem Iic_disjoint_Ioc (h : a ≤ b) : Disjoint (Iic a) (Ioc b c) :=
-  (Iic_disjoint_Ioi h).mono le_rfl fun _ => And.left
+  (Iic_disjoint_Ioi h).mono le_rfl Ioc_subset_Ioi_self
 #align set.Iic_disjoint_Ioc Set.Iic_disjoint_Ioc
 
 @[simp]
 theorem Ioc_disjoint_Ioc_same {a b c : α} : Disjoint (Ioc a b) (Ioc b c) :=
-  (Iic_disjoint_Ioc (le_refl b)).mono (fun _ => And.right) le_rfl
+  (Iic_disjoint_Ioc le_rfl).mono Ioc_subset_Iic_self le_rfl
 #align set.Ioc_disjoint_Ioc_same Set.Ioc_disjoint_Ioc_same
 
 @[simp]

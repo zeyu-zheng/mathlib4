@@ -353,7 +353,7 @@ is preserved under multiplication, then `p` holds for all elements of the closur
   elements of the additive closure of `s`."]
 theorem closure_induction {p : M → Prop} {x} (h : x ∈ closure s) (Hs : ∀ x ∈ s, p x)
     (Hmul : ∀ x y, p x → p y → p (x * y)) : p x :=
-  (@closure_le _ _ _ ⟨p, Hmul _ _⟩).2 Hs h
+  (@closure_le _ _ _ ⟨⟨p⟩, Hmul _ _⟩).2 Hs h
 #align subsemigroup.closure_induction Subsemigroup.closure_induction
 #align add_subsemigroup.closure_induction AddSubsemigroup.closure_induction
 

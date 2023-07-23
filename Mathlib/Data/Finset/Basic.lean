@@ -422,21 +422,21 @@ theorem ssubset_iff_subset_ne {s t : Finset α} : s ⊂ t ↔ s ⊆ t ∧ s ≠ 
 #align finset.ssubset_iff_subset_ne Finset.ssubset_iff_subset_ne
 
 theorem ssubset_iff_of_subset {s₁ s₂ : Finset α} (h : s₁ ⊆ s₂) : s₁ ⊂ s₂ ↔ ∃ x ∈ s₂, x ∉ s₁ :=
-  Set.ssubset_iff_of_subset h
+  coe_ssubset.symm.trans <| Set.ssubset_iff_of_subset (coe_subset.2 h)
 #align finset.ssubset_iff_of_subset Finset.ssubset_iff_of_subset
 
 theorem ssubset_of_ssubset_of_subset {s₁ s₂ s₃ : Finset α} (hs₁s₂ : s₁ ⊂ s₂) (hs₂s₃ : s₂ ⊆ s₃) :
     s₁ ⊂ s₃ :=
-  Set.ssubset_of_ssubset_of_subset hs₁s₂ hs₂s₃
+  lt_of_lt_of_le hs₁s₂ hs₂s₃
 #align finset.ssubset_of_ssubset_of_subset Finset.ssubset_of_ssubset_of_subset
 
 theorem ssubset_of_subset_of_ssubset {s₁ s₂ s₃ : Finset α} (hs₁s₂ : s₁ ⊆ s₂) (hs₂s₃ : s₂ ⊂ s₃) :
     s₁ ⊂ s₃ :=
-  Set.ssubset_of_subset_of_ssubset hs₁s₂ hs₂s₃
+  lt_of_le_of_lt hs₁s₂ hs₂s₃
 #align finset.ssubset_of_subset_of_ssubset Finset.ssubset_of_subset_of_ssubset
 
 theorem exists_of_ssubset {s₁ s₂ : Finset α} (h : s₁ ⊂ s₂) : ∃ x ∈ s₂, x ∉ s₁ :=
-  Set.exists_of_ssubset h
+  Set.exists_of_ssubset (coe_ssubset.2 h)
 #align finset.exists_of_ssubset Finset.exists_of_ssubset
 
 instance isWellFounded_ssubset : IsWellFounded (Finset α) (· ⊂ ·) :=
@@ -505,7 +505,7 @@ theorem Nonempty.bex {s : Finset α} (h : s.Nonempty) : ∃ x : α, x ∈ s :=
 #align finset.nonempty.bex Finset.Nonempty.bex
 
 theorem Nonempty.mono {s t : Finset α} (hst : s ⊆ t) (hs : s.Nonempty) : t.Nonempty :=
-  Set.Nonempty.mono hst hs
+  coe_nonempty.1 <| hs.to_set.mono hst
 #align finset.nonempty.mono Finset.Nonempty.mono
 
 theorem Nonempty.forall_const {s : Finset α} (h : s.Nonempty) {p : Prop} : (∀ x ∈ s, p) ↔ p :=
@@ -770,7 +770,7 @@ theorem singleton_subset_set_iff {s : Set α} {a : α} : ↑({a} : Finset α) �
 
 @[simp]
 theorem singleton_subset_iff {s : Finset α} {a : α} : {a} ⊆ s ↔ a ∈ s :=
-  singleton_subset_set_iff
+  singleton_subset_set_iff (s := s.toSet)
 #align finset.singleton_subset_iff Finset.singleton_subset_iff
 
 @[simp]
@@ -1541,18 +1541,13 @@ theorem induction_on_union (P : Finset α → Finset α → Prop) (symm : ∀ {a
 theorem _root_.Directed.exists_mem_subset_of_finset_subset_biUnion {α ι : Type _} [hn : Nonempty ι]
     {f : ι → Set α} (h : Directed (· ⊆ ·) f) {s : Finset α} (hs : (s : Set α) ⊆ ⋃ i, f i) :
     ∃ i, (s : Set α) ⊆ f i := by
-  classical
-    revert hs
-    refine' s.induction_on _ _
-    · refine' fun _ => ⟨hn.some, _⟩
-      simp only [coe_empty, Set.empty_subset]
-    · intro b t _hbt htc hbtc
-      obtain ⟨i : ι, hti : (t : Set α) ⊆ f i⟩ := htc (Set.Subset.trans (t.subset_insert b) hbtc)
-      obtain ⟨j, hbj⟩ : ∃ j, b ∈ f j := by simpa [Set.mem_iUnion₂] using hbtc (t.mem_insert_self b)
-      rcases h j i with ⟨k, hk, hk'⟩
-      use k
-      rw [coe_insert, Set.insert_subset_iff]
-      exact ⟨hk hbj, _root_.trans hti hk'⟩
+  induction s using Finset.cons_induction_on with
+  | h₁ => exact ⟨hn.some, by simp only [coe_empty, Set.empty_subset]⟩
+  | h₂ hbt iht =>
+    simp only [coe_cons, Set.insert_subset_iff, Set.mem_iUnion] at hs ⊢
+    rcases hs.imp_right iht with ⟨⟨i, hi⟩, j, hj⟩
+    rcases h i j with ⟨k, hik, hjk⟩
+    exact ⟨k, hik hi, hj.trans hjk⟩
 #align directed.exists_mem_subset_of_finset_subset_bUnion Directed.exists_mem_subset_of_finset_subset_biUnion
 
 theorem _root_.DirectedOn.exists_mem_subset_of_finset_subset_biUnion {α ι : Type _} {f : ι → Set α}
@@ -2469,8 +2464,7 @@ variable [∀ j, Decidable (j ∈ s)]
 @[norm_cast move]
 theorem piecewise_coe [∀ j, Decidable (j ∈ (s : Set α))] :
     (s : Set α).piecewise f g = s.piecewise f g := by
-  ext
-  congr
+  simp only [piecewise, Set.piecewise, mem_coe]
 #align finset.piecewise_coe Finset.piecewise_coe
 
 @[simp]
@@ -2678,7 +2672,7 @@ theorem mem_of_mem_filter {s : Finset α} (x : α) (h : x ∈ s.filter p) : x �
 
 theorem filter_ssubset {s : Finset α} : s.filter p ⊂ s ↔ ∃ x ∈ s, ¬p x :=
   ⟨fun h =>
-    let ⟨x, hs, hp⟩ := Set.exists_of_ssubset h
+    let ⟨x, hs, hp⟩ := exists_of_ssubset h
     ⟨x, hs, mt (fun hp => mem_filter.2 ⟨hs, hp⟩) hp⟩,
     fun ⟨_, hs, hp⟩ => ⟨s.filter_subset _, fun h => hp (mem_filter.1 (h hs)).2⟩⟩
 #align finset.filter_ssubset Finset.filter_ssubset

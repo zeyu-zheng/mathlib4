@@ -72,9 +72,9 @@ reflection of `A`, with the isomorphism as `η_A`.
 -/
 theorem Functor.essImage.unit_isIso [Reflective i] {A : C} (h : A ∈ i.essImage) :
     IsIso ((ofRightAdjoint i).unit.app A) := by
-  suffices (ofRightAdjoint i).unit.app A = h.getIso.inv ≫
+  suffices (ofRightAdjoint i).unit.app A = (Functor.essImage.getIso h).inv ≫
       (ofRightAdjoint i).unit.app (i.obj (Functor.essImage.witness h)) ≫
-      (leftAdjoint i ⋙ i).map h.getIso.hom by
+      (leftAdjoint i ⋙ i).map (Functor.essImage.getIso h).hom by
     rw [this]
     infer_instance
   rw [← NatTrans.naturality]
@@ -134,7 +134,8 @@ that `η.app A` is an isomorphism.
 def unitCompPartialBijective [Reflective i] (A : C) {B : C} (hB : B ∈ i.essImage) :
     (A ⟶ B) ≃ (i.obj ((leftAdjoint i).obj A) ⟶ B) :=
   calc
-    (A ⟶ B) ≃ (A ⟶ i.obj (Functor.essImage.witness hB)) := Iso.homCongr (Iso.refl _) hB.getIso.symm
+    (A ⟶ B) ≃ (A ⟶ i.obj (Functor.essImage.witness hB)) :=
+      (Iso.refl _).homCongr (Functor.essImage.getIso hB).symm
     _ ≃ (i.obj _ ⟶ i.obj (Functor.essImage.witness hB)) := unitCompPartialBijectiveAux _ _
     _ ≃ (i.obj ((leftAdjoint i).obj A) ⟶ B) :=
       Iso.homCongr (Iso.refl _) (Functor.essImage.getIso hB)

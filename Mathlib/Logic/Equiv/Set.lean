@@ -174,7 +174,7 @@ def setProdEquivSigma {α β : Type _} (s : Set (α × β)) :
 /-- The subtypes corresponding to equal sets are equivalent. -/
 @[simps! apply]
 def setCongr {α : Type _} {s t : Set α} (h : s = t) : s ≃ t :=
-  subtypeEquivProp h
+  subtypeEquivProp <| congr_arg Set.Mem h
 #align equiv.set_congr Equiv.setCongr
 #align equiv.set_congr_apply Equiv.setCongr_apply
 
@@ -197,7 +197,6 @@ def image {α β : Type _} (e : α ≃ β) (s : Set α) :
 #align equiv.image_apply_coe Equiv.image_apply_coe
 
 namespace Set
-
 
 --Porting note: Removed attribute @[simps apply symm_apply]
 /-- `univ α` is equivalent to `α`. -/

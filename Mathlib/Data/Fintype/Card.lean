@@ -722,7 +722,7 @@ end Equiv
 
 @[simp]
 theorem Fintype.card_coe (s : Finset α) [Fintype s] : Fintype.card s = s.card :=
-  @Fintype.card_of_finset' _ _ _ (fun _ => Iff.rfl) (id _)
+  @Fintype.card_of_finset' _ s s (fun _ => Iff.rfl) (id _)
 #align fintype.card_coe Fintype.card_coe
 
 /-- Noncomputable equivalence between a finset `s` coerced to a type and `Fin s.card`. -/
@@ -847,8 +847,8 @@ theorem Fintype.card_subtype_compl [Fintype α] (p : α → Prop) [Fintype { x /
     [Fintype { x // ¬p x }] :
     Fintype.card { x // ¬p x } = Fintype.card α - Fintype.card { x // p x } := by
   classical
-    rw [Fintype.card_of_subtype (Set.toFinset pᶜ), Set.toFinset_compl p,
-      Finset.card_compl, Fintype.card_of_subtype (Set.toFinset p)] <;>
+    rw [Fintype.card_of_subtype (Set.toFinset {x | p x}ᶜ), Set.toFinset_compl,
+      Finset.card_compl, Fintype.card_of_subtype] <;>
     · intro
       simp only [Set.mem_toFinset, Set.mem_compl_iff]
       rfl

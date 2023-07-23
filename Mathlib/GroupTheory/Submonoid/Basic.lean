@@ -173,20 +173,19 @@ theorem mem_carrier {s : Submonoid M} {x : M} : x ∈ s.carrier ↔ x ∈ s :=
 #align add_submonoid.mem_carrier AddSubmonoid.mem_carrier
 
 @[to_additive (attr := simp)]
-theorem mem_mk {s : Set M} {x : M} (h_one) (h_mul) : x ∈ mk ⟨s, h_mul⟩ h_one ↔ x ∈ s :=
+theorem mem_mk {s : Subsemigroup M} {x : M} (h_one) : x ∈ mk s h_one ↔ x ∈ s :=
   Iff.rfl
 #align submonoid.mem_mk Submonoid.mem_mk
 #align add_submonoid.mem_mk AddSubmonoid.mem_mk
 
 @[to_additive (attr := simp)]
-theorem coe_set_mk {s : Set M} (h_one) (h_mul) : (mk ⟨s, h_mul⟩ h_one : Set M) = s :=
+theorem coe_set_mk {s : Subsemigroup M} (h_one) : (mk s h_one : Set M) = s :=
   rfl
 #align submonoid.coe_set_mk Submonoid.coe_set_mk
 #align add_submonoid.coe_set_mk AddSubmonoid.coe_set_mk
 
 @[to_additive (attr := simp)]
-theorem mk_le_mk {s t : Set M} (h_one) (h_mul) (h_one') (h_mul') :
-    mk ⟨s, h_mul⟩ h_one ≤ mk ⟨t, h_mul'⟩ h_one' ↔ s ⊆ t :=
+theorem mk_le_mk {s t : Subsemigroup M} (h_one) (h_one') : mk s h_one ≤ mk t h_one' ↔ s ≤ t :=
   Iff.rfl
 #align submonoid.mk_le_mk Submonoid.mk_le_mk
 #align add_submonoid.mk_le_mk AddSubmonoid.mk_le_mk
@@ -444,7 +443,7 @@ is preserved under multiplication, then `p` holds for all elements of the closur
       additive closure of `s`."]
 theorem closure_induction {p : M → Prop} {x} (h : x ∈ closure s) (Hs : ∀ x ∈ s, p x) (H1 : p 1)
     (Hmul : ∀ x y, p x → p y → p (x * y)) : p x :=
-  (@closure_le _ _ _ ⟨⟨p, Hmul _ _⟩, H1⟩).2 Hs h
+  (@closure_le _ _ _ ⟨⟨⟨p⟩, Hmul _ _⟩, H1⟩).2 Hs h
 #align submonoid.closure_induction Submonoid.closure_induction
 #align add_submonoid.closure_induction AddSubmonoid.closure_induction
 

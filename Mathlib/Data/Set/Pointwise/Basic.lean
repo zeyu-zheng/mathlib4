@@ -84,6 +84,9 @@ protected noncomputable def one : One (Set α) :=
 #align set.has_one Set.one
 #align set.has_zero Set.zero
 
+compile_def% Set.one
+compile_def% Set.zero
+
 scoped[Pointwise] attribute [instance] Set.one Set.zero
 
 open Pointwise

@@ -89,8 +89,7 @@ theorem pimage_congr (h₁ : s = t) (h₂ : ∀ x ∈ t, f x = g x) : s.pimage f
 /-- Rewrite `s.pimage f` in terms of `Finset.filter`, `Finset.attach`, and `Finset.image`. -/
 theorem pimage_eq_image_filter : s.pimage f =
     (filter (fun x => (f x).Dom) s).attach.image
-      fun x : { x // x ∈ filter (fun x => (f x).Dom) s } =>
-        (f x).get (mem_filter.mp x.coe_prop).2 := by
+      fun x : { x // x ∈ filter (fun x => (f x).Dom) s } => (f x).get (mem_filter.mp x.2).2 := by
   ext x
   simp [Part.mem_eq, And.exists]
   -- Porting note: `←exists_prop` required because `∃ x ∈ s, p x` is defined differently

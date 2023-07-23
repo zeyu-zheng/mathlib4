@@ -114,7 +114,7 @@ open Nat
 -/
 @[simp, norm_cast]
 theorem coe_inj {m n : ℕ+} : (m : ℕ) = n ↔ m = n :=
-  SetCoe.ext_iff
+  Subtype.ext_iff.symm
 #align pnat.coe_inj PNat.coe_inj
 
 @[simp, norm_cast]

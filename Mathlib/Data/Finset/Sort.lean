@@ -145,7 +145,8 @@ the cardinality of `s` is `k`. We use this instead of an iso `Fin s.card ≃o s`
 casting issues in further uses of this function. -/
 def orderIsoOfFin (s : Finset α) {k : ℕ} (h : s.card = k) : Fin k ≃o s :=
   OrderIso.trans (Fin.castIso ((length_sort (α := α) (· ≤ ·)).trans h).symm) <|
-    (s.sort_sorted_lt.getIso _).trans <| OrderIso.setCongr _ _ <| Set.ext fun _ => mem_sort _
+    (s.sort_sorted_lt.getIso _).trans <|
+      OrderIso.setCongr {x | x ∈ sort (· ≤ ·) s} s <| Set.ext fun _ => mem_sort _
 #align finset.order_iso_of_fin Finset.orderIsoOfFin
 
 /-- Given a finset `s` of cardinality `k` in a linear order `α`, the map `orderEmbOfFin s h` is

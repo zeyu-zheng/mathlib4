@@ -344,6 +344,8 @@ def MapsTo (f : α → β) (s : Set α) (t : Set β) : Prop :=
   ∀ ⦃x⦄, x ∈ s → f x ∈ t
 #align set.maps_to Set.MapsTo
 
+theorem mapsTo_iff_subset : MapsTo f s t ↔ s ⊆ f ⁻¹' t := Iff.rfl
+
 /-- Given a map `f` sending `s : Set α` into `t : Set β`, restrict domain of `f` to `s`
 and the codomain to `t`. Same as `Subtype.map`. -/
 def MapsTo.restrict (f : α → β) (s : Set α) (t : Set β) (h : MapsTo f s t) : s → t :=
@@ -393,7 +395,7 @@ theorem mapsTo' : MapsTo f s t ↔ f '' s ⊆ t :=
 #align set.maps_to' Set.mapsTo'
 
 theorem mapsTo_prod_map_diagonal : MapsTo (Prod.map f f) (diagonal α) (diagonal β) :=
-  diagonal_subset_iff.2 <| fun _ => rfl
+  mapsTo_iff_subset.2 <| diagonal_subset_iff.2 <| fun _ => rfl
 #align set.maps_to_prod_map_diagonal Set.mapsTo_prod_map_diagonal
 
 theorem MapsTo.subset_preimage {f : α → β} {s : Set α} {t : Set β} (hf : MapsTo f s t) :
@@ -403,11 +405,11 @@ theorem MapsTo.subset_preimage {f : α → β} {s : Set α} {t : Set β} (hf : M
 
 @[simp]
 theorem mapsTo_singleton {x : α} : MapsTo f {x} t ↔ f x ∈ t :=
-  singleton_subset_iff
+  mapsTo_iff_subset.trans singleton_subset_iff
 #align set.maps_to_singleton Set.mapsTo_singleton
 
 theorem mapsTo_empty (f : α → β) (t : Set β) : MapsTo f ∅ t :=
-  empty_subset _
+  empty_subset (f ⁻¹' t)
 #align set.maps_to_empty Set.mapsTo_empty
 
 theorem MapsTo.image_subset (h : MapsTo f s t) : f '' s ⊆ t :=

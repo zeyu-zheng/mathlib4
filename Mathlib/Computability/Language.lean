@@ -31,7 +31,7 @@ def Language (α) :=
   Set (List α)
 #align language Language
 
-instance : Membership (List α) (Language α) := ⟨Set.Mem⟩
+instance : Membership (List α) (Language α) := inferInstanceAs (Membership (List α) (Set (List α)))
 instance : Singleton (List α) (Language α) := ⟨Set.singleton⟩
 instance : Insert (List α) (Language α) := ⟨Set.insert⟩
 instance : CompleteAtomicBooleanAlgebra (Language α) := Set.completeAtomicBooleanAlgebra
@@ -45,14 +45,13 @@ variable {l m : Language α} {a b x : List α}
 
 /-- Zero language has no elements. -/
 instance : Zero (Language α) :=
-  ⟨fun _ => False⟩
+  ⟨(∅ : Set _)⟩
 
 /-- `1 : Language α` contains only one element `[]`. -/
 instance : One (Language α) :=
-  ⟨fun l => l = []⟩
+  ⟨{[]}⟩
 
-instance : Inhabited (Language α) :=
-  ⟨fun _ => False⟩
+instance : Inhabited (Language α) := ⟨0⟩
 
 /-- The sum of two languages is their union. -/
 instance : Add (Language α) :=

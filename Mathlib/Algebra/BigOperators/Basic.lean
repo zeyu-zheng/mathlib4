@@ -918,7 +918,7 @@ variable {f s}
 @[to_additive]
 theorem prod_subtype {p : α → Prop} {F : Fintype (Subtype p)} (s : Finset α) (h : ∀ x, x ∈ s ↔ p x)
     (f : α → β) : ∏ a in s, f a = ∏ a : Subtype p, f a := by
-  have : (· ∈ s) = p := Set.ext h
+  have : (· ∈ s) = p := funext <| fun _ ↦ propext (h _)
   subst p
   rw [← prod_coe_sort]
   congr!

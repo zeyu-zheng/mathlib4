@@ -85,7 +85,7 @@ theorem Finset.exists_equiv_extend_of_card_eq [Fintype α] [DecidableEq β] {t :
       use e
       simp
     have hfst' : Finset.image f s ⊆ t := (Finset.image_mono _ (s.subset_insert a)).trans hfst
-    have hfs' : Set.InjOn f s := hfs.mono (s.subset_insert a)
+    have hfs' : Set.InjOn f s := hfs.mono (coe_subset.2 <| s.subset_insert a)
     obtain ⟨g', hg'⟩ := H hfst' hfs'
     have hfat : f a ∈ t := hfst (mem_image_of_mem _ (s.mem_insert_self a))
     use g'.trans (Equiv.swap (⟨f a, hfat⟩ : t) (g' a))

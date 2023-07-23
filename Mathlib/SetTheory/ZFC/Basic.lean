@@ -376,7 +376,7 @@ theorem nonempty_of_nonempty_type (x : PSet) [h : Nonempty x.Type] : PSet.Nonemp
 
 /-- Two pre-sets are equivalent iff they have the same members. -/
 theorem Equiv.eq {x y : PSet} : Equiv x y ↔ toSet x = toSet y :=
-  equiv_iff_mem.trans Set.ext_iff.symm
+  equiv_iff_mem.trans <| Iff.symm Set.ext_iff
 #align pSet.equiv.eq PSet.Equiv.eq
 
 instance : Coe PSet (Set PSet) :=
@@ -1445,40 +1445,41 @@ We define `Class` as `Set ZFSet`, as this allows us to get many instances automa
 practice, we treat it as (the definitionally equal) `ZFSet → Prop`. This means, the preferred way to
 state that `x : ZFSet` belongs to `A : Class` is to write `A x`. -/
 def Class :=
-  Set ZFSet deriving HasSubset, EmptyCollection, Nonempty, Union, Inter, HasCompl, SDiff
+  ZFSet → Prop deriving Nonempty, BooleanAlgebra
 #align Class Class
 
-instance : Insert ZFSet Class :=
-  ⟨Set.insert⟩
+instance : HasSubset Class := ⟨fun A B ↦ ∀ ⦃x⦄, A x → B x⟩
+instance : EmptyCollection Class := ⟨fun _ ↦ False⟩
+instance : Union Class := ⟨(· ⊔ ·)⟩
+instance : Inter Class := ⟨(· ⊓ ·)⟩
+
+instance : Insert ZFSet Class := ⟨fun S A T ↦ T = S ∨ A T⟩
 
 namespace Class
 
 -- Porting note: this is no longer an automatically derived instance.
 /-- `{x ∈ A | p x}` is the class of elements in `A` satisfying `p` -/
-protected def sep (p : Class → Prop) (A : Class) : Class :=
-  {y | A y ∧ p A}
+protected def sep (p : ZFSet → Prop) (A : Class) : Class := fun y ↦ A y ∧ p y
 
 @[ext]
-theorem ext {x y : Class.{u}} : (∀ z : ZFSet.{u}, x z ↔ y z) → x = y :=
-  Set.ext
+theorem ext {x y : Class.{u}} (h : ∀ z : ZFSet.{u}, x z ↔ y z) : x = y :=
+  funext fun _ ↦ propext (h _)
 #align Class.ext Class.ext
 
 theorem ext_iff {x y : Class.{u}} : x = y ↔ ∀ z, x z ↔ y z :=
-  Set.ext_iff
+  ⟨fun h _ ↦ h ▸ Iff.rfl, ext⟩
 #align Class.ext_iff Class.ext_iff
 
 /-- Coerce a ZFC set into a class -/
 @[coe]
-def ofSet (x : ZFSet.{u}) : Class.{u} :=
-  { y | y ∈ x }
+def ofSet (x : ZFSet.{u}) : Class.{u} := (· ∈ x)
 #align Class.of_Set Class.ofSet
 
 instance : Coe ZFSet Class :=
   ⟨ofSet⟩
 
 /-- The universal class -/
-def univ : Class :=
-  Set.univ
+def univ : Class := ⊤
 #align Class.univ Class.univ
 
 /-- Assert that `A` is a ZFC set satisfying `B` -/

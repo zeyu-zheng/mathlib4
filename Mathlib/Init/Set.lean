@@ -33,13 +33,14 @@ This file is a port of the core Lean 3 file `lib/lean/library/init/data/set.lean
 
 -/
 
-structure Set (α : Type u) : Type u where setOf ::
+structure Set (α : Type u) : Type u where
   /-- Membership in a set -/
   protected Mem : α → Prop
 #align set Set
-#align set_of Set.setOf
 
-export Set (setOf)
+/-- Set of elements satisfying a given predicate. -/
+def setOf (p : α → Prop) : Set α := ⟨p⟩
+#align set_of setOf
 
 namespace Set
 
@@ -50,6 +51,8 @@ instance : Membership α (Set α) where
 
 instance : CoeFun (Set α) fun _ ↦ α → Prop where
   coe s x := x ∈ s
+
+@[simp] theorem Mem_eq_mem (s : Set α) : s.Mem = (· ∈ s) := rfl
 
 theorem ext {a b : Set α} (h : ∀ (x : α), x ∈ a ↔ x ∈ b) : a = b := by
   cases a; cases b; congr; exact funext fun _ ↦ propext (h _)
@@ -122,6 +125,21 @@ def image (f : α → β) (s : Set α) : Set β := {f a | a ∈ s}
 /-- `f '' s` denotes the image of `s : Set α` under the function `f : α → β`. -/
 infixl:80 " '' " => image
 
+theorem image_id (s : Set α) : id '' s = s :=
+  ext fun _ ↦ ⟨λ ⟨_, sb, rfl⟩ => sb, λ sb => ⟨_, sb, rfl⟩⟩
+#align set.image_id Set.image_id
+
+theorem image_comp (f : β → γ) (g : α → β) (s : Set α) : (f ∘ g) '' s = f '' (g '' s) :=
+  ext fun c =>
+    ⟨fun ⟨a, ⟨h₁, h₂⟩⟩ => ⟨g a, ⟨⟨a, ⟨h₁, rfl⟩⟩, h₂⟩⟩,
+     fun ⟨_, ⟨⟨a, ⟨h₁, h₂⟩⟩, h₃⟩⟩ => ⟨a, ⟨h₁, show f (g a) = c from h₂ ▸ h₃⟩⟩⟩
+#align set.image_comp Set.image_comp
+
 instance : Functor Set where map := @Set.image
+
+instance : LawfulFunctor Set where
+  id_map := image_id
+  comp_map _ _ := image_comp _ _
+  map_const := rfl
 
 end Set

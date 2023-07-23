@@ -183,6 +183,7 @@ theorem preimage_subtype_coe_eq_compl {α : Type _} {s u v : Set α} (hsuv : s �
   · intro x_in_u x_in_v
     exact eq_empty_iff_forall_not_mem.mp H x ⟨x_in_s, ⟨x_in_u, x_in_v⟩⟩
   · intro hx
+
     exact Or.elim (hsuv x_in_s) id fun hx' => hx.elim hx'
 #align set.preimage_subtype_coe_eq_compl Set.preimage_subtype_coe_eq_compl
 
@@ -197,9 +198,6 @@ variable {f : α → β} {s t : Set α}
 
 -- Porting note: `Set.image` is already defined in `Init.Set`
 #align set.image Set.image
-
-/-- `f '' s` denotes the image of `s : Set α` under the function `f : α → β`. -/
-infixl:80 " '' " => image
 
 theorem mem_image_iff_bex {f : α → β} {s : Set α} {y : β} :
     y ∈ f '' s ↔ ∃ (x : _) (_ : x ∈ s), f x = y :=
@@ -268,11 +266,6 @@ theorem image_congr {f g : α → β} {s : Set α} (h : ∀ a ∈ s, f a = g a) 
 theorem image_congr' {f g : α → β} {s : Set α} (h : ∀ x : α, f x = g x) : f '' s = g '' s :=
   image_congr fun x _ => h x
 #align set.image_congr' Set.image_congr'
-
-theorem image_comp (f : β → γ) (g : α → β) (a : Set α) : f ∘ g '' a = f '' (g '' a) :=
-  Subset.antisymm (ball_image_of_ball fun _ ha => mem_image_of_mem _ <| mem_image_of_mem _ ha)
-    (ball_image_of_ball <| ball_image_of_ball fun _ ha => mem_image_of_mem _ ha)
-#align set.image_comp Set.image_comp
 
 /-- A variant of `image_comp`, useful for rewriting -/
 theorem image_image (g : β → γ) (f : α → β) (s : Set α) : g '' (f '' s) = (fun x => g (f x)) '' s :=
@@ -372,13 +365,8 @@ theorem mem_compl_image [BooleanAlgebra α] (t : α) (S : Set α) :
 
 /-- A variant of `image_id` -/
 @[simp]
-theorem image_id' (s : Set α) : (fun x => x) '' s = s := by
-  ext
-  simp
+theorem image_id' (s : Set α) : (fun x => x) '' s = s := image_id s
 #align set.image_id' Set.image_id'
-
-theorem image_id (s : Set α) : id '' s = s := by simp
-#align set.image_id Set.image_id
 
 theorem compl_compl_image [BooleanAlgebra α] (S : Set α) :
   HasCompl.compl '' (HasCompl.compl '' S) = S := by
@@ -440,7 +428,7 @@ theorem subset_image_symm_diff : (f '' s) ∆ (f '' t) ⊆ f '' s ∆ t :=
 
 theorem image_diff {f : α → β} (hf : Injective f) (s t : Set α) : f '' (s \ t) = f '' s \ f '' t :=
   Subset.antisymm
-    (Subset.trans (image_inter_subset _ _ _) <| inter_subset_inter_right _ <| image_compl_subset hf)
+    ((image_inter_subset _ _ tᶜ).trans <| inter_subset_inter_right _ <| image_compl_subset hf)
     (subset_image_diff f s t)
 #align set.image_diff Set.image_diff
 
@@ -507,7 +495,6 @@ theorem image_inter_preimage (f : α → β) (s : Set α) (t : Set β) :
   · calc
       f '' (s ∩ f ⁻¹' t) ⊆ f '' s ∩ f '' (f ⁻¹' t) := image_inter_subset _ _ _
       _ ⊆ f '' s ∩ t := inter_subset_inter_right _ (image_preimage_subset f t)
-
   · rintro _ ⟨⟨x, h', rfl⟩, h⟩
     exact ⟨x, ⟨h', h⟩, rfl⟩
 #align set.image_inter_preimage Set.image_inter_preimage
@@ -531,7 +518,7 @@ theorem compl_image : image (compl : Set α → Set α) = preimage compl :=
 #align set.compl_image Set.compl_image
 
 theorem compl_image_set_of {p : Set α → Prop} : compl '' { s | p s } = { s | p sᶜ } :=
-  congr_fun compl_image p
+  congr_fun compl_image _
 #align set.compl_image_set_of Set.compl_image_set_of
 
 theorem inter_preimage_subset (s : Set α) (t : Set β) (f : α → β) :

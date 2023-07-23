@@ -1078,7 +1078,7 @@ theorem eventually_mem_set {s : Set α} {l : Filter α} : (∀ᶠ x in l, x ∈ 
 
 protected theorem ext' {f₁ f₂ : Filter α}
     (h : ∀ p : α → Prop, (∀ᶠ x in f₁, p x) ↔ ∀ᶠ x in f₂, p x) : f₁ = f₂ :=
-  Filter.ext h
+  Filter.ext <| Set.forall.2 h
 #align filter.ext' Filter.ext'
 
 theorem Eventually.filter_mono {f₁ f₂ : Filter α} (h : f₁ ≤ f₂) {p : α → Prop}
@@ -1309,7 +1309,7 @@ theorem frequently_iff_forall_eventually_exists_and {p : α → Prop} {f : Filte
 
 theorem frequently_iff {f : Filter α} {P : α → Prop} :
     (∃ᶠ x in f, P x) ↔ ∀ {U}, U ∈ f → ∃ x ∈ U, P x := by
-  simp only [frequently_iff_forall_eventually_exists_and, exists_prop, @and_comm (P _)]
+  simp only [frequently_iff_forall_eventually_exists_and, exists_prop, @and_comm (P _), Set.forall]
   rfl
 #align filter.frequently_iff Filter.frequently_iff
 
@@ -1444,7 +1444,7 @@ theorem EventuallyEq.rw {l : Filter α} {f g : α → β} (h : f =ᶠ[l] g) (p :
 #align filter.eventually_eq.rw Filter.EventuallyEq.rw
 
 theorem eventuallyEq_set {s t : Set α} {l : Filter α} : s =ᶠ[l] t ↔ ∀ᶠ x in l, x ∈ s ↔ x ∈ t :=
-  eventually_congr <| eventually_of_forall fun _ => ⟨Eq.to_iff, Iff.to_eq⟩
+  eventually_congr <| eventually_of_forall fun _ => eq_iff_iff
 #align filter.eventually_eq_set Filter.eventuallyEq_set
 
 alias eventuallyEq_set ↔ EventuallyEq.mem_iff Eventually.set_eq
@@ -1453,7 +1453,7 @@ alias eventuallyEq_set ↔ EventuallyEq.mem_iff Eventually.set_eq
 
 @[simp]
 theorem eventuallyEq_univ {s : Set α} {l : Filter α} : s =ᶠ[l] univ ↔ s ∈ l := by
-  simp [eventuallyEq_set]
+  simp [EventuallyEq]
 #align filter.eventually_eq_univ Filter.eventuallyEq_univ
 
 theorem EventuallyEq.exists_mem {l : Filter α} {f g : α → β} (h : f =ᶠ[l] g) :
@@ -1594,7 +1594,7 @@ theorem eventuallyEq_empty {s : Set α} {l : Filter α} : s =ᶠ[l] (∅ : Set �
 
 theorem inter_eventuallyEq_left {s t : Set α} {l : Filter α} :
     (s ∩ t : Set α) =ᶠ[l] s ↔ ∀ᶠ x in l, x ∈ s → x ∈ t := by
-  simp only [eventuallyEq_set, mem_inter_iff, and_iff_left_iff_imp]
+  simp only [EventuallyEq, eq_iff_iff, mem_inter_iff, and_iff_left_iff_imp]
 #align filter.inter_eventually_eq_left Filter.inter_eventuallyEq_left
 
 theorem inter_eventuallyEq_right {s t : Set α} {l : Filter α} :
@@ -2849,7 +2849,7 @@ theorem tendsto_def {f : α → β} {l₁ : Filter α} {l₂ : Filter β} :
 
 theorem tendsto_iff_eventually {f : α → β} {l₁ : Filter α} {l₂ : Filter β} :
     Tendsto f l₁ l₂ ↔ ∀ ⦃p : β → Prop⦄, (∀ᶠ y in l₂, p y) → ∀ᶠ x in l₁, p (f x) :=
-  Iff.rfl
+  Set.forall
 #align filter.tendsto_iff_eventually Filter.tendsto_iff_eventually
 
 theorem Tendsto.eventually {f : α → β} {l₁ : Filter α} {l₂ : Filter β} {p : β → Prop}

@@ -63,6 +63,7 @@ set, sets, subset, subsets, union, intersection, insert, singleton, complement, 
 -/
 
 -- https://github.com/leanprover/lean4/issues/2096
+compile_inductive% Set
 compile_def% Union.union
 compile_def% Inter.inter
 compile_def% SDiff.sdiff
@@ -91,6 +92,12 @@ def equivPred : Set α ≃ (α → Prop) where
 
 theorem mem_injective : Function.Injective (fun s : Set α ↦ (· ∈ s)) := equivPred.injective
 
+protected theorem «forall» {p : Set α → Prop} : (∀ s, p s) ↔ ∀ q : α → Prop, p {x | q x} :=
+  equivPred.symm.surjective.forall
+
+protected theorem «exists» {p : Set α → Prop} : (∃ s, p s) ↔ ∃ q : α → Prop, p {x | q x} :=
+  equivPred.symm.surjective.exists
+
 instance : Sup (Set α) := ⟨(· ∪ ·)⟩
 instance : Inf (Set α) := ⟨(· ∩ ·)⟩
 instance : Top (Set α) := ⟨univ⟩
@@ -98,7 +105,10 @@ instance : Bot (Set α) := ⟨∅⟩
 instance : HasCompl (Set α) := ⟨Set.compl⟩
 
 instance {α : Type _} : BooleanAlgebra (Set α) :=
-  mem_injective.booleanAlgebra _ (fun _ _ ↦ rfl) (fun _ _ ↦ rfl) rfl rfl (fun _ ↦ rfl) fun _ _ ↦ rfl
+  { mem_injective.booleanAlgebra _ (fun _ _ ↦ rfl) (fun _ _ ↦ rfl) rfl rfl (fun _ ↦ rfl)
+      fun _ _ ↦ rfl with
+    le := (· ≤ ·)
+    lt := fun s t => s ⊆ t ∧ ¬t ⊆ s }
 
 instance : HasSSubset (Set α) :=
   ⟨(· < ·)⟩
@@ -1394,11 +1404,11 @@ theorem default_coe_singleton (x : α) : (default : ({x} : Set α)) = ⟨x, rfl�
 
 --Porting note: removed `simp` attribute because `simp` can prove it
 theorem pair_eq_singleton (a : α) : ({a, a} : Set α) = {a} :=
-  union_self _
+  union_self {a}
 #align set.pair_eq_singleton Set.pair_eq_singleton
 
 theorem pair_comm (a b : α) : ({a, b} : Set α) = {b, a} :=
-  union_comm _ _
+  union_comm {a} {b}
 #align set.pair_comm Set.pair_comm
 
 -- Porting note: first branch after `constructor` used to be by `tauto!`.
@@ -1412,7 +1422,6 @@ theorem pair_eq_pair_iff {x y z w : α} :
 #align set.pair_eq_pair_iff Set.pair_eq_pair_iff
 
 /-! ### Lemmas about sets defined as `{x ∈ s | p x}`. -/
-
 
 section Sep
 
@@ -1466,12 +1475,12 @@ theorem sep_false : { x ∈ s | False } = ∅ :=
 
 --Porting note: removed `simp` attribute because `simp` can prove it
 theorem sep_empty (p : α → Prop) : { x ∈ (∅ : Set α) | p x } = ∅ :=
-  empty_inter p
+  empty_inter {x | p x}
 #align set.sep_empty Set.sep_empty
 
 --Porting note: removed `simp` attribute because `simp` can prove it
 theorem sep_univ : { x ∈ (univ : Set α) | p x } = { x | p x } :=
-  univ_inter p
+  univ_inter {x | p x}
 #align set.sep_univ Set.sep_univ
 
 @[simp]
@@ -1481,12 +1490,12 @@ theorem sep_union : { x | (x ∈ s ∨ x ∈ t) ∧ p x } = { x ∈ s | p x } �
 
 @[simp]
 theorem sep_inter : { x | (x ∈ s ∧ x ∈ t) ∧ p x } = { x ∈ s | p x } ∩ { x ∈ t | p x } :=
-  inter_inter_distrib_right s t p
+  inter_inter_distrib_right s t {x | p x}
 #align set.sep_inter Set.sep_inter
 
 @[simp]
 theorem sep_and : { x ∈ s | p x ∧ q x } = { x ∈ s | p x } ∩ { x ∈ s | q x } :=
-  inter_inter_distrib_left s p q
+  inter_inter_distrib_left s {x | p x} {x | q x}
 #align set.sep_and Set.sep_and
 
 @[simp]
@@ -1721,8 +1730,8 @@ theorem compl_singleton_eq (a : α) : ({a} : Set α)ᶜ = { x | x ≠ a } :=
 #align set.compl_singleton_eq Set.compl_singleton_eq
 
 @[simp]
-theorem compl_ne_eq_singleton (a : α) : ({ x | x ≠ a } : Set α)ᶜ = {a} :=
-  compl_compl _
+theorem compl_ne_eq_singleton (a : α) : { x | x ≠ a }ᶜ = {a} := by
+  rw [← compl_singleton_eq, compl_compl]
 #align set.compl_ne_eq_singleton Set.compl_ne_eq_singleton
 
 theorem union_eq_compl_compl_inter_compl (s t : Set α) : s ∪ t = (sᶜ ∩ tᶜ)ᶜ :=
@@ -2315,7 +2324,7 @@ theorem ite_empty_right (t s : Set α) : t.ite s ∅ = s ∩ t := by simp [Set.i
 
 theorem ite_mono (t : Set α) {s₁ s₁' s₂ s₂' : Set α} (h : s₁ ⊆ s₂) (h' : s₁' ⊆ s₂') :
     t.ite s₁ s₁' ⊆ t.ite s₂ s₂' :=
-  union_subset_union (inter_subset_inter_left _ h) (inter_subset_inter_left _ h')
+  union_subset_union (inter_subset_inter_left _ h) (inter_subset_inter_left tᶜ h')
 #align set.ite_mono Set.ite_mono
 
 theorem ite_subset_union (t s s' : Set α) : t.ite s s' ⊆ s ∪ s' :=
@@ -2670,8 +2679,7 @@ variable [Preorder α] [Preorder β] {f : α → β}
 --   instance : Preorder (↑s) := Subtype.instPreorderSubtype _
 -- here, along with appropriate lemmas.
 
-theorem monotoneOn_iff_monotone : MonotoneOn f s ↔
-    Monotone fun a : s => f a := by
+theorem monotoneOn_iff_monotone : MonotoneOn f s ↔ Monotone fun a : s => f a := by
   simp [Monotone, MonotoneOn]
 #align set.monotone_on_iff_monotone Set.monotoneOn_iff_monotone
 

@@ -394,8 +394,8 @@ theorem ofElement_top {α : Type _} (r : α → α → Prop) (a : α) : (ofEleme
 @[simps! symm_apply]
 noncomputable def subrelIso (f : r ≺i s) : Subrel s {b | s b f.top} ≃r r :=
   RelIso.symm
-  { toEquiv := ((Equiv.ofInjective f f.injective).trans (Equiv.setCongr
-      (funext fun _ ↦ propext f.down.symm))),
+  { toEquiv := ((Equiv.ofInjective f f.injective).trans
+      (Equiv.setCongr (Set.ext fun _ ↦ f.down.symm))),
     map_rel_iff' := f.map_rel_iff }
 
 @[simp]
