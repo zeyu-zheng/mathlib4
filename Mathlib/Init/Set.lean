@@ -33,24 +33,26 @@ This file is a port of the core Lean 3 file `lib/lean/library/init/data/set.lean
 
 -/
 
-def Set (α : Type u) := α → Prop
+structure Set (α : Type u) : Type u where setOf ::
+  /-- Membership in a set -/
+  protected Mem : α → Prop
 #align set Set
+#align set_of Set.setOf
 
-def setOf {α : Type u} (p : α → Prop) : Set α :=
-  p
-#align set_of setOf
+export Set (setOf)
 
 namespace Set
 
-/-- Membership in a set -/
-protected def Mem (a : α) (s : Set α) : Prop :=
-  s a
+#align set.mem Set.Mem
 
-instance : Membership α (Set α) :=
-  ⟨Set.Mem⟩
+instance : Membership α (Set α) where
+  mem a b := Set.Mem b a
 
-theorem ext {a b : Set α} (h : ∀ (x : α), x ∈ a ↔ x ∈ b) : a = b :=
-  funext (fun x ↦ propext (h x))
+instance : CoeFun (Set α) fun _ ↦ α → Prop where
+  coe s x := x ∈ s
+
+theorem ext {a b : Set α} (h : ∀ (x : α), x ∈ a ↔ x ∈ b) : a = b := by
+  cases a; cases b; congr; exact funext fun _ ↦ propext (h _)
 
 protected def Subset (s₁ s₂ : Set α) :=
   ∀ ⦃a⦄, a ∈ s₁ → a ∈ s₂
@@ -64,7 +66,7 @@ instance : HasSubset (Set α) :=
   ⟨(· ≤ ·)⟩
 
 instance : EmptyCollection (Set α) :=
-  ⟨λ _ => False⟩
+  ⟨⟨λ _ => False⟩⟩
 
 open Std.ExtendedBinder in
 syntax "{" extBinder " | " term "}" : term
@@ -85,6 +87,7 @@ open Std.ExtendedBinder in
 macro (priority := low) "{" t:term " | " bs:extBinders "}" : term =>
   `({x | ∃ᵉ $bs:extBinders, $t = x})
 
+/-- The universal set that contains all element of a type. -/
 def univ : Set α := {_a | True}
 #align set.univ Set.univ
 
@@ -116,13 +119,9 @@ prefix:100 "𝒫" => powerset
 
 def image (f : α → β) (s : Set α) : Set β := {f a | a ∈ s}
 
-instance : Functor Set where map := @Set.image
+/-- `f '' s` denotes the image of `s : Set α` under the function `f : α → β`. -/
+infixl:80 " '' " => image
 
-instance : LawfulFunctor Set where
-  id_map _ := funext fun _ ↦ propext ⟨λ ⟨_, sb, rfl⟩ => sb, λ sb => ⟨_, sb, rfl⟩⟩
-  comp_map g h _ := funext $ λ c => propext
-    ⟨λ ⟨a, ⟨h₁, h₂⟩⟩ => ⟨g a, ⟨⟨a, ⟨h₁, rfl⟩⟩, h₂⟩⟩,
-     λ ⟨_, ⟨⟨a, ⟨h₁, h₂⟩⟩, h₃⟩⟩ => ⟨a, ⟨h₁, show h (g a) = c from h₂ ▸ h₃⟩⟩⟩
-  map_const := rfl
+instance : Functor Set where map := @Set.image
 
 end Set

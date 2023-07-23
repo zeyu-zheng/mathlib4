@@ -81,16 +81,24 @@ namespace Set
 
 variable {α : Type _} {s t : Set α}
 
+/-- `Set α` is equivalent to `α → Prop`. -/
+@[simps]
+def equivPred : Set α ≃ (α → Prop) where
+  toFun s := s
+  invFun := setOf
+  left_inv _ := rfl
+  right_inv _ := rfl
+
+theorem mem_injective : Function.Injective (fun s : Set α ↦ (· ∈ s)) := equivPred.injective
+
+instance : Sup (Set α) := ⟨(· ∪ ·)⟩
+instance : Inf (Set α) := ⟨(· ∩ ·)⟩
+instance : Top (Set α) := ⟨univ⟩
+instance : Bot (Set α) := ⟨∅⟩
+instance : HasCompl (Set α) := ⟨Set.compl⟩
+
 instance {α : Type _} : BooleanAlgebra (Set α) :=
-  { (inferInstance : BooleanAlgebra (α → Prop)) with
-    sup := (· ∪ ·),
-    le := (· ≤ ·),
-    lt := fun s t => s ⊆ t ∧ ¬t ⊆ s,
-    inf := (· ∩ ·),
-    bot := ∅,
-    compl := fun s => { x | x ∉ s },
-    top := univ,
-    sdiff := fun s t => { x | x ∈ s ∧ x ∉ t } }
+  mem_injective.booleanAlgebra _ (fun _ _ ↦ rfl) (fun _ _ ↦ rfl) rfl rfl (fun _ ↦ rfl) fun _ _ ↦ rfl
 
 instance : HasSSubset (Set α) :=
   ⟨(· < ·)⟩
@@ -287,7 +295,7 @@ theorem mem_def {a : α} {s : Set α} : a ∈ s ↔ s a :=
 #align set.mem_def Set.mem_def
 
 theorem setOf_bijective : Bijective (setOf : (α → Prop) → Set α) :=
-  bijective_id
+  equivPred.symm.bijective
 #align set.set_of_bijective Set.setOf_bijective
 
 @[simp]
@@ -307,34 +315,34 @@ theorem setOf_or {p q : α → Prop} : { a | p a ∨ q a } = { a | p a } ∪ { a
 
 
 instance : IsRefl (Set α) (· ⊆ ·) :=
-  show IsRefl (Set α) (. ≤ .) by infer_instance
+  show IsRefl (Set α) (· ≤ ·) by infer_instance
 
 instance : IsTrans (Set α) (· ⊆ ·) :=
-  show IsTrans (Set α) (. ≤ .) by infer_instance
+  show IsTrans (Set α) (· ≤ ·) by infer_instance
 
 instance : Trans ((· ⊆ ·) : Set α → Set α → Prop) (· ⊆ ·) (· ⊆ ·) :=
-  show Trans (. ≤ .) (. ≤ .) (. ≤ .) by infer_instance
+  show Trans (· ≤ ·) (· ≤ ·) (· ≤ ·) by infer_instance
 
 instance : IsAntisymm (Set α) (· ⊆ ·) :=
-  show IsAntisymm (Set α) (. ≤ .) by infer_instance
+  show IsAntisymm (Set α) (· ≤ ·) by infer_instance
 
 instance : IsIrrefl (Set α) (· ⊂ ·) :=
-  show IsIrrefl (Set α) (. < .) by infer_instance
+  show IsIrrefl (Set α) (· < ·) by infer_instance
 
 instance : IsTrans (Set α) (· ⊂ ·) :=
-  show IsTrans (Set α) (. < .) by infer_instance
+  show IsTrans (Set α) (· < ·) by infer_instance
 
 instance : Trans ((· ⊂ ·) : Set α → Set α → Prop) (· ⊂ ·) (· ⊂ ·) :=
-  show Trans (. < .) (. < .) (. < .) by infer_instance
+  show Trans (· < ·) (· < ·) (· < ·) by infer_instance
 
 instance : Trans ((· ⊂ ·) : Set α → Set α → Prop) (· ⊆ ·) (· ⊂ ·) :=
-  show Trans (. < .) (. ≤ .) (. < .) by infer_instance
+  show Trans (· < ·) (· ≤ ·) (· < ·) by infer_instance
 
 instance : Trans ((· ⊆ ·) : Set α → Set α → Prop) (· ⊂ ·) (· ⊂ ·) :=
-  show Trans (. ≤ .) (. < .) (. < .) by infer_instance
+  show Trans (· ≤ ·) (· < ·) (· < ·) by infer_instance
 
 instance : IsAsymm (Set α) (· ⊂ ·) :=
-  show IsAsymm (Set α) (. < .) by infer_instance
+  show IsAsymm (Set α) (· < ·) by infer_instance
 
 instance : IsNonstrictStrictOrder (Set α) (· ⊆ ·) (· ⊂ ·) :=
   ⟨fun _ _ => Iff.rfl⟩
