@@ -176,19 +176,6 @@ theorem neg_eq_inv_inf_one [CovariantClass α α (· * ·) (· ≤ ·)] (a : α)
 #align lattice_ordered_comm_group.neg_eq_inv_inf_one LatticeOrderedCommGroup.neg_eq_inv_inf_one
 #align lattice_ordered_comm_group.neg_eq_neg_inf_zero LatticeOrderedCommGroup.neg_eq_neg_inf_zero
 
-@[to_additive le_abs]
-theorem le_mabs (a : α) : a ≤ |a| :=
-  le_sup_left
-#align lattice_ordered_comm_group.le_mabs LatticeOrderedCommGroup.le_mabs
-#align lattice_ordered_comm_group.le_abs LatticeOrderedCommGroup.le_abs
-
--- -a ≤ |a|
-@[to_additive]
-theorem inv_le_abs (a : α) : a⁻¹ ≤ |a| :=
-  le_sup_right
-#align lattice_ordered_comm_group.inv_le_abs LatticeOrderedCommGroup.inv_le_abs
-#align lattice_ordered_comm_group.neg_le_abs LatticeOrderedCommGroup.neg_le_abs
-
 @[to_additive (attr := simp)]
 theorem abs_inv (a : α) : |a⁻¹| = |a| := calc
   |a⁻¹| = a⁻¹ ⊔ (a⁻¹)⁻¹ := rfl
@@ -350,8 +337,8 @@ theorem m_neg_abs [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) : |a|⁻
   · rw [← pos_inf_neg_eq_one a]
     apply le_inf
     · rw [pos_eq_neg_inv]
-      exact ((m_le_iff_pos_le_neg_ge _ _).mp (inv_le_abs a)).right
-    · exact And.right (Iff.mp (m_le_iff_pos_le_neg_ge _ _) (le_mabs a))
+      exact ((m_le_iff_pos_le_neg_ge _ _).mp (inv_le_abs_self a)).right
+    · exact And.right (Iff.mp (m_le_iff_pos_le_neg_ge _ _) (le_mabs_self a))
   · exact one_le_neg _
 #align lattice_ordered_comm_group.m_neg_abs LatticeOrderedCommGroup.m_neg_abs
 #align lattice_ordered_comm_group.neg_abs LatticeOrderedCommGroup.neg_abs
@@ -566,9 +553,9 @@ set_option linter.uppercaseLean3 false in
 @[to_additive abs_add_le "The absolute value satisfies the triangle inequality."]
 theorem mabs_mul_le [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) : |a * b| ≤ |a| * |b| := by
   apply sup_le
-  · exact mul_le_mul' (le_mabs a) (le_mabs b)
+  · exact mul_le_mul' (le_mabs_self a) (le_mabs_self b)
   · rw [mul_inv]
-    exact mul_le_mul' (inv_le_abs _) (inv_le_abs _)
+    exact mul_le_mul' (inv_le_abs_self _) (inv_le_abs_self _)
 #align lattice_ordered_comm_group.mabs_mul_le LatticeOrderedCommGroup.mabs_mul_le
 #align lattice_ordered_comm_group.abs_add_le LatticeOrderedCommGroup.abs_add_le
 

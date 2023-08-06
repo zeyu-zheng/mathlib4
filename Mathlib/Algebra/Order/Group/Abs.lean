@@ -20,7 +20,7 @@ open Function
 
 section CovariantAddLe
 
-section Neg
+section Inv
 
 -- see Note [lower instance priority]
 /-- `abs a` is the absolute value of `a`. -/
@@ -35,6 +35,22 @@ theorem abs_eq_sup_inv [Inv α] [Sup α] (a : α) : |a| = a ⊔ a⁻¹ :=
   rfl
 #align abs_eq_sup_inv abs_eq_sup_inv
 #align abs_eq_sup_neg abs_eq_sup_neg
+
+variable [Inv α] [Lattice α] {a b : α}
+
+@[to_additive le_abs_self]
+theorem le_mabs_self (a : α) : a ≤ |a| :=
+  le_sup_left
+#align le_abs_self le_abs_self
+
+@[to_additive]
+theorem inv_le_abs_self (a : α) : a⁻¹  ≤ |a| :=
+  le_sup_right
+#align neg_le_abs_self neg_le_abs_self
+
+end Inv
+
+section Neg
 
 variable [Neg α] [LinearOrder α] {a b : α}
 
@@ -54,13 +70,9 @@ theorem le_abs : a ≤ |b| ↔ a ≤ b ∨ a ≤ -b :=
   le_max_iff
 #align le_abs le_abs
 
-theorem le_abs_self (a : α) : a ≤ |a| :=
-  le_max_left _ _
-#align le_abs_self le_abs_self
 
-theorem neg_le_abs_self (a : α) : -a ≤ |a| :=
-  le_max_right _ _
-#align neg_le_abs_self neg_le_abs_self
+
+
 
 theorem lt_abs : a < |b| ↔ a < b ∨ a < -b :=
   lt_max_iff
