@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
 import Mathlib.Topology.SubsetProperties
+import Mathlib.Topology.LocalAtTarget
 import Mathlib.Topology.Connected
 import Mathlib.Topology.ContinuousFunction.Basic
 import Mathlib.Algebra.IndicatorFunction
@@ -610,66 +611,78 @@ section Piecewise
 /-- Given two closed sets covering a topological space, and locally constant maps on these two sets,
     then if these two locally constant maps agree on the intersection, we get a piecewise defined
     locally constant map on the whole space. -/
-def piecewise {C₁ C₂ : Set X} (h₁ : IsClosed C₁) (h₂ : IsClosed C₂) (h : C₁ ∪ C₂ = Set.univ)
+noncomputable def piecewise {C₁ C₂ : Type*} {ι₁ : C₁ → X} {ι₂ : C₂ → X}
+    [TopologicalSpace C₁] [TopologicalSpace C₂] (h₁ : ClosedEmbedding ι₁)
+    (h₂ : ClosedEmbedding ι₂) (h : ∀ x, x ∈ range ι₁ ∪ range ι₂)
     (f : LocallyConstant C₁ Z) (g : LocallyConstant C₂ Z)
-    (hfg : ∀ (x : X) (hx : x ∈ C₁ ∩ C₂), f.toFun ⟨x, hx.1⟩ = g.toFun ⟨x, hx.2⟩)
-    [∀ j, Decidable (j ∈ C₁)] : LocallyConstant X Z where
-  toFun i := if hi : i ∈ C₁ then f ⟨i, hi⟩ else g ⟨i, (Set.compl_subset_iff_union.mpr h) hi⟩
+    (hfg : ∀ c₁ c₂, ι₁ c₁ = ι₂ c₂ → f c₁ = g c₂)
+    [∀ j, Decidable (j ∈ range ι₁)] : LocallyConstant X Z where
+  toFun x := if hx : x ∈ range ι₁ then f hx.choose else g ((h x).resolve_left hx).choose
   isLocallyConstant := by
     let dZ : TopologicalSpace Z := ⊥
-    haveI : DiscreteTopology Z := discreteTopology_bot Z
+    have : DiscreteTopology Z := discreteTopology_bot Z
     obtain ⟨f, hf⟩ := f
     obtain ⟨g, hg⟩ := g
     rw [IsLocallyConstant.iff_continuous] at hf hg ⊢
     dsimp only [coe_mk]
-    rw [Set.union_eq_iUnion] at h
+    rw [← eq_univ_iff_forall, Set.union_eq_iUnion] at h
     refine' (locallyFinite_of_finite _).continuous h (fun i ↦ _) (fun i ↦ _)
-    · cases i <;> [exact h₂; exact h₁]
+    · cases i <;> [exact h₂.closed_range; exact h₁.closed_range]
     · cases i <;> rw [continuousOn_iff_continuous_restrict]
-      · convert hg
+      · rw [← (Homeomorph.ofEmbedding ι₂ h₂.toEmbedding).comp_continuous_iff']
+        convert hg
         ext x
-        simp only [cond_false, restrict_apply, Subtype.coe_eta, dite_eq_right_iff]
+        simp [cond_false, restrict_apply, Subtype.coe_eta, dite_eq_right_iff]
         exact fun hx ↦ hfg x ⟨hx, x.prop⟩
       · simp only [cond_true, restrict_dite, Subtype.coe_eta]
         exact hf
 
+/-- Given two closed sets covering a topological space, and locally constant maps on these two sets,
+    then if these two locally constant maps agree on the intersection, we get a piecewise defined
+    locally constant map on the whole space. -/
+noncomputable def piecewise'' {C₁ C₂ : Set X} (h₁ : IsClosed C₁) (h₂ : IsClosed C₂)
+    (h : C₁ ∪ C₂ = Set.univ) (f : LocallyConstant C₁ Z) (g : LocallyConstant C₂ Z)
+    (hfg : ∀ (x : X) (hx : x ∈ C₁ ∩ C₂), f.toFun ⟨x, hx.1⟩ = g.toFun ⟨x, hx.2⟩)
+    [∀ j, Decidable (j ∈ C₁)] : LocallyConstant X Z :=
+  letI : ∀ j, Decidable (j ∈ range ((↑) : C₁ → X)) := by rwa [Subtype.range_val]
+  piecewise h₁.closedEmbedding_subtype_val h₂.closedEmbedding_subtype_val (by simp [h]) f g <| by
+    rintro ⟨c, h₁⟩ ⟨_, h₂⟩ rfl
+    exact hfg c ⟨h₁, h₂⟩
+
 /-- A variant of `LocallyConstant.piecewise` where the two closed sets cover a subset. -/
-def piecewise' {C₀ C₁ C₂ : Set X} (h₀ : C₀ ⊆ C₁ ∪ C₂) (h₁ : IsClosed C₁) (h₂ : IsClosed C₂)
-  (f₁ : LocallyConstant C₁ Z) (f₂ : LocallyConstant C₂ Z) [∀ j, Decidable (j ∈ C₁)]
-  (hf : ∀ x (hx : x ∈ C₁ ∩ C₂), f₁ ⟨x, hx.1⟩  = f₂ ⟨x, hx.2⟩) : LocallyConstant C₀ Z where
-  toFun i := if hi : i.val ∈ C₁ then f₁ ⟨i.val, hi⟩ else
-    f₂ ⟨i.val, (or_iff_not_imp_left.mp (h₀ i.prop)) hi⟩
-  isLocallyConstant := by
-    let dZ : TopologicalSpace Z := ⊥
-    haveI : DiscreteTopology Z := discreteTopology_bot Z
-    obtain ⟨f₁, hf₁⟩ := f₁
-    obtain ⟨f₂, hf₂⟩ := f₂
-    rw [IsLocallyConstant.iff_continuous] at hf₁ hf₂ ⊢
-    dsimp only [coe_mk]
-    have h₀' : {i : C₀ | i.val ∈ C₁} ∪ {i : C₀ | i.val ∈ C₂} = Set.univ :=
-      Set.eq_univ_of_subset (s := {i : C₀ | i.val ∈ C₀})
-      (fun i hi ↦ h₀ hi) (Set.eq_univ_of_forall (fun x ↦ x.prop))
-    have hf₁' : Continuous (fun (i : {i : C₀ | i.val ∈ C₁}) ↦ f₁ ⟨i.val.val, i.prop⟩) :=
-      hf₁.comp (Continuous.subtype_mk (continuous_subtype_val.comp continuous_subtype_val) _)
-    have hf₂' : Continuous (fun (i : {i : C₀ | i.val ∈ C₂}) ↦ f₂ ⟨i.val.val, i.prop⟩) :=
-      hf₂.comp (Continuous.subtype_mk (continuous_subtype_val.comp continuous_subtype_val) _)
-    rw [Set.union_eq_iUnion] at h₀'
-    refine' (locallyFinite_of_finite _).continuous h₀' (fun i ↦ _) (fun i ↦ _)
-    · cases i <;> [exact isClosed_induced_iff.mpr ⟨C₂, ⟨h₂, rfl⟩⟩;
-        exact isClosed_induced_iff.mpr ⟨C₁, ⟨h₁, rfl⟩⟩  ]
-    · cases i <;> rw [continuousOn_iff_continuous_restrict]
-      · simp only [cond_false, Set.coe_setOf, Set.mem_setOf_eq]
-        refine Continuous.congr hf₂' (fun x ↦ ?_)
-        simp only [Set.restrict_apply, Set.mem_setOf_eq]
-        split_ifs with h
-        · exact (hf x.val.val ⟨h, x.prop⟩).symm
-        · rfl
-      · simp only [cond_true, Set.coe_setOf, Set.mem_setOf_eq]
-        refine Continuous.congr hf₁' (fun x ↦ ?_)
-        simp only [Set.restrict_apply, Set.mem_setOf_eq]
-        split_ifs with h
-        · rfl
-        · simp only [x.prop, not_true] at h
+noncomputable def piecewise' {C₀ C₁ C₂ : Set X} (h₀ : C₀ ⊆ C₁ ∪ C₂) (h₁ : IsClosed C₁)
+    (h₂ : IsClosed C₂) (f₁ : LocallyConstant C₁ Z) (f₂ : LocallyConstant C₂ Z)
+    [∀ j, Decidable (j ∈ C₁)] (hf : ∀ x (hx : x ∈ C₁ ∩ C₂), f₁ ⟨x, hx.1⟩  = f₂ ⟨x, hx.2⟩) :
+    LocallyConstant C₀ Z :=
+  letI : ∀ j : C₀, Decidable (j ∈ range (restrictPreimage C₀ (Subtype.val : C₁ → X))) := fun j ↦ by
+    rw [range_restrictPreimage, Subtype.range_val, mem_preimage]
+    infer_instance
+  piecewise
+    (h₁.closedEmbedding_subtype_val.restrictPreimage C₀)
+    (h₂.closedEmbedding_subtype_val.restrictPreimage C₀)
+    (by simpa [range_restrictPreimage] using h₀)
+    (f₁.comap Subtype.val) (f₂.comap Subtype.val) <| by
+      rintro ⟨⟨c, hc₁⟩, hc₀⟩ ⟨⟨_, hc₂⟩, -⟩ ⟨⟩
+      rw [coe_comap_apply _ _ continuous_subtype_val, coe_comap_apply _ _ continuous_subtype_val]
+      exact hf c ⟨hc₁, hc₂⟩
+
+/-- A variant of `LocallyConstant.piecewise` where the two closed sets cover a subset. -/
+noncomputable def piecewise''' {C₀ C₁ C₂ : Set X} (h₀ : C₀ ⊆ C₁ ∪ C₂) (h₁ : IsClosed C₁)
+    (h₂ : IsClosed C₂) (f₁ : LocallyConstant C₁ Z) (f₂ : LocallyConstant C₂ Z)
+    [∀ j, Decidable (j ∈ C₁)] (hf : ∀ x (hx : x ∈ C₁ ∩ C₂), f₁ ⟨x, hx.1⟩  = f₂ ⟨x, hx.2⟩) :
+    LocallyConstant C₀ Z :=
+  letI : ∀ j : C₀, Decidable (j ∈ range (restrictPreimage C₀ (Subtype.val : C₁ → X))) := fun j ↦ by
+    rw [range_restrictPreimage, Subtype.range_val, mem_preimage]
+    infer_instance
+  piecewise
+    (h₁.closedEmbedding_subtype_val.restrictPreimage C₀)
+    (h₂.closedEmbedding_subtype_val.restrictPreimage C₀)
+    (by simpa [range_restrictPreimage] using h₀)
+    (f₁.comap Subtype.val) (f₂.comap Subtype.val) <| by
+      rintro ⟨⟨c, hc₁⟩, hc₀⟩ ⟨⟨_, hc₂⟩, -⟩ ⟨⟩
+      rw [coe_comap_apply _ _ continuous_subtype_val, coe_comap_apply _ _ continuous_subtype_val]
+      exact hf c ⟨hc₁, hc₂⟩
+
 
 end Piecewise
 
