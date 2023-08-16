@@ -5,6 +5,8 @@ Authors: Yaël Dillies, Christopher Hoskin
 -/
 import Mathlib.Algebra.GroupPower.Lemmas
 import Mathlib.Algebra.Hom.GroupInstances
+import Mathlib.GroupTheory.Subsemigroup.Center
+import Mathlib.RingTheory.NonUnitalSubsemiring.Basic
 
 #align_import algebra.hom.centroid from "leanprover-community/mathlib"@"6cb77a8eaff0ddd100e87b1591c6d3ad319514ff"
 
@@ -493,11 +495,16 @@ instance instRing : Ring (CentroidHom α) :=
   toEnd_injective.ring _ toEnd_zero toEnd_one toEnd_add toEnd_mul toEnd_neg toEnd_sub
     toEnd_nsmul toEnd_zsmul toEnd_pow toEnd_nat_cast toEnd_int_cast
 
+
+
+
+
 end NonUnitalNonAssocRing
 
 section NonUnitalRing
 
 variable [NonUnitalRing α]
+
 
 -- Porting note: Not sure why Lean didn't like `CentroidHom.Ring`
 -- See note [reducible non instances]
@@ -511,6 +518,28 @@ def commRing (h : ∀ a b : α, (∀ r : α, a * r * b = 0) → a = 0 ∨ b = 0)
       rw [mul_assoc, sub_mul, sub_eq_zero, ← map_mul_right, ← map_mul_right, coe_mul, coe_mul,
         comp_mul_comm] }
 #align centroid_hom.comm_ring CentroidHom.commRing
+
+def centerToCentroid : NonUnitalSubsemiring.center α →+ CentroidHom α where
+  toFun z := {
+    toFun := fun a => z * a
+    map_zero' := by
+      simp only [mul_zero]
+    map_add' := fun a b => by
+      simp only [mul_add]
+    map_mul_left' := fun a b => by
+      simp only
+      rw [← mul_assoc, ←mul_assoc, (NonUnitalSubsemiring.mem_center_iff.mp (SetLike.coe_mem z) a)]
+    map_mul_right' := fun a b => by
+      simp only
+      rw [mul_assoc]
+  }
+  map_zero' := by
+    simp
+    exact rfl
+  map_add' := fun z₁ z₂ => by
+    ext a
+    show (z₁ + z₂) * a = z₁ * a + ↑z₂ * a
+    rw [add_mul]
 
 end NonUnitalRing
 
