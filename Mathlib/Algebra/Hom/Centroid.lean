@@ -519,7 +519,7 @@ def commRing (h : ∀ a b : α, (∀ r : α, a * r * b = 0) → a = 0 ∨ b = 0)
         comp_mul_comm] }
 #align centroid_hom.comm_ring CentroidHom.commRing
 
-def centerToCentroid : NonUnitalSubsemiring.center α →+ CentroidHom α where
+def centerToCentroid : NonUnitalSubsemiring.center α →ₙ+* CentroidHom α where
   toFun z := {
     toFun := fun a => z * a
     map_zero' := by
@@ -538,8 +538,12 @@ def centerToCentroid : NonUnitalSubsemiring.center α →+ CentroidHom α where
     exact rfl
   map_add' := fun z₁ z₂ => by
     ext a
-    show (z₁ + z₂) * a = z₁ * a + ↑z₂ * a
+    show (z₁ + z₂) * a = z₁ * a + z₂ * a
     rw [add_mul]
+  map_mul' := fun z₁ z₂ => by
+    ext a
+    show  (z₁ * z₂) * a = z₁ * (z₂ * a)
+    rw [mul_assoc]
 
 end NonUnitalRing
 
