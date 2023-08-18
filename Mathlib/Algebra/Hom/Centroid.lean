@@ -553,18 +553,32 @@ namespace Set
 
 variable (M)
 
+/-
+structure is_AddCentral [Add M] (z : M) : Prop where
+  comm : ∀ a , z + a = a + z
+  left_assoc : ∀ b c, z + (b + c) = (z + b) + c
+  mid_assoc : ∀ a c, (a + z) + c = a + (z + c)
+  right_assoc : ∀ a b, (a + b) + z = a + (b + z)
+-/
+universe u
 
-structure is_central [Mul M]  (z : M) : Prop :=
-(comm : ∀ a , z * a = a * z)
-(lmul_comm_rmul : ∀ a b, z * (b * a) = (z * b) * a )
-(mid_assoc : ∀ a b, (a * z) * b = a * (z * b))
-(rmul_comm_lmul : ∀ a b, (a * b) * z = a * (b * z))
+@[to_additive]
+structure IsMulCentral {M : Type u} [Mul M] (z : M) : Prop where
+  comm : ∀ a , z * a = a * z
+  left_assoc : ∀ b c, z * (b * c) = (z * b) * c
+  mid_assoc : ∀ a c, (a * z) * c = a * (z * c)
+  right_assoc : ∀ a b, (a * b) * z = a * (b * z)
+
+
+
+variable [Mul M] (z:M)
+
+#check is_mulCentral M z
 
 /-- The center of a magma. -/
 @[to_additive addNonAssocCenter " The center of an additive magma. "]
 def nonAssocCenter [Mul M] : Set M :=
-  { z | ∀ a b, a * z = z * a ∧ (z * a) * b = z * (a * b) ∧ (a * z) * b = a * (z * b) ∧
-    (a * b) * z = a* (b * z) }
+  { z | (is_mulCentral M z) }
 
 @[to_additive mem_addNonAssocCenter_iff]
 theorem mem_nonAssocCenter_iff [Mul M] {z : M} : z ∈ nonAssocCenter M ↔
