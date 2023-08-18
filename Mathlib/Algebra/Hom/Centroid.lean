@@ -548,3 +548,51 @@ def centerToCentroid : NonUnitalSubsemiring.center α →ₙ+* CentroidHom α wh
 end NonUnitalRing
 
 end CentroidHom
+
+namespace Set
+
+variable (M)
+
+/-- The center of a magma. -/
+@[to_additive addNonAssocCenter " The center of an additive magma. "]
+def nonAssocCenter [Mul M] : Set M :=
+  { z | ∀ a b, a * z = z * a ∧ (z * a) * b = z * (a * b) ∧ (a * z) * b = a * (z * b) ∧
+    (a * b) * z = a* (b * z) }
+
+@[to_additive mem_addNonAssocCenter_iff]
+theorem mem_nonAssocCenter_iff [Mul M] {z : M} : z ∈ nonAssocCenter M ↔
+    ∀ a b, a * z = z * a ∧
+    (z * a) * b = z * (a * b) ∧
+    (a * z) * b = a * (z * b) ∧
+    (a * b) * z = a * (b * z) :=
+  Iff.rfl
+
+@[to_additive (attr := simp) add_mem_nonAssocAddCenter]
+theorem mul_mem_nonAssocCenter [Mul M] {z₁ z₂ : M} (hz₁ : z₁ ∈ Set.nonAssocCenter M)
+    (hz₂ : z₂ ∈ Set.nonAssocCenter M) : z₁ * z₂ ∈ Set.nonAssocCenter M := fun a b => by
+  constructor
+  · calc
+      a * (z₁ * z₂) = (a * z₁) * z₂ := by rw [((mem_nonAssocCenter_iff _).mp hz₁ a z₂).2.2.1]
+      _ = z₂ * (z₁ * a) := by rw [((mem_nonAssocCenter_iff _).mp hz₁ a z₁).1,
+        ((mem_nonAssocCenter_iff _).mp hz₂ (z₁ * a) z₂).1]
+      _ = z₂ * z₁ * a := by rw [((mem_nonAssocCenter_iff _).mp hz₂ _ _).2.1]
+      _ = z₁ * z₂ * a := by rw [((mem_nonAssocCenter_iff _).mp hz₁ _ z₁).1]
+  · constructor
+    · calc
+        z₁ * z₂ * a * b = (z₁ * (z₂ * a)) * b := by rw [((mem_nonAssocCenter_iff _).mp hz₁ _ _).2.1]
+        _ = z₁ * ((z₂ * a) * b) := by rw [((mem_nonAssocCenter_iff _).mp hz₁ _ _).2.1]
+        _ = z₁ * (z₂ * (a * b)) := by rw [((mem_nonAssocCenter_iff _).mp hz₂ _ _).2.1]
+        _ = z₁ * z₂ * (a * b) := by rw [((mem_nonAssocCenter_iff _).mp hz₁ _ _).2.1]
+    · constructor
+      · calc a * (z₁ * z₂) * b = ((a * z₁) * z₂) * b := by
+              rw [((mem_nonAssocCenter_iff _).mp hz₁ _ _).2.2.1]
+        _ = (a * z₁) * (z₂ * b) := by rw [((mem_nonAssocCenter_iff _).mp hz₂ _ _).2.2.1]
+        _ = a * (z₁ * (z₂ * b)) := by rw [((mem_nonAssocCenter_iff _).mp hz₁ _ _).2.2.1]
+        _ = a * (z₁ * z₂ * b) := by rw [((mem_nonAssocCenter_iff _).mp hz₂ _ _).2.2.1]
+      · calc a * b * (z₁ * z₂) = ((a * b) * z₁) * z₂ := by
+              rw [((mem_nonAssocCenter_iff _).mp hz₁ _ _).2.2.1]
+        _ = (a * (b * z₁)) * z₂ := by rw [((mem_nonAssocCenter_iff _).mp hz₁ _ _).2.2.2]
+        _ = a * ((b * z₁) * z₂) := by rw [((mem_nonAssocCenter_iff _).mp hz₂ _ _).2.2.2]
+        _ = a * (b * (z₁ * z₂)) := by rw [((mem_nonAssocCenter_iff _).mp hz₂ _ _).2.2.2]
+
+end Set
