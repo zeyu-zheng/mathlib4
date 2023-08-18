@@ -553,6 +553,13 @@ namespace Set
 
 variable (M)
 
+
+structure is_central [Mul M]  (z : M) : Prop :=
+(comm : ∀ a , z * a = a * z)
+(lmul_comm_rmul : ∀ a b, z * (b * a) = (z * b) * a )
+(mid_assoc : ∀ a b, (a * z) * b = a * (z * b))
+(rmul_comm_lmul : ∀ a b, (a * b) * z = a * (b * z))
+
 /-- The center of a magma. -/
 @[to_additive addNonAssocCenter " The center of an additive magma. "]
 def nonAssocCenter [Mul M] : Set M :=
