@@ -34,8 +34,6 @@ notation "⦃" a "," b "," c "⦄" => TrilinearTp.tp  a b c
 
 namespace TrilinearTp
 
-section fibble
-
 variable {A : Type _}  [AddCommMonoid A] {Aₛ : AddSubmonoid A} [TrilinearTp A Aₛ]
 
 lemma add_left (a₁ a₂ c : A) (b : Aₛ) : ⦃a₁ + a₂, b, c⦄ = ⦃a₁, b, c⦄ + ⦃a₂, b, c⦄ := by
@@ -57,7 +55,23 @@ def leibniz (T : A → A) (T'  : Aₛ → Aₛ) : Prop :=
 /-- Define the multiplication operator `D` -/
 def D : A →+ Aₛ →+ AddMonoid.End A := TrilinearTp.tp
 
-end fibble
+/-- homotope a is the a-homotope -/
+def homotope : Aₛ →+ A →+ AddMonoid.End A := AddMonoidHom.flipHom (D : A →+ Aₛ →+ AddMonoid.End A)
+
+lemma homotope_def (a c : A) (b : Aₛ) : homotope b a c = ⦃a, b, c⦄ := rfl
+
+-- /-- Define the quadratic operator `Q` -/
+/-
+@[simps] def Q : A →+ A →+  AddMonoid.End Aₛ :=
+{ toFun := fun a => AddMonoidHom.flipHom (D a : Aₛ →+  AddMonoid.End A)
+  map_zero' := by
+    ext
+    simp
+  map_add' := fun _ _ => by
+    ext
+    simp }
+-/
+
 
 end TrilinearTp
 
@@ -71,6 +85,7 @@ open TrilinearTp
 
 variable {A : Type _}  [AddCommMonoid A] {Aₛ : AddSubmonoid A} [TrilinearTp A Aₛ]
 
+/-
 lemma polar (a c : A) (b : Aₛ): ⦃a + c, b, a + c⦄ = ⦃a, b, a⦄ + 2•⦃a, b, c⦄ + ⦃c, b, c⦄ :=
 calc
   ⦃a + c, b, a + c⦄ = ⦃a, b, a + c⦄ + ⦃c, b, a + c⦄ := by rw [add_left]
@@ -78,6 +93,6 @@ calc
   _ = ⦃a, b, a⦄ + ⦃a, b, c⦄ + (⦃a, b, c⦄ + ⦃c, b, c⦄) := by rw [comm c b a]
   _ = ⦃a, b, a⦄ + (⦃a, b, c⦄ + ⦃a, b, c⦄) + ⦃c, b, c⦄ := by abel
   _ = ⦃a, b, a⦄ + 2•⦃a, b, c⦄ + ⦃c, b, c⦄ := by rw [two_nsmul]
-
+-/
 
 end PartialTripleProduct
