@@ -103,13 +103,14 @@ lemma homotope_def (a b c : A) : homotope b a c = ⦃a, b, c⦄ := rfl
 lemma Q_def (a b c : A) : Q a c b = ⦃a, b, c⦄ := rfl
 
 lemma lie_D_D (a b c d: A) : ⁅D a b, D c d⁆ = D ⦃a, b, c⦄ d - D c ⦃b, a, d⦄ := by
-  --simp
   apply AddMonoidHom.ext
   intro e
   rw [Ring.lie_def]
   unfold D
   simp
-  rw [sub_eq_iff_eq_add, jordan]
+  --sorry
+  --rw [sub_eq_iff_eq_add]
+  rw [jordan]
 
 /--
 For a and b in A, the pair D(a,b) and -D(b,a) are Leibniz
@@ -119,8 +120,6 @@ lemma D_D_leibniz (a b : A) : leibniz (D a b) (-D b a) := by
   intros c d e
   unfold D
   simp
-  rw [jordan]
-  simp
-  ring_nf
+  rw [jordan, sub_eq_add_neg]
 
 end is_jordan_tp
