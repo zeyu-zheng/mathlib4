@@ -58,6 +58,12 @@ class is_jordan_tp (A : Type*) [AddCommGroup A] extends has_trilinear_tp A :=
 (jordan : ∀ (a b c d e: A), ⦃a, b, ⦃c, d, e⦄⦄  =
   ⦃⦃a, b, c⦄, d, e⦄ - ⦃c, ⦃b, a, d⦄, e⦄ + ⦃c, d, ⦃a, b, e⦄⦄)
 
+class SesterlinearTp (R : Type _) [CommSemiring R] [StarRing R] (A : Type*)
+[AddCommGroup A] [Module R A] :=
+(tp : A →ₗ[R] A →ₛₗ[starRingEnd R] A →ₗ[R] A )
+
+
+
 namespace is_jordan_tp
 
 open has_trilinear_tp
@@ -108,9 +114,9 @@ lemma lie_D_D (a b c d: A) : ⁅D a b, D c d⁆ = D ⦃a, b, c⦄ d - D c ⦃b, 
   rw [Ring.lie_def]
   unfold D
   simp
-  --sorry
+  sorry
   --rw [sub_eq_iff_eq_add]
-  rw [jordan]
+  --rw [jordan]
 
 /--
 For a and b in A, the pair D(a,b) and -D(b,a) are Leibniz

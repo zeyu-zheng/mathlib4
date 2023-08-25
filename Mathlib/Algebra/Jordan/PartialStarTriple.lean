@@ -29,6 +29,7 @@ interested reader is referred to [alfsenshultz2003], [chu2012], [friedmanscarr20
 
 class TrilinearTp (A : Type _) [AddCommMonoid A] (Aₛ : AddSubmonoid A) where
   tp : A →+ Aₛ →+ A →+ A
+  subtriple: ∀ (a b c : Aₛ), tp a b c ∈ Aₛ
 
 notation "⦃" a "," b "," c "⦄" => TrilinearTp.tp  a b c
 
@@ -96,3 +97,21 @@ calc
 -/
 
 end PartialTripleProduct
+
+class SesterlinearTp (R : Type _) [CommSemiring R] [StarRing R] (A : Type _)
+[AddCommMonoid A] [Module R A] {Aₛ : Submodule R A} where
+  tp : A →ₗ[R] Aₛ →ₛₗ[starRingEnd R] A →ₗ[R] A
+  subtriple: ∀ (a b c : Aₛ), tp a b c ∈ Aₛ
+
+notation "⦃" a "," b "," c "⦄" => SesterlinearTp.tp a b c
+
+namespace SesterlinearTp
+
+/-- The type of centroid homomorphisms from `α` to `α`. -/
+structure CentroidHom (α : Type*) [NonUnitalNonAssocSemiring α] extends α →+ α where
+  /-- Commutativity of centroid homomorphims with left multiplication. -/
+  map_mul_left' (a b : α) : toFun (a * b) = a * toFun b
+  /-- Commutativity of centroid homomorphims with right multiplication. -/
+  map_mul_right' (a b : α) : toFun (a * b) = toFun a * b
+
+  end SesterlinearTp
