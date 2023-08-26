@@ -98,20 +98,39 @@ calc
 
 end PartialTripleProduct
 
-class SesterlinearTp (R : Type _) [CommSemiring R] [StarRing R] (A : Type _)
-[AddCommMonoid A] [Module R A] {Aₛ : Submodule R A} where
+class PartialStarTriple (R : Type _) [CommSemiring R] [StarRing R] (A : Type _)
+[AddCommMonoid A] [Module R A] (Aₛ : Submodule R A) where
   tp : A →ₗ[R] Aₛ →ₛₗ[starRingEnd R] A →ₗ[R] A
-  subtriple: ∀ (a b c : Aₛ), tp a b c ∈ Aₛ
+  comm (a c : A) (b : Aₛ) : tp a b c = tp c b a
+  subtriple (a b c : Aₛ) : tp a b c ∈ Aₛ
 
-notation "⦃" a "," b "," c "⦄" => SesterlinearTp.tp a b c
+notation "⦃" a "," b "," c "⦄" => PartialStarTriple.tp a b c
 
-namespace SesterlinearTp
+namespace PartialStarTriple
+
+variable (R : Type _) [CommSemiring R] [StarRing R] (A : Type _) [AddCommMonoid A] [Module R A]
+  (Aₛ : Submodule R A) [PartialStarTriple R A Aₛ]
 
 /-- The type of centroid homomorphisms from `α` to `α`. -/
-structure CentroidHom (α : Type*) [NonUnitalNonAssocSemiring α] extends α →+ α where
-  /-- Commutativity of centroid homomorphims with left multiplication. -/
-  map_mul_left' (a b : α) : toFun (a * b) = a * toFun b
-  /-- Commutativity of centroid homomorphims with right multiplication. -/
-  map_mul_right' (a b : α) : toFun (a * b) = toFun a * b
+structure CentroidHom extends A →ₗ[R] A where
+  map_left (a c : A) (b : Aₛ) : toFun ⦃a, b, c⦄ = ⦃toFun a, b, c⦄
+  map_mid: ∃ (S : Aₛ →ₗ[R] Aₛ), ∀ (a c : A) (b : Aₛ), toFun ⦃a, b, c⦄ = ⦃a, S.toFun b, c⦄
 
-  end SesterlinearTp
+-- lemma CentroidHom.map_right (a c : A) (b : Aₛ) :
+
+namespace CentroidHom
+
+#check LinearMap.id
+
+/-- `id` as a `CentroidHom`. -/
+protected def id : CentroidHom R A Aₛ :=
+{ (LinearMap.id :  A →ₗ[R] A) with
+  map_left := fun _ _ _ ↦ rfl
+  map_mid := by
+    use (LinearMap.id :  Aₛ →ₗ[R] Aₛ)
+    simp only [AddHom.toFun_eq_coe, LinearMap.coe_toAddHom, LinearMap.id_coe, id_eq,
+      Subtype.forall, implies_true, forall_const] }
+
+end CentroidHom
+
+end PartialStarTriple
