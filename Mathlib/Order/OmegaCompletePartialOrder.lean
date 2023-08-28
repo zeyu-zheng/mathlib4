@@ -194,18 +194,6 @@ variable {α : Type u} {β : Type v} {γ : Type*}
 
 variable [OmegaCompletePartialOrder α]
 
-lemma ωSup_IsLUB (c : Chain α) : IsLUB (Set.range c) (ωSup c) := by
-  unfold IsLUB
-  unfold IsLeast
-  constructor
-  · unfold upperBounds
-    simp
-    exact fun a ↦ le_ωSup c a
-  · unfold lowerBounds
-    unfold upperBounds
-    simp
-    exact fun ⦃a⦄ a_1 ↦ ωSup_le c a a_1
-
 /-- Transfer an `OmegaCompletePartialOrder` on `β` to an `OmegaCompletePartialOrder` on `α`
 using a strictly monotone function `f : β →o α`, a definition of ωSup and a proof that `f` is
 continuous with regard to the provided `ωSup` and the ωCPO on `α`. -/
@@ -239,6 +227,18 @@ theorem ωSup_le_ωSup_of_le {c₀ c₁ : Chain α} (h : c₀ ≤ c₁) : ωSup 
     exact le_trans h (le_ωSup _ _)
 #align omega_complete_partial_order.ωSup_le_ωSup_of_le OmegaCompletePartialOrder.ωSup_le_ωSup_of_le
 
+lemma ωSup_IsLUB {c : Chain α} : IsLUB (Set.range c) (ωSup c) := by
+  unfold IsLUB
+  unfold IsLeast
+  constructor
+  · unfold upperBounds
+    simp
+    exact fun a ↦ le_ωSup c a
+  · unfold lowerBounds
+    unfold upperBounds
+    simp
+    exact fun ⦃a⦄ a_1 ↦ ωSup_le c a a_1
+
 theorem ωSup_le_iff (c : Chain α) (x : α) : ωSup c ≤ x ↔ ∀ i, c i ≤ x := by
   constructor <;> intros
   · trans ωSup c
@@ -246,6 +246,19 @@ theorem ωSup_le_iff (c : Chain α) (x : α) : ωSup c ≤ x ↔ ∀ i, c i ≤ 
     assumption
   exact ωSup_le _ _ ‹_›
 #align omega_complete_partial_order.ωSup_le_iff OmegaCompletePartialOrder.ωSup_le_iff
+
+lemma IsLUB_ωSup {c : Chain α} {a : α} (h: IsLUB (Set.range c) a) : a = ωSup c := by
+  rw [le_antisymm_iff]
+  unfold IsLUB at h
+  unfold IsLeast at h
+  unfold upperBounds at h
+  unfold lowerBounds at h
+  simp at h
+  constructor
+  · apply h.2
+    exact fun a ↦ le_ωSup c a
+  · rw [ωSup_le_iff]
+    apply h.1
 
 /-- A subset `p : α → Prop` of the type closed under `ωSup` induces an
 `OmegaCompletePartialOrder` on the subtype `{a : α // p a}`. -/
