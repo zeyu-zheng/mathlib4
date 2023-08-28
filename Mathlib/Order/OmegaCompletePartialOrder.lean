@@ -292,11 +292,19 @@ def Continuous' (f : α → β) : Prop :=
 #align omega_complete_partial_order.continuous' OmegaCompletePartialOrder.Continuous'
 
 lemma IsLUB_of_ScottContinuous {c : Chain α} {f : α → β} (hf : ScottContinuous f) :
-    IsLUB (f '' Set.range c) (f (ωSup c)) := by
+    IsLUB (Set.range (Chain.map c ⟨f, (ScottContinuous.monotone hf)⟩)) (f (ωSup c)) := by
+  simp only [map_coe, OrderHom.coe_mk]
+  rw [(Set.range_comp f ↑c)]
   apply hf
   exact Set.range_nonempty ↑c
   exact IsChain.directedOn (isChain_range c)
   exact ωSup_IsLUB
+
+lemma Continuous'_of_ScottContinuous {f : α → β} (hf : ScottContinuous f) : Continuous' f := by
+  constructor
+  · intro c
+    rw [← (IsLUB_ωSup (IsLUB_of_ScottContinuous hf))]
+    simp only [OrderHom.coe_mk]
 
 theorem Continuous'.to_monotone {f : α → β} (hf : Continuous' f) : Monotone f :=
   hf.fst
