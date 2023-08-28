@@ -194,6 +194,18 @@ variable {α : Type u} {β : Type v} {γ : Type*}
 
 variable [OmegaCompletePartialOrder α]
 
+lemma ωSup_IsLUB (c : Chain α) : IsLUB (Set.range c) (ωSup c) := by
+  unfold IsLUB
+  unfold IsLeast
+  constructor
+  · unfold upperBounds
+    simp
+    exact fun a ↦ le_ωSup c a
+  · unfold lowerBounds
+    unfold upperBounds
+    simp
+    exact fun ⦃a⦄ a_1 ↦ ωSup_le c a a_1
+
 /-- Transfer an `OmegaCompletePartialOrder` on `β` to an `OmegaCompletePartialOrder` on `α`
 using a strictly monotone function `f : β →o α`, a definition of ωSup and a proof that `f` is
 continuous with regard to the provided `ωSup` and the ωCPO on `α`. -/
