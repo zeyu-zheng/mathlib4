@@ -227,6 +227,14 @@ theorem ωSup_le_ωSup_of_le {c₀ c₁ : Chain α} (h : c₀ ≤ c₁) : ωSup 
     exact le_trans h (le_ωSup _ _)
 #align omega_complete_partial_order.ωSup_le_ωSup_of_le OmegaCompletePartialOrder.ωSup_le_ωSup_of_le
 
+theorem ωSup_le_iff (c : Chain α) (x : α) : ωSup c ≤ x ↔ ∀ i, c i ≤ x := by
+  constructor <;> intros
+  · trans ωSup c
+    exact le_ωSup _ _
+    assumption
+  exact ωSup_le _ _ ‹_›
+#align omega_complete_partial_order.ωSup_le_iff OmegaCompletePartialOrder.ωSup_le_iff
+
 lemma ωSup_IsLUB {c : Chain α} : IsLUB (Set.range c) (ωSup c) := by
   unfold IsLUB
   unfold IsLeast
@@ -238,14 +246,6 @@ lemma ωSup_IsLUB {c : Chain α} : IsLUB (Set.range c) (ωSup c) := by
     unfold upperBounds
     simp
     exact fun ⦃a⦄ a_1 ↦ ωSup_le c a a_1
-
-theorem ωSup_le_iff (c : Chain α) (x : α) : ωSup c ≤ x ↔ ∀ i, c i ≤ x := by
-  constructor <;> intros
-  · trans ωSup c
-    exact le_ωSup _ _
-    assumption
-  exact ωSup_le _ _ ‹_›
-#align omega_complete_partial_order.ωSup_le_iff OmegaCompletePartialOrder.ωSup_le_iff
 
 lemma IsLUB_ωSup {c : Chain α} {a : α} (h: IsLUB (Set.range c) a) : a = ωSup c := by
   rw [le_antisymm_iff]
@@ -290,6 +290,13 @@ def Continuous (f : α →o β) : Prop :=
 def Continuous' (f : α → β) : Prop :=
   ∃ hf : Monotone f, Continuous ⟨f, hf⟩
 #align omega_complete_partial_order.continuous' OmegaCompletePartialOrder.Continuous'
+
+lemma IsLUB_of_ScottContinuous {c : Chain α} {f : α → β} (hf : ScottContinuous f) :
+    IsLUB (f '' Set.range c) (f (ωSup c)) := by
+  apply hf
+  exact Set.range_nonempty ↑c
+  exact IsChain.directedOn (isChain_range c)
+  exact ωSup_IsLUB
 
 theorem Continuous'.to_monotone {f : α → β} (hf : Continuous' f) : Monotone f :=
   hf.fst
