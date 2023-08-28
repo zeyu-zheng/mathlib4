@@ -114,6 +114,17 @@ theorem isωSup_ωSup {α} [OmegaCompletePartialOrder α] (c : Chain α) : IsωS
   · apply ωSup_le
 #align is_ωSup_ωSup isωSup_ωSup
 
+
+#check isωSup_iff_isLUB
+
+lemma Continuous_of_ScottContinuous {f : α → β} (hf : ScottContinuous f) : Continuous' f := by
+  constructor
+  · intro c
+    apply hf
+    unfold ScottContinuous at hf
+
+  · exact ScottContinuous.monotone hf
+
 theorem scottContinuous_of_continuous {α β} [OmegaCompletePartialOrder α]
     [OmegaCompletePartialOrder β] (f : Scott α → Scott β) (hf : Continuous f) :
     OmegaCompletePartialOrder.Continuous' f := by
