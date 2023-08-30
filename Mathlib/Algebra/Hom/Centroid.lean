@@ -575,15 +575,10 @@ structure IsMulCentral {M : Type*} [Mul M] (z : M) : Prop where
 def nonAssocCenter [Mul M] : Set M :=
   { z | (IsMulCentral z) }
 
-/-
 @[to_additive mem_addNonAssocCenter_iff]
 theorem mem_nonAssocCenter_iff [Mul M] {z : M} : z ∈ nonAssocCenter M ↔
-    ∀ a b, a * z = z * a ∧
-    (z * a) * b = z * (a * b) ∧
-    (a * z) * b = a * (z * b) ∧
-    (a * b) * z = a * (b * z) :=
+    IsMulCentral z :=
   Iff.rfl
--/
 
 @[to_additive (attr := simp) zero_mem_addNonAssocCenter]
 theorem one_mem_nonAssocCenter [MulOneClass M] : (1 : M) ∈ Set.nonAssocCenter M where
@@ -598,6 +593,8 @@ theorem zero_mem_nonAssocCenter [MulZeroClass M] : (0 : M) ∈ Set.nonAssocCente
   left_assoc _ _ := by rw [zero_mul, zero_mul, zero_mul]
   mid_assoc _ _ := by rw [mul_zero, zero_mul, mul_zero]
   right_assoc _ _ := by rw [mul_zero, mul_zero, mul_zero]
+
+variable {M}
 
 @[to_additive (attr := simp) add_mem_nonAssocAddCenter]
 theorem mul_mem_nonAssocCenter [Mul M] {z₁ z₂ : M} (hz₁ : z₁ ∈ Set.nonAssocCenter M)
@@ -651,3 +648,29 @@ theorem neg_mem_nonAssoccenter [NonUnitalNonAssocRing M] {z : M} (hz : z ∈ Set
   right_assoc _ _ := by rw [mul_neg, hz.right_assoc, mul_neg, mul_neg]
 
 end Set
+
+
+namespace Mul
+
+section
+
+variable (M) [Mul M]
+
+/-- The center of a magma `M` is the set of elements that commute with everything in `M` -/
+@[to_additive
+      "The center of a magma `M` is the set of elements that commute with everything in `M`"]
+def nacenter : Subsemigroup M where
+  carrier := Set.nonAssocCenter M
+  mul_mem' := Set.mul_mem_nonAssocCenter
+
+variable {M}
+
+/-- The center of a magma is commutative. -/
+@[to_additive "The center of an additive magma is commutative."]
+instance : CommSemigroup (Mul.nacenter M) where
+  mul_assoc := fun _ b _ => Subtype.ext <| b.2.mid_assoc _ _
+  mul_comm := fun a _ => Subtype.ext <| a.2.comm _
+
+end
+
+end Mul
