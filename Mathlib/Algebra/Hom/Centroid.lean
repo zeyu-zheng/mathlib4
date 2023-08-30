@@ -562,24 +562,25 @@ structure is_AddCentral [Add M] (z : M) : Prop where
 -/
 universe u
 
+structure IsAddCentral {M : Type u} [Add M] (z : M) : Prop where
+  comm (a : M) : z + a = a + z
+  left_assoc (b c : M) : z + (b + c) = (z + b) + c
+  mid_assoc (a c : M) : (a + z) + c = a + (z + c)
+  right_assoc (a b : M) : (a + b) + z = a + (b + z)
+
 @[to_additive]
-structure IsMulCentral {M : Type u} [Mul M] (z : M) : Prop where
-  comm : ∀ a , z * a = a * z
-  left_assoc : ∀ b c, z * (b * c) = (z * b) * c
-  mid_assoc : ∀ a c, (a * z) * c = a * (z * c)
-  right_assoc : ∀ a b, (a * b) * z = a * (b * z)
-
-
-
-variable [Mul M] (z:M)
-
-#check is_mulCentral M z
+structure IsMulCentral {M : Type*} [Mul M] (z : M) : Prop where
+  comm (a : M): z * a = a * z
+  left_assoc (b c : M) : z * (b * c) = (z * b) * c
+  mid_assoc (a c : M) : (a * z) * c = a * (z * c)
+  right_assoc (a b : M) : (a * b) * z = a * (b * z)
 
 /-- The center of a magma. -/
 @[to_additive addNonAssocCenter " The center of an additive magma. "]
 def nonAssocCenter [Mul M] : Set M :=
-  { z | (is_mulCentral M z) }
+  { z | (IsMulCentral z) }
 
+/-
 @[to_additive mem_addNonAssocCenter_iff]
 theorem mem_nonAssocCenter_iff [Mul M] {z : M} : z ∈ nonAssocCenter M ↔
     ∀ a b, a * z = z * a ∧
@@ -587,33 +588,31 @@ theorem mem_nonAssocCenter_iff [Mul M] {z : M} : z ∈ nonAssocCenter M ↔
     (a * z) * b = a * (z * b) ∧
     (a * b) * z = a * (b * z) :=
   Iff.rfl
+-/
 
 @[to_additive (attr := simp) add_mem_nonAssocAddCenter]
 theorem mul_mem_nonAssocCenter [Mul M] {z₁ z₂ : M} (hz₁ : z₁ ∈ Set.nonAssocCenter M)
-    (hz₂ : z₂ ∈ Set.nonAssocCenter M) : z₁ * z₂ ∈ Set.nonAssocCenter M := fun a b => by
-  constructor
-  · calc
-      a * (z₁ * z₂) = (a * z₁) * z₂ := by rw [((mem_nonAssocCenter_iff _).mp hz₁ a z₂).2.2.1]
-      _ = z₂ * (z₁ * a) := by rw [((mem_nonAssocCenter_iff _).mp hz₁ a z₁).1,
-        ((mem_nonAssocCenter_iff _).mp hz₂ (z₁ * a) z₂).1]
-      _ = z₂ * z₁ * a := by rw [((mem_nonAssocCenter_iff _).mp hz₂ _ _).2.1]
-      _ = z₁ * z₂ * a := by rw [((mem_nonAssocCenter_iff _).mp hz₁ _ z₁).1]
-  · constructor
-    · calc
-        z₁ * z₂ * a * b = (z₁ * (z₂ * a)) * b := by rw [((mem_nonAssocCenter_iff _).mp hz₁ _ _).2.1]
-        _ = z₁ * ((z₂ * a) * b) := by rw [((mem_nonAssocCenter_iff _).mp hz₁ _ _).2.1]
-        _ = z₁ * (z₂ * (a * b)) := by rw [((mem_nonAssocCenter_iff _).mp hz₂ _ _).2.1]
-        _ = z₁ * z₂ * (a * b) := by rw [((mem_nonAssocCenter_iff _).mp hz₁ _ _).2.1]
-    · constructor
-      · calc a * (z₁ * z₂) * b = ((a * z₁) * z₂) * b := by
-              rw [((mem_nonAssocCenter_iff _).mp hz₁ _ _).2.2.1]
-        _ = (a * z₁) * (z₂ * b) := by rw [((mem_nonAssocCenter_iff _).mp hz₂ _ _).2.2.1]
-        _ = a * (z₁ * (z₂ * b)) := by rw [((mem_nonAssocCenter_iff _).mp hz₁ _ _).2.2.1]
-        _ = a * (z₁ * z₂ * b) := by rw [((mem_nonAssocCenter_iff _).mp hz₂ _ _).2.2.1]
-      · calc a * b * (z₁ * z₂) = ((a * b) * z₁) * z₂ := by
-              rw [((mem_nonAssocCenter_iff _).mp hz₁ _ _).2.2.1]
-        _ = (a * (b * z₁)) * z₂ := by rw [((mem_nonAssocCenter_iff _).mp hz₁ _ _).2.2.2]
-        _ = a * ((b * z₁) * z₂) := by rw [((mem_nonAssocCenter_iff _).mp hz₂ _ _).2.2.2]
-        _ = a * (b * (z₁ * z₂)) := by rw [((mem_nonAssocCenter_iff _).mp hz₂ _ _).2.2.2]
+    (hz₂ : z₂ ∈ Set.nonAssocCenter M) : z₁ * z₂ ∈ Set.nonAssocCenter M where
+  comm a := calc
+    z₁ * z₂ * a = z₂ * z₁ * a := by rw [IsMulCentral.comm hz₁]
+    _ = z₂ * (z₁ * a) := by rw [IsMulCentral.mid_assoc hz₁ z₂]
+    _ = (a * z₁) * z₂ := by rw [IsMulCentral.comm hz₁, IsMulCentral.comm hz₂]
+    _ = a * (z₁ * z₂) := by rw [IsMulCentral.right_assoc hz₂ a z₁]
+  left_assoc (b c : M) := calc
+    z₁ * z₂ * (b * c) = z₁ * (z₂ * (b * c)) := by rw [IsMulCentral.mid_assoc hz₂]
+    _ = z₁ * ((z₂ * b) * c) := by rw [IsMulCentral.left_assoc hz₂]
+    _ = (z₁ * (z₂ * b)) * c := by rw [IsMulCentral.left_assoc hz₁]
+    _ = z₁ * z₂ * b * c := by rw [IsMulCentral.mid_assoc hz₂]
+  mid_assoc (a c : M) := calc
+    a * (z₁ * z₂) * c = ((a * z₁) * z₂) * c := by rw [IsMulCentral.mid_assoc hz₁]
+    _ = (a * z₁) * (z₂ * c) := by rw [IsMulCentral.mid_assoc hz₂]
+    _ = a * (z₁ * (z₂ * c)) := by rw [IsMulCentral.mid_assoc hz₁]
+    _ = a * (z₁ * z₂ * c) := by rw [IsMulCentral.mid_assoc hz₂]
+  right_assoc (a b : M) := calc
+    a * b * (z₁ * z₂) = ((a * b) * z₁) * z₂ := by rw [IsMulCentral.right_assoc hz₂]
+    _ = (a * (b * z₁)) * z₂ := by rw [IsMulCentral.right_assoc hz₁]
+    _ =  a * ((b * z₁) * z₂) := by rw [IsMulCentral.right_assoc hz₂]
+    _ = a * (b * (z₁ * z₂)) := by rw [IsMulCentral.mid_assoc hz₁]
+
 
 end Set
