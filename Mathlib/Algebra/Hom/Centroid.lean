@@ -553,14 +553,9 @@ namespace Set
 
 variable (M)
 
-/-
-structure is_AddCentral [Add M] (z : M) : Prop where
-  comm : ∀ a , z + a = a + z
-  left_assoc : ∀ b c, z + (b + c) = (z + b) + c
-  mid_assoc : ∀ a c, (a + z) + c = a + (z + c)
-  right_assoc : ∀ a b, (a + b) + z = a + (b + z)
--/
 universe u
+
+-- cf  GroupTheory/Subsemigroup/Center
 
 structure IsAddCentral {M : Type u} [Add M] (z : M) : Prop where
   comm (a : M) : z + a = a + z
@@ -590,29 +585,54 @@ theorem mem_nonAssocCenter_iff [Mul M] {z : M} : z ∈ nonAssocCenter M ↔
   Iff.rfl
 -/
 
+@[to_additive (attr := simp) zero_mem_addNonAssocCenter]
+theorem one_mem_nonAssocCenter [MulOneClass M] : (1 : M) ∈ Set.nonAssocCenter M where
+  comm _  := by rw [one_mul, mul_one]
+  left_assoc _ _ := by rw [one_mul, one_mul]
+  mid_assoc _ _ := by rw [mul_one, one_mul]
+  right_assoc _ _ := by rw [mul_one, mul_one]
+
+@[simp]
+theorem zero_mem_nonAssocCenter [MulZeroClass M] : (0 : M) ∈ Set.nonAssocCenter M where
+  comm _ := by rw [zero_mul, mul_zero]
+  left_assoc _ _ := by rw [zero_mul, zero_mul, zero_mul]
+  mid_assoc _ _ := by rw [mul_zero, zero_mul, mul_zero]
+  right_assoc _ _ := by rw [mul_zero, mul_zero, mul_zero]
+
 @[to_additive (attr := simp) add_mem_nonAssocAddCenter]
 theorem mul_mem_nonAssocCenter [Mul M] {z₁ z₂ : M} (hz₁ : z₁ ∈ Set.nonAssocCenter M)
     (hz₂ : z₂ ∈ Set.nonAssocCenter M) : z₁ * z₂ ∈ Set.nonAssocCenter M where
   comm a := calc
-    z₁ * z₂ * a = z₂ * z₁ * a := by rw [IsMulCentral.comm hz₁]
-    _ = z₂ * (z₁ * a) := by rw [IsMulCentral.mid_assoc hz₁ z₂]
-    _ = (a * z₁) * z₂ := by rw [IsMulCentral.comm hz₁, IsMulCentral.comm hz₂]
-    _ = a * (z₁ * z₂) := by rw [IsMulCentral.right_assoc hz₂ a z₁]
+    z₁ * z₂ * a = z₂ * z₁ * a := by rw [hz₁.comm]
+    _ = z₂ * (z₁ * a) := by rw [hz₁.mid_assoc z₂]
+    _ = (a * z₁) * z₂ := by rw [hz₁.comm, hz₂.comm]
+    _ = a * (z₁ * z₂) := by rw [hz₂.right_assoc a z₁]
   left_assoc (b c : M) := calc
-    z₁ * z₂ * (b * c) = z₁ * (z₂ * (b * c)) := by rw [IsMulCentral.mid_assoc hz₂]
-    _ = z₁ * ((z₂ * b) * c) := by rw [IsMulCentral.left_assoc hz₂]
-    _ = (z₁ * (z₂ * b)) * c := by rw [IsMulCentral.left_assoc hz₁]
-    _ = z₁ * z₂ * b * c := by rw [IsMulCentral.mid_assoc hz₂]
+    z₁ * z₂ * (b * c) = z₁ * (z₂ * (b * c)) := by rw [hz₂.mid_assoc]
+    _ = z₁ * ((z₂ * b) * c) := by rw [hz₂.left_assoc]
+    _ = (z₁ * (z₂ * b)) * c := by rw [hz₁.left_assoc]
+    _ = z₁ * z₂ * b * c := by rw [hz₂.mid_assoc]
   mid_assoc (a c : M) := calc
-    a * (z₁ * z₂) * c = ((a * z₁) * z₂) * c := by rw [IsMulCentral.mid_assoc hz₁]
-    _ = (a * z₁) * (z₂ * c) := by rw [IsMulCentral.mid_assoc hz₂]
-    _ = a * (z₁ * (z₂ * c)) := by rw [IsMulCentral.mid_assoc hz₁]
-    _ = a * (z₁ * z₂ * c) := by rw [IsMulCentral.mid_assoc hz₂]
+    a * (z₁ * z₂) * c = ((a * z₁) * z₂) * c := by rw [hz₁.mid_assoc]
+    _ = (a * z₁) * (z₂ * c) := by rw [hz₂.mid_assoc]
+    _ = a * (z₁ * (z₂ * c)) := by rw [hz₁.mid_assoc]
+    _ = a * (z₁ * z₂ * c) := by rw [hz₂.mid_assoc]
   right_assoc (a b : M) := calc
-    a * b * (z₁ * z₂) = ((a * b) * z₁) * z₂ := by rw [IsMulCentral.right_assoc hz₂]
-    _ = (a * (b * z₁)) * z₂ := by rw [IsMulCentral.right_assoc hz₁]
-    _ =  a * ((b * z₁) * z₂) := by rw [IsMulCentral.right_assoc hz₂]
-    _ = a * (b * (z₁ * z₂)) := by rw [IsMulCentral.mid_assoc hz₁]
+    a * b * (z₁ * z₂) = ((a * b) * z₁) * z₂ := by rw [hz₂.right_assoc]
+    _ = (a * (b * z₁)) * z₂ := by rw [hz₁.right_assoc]
+    _ =  a * ((b * z₁) * z₂) := by rw [hz₂.right_assoc]
+    _ = a * (b * (z₁ * z₂)) := by rw [hz₁.mid_assoc]
+
+@[to_additive (attr := simp) neg_mem_addNonAssocCenter]
+theorem inv_mem_nonAssocCenter [Group M] {z : M} (hz : z ∈ Set.nonAssocCenter M) :
+    z⁻¹ ∈ Set.nonAssocCenter M where
+  comm _ := by rw [← inv_inj, mul_inv_rev, inv_inv, ← hz.comm, mul_inv_rev, inv_inv]
+  left_assoc _ _ := by rw [← inv_inj, mul_inv_rev, inv_inv, mul_inv_rev, hz.right_assoc,
+    mul_inv_rev, mul_inv_rev, inv_inv]
+  mid_assoc a c := by rw [← inv_inj, mul_inv_rev, mul_inv_rev, inv_inv, ← hz.mid_assoc,
+    mul_inv_rev, mul_inv_rev, inv_inv,]
+  right_assoc a b := by rw [← inv_inj, mul_inv_rev, inv_inv, mul_inv_rev, hz.left_assoc,
+    mul_inv_rev, mul_inv_rev, inv_inv]
 
 
 end Set
