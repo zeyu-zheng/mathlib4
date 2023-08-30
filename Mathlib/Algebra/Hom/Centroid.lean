@@ -629,10 +629,16 @@ theorem inv_mem_nonAssocCenter [Group M] {z : M} (hz : z ∈ Set.nonAssocCenter 
   comm _ := by rw [← inv_inj, mul_inv_rev, inv_inv, ← hz.comm, mul_inv_rev, inv_inv]
   left_assoc _ _ := by rw [← inv_inj, mul_inv_rev, inv_inv, mul_inv_rev, hz.right_assoc,
     mul_inv_rev, mul_inv_rev, inv_inv]
-  mid_assoc a c := by rw [← inv_inj, mul_inv_rev, mul_inv_rev, inv_inv, ← hz.mid_assoc,
+  mid_assoc _ _ := by rw [← inv_inj, mul_inv_rev, mul_inv_rev, inv_inv, ← hz.mid_assoc,
     mul_inv_rev, mul_inv_rev, inv_inv,]
-  right_assoc a b := by rw [← inv_inj, mul_inv_rev, inv_inv, mul_inv_rev, hz.left_assoc,
+  right_assoc _ _ := by rw [← inv_inj, mul_inv_rev, inv_inv, mul_inv_rev, hz.left_assoc,
     mul_inv_rev, mul_inv_rev, inv_inv]
 
+theorem add_mem_nonAssocCenter [Distrib M] {z₁ z₂ : M} (hz₁ : z₁ ∈ Set.nonAssocCenter M) (hz₂ : z₂ ∈ Set.nonAssocCenter M) :
+    z₁ + z₂ ∈ Set.nonAssocCenter M where
+  comm _ := by rw [add_mul, mul_add, hz₁.comm, hz₂.comm]
+  left_assoc _ _ := by rw [add_mul, hz₁.left_assoc, hz₂.left_assoc, ←add_mul, ←add_mul]
+  mid_assoc _ _ := by rw [mul_add, add_mul, hz₁.mid_assoc, hz₂.mid_assoc, ←mul_add, ←add_mul]
+  right_assoc _ _ := by rw [mul_add, hz₁.right_assoc, hz₂.right_assoc, ←mul_add, ←mul_add]
 
 end Set
