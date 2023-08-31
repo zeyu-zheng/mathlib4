@@ -117,6 +117,67 @@ def _root_.Lean.MVarId.changeLocalDecl' (mvarId : MVarId) (fvarId : FVarId) (typ
     | _ => throwTacticEx `changeLocalDecl mvarId "unexpected auxiliary target"
   return mvarId
 
+/--
+  Execute `k`, and collect new "holes" in the resulting expression.
+-/
+def withCollectingNewGoalsFrom' (k : TacticM Expr) (tagSuffix : Name) (allowNaturalHoles := false) : TacticM (Expr × List MVarId) :=
+  /-
+  When `allowNaturalHoles = true`, unassigned holes should become new metavariables, including `_`s.
+  Thus, we set `holesAsSynthethicOpaque` to true if it is not already set to `true`.
+  See issue #1681. We have the tactic
+  ```
+  `refine' (fun x => _)
+  ```
+  If we create a natural metavariable `?m` for `_` with type `Nat`, then when we try to abstract `x`,
+  a new metavariable `?n` with type `Nat -> Nat` is created, and we assign `?m := ?n x`,
+  and the resulting term is `fun x => ?n x`. Then, `getMVarsNoDelayed` would return `?n` as a new goal
+  which would be confusing since it has type `Nat -> Nat`.
+  -/
+  if allowNaturalHoles then
+    withTheReader Term.Context (fun ctx => { ctx with holesAsSyntheticOpaque := ctx.holesAsSyntheticOpaque || allowNaturalHoles }) do
+      /-
+      We also enable the assignment of synthetic metavariables, otherwise we will fail to
+      elaborate terms such as `f _ x` where `f : (α : Type) → α → α` and `x : A`.
+
+      IMPORTANT: This is not a perfect solution. For example, `isDefEq` will be able assign metavariables associated with `by ...`.
+      This should not be an immediate problem since this feature is only used to implement `refine'`. If it becomes
+      an issue in practice, we should add a new kind of opaque metavariable for `refine'`, and mark the holes created using `_`
+      with it, and have a flag that allows us to assign this kind of metavariable, but prevents us from assigning metavariables
+      created by the `by ...` notation.
+      -/
+      withAssignableSyntheticOpaque go
+  else
+    go
+where
+  go := do
+    let mvarCounterSaved := (← getMCtx).mvarCounter
+    let val ← k
+    let newMVarIds ← getMVarsNoDelayed val
+    /- ignore let-rec auxiliary variables, they are synthesized automatically later -/
+    let newMVarIds ← newMVarIds.filterM fun mvarId => return !(← Term.isLetRecAuxMVar mvarId)
+    /- The following `unless … do` block guards against unassigned natural mvarids created during
+    `k` in the case that `allowNaturalHoles := false`. If we pass this block without aborting, we
+    can be assured that `newMVarIds` does not contain unassigned natural mvars created during `k`.
+    Note that in all cases we must allow `newMVarIds` to contain unassigned natural mvars which
+    were created *before* `k`; this is the purpose of `mvarCounterSaved`, which lets us distinguish
+    mvars created before `k` from those created during and after. See issue #2434. -/
+    unless allowNaturalHoles do
+      let naturalMVarIds ← newMVarIds.filterM fun mvarId => return (← mvarId.getKind).isNatural
+      let naturalMVarIds ← filterOldMVars naturalMVarIds mvarCounterSaved
+      logUnassignedAndAbort naturalMVarIds
+    /-
+    We sort the new metavariable ids by index to ensure the new goals are ordered using the order the metavariables have been created.
+    See issue #1682.
+    Potential problem: if elaboration of subterms is delayed the order the new metavariables are created may not match the order they
+    appear in the `.lean` file. We should tell users to prefer tagged goals.
+    -/
+    let newMVarIds ← sortMVarIdsByIndex newMVarIds.toList
+    tagUntaggedGoals (← getMainTag) tagSuffix newMVarIds
+    return (val, newMVarIds)
+
+def elabTermWithHoles' (stx : Syntax) (expectedType? : Option Expr) (tagSuffix : Name) (allowNaturalHoles := false) : TacticM (Expr × List MVarId) := do
+  withCollectingNewGoalsFrom' (elabTermEnsuringType stx expectedType?) tagSuffix allowNaturalHoles
+
 /-- Exactly like `Lean.Elab.Tactic.filterOldMVars`, but uses `List`s instead of `Array`s. Discards
 all mvars that were created before `mvarCounterSaved` was recorded. -/
 private def filterOldMVarsList (mvarIds : List MVarId) (mvarCounterSaved : Nat)
@@ -157,7 +218,7 @@ elab_rules : tactic
         Due to the nature of the hack, nothing depends on `mvar`, and it should be thrown away. If
         we fail to do so, we wind up with a spurious unsolved goal. -/
         let mvarCounterSaved := (← getMCtx).mvarCounter
-        let (_, mvars) ← elabTermWithHoles
+        let (_, mvars) ← elabTermWithHoles'
                           (← `(term | show $newType from $(← Term.exprToSyntax mvar))) hTy `change
         let mvars ← filterOldMVarsList mvars mvarCounterSaved
         liftMetaTactic fun mvarId ↦ do
