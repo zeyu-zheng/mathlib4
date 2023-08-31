@@ -367,9 +367,9 @@ lemma monotone_seq_Cauchy [FaithfulSMul M X] {u : ℕ → { P : M // IsLprojecti
   use N
   intros m hm n hn
   cases' le_or_gt n m with hnm hmn
-  . rw [le_norm' x (h hnm)]
+  · rw [le_norm' x (h hnm)]
     exact lt_of_abs_lt (hN m hm n hn)
-  . rw [norm_sub_rev, le_norm' x (h (Nat.le_of_lt hmn))]
+  · rw [norm_sub_rev, le_norm' x (h (Nat.le_of_lt hmn))]
     exact lt_of_abs_lt (hN n hn m hm)
 
 
