@@ -374,7 +374,7 @@ lemma monotone_seq_Cauchy [FaithfulSMul M X] {u : ℕ → { P : M // IsLprojecti
     exact lt_of_abs_lt (hN n hn m hm)
 
 
-#check DirectedOn (· ≤ ·)
+
 -- HWW p9
 
 -- Behrends p20
@@ -389,9 +389,7 @@ instance [FaithfulSMul M X] : CompleteSemilatticeSup { P : M // IsLprojection X 
 }
 -/
 
-#check BooleanAlgebra
 
-#check CompleteBooleanAlgebra
 
 /-
 instance [FaithfulSMul M X] :  CompleteBooleanAlgebra { P : M // IsLprojection X P } := {
