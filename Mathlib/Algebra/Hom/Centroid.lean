@@ -635,8 +635,8 @@ theorem inv_mem_nonAssocCenter [Group M] {z : M} (hz : z ∈ Set.nonAssocCenter 
     mul_inv_rev, mul_inv_rev, inv_inv]
 
 @[simp]
-theorem add_mem_nonAssocCenter [Distrib M] {z₁ z₂ : M} (hz₁ : z₁ ∈ Set.nonAssocCenter M) (hz₂ : z₂ ∈ Set.nonAssocCenter M) :
-    z₁ + z₂ ∈ Set.nonAssocCenter M where
+theorem add_mem_nonAssocCenter [Distrib M] {z₁ z₂ : M} (hz₁ : z₁ ∈ Set.nonAssocCenter M)
+    (hz₂ : z₂ ∈ Set.nonAssocCenter M) : z₁ + z₂ ∈ Set.nonAssocCenter M where
   comm _ := by rw [add_mul, mul_add, hz₁.comm, hz₂.comm]
   left_assoc _ _ := by rw [add_mul, hz₁.left_assoc, hz₂.left_assoc, ←add_mul, ←add_mul]
   mid_assoc _ _ := by rw [mul_add, add_mul, hz₁.mid_assoc, hz₂.mid_assoc, ←mul_add, ←add_mul]
