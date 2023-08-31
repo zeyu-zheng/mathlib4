@@ -580,6 +580,9 @@ theorem mem_nonAssocCenter_iff [Mul M] {z : M} : z ∈ nonAssocCenter M ↔
     IsMulCentral z :=
   Iff.rfl
 
+instance decidableMemNonAssocCenter [Mul M] [∀ a : M, Decidable <| IsMulCentral a] :
+    DecidablePred (· ∈ nonAssocCenter M) := fun _ => decidable_of_iff' _ (mem_nonAssocCenter_iff M)
+
 @[to_additive (attr := simp) zero_mem_addNonAssocCenter]
 theorem one_mem_nonAssocCenter [MulOneClass M] : (1 : M) ∈ Set.nonAssocCenter M where
   comm _  := by rw [one_mul, mul_one]
