@@ -111,16 +111,24 @@ namespace PartialStarTriple
 variable (R : Type _) [CommSemiring R] [StarRing R] (A : Type _) [AddCommMonoid A] [Module R A]
   (Aₛ : Submodule R A) [PartialStarTriple R A Aₛ]
 
-/-- The type of centroid homomorphisms from `α` to `α`. -/
+
+-- (Aₛ,Aₛ) is a (partial) *-triple
+instance : PartialStarTriple R Aₛ ⊤ where
+  tp := sorry
+  comm :=
+
+
+
+/-- The type of centroid homomorphisms from `A` to `A`. -/
 structure CentroidHom extends A →ₗ[R] A where
   map_left (a c : A) (b : Aₛ) : toFun ⦃a, b, c⦄ = ⦃toFun a, b, c⦄
   map_mid: ∃ (S : Aₛ →ₗ[R] Aₛ), ∀ (a c : A) (b : Aₛ), toFun ⦃a, b, c⦄ = ⦃a, S.toFun b, c⦄
 
+--structure
+
 -- lemma CentroidHom.map_right (a c : A) (b : Aₛ) :
 
 namespace CentroidHom
-
-#check LinearMap.id
 
 /-- `id` as a `CentroidHom`. -/
 protected def id : CentroidHom R A Aₛ :=
