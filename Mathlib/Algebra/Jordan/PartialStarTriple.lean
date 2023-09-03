@@ -109,13 +109,14 @@ notation "⦃" a "," b "," c "⦄" => PartialStarTriple.tp a b c
 namespace PartialStarTriple
 
 variable (R : Type _) [CommSemiring R] [StarRing R] (A : Type _) [AddCommMonoid A] [Module R A]
-  (Aₛ : Submodule R A) [PartialStarTriple R A Aₛ]
+  (Aₛ : Submodule R A)
 
 
 -- (Aₛ,Aₛ) is a (partial) *-triple
-instance : PartialStarTriple R Aₛ ⊤ where
-  tp := sorry
-  comm :=
+instance [h: PartialStarTriple R A Aₛ] : PartialStarTriple R Aₛ ⊤ where
+  tp := h.tp
+  comm := h.comm
+  subtriple := h.subtriple
 
 
 
