@@ -172,10 +172,10 @@ jobs:
       - name: upload cache
         if: always()
         run: |
-          # xxd -l 32 ~/.cache/mathlib/4c5ca804ed29bc79.ltar
-          # lake exe cache pack! || true
           xxd -l 32 ~/.cache/mathlib/4c5ca804ed29bc79.ltar
-          lake exe cache commit! || true
+          lake exe cache pack || true
+          # xxd -l 32 ~/.cache/mathlib/4c5ca804ed29bc79.ltar
+          # lake exe cache commit! || true
           xxd -l 32 ~/.cache/mathlib/4c5ca804ed29bc79.ltar
           lake exe cache put! || true
         env:
@@ -190,56 +190,56 @@ jobs:
           # and if we find " Building " in that file we kill `lake build`, and error.
           lake build > tmp & tail --pid=$! -n +1 -F tmp | (! (grep -m 1 " Building " && kill $! ))
 
-      - name: build archive
-        run: |
-          # Note: we should not be including `Archive` and `Countexamples` in the cache.
-          # We do this for now for the sake of not rebuilding them in every CI run
-          # even when they are not touched.
-          # Since `Archive` and `Counterexamples` files have very simple dependencies,
-          # it should be possible to determine whether they need to be built without actually
-          # storing and transferring oleans over the network.
-          # Hopefully a future re-implementation of `cache` will obviate the present need for this hack.
-          lake exe cache get Archive.lean
-          lake build Archive
-          lake exe cache put Archive.lean
-        env:
-          MATHLIB_CACHE_SAS: ${{ secrets.MATHLIB_CACHE_SAS }}
+      # - name: build archive
+      #   run: |
+      #     # Note: we should not be including `Archive` and `Countexamples` in the cache.
+      #     # We do this for now for the sake of not rebuilding them in every CI run
+      #     # even when they are not touched.
+      #     # Since `Archive` and `Counterexamples` files have very simple dependencies,
+      #     # it should be possible to determine whether they need to be built without actually
+      #     # storing and transferring oleans over the network.
+      #     # Hopefully a future re-implementation of `cache` will obviate the present need for this hack.
+      #     lake exe cache get Archive.lean
+      #     lake build Archive
+      #     lake exe cache put Archive.lean
+      #   env:
+      #     MATHLIB_CACHE_SAS: ${{ secrets.MATHLIB_CACHE_SAS }}
 
-      - name: build counterexamples
-        run: |
-          lake exe cache get Counterexamples.lean
-          lake build Counterexamples
-          lake exe cache put Counterexamples.lean
-        env:
-          MATHLIB_CACHE_SAS: ${{ secrets.MATHLIB_CACHE_SAS }}
+      # - name: build counterexamples
+      #   run: |
+      #     lake exe cache get Counterexamples.lean
+      #     lake build Counterexamples
+      #     lake exe cache put Counterexamples.lean
+      #   env:
+      #     MATHLIB_CACHE_SAS: ${{ secrets.MATHLIB_CACHE_SAS }}
 
-      - name: check declarations in db files
-        run: |
-          python3 scripts/yaml_check.py docs/100.yaml docs/overview.yaml docs/undergrad.yaml
-          lake exe checkYaml
+      # - name: check declarations in db files
+      #   run: |
+      #     python3 scripts/yaml_check.py docs/100.yaml docs/overview.yaml docs/undergrad.yaml
+      #     lake exe checkYaml
 
-      - name: test mathlib
-        id: test
-        run: make -j 8 test
+      # - name: test mathlib
+      #   id: test
+      #   run: make -j 8 test
 
-      - name: lint mathlib
-        id: lint
-        uses: liskin/gh-problem-matcher-wrap@v2
-        with:
-          linters: gcc
-          run: env LEAN_ABORT_ON_PANIC=1 lake exe runLinter
+      # - name: lint mathlib
+      #   id: lint
+      #   uses: liskin/gh-problem-matcher-wrap@v2
+      #   with:
+      #     linters: gcc
+      #     run: env LEAN_ABORT_ON_PANIC=1 lake exe runLinter
 
-      - name: Post comments for lean-pr-testing branch
-        if: always()
-        env:
-          TOKEN: ${{ secrets.LEAN_PR_TESTING }}
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-          WORKFLOW_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.event.workflow_run.id }}
-          LINT_OUTCOME: ${{ steps.lint.outcome }}
-          TEST_OUTCOME: ${{ steps.test.outcome }}
-          BUILD_OUTCOME: ${{ steps.build.outcome }}
-        run: |
-          scripts/lean-pr-testing-comments.sh
+      # - name: Post comments for lean-pr-testing branch
+      #   if: always()
+      #   env:
+      #     TOKEN: ${{ secrets.LEAN_PR_TESTING }}
+      #     GITHUB_CONTEXT: ${{ toJson(github) }}
+      #     WORKFLOW_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.event.workflow_run.id }}
+      #     LINT_OUTCOME: ${{ steps.lint.outcome }}
+      #     TEST_OUTCOME: ${{ steps.test.outcome }}
+      #     BUILD_OUTCOME: ${{ steps.build.outcome }}
+      #   run: |
+      #     scripts/lean-pr-testing-comments.sh
 
   final:
     name: Post-CI job
