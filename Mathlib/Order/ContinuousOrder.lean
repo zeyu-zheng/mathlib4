@@ -25,7 +25,7 @@ section Preorder
 
 variable [Preorder α]
 
-lemma le_of_waybelow (U V : α) (h : U ❰ V) : U ≤ V := by
+lemma le_of_waybelow {U V : α} (h : U ❰ V) : U ≤ V := by
   convert (h (Set.singleton_nonempty V) (directedOn_singleton le_refl _) isLUB_singleton
     (le_refl V))
   constructor
@@ -38,18 +38,24 @@ lemma le_of_waybelow (U V : α) (h : U ❰ V) : U ≤ V := by
     rw [← hW.1]
     exact hW.2
 
-lemma waybelow_of_le_waybelow_le (U V W Y : α) (hUV : U ≤ V) (hVW : V ❰ W) (hWY : W ≤ Y) :
+lemma waybelow_of_le_waybelow_le {U V W Y : α} (hUV : U ≤ V) (hVW : V ❰ W) (hWY : W ≤ Y) :
     (U ❰ Y) := by
   intro d hd₁ hd₂ a hda hYa
   cases' (hVW hd₁ hd₂ hda (le_trans hWY hYa)) with W hW
   use W
   exact ⟨hW.1, le_trans hUV hW.2⟩
 
+@[trans]
+theorem waybelow_trans : ∀ {a b c : α}, a ❰ b → b ❰ c → a ❰ c :=
+  fun hab hbc => waybelow_of_le_waybelow_le (le_refl _) hab (le_of_waybelow hbc)
+
 lemma bot_waybelow [OrderBot α] (U : α) : ⊥ ❰ U := by
   intro d hd₁ _ _ _ _
   cases' hd₁ with W hW
   use W
   exact ⟨hW, bot_le⟩
+
+
 
 end Preorder
 
