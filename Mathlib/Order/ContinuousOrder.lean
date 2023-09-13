@@ -40,7 +40,6 @@ lemma le_of_waybelow (U V : α) (h : U ❰ V) : U ≤ V := by
 
 lemma waybelow_of_le_waybelow_le (U V W Y : α) (hUV : U ≤ V) (hVW : V ❰ W) (hWY : W ≤ Y) :
     (U ❰ Y) := by
-  unfold waybelow
   intro d hd₁ hd₂ a hda hYa
   cases' (hVW hd₁ hd₂ hda (le_trans hWY hYa)) with W hW
   use W
@@ -53,3 +52,13 @@ lemma bot_waybelow [OrderBot α] (U : α) : ⊥ ❰ U := by
   exact ⟨hW, bot_le⟩
 
 end Preorder
+
+lemma sup_waybelow_of_waybelow_waybelow [SemilatticeSup α] (U V Y : α) (hUY : U ❰ Y) (hVY : V ❰ Y) :
+    U ⊔ V ❰ Y := by
+  intro d hd₁ hd₂ a hda hYa
+  cases' (hUY hd₁ hd₂ hda hYa) with W₁ hW₁
+  cases' (hVY hd₁ hd₂ hda hYa) with W₂ hW₂
+  cases' (hd₂ W₁ hW₁.1 W₂ hW₂.1) with W hW
+  simp only at hW
+  use W
+  exact ⟨hW.1, (sup_le (le_trans hW₁.2 hW.2.1) (le_trans hW₂.2 hW.2.2))⟩
