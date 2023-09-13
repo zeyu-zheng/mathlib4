@@ -46,7 +46,7 @@ lemma waybelow_of_le_waybelow_le {U V W Y : α} (hUV : U ≤ V) (hVW : V ❰ W) 
   exact ⟨hW.1, le_trans hUV hW.2⟩
 
 @[trans]
-theorem waybelow_trans : ∀ {a b c : α}, a ❰ b → b ❰ c → a ❰ c :=
+lemma waybelow_trans : ∀ {a b c : α}, a ❰ b → b ❰ c → a ❰ c :=
   fun hab hbc => waybelow_of_le_waybelow_le (le_refl _) hab (le_of_waybelow hbc)
 
 lemma bot_waybelow [OrderBot α] (U : α) : ⊥ ❰ U := by
@@ -58,6 +58,9 @@ lemma bot_waybelow [OrderBot α] (U : α) : ⊥ ❰ U := by
 
 
 end Preorder
+
+lemma waybelow_antisymm [PartialOrder α] : ∀ {a b : α}, a ❰ b → b ❰ a → a = b :=
+  fun hab hba => le_antisymm_iff.mpr ⟨le_of_waybelow hab,le_of_waybelow hba⟩
 
 lemma sup_waybelow_of_waybelow_waybelow [SemilatticeSup α] (U V Y : α) (hUY : U ❰ Y) (hVY : V ❰ Y) :
     U ⊔ V ❰ Y := by
