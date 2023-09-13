@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Hoskin
 -/
 import Mathlib.Order.OmegaCompletePartialOrder
+import Mathlib.Order.ContinuousOrder
 
 /-!
 # Complete Partial Orders
@@ -64,6 +65,13 @@ hf.directedOn_range.sSup_le $ Set.forall_range_iff.2 ha
 lemma CompletePartialOrder.scottContinuous {f : α → β} :
   ScottContinuous f ↔
     ∀ ⦃d : Set α⦄, d.Nonempty → DirectedOn (. ≤ .) d → IsLUB (f '' d) (f (sSup d)) := by
+  refine' ⟨λ h d hd₁ hd₂ ↦ h hd₁ hd₂ hd₂.isLUB_sSup, λ h d hne hd a hda ↦ _⟩
+  rw [hda.unique hd.isLUB_sSup]
+  exact h hne hd
+
+/-- The way below relation takes on a simpler form in complete partial orders.-/
+lemma CompletePartialOrder.waybelow (U V : α) : waybelow U V ↔
+    ∀ ⦃d : Set α⦄, d.Nonempty → DirectedOn (· ≤ ·) d → V ≤ sSup d → ∃ W ∈ d, U ≤ W := by
   refine' ⟨λ h d hd₁ hd₂ ↦ h hd₁ hd₂ hd₂.isLUB_sSup, λ h d hne hd a hda ↦ _⟩
   rw [hda.unique hd.isLUB_sSup]
   exact h hne hd
