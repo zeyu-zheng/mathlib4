@@ -1,5 +1,14 @@
+/-
+Copyright (c) 2023 Christopher Hoskin. All rights reserved.
+eleased under Apache 2.0 license as described in the file LICENSE.
+Authors: Christopher Hoskin
+-/
 import Mathlib.Data.Finset.Lattice
 import Mathlib.Order.Closure
+
+/-!
+# Finite LUB Closure
+-/
 
 variable {α : Type*} [Preorder α]
 
@@ -79,7 +88,8 @@ def finiteLUBClosure' := ClosureOperator.mk₃ (fun (s : Set α) => finiteLUBClo
 -/
 
 /-
-@[simp] lemma directedOn_finiteLUBClosure {s : Set α} : DirectedOn (. ≤ .) (finiteLUBClosure s) := by
+@[simp] lemma directedOn_finiteLUBClosure {s : Set α} : DirectedOn (. ≤ .)
+    (finiteLUBClosure s) := by
   classical
   rintro _ ⟨t, ht, hts, rfl⟩ _ ⟨u, hu, hus, rfl⟩
   refine' ⟨_, ⟨_, ht.mono $ subset_union_left _ _, _, sup'_union ht hu _⟩,
