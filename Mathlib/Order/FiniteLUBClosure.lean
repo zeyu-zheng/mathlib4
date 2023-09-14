@@ -63,12 +63,50 @@ lemma inductive_step {s : Set α} {u : Finset α} {a₁ a : α} (ha₁ : a₁ �
     a ∈ finiteLUBClosure s := sorry
 
 /-
-lemma lub_finset {s : Set α} {u : Finset α} {a : α} (hu : ↑u ⊆ finiteLUBClosure s)
-    : IsLUB u a → a ∈ finiteLUBClosure s := by
-    intro h
-    apply (Finset.induction_on u)
+theorem Nonempty.cons_induction {α : Type*} {p : ∀ s : Finset α, s.Nonempty → Prop}
+    (h₀ : ∀ a, p {a} (singleton_nonempty _))
+    (h₁ : ∀ ⦃a⦄ (s) (h : a ∉ s) (hs), p s hs → p (Finset.cons a s h) (nonempty_cons h))
+    {s : Finset α} (hs : s.Nonempty) : p s hs := by
 -/
 
+
+
+#check Finset.induction_on
+
+#check Finset.induction_on'
+
+variable (s : Set α) {u : Finset α} (hu : ↑u ⊆ finiteLUBClosure s) {a : α} (hua : IsLUB u a)
+
+def p (t : Finset α) (_ : t.Nonempty) := ∀ ⦃b : α⦄, IsLUB t b → b ∈ s
+
+#check (p s : ∀ t : Finset α, t.Nonempty → Prop)
+
+--theorem induction_on' {α : Type*} {p : Finset α → Prop} [DecidableEq α] (S : Finset α) (h₁ : p ∅)
+--    (h₂ : ∀ {a s}, a ∈ S → s ⊆ S → a ∉ s → p s → p (insert a s)) : p S :=
+
+lemma test (a : α): IsLUB ∅ a := by
+  simp only [isLUB_empty_iff]
+
+lemma p_singleton (b : α) : p s {b} (singleton_nonempty _) := by
+  unfold p
+  intro c hbc
+  apply isLUB_singleton
+
+
+/-
+lemma lub_finset'  : ∀ ⦃t : Finset α⦄, ↑t ⊆ finiteLUBClosure s → ∀ ⦃a : α⦄, IsLUB t a
+    → a ∈ finiteLUBClosure s := by
+  apply (Finset.induction_on' )
+-/
+
+/-
+lemma lub_finset {s : Set α} {u : Finset α} {a : α} (hu : ↑u ⊆ finiteLUBClosure s)
+    : IsLUB u a → a ∈ finiteLUBClosure s := by
+  intro h
+  apply (Finset.induction_on' u)
+-/
+
+/-
 @[simp] lemma Closed_finiteLUBClosure {s : Set α} : Closed (finiteLUBClosure s) := by
   unfold Closed
   intro u hts a hta
@@ -77,6 +115,7 @@ lemma lub_finset {s : Set α} {u : Finset α} {a : α} (hu : ↑u ⊆ finiteLUBC
   use t
   constructor
   · apply
+-/
 
   /-
   rintro _ ⟨t, ht, hts, rfl⟩ _ ⟨u, hu, hus, rfl⟩
@@ -91,10 +130,11 @@ lemma hmin : ∀ ⦃x y : Set α⦄, x ≤ y → Closed y → finiteLUBClosure x
   rcases has₂ with ⟨t,⟨ht1, hr⟩⟩
   exact hs₂ (Set.Subset.trans ht1 hs) hr
 
-/-
+lemma Closed_finiteLUBClosure {s : Set α} : Closed (finiteLUBClosure s) := sorry
+
 def finiteLUBClosure' := ClosureOperator.mk₃ (fun (s : Set α) => finiteLUBClosure s) Closed
-  (fun _ => subset_finiteLUBClosure) (fun _ => directedOn_directedClosure) hmin
--/
+  (fun _ => subset_finiteLUBClosure) (fun _ => Closed_finiteLUBClosure) hmin
+
 
 /-
 @[simp] lemma directedOn_finiteLUBClosure {s : Set α} : DirectedOn (. ≤ .)
