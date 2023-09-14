@@ -43,7 +43,7 @@ theorem IsLUB.union' {a b c : α} {s t : Set α} (hs : IsLUB s a) (ht : IsLUB t 
       exact ⟨hs.2 hu.1, ht.2 hu.2⟩
     ⟩
 
-lemma inductive_step {s : Set α} {a₁ a₂ a : α} (ha₁ : a₁ ∈ finiteLUBClosure s)
+lemma inductive_step_n2 {s : Set α} {a₁ a₂ a : α} (ha₁ : a₁ ∈ finiteLUBClosure s)
     (ha₂ : a₂ ∈ finiteLUBClosure s) : IsLUB {a₁, a₂} a → a ∈ finiteLUBClosure s := by
   classical
   intro h
@@ -58,17 +58,26 @@ lemma inductive_step {s : Set α} {a₁ a₂ a : α} (ha₁ : a₁ ∈ finiteLUB
   · rw [coe_union]
     apply IsLUB.union' ht₁ ht₂ h
 
+lemma inductive_step {s : Set α} {u : Finset α} {a₁ a : α} (ha₁ : a₁ ∈ finiteLUBClosure s)
+    (hu : ↑u ⊆ finiteLUBClosure s) (ha₁u : a₁ ∉ u) : IsLUB (insert a₁ u) a →
+    a ∈ finiteLUBClosure s := sorry
+
 /-
+lemma lub_finset {s : Set α} {u : Finset α} {a : α} (hu : ↑u ⊆ finiteLUBClosure s)
+    : IsLUB u a → a ∈ finiteLUBClosure s := by
+    intro h
+    apply (Finset.induction_on u)
+-/
+
 @[simp] lemma Closed_finiteLUBClosure {s : Set α} : Closed (finiteLUBClosure s) := by
-  classical
   unfold Closed
   intro u hts a hta
   unfold finiteLUBClosure
   simp
   use t
   constructor
-  ·apply
--/
+  · apply
+
   /-
   rintro _ ⟨t, ht, hts, rfl⟩ _ ⟨u, hu, hus, rfl⟩
   refine' ⟨_, ⟨_, ht.mono $ subset_union_left _ _, _, sup'_union ht hu _⟩,
