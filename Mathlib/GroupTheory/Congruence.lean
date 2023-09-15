@@ -1163,13 +1163,14 @@ theorem smul {α M : Type*} [MulOneClass M] [SMul α M] [IsScalarTower α M M] (
 #align con.smul Con.smul
 #align add_con.vadd AddCon.vadd
 
-instance _root_.AddCon.Quotient.nsmul {M : Type*} [AddMonoid M] (c : AddCon M) : SMul ℕ c.Quotient
-    where smul n := (Quotient.map' ((· • ·) n)) fun _ _ => c.nsmul n
+instance _root_.AddCon.Quotient.nsmul {M : Type*} [AddMonoid M] (c : AddCon M) :
+    SMul ℕ c.Quotient where
+  smul n := (Quotient.map' ((· • ·) n)) fun _ _ => c.nsmul n
 #align add_con.quotient.has_nsmul AddCon.Quotient.nsmul
 
 @[to_additive existing AddCon.Quotient.nsmul]
-instance {M : Type*} [Monoid M] (c : Con M) : Pow c.Quotient ℕ
-    where pow x n := Quotient.map' (fun x => x ^ n) (fun _ _ => c.pow n) x
+instance {M : Type*} [Monoid M] (c : Con M) : Pow c.Quotient ℕ where
+  pow x n := Quotient.map' (fun x => x ^ n) (fun _ _ => c.pow n) x
 
 /-- The quotient of a semigroup by a congruence relation is a semigroup. -/
 @[to_additive "The quotient of an `AddSemigroup` by an additive congruence relation is
@@ -1359,7 +1360,6 @@ instance mulAction {α M : Type*} [Monoid α] [MulOneClass M] [MulAction α M] [
 instance mulDistribMulAction {α M : Type*} [Monoid α] [Monoid M] [MulDistribMulAction α M]
     [IsScalarTower α M M] (c : Con M) : MulDistribMulAction α c.Quotient :=
   { c.mulAction with
-    smul := (· • ·)
     smul_one := fun _ => congr_arg Quotient.mk'' <| smul_one _
     smul_mul := fun _ => Quotient.ind₂' fun _ _ => congr_arg Quotient.mk'' <| smul_mul' _ _ _ }
 #align con.mul_distrib_mul_action Con.mulDistribMulAction
