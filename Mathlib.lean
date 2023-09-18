@@ -2027,7 +2027,7 @@ import Mathlib.GroupTheory.Commutator
 import Mathlib.GroupTheory.CommutingProbability
 import Mathlib.GroupTheory.Complement
 import Mathlib.GroupTheory.Congruence
-import Mathlib.GroupTheory.Coprod
+import Mathlib.GroupTheory.Coprod.Basic
 import Mathlib.GroupTheory.CoprodI
 import Mathlib.GroupTheory.Coset
 import Mathlib.GroupTheory.Divisible
@@ -2213,6 +2213,7 @@ import Mathlib.LinearAlgebra.BilinearForm.TensorProduct
 import Mathlib.LinearAlgebra.BilinearMap
 import Mathlib.LinearAlgebra.Charpoly.Basic
 import Mathlib.LinearAlgebra.Charpoly.ToMatrix
+import Mathlib.LinearAlgebra.CliffordAlgebra.BaseChange
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 import Mathlib.LinearAlgebra.CliffordAlgebra.Conjugation
 import Mathlib.LinearAlgebra.CliffordAlgebra.Contraction
@@ -2514,6 +2515,7 @@ import Mathlib.MeasureTheory.Measure.VectorMeasure
 import Mathlib.MeasureTheory.Measure.WithDensityVectorMeasure
 import Mathlib.MeasureTheory.PiSystem
 import Mathlib.MeasureTheory.Tactic
+import Mathlib.ModelTheory.Algebra.Ring.Basic
 import Mathlib.ModelTheory.Basic
 import Mathlib.ModelTheory.Bundled
 import Mathlib.ModelTheory.Definability
@@ -2791,6 +2793,7 @@ import Mathlib.Probability.Notation
 import Mathlib.Probability.ProbabilityMassFunction.Basic
 import Mathlib.Probability.ProbabilityMassFunction.Binomial
 import Mathlib.Probability.ProbabilityMassFunction.Constructions
+import Mathlib.Probability.ProbabilityMassFunction.Integrals
 import Mathlib.Probability.ProbabilityMassFunction.Monad
 import Mathlib.Probability.ProbabilityMassFunction.Uniform
 import Mathlib.Probability.Process.Adapted
