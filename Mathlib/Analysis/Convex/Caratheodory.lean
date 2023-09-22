@@ -18,7 +18,7 @@ coarser sublattice of affine subspaces.
 
 The cost of this refinement is that one no longer has bases. However Carathéodory's convexity
 theorem offers some compensation. Given a set `s` together with a point `x` in its convex hull,
-Carathéodory says that one may find an affine-independent family of elements `s` whose convex hull
+    Carathéodory says that one may find an affine-independent family of elements `s` whose convex hull
 contains `x`. Thus the difference from the case of affine span is that the affine-independent family
 depends on `x`.
 

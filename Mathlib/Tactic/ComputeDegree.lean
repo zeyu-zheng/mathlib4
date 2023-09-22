@@ -358,7 +358,7 @@ namely, goals of the form
 
 `splitApply` determines which of these goals are actually within the scope, it applies the relevant
 lemma and returns two lists: the left-over goals of all the applications, followed by the
-concatenation of the previous `static` list, followed by the newly discovered goals outside of the
+    concatenation of the previous `static` list, followed by the newly discovered goals outside of the
 scope of `compute_degree`. -/
 def splitApply (mvs static : List MVarId) : MetaM ((List MVarId) × (List MVarId)) := do
   let (can_progress, curr_static) := ← mvs.partitionM fun mv => do

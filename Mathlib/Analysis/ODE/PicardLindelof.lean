@@ -25,8 +25,7 @@ all assumptions of the main theorem. This structure and lemmas in the `PicardLin
 should be treated as private implementation details. This is not to be confused with the `Prop`-
 valued structure `IsPicardLindelof`, which holds the long hypotheses of the Picard-Lindelöf
 theorem for actual use as part of the public API.
-
-We only prove existence of a solution in this file. For uniqueness see `ODE_solution_unique` and
+    We only prove existence of a solution in this file. For uniqueness see `ODE_solution_unique` and
 related theorems in `Mathlib/Analysis/ODE/Gronwall.lean`.
 
 ## Tags

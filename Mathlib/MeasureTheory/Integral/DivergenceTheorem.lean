@@ -82,7 +82,7 @@ section
 In this section we use the divergence theorem for a Henstock-Kurzweil-like integral
 `BoxIntegral.hasIntegral_GP_divergence_of_forall_hasDerivWithinAt` to prove the divergence
 theorem for Bochner integral. The divergence theorem for Bochner integral
-`MeasureTheory.integral_divergence_of_hasFDerivWithinAt_off_countable` assumes that the function
+    `MeasureTheory.integral_divergence_of_hasFDerivWithinAt_off_countable` assumes that the function
 itself is continuous on a closed box, differentiable at all but countably many points of its
 interior, and the divergence is integrable on the box.
 

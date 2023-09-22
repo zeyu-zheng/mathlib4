@@ -18,12 +18,12 @@ variable {α : Type*}
 open Function
 
 lemma lt_add_one [One α] [AddZeroClass α] [PartialOrder α] [ZeroLEOneClass α]
-  [NeZero (1 : α)] [CovariantClass α α (·+·) (·<·)] (a : α) : a < a + 1 :=
+    [NeZero (1 : α)] [CovariantClass α α (·+·) (·<·)] (a : α) : a < a + 1 :=
 lt_add_of_pos_right _ zero_lt_one
 #align lt_add_one lt_add_one
 
 lemma lt_one_add [One α] [AddZeroClass α] [PartialOrder α] [ZeroLEOneClass α]
-  [NeZero (1 : α)] [CovariantClass α α (swap (·+·)) (·<·)] (a : α) : a < 1 + a :=
+    [NeZero (1 : α)] [CovariantClass α α (swap (·+·)) (·<·)] (a : α) : a < 1 + a :=
 lt_add_of_pos_left _ zero_lt_one
 #align lt_one_add lt_one_add
 

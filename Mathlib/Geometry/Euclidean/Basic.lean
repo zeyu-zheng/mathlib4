@@ -242,7 +242,7 @@ theorem inter_eq_singleton_orthogonalProjectionFn {s : AffineSubspace ℝ P} [No
 
 /-- The `orthogonalProjectionFn` lies in the given subspace. This
 lemma is only intended for use in setting up the bundled version and
-should not be used once that is defined. -/
+    should not be used once that is defined. -/
 theorem orthogonalProjectionFn_mem {s : AffineSubspace ℝ P} [Nonempty s]
     [HasOrthogonalProjection s.direction] (p : P) : orthogonalProjectionFn s p ∈ s := by
   rw [← mem_coe, ← Set.singleton_subset_iff, ← inter_eq_singleton_orthogonalProjectionFn]

@@ -38,8 +38,7 @@ a function `f` that has a finite limit `c` at `l ⊓ μ.ae`. Then `∫ x in s, f
 as `s` tends to `l.smallSets`, i.e. for any `ε>0` there exists `t ∈ l` such that
 `‖∫ x in s, f x ∂μ - μ s • c‖ ≤ ε * μ s` whenever `s ⊆ t`. We also formulate a version of this
 theorem for a locally finite measure `μ` and a function `f` continuous at a point `a`.
-
-## Notation
+    ## Notation
 
 We provide the following notations for expressing the integral of a function on a set :
 * `∫ a in s, f a ∂μ` is `MeasureTheory.integral (μ.restrict s) f`

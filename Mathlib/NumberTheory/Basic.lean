@@ -13,8 +13,7 @@ import Mathlib.RingTheory.Ideal.Quotient
 
 This file should contain basic results in number theory. So far, it only contains the essential
 lemma in the construction of the ring of Witt vectors.
-
-## Main statement
+    ## Main statement
 
 `dvd_sub_pow_of_dvd_sub` proves that for elements `a` and `b` in a commutative ring `R` and for
 all natural numbers `p` and `k` if `p` divides `a-b` in `R`, then `p ^ (k + 1)` divides

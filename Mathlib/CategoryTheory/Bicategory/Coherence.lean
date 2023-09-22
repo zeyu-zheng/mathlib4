@@ -24,8 +24,7 @@ free bicategory on the same quiver. A normalization procedure is then described 
 pseudofunctor from the free bicategory to the locally discrete bicategory on the path category.
 It turns out that this pseudofunctor is locally an equivalence of categories, and the coherence
 theorem follows immediately from this fact.
-
-## Main statements
+    ## Main statements
 
 * `locally_thin` : the free bicategory is locally thin, that is, there is at most one
   2-morphism between two fixed 1-morphisms.

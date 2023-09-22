@@ -1516,7 +1516,7 @@ end
 
 /-! We note that we cannot use `BilinForm.restrict_nondegenerate_iff_isCompl_orthogonal` for the
 lemma below since the below lemma does not require `V` to be finite dimensional. However,
-`BilinForm.restrict_nondegenerate_iff_isCompl_orthogonal` does not require `B` to be nondegenerate
+    `BilinForm.restrict_nondegenerate_iff_isCompl_orthogonal` does not require `B` to be nondegenerate
 on the whole space. -/
 
 

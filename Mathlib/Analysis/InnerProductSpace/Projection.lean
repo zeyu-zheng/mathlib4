@@ -432,7 +432,7 @@ theorem orthogonalProjectionFn_mem (v : E) : orthogonalProjectionFn K v ∈ K :=
 
 /-- The characterization of the unbundled orthogonal projection.  This
 lemma is only intended for use in setting up the bundled version
-and should not be used once that is defined. -/
+    and should not be used once that is defined. -/
 theorem orthogonalProjectionFn_inner_eq_zero (v : E) :
     ∀ w ∈ K, ⟪v - orthogonalProjectionFn K v, w⟫ = 0 :=
   (K.mem_orthogonal' _).1 (HasOrthogonalProjection.exists_orthogonal (K := K) v).choose_spec.right

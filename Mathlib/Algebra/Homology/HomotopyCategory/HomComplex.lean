@@ -263,7 +263,7 @@ lemma comp_assoc {n₁ n₂ n₃ n₁₂ n₂₃ n₁₂₃ : ℤ}
 
 /-! The formulation of the associativity of the composition of cochains given by the
 lemma `comp_assoc` often requires a careful selection of degrees with good definitional
-properties. In a few cases, like when one of the three cochains is a `0`-cochain,
+    properties. In a few cases, like when one of the three cochains is a `0`-cochain,
 there are better choices, which provides the following simplification lemmas. -/
 
 @[simp]
@@ -349,13 +349,13 @@ protected lemma comp_sub {n₁ n₂ n₁₂ : ℤ} (z₁ : Cochain F G n₁) (z�
 
 @[simp]
 protected lemma comp_neg {n₁ n₂ n₁₂ : ℤ} (z₁ : Cochain F G n₁) (z₂ : Cochain G K n₂)
-  (h : n₁ + n₂ = n₁₂) : z₁.comp (-z₂) h = -z₁.comp z₂ h := by
+    (h : n₁ + n₂ = n₁₂) : z₁.comp (-z₂) h = -z₁.comp z₂ h := by
   ext p q hpq
   simp only [comp_v _ _ h p _ q rfl (by linarith), neg_v, comp_neg]
 
 @[simp]
 protected lemma comp_zsmul {n₁ n₂ n₁₂ : ℤ} (k : ℤ) (z₁ : Cochain F G n₁) (z₂ : Cochain G K n₂)
-  (h : n₁ + n₂ = n₁₂ ) : z₁.comp (k • z₂) h = k • (z₁.comp z₂ h) := by
+    (h : n₁ + n₂ = n₁₂ ) : z₁.comp (k • z₂) h = k • (z₁.comp z₂ h) := by
   ext p q hpq
   simp only [comp_v _ _ h p _ q rfl (by linarith), zsmul_v, comp_zsmul]
 

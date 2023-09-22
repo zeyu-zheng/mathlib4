@@ -17,7 +17,7 @@ We prove Hindman's theorem on finite sums, using idempotent ultrafilters.
 Given an infinite sequence `a₀, a₁, a₂, …` of positive integers, the set `FS(a₀, …)` is the set
 of positive integers that can be expressed as a finite sum of `aᵢ`'s, without repetition. Hindman's
 theorem asserts that whenever the positive integers are finitely colored, there exists a sequence
-`a₀, a₁, a₂, …` such that `FS(a₀, …)` is monochromatic. There is also a stronger version, saying
+    `a₀, a₁, a₂, …` such that `FS(a₀, …)` is monochromatic. There is also a stronger version, saying
 that whenever a set of the form `FS(a₀, …)` is finitely colored, there exists a sequence
 `b₀, b₁, b₂, …` such that `FS(b₀, …)` is monochromatic and contained in `FS(a₀, …)`. We prove both
 these versions for a general semigroup `M` instead of `ℕ+` since it is no harder, although this

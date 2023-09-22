@@ -79,7 +79,7 @@ variable [CompleteSpace A] (a : A) [IsStarNormal a] (S : StarSubalgebra ℂ A)
 which in turn is the key to spectral permanence `StarSubalgebra.spectrum_eq`, which is itself
 necessary for the continuous functional calculus. Using the continuous functional calculus, this
 lemma can be superseded by one that omits the `IsStarNormal` hypothesis. -/
-theorem spectrum_star_mul_self_of_isStarNormal :
+    theorem spectrum_star_mul_self_of_isStarNormal :
     spectrum ℂ (star a * a) ⊆ Set.Icc (0 : ℂ) ‖star a * a‖ := by
   -- this instance should be found automatically, but without providing it Lean goes on a wild
   -- goose chase when trying to apply `spectrum.gelfandTransform_eq`.
