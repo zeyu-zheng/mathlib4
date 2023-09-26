@@ -20,7 +20,8 @@ with constant `K ≥ 0` if for all `x, y` we have `edist (f x) (f y) ≤ K * edi
 For a metric space, the latter inequality is equivalent to `dist (f x) (f y) ≤ K * dist x y`.
 There is also a version asserting this inequality only for `x` and `y` in some set `s`.
 Finally, `f : α → β` is called *locally Lipschitz continuous* if each `x : α` has a neighbourhood
-on which `f` is Lipschitz continuous (with some constant).
+on which `f` is Lipschitz continuous (with some constant). Similarly, there is a version for
+this relation on some set `s`.
 
 In this file we provide various ways to prove that various combinations of Lipschitz continuous
 functions are Lipschitz continuous. We also prove that Lipschitz continuous functions are
@@ -34,6 +35,7 @@ uniformly continuous, and that locally Lipschitz functions are continuous.
 * `LipschitzOnWith.uniformContinuousOn`: a function which is Lipschitz on a set `s` is uniformly
   continuous on `s`.
 * `LocallyLipschitz f`: states that `f` is locally Lipschitz
+* `LocallyLipschitzOn f s`: states that `f` is locally Lipschitz on a set `s`
 * `LocallyLipschitz.continuous`: a locally Lipschitz function is continuous.
 
 
@@ -80,17 +82,45 @@ has a neighourhood on which `f` is Lipschitz. -/
 def LocallyLipschitz [PseudoEMetricSpace α] [PseudoEMetricSpace β] (f : α → β) : Prop :=
   ∀ x : α, ∃ K, ∃ t ∈ 𝓝 x, LipschitzOnWith K f t
 
+/-- `f : α → β` is called **locally Lipschitz continuous on `s`** iff every point `x`
+has a neighourhood within `s` on which `f` is Lipschitz. -/
+def LocallyLipschitzOn [PseudoEMetricSpace α] [PseudoEMetricSpace β] (f : α → β) (s : Set α) :=
+  ∀ x : α, ∃ K, ∃ t ∈ 𝓝[s] x, LipschitzOnWith K f t
+
 /-- Every function is Lipschitz on the empty set (with any Lipschitz constant). -/
 @[simp]
 theorem lipschitzOnWith_empty [PseudoEMetricSpace α] [PseudoEMetricSpace β] (K : ℝ≥0) (f : α → β) :
     LipschitzOnWith K f ∅ := fun _ => False.elim
 #align lipschitz_on_with_empty lipschitzOnWith_empty
 
+/-- Every function is locally Lipschitz on the empty set. -/
+@[simp]
+theorem locallyLipschitzOn_empty [PseudoEMetricSpace α] [PseudoEMetricSpace β] (f : α → β) :
+    LocallyLipschitzOn f ∅ := fun _ ↦ ⟨37, ∅, (by simp)⟩
+
 /-- Being Lipschitz on a set is monotone w.r.t. that set. -/
 theorem LipschitzOnWith.mono [PseudoEMetricSpace α] [PseudoEMetricSpace β] {K : ℝ≥0} {s t : Set α}
     {f : α → β} (hf : LipschitzOnWith K f t) (h : s ⊆ t) : LipschitzOnWith K f s :=
   fun _x x_in _y y_in => hf (h x_in) (h y_in)
 #align lipschitz_on_with.mono LipschitzOnWith.mono
+
+-- TODO: move to TopologicalSpace.Basic or so. can probably be golfed a lot
+lemma mem_nhdsWihtin_inter [TopologicalSpace α] {s t u : Set α} (x : α) (hst : s ⊆ t) (hu : u ∈ 𝓝[t] x) : u ∩ s ∈ 𝓝[s] x := by
+  rw [mem_nhdsWithin] at hu
+  rcases hu with ⟨u₁, hu₁, hxu₁, hu₁t⟩
+  rw [mem_nhdsWithin]
+  refine ⟨u₁, hu₁, hxu₁, ?_⟩
+  calc u₁ ∩ s
+      _ = u₁ ∩ (t ∩ s) := by rw [(inter_eq_right_iff_subset.mpr hst)]
+      _ = (u₁ ∩ t) ∩ s := by rw [inter_assoc]
+      _ ⊆ u ∩ s := by exact (inter_subset_inter_left s hu₁t)
+
+/-- Being locally Lipschitz on a set is monotone w.r.t. that set. -/
+theorem LocallyLipschitzOn.mono [PseudoEMetricSpace α] [PseudoEMetricSpace β] {s t : Set α}
+    {f : α → β} (hf : LocallyLipschitzOn f t) (h : s ⊆ t) : LocallyLipschitzOn f s := by
+  intro x
+  rcases hf x with ⟨K, u, hu, hfK⟩
+  exact ⟨K, u ∩ s, mem_nhdsWihtin_inter x h hu, hfK.mono (inter_subset_left u s)⟩
 
 theorem lipschitzOnWith_iff_dist_le_mul [PseudoMetricSpace α] [PseudoMetricSpace β] {K : ℝ≥0}
     {s : Set α} {f : α → β} :
@@ -110,10 +140,21 @@ theorem lipschitzOn_univ [PseudoEMetricSpace α] [PseudoEMetricSpace β] {K : �
     LipschitzOnWith K f univ ↔ LipschitzWith K f := by simp [LipschitzOnWith, LipschitzWith]
 #align lipschitz_on_univ lipschitzOn_univ
 
+/-- `f` is locally Lipschitz iff it is locally Lipschitz on the entire space. -/
+@[simp]
+theorem locallyLipschitzOn_univ [PseudoEMetricSpace α] [PseudoEMetricSpace β] {f : α → β} :
+    LocallyLipschitzOn f univ ↔ LocallyLipschitz f := by
+  -- lemma: 𝓝[univ] x = 𝓝 x should do this
+  sorry --simp [LocallyLipschitzOn, LocallyLipschitz]
+
 theorem lipschitzOnWith_iff_restrict [PseudoEMetricSpace α] [PseudoEMetricSpace β] {K : ℝ≥0}
     {f : α → β} {s : Set α} : LipschitzOnWith K f s ↔ LipschitzWith K (s.restrict f) := by
   simp only [LipschitzOnWith, LipschitzWith, SetCoe.forall', restrict, Subtype.edist_eq]
 #align lipschitz_on_with_iff_restrict lipschitzOnWith_iff_restrict
+
+theorem locallyLipschitzOn_iff_restrict [PseudoEMetricSpace α] [PseudoEMetricSpace β]
+    {f : α → β} {s : Set α} : LocallyLipschitzOn f s ↔ LocallyLipschitz (s.restrict f) := by
+  sorry -- simp only [LipschitzOnWith, LipschitzWith, SetCoe.forall', restrict, Subtype.edist_eq]
 
 alias ⟨LipschitzOnWith.to_restrict, _⟩ := lipschitzOnWith_iff_restrict
 #align lipschitz_on_with.to_restrict LipschitzOnWith.to_restrict
@@ -123,6 +164,11 @@ theorem MapsTo.lipschitzOnWith_iff_restrict [PseudoEMetricSpace α] [PseudoEMetr
     LipschitzOnWith K f s ↔ LipschitzWith K (h.restrict f s t) :=
   _root_.lipschitzOnWith_iff_restrict
 #align maps_to.lipschitz_on_with_iff_restrict MapsTo.lipschitzOnWith_iff_restrict
+
+theorem MapsTo.locallyLipschitzOn_iff_restrict [PseudoEMetricSpace α] [PseudoEMetricSpace β]
+    {f : α → β} {s : Set α} {t : Set β} (h : MapsTo f s t) :
+    LocallyLipschitzOn f s ↔ LocallyLipschitz (h.restrict f s t) :=
+  _root_.locallyLipschitzOn_iff_restrict
 
 alias ⟨LipschitzOnWith.to_restrict_mapsTo, _⟩ := MapsTo.lipschitzOnWith_iff_restrict
 #align lipschitz_on_with.to_restrict_maps_to LipschitzOnWith.to_restrict_mapsTo
@@ -596,6 +642,66 @@ protected theorem iff_le_add_mul {f : α → ℝ} {K : ℝ≥0} :
 end Metric
 
 end LipschitzOnWith
+
+namespace LocallyLipschitzOn
+variable [PseudoEMetricSpace α] [PseudoEMetricSpace β] [PseudoEMetricSpace γ] {f : α → β}
+/-- A Lipschitz function on `s` is locally Lipschitz on `s`. -/
+protected lemma _root_.LipschitzOnWith.locallyLipschitzOn {K : ℝ≥0} {s : Set α}
+    (hf : LipschitzOnWith K f s) : LocallyLipschitzOn f s :=
+  sorry -- fun _ ↦ ⟨K, univ, Filter.univ_mem, locallyLipschitzOn_univ.mpr hf⟩
+
+-- /-- The identity function is locally Lipschitz. -/
+-- protected lemma id : LocallyLipschitz (@id α) := LipschitzWith.id.locallyLipschitz
+
+-- /-- Constant functions are locally Lipschitz. -/
+-- protected lemma const (b : β) : LocallyLipschitz (fun _ : α ↦ b) :=
+--   (LipschitzWith.const b).locallyLipschitz
+
+/-- A locally Lipschitz function on `s` is continuous on `s`. (The converse is false: for example,
+$x ↦ \sqrt{x}$ is continuous, but not locally Lipschitz at 0.) -/
+protected theorem continuousOn {f : α → β} (hf : LocallyLipschitzOn f s) : ContinuousOn f s := by
+  sorry
+  -- apply continuous_iff_continuousAt.mpr
+  -- intro x
+  -- rcases (hf x) with ⟨K, t, ht, hK⟩
+  -- exact (hK.continuousOn).continuousAt ht
+
+/-- The composition of locally Lipschitz functions is locally Lipschitz. --/
+protected lemma comp  {f : β → γ} {g : α → β} -- TODO: fix statement!
+    (hf : LocallyLipschitz f) (hg : LocallyLipschitz g) : LocallyLipschitz (f ∘ g) := by
+  sorry
+  -- intro x
+  -- -- g is Lipschitz on t ∋ x, f is Lipschitz on u ∋ g(x)
+  -- rcases hg x with ⟨Kg, t, ht, hgL⟩
+  -- rcases hf (g x) with ⟨Kf, u, hu, hfL⟩
+  -- refine ⟨Kf * Kg, t ∩ g⁻¹' u, inter_mem ht (hg.continuous.continuousAt hu), ?_⟩
+  -- exact hfL.comp (hgL.mono (inter_subset_left _ _))
+  --   ((mapsTo_preimage g u).mono_left (inter_subset_right _ _))
+
+/-- If `f` and `g` are locally Lipschitz on `s`, so is the induced map `f × g` to the product type. -/
+protected lemma prod {g : α → γ} {s : Set α} (hf : LocallyLipschitzOn f s)
+    (hg : LocallyLipschitzOn g s) : LocallyLipschitzOn (fun x => (f x, g x)) s := by
+  intro x
+  rcases hf x with ⟨Kf, t₁, h₁t, hfL⟩
+  rcases hg x with ⟨Kg, t₂, h₂t, hgL⟩
+  refine ⟨max Kf Kg, t₁ ∩ t₂, Filter.inter_mem h₁t h₂t, ?_⟩
+  exact (hfL.mono (inter_subset_left t₁ t₂)).prod (hgL.mono (inter_subset_right t₁ t₂))
+
+-- TODO: think if these statements are true and fix/delete/prove them!
+-- protected theorem iterate {f : α → α} (hf : LocallyLipschitz f) : ∀ n, LocallyLipschitz f^[n]
+--   | 0 => by simpa only [pow_zero] using LocallyLipschitz.id
+--   | n + 1 => by rw [iterate_add, iterate_one]; exact (hf.iterate n).comp hf
+
+-- protected theorem mul_end {f g : Function.End α} (hf : LocallyLipschitz f)
+--     (hg : LocallyLipschitz g) : LocallyLipschitz (f * g : Function.End α) := hf.comp hg
+
+-- protected theorem pow_end {f : Function.End α} (h : LocallyLipschitz f) :
+--     ∀ n : ℕ, LocallyLipschitz (f ^ n : Function.End α)
+--   | 0 => by simpa only [pow_zero] using LocallyLipschitz.id
+--   | n + 1 => by
+--     rw [pow_succ]
+--     exact h.mul_end (h.pow_end n)
+end LocallyLipschitzOn
 
 namespace LocallyLipschitz
 variable [PseudoEMetricSpace α] [PseudoEMetricSpace β] [PseudoEMetricSpace γ] {f : α → β}
