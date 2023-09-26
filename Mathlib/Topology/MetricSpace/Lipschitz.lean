@@ -105,8 +105,10 @@ theorem LipschitzOnWith.mono [PseudoEMetricSpace α] [PseudoEMetricSpace β] {K 
 #align lipschitz_on_with.mono LipschitzOnWith.mono
 
 -- TODO: move to TopologicalSpace.Basic or so. can probably be golfed a lot
-lemma mem_nhdsWihtin_inter [TopologicalSpace α] {s t u : Set α} (x : α) (hst : s ⊆ t) (hu : u ∈ 𝓝[t] x) : u ∩ s ∈ 𝓝[s] x := by
-  rw [mem_nhdsWithin] at hu
+-- compare nhdsWithin_mono; does the other direction: u ∈ 𝓝[s] x → u ∈ 𝓝[t] s
+lemma mem_nhdsWithin_inter [TopologicalSpace α] {s t u : Set α} (x : α)
+    (hst : s ⊆ t) (hu : u ∈ 𝓝[t] x) : u ∩ s ∈ 𝓝[s] x := by
+  rw [mem_nhdsWithin] at hu -- can remove first two rewrites, but need to adapt later proof!
   rcases hu with ⟨u₁, hu₁, hxu₁, hu₁t⟩
   rw [mem_nhdsWithin]
   refine ⟨u₁, hu₁, hxu₁, ?_⟩
@@ -120,7 +122,7 @@ theorem LocallyLipschitzOn.mono [PseudoEMetricSpace α] [PseudoEMetricSpace β] 
     {f : α → β} (hf : LocallyLipschitzOn f t) (h : s ⊆ t) : LocallyLipschitzOn f s := by
   intro x
   rcases hf x with ⟨K, u, hu, hfK⟩
-  exact ⟨K, u ∩ s, mem_nhdsWihtin_inter x h hu, hfK.mono (inter_subset_left u s)⟩
+  exact ⟨K, u ∩ s, mem_nhdsWithin_inter x h hu, hfK.mono (inter_subset_left u s)⟩
 
 theorem lipschitzOnWith_iff_dist_le_mul [PseudoMetricSpace α] [PseudoMetricSpace β] {K : ℝ≥0}
     {s : Set α} {f : α → β} :
@@ -144,8 +146,16 @@ theorem lipschitzOn_univ [PseudoEMetricSpace α] [PseudoEMetricSpace β] {K : �
 @[simp]
 theorem locallyLipschitzOn_univ [PseudoEMetricSpace α] [PseudoEMetricSpace β] {f : α → β} :
     LocallyLipschitzOn f univ ↔ LocallyLipschitz f := by
-  -- lemma: 𝓝[univ] x = 𝓝 x should do this
-  sorry --simp [LocallyLipschitzOn, LocallyLipschitz]
+  -- This also proves this; there should be a way to golf this.
+  -- unfold LocallyLipschitzOn
+  -- simp only [nhdsWithin_univ]
+  -- unfold LocallyLipschitz
+  -- simp
+  constructor <;> intro h x <;> rcases h x with ⟨K, t, ht, hf⟩ <;> refine ⟨K, t, ?_, hf⟩
+  · rw [← (nhdsWithin_univ x)]
+    exact ht
+  · rw [nhdsWithin_univ x]
+    exact ht
 
 theorem lipschitzOnWith_iff_restrict [PseudoEMetricSpace α] [PseudoEMetricSpace β] {K : ℝ≥0}
     {f : α → β} {s : Set α} : LipschitzOnWith K f s ↔ LipschitzWith K (s.restrict f) := by
@@ -646,9 +656,12 @@ end LipschitzOnWith
 namespace LocallyLipschitzOn
 variable [PseudoEMetricSpace α] [PseudoEMetricSpace β] [PseudoEMetricSpace γ] {f : α → β}
 /-- A Lipschitz function on `s` is locally Lipschitz on `s`. -/
-protected lemma _root_.LipschitzOnWith.locallyLipschitzOn {K : ℝ≥0} {s : Set α}
-    (hf : LipschitzOnWith K f s) : LocallyLipschitzOn f s :=
-  sorry -- fun _ ↦ ⟨K, univ, Filter.univ_mem, locallyLipschitzOn_univ.mpr hf⟩
+protected lemma _root_.LipschitzOnWith.locallyLipschitzOn {s : Set α}
+    (hf : LocallyLipschitz f) : LocallyLipschitzOn f s := by
+  intro x
+  rcases hf x with ⟨K, t, ht, hfK⟩
+  refine ⟨K, t, mem_nhdsWithin_of_mem_nhds ht, hfK⟩
+  -- FIXME: is there a nicer proof?
 
 -- /-- The identity function is locally Lipschitz. -/
 -- protected lemma id : LocallyLipschitz (@id α) := LipschitzWith.id.locallyLipschitz
@@ -657,26 +670,37 @@ protected lemma _root_.LipschitzOnWith.locallyLipschitzOn {K : ℝ≥0} {s : Set
 -- protected lemma const (b : β) : LocallyLipschitz (fun _ : α ↦ b) :=
 --   (LipschitzWith.const b).locallyLipschitz
 
+-- TODO: move this to Topology.Basic
+theorem continuousOn_iff_continuousAt {f : α → β} {s : Set α} :
+    ContinuousOn f s ↔ ∀ x : s, ContinuousAt f x := sorry -- XXX: is this true, if s is weird??
+
 /-- A locally Lipschitz function on `s` is continuous on `s`. (The converse is false: for example,
 $x ↦ \sqrt{x}$ is continuous, but not locally Lipschitz at 0.) -/
 protected theorem continuousOn {f : α → β} (hf : LocallyLipschitzOn f s) : ContinuousOn f s := by
-  sorry
-  -- apply continuous_iff_continuousAt.mpr
-  -- intro x
-  -- rcases (hf x) with ⟨K, t, ht, hK⟩
-  -- exact (hK.continuousOn).continuousAt ht
+  --sorry
+  apply continuousOn_iff_continuousAt.mpr
+  intro x
+  rcases (hf x) with ⟨K, t, ht, hK⟩
+  refine (hK.continuousOn).continuousAt ?_
+  sorry -- ht doesn't cut it: is in 𝓝[s] x, but need a nbhd of x ---> re-think the proof!
 
+-- xxx harmonize naming in all comp lemmas, current f and g are sometimes swapped!
 /-- The composition of locally Lipschitz functions is locally Lipschitz. --/
-protected lemma comp  {f : β → γ} {g : α → β} -- TODO: fix statement!
-    (hf : LocallyLipschitz f) (hg : LocallyLipschitz g) : LocallyLipschitz (f ∘ g) := by
-  sorry
-  -- intro x
-  -- -- g is Lipschitz on t ∋ x, f is Lipschitz on u ∋ g(x)
-  -- rcases hg x with ⟨Kg, t, ht, hgL⟩
-  -- rcases hf (g x) with ⟨Kf, u, hu, hfL⟩
-  -- refine ⟨Kf * Kg, t ∩ g⁻¹' u, inter_mem ht (hg.continuous.continuousAt hu), ?_⟩
+-- protected theorem comp {g : β → γ} {t : Set β} {Kg : ℝ≥0} (hg : LipschitzOnWith Kg g t)
+--     (hf : LipschitzOnWith K f s) (hmaps : MapsTo f s t) : LipschitzOnWith (Kg * K) (g ∘ f) s :=
+--   lipschitzOnWith_iff_restrict.mpr <| hg.to_restrict.comp (hf.to_restrict_mapsTo hmaps)
+protected lemma comp  {g : β → γ} {t : Set β} (hg : LocallyLipschitzOn g t)
+    (hf : LocallyLipschitzOn f s) (hmaps : MapsTo f s t) : LocallyLipschitzOn (g ∘ f) s := by
+  intro x
+  -- g is locally Lipschitz on t ∋ x, f is locally Lipschitz on u ∋ g(x)
+  rcases hf x with ⟨Kf, t, ht, hfL⟩
+  rcases hg (f x) with ⟨Kg, u, hu, hgL⟩
+  -- XXX: ht is a nbhd within s - need one in X; need to work
+  -- refine ⟨Kf * Kg, t ∩ f⁻¹' u, inter_mem ht (hf.continuousOn.continuousAt ht), ?_⟩
+  -- XXX: fix this, also just "almost" works
   -- exact hfL.comp (hgL.mono (inter_subset_left _ _))
-  --   ((mapsTo_preimage g u).mono_left (inter_subset_right _ _))
+  --   ((mapsTo_preimage g t).mono_left (inter_subset_right _ _))
+  sorry
 
 /-- If `f` and `g` are locally Lipschitz on `s`, so is the induced map `f × g` to the product type. -/
 protected lemma prod {g : α → γ} {s : Set α} (hf : LocallyLipschitzOn f s)
