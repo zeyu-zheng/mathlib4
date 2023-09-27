@@ -146,16 +146,7 @@ theorem lipschitzOn_univ [PseudoEMetricSpace α] [PseudoEMetricSpace β] {K : �
 @[simp]
 theorem locallyLipschitzOn_univ [PseudoEMetricSpace α] [PseudoEMetricSpace β] {f : α → β} :
     LocallyLipschitzOn f univ ↔ LocallyLipschitz f := by
-  -- This also proves this; there should be a way to golf this.
-  -- unfold LocallyLipschitzOn
-  -- simp only [nhdsWithin_univ]
-  -- unfold LocallyLipschitz
-  -- simp
-  constructor <;> intro h x <;> rcases h x with ⟨K, t, ht, hf⟩ <;> refine ⟨K, t, ?_, hf⟩
-  · rw [← (nhdsWithin_univ x)]
-    exact ht
-  · rw [nhdsWithin_univ x]
-    exact ht
+  simp only [LocallyLipschitzOn, nhdsWithin_univ, LocallyLipschitz]
 
 theorem lipschitzOnWith_iff_restrict [PseudoEMetricSpace α] [PseudoEMetricSpace β] {K : ℝ≥0}
     {f : α → β} {s : Set α} : LipschitzOnWith K f s ↔ LipschitzWith K (s.restrict f) := by
