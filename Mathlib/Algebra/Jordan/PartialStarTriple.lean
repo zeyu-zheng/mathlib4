@@ -98,7 +98,7 @@ calc
 
 end PartialTripleProduct
 
-class PartialStarTriple (R : Type _) [CommSemiring R] [StarRing R] (A : Type _)
+class PartialStarTriple (R : Type _) [CommSemiring R] [StarRing R] (A : Type*)
 [AddCommMonoid A] [Module R A] (Aₛ : Submodule R A) where
   tp : A →ₗ[R] Aₛ →ₛₗ[starRingEnd R] A →ₗ[R] A
   comm (a c : A) (b : Aₛ) : tp a b c = tp c b a
@@ -108,43 +108,69 @@ notation "⦃" a "," b "," c "⦄" => PartialStarTriple.tp a b c
 
 namespace PartialStarTriple
 
-variable (R : Type _) [CommSemiring R] [StarRing R] (A : Type _) [AddCommMonoid A] [Module R A]
-  (Aₛ : Submodule R A)
+variable {R : Type _} [CommSemiring R] [StarRing R] {A : Type _} [AddCommMonoid A] [Module R A]
+  {Aₛ : Submodule R A}
+
+lemma smul_middle [PartialStarTriple R A Aₛ] (a c : A) (b : Aₛ) (r : R) :
+    ⦃a, r•b, c⦄ = (star r) • ⦃a, b, c⦄ := by
+  simp only [map_smulₛₗ, LinearMap.smul_apply]
+  rfl
 
 variable (T : A →ₗ[R] A)
 
 lemma test : Aₛ ≤ ⊤ := by
   exact Iff.mp Submodule.comap_subtype_eq_top rfl
 
-#check Submodule.ofLe
-
-#check submonoid.inclusion
-
-#check AddMonoidHom.flipHom
-
-#check Aₛ.subtype
-
-#check (↑T ∘ Aₛ.subtype)
-
-#check Function.invFun_eq_of_injective_of_rightInverse
-
 variable [h: PartialStarTriple R A Aₛ]
 
-#check h.tp (Aₛ.subtype _) _ (Aₛ.subtype _)
+lemma test1 (b : Aₛ) : ∀ (a : A), a ∈ Aₛ → ∀ (c : A), c ∈ Aₛ → h.tp a b c ∈ Aₛ :=
+  fun a ha c hc => (h.subtriple ⟨a,ha⟩ b ⟨c,hc⟩)
 
-instance  : PartialStarTriple R Aₛ ⊤ where
-  tp (a b c : Aₛ) := h.tp (Aₛ.subtype a) b (Aₛ.subtype c)
-  comm := sorry
-  subtriple := sorry
+lemma test2 (b : (⊤ : Submodule R Aₛ)) : ∀ (a : A), a ∈ Aₛ → ∀ (c : A), c ∈ Aₛ → h.tp a b c ∈ Aₛ :=
+  fun a ha c hc => (h.subtriple ⟨a,ha⟩ b ⟨c,hc⟩)
 
+instance third (a : Aₛ) (b : (⊤ : Submodule R Aₛ)) : Aₛ →ₗ[R] Aₛ where
+  toFun (c : Aₛ) := (h.tp a b).restrict (test2 b a a.prop) c
+  map_add' d e := by
+    simp only [Submodule.top_coe, map_add]
+  map_smul' r d := by
+    simp only [Submodule.top_coe, map_smul, RingHom.id_apply]
+
+lemma apply_third (a : Aₛ) (b : (⊤ : Submodule R Aₛ)) (c : Aₛ) : third a b c = h.tp a b c := rfl
+
+instance second (a : Aₛ) : (⊤ : Submodule R Aₛ) →ₛₗ[starRingEnd R] Aₛ →ₗ[R] Aₛ where
+  toFun (b : (⊤ : Submodule R Aₛ)) := third a b
+  map_add' _ _ := by
+    ext _
+    simp only [apply_third, Submodule.top_coe, AddSubmonoid.coe_add, Submodule.top_toAddSubmonoid,
+      AddSubmonoid.coe_top, map_add, LinearMap.add_apply, Submodule.coe_toAddSubmonoid]
+  map_smul' _ _ := by
+    ext _
+    simp only [apply_third, Submodule.top_coe, SetLike.val_smul, map_smulₛₗ, LinearMap.smul_apply]
+
+lemma apply_second (a : Aₛ) (b : (⊤ : Submodule R Aₛ)) (c : Aₛ) : second a b c = h.tp a b c := rfl
+
+instance first : Aₛ →ₗ[R] (⊤ : Submodule R Aₛ) →ₛₗ[starRingEnd R] Aₛ →ₗ[R] Aₛ where
+  toFun (a : Aₛ) := second a
+  map_add' _ _ := by
+    ext _
+    simp only [apply_second, Submodule.top_coe, AddSubmonoid.coe_add, Submodule.coe_toAddSubmonoid,
+      map_add, LinearMap.add_apply]
+  map_smul' _ _ := by
+    ext _
+    simp only [apply_second, Submodule.top_coe, SetLike.val_smul, map_smul, LinearMap.smul_apply,
+      RingHom.id_apply]
+
+lemma apply_first (a : Aₛ) (b : (⊤ : Submodule R Aₛ)) (c : Aₛ) : ((first a) b) c = h.tp a b c := rfl
 
 -- (Aₛ,Aₛ) is a (partial) *-triple
-instance [h: PartialStarTriple R A Aₛ] : PartialStarTriple R Aₛ ⊤ where
-  tp := h.tp
-  comm := h.comm
-  subtriple := h.subtriple
-
-
+instance  : PartialStarTriple R Aₛ ⊤ where
+  tp  := first
+  comm _ _ _ := by
+    ext
+    rw [apply_first, h.comm, apply_first]
+  subtriple a b c := by
+    simp only [Submodule.top_coe, Submodule.mem_top]
 
 /-- The type of centroid homomorphisms from `A` to `A`. -/
 structure CentroidHom extends A →ₗ[R] A where
@@ -156,7 +182,7 @@ structure CentroidHom extends A →ₗ[R] A where
 -- lemma CentroidHom.map_right (a c : A) (b : Aₛ) :
 
 namespace CentroidHom
-
+/-
 /-- `id` as a `CentroidHom`. -/
 protected def id : CentroidHom R A Aₛ :=
 { (LinearMap.id :  A →ₗ[R] A) with
@@ -165,7 +191,7 @@ protected def id : CentroidHom R A Aₛ :=
     use (LinearMap.id :  Aₛ →ₗ[R] Aₛ)
     simp only [AddHom.toFun_eq_coe, LinearMap.coe_toAddHom, LinearMap.id_coe, id_eq,
       Subtype.forall, implies_true, forall_const] }
-
+-/
 end CentroidHom
 
 end PartialStarTriple
