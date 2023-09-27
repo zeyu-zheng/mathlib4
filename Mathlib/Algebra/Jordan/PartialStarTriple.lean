@@ -111,6 +111,32 @@ namespace PartialStarTriple
 variable (R : Type _) [CommSemiring R] [StarRing R] (A : Type _) [AddCommMonoid A] [Module R A]
   (Aₛ : Submodule R A)
 
+variable (T : A →ₗ[R] A)
+
+lemma test : Aₛ ≤ ⊤ := by
+  exact Iff.mp Submodule.comap_subtype_eq_top rfl
+
+#check Submodule.ofLe
+
+#check submonoid.inclusion
+
+#check AddMonoidHom.flipHom
+
+#check Aₛ.subtype
+
+#check (↑T ∘ Aₛ.subtype)
+
+#check Function.invFun_eq_of_injective_of_rightInverse
+
+variable [h: PartialStarTriple R A Aₛ]
+
+#check h.tp (Aₛ.subtype _) _ (Aₛ.subtype _)
+
+instance  : PartialStarTriple R Aₛ ⊤ where
+  tp (a b c : Aₛ) := h.tp (Aₛ.subtype a) b (Aₛ.subtype c)
+  comm := sorry
+  subtriple := sorry
+
 
 -- (Aₛ,Aₛ) is a (partial) *-triple
 instance [h: PartialStarTriple R A Aₛ] : PartialStarTriple R Aₛ ⊤ where
