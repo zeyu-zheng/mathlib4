@@ -155,7 +155,21 @@ theorem lipschitzOnWith_iff_restrict [PseudoEMetricSpace α] [PseudoEMetricSpace
 
 theorem locallyLipschitzOn_iff_restrict [PseudoEMetricSpace α] [PseudoEMetricSpace β]
     {f : α → β} {s : Set α} : LocallyLipschitzOn f s ↔ LocallyLipschitz (s.restrict f) := by
-  sorry -- simp only [LipschitzOnWith, LipschitzWith, SetCoe.forall', restrict, Subtype.edist_eq]
+  simp [LocallyLipschitz, LocallyLipschitzOn]
+  simp [restrict]
+  sorry
+  -- constructor
+  -- · intro h
+  --   intro a b
+  --   rcases h a with ⟨K, t, ht, hf⟩
+  --   use K
+  --   -- use (toSubset (t))
+  --   sorry
+  -- · intro h
+  --   intro x
+  --   -- rcases h x with ⟨ha, K, t, ht, xcv⟩
+  --   sorry
+  -- simp only [LipschitzOnWith, LipschitzWith, SetCoe.forall', restrict, Subtype.edist_eq]
 
 alias ⟨LipschitzOnWith.to_restrict, _⟩ := lipschitzOnWith_iff_restrict
 #align lipschitz_on_with.to_restrict LipschitzOnWith.to_restrict
