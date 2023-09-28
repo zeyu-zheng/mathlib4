@@ -185,14 +185,20 @@ variable {R : Type _} [CommSemiring R] [StarRing R] {A : Type*} [AddCommMonoid A
   [PartialStarTriple R A (⊤ : Submodule R A)]
 
 
-/-
+-- def topEquiv : (⊤ : Submodule R M) ≃ₗ[R] M where
+
+
+
 /--
 If `A` is a partial *-triple with symmetric part `A` then `A` is a *-triple
 -/
 instance : StarTriple R A where
-  tp  := PartialStarTriple.tp
-  comm := sorry
--/
+  tp  := LinearMap.compl₂ PartialStarTriple.tp (Submodule.topEquiv.symm.toLinearMap)
+  comm _ _ _ := by
+    simp only [LinearMap.compl₂_apply, LinearEquiv.coe_coe]
+    exact PartialStarTriple.comm _ _ ((LinearEquiv.symm Submodule.topEquiv) _)
+
+
 
 end PartialStarTriple_symmetric_top_is_StarTriple
 
@@ -215,11 +221,16 @@ lemma test : Aₛ ≤ ⊤ := by
 
 variable [h: PartialStarTriple R A Aₛ]
 
+
+
+
 lemma test1 (b : Aₛ) : ∀ (a : A), a ∈ Aₛ → ∀ (c : A), c ∈ Aₛ → h.tp a b c ∈ Aₛ :=
   fun a ha c hc => (h.subtriple ⟨a,ha⟩ b ⟨c,hc⟩)
 
 lemma test2 (b : (⊤ : Submodule R Aₛ)) : ∀ (a : A), a ∈ Aₛ → ∀ (c : A), c ∈ Aₛ → h.tp a b c ∈ Aₛ :=
   fun a ha c hc => (h.subtriple ⟨a,ha⟩ b ⟨c,hc⟩)
+
+
 
 instance third (a : Aₛ) (b : (⊤ : Submodule R Aₛ)) : Aₛ →ₗ[R] Aₛ where
   toFun (c : Aₛ) := (h.tp a b).restrict (test2 b a a.prop) c
@@ -264,11 +275,41 @@ instance  : PartialStarTriple R Aₛ ⊤ where
   subtriple a b c := by
     simp only [Submodule.top_coe, Submodule.mem_top]
 
+#check Submodule.subtype Aₛ
+
+#check LinearMap.comp PartialStarTriple.tp (Submodule.subtype Aₛ)
+
+#check LinearMap.domRestrict₂
+
+
+/-- Restricting a bilinear map in the second entry -/
 /-
-instance : StarTriple R Aₛ where
-  tp := sorry
-  comm := sorry
+def domRestrict₂ (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) (q : Submodule S N) : M →ₛₗ[ρ₁₂] q →ₛₗ[σ₁₂] P
+    where
+  toFun m := (f m).domRestrict q
+  map_add' m₁ m₂ := LinearMap.ext fun _ => by simp only [map_add, domRestrict_apply, add_apply]
+  map_smul' c m :=
+    LinearMap.ext fun _ => by simp only [f.map_smulₛₗ, domRestrict_apply, smul_apply]
 -/
+
+/- Restrict domain and codomain of a linear map. -/
+/-
+def restrict (f : M →ₗ[R] M₁) {p : Submodule R M} {q : Submodule R M₁} (hf : ∀ x ∈ p, f x ∈ q) :
+    p →ₗ[R] q :=
+  (f.domRestrict p).codRestrict q <| SetLike.forall.2 hf
+-/
+
+
+--def symRestrict (f :  A →ₗ[R] A) : Aₛ →ₗ[R] Aₛ := sorry
+
+instance : StarTriple R Aₛ where
+  tp := {
+    toFun := (LinearMap.comp PartialStarTriple.tp (Submodule.subtype Aₛ))
+    map_add' := sorry
+    map_smul' := sorry
+  }
+  comm := sorry
+
 
 /-- The type of centroid homomorphisms from `A` to `A`. -/
 structure CentroidHom extends A →ₗ[R] A where
