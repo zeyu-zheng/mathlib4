@@ -104,6 +104,98 @@ class PartialStarTriple (R : Type _) [CommSemiring R] [StarRing R] (A : Type*)
   comm (a c : A) (b : Aₛ) : tp a b c = tp c b a
   subtriple (a b c : Aₛ) : tp a b c ∈ Aₛ
 
+-- def trivial_star_triple
+
+
+class StarTriple (R : Type _) [CommSemiring R] [StarRing R] (A : Type*)
+[AddCommMonoid A] [Module R A] where
+  tp : A →ₗ[R] A →ₛₗ[starRingEnd R] A →ₗ[R] A
+  comm (a b c : A) : tp a b c = tp c b a
+
+
+/- Composing a linear map `P → Q` and a bilinear map `M → N → P` to
+form a bilinear map `M → N → Q`.
+def compr₂ (f : M →ₗ[R] Nₗ →ₗ[R] Pₗ) (g : Pₗ →ₗ[R] Qₗ) : M →ₗ[R] Nₗ →ₗ[R] Qₗ :=
+  llcomp R Nₗ Pₗ Qₗ g ∘ₗ f
+-/
+
+/- Composing a linear map `Q → N` and a bilinear map `M → N → P` to
+form a bilinear map `M → Q → P`.
+def compl₂ (g : Q →ₛₗ[σ₄₂] N) : M →ₛₗ[σ₁₃] Q →ₛₗ[σ₄₃] P :=
+  (lcompₛₗ _ _ g).comp f
+-/
+
+section StarTriple_is_PartialStarTriple
+
+variable {R : Type _} [CommSemiring R] [StarRing R] {A : Type*} [AddCommMonoid A] [Module R A]
+  [StarTriple R A]
+
+
+/-
+instance third (a : A) (b : (⊤ : Submodule R A)) : A →ₗ[R] A where
+  toFun (c : A) := StarTriple.tp a b c
+  map_add' _ _ := LinearMap.map_add ((StarTriple.tp a) ↑b) _ _
+  map_smul' _ _ := LinearMap.map_smul ((StarTriple.tp a) ↑b) _ _
+
+lemma apply_third (a : A) (b : (⊤ : Submodule R A)) : third a b = StarTriple.tp a b := rfl
+
+instance second (a : A) : (⊤ : Submodule R A) →ₛₗ[starRingEnd R] A →ₗ[R] A where
+  toFun (b : (⊤ : Submodule R A)) := third a b
+  map_add' _ _ := by
+    simp only [apply_third, Submodule.top_coe, AddSubmonoid.coe_add, Submodule.top_toAddSubmonoid,
+      AddSubmonoid.coe_top, map_add]
+  map_smul' _ _ := by
+    simp only [apply_third, Submodule.top_coe, SetLike.val_smul, map_smulₛₗ, LinearMap.smul_apply]
+
+lemma apply_second (a : A) (b : (⊤ : Submodule R A)) : second a b = StarTriple.tp a b := rfl
+
+instance first : A →ₗ[R] (⊤ : Submodule R A) →ₛₗ[starRingEnd R] A →ₗ[R] A where
+  toFun (a : A) := second a
+  map_add' _ _ := by
+    ext _
+    simp only [apply_second, map_add, Submodule.top_coe, LinearMap.add_apply]
+  map_smul' _ _ := by
+    ext _
+    simp only [apply_second, map_smul, Submodule.top_coe, LinearMap.smul_apply, RingHom.id_apply]
+
+lemma apply_first (a : A) (b : (⊤ : Submodule R A)) : ((first a) b)  = StarTriple.tp a b := rfl
+
+instance : PartialStarTriple R A ⊤ where
+  tp := first
+  comm _ _ _ := by
+    rw [apply_first, StarTriple.comm, apply_first]
+  subtriple _ _ _ := by
+    simp only [Submodule.top_coe, Submodule.mem_top]
+-/
+
+/--
+Every *-triple is a partial *-triple
+-/
+instance : PartialStarTriple R A ⊤ where
+  tp := LinearMap.compl₂ StarTriple.tp (Submodule.subtype (⊤ : Submodule R A))
+  comm _ _ _ := by
+    simp only [LinearMap.compl₂_apply, Submodule.coeSubtype, StarTriple.comm]
+  subtriple _ _ _ := trivial
+
+end StarTriple_is_PartialStarTriple
+
+section PartialStarTriple_symmetric_top_is_StarTriple
+
+variable {R : Type _} [CommSemiring R] [StarRing R] {A : Type*} [AddCommMonoid A] [Module R A]
+  [PartialStarTriple R A (⊤ : Submodule R A)]
+
+
+/-
+/--
+If `A` is a partial *-triple with symmetric part `A` then `A` is a *-triple
+-/
+instance : StarTriple R A where
+  tp  := PartialStarTriple.tp
+  comm := sorry
+-/
+
+end PartialStarTriple_symmetric_top_is_StarTriple
+
 notation "⦃" a "," b "," c "⦄" => PartialStarTriple.tp a b c
 
 namespace PartialStarTriple
@@ -171,6 +263,12 @@ instance  : PartialStarTriple R Aₛ ⊤ where
     rw [apply_first, h.comm, apply_first]
   subtriple a b c := by
     simp only [Submodule.top_coe, Submodule.mem_top]
+
+/-
+instance : StarTriple R Aₛ where
+  tp := sorry
+  comm := sorry
+-/
 
 /-- The type of centroid homomorphisms from `A` to `A`. -/
 structure CentroidHom extends A →ₗ[R] A where
