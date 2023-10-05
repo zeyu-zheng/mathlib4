@@ -682,20 +682,18 @@ theorem continuousOn_iff_continuousAt {f : α → β} {s : Set α} :
 /-- A locally Lipschitz function on `s` is continuous on `s`. (The converse is false: for example,
 $x ↦ \sqrt{x}$ is continuous, but not locally Lipschitz at 0.) -/
 protected theorem continuousOn {f : α → β} (hf : LocallyLipschitzOn f s) : ContinuousOn f s := by
-  --sorry
   apply continuousOn_iff_continuousAt.mpr
   intro x
   rcases (hf x) with ⟨K, t, ht, hK⟩
   refine (hK.continuousOn).continuousAt ?_
-  sorry -- ht doesn't cut it: is in 𝓝[s] x, but need a nbhd of x ---> re-think the proof!
+  -- `ht` doesn't solve this; says t ∈ 𝓝[s] x, whereas I need t ∈ 𝓝 x
+  -- if s is open, that's the same... TODO: re-think the proof!
+  sorry
 
--- xxx harmonize naming in all comp lemmas, current f and g are sometimes swapped!
-/-- The composition of locally Lipschitz functions is locally Lipschitz. --/
--- protected theorem comp {g : β → γ} {t : Set β} {Kg : ℝ≥0} (hg : LipschitzOnWith Kg g t)
---     (hf : LipschitzOnWith K f s) (hmaps : MapsTo f s t) : LipschitzOnWith (Kg * K) (g ∘ f) s :=
---   lipschitzOnWith_iff_restrict.mpr <| hg.to_restrict.comp (hf.to_restrict_mapsTo hmaps)
-protected lemma comp  {g : β → γ} {t : Set β} (hg : LocallyLipschitzOn g t)
+-- naming matches LipschitzOnWith.comp (but not LipschitzWith.comp; that's a pre-existing issue)
+protected lemma comp {g : β → γ} {t : Set β} (hg : LocallyLipschitzOn g t)
     (hf : LocallyLipschitzOn f s) (hmaps : MapsTo f s t) : LocallyLipschitzOn (g ∘ f) s := by
+  -- LipschitzOn.comp proof: lipschitzOnWith_iff_restrict.mpr <| hg.to_restrict.comp (hf.to_restrict_mapsTo hmaps)
   intro x
   -- g is locally Lipschitz on t ∋ x, f is locally Lipschitz on u ∋ g(x)
   rcases hf x with ⟨Kf, t, ht, hfL⟩
