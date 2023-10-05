@@ -720,8 +720,7 @@ variable [PseudoEMetricSpace α] [PseudoEMetricSpace β] [PseudoEMetricSpace γ]
 
 /-- A Lipschitz function is locally Lipschitz. -/
 protected lemma _root_.LipschitzWith.locallyLipschitz {K : ℝ≥0} (hf : LipschitzWith K f) :
-    LocallyLipschitz f :=
-  fun _ ↦ ⟨K, univ, Filter.univ_mem, lipschitzOn_univ.mpr hf⟩
+    LocallyLipschitz f := fun _ ↦ ⟨K, univ, Filter.univ_mem, lipschitzOn_univ.mpr hf⟩
 
 /-- The identity function is locally Lipschitz. -/
 protected lemma id : LocallyLipschitz (@id α) := LipschitzWith.id.locallyLipschitz
@@ -734,29 +733,20 @@ protected lemma const (b : β) : LocallyLipschitz (fun _ : α ↦ b) :=
 $x ↦ \sqrt{x}$ is continuous, but not locally Lipschitz at 0.) -/
 protected theorem continuous {f : α → β} (hf : LocallyLipschitz f) : Continuous f := by
   apply continuous_iff_continuousAt.mpr
-  intro x
-  rcases (hf x) with ⟨K, t, ht, hK⟩
-  exact (hK.continuousOn).continuousAt ht
+  rw [← locallyLipschitzOn_univ] at hf
+  exact fun x ↦ (hf.continuousOn).continuousAt univ_mem
 
 /-- The composition of locally Lipschitz functions is locally Lipschitz. --/
 protected lemma comp  {f : β → γ} {g : α → β}
     (hf : LocallyLipschitz f) (hg : LocallyLipschitz g) : LocallyLipschitz (f ∘ g) := by
-  intro x
-  -- g is Lipschitz on t ∋ x, f is Lipschitz on u ∋ g(x)
-  rcases hg x with ⟨Kg, t, ht, hgL⟩
-  rcases hf (g x) with ⟨Kf, u, hu, hfL⟩
-  refine ⟨Kf * Kg, t ∩ g⁻¹' u, inter_mem ht (hg.continuous.continuousAt hu), ?_⟩
-  exact hfL.comp (hgL.mono (inter_subset_left _ _))
-    ((mapsTo_preimage g u).mono_left (inter_subset_right _ _))
+  rw [← locallyLipschitzOn_univ] at hf hg ⊢
+  apply hf.comp hg (mapsTo_univ g univ)
 
 /-- If `f` and `g` are locally Lipschitz, so is the induced map `f × g` to the product type. -/
 protected lemma prod {f : α → β} (hf : LocallyLipschitz f) {g : α → γ} (hg : LocallyLipschitz g) :
     LocallyLipschitz fun x => (f x, g x) := by
-  intro x
-  rcases hf x with ⟨Kf, t₁, h₁t, hfL⟩
-  rcases hg x with ⟨Kg, t₂, h₂t, hgL⟩
-  refine ⟨max Kf Kg, t₁ ∩ t₂, Filter.inter_mem h₁t h₂t, ?_⟩
-  exact (hfL.mono (inter_subset_left t₁ t₂)).prod (hgL.mono (inter_subset_right t₁ t₂))
+  rw [← locallyLipschitzOn_univ] at hf hg ⊢
+  exact hf.prod hg
 
 protected theorem prod_mk_left (a : α) : LocallyLipschitz (Prod.mk a : β → α × β) :=
   (LipschitzWith.prod_mk_left a).locallyLipschitz
