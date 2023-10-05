@@ -713,21 +713,6 @@ protected lemma prod {g : α → γ} {s : Set α} (hf : LocallyLipschitzOn f s)
   rcases hg x with ⟨Kg, t₂, h₂t, hgL⟩
   refine ⟨max Kf Kg, t₁ ∩ t₂, Filter.inter_mem h₁t h₂t, ?_⟩
   exact (hfL.mono (inter_subset_left t₁ t₂)).prod (hgL.mono (inter_subset_right t₁ t₂))
-
--- TODO: think if these statements are true and fix/delete/prove them!
--- protected theorem iterate {f : α → α} (hf : LocallyLipschitz f) : ∀ n, LocallyLipschitz f^[n]
---   | 0 => by simpa only [pow_zero] using LocallyLipschitz.id
---   | n + 1 => by rw [iterate_add, iterate_one]; exact (hf.iterate n).comp hf
-
--- protected theorem mul_end {f g : Function.End α} (hf : LocallyLipschitz f)
---     (hg : LocallyLipschitz g) : LocallyLipschitz (f * g : Function.End α) := hf.comp hg
-
--- protected theorem pow_end {f : Function.End α} (h : LocallyLipschitz f) :
---     ∀ n : ℕ, LocallyLipschitz (f ^ n : Function.End α)
---   | 0 => by simpa only [pow_zero] using LocallyLipschitz.id
---   | n + 1 => by
---     rw [pow_succ]
---     exact h.mul_end (h.pow_end n)
 end LocallyLipschitzOn
 
 namespace LocallyLipschitz
