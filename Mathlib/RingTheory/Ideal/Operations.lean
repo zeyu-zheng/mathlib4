@@ -2127,9 +2127,8 @@ theorem sub_mem_ker_iff {x y} : x - y ∈ ker f ↔ f x = f y := by rw [mem_ker,
 #align ring_hom.sub_mem_ker_iff RingHom.sub_mem_ker_iff
 
 @[simp]
-theorem ker_rangeRestrict (f : R →+* S) :
-    RingHom.ker f.rangeRestrict = RingHom.ker f :=
-  Ideal.ext fun _ ↦ ⟨fun h ↦ congr(((↑) : RingHom.range f → S) $h), fun h ↦ Subtype.ext h⟩
+theorem ker_rangeRestrict (f : R →+* S) : ker f.rangeRestrict = ker f :=
+  Ideal.ext fun _ ↦ Subtype.ext_iff
 
 end RingRing
 
