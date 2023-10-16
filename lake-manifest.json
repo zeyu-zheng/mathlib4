@@ -28,17 +28,17 @@
   {"git":
    {"url": "https://github.com/leanprover/std4",
     "subDir?": null,
-    "rev": "a093d7a6ac721071d8ba3774b0318063928cd3e2",
+    "rev": "85a0d4891518518edfccee16cbceac139efa460c",
     "opts": {},
     "name": "std",
     "inputRev?": "main",
     "inherited": false}},
   {"git":
-   {"url": "https://github.com/semorrison/aesop",
+   {"url": "https://github.com/JLimperg/aesop",
     "subDir?": null,
-    "rev": "5c8d78e23721a4610cae41974e1867da7985494c",
+    "rev": "0bd8465d8a5cfdd53c1ff0fd57ca5eaa53eb455c",
     "opts": {},
     "name": "aesop",
-    "inputRev?": "use_replay",
+    "inputRev?": "master",
     "inherited": false}}],
  "name": "mathlib"}
