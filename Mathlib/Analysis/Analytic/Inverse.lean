@@ -276,7 +276,7 @@ theorem rightInv_coeff (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[𝕜] 
     congr (config := { closePost := false }) 1
     ext v
     have N : 0 < n + 2 := by norm_num
-    have : ((p 1) fun i : Fin 1 => 0) = 0 := ContinuousMultilinearMap.map_zero _
+    have : ((p 1) fun _ : Fin 1 => 0) = 0 := ContinuousMultilinearMap.map_zero _
     simp [comp_rightInv_aux1 N, lt_irrefl n, this, comp_rightInv_aux2, -Set.toFinset_setOf]
 #align formal_multilinear_series.right_inv_coeff FormalMultilinearSeries.rightInv_coeff
 

@@ -184,9 +184,10 @@ theorem eigenspaces_independent (f : End K V) : CompleteLattice.Independent f.ei
     have total_l' : S l' = 0 := by
       let g := f - algebraMap K (End K V) μ₀
       let a : Π₀ _ : K, V := DFinsupp.mapRange.linearMap (fun μ => (f.eigenspace μ).subtype) l
+      let F := fun μ => (f.eigenspace μ).subtype.comp ((μ - μ₀) • LinearMap.id)
       calc
         S l' =
-          DFinsupp.lsum ℕ (fun μ => (f.eigenspace μ).subtype.comp ((μ - μ₀) • LinearMap.id)) l := ?_
+          DFinsupp.lsum ℕ F l := ?_
         _ = DFinsupp.lsum ℕ (fun μ => g.comp (f.eigenspace μ).subtype) l := ?_
         _ = DFinsupp.lsum ℕ (fun _ => g) a := ?_
         _ = g (DFinsupp.lsum ℕ (fun _ => (LinearMap.id : V →ₗ[K] V)) a) := ?_

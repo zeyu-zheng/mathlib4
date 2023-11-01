@@ -935,7 +935,7 @@ ones. We register this bijection as a linear isometry in
 `ContinuousMultilinearMap.piFieldEquiv`. -/
 protected def piFieldEquiv : G ≃ₗᵢ[𝕜] ContinuousMultilinearMap 𝕜 (fun _ : ι => 𝕜) G where
   toFun z := ContinuousMultilinearMap.mkPiField 𝕜 ι z
-  invFun f := f fun i => 1
+  invFun f := f fun _ => 1
   map_add' z z' := by
     ext m
     simp [smul_add]
