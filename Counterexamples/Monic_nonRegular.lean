@@ -73,8 +73,7 @@ instance : CommSemiring N₃ where
 theorem X_add_two_mul_X_add_two : (X + C 2 : N₃[X]) * (X + C 2) = (X + C 2) * (X + C 3) := by
   simp only [mul_add, add_mul, X_mul, add_assoc]
   apply congr_arg
-  rw [← add_assoc, ← add_mul, ← C_add, ← C_mul, ← C_mul]
-  rw [← add_assoc, ← add_mul, ← C_add]
+  rw [← add_assoc, ← add_mul, ← C_add, ← C_mul, ← C_mul, ← add_assoc, ← add_mul, ← C_add]
   rfl
 
 /-! The main example: multiplication by the polynomial `X + 2` is not injective,

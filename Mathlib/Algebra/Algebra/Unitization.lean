@@ -489,8 +489,7 @@ instance instMonoid [CommMonoid R] [NonUnitalSemiring A] [DistribMulAction R A]
             x.2 * (y.1 • z.2 + z.1 • y.2 + y.2 * z.2) by
           simp only [smul_add, mul_add, add_mul, smul_smul, smul_mul_assoc, mul_smul_comm,
             mul_assoc]
-          rw [mul_comm z.1 x.1]
-          rw [mul_comm z.1 y.1]
+          rw [mul_comm z.1 x.1, mul_comm z.1 y.1]
           abel }
 
 instance instCommMonoid [CommMonoid R] [NonUnitalCommSemiring A] [DistribMulAction R A]
@@ -710,8 +709,7 @@ def _root_.NonUnitalAlgHom.toAlgHom (φ :A →ₙₐ[R] C) : Unitization R A →
     induction' y using Unitization.ind with y_r y_a
     simp only [fst_mul, fst_add, fst_inl, fst_inr, snd_mul, snd_add, snd_inl, snd_inr, add_zero,
       map_mul, zero_add, map_add, map_smul φ]
-    rw [add_mul, mul_add, mul_add]
-    rw [← Algebra.commutes _ (φ x_a)]
+    rw [add_mul, mul_add, mul_add, ← Algebra.commutes _ (φ x_a)]
     simp only [Algebra.algebraMap_eq_smul_one, smul_one_mul, add_assoc]
   map_zero' := by simp only [fst_zero, map_zero, snd_zero, φ.map_zero, add_zero]
   map_add' := fun x y => by

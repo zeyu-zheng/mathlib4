@@ -339,8 +339,7 @@ theorem partialGF_prop (α : Type*) [CommSemiring α] (n : ℕ) (s : Finset ℕ)
     specialize h i
     match i with
     | 0 =>
-      rw [Multiset.count_eq_zero_of_not_mem]
-      rw [Multiset.count_eq_zero_of_not_mem]
+      rw [Multiset.count_eq_zero_of_not_mem, Multiset.count_eq_zero_of_not_mem]
       intro a; exact Nat.lt_irrefl 0 (hs 0 (hp₂.2 0 a))
       intro a; exact Nat.lt_irrefl 0 (hs 0 (hp₁.2 0 a))
     | .succ i =>
@@ -529,8 +528,7 @@ theorem partition_theorem (n : ℕ) :
   -- We need the counts to live in some field (which contains ℕ), so let's just use ℚ
   suffices ((Nat.Partition.odds n).card : ℚ) = (Nat.Partition.distincts n).card by
     exact_mod_cast this
-  rw [distinctGF_prop n (n + 1) (by linarith)]
-  rw [oddGF_prop n (n + 1) (by linarith)]
+  rw [distinctGF_prop n (n + 1) (by linarith), oddGF_prop n (n + 1) (by linarith)]
   apply same_coeffs (n + 1) n n.le_succ
 #align theorems_100.partition_theorem Theorems100.partition_theorem
 

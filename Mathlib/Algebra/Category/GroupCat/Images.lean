@@ -78,9 +78,7 @@ noncomputable def image.lift (F' : MonoFactorisation f) : image f ⟶ F'.I where
     rw [AddMonoidHom.map_add]
     change (F'.e ≫ F'.m) _ = (F'.e ≫ F'.m) _ + (F'.e ≫ F'.m) _
     rw [F'.fac]
-    rw [(Classical.indefiniteDescription (fun z => f z = _) _).2]
-    rw [(Classical.indefiniteDescription (fun z => f z = _) _).2]
-    rw [(Classical.indefiniteDescription (fun z => f z = _) _).2]
+    repeat rw [(Classical.indefiniteDescription (fun z => f z = _) _).2]
     rfl
 #align AddCommGroup.image.lift AddCommGroupCat.image.lift
 

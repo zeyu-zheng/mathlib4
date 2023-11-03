@@ -281,8 +281,7 @@ theorem lcm_dvd {x y z : R} (hxz : x ∣ z) (hyz : y ∣ z) : lcm x y ∣ z := b
     use p
     generalize gcd x y = g at hxy hs hp ⊢
     subst hs
-    rw [mul_left_comm, mul_div_cancel_left _ hxy, ← mul_left_inj' hxy, hp]
-    rw [← mul_assoc]
+    rw [mul_left_comm, mul_div_cancel_left _ hxy, ← mul_left_inj' hxy, hp, ← mul_assoc]
     simp only [mul_right_comm]
   rw [gcd_eq_gcd_ab, mul_add]
   apply dvd_add

@@ -197,8 +197,8 @@ theorem zpow_add_one (a : G) : ∀ n : ℤ, a ^ (n + 1) = a ^ n * a
   | (n : ℕ) => by simp only [← Int.ofNat_succ, zpow_ofNat, pow_succ']
   | -[0+1] => by erw [zpow_zero, zpow_negSucc, pow_one, mul_left_inv]
   | -[n + 1+1] => by
-    rw [zpow_negSucc, pow_succ, mul_inv_rev, inv_mul_cancel_right]
-    rw [Int.negSucc_eq, neg_add, add_assoc, neg_add_self, add_zero]
+    rw [zpow_negSucc, pow_succ, mul_inv_rev, inv_mul_cancel_right, Int.negSucc_eq, neg_add,
+        add_assoc, neg_add_self, add_zero]
     exact zpow_negSucc _ _
 #align zpow_add_one zpow_add_one
 #align add_one_zsmul add_one_zsmul

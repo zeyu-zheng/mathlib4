@@ -253,8 +253,7 @@ theorem extract_gcd (s : Multiset α) (hs : s ≠ 0) :
         conv_lhs => rw [← s.map_id, ← s.pmap_eq_map _ _ fun _ ↦ id]
         congr with (x hx)
         simp only
-        rw [id]
-        rw [← hf hx]
+        rw [id, ← hf hx]
 #align multiset.extract_gcd Multiset.extract_gcd
 
 end gcd

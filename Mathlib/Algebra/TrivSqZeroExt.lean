@@ -743,9 +743,8 @@ instance algebra' : Algebra S (tsze R M) :=
       ext (Algebra.commutes _ _) <|
         show algebraMap S R s • x.snd + op x.fst • (0 : M)
             = x.fst • (0 : M) + op (algebraMap S R s) • x.snd by
-          rw [smul_zero, smul_zero, add_zero, zero_add]
-          rw [Algebra.algebraMap_eq_smul_one, MulOpposite.op_smul, MulOpposite.op_one, smul_assoc,
-            one_smul, smul_assoc, one_smul]
+          rw [smul_zero, smul_zero, add_zero, zero_add, Algebra.algebraMap_eq_smul_one,
+              MulOpposite.op_smul, MulOpposite.op_one, smul_assoc, one_smul, smul_assoc, one_smul]
     smul_def' := fun r x =>
       ext (Algebra.smul_def _ _) <|
         show r • x.2 = algebraMap S R r • x.2 + op x.1 • (0 : M) by

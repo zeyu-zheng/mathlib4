@@ -293,9 +293,7 @@ theorem self_invAct_invAct_eq {x y : R} : (x ◃⁻¹ x) ◃⁻¹ y = x ◃⁻¹
 @[simp]
 theorem self_act_invAct_eq {x y : R} : (x ◃ x) ◃⁻¹ y = x ◃⁻¹ y := by
   rw [← left_cancel (x ◃ x)]
-  rw [right_inv]
-  rw [self_act_act_eq]
-  rw [right_inv]
+  rw [right_inv, self_act_act_eq, right_inv]
 #align rack.self_act_inv_act_eq Rack.self_act_invAct_eq
 
 @[simp]
@@ -348,8 +346,7 @@ def IsAbelian (R : Type*) [Rack R] : Prop :=
 /-- Associative racks are uninteresting.
 -/
 theorem assoc_iff_id {R : Type*} [Rack R] {x y z : R} : x ◃ y ◃ z = (x ◃ y) ◃ z ↔ x ◃ z = z := by
-  rw [self_distrib]
-  rw [left_cancel]
+  rw [self_distrib, left_cancel]
 #align rack.assoc_iff_id Rack.assoc_iff_id
 
 end Rack

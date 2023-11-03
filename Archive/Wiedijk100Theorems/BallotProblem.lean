@@ -424,9 +424,8 @@ theorem ballot_problem :
   have :
     (condCount (countedSequence p q) staysPositive).toReal =
       ((p - q) / (p + q) : ENNReal).toReal := by
-    rw [ballot_problem' q p qp]
-    rw [ENNReal.toReal_div, ← Nat.cast_add, ← Nat.cast_add, ENNReal.toReal_nat,
-      ENNReal.toReal_sub_of_le, ENNReal.toReal_nat, ENNReal.toReal_nat]
+    rw [ballot_problem' q p qp, ENNReal.toReal_div, ← Nat.cast_add, ← Nat.cast_add,
+      ENNReal.toReal_nat, ENNReal.toReal_sub_of_le, ENNReal.toReal_nat, ENNReal.toReal_nat]
     exacts [Nat.cast_le.2 qp.le, ENNReal.nat_ne_top _]
   rwa [ENNReal.toReal_eq_toReal (measure_lt_top _ _).ne] at this
   · simp only [Ne.def, ENNReal.div_eq_top, tsub_eq_zero_iff_le, Nat.cast_le, not_le,

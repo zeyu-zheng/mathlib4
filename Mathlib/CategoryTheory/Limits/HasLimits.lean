@@ -1142,8 +1142,8 @@ theorem colimit.map_post {D : Type u'} [Category.{v'} D] [HasColimitsOfShape J D
         H.map (colim.map α) =
       colim.map (whiskerRight α H) ≫ colimit.post G H := by
   ext
-  rw [← assoc, colimit.ι_post, ← H.map_comp, colimit.ι_map, H.map_comp]
-  rw [← assoc, colimit.ι_map, assoc, colimit.ι_post]
+  rw [← assoc, colimit.ι_post, ← H.map_comp, colimit.ι_map, H.map_comp, ← assoc, colimit.ι_map,
+      assoc, colimit.ι_post]
   rfl
 #align category_theory.limits.colimit.map_post CategoryTheory.Limits.colimit.map_post
 
