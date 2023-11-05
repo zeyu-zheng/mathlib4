@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Amelia Livingston
 
 -/
+import Mathlib.Algebra.Homology.ShortComplex.ModuleCat
 import Mathlib.RepresentationTheory.GroupCohomology.Basic
 import Mathlib.RepresentationTheory.Invariants
 
@@ -320,6 +321,45 @@ abbrev H2 := twoCocycles A ⧸ twoCoboundaries A
 
 /-- The quotient map `Z²(G, A) → H²(G, A).` -/
 def H2_π : twoCocycles A →ₗ[k] H2 A := (twoCoboundaries A).mkQ
+
+-- DRAFT
+
+lemma dZero_comp_H0_subtype : dZero A ∘ₗ (H0 A).subtype = 0 := sorry
+
+def kernelForkH0 : KernelFork (ModuleCat.ofHom (dZero A)) :=
+  KernelFork.ofι (ModuleCat.ofHom (H0 A).subtype) (dZero_comp_H0_subtype A)
+
+def isLimitKernelForkH0 : IsLimit (kernelForkH0 A) := sorry
+
+/-- Constructor for short complexes in `ModuleCat.{v} R` taking as inputs
+linear maps `f` and `g` and the vanishing of their composition. -/
+@[simps]
+def _root_.CategoryTheory.ShortComplex.moduleCatMk {R : Type u} [Ring R]
+    {X₁ X₂ X₃ : Type v} [AddCommGroup X₁] [AddCommGroup X₂] [AddCommGroup X₃]
+    [Module R X₁] [Module R X₂] [Module R X₃] (f : X₁ →ₗ[R] X₂) (g : X₂ →ₗ[R] X₃)
+    (hfg : g.comp f = 0) : ShortComplex (ModuleCat.{v} R) :=
+  ShortComplex.mk (ModuleCat.ofHom f) (ModuleCat.ofHom g) hfg
+
+def isoH0 : groupCohomology A 0 ≅ ModuleCat.of k (H0 A) :=
+  (inhomogeneousCochains A).isoHomologyπ₀.symm ≪≫
+    ((IsLimit.conePointUniqueUpToIso ((inhomogeneousCochains A).cyclesIsKernel 0 1 (by simp))
+      (limit.isLimit _)) ≪≫ (kernel.mapIso _ _ (zeroCochainsLinearEquiv A).toModuleIso
+      (oneCochainsLinearEquiv A).toModuleIso (dZero_comp_eq A).symm)) ≪≫
+    (IsLimit.conePointUniqueUpToIso (limit.isLimit _) (isLimitKernelForkH0 A))
+-- to simplify this, we should introduce a variant of `kernel.map` and `kernel.mapIso`
+-- when we have limit kernel forks of two maps, and a map (resp. iso) in the category of arrows
+
+@[simps!]
+def inhomogeneousCochainsSc'IsoOne :
+    (inhomogeneousCochains A).sc' 0 1 2 ≅
+      ShortComplex.moduleCatMk _ _ (dOne_comp_dZero A) :=
+  ShortComplex.isoMk
+    (zeroCochainsLinearEquiv A).toModuleIso (oneCochainsLinearEquiv A).toModuleIso
+    (twoCochainsLinearEquiv A).toModuleIso (dZero_comp_eq A) (dOne_comp_eq A)
+
+def isoH1 : groupCohomology A 1 ≅ ModuleCat.of k (H1 A) :=
+  ShortComplex.homologyMapIso ((inhomogeneousCochains A).isoSc' 0 1 2 (by simp) (by simp) ≪≫
+    inhomogeneousCochainsSc'IsoOne A) ≪≫ ShortComplex.moduleCatHomologyIso _
 
 end Cohomology
 end groupCohomology
