@@ -324,30 +324,31 @@ def H2_π : twoCocycles A →ₗ[k] H2 A := (twoCoboundaries A).mkQ
 
 -- DRAFT
 
-lemma dZero_comp_H0_subtype : dZero A ∘ₗ (H0 A).subtype = 0 := sorry
+lemma dZero_comp_H0_subtype : dZero A ∘ₗ (H0 A).subtype = 0 := by
+  ext ⟨x, hx⟩ g
+  replace hx := hx g
+  rw [← sub_eq_zero] at hx
+  exact hx
 
-def kernelForkH0 : KernelFork (ModuleCat.ofHom (dZero A)) :=
-  KernelFork.ofι (ModuleCat.ofHom (H0 A).subtype) (dZero_comp_H0_subtype A)
+def shortComplexH0 : ShortComplex (ModuleCat k) :=
+  ShortComplex.moduleCatMk _ _ (dZero_comp_H0_subtype A)
 
-def isLimitKernelForkH0 : IsLimit (kernelForkH0 A) := sorry
+instance : Mono (shortComplexH0 A).f := by
+  rw [ModuleCat.mono_iff_injective]
+  apply Submodule.injective_subtype
 
-/-- Constructor for short complexes in `ModuleCat.{v} R` taking as inputs
-linear maps `f` and `g` and the vanishing of their composition. -/
-@[simps]
-def _root_.CategoryTheory.ShortComplex.moduleCatMk {R : Type u} [Ring R]
-    {X₁ X₂ X₃ : Type v} [AddCommGroup X₁] [AddCommGroup X₂] [AddCommGroup X₃]
-    [Module R X₁] [Module R X₂] [Module R X₃] (f : X₁ →ₗ[R] X₂) (g : X₂ →ₗ[R] X₃)
-    (hfg : g.comp f = 0) : ShortComplex (ModuleCat.{v} R) :=
-  ShortComplex.mk (ModuleCat.ofHom f) (ModuleCat.ofHom g) hfg
+lemma shortComplexH0_exact : (shortComplexH0 A).Exact := by
+  rw [ShortComplex.moduleCat_exact_iff]
+  intro (x : A) (hx : dZero _ x = 0)
+  refine' ⟨⟨x, fun g => _⟩, rfl⟩
+  rw [← sub_eq_zero]
+  exact congr_fun hx g
 
 def isoH0 : groupCohomology A 0 ≅ ModuleCat.of k (H0 A) :=
   (inhomogeneousCochains A).isoHomologyπ₀.symm ≪≫
-    ((IsLimit.conePointUniqueUpToIso ((inhomogeneousCochains A).cyclesIsKernel 0 1 (by simp))
-      (limit.isLimit _)) ≪≫ (kernel.mapIso _ _ (zeroCochainsLinearEquiv A).toModuleIso
-      (oneCochainsLinearEquiv A).toModuleIso (dZero_comp_eq A).symm)) ≪≫
-    (IsLimit.conePointUniqueUpToIso (limit.isLimit _) (isLimitKernelForkH0 A))
--- to simplify this, we should introduce a variant of `kernel.map` and `kernel.mapIso`
--- when we have limit kernel forks of two maps, and a map (resp. iso) in the category of arrows
+    KernelFork.mapIsoOfIsLimit ((inhomogeneousCochains A).cyclesIsKernel 0 1 (by simp))
+      (shortComplexH0_exact A).fIsKernel (Arrow.isoMk (zeroCochainsLinearEquiv A).toModuleIso
+        (oneCochainsLinearEquiv A).toModuleIso (dZero_comp_eq A))
 
 @[simps!]
 def inhomogeneousCochainsSc'IsoOne :
