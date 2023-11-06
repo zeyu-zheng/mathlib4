@@ -3,7 +3,7 @@ Copyright (c) 2018 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Julian Kuelshammer
 -/
-import Mathlib.Algebra.Hom.Iterate
+import Mathlib.Algebra.GroupPower.IterateHom
 import Mathlib.Data.Int.ModEq
 import Mathlib.Data.Set.Pointwise.Basic
 import Mathlib.Data.Set.Intervals.Infinite
@@ -679,7 +679,7 @@ theorem sum_card_orderOf_eq_card_pow_eq_one [Fintype G] [DecidableEq G] (hn : n 
 #align sum_card_order_of_eq_card_pow_eq_one sum_card_orderOf_eq_card_pow_eq_one
 #align sum_card_add_order_of_eq_card_nsmul_eq_zero sum_card_addOrderOf_eq_card_nsmul_eq_zero
 
-@[to_additive ]
+@[to_additive]
 theorem orderOf_le_card_univ [Fintype G] : orderOf x ≤ Fintype.card G :=
   Finset.le_card_of_inj_on_range ((· ^ ·) x) (fun _ _ => Finset.mem_univ _) fun _ hi _ hj =>
     pow_injective_of_lt_orderOf x hi hj
@@ -1129,7 +1129,7 @@ theorem LinearOrderedRing.orderOf_le_two : orderOf x ≤ 2 := by
   cases' ne_or_eq |x| 1 with h h
   · simp [orderOf_abs_ne_one h]
   rcases eq_or_eq_neg_of_abs_eq h with (rfl | rfl)
-  · simp
+  · simp; decide
   apply orderOf_le_of_pow_eq_one <;> norm_num
 #align linear_ordered_ring.order_of_le_two LinearOrderedRing.orderOf_le_two
 
