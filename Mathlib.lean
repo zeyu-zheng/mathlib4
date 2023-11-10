@@ -3165,6 +3165,7 @@ import Mathlib.Tactic.FBinop
 import Mathlib.Tactic.FailIfNoProgress
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.FinCases
+import Mathlib.Tactic.FinCases2
 import Mathlib.Tactic.Find
 import Mathlib.Tactic.GCongr
 import Mathlib.Tactic.GCongr.Core
