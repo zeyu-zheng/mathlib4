@@ -639,6 +639,18 @@ theorem mfderivWithin_inter (ht : t ∈ 𝓝 x) :
     fderivWithin_inter (extChartAt_preimage_mem_nhds I x ht)]
 #align mfderiv_within_inter mfderivWithin_inter
 
+theorem mfderivWithin_of_mem_nhds (h : s ∈ 𝓝 x) : mfderivWithin I I' f s x = mfderiv I I' f x := by
+  rw [← mfderivWithin_univ, ← univ_inter s, mfderivWithin_inter h]
+
+lemma mfderivWithin_of_isOpen (hs : IsOpen s) (hx : x ∈ s) :
+    mfderivWithin I I' f s x = mfderiv I I' f x :=
+  mfderivWithin_of_mem_nhds (hs.mem_nhds hx)
+
+theorem mfderivWithin_eq_mfderiv (hs : UniqueMDiffWithinAt I s x) (h : MDifferentiableAt I I' f x) :
+    mfderivWithin I I' f s x = mfderiv I I' f x := by
+  rw [← mfderivWithin_univ]
+  exact mfderivWithin_subset (subset_univ _) hs h.mdifferentiableWithinAt
+
 theorem mdifferentiableAt_iff_of_mem_source {x' : M} {y : M'}
     (hx : x' ∈ (chartAt H x).source) (hy : f x' ∈ (chartAt H' y).source) :
     MDifferentiableAt I I' f x' ↔
@@ -1340,7 +1352,7 @@ variable {c : M'}
 theorem hasMFDerivAt_const (c : M') (x : M) :
     HasMFDerivAt I I' (fun _ : M => c) x (0 : TangentSpace I x →L[𝕜] TangentSpace I' c) := by
   refine' ⟨continuous_const.continuousAt, _⟩
-  simp only [writtenInExtChartAt, (· ∘ ·), hasFDerivWithinAt_const]
+  simp only [writtenInExtChartAt, Function.comp_def, hasFDerivWithinAt_const]
 #align has_mfderiv_at_const hasMFDerivAt_const
 
 theorem hasMFDerivWithinAt_const (c : M') (s : Set M) (x : M) :

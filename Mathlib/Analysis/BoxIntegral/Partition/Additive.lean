@@ -83,7 +83,7 @@ theorem sum_partition_boxes (f : ι →ᵇᵃ[I₀] M) (hI : ↑I ≤ I₀) {π 
   f.sum_partition_boxes' I hI π h
 #align box_integral.box_additive_map.sum_partition_boxes BoxIntegral.BoxAdditiveMap.sum_partition_boxes
 
-@[simps (config := { fullyApplied := false })]
+@[simps (config := .asFn)]
 instance : Zero (ι →ᵇᵃ[I₀] M) :=
   ⟨⟨0, fun _ _ _ _ => sum_const_zero⟩⟩
 
@@ -142,7 +142,7 @@ def ofMapSplitAdd [Fintype ι] (f : Box ι → M) (I₀ : WithTop (Box ι))
 
 /-- If `g : M → N` is an additive map and `f` is a box additive map, then `g ∘ f` is a box additive
 map. -/
-@[simps (config := { fullyApplied := false })]
+@[simps (config := .asFn)]
 def map (f : ι →ᵇᵃ[I₀] M) (g : M →+ N) : ι →ᵇᵃ[I₀] N where
   toFun := g ∘ f
   sum_partition_boxes' I hI π hπ := by simp_rw [comp, ← g.map_sum, f.sum_partition_boxes hI hπ]
@@ -201,7 +201,7 @@ def upperSubLower.{u} {G : Type u} [AddCommGroup G] (I₀ : Box (Fin (n + 1))) (
       rw [WithTop.coe_le_coe] at hJ
       refine' i.succAboveCases (fun hx => _) (fun j hx => _) j
       · simp only [Box.splitLower_def hx, Box.splitUpper_def hx, update_same, ← WithBot.some_eq_coe,
-          Option.elim', Box.face, (· ∘ ·), update_noteq (Fin.succAbove_ne _ _)]
+          Option.elim', Box.face, Function.comp_def, update_noteq (Fin.succAbove_ne _ _)]
         abel
       · have : (J.face i : WithTop (Box (Fin n))) ≤ I₀.face i :=
           WithTop.coe_le_coe.2 (face_mono hJ i)

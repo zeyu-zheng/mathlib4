@@ -331,7 +331,7 @@ theorem hasFDerivAt_iff_tendsto :
 theorem hasFDerivAt_iff_isLittleO_nhds_zero :
     HasFDerivAt f f' x ↔ (fun h : E => f (x + h) - f x - f' h) =o[𝓝 0] fun h => h := by
   rw [HasFDerivAt, HasFDerivAtFilter, ← map_add_left_nhds_zero x, isLittleO_map]
-  simp [(· ∘ ·)]
+  simp [Function.comp_def]
 #align has_fderiv_at_iff_is_o_nhds_zero hasFDerivAt_iff_isLittleO_nhds_zero
 
 /-- Converse to the mean value inequality: if `f` is differentiable at `x₀` and `C`-lipschitz
@@ -408,6 +408,14 @@ theorem hasFDerivWithinAt_univ : HasFDerivWithinAt f f' univ x ↔ HasFDerivAt f
 
 alias ⟨HasFDerivWithinAt.hasFDerivAt_of_univ, _⟩ := hasFDerivWithinAt_univ
 #align has_fderiv_within_at.has_fderiv_at_of_univ HasFDerivWithinAt.hasFDerivAt_of_univ
+
+theorem hasFDerivWithinAt_of_mem_nhds (h : s ∈ 𝓝 x) :
+    HasFDerivWithinAt f f' s x ↔ HasFDerivAt f f' x := by
+  rw [HasFDerivAt, HasFDerivWithinAt, nhdsWithin_eq_nhds.mpr h]
+
+lemma hasFDerivWithinAt_of_isOpen (h : IsOpen s) (hx : x ∈ s) :
+    HasFDerivWithinAt f f' s x ↔ HasFDerivAt f f' x :=
+  hasFDerivWithinAt_of_mem_nhds (h.mem_nhds hx)
 
 theorem hasFDerivWithinAt_insert {y : E} :
     HasFDerivWithinAt f f' (insert y s) x ↔ HasFDerivWithinAt f f' s x := by
@@ -712,9 +720,9 @@ theorem fderivWithin_of_mem_nhds (h : s ∈ 𝓝 x) : fderivWithin 𝕜 f s x = 
   rw [← fderivWithin_univ, ← univ_inter s, fderivWithin_inter h]
 #align fderiv_within_of_mem_nhds fderivWithin_of_mem_nhds
 
-theorem fderivWithin_of_open (hs : IsOpen s) (hx : x ∈ s) : fderivWithin 𝕜 f s x = fderiv 𝕜 f x :=
+theorem fderivWithin_of_isOpen (hs : IsOpen s) (hx : x ∈ s) : fderivWithin 𝕜 f s x = fderiv 𝕜 f x :=
   fderivWithin_of_mem_nhds (hs.mem_nhds hx)
-#align fderiv_within_of_open fderivWithin_of_open
+#align fderiv_within_of_open fderivWithin_of_isOpen
 
 theorem fderivWithin_eq_fderiv (hs : UniqueDiffWithinAt 𝕜 s x) (h : DifferentiableAt 𝕜 f x) :
     fderivWithin 𝕜 f s x = fderiv 𝕜 f x := by
@@ -752,17 +760,25 @@ theorem Asymptotics.IsBigO.hasFDerivAt {x₀ : E} {n : ℕ} (h : f =O[𝓝 x₀]
 set_option linter.uppercaseLean3 false in
 #align asymptotics.is_O.has_fderiv_at Asymptotics.IsBigO.hasFDerivAt
 
-nonrec theorem HasFDerivWithinAt.isBigO {f : E → F} {s : Set E} {x₀ : E} {f' : E →L[𝕜] F}
-    (h : HasFDerivWithinAt f f' s x₀) : (fun x => f x - f x₀) =O[𝓝[s] x₀] fun x => x - x₀ := by
-  simpa only [sub_add_cancel] using h.isBigO.add (isBigO_sub f' (𝓝[s] x₀) x₀)
+nonrec theorem HasFDerivWithinAt.isBigO_sub {f : E → F} {s : Set E} {x₀ : E} {f' : E →L[𝕜] F}
+    (h : HasFDerivWithinAt f f' s x₀) : (f · - f x₀) =O[𝓝[s] x₀] (· - x₀) :=
+  h.isBigO_sub
 set_option linter.uppercaseLean3 false in
-#align has_fderiv_within_at.is_O HasFDerivWithinAt.isBigO
+#align has_fderiv_within_at.is_O HasFDerivWithinAt.isBigO_sub
 
-nonrec theorem HasFDerivAt.isBigO {f : E → F} {x₀ : E} {f' : E →L[𝕜] F} (h : HasFDerivAt f f' x₀) :
-    (fun x => f x - f x₀) =O[𝓝 x₀] fun x => x - x₀ := by
-  simpa only [sub_add_cancel] using h.isBigO.add (isBigO_sub f' (𝓝 x₀) x₀)
+lemma DifferentiableWithinAt.isBigO_sub {f : E → F} {s : Set E} {x₀ : E}
+    (h : DifferentiableWithinAt 𝕜 f s x₀) : (f · - f x₀) =O[𝓝[s] x₀] (· - x₀) :=
+  h.hasFDerivWithinAt.isBigO_sub
+
+nonrec theorem HasFDerivAt.isBigO_sub {f : E → F} {x₀ : E} {f' : E →L[𝕜] F}
+    (h : HasFDerivAt f f' x₀) : (f · - f x₀) =O[𝓝 x₀] (· - x₀) :=
+  h.isBigO_sub
 set_option linter.uppercaseLean3 false in
-#align has_fderiv_at.is_O HasFDerivAt.isBigO
+#align has_fderiv_at.is_O HasFDerivAt.isBigO_sub
+
+nonrec theorem DifferentiableAt.isBigO_sub {f : E → F} {x₀ : E} (h : DifferentiableAt 𝕜 f x₀) :
+    (f · - f x₀) =O[𝓝 x₀] (· - x₀) :=
+  h.hasFDerivAt.isBigO_sub
 
 end FDerivProperties
 

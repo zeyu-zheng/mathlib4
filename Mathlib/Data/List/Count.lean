@@ -5,7 +5,7 @@ Authors: Parikshit Khanna, Jeremy Avigad, Leonardo de Moura, Floris van Doorn, M
 -/
 import Mathlib.Data.List.BigOperators.Basic
 
-#align_import data.list.count from "leanprover-community/mathlib"@"47adfab39a11a072db552f47594bf8ed2cf8a722"
+#align_import data.list.count from "leanprover-community/mathlib"@"65a1391a0106c9204fe45bc73a039f056558cb83"
 
 /-!
 # Counting in lists
@@ -70,6 +70,11 @@ theorem length_filter_lt_length_iff_exists (l) :
 #align list.countp_false List.countP_false
 
 #align list.countp_map List.countP_map
+
+-- porting note: `Lean.Internal.coeM` forces us to type-ascript `{x // x ∈ l}`
+lemma countP_attach (l : List α) : l.attach.countP (fun a : {x // x ∈ l} ↦ p a) = l.countP p := by
+  simp_rw [←Function.comp_apply (g := Subtype.val), ←countP_map, attach_map_val]
+#align list.countp_attach List.countP_attach
 
 #align list.countp_mono_left List.countP_mono_left
 
@@ -148,9 +153,14 @@ theorem count_bind {α β} [DecidableEq β] (l : List α) (f : α → List β) (
 #align list.count_bind List.count_bind
 
 @[simp]
+lemma count_attach (a : {x // x ∈ l}) : l.attach.count a = l.count ↑a :=
+  Eq.trans (countP_congr fun _ _ => by simp [Subtype.ext_iff]) <| countP_attach _ _
+#align list.count_attach List.count_attach
+
+@[simp]
 theorem count_map_of_injective {α β} [DecidableEq α] [DecidableEq β] (l : List α) (f : α → β)
     (hf : Function.Injective f) (x : α) : count (f x) (map f l) = count x l := by
-  simp only [count, countP_map, (· ∘ ·), hf.beq_eq]
+  simp only [count, countP_map, Function.comp_def, hf.beq_eq]
 #align list.count_map_of_injective List.count_map_of_injective
 
 #align list.count_le_count_map List.count_le_count_map

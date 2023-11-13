@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Kenny Lau, Johan Commelin, Mario Carneiro, Kevin Buzzard,
 Amelia Livingston, Yury Kudryashov
 -/
-import Mathlib.Algebra.Order.Monoid.Cancel.Basic
+import Mathlib.Algebra.Order.Monoid.Basic
 import Mathlib.GroupTheory.GroupAction.Defs
 import Mathlib.GroupTheory.Submonoid.Basic
 import Mathlib.GroupTheory.Subsemigroup.Operations
@@ -560,7 +560,7 @@ attribute [to_additive existing nSMul] nPow
 
 @[to_additive (attr := simp, norm_cast)]
 theorem coe_pow {M} [Monoid M] {A : Type*} [SetLike A M] [SubmonoidClass A M] {S : A} (x : S)
-    (n : ℕ) : (x ^ n : M) = (x : M) ^ n :=
+    (n : ℕ) : ↑(x ^ n) = (x : M) ^ n :=
   rfl
 #align submonoid_class.coe_pow SubmonoidClass.coe_pow
 #align add_submonoid_class.coe_nsmul AddSubmonoidClass.coe_nsmul
