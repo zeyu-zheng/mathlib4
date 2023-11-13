@@ -146,6 +146,20 @@ theorem Units.embedding_val₀ [GroupWithZero G₀] [TopologicalSpace G₀] [Has
   embedding_val_mk <| (continuousOn_inv₀ (G₀ := G₀)).mono <| fun _ ↦ IsUnit.ne_zero
 #align units.embedding_coe₀ Units.embedding_val₀
 
+section NhdsInv
+
+variable [GroupWithZero G₀] [TopologicalSpace G₀] [HasContinuousInv₀ G₀] {x : G₀}
+
+lemma nhds_inv₀ (hx : x ≠ 0) : 𝓝 x⁻¹ = (𝓝 x)⁻¹ := by
+  refine le_antisymm (inv_le_iff_le_inv.1 ?_) (tendsto_inv₀ hx)
+  simpa only [inv_inv] using tendsto_inv₀ (inv_ne_zero hx)
+
+lemma tendsto_inv_iff₀ {l : Filter α} {f : α → G₀} (hx : x ≠ 0) :
+    Tendsto (fun x ↦ (f x)⁻¹) l (𝓝 x⁻¹) ↔ Tendsto f l (𝓝 x) := by
+  simp only [nhds_inv₀ hx, ← Filter.comap_inv, tendsto_comap_iff, comp_def, inv_inv]
+
+end NhdsInv
+
 /-!
 ### Continuity of division
 
@@ -302,7 +316,7 @@ theorem HasContinuousInv₀.of_nhds_one (h : Tendsto Inv.inv (𝓝 (1 : G₀)) (
     have hx' := inv_ne_zero hx
     rw [ContinuousAt, ← map_mul_left_nhds_one₀ hx, ← nhds_translation_mul_inv₀ hx',
       tendsto_map'_iff, tendsto_comap_iff]
-    simpa only [(· ∘ ·), mul_inv_rev, mul_inv_cancel_right₀ hx']
+    simpa only [Function.comp_def, mul_inv_rev, mul_inv_cancel_right₀ hx']
 
 end map_comap
 

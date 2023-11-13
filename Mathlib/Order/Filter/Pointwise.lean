@@ -234,6 +234,10 @@ section InvolutiveInv
 
 variable [InvolutiveInv α] {f g : Filter α} {s : Set α}
 
+@[to_additive (attr := simp)]
+protected lemma comap_inv : comap Inv.inv f = f⁻¹ :=
+  .symm <| map_eq_comap_of_inverse (inv_comp_inv _) (inv_comp_inv _)
+
 @[to_additive]
 theorem inv_mem_inv (hs : s ∈ f) : s⁻¹ ∈ f⁻¹ := by rwa [mem_inv, inv_preimage, inv_inv]
 #align filter.inv_mem_inv Filter.inv_mem_inv
@@ -268,8 +272,11 @@ theorem inv_le_self : f⁻¹ ≤ f ↔ f⁻¹ = f :=
 
 end InvolutiveInv
 
-/-! ### Filter addition/multiplication -/
+@[to_additive (attr := simp)]
+lemma inv_atTop {G : Type*} [OrderedCommGroup G] : (atTop : Filter G)⁻¹ = atBot :=
+  (OrderIso.inv G).map_atTop
 
+/-! ### Filter addition/multiplication -/
 
 section Mul
 
@@ -1309,7 +1316,7 @@ protected def mulAction [Monoid α] [MulAction α β] : MulAction (Filter α) (F
 @[to_additive "An additive action of an additive monoid on a type `β` gives an additive action on
  `Filter β`."]
 protected def mulActionFilter [Monoid α] [MulAction α β] : MulAction α (Filter β) where
-  mul_smul a b f := by simp only [← map_smul, map_map, Function.comp, ← mul_smul]
+  mul_smul a b f := by simp only [← map_smul, map_map, Function.comp_def, ← mul_smul]
   one_smul f := by simp only [← map_smul, one_smul, map_id']
 #align filter.mul_action_filter Filter.mulActionFilter
 #align filter.add_action_filter Filter.addActionFilter

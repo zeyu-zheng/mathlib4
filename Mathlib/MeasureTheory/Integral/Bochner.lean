@@ -482,7 +482,7 @@ nonrec def posPart (f : α →₁ₛ[μ] ℝ) : α →₁ₛ[μ] ℝ :=
     simp only [Subtype.coe_mk, Lp.coe_posPart, ← hsf, AEEqFun.posPart_mk,
       SimpleFunc.coe_map, mk_eq_mk]
     -- Porting note: added
-    simp [SimpleFunc.posPart, Function.comp, EventuallyEq.rfl] ⟩
+    simp [SimpleFunc.posPart, Function.comp_def, EventuallyEq.rfl] ⟩
 #align measure_theory.L1.simple_func.pos_part MeasureTheory.L1.SimpleFunc.posPart
 
 /-- Negative part of a simple function in L1 space. -/
@@ -1324,17 +1324,13 @@ theorem Memℒp.snorm_eq_integral_rpow_norm {f : α → H} {p : ℝ≥0∞} (hp1
   have A : ∫⁻ a : α, ENNReal.ofReal (‖f a‖ ^ p.toReal) ∂μ = ∫⁻ a : α, ‖f a‖₊ ^ p.toReal ∂μ := by
     apply lintegral_congr
     intro x
-    rw [← ofReal_rpow_of_nonneg (norm_nonneg _) toReal_nonneg, ofReal_norm_eq_coe_nnnorm,
-      -- Porting note: Here and below `ENNReal.coe_rpow_of_nonneg` was not needed
-      ← ENNReal.coe_rpow_of_nonneg _ toReal_nonneg]
+    rw [← ofReal_rpow_of_nonneg (norm_nonneg _) toReal_nonneg, ofReal_norm_eq_coe_nnnorm]
   simp only [snorm_eq_lintegral_rpow_nnnorm hp1 hp2, one_div]
   rw [integral_eq_lintegral_of_nonneg_ae]; rotate_left
   · exact eventually_of_forall fun x => Real.rpow_nonneg_of_nonneg (norm_nonneg _) _
   · exact (hf.aestronglyMeasurable.norm.aemeasurable.pow_const _).aestronglyMeasurable
   rw [A, ← ofReal_rpow_of_nonneg toReal_nonneg (inv_nonneg.2 toReal_nonneg), ofReal_toReal]
-  · simp_rw [← ENNReal.coe_rpow_of_nonneg _ toReal_nonneg]
-  · simp_rw [← ENNReal.coe_rpow_of_nonneg _ toReal_nonneg]
-    exact (lintegral_rpow_nnnorm_lt_top_of_snorm_lt_top hp1 hp2 hf.2).ne
+  exact (lintegral_rpow_nnnorm_lt_top_of_snorm_lt_top hp1 hp2 hf.2).ne
 #align measure_theory.mem_ℒp.snorm_eq_integral_rpow_norm MeasureTheory.Memℒp.snorm_eq_integral_rpow_norm
 
 end NormedAddCommGroup
@@ -1564,7 +1560,7 @@ theorem integral_tsum {ι} [Countable ι] {f : ι → α → G} (hf : ∀ i, AES
     filter_upwards [hhh] with a ha
     exact ENNReal.coe_tsum (NNReal.summable_coe.mp ha)
   · filter_upwards [hhh] with x hx
-    exact (summable_of_summable_norm hx).hasSum
+    exact hx.of_norm.hasSum
 #align measure_theory.integral_tsum MeasureTheory.integral_tsum
 
 @[simp]
@@ -1583,6 +1579,11 @@ theorem integral_smul_measure (f : α → G) (c : ℝ≥0∞) :
   rw [← setToFun_congr_smul_measure c hc hdfma hdfma_smul f]
   exact setToFun_congr_left' _ _ (fun s _ _ => weightedSMul_smul_measure μ c) f
 #align measure_theory.integral_smul_measure MeasureTheory.integral_smul_measure
+
+@[simp]
+theorem integral_smul_nnreal_measure (f : α → G) (c : ℝ≥0) :
+    ∫ x, f x ∂(c • μ) = c • ∫ x, f x ∂μ :=
+  integral_smul_measure f (c : ℝ≥0∞)
 
 theorem integral_map_of_stronglyMeasurable {β} [MeasurableSpace β] {φ : α → β} (hφ : Measurable φ)
     {f : β → G} (hfm : StronglyMeasurable f) : ∫ y, f y ∂Measure.map φ μ = ∫ x, f (φ x) ∂μ := by

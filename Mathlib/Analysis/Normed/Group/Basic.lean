@@ -473,7 +473,7 @@ theorem dist_div_eq_dist_mul_right (a b c : E) : dist a (b / c) = dist (a * c) b
 `Bornology.cobounded` instead of `Filter.comap Norm.norm Filter.atTop`."]
 theorem Filter.tendsto_inv_cobounded :
     Tendsto (Inv.inv : E → E) (comap norm atTop) (comap norm atTop) := by
-  simpa only [norm_inv', tendsto_comap_iff, (· ∘ ·)] using tendsto_comap
+  simpa only [norm_inv', tendsto_comap_iff, Function.comp_def] using tendsto_comap
 #align filter.tendsto_inv_cobounded Filter.tendsto_inv_cobounded
 #align filter.tendsto_neg_cobounded Filter.tendsto_neg_cobounded
 
@@ -2101,6 +2101,10 @@ theorem coe_normGroupNorm : ⇑(normGroupNorm E) = norm :=
   rfl
 #align coe_norm_group_norm coe_normGroupNorm
 
+@[to_additive comap_norm_nhdsWithin_Ioi_zero]
+lemma comap_norm_nhdsWithin_Ioi_zero' : comap norm (𝓝[>] 0) = 𝓝[≠] (1 : E) := by
+  simp [nhdsWithin, comap_norm_nhds_one, Set.preimage, Set.compl_def]
+
 end NormedGroup
 
 section NormedAddGroup
@@ -2108,7 +2112,6 @@ section NormedAddGroup
 variable [NormedAddGroup E] [TopologicalSpace α] {f : α → E}
 
 /-! Some relations with `HasCompactSupport` -/
-
 
 theorem hasCompactSupport_norm_iff : (HasCompactSupport fun x => ‖f x‖) ↔ HasCompactSupport f :=
   hasCompactSupport_comp_left norm_eq_zero
@@ -2654,7 +2657,7 @@ but that case would likely never be used.
 instance seminormedAddGroup [SeminormedAddGroup E] : SeminormedAddGroup Eᵐᵒᵖ where
   norm x := ‖x.unop‖
   dist_eq _ _ := dist_eq_norm _ _
-  toPseudoMetricSpace := MulOpposite.instPseudoMetricSpaceMulOpposite
+  toPseudoMetricSpace := MulOpposite.instPseudoMetricSpace
 
 theorem norm_op [SeminormedAddGroup E] (a : E) : ‖MulOpposite.op a‖ = ‖a‖ :=
   rfl

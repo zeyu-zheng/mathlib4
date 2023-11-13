@@ -277,6 +277,13 @@ theorem atTop_basis_Ioi [Nonempty α] [SemilatticeSup α] [NoMaxOrder α] :
     (exists_gt a).imp fun _b hb => ⟨ha, Ici_subset_Ioi.2 hb⟩
 #align filter.at_top_basis_Ioi Filter.atTop_basis_Ioi
 
+lemma atTop_basis_Ioi' [SemilatticeSup α] [NoMaxOrder α] (a : α) : atTop.HasBasis (a < ·) Ioi :=
+  have : Nonempty α := ⟨a⟩
+  atTop_basis_Ioi.to_hasBasis (fun b _ ↦
+      let ⟨c, hc⟩ := exists_gt (a ⊔ b)
+      ⟨c, le_sup_left.trans_lt hc, Ioi_subset_Ioi <| le_sup_right.trans hc.le⟩) fun b _ ↦
+    ⟨b, trivial, Subset.rfl⟩
+
 theorem atTop_countable_basis [Nonempty α] [SemilatticeSup α] [Countable α] :
     HasCountableBasis (atTop : Filter α) (fun _ => True) Ici :=
   { atTop_basis with countable := to_countable _ }
@@ -884,12 +891,10 @@ theorem map_neg_atTop : map (Neg.neg : β → β) atTop = atBot :=
   (OrderIso.neg β).map_atTop
 #align filter.map_neg_at_top Filter.map_neg_atTop
 
-@[simp]
 theorem comap_neg_atBot : comap (Neg.neg : β → β) atBot = atTop :=
   (OrderIso.neg β).comap_atTop
 #align filter.comap_neg_at_bot Filter.comap_neg_atBot
 
-@[simp]
 theorem comap_neg_atTop : comap (Neg.neg : β → β) atTop = atBot :=
   (OrderIso.neg β).comap_atBot
 #align filter.comap_neg_at_top Filter.comap_neg_atTop
@@ -956,14 +961,16 @@ variable [OrderedRing α] {l : Filter β} {f g : β → α}
 theorem Tendsto.atTop_mul_atBot (hf : Tendsto f l atTop) (hg : Tendsto g l atBot) :
     Tendsto (fun x => f x * g x) l atBot := by
   have := hf.atTop_mul_atTop <| tendsto_neg_atBot_atTop.comp hg
-  simpa only [(· ∘ ·), neg_mul_eq_mul_neg, neg_neg] using tendsto_neg_atTop_atBot.comp this
+  simpa only [Function.comp_def, neg_mul_eq_mul_neg, neg_neg] using
+    tendsto_neg_atTop_atBot.comp this
 #align filter.tendsto.at_top_mul_at_bot Filter.Tendsto.atTop_mul_atBot
 
 theorem Tendsto.atBot_mul_atTop (hf : Tendsto f l atBot) (hg : Tendsto g l atTop) :
     Tendsto (fun x => f x * g x) l atBot := by
   have : Tendsto (fun x => -f x * g x) l atTop :=
     (tendsto_neg_atBot_atTop.comp hf).atTop_mul_atTop hg
-  simpa only [(· ∘ ·), neg_mul_eq_neg_mul, neg_neg] using tendsto_neg_atTop_atBot.comp this
+  simpa only [Function.comp_def, neg_mul_eq_neg_mul, neg_neg] using
+    tendsto_neg_atTop_atBot.comp this
 #align filter.tendsto.at_bot_mul_at_top Filter.Tendsto.atBot_mul_atTop
 
 theorem Tendsto.atBot_mul_atBot (hf : Tendsto f l atBot) (hg : Tendsto g l atBot) :
@@ -1063,7 +1070,7 @@ theorem tendsto_mul_const_atTop_of_pos (hr : 0 < r) :
   simpa only [mul_comm] using tendsto_const_mul_atTop_of_pos hr
 #align filter.tendsto_mul_const_at_top_of_pos Filter.tendsto_mul_const_atTop_of_pos
 
-/-- If `r` is a positive constant, then `x ↦ f x * r` tends to infinity along a filter if and only
+/-- If `r` is a positive constant, then `x ↦ f x / r` tends to infinity along a filter if and only
 if `f` tends to infinity along the same filter. -/
 lemma tendsto_div_const_atTop_of_pos (hr : 0 < r) :
     Tendsto (λ x ↦ f x / r) l atTop ↔ Tendsto f l atTop := by
