@@ -482,7 +482,7 @@ nonrec def posPart (f : α →₁ₛ[μ] ℝ) : α →₁ₛ[μ] ℝ :=
     simp only [Subtype.coe_mk, Lp.coe_posPart, ← hsf, AEEqFun.posPart_mk,
       SimpleFunc.coe_map, mk_eq_mk]
     -- Porting note: added
-    simp [SimpleFunc.posPart, Function.comp_def, EventuallyEq.rfl] ⟩
+    simp [SimpleFunc.posPart, Function.comp, EventuallyEq.rfl] ⟩
 #align measure_theory.L1.simple_func.pos_part MeasureTheory.L1.SimpleFunc.posPart
 
 /-- Negative part of a simple function in L1 space. -/
@@ -1652,6 +1652,7 @@ theorem integral_subtype_comap {α} [MeasurableSpace α] {μ : Measure α} {s : 
   rw [← map_comap_subtype_coe hs]
   exact ((MeasurableEmbedding.subtype_coe hs).integral_map _).symm
 
+attribute [local instance] Measure.Subtype.measureSpace in
 theorem integral_subtype {α} [MeasureSpace α] {s : Set α} (hs : MeasurableSet s) (f : α → G) :
     ∫ x : s, f x = ∫ x in s, f x := integral_subtype_comap hs f
 #align measure_theory.set_integral_eq_subtype MeasureTheory.integral_subtype
