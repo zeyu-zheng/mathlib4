@@ -36,7 +36,7 @@
   {"git":
    {"url": "https://github.com/leanprover-community/ProofWidgets4",
     "subDir?": null,
-    "rev": "c3b9f0d4ebedc43635d3f7e764e277b1010844b7",
+    "rev": "bbc68b477b506fd9e527bfeffedadb3aaa9e7da6",
     "opts": {},
     "name": "proofwidgets",
     "inputRev?": "v0.0.23-pre",
