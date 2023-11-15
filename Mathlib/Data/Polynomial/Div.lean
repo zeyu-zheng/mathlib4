@@ -74,7 +74,7 @@ theorem multiplicity_finite_of_degree_pos_of_monic (hp : (0 : WithBot ℕ) < deg
     have hpn0' : leadingCoeff p ^ (natDegree q + 1) ≠ 0 := hpn1.symm ▸ zn0.symm
     have hpnr0 : leadingCoeff (p ^ (natDegree q + 1)) * leadingCoeff r ≠ 0 := by
       simp only [leadingCoeff_pow' hpn0', leadingCoeff_eq_zero, hpn1, one_pow, one_mul, Ne.def,
-          hr0]
+          hr0, not_false_eq_true]
     have hnp : 0 < natDegree p := Nat.cast_lt.1 <| by
       rw [← degree_eq_natDegree hp0]; exact hp
     have := congr_arg natDegree hr
@@ -202,7 +202,7 @@ theorem modByMonic_zero (p : R[X]) : p %ₘ 0 = p :=
   letI := Classical.decEq R
   if h : Monic (0 : R[X]) then by
     haveI := monic_zero_iff_subsingleton.mp h
-    simp
+    simp [eq_iff_true_of_subsingleton]
   else by unfold modByMonic divModByMonicAux; rw [dif_neg h]
 #align polynomial.mod_by_monic_zero Polynomial.modByMonic_zero
 
@@ -211,7 +211,7 @@ theorem divByMonic_zero (p : R[X]) : p /ₘ 0 = 0 :=
   letI := Classical.decEq R
   if h : Monic (0 : R[X]) then by
     haveI := monic_zero_iff_subsingleton.mp h
-    simp
+    simp [eq_iff_true_of_subsingleton]
   else by unfold divByMonic divModByMonicAux; rw [dif_neg h]
 #align polynomial.div_by_monic_zero Polynomial.divByMonic_zero
 

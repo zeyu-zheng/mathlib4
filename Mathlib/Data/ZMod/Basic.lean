@@ -803,12 +803,12 @@ def chineseRemainder {m n : ℕ} (h : m.Coprime n) : ZMod (m * n) ≃+* ZMod m �
         · intro x; rfl
         · rintro ⟨x, y⟩
           fin_cases y
-          simp [castHom, Prod.ext_iff]
+          simp [castHom, Prod.ext_iff, eq_iff_true_of_subsingleton]
       · constructor
         · intro x; rfl
         · rintro ⟨x, y⟩
           fin_cases x
-          simp [castHom, Prod.ext_iff]
+          simp [castHom, Prod.ext_iff, eq_iff_true_of_subsingleton]
     else by
       haveI : NeZero (m * n) := ⟨hmn0⟩
       haveI : NeZero m := ⟨left_ne_zero_of_mul hmn0⟩
@@ -853,7 +853,7 @@ theorem neg_one_ne_one {n : ℕ} [Fact (2 < n)] : (-1 : ZMod n) ≠ 1 :=
 #align zmod.neg_one_ne_one ZMod.neg_one_ne_one
 
 theorem neg_eq_self_mod_two (a : ZMod 2) : -a = a := by
-  fin_cases a <;> apply Fin.ext <;> simp [Fin.coe_neg, Int.natMod]
+  fin_cases a <;> apply Fin.ext <;> simp [Fin.coe_neg, Int.natMod]; rfl
 #align zmod.neg_eq_self_mod_two ZMod.neg_eq_self_mod_two
 
 @[simp]
