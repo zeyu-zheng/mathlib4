@@ -504,4 +504,17 @@ theorem lt_xor_cases {a b c : ℕ} (h : a < b ^^^ c) : a ^^^ c < b ∨ a ^^^ b <
   (or_iff_right fun h' => (h.asymm h').elim).1 <| xor_trichotomy h.ne
 #align nat.lt_lxor_cases Nat.lt_xor_cases
 
+@[simp] lemma bits_bit {b x} (h : bit b x ≠ zero) :
+    bits (bit b x) = b :: bits x := by
+  rw [bits, binaryRec_of_ne_zero (h:=h)]
+  simp
+
+@[simp] lemma foldr_bit_bits (v : Nat) :
+    v.bits.foldr bit 0 = v := by
+  induction' v using Nat.binaryRec with b v ih
+  · rfl
+  · by_cases h : bit b v = 0
+    · simp only [h, zero_bits, List.foldr_nil]
+    · simp [bits_bit h, ih]
+
 end Nat
