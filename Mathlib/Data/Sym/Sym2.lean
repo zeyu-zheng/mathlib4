@@ -686,7 +686,6 @@ def Mem.other' [DecidableEq α] {a : α} {z : Sym2 α} (h : a ∈ z) : α :=
 @[simp]
 theorem other_spec' [DecidableEq α] {a : α} {z : Sym2 α} (h : a ∈ z) : ⟦(a, Mem.other' h)⟧ = z := by
   induction z using Sym2.ind
-  have h' := mem_iff.mp h
   aesop (add norm unfold [Quotient.rec, Quot.rec]) (rule_sets [Sym2])
 #align sym2.other_spec' Sym2.other_spec'
 
