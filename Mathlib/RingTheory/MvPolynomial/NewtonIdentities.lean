@@ -156,6 +156,7 @@ private theorem sum_filter_pairs_eq_sum_powersetCard_mem_filter_antidiagonal_sum
   have : card p.fst ≤ k := by apply le_of_lt; aesop
   aesop
 
+set_option maxHeartbeats 800000 in
 private theorem sum_filter_pairs_eq_sum_filter_antidiagonal_powersetCard_sum (k : ℕ)
     (f : Finset σ × σ → MvPolynomial σ R) :
     (∑ t in filter (fun t ↦ card t.fst < k) (pairs σ k), f t) =
@@ -259,6 +260,7 @@ theorem sum_antidiagonal_card_esymm_psum_eq_zero :
   simp [← sum_filter_add_sum_filter_not (antidiagonal k) (fun a ↦ a.fst < k), ← mul_esymm_eq_sum,
     mul_add, ← mul_assoc, ← pow_add, mul_comm ↑k (esymm σ R k)]
 
+set_option maxHeartbeats 400000 in
 /-- A version of Newton's identities which may be more useful in the case that we know the values of
 the elementary symmetric polynomials and would like to calculate the values of the power sums. -/
 theorem psum_eq_mul_esymm_sub_sum (k : ℕ) (h : 0 < k) : psum σ R k =
