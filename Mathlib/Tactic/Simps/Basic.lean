@@ -848,6 +848,12 @@ def Config.asFn : Simps.Config where
 def Config.lemmasOnly : Config where
   isSimp := false
 
+/-- Reduce let binders and remove meta-data from the head of the expression. -/
+partial def _root_.Lean.Expr.headZeta : Expr → Expr
+  | .letE _ _ v b _ => b.instantiate1 v |>.headZeta
+  | Expr.mdata _ b => b.headZeta
+  | e => e
+
 /-- `instantiateLambdasOrApps es e` instantiates lambdas in `e` by expressions from `es`.
 If the length of `es` is larger than the number of lambdas in `e`,
 then the term is applied to the remaining terms.
@@ -855,7 +861,7 @@ Also reduces head let-expressions in `e`, including those after instantiating al
 
 This is very similar to `expr.substs`, but this also reduces head let-expressions. -/
 partial def _root_.Lean.Expr.instantiateLambdasOrApps (es : Array Expr) (e : Expr) : Expr :=
-  e.betaRev es.reverse true -- check if this is what I want
+  e.betaRev es.reverse true |>.headZeta
 
 /-- Get the projections of a structure used by `@[simps]` applied to the appropriate arguments.
   Returns a list of tuples
