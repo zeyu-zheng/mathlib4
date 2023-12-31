@@ -268,7 +268,8 @@ This is a stronger version of `MulAction.toPermHom`. -/
 def DistribMulAction.toAddAut : α →* AddAut β where
   toFun := DistribMulAction.toAddEquiv β
   map_one' := AddEquiv.ext (one_smul _)
-  map_mul' _ _ := AddEquiv.ext (mul_smul _ _)
+  map_mul' _ _ := AddEquiv.ext (fun _ => by
+    rw [toAddEquiv_apply, AddAut.mul_apply, toAddEquiv_apply, toAddEquiv_apply, mul_smul _ _])
 #align distrib_mul_action.to_add_aut DistribMulAction.toAddAut
 #align distrib_mul_action.to_add_aut_apply DistribMulAction.toAddAut_apply
 
