@@ -206,9 +206,9 @@ class SMulCommClass (M N α : Type*) [SMul M α] [SMul N α] : Prop where
   smul_comm : ∀ (m : M) (n : N) (a : α), m • n • a = n • m • a
 #align smul_comm_class SMulCommClass
 
-export MulAction (mul_smul)
+export MulAssocAction (mul_smul)
 
-export AddAction (add_vadd)
+export AddAssocAction (add_vadd)
 
 export SMulCommClass (smul_comm)
 
@@ -258,7 +258,8 @@ theorem Function.Surjective.smulCommClass [SMul M α] [SMul N α] [SMul M β] [S
   smul_comm c₁ c₂ := hf.forall.2 fun x ↦ by simp only [← h₁, ← h₂, smul_comm c₁ c₂ x]
 
 @[to_additive]
-instance smulCommClass_self (M α : Type*) [CommMonoid M] [MulAction M α] : SMulCommClass M M α :=
+instance smulCommClass_self (M α : Type*) [CommSemigroup M] [MulAssocAction M α] :
+    SMulCommClass M M α :=
   ⟨fun a a' b => by rw [← mul_smul, mul_comm, mul_smul]⟩
 #align smul_comm_class_self smulCommClass_self
 #align vadd_comm_class_self vaddCommClass_self
@@ -497,13 +498,54 @@ end ite
 
 section
 
-variable [Monoid M] [MulAction M α]
+section MulAssocAction
+
+variable [Semigroup M] [MulAssocAction M α]
 
 @[to_additive]
 theorem smul_smul (a₁ a₂ : M) (b : α) : a₁ • a₂ • b = (a₁ * a₂) • b :=
   (mul_smul _ _ _).symm
 #align smul_smul smul_smul
 #align vadd_vadd vadd_vadd
+
+variable (M)
+
+/-- `SMul` version of `comp_mul_left` -/
+@[to_additive "`VAdd` version of `comp_add_left`"]
+theorem comp_smul_left (a₁ a₂ : M) : (a₁ • ·) ∘ (a₂ • ·) = (((a₁ * a₂) • ·) : α → α) :=
+  funext fun _ => (mul_smul _ _ _).symm
+#align comp_smul_left comp_smul_left
+#align comp_vadd_left comp_vadd_left
+
+variable {M}
+
+/-- Pullback a multiplicative assoc action along an injective map respecting `•`.
+See note [reducible non-instances]. -/
+@[to_additive (attr := reducible)
+    "Pullback an additive assoc action along an injective map respecting `+ᵥ`."]
+protected def Function.Injective.mulAssocAction  [SMul M β] (f : β → α)
+    (hf : Injective f) (smul : ∀ (c : M) (x), f (c • x) = c • f x) :
+    MulAssocAction M β where
+  smul := (· • ·)
+  mul_smul c₁ c₂ x := hf <| by simp only [smul, mul_smul]
+
+/-- Pushforward a multiplicative assoc action along a surjective map respecting `•`.
+See note [reducible non-instances]. -/
+@[to_additive (attr := reducible)
+    "Pushforward an additive action along a surjective map respecting `+ᵥ`."]
+protected def Function.Surjective.mulAssocAction [MulAssocAction M α] [SMul M β] (f : α → β)
+    (hf : Surjective f) (smul : ∀ (c : M) (x), f (c • x) = c • f x) :
+    MulAssocAction M β where
+  smul := (· • ·)
+  mul_smul c₁ c₂ y := by
+    rcases hf y with ⟨x, rfl⟩
+    simp only [← smul, mul_smul]
+
+end MulAssocAction
+
+section MulOneAction
+
+variable [Monoid M] [MulOneAction M α]
 
 variable (M)
 
@@ -519,25 +561,45 @@ theorem one_smul_eq_id : (((1 : M) • ·) : α → α) = id := funext <| one_sm
 #align one_smul_eq_id one_smul_eq_id
 #align zero_vadd_eq_id zero_vadd_eq_id
 
-/-- `SMul` version of `comp_mul_left` -/
-@[to_additive "`VAdd` version of `comp_add_left`"]
-theorem comp_smul_left (a₁ a₂ : M) : (a₁ • ·) ∘ (a₂ • ·) = (((a₁ * a₂) • ·) : α → α) :=
-  funext fun _ => (mul_smul _ _ _).symm
-#align comp_smul_left comp_smul_left
-#align comp_vadd_left comp_vadd_left
-
 variable {M}
+
+/-- Pullback a multiplicative action with identity along an injective map respecting `•`.
+See note [reducible non-instances]. -/
+@[to_additive (attr := reducible)
+    "Pullback an additive action with identity along an injective map respecting `+ᵥ`."]
+protected def Function.Injective.mulOneAction [SMul M β] (f : β → α) (hf : Injective f)
+    (smul : ∀ (c : M) (x), f (c • x) = c • f x) :
+    MulOneAction M β where
+  smul := (· • ·)
+  one_smul x := hf <| (smul _ _).trans <| one_smul _ (f x)
+
+/-- Pushforward a multiplicative action with identity along a surjective map respecting `•`.
+See note [reducible non-instances]. -/
+@[to_additive (attr := reducible)
+    "Pushforward an additive action with identity along a surjective map respecting `+ᵥ`."]
+protected def Function.Surjective.mulOneAction [SMul M β] (f : α → β) (hf : Surjective f)
+    (smul : ∀ (c : M) (x), f (c • x) = c • f x) :
+    MulOneAction M β where
+  smul := (· • ·)
+  one_smul y := by
+    rcases hf y with ⟨x, rfl⟩
+    rw [← smul, one_smul]
+
+end MulOneAction
+
+section MulAction
+
+variable [Monoid M] [MulAction M α]
 
 /-- Pullback a multiplicative action along an injective map respecting `•`.
 See note [reducible non-instances]. -/
 @[to_additive (attr := reducible)
     "Pullback an additive action along an injective map respecting `+ᵥ`."]
-protected def Function.Injective.mulAction [SMul M β] (f : β → α) (hf : Injective f)
+protected def Function.Injective.mulAction  [SMul M β] (f : β → α) (hf : Injective f)
     (smul : ∀ (c : M) (x), f (c • x) = c • f x) :
-    MulAction M β where
-  smul := (· • ·)
-  one_smul x := hf <| (smul _ _).trans <| one_smul _ (f x)
-  mul_smul c₁ c₂ x := hf <| by simp only [smul, mul_smul]
+    MulAction M β := {
+      one_smul := (Function.Injective.mulOneAction f hf smul).one_smul
+      mul_smul := (Function.Injective.mulAssocAction f hf smul).mul_smul }
 #align function.injective.mul_action Function.Injective.mulAction
 #align function.injective.add_action Function.Injective.addAction
 
@@ -547,16 +609,40 @@ See note [reducible non-instances]. -/
     "Pushforward an additive action along a surjective map respecting `+ᵥ`."]
 protected def Function.Surjective.mulAction [SMul M β] (f : α → β) (hf : Surjective f)
     (smul : ∀ (c : M) (x), f (c • x) = c • f x) :
-    MulAction M β where
-  smul := (· • ·)
-  one_smul y := by
-    rcases hf y with ⟨x, rfl⟩
-    rw [← smul, one_smul]
-  mul_smul c₁ c₂ y := by
-    rcases hf y with ⟨x, rfl⟩
-    simp only [← smul, mul_smul]
+    MulAction M β := {
+      one_smul := (Function.Surjective.mulOneAction f hf smul).one_smul
+      mul_smul := (Function.Surjective.mulAssocAction f hf smul).mul_smul }
 #align function.surjective.mul_action Function.Surjective.mulAction
 #align function.surjective.add_action Function.Surjective.addAction
+
+end MulAction
+
+/-- Push forward the action of `R` on `M` along a compatible surjective map `f : R →* S`.
+
+See also `Function.Surjective.distribMulActionLeft` and `Function.Surjective.moduleLeft`.
+-/
+@[to_additive (attr := reducible)
+    "Push forward the action of `R` on `M` along a compatible surjective map `f : R →+ S`."]
+def Function.Surjective.mulAssocActionLeft {R S M : Type*} [Monoid R] [MulAssocAction R M]
+    [Monoid S] [SMul S M] (f : R →* S) (hf : Function.Surjective f)
+    (hsmul : ∀ (c) (x : M), f c • x = c • x) :
+    MulAssocAction S M where
+  smul := (· • ·)
+  mul_smul := hf.forall₂.mpr fun a b x => by simp only [← f.map_mul, hsmul, mul_smul]
+
+
+/-- Push forward the action of `R` on `M` along a compatible surjective map `f : R →* S`.
+
+See also `Function.Surjective.distribMulActionLeft` and `Function.Surjective.moduleLeft`.
+-/
+@[to_additive (attr := reducible)
+    "Push forward the action of `R` on `M` along a compatible surjective map `f : R →+ S`."]
+def Function.Surjective.mulOneActionLeft {R S M : Type*} [Monoid R] [MulOneAction R M] [Monoid S]
+    [SMul S M] (f : R →* S) (hf : Function.Surjective f)
+    (hsmul : ∀ (c) (x : M), f c • x = c • x) :
+    MulOneAction S M where
+  smul := (· • ·)
+  one_smul b := by rw [← f.map_one, hsmul, one_smul]
 
 /-- Push forward the action of `R` on `M` along a compatible surjective map `f : R →* S`.
 
@@ -567,12 +653,13 @@ See also `Function.Surjective.distribMulActionLeft` and `Function.Surjective.mod
 def Function.Surjective.mulActionLeft {R S M : Type*} [Monoid R] [MulAction R M] [Monoid S]
     [SMul S M] (f : R →* S) (hf : Function.Surjective f)
     (hsmul : ∀ (c) (x : M), f c • x = c • x) :
-    MulAction S M where
-  smul := (· • ·)
-  one_smul b := by rw [← f.map_one, hsmul, one_smul]
-  mul_smul := hf.forall₂.mpr fun a b x => by simp only [← f.map_mul, hsmul, mul_smul]
+    MulAction S M := {
+      one_smul := (Function.Surjective.mulOneActionLeft f hf hsmul).one_smul
+      mul_smul := (Function.Surjective.mulAssocActionLeft f hf hsmul).mul_smul }
 #align function.surjective.mul_action_left Function.Surjective.mulActionLeft
 #align function.surjective.add_action_left Function.Surjective.addActionLeft
+
+variable [Monoid M] [MulAction M α]
 
 section
 
