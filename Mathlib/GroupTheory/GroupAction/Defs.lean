@@ -122,6 +122,10 @@ class MulAssocAction (α : Type*) (β : Type*) [Semigroup α] extends SMul α β
   /-- Associativity of `•` and `*` -/
   mul_smul : ∀ (x y : α) (b : β), (x * y) • b = x • y • b
 
+export MulAssocAction (mul_smul)
+
+export AddAssocAction (add_vadd)
+
 /-- Typeclass for multiplicative actions by monoids. This generalizes group actions. -/
 @[to_additive (attr := ext)]
 class MulAction (α : Type*) (β : Type*) [Monoid α]
@@ -205,10 +209,6 @@ class SMulCommClass (M N α : Type*) [SMul M α] [SMul N α] : Prop where
   /-- `•` is left commutative -/
   smul_comm : ∀ (m : M) (n : N) (a : α), m • n • a = n • m • a
 #align smul_comm_class SMulCommClass
-
-export MulAssocAction (mul_smul)
-
-export AddAssocAction (add_vadd)
 
 export SMulCommClass (smul_comm)
 

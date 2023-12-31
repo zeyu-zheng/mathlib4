@@ -783,7 +783,7 @@ This is a stronger version of `DistribMulAction.toAddAut`. -/
 def toModuleAut : S →* M ≃ₗ[R] M where
   toFun := toLinearEquiv R M
   map_one' := LinearEquiv.ext <| one_smul _
-  map_mul' _ _ := LinearEquiv.ext <| mul_smul _ _
+  map_mul' _ b := LinearEquiv.ext <| mul_smul _ b
 #align distrib_mul_action.to_module_aut DistribMulAction.toModuleAut
 #align distrib_mul_action.to_module_aut_apply DistribMulAction.toModuleAut_apply
 
