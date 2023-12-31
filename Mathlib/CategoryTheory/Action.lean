@@ -37,7 +37,7 @@ variable (M : Type*) [Monoid M] (X : Type u) [MulAction M X]
 def actionAsFunctor : SingleObj M ⥤ Type u where
   obj _ := X
   map := (· • ·)
-  map_id _ := funext <| MulAction.one_smul
+  map_id _ := funext <| MulOneAction.one_smul
   map_comp f g := funext fun x => (smul_smul g f x).symm
 #align category_theory.action_as_functor CategoryTheory.actionAsFunctor
 
