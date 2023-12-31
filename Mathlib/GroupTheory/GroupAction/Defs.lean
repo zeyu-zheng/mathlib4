@@ -523,8 +523,8 @@ variable {M}
 See note [reducible non-instances]. -/
 @[to_additive (attr := reducible)
     "Pullback an additive assoc action along an injective map respecting `+ᵥ`."]
-protected def Function.Injective.mulAssocAction  [SMul M β] (f : β → α)
-    (hf : Injective f) (smul : ∀ (c : M) (x), f (c • x) = c • f x) :
+protected def Function.Injective.mulAssocAction  [SMul M β] (f : β → α) (hf : Injective f)
+    (smul : ∀ (c : M) (x), f (c • x) = c • f x) :
     MulAssocAction M β where
   smul := (· • ·)
   mul_smul c₁ c₂ x := hf <| by simp only [smul, mul_smul]
@@ -637,9 +637,8 @@ See also `Function.Surjective.distribMulActionLeft` and `Function.Surjective.mod
 -/
 @[to_additive (attr := reducible)
     "Push forward the action of `R` on `M` along a compatible surjective map `f : R →+ S`."]
-def Function.Surjective.mulOneActionLeft {R S M : Type*} [Monoid R] [MulOneAction R M] [Monoid S]
-    [SMul S M] (f : R →* S) (hf : Function.Surjective f)
-    (hsmul : ∀ (c) (x : M), f c • x = c • x) :
+def Function.mulOneActionLeft {R S M : Type*} [Monoid R] [MulOneAction R M] [Monoid S] [SMul S M]
+    (f : R →* S) (hsmul : ∀ (c) (x : M), f c • x = c • x) :
     MulOneAction S M where
   smul := (· • ·)
   one_smul b := by rw [← f.map_one, hsmul, one_smul]
@@ -651,10 +650,9 @@ See also `Function.Surjective.distribMulActionLeft` and `Function.Surjective.mod
 @[to_additive (attr := reducible)
     "Push forward the action of `R` on `M` along a compatible surjective map `f : R →+ S`."]
 def Function.Surjective.mulActionLeft {R S M : Type*} [Monoid R] [MulAction R M] [Monoid S]
-    [SMul S M] (f : R →* S) (hf : Function.Surjective f)
-    (hsmul : ∀ (c) (x : M), f c • x = c • x) :
+    [SMul S M] (f : R →* S) (hf : Function.Surjective f) (hsmul : ∀ (c) (x : M), f c • x = c • x) :
     MulAction S M := {
-      one_smul := (Function.Surjective.mulOneActionLeft f hf hsmul).one_smul
+      one_smul := (Function.mulOneActionLeft f hsmul).one_smul
       mul_smul := (Function.Surjective.mulAssocActionLeft f hf hsmul).mul_smul }
 #align function.surjective.mul_action_left Function.Surjective.mulActionLeft
 #align function.surjective.add_action_left Function.Surjective.addActionLeft
