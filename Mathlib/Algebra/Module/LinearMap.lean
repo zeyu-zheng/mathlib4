@@ -1004,7 +1004,7 @@ variable [Monoid T] [DistribMulAction T M₂] [SMulCommClass R₂ T M₂]
 instance : DistribMulAction S (M →ₛₗ[σ₁₂] M₂)
     where
   one_smul _ := ext fun _ ↦ one_smul _ _
-  mul_smul _ _ _ := ext fun _ ↦ mul_smul _ _ _
+  mul_smul _ b _ := ext fun _ ↦ mul_smul _ b _
   smul_add _ _ _ := ext fun _ ↦ smul_add _ _ _
   smul_zero _ := ext fun _ ↦ smul_zero _
 
@@ -1288,7 +1288,7 @@ This is a stronger version of `DistribMulAction.toAddMonoidEnd`. -/
 def toModuleEnd : S →* Module.End R M where
   toFun := toLinearMap R M
   map_one' := LinearMap.ext <| one_smul _
-  map_mul' _ _ := LinearMap.ext <| mul_smul _ _
+  map_mul' _ b := LinearMap.ext <| mul_smul _ b
 #align distrib_mul_action.to_module_End DistribMulAction.toModuleEnd
 #align distrib_mul_action.to_module_End_apply DistribMulAction.toModuleEnd_apply
 
@@ -1464,7 +1464,7 @@ def smulRightₗ : (M₂ →ₗ[R] R) →ₗ[R] M →ₗ[R] M₂ →ₗ[R] M whe
     apply add_smul
   map_smul' c f := by
     ext
-    apply mul_smul
+    apply mul_smul c _
 #align linear_map.smul_rightₗ LinearMap.smulRightₗ
 
 @[simp]
