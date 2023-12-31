@@ -107,7 +107,7 @@ class AddAssocAction (G : Type*) (P : Type*) [AddSemigroup G] extends VAdd G P w
 
 /-- Type class for additive monoid actions. -/
 class AddAction (G : Type*) (P : Type*) [AddMonoid G]
-    extends AddZeroAction G P, AddAssocAction G P where
+    extends AddZeroAction G P, AddAssocAction G P
 #align add_action AddAction
 
 /-- Typeclass for multiplicative actions by monoids where `1` acts as the identity. -/
@@ -125,7 +125,7 @@ class MulAssocAction (α : Type*) (β : Type*) [Semigroup α] extends SMul α β
 /-- Typeclass for multiplicative actions by monoids. This generalizes group actions. -/
 @[to_additive (attr := ext)]
 class MulAction (α : Type*) (β : Type*) [Monoid α]
-    extends MulOneAction α β, MulAssocAction α β where
+    extends MulOneAction α β, MulAssocAction α β
 #align mul_action MulAction
 #align mul_action.ext MulAction.ext
 #align add_action.ext_iff AddAction.ext_iff
