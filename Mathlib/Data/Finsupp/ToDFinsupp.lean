@@ -360,7 +360,7 @@ attribute [-instance] Finsupp.addZeroClass
 theorem sigmaFinsuppEquivDFinsupp_smul {R} [Monoid R] [AddMonoid N] [DistribMulAction R N] (r : R)
     (f : (Σi, η i) →₀ N) :
     sigmaFinsuppEquivDFinsupp (r • f) =
-      @SMul.smul R (Π₀ i, η i →₀ N) MulAction.toSMul r (sigmaFinsuppEquivDFinsupp f) := by
+      @SMul.smul R (Π₀ i, η i →₀ N) _ r (sigmaFinsuppEquivDFinsupp f) := by
   ext
   rfl
 #align sigma_finsupp_equiv_dfinsupp_smul sigmaFinsuppEquivDFinsupp_smul

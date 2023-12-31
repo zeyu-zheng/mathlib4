@@ -66,7 +66,7 @@ theorem mem_orbit (a : α) (m : M) : m • a ∈ orbit M a :=
 
 @[to_additive (attr := simp)]
 theorem mem_orbit_self (a : α) : a ∈ orbit M a :=
-  ⟨1, by simp [MulAction.one_smul]⟩
+  ⟨1, by simp [MulOneAction.one_smul]⟩
 #align mul_action.mem_orbit_self MulAction.mem_orbit_self
 #align add_action.mem_orbit_self AddAction.mem_orbit_self
 
