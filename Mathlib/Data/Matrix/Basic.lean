@@ -15,6 +15,7 @@ import Mathlib.Algebra.Star.Module
 import Mathlib.Algebra.Star.Pi
 import Mathlib.Data.Fintype.BigOperators
 import Mathlib.GroupTheory.GroupAction.BigOperators
+import Mathlib.GroupTheory.GroupAction.Opposite
 
 #align_import data.matrix.basic from "leanprover-community/mathlib"@"eba5bb3155cab51d80af00e8d7d69fa271b1302b"
 
@@ -61,7 +62,8 @@ def Matrix (m : Type u) (n : Type u') (α : Type v) : Type max u u' v :=
 
 variable {l m n o : Type*} {m' : o → Type*} {n' : o → Type*}
 
-variable {R : Type*} {S : Type*} {α : Type v} {β : Type w} {γ : Type*}
+variable {R : Type*} {S : Type*} {α : Type v} {β : Type w} {γ : Type*} {δ : Type*} {ε : Type*}
+  {ζ : Type*}
 
 namespace Matrix
 
@@ -748,9 +750,17 @@ section DotProduct
 
 variable [Fintype m] [Fintype n]
 
+--def vecOp (v : m → α) : (m → αᵐᵒᵖ) := MulOpposite.op ∘ v
+
+#check Mul
+
+#check SMul
+
+#check DistribMulAction
+
 /-- `dotProduct v w` is the sum of the entrywise products `v i * w i` -/
-def dotProduct [Mul α] [AddCommMonoid α] (v w : m → α) : α :=
-  ∑ i, v i * w i
+def dotProduct [SMul α β] [AddCommMonoid β] (v : m → α) (w : m → β) :=
+  ∑ i, v i • w i
 #align matrix.dot_product Matrix.dotProduct
 
 /- The precedence of 72 comes immediately after ` • ` for `SMul.smul`,
@@ -758,13 +768,35 @@ def dotProduct [Mul α] [AddCommMonoid α] (v w : m → α) : α :=
 @[inherit_doc]
 scoped infixl:72 " ⬝ᵥ " => Matrix.dotProduct
 
+scoped notation3:73 m:73 " <⬝ᵥ " r:74 => Matrix.dotProduct (MulOpposite.op ∘ r) m
+
+@[simp]
+lemma rmul [NonUnitalSemiring α] (v : m → α) (w : m → α) :
+    w <⬝ᵥ v = w ⬝ᵥ v := by
+
+  rw [Matrix.dotProduct, Matrix.dotProduct]
+  simp only [smul_eq_mul]
+  apply Finset.sum_congr rfl
+  intros i _
+  simp
+
+-- Problem - DistribMulAction requires a unit
+theorem dotProduct_assoc' [NonUnitalSemiring α] [AddCommMonoid β] [DistribMulAction α β]
+    [DistribMulAction αᵐᵒᵖ β]
+    [SMulCommClass α αᵐᵒᵖ β] (u : m → α) (w : n → α) (v : Matrix m n β) :
+    (fun j => u ⬝ᵥ fun i => v i j) <⬝ᵥ w = u ⬝ᵥ fun i => v i <⬝ᵥ w := by
+  simpa [dotProduct, Finset.smul_sum, smul_comm] using Finset.sum_comm
+  --simpa [dotProduct, Finset.mul_sum, Finset.sum_mul, h] using Finset.sum_comm
+
+
 theorem dotProduct_assoc [NonUnitalSemiring α] (u : m → α) (w : n → α) (v : Matrix m n α) :
     (fun j => u ⬝ᵥ fun i => v i j) ⬝ᵥ w = u ⬝ᵥ fun i => v i ⬝ᵥ w := by
-  simpa [dotProduct, Finset.mul_sum, Finset.sum_mul, mul_assoc] using Finset.sum_comm
+  rw [←rmul]
+  rw [dotProduct_assoc', rmul]
 #align matrix.dot_product_assoc Matrix.dotProduct_assoc
 
 theorem dotProduct_comm [AddCommMonoid α] [CommSemigroup α] (v w : m → α) : v ⬝ᵥ w = w ⬝ᵥ v := by
-  simp_rw [dotProduct, mul_comm]
+  simp_rw [dotProduct, smul_eq_mul, mul_comm]
 #align matrix.dot_product_comm Matrix.dotProduct_comm
 
 @[simp]
@@ -779,7 +811,7 @@ variable [MulOneClass α] [AddCommMonoid α]
 theorem dotProduct_one (v : n → α) : v ⬝ᵥ 1 = ∑ i, v i := by simp [(· ⬝ᵥ ·)]
 #align matrix.dot_product_one Matrix.dotProduct_one
 
-theorem one_dotProduct (v : n → α) : 1 ⬝ᵥ v = ∑ i, v i := by simp [(· ⬝ᵥ ·)]
+theorem one_dotProduct (v : n → α) : (1 : n → α) ⬝ᵥ v = ∑ i, v i := by simp [(· ⬝ᵥ ·)]
 #align matrix.one_dot_product Matrix.one_dotProduct
 
 end MulOneClass
@@ -789,16 +821,16 @@ section NonUnitalNonAssocSemiring
 variable [NonUnitalNonAssocSemiring α] (u v w : m → α) (x y : n → α)
 
 @[simp]
-theorem dotProduct_zero : v ⬝ᵥ 0 = 0 := by simp [dotProduct]
+theorem dotProduct_zero : v ⬝ᵥ (0 : m → α) = 0 := by simp [dotProduct]
 #align matrix.dot_product_zero Matrix.dotProduct_zero
 
 @[simp]
-theorem dotProduct_zero' : (v ⬝ᵥ fun _ => 0) = 0 :=
+theorem dotProduct_zero' : (v ⬝ᵥ fun _ => 0 : α) = 0 :=
   dotProduct_zero v
 #align matrix.dot_product_zero' Matrix.dotProduct_zero'
 
 @[simp]
-theorem zero_dotProduct : 0 ⬝ᵥ v = 0 := by simp [dotProduct]
+theorem zero_dotProduct : (0 : m → α) ⬝ᵥ v = 0 := by simp [dotProduct]
 #align matrix.zero_dot_product Matrix.zero_dotProduct
 
 @[simp]
@@ -891,7 +923,7 @@ section NonAssocSemiring
 variable [NonAssocSemiring α]
 
 @[simp]
-theorem one_dotProduct_one : (1 : n → α) ⬝ᵥ 1 = Fintype.card n := by
+theorem one_dotProduct_one : (1 : n → α) ⬝ᵥ (1 : n → α) = Fintype.card n := by
   simp [dotProduct, Fintype.card]
 #align matrix.one_dot_product_one Matrix.one_dotProduct_one
 
