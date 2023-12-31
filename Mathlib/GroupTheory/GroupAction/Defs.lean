@@ -95,26 +95,45 @@ theorem smul_eq_mul (α : Type*) [Mul α] {a a' : α} : a • a' = a * a' :=
 #align smul_eq_mul smul_eq_mul
 #align vadd_eq_add vadd_eq_add
 
-/-- Type class for additive monoid actions. -/
-class AddAction (G : Type*) (P : Type*) [AddMonoid G] extends VAdd G P where
+/-- Type class for additive monoid actions where `0` acts as the identity. -/
+class AddZeroAction (G : Type*) (P : Type*) [AddMonoid G] extends VAdd G P where
   /-- Zero is a neutral element for `+ᵥ` -/
   protected zero_vadd : ∀ p : P, (0 : G) +ᵥ p = p
+
+/-- Type class for additive actions which associate. -/
+class AddAssocAction (G : Type*) (P : Type*) [AddSemigroup G] extends VAdd G P where
   /-- Associativity of `+` and `+ᵥ` -/
   add_vadd : ∀ (g₁ g₂ : G) (p : P), g₁ + g₂ +ᵥ p = g₁ +ᵥ (g₂ +ᵥ p)
+
+/-- Type class for additive monoid actions. -/
+class AddAction (G : Type*) (P : Type*) [AddMonoid G]
+    extends AddZeroAction G P, AddAssocAction G P where
 #align add_action AddAction
+
+/-- Typeclass for multiplicative actions by monoids where `1` acts as the identity. -/
+@[to_additive (attr := ext)]
+class MulOneAction (α : Type*) (β : Type*) [Monoid α] extends SMul α β where
+  /-- One is the neutral element for `•` -/
+  protected one_smul : ∀ b : β, (1 : α) • b = b
+
+/-- Typeclass for multiplicative actions which associate. -/
+@[to_additive (attr := ext)]
+class MulAssocAction (α : Type*) (β : Type*) [Semigroup α] extends SMul α β where
+  /-- Associativity of `•` and `*` -/
+  mul_smul : ∀ (x y : α) (b : β), (x * y) • b = x • y • b
 
 /-- Typeclass for multiplicative actions by monoids. This generalizes group actions. -/
 @[to_additive (attr := ext)]
-class MulAction (α : Type*) (β : Type*) [Monoid α] extends SMul α β where
-  /-- One is the neutral element for `•` -/
-  protected one_smul : ∀ b : β, (1 : α) • b = b
-  /-- Associativity of `•` and `*` -/
-  mul_smul : ∀ (x y : α) (b : β), (x * y) • b = x • y • b
+class MulAction (α : Type*) (β : Type*) [Monoid α]
+    extends MulOneAction α β, MulAssocAction α β where
 #align mul_action MulAction
 #align mul_action.ext MulAction.ext
 #align add_action.ext_iff AddAction.ext_iff
 #align mul_action.ext_iff MulAction.ext_iff
 #align add_action.ext AddAction.ext
+
+-- See https://github.com/leanprover-community/mathlib4/issues/660
+attribute [to_additive AddAction.toAddAssocAction] MulAction.toMulAssocAction
 
 /-!
 ### (Pre)transitive action
@@ -490,7 +509,7 @@ variable (M)
 
 @[to_additive (attr := simp)]
 theorem one_smul (b : α) : (1 : M) • b = b :=
-  MulAction.one_smul _
+  MulOneAction.one_smul _
 #align one_smul one_smul
 #align zero_vadd zero_vadd
 
@@ -629,7 +648,7 @@ def compHom [Monoid N] (g : N →* M) :
     MulAction N α where
   smul := SMul.comp.smul g
   -- Porting note: was `by simp [g.map_one, MulAction.one_smul]`
-  one_smul _ := by simp [(· • ·)]; apply MulAction.one_smul
+  one_smul _ := by simp [(· • ·)]; apply MulOneAction.one_smul
   -- Porting note: was `by simp [g.map_mul, MulAction.mul_smul]`
   mul_smul _ _ _ := by simp [(· • ·)]; apply MulAction.mul_smul
 #align mul_action.comp_hom MulAction.compHom
@@ -1235,14 +1254,14 @@ theorem ofAdd_smul [VAdd α β] (a : α) (b : β) : ofAdd a • b = a +ᵥ b :=
 -- Porting note: I don't know why `one_smul` can do without an explicit α and `mul_smul` can't.
 instance Additive.addAction [Monoid α] [MulAction α β] :
     AddAction (Additive α) β where
-  zero_vadd := MulAction.one_smul
+  zero_vadd := MulOneAction.one_smul
   add_vadd := @MulAction.mul_smul α _ _ _
 #align additive.add_action Additive.addAction
 
 instance Multiplicative.mulAction [AddMonoid α] [AddAction α β] :
     MulAction (Multiplicative α)
       β where
-  one_smul := AddAction.zero_vadd
+  one_smul := AddZeroAction.zero_vadd
   mul_smul := @AddAction.add_vadd α _ _ _
 #align multiplicative.mul_action Multiplicative.mulAction
 
