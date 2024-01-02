@@ -82,7 +82,8 @@ instance : LE SignType :=
   ⟨SignType.LE⟩
 
 instance LE.decidableRel : DecidableRel SignType.LE := fun a b => by
-  cases a <;> cases b <;> first | exact isTrue (by constructor)| exact isFalse (by rintro ⟨_⟩)
+  cases a <;> cases b <;>
+    first | solve_by_elim [isTrue, LE.of_neg, LE.zero, LE.of_pos] | exact isFalse (by rintro ⟨_⟩)
 
 instance decidableEq : DecidableEq SignType := fun a b => by
   cases a <;> cases b <;> first | exact isTrue (by constructor)| exact isFalse (by rintro ⟨_⟩)
@@ -112,12 +113,12 @@ private lemma le_antisymm (a b : SignType) (_ : a ≤ b) (_: b ≤ a) : a = b :=
   cases a <;> cases b <;> trivial
 
 private lemma le_trans (a b c : SignType) (_ : a ≤ b) (_: b ≤ c) : a ≤ c := by
-  cases a <;> cases b <;> cases c <;> first | tauto | constructor
+  cases a <;> cases b <;> cases c <;> first | tauto | apply LE.of_neg
 
 instance : LinearOrder SignType where
   le := (· ≤ ·)
   le_refl a := by cases a <;> constructor
-  le_total a b := by cases a <;> cases b <;> first | left; constructor | right; constructor
+  le_total := show ∀ a b, SignType.LE a b ∨ SignType.LE b a by decide
   le_antisymm := le_antisymm
   le_trans := le_trans
   decidableLE := LE.decidableRel
@@ -313,7 +314,7 @@ variable [Zero α] [Preorder α] [DecidableRel ((· < ·) : α → α → Prop)]
 def SignType.sign : α →o SignType :=
   ⟨fun a => if 0 < a then 1 else if a < 0 then -1 else 0, fun a b h => by
     dsimp
-    split_ifs with h₁ h₂ h₃ h₄ _ _ h₂ h₃ <;> try constructor
+    split_ifs with h₁ h₂ h₃ h₄ _ _ h₂ h₃ <;> try decide
     · cases lt_irrefl 0 (h₁.trans <| h.trans_lt h₃)
     · cases h₂ (h₁.trans_le h)
     · cases h₄ (h.trans_lt h₃)⟩

@@ -1261,7 +1261,7 @@ theorem coe_neg_one : ↑(-1 : Fin (n + 1)) = n := by
   cases n
   · simp
   rw [Fin.coe_neg, Fin.val_one, Nat.add_one_sub_one, Nat.mod_eq_of_lt]
-  constructor
+  apply Nat.le.refl
 #align fin.coe_neg_one Fin.coe_neg_one
 
 theorem coe_sub_one {n} (a : Fin (n + 1)) : ↑(a - 1) = if a = 0 then n else a - 1 := by

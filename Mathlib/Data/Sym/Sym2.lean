@@ -593,7 +593,7 @@ def sym2EquivSym' : Equiv (Sym2 α) (Sym' α 2)
     Quot.map (fun x : α × α => ⟨[x.1, x.2], rfl⟩)
       (by
         rintro _ _ ⟨_⟩
-        · constructor; apply List.Perm.refl
+        · apply List.Perm.cons; apply List.Perm.refl
         apply List.Perm.swap'
         rfl)
   invFun :=

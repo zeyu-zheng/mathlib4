@@ -431,7 +431,7 @@ theorem right : Primrec₂ fun (_ : α) (b : β) => b :=
   .snd
 #align primrec₂.right Primrec₂.right
 
-theorem natPair : Primrec₂ Nat.pair := by simp [Primrec₂, Primrec]; constructor
+theorem natPair : Primrec₂ Nat.pair := by simp [Primrec₂, Primrec]; apply Nat.Primrec.succ
 #align primrec₂.mkpair Primrec₂.natPair
 
 theorem unpaired {f : ℕ → ℕ → α} : Primrec (Nat.unpaired f) ↔ Primrec₂ f :=

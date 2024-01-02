@@ -260,7 +260,7 @@ theorem cons_cons_iff (p) : Red (p :: L₁) (p :: L₂) ↔ Red L₁ L₂ :=
         generalizing L₁ L₂
       · subst_vars
         cases eq₂
-        constructor
+        apply ReflTransGen.refl
       · subst_vars
         cases' p with a b
         rw [Step.cons_left_iff] at h₁₂
@@ -1124,7 +1124,7 @@ theorem reduce.cons (x) :
   maximal reduction."]
 theorem reduce.red : Red L (reduce L) := by
   induction L with
-  | nil => constructor
+  | nil => apply ReflTransGen.refl
   | cons hd1 tl1 ih =>
     dsimp
     revert ih

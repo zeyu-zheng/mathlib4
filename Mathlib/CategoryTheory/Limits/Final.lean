@@ -399,10 +399,10 @@ theorem zigzag_of_eqvGen_quot_rel {F : C ⥤ D} {d : D} {f₁ f₂ : ΣX, d ⟶ 
   | rel x y r =>
     obtain ⟨f, w⟩ := r
     fconstructor
-    swap; fconstructor
+    swap; rfl
     left; fconstructor
     exact StructuredArrow.homMk f
-  | refl => fconstructor
+  | refl => rfl
   | symm x y _ ih =>
     apply zigzag_symmetric
     exact ih
