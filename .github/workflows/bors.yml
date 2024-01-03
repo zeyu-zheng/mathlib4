@@ -167,7 +167,10 @@ jobs:
           # We've been seeing many failures at this step recently because of network errors.
           # As a band-aid, we try twice.
           # The 'sleep 1' is small pause to let the network recover.
-          lake exe cache get || (sleep 1; lake exe cache get)
+          # We temporarily disable this step in CI as there's currently failures.
+          # lake exe cache get || (sleep 1; lake exe cache get)
+          # We try unpack stuff if by some coincidence we have some stuff there already.
+          lake exe cache unpack
 
       - name: build mathlib
         id: build
@@ -184,51 +187,22 @@ jobs:
       - name: build library_search cache
         run: lake build -KCI MathlibExtras
 
-      - name: upload cache
+      - name: prepare cache upload cache
         if: always()
         run: |
           # run this in CI if it gets an incorrect lake hash for existing cache files somehow
-          # lake exe cache pack! || true
-          lake exe cache commit || true
+          lake exe cache pack! || true
           # try twice in case of network errors
-          lake exe cache put || (sleep 1; lake exe cache put) || true
+          # Azure is broken!
+          # lake exe cache put || (sleep 1; lake exe cache put) || true
         env:
           MATHLIB_CACHE_SAS: ${{ secrets.MATHLIB_CACHE_SAS }}
 
-      - name: check the cache
-        run: |
-          # Because the `lean-pr-testing-NNNN` branches use toolchains that are "updated in place"
-          # the cache mechanism is unreliable, so we don't test it if we are on such a branch.
-          if [[ ! `cat lean-toolchain` =~ ^leanprover/lean4-pr-releases:pr-release-[0-9]+$ ]]; then
-            lake exe cache get || (sleep 1; lake exe cache get)
-            # We pipe the output of `lake build` to a file,
-            # and if we find " Building Mathlib" in that file we kill `lake build`, and error.
-            lake build > tmp & tail --pid=$! -n +1 -F tmp | (! (grep -m 1 " Building Mathlib" && kill $! ))
-          fi
-
-      - name: build archive
-        run: |
-          # Note: we should not be including `Archive` and `Countexamples` in the cache.
-          # We do this for now for the sake of not rebuilding them in every CI run
-          # even when they are not touched.
-          # Since `Archive` and `Counterexamples` files have very simple dependencies,
-          # it should be possible to determine whether they need to be built without actually
-          # storing and transferring oleans over the network.
-          # Hopefully a future re-implementation of `cache` will obviate the present need for this hack.
-          # We retry twice in case of network errors.
-          lake exe cache get Archive.lean || (sleep 1; lake exe cache get Archive.lean)
-          lake build Archive
-          lake exe cache put Archive.lean || (sleep 1; lake exe cache put Archive.lean)
-        env:
-          MATHLIB_CACHE_SAS: ${{ secrets.MATHLIB_CACHE_SAS }}
-
-      - name: build counterexamples
-        run: |
-          lake exe cache get Counterexamples.lean || (sleep 1; lake exe cache get Counterexamples.lean)
-          lake build Counterexamples
-          lake exe cache put Counterexamples.lean || (sleep 1; lake exe cache put Counterexamples.lean)
-        env:
-          MATHLIB_CACHE_SAS: ${{ secrets.MATHLIB_CACHE_SAS }}
+      - name: upload cache
+        uses: actions/upload-artifact@v4
+        with:
+          name: mathlib_cache_temp
+          path: ~/.cache/mathlib/
 
       - name: check declarations in db files
         run: |
