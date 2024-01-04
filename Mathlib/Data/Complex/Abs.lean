@@ -3,6 +3,7 @@ Copyright (c) 2017 Kevin Buzzard. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Mario Carneiro
 -/
+import Mathlib.Algebra.Order.AbsoluteValue
 import Mathlib.Data.Complex.Basic
 import Mathlib.Data.Real.Sqrt
 
@@ -251,7 +252,7 @@ theorem range_normSq : range normSq = Ici 0 :=
 
 /-! ### Cauchy sequences -/
 
-local notation "abs'" => Abs.abs
+local notation "abs'" => _root_.abs
 
 theorem isCauSeq_re (f : CauSeq ℂ Complex.abs) : IsCauSeq abs' fun n => (f n).re := fun ε ε0 =>
   (f.cauchy ε0).imp fun i H j ij =>
@@ -259,8 +260,8 @@ theorem isCauSeq_re (f : CauSeq ℂ Complex.abs) : IsCauSeq abs' fun n => (f n).
 #align complex.is_cau_seq_re Complex.isCauSeq_re
 
 theorem isCauSeq_im (f : CauSeq ℂ Complex.abs) : IsCauSeq abs' fun n => (f n).im := fun ε ε0 =>
-  (f.cauchy ε0).imp fun i H j ij =>
-    lt_of_le_of_lt (by simpa using abs_im_le_abs (f j - f i)) (H _ ij)
+  (f.cauchy ε0).imp fun i H j ij ↦ by
+    simpa only [← ofReal_sub, abs_ofReal, sub_re] using (abs_im_le_abs _).trans_lt $ H _ ij
 #align complex.is_cau_seq_im Complex.isCauSeq_im
 
 /-- The real part of a complex Cauchy sequence, as a real Cauchy sequence. -/
@@ -348,3 +349,9 @@ theorem lim_abs (f : CauSeq ℂ Complex.abs) : lim (cauSeqAbs f) = Complex.abs (
     let ⟨i, hi⟩ := equiv_lim f ε ε0
     ⟨i, fun j hj => lt_of_le_of_lt (Complex.abs.abs_abv_sub_le_abv_sub _ _) (hi j hj)⟩
 #align complex.lim_abs Complex.lim_abs
+
+lemma ne_zero_of_one_lt_re {s : ℂ} (hs : 1 < s.re) : s ≠ 0 :=
+  fun h ↦ ((zero_re ▸ h ▸ hs).trans zero_lt_one).false
+
+lemma re_neg_ne_zero_of_one_lt_re {s : ℂ} (hs : 1 < s.re) : (-s).re ≠ 0 :=
+  ne_iff_lt_or_gt.mpr <| Or.inl <| neg_re s ▸ by linarith
