@@ -548,10 +548,8 @@ there are no satellite configurations with `N+1` points.
 theorem exist_finset_disjoint_balls_large_measure (μ : Measure α) [IsFiniteMeasure μ] {N : ℕ}
     {τ : ℝ} (hτ : 1 < τ) (hN : IsEmpty (SatelliteConfig α N τ)) (s : Set α) (r : α → ℝ)
     (rpos : ∀ x ∈ s, 0 < r x) (rle : ∀ x ∈ s, r x ≤ 1) :
-    ∃ t : Finset α,
-      ↑t ⊆ s ∧
-        μ (s \ ⋃ x ∈ t, closedBall x (r x)) ≤ N / (N + 1) * μ s ∧
-          (t : Set α).PairwiseDisjoint fun x => closedBall x (r x) := by
+    ∃ t : Finset α, ↑t ⊆ s ∧ μ (s \ ⋃ x ∈ t, closedBall x (r x)) ≤ N / (N + 1) * μ s ∧
+      (t : Set α).PairwiseDisjoint fun x => closedBall x (r x) := by
   -- exclude the trivial case where `μ s = 0`.
   rcases le_or_lt (μ s) 0 with (hμs | hμs)
   · have : μ s = 0 := le_bot_iff.1 hμs
@@ -688,12 +686,9 @@ For a version giving the conclusion in a nicer form, see `exists_disjoint_closed
 theorem exists_disjoint_closedBall_covering_ae_of_finiteMeasure_aux (μ : Measure α)
     [IsFiniteMeasure μ] (f : α → Set ℝ) (s : Set α)
     (hf : ∀ x ∈ s, ∀ δ > 0, (f x ∩ Ioo 0 δ).Nonempty) :
-    ∃ t : Set (α × ℝ),
-      t.Countable ∧
-        (∀ p : α × ℝ, p ∈ t → p.1 ∈ s) ∧
-          (∀ p : α × ℝ, p ∈ t → p.2 ∈ f p.1) ∧
-            μ (s \ ⋃ (p : α × ℝ) (_ : p ∈ t), closedBall p.1 p.2) = 0 ∧
-              t.PairwiseDisjoint fun p => closedBall p.1 p.2 := by
+    ∃ t : Set (α × ℝ), t.Countable ∧ (∀ p ∈ t, p.1 ∈ s) ∧ (∀ p ∈ t, p.2 ∈ f p.1) ∧
+      μ (s \ ⋃ (p : α × ℝ) (_ : p ∈ t), closedBall p.1 p.2) = 0 ∧
+        t.PairwiseDisjoint fun p => closedBall p.1 p.2 := by
   rcases HasBesicovitchCovering.no_satelliteConfig (α := α) with ⟨N, τ, hτ, hN⟩
   /- Introduce a property `P` on finsets saying that we have a nice disjoint covering of a
       subset of `s` by admissible balls. -/
@@ -832,10 +827,9 @@ For a version giving the conclusion in a nicer form, see `exists_disjoint_closed
 -/
 theorem exists_disjoint_closedBall_covering_ae_aux (μ : Measure α) [SigmaFinite μ] (f : α → Set ℝ)
     (s : Set α) (hf : ∀ x ∈ s, ∀ δ > 0, (f x ∩ Ioo 0 δ).Nonempty) :
-    ∃ t : Set (α × ℝ), t.Countable ∧ (∀ p : α × ℝ, p ∈ t → p.1 ∈ s) ∧
-      (∀ p : α × ℝ, p ∈ t → p.2 ∈ f p.1) ∧
-        μ (s \ ⋃ (p : α × ℝ) (_ : p ∈ t), closedBall p.1 p.2) = 0 ∧
-          t.PairwiseDisjoint fun p => closedBall p.1 p.2 := by
+    ∃ t : Set (α × ℝ), t.Countable ∧ (∀ p ∈ t, p.1 ∈ s) ∧ (∀ p ∈ t, p.2 ∈ f p.1) ∧
+      μ (s \ ⋃ (p : α × ℝ) (_ : p ∈ t), closedBall p.1 p.2) = 0 ∧
+        t.PairwiseDisjoint fun p => closedBall p.1 p.2 := by
   /- This is deduced from the finite measure case, by using a finite measure with respect to which
     the initial sigma-finite measure is absolutely continuous. -/
   rcases exists_absolutelyContinuous_isFiniteMeasure μ with ⟨ν, hν, hμν⟩
@@ -859,41 +853,22 @@ theorem exists_disjoint_closedBall_covering_ae (μ : Measure α) [SigmaFinite μ
       (∀ x ∈ t, r x ∈ f x ∩ Ioo 0 (R x)) ∧ μ (s \ ⋃ x ∈ t, closedBall x (r x)) = 0 ∧
         t.PairwiseDisjoint fun x => closedBall x (r x) := by
   let g x := f x ∩ Ioo 0 (R x)
-  have hg : ∀ x ∈ s, ∀ δ > 0, (g x ∩ Ioo 0 δ).Nonempty := by
-    intro x hx δ δpos
+  have hg : ∀ x ∈ s, ∀ δ > 0, (g x ∩ Ioo 0 δ).Nonempty := fun x hx δ δpos ↦ by
     rcases hf x hx (min δ (R x)) (lt_min δpos (hR x hx)) with ⟨r, hr⟩
-    exact
-      ⟨r,
-        ⟨⟨hr.1, hr.2.1, hr.2.2.trans_le (min_le_right _ _)⟩,
-          ⟨hr.2.1, hr.2.2.trans_le (min_le_left _ _)⟩⟩⟩
+    exact ⟨r, ⟨⟨hr.1, hr.2.1, hr.2.2.trans_le (min_le_right _ _)⟩,
+      ⟨hr.2.1, hr.2.2.trans_le (min_le_left _ _)⟩⟩⟩
   rcases exists_disjoint_closedBall_covering_ae_aux μ g s hg with ⟨v, v_count, vs, vg, μv, v_disj⟩
-  let t := Prod.fst '' v
-  have : ∀ x ∈ t, ∃ r : ℝ, (x, r) ∈ v := by
-    intro x hx
-    rcases (mem_image _ _ _).1 hx with ⟨⟨p, q⟩, hp, rfl⟩
-    exact ⟨q, hp⟩
-  choose! r hr using this
-  have im_t : (fun x => (x, r x)) '' t = v := by
-    have I : ∀ p : α × ℝ, p ∈ v → 0 ≤ p.2 := fun p hp => (vg p hp).2.1.le
-    apply Subset.antisymm
-    · simp only [image_subset_iff]
-      rintro ⟨x, p⟩ hxp
-      simp only [mem_preimage]
-      exact hr _ (mem_image_of_mem _ hxp)
-    · rintro ⟨x, p⟩ hxp
-      have hxrx : (x, r x) ∈ v := hr _ (mem_image_of_mem _ hxp)
-      have : p = r x := by
-        by_contra h
-        have A : (x, p) ≠ (x, r x) := by
-          simpa only [true_and_iff, Prod.mk.inj_iff, eq_self_iff_true, Ne.def] using h
-        have H := v_disj hxp hxrx A
-        contrapose H
-        rw [not_disjoint_iff_nonempty_inter]
-        refine' ⟨x, by simp (config := { proj := false }) [I _ hxp, I _ hxrx]⟩
-      rw [this]
-      apply mem_image_of_mem
-      exact mem_image_of_mem _ hxp
-  refine' ⟨t, r, v_count.image _, _, _, _, _⟩
+  obtain ⟨t, r, htc, rfl⟩ :
+      ∃ (t : Set α) (r : α → ℝ), t.Countable ∧ (fun x ↦ (x, r x)) '' t = v := by
+    rw [ball_image_iff] at hr
+    refine ⟨Prod.fst '' v, r, v_count.image _, ?_⟩
+    rw [← image_comp, EqOn.image_eq_self]
+    have I : ∀ p ∈ v, 0 ≤ p.2 := fun p hp => (vg p hp).2.1.le
+    have hinj : InjOn Prod.fst v := fun x h x' h' h₁ ↦ v_disj.eq h h' <|
+      not_disjoint_iff.2 ⟨x.1, by simp [*]⟩
+    exact fun x h ↦ hinj (hr _ h) h rfl
+  simp only [ball_image_iff, biUnion_image] at *
+  refine' ⟨t, r, htc, vs, vg, μv, ?_⟩
   · intro x hx
     rcases (mem_image _ _ _).1 hx with ⟨⟨p, q⟩, hp, rfl⟩
     exact vs _ hp
