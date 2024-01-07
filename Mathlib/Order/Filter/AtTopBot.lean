@@ -10,7 +10,6 @@ import Mathlib.Data.Set.Intervals.OrderIso
 import Mathlib.Order.Filter.Bases
 import Mathlib.Order.ConditionallyCompleteLattice.Basic
 import Mathlib.Algebra.Order.Group.MinMax
-import Mathlib.Tactic.TFAE
 
 #align_import order.filter.at_top_bot from "leanprover-community/mathlib"@"1f0096e6caa61e9c849ec2adbd227e960e9dff58"
 
@@ -1918,7 +1917,7 @@ if a filter `k` is countably generated then `Tendsto f k l` iff for every sequen
 converging to `k`, `f ∘ u` tends to `l`. -/
 theorem tendsto_iff_seq_tendsto {f : α → β} {k : Filter α} {l : Filter β} [k.IsCountablyGenerated] :
     Tendsto f k l ↔ ∀ x : ℕ → α, Tendsto x atTop k → Tendsto (f ∘ x) atTop l := by
-  refine' ⟨fun h x hx => h.comp hx, fun H s hs => _⟩
+  refine ⟨fun h x hx => h.comp hx, fun H s hs => ?_⟩
   contrapose! H
   have : NeBot (k ⊓ 𝓟 (f ⁻¹' sᶜ)) := by simpa [neBot_iff, inf_principal_eq_bot]
   rcases (k ⊓ 𝓟 (f ⁻¹' sᶜ)).exists_seq_tendsto with ⟨x, hx⟩
@@ -1933,56 +1932,18 @@ theorem tendsto_of_seq_tendsto {f : α → β} {k : Filter α} {l : Filter β} [
   tendsto_iff_seq_tendsto.2
 #align filter.tendsto_of_seq_tendsto Filter.tendsto_of_seq_tendsto
 
--- porting note: move to `Basic`
-theorem tendsto_iff_forall_eventually_mem {x : ι → α} {f : Filter α} {l : Filter ι} :
-    Tendsto x l f ↔ ∀ s ∈ f, ∀ᶠ n in l, x n ∈ s :=
-  Iff.rfl
-#align filter.tendsto_iff_forall_eventually_mem Filter.tendsto_iff_forall_eventually_mem
-
--- porting note: move to `Basic`
-theorem not_tendsto_iff_exists_frequently_nmem {x : ι → α} {f : Filter α} {l : Filter ι} :
-    ¬Tendsto x l f ↔ ∃ s ∈ f, ∃ᶠ n in l, x n ∉ s := by
-  simp only [tendsto_iff_forall_eventually_mem, not_forall, exists_prop, Filter.Frequently, not_not]
-#align filter.not_tendsto_iff_exists_frequently_nmem Filter.not_tendsto_iff_exists_frequently_nmem
-
-lemma frequently_seq_tfae {ι : Type*} (l : Filter ι) (p : ι → Prop) [l.IsCountablyGenerated] :
-    List.TFAE
-      [∃ᶠ n in l, p n,
-        ∃ x : ℕ → ι, Tendsto x atTop l ∧ ∃ᶠ n in atTop, p (x n),
-        ∃ x : ℕ → ι, Tendsto x atTop l ∧ ∀ᶠ n in atTop, p (x n),
-        ∃ x : ℕ → ι, Tendsto x atTop l ∧ ∀ n, p (x n)] := by
-  tfae_have 1 → 3
-  · intro h
-    have : NeBot (l ⊓ 𝓟 { x : ι | p x }) := by simpa [neBot_iff, inf_principal_eq_bot]
-    simpa [tendsto_inf] using exists_seq_tendsto (l ⊓ 𝓟 { x : ι | p x })
-  tfae_have 3 → 4
-  · rintro ⟨x, hxl, hpx⟩
-    rcases eventually_atTop.1 hpx with ⟨k, hk⟩
-    exact ⟨fun n ↦ x (n + k), hxl.comp <| tendsto_add_atTop_nat _, fun n ↦ hk _ le_add_self⟩
-  tfae_have 4 → 2
-  · rintro ⟨x, hxl, hpx⟩
-    exact ⟨x, hxl, frequently_of_forall hpx⟩
-  tfae_have 2 → 1
-  · rintro ⟨x, hxl, hpx⟩
-    exact hxl.frequently hpx
-  tfae_finish
+theorem eventually_iff_seq_eventually {ι : Type*} {l : Filter ι} {p : ι → Prop}
+    [l.IsCountablyGenerated] :
+    (∀ᶠ n in l, p n) ↔ ∀ x : ℕ → ι, Tendsto x atTop l → ∀ᶠ n : ℕ in atTop, p (x n) := by
+  simpa using tendsto_iff_seq_tendsto (f := id) (l := 𝓟 {x | p x})
+#align filter.eventually_iff_seq_eventually Filter.eventually_iff_seq_eventually
 
 theorem frequently_iff_seq_frequently {ι : Type*} {l : Filter ι} {p : ι → Prop}
-    [hl : l.IsCountablyGenerated] :
-    (∃ᶠ n in l, p n) ↔ ∃ x : ℕ → ι, Tendsto x atTop l ∧ ∃ᶠ n : ℕ in atTop, p (x n) :=
-  (frequently_seq_tfae l p).out 0 1
+    [l.IsCountablyGenerated] :
+    (∃ᶠ n in l, p n) ↔ ∃ x : ℕ → ι, Tendsto x atTop l ∧ ∃ᶠ n : ℕ in atTop, p (x n) := by
+  simp only [Filter.Frequently, eventually_iff_seq_eventually (l := l)]
+  push_neg; rfl
 #align filter.frequently_iff_seq_frequently Filter.frequently_iff_seq_frequently
-
-theorem eventually_iff_seq_eventually {ι : Type*} {l : Filter ι} {p : ι → Prop}
-    [hl : l.IsCountablyGenerated] :
-    (∀ᶠ n in l, p n) ↔ ∀ x : ℕ → ι, Tendsto x atTop l → ∀ᶠ n : ℕ in atTop, p (x n) := by
-  have : (∀ᶠ n in l, p n) ↔ ¬∃ᶠ n in l, ¬p n := by
-    rw [not_frequently]
-    simp_rw [not_not]
-  rw [this, frequently_iff_seq_frequently]
-  push_neg
-  simp_rw [not_frequently, not_not]
-#align filter.eventually_iff_seq_eventually Filter.eventually_iff_seq_eventually
 
 theorem subseq_forall_of_frequently {ι : Type*} {x : ℕ → ι} {p : ι → Prop} {l : Filter ι}
     (h_tendsto : Tendsto x atTop l) (h : ∃ᶠ n in atTop, p (x n)) :
@@ -1992,7 +1953,7 @@ theorem subseq_forall_of_frequently {ι : Type*} {x : ℕ → ι} {p : ι → Pr
 #align filter.subseq_forall_of_frequently Filter.subseq_forall_of_frequently
 
 theorem exists_seq_forall_of_frequently {ι : Type*} {l : Filter ι} {p : ι → Prop}
-    [hl : l.IsCountablyGenerated] (h : ∃ᶠ n in l, p n) :
+    [l.IsCountablyGenerated] (h : ∃ᶠ n in l, p n) :
     ∃ ns : ℕ → ι, Tendsto ns atTop l ∧ ∀ n, p (ns n) := by
   rw [frequently_iff_seq_frequently] at h
   obtain ⟨x, hx_tendsto, hx_freq⟩ := h
@@ -2000,27 +1961,25 @@ theorem exists_seq_forall_of_frequently {ι : Type*} {l : Filter ι} {p : ι →
   exact ⟨x ∘ n_to_n, h_tendsto, h_freq⟩
 #align filter.exists_seq_forall_of_frequently Filter.exists_seq_forall_of_frequently
 
+lemma frequently_iff_seq_forall {ι : Type*} {l : Filter ι} {p : ι → Prop}
+    [l.IsCountablyGenerated] :
+    (∃ᶠ n in l, p n) ↔ ∃ ns : ℕ → ι, Tendsto ns atTop l ∧ ∀ n, p (ns n) :=
+  ⟨exists_seq_forall_of_frequently, fun ⟨_ns, hnsl, hpns⟩ ↦
+    hnsl.frequently <| frequently_of_forall hpns⟩
+
 /-- A sequence converges if every subsequence has a convergent subsequence. -/
 theorem tendsto_of_subseq_tendsto {α ι : Type*} {x : ι → α} {f : Filter α} {l : Filter ι}
     [l.IsCountablyGenerated]
     (hxy : ∀ ns : ℕ → ι, Tendsto ns atTop l →
       ∃ ms : ℕ → ℕ, Tendsto (fun n => x (ns <| ms n)) atTop f) :
     Tendsto x l f := by
-  by_contra h
+  contrapose! hxy
   obtain ⟨s, hs, hfreq⟩ : ∃ s ∈ f, ∃ᶠ n in l, x n ∉ s := by
-    rwa [not_tendsto_iff_exists_frequently_nmem] at h
+    rwa [not_tendsto_iff_exists_frequently_nmem] at hxy
   obtain ⟨y, hy_tendsto, hy_freq⟩ := exists_seq_forall_of_frequently hfreq
-  specialize hxy y hy_tendsto
-  obtain ⟨ms, hms_tendsto⟩ := hxy
-  specialize hms_tendsto hs
-  rw [mem_map] at hms_tendsto
-  have hms_freq : ∀ n : ℕ, x (y (ms n)) ∉ s := fun n => hy_freq (ms n)
-  have h_empty : (fun n : ℕ => x (y (ms n))) ⁻¹' s = ∅ := by
-    ext1 n
-    simp only [Set.mem_preimage, Set.mem_empty_iff_false, iff_false_iff]
-    exact hms_freq n
-  rw [h_empty] at hms_tendsto
-  exact empty_not_mem atTop hms_tendsto
+  refine ⟨y, hy_tendsto, fun ms hms_tendsto ↦ ?_⟩
+  rcases (hms_tendsto.eventually_mem hs).exists with ⟨n, hn⟩
+  exact absurd hn <| hy_freq _
 #align filter.tendsto_of_subseq_tendsto Filter.tendsto_of_subseq_tendsto
 
 theorem subseq_tendsto_of_neBot {f : Filter α} [IsCountablyGenerated f] {u : ℕ → α}
