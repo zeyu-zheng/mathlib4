@@ -66,7 +66,7 @@ differentiations of measure that apply in both contexts.
 -/
 -- @[nolint has_nonempty_instance] -- Porting note: This linter does not exist yet.
 structure VitaliFamily {m : MeasurableSpace α} (μ : Measure α) where
-  setsAt : α → Set (Set α)
+  setsAt :  α → Set (Set α)
   MeasurableSet' : ∀ x : α, ∀ a : Set α, a ∈ setsAt x → MeasurableSet a
   nonempty_interior : ∀ x : α, ∀ y : Set α, y ∈ setsAt x → (interior y).Nonempty
   Nontrivial : ∀ (x : α), ∀ ε > (0 : ℝ), ∃ y ∈ setsAt x, y ⊆ closedBall x ε
