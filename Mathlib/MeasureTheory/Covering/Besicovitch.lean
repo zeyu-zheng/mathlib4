@@ -1136,7 +1136,6 @@ lemma outerMeasure_image_le {f : α → β} {μ : Measure α} [SigmaFinite μ] [
   rw [← one_mul (μ s)]
   refine outerMeasure_image_le_mul (.inr ENNReal.one_ne_top) fun x hx ↦ ?_
   
-
 lemma outerMeasure_image_le_lintegral {f : α → β} {μ : Measure α} [SigmaFinite μ] [μ.OuterRegular]
     {ν : OuterMeasure β} {g : α → ℝ≥0} {s : Set α}
     (h : ∀ x ∈ s, ∀ C > g x,
