@@ -704,10 +704,6 @@ theorem getLast_mem : ∀ {l : List α} (h : l ≠ []), getLast l h ∈ l
         exact getLast_mem (cons_ne_nil b l)
 #align list.last_mem List.getLast_mem
 
-theorem getLastD_mem_cons {α} : ∀ (l : List α) (a : α), getLastD l a ∈ a::l
-  | [], _ => .head ..
-  | _::_, _ => .tail _ <| getLast_mem _
-
 theorem getLast_replicate_succ (m : ℕ) (a : α) :
     (replicate (m + 1) a).getLast (ne_nil_of_length_eq_succ (length_replicate _ _)) = a := by
   simp only [replicate_succ']
