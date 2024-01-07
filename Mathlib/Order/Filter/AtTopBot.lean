@@ -10,6 +10,7 @@ import Mathlib.Data.Set.Intervals.OrderIso
 import Mathlib.Order.Filter.Bases
 import Mathlib.Order.ConditionallyCompleteLattice.Basic
 import Mathlib.Algebra.Order.Group.MinMax
+import Mathlib.Tactic.TFAE
 
 #align_import order.filter.at_top_bot from "leanprover-community/mathlib"@"1f0096e6caa61e9c849ec2adbd227e960e9dff58"
 
@@ -1944,22 +1945,32 @@ theorem not_tendsto_iff_exists_frequently_nmem {x : ι → α} {f : Filter α} {
   simp only [tendsto_iff_forall_eventually_mem, not_forall, exists_prop, Filter.Frequently, not_not]
 #align filter.not_tendsto_iff_exists_frequently_nmem Filter.not_tendsto_iff_exists_frequently_nmem
 
+lemma frequently_seq_tfae {ι : Type*} (l : Filter ι) (p : ι → Prop) [l.IsCountablyGenerated] :
+    List.TFAE
+      [∃ᶠ n in l, p n,
+        ∃ x : ℕ → ι, Tendsto x atTop l ∧ ∃ᶠ n in atTop, p (x n),
+        ∃ x : ℕ → ι, Tendsto x atTop l ∧ ∀ᶠ n in atTop, p (x n),
+        ∃ x : ℕ → ι, Tendsto x atTop l ∧ ∀ n, p (x n)] := by
+  tfae_have 1 → 3
+  · intro h
+    have : NeBot (l ⊓ 𝓟 { x : ι | p x }) := by simpa [neBot_iff, inf_principal_eq_bot]
+    simpa [tendsto_inf] using exists_seq_tendsto (l ⊓ 𝓟 { x : ι | p x })
+  tfae_have 3 → 4
+  · rintro ⟨x, hxl, hpx⟩
+    rcases eventually_atTop.1 hpx with ⟨k, hk⟩
+    exact ⟨fun n ↦ x (n + k), hxl.comp <| tendsto_add_atTop_nat _, fun n ↦ hk _ le_add_self⟩
+  tfae_have 4 → 2
+  · rintro ⟨x, hxl, hpx⟩
+    exact ⟨x, hxl, frequently_of_forall hpx⟩
+  tfae_have 2 → 1
+  · rintro ⟨x, hxl, hpx⟩
+    exact hxl.frequently hpx
+  tfae_finish
+
 theorem frequently_iff_seq_frequently {ι : Type*} {l : Filter ι} {p : ι → Prop}
     [hl : l.IsCountablyGenerated] :
-    (∃ᶠ n in l, p n) ↔ ∃ x : ℕ → ι, Tendsto x atTop l ∧ ∃ᶠ n : ℕ in atTop, p (x n) := by
-  refine' ⟨fun h_freq => _, fun h_exists_freq => _⟩
-  · have : NeBot (l ⊓ 𝓟 { x : ι | p x }) := by simpa [neBot_iff, inf_principal_eq_bot]
-    obtain ⟨x, hx⟩ := exists_seq_tendsto (l ⊓ 𝓟 { x : ι | p x })
-    rw [tendsto_inf] at hx
-    cases' hx with hx_l hx_p
-    refine' ⟨x, hx_l, _⟩
-    rw [tendsto_principal] at hx_p
-    exact hx_p.frequently
-  · obtain ⟨x, hx_tendsto, hx_freq⟩ := h_exists_freq
-    simp_rw [Filter.Frequently, Filter.Eventually] at hx_freq ⊢
-    have : { n : ℕ | ¬p (x n) } = { n | x n ∈ { y | ¬p y } } := rfl
-    rw [this, ← mem_map'] at hx_freq
-    exact mt (@hx_tendsto _) hx_freq
+    (∃ᶠ n in l, p n) ↔ ∃ x : ℕ → ι, Tendsto x atTop l ∧ ∃ᶠ n : ℕ in atTop, p (x n) :=
+  (frequently_seq_tfae l p).out 0 1
 #align filter.frequently_iff_seq_frequently Filter.frequently_iff_seq_frequently
 
 theorem eventually_iff_seq_eventually {ι : Type*} {l : Filter ι} {p : ι → Prop}
@@ -1976,9 +1987,8 @@ theorem eventually_iff_seq_eventually {ι : Type*} {l : Filter ι} {p : ι → P
 theorem subseq_forall_of_frequently {ι : Type*} {x : ℕ → ι} {p : ι → Prop} {l : Filter ι}
     (h_tendsto : Tendsto x atTop l) (h : ∃ᶠ n in atTop, p (x n)) :
     ∃ ns : ℕ → ℕ, Tendsto (fun n => x (ns n)) atTop l ∧ ∀ n, p (x (ns n)) := by
-  rw [tendsto_iff_seq_tendsto] at h_tendsto
   choose ns hge hns using frequently_atTop.1 h
-  exact ⟨ns, h_tendsto ns (tendsto_atTop_mono hge tendsto_id), hns⟩
+  exact ⟨ns, h_tendsto.comp (tendsto_atTop_mono hge tendsto_id), hns⟩
 #align filter.subseq_forall_of_frequently Filter.subseq_forall_of_frequently
 
 theorem exists_seq_forall_of_frequently {ι : Type*} {l : Filter ι} {p : ι → Prop}
@@ -1993,8 +2003,8 @@ theorem exists_seq_forall_of_frequently {ι : Type*} {l : Filter ι} {p : ι →
 /-- A sequence converges if every subsequence has a convergent subsequence. -/
 theorem tendsto_of_subseq_tendsto {α ι : Type*} {x : ι → α} {f : Filter α} {l : Filter ι}
     [l.IsCountablyGenerated]
-    (hxy :
-      ∀ ns : ℕ → ι, Tendsto ns atTop l → ∃ ms : ℕ → ℕ, Tendsto (fun n => x (ns <| ms n)) atTop f) :
+    (hxy : ∀ ns : ℕ → ι, Tendsto ns atTop l →
+      ∃ ms : ℕ → ℕ, Tendsto (fun n => x (ns <| ms n)) atTop f) :
     Tendsto x l f := by
   by_contra h
   obtain ⟨s, hs, hfreq⟩ : ∃ s ∈ f, ∃ᶠ n in l, x n ∉ s := by
@@ -2015,16 +2025,12 @@ theorem tendsto_of_subseq_tendsto {α ι : Type*} {x : ι → α} {f : Filter α
 
 theorem subseq_tendsto_of_neBot {f : Filter α} [IsCountablyGenerated f] {u : ℕ → α}
     (hx : NeBot (f ⊓ map u atTop)) : ∃ θ : ℕ → ℕ, StrictMono θ ∧ Tendsto (u ∘ θ) atTop f := by
-  obtain ⟨B, h⟩ := f.exists_antitone_basis
-  have : ∀ N, ∃ n ≥ N, u n ∈ B N := fun N =>
-    Filter.inf_map_atTop_neBot_iff.mp hx _ (h.1.mem_of_mem trivial) N
-  choose φ hφ using this
-  cases' forall_and.mp hφ with φ_ge φ_in
-  have lim_uφ : Tendsto (u ∘ φ) atTop f := h.tendsto φ_in
-  have lim_φ : Tendsto φ atTop atTop := tendsto_atTop_mono φ_ge tendsto_id
-  obtain ⟨ψ, hψ, hψφ⟩ : ∃ ψ : ℕ → ℕ, StrictMono ψ ∧ StrictMono (φ ∘ ψ)
-  exact strictMono_subseq_of_tendsto_atTop lim_φ
-  exact ⟨φ ∘ ψ, hψφ, lim_uφ.comp hψ.tendsto_atTop⟩
+  rw [← Filter.push_pull', map_neBot_iff] at hx
+  rcases exists_seq_tendsto (comap u f ⊓ atTop) with ⟨φ, hφ⟩
+  rw [tendsto_inf, tendsto_comap_iff] at hφ
+  obtain ⟨ψ, hψ, hψφ⟩ : ∃ ψ : ℕ → ℕ, StrictMono ψ ∧ StrictMono (φ ∘ ψ) :=
+    strictMono_subseq_of_tendsto_atTop hφ.2
+  exact ⟨φ ∘ ψ, hψφ, hφ.1.comp hψ.tendsto_atTop⟩
 #align filter.subseq_tendsto_of_ne_bot Filter.subseq_tendsto_of_neBot
 
 end Filter

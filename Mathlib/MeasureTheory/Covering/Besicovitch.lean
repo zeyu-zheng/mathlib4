@@ -858,33 +858,14 @@ theorem exists_disjoint_closedBall_covering_ae (μ : Measure α) [SigmaFinite μ
     exact ⟨r, ⟨⟨hr.1, hr.2.1, hr.2.2.trans_le (min_le_right _ _)⟩,
       ⟨hr.2.1, hr.2.2.trans_le (min_le_left _ _)⟩⟩⟩
   rcases exists_disjoint_closedBall_covering_ae_aux μ g s hg with ⟨v, v_count, vs, vg, μv, v_disj⟩
-  obtain ⟨t, r, htc, rfl⟩ :
-      ∃ (t : Set α) (r : α → ℝ), t.Countable ∧ (fun x ↦ (x, r x)) '' t = v := by
-    rw [ball_image_iff] at hr
-    refine ⟨Prod.fst '' v, r, v_count.image _, ?_⟩
-    rw [← image_comp, EqOn.image_eq_self]
+  obtain ⟨r, t, rfl⟩ : ∃ (r : α → ℝ) (t : Set α), v = graphOn r t := by
     have I : ∀ p ∈ v, 0 ≤ p.2 := fun p hp => (vg p hp).2.1.le
-    have hinj : InjOn Prod.fst v := fun x h x' h' h₁ ↦ v_disj.eq h h' <|
-      not_disjoint_iff.2 ⟨x.1, by simp [*]⟩
-    exact fun x h ↦ hinj (hr _ h) h rfl
-  simp only [ball_image_iff, biUnion_image] at *
-  refine' ⟨t, r, htc, vs, vg, μv, ?_⟩
-  · intro x hx
-    rcases (mem_image _ _ _).1 hx with ⟨⟨p, q⟩, hp, rfl⟩
-    exact vs _ hp
-  · intro x hx
-    rcases (mem_image _ _ _).1 hx with ⟨⟨p, q⟩, _, rfl⟩
-    exact vg _ (hr _ hx)
-  · have :
-      ⋃ (x : α) (_ : x ∈ t), closedBall x (r x) =
-        ⋃ (p : α × ℝ) (_ : p ∈ (fun x => (x, r x)) '' t), closedBall p.1 p.2 :=
-      by conv_rhs => rw [biUnion_image]
-    rw [this, im_t]
-    exact μv
-  · have A : InjOn (fun x : α => (x, r x)) t := by
-      simp (config := { contextual := true }) only [InjOn, Prod.mk.inj_iff, imp_true_iff,
-        eq_self_iff_true]
-    rwa [← im_t, A.pairwiseDisjoint_image] at v_disj
+    rw [exists_eq_graphOn]
+    refine fun x hx y hy heq ↦ v_disj.eq hx hy <| not_disjoint_iff.2 ⟨x.1, ?_⟩
+    simp [*]
+  have hinj : InjOn (fun x ↦ (x, r x)) t := LeftInvOn.injOn (f₁' := Prod.fst) fun _ _ ↦ rfl
+  simp only [graphOn, ball_image_iff, biUnion_image, hinj.pairwiseDisjoint_image] at *
+  exact ⟨t, r, countable_of_injective_of_countable_image hinj v_count, vs, vg, μv, v_disj⟩
 #align besicovitch.exists_disjoint_closed_ball_covering_ae Besicovitch.exists_disjoint_closedBall_covering_ae
 
 /-- In a space with the Besicovitch property, any set `s` can be covered with balls whose measures
@@ -1058,24 +1039,122 @@ theorem exists_closedBall_covering_tsum_measure_le (μ : Measure α) [SigmaFinit
       _ = μ s + ε := by rw [add_assoc, ENNReal.add_halves]
 #align besicovitch.exists_closed_ball_covering_tsum_measure_le Besicovitch.exists_closedBall_covering_tsum_measure_le
 
-/-! ### Consequences on differentiation of measures -/
+/-- Let `f : α → β` be a map from a space with Besicovitch property to any space.
+Let `μ` be a σ-finite outer regular measure on `α`, let `ν` be an outer measure on `β`,
+let `s` be a set in the domain, let `C` be a constant such that `μ s ≠ 0` or `C ≠ ∞`.
+Suppose that for each `x ∈ s` and a positive `ε`,
+for a set of positive `r` that accumulates to zero,
+we have `ν (f '' (s ∩ Metric.closedBall x r)) ≤ (C + ε) * μ (Metric.closedBall x r)`.
+Then `ν (f '' s) ≤ C * μ s`.
 
+Briefly speaking, this means that `ν (f '' s) ≤ C * μ s` 
+provided that a similar estimate holds for sufficiently small ball around each point `x ∈ s`.
+
+See also `Besicovitch.measure_image_le_mul`.
+-/
+lemma outerMeasure_image_le_mul {f : α → β} {μ : Measure α} [SigmaFinite μ] [μ.OuterRegular]
+    {ν : OuterMeasure β} {C : ℝ≥0∞} {s : Set α} (hsC : μ s ≠ 0 ∨ C ≠ ∞)
+    (h : ∀ x ∈ s, ∃ᶠ ε : ℝ≥0∞ in 𝓝[>] 0, ∃ᶠ r : ℝ in 𝓝[>] 0,
+      ν (f '' (s ∩ closedBall x r)) ≤ (C + ε) * μ (closedBall x r)) :
+    ν (f '' s) ≤ C * μ s := by
+  -- WLOG, we can assume that `C ≠ 0` or `μ s ≠ ∞`
+  wlog hCs : C ≠ 0 ∨ μ s ≠ ∞ generalizing s
+  · push_neg at hCs; rcases hCs with ⟨rfl, -⟩
+    simp only [zero_mul, nonpos_iff_eq_zero] at this ⊢
+    suffices ∀ n, ν (f '' (spanningSets μ n ∩ s)) = 0 by
+      rwa [← ν.iUnion_null_iff, ← image_iUnion, ← iUnion_inter, iUnion_spanningSets,
+        univ_inter] at this
+    refine fun n ↦ this (.inr ENNReal.zero_ne_top) ?_ <| .inr ?_
+    · refine fun x hx ↦ (h x hx.2).mono fun ε hε ↦ hε.mono fun _ ↦ le_trans ?_
+      gcongr; apply inter_subset_right
+    · exact ne_top_of_le_ne_top (measure_spanningSets_lt_top μ n).ne <|
+        measure_mono <| inter_subset_left _ _
+  -- Thus it suffices to prove `ν (f '' s) ≤ C' * (μ s + ε)` for all `C' > C` and `ε > 0`
+  suffices ∀ ε > 0, ∃ᶠ δ : ℝ≥0∞ in 𝓝[>] 0, ν (f '' s) ≤ (C + δ) * (μ s + ε) by
+    have H₁ : ∀ c : ℝ≥0∞, Tendsto (c + ·) (𝓝[>] 0) (𝓝 c) := fun c ↦ by
+      simpa only [add_zero]
+        using (tendsto_const_nhds.add (tendsto_id (x := 𝓝 (0 : ℝ≥0∞)))).mono_left inf_le_left
+    have H₂ : Tendsto (fun (δ, ε) ↦ (C + δ) * (μ s + ε)) (𝓝[>] 0 ×ˢ 𝓝[>] 0) (𝓝 (C * μ s)) :=
+      ENNReal.Tendsto.mul ((H₁ _).comp tendsto_fst) hCs ((H₁ _).comp tendsto_snd) hsC
+    refine ge_of_tendsto_of_frequently H₂ ?_
+    
+  -- Now we use `exists_closedBall_covering_tsum_measure_le`,
+  -- to obtain a covering by countably many balls such that
+  -- `ν (f '' (s ∩ closedBall x (r x))) ≤ (C + ε) * μ (closedBall x (r x))` for each ball
+  -- and `∑' x : t, μ (closedBall x.1 (r x)) ≤ μ s + ε`
+  intro ε hε
+  obtain ⟨t, r, htc, -, hνμ, hsr, hμ⟩ : ∃ (t : Set α) (r : α → ℝ), Set.Countable t ∧ t ⊆ s ∧
+      (∀ x ∈ t, ν (f '' (s ∩ closedBall x (r x))) ≤ (C + ε) * μ (closedBall x (r x))) ∧
+      s ⊆ ⋃ x ∈ t, closedBall x (r x) ∧ ∑' x : t, μ (closedBall x.1 (r x)) ≤ μ s + ε := by
+    refine exists_closedBall_covering_tsum_measure_le μ hε.ne'
+      (fun x ↦ {r | ν (f '' (s ∩ closedBall x r)) ≤ (C + ε) * μ (closedBall x r)}) s ?_
+    simpa only [(nhdsWithin_Ioi_basis _).frequently_iff, @and_comm (_ ∈ _)] using (h · · ε hε)
+  have := htc.to_subtype
+  calc
+    ν (f '' s) ≤ ν (⋃ x : t, f '' (s ∩ closedBall x (r x))) := by
+      rw [← image_iUnion, ← inter_iUnion]
+      gcongr
+      simpa [Subset.rfl]
+    _ ≤ ∑' x : t, ν (f '' (s ∩ closedBall x (r x))) := ν.iUnion _
+    _ ≤ ∑' x : t, (C + ε) * μ (closedBall x (r x)) := ENNReal.tsum_le_tsum <| Subtype.forall.2 hνμ
+    _ = (C + ε) * ∑' x : t, μ (closedBall x (r x)) := ENNReal.tsum_mul_left
+    _ ≤ (C + ε) * (μ s + ε) := by gcongr
+
+/-- Let `f : α → β` be a map from a space with Besicovitch property to any space.
+Let `μ` be a σ-finite outer regular measure on `α`, let `ν` be a measure on `β`,
+let `s` be a set in the domain, let `C` be a constant such that `μ s ≠ 0` or `C ≠ ∞`.
+Suppose that for each `x ∈ s` and a positive `ε`,
+for a set of positive `r` that accumulates to zero,
+we have `ν (f '' (s ∩ Metric.closedBall x r)) ≤ (C + ε) * μ (Metric.closedBall x r)`.
+Then `ν (f '' s) ≤ C * μ s`.
+
+Briefly speaking, this means that `ν (f '' s) ≤ C * μ s` 
+provided that a similar estimate holds for sufficiently small ball around each point `x ∈ s`.
+
+See also `Besicovitch.outerMeasure_image_le_mul`.
+-/
+lemma measure_image_le_mul {_ : MeasurableSpace β} {f : α → β} {μ : Measure α} [SigmaFinite μ]
+    [μ.OuterRegular] {ν : Measure β} {C : ℝ≥0∞} {s : Set α} (hsC : μ s ≠ 0 ∨ C ≠ ∞)
+    (h : ∀ x ∈ s, ∀ ε > 0, ∃ᶠ r : ℝ in 𝓝[>] 0,
+      ν (f '' (s ∩ closedBall x r)) ≤ (C + ε) * μ (closedBall x r)) :
+    ν (f '' s) ≤ C * μ s :=
+  outerMeasure_image_le_mul hsC h
+
+/-- Let `f : α → β` be a map from a space with Besicovitch property to any space.
+Let `μ` be a σ-finite outer regular measure on `α`, let `ν` be an outer measure on `β`,
+let `s` be a set in the domain.
+Suppose that for each `x ∈ s` and `C > 1`, for a set of positive `r` that accumulates to zero,
+we have `ν (f '' (s ∩ Metric.closedBall x r)) ≤ C * μ (Metric.closedBall x r)`.
+Then `ν (f '' s) ≤ μ s`.
+
+See also `Besicovitch.outerMeasure_image_le_mul`.
+-/
+lemma outerMeasure_image_le {f : α → β} {μ : Measure α} [SigmaFinite μ] [μ.OuterRegular]
+    {ν : OuterMeasure β} {s : Set α}
+    (h : ∀ x ∈ s, ∃ᶠ C : ℝ≥0∞ in 𝓝[>] 1, ∃ᶠ r : ℝ in 𝓝[>] 0,
+      ν (f '' (s ∩ closedBall x r)) ≤ C * μ (closedBall x r)) :
+    ν (f '' s) ≤ μ s := by
+  rw [← one_mul (μ s)]
+  refine outerMeasure_image_le_mul (.inr ENNReal.one_ne_top) fun x hx ↦ ?_
+  
+
+lemma outerMeasure_image_le_lintegral {f : α → β} {μ : Measure α} [SigmaFinite μ] [μ.OuterRegular]
+    {ν : OuterMeasure β} {g : α → ℝ≥0} {s : Set α}
+    (h : ∀ x ∈ s, ∀ C > g x,
+      ∃ᶠ r : ℝ in 𝓝[>] 0, ν (f '' (s ∩ closedBall x r)) ≤ C * μ (closedBall x r)) :
+    ν (f '' s) ≤ ∫⁻ x in s, g x ∂μ := by
+  rw [← withDensity_apply']
+
+/-! ### Consequences on differentiation of measures -/
 
 /-- In a space with the Besicovitch covering property, the set of closed balls with positive radius
 forms a Vitali family. This is essentially a restatement of the measurable Besicovitch theorem. -/
 protected def vitaliFamily (μ : Measure α) [SigmaFinite μ] : VitaliFamily μ where
   setsAt x := (fun r : ℝ => closedBall x r) '' Ioi (0 : ℝ)
-  MeasurableSet' := by
-    intro x y hy
-    obtain ⟨r, _, rfl⟩ : ∃ r : ℝ, 0 < r ∧ closedBall x r = y := by
-      simpa only [mem_image, mem_Ioi] using hy
-    exact isClosed_ball.measurableSet
-  nonempty_interior := by
-    intro x y hy
-    obtain ⟨r, rpos, rfl⟩ : ∃ r : ℝ, 0 < r ∧ closedBall x r = y := by
-      simpa only [mem_image, mem_Ioi] using hy
-    simp only [Nonempty.mono ball_subset_interior_closedBall, rpos, nonempty_ball]
-  Nontrivial x ε εpos := ⟨closedBall x ε, mem_image_of_mem _ εpos, Subset.refl _⟩
+  MeasurableSet' _ := ball_image_iff.2 fun _ _ ↦ isClosed_ball.measurableSet
+  nonempty_interior _ := ball_image_iff.2 fun r rpos ↦
+    (nonempty_ball.2 rpos).mono ball_subset_interior_closedBall
+  Nontrivial x ε εpos := ⟨closedBall x ε, mem_image_of_mem _ εpos, Subset.rfl⟩
   covering := by
     intro s f fsubset ffine
     let g : α → Set ℝ := fun x => {r | 0 < r ∧ closedBall x r ∈ f x}

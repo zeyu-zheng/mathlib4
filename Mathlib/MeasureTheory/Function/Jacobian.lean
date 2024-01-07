@@ -278,6 +278,11 @@ essentially like this linear map, and that its derivative (if it exists) is almo
 to the approximating linear map.
 -/
 
+theorem addHaar_image_le_mul_of_det_lt' {f : E → E} {s : Set E}
+    (h : ∀ x ∈ s, 
+    (A : E →L[ℝ] E) {m : ℝ≥0} (hm : ENNReal.ofReal |A.det| < m) :
+    ∀ᶠ δ in 𝓝[>] (0 : ℝ≥0),
+      ∀ (s : Set E) (f : E → E), ApproximatesLinearOn f A s δ → μ (f '' s) ≤ m * μ s := by
 
 /-- Let `f` be a function which is sufficiently close (in the Lipschitz sense) to a given linear
 map `A`. Then it expands the volume of any set by at most `m` for any `m > det A`. -/
@@ -311,8 +316,7 @@ theorem addHaar_image_le_mul_of_det_lt (A : E →L[ℝ] E) {m : ℝ≥0}
       exact (addHaar_image_continuousLinearMap _ _ _).symm
     have I : d * μ (closedBall 0 1) < m * μ (closedBall 0 1) :=
       (ENNReal.mul_lt_mul_right (measure_closedBall_pos μ _ zero_lt_one).ne'
-            measure_closedBall_lt_top.ne).2
-        hm
+        measure_closedBall_lt_top.ne).2 hm
     have H :
       ∀ᶠ b : ℝ in 𝓝[>] 0, μ (closedBall 0 b + A '' closedBall 0 1) < m * μ (closedBall 0 1) :=
       (tendsto_order.1 L2).2 _ I
