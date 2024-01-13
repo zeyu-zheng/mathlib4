@@ -1046,7 +1046,7 @@ for a set of positive `r` that accumulates to zero,
 we have `ν (f '' (s ∩ Metric.closedBall x r)) ≤ (C + ε) * μ (Metric.closedBall x r)`.
 Then `ν (f '' s) ≤ C * μ s`.
 
-Briefly speaking, this means that `ν (f '' s) ≤ C * μ s` 
+Briefly speaking, this means that `ν (f '' s) ≤ C * μ s`
 provided that a similar estimate holds for sufficiently small ball around each point `x ∈ s`.
 
 See also `Besicovitch.measure_image_le_mul`.
@@ -1076,7 +1076,7 @@ lemma outerMeasure_image_le_mul {f : α → β} {μ : Measure α} [SigmaFinite �
     have H₂ : Tendsto (fun (δ, ε) ↦ (C + δ) * (μ s + ε)) (𝓝[>] 0 ×ˢ 𝓝[>] 0) (𝓝 (C * μ s)) :=
       ENNReal.Tendsto.mul ((H₁ _).comp tendsto_fst) hCs ((H₁ _).comp tendsto_snd) hsC
     refine ge_of_tendsto_of_frequently H₂ ?_
-    
+
   -- Now we use `exists_closedBall_covering_tsum_measure_le`,
   -- to obtain a covering by countably many balls such that
   -- `ν (f '' (s ∩ closedBall x (r x))) ≤ (C + ε) * μ (closedBall x (r x))` for each ball
@@ -1107,7 +1107,7 @@ for a set of positive `r` that accumulates to zero,
 we have `ν (f '' (s ∩ Metric.closedBall x r)) ≤ (C + ε) * μ (Metric.closedBall x r)`.
 Then `ν (f '' s) ≤ C * μ s`.
 
-Briefly speaking, this means that `ν (f '' s) ≤ C * μ s` 
+Briefly speaking, this means that `ν (f '' s) ≤ C * μ s`
 provided that a similar estimate holds for sufficiently small ball around each point `x ∈ s`.
 
 See also `Besicovitch.outerMeasure_image_le_mul`.
@@ -1135,7 +1135,7 @@ lemma outerMeasure_image_le {f : α → β} {μ : Measure α} [SigmaFinite μ] [
     ν (f '' s) ≤ μ s := by
   rw [← one_mul (μ s)]
   refine outerMeasure_image_le_mul (.inr ENNReal.one_ne_top) fun x hx ↦ ?_
-  
+
 lemma outerMeasure_image_le_lintegral {f : α → β} {μ : Measure α} [SigmaFinite μ] [μ.OuterRegular]
     {ν : OuterMeasure β} {g : α → ℝ≥0} {s : Set α}
     (h : ∀ x ∈ s, ∀ C > g x,
