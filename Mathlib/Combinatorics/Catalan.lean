@@ -171,9 +171,8 @@ def treesOfNumNodesEq : ℕ → Finset (Tree Unit)
       pairwiseNode (treesOfNumNodesEq ijh.1.1) (treesOfNumNodesEq ijh.1.2)
   -- Porting note: Add this to satisfy the linter.
   decreasing_by
-      simp_wf
-      try exact Nat.lt_succ_of_le (fst_le ijh.2)
-      try exact Nat.lt_succ_of_le (snd_le ijh.2)
+    · simp_wf; have := fst_le ijh.2; omega
+    · simp_wf; have := snd_le ijh.2; omega
 #align tree.trees_of_num_nodes_eq Tree.treesOfNumNodesEq
 
 @[simp]
