@@ -112,14 +112,14 @@ variable {N X x}
 
 namespace GenLoop
 
-instance funLike : FunLike (Ω^ N X x) (I^N) fun _ => X where
+instance instFunLike : FunLike (Ω^ N X x) (I^N) X where
   coe f := f.1
   coe_injective' := fun ⟨⟨f, _⟩, _⟩ ⟨⟨g, _⟩, _⟩ _ => by congr
-#align gen_loop.fun_like GenLoop.funLike
+#align gen_loop.fun_like GenLoop.instFunLike
 
 @[ext]
 theorem ext (f g : Ω^ N X x) (H : ∀ y, f y = g y) : f = g :=
-  FunLike.coe_injective' (funext H)
+  DFunLike.coe_injective' (funext H)
 #align gen_loop.ext GenLoop.ext
 
 @[simp]
@@ -133,7 +133,7 @@ def copy (f : Ω^ N X x) (g : (I^N) → X) (h : g = f) : Ω^ N X x :=
   ⟨⟨g, h.symm ▸ f.1.2⟩, by convert f.2⟩
 #align gen_loop.copy GenLoop.copy
 
-/- porting note: this now requires the `funLike` instance,
+/- porting note: this now requires the `instFunLike` instance,
   so the instance is now put before `copy`. -/
 theorem coe_copy (f : Ω^ N X x) {g : (I^N) → X} (h : g = f) : ⇑(copy f g h) = g :=
   rfl
@@ -332,18 +332,16 @@ theorem homotopicFrom (i : N) {p q : Ω^ N X x} :
     obtain rfl | h := eq_or_ne j i
     · rw [H.eq_fst]; exacts [congr_arg p ((Cube.splitAt j).left_inv _), jH]
     · rw [p.2 _ ⟨j, jH⟩]; apply boundary; exact ⟨⟨j, h⟩, jH⟩
-    /- porting note: the following is indented two spaces more than it should be due to
-      strange behavior of `erw` -/
-    all_goals
-      intro
-      apply (homotopyFrom_apply _ _ _).trans
-      first
-      | rw [H.apply_zero]
-      | rw [H.apply_one]
-      first
-      | apply congr_arg p
-      | apply congr_arg q
-      apply (Cube.splitAt i).left_inv
+  all_goals
+    intro
+    apply (homotopyFrom_apply _ _ _).trans
+    first
+    | rw [H.apply_zero]
+    | rw [H.apply_one]
+    first
+    | apply congr_arg p
+    | apply congr_arg q
+    apply (Cube.splitAt i).left_inv
 #align gen_loop.homotopic_from GenLoop.homotopicFrom
 
 /-- Concatenation of two `GenLoop`s along the `i`th coordinate. -/
