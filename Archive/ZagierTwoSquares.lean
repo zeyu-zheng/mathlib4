@@ -149,7 +149,7 @@ theorem eq_of_mem_fixedPoints {t : zagierSet k} (mem : t ∈ fixedPoints (comple
   · -- more
     obtain ⟨_, _, _⟩ := mem; simp_all
   · -- middle (the one fixed point falls under this case)
-    simp [zagierSet, Set.mem_setOf_eq] at h
+    simp only [zagierSet, Set.mem_setOf_eq] at h
     replace mem := mem.1
     rw [tsub_eq_iff_eq_add_of_le more, ← two_mul] at mem
     replace mem := (mul_left_cancel₀ two_ne_zero mem).symm
@@ -195,5 +195,5 @@ theorem Nat.Prime.sq_add_sq' {p : ℕ} [h : Fact p.Prime] (hp : p % 4 = 1) :
     (Equiv.Perm.card_fixedPoints_modEq (p := 2) (n := 1) (complexInvo_sq k))
   contrapose key
   rw [Set.not_nonempty_iff_eq_empty] at key
-  simp_rw [key, Fintype.card_of_isEmpty, card_fixedPoints_eq_one]
+  simp_rw [key, Fintype.card_eq_zero, card_fixedPoints_eq_one]
   decide

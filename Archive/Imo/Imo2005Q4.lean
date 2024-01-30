@@ -57,7 +57,7 @@ theorem imo2005_q4 {k : ℕ} (hk : 0 < k) : (∀ n : ℕ, 1 ≤ n → IsCoprime 
     rintro rfl n -
     exact isCoprime_one_right
   intro h
-  -- Conversely, suppose `k` is a number with the property, and let `p` be `k.min_fac` (by
+  -- Conversely, suppose `k` is a number with the property, and let `p` be `k.minFac` (by
   -- definition this is the minimal prime factor of `k` if `k ≠ 1`, and otherwise `1`.
   let p := k.minFac
   -- Suppose for the sake of contradiction that `k ≠ 1`.  Then `p` is genuinely a prime factor of
@@ -79,5 +79,5 @@ theorem imo2005_q4 {k : ℕ} (hk : 0 < k) : (∀ n : ℕ, 1 ≤ n → IsCoprime 
   refine h (p - 2) ?_ (find_specified_factor hp hp2 hp3)
   calc
     1 = 3 - 2 := by norm_num
-    _ ≤ p - 2 := tsub_le_tsub_right (Nat.succ_le_of_lt $ hp.two_le.lt_of_ne' hp2) _
+    _ ≤ p - 2 := tsub_le_tsub_right (Nat.succ_le_of_lt <| hp.two_le.lt_of_ne' hp2) _
 #align imo2005_q4 imo2005_q4

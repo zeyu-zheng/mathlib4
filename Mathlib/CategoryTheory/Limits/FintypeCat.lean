@@ -8,7 +8,7 @@ import Mathlib.CategoryTheory.Limits.Shapes.FiniteLimits
 import Mathlib.CategoryTheory.Limits.Types
 import Mathlib.CategoryTheory.Limits.Creates
 import Mathlib.CategoryTheory.Limits.Preserves.Finite
-import Mathlib.Data.FunLike.Fintype
+import Mathlib.Data.Finite.Basic
 
 /-!
 # (Co)limits in the category of finite types
@@ -23,7 +23,7 @@ universe u
 
 namespace CategoryTheory.Limits.FintypeCat
 
-instance {J : Type} [SmallCategory J] [FinCategory J] (K : J ⥤ FintypeCat.{u}) (j : J) :
+instance {J : Type} [SmallCategory J] (K : J ⥤ FintypeCat.{u}) (j : J) :
     Finite ((K ⋙ FintypeCat.incl.{u}).obj j) := by
   simp only [comp_obj, FintypeCat.incl_obj]
   infer_instance
