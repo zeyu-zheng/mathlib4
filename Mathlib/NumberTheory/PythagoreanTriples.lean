@@ -9,6 +9,7 @@ import Mathlib.Tactic.Ring
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Data.Int.NatPrime
 import Mathlib.Data.ZMod.Basic
+import Mathlib.Algebra.GroupPower.Order
 
 #align_import number_theory.pythagorean_triples from "leanprover-community/mathlib"@"e8638a0fcaf73e4500469f368ef9494e495099b3"
 
@@ -218,8 +219,8 @@ theorem isClassified_of_normalize_isPrimitiveClassified (hc : h.normalize.IsPrim
   convert h.normalize.mul_isClassified (Int.gcd x y)
         (isClassified_of_isPrimitiveClassified h.normalize hc) <;>
     rw [Int.mul_ediv_cancel']
-  · exact Int.gcd_dvd_left x y
-  · exact Int.gcd_dvd_right x y
+  · exact Int.gcd_dvd_left
+  · exact Int.gcd_dvd_right
   · exact h.gcd_dvd
 #align pythagorean_triple.is_classified_of_normalize_is_primitive_classified PythagoreanTriple.isClassified_of_normalize_isPrimitiveClassified
 
@@ -459,7 +460,6 @@ theorem isPrimitiveClassified_aux (hc : x.gcd y = 1) (hzpos : 0 < z) {m n : ℤ}
   norm_cast
 #align pythagorean_triple.is_primitive_classified_aux PythagoreanTriple.isPrimitiveClassified_aux
 
-set_option maxHeartbeats 400000 in
 theorem isPrimitiveClassified_of_coprime_of_odd_of_pos (hc : Int.gcd x y = 1) (hyo : y % 2 = 1)
     (hzpos : 0 < z) : h.IsPrimitiveClassified := by
   by_cases h0 : x = 0

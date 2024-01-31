@@ -5,7 +5,6 @@ Authors: Aaron Anderson
 -/
 import Mathlib.Algebra.Squarefree
 import Mathlib.Data.Nat.Factorization.PrimePow
-import Mathlib.Data.Nat.PrimeNormNum
 import Mathlib.RingTheory.Int.Basic
 
 #align_import data.nat.squarefree from "leanprover-community/mathlib"@"3c1368cac4abd5a5cbe44317ba7e87379d51ed88"
@@ -127,7 +126,7 @@ def minSqFacAux : ℕ → ℕ → Option ℕ
         lt_of_le_of_lt (Nat.sub_le_sub_right (Nat.sqrt_le_sqrt <| Nat.div_le_self _ _) k) this
         if k ∣ n' then some k else minSqFacAux n' (k + 2)
       else minSqFacAux n (k + 2)
-termination_by _ n k => sqrt n + 2 - k
+termination_by n k => sqrt n + 2 - k
 #align nat.min_sq_fac_aux Nat.minSqFacAux
 
 /-- Returns the smallest prime factor `p` of `n` such that `p^2 ∣ n`, or `none` if there is no
@@ -202,7 +201,7 @@ theorem minSqFacAux_has_prop {n : ℕ} (k) (n0 : 0 < n) (i) (e : k = 2 * i + 3)
   · specialize IH (n / k) (div_dvd_of_dvd dk) dkk
     exact minSqFacProp_div _ (pk dk) dk (mt (Nat.dvd_div_iff dk).2 dkk) IH
   · exact IH n (dvd_refl _) dk
-termination_by _ => n.sqrt + 2 - k
+termination_by n.sqrt + 2 - k
 #align nat.min_sq_fac_aux_has_prop Nat.minSqFacAux_has_prop
 
 theorem minSqFac_has_prop (n : ℕ) : MinSqFacProp n (minSqFac n) := by

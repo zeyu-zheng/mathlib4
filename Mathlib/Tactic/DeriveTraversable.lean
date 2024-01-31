@@ -3,7 +3,6 @@ Copyright (c) 2018 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 -/
-import Mathlib.Tactic.Basic
 import Mathlib.Control.Traversable.Lemmas
 
 #align_import control.traversable.derive from "leanprover-community/mathlib"@"b01d6eb9d0a308807af54319b264d0994b91774b"
@@ -179,7 +178,8 @@ def deriveFunctor (m : MVarId) : TermElabM Unit := do
                     stx := ← `(attr| specialize) }] }
           declName := n'
           type := t'
-          value := e' }] {}
+          value := e'
+          termination := .none }] {}
   m.assign (mkAppN (mkConst n' (levels.map Level.param)) vars.toArray)
 
 /-- Similar to `mkInstanceName`, but for a `Expr` type. -/
@@ -244,7 +244,8 @@ def mkOneInstance (n cls : Name) (tac : MVarId → TermElabM Unit)
                     stx := ← `(attr| instance) }] }
           declName := instN
           type := tgt
-          value := val }] {}
+          value := val
+          termination := .none }] {}
 
 /-- Make the new deriving handler depends on other deriving handlers. -/
 def higherOrderDeriveHandler (cls : Name) (tac : MVarId → TermElabM Unit)
@@ -415,7 +416,8 @@ def deriveTraversable (m : MVarId) : TermElabM Unit := do
               visibility := .protected }
           declName := n'
           type := t'
-          value := e' }] {}
+          value := e'
+          termination := .none }] {}
   m.assign (mkAppN (mkConst n' (levels.map Level.param)) vars.toArray)
 
 /-- The deriving handler for `Traversable`. -/

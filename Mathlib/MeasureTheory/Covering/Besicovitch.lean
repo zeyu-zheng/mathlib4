@@ -9,6 +9,7 @@ import Mathlib.MeasureTheory.Integral.Lebesgue
 import Mathlib.MeasureTheory.Measure.Regular
 import Mathlib.SetTheory.Ordinal.Arithmetic
 import Mathlib.Topology.MetricSpace.Basic
+import Mathlib.Data.Set.Pairwise.Lattice
 
 #align_import measure_theory.covering.besicovitch from "leanprover-community/mathlib"@"5f6e827d81dfbeb6151d7016586ceeb0099b9655"
 
@@ -250,7 +251,7 @@ noncomputable def index : Ordinal.{u} → β
       -- return an index `b` for which the center `c b` is not in `Z`, and the radius is at
       -- least `R / τ`, if such an index exists (and garbage otherwise).
       Classical.epsilon fun b : β => p.c b ∉ Z ∧ R ≤ p.τ * p.r b
-  termination_by index i => i
+  termination_by i => i
   decreasing_by exact j.2
 #align besicovitch.tau_package.index Besicovitch.TauPackage.index
 
@@ -280,7 +281,7 @@ noncomputable def color : Ordinal.{u} → ℕ
         (_ : (closedBall (p.c (p.index j)) (p.r (p.index j)) ∩
           closedBall (p.c (p.index i)) (p.r (p.index i))).Nonempty), {color j}
     sInf (univ \ A)
-  termination_by color i => i
+  termination_by i => i
   decreasing_by exact j.2
 #align besicovitch.tau_package.color Besicovitch.TauPackage.color
 
@@ -1044,10 +1045,10 @@ theorem exists_closedBall_covering_tsum_measure_le (μ : Measure α) [SigmaFinit
 forms a Vitali family. This is essentially a restatement of the measurable Besicovitch theorem. -/
 protected def vitaliFamily (μ : Measure α) [SigmaFinite μ] : VitaliFamily μ where
   setsAt x := (fun r : ℝ => closedBall x r) '' Ioi (0 : ℝ)
-  MeasurableSet' _ := ball_image_iff.2 fun _ _ ↦ isClosed_ball.measurableSet
+  measurableSet _ := ball_image_iff.2 fun _ _ ↦ isClosed_ball.measurableSet
   nonempty_interior _ := ball_image_iff.2 fun r rpos ↦
     (nonempty_ball.2 rpos).mono ball_subset_interior_closedBall
-  Nontrivial x ε εpos := ⟨closedBall x ε, mem_image_of_mem _ εpos, Subset.rfl⟩
+  nontrivial x ε εpos := ⟨closedBall x ε, mem_image_of_mem _ εpos, Subset.rfl⟩
   covering := by
     intro s f fsubset ffine
     let g : α → Set ℝ := fun x => {r | 0 < r ∧ closedBall x r ∈ f x}

@@ -801,7 +801,7 @@ def compositionAsSetEquiv (n : ℕ) : CompositionAsSet n ≃ Finset (Fin (n - 1)
     · simp only [or_iff_not_imp_left]
       intro i_mem i_ne_zero i_ne_last
       simp? [Fin.ext_iff] at i_ne_zero i_ne_last says
-        simp only [Fin.ext_iff, Fin.val_zero, Fin.val_last] at i_ne_zero i_ne_last
+        simp only [Fin.isValue, Fin.ext_iff, Fin.val_zero, Fin.val_last] at i_ne_zero i_ne_last
       have A : (1 + (i - 1) : ℕ) = (i : ℕ) := by
         rw [add_comm]
         exact Nat.succ_pred_eq_of_pos (pos_iff_ne_zero.mpr i_ne_zero)
@@ -1043,7 +1043,6 @@ theorem Composition.toCompositionAsSet_boundaries (c : Composition n) :
   rfl
 #align composition.to_composition_as_set_boundaries Composition.toCompositionAsSet_boundaries
 
-set_option maxHeartbeats 400000 in
 /-- Equivalence between `Composition n` and `CompositionAsSet n`. -/
 def compositionEquiv (n : ℕ) : Composition n ≃ CompositionAsSet n
     where

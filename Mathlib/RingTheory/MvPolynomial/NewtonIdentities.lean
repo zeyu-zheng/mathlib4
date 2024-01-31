@@ -8,10 +8,7 @@ import Mathlib.Data.Finset.Card
 import Mathlib.Data.Fintype.Basic
 import Mathlib.Data.MvPolynomial.CommRing
 import Mathlib.Data.MvPolynomial.Rename
-import Mathlib.Data.Nat.Parity
-import Mathlib.RingTheory.MvPolynomial.Basic
 import Mathlib.RingTheory.MvPolynomial.Symmetric
-import Mathlib.RingTheory.Polynomial.Basic
 
 /-!
 # Newton's Identities
@@ -156,7 +153,6 @@ private theorem sum_filter_pairs_eq_sum_powersetCard_mem_filter_antidiagonal_sum
   have : card p.fst ≤ k := by apply le_of_lt; aesop
   aesop
 
-set_option maxHeartbeats 400000 in
 private theorem sum_filter_pairs_eq_sum_filter_antidiagonal_powersetCard_sum (k : ℕ)
     (f : Finset σ × σ → MvPolynomial σ R) :
     (∑ t in filter (fun t ↦ card t.fst < k) (pairs σ k), f t) =

@@ -4,11 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Scott Morrison, Ainsley Pahljina
 -/
 import Mathlib.Data.Nat.Parity
-import Mathlib.Data.PNat.Interval
 import Mathlib.Data.ZMod.Basic
 import Mathlib.GroupTheory.OrderOfElement
 import Mathlib.RingTheory.Fintype
 import Mathlib.Tactic.IntervalCases
+import Mathlib.Algebra.GroupPower.Order
 
 #align_import number_theory.lucas_lehmer from "leanprover-community/mathlib"@"10b4e499f43088dd3bb7b5796184ad5216648ab1"
 
@@ -153,7 +153,7 @@ theorem residue_eq_zero_iff_sMod_eq_zero (p : ℕ) (w : 1 < p) :
     intro h
     simp? [ZMod.int_cast_zmod_eq_zero_iff_dvd] at h says
       simp only [ZMod.int_cast_zmod_eq_zero_iff_dvd, gt_iff_lt, zero_lt_two, pow_pos, cast_pred,
-        cast_pow, cast_ofNat] at h
+        cast_pow, cast_ofNat, Int.isPosValue] at h
     apply Int.eq_zero_of_dvd_of_nonneg_of_lt _ _ h <;> clear h
     · exact sMod_nonneg _ (by positivity) _
     · exact sMod_lt _ (by positivity) _
@@ -418,7 +418,6 @@ theorem two_lt_q (p' : ℕ) : 2 < q (p' + 2) := by
     exact Nat.two_not_dvd_two_mul_sub_one (Nat.one_le_two_pow _)
 #align lucas_lehmer.two_lt_q LucasLehmer.two_lt_q
 
-set_option maxHeartbeats 400000 in
 theorem ω_pow_formula (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) :
     ∃ k : ℤ,
       (ω : X (q (p' + 2))) ^ 2 ^ (p' + 1) =
@@ -427,7 +426,7 @@ theorem ω_pow_formula (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) :
   rw [sZMod_eq_s p'] at h
   simp? [ZMod.int_cast_zmod_eq_zero_iff_dvd] at h says
     simp only [add_tsub_cancel_right, ZMod.int_cast_zmod_eq_zero_iff_dvd, gt_iff_lt, zero_lt_two,
-      pow_pos, cast_pred, cast_pow, cast_ofNat] at h
+      pow_pos, cast_pred, cast_pow, cast_ofNat, Int.isPosValue] at h
   cases' h with k h
   use k
   replace h := congr_arg (fun n : ℤ => (n : X (q (p' + 2)))) h
@@ -516,7 +515,6 @@ export LucasLehmer (LucasLehmerTest lucasLehmerResidue)
 
 open LucasLehmer
 
-set_option maxHeartbeats 400000 in
 theorem lucas_lehmer_sufficiency (p : ℕ) (w : 1 < p) : LucasLehmerTest p → (mersenne p).Prime := by
   let p' := p - 2
   have z : p = p' + 2 := (tsub_eq_iff_eq_add_of_le w.nat_succ_le).mp rfl
