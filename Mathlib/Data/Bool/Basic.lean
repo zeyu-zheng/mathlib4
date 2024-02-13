@@ -65,7 +65,7 @@ theorem decide_or (p q : Prop) [Decidable p] [Decidable q] : decide (p ∨ q) = 
 
 #align bool.to_bool_eq decide_eq_decide
 
-theorem not_false' : ¬false := fun.
+theorem not_false' : ¬false := nofun
 #align bool.not_ff Bool.not_false'
 
 -- Porting note: new theorem
@@ -104,7 +104,7 @@ theorem exists_bool {p : Bool → Prop} : (∃ b, p b) ↔ p false ∨ p true :=
   ⟨fun ⟨b, h⟩ ↦ by cases b; exact Or.inl h; exact Or.inr h,
   fun h ↦ match h with
   | .inl h => ⟨_, h⟩
-  | .inr h => ⟨_, h⟩ ⟩
+  | .inr h => ⟨_, h⟩⟩
 #align bool.exists_bool Bool.exists_bool
 
 /-- If `p b` is decidable for all `b : Bool`, then `∀ b, p b` is decidable -/
@@ -261,6 +261,8 @@ instance linearOrder : LinearOrder Bool where
   le_antisymm := by decide
   le_total := by decide
   decidableLE := inferInstance
+  decidableEq := inferInstance
+  decidableLT := inferInstance
   lt_iff_le_not_le := by decide
   max_def := by decide
   min_def := by decide

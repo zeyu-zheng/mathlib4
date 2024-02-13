@@ -5,8 +5,6 @@ Authors: Tomas Skrivan
 -/
 import Lean
 
-import Std.Data.Array.Init.Basic
-
 /-!
 ## `funProp` missing function from standard library
 -/
@@ -17,7 +15,7 @@ open Lean Meta
 namespace Meta.FunProp
 set_option autoImplicit true
 
-/-- Check if `a` can be obtained by removing elemnts from `b`. -/
+/-- Check if `a` can be obtained by removing elements from `b`. -/
 def isOrderedSubsetOf {α} [Inhabited α] [DecidableEq α] (a b : Array α) : Bool :=
   Id.run do
   if a.size > b.size then
@@ -96,7 +94,7 @@ def mkProdProj (x : Expr) (i : Nat) (n : Nat) : MetaM Expr := do
   | 0, _ => mkAppM ``Prod.fst #[x]
   | i'+1, n'+1 => mkProdProj (← withTransparency .all <| mkAppM ``Prod.snd #[x]) i' n'
 
-/-- For an elemnt of a product type(of size`n`) `xs` create an array of all possible projections
+/-- For an element of a product type(of size`n`) `xs` create an array of all possible projections
 i.e. `#[xs.1, xs.2.1, xs.2.2.1, ..., xs.2..2]` -/
 def mkProdSplitElem (xs : Expr) (n : Nat) : MetaM (Array Expr) :=
   (Array.range n)

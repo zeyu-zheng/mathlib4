@@ -82,10 +82,8 @@ theorem coe_sub (m n : ℕ) : ↑(m - n) = (m - n : ℕ∞) :=
   rfl
 #align enat.coe_sub ENat.coe_sub
 
---Porting note: `simp` and `norm_cast` can prove it
---@[simp, norm_cast]
-theorem coe_mul (m n : ℕ) : ↑(m * n) = (m * n : ℕ∞) :=
-  WithTop.coe_mul
+-- Eligible for dsimp
+@[simp, nolint simpNF] lemma coe_mul (m n : ℕ) : ↑(m * n) = (m * n : ℕ∞) := rfl
 #align enat.coe_mul ENat.coe_mul
 
 @[simp] theorem mul_top (hm : m ≠ 0) : m * ⊤ = ⊤ := WithTop.mul_top hm
@@ -138,12 +136,12 @@ theorem recTopCoe_coe {C : ℕ∞ → Sort*} (d : C ⊤) (f : ∀ a : ℕ, C a) 
 --Porting note: new theorem copied from `WithTop`
 @[simp]
 theorem top_ne_coe (a : ℕ) : ⊤ ≠ (a : ℕ∞) :=
-  fun.
+  nofun
 
 --Porting note: new theorem copied from `WithTop`
 @[simp]
 theorem coe_ne_top (a : ℕ) : (a : ℕ∞) ≠ ⊤ :=
-  fun.
+  nofun
 
 --Porting note: new theorem copied from `WithTop`
 @[simp]
