@@ -546,7 +546,7 @@ end OneMemClass
 variable {A : Type*} [SetLike A M] [hA : SubmonoidClass A M] (S' : A)
 
 /-- An `AddSubmonoid` of an `AddMonoid` inherits a scalar multiplication. -/
-instance AddSubmonoidClass.nSMul {M} [AddMonoid M] {A : Type*} [SetLike A M]
+instance (priority := 75) AddSubmonoidClass.nSMul {M} [AddMonoid M] {A : Type*} [SetLike A M]
     [AddSubmonoidClass A M] (S : A) : SMul ℕ S :=
   ⟨fun n a => ⟨n • a.1, nsmul_mem a.2 n⟩⟩
 #align add_submonoid_class.has_nsmul AddSubmonoidClass.nSMul

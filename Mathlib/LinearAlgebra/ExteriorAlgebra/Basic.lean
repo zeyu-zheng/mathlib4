@@ -73,7 +73,7 @@ variable (n : ℕ) (N : Type u2) [AddCommGroup N] [Module R N]
 
 /-- Definition of the `n`th exterior power of a `R`-module `N`. We introduce the notation
 `Λ[R]^n N` for `ExteriorPower R n N`. -/
-@[reducible]
+@[reducible, inline]
 def ExteriorPower := (LinearMap.range (ι R : N →ₗ[R] ExteriorAlgebra R N) ^ n)
 
 @[inherit_doc]

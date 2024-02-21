@@ -190,7 +190,7 @@ def mulHom : (⨁ i, A i) →+ (⨁ i, A i) →+ ⨁ i, A i :=
 #align direct_sum.mul_hom DirectSum.mulHom
 
 instance : NonUnitalNonAssocSemiring (⨁ i, A i) :=
-  { (inferInstance : AddCommMonoid _) with
+  { --(inferInstance : AddCommMonoid _) with
     mul := fun a b => mulHom A a b
     -- Porting note: these are no longer needed
     -- zero := 0
@@ -262,7 +262,7 @@ private theorem mul_assoc (a b c : ⨁ i, A i) : a * b * c = a * (b * c) := by
 
 /-- The `Semiring` structure derived from `GSemiring A`. -/
 instance semiring : Semiring (⨁ i, A i) :=
-  { (inferInstance : NonUnitalNonAssocSemiring _) with
+  { -- (inferInstance : NonUnitalNonAssocSemiring _) with
     one := 1
     -- Porting note: not required in now
     -- mul := (· * ·)
@@ -360,8 +360,7 @@ variable [∀ i, AddCommGroup (A i)] [Add ι] [GNonUnitalNonAssocSemiring A]
 
 /-- The `Ring` derived from `GSemiring A`. -/
 instance nonAssocRing : NonUnitalNonAssocRing (⨁ i, A i) :=
-  { (inferInstance : NonUnitalNonAssocSemiring (⨁ i, A i)),
-    (inferInstance : AddCommGroup (⨁ i, A i)) with }
+  { instAddCommGroupDirectSumToAddCommMonoid _, instNonUnitalNonAssocSemiringDirectSum _ with }
 #align direct_sum.non_assoc_ring DirectSum.nonAssocRing
 
 end NonUnitalNonAssocRing
@@ -373,8 +372,7 @@ variable [∀ i, AddCommGroup (A i)] [AddMonoid ι] [GRing A]
 -- Porting note: overspecified fields in ml4
 /-- The `Ring` derived from `GSemiring A`. -/
 instance ring : Ring (⨁ i, A i) :=
-  { DirectSum.semiring A,
-    (inferInstance : AddCommGroup (⨁ i, A i)) with
+  { DirectSum.semiring A, instAddCommGroupDirectSumToAddCommMonoid _ with
     toIntCast.intCast := fun z => of A 0 <| (GRing.intCast z)
     intCast_ofNat := fun _ => congrArg (of A 0) <| GRing.intCast_ofNat _
     intCast_negSucc := fun _ =>
@@ -389,8 +387,7 @@ variable [∀ i, AddCommGroup (A i)] [AddCommMonoid ι] [GCommRing A]
 
 /-- The `CommRing` derived from `GCommSemiring A`. -/
 instance commRing : CommRing (⨁ i, A i) :=
-  { DirectSum.ring A,
-    DirectSum.commSemiring A with }
+  { DirectSum.ring A, DirectSum.commSemiring A with }
 #align direct_sum.comm_ring DirectSum.commRing
 
 end CommRing
@@ -697,7 +694,7 @@ example {R : Type*} [AddMonoid ι] [Semiring R] (i j : ι) (a b : R) :
 -/
 instance CommSemiring.directSumGCommSemiring {R : Type*} [AddCommMonoid ι] [CommSemiring R] :
     DirectSum.GCommSemiring fun _ : ι => R :=
-  { CommMonoid.gCommMonoid ι, Semiring.directSumGSemiring ι with }
+  { Semiring.directSumGSemiring ι, CommMonoid.gCommMonoid ι with }
 #align comm_semiring.direct_sum_gcomm_semiring CommSemiring.directSumGCommSemiring
 
 end Uniform

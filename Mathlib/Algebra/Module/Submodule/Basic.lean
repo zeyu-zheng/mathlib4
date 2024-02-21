@@ -40,6 +40,9 @@ structure Submodule (R : Type u) (M : Type v) [Semiring R] [AddCommMonoid M] [Mo
   AddSubmonoid M, SubMulAction R M : Type v
 #align submodule Submodule
 
+-- See note [reducible non-instances]
+attribute [reducible] Submodule.toAddSubmonoid Submodule.toSubMulAction
+
 /-- Reinterpret a `Submodule` as an `AddSubmonoid`. -/
 add_decl_doc Submodule.toAddSubmonoid
 #align submodule.to_add_submonoid Submodule.toAddSubmonoid
@@ -57,7 +60,7 @@ instance setLike : SetLike (Submodule R M) M where
   coe_injective' p q h := by cases p; cases q; congr; exact SetLike.coe_injective' h
 #align submodule.set_like Submodule.setLike
 
-instance addSubmonoidClass : AddSubmonoidClass (Submodule R M) M where
+instance (priority := 75) addSubmonoidClass : AddSubmonoidClass (Submodule R M) M where
   zero_mem _ := AddSubmonoid.zero_mem' _
   add_mem := AddSubsemigroup.add_mem' _
 #align submodule.add_submonoid_class Submodule.addSubmonoidClass
@@ -334,7 +337,7 @@ instance addCommMonoid : AddCommMonoid p :=
 #align submodule.add_comm_monoid Submodule.addCommMonoid
 
 instance module' [Semiring S] [SMul S R] [Module S M] [IsScalarTower S R M] : Module S p :=
-  { (show MulAction S p from p.toSubMulAction.mulAction') with
+  { p.toSubMulAction.mulAction' with
     smul_zero := fun a => by ext; simp
     zero_smul := fun a => by ext; simp
     add_smul := fun a b x => by ext; simp [add_smul]
@@ -394,7 +397,7 @@ variable (p p' : Submodule R M)
 
 variable {r : R} {x y : M}
 
-instance addSubgroupClass [Module R M] : AddSubgroupClass (Submodule R M) M :=
+instance (priority := 75) addSubgroupClass [Module R M] : AddSubgroupClass (Submodule R M) M :=
   { Submodule.addSubmonoidClass with neg_mem := fun p {_} => p.toSubMulAction.neg_mem }
 #align submodule.add_subgroup_class Submodule.addSubgroupClass
 
@@ -473,7 +476,8 @@ theorem sub_mem_iff_right (hx : x ∈ p) : x - y ∈ p ↔ y ∈ p := by
 #align submodule.sub_mem_iff_right Submodule.sub_mem_iff_right
 
 instance addCommGroup : AddCommGroup p :=
-  { p.toAddSubgroup.toAddCommGroup with }
+  { p.toAddSubgroup.toAddGroup with
+    add_comm := add_comm }
 #align submodule.add_comm_group Submodule.addCommGroup
 
 -- See `neg_coe_set`
