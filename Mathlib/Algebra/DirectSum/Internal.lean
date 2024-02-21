@@ -114,7 +114,8 @@ instance gsemiring [AddMonoid ι] [Semiring R] [SetLike σ R] [AddSubmonoidClass
 /-- Build a `DirectSum.GCommSemiring` instance for a collection of additive submonoids. -/
 instance gcommSemiring [AddCommMonoid ι] [CommSemiring R] [SetLike σ R] [AddSubmonoidClass σ R]
     (A : ι → σ) [SetLike.GradedMonoid A] : DirectSum.GCommSemiring fun i => A i :=
-  { SetLike.gCommMonoid A, SetLike.gsemiring A with }
+  { SetLike.gsemiring A with
+    mul_comm := mul_comm }
 #align set_like.gcomm_semiring SetLike.gcommSemiring
 
 /-- Build a `DirectSum.GRing` instance for a collection of additive subgroups. -/
@@ -129,7 +130,8 @@ instance gring [AddMonoid ι] [Ring R] [SetLike σ R] [AddSubgroupClass σ R] (A
 /-- Build a `DirectSum.GCommRing` instance for a collection of additive submonoids. -/
 instance gcommRing [AddCommMonoid ι] [CommRing R] [SetLike σ R] [AddSubgroupClass σ R] (A : ι → σ)
     [SetLike.GradedMonoid A] : DirectSum.GCommRing fun i => A i :=
-  { SetLike.gCommMonoid A, SetLike.gring A with }
+  { SetLike.gring A with
+    mul_comm := mul_comm }
 #align set_like.gcomm_ring SetLike.gcommRing
 
 end SetLike

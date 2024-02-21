@@ -205,17 +205,17 @@ theorem sum_support_decompose [∀ (i) (x : ℳ i), Decidable (x ≠ 0)] (r : M)
 
 end AddCommMonoid
 
-/-- The `-` in the statements below doesn't resolve without this line.
-
-This seems to be a problem of synthesized vs inferred typeclasses disagreeing. If we replace
-the statement of `decompose_neg` with `@Eq (⨁ i, ℳ i) (decompose ℳ (-x)) (-decompose ℳ x)`
-instead of `decompose ℳ (-x) = -decompose ℳ x`, which forces the typeclasses needed by `⨁ i, ℳ i`
-to be found by unification rather than synthesis, then everything works fine without this
-instance. -/
-instance addCommGroupSetLike [AddCommGroup M] [SetLike σ M] [AddSubgroupClass σ M] (ℳ : ι → σ) :
-    AddCommGroup (⨁ i, ℳ i) := by infer_instance
-#align direct_sum.add_comm_group_set_like DirectSum.addCommGroupSetLike
-
+-- /-- The `-` in the statements below doesn't resolve without this line.
+--
+-- This seems to be a problem of synthesized vs inferred typeclasses disagreeing. If we replace
+-- the statement of `decompose_neg` with `@Eq (⨁ i, ℳ i) (decompose ℳ (-x)) (-decompose ℳ x)`
+-- instead of `decompose ℳ (-x) = -decompose ℳ x`, which forces the typeclasses needed by `⨁ i, ℳ i`
+-- to be found by unification rather than synthesis, then everything works fine without this
+-- instance. -/
+-- instance addCommGroupSetLike [AddCommGroup M] [SetLike σ M] [AddSubgroupClass σ M] (ℳ : ι → σ) :
+--     AddCommGroup (⨁ i, ℳ i) := by infer_instance
+-- #align direct_sum.add_comm_group_set_like DirectSum.addCommGroupSetLike
+--
 section AddCommGroup
 
 variable [DecidableEq ι] [AddCommGroup M]
