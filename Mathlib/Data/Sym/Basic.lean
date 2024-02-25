@@ -29,6 +29,8 @@ symmetric powers
 
 -/
 
+set_option autoImplicit true
+
 
 open Function
 
@@ -37,28 +39,28 @@ as a subtype of `Multiset` since these are well developed in the
 library.  We also give a definition `Sym.sym'` in terms of vectors, and we
 show these are equivalent in `Sym.symEquivSym'`.
 -/
-def Sym (α : Type _) (n : ℕ) :=
+def Sym (α : Type*) (n : ℕ) :=
   { s : Multiset α // Multiset.card s = n }
 #align sym Sym
 
 --Porting note: new definition
 /-- The canonical map to `Multiset α` that forgets that `s` has length `n` -/
-@[coe] def Sym.toMultiset {α : Type _} {n : ℕ} (s : Sym α n) : Multiset α :=
+@[coe] def Sym.toMultiset {α : Type*} {n : ℕ} (s : Sym α n) : Multiset α :=
   s.1
 
-instance Sym.hasCoe (α : Type _) (n : ℕ) : CoeOut (Sym α n) (Multiset α) :=
+instance Sym.hasCoe (α : Type*) (n : ℕ) : CoeOut (Sym α n) (Multiset α) :=
   ⟨Sym.toMultiset⟩
 #align sym.has_coe Sym.hasCoe
 
 -- Porting note: instance needed for Data.Finset.Sym
-instance [DecidableEq α]: DecidableEq (Sym α n) := Subtype.instDecidableEqSubtype
+instance [DecidableEq α] : DecidableEq (Sym α n) := Subtype.instDecidableEqSubtype
 
 /-- This is the `List.Perm` setoid lifted to `Vector`.
 
 See note [reducible non-instances].
 -/
 @[reducible]
-def Vector.Perm.isSetoid (α : Type _) (n : ℕ) : Setoid (Vector α n) :=
+def Vector.Perm.isSetoid (α : Type*) (n : ℕ) : Setoid (Vector α n) :=
   (List.isSetoid α).comap Subtype.val
 #align vector.perm.is_setoid Vector.Perm.isSetoid
 
@@ -66,7 +68,7 @@ attribute [local instance] Vector.Perm.isSetoid
 
 namespace Sym
 
-variable {α β : Type _} {n n' m : ℕ} {s : Sym α n} {a b : α}
+variable {α β : Type*} {n n' m : ℕ} {s : Sym α n} {a b : α}
 
 theorem coe_injective : Injective ((↑) : Sym α n → Multiset α) :=
   Subtype.coe_injective
@@ -144,15 +146,15 @@ symmetric power.
 instance : Coe (Vector α n) (Sym α n) where coe x := ofVector x
 
 @[simp]
-theorem of_vector_nil : ↑(Vector.nil : Vector α 0) = (Sym.nil : Sym α 0) :=
+theorem ofVector_nil : ↑(Vector.nil : Vector α 0) = (Sym.nil : Sym α 0) :=
   rfl
-#align sym.of_vector_nil Sym.of_vector_nil
+#align sym.of_vector_nil Sym.ofVector_nil
 
 @[simp]
-theorem of_vector_cons (a : α) (v : Vector α n) : ↑(Vector.cons a v) = a ::ₛ (↑v : Sym α n) := by
+theorem ofVector_cons (a : α) (v : Vector α n) : ↑(Vector.cons a v) = a ::ₛ (↑v : Sym α n) := by
   cases v
   rfl
-#align sym.of_vector_cons Sym.of_vector_cons
+#align sym.of_vector_cons Sym.ofVector_cons
 
 /-- `α ∈ s` means that `a` appears as one of the factors in `s`.
 -/
@@ -169,6 +171,10 @@ theorem mem_mk (a : α) (s : Multiset α) (h : Multiset.card s = n) : a ∈ mk s
 #align sym.mem_mk Sym.mem_mk
 
 @[simp]
+theorem not_mem_nil (a : α) : ¬ a ∈ (nil : Sym α 0) :=
+  Multiset.not_mem_zero a
+
+@[simp]
 theorem mem_cons : a ∈ b ::ₛ s ↔ a = b ∨ a ∈ s :=
   Multiset.mem_cons
 #align sym.mem_cons Sym.mem_cons
@@ -182,7 +188,7 @@ theorem mem_cons_of_mem (h : a ∈ s) : a ∈ b ::ₛ s :=
   Multiset.mem_cons_of_mem h
 #align sym.mem_cons_of_mem Sym.mem_cons_of_mem
 
---@[simp] Porting note: simp can prove it
+--@[simp] Porting note (#10618): simp can prove it
 theorem mem_cons_self (a : α) (s : Sym α n) : a ∈ a ::ₛ s :=
   Multiset.mem_cons_self a s.1
 #align sym.mem_cons_self Sym.mem_cons_self
@@ -193,6 +199,7 @@ theorem cons_of_coe_eq (a : α) (v : Vector α n) : a ::ₛ (↑v : Sym α n) = 
     rfl
 #align sym.cons_of_coe_eq Sym.cons_of_coe_eq
 
+open scoped List in
 theorem sound {a b : Vector α n} (h : a.val ~ b.val) : (↑a : Sym α n) = ↑b :=
   Subtype.ext <| Quotient.sound h
 #align sym.sound Sym.sound
@@ -230,13 +237,13 @@ theorem erase_cons_head [DecidableEq α] (s : Sym α n) (a : α)
 
 /-- Another definition of the nth symmetric power, using vectors modulo permutations. (See `Sym`.)
 -/
-def Sym' (α : Type _) (n : ℕ) :=
+def Sym' (α : Type*) (n : ℕ) :=
   Quotient (Vector.Perm.isSetoid α n)
 #align sym.sym' Sym.Sym'
 
 /-- This is `cons` but for the alternative `Sym'` definition.
 -/
-def cons' {α : Type _} {n : ℕ} : α → Sym' α n → Sym' α (Nat.succ n) := fun a =>
+def cons' {α : Type*} {n : ℕ} : α → Sym' α n → Sym' α (Nat.succ n) := fun a =>
   Quotient.map (Vector.cons a) fun ⟨_, _⟩ ⟨_, _⟩ h => List.Perm.cons _ h
 #align sym.cons' Sym.cons'
 
@@ -245,17 +252,17 @@ scoped notation a " :: " b => cons' a b
 
 /-- Multisets of cardinality n are equivalent to length-n vectors up to permutations.
 -/
-def symEquivSym' {α : Type _} {n : ℕ} : Sym α n ≃ Sym' α n :=
+def symEquivSym' {α : Type*} {n : ℕ} : Sym α n ≃ Sym' α n :=
   Equiv.subtypeQuotientEquivQuotientSubtype _ _ (fun _ => by rfl) fun _ _ => by rfl
 #align sym.sym_equiv_sym' Sym.symEquivSym'
 
-theorem cons_equiv_eq_equiv_cons (α : Type _) (n : ℕ) (a : α) (s : Sym α n) :
+theorem cons_equiv_eq_equiv_cons (α : Type*) (n : ℕ) (a : α) (s : Sym α n) :
     (a::symEquivSym' s) = symEquivSym' (a ::ₛ s) := by
   rcases s with ⟨⟨l⟩, _⟩
   rfl
 #align sym.cons_equiv_eq_equiv_cons Sym.cons_equiv_eq_equiv_cons
 
-instance : Zero (Sym α 0) :=
+instance instZeroSym : Zero (Sym α 0) :=
   ⟨⟨0, rfl⟩⟩
 
 instance : EmptyCollection (Sym α 0) :=
@@ -296,6 +303,16 @@ theorem exists_mem (s : Sym α n.succ) : ∃ a, a ∈ s :=
   Multiset.card_pos_iff_exists_mem.1 <| s.2.symm ▸ n.succ_pos
 #align sym.exists_mem Sym.exists_mem
 
+theorem exists_cons_of_mem {s : Sym α (n + 1)} {a : α} (h : a ∈ s) : ∃ t, s = a ::ₛ t := by
+  obtain ⟨m, h⟩ := Multiset.exists_cons_of_mem h
+  have : Multiset.card m = n := by
+    apply_fun Multiset.card at h
+    rw [s.2, Multiset.card_cons, add_left_inj] at h
+    exact h.symm
+  use ⟨m, this⟩
+  apply Subtype.ext
+  exact h
+
 theorem exists_eq_cons_of_succ (s : Sym α n.succ) : ∃ (a : α) (s' : Sym α n), s = a ::ₛ s' := by
   obtain ⟨a, ha⟩ := exists_mem s
   classical exact ⟨a, s.erase a ha, (cons_erase ha).symm⟩
@@ -313,7 +330,7 @@ theorem eq_replicate_of_subsingleton [Subsingleton α] (a : α) {n : ℕ} (s : S
 instance [Subsingleton α] (n : ℕ) : Subsingleton (Sym α n) :=
   ⟨by
     cases n
-    · simp
+    · simp [eq_iff_true_of_subsingleton]
     · intro s s'
       obtain ⟨b, -⟩ := exists_mem s
       rw [eq_replicate_of_subsingleton b s', eq_replicate_of_subsingleton b s]⟩
@@ -359,16 +376,16 @@ theorem mem_map {n : ℕ} {f : α → β} {b : β} {l : Sym α n} :
 
 /-- Note: `Sym.map_id` is not simp-normal, as simp ends up unfolding `id` with `Sym.map_congr` -/
 @[simp]
-theorem map_id' {α : Type _} {n : ℕ} (s : Sym α n) : Sym.map (fun x : α => x) s = s := by
+theorem map_id' {α : Type*} {n : ℕ} (s : Sym α n) : Sym.map (fun x : α => x) s = s := by
   ext; simp [Sym.map]; rfl
 #align sym.map_id' Sym.map_id'
 
-theorem map_id {α : Type _} {n : ℕ} (s : Sym α n) : Sym.map id s = s := by
+theorem map_id {α : Type*} {n : ℕ} (s : Sym α n) : Sym.map id s = s := by
   ext; simp [Sym.map]; rfl
 #align sym.map_id Sym.map_id
 
 @[simp]
-theorem map_map {α β γ : Type _} {n : ℕ} (g : β → γ) (f : α → β) (s : Sym α n) :
+theorem map_map {α β γ : Type*} {n : ℕ} (g : β → γ) (f : α → β) (s : Sym α n) :
     Sym.map g (Sym.map f s) = Sym.map (g ∘ f) s :=
   Subtype.ext <| by dsimp only [Sym.map]; simp
 #align sym.map_map Sym.map_map
@@ -407,8 +424,7 @@ theorem map_injective {f : α → β} (hf : Injective f) (n : ℕ) :
 /-- Mapping an equivalence `α ≃ β` using `Sym.map` gives an equivalence between `Sym α n` and
 `Sym β n`. -/
 @[simps]
-def equivCongr (e : α ≃ β) : Sym α n ≃ Sym β n
-    where
+def equivCongr (e : α ≃ β) : Sym α n ≃ Sym β n where
   toFun := map e
   invFun := map e.symm
   left_inv x := by rw [map_map, Equiv.symm_comp_self, map_id]
@@ -458,8 +474,7 @@ theorem attach_cons (x : α) (s : Sym α n) :
 
 /-- Change the length of a `Sym` using an equality.
 The simp-normal form is for the `cast` to be pushed outward. -/
-protected def cast {n m : ℕ} (h : n = m) : Sym α n ≃ Sym α m
-    where
+protected def cast {n m : ℕ} (h : n = m) : Sym α n ≃ Sym α m where
   toFun s := ⟨s.val, s.2.trans h⟩
   invFun s := ⟨s.val, s.2.trans h.symm⟩
   left_inv _ := Subtype.ext rfl
@@ -540,13 +555,13 @@ open Multiset
 Yields the number of copies `i` and a term of `Sym α (n - i)`. -/
 def filterNe [DecidableEq α] (a : α) (m : Sym α n) : Σi : Fin (n + 1), Sym α (n - i) :=
   ⟨⟨m.1.count a, (count_le_card _ _).trans_lt <| by rw [m.2, Nat.lt_succ_iff]⟩,
-    m.1.filter ((· ≠ ·) a),
+    m.1.filter (a ≠ ·),
     eq_tsub_of_add_eq <|
       Eq.trans
         (by
-          rw [← countp_eq_card_filter, add_comm]
+          rw [← countP_eq_card_filter, add_comm]
           simp only [eq_comm, Ne.def, count]
-          rw [← card_eq_countp_add_countp _ _])
+          rw [← card_eq_countP_add_countP _ _])
         m.2⟩
 #align sym.filter_ne Sym.filterNe
 
@@ -590,7 +605,7 @@ section Equiv
 /-! ### Combinatorial equivalences -/
 
 
-variable {α : Type _} {n : ℕ}
+variable {α : Type*} {n : ℕ}
 
 open Sym
 
@@ -667,8 +682,7 @@ end SymOptionSuccEquiv
 /-- The symmetric product over `Option` is a disjoint union over simpler symmetric products. -/
 --@[simps]
 def symOptionSuccEquiv [DecidableEq α] :
-    Sym (Option α) n.succ ≃ Sum (Sym (Option α) n) (Sym α n.succ)
-    where
+    Sym (Option α) n.succ ≃ Sum (Sym (Option α) n) (Sym α n.succ) where
   toFun := SymOptionSuccEquiv.encode
   invFun := SymOptionSuccEquiv.decode
   left_inv := SymOptionSuccEquiv.decode_encode

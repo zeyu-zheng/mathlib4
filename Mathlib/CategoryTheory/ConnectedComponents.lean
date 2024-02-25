@@ -22,6 +22,8 @@ particular `Decomposed J` is the category (definitionally) given by the sigma-ty
 components of `J`, and it is shown that this is equivalent to `J`.
 -/
 
+set_option autoImplicit true
+
 
 universe v₁ v₂ v₃ u₁ u₂
 
@@ -53,7 +55,7 @@ def Component (j : ConnectedComponents J) : Type u₁ :=
 instance : Category (Component (j : ConnectedComponents J)) :=
   FullSubcategory.category _
 
---porting note : it was originally @[simps (config := { rhsMd := semireducible })]
+--Porting note: it was originally @[simps (config := { rhsMd := semireducible })]
 /-- The inclusion functor from a connected component to the whole category. -/
 @[simps!]
 def Component.ι (j : ConnectedComponents J) : Component j ⥤ J :=
@@ -116,7 +118,7 @@ abbrev inclusion (j : ConnectedComponents J) : Component j ⥤ Decomposed J :=
   Sigma.incl _
 #align category_theory.inclusion CategoryTheory.inclusion
 
---porting note : it was originally @[simps (config := { rhsMd := semireducible })]
+--Porting note: it was originally @[simps (config := { rhsMd := semireducible })]
 /-- The forward direction of the equivalence between the decomposed category and the original. -/
 @[simps!]
 def decomposedTo (J : Type u₁) [Category.{v₁} J] : Decomposed J ⥤ J :=
@@ -134,9 +136,9 @@ instance : Full (decomposedTo J)
   preimage := by
     rintro ⟨j', X, hX⟩ ⟨k', Y, hY⟩ f
     dsimp at f
-    have : j' = k'
-    rw [← hX, ← hY, Quotient.eq'']
-    exact Relation.ReflTransGen.single (Or.inl ⟨f⟩)
+    have : j' = k' := by
+      rw [← hX, ← hY, Quotient.eq'']
+      exact Relation.ReflTransGen.single (Or.inl ⟨f⟩)
     subst this
     exact Sigma.SigmaHom.mk f
   witness := by

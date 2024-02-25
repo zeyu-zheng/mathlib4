@@ -6,7 +6,6 @@ Authors: Bhavik Mehta, Adam Topaz
 import Mathlib.CategoryTheory.ConcreteCategory.Basic
 import Mathlib.CategoryTheory.FullSubcategory
 import Mathlib.CategoryTheory.Skeletal
-import Mathlib.CategoryTheory.Elementwise
 import Mathlib.Data.Fintype.Card
 
 #align_import category_theory.Fintype from "leanprover-community/mathlib"@"c3019c79074b0619edb4b27553a91b2e82242395"
@@ -37,11 +36,11 @@ set_option linter.uppercaseLean3 false in
 
 namespace FintypeCat
 
-instance : CoeSort FintypeCat (Type _) :=
+instance : CoeSort FintypeCat (Type*) :=
   Bundled.coeSort
 
 /-- Construct a bundled `FintypeCat` from the underlying type and typeclass. -/
-def of (X : Type _) [Fintype X] : FintypeCat :=
+def of (X : Type*) [Fintype X] : FintypeCat :=
   Bundled.of X
 set_option linter.uppercaseLean3 false in
 #align Fintype.of FintypeCat.of
@@ -57,7 +56,7 @@ instance : Category FintypeCat :=
 
 /-- The fully faithful embedding of `FintypeCat` into the category of types. -/
 @[simps!]
-def incl : FintypeCat ⥤ Type _ :=
+def incl : FintypeCat ⥤ Type* :=
   inducedFunctor _
 set_option linter.uppercaseLean3 false in
 #align Fintype.incl FintypeCat.incl
@@ -69,6 +68,9 @@ instance concreteCategoryFintype : ConcreteCategory FintypeCat :=
   ⟨incl⟩
 set_option linter.uppercaseLean3 false in
 #align Fintype.concrete_category_Fintype FintypeCat.concreteCategoryFintype
+
+/- Help typeclass inference infer fullness of forgetful functor. -/
+instance : Full (forget FintypeCat) := inferInstanceAs <| Full FintypeCat.incl
 
 @[simp]
 theorem id_apply (X : FintypeCat) (x : X) : (𝟙 X : X → X) x = x :=
@@ -82,7 +84,15 @@ theorem comp_apply {X Y Z : FintypeCat} (f : X ⟶ Y) (g : Y ⟶ Z) (x : X) : (f
 set_option linter.uppercaseLean3 false in
 #align Fintype.comp_apply FintypeCat.comp_apply
 
--- porting note: added to ease automation
+@[simp]
+lemma hom_inv_id_apply {X Y : FintypeCat} (f : X ≅ Y) (x : X) : f.inv (f.hom x) = x :=
+  congr_fun f.hom_inv_id x
+
+@[simp]
+lemma inv_hom_id_apply {X Y : FintypeCat} (f : X ≅ Y) (y : Y) : f.hom (f.inv y) = y :=
+  congr_fun f.inv_hom_id y
+
+-- Porting note (#10688): added to ease automation
 @[ext]
 lemma hom_ext {X Y : FintypeCat} (f g : X ⟶ Y) (h : ∀ x, f x = g x) : f = g := by
   funext
@@ -213,5 +223,6 @@ noncomputable def isSkeleton : IsSkeletonOf FintypeCat Skeleton Skeleton.incl wh
   eqv := by infer_instance
 set_option linter.uppercaseLean3 false in
 #align Fintype.is_skeleton FintypeCat.isSkeleton
+
 
 end FintypeCat

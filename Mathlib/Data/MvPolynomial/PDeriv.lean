@@ -25,9 +25,9 @@ It is based purely on the polynomial exponents and coefficients.
 
 As in other polynomial files, we typically use the notation:
 
-+ `σ : Type _` (indexing the variables)
++ `σ : Type*` (indexing the variables)
 
-+ `R : Type _` `[CommRing R]` (the coefficients)
++ `R : Type*` `[CommRing R]` (the coefficients)
 
 + `s : σ →₀ ℕ`, a function from `σ` to `ℕ` which is zero away from a finite set.
 This will give rise to a monomial in `MvPolynomial σ R` which mathematicians might call `X^s`
@@ -119,9 +119,13 @@ theorem pderiv_mul {i : σ} {f g : MvPolynomial σ R} :
   simp only [(pderiv i).leibniz f g, smul_eq_mul, mul_comm, add_comm]
 #align mv_polynomial.pderiv_mul MvPolynomial.pderiv_mul
 
--- @[simp] -- Porting note: simp can prove this
-theorem pderiv_C_mul {f : MvPolynomial σ R} {i : σ} : pderiv i (C a * f) = C a * pderiv i f :=
-  (derivation_C_mul _ _ _).trans C_mul'.symm
+theorem pderiv_pow {i : σ} {f : MvPolynomial σ R} {n : ℕ} :
+    pderiv i (f ^ n) = n * f ^ (n - 1) * pderiv i f := by
+  rw [(pderiv i).leibniz_pow f n, nsmul_eq_mul, smul_eq_mul, mul_assoc]
+
+-- @[simp] -- Porting note (#10618): simp can prove this
+theorem pderiv_C_mul {f : MvPolynomial σ R} {i : σ} : pderiv i (C a * f) = C a * pderiv i f := by
+  rw [C_mul', Derivation.map_smul, C_mul']
 set_option linter.uppercaseLean3 false in
 #align mv_polynomial.pderiv_C_mul MvPolynomial.pderiv_C_mul
 

@@ -3,7 +3,6 @@ Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathlib.Algebra.Group.Pi
 import Mathlib.Data.Fintype.Basic
 
 #align_import data.matrix.dmatrix from "leanprover-community/mathlib"@"9003f28797c0664a49e4179487267c494477d853"
@@ -24,7 +23,7 @@ def DMatrix (m : Type u) (n : Type u') [Fintype m] [Fintype n] (α : m → n →
   ∀ i j, α i j
 #align dmatrix DMatrix
 
-variable {l m n o : Type _} [Fintype l] [Fintype m] [Fintype n] [Fintype o]
+variable {l m n o : Type*} [Fintype l] [Fintype m] [Fintype n] [Fintype o]
 
 variable {α : m → n → Type v}
 

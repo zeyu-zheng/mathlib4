@@ -28,7 +28,7 @@ namespace CategoryTheory
 
 open CategoryTheory.Limits
 
-variable {C : Type _} [Category C]
+variable {C : Type*} [Category C]
 
 variable [Preadditive C]
 
@@ -82,7 +82,7 @@ open FiniteDimensional
 
 section
 
-variable (𝕜 : Type _) [DivisionRing 𝕜]
+variable (𝕜 : Type*) [DivisionRing 𝕜]
 
 /-- Part of **Schur's lemma** for `𝕜`-linear categories:
 the hom space between two non-isomorphic simple objects is 0-dimensional.
@@ -93,13 +93,13 @@ theorem finrank_hom_simple_simple_eq_zero_of_not_iso [HasKernels C] [Linear 𝕜
     subsingleton_of_forall_eq (0 : X ⟶ Y) fun f => by
       have p := not_congr (isIso_iff_nonzero f)
       simp only [Classical.not_not, Ne.def] at p
-      refine' p.mp fun _ => h (asIso f)
+      exact p.mp fun _ => h (asIso f)
   finrank_zero_of_subsingleton
 #align category_theory.finrank_hom_simple_simple_eq_zero_of_not_iso CategoryTheory.finrank_hom_simple_simple_eq_zero_of_not_iso
 
 end
 
-variable (𝕜 : Type _) [Field 𝕜]
+variable (𝕜 : Type*) [Field 𝕜]
 
 variable [IsAlgClosed 𝕜] [Linear 𝕜 C]
 
