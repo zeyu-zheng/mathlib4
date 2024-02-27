@@ -475,7 +475,8 @@ def fintypeOfFintypeImage (s : Set α) {f : α → β} {g} (I : IsPartialInv f g
 #align set.fintype_of_fintype_image Set.fintypeOfFintypeImage
 
 instance fintypeRange [DecidableEq α] (f : ι → α) [Fintype (PLift ι)] : Fintype (range f) :=
-  Fintype.ofFinset (Finset.univ.image <| f ∘ PLift.down) <| by simp [Equiv.plift.exists_congr_left]
+  Fintype.ofFinset (Finset.univ.image <| f ∘ PLift.down) <| by simp
+  -- v4.7.0-rc1 extra argument throws it off (works also with v4.6.0)
 #align set.fintype_range Set.fintypeRange
 
 instance fintypeMap {α β} [DecidableEq β] :
@@ -547,7 +548,7 @@ theorem finite_toSet (s : Finset α) : (s : Set α).Finite :=
   Set.toFinite _
 #align finset.finite_to_set Finset.finite_toSet
 
--- porting note: was @[simp], now `simp` can prove it
+-- Porting note (#10618): was @[simp], now `simp` can prove it
 theorem finite_toSet_toFinset (s : Finset α) : s.finite_toSet.toFinset = s := by
   rw [toFinite_toFinset, toFinset_coe]
 #align finset.finite_to_set_to_finset Finset.finite_toSet_toFinset
@@ -1163,7 +1164,7 @@ theorem eq_finite_iUnion_of_finite_subset_iUnion {ι} {s : ι → Set α} {t : S
     constructor
     · intro x_in
       rcases mem_iUnion.mp (hI x_in) with ⟨i, _, ⟨hi, rfl⟩, H⟩
-      refine' ⟨⟨i, hi⟩, ⟨H, x_in⟩⟩
+      exact ⟨⟨i, hi⟩, ⟨H, x_in⟩⟩
     · rintro ⟨i, -, H⟩
       exact H⟩
 #align set.eq_finite_Union_of_finite_subset_Union Set.eq_finite_iUnion_of_finite_subset_iUnion

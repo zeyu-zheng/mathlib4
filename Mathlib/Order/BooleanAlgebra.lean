@@ -620,7 +620,7 @@ instance (priority := 100) BooleanAlgebra.toBiheytingAlgebra : BiheytingAlgebra 
   hnot := compl
   le_himp_iff a b c := by rw [himp_eq, isCompl_compl.le_sup_right_iff_inf_left_le]
   himp_bot _ := _root_.himp_eq.trans bot_sup_eq
-  top_sdiff a := by rw [sdiff_eq, top_inf_eq]; rfl
+  top_sdiff _ := by rw [sdiff_eq, top_inf_eq]; rfl
 #align boolean_algebra.to_biheyting_algebra BooleanAlgebra.toBiheytingAlgebra
 
 @[simp]
@@ -852,6 +852,7 @@ protected def Function.Injective.generalizedBooleanAlgebra [Sup α] [Inf α] [Bo
     (map_sup : ∀ a b, f (a ⊔ b) = f a ⊔ f b) (map_inf : ∀ a b, f (a ⊓ b) = f a ⊓ f b)
     (map_bot : f ⊥ = ⊥) (map_sdiff : ∀ a b, f (a \ b) = f a \ f b) :
     GeneralizedBooleanAlgebra α where
+  __ := hf.distribLattice f map_sup map_inf
   __ := hf.generalizedCoheytingAlgebra f map_sup map_inf map_bot map_sdiff
   __ := hf.distribLattice f map_sup map_inf
   sup_inf_sdiff a b := hf <| by erw [map_sup, map_sdiff, map_inf, sup_inf_sdiff]

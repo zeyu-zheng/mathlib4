@@ -756,13 +756,13 @@ theorem countable_meas_pos_of_disjoint_of_meas_iUnion_ne_top₀ {ι : Type*} {_ 
   set fairmeas := fun n : ℕ => { i : ι | as n ≤ μ (As i) }
   have countable_union : posmeas = ⋃ n, fairmeas n := by
     have fairmeas_eq : ∀ n, fairmeas n = (fun i => μ (As i)) ⁻¹' Ici (as n) := fun n => by
-      simp only []
+      simp only [fairmeas]
       rfl
     simpa only [fairmeas_eq, posmeas_def, ← preimage_iUnion,
       iUnion_Ici_eq_Ioi_of_lt_of_tendsto (0 : ℝ≥0∞) (fun n => (as_mem n).1) as_lim]
   rw [countable_union]
   refine' countable_iUnion fun n => Finite.countable _
-  refine' finite_const_le_meas_of_disjoint_iUnion₀ μ (as_mem n).1 As_mble As_disj Union_As_finite
+  exact finite_const_le_meas_of_disjoint_iUnion₀ μ (as_mem n).1 As_mble As_disj Union_As_finite
 
 /-- If the union of disjoint measurable sets has finite measure, then there are only
 countably many members of the union whose measure is positive. -/
@@ -867,7 +867,7 @@ theorem measure_toMeasurable_inter_of_cover {s : Set α} (hs : MeasurableSet s) 
     let w n := toMeasurable μ (t ∩ v n)
     have hw : ∀ n, μ (w n) < ∞ := by
       intro n
-      simp_rw [measure_toMeasurable]
+      simp_rw [w, measure_toMeasurable]
       exact (h'v n).lt_top
     set t' := ⋃ n, toMeasurable μ (t ∩ disjointed w n) with ht'
     have tt' : t ⊆ t' :=
@@ -1176,6 +1176,11 @@ theorem _root_.IsCompact.measure_lt_top [TopologicalSpace α] {μ : Measure α}
     [IsFiniteMeasureOnCompacts μ] ⦃K : Set α⦄ (hK : IsCompact K) : μ K < ∞ :=
   IsFiniteMeasureOnCompacts.lt_top_of_isCompact hK
 #align is_compact.measure_lt_top IsCompact.measure_lt_top
+
+/-- A compact subset has finite measure for a measure which is finite on compacts. -/
+theorem _root_.IsCompact.measure_ne_top [TopologicalSpace α] {μ : Measure α}
+    [IsFiniteMeasureOnCompacts μ] ⦃K : Set α⦄ (hK : IsCompact K) : μ K ≠ ∞ :=
+  hK.measure_lt_top.ne
 
 /-- A bounded subset has finite measure for a measure which is finite on compact sets, in a
 proper space. -/

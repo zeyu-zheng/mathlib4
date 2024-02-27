@@ -6,7 +6,6 @@ Authors: Frédéric Dupuis, Eric Wieser
 import Mathlib.GroupTheory.Congruence
 import Mathlib.LinearAlgebra.Basic
 import Mathlib.LinearAlgebra.Multilinear.TensorProduct
-import Mathlib.Tactic.LibrarySearch
 
 #align_import linear_algebra.pi_tensor_product from "leanprover-community/mathlib"@"ce11c3c2a285bbe6937e26d9792fda4e51f3fe1a"
 
@@ -205,17 +204,19 @@ def liftAddHom (φ : (R × Π i, s i) → F)
         (AddCon.ker_rel _).2 <| by simp_rw [AddMonoidHom.map_add, add_comm]
 #align pi_tensor_product.lift_add_hom PiTensorProduct.liftAddHom
 
+/-- Induct using `tprodCoeff` -/
 @[elab_as_elim]
-protected theorem induction_on' {C : (⨂[R] i, s i) → Prop} (z : ⨂[R] i, s i)
-    (C1 : ∀ {r : R} {f : Π i, s i}, C (tprodCoeff R r f)) (Cp : ∀ {x y}, C x → C y → C (x + y)) :
-    C z := by
-  have C0 : C 0 := by
-    have h₁ := @C1 0 0
+protected theorem induction_on' {motive : (⨂[R] i, s i) → Prop} (z : ⨂[R] i, s i)
+    (tprodCoeff : ∀ (r : R) (f : Π i, s i), motive (tprodCoeff R r f))
+    (add : ∀ x y, motive x → motive y → motive (x + y)) :
+    motive z := by
+  have C0 : motive 0 := by
+    have h₁ := tprodCoeff 0 0
     rwa [zero_tprodCoeff] at h₁
   refine' AddCon.induction_on z fun x ↦ FreeAddMonoid.recOn x C0 _
   simp_rw [AddCon.coe_add]
-  refine' fun f y ih ↦ Cp _ ih
-  convert@C1 f.1 f.2
+  refine' fun f y ih ↦ add _ _ _ ih
+  convert tprodCoeff f.1 f.2
 #align pi_tensor_product.induction_on' PiTensorProduct.induction_on'
 
 section DistribMulAction
@@ -324,12 +325,14 @@ theorem tprodCoeff_eq_smul_tprod (z : R) (f : Π i, s i) : tprodCoeff R z f = z 
   conv_lhs => rw [this]
 #align pi_tensor_product.tprod_coeff_eq_smul_tprod PiTensorProduct.tprodCoeff_eq_smul_tprod
 
+/-- Induct using scaled versions of `PiTensorProduct.tprod`. -/
 @[elab_as_elim]
-protected theorem induction_on {C : (⨂[R] i, s i) → Prop} (z : ⨂[R] i, s i)
-    (C1 : ∀ {r : R} {f : Π i, s i}, C (r • tprod R f)) (Cp : ∀ {x y}, C x → C y → C (x + y)) :
-    C z := by
-  simp_rw [← tprodCoeff_eq_smul_tprod] at C1
-  exact PiTensorProduct.induction_on' z @C1 @Cp
+protected theorem induction_on {motive : (⨂[R] i, s i) → Prop} (z : ⨂[R] i, s i)
+    (smul_tprod : ∀ (r : R) (f : Π i, s i), motive (r • tprod R f))
+    (add : ∀ x y, motive x → motive y → motive (x + y)) :
+    motive z := by
+  simp_rw [← tprodCoeff_eq_smul_tprod] at smul_tprod
+  exact PiTensorProduct.induction_on' z smul_tprod add
 #align pi_tensor_product.induction_on PiTensorProduct.induction_on
 
 @[ext]
@@ -448,9 +451,11 @@ variable (R M)
 variable (s) in
 /-- Re-index the components of the tensor power by `e`.-/
 def reindex (e : ι ≃ ι₂) : (⨂[R] i : ι, s i) ≃ₗ[R] ⨂[R] i : ι₂, s (e.symm i) :=
-  let f := domDomCongrLinearEquiv' R R s (⨂[R] (i : ι₂), s (e.symm i)) e
-  let g := domDomCongrLinearEquiv' R R s (⨂[R] (i : ι), s i) e
-  LinearEquiv.ofLinear (lift <| f.symm <| tprod R) (lift <| g <| tprod R) (by aesop) (by aesop)
+  let __f := domDomCongrLinearEquiv' R R s (⨂[R] (i : ι₂), s (e.symm i)) e
+  let __g := domDomCongrLinearEquiv' R R s (⨂[R] (i : ι), s i) e
+  -- v4.7.0-rc1 issues - nightly-testing: aesop won't unfold: both sorries were `aesop`
+  LinearEquiv.ofLinear (lift <| __f.symm <| tprod R) (lift <| __g <| tprod R)
+  ( by aesop ) ( by aesop )
 #align pi_tensor_product.reindex PiTensorProduct.reindex
 
 end

@@ -151,7 +151,7 @@ theorem compExactValue_correctness_of_stream_eq_some :
         get?_of_eq_some_of_get?_intFractPair_stream_fr_ne_zero nth_stream_eq nth_fract_ne_zero
       rw [← ifp_n_fract_inv_eq_floor] at s_nth_eq
       suffices v = compExactValue ppconts pconts ifp_n.fr by
-        simpa [continuantsAux, s_nth_eq, compExactValue, nth_fract_ne_zero] using this
+        simpa [conts, continuantsAux, s_nth_eq, compExactValue, nth_fract_ne_zero] using this
       exact IH nth_stream_eq
     -- ifp_succ_n.fr ≠ 0
     · -- use the IH to show that the following equality suffices
@@ -180,7 +180,7 @@ theorem compExactValue_correctness_of_stream_eq_some :
           (ppA + ifp_n.fr⁻¹ * pA) / (ppB + ifp_n.fr⁻¹ * pB) := by
         -- unfold compExactValue and the convergent computation once
         field_simp [ifp_n_fract_ne_zero, compExactValue, nextContinuants, nextNumerator,
-          nextDenominator]
+          nextDenominator, ppA, ppB]
         ac_rfl
       rw [this]
       -- two calculations needed to show the claim
@@ -189,26 +189,29 @@ theorem compExactValue_correctness_of_stream_eq_some :
       have tmp_calc' :=
         compExactValue_correctness_of_stream_eq_some_aux_comp pB ppB ifp_succ_n_fr_ne_zero
       let f := Int.fract (1 / ifp_n.fr)
-      have f_ne_zero : f ≠ 0 := by simpa using ifp_succ_n_fr_ne_zero
+      have f_ne_zero : f ≠ 0 := by simpa [f] using ifp_succ_n_fr_ne_zero
       rw [inv_eq_one_div] at tmp_calc tmp_calc'
       -- Porting note: the `tmp_calc`s need to be massaged, and some processing after `ac_rfl` done,
       -- because `field_simp` is not as powerful
-      have hA : (↑⌊1 / ifp_n.fr⌋ * pA + ppA) + pA * f = pA * (1 / ifp_n.fr) + ppA := by
+      have hA : (↑⌊1 / ifp_n.fr⌋ * pA + ppA) + pA * f =
+          pA * (1 / ifp_n.fr) + ppA := by
         have := congrFun (congrArg HMul.hMul tmp_calc) f
         rwa [right_distrib, div_mul_cancel (h := f_ne_zero),
           div_mul_cancel (h := f_ne_zero)] at this
-      have hB : (↑⌊1 / ifp_n.fr⌋ * pB + ppB) + pB * f = pB * (1 / ifp_n.fr) + ppB := by
+      have hB : (↑⌊1 / ifp_n.fr⌋ * pB + ppB) + pB * f =
+          pB * (1 / ifp_n.fr) + ppB := by
         have := congrFun (congrArg HMul.hMul tmp_calc') f
         rwa [right_distrib, div_mul_cancel (h := f_ne_zero),
           div_mul_cancel (h := f_ne_zero)] at this
       -- now unfold the recurrence one step and simplify both sides to arrive at the conclusion
+      dsimp only [conts, pconts, ppconts]
       field_simp [compExactValue, continuantsAux_recurrence s_nth_eq ppconts_eq pconts_eq,
         nextContinuants, nextNumerator, nextDenominator]
       have hfr : (IntFractPair.of (1 / ifp_n.fr)).fr = f := rfl
       rw [one_div, if_neg _, ← one_div, hfr]
-      field_simp [hA, hB]
-      ac_rfl
-      rwa [inv_eq_one_div, hfr]
+      · field_simp [hA, hB]
+        ac_rfl
+      · rwa [inv_eq_one_div, hfr]
 #align generalized_continued_fraction.comp_exact_value_correctness_of_stream_eq_some GeneralizedContinuedFraction.compExactValue_correctness_of_stream_eq_some
 
 open GeneralizedContinuedFraction (of_terminatedAt_n_iff_succ_nth_intFractPair_stream_eq_none)

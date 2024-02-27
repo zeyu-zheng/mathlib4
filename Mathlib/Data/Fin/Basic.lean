@@ -8,7 +8,7 @@ import Mathlib.Init.Data.Fin.Basic
 import Mathlib.Order.RelIso.Basic
 import Mathlib.Data.Nat.Order.Basic
 import Mathlib.Order.Hom.Set
-import Std.Data.Fin.Basic
+import Std.Data.Fin.Lemmas
 
 #align_import data.fin.basic from "leanprover-community/mathlib"@"3a2b5524a138b5d0b818b858b516d4ac8a484b03"
 
@@ -89,10 +89,10 @@ namespace Fin
 instance : CanLift ℕ (Fin n) Fin.val (· < n) where
   prf k hk := ⟨⟨k, hk⟩, rfl⟩
 
-/-- A non-dependent variant of `elim0`. -/
-def elim0' {α : Sort*} (x : Fin 0) : α :=
-  x.elim0
-#align fin.elim0' Fin.elim0'
+/-- A dependent variant of `Fin.elim0`. -/
+def rec0 {α : Fin 0 → Sort*} (i : Fin 0) : α i := absurd i.2 (Nat.not_lt_zero _)
+
+#align fin.elim0' Fin.elim0
 
 variable {n m : ℕ}
 --variable {a b : Fin n} -- this *really* breaks stuff

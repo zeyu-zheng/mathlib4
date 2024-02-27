@@ -1521,14 +1521,14 @@ theorem insertWith.valid_aux [IsTotal α (· ≤ ·)] [@DecidableRel α (· ≤ 
       suffices H : _ by
         refine' ⟨vl.balanceL h.right H, _⟩
         rw [size_balanceL vl.3 h.3.2.2 vl.2 h.2.2.2 H, h.2.size_eq]
-        refine' (e.add_right _).add_right _
+        exact (e.add_right _).add_right _
       · exact Or.inl ⟨_, e, h.3.1⟩
     · have : y < x := lt_of_le_not_le ((total_of (· ≤ ·) _ _).resolve_left h_1) h_1
       rcases insertWith.valid_aux f x hf h.right this br with ⟨vr, e⟩
       suffices H : _ by
         refine' ⟨h.left.balanceR vr H, _⟩
         rw [size_balanceR h.3.2.1 vr.3 h.2.2.1 vr.2 H, h.2.size_eq]
-        refine' (e.add_left _).add_right _
+        exact (e.add_left _).add_right _
       · exact Or.inr ⟨_, e, h.3.1⟩
 #align ordnode.insert_with.valid_aux Ordnode.insertWith.valid_aux
 
@@ -1776,7 +1776,7 @@ instance mem.decidable (x : α) (s : Ordset α) : Decidable (x ∈ s) :=
 
 theorem pos_size_of_mem {x : α} {t : Ordset α} (h_mem : x ∈ t) : 0 < size t := by
   simp? [Membership.mem, mem] at h_mem says
-    simp only [Membership.mem, mem, Bool.decide_coe] at h_mem
+    simp only [Membership.mem, mem, Bool.decide_eq_true] at h_mem
   apply Ordnode.pos_size_of_mem t.property.sz h_mem
 #align ordset.pos_size_of_mem Ordset.pos_size_of_mem
 
