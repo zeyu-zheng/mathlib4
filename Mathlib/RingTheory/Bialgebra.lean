@@ -45,13 +45,15 @@ universe u v
 
 open scoped TensorProduct
 
+export CoalgebraStruct (comul' counit' comul counit)
+
 /-- A bialgebra over a commutative (semi)ring `R` is both an algebra and a coalgebra over `R`, such
 that the counit and comultiplication are algebra morphisms. -/
 class Bialgebra (R : Type u) (A : Type v) [CommSemiring R] [Semiring A] extends
     Algebra R A, Coalgebra R A where
   -- The counit is an algebra morphism
   /-- The counit on a bialgebra preserves 1. -/
-  counit_one : counit 1 = 1
+  counit_one : counit R A 1 = 1
   /-- The counit on a bialgebra preserves multiplication. Note that this is written
   in a rather obscure way: it says that two bilinear maps `A →ₗ[R] A →ₗ[R]` are equal.
   The two corresponding equal linear maps `A ⊗[R] A →ₗ[R]`
@@ -61,10 +63,11 @@ class Bialgebra (R : Type u) (A : Type v) [CommSemiring R] [Semiring A] extends
 
   See `Bialgebra.mk'` for a constructor for bialgebras which uses
   the more familiar but mathematically equivalent `counit (a * b) = counit a * counit b`. -/
-  mul_compr₂_counit : (LinearMap.mul R A).compr₂ counit = (LinearMap.mul R R).compl₁₂ counit counit
+  mul_compr₂_counit : (LinearMap.mul R A).compr₂ (counit R A) =
+    (LinearMap.mul R R).compl₁₂ (counit R A) (counit R A)
   -- The comultiplication is an algebra morphism
   /-- The comultiplication on a bialgebra preserves `1`. -/
-  comul_one : comul 1 = 1
+  comul_one : comul R A 1 = 1
   /-- The comultiplication on a bialgebra preserves multiplication. This is written in
   a rather obscure way: it says that two bilinear maps `A →ₗ[R] A →ₗ[R] (A ⊗[R] A)`
   are equal. The corresponding equal linear maps `A ⊗[R] A →ₗ[R] A ⊗[R] A`
@@ -74,7 +77,8 @@ class Bialgebra (R : Type u) (A : Type v) [CommSemiring R] [Semiring A] extends
   See `Bialgebra.mk'` for a constructor for bialgebras which uses the more familiar
   but mathematically equivalent `comul (a * b) = comul a * comul b`. -/
   mul_compr₂_comul :
-    (LinearMap.mul R A).compr₂ comul = (LinearMap.mul R (A ⊗[R] A)).compl₁₂ comul comul
+    (LinearMap.mul R A).compr₂ (comul R A) =
+    (LinearMap.mul R (A ⊗[R] A)).compl₁₂ (comul R A) (comul R A)
 
 namespace Bialgebra
 
@@ -83,10 +87,10 @@ open Coalgebra
 variable {R : Type u} {A : Type v}
 variable [CommSemiring R] [Semiring A] [Bialgebra R A]
 
-lemma counit_mul (a b : A) : counit (R := R) (a * b) = counit a * counit b :=
+lemma counit_mul (a b : A) : counit R A (a * b) = counit R A a * counit R A b :=
   DFunLike.congr_fun (DFunLike.congr_fun mul_compr₂_counit a) b
 
-lemma comul_mul (a b : A) : comul (R := R) (a * b) = comul a * comul b :=
+lemma comul_mul (a b : A) : comul R A (a * b) = comul R A a * comul R A b :=
   DFunLike.congr_fun (DFunLike.congr_fun mul_compr₂_comul a) b
 
 attribute [simp] counit_one comul_one counit_mul comul_mul
