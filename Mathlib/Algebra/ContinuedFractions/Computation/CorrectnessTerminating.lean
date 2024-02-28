@@ -127,7 +127,7 @@ theorem compExactValue_correctness_of_stream_eq_some :
         of_h_eq_floor, compExactValue]
       -- Porting note: this and the if_neg rewrite are needed
       have : (IntFractPair.of v).fr = Int.fract v := rfl
-      rw [this, if_neg fract_ne_zero, Int.floor_add_fract]
+      rw [this, if_neg fract_ne_zero, g_eq, of_h_eq_floor, Int.floor_add_fract]
   · intro ifp_succ_n succ_nth_stream_eq
     -- Nat.succ
     obtain ⟨ifp_n, nth_stream_eq, nth_fract_ne_zero, -⟩ :
@@ -193,13 +193,11 @@ theorem compExactValue_correctness_of_stream_eq_some :
       rw [inv_eq_one_div] at tmp_calc tmp_calc'
       -- Porting note: the `tmp_calc`s need to be massaged, and some processing after `ac_rfl` done,
       -- because `field_simp` is not as powerful
-      have hA : (↑⌊1 / ifp_n.fr⌋ * pA + ppA) + pA * f =
-          pA * (1 / ifp_n.fr) + ppA := by
+      have hA : (↑⌊1 / ifp_n.fr⌋ * pA + ppA) + pA * f = pA * (1 / ifp_n.fr) + ppA := by
         have := congrFun (congrArg HMul.hMul tmp_calc) f
         rwa [right_distrib, div_mul_cancel (h := f_ne_zero),
           div_mul_cancel (h := f_ne_zero)] at this
-      have hB : (↑⌊1 / ifp_n.fr⌋ * pB + ppB) + pB * f =
-          pB * (1 / ifp_n.fr) + ppB := by
+      have hB : (↑⌊1 / ifp_n.fr⌋ * pB + ppB) + pB * f = pB * (1 / ifp_n.fr) + ppB := by
         have := congrFun (congrArg HMul.hMul tmp_calc') f
         rwa [right_distrib, div_mul_cancel (h := f_ne_zero),
           div_mul_cancel (h := f_ne_zero)] at this
