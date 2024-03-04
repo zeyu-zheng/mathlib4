@@ -5,8 +5,11 @@ Authors: Gabriel Ebner, Scott Morrison
 -/
 import Std.Util.Pickle
 import Std.Util.Cache
+import Std.Lean.Parser
 import Std.Tactic.SolveByElim
+import Lean.Meta.Tactic.TryThis
 import Std.Data.MLList.Heartbeats
+import Std.Lean.Parser
 import Mathlib.Lean.Meta
 import Mathlib.Lean.Meta.DiscrTree
 import Mathlib.Lean.Expr.Basic
@@ -29,7 +32,7 @@ example : Nat := by exact?
 
 namespace Mathlib.Tactic.LibrarySearch
 
-open Lean Meta Std.Tactic TryThis
+open Lean Meta Std.Tactic Tactic.TryThis
 
 initialize registerTraceClass `Tactic.librarySearch
 initialize registerTraceClass `Tactic.librarySearch.lemmas
