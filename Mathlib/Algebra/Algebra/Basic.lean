@@ -56,12 +56,12 @@ structure morphism `algebraMap R A r * x`.
 
 As a result, there are two ways to talk about an `R`-algebra `A` when `A` is a semiring:
 1. ```lean
-   variables [CommSemiring R] [Semiring A]
-   variables [Algebra R A]
+   variable [CommSemiring R] [Semiring A]
+   variable [Algebra R A]
    ```
 2. ```lean
-   variables [CommSemiring R] [Semiring A]
-   variables [Module R A] [SMulCommClass R A A] [IsScalarTower R A A]
+   variable [CommSemiring R] [Semiring A]
+   variable [Module R A] [SMulCommClass R A A] [IsScalarTower R A A]
    ```
 
 The first approach implies the second via typeclass search; so any lemma stated with the second set
@@ -592,7 +592,8 @@ variable (R)
 See note [reducible non-instances]. -/
 @[reducible]
 def semiringToRing [Semiring A] [Algebra R A] : Ring A :=
-  { Module.addCommMonoidToAddCommGroup R, (inferInstance : Semiring A) with
+  { __ := (inferInstance : Semiring A)
+    __ := Module.addCommMonoidToAddCommGroup R
     intCast := fun z => algebraMap R A z
     intCast_ofNat := fun z => by simp only [Int.cast_ofNat, map_natCast]
     intCast_negSucc := fun z => by simp }

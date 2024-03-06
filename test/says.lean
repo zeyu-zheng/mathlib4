@@ -1,10 +1,5 @@
-import Std.Tactic.ShowTerm
-import Std.Tactic.SimpTrace
 import Mathlib.Tactic.Says
 import Aesop
-import Std.Tactic.ShowTerm
-import Std.Tactic.SimpTrace
-import Std.Tactic.RunCmd
 
 set_option autoImplicit true
 /--

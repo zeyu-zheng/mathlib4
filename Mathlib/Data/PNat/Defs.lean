@@ -103,6 +103,9 @@ def toPNat' (n : ℕ) : ℕ+ :=
 #align nat.to_pnat' Nat.toPNat'
 
 @[simp]
+theorem toPNat'_zero : Nat.toPNat' 0 = 1 := rfl
+
+@[simp]
 theorem toPNat'_coe : ∀ n : ℕ, (toPNat' n : ℕ) = ite (0 < n) n 1
   | 0 => rfl
   | m + 1 => by
@@ -191,7 +194,7 @@ theorem mk_one {h} : (⟨1, h⟩ : ℕ+) = (1 : ℕ+) :=
   rfl
 #align pnat.mk_one PNat.mk_one
 
-@[simp, norm_cast]
+@[norm_cast]
 theorem one_coe : ((1 : ℕ+) : ℕ) = 1 :=
   rfl
 #align pnat.one_coe PNat.one_coe

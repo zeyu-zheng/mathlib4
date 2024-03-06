@@ -720,7 +720,7 @@ theorem HasFPowerSeriesAt.isBigO_sub_partialSum_pow (hf : HasFPowerSeriesAt f p 
       ‖f (x + y) - p.partialSum n y‖ ≤ C * (a * (‖y‖ / r')) ^ n :=
     hf.uniform_geometric_approx' h
   refine' isBigO_iff.2 ⟨C * (a / r') ^ n, _⟩
-  replace r'0 : 0 < (r' : ℝ); · exact mod_cast r'0
+  replace r'0 : 0 < (r' : ℝ) := mod_cast r'0
   filter_upwards [Metric.ball_mem_nhds (0 : E) r'0] with y hy
   simpa [mul_pow, mul_div_assoc, mul_assoc, div_mul_eq_mul_div] using hp y hy n
 set_option linter.uppercaseLean3 false in
@@ -738,8 +738,8 @@ theorem HasFPowerSeriesOnBall.isBigO_image_sub_image_sub_deriv_principal
   rcases (zero_le r').eq_or_lt with (rfl | hr'0)
   · simp only [isBigO_bot, EMetric.ball_zero, principal_empty, ENNReal.coe_zero]
   obtain ⟨a, ha, C, hC : 0 < C, hp⟩ :
-    ∃ a ∈ Ioo (0 : ℝ) 1, ∃ C > 0, ∀ n : ℕ, ‖p n‖ * (r' : ℝ) ^ n ≤ C * a ^ n
-  exact p.norm_mul_pow_le_mul_pow_of_lt_radius (hr.trans_le hf.r_le)
+      ∃ a ∈ Ioo (0 : ℝ) 1, ∃ C > 0, ∀ n : ℕ, ‖p n‖ * (r' : ℝ) ^ n ≤ C * a ^ n :=
+    p.norm_mul_pow_le_mul_pow_of_lt_radius (hr.trans_le hf.r_le)
   simp only [← le_div_iff (pow_pos (NNReal.coe_pos.2 hr'0) _)] at hp
   set L : E × E → ℝ := fun y =>
     C * (a / r') ^ 2 * (‖y - (x, x)‖ * ‖y.1 - y.2‖) * (a / (1 - a) ^ 2 + 2 / (1 - a))
@@ -776,9 +776,7 @@ theorem HasFPowerSeriesOnBall.isBigO_image_sub_image_sub_deriv_principal
           · apply hp
           · apply hy'.le
         _ = B n := by
-          -- porting note: in the original, `B` was in the `field_simp`, but now Lean does not
-          -- accept it. The current proof works in Lean 4, but does not in Lean 3.
-          field_simp [pow_succ]
+          field_simp [B, pow_succ]
           simp only [mul_assoc, mul_comm, mul_left_comm]
     have hBL : HasSum B (L y) := by
       apply HasSum.mul_left
@@ -792,7 +790,7 @@ theorem HasFPowerSeriesOnBall.isBigO_image_sub_image_sub_deriv_principal
     refine' (IsBigO.of_bound 1 (eventually_principal.2 fun y hy => _)).trans this
     rw [one_mul]
     exact (hL y hy).trans (le_abs_self _)
-  simp_rw [mul_right_comm _ (_ * _)]  -- porting note: there was an `L` inside the `simp_rw`.
+  simp_rw [L, mul_right_comm _ (_ * _)]
   exact (isBigO_refl _ _).const_mul_left _
 set_option linter.uppercaseLean3 false in
 #align has_fpower_series_on_ball.is_O_image_sub_image_sub_deriv_principal HasFPowerSeriesOnBall.isBigO_image_sub_image_sub_deriv_principal
@@ -830,8 +828,7 @@ theorem HasFPowerSeriesOnBall.tendstoUniformlyOn {r' : ℝ≥0} (hf : HasFPowerS
     TendstoUniformlyOn (fun n y => p.partialSum n y) (fun y => f (x + y)) atTop
       (Metric.ball (0 : E) r') := by
   obtain ⟨a, ha, C, -, hp⟩ : ∃ a ∈ Ioo (0 : ℝ) 1, ∃ C > 0, ∀ y ∈ Metric.ball (0 : E) r', ∀ n,
-    ‖f (x + y) - p.partialSum n y‖ ≤ C * a ^ n
-  exact hf.uniform_geometric_approx h
+    ‖f (x + y) - p.partialSum n y‖ ≤ C * a ^ n := hf.uniform_geometric_approx h
   refine' Metric.tendstoUniformlyOn_iff.2 fun ε εpos => _
   have L : Tendsto (fun n => (C : ℝ) * a ^ n) atTop (𝓝 ((C : ℝ) * 0)) :=
     tendsto_const_nhds.mul (tendsto_pow_atTop_nhds_zero_of_lt_one ha.1.le ha.2)
@@ -1334,7 +1331,7 @@ theorem changeOrigin_eval (h : (‖x‖₊ + ‖y‖₊ : ℝ≥0∞) < p.radius
     exact p.nnnorm_changeOriginSeriesTerm_apply_le _ _ _ _ _ _
   have hf : HasSum f ((p.changeOrigin x).sum y) := by
     refine' HasSum.sigma_of_hasSum ((p.changeOrigin x).summable y_mem_ball).hasSum (fun k => _) hsf
-    · dsimp only
+    · dsimp only [f]
       refine' ContinuousMultilinearMap.hasSum_eval _ _
       have := (p.hasFPowerSeriesOnBall_changeOrigin k radius_pos).hasSum x_mem_ball
       rw [zero_add] at this

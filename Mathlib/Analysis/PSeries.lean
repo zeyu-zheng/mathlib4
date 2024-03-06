@@ -216,7 +216,7 @@ theorem Real.summable_nat_pow_inv {p : ℕ} :
 if and only if `1 < p`. -/
 theorem Real.summable_one_div_nat_pow {p : ℕ} :
     Summable (fun n => 1 / (n : ℝ) ^ p : ℕ → ℝ) ↔ 1 < p := by
-  -- Porting note: was `simp`
+  -- porting note (#10745): was `simp`
   simp only [one_div, Real.summable_nat_pow_inv]
 #align real.summable_one_div_nat_pow Real.summable_one_div_nat_pow
 
@@ -291,6 +291,7 @@ open Finset
 
 variable {α : Type*} [LinearOrderedField α]
 
+set_option tactic.skipAssignedInstances false in
 theorem sum_Ioc_inv_sq_le_sub {k n : ℕ} (hk : k ≠ 0) (h : k ≤ n) :
     (∑ i in Ioc k n, ((i : α) ^ 2)⁻¹) ≤ (k : α)⁻¹ - (n : α)⁻¹ := by
   refine' Nat.le_induction _ _ n h

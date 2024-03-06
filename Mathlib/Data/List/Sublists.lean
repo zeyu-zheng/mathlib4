@@ -98,6 +98,7 @@ theorem length_sublists' : ∀ l : List α, length (sublists' l) = 2 ^ length l
   | a :: l => by
     simp_arith only [sublists'_cons, length_append, length_sublists' l,
       length_map, length, Nat.pow_succ', mul_succ, mul_zero, zero_add]
+    rfl
 #align list.length_sublists' List.length_sublists'
 
 @[simp]
@@ -165,7 +166,7 @@ theorem sublists_append (l₁ l₂ : List α) :
     simp [List.bind, join_join, Function.comp]
 #align list.sublists_append List.sublists_append
 
---Portin note: New theorem
+--Porting note: New theorem
 theorem sublists_cons (a : α) (l : List α) :
     sublists (a :: l) = sublists l >>= (fun x => [x, a :: x]) :=
   show sublists ([a] ++ l) = _ by

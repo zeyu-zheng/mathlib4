@@ -136,10 +136,9 @@ def toEven : CliffordAlgebra Q →ₐ[R] CliffordAlgebra.even (Q' Q) := by
     rw [← mul_assoc, e0_mul_v_mul_e0, v_sq_scalar]
 #align clifford_algebra.to_even CliffordAlgebra.toEven
 
-@[simp]
 theorem toEven_ι (m : M) : (toEven Q (ι Q m) : CliffordAlgebra (Q' Q)) = e0 Q * v Q m := by
   rw [toEven, CliffordAlgebra.lift_ι_apply]
-  -- porting note: was `rw`
+  -- Porting note (#10691): was `rw`
   erw [LinearMap.codRestrict_apply]
   rw [LinearMap.coe_comp, Function.comp_apply, LinearMap.mulLeft_apply]
 #align clifford_algebra.to_even_ι CliffordAlgebra.toEven_ι
@@ -182,7 +181,7 @@ theorem ofEven_ι (x y : M × R) :
   lift_lets
   intro f
   -- TODO: replacing `?_` with `_` takes way longer?
-  refine @even.lift_ι R (M × R) _ _ _ (Q' Q) _ _ _ ⟨f, ?_, ?_⟩ x y
+  exact @even.lift_ι R (M × R) _ _ _ (Q' Q) _ _ _ ⟨f, ?_, ?_⟩ x y
 #align clifford_algebra.of_even_ι CliffordAlgebra.ofEven_ι
 
 theorem toEven_comp_ofEven : (toEven Q).comp (ofEven Q) = AlgHom.id R _ :=
@@ -233,13 +232,9 @@ theorem ofEven_comp_toEven : (ofEven Q).comp (toEven Q) = AlgHom.id R _ :=
 /-- Any clifford algebra is isomorphic to the even subalgebra of a clifford algebra with an extra
 dimension (that is, with vector space `M × R`), with a quadratic form evaluating to `-1` on that new
 basis vector. -/
-@[simps!]
 def equivEven : CliffordAlgebra Q ≃ₐ[R] CliffordAlgebra.even (Q' Q) :=
   AlgEquiv.ofAlgHom (toEven Q) (ofEven Q) (toEven_comp_ofEven Q) (ofEven_comp_toEven Q)
 #align clifford_algebra.equiv_even CliffordAlgebra.equivEven
-
--- Note: times out on linting CI
-attribute [nolint simpNF] equivEven_symm_apply
 
 /-- The representation of the clifford conjugate (i.e. the reverse of the involute) in the even
 subalgebra is just the reverse of the representation. -/
@@ -247,14 +242,14 @@ theorem coe_toEven_reverse_involute (x : CliffordAlgebra Q) :
     ↑(toEven Q (reverse (involute x))) =
       reverse (Q := Q' Q) (toEven Q x : CliffordAlgebra (Q' Q)) := by
   induction x using CliffordAlgebra.induction with
-  | h_grade0 r => simp only [AlgHom.commutes, Subalgebra.coe_algebraMap, reverse.commutes]
-  | h_grade1 m =>
+  | algebraMap r => simp only [AlgHom.commutes, Subalgebra.coe_algebraMap, reverse.commutes]
+  | ι m =>
     -- porting note: added `letI`
     letI : SubtractionMonoid (even (Q' Q)) := AddGroup.toSubtractionMonoid
     simp only [involute_ι, Subalgebra.coe_neg, toEven_ι, reverse.map_mul, reverse_v, reverse_e0,
       reverse_ι, neg_e0_mul_v, map_neg]
-  | h_mul x y hx hy => simp only [map_mul, Subalgebra.coe_mul, reverse.map_mul, hx, hy]
-  | h_add x y hx hy =>
+  | mul x y hx hy => simp only [map_mul, Subalgebra.coe_mul, reverse.map_mul, hx, hy]
+  | add x y hx hy =>
     -- TODO: The `()` around `map_add` are a regression from leanprover/lean4#2478
     rw [map_add, map_add]
     erw [RingHom.map_add, RingHom.map_add]

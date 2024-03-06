@@ -1320,7 +1320,7 @@ theorem Eventually.and_frequently {p q : α → Prop} {f : Filter α} (hp : ∀�
 
 theorem Frequently.exists {p : α → Prop} {f : Filter α} (hp : ∃ᶠ x in f, p x) : ∃ x, p x := by
   by_contra H
-  replace H : ∀ᶠ x in f, ¬p x; exact eventually_of_forall (not_exists.1 H)
+  replace H : ∀ᶠ x in f, ¬p x := eventually_of_forall (not_exists.1 H)
   exact hp H
 #align filter.frequently.exists Filter.Frequently.exists
 
@@ -1395,7 +1395,8 @@ theorem frequently_imp_distrib_left {f : Filter α} [NeBot f] {p : Prop} {q : α
 #align filter.frequently_imp_distrib_left Filter.frequently_imp_distrib_left
 
 theorem frequently_imp_distrib_right {f : Filter α} [NeBot f] {p : α → Prop} {q : Prop} :
-    (∃ᶠ x in f, p x → q) ↔ (∀ᶠ x in f, p x) → q := by simp [frequently_imp_distrib]
+    (∃ᶠ x in f, p x → q) ↔ (∀ᶠ x in f, p x) → q := by
+  set_option tactic.skipAssignedInstances false in simp [frequently_imp_distrib]
 #align filter.frequently_imp_distrib_right Filter.frequently_imp_distrib_right
 
 theorem eventually_imp_distrib_right {f : Filter α} {p : α → Prop} {q : Prop} :
@@ -1528,7 +1529,7 @@ theorem EventuallyEq.trans {l : Filter α} {f g h : α → β} (H₁ : f =ᶠ[l]
   H₂.rw (fun x y => f x = y) H₁
 #align filter.eventually_eq.trans Filter.EventuallyEq.trans
 
--- porting note: new instance
+-- porting note (#10754): new instance
 instance : Trans ((· =ᶠ[l] ·) : (α → β) → (α → β) → Prop) (· =ᶠ[l] ·) (· =ᶠ[l] ·) where
   trans := EventuallyEq.trans
 
@@ -1540,6 +1541,8 @@ theorem EventuallyEq.prod_mk {l} {f f' : α → β} (hf : f =ᶠ[l] f') {g g' : 
       simp only [*]
 #align filter.eventually_eq.prod_mk Filter.EventuallyEq.prod_mk
 
+-- See `EventuallyEq.comp_tendsto` further below for a similar statement w.r.t.
+-- composition on the right.
 theorem EventuallyEq.fun_comp {f g : α → β} {l : Filter α} (H : f =ᶠ[l] g) (h : β → γ) :
     h ∘ f =ᶠ[l] h ∘ g :=
   H.mono fun _ hx => congr_arg h hx
@@ -1701,7 +1704,7 @@ theorem EventuallyLE.trans (H₁ : f ≤ᶠ[l] g) (H₂ : g ≤ᶠ[l] h) : f ≤
   H₂.mp <| H₁.mono fun _ => le_trans
 #align filter.eventually_le.trans Filter.EventuallyLE.trans
 
--- porting note: new instance
+-- porting note (#10754): new instance
 instance : Trans ((· ≤ᶠ[l] ·) : (α → β) → (α → β) → Prop) (· ≤ᶠ[l] ·) (· ≤ᶠ[l] ·) where
   trans := EventuallyLE.trans
 
@@ -1710,7 +1713,7 @@ theorem EventuallyEq.trans_le (H₁ : f =ᶠ[l] g) (H₂ : g ≤ᶠ[l] h) : f �
   H₁.le.trans H₂
 #align filter.eventually_eq.trans_le Filter.EventuallyEq.trans_le
 
--- porting note: new instance
+-- porting note (#10754): new instance
 instance : Trans ((· =ᶠ[l] ·) : (α → β) → (α → β) → Prop) (· ≤ᶠ[l] ·) (· ≤ᶠ[l] ·) where
   trans := EventuallyEq.trans_le
 
@@ -1719,7 +1722,7 @@ theorem EventuallyLE.trans_eq (H₁ : f ≤ᶠ[l] g) (H₂ : g =ᶠ[l] h) : f �
   H₁.trans H₂.le
 #align filter.eventually_le.trans_eq Filter.EventuallyLE.trans_eq
 
--- porting note: new instance
+-- porting note (#10754): new instance
 instance : Trans ((· ≤ᶠ[l] ·) : (α → β) → (α → β) → Prop) (· =ᶠ[l] ·) (· ≤ᶠ[l] ·) where
   trans := EventuallyLE.trans_eq
 
@@ -3283,6 +3286,11 @@ theorem Set.MapsTo.tendsto {α β} {s : Set α} {t : Set β} {f : α → β} (h 
     Filter.Tendsto f (𝓟 s) (𝓟 t) :=
   Filter.tendsto_principal_principal.2 h
 #align set.maps_to.tendsto Set.MapsTo.tendsto
+
+theorem Filter.EventuallyEq.comp_tendsto {f' : α → β} (H : f =ᶠ[l] f') {g : γ → α} {lc : Filter γ}
+    (hg : Tendsto g lc l) : f ∘ g =ᶠ[lc] f' ∘ g :=
+  hg.eventually H
+#align filter.eventually_eq.comp_tendsto Filter.EventuallyEq.comp_tendsto
 
 namespace Filter
 

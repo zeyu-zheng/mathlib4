@@ -70,7 +70,7 @@ variable {X Y : Type*} [TopologicalSpace X] [TopologicalSpace Y] {x y z : X} {ι
 /-! ### Paths -/
 
 /-- Continuous path connecting two points `x` and `y` in a topological space -/
--- porting note: removed @[nolint has_nonempty_instance]
+-- porting note (#10927): removed @[nolint has_nonempty_instance]
 structure Path (x y : X) extends C(I, X) where
   /-- The start point of a `Path`. -/
   source' : toFun 0 = x
@@ -84,7 +84,7 @@ instance Path.funLike : FunLike (Path x y) I X where
     simp only [DFunLike.coe_fn_eq] at h
     cases γ₁; cases γ₂; congr
 
--- porting note: added this instance so that we can use `FunLike.coe` for `CoeFun`
+-- Porting note (#10754): added this instance so that we can use `FunLike.coe` for `CoeFun`
 -- this also fixed very strange `simp` timeout issues
 instance Path.continuousMapClass : ContinuousMapClass (Path x y) I X where
   map_continuous := fun γ => show Continuous γ.toContinuousMap by continuity
@@ -315,6 +315,7 @@ theorem ofLine_mem {f : ℝ → X} (hf : ContinuousOn f I) (h₀ : f 0 = x) (h�
 
 attribute [local simp] Iic_def
 
+set_option tactic.skipAssignedInstances false in
 /-- Concatenation of two paths from `x` to `y` and from `y` to `z`, putting the first
 path on `[0, 1/2]` and the second one on `[1/2, 1]`. -/
 @[trans]
@@ -1056,7 +1057,7 @@ theorem IsPathConnected.exists_path_through_family {n : ℕ}
   obtain ⟨γ, hγ⟩ : ∃ γ : Path (p' 0) (p' n), (∀ i ≤ n, p' i ∈ range γ) ∧ range γ ⊆ s := by
     have hp' : ∀ i ≤ n, p' i ∈ s := by
       intro i hi
-      simp [Nat.lt_succ_of_le hi, hp]
+      simp [p', Nat.lt_succ_of_le hi, hp]
     clear_value p'
     clear hp p
     induction' n with n hn
@@ -1091,7 +1092,7 @@ theorem IsPathConnected.exists_path_through_family {n : ℕ}
         exact hγ₁
   have hpp' : ∀ k < n + 1, p k = p' k := by
     intro k hk
-    simp only [hk, dif_pos]
+    simp only [p', hk, dif_pos]
     congr
     ext
     rw [Fin.val_cast_of_lt hk]
