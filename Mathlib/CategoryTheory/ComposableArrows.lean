@@ -289,6 +289,9 @@ lemma obj_zero : obj F X 0 = X := rfl
 lemma obj_one : obj F X 1 = F.obj' 0 := rfl
 
 @[simp]
+lemma obj_two (F : ComposableArrows C (n + 1)) : obj F X 2 = F.obj' 1 := rfl
+
+@[simp]
 lemma obj_succ (i : ℕ) (hi : i + 1 < n + 1 + 1) : obj F X ⟨i + 1, hi⟩ = F.obj' i := rfl
 
 variable {X} (f : X ⟶ F.left)
@@ -325,6 +328,38 @@ lemma map_succ_succ (i j : ℕ) (hi : i + 1 < n + 1 + 1) (hj : j + 1 < n + 1 + 1
 @[simp]
 lemma map_one_succ (j : ℕ) (hj : j + 1 < n + 1 + 1) :
     map F f 1 ⟨j + 1, hj⟩ (by simp [Fin.le_def]) = F.map' 0 j := rfl
+
+@[simp]
+lemma map_zero_two (F : ComposableArrows C (n + 1)) (f : X ⟶ F.left)
+  (hj : (0 : Fin (n + 1 + 1 + 1)) ≤ 2) : map F f 0 2 hj = f ≫ F.map' 0 1 := rfl
+
+@[simp]
+lemma map_one_two (F : ComposableArrows C (n + 1)) (f : X ⟶ F.left)
+  (hj : (1 : Fin (n + 1 + 1 + 1)) ≤ 2) : map F f 1 2 hj = F.map' 0 1 := rfl
+
+@[simp]
+lemma map_two_two (F : ComposableArrows C (n + 1)) (f : X ⟶ F.left)
+  (hj : (2 : Fin (n + 1 + 1 + 1)) ≤ 2) : map F f 2 2 hj = F.map' 1 1 := rfl
+
+@[simp]
+lemma map_zero_three (F : ComposableArrows C (n + 1 + 1)) (f : X ⟶ F.left)
+  (hj : (0 : Fin (n + 1 + 1 + 1 + 1)) ≤ 3) : map F f 0 3 hj = f ≫ F.map' 0 2 := rfl
+
+@[simp]
+lemma map_one_three (F : ComposableArrows C (n + 1 + 1)) (f : X ⟶ F.left)
+  (hj : (1 : Fin (n + 1 + 1 + 1 + 1)) ≤ 3) : map F f 1 3 hj = F.map' 0 2 := rfl
+
+@[simp]
+lemma map_two_three (F : ComposableArrows C (n + 1 + 1)) (f : X ⟶ F.left)
+  (hj : (2 : Fin (n + 1 + 1 + 1 + 1)) ≤ 3) : map F f 2 3 hj = F.map' 1 2 := rfl
+
+@[simp]
+lemma map_three_four (F : ComposableArrows C (n + 1 + 1 + 1)) (f : X ⟶ F.left)
+  (hj : (3 : Fin (n + 1 + 1 + 1 + 1 + 1)) ≤ 4) : map F f 3 4 hj = F.map' 2 3 := rfl
+
+@[simp]
+lemma map_four_five (F : ComposableArrows C (n + 1 + 1 + 1 + 1)) (f : X ⟶ F.left)
+  (hj : (4 : Fin (n + 1 + 1 + 1 + 1 + 1 + 1)) ≤ 5) : map F f 4 5 hj = F.map' 3 4 := rfl
 
 lemma map_id (i : Fin (n + 1 + 1)) : map F f i i (by simp) = 𝟙 _ := by
   obtain ⟨i, hi⟩ := i
@@ -565,7 +600,7 @@ lemma homMk₂_app_zero : (homMk₂ app₀ app₁ app₂ w₀ w₁).app 0 = app�
 lemma homMk₂_app_one : (homMk₂ app₀ app₁ app₂ w₀ w₁).app 1 = app₁ := rfl
 
 @[simp]
-lemma homMk₂_app_two : (homMk₂ app₀ app₁ app₂ w₀ w₁).app ⟨2, by valid⟩ = app₂ := rfl
+lemma homMk₂_app_two : (homMk₂ app₀ app₁ app₂ w₀ w₁).app 2 = app₂ := rfl
 
 end
 
@@ -618,12 +653,10 @@ lemma homMk₃_app_zero : (homMk₃ app₀ app₁ app₂ app₃ w₀ w₁ w₂).
 lemma homMk₃_app_one : (homMk₃ app₀ app₁ app₂ app₃ w₀ w₁ w₂).app 1 = app₁ := rfl
 
 @[simp]
-lemma homMk₃_app_two : (homMk₃ app₀ app₁ app₂ app₃ w₀ w₁ w₂).app ⟨2, by valid⟩ = app₂ :=
-  rfl
+lemma homMk₃_app_two : (homMk₃ app₀ app₁ app₂ app₃ w₀ w₁ w₂).app 2 = app₂ := rfl
 
 @[simp]
-lemma homMk₃_app_three : (homMk₃ app₀ app₁ app₂ app₃ w₀ w₁ w₂).app ⟨3, by valid⟩ = app₃ :=
-  rfl
+lemma homMk₃_app_three : (homMk₃ app₀ app₁ app₂ app₃ w₀ w₁ w₂).app 3 = app₃ := rfl
 
 end
 
@@ -686,15 +719,15 @@ lemma homMk₄_app_one : (homMk₄ app₀ app₁ app₂ app₃ app₄ w₀ w₁ 
 
 @[simp]
 lemma homMk₄_app_two :
-    (homMk₄ app₀ app₁ app₂ app₃ app₄ w₀ w₁ w₂ w₃).app ⟨2, by valid⟩ = app₂ := rfl
+    (homMk₄ app₀ app₁ app₂ app₃ app₄ w₀ w₁ w₂ w₃).app 2 = app₂ := rfl
 
 @[simp]
 lemma homMk₄_app_three :
-    (homMk₄ app₀ app₁ app₂ app₃ app₄ w₀ w₁ w₂ w₃).app ⟨3, by valid⟩ = app₃ := rfl
+    (homMk₄ app₀ app₁ app₂ app₃ app₄ w₀ w₁ w₂ w₃).app 3 = app₃ := rfl
 
 @[simp]
 lemma homMk₄_app_four :
-    (homMk₄ app₀ app₁ app₂ app₃ app₄ w₀ w₁ w₂ w₃).app ⟨4, by valid⟩ = app₄ := rfl
+    (homMk₄ app₀ app₁ app₂ app₃ app₄ w₀ w₁ w₂ w₃).app 4 = app₄ := rfl
 
 end
 
@@ -767,19 +800,19 @@ lemma homMk₅_app_one : (homMk₅ app₀ app₁ app₂ app₃ app₄ app₅ w�
 
 @[simp]
 lemma homMk₅_app_two :
-    (homMk₅ app₀ app₁ app₂ app₃ app₄ app₅ w₀ w₁ w₂ w₃ w₄).app ⟨2, by valid⟩ = app₂ := rfl
+    (homMk₅ app₀ app₁ app₂ app₃ app₄ app₅ w₀ w₁ w₂ w₃ w₄).app 2 = app₂ := rfl
 
 @[simp]
 lemma homMk₅_app_three :
-    (homMk₅ app₀ app₁ app₂ app₃ app₄ app₅ w₀ w₁ w₂ w₃ w₄).app ⟨3, by valid⟩ = app₃ := rfl
+    (homMk₅ app₀ app₁ app₂ app₃ app₄ app₅ w₀ w₁ w₂ w₃ w₄).app 3 = app₃ := rfl
 
 @[simp]
 lemma homMk₅_app_four :
-    (homMk₅ app₀ app₁ app₂ app₃ app₄ app₅ w₀ w₁ w₂ w₃ w₄).app ⟨4, by valid⟩ = app₄ := rfl
+    (homMk₅ app₀ app₁ app₂ app₃ app₄ app₅ w₀ w₁ w₂ w₃ w₄).app 4 = app₄ := rfl
 
 @[simp]
 lemma homMk₅_app_five :
-    (homMk₅ app₀ app₁ app₂ app₃ app₄ app₅ w₀ w₁ w₂ w₃ w₄).app ⟨5, by valid⟩ = app₅ := rfl
+    (homMk₅ app₀ app₁ app₂ app₃ app₄ app₅ w₀ w₁ w₂ w₃ w₄).app 5 = app₅ := rfl
 
 end
 
@@ -849,8 +882,8 @@ lemma mkOfObjOfMapSucc_exists : ∃ (F : ComposableArrows C n) (e : ∀ i, F.obj
       | ⟨i + 1, hi⟩ => e _, fun i hi => _⟩
     obtain _ | i := i
     · dsimp
-      rw [assoc, Iso.inv_hom_id, comp_id]
-      erw [id_comp]
+      change _ = 𝟙 _ ≫ (mapSucc 0 ≫ (e 0).inv) ≫ (e 0).hom
+      rw [assoc, Iso.inv_hom_id, comp_id, id_comp]
     · exact h i (by valid)
 
 /-- Given `obj : Fin (n + 1) → C` and `mapSucc i : obj i.castSucc ⟶ obj i.succ`
