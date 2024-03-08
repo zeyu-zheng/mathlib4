@@ -331,35 +331,35 @@ lemma map_one_succ (j : ℕ) (hj : j + 1 < n + 1 + 1) :
 
 @[simp]
 lemma map_zero_two (F : ComposableArrows C (n + 1)) (f : X ⟶ F.left)
-  (hj : (0 : Fin (n + 1 + 1 + 1)) ≤ 2) : map F f 0 2 hj = f ≫ F.map' 0 1 := rfl
+    (hj : (0 : Fin (n + 1 + 1 + 1)) ≤ 2) : map F f 0 2 hj = f ≫ F.map' 0 1 := rfl
 
 @[simp]
 lemma map_one_two (F : ComposableArrows C (n + 1)) (f : X ⟶ F.left)
-  (hj : (1 : Fin (n + 1 + 1 + 1)) ≤ 2) : map F f 1 2 hj = F.map' 0 1 := rfl
+    (hj : (1 : Fin (n + 1 + 1 + 1)) ≤ 2) : map F f 1 2 hj = F.map' 0 1 := rfl
 
 @[simp]
 lemma map_two_two (F : ComposableArrows C (n + 1)) (f : X ⟶ F.left)
-  (hj : (2 : Fin (n + 1 + 1 + 1)) ≤ 2) : map F f 2 2 hj = F.map' 1 1 := rfl
+    (hj : (2 : Fin (n + 1 + 1 + 1)) ≤ 2) : map F f 2 2 hj = F.map' 1 1 := rfl
 
 @[simp]
 lemma map_zero_three (F : ComposableArrows C (n + 1 + 1)) (f : X ⟶ F.left)
-  (hj : (0 : Fin (n + 1 + 1 + 1 + 1)) ≤ 3) : map F f 0 3 hj = f ≫ F.map' 0 2 := rfl
+    (hj : (0 : Fin (n + 1 + 1 + 1 + 1)) ≤ 3) : map F f 0 3 hj = f ≫ F.map' 0 2 := rfl
 
 @[simp]
 lemma map_one_three (F : ComposableArrows C (n + 1 + 1)) (f : X ⟶ F.left)
-  (hj : (1 : Fin (n + 1 + 1 + 1 + 1)) ≤ 3) : map F f 1 3 hj = F.map' 0 2 := rfl
+    (hj : (1 : Fin (n + 1 + 1 + 1 + 1)) ≤ 3) : map F f 1 3 hj = F.map' 0 2 := rfl
 
 @[simp]
 lemma map_two_three (F : ComposableArrows C (n + 1 + 1)) (f : X ⟶ F.left)
-  (hj : (2 : Fin (n + 1 + 1 + 1 + 1)) ≤ 3) : map F f 2 3 hj = F.map' 1 2 := rfl
+    (hj : (2 : Fin (n + 1 + 1 + 1 + 1)) ≤ 3) : map F f 2 3 hj = F.map' 1 2 := rfl
 
 @[simp]
 lemma map_three_four (F : ComposableArrows C (n + 1 + 1 + 1)) (f : X ⟶ F.left)
-  (hj : (3 : Fin (n + 1 + 1 + 1 + 1 + 1)) ≤ 4) : map F f 3 4 hj = F.map' 2 3 := rfl
+    (hj : (3 : Fin (n + 1 + 1 + 1 + 1 + 1)) ≤ 4) : map F f 3 4 hj = F.map' 2 3 := rfl
 
 @[simp]
 lemma map_four_five (F : ComposableArrows C (n + 1 + 1 + 1 + 1)) (f : X ⟶ F.left)
-  (hj : (4 : Fin (n + 1 + 1 + 1 + 1 + 1 + 1)) ≤ 5) : map F f 4 5 hj = F.map' 3 4 := rfl
+    (hj : (4 : Fin (n + 1 + 1 + 1 + 1 + 1 + 1)) ≤ 5) : map F f 4 5 hj = F.map' 3 4 := rfl
 
 lemma map_id (i : Fin (n + 1 + 1)) : map F f i i (by simp) = 𝟙 _ := by
   obtain ⟨i, hi⟩ := i
