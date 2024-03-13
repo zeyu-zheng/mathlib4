@@ -468,7 +468,7 @@ theorem upcrossingsBefore_zero' : upcrossingsBefore a b f 0 = 0 := by
 theorem upperCrossingTime_lt_of_le_upcrossingsBefore (hN : 0 < N) (hab : a < b)
     (hn : n ≤ upcrossingsBefore a b f N ω) : upperCrossingTime a b f N n ω < N :=
   haveI : upperCrossingTime a b f N (upcrossingsBefore a b f N ω) ω < N :=
-    (upperCrossingTime_lt_nonempty hN).cSup_mem
+    (upperCrossingTime_lt_nonempty hN).csSup_mem
       ((OrderBot.bddBelow _).finite_of_bddAbove (upperCrossingTime_lt_bddAbove hab))
   lt_of_le_of_lt (upperCrossingTime_mono hn) this
 #align measure_theory.upper_crossing_time_lt_of_le_upcrossings_before MeasureTheory.upperCrossingTime_lt_of_le_upcrossingsBefore
@@ -511,7 +511,7 @@ theorem crossing_eq_crossing_of_lowerCrossingTime_lt {M : ℕ} (hNM : N ≤ M)
       rw [eq_comm, ih.2]
       exacts [hitting_eq_hitting_of_exists hNM ⟨j, ⟨hj₁.1, hj₁.2.le⟩, hj₂⟩, le_rfl]
     refine' ⟨this, _⟩
-    simp only [lowerCrossingTime, eq_comm, this]
+    simp only [lowerCrossingTime, eq_comm, this, Nat.succ_eq_add_one]
     refine' hitting_eq_hitting_of_exists hNM _
     rw [lowerCrossingTime, hitting_lt_iff _ le_rfl] at h
     obtain ⟨j, hj₁, hj₂⟩ := h

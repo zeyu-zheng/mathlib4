@@ -442,7 +442,7 @@ instance semilatticeSup [SemilatticeSup α] : SemilatticeSup (WithBot α) :=
       · exact h₂ a rfl
       · exact h₁ a rfl
       · rcases h₁ b rfl with ⟨d, ⟨⟩, h₁'⟩
-        simp at h₂
+        simp only [some_le_some] at h₂
         exact ⟨d, rfl, sup_le h₁' h₂⟩ }
 
 theorem coe_sup [SemilatticeSup α] (a b : α) : ((a ⊔ b : α) : WithBot α) = (a : WithBot α) ⊔ b :=
@@ -754,7 +754,7 @@ theorem untop'_coe {α} (d x : α) : untop' d x = x :=
   rfl
 #align with_top.untop'_coe WithTop.untop'_coe
 
-@[simp, norm_cast] -- porting note: added `simp`
+@[simp, norm_cast] -- Porting note: added `simp`
 theorem coe_eq_coe : (a : WithTop α) = b ↔ a = b :=
   Option.some_inj
 #align with_top.coe_eq_coe WithTop.coe_eq_coe

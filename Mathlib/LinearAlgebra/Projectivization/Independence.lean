@@ -32,7 +32,7 @@ ambient vector space. Similarly for the definition of dependence.
 
 open scoped LinearAlgebra.Projectivization
 
-variable {ι K V : Type*} [Field K] [AddCommGroup V] [Module K V] {f : ι → ℙ K V}
+variable {ι K V : Type*} [DivisionRing K] [AddCommGroup V] [Module K V] {f : ι → ℙ K V}
 
 namespace Projectivization
 
@@ -110,7 +110,7 @@ theorem dependent_pair_iff_eq (u v : ℙ K V) : Dependent ![u, v] ↔ u = v := b
   rw [dependent_iff_not_independent, independent_iff, linearIndependent_fin2,
     Function.comp_apply, Matrix.cons_val_one, Matrix.head_cons, Ne.def]
   simp only [Matrix.cons_val_zero, not_and, not_forall, Classical.not_not, Function.comp_apply,
-    ← mk_eq_mk_iff' K _ _ (rep_nonzero u) (rep_nonzero v), mk_rep, imp_iff_right_iff]
+    ← mk_eq_mk_iff' K _ _ (rep_nonzero u) (rep_nonzero v), mk_rep, Classical.imp_iff_right_iff]
   exact Or.inl (rep_nonzero v)
 #align projectivization.dependent_pair_iff_eq Projectivization.dependent_pair_iff_eq
 

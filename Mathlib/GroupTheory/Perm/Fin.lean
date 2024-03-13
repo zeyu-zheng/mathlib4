@@ -85,7 +85,7 @@ Define the permutations `Fin.cycleRange i`, the cycle `(0 1 2 ... i)`.
 
 open Equiv.Perm
 
---Porting note: renamed from finRotate_succ because there is already a theorem with that name
+-- Porting note: renamed from finRotate_succ because there is already a theorem with that name
 theorem finRotate_succ_eq_decomposeFin {n : ℕ} :
     finRotate n.succ = decomposeFin.symm (1, finRotate n) := by
   ext i
@@ -103,7 +103,7 @@ theorem finRotate_succ_eq_decomposeFin {n : ℕ} :
 @[simp]
 theorem sign_finRotate (n : ℕ) : Perm.sign (finRotate (n + 1)) = (-1) ^ n := by
   induction' n with n ih
-  · simp; rfl
+  · simp
   · rw [finRotate_succ_eq_decomposeFin]
     simp [ih, pow_succ]
 #align sign_fin_rotate sign_finRotate

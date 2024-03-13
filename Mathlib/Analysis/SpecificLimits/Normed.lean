@@ -23,9 +23,11 @@ well as such computations in `ℝ` when the natural proof passes through a fact 
 
 noncomputable section
 
-open Classical Set Function Filter Finset Metric Asymptotics
+open scoped Classical
+open Set Function Filter Finset Metric Asymptotics
 
-open Classical Topology Nat BigOperators uniformity NNReal ENNReal
+open scoped Classical
+open Topology Nat BigOperators uniformity NNReal ENNReal
 
 variable {α : Type*} {β : Type*} {ι : Type*}
 
@@ -179,7 +181,7 @@ theorem TFAE_exists_lt_isLittleO_pow (f : ℕ → ℝ) (R : ℝ) :
     have : 0 ≤ a := nonneg_of_eventually_pow_nonneg (H.mono fun n ↦ (abs_nonneg _).trans)
     refine' ⟨a, A ⟨this, ha⟩, IsBigO.of_bound 1 _⟩
     simpa only [Real.norm_eq_abs, one_mul, abs_pow, abs_of_nonneg this]
-  -- porting note: used to work without explicitly having 6 → 7
+  -- Porting note: used to work without explicitly having 6 → 7
   tfae_have 6 → 7
   · exact fun h ↦ tfae_8_to_7 <| tfae_2_to_8 <| tfae_3_to_2 <| tfae_5_to_3 <| tfae_6_to_5 h
   tfae_finish

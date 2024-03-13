@@ -180,14 +180,17 @@ instance : LinearOrder F :=
 theorem z01 : (0 : F) < 1 := by decide
 #align counterexample.F.z01 Counterexample.F.z01
 
+instance : Add F where
+  add := max
+
 /-- `F` would be a `CommSemiring`, using `min` as multiplication.  Again, we do not need this. -/
 instance : AddCommMonoid F where
-  add := max
   add_assoc := by boom
   zero := 0
   zero_add := by boom
   add_zero := by boom
   add_comm := by boom
+  nsmul := nsmulRec
 
 /-- The `CovariantClass`es asserting monotonicity of addition hold for `F`. -/
 instance covariantClass_add_le : CovariantClass F F (· + ·) (· ≤ ·) :=
@@ -256,7 +259,6 @@ example : ¬UniqueProds ℕ := by
   rintro ⟨h⟩
   refine' not_not.mpr (h (Finset.singleton_nonempty 0) (Finset.insert_nonempty 0 {1})) _
   simp [UniqueMul, not_or]
-  exact ⟨⟨0, 1, by simp⟩, ⟨0, 0, by simp⟩⟩
 
 /-- Some Types that do not have `UniqueSums`. -/
 example (n : ℕ) (n2 : 2 ≤ n) : ¬UniqueSums (ZMod n) := by

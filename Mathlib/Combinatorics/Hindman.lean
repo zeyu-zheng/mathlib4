@@ -82,14 +82,14 @@ attribute [local instance] Ultrafilter.semigroup Ultrafilter.addSemigroup
 @[to_additive]
 theorem Ultrafilter.continuous_mul_left {M} [Semigroup M] (V : Ultrafilter M) :
     Continuous (· * V) :=
-  ultrafilterBasis_is_basis.continuous_iff.2 <| Set.forall_range_iff.mpr fun s ↦
+  ultrafilterBasis_is_basis.continuous_iff.2 <| Set.forall_mem_range.mpr fun s ↦
     ultrafilter_isOpen_basic { m : M | ∀ᶠ m' in V, m * m' ∈ s }
 #align ultrafilter.continuous_mul_left Ultrafilter.continuous_mul_left
 #align ultrafilter.continuous_add_left Ultrafilter.continuous_add_left
 
 namespace Hindman
 
--- porting note: mathport wants these names to be `fS`, `fP`, etc, but this does violence to
+-- Porting note: mathport wants these names to be `fS`, `fP`, etc, but this does violence to
 -- mathematical naming conventions, as does `fs`, `fp`, so we just followed `mathlib` 3 here
 
 /-- `FS a` is the set of finite sums in `a`, i.e. `m ∈ FS a` if `m` is the sum of a nonempty
@@ -244,7 +244,7 @@ set_option linter.uppercaseLean3 false in
 theorem FP_drop_subset_FP {M} [Semigroup M] (a : Stream' M) (n : ℕ) : FP (a.drop n) ⊆ FP a := by
   induction' n with n ih
   · rfl
-  rw [Nat.succ_eq_one_add, ← Stream'.drop_drop]
+  rw [Nat.add_comm, ← Stream'.drop_drop]
   exact _root_.trans (FP.tail _) ih
 set_option linter.uppercaseLean3 false in
 #align hindman.FP_drop_subset_FP Hindman.FP_drop_subset_FP

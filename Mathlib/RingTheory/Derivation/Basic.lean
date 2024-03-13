@@ -86,7 +86,7 @@ instance hasCoeToLinearMap : Coe (Derivation R A M) (A →ₗ[R] M) :=
   ⟨fun D => D.toLinearMap⟩
 #align derivation.has_coe_to_linear_map Derivation.hasCoeToLinearMap
 
-#noalign derivation.to_linear_map_eq_coe -- porting note: not needed anymore
+#noalign derivation.to_linear_map_eq_coe -- Porting note: not needed anymore
 
 @[simp]
 theorem mk_coe (f : A →ₗ[R] M) (h₁ h₂) : ((⟨f, h₁, h₂⟩ : Derivation R A M) : A → M) = f :=
@@ -159,7 +159,7 @@ theorem map_coe_nat (n : ℕ) : D (n : A) = 0 := by
 @[simp]
 theorem leibniz_pow (n : ℕ) : D (a ^ n) = n • a ^ (n - 1) • D a := by
   induction' n with n ihn
-  · rw [Nat.zero_eq, pow_zero, map_one_eq_zero, zero_smul]
+  · rw [pow_zero, map_one_eq_zero, zero_smul]
   · rcases (zero_le n).eq_or_lt with (rfl | hpos)
     · erw [pow_one, one_smul, pow_zero, one_smul]
     · have : a * a ^ (n - 1) = a ^ n := by rw [← pow_succ, Nat.sub_add_cancel hpos]

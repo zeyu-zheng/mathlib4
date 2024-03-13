@@ -181,8 +181,8 @@ theorem mk_to_fun (f) (hf : IsCauSeq abv f) : @coeFn (CauSeq β abv) _ _ ⟨f, h
   rfl -/
 #noalign cau_seq.mk_to_fun
 
-theorem ext {f g : CauSeq β abv} (h : ∀ i, f i = g i) : f = g :=
-  Subtype.eq (funext h)
+@[ext]
+theorem ext {f g : CauSeq β abv} (h : ∀ i, f i = g i) : f = g := Subtype.eq (funext h)
 #align cau_seq.ext CauSeq.ext
 
 theorem isCauSeq (f : CauSeq β abv) : IsCauSeq abv f :=
@@ -506,7 +506,8 @@ theorem abv_pos_of_not_limZero {f : CauSeq β abv} (hf : ¬LimZero f) :
   by_contra nk
   refine' hf fun ε ε0 => _
   simp? [not_forall] at nk says
-    simp only [gt_iff_lt, ge_iff_le, not_exists, not_and, not_forall, not_le, exists_prop] at nk
+    simp only [gt_iff_lt, ge_iff_le, not_exists, not_and, not_forall, Classical.not_imp,
+      not_le] at nk
   cases' f.cauchy₃ (half_pos ε0) with i hi
   rcases nk _ (half_pos ε0) i with ⟨j, ij, hj⟩
   refine' ⟨j, fun k jk => _⟩
@@ -904,21 +905,17 @@ protected theorem lt_inf {a b c : CauSeq α abs} (hb : a < b) (hc : a < c) : a <
 #align cau_seq.lt_inf CauSeq.lt_inf
 
 @[simp]
-protected theorem sup_idem (a : CauSeq α abs) : a ⊔ a = a :=
-  Subtype.ext sup_idem
+protected theorem sup_idem (a : CauSeq α abs) : a ⊔ a = a := Subtype.ext (sup_idem _)
 #align cau_seq.sup_idem CauSeq.sup_idem
 
 @[simp]
-protected theorem inf_idem (a : CauSeq α abs) : a ⊓ a = a :=
-  Subtype.ext inf_idem
+protected theorem inf_idem (a : CauSeq α abs) : a ⊓ a = a := Subtype.ext (inf_idem _)
 #align cau_seq.inf_idem CauSeq.inf_idem
 
-protected theorem sup_comm (a b : CauSeq α abs) : a ⊔ b = b ⊔ a :=
-  Subtype.ext sup_comm
+protected theorem sup_comm (a b : CauSeq α abs) : a ⊔ b = b ⊔ a := Subtype.ext (sup_comm _ _)
 #align cau_seq.sup_comm CauSeq.sup_comm
 
-protected theorem inf_comm (a b : CauSeq α abs) : a ⊓ b = b ⊓ a :=
-  Subtype.ext inf_comm
+protected theorem inf_comm (a b : CauSeq α abs) : a ⊓ b = b ⊓ a := Subtype.ext (inf_comm _ _)
 #align cau_seq.inf_comm CauSeq.inf_comm
 
 protected theorem sup_eq_right {a b : CauSeq α abs} (h : a ≤ b) : a ⊔ b ≈ b := by
@@ -998,11 +995,11 @@ protected theorem le_inf {a b c : CauSeq α abs} (hb : a ≤ b) (hc : a ≤ c) :
 
 
 protected theorem sup_inf_distrib_left (a b c : CauSeq α abs) : a ⊔ b ⊓ c = (a ⊔ b) ⊓ (a ⊔ c) :=
-  Subtype.ext <| funext fun _ => max_min_distrib_left
+  ext fun _ ↦ max_min_distrib_left _ _ _
 #align cau_seq.sup_inf_distrib_left CauSeq.sup_inf_distrib_left
 
 protected theorem sup_inf_distrib_right (a b c : CauSeq α abs) : a ⊓ b ⊔ c = (a ⊔ c) ⊓ (b ⊔ c) :=
-  Subtype.ext <| funext fun _ => max_min_distrib_right
+  ext fun _ ↦ max_min_distrib_right _ _ _
 #align cau_seq.sup_inf_distrib_right CauSeq.sup_inf_distrib_right
 
 end Abs

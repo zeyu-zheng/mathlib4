@@ -33,7 +33,7 @@ open Denumerable Encodable Function
 
 namespace Nat
 
--- porting note: elim is no longer required because lean 4 is better
+-- Porting note: elim is no longer required because lean 4 is better
 -- at inferring motive types (I think this is the reason)
 -- and worst case, we can always explicitly write (motive := fun _ => C)
 -- without having to then add all the other underscores
@@ -50,7 +50,7 @@ namespace Nat
 
 #align nat.elim_succ Nat.rec_add_one
 
--- porting note: cases is no longer required because lean 4 is better
+-- Porting note: cases is no longer required because lean 4 is better
 -- at inferring motive types (I think this is the reason)
 
 -- /-- Cases on whether the input is 0 or a successor. -/
@@ -129,12 +129,12 @@ theorem pred : Nat.Primrec pred :=
 
 theorem add : Nat.Primrec (unpaired (· + ·)) :=
   (prec .id ((Primrec.succ.comp right).comp right)).of_eq fun p => by
-    simp; induction p.unpair.2 <;> simp [*, add_succ]
+    simp; induction p.unpair.2 <;> simp [*, Nat.add_assoc]
 #align nat.primrec.add Nat.Primrec.add
 
 theorem sub : Nat.Primrec (unpaired (· - ·)) :=
   (prec .id ((pred.comp right).comp right)).of_eq fun p => by
-    simp; induction p.unpair.2 <;> simp [*, sub_succ]
+    simp; induction p.unpair.2 <;> simp [*, Nat.sub_add_eq]
 #align nat.primrec.sub Nat.Primrec.sub
 
 theorem mul : Nat.Primrec (unpaired (· * ·)) :=
@@ -154,7 +154,7 @@ end Nat
 /-- A `Primcodable` type is an `Encodable` type for which
   the encode/decode functions are primitive recursive. -/
 class Primcodable (α : Type*) extends Encodable α where
-  -- porting note: was `prim [] `.
+  -- Porting note: was `prim [] `.
   -- This means that `prim` does not take the type explicitly in Lean 4
   prim : Nat.Primrec fun n => Encodable.encode (decode n)
 #align primcodable Primcodable
@@ -573,7 +573,8 @@ theorem nat_rec {f : α → β} {g : α → ℕ × β → β} (hf : Primrec f) (
       simp only [Nat.unpaired, id_eq, Nat.unpair_pair, decode_prod_val, decode_nat,
         Option.some_bind, Option.map_map, Option.map_some']
       cases' @decode α _ n.unpair.1 with a; · rfl
-      simp only [encode_some, encodek, Option.map_some', Option.some_bind, Option.map_map]
+      simp only [Nat.pred_eq_sub_one, encode_some, Nat.succ_eq_add_one, encodek, Option.map_some',
+        Option.some_bind, Option.map_map]
       induction' n.unpair.2 with m <;> simp [encodek]
       simp [*, encodek]
 #align primrec.nat_elim Primrec.nat_rec
@@ -684,7 +685,7 @@ theorem cond {c : α → Bool} {f : α → σ} {g : α → σ} (hc : Primrec c) 
 
 theorem ite {c : α → Prop} [DecidablePred c] {f : α → σ} {g : α → σ} (hc : PrimrecPred c)
     (hf : Primrec f) (hg : Primrec g) : Primrec fun a => if c a then f a else g a := by
-  simpa using cond hc hf hg
+  simpa [Bool.cond_decide] using cond hc hf hg
 #align primrec.ite Primrec.ite
 
 theorem nat_le : PrimrecRel ((· ≤ ·) : ℕ → ℕ → Prop) :=
@@ -739,7 +740,7 @@ theorem _root_.PrimrecPred.or {p q : α → Prop} [DecidablePred p] [DecidablePr
   (Primrec.or.comp hp hq).of_eq fun n => by simp
 #align primrec.or PrimrecPred.or
 
--- porting note: It is unclear whether we want to boolean versions
+-- Porting note: It is unclear whether we want to boolean versions
 -- of these lemmas, just the prop versions, or both
 -- The boolean versions are often actually easier to use
 -- but did not exist in Lean 3
@@ -781,7 +782,7 @@ theorem list_indexOf₁ [DecidableEq α] (l : List α) : Primrec fun a => l.inde
   list_findIdx₁ (.swap .beq) l
 #align primrec.list_index_of₁ Primrec.list_indexOf₁
 
-theorem dom_fintype [Fintype α] (f : α → σ) : Primrec f :=
+theorem dom_fintype [Finite α] (f : α → σ) : Primrec f :=
   let ⟨l, _, m⟩ := Finite.exists_univ_list α
   option_some_iff.1 <| by
     haveI := decidableEqOfEncodable α
@@ -789,7 +790,7 @@ theorem dom_fintype [Fintype α] (f : α → σ) : Primrec f :=
     rw [List.get?_map, List.indexOf_get? (m a), Option.map_some']
 #align primrec.dom_fintype Primrec.dom_fintype
 
--- porting note: These are new lemmas
+-- Porting note: These are new lemmas
 -- I added it because it actually simplified the proofs
 -- and because I couldn't understand the original proof
 /-- A function is `PrimrecBounded` if its size is bounded by a primitive recursive function -/
@@ -846,21 +847,21 @@ theorem nat_div2 : Primrec Nat.div2 :=
   (nat_div.comp .id (const 2)).of_eq fun n => n.div2_val.symm
 #align primrec.nat_div2 Primrec.nat_div2
 
--- porting note: this is no longer used
+-- Porting note: this is no longer used
 -- theorem nat_boddDiv2 : Primrec Nat.boddDiv2 := pair nat_bodd nat_div2
 #noalign primrec.nat_bodd_div2
 
--- porting note: bit0 is deprecated
+-- Porting note: bit0 is deprecated
 theorem nat_double : Primrec (fun n : ℕ => 2 * n) :=
   nat_mul.comp (const _) Primrec.id
 #align primrec.nat_bit0 Primrec.nat_double
 
--- porting note: bit1 is deprecated
+-- Porting note: bit1 is deprecated
 theorem nat_double_succ : Primrec (fun n : ℕ => 2 * n + 1) :=
   nat_double |> Primrec.succ.comp
 #align primrec.nat_bit1 Primrec.nat_double_succ
 
--- porting note: this is no longer used
+-- Porting note: this is no longer used
 -- theorem nat_div_mod : Primrec₂ fun n k : ℕ => (n / k, n % k) := pair nat_div nat_mod
 #noalign primrec.nat_div_mod
 
@@ -1189,7 +1190,7 @@ instance finArrow {n} : Primcodable (Fin n → α) :=
   ofEquiv _ (Equiv.vectorEquivFin _ _).symm
 #align primcodable.fin_arrow Primcodable.finArrow
 
--- porting note: Equiv.arrayEquivFin is not ported yet
+-- Porting note: Equiv.arrayEquivFin is not ported yet
 -- instance array {n} : Primcodable (Array' n α) :=
 --   ofEquiv _ (Equiv.arrayEquivFin _ _)
 -- #align primcodable.array Primcodable.array
@@ -1458,7 +1459,7 @@ theorem add : @Primrec' 2 fun v => v.head + v.tail.head :=
 theorem sub : @Primrec' 2 fun v => v.head - v.tail.head := by
   have : @Primrec' 2 fun v ↦ (fun a b ↦ b - a) v.head v.tail.head := by
     refine' (prec head (pred.comp₁ _ (tail head))).of_eq fun v => _
-    simp; induction v.head <;> simp [*, Nat.sub_succ]
+    simp; induction v.head <;> simp [*, Nat.sub_add_eq]
   simpa using comp₂ (fun a b => b - a) this (tail head) head
 #align nat.primrec'.sub Nat.Primrec'.sub
 
