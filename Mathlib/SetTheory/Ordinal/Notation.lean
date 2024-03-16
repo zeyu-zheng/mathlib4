@@ -628,7 +628,7 @@ theorem repr_mul : ∀ (o₁ o₂) [NF o₁] [NF o₂], repr (o₁ * o₂) = rep
       rw [nat_cast_succ x, add_mul_succ _ ao, mul_assoc]
     · haveI := h₁.fst
       haveI := h₂.fst
-      simp only [Mul.mul, mul, e0, ite_false, repr._eq_2, repr_add, opow_add, IH, repr, mul_add]
+      simp only [Mul.mul, mul, e0, ite_false, repr.eq_2, repr_add, opow_add, IH, repr, mul_add]
       rw [← mul_assoc]
       congr 2
       have := mt repr_inj.1 e0
@@ -784,7 +784,7 @@ theorem repr_scale (x) [NF x] (o) [NF o] : repr (scale x o) = ω ^ repr x * repr
 
 theorem nf_repr_split {o o' m} [NF o] (h : split o = (o', m)) : NF o' ∧ repr o = repr o' + m := by
   cases' e : split' o with a n
-  cases' nf_repr_split' e with s₁ s₂; skip
+  cases' nf_repr_split' e with s₁ s₂
   rw [split_eq_scale_split' e] at h
   injection h; substs o' n
   simp only [repr_scale, repr, opow_zero, Nat.succPNat_coe, Nat.cast_one, mul_one, add_zero,
@@ -796,7 +796,7 @@ theorem split_dvd {o o' m} [NF o] (h : split o = (o', m)) : ω ∣ repr o' := by
   cases' e : split' o with a n
   rw [split_eq_scale_split' e] at h
   injection h; subst o'
-  cases nf_repr_split' e; skip; simp
+  cases nf_repr_split' e; simp
 #align onote.split_dvd ONote.split_dvd
 
 theorem split_add_lt {o e n a m} [NF o] (h : split o = (oadd e n a, m)) :
