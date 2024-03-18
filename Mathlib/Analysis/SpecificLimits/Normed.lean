@@ -172,7 +172,7 @@ theorem TFAE_exists_lt_isLittleO_pow (f : ℕ → ℝ) (R : ℝ) :
   -- Add 7 and 8 using 2 → 8 → 7 → 3
   tfae_have 2 → 8
   · rintro ⟨a, ha, H⟩
-    refine' ⟨a, ha, (H.def zero_lt_one).mono fun n hn ↦ _⟩
+    refine' ⟨a, ha, (H.definition zero_lt_one).mono fun n hn ↦ _⟩
     rwa [Real.norm_eq_abs, Real.norm_eq_abs, one_mul, abs_pow, abs_of_pos ha.1] at hn
   tfae_have 8 → 7
   exact fun ⟨a, ha, H⟩ ↦ ⟨a, ha.2, H⟩
@@ -659,7 +659,6 @@ theorem Antitone.cauchySeq_series_mul_of_tendsto_zero_of_bounded (hfa : Antitone
     convert hf0.neg
     norm_num
   convert (hfa'.cauchySeq_series_mul_of_tendsto_zero_of_bounded hf0' hzb).neg
-  funext
   simp
 #align antitone.cauchy_seq_series_mul_of_tendsto_zero_of_bounded Antitone.cauchySeq_series_mul_of_tendsto_zero_of_bounded
 
