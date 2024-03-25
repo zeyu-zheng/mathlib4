@@ -683,7 +683,6 @@ nonrec theorem integral_ofReal {a b : ℝ} {μ : Measure ℝ} {f : ℝ → ℝ} 
 section ContinuousLinearMap
 
 variable {a b : ℝ} {μ : Measure ℝ} {f : ℝ → E}
-
 variable [IsROrC 𝕜] [NormedSpace 𝕜 E] [NormedAddCommGroup F] [NormedSpace 𝕜 F]
 
 open ContinuousLinearMap
@@ -725,9 +724,9 @@ theorem integral_comp_mul_right (hc : c ≠ 0) :
   simp_rw [integral_smul_measure, intervalIntegral, A.set_integral_map,
     ENNReal.toReal_ofReal (abs_nonneg c)]
   cases' hc.lt_or_lt with h h
-  · simp [h, mul_div_cancel, hc, abs_of_neg,
+  · simp [h, mul_div_cancel_right₀, hc, abs_of_neg,
       Measure.restrict_congr_set (α := ℝ) (μ := volume) Ico_ae_eq_Ioc]
-  · simp [h, mul_div_cancel, hc, abs_of_pos]
+  · simp [h, mul_div_cancel_right₀, hc, abs_of_pos]
 #align interval_integral.integral_comp_mul_right intervalIntegral.integral_comp_mul_right
 
 -- Porting note (#10618): was @[simp]
@@ -1099,7 +1098,8 @@ theorem intervalIntegral_pos_of_pos_on {f : ℝ → ℝ} {a b : ℝ} (hfi : Inte
   have h₀ : 0 ≤ᵐ[volume.restrict (uIoc a b)] f := by
     rw [EventuallyLE, uIoc_of_le hab.le]
     refine' ae_restrict_of_ae_eq_of_ae_restrict Ioo_ae_eq_Ioc _
-    exact (ae_restrict_iff' measurableSet_Ioo).mpr (ae_of_all _ fun x hx => (hpos x hx).le)
+    rw [ae_restrict_iff' measurableSet_Ioo]
+    filter_upwards with x hx using (hpos x hx).le
   rw [integral_pos_iff_support_of_nonneg_ae' h₀ hfi]
   exact ⟨hab, ((Measure.measure_Ioo_pos _).mpr hab).trans_le (measure_mono hsupp)⟩
 #align interval_integral.interval_integral_pos_of_pos_on intervalIntegral.intervalIntegral_pos_of_pos_on
