@@ -1277,7 +1277,7 @@ theorem continuous_apply (i : ι) : Continuous fun p : ∀ i, π i => p i :=
   continuous_iInf_dom continuous_induced_dom
 #align continuous_apply continuous_apply
 
-@[continuity, fun_prop]
+@[continuity]
 theorem continuous_apply_apply {ρ : κ → ι → Type*} [∀ j i, TopologicalSpace (ρ j i)] (j : κ)
     (i : ι) : Continuous fun p : ∀ j, ∀ i, ρ j i => p j i :=
   (continuous_apply i).comp (continuous_apply j)
