@@ -477,12 +477,12 @@ theorem uniformContinuous_equiv_symm [∀ i, UniformSpace (β i)] :
   uniformContinuous_id
 #align pi_Lp.uniform_continuous_equiv_symm PiLp.uniformContinuous_equiv_symm
 
-@[continuity]
+@[continuity, fun_prop]
 theorem continuous_equiv [∀ i, UniformSpace (β i)] : Continuous (WithLp.equiv p (∀ i, β i)) :=
   continuous_id
 #align pi_Lp.continuous_equiv PiLp.continuous_equiv
 
-@[continuity]
+@[continuity, fun_prop]
 theorem continuous_equiv_symm [∀ i, UniformSpace (β i)] :
     Continuous (WithLp.equiv p (∀ i, β i)).symm :=
   continuous_id

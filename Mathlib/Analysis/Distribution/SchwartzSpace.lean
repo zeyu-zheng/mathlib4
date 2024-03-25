@@ -114,7 +114,7 @@ theorem smooth (f : 𝓢(E, F)) (n : ℕ∞) : ContDiff ℝ n f :=
 #align schwartz_map.smooth SchwartzMap.smooth
 
 /-- Every Schwartz function is continuous. -/
-@[continuity]
+@[continuity, fun_prop]
 protected theorem continuous (f : 𝓢(E, F)) : Continuous f :=
   (f.smooth 0).continuous
 #align schwartz_map.continuous SchwartzMap.continuous

@@ -43,7 +43,7 @@ def reflTransSymmAux (x : I × I) : ℝ :=
   if (x.2 : ℝ) ≤ 1 / 2 then x.1 * 2 * x.2 else x.1 * (2 - 2 * x.2)
 #align path.homotopy.refl_trans_symm_aux Path.Homotopy.reflTransSymmAux
 
-@[continuity]
+@[continuity, fun_prop]
 theorem continuous_reflTransSymmAux : Continuous reflTransSymmAux := by
   refine' continuous_if_le _ _ (Continuous.continuousOn _) (Continuous.continuousOn _) _
   · continuity
@@ -128,7 +128,7 @@ def transReflReparamAux (t : I) : ℝ :=
   if (t : ℝ) ≤ 1 / 2 then 2 * t else 1
 #align path.homotopy.trans_refl_reparam_aux Path.Homotopy.transReflReparamAux
 
-@[continuity]
+@[continuity, fun_prop]
 theorem continuous_transReflReparamAux : Continuous transReflReparamAux := by
   refine' continuous_if_le _ _ (Continuous.continuousOn _) (Continuous.continuousOn _) _ <;>
     [continuity; continuity; continuity; continuity; skip]
@@ -186,7 +186,7 @@ def transAssocReparamAux (t : I) : ℝ :=
   if (t : ℝ) ≤ 1 / 4 then 2 * t else if (t : ℝ) ≤ 1 / 2 then t + 1 / 4 else 1 / 2 * (t + 1)
 #align path.homotopy.trans_assoc_reparam_aux Path.Homotopy.transAssocReparamAux
 
-@[continuity]
+@[continuity, fun_prop]
 theorem continuous_transAssocReparamAux : Continuous transAssocReparamAux := by
   refine' continuous_if_le _ _ (Continuous.continuousOn _)
       (continuous_if_le _ _ (Continuous.continuousOn _) (Continuous.continuousOn _) _).continuousOn

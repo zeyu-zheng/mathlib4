@@ -177,7 +177,7 @@ theorem coe_sqrt {x : ℝ≥0} : (NNReal.sqrt x : ℝ) = Real.sqrt x := by
   rw [Real.sqrt, Real.toNNReal_coe]
 #align real.coe_sqrt Real.coe_sqrt
 
-@[continuity]
+@[continuity, fun_prop]
 theorem continuous_sqrt : Continuous sqrt :=
   NNReal.continuous_coe.comp <| NNReal.continuous_sqrt.comp continuous_real_toNNReal
 #align real.continuous_sqrt Real.continuous_sqrt

@@ -1572,7 +1572,7 @@ theorem preimage_interior_subset_interior_preimage {t : Set Y} (hf : Continuous 
   interior_maximal (preimage_mono interior_subset) (isOpen_interior.preimage hf)
 #align preimage_interior_subset_interior_preimage preimage_interior_subset_interior_preimage
 
-@[continuity]
+@[continuity, fun_prop]
 theorem continuous_id : Continuous (id : X → X) :=
   continuous_def.2 fun _ => id
 #align continuous_id continuous_id

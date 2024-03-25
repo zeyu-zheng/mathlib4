@@ -179,7 +179,7 @@ theorem differentiable_circleMap (c : ℂ) (R : ℝ) : Differentiable ℝ (circl
   (hasDerivAt_circleMap c R θ).differentiableAt
 #align differentiable_circle_map differentiable_circleMap
 
-@[continuity]
+@[continuity, fun_prop]
 theorem continuous_circleMap (c : ℂ) (R : ℝ) : Continuous (circleMap c R) :=
   (differentiable_circleMap c R).continuous
 #align continuous_circle_map continuous_circleMap

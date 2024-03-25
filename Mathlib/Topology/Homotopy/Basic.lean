@@ -442,7 +442,7 @@ def Simps.apply (F : HomotopyWith f₀ f₁ P) : I × X → Y := F
 initialize_simps_projections HomotopyWith (toHomotopy_toContinuousMap_toFun → apply,
   -toHomotopy_toContinuousMap)
 
-@[continuity]
+@[continuity, fun_prop]
 protected theorem continuous (F : HomotopyWith f₀ f₁ P) : Continuous F :=
   F.continuous_toFun
 #align continuous_map.homotopy_with.continuous ContinuousMap.HomotopyWith.continuous

@@ -181,12 +181,12 @@ theorem norm_int_of_nonneg {n : ℤ} (hn : 0 ≤ n) : ‖(n : ℂ)‖ = n := by
 lemma normSq_eq_norm_sq (z : ℂ) : normSq z = ‖z‖ ^ 2 := by
   rw [normSq_eq_abs, norm_eq_abs]
 
-@[continuity]
+@[continuity, fun_prop]
 theorem continuous_abs : Continuous abs :=
   continuous_norm
 #align complex.continuous_abs Complex.continuous_abs
 
-@[continuity]
+@[continuity, fun_prop]
 theorem continuous_normSq : Continuous normSq := by
   simpa [← normSq_eq_abs] using continuous_abs.pow 2
 #align complex.continuous_norm_sq Complex.continuous_normSq
@@ -361,7 +361,7 @@ theorem nndist_conj_comm (z w : ℂ) : nndist (conj z) w = nndist z (conj w) :=
 instance : ContinuousStar ℂ :=
   ⟨conjLIE.continuous⟩
 
-@[continuity]
+@[continuity, fun_prop]
 theorem continuous_conj : Continuous (conj : ℂ → ℂ) :=
   continuous_star
 #align complex.continuous_conj Complex.continuous_conj

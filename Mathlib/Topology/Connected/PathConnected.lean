@@ -113,7 +113,7 @@ theorem coe_mk_mk (f : I → X) (h₁) (h₂ : f 0 = x) (h₃ : f 1 = y) :
 
 variable (γ : Path x y)
 
-@[continuity]
+@[continuity, fun_prop]
 protected theorem continuous : Continuous γ :=
   γ.continuous_toFun
 #align path.continuous Path.continuous
@@ -221,7 +221,7 @@ theorem continuous_eval : Continuous fun p : Path x y × I => p.1 p.2 :=
   continuous_eval.comp <| (continuous_induced_dom (α := Path x y)).prod_map continuous_id
 #align path.continuous_eval Path.continuous_eval
 
-@[continuity]
+@[continuity, fun_prop]
 theorem _root_.Continuous.path_eval {Y} [TopologicalSpace Y] {f : Y → Path x y} {g : Y → I}
     (hf : Continuous f) (hg : Continuous g) : Continuous fun y => f y (g y) :=
   Continuous.comp continuous_eval (hf.prod_mk hg)
@@ -246,7 +246,7 @@ theorem _root_.Continuous.path_extend {γ : Y → Path x y} {f : Y → ℝ} (hγ
 #align continuous.path_extend Continuous.path_extend
 
 /-- A useful special case of `Continuous.path_extend`. -/
-@[continuity]
+@[continuity, fun_prop]
 theorem continuous_extend : Continuous γ.extend :=
   γ.continuous.Icc_extend'
 #align path.continuous_extend Path.continuous_extend
@@ -472,19 +472,19 @@ theorem cast_coe (γ : Path x y) {x' y'} (hx : x' = x) (hy : y' = y) : (γ.cast 
   rfl
 #align path.cast_coe Path.cast_coe
 
-@[continuity]
+@[continuity, fun_prop]
 theorem symm_continuous_family {ι : Type*} [TopologicalSpace ι]
     {a b : ι → X} (γ : ∀ t : ι, Path (a t) (b t)) (h : Continuous ↿γ) :
     Continuous ↿fun t => (γ t).symm :=
   h.comp (continuous_id.prod_map continuous_symm)
 #align path.symm_continuous_family Path.symm_continuous_family
 
-@[continuity]
+@[continuity, fun_prop]
 theorem continuous_symm : Continuous (symm : Path x y → Path y x) :=
   continuous_uncurry_iff.mp <| symm_continuous_family _ (continuous_fst.path_eval continuous_snd)
 #align path.continuous_symm Path.continuous_symm
 
-@[continuity]
+@[continuity, fun_prop]
 theorem continuous_uncurry_extend_of_continuous_family {ι : Type*} [TopologicalSpace ι]
     {a b : ι → X} (γ : ∀ t : ι, Path (a t) (b t)) (h : Continuous ↿γ) :
     Continuous ↿fun t => (γ t).extend := by
@@ -492,7 +492,7 @@ theorem continuous_uncurry_extend_of_continuous_family {ι : Type*} [Topological
   exact zero_le_one
 #align path.continuous_uncurry_extend_of_continuous_family Path.continuous_uncurry_extend_of_continuous_family
 
-@[continuity]
+@[continuity, fun_prop]
 theorem trans_continuous_family {ι : Type*} [TopologicalSpace ι]
     {a b c : ι → X} (γ₁ : ∀ t : ι, Path (a t) (b t)) (h₁ : Continuous ↿γ₁)
     (γ₂ : ∀ t : ι, Path (b t) (c t)) (h₂ : Continuous ↿γ₂) :
@@ -514,7 +514,7 @@ theorem trans_continuous_family {ι : Type*} [TopologicalSpace ι]
     simp [hst, mul_inv_cancel (two_ne_zero' ℝ)]
 #align path.trans_continuous_family Path.trans_continuous_family
 
-@[continuity]
+@[continuity, fun_prop]
 theorem _root_.Continuous.path_trans {f : Y → Path x y} {g : Y → Path y z} :
     Continuous f → Continuous g → Continuous fun t => (f t).trans (g t) := by
   intro hf hg
@@ -522,7 +522,7 @@ theorem _root_.Continuous.path_trans {f : Y → Path x y} {g : Y → Path y z} :
   exact trans_continuous_family _ (continuous_uncurry_iff.mpr hf) _ (continuous_uncurry_iff.mpr hg)
 #align continuous.path_trans Continuous.path_trans
 
-@[continuity]
+@[continuity, fun_prop]
 theorem continuous_trans {x y z : X} : Continuous fun ρ : Path x y × Path y z => ρ.1.trans ρ.2 :=
   continuous_fst.path_trans continuous_snd
 #align path.continuous_trans Path.continuous_trans
@@ -655,7 +655,7 @@ theorem truncate_range {a b : X} (γ : Path a b) {t₀ t₁ : ℝ} :
 
 /-- For a path `γ`, `γ.truncate` gives a "continuous family of paths", by which we
   mean the uncurried function which maps `(t₀, t₁, s)` to `γ.truncate t₀ t₁ s` is continuous. -/
-@[continuity]
+@[continuity, fun_prop]
 theorem truncate_continuous_family {a b : X} (γ : Path a b) :
     Continuous (fun x => γ.truncate x.1 x.2.1 x.2.2 : ℝ × ℝ × I → X) :=
   γ.continuous_extend.comp
@@ -663,7 +663,7 @@ theorem truncate_continuous_family {a b : X} (γ : Path a b) :
       (continuous_fst.comp continuous_snd))
 #align path.truncate_continuous_family Path.truncate_continuous_family
 
-@[continuity]
+@[continuity, fun_prop]
 theorem truncate_const_continuous_family {a b : X} (γ : Path a b)
     (t : ℝ) : Continuous ↿(γ.truncate t) := by
   have key : Continuous (fun x => (t, x) : ℝ × I → ℝ × ℝ × I) := by continuity

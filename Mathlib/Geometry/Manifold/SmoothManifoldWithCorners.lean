@@ -221,7 +221,7 @@ theorem mk_symm (e : PartialEquiv H E) (a b c d) :
   rfl
 #align model_with_corners.mk_symm ModelWithCorners.mk_symm
 
-@[continuity]
+@[continuity, fun_prop]
 protected theorem continuous : Continuous I :=
   I.continuous_toFun
 #align model_with_corners.continuous ModelWithCorners.continuous
@@ -234,7 +234,7 @@ protected theorem continuousWithinAt {s x} : ContinuousWithinAt I s x :=
   I.continuousAt.continuousWithinAt
 #align model_with_corners.continuous_within_at ModelWithCorners.continuousWithinAt
 
-@[continuity]
+@[continuity, fun_prop]
 theorem continuous_symm : Continuous I.symm :=
   I.continuous_invFun
 #align model_with_corners.continuous_symm ModelWithCorners.continuous_symm

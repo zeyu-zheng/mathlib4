@@ -437,7 +437,7 @@ theorem coe_mk' (f : M₁ →ₛₗ[σ₁₂] M₂) (h) : (mk f h : M₁ → M�
   rfl
 #align continuous_linear_map.coe_mk' ContinuousLinearMap.coe_mk'
 
-@[continuity]
+@[continuity, fun_prop]
 protected theorem continuous (f : M₁ →SL[σ₁₂] M₂) : Continuous f :=
   f.2
 #align continuous_linear_map.continuous ContinuousLinearMap.continuous
@@ -1988,7 +1988,7 @@ theorem map_eq_zero_iff (e : M₁ ≃SL[σ₁₂] M₂) {x : M₁} : e x = 0 ↔
 attribute [continuity]
   ContinuousLinearEquiv.continuous_toFun ContinuousLinearEquiv.continuous_invFun
 
-@[continuity]
+@[continuity, fun_prop]
 protected theorem continuous (e : M₁ ≃SL[σ₁₂] M₂) : Continuous (e : M₁ → M₂) :=
   e.continuous_toFun
 #align continuous_linear_equiv.continuous ContinuousLinearEquiv.continuous

@@ -928,7 +928,7 @@ theorem LpToLpRestrictCLM_coeFn [Fact (1 ≤ p)] (s : Set X) (f : Lp F p μ) :
 set_option linter.uppercaseLean3 false in
 #align measure_theory.Lp_to_Lp_restrict_clm_coe_fn MeasureTheory.LpToLpRestrictCLM_coeFn
 
-@[continuity]
+@[continuity, fun_prop]
 theorem continuous_set_integral [NormedSpace ℝ E] (s : Set X) :
     Continuous fun f : X →₁[μ] E => ∫ x in s, f x ∂μ := by
   haveI : Fact ((1 : ℝ≥0∞) ≤ 1) := ⟨le_rfl⟩

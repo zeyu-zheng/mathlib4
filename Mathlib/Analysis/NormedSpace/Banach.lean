@@ -308,7 +308,7 @@ namespace LinearEquiv
 variable [CompleteSpace E]
 
 /-- If a bounded linear map is a bijection, then its inverse is also a bounded linear map. -/
-@[continuity]
+@[continuity, fun_prop]
 theorem continuous_symm (e : E ≃ₗ[𝕜] F) (h : Continuous e) : Continuous e.symm := by
   rw [continuous_def]
   intro s hs

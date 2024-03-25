@@ -316,13 +316,13 @@ theorem continuous_coe : Continuous fun (f : α →ᵇ β) x => f x :=
 #align bounded_continuous_function.continuous_coe BoundedContinuousFunction.continuous_coe
 
 /-- When `x` is fixed, `(f : α →ᵇ β) ↦ f x` is continuous. -/
-@[continuity]
+@[continuity, fun_prop]
 theorem continuous_eval_const {x : α} : Continuous fun f : α →ᵇ β => f x :=
   (continuous_apply x).comp continuous_coe
 #align bounded_continuous_function.continuous_eval_const BoundedContinuousFunction.continuous_eval_const
 
 /-- The evaluation map is continuous, as a joint function of `u` and `x`. -/
-@[continuity]
+@[continuity, fun_prop]
 theorem continuous_eval : Continuous fun p : (α →ᵇ β) × α => p.1 p.2 :=
   (continuous_prod_of_continuous_lipschitzWith _ 1 fun f => f.continuous) <| lipschitz_evalx
 #align bounded_continuous_function.continuous_eval BoundedContinuousFunction.continuous_eval

@@ -237,7 +237,7 @@ theorem map_proj_nhds (x : TotalSpace F E) : map (π F E) (𝓝 x) = 𝓝 x.proj
 variable (E)
 
 /-- The projection from a fiber bundle to its base is continuous. -/
-@[continuity]
+@[continuity, fun_prop]
 theorem continuous_proj : Continuous (π F E) :=
   continuous_iff_continuousAt.2 fun x => (map_proj_nhds F x).le
 #align fiber_bundle.continuous_proj FiberBundle.continuous_proj
@@ -734,7 +734,7 @@ instance fiberBundle : FiberBundle F Z.Fiber where
 #align fiber_bundle_core.fiber_bundle FiberBundleCore.fiberBundle
 
 /-- The inclusion of a fiber into the total space is a continuous map. -/
-@[continuity]
+@[continuity, fun_prop]
 theorem continuous_totalSpaceMk (b : B) :
     Continuous (TotalSpace.mk b : Z.Fiber b → Bundle.TotalSpace F Z.Fiber) :=
   FiberBundle.continuous_totalSpaceMk F Z.Fiber b
@@ -841,7 +841,7 @@ theorem totalSpaceMk_preimage_source (b : B) :
   eq_univ_of_forall (a.mem_pretrivializationAt_source b)
 #align fiber_prebundle.total_space_mk_preimage_source FiberPrebundle.totalSpaceMk_preimage_source
 
-@[continuity]
+@[continuity, fun_prop]
 theorem continuous_totalSpaceMk (b : B) :
     Continuous[_, a.totalSpaceTopology] (TotalSpace.mk b) := by
   letI := a.totalSpaceTopology
