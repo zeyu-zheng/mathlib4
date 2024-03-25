@@ -1251,7 +1251,8 @@ theorem Continuous.quotient_liftOn' {f : X → Y} (h : Continuous f)
   h.quotient_lift hs
 #align continuous.quotient_lift_on' Continuous.quotient_liftOn'
 
-@[continuity, fun_prop] theorem Continuous.quotient_map' {t : Setoid Y} {f : X → Y} (hf : Continuous f)
+@[continuity, fun_prop]
+theorem Continuous.quotient_map' {t : Setoid Y} {f : X → Y} (hf : Continuous f)
     (H : (s.r ⇒ t.r) f f) : Continuous (Quotient.map' f H) :=
   (continuous_quotient_mk'.comp hf).quotient_lift _
 #align continuous.quotient_map' Continuous.quotient_map'
