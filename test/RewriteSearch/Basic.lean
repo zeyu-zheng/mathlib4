@@ -24,7 +24,7 @@ info: Try this: rw [← @add_assoc, @add_right_comm, @add_assoc, @add_add_add_co
 example [AddCommMonoid α] {a b c d : α} : (a + b) + (c + d) = a + d + c + b := by
   rw_search
 
-/-- info: Try this: rw [@List.length_append, @List.length_append, Nat.two_mul, @add_rotate] -/
+/-- info: Try this: rw [@List.length_append, @List.length_append, @add_rotate, @Nat.add_right_cancel_iff, Nat.two_mul] -/
 #guard_msgs in
 example (xs ys : List α) :
     (xs ++ ys ++ ys).length = 2 * ys.length + xs.length := by
