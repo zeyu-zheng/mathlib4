@@ -39,6 +39,8 @@ theorem isGenericPoint_def {x : α} {S : Set α} : IsGenericPoint x S ↔ closur
   Iff.rfl
 #align is_generic_point_def isGenericPoint_def
 
+-- Adaptation note: 2024-03-15
+-- Renamed to avoid the reserved name `IsGenericPoint.def`.
 theorem IsGenericPoint.def' {x : α} {S : Set α} (h : IsGenericPoint x S) :
     closure ({x} : Set α) = S :=
   h
@@ -201,7 +203,7 @@ theorem OpenEmbedding.quasiSober {f : α → β} (hf : OpenEmbedding f) [QuasiSo
       rw [← hT.closure_eq]
       exact closure_mono (inter_subset_left _ _) hx.mem
     obtain ⟨y, rfl⟩ : x ∈ range f := by
-      rw [hx.mem_open_set_iff hf.open_range]
+      rw [hx.mem_open_set_iff hf.isOpen_range]
       refine' Nonempty.mono _ hS''.1
       simpa using subset_closure
     use y
