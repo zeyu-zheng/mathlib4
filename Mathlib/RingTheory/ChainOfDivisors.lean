@@ -46,7 +46,9 @@ theorem Associates.isAtom_iff {p : Associates M} (h₁ : p ≠ 0) : IsAtom p ↔
         Or.inr
           (show IsUnit b by
             rw [ha] at h
-            apply isUnit_of_associated_mul (show Associated (p * b) p by conv_rhs => rw [h]) h₁)⟩,
+            refine isUnit_of_associated_mul ?_ h₁
+            conv_rhs => rw [h]
+            exact Associated.refl _)⟩,
     fun hp =>
     ⟨by simpa only [Associates.isUnit_iff_eq_one, Associates.bot_eq_one] using hp.1,
       fun b ⟨⟨a, hab⟩, hb⟩ =>
