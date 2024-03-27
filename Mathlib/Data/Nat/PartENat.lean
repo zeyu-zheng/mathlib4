@@ -316,9 +316,8 @@ theorem coe_lt_coe {x y : ℕ} : (x : PartENat) < y ↔ x < y := Nat.cast_lt
 
 @[simp]
 theorem get_le_get {x y : PartENat} {hx : x.Dom} {hy : y.Dom} : x.get hx ≤ y.get hy ↔ x ≤ y := by
-  conv =>
-    lhs
-    rw [← coe_le_coe, natCast_get, natCast_get]
+  conv_lhs => rw [← coe_le_coe, natCast_get, natCast_get]
+  exact Iff.rfl
 #align part_enat.get_le_get PartENat.get_le_get
 
 theorem le_coe_iff (x : PartENat) (n : ℕ) : x ≤ n ↔ ∃ h : x.Dom, x.get h ≤ n := by
