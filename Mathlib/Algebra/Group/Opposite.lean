@@ -261,6 +261,7 @@ theorem semiconjBy_op [Mul α] {a x y : α} : SemiconjBy (op a) (op y) (op x) �
 theorem semiconjBy_unop [Mul α] {a x y : αᵐᵒᵖ} :
     SemiconjBy (unop a) (unop y) (unop x) ↔ SemiconjBy a x y := by
   conv_rhs => rw [← op_unop a, ← op_unop x, ← op_unop y, semiconjBy_op]
+  exact Iff.rfl
 #align mul_opposite.semiconj_by_unop MulOpposite.semiconjBy_unop
 #align add_opposite.semiconj_by_unop AddOpposite.addSemiconjBy_unop
 
