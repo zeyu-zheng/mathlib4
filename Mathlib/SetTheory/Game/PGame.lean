@@ -630,9 +630,8 @@ theorem le_def {x y : PGame} :
       (∀ i, (∃ i', x.moveLeft i ≤ y.moveLeft i') ∨ ∃ j, (x.moveLeft i).moveRight j ≤ y) ∧
         ∀ j, (∃ i, x ≤ (y.moveRight j).moveLeft i) ∨ ∃ j', x.moveRight j' ≤ y.moveRight j := by
   rw [le_iff_forall_lf]
-  conv =>
-    lhs
-    simp only [lf_iff_exists_le]
+  conv_lhs => simp only [lf_iff_exists_le]
+  exact Iff.rfl
 #align pgame.le_def SetTheory.PGame.le_def
 
 /-- The definition of `x ⧏ y` on pre-games, in terms of `⧏` two moves later. -/
@@ -641,9 +640,8 @@ theorem lf_def {x y : PGame} :
       (∃ i, (∀ i', x.moveLeft i' ⧏ y.moveLeft i) ∧ ∀ j, x ⧏ (y.moveLeft i).moveRight j) ∨
         ∃ j, (∀ i, (x.moveRight j).moveLeft i ⧏ y) ∧ ∀ j', x.moveRight j ⧏ y.moveRight j' := by
   rw [lf_iff_exists_le]
-  conv =>
-    lhs
-    simp only [le_iff_forall_lf]
+  conv_lhs => simp only [le_iff_forall_lf]
+  exact Iff.rfl
 #align pgame.lf_def SetTheory.PGame.lf_def
 
 /-- The definition of `0 ≤ x` on pre-games, in terms of `0 ⧏`. -/
