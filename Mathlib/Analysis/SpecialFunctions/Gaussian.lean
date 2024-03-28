@@ -464,7 +464,6 @@ theorem verticalIntegral_norm_le (hb : 0 < b.re) (c : ℝ) {T : ℝ} (hT : 0 ≤
         congr
         rw [mul_comm]
       rw [mul_assoc]
-    exact le_rfl
   · intro y hy
     have absy : |y| ≤ |c| := by
       rcases le_or_lt 0 c with (h | h)

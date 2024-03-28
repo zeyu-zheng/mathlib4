@@ -596,7 +596,6 @@ theorem iIndepSets.piiUnionInter_of_not_mem {π : ι → Set (Set Ω)} {a : ι} 
       ext x
       simp_rw [Set.mem_iInter]
       conv => lhs; intro i hns; rw [← h_forall i hns]
-      exact Iff.rfl
     intro n hnS
     have hn_ne_a : n ≠ a := by rintro rfl; exact haS (hs_mem hnS)
     simp_rw [f, if_pos hnS, if_neg hn_ne_a]

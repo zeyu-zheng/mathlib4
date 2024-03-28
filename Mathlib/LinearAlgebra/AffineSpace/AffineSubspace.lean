@@ -301,7 +301,6 @@ theorem coe_direction_eq_vsub_set_left {s : AffineSubspace k P} {p : P} (hp : p 
     congr
     ext
     rw [← neg_vsub_eq_vsub_rev, neg_inj]
-  exact Iff.rfl
 #align affine_subspace.coe_direction_eq_vsub_set_left AffineSubspace.coe_direction_eq_vsub_set_left
 
 /-- Given a point in an affine subspace, a vector is in its direction if and only if it results from
