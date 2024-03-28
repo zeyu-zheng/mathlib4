@@ -438,7 +438,6 @@ instance : MetricSpace GHSpace where
               hausdorffDist (p.1 : Set ℓ_infty_ℝ) p.2) ∘
             Prod.swap ''
           { a | ⟦a⟧ = x } ×ˢ { b | ⟦b⟧ = y } := by
-      congr
       funext
       simp only [comp_apply, Prod.fst_swap, Prod.snd_swap]
       congr
@@ -1020,7 +1019,7 @@ instance : CompleteSpace GHSpace := by
   have E :
     ∀ n : ℕ,
       GlueSpace (Y n).isom (isometry_optimalGHInjl (X n) (X (n + 1))) = (Y (n + 1)).Space :=
-    fun n => by dsimp only [Y, auxGluing]; rfl
+    fun n => by dsimp only [Y, auxGluing]
   let c n := cast (E n)
   have ic : ∀ n, Isometry (c n) := fun n x y => by dsimp only [Y, auxGluing]; exact rfl
   -- there is a canonical embedding of `Y n` in `Y (n+1)`, by construction

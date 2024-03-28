@@ -159,7 +159,7 @@ theorem map_coe_nat (n : ℕ) : D (n : A) = 0 := by
 @[simp]
 theorem leibniz_pow (n : ℕ) : D (a ^ n) = n • a ^ (n - 1) • D a := by
   induction' n with n ihn
-  · rw [Nat.zero_eq, pow_zero, map_one_eq_zero, zero_smul]
+  · rw [pow_zero, map_one_eq_zero, zero_smul]
   · rcases (zero_le n).eq_or_lt with (rfl | hpos)
     · erw [pow_one, one_smul, pow_zero, one_smul]
     · have : a * a ^ (n - 1) = a ^ n := by rw [← pow_succ, Nat.sub_add_cancel hpos]
@@ -225,9 +225,7 @@ instance : Inhabited (Derivation R A M) :=
 section Scalar
 
 variable {S T : Type*}
-
 variable [Monoid S] [DistribMulAction S M] [SMulCommClass R S M] [SMulCommClass S A M]
-
 variable [Monoid T] [DistribMulAction T M] [SMulCommClass R T M] [SMulCommClass T A M]
 
 instance : SMul S (Derivation R A M) :=
@@ -342,9 +340,7 @@ def compAlgebraMap [Algebra A B] [IsScalarTower R A B] [IsScalarTower A B M]
 section RestrictScalars
 
 variable {S : Type*} [CommSemiring S]
-
 variable [Algebra S A] [Module S M] [LinearMap.CompatibleSMul A M R S]
-
 variable (R)
 
 /-- If `A` is both an `R`-algebra and an `S`-algebra; `M` is both an `R`-module and an `S`-module,
@@ -387,13 +383,11 @@ end Cancel
 section
 
 variable {R : Type*} [CommRing R]
-
 variable {A : Type*} [CommRing A] [Algebra R A]
 
 section
 
 variable {M : Type*} [AddCommGroup M] [Module A M] [Module R M]
-
 variable (D : Derivation R A M) {D1 D2 : Derivation R A M} (r : R) (a b : A)
 
 protected theorem map_neg : D (-a) = -D a :=

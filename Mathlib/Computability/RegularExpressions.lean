@@ -349,7 +349,7 @@ theorem star_rmatch_iff (P : RegularExpression α) :
             refine' ⟨U, rfl, fun t h => helem t _⟩
             right
             assumption
-  termination_by t => (P,t.length)
+  termination_by t => (P, t.length)
 #align regular_expression.star_rmatch_iff RegularExpression.star_rmatch_iff
 
 @[simp]
@@ -433,7 +433,8 @@ theorem matches'_map (f : α → β) :
   -- Porting note: the following close with last `rw` but not with `simp`?
   | R + S => by simp only [matches'_map, map, matches'_add]; rw [map_add]
   -- Adaptation note: around nightly-2024-02-25, we need to write `comp x y` in the pattern here,
-  -- instead of `x * y` (and the `erw` was just `rw`).
+  -- instead of `x * y`.
+  -- and the `erw` was just `rw`
   | comp R S => by simp only [matches'_map, map, matches'_mul]; erw [map_mul]
   | star R => by
     simp_rw [map, matches', matches'_map]

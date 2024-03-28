@@ -231,7 +231,6 @@ noncomputable instance : Inhabited (PolynomialModule R M) := Finsupp.instInhabit
 noncomputable instance : AddCommGroup (PolynomialModule R M) := Finsupp.instAddCommGroup
 
 variable {M}
-
 variable {S : Type*} [CommSemiring S] [Algebra S R] [Module S M] [IsScalarTower S R M]
 
 namespace PolynomialModule
@@ -312,10 +311,10 @@ theorem monomial_smul_single (i : ℕ) (r : R) (j : ℕ) (m : M) :
     Module.algebraMap_end_apply, smul_def]
   induction i generalizing r j m with
   | zero =>
-    rw [Nat.zero_eq, Function.iterate_zero, zero_add]
+    rw [Function.iterate_zero, zero_add]
     exact Finsupp.smul_single r j m
   | succ n hn =>
-    rw [Function.iterate_succ, Function.comp_apply, Nat.succ_eq_add_one, add_assoc, ← hn]
+    rw [Function.iterate_succ, Function.comp_apply, add_assoc, ← hn]
     congr 2
     rw [Nat.one_add]
     exact Finsupp.mapDomain_single
@@ -416,7 +415,6 @@ noncomputable def equivPolynomial {S : Type*} [CommRing S] [Algebra R S] :
 #align polynomial_module.equiv_polynomial PolynomialModule.equivPolynomial
 
 variable (R' : Type*) {M' : Type*} [CommRing R'] [AddCommGroup M'] [Module R' M']
-
 variable [Algebra R R'] [Module R M'] [IsScalarTower R R' M']
 
 /-- The image of a polynomial under a linear map. -/

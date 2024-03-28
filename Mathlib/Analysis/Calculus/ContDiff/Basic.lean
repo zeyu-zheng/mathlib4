@@ -859,7 +859,6 @@ theorem contDiffWithinAt_snd {s : Set (E × F)} {p : E × F} :
 section NAry
 
 variable {E₁ E₂ E₃ E₄ : Type*}
-
 variable [NormedAddCommGroup E₁] [NormedAddCommGroup E₂] [NormedAddCommGroup E₃]
   [NormedAddCommGroup E₄] [NormedSpace 𝕜 E₁] [NormedSpace 𝕜 E₂] [NormedSpace 𝕜 E₃]
   [NormedSpace 𝕜 E₄]
@@ -1086,7 +1085,7 @@ theorem ContDiffWithinAt.iteratedFderivWithin_right {i : ℕ} (hf : ContDiffWith
     (hs : UniqueDiffOn 𝕜 s) (hmn : (m + i : ℕ∞) ≤ n) (hx₀s : x₀ ∈ s) :
     ContDiffWithinAt 𝕜 m (iteratedFDerivWithin 𝕜 i f s) s x₀ := by
   induction' i with i hi generalizing m
-  · rw [Nat.zero_eq, ENat.coe_zero, add_zero] at hmn
+  · rw [ENat.coe_zero, add_zero] at hmn
     exact (hf.of_le hmn).continuousLinearMap_comp
       ((continuousMultilinearCurryFin0 𝕜 E F).symm : _ →L[𝕜] E [×0]→L[𝕜] F)
   · rw [Nat.cast_succ, add_comm _ 1, ← add_assoc] at hmn
@@ -1230,7 +1229,8 @@ theorem contDiff_pi : ContDiff 𝕜 n Φ ↔ ∀ i, ContDiff 𝕜 n fun x => Φ 
   simp only [← contDiffOn_univ, contDiffOn_pi]
 #align cont_diff_pi contDiff_pi
 
-theorem contDiff_update (k : ℕ∞) (x : ∀ i, F' i) (i : ι) : ContDiff 𝕜 k (update x i) := by
+theorem contDiff_update [DecidableEq ι] (k : ℕ∞) (x : ∀ i, F' i) (i : ι) :
+    ContDiff 𝕜 k (update x i) := by
   rw [contDiff_pi]
   intro j
   dsimp [Function.update]
@@ -1240,7 +1240,8 @@ theorem contDiff_update (k : ℕ∞) (x : ∀ i, F' i) (i : ι) : ContDiff 𝕜 
   · exact contDiff_const
 
 variable (F') in
-theorem contDiff_single (k : ℕ∞) (i : ι) : ContDiff 𝕜 k (Pi.single i : F' i → ∀ i, F' i) :=
+theorem contDiff_single [DecidableEq ι] (k : ℕ∞) (i : ι) :
+    ContDiff 𝕜 k (Pi.single i : F' i → ∀ i, F' i) :=
   contDiff_update k 0 i
 
 variable (𝕜 E)
@@ -1627,7 +1628,6 @@ Porting note (#11215): TODO: generalize results in this section.
 section ConstSMul
 
 variable {R : Type*} [Semiring R] [Module R F] [SMulCommClass 𝕜 R F]
-
 variable [ContinuousConstSMul R F]
 
 -- The scalar multiplication with a constant is smooth.
@@ -1680,7 +1680,6 @@ end ConstSMul
 section Prod_map
 
 variable {E' : Type*} [NormedAddCommGroup E'] [NormedSpace 𝕜 E']
-
 variable {F' : Type*} [NormedAddCommGroup F'] [NormedSpace 𝕜 F']
 
 /-- The product map of two `C^n` functions within a set at a point is `C^n`
@@ -1766,7 +1765,7 @@ theorem contDiffAt_ring_inverse [CompleteSpace R] (x : Rˣ) :
       · rintro _ ⟨x', rfl⟩
         exact (inverse_continuousAt x').continuousWithinAt
       · simp [ftaylorSeriesWithin]
-  · apply contDiffAt_succ_iff_hasFDerivAt.mpr
+  · rw [contDiffAt_succ_iff_hasFDerivAt]
     refine' ⟨fun x : R => -mulLeftRight 𝕜 R (inverse x) (inverse x), _, _⟩
     · refine' ⟨{ y : R | IsUnit y }, x.nhds, _⟩
       rintro _ ⟨y, rfl⟩
@@ -1884,7 +1883,7 @@ theorem PartialHomeomorph.contDiffAt_symm [CompleteSpace E] (f : PartialHomeomor
   · rw [contDiffAt_zero]
     exact ⟨f.target, IsOpen.mem_nhds f.open_target ha, f.continuousOn_invFun⟩
   · obtain ⟨f', ⟨u, hu, hff'⟩, hf'⟩ := contDiffAt_succ_iff_hasFDerivAt.mp hf
-    apply contDiffAt_succ_iff_hasFDerivAt.mpr
+    rw [contDiffAt_succ_iff_hasFDerivAt]
     -- For showing `n.succ` times continuous differentiability (the main inductive step), it
     -- suffices to produce the derivative and show that it is `n` times continuously differentiable
     have eq_f₀' : f' (f.symm a) = f₀' := (hff' (f.symm a) (mem_of_mem_nhds hu)).unique hf₀'
@@ -2138,11 +2137,8 @@ over `𝕜`.
 variable (𝕜) {𝕜' : Type*} [NontriviallyNormedField 𝕜']
 -- Porting note: this couldn't be on the same line as the binder type update of `𝕜`
 variable [NormedAlgebra 𝕜 𝕜']
-
 variable [NormedSpace 𝕜' E] [IsScalarTower 𝕜 𝕜' E]
-
 variable [NormedSpace 𝕜' F] [IsScalarTower 𝕜 𝕜' F]
-
 variable {p' : E → FormalMultilinearSeries 𝕜' E F}
 
 theorem HasFTaylorSeriesUpToOn.restrictScalars (h : HasFTaylorSeriesUpToOn n f p' s) :

@@ -38,7 +38,7 @@ theorem cast_sub {m n} (h : m ≤ n) : ((n - m : ℕ) : R) = n - m :=
 @[simp, norm_cast]
 theorem cast_pred : ∀ {n}, 0 < n → ((n - 1 : ℕ) : R) = n - 1
   | 0, h => by cases h
-  | n + 1, _ => by rw [cast_succ, add_sub_cancel]; rfl
+  | n + 1, _ => by rw [cast_succ, add_sub_cancel_right]; rfl
 #align nat.cast_pred Nat.cast_pred
 
 end Nat
@@ -94,8 +94,7 @@ theorem cast_subNatNat (m n) : ((Int.subNatNat m n : ℤ) : R) = m - n := by
   cases e : n - m
   · simp only [ofNat_eq_coe]
     simp [e, Nat.le_of_sub_eq_zero e]
-  · rw [cast_negSucc, Nat.add_one, succ_eq_add_one, ← e,
-      Nat.cast_sub <| _root_.le_of_lt <| Nat.lt_of_sub_eq_succ e, neg_sub]
+  · rw [cast_negSucc, ← e, Nat.cast_sub <| _root_.le_of_lt <| Nat.lt_of_sub_eq_succ e, neg_sub]
 #align int.cast_sub_nat_nat Int.cast_subNatNatₓ
 -- type had `HasLiftT`
 

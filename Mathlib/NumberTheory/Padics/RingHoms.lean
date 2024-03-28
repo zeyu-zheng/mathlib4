@@ -338,7 +338,7 @@ theorem dvd_appr_sub_appr (x : ℤ_[p]) (m n : ℕ) (h : m ≤ n) : p ^ m ∣ x.
   obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_le h; clear h
   induction' k with k ih
   · simp only [zero_eq, add_zero, le_refl, tsub_eq_zero_of_le, ne_eq, Nat.isUnit_iff, dvd_zero]
-  rw [Nat.succ_eq_add_one, ← add_assoc]
+  rw [← add_assoc]
   dsimp [appr]
   split_ifs with h
   · exact ih
@@ -369,7 +369,7 @@ theorem appr_spec (n : ℕ) : ∀ x : ℤ_[p], x - appr x n ∈ Ideal.span {(p :
     congr
     simp only [hc]
   rw [show (x - (appr x n : ℤ_[p])).valuation = ((p : ℤ_[p]) ^ n * c).valuation by rw [hc]]
-  rw [valuation_p_pow_mul _ _ hc', add_sub_cancel', _root_.pow_succ', ← mul_sub]
+  rw [valuation_p_pow_mul _ _ hc', add_sub_cancel_left, _root_.pow_succ', ← mul_sub]
   apply mul_dvd_mul_left
   obtain hc0 | hc0 := eq_or_ne c.valuation.natAbs 0
   · simp only [hc0, mul_one, _root_.pow_zero]

@@ -103,7 +103,7 @@ theorem finRotate_succ_eq_decomposeFin {n : ℕ} :
 @[simp]
 theorem sign_finRotate (n : ℕ) : Perm.sign (finRotate (n + 1)) = (-1) ^ n := by
   induction' n with n ih
-  · simp; rfl
+  · simp
   · rw [finRotate_succ_eq_decomposeFin]
     simp [ih, pow_succ]
 #align sign_fin_rotate sign_finRotate
@@ -123,7 +123,7 @@ theorem isCycle_finRotate {n : ℕ} : IsCycle (finRotate (n + 2)) := by
   refine' ⟨0, by simp, fun x hx' => ⟨x, _⟩⟩
   clear hx'
   cases' x with x hx
-  rw [zpow_coe_nat, Fin.ext_iff, Fin.val_mk]
+  rw [zpow_natCast, Fin.ext_iff, Fin.val_mk]
   induction' x with x ih; · rfl
   rw [pow_succ, Perm.mul_apply, coe_finRotate_of_ne_last, ih (lt_trans x.lt_succ_self hx)]
   rw [Ne.def, Fin.ext_iff, ih (lt_trans x.lt_succ_self hx), Fin.val_last]

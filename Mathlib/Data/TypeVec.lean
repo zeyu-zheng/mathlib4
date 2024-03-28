@@ -497,7 +497,6 @@ theorem const_iff_true {α : TypeVec n} {i x p} : ofRepeat (TypeVec.const p α i
 
 section
 variable {α β γ : TypeVec.{u} n}
-
 variable (p : α ⟹ «repeat» n Prop) (r : α ⊗ α ⟹ «repeat» n Prop)
 
 /-- left projection of a `prod` vector -/
@@ -646,7 +645,7 @@ theorem subtypeVal_nil {α : TypeVec.{u} 0} (ps : α ⟹ «repeat» 0 Prop) :
 theorem diag_sub_val {n} {α : TypeVec.{u} n} : subtypeVal (repeatEq α) ⊚ diagSub = prod.diag := by
   ext i x
   induction' i with _ _ _ i_ih
-  simp only [comp, subtypeVal, repeatEq._eq_2, diagSub, prod.diag]
+  simp only [comp, subtypeVal, repeatEq.eq_2, diagSub, prod.diag]
   apply @i_ih (drop α)
 #align typevec.diag_sub_val TypeVec.diag_sub_val
 

@@ -144,6 +144,9 @@ theorem moment_truncation_eq_intervalIntegral (hf : AEStronglyMeasurable f μ) {
   rw [← integral_map (f := fun z => _ ^ n) hf.aemeasurable, intervalIntegral.integral_of_le,
     ← integral_indicator M]
   · simp only [indicator, zero_pow hn, id.def, ite_pow]
+    -- FIXME nightly-testing
+    -- Why is this needed?
+    convert rfl
   · linarith
   · exact ((measurable_id.indicator M).pow_const n).aestronglyMeasurable
 #align probability_theory.moment_truncation_eq_interval_integral ProbabilityTheory.moment_truncation_eq_intervalIntegral
@@ -159,6 +162,9 @@ theorem moment_truncation_eq_intervalIntegral_of_nonneg (hf : AEStronglyMeasurab
   · rw [← integral_map (f := fun z => _ ^ n) hf.aemeasurable, intervalIntegral.integral_of_le hA,
       ← integral_indicator M]
     · simp only [indicator, zero_pow hn, id.def, ite_pow]
+      -- FIXME nightly-testing
+      -- Why is this needed?
+      convert rfl
     · exact ((measurable_id.indicator M).pow_const n).aestronglyMeasurable
   · rw [← integral_map (f := fun z => _ ^ n) hf.aemeasurable, intervalIntegral.integral_of_ge hA.le,
       ← integral_indicator M']
@@ -201,13 +207,13 @@ integral of the whole function. -/
 theorem tendsto_integral_truncation {f : α → ℝ} (hf : Integrable f μ) :
     Tendsto (fun A => ∫ x, truncation f A x ∂μ) atTop (𝓝 (∫ x, f x ∂μ)) := by
   refine' tendsto_integral_filter_of_dominated_convergence (fun x => abs (f x)) _ _ _ _
-  · exact eventually_of_forall fun A => hf.aestronglyMeasurable.truncation
-  · apply eventually_of_forall fun A => ?_
-    apply eventually_of_forall fun x => ?_
+  · exact eventually_of_forall fun A ↦ hf.aestronglyMeasurable.truncation
+  · filter_upwards with A
+    filter_upwards with x
     rw [Real.norm_eq_abs]
     exact abs_truncation_le_abs_self _ _ _
-  · apply hf.abs
-  · apply eventually_of_forall fun x => ?_
+  · exact hf.abs
+  · filter_upwards with x
     apply tendsto_const_nhds.congr' _
     filter_upwards [Ioi_mem_atTop (abs (f x))] with A hA
     exact (truncation_eq_self hA).symm

@@ -318,7 +318,7 @@ theorem exists_discrete_support_nonpos (f : BoundedAdditiveMeasure α) :
     · have : (s (n + 1)).1 = (s (n + 1)).1 \ (s n).1 ∪ (s n).1 := by
         simpa only [s, Function.iterate_succ', union_diff_self]
           using (diff_union_of_subset <| subset_union_left _ _).symm
-      rw [Nat.succ_eq_add_one, this, f.additive]
+      rw [this, f.additive]
       swap; · exact disjoint_sdiff_self_left
       calc
         ((n + 1 : ℕ) : ℝ) * (ε / 2) = ε / 2 + n * (ε / 2) := by simp only [Nat.cast_succ]; ring
@@ -374,7 +374,7 @@ def continuousPart (f : BoundedAdditiveMeasure α) : BoundedAdditiveMeasure α :
 theorem eq_add_parts (f : BoundedAdditiveMeasure α) (s : Set α) :
     f s = f.discretePart s + f.continuousPart s := by
   simp only [discretePart, continuousPart, restrict_apply]
-  rw [← f.additive, ← inter_distrib_right]
+  rw [← f.additive, ← union_inter_distrib_right]
   · simp only [union_univ, union_diff_self, univ_inter]
   · have : Disjoint f.discreteSupport (univ \ f.discreteSupport) := disjoint_sdiff_self_right
     exact this.mono (inter_subset_left _ _) (inter_subset_left _ _)
@@ -498,7 +498,6 @@ We need the continuum hypothesis to construct it.
 theorem sierpinski_pathological_family (Hcont : #ℝ = aleph 1) :
     ∃ f : ℝ → Set ℝ, (∀ x, (univ \ f x).Countable) ∧ ∀ y, {x : ℝ | y ∈ f x}.Countable := by
   rcases Cardinal.ord_eq ℝ with ⟨r, hr, H⟩
-  skip
   refine' ⟨fun x => {y | r x y}, fun x => _, fun y => _⟩
   · have : univ \ {y | r x y} = {y | r y x} ∪ {x} := by
       ext y

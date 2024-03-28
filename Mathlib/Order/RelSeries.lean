@@ -3,12 +3,13 @@ Copyright (c) 2023 Jujian Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang, Fangming Li
 -/
+import Mathlib.Algebra.Order.WithZero
 import Mathlib.Data.Int.Basic
 import Mathlib.Data.List.Chain
 import Mathlib.Data.List.OfFn
 import Mathlib.Data.Rel
-import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Abel
+import Mathlib.Tactic.Linarith
 
 /-!
 # Series of a relation
@@ -112,7 +113,8 @@ protected def Equiv : RelSeries r ≃ {x : List α | x ≠ [] ∧ x.Chain' r} wh
   left_inv x := ext (by simp) <| by ext; apply List.get_ofFn
   right_inv x := by
     refine Subtype.ext (List.ext_get ?_ fun n hn1 _ => List.get_ofFn _ _)
-    simp [Nat.succ_pred_eq_of_pos <| List.length_pos.mpr x.2.1]
+    have := Nat.succ_pred_eq_of_pos <| List.length_pos.mpr x.2.1
+    simp_all
 
 -- TODO : build a similar bijection between `RelSeries α` and `Quiver.Path`
 
@@ -242,7 +244,6 @@ lemma append_apply_right (p q : RelSeries r) (connect : r p.last q.head)
     (p.append q connect).last = q.last := by
   delta last
   convert append_apply_right p q connect (Fin.last _)
-  congr
   ext
   change _ = _ % _
   simp only [append_length, Fin.val_last, Fin.natAdd_last, Nat.one_mod, Nat.mod_add_mod,
@@ -453,11 +454,9 @@ lemma smash_succ_castAdd {p q : RelSeries r} (h : p.last = q.head)
 
 lemma smash_natAdd {p q : RelSeries r} (h : p.last = q.head) (i : Fin q.length) :
     smash p q h (Fin.castSucc <| i.natAdd p.length) = q (Fin.castSucc i) := by
-  rw [smash_toFun]
-  split_ifs with H
-  · simp only [Fin.coe_castSucc, Fin.coe_natAdd, add_lt_iff_neg_left, not_lt_zero'] at H
-  · congr
-    exact Nat.add_sub_self_left _ _
+  rw [smash_toFun, dif_neg (by simp)]
+  congr
+  exact Nat.add_sub_self_left _ _
 
 lemma smash_succ_natAdd {p q : RelSeries r} (h : p.last = q.head) (i : Fin q.length) :
     smash p q h (i.natAdd p.length).succ = q i.succ := by

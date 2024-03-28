@@ -271,7 +271,8 @@ theorem ofDigits_digits (b n : ℕ) : ofDigits b (digits b n) = n := by
     · induction' n with n ih
       · rfl
       · rw [show 0 + 1 = 1 by rfl] at ih ⊢
-        simp only [Nat.succ_eq_add_one, ih, add_comm 1, ofDigits_one_cons, Nat.cast_id, digits_one_succ]
+        simp only [Nat.succ_eq_add_one, ih, add_comm 1, ofDigits_one_cons, Nat.cast_id,
+          digits_one_succ]
     · apply Nat.strongInductionOn n _
       clear n
       intro n h
@@ -387,7 +388,7 @@ theorem digits_lt_base' {b m : ℕ} : ∀ {d}, d ∈ digits (b + 2) m → d < b 
   -- Porting note: Previous code (single line) contained linarith.
   -- . exact IH _ (Nat.div_lt_self (Nat.succ_pos _) (by linarith)) hd
   · apply IH ((n + 1) / (b + 2))
-    · apply Nat.div_lt_self <;> simp
+    · apply Nat.div_lt_self <;> omega
     · assumption
 #align nat.digits_lt_base' Nat.digits_lt_base'
 
@@ -407,7 +408,6 @@ theorem ofDigits_lt_base_pow_length' {b : ℕ} {l : List ℕ} (hl : ∀ x ∈ l,
       mul_le_mul (IH fun x hx => hl _ (List.mem_cons_of_mem _ hx)) (by rfl) (by simp only [zero_le])
         (Nat.zero_le _)
     suffices ↑hd < b + 2 by linarith
-    norm_cast
     exact hl hd (List.mem_cons_self _ _)
 #align nat.of_digits_lt_base_pow_length' Nat.ofDigits_lt_base_pow_length'
 
@@ -567,7 +567,8 @@ theorem sub_one_mul_sum_div_pow_eq_sub_sum_digits
         have h₁ : 1 ≤ tl.length := List.length_pos.mpr h'
         rw [← sum_range_add_sum_Ico _ <| h₁, ← add_zero (∑ x in Ico _ _, ofDigits p (tl.drop x)),
             ← this, sum_Ico_consecutive _  h₁ <| (le_add_right (List.length tl) 1)]
-        -- Adaptatin note: nightly-2024-03-07: this needs an `erw` only because of a `0 + 1` vs `1`.
+        -- Adaptation note: nightly-2024-03-07:
+        -- this needs an `erw` only because of a `0 + 1` vs `1`.
         -- Can someone do it more cleanly?
         erw [← sum_Ico_add _ 0 tl.length 1]
         rw [Ico_zero_eq_range, mul_add, mul_add, ih, range_one, sum_singleton, List.drop, ofDigits,

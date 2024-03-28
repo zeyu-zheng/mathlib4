@@ -60,8 +60,7 @@ theorem pow_inv_comm' (A : M) (m n : ℕ) : A⁻¹ ^ m * A ^ n = A ^ n * A⁻¹ 
   cases' m with m m
   · simp
   rcases nonsing_inv_cancel_or_zero A with (⟨h, h'⟩ | h)
-  · simp only [Nat.succ_eq_add_one]
-    calc
+  · calc
        A⁻¹ ^ (m + 1) * A ^ (n + 1) = A⁻¹ ^ m * (A⁻¹ * A) * A ^ n := by
         simp only [pow_succ' A⁻¹, pow_succ A, Matrix.mul_assoc]
       _ = A ^ n * A⁻¹ ^ m := by simp only [h, Matrix.mul_one, Matrix.one_mul, IH m]
@@ -79,13 +78,13 @@ open Int
 
 @[simp]
 theorem one_zpow : ∀ n : ℤ, (1 : M) ^ n = 1
-  | (n : ℕ) => by rw [zpow_coe_nat, one_pow]
+  | (n : ℕ) => by rw [zpow_natCast, one_pow]
   | -[n+1] => by rw [zpow_negSucc, one_pow, inv_one]
 #align matrix.one_zpow Matrix.one_zpow
 
 theorem zero_zpow : ∀ z : ℤ, z ≠ 0 → (0 : M) ^ z = 0
   | (n : ℕ), h => by
-    rw [zpow_coe_nat, zero_pow]
+    rw [zpow_natCast, zero_pow]
     exact mod_cast h
   | -[n+1], _ => by simp [zero_pow n.succ_ne_zero]
 #align matrix.zero_zpow Matrix.zero_zpow
@@ -97,7 +96,7 @@ theorem zero_zpow_eq (n : ℤ) : (0 : M) ^ n = if n = 0 then 1 else 0 := by
 #align matrix.zero_zpow_eq Matrix.zero_zpow_eq
 
 theorem inv_zpow (A : M) : ∀ n : ℤ, A⁻¹ ^ n = (A ^ n)⁻¹
-  | (n : ℕ) => by rw [zpow_coe_nat, zpow_coe_nat, inv_pow']
+  | (n : ℕ) => by rw [zpow_natCast, zpow_natCast, inv_pow']
   | -[n+1] => by rw [zpow_negSucc, zpow_negSucc, inv_pow']
 #align matrix.inv_zpow Matrix.inv_zpow
 
@@ -108,7 +107,7 @@ theorem zpow_neg_one (A : M) : A ^ (-1 : ℤ) = A⁻¹ := by
 #align matrix.zpow_neg_one Matrix.zpow_neg_one
 
 nonrec theorem zpow_coe_nat (A : M) (n : ℕ) : A ^ (n : ℤ) = A ^ n :=
-  zpow_coe_nat _ _
+  zpow_natCast _ _
 #align matrix.zpow_coe_nat Matrix.zpow_coe_nat
 
 @[simp]
@@ -285,7 +284,7 @@ theorem zpow_mul' (A : M) (h : IsUnit A.det) (m n : ℤ) : A ^ (m * n) = (A ^ n)
 
 @[simp, norm_cast]
 theorem coe_units_zpow (u : Mˣ) : ∀ n : ℤ, ((u ^ n : Mˣ) : M) = (u : M) ^ n
-  | (n : ℕ) => by rw [_root_.zpow_coe_nat, zpow_coe_nat, Units.val_pow_eq_pow_val]
+  | (n : ℕ) => by rw [zpow_natCast, zpow_coe_nat, Units.val_pow_eq_pow_val]
   | -[k+1] => by
     rw [zpow_negSucc, zpow_negSucc, ← inv_pow, u⁻¹.val_pow_eq_pow_val, ← inv_pow', coe_units_inv]
 #align matrix.coe_units_zpow Matrix.coe_units_zpow

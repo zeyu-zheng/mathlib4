@@ -837,7 +837,7 @@ end IsMultiplicative
 section SpecialFunctions
 
 /-- The identity on `ℕ` as an `ArithmeticFunction`.  -/
-nonrec  -- Porting note: added
+nonrec  -- Porting note (#11445): added
 def id : ArithmeticFunction ℕ :=
   ⟨id, rfl⟩
 #align nat.arithmetic_function.id ArithmeticFunction.id
@@ -967,10 +967,9 @@ lemma cardFactors_zero : Ω 0 = 0 := rfl
 theorem cardFactors_eq_one_iff_prime {n : ℕ} : Ω n = 1 ↔ n.Prime := by
   refine' ⟨fun h => _, fun h => List.length_eq_one.2 ⟨n, factors_prime h⟩⟩
   cases' n with n
-  · contrapose! h
-    simp
+  · simp at h
   rcases List.length_eq_one.1 h with ⟨x, hx⟩
-  rw [← prod_factors n.succ_ne_zero, hx, List.prod_singleton]
+  rw [← prod_factors n.add_one_ne_zero, hx, List.prod_singleton]
   apply prime_of_mem_factors
   rw [hx, List.mem_singleton]
 #align nat.arithmetic_function.card_factors_eq_one_iff_prime ArithmeticFunction.cardFactors_eq_one_iff_prime

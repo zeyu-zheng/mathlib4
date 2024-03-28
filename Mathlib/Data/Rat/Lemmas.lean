@@ -3,11 +3,10 @@ Copyright (c) 2019 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 -/
-import Mathlib.Data.Rat.Defs
 import Mathlib.Data.Int.Cast.Lemmas
 import Mathlib.Data.Int.Div
-import Mathlib.Algebra.GroupWithZero.Units.Lemmas
 import Mathlib.Data.PNat.Defs
+import Mathlib.Data.Rat.Defs
 
 #align_import data.rat.lemmas from "leanprover-community/mathlib"@"550b58538991c8977703fdeb7c9d51a5aa27df11"
 
@@ -61,13 +60,15 @@ theorem num_den_mk {q : ℚ} {n d : ℤ} (hd : d ≠ 0) (qdf : q = n /. d) :
 theorem num_mk (n d : ℤ) : (n /. d).num = d.sign * n / n.gcd d := by
   rcases d with ((_ | _) | _) <;>
   rw [← Int.div_eq_ediv_of_dvd] <;>
-  simp [divInt, mkRat, Rat.normalize, Nat.succPNat, Int.sign, Int.gcd, -Nat.cast_succ,
+  simp [divInt, mkRat, Rat.normalize, Nat.succPNat, Int.sign, Int.gcd,
     Int.zero_ediv, Int.ofNat_dvd_left, Nat.gcd_dvd_left]
+  congr
 #align rat.num_mk Rat.num_mk
 
 theorem den_mk (n d : ℤ) : (n /. d).den = if d = 0 then 1 else d.natAbs / n.gcd d := by
   rcases d with ((_ | _) | _) <;>
-    simp [divInt, mkRat, Rat.normalize, Nat.succPNat, Int.sign, Int.gcd, -Nat.cast_succ]
+    simp [divInt, mkRat, Rat.normalize, Nat.succPNat, Int.sign, Int.gcd]
+  congr
 #align rat.denom_mk Rat.den_mk
 
 #noalign rat.mk_pnat_denom_dvd
@@ -202,7 +203,7 @@ theorem den_div_cast_eq_one_iff (m n : ℤ) (hn : n ≠ 0) : ((m : ℚ) / n).den
     simp_rw [eq_div_iff_mul_eq hn, ← Int.cast_mul] at hk
     rwa [mul_comm, eq_comm, coe_int_inj] at hk
   · rintro ⟨d, rfl⟩
-    rw [Int.cast_mul, mul_comm, mul_div_cancel _ hn, Rat.coe_int_den]
+    rw [Int.cast_mul, mul_comm, mul_div_cancel_right₀ _ hn, Rat.coe_int_den]
 #align rat.denom_div_cast_eq_one_iff Rat.den_div_cast_eq_one_iff
 
 theorem num_div_eq_of_coprime {a b : ℤ} (hb0 : 0 < b) (h : Nat.Coprime a.natAbs b.natAbs) :
@@ -277,10 +278,13 @@ theorem inv_coe_nat_den_of_pos {a : ℕ} (ha0 : 0 < a) : (a : ℚ)⁻¹.den = a 
 
 @[simp]
 theorem inv_coe_int_num (a : ℤ) : (a : ℚ)⁻¹.num = Int.sign a := by
-  induction a using Int.induction_on <;>
-    simp [← Int.negSucc_coe', Int.negSucc_coe, -neg_add_rev, Rat.inv_neg, Int.ofNat_add_one_out,
-      -Nat.cast_succ, inv_coe_nat_num_of_pos, -Int.cast_negSucc, @eq_comm ℤ 1,
-      Int.sign_eq_one_of_pos, ofInt_eq_cast]
+  induction a using Int.induction_on
+  · simp only [Int.cast_zero, inv_zero, num_ofNat, Int.sign_zero]
+  · simp only [Int.ofNat_add_one_out, Int.cast_ofNat, Nat.zero_lt_succ, inv_coe_nat_num_of_pos,
+      Nat.cast_pos, Int.sign_eq_one_of_pos]
+  · simp only [← Int.negSucc_coe', Int.negSucc_coe, Nat.cast_add, Nat.cast_one,
+      Int.ofNat_add_one_out, Int.cast_neg, Int.cast_ofNat, Rat.inv_neg, neg_num, Nat.zero_lt_succ,
+      inv_coe_nat_num_of_pos, Int.reduceNeg, Int.sign_neg, Nat.cast_pos, Int.sign_eq_one_of_pos]
 #align rat.inv_coe_int_num Rat.inv_coe_int_num
 
 @[simp]
@@ -294,9 +298,15 @@ theorem inv_ofNat_num (a : ℕ) [a.AtLeastTwo] : (no_index (OfNat.ofNat a : ℚ)
 
 @[simp]
 theorem inv_coe_int_den (a : ℤ) : (a : ℚ)⁻¹.den = if a = 0 then 1 else a.natAbs := by
-  induction a using Int.induction_on <;>
-    simp [← Int.negSucc_coe', Int.negSucc_coe, -neg_add_rev, Rat.inv_neg, Int.ofNat_add_one_out,
-      -Nat.cast_succ, inv_coe_nat_den_of_pos, -Int.cast_negSucc, ofInt_eq_cast]
+  induction a using Int.induction_on
+  · simp only [Int.cast_zero, inv_zero, den_ofNat, ↓reduceIte]
+  · simp only [Int.ofNat_add_one_out, Int.cast_ofNat, Nat.zero_lt_succ, inv_coe_nat_den_of_pos,
+      Nat.cast_eq_zero, Nat.succ_ne_zero, ↓reduceIte, Int.natAbs_ofNat]
+  · simp only [← Int.negSucc_coe', Int.negSucc_coe, Nat.cast_add, Nat.cast_one,
+      Int.ofNat_add_one_out, Int.cast_neg, Int.cast_ofNat, Rat.inv_neg, neg_den, Nat.zero_lt_succ,
+      inv_coe_nat_den_of_pos, neg_eq_zero, Nat.cast_eq_zero, Nat.succ_ne_zero, ↓reduceIte,
+      Int.natAbs_neg, Int.natAbs_ofNat]
+
 #align rat.inv_coe_int_denom Rat.inv_coe_int_den
 
 @[simp]

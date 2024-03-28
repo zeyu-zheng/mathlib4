@@ -322,7 +322,6 @@ instance (i : ι) : Inhabited (Pair M i) :=
   ⟨⟨1, empty, by tauto⟩⟩
 
 variable {M}
-
 variable [∀ i, DecidableEq (M i)]
 
 /-- Construct a new `Word` without any reduction. The underlying list of
@@ -377,7 +376,7 @@ theorem rcons_inj {i} : Function.Injective (rcons : Pair M i → Word M) := by
 theorem mem_rcons_iff {i j : ι} (p : Pair M i) (m : M j) :
     ⟨_, m⟩ ∈ (rcons p).toList ↔ ⟨_, m⟩ ∈ p.tail.toList ∨
       m ≠ 1 ∧ (∃ h : i = j, m = h ▸ p.head) := by
-  simp only [rcons._eq_1, cons._eq_1, ne_eq]
+  simp only [rcons.eq_1, cons.eq_1, ne_eq]
   by_cases hij : i = j
   · subst i
     by_cases hm : m = p.head
@@ -859,11 +858,8 @@ open Pointwise
 open Cardinal
 
 variable [hnontriv : Nontrivial ι]
-
 variable {G : Type*} [Group G]
-
 variable {H : ι → Type*} [∀ i, Group (H i)]
-
 variable (f : ∀ i, H i →* G)
 
 -- We need many groups or one group with many elements
@@ -871,13 +867,9 @@ variable (hcard : 3 ≤ #ι ∨ ∃ i, 3 ≤ #(H i))
 
 -- A group action on α, and the ping-pong sets
 variable {α : Type*} [MulAction G α]
-
 variable (X : ι → Set α)
-
 variable (hXnonempty : ∀ i, (X i).Nonempty)
-
 variable (hXdisj : Pairwise fun i j => Disjoint (X i) (X j))
-
 variable (hpp : Pairwise fun i j => ∀ h : H i, h ≠ 1 → f i h • X j ⊆ X i)
 
 theorem lift_word_ping_pong {i j k} (w : NeWord H i j) (hk : j ≠ k) :
@@ -1019,24 +1011,16 @@ section PingPongLemma
 open Pointwise Cardinal
 
 variable [Nontrivial ι]
-
 variable {G : Type u_1} [Group G] (a : ι → G)
 
 -- A group action on α, and the ping-pong sets
 variable {α : Type*} [MulAction G α]
-
 variable (X Y : ι → Set α)
-
 variable (hXnonempty : ∀ i, (X i).Nonempty)
-
 variable (hXdisj : Pairwise fun i j => Disjoint (X i) (X j))
-
 variable (hYdisj : Pairwise fun i j => Disjoint (Y i) (Y j))
-
 variable (hXYdisj : ∀ i j, Disjoint (X i) (Y j))
-
 variable (hX : ∀ i, a i • (Y i)ᶜ ⊆ X i)
-
 variable (hY : ∀ i, a⁻¹ i • (X i)ᶜ ⊆ Y i)
 
 /-- The Ping-Pong-Lemma.

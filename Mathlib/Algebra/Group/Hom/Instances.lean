@@ -68,10 +68,15 @@ instance MonoidHom.commGroup {M G} [MulOneClass M] [CommGroup G] : CommGroup (M 
       simp,
     zpow_succ' := fun n f => by
       ext x
-      simp [zpow_coe_nat, pow_succ],
+      -- Adaptation note: nightly-2024-03-13
+      -- https://github.com/leanprover-community/mathlib4/issues/11357
+      -- If we combine these two `simp`s we reveal a bug: "unexpected bound variable #0"
+      -- Hopefully we can minimize this.
+      simp [zpow_add_one]
+      simp [mul_comm],
     zpow_neg' := fun n f => by
       ext x
-      simp [Nat.succ_eq_add_one, zpow_coe_nat, -Int.natCast_add] }
+      simp [Nat.succ_eq_add_one, zpow_natCast, -Int.natCast_add] }
 
 instance AddMonoid.End.instAddCommMonoid [AddCommMonoid M] : AddCommMonoid (AddMonoid.End M) :=
   AddMonoidHom.addCommMonoid
@@ -113,7 +118,7 @@ instance AddMonoid.End.instAddCommGroup [AddCommGroup M] : AddCommGroup (AddMono
 instance AddMonoid.End.instRing [AddCommGroup M] : Ring (AddMonoid.End M) :=
   { AddMonoid.End.instSemiring, AddMonoid.End.instAddCommGroup with
     intCast := fun z => z • (1 : AddMonoid.End M),
-    intCast_ofNat := coe_nat_zsmul _,
+    intCast_ofNat := natCast_zsmul _,
     intCast_negSucc := negSucc_zsmul _ }
 
 /-- See also `AddMonoid.End.intCast_def`. -/

@@ -279,9 +279,11 @@ instance Interval.mulOneClass [OrderedCommMonoid α] : MulOneClass (Interval α)
   mul := (· * ·)
   one := 1
   one_mul s :=
-    (Option.map₂_coe_left _ _ _).trans <| by simp_rw [one_mul, ← id_def, Option.map_id, id]
+    (Option.map₂_coe_left _ _ _).trans <| by
+      simp_rw [one_mul, ← Function.id_def, Option.map_id, id]
   mul_one s :=
-    (Option.map₂_coe_right _ _ _).trans <| by simp_rw [mul_one, ← id_def, Option.map_id, id]
+    (Option.map₂_coe_right _ _ _).trans <| by
+      simp_rw [mul_one, ← Function.id_def, Option.map_id, id]
 
 @[to_additive]
 instance Interval.commMonoid [OrderedCommMonoid α] : CommMonoid (Interval α) :=
@@ -517,7 +519,7 @@ variable [OrderedCommGroup α] {s t : NonemptyInterval α}
 @[to_additive]
 protected theorem mul_eq_one_iff : s * t = 1 ↔ ∃ a b, s = pure a ∧ t = pure b ∧ a * b = 1 := by
   refine' ⟨fun h => _, _⟩
-  · rw [ext_iff, Prod.ext_iff] at h
+  · rw [NonemptyInterval.ext_iff, Prod.ext_iff] at h
     have := (mul_le_mul_iff_of_ge s.fst_le_snd t.fst_le_snd).1 (h.2.trans h.1.symm).le
     refine' ⟨s.fst, t.fst, _, _, h.1⟩ <;> apply NonemptyInterval.ext <;> dsimp [pure]
     · nth_rw 2 [this.1]
