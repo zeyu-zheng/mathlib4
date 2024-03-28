@@ -84,8 +84,12 @@ theorem horiz_inv {f : W ≅ X} {i : Y ≅ Z} (p : CommSq f.hom g h i.hom) :
 =======
     CommSq f.inv h g i.inv := flip (vert_inv (flip p))
 
+<<<<<<< HEAD
 /-- The composite of two commutative squares as below is commutative.
 >>>>>>> 6117a97cf0 (horizontal inv)
+=======
+/-- The composite of two commutative squares as below is a commutative square.
+>>>>>>> 48ef93f625 (comment fix)
 ```
   W ---f---> X ---f'--> X'
   |          |          |
