@@ -90,10 +90,17 @@ theorem horiz_inv {f : W ≅ X} {i : Y ≅ Z} (p : CommSq f.hom g h i.hom) :
 
 ```
 -/
+<<<<<<< HEAD
 lemma horiz_comp {W X X' Y Z Z' : C} {f : W ⟶ X} {f' : X ⟶ X'} {g : W ⟶ Y} {h : X ⟶ Z}
     {h' : X' ⟶ Z'} {i : Y ⟶ Z} {i' : Z ⟶ Z'} (hsq₁ : CommSq f g h i) (hsq₂ : CommSq f' h h' i') :
     CommSq (f ≫ f') g h' (i ≫ i') :=
   ⟨by rw [← Category.assoc, Category.assoc, ← hsq₁.w, hsq₂.w, Category.assoc]⟩
+=======
+lemma CommSq_comp {W X X' Y Z Z' : C} {f : W ⟶ X} {f' : X ⟶ X'} {g : W ⟶ Y} {h : X ⟶ Z}
+    {h' : X' ⟶ Z'} {i : Y ⟶ Z} {i' : Z ⟶ Z'} (hsq₁ : CommSq f g h i) (hsq₂ : CommSq f' h h' i') :
+    CommSq (f ≫ f') g h' (i ≫ i') :=
+  ⟨by rw [←Category.assoc, Category.assoc, ← hsq₁.w, hsq₂.w, Category.assoc]⟩
+>>>>>>> 7729a41ede (fixing linter complaints)
 
 <<<<<<< HEAD
 /-- The vertical composition of two commutative squares as below is a commutative square.
