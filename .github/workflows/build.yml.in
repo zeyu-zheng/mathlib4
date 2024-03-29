@@ -82,7 +82,13 @@ jobs:
           git ls-files 'Archive/*.lean' | LC_ALL=C sort | sed 's/\.lean//;s,/,.,g;s/^/import /' > Archive.lean
 
       - name: check that all files are imported
-        run: git diff --exit-code
+        run:
+          if git diff --exit-code; then
+            echo "The file Mathlib.lean (or a similar file) is not up to date.
+            You can update Mathlib.lean using
+              ./scripts/update-imports.sh"
+            git diff --exit-code
+          fi
 
   check_workflows:
     if: github.repository MAIN_OR_FORK 'leanprover-community/mathlib4'
