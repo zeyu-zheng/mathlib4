@@ -37,21 +37,21 @@ variable {F α β : Type*}
 
 /-- Notation typeclass for pointwise supremum `⊻`. -/
 class HasSups (α : Type*) where
+  /-- The point-wise supremum `a ⊔ b` of `a, b : α`. -/
   sups : α → α → α
 #align has_sups HasSups
 
 /-- Notation typeclass for pointwise infimum `⊼`. -/
 class HasInfs (α : Type*) where
+  /-- The point-wise infimum `a ⊓ b` of `a, b : α`. -/
   infs : α → α → α
 #align has_infs HasInfs
 
--- mathport name: «expr ⊻ »
-infixl:74 " ⊻ " => HasSups.sups
+@[inherit_doc] infixl:74 " ⊻ " => HasSups.sups
   -- This notation is meant to have higher precedence than `⊔` and `⊓`, but still within the
   -- realm of other binary notation
 
--- mathport name: «expr ⊼ »
-infixl:75 " ⊼ " => HasInfs.infs
+@[inherit_doc] infixl:75 " ⊼ " => HasInfs.infs
 
 namespace Set
 

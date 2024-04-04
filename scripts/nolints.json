@@ -191,8 +191,6 @@
  ["docBlame", "HSpace.hmulE"],
  ["docBlame", "HSpaces.«term_⋀_»"],
  ["docBlame", "HahnSeries.coeff"],
- ["docBlame", "HasInfs.infs"],
- ["docBlame", "HasSups.sups"],
  ["docBlame", "Holor.assocLeft"],
  ["docBlame", "Holor.assocRight"],
  ["docBlame", "HolorIndex.assocLeft"],
