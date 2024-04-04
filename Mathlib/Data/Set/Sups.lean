@@ -46,13 +46,11 @@ class HasInfs (α : Type*) where
 #align has_infs HasInfs
 
 -- mathport name: «expr ⊻ »
-@[inherit_doc]
 infixl:74 " ⊻ " => HasSups.sups
   -- This notation is meant to have higher precedence than `⊔` and `⊓`, but still within the
   -- realm of other binary notation
 
 -- mathport name: «expr ⊼ »
-@[inherit_doc]
 infixl:75 " ⊼ " => HasInfs.infs
 
 namespace Set

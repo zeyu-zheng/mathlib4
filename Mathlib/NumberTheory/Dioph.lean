@@ -572,11 +572,11 @@ theorem diophFn_comp {f : Vector3 ℕ n → ℕ} (df : DiophFn f) (g : Vector3 (
           reindex_diophFn _ <| (vectorAllP_iff_forall _ _).1 dg _⟩
 #align dioph.dioph_fn_comp Dioph.diophFn_comp
 
-@[inherit_doc] scoped notation:35 x " D∧ " y => Dioph.inter x y
+scoped notation:35 x " D∧ " y => Dioph.inter x y
 
-@[inherit_doc] scoped notation:35 x " D∨ " y => Dioph.union x y
+scoped notation:35 x " D∨ " y => Dioph.union x y
 
-@[inherit_doc] scoped notation:30 "D∃" => Dioph.vec_ex1_dioph
+scoped notation:30 "D∃" => Dioph.vec_ex1_dioph
 
 @[inherit_doc] scoped prefix:arg "&" => Fin2.ofNat'
 
@@ -584,13 +584,13 @@ theorem proj_dioph_of_nat {n : ℕ} (m : ℕ) [IsLT m n] : DiophFn fun v : Vecto
   proj_dioph &m
 #align dioph.proj_dioph_of_nat Dioph.proj_dioph_of_nat
 
-@[inherit_doc] scoped prefix:100 "D&" => Dioph.proj_dioph_of_nat
+scoped prefix:100 "D&" => Dioph.proj_dioph_of_nat
 
 theorem const_dioph (n : ℕ) : DiophFn (const (α → ℕ) n) :=
   abs_poly_dioph (Poly.const n)
 #align dioph.const_dioph Dioph.const_dioph
 
-@[inherit_doc] scoped prefix:100 "D." => Dioph.const_dioph
+scoped prefix:100 "D." => Dioph.const_dioph
 
 variable {f g : (α → ℕ) → ℕ} (df : DiophFn f) (dg : DiophFn g)
 
@@ -609,39 +609,39 @@ theorem eq_dioph : Dioph fun v => f v = g v :=
 #align dioph.eq_dioph Dioph.eq_dioph
 
 -- mathport name: eq_dioph
-@[inherit_doc] scoped infixl:50 " D= " => Dioph.eq_dioph
+scoped infixl:50 " D= " => Dioph.eq_dioph
 
 theorem add_dioph : DiophFn fun v => f v + g v :=
   diophFn_comp2 df dg <| abs_poly_dioph (@Poly.proj (Fin2 2) &0 + @Poly.proj (Fin2 2) &1)
 #align dioph.add_dioph Dioph.add_dioph
 
 -- mathport name: add_dioph
-@[inherit_doc] scoped infixl:80 " D+ " => Dioph.add_dioph
+scoped infixl:80 " D+ " => Dioph.add_dioph
 
 theorem mul_dioph : DiophFn fun v => f v * g v :=
   diophFn_comp2 df dg <| abs_poly_dioph (@Poly.proj (Fin2 2) &0 * @Poly.proj (Fin2 2) &1)
 #align dioph.mul_dioph Dioph.mul_dioph
 
 -- mathport name: mul_dioph
-@[inherit_doc] scoped infixl:90 " D* " => Dioph.mul_dioph
+scoped infixl:90 " D* " => Dioph.mul_dioph
 
 theorem le_dioph : Dioph {v | f v ≤ g v} :=
   dioph_comp2 df dg <|
     ext ((D∃) 2 <| D&1 D+ D&0 D= D&2) fun _ => ⟨fun ⟨_, hx⟩ => le.intro hx, le.dest⟩
 #align dioph.le_dioph Dioph.le_dioph
 
-@[inherit_doc] scoped infixl:50 " D≤ " => Dioph.le_dioph
+scoped infixl:50 " D≤ " => Dioph.le_dioph
 
 theorem lt_dioph : Dioph {v | f v < g v} := df D+ D.1 D≤ dg
 #align dioph.lt_dioph Dioph.lt_dioph
 
-@[inherit_doc] scoped infixl:50 " D< " => Dioph.lt_dioph
+scoped infixl:50 " D< " => Dioph.lt_dioph
 
 theorem ne_dioph : Dioph {v | f v ≠ g v} :=
   ext (df D< dg D∨ dg D< df) fun v => by dsimp; exact lt_or_lt_iff_ne (α := ℕ)
 #align dioph.ne_dioph Dioph.ne_dioph
 
-@[inherit_doc] scoped infixl:50 " D≠ " => Dioph.ne_dioph
+scoped infixl:50 " D≠ " => Dioph.ne_dioph
 
 theorem sub_dioph : DiophFn fun v => f v - g v :=
   diophFn_comp2 df dg <|
@@ -659,13 +659,13 @@ theorem sub_dioph : DiophFn fun v => f v - g v :=
               · exact Or.inl (tsub_add_cancel_of_le zy).symm⟩
 #align dioph.sub_dioph Dioph.sub_dioph
 
-@[inherit_doc] scoped infixl:80 " D- " => Dioph.sub_dioph
+scoped infixl:80 " D- " => Dioph.sub_dioph
 
 theorem dvd_dioph : Dioph fun v => f v ∣ g v :=
   dioph_comp ((D∃) 2 <| D&2 D= D&1 D* D&0) [f, g] ⟨df, dg⟩
 #align dioph.dvd_dioph Dioph.dvd_dioph
 
-@[inherit_doc] scoped infixl:50 " D∣ " => Dioph.dvd_dioph
+scoped infixl:50 " D∣ " => Dioph.dvd_dioph
 
 theorem mod_dioph : DiophFn fun v => f v % g v :=
   have : Dioph fun v : Vector3 ℕ 3 => (v &2 = 0 ∨ v &0 < v &2) ∧ ∃ x : ℕ, v &0 + v &2 * x = v &1 :=
@@ -683,13 +683,13 @@ theorem mod_dioph : DiophFn fun v => f v % g v :=
                   mod_add_div _ _⟩⟩
 #align dioph.mod_dioph Dioph.mod_dioph
 
-@[inherit_doc] scoped infixl:80 " D% " => Dioph.mod_dioph
+scoped infixl:80 " D% " => Dioph.mod_dioph
 
 theorem modEq_dioph {h : (α → ℕ) → ℕ} (dh : DiophFn h) : Dioph fun v => f v ≡ g v [MOD h v] :=
   df D% dh D= dg D% dh
 #align dioph.modeq_dioph Dioph.modEq_dioph
 
-@[inherit_doc] scoped notation " D≡ " => Dioph.modEq_dioph
+scoped notation " D≡ " => Dioph.modEq_dioph
 
 theorem div_dioph : DiophFn fun v => f v / g v :=
   have :
@@ -714,7 +714,7 @@ theorem div_dioph : DiophFn fun v => f v / g v :=
 #align dioph.div_dioph Dioph.div_dioph
 
 -- mathport name: div_dioph
-@[inherit_doc] scoped infixl:80 " D/ " => Dioph.div_dioph
+scoped infixl:80 " D/ " => Dioph.div_dioph
 
 open Pell
 
