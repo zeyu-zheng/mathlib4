@@ -28,6 +28,7 @@ def SModEq (x y : M) : Prop :=
 #align smodeq SModEq
 
 -- mathport name: «expr ≡ [SMOD ]»
+@[inherit_doc]
 notation:50 x " ≡ " y " [SMOD " N "]" => SModEq N x y
 
 variable {U U₁ U₂}

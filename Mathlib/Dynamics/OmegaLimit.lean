@@ -54,9 +54,11 @@ def omegaLimit [TopologicalSpace β] (f : Filter τ) (ϕ : τ → α → β) (s 
 scoped[omegaLimit] notation "ω" => omegaLimit
 
 -- mathport name: omega_limit.atTop
+/-- The ω-limit w.r.t. `Filter.atTop`. -/
 scoped[omegaLimit] notation "ω⁺" => omegaLimit Filter.atTop
 
 -- mathport name: omega_limit.atBot
+/-- The ω-limit w.r.t. `Filter.atBot`. -/
 scoped[omegaLimit] notation "ω⁻" => omegaLimit Filter.atBot
 
 variable [TopologicalSpace β]

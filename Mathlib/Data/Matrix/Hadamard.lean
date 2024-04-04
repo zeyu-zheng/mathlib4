@@ -53,7 +53,7 @@ theorem hadamard_apply [Mul α] (A : Matrix m n α) (B : Matrix m n α) (i j) :
 #align matrix.hadamard_apply Matrix.hadamard_apply
 
 -- mathport name: matrix.hadamard
-scoped infixl:100 " ⊙ " => Matrix.hadamard
+@[inherit_doc] scoped infixl:100 " ⊙ " => Matrix.hadamard
 
 section BasicProperties
 

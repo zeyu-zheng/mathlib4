@@ -39,6 +39,7 @@ structure ContinuousAffineMap (R : Type*) {V W : Type*} (P Q : Type*) [Ring R] [
 #align continuous_affine_map ContinuousAffineMap
 
 -- mathport name: «expr →A[ ] »
+@[inherit_doc]
 notation:25 P " →A[" R "] " Q => ContinuousAffineMap R P Q
 
 namespace ContinuousAffineMap

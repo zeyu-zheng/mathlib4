@@ -31,6 +31,7 @@ def continuum : Cardinal.{u} :=
 #align cardinal.continuum Cardinal.continuum
 
 -- mathport name: Cardinal.continuum
+@[inherit_doc]
 scoped notation "𝔠" => Cardinal.continuum
 
 @[simp]

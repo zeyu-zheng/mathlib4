@@ -39,6 +39,7 @@ structure ContinuousOrderHom (α β : Type*) [Preorder α] [Preorder β] [Topolo
 #align continuous_order_hom ContinuousOrderHom
 
 -- mathport name: «expr →Co »
+@[inherit_doc]
 infixr:25 " →Co " => ContinuousOrderHom
 
 section
