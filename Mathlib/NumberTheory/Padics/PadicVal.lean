@@ -3,15 +3,12 @@ Copyright (c) 2018 Robert Y. Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis, Matthew Robert Ballard
 -/
--- import Mathlib.NumberTheory.Divisors
-import Mathlib.Data.Nat.Prime
--- import Mathlib.Data.Nat.Digits
-import Mathlib.Data.Nat.MaxPowDiv
 import Mathlib.RingTheory.Multiplicity
 import Mathlib.Data.Nat.Log
--- import Mathlib.Data.Nat.Multiplicity
--- import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.Ring
+import Mathlib.Data.Nat.MaxPowDiv
+import Mathlib.Data.Nat.Prime
+import Mathlib.Data.Rat.Field
+import Mathlib.Data.Rat.Lemmas
 
 #align_import number_theory.padics.padic_val from "leanprover-community/mathlib"@"60fa54e778c9e85d930efae172435f42fb0d71f7"
 
@@ -66,6 +63,7 @@ p-adic, p adic, padic, norm, valuation
 -/
 
 assert_not_exists Finset
+assert_not_exists Function.support
 
 universe u
 
@@ -337,7 +335,9 @@ protected theorem defn (p : ℕ) [hp : Fact p.Prime] {q : ℚ} {n d : ℤ} (hqz 
     multiplicity.mul' (Nat.prime_iff_prime_int.1 hp.1)]
   rw [Nat.cast_add, Nat.cast_add]
   simp_rw [Int.coe_nat_multiplicity p q.den]
-  ring
+
+  simp
+  -- ring
   -- Porting note: was
   -- simp only [hc1, hc2, multiplicity.mul' (Nat.prime_iff_prime_int.1 hp.1),
   --   hp.1.ne_one, hqz, pos_iff_ne_zero, Int.coe_nat_multiplicity p q.den
@@ -354,7 +354,10 @@ protected theorem mul {q r : ℚ} (hq : q ≠ 0) (hr : r ≠ 0) :
   conv_rhs =>
     rw [← @Rat.num_den q, padicValRat.defn p hq', ← @Rat.num_den r, padicValRat.defn p hr']
   rw [multiplicity.mul' hp', multiplicity.mul' hp', Nat.cast_add, Nat.cast_add]
-  ring
+  simp [sub_eq_add_neg, add_assoc]
+  nth_rewrite 2 [add_comm]
+  rw [add_left_comm]
+  -- ring
   -- Porting note: was
   -- simp [add_comm, add_left_comm, sub_eq_add_neg]
 #align padic_val_rat.mul padicValRat.mul
