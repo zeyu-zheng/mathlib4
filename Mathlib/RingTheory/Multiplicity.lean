@@ -3,11 +3,9 @@ Copyright (c) 2018 Robert Y. Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis, Chris Hughes
 -/
-import Mathlib.Algebra.BigOperators.Basic
 import Mathlib.Algebra.Associated
 import Mathlib.Algebra.SMulWithZero
 import Mathlib.Data.Nat.PartENat
-import Mathlib.Tactic.Linarith
 
 #align_import ring_theory.multiplicity from "leanprover-community/mathlib"@"e8638a0fcaf73e4500469f368ef9494e495099b3"
 
@@ -29,7 +27,7 @@ several basic results on it.
 variable {α β : Type*}
 
 open Nat Part
-open scoped BigOperators
+-- open scoped BigOperators
 
 /-- `multiplicity a b` returns the largest natural number `n` such that
   `a ^ n ∣ b`, as a `PartENat` or natural with infinity. If `∀ n, a ^ n ∣ b`,
@@ -588,15 +586,15 @@ protected theorem mul {p a b : α} (hp : Prime p) :
     cases' not_and_or.1 h with h h <;> simp [eq_top_iff_not_finite.2 h]
 #align multiplicity.mul multiplicity.mul
 
-theorem Finset.prod {β : Type*} {p : α} (hp : Prime p) (s : Finset β) (f : β → α) :
-    multiplicity p (∏ x in s, f x) = ∑ x in s, multiplicity p (f x) := by
-  classical
-    induction' s using Finset.induction with a s has ih h
-    · simp only [Finset.sum_empty, Finset.prod_empty]
-      convert one_right hp.not_unit
-    · simp [has, ← ih]
-      convert multiplicity.mul hp
-#align multiplicity.finset.prod multiplicity.Finset.prod
+-- theorem Finset.prod {β : Type*} {p : α} (hp : Prime p) (s : Finset β) (f : β → α) :
+--     multiplicity p (∏ x in s, f x) = ∑ x in s, multiplicity p (f x) := by
+--   classical
+--     induction' s using Finset.induction with a s has ih h
+--     · simp only [Finset.sum_empty, Finset.prod_empty]
+--       convert one_right hp.not_unit
+--     · simp [has, ← ih]
+--       convert multiplicity.mul hp
+-- #align multiplicity.finset.prod multiplicity.Finset.prod
 
 -- Porting note: with protected could not use pow' k in the succ branch
 protected theorem pow' {p a : α} (hp : Prime p) (ha : Finite p a) :
@@ -667,3 +665,4 @@ instance decidableInt : DecidableRel fun a b : ℤ => (multiplicity a b).Dom := 
 #align multiplicity.decidable_int multiplicity.decidableInt
 
 end multiplicity
+#minimize_imports
