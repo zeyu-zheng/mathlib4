@@ -56,9 +56,8 @@ open scoped BigOperators
 variable {p : ℕ} {R S T : Type*} [hp : Fact p.Prime] [CommRing R] [CommRing S] [CommRing T]
 variable {α : Type*} {β : Type*}
 
--- mathport name: expr𝕎
-local notation "𝕎" => WittVector p
-local notation "W_" => wittPolynomial p
+@[inherit_doc] local notation "𝕎" => WittVector p
+@[inherit_doc] local notation "W_" => wittPolynomial p
 
 -- type as `\bbW`
 open scoped Witt

@@ -253,8 +253,7 @@ theorem weightedSMul_nonneg (s : Set α) (x : ℝ) (hx : 0 ≤ x) : 0 ≤ weight
 
 end WeightedSMul
 
--- mathport name: «expr →ₛ »
-local infixr:25 " →ₛ " => SimpleFunc
+@[inherit_doc] local infixr:25 " →ₛ " => SimpleFunc
 
 namespace SimpleFunc
 

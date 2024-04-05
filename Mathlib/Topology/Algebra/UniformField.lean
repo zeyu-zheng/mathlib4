@@ -43,8 +43,7 @@ open Set UniformSpace UniformSpace.Completion Filter
 
 variable (K : Type*) [Field K] [UniformSpace K]
 
--- mathport name: exprhat
-local notation "hat" => Completion
+@[inherit_doc] local notation "hat" => Completion
 
 /-- A topological field is completable if it is separated and the image under
 the mapping x ↦ x⁻¹ of every Cauchy filter (with respect to the additive uniform structure)
