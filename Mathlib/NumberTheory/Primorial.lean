@@ -36,8 +36,7 @@ def primorial (n : ℕ) : ℕ :=
   ∏ p in filter Nat.Prime (range (n + 1)), p
 #align primorial primorial
 
--- mathport name: «expr #»
-local notation x "#" => primorial x
+@[inherit_doc] local notation x "#" => primorial x
 
 theorem primorial_pos (n : ℕ) : 0 < n# :=
   prod_pos fun _p hp ↦ (mem_filter.1 hp).2.pos

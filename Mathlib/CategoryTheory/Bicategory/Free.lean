@@ -89,7 +89,7 @@ section
 
 
 -- The following notations are only used in the definition of `Rel` to simplify the notation.
-@[inherit_doc] local infixr:0 " ≫ " => Hom₂.vcomp
+local infixr:0 " ≫ " => Hom₂.vcomp
 
 local notation "𝟙" => Hom₂.id
 

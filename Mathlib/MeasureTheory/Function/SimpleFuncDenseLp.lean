@@ -54,8 +54,7 @@ variable {α β ι E F 𝕜 : Type*}
 
 namespace MeasureTheory
 
--- mathport name: «expr →ₛ »
-local infixr:25 " →ₛ " => SimpleFunc
+@[inherit_doc] local infixr:25 " →ₛ " => SimpleFunc
 
 namespace SimpleFunc
 

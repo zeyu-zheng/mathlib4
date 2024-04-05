@@ -67,10 +67,8 @@ local notation "lib.lift" => FreeNonUnitalNonAssocAlgebra.lift
 @[inherit_doc]
 local notation "lib.of" => FreeNonUnitalNonAssocAlgebra.of
 
-@[inherit_doc]
 local notation "lib.lift_of_apply" => FreeNonUnitalNonAssocAlgebra.lift_of_apply
 
-@[inherit_doc]
 local notation "lib.lift_comp_of" => FreeNonUnitalNonAssocAlgebra.lift_comp_of
 
 namespace FreeLieAlgebra

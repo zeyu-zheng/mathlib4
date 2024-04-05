@@ -47,7 +47,7 @@ open scoped Classical Topology ENNReal Cardinal
 
 set_option linter.uppercaseLean3 false
 
--- mathport name: exprℓ_infty_ℝ
+/-- the space `ℓ_∞(ℝ)` of l_∞ sequences `ℕ → ℝ` -/
 local notation "ℓ_infty_ℝ" => lp (fun n : ℕ => ℝ) ∞
 
 universe u v w

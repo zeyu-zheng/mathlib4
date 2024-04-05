@@ -564,8 +564,7 @@ def integralCLM : (α →₁ₛ[μ] E) →L[ℝ] E :=
 
 variable {α E μ 𝕜}
 
--- mathport name: simple_func.integral_clm
-local notation "Integral" => integralCLM α E μ
+@[inherit_doc] local notation "Integral" => integralCLM α E μ
 
 open ContinuousLinearMap
 
