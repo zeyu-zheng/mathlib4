@@ -150,13 +150,13 @@ def modelWithCornersEuclideanQuadrant (n : ℕ) :
     (continuous_pi fun i => (continuous_id.max continuous_const).comp (continuous_apply i)) _
 #align model_with_corners_euclidean_quadrant modelWithCornersEuclideanQuadrant
 
--- mathport name: model_with_corners_self.euclidean
+-- TODO DOC
 scoped[Manifold]
   notation "𝓡 " n =>
     (modelWithCornersSelf ℝ (EuclideanSpace ℝ (Fin n)) :
       ModelWithCorners ℝ (EuclideanSpace ℝ (Fin n)) (EuclideanSpace ℝ (Fin n)))
 
--- mathport name: model_with_corners_euclidean_half_space.euclidean
+-- TODO DOC
 scoped[Manifold]
   notation "𝓡∂ " n =>
     (modelWithCornersEuclideanHalfSpace n :

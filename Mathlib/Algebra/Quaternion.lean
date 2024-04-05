@@ -760,7 +760,7 @@ def Quaternion (R : Type*) [One R] [Neg R] :=
   QuaternionAlgebra R (-1) (-1)
 #align quaternion Quaternion
 
--- mathport name: quaternion
+-- TODO DOC
 scoped[Quaternion] notation "ℍ[" R "]" => Quaternion R
 
 /-- The equivalence between the quaternions over `R` and `R × R × R × R`. -/
