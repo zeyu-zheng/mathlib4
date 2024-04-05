@@ -47,11 +47,13 @@ class HasInfs (α : Type*) where
   infs : α → α → α
 #align has_infs HasInfs
 
-@[inherit_doc] infixl:74 " ⊻ " => HasSups.sups
-  -- This notation is meant to have higher precedence than `⊔` and `⊓`, but still within the
-  -- realm of other binary notation
+-- This notation is meant to have higher precedence than `⊔` and `⊓`, but still within the
+-- realm of other binary notation.
+@[inherit_doc]
+infixl:74 " ⊻ " => HasSups.sups
 
-@[inherit_doc] infixl:75 " ⊼ " => HasInfs.infs
+@[inherit_doc]
+infixl:75 " ⊼ " => HasInfs.infs
 
 namespace Set
 
