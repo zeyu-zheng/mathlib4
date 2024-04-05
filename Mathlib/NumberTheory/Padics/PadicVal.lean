@@ -3,13 +3,14 @@ Copyright (c) 2018 Robert Y. Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis, Matthew Robert Ballard
 -/
-import Mathlib.NumberTheory.Divisors
+-- import Mathlib.NumberTheory.Divisors
+import Mathlib.Data.Nat.Prime
 -- import Mathlib.Data.Nat.Digits
 import Mathlib.Data.Nat.MaxPowDiv
 import Mathlib.RingTheory.Multiplicity
 import Mathlib.Data.Nat.Log
 -- import Mathlib.Data.Nat.Multiplicity
-import Mathlib.Tactic.IntervalCases
+-- import Mathlib.Tactic.IntervalCases
 import Mathlib.Tactic.Ring
 
 #align_import number_theory.padics.padic_val from "leanprover-community/mathlib"@"60fa54e778c9e85d930efae172435f42fb0d71f7"
@@ -64,7 +65,7 @@ the digits of `n - k` minus the sum of digits of `n`, all base `p`.
 p-adic, p adic, padic, norm, valuation
 -/
 
-assert_not_exists Finset.prod
+assert_not_exists Finset
 
 universe u
 
@@ -142,10 +143,11 @@ theorem padicValNat_eq_maxPowDiv : @padicValNat = @maxPowDiv := by
   · simp only [not_and_or,not_gt_eq,Nat.le_zero] at h
     apply h.elim
     · intro h
-      interval_cases p
-      · simp [Classical.em]
+      rw [Nat.le_one_iff_eq_zero_or_eq_one] at h
+      cases h
+      · simp [*, Classical.em]
       · dsimp [padicValNat, maxPowDiv]
-        rw [go_eq, if_neg, dif_neg] <;> simp
+        rw [go_eq, if_neg, dif_neg] <;> simp [*]
     · intro h
       simp [h]
 
@@ -621,26 +623,26 @@ lemma Nat.max_log_padicValNat_succ_eq_log_succ (n : ℕ) :
     (pow_log_le_self 2 n.succ_ne_zero)
   rw [h, padicValNat.prime_pow, ← h]
 
-theorem range_pow_padicValNat_subset_divisors {n : ℕ} (hn : n ≠ 0) :
-    (Finset.range (padicValNat p n + 1)).image (p ^ ·) ⊆ n.divisors := by
-  intro t ht
-  simp only [exists_prop, Finset.mem_image, Finset.mem_range] at ht
-  obtain ⟨k, hk, rfl⟩ := ht
-  rw [Nat.mem_divisors]
-  exact ⟨(pow_dvd_pow p <| by omega).trans pow_padicValNat_dvd, hn⟩
-#align range_pow_padic_val_nat_subset_divisors range_pow_padicValNat_subset_divisors
+-- theorem range_pow_padicValNat_subset_divisors {n : ℕ} (hn : n ≠ 0) :
+--     (Finset.range (padicValNat p n + 1)).image (p ^ ·) ⊆ n.divisors := by
+--   intro t ht
+--   simp only [exists_prop, Finset.mem_image, Finset.mem_range] at ht
+--   obtain ⟨k, hk, rfl⟩ := ht
+--   rw [Nat.mem_divisors]
+--   exact ⟨(pow_dvd_pow p <| by omega).trans pow_padicValNat_dvd, hn⟩
+-- #align range_pow_padic_val_nat_subset_divisors range_pow_padicValNat_subset_divisors
 
-theorem range_pow_padicValNat_subset_divisors' {n : ℕ} [hp : Fact p.Prime] :
-    ((Finset.range (padicValNat p n)).image fun t => p ^ (t + 1)) ⊆ n.divisors.erase 1 := by
-  rcases eq_or_ne n 0 with (rfl | hn)
-  · simp
-  intro t ht
-  simp only [exists_prop, Finset.mem_image, Finset.mem_range] at ht
-  obtain ⟨k, hk, rfl⟩ := ht
-  rw [Finset.mem_erase, Nat.mem_divisors]
-  refine' ⟨_, (pow_dvd_pow p <| succ_le_iff.2 hk).trans pow_padicValNat_dvd, hn⟩
-  exact (Nat.one_lt_pow k.succ_ne_zero hp.out.one_lt).ne'
-#align range_pow_padic_val_nat_subset_divisors' range_pow_padicValNat_subset_divisors'
+-- theorem range_pow_padicValNat_subset_divisors' {n : ℕ} [hp : Fact p.Prime] :
+--     ((Finset.range (padicValNat p n)).image fun t => p ^ (t + 1)) ⊆ n.divisors.erase 1 := by
+--   rcases eq_or_ne n 0 with (rfl | hn)
+--   · simp
+--   intro t ht
+--   simp only [exists_prop, Finset.mem_image, Finset.mem_range] at ht
+--   obtain ⟨k, hk, rfl⟩ := ht
+--   rw [Finset.mem_erase, Nat.mem_divisors]
+--   refine' ⟨_, (pow_dvd_pow p <| succ_le_iff.2 hk).trans pow_padicValNat_dvd, hn⟩
+--   exact (Nat.one_lt_pow k.succ_ne_zero hp.out.one_lt).ne'
+-- #align range_pow_padic_val_nat_subset_divisors' range_pow_padicValNat_subset_divisors'
 
 -- /-- The `p`-adic valuation of `(p * n)!` is `n` more than that of `n!`. -/
 -- theorem padicValNat_factorial_mul (n : ℕ) [hp : Fact p.Prime] :
