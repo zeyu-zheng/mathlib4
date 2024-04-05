@@ -90,7 +90,6 @@ def LoopSpace :=
   Path x x
 #align loop_space LoopSpace
 
--- mathport name: exprΩ
 @[inherit_doc] scoped[Topology.Homotopy] notation "Ω" => LoopSpace
 
 instance LoopSpace.inhabited : Inhabited (Path x x) :=
@@ -415,7 +414,6 @@ def HomotopyGroup.Pi (n) (X : Type*) [TopologicalSpace X] (x : X) :=
   HomotopyGroup (Fin n) _ x
 #align homotopy_group.pi HomotopyGroup.Pi
 
--- mathport name: exprπ_
 @[inherit_doc] scoped[Topology] notation "π_" => HomotopyGroup.Pi
 
 /-- The 0-dimensional generalized loops based at `x` are in bijection with `X`. -/

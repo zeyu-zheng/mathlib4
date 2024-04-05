@@ -39,7 +39,6 @@ def NNRat := { q : ℚ // 0 ≤ q } deriving
 -- instead of `deriving` them
 instance : OrderedSub NNRat := Nonneg.orderedSub
 
--- mathport name: nnrat
 @[inherit_doc] scoped[NNRat] notation "ℚ≥0" => NNRat
 
 namespace NNRat
