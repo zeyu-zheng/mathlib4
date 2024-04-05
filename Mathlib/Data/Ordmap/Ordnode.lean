@@ -123,8 +123,7 @@ protected def singleton (a : α) : Ordnode α :=
   node 1 nil a nil
 #align ordnode.singleton Ordnode.singleton
 
--- mathport name: «exprι »
-local prefix:arg "ι" => Ordnode.singleton
+@[inherit_doc] local prefix:arg "ι" => Ordnode.singleton
 
 instance : Singleton α (Ordnode α) :=
   ⟨Ordnode.singleton⟩
