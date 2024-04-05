@@ -1017,7 +1017,6 @@ theorem Memℒp.induction_dense (hp_ne_top : p ≠ ∞) (P : (α → E) → Prop
 
 section Integrable
 
--- mathport name: «expr →₁ₛ[ ] »
 @[inherit_doc MeasureTheory.Lp.simpleFunc]
 notation:25 α " →₁ₛ[" μ "] " E => @MeasureTheory.Lp.simpleFunc α E _ _ 1 μ
 
