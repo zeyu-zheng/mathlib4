@@ -64,7 +64,6 @@ algebraic structure. -/
 structure RingEquiv (R S : Type*) [Mul R] [Mul S] [Add R] [Add S] extends R ≃ S, R ≃* S, R ≃+ S
 #align ring_equiv RingEquiv
 
--- mathport name: «expr ≃+* »*
 /-- Notation for `RingEquiv`. -/
 infixl:25 " ≃+* " => RingEquiv
 
