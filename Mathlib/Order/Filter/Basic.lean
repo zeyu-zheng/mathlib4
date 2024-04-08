@@ -1477,7 +1477,7 @@ theorem EventuallyEq.rw {l : Filter α} {f g : α → β} (h : f =ᶠ[l] g) (p :
 #align filter.eventually_eq.rw Filter.EventuallyEq.rw
 
 theorem eventuallyEq_set {s t : Set α} {l : Filter α} : s =ᶠ[l] t ↔ ∀ᶠ x in l, x ∈ s ↔ x ∈ t :=
-  eventually_congr <| eventually_of_forall fun _ => ⟨Eq.to_iff, Iff.to_eq⟩
+  eventually_congr <| eventually_of_forall fun _ ↦ eq_iff_iff
 #align filter.eventually_eq_set Filter.eventuallyEq_set
 
 alias ⟨EventuallyEq.mem_iff, Eventually.set_eq⟩ := eventuallyEq_set
@@ -1509,7 +1509,7 @@ theorem EventuallyEq.filter_mono {l l' : Filter α} {f g : α → β} (h₁ : f 
   h₂ h₁
 #align filter.eventually_eq.filter_mono Filter.EventuallyEq.filter_mono
 
-@[refl]
+@[refl, simp]
 theorem EventuallyEq.refl (l : Filter α) (f : α → β) : f =ᶠ[l] f :=
   eventually_of_forall fun _ => rfl
 #align filter.eventually_eq.refl Filter.EventuallyEq.refl

@@ -30,7 +30,7 @@ instance instCommRingInt : CommRing ℤ where
   one_mul := Int.one_mul
   npow n x := x ^ n
   npow_zero _ := rfl
-  npow_succ _ _ := by rw [Int.mul_comm]; rfl
+  npow_succ n x := rfl
   mul_assoc := Int.mul_assoc
   add_comm := Int.add_comm
   add_assoc := Int.add_assoc
@@ -40,8 +40,8 @@ instance instCommRingInt : CommRing ℤ where
   nsmul := (·*·)
   nsmul_zero := Int.zero_mul
   nsmul_succ n x :=
-    show (n + 1 : ℤ) * x = x + n * x
-    by rw [Int.add_mul, Int.add_comm, Int.one_mul]
+    show (n + 1 : ℤ) * x = n * x + x
+    by rw [Int.add_mul, Int.one_mul]
   zsmul := (·*·)
   zsmul_zero' := Int.zero_mul
   zsmul_succ' m n := by
@@ -70,7 +70,7 @@ theorem cast_mul {α : Type*} [NonAssocRing α] : ∀ m n, ((m * n : ℤ) : α) 
 
 lemma cast_Nat_cast {n : ℕ} {R : Type*} [AddGroupWithOne R] :
     (Int.cast (Nat.cast n) : R) = Nat.cast n :=
-  Int.cast_ofNat _
+  Int.cast_natCast _
 
 @[simp, norm_cast] lemma cast_pow {R : Type*} [Ring R] (n : ℤ) (m : ℕ) :
     ↑(n ^ m) = (n ^ m : R) := by

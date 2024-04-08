@@ -334,13 +334,13 @@ protected theorem add_smul (r s : R'') (x : M ⊗[R] N) : (r + s) • x = r • 
 #align tensor_product.add_smul TensorProduct.add_smul
 
 instance addMonoid : AddMonoid (M ⊗[R] N) :=
-{ TensorProduct.addZeroClass _ _ with
-  toAddSemigroup := TensorProduct.addSemigroup _ _
-  toZero := (TensorProduct.addZeroClass _ _).toZero
-  nsmul := fun n v => n • v
-  nsmul_zero := by simp [TensorProduct.zero_smul]
-  nsmul_succ := by simp only [TensorProduct.one_smul, TensorProduct.add_smul, add_comm,
-    forall_const] }
+  { TensorProduct.addZeroClass _ _ with
+    toAddSemigroup := TensorProduct.addSemigroup _ _
+    toZero := (TensorProduct.addZeroClass _ _).toZero
+    nsmul := fun n v => n • v
+    nsmul_zero := by simp [TensorProduct.zero_smul]
+    nsmul_succ := by simp only [TensorProduct.one_smul, TensorProduct.add_smul, add_comm,
+      forall_const] }
 
 instance addCommMonoid : AddCommMonoid (M ⊗[R] N) :=
   { TensorProduct.addCommSemigroup _ _ with
@@ -760,6 +760,10 @@ theorem rid_symm_apply (m : M) : (TensorProduct.rid R M).symm m = m ⊗ₜ 1 :=
   rfl
 #align tensor_product.rid_symm_apply TensorProduct.rid_symm_apply
 
+variable (R) in
+theorem lid_eq_rid : TensorProduct.lid R R = TensorProduct.rid R R :=
+  LinearEquiv.toLinearMap_injective <| ext' mul_comm
+
 open LinearMap
 
 section
@@ -1153,6 +1157,21 @@ lemma comm_comp_lTensor_comp_comm_eq (g : N →ₗ[R] P) :
       rTensor Q g :=
   TensorProduct.ext rfl
 
+/-- Given a linear map `f : N → P`, `f ⊗ M` is injective if and only if `M ⊗ f` is injective. -/
+theorem lTensor_inj_iff_rTensor_inj :
+    Function.Injective (lTensor M f) ↔ Function.Injective (rTensor M f) := by
+  simp [← comm_comp_rTensor_comp_comm_eq]
+
+/-- Given a linear map `f : N → P`, `f ⊗ M` is surjective if and only if `M ⊗ f` is surjective. -/
+theorem lTensor_surj_iff_rTensor_surj :
+    Function.Surjective (lTensor M f) ↔ Function.Surjective (rTensor M f) := by
+  simp [← comm_comp_rTensor_comp_comm_eq]
+
+/-- Given a linear map `f : N → P`, `f ⊗ M` is bijective if and only if `M ⊗ f` is bijective. -/
+theorem lTensor_bij_iff_rTensor_bij :
+    Function.Bijective (lTensor M f) ↔ Function.Bijective (rTensor M f) := by
+  simp [← comm_comp_rTensor_comp_comm_eq]
+
 open TensorProduct
 
 attribute [local ext high] TensorProduct.ext
@@ -1256,7 +1275,7 @@ theorem lTensor_id : (id : N →ₗ[R] N).lTensor M = id :=
 
 -- `simp` can prove this.
 theorem lTensor_id_apply (x : M ⊗[R] N) : (LinearMap.id : N →ₗ[R] N).lTensor M x = x := by
-  rw [lTensor_id, id_coe, id.eq_def]
+  rw [lTensor_id, id_coe, _root_.id]
 #align linear_map.ltensor_id_apply LinearMap.lTensor_id_apply
 
 @[simp]
@@ -1266,7 +1285,7 @@ theorem rTensor_id : (id : N →ₗ[R] N).rTensor M = id :=
 
 -- `simp` can prove this.
 theorem rTensor_id_apply (x : N ⊗[R] M) : (LinearMap.id : N →ₗ[R] N).rTensor M x = x := by
-  rw [rTensor_id, id_coe, id.eq_def]
+  rw [rTensor_id, id_coe, _root_.id]
 #align linear_map.rtensor_id_apply LinearMap.rTensor_id_apply
 
 variable {N}

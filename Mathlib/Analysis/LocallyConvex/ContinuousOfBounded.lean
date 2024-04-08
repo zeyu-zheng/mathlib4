@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 -/
 import Mathlib.Analysis.LocallyConvex.Bounded
-import Mathlib.Data.IsROrC.Basic
+import Mathlib.Analysis.RCLike.Basic
 
 #align_import analysis.locally_convex.continuous_of_bounded from "leanprover-community/mathlib"@"3f655f5297b030a87d641ad4e825af8d9679eb0b"
 
@@ -16,7 +16,7 @@ if `E` is first countable, then every locally bounded linear map `E →ₛₗ[σ
 (this is `LinearMap.continuous_of_locally_bounded`).
 
 We keep this file separate from `Analysis/LocallyConvex/Bounded` in order not to import
-`Analysis/NormedSpace/IsROrC` there, because defining the strong topology on the space of
+`Analysis/NormedSpace/RCLike` there, because defining the strong topology on the space of
 continuous linear maps will require importing `Analysis/LocallyConvex/Bounded` in
 `Analysis/NormedSpace/OperatorNorm`.
 
@@ -84,13 +84,13 @@ theorem LinearMap.clmOfExistsBoundedImage_apply {f : E →ₗ[𝕜] F}
 
 end NontriviallyNormedField
 
-section IsROrC
+section RCLike
 
 open TopologicalSpace Bornology
 
 variable [FirstCountableTopology E]
-variable [IsROrC 𝕜] [Module 𝕜 E] [ContinuousSMul 𝕜 E]
-variable [IsROrC 𝕜'] [Module 𝕜' F] [ContinuousSMul 𝕜' F]
+variable [RCLike 𝕜] [Module 𝕜 E] [ContinuousSMul 𝕜 E]
+variable [RCLike 𝕜'] [Module 𝕜' F] [ContinuousSMul 𝕜' F]
 variable {σ : 𝕜 →+* 𝕜'}
 
 theorem LinearMap.continuousAt_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
@@ -100,7 +100,7 @@ theorem LinearMap.continuousAt_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
   -- We use a decreasing balanced basis for 0 : E and a balanced basis for 0 : F
   -- and reformulate non-continuity in terms of these bases
   rcases (nhds_basis_balanced 𝕜 E).exists_antitone_subbasis with ⟨b, bE1, bE⟩
-  simp only [id.eq_def] at bE
+  simp only [_root_.id] at bE
   have bE' : (𝓝 (0 : E)).HasBasis (fun x : ℕ => x ≠ 0) fun n : ℕ => (n : 𝕜)⁻¹ • b n := by
     refine' bE.1.to_hasBasis _ _
     · intro n _
@@ -114,8 +114,8 @@ theorem LinearMap.continuousAt_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
       rw [← hy]
       refine' (bE1 (n + 1)).2.smul_mem _ hx
       have h' : 0 < (n : ℝ) + 1 := n.cast_add_one_pos
-      rw [norm_inv, ← Nat.cast_one, ← Nat.cast_add, IsROrC.norm_natCast, Nat.cast_add, Nat.cast_one,
-        inv_le h' zero_lt_one]
+      rw [norm_inv, ← Nat.cast_one, ← Nat.cast_add, RCLike.norm_natCast, Nat.cast_add,
+        Nat.cast_one, inv_le h' zero_lt_one]
       simp
     intro n hn
     -- The converse direction follows from continuity of the scalar multiplication
@@ -129,7 +129,7 @@ theorem LinearMap.continuousAt_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
   rw [ContinuousAt, map_zero, bE'.tendsto_iff (nhds_basis_balanced 𝕜' F)] at h
   push_neg at h
   rcases h with ⟨V, ⟨hV, -⟩, h⟩
-  simp only [id.eq_def, forall_true_left] at h
+  simp only [_root_.id, forall_true_left] at h
   -- There exists `u : ℕ → E` such that for all `n : ℕ` we have `u n ∈ n⁻¹ • b n` and `f (u n) ∉ V`
   choose! u hu hu' using h
   -- The sequence `(fun n ↦ n • u n)` converges to `0`
@@ -138,7 +138,7 @@ theorem LinearMap.continuousAt_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
     intro n
     by_cases h : n = 0
     · rw [h, Nat.cast_zero, zero_smul]
-      exact mem_of_mem_nhds (bE.1.mem_of_mem <| by triv)
+      exact mem_of_mem_nhds (bE.1.mem_of_mem <| by trivial)
     rcases hu n h with ⟨y, hy, hu1⟩
     convert hy
     rw [← hu1, ← mul_smul]
@@ -151,7 +151,7 @@ theorem LinearMap.continuousAt_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
   cases' exists_nat_gt r with n hn
   -- We now find a contradiction between `f (u n) ∉ V` and the absorbing property
   have h1 : r ≤ ‖(n : 𝕜')‖ := by
-    rw [IsROrC.norm_natCast]
+    rw [RCLike.norm_natCast]
     exact hn.le
   have hn' : 0 < ‖(n : 𝕜')‖ := lt_of_lt_of_le hr h1
   rw [norm_pos_iff, Ne, Nat.cast_eq_zero] at hn'
@@ -172,4 +172,4 @@ theorem LinearMap.continuous_of_locally_bounded [UniformAddGroup F] (f : E →�
   (uniformContinuous_of_continuousAt_zero f <| f.continuousAt_zero_of_locally_bounded hf).continuous
 #align linear_map.continuous_of_locally_bounded LinearMap.continuous_of_locally_bounded
 
-end IsROrC
+end RCLike

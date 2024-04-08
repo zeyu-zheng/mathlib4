@@ -67,11 +67,9 @@ structure DFinsupp [∀ i, Zero (β i)] : Type max u v where mk' ::
 
 variable {β}
 
--- mathport name: «exprΠ₀ , »
 /-- `Π₀ i, β i` denotes the type of dependent functions with finite support `DFinsupp β`. -/
 notation3 "Π₀ "(...)", "r:(scoped f => DFinsupp f) => r
 
--- mathport name: «expr →ₚ »
 @[inherit_doc]
 infixl:25 " →ₚ " => DFinsupp
 
@@ -560,17 +558,15 @@ theorem subtypeDomain_sub [∀ i, AddGroup (β i)] {p : ι → Prop} [DecidableP
 
 end FilterAndSubtypeDomain
 
-variable [dec : DecidableEq ι]
+variable [DecidableEq ι]
 
 section Basic
 
 variable [∀ i, Zero (β i)]
 
-theorem finite_support (f : Π₀ i, β i) : Set.Finite { i | f i ≠ 0 } := by
-  classical!
-  exact Trunc.induction_on f.support' fun xs =>
-        (Multiset.toFinset xs.1).finite_toSet.subset fun i H =>
-          Multiset.mem_toFinset.2 ((xs.prop i).resolve_right H)
+theorem finite_support (f : Π₀ i, β i) : Set.Finite { i | f i ≠ 0 } :=
+  Trunc.induction_on f.support' fun xs ↦
+    xs.1.finite_toSet.subset fun i H ↦ ((xs.prop i).resolve_right H)
 #align dfinsupp.finite_support DFinsupp.finite_support
 
 /-- Create an element of `Π₀ i, β i` from a finset `s` and a function `x`

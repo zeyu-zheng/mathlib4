@@ -3,7 +3,6 @@ Copyright (c) 2023 Jujian Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang, Fangming Li
 -/
-import Mathlib.Algebra.Order.WithZero
 import Mathlib.Data.Int.Basic
 import Mathlib.Data.List.Chain
 import Mathlib.Data.List.OfFn
@@ -196,7 +195,7 @@ def append (p q : RelSeries r) (connect : r p.last q.head) : RelSeries r where
       lt_trichotomy i (Fin.castLE (by omega) (Fin.last _ : Fin (p.length + 1)))
     · convert p.step ⟨i.1, hi⟩ <;> convert Fin.append_left p q _ <;> rfl
     · convert connect
-      · convert Fin.append_left p q _; rfl
+      · convert Fin.append_left p q _
       · convert Fin.append_right p q _; rfl
     · set x := _; set y := _
       change r (Fin.append p q x) (Fin.append p q y)
@@ -209,6 +208,7 @@ def append (p q : RelSeries r) (connect : r p.last q.head) : RelSeries r where
         dsimp
         conv_rhs => rw [Nat.add_comm p.length 1, add_assoc,
           Nat.add_sub_cancel' <| le_of_lt (show p.length < i.1 from hi), add_comm]
+        rfl
       rw [hx, Fin.append_right, hy, Fin.append_right]
       convert q.step ⟨i - (p.length + 1), Nat.sub_lt_left_of_lt_add hi <|
         by convert i.2 using 1; abel⟩
@@ -255,15 +255,13 @@ For two types `α, β` and relation on them `r, s`, if `f : α → β` preserves
 `a₀ -r→ a₁ -r→ ... -r→ aₙ ↦ f a₀ -s→ f a₁ -s→ ... -s→ f aₙ`
 -/
 @[simps length]
-def map (p : RelSeries r)
-    (f : α → β) (hf : ∀ ⦃x y : α⦄, r x y → s (f x) (f y)) : RelSeries s where
+def map (p : RelSeries r) (f : r →r s) : RelSeries s where
   length := p.length
-  toFun := f.comp p
-  step := (hf <| p.step .)
+  toFun := f.1.comp p
+  step := (f.2 <| p.step .)
 
-@[simp] lemma map_apply (p : RelSeries r)
-    (f : α → β) (hf : ∀ ⦃x y : α⦄, r x y → s (f x) (f y)) (i : Fin (p.length + 1)) :
-    p.map f hf i = f (p i) := rfl
+@[simp] lemma map_apply (p : RelSeries r) (f : r →r s) (i : Fin (p.length + 1)) :
+    p.map f i = f (p i) := rfl
 
 /--
 If `a₀ -r→ a₁ -r→ ... -r→ aₙ` is an `r`-series and `a` is such that
@@ -484,6 +482,12 @@ end RelSeries
 /-- A type is finite dimensional if its `LTSeries` has bounded length. -/
 abbrev FiniteDimensionalOrder (γ : Type*) [Preorder γ] :=
   Rel.FiniteDimensional ((. < .) : γ → γ → Prop)
+
+instance FiniteDimensionalOrder.ofUnique (γ : Type*) [Preorder γ] [Unique γ] :
+    FiniteDimensionalOrder γ where
+  exists_longest_relSeries := ⟨.singleton _ default, fun x ↦ by
+    by_contra! r
+    exact (ne_of_lt <| x.step ⟨0, by omega⟩) <| Subsingleton.elim _ _⟩
 
 /-- A type is infinite dimensional if it has `LTSeries` of at least arbitrary length -/
 abbrev InfiniteDimensionalOrder (γ : Type*) [Preorder γ] :=

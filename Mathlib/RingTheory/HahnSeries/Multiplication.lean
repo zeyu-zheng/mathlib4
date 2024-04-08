@@ -74,7 +74,7 @@ end HahnSeries
 /-- We introduce a type alias for `HahnSeries` in order to work with scalar multiplication by
 series. If we wrote a `SMul (HahnSeries Γ R) (HahnSeries Γ V)` instance, then when
 `V = HahnSeries Γ R`, we would have two different actions of `HahnSeries Γ R` on `HahnSeries Γ V`.
-See `Mathlib.Data.Polynomial.Module` for more discussion on this problem. -/
+See `Mathlib.Algebra.Polynomial.Module` for more discussion on this problem. -/
 @[nolint unusedArguments]
 def HahnModule (Γ R V : Type*) [PartialOrder Γ] [Zero V] [SMul R V] :=
   HahnSeries Γ V
@@ -420,7 +420,7 @@ theorem order_pow {Γ} [LinearOrderedCancelAddCommMonoid Γ] [Semiring R] [NoZer
   · simp
   rcases eq_or_ne x 0 with (rfl | hx)
   · simp
-  rw [pow_succ', order_mul (pow_ne_zero _ hx) hx, succ_nsmul', IH]
+  rw [pow_succ, order_mul (pow_ne_zero _ hx) hx, succ_nsmul, IH]
 #align hahn_series.order_pow HahnSeries.order_pow
 
 section NonUnitalNonAssocSemiring

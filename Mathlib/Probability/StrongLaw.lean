@@ -144,9 +144,6 @@ theorem moment_truncation_eq_intervalIntegral (hf : AEStronglyMeasurable f μ) {
   rw [← integral_map (f := fun z => _ ^ n) hf.aemeasurable, intervalIntegral.integral_of_le,
     ← integral_indicator M]
   · simp only [indicator, zero_pow hn, id, ite_pow]
-    -- FIXME nightly-testing
-    -- Why is this needed?
-    convert rfl
   · linarith
   · exact ((measurable_id.indicator M).pow_const n).aestronglyMeasurable
 #align probability_theory.moment_truncation_eq_interval_integral ProbabilityTheory.moment_truncation_eq_intervalIntegral
@@ -162,9 +159,6 @@ theorem moment_truncation_eq_intervalIntegral_of_nonneg (hf : AEStronglyMeasurab
   · rw [← integral_map (f := fun z => _ ^ n) hf.aemeasurable, intervalIntegral.integral_of_le hA,
       ← integral_indicator M]
     · simp only [indicator, zero_pow hn, id, ite_pow]
-      -- FIXME nightly-testing
-      -- Why is this needed?
-      convert rfl
     · exact ((measurable_id.indicator M).pow_const n).aestronglyMeasurable
   · rw [← integral_map (f := fun z => _ ^ n) hf.aemeasurable, intervalIntegral.integral_of_ge hA.le,
       ← integral_indicator M']
@@ -786,7 +780,7 @@ lemma strong_law_ae_of_measurable
       norm_add₃_le _ _ _
   _ ≤ (∑ i in Finset.range n, ‖X i ω - Y k i ω‖) / n + δ + δ := by
       gcongr
-      simp only [Function.comp_apply, norm_smul, norm_inv, IsROrC.norm_natCast,
+      simp only [Function.comp_apply, norm_smul, norm_inv, RCLike.norm_natCast,
         div_eq_inv_mul, inv_pos, Nat.cast_pos, inv_lt_zero]
       gcongr
       exact norm_sum_le _ _

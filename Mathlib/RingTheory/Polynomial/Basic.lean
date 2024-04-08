@@ -5,15 +5,15 @@ Authors: Kenny Lau
 -/
 import Mathlib.Algebra.CharP.ExpChar
 import Mathlib.Algebra.GeomSum
-import Mathlib.Data.MvPolynomial.CommRing
-import Mathlib.Data.MvPolynomial.Equiv
+import Mathlib.Algebra.MvPolynomial.CommRing
+import Mathlib.Algebra.MvPolynomial.Equiv
 import Mathlib.RingTheory.Polynomial.Content
 import Mathlib.RingTheory.UniqueFactorizationDomain
 
 #align_import ring_theory.polynomial.basic from "leanprover-community/mathlib"@"da420a8c6dd5bdfb85c4ced85c34388f633bc6ff"
 
 /-!
-# Ring-theoretic supplement of Data.Polynomial.
+# Ring-theoretic supplement of Algebra.Polynomial.
 
 ## Main results
 * `MvPolynomial.isDomain`:
@@ -106,6 +106,7 @@ theorem mem_degreeLT {n : ℕ} {f : R[X]} : f ∈ degreeLT R n ↔ degree f < n 
     simp only [mem_support_iff]
     intro b
     rw [Nat.cast_withBot, WithBot.coe_lt_coe, lt_iff_not_le, Ne, not_imp_not]
+  rfl
 #align polynomial.mem_degree_lt Polynomial.mem_degreeLT
 
 @[mono]
@@ -1211,10 +1212,10 @@ theorem map_mvPolynomial_eq_eval₂ {S : Type*} [CommRing S] [Finite σ] (ϕ : M
     ϕ p = MvPolynomial.eval₂ (ϕ.comp MvPolynomial.C) (fun s => ϕ (MvPolynomial.X s)) p := by
   cases nonempty_fintype σ
   refine' Trans.trans (congr_arg ϕ (MvPolynomial.as_sum p)) _
-  rw [MvPolynomial.eval₂_eq', ϕ.map_sum]
+  rw [MvPolynomial.eval₂_eq', map_sum ϕ]
   congr
   ext
-  simp only [monomial_eq, ϕ.map_pow, ϕ.map_prod, ϕ.comp_apply, ϕ.map_mul, Finsupp.prod_pow]
+  simp only [monomial_eq, ϕ.map_pow, map_prod ϕ, ϕ.comp_apply, ϕ.map_mul, Finsupp.prod_pow]
 #align mv_polynomial.map_mv_polynomial_eq_eval₂ MvPolynomial.map_mvPolynomial_eq_eval₂
 
 /-- If every coefficient of a polynomial is in an ideal `I`, then so is the polynomial itself,

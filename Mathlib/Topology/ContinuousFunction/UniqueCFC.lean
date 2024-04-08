@@ -26,11 +26,11 @@ opposed to simply appealing directly to Stone-Weierstrass to prove `StarAlgHom.e
 
 section UniqueUnital
 
-section IsROrC
+section RCLike
 
-variable {𝕜 A : Type*} [IsROrC 𝕜]
+variable {𝕜 A : Type*} [RCLike 𝕜]
 
-theorem IsROrC.uniqueContinuousFunctionalCalculus_of_compactSpace_spectrum [TopologicalSpace A]
+theorem RCLike.uniqueContinuousFunctionalCalculus_of_compactSpace_spectrum [TopologicalSpace A]
     [T2Space A] [Ring A] [StarRing A] [Algebra 𝕜 A] [h : ∀ a : A, CompactSpace (spectrum 𝕜 a)] :
     UniqueContinuousFunctionalCalculus 𝕜 A where
   eq_of_continuous_of_map_id s hs φ ψ hφ hψ h :=
@@ -39,11 +39,11 @@ theorem IsROrC.uniqueContinuousFunctionalCalculus_of_compactSpace_spectrum [Topo
       all_goals exact congr_arg _ (by ext; simp)
   compactSpace_spectrum := h
 
-instance IsROrC.instUniqueContinuousFunctionalCalculus [NormedRing A] [StarRing A]
+instance RCLike.instUniqueContinuousFunctionalCalculus [NormedRing A] [StarRing A]
     [NormedAlgebra 𝕜 A] [CompleteSpace A] : UniqueContinuousFunctionalCalculus 𝕜 A :=
-  IsROrC.uniqueContinuousFunctionalCalculus_of_compactSpace_spectrum
+  RCLike.uniqueContinuousFunctionalCalculus_of_compactSpace_spectrum
 
-end IsROrC
+end RCLike
 
 section NNReal
 open NNReal
@@ -97,6 +97,9 @@ variable {A : Type*} [TopologicalSpace A] [Ring A] [StarRing A] [Algebra ℝ A] 
 
 namespace StarAlgHom
 
+-- Adaptation note: nightly-2024-04-01
+-- This synthInstance.maxHeartbeats was not needed previously.
+set_option synthInstance.maxHeartbeats 40000 in
 /-- Given a star `ℝ≥0`-algebra homomorphism `φ` from `C(X, ℝ≥0)` into an `ℝ`-algebra `A`, this is
 the unique extension of `φ` from `C(X, ℝ)` to `A` as a star `ℝ`-algebra homomorphism. -/
 @[simps]

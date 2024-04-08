@@ -90,6 +90,7 @@ theorem isLimitEquivSections_symm_apply {c : Cone F} (t : IsLimit c)
     (x : F.sections) (j : J) :
     c.π.app j ((isLimitEquivSections t).symm x) = (x : ∀ j, F.obj j) j := by
   conv_rhs => rw [← (isLimitEquivSections t).right_inv x]
+  rfl
 #align category_theory.limits.types.is_limit_equiv_sections_symm_apply CategoryTheory.Limits.Types.isLimitEquivSections_symm_apply
 
 end limit_characterization
@@ -199,6 +200,8 @@ open UnivLE
 
 instance hasLimit [Small.{u} J] (F : J ⥤ Type u) : HasLimit F :=
   (Small.hasLimit_iff_small_sections F).mpr inferInstance
+
+instance hasLimitsOfShape [Small.{u} J] : HasLimitsOfShape J (Type u) where
 
 /--
 The category of types has all limits.

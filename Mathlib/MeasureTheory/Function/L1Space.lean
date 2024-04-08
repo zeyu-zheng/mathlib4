@@ -570,6 +570,11 @@ theorem Integrable.smul_measure {f : α → β} (h : Integrable f μ) {c : ℝ�
   exact h.smul_measure hc
 #align measure_theory.integrable.smul_measure MeasureTheory.Integrable.smul_measure
 
+theorem Integrable.smul_measure_nnreal {f : α → β} (h : Integrable f μ) {c : ℝ≥0} :
+    Integrable f (c • μ) := by
+  apply h.smul_measure
+  simp
+
 theorem integrable_smul_measure {f : α → β} {c : ℝ≥0∞} (h₁ : c ≠ 0) (h₂ : c ≠ ∞) :
     Integrable f (c • μ) ↔ Integrable f μ :=
   ⟨fun h => by
@@ -1168,9 +1173,9 @@ theorem Integrable.div_const {f : α → 𝕜} (h : Integrable f μ) (c : 𝕜) 
 
 end NormedDivisionRing
 
-section IsROrC
+section RCLike
 
-variable {𝕜 : Type*} [IsROrC 𝕜] {f : α → 𝕜}
+variable {𝕜 : Type*} [RCLike 𝕜] {f : α → 𝕜}
 
 theorem Integrable.ofReal {f : α → ℝ} (hf : Integrable f μ) :
     Integrable (fun x => (f x : 𝕜)) μ := by
@@ -1179,23 +1184,23 @@ theorem Integrable.ofReal {f : α → ℝ} (hf : Integrable f μ) :
 #align measure_theory.integrable.of_real MeasureTheory.Integrable.ofReal
 
 theorem Integrable.re_im_iff :
-    Integrable (fun x => IsROrC.re (f x)) μ ∧ Integrable (fun x => IsROrC.im (f x)) μ ↔
+    Integrable (fun x => RCLike.re (f x)) μ ∧ Integrable (fun x => RCLike.im (f x)) μ ↔
       Integrable f μ := by
   simp_rw [← memℒp_one_iff_integrable]
   exact memℒp_re_im_iff
 #align measure_theory.integrable.re_im_iff MeasureTheory.Integrable.re_im_iff
 
-theorem Integrable.re (hf : Integrable f μ) : Integrable (fun x => IsROrC.re (f x)) μ := by
+theorem Integrable.re (hf : Integrable f μ) : Integrable (fun x => RCLike.re (f x)) μ := by
   rw [← memℒp_one_iff_integrable] at hf ⊢
   exact hf.re
 #align measure_theory.integrable.re MeasureTheory.Integrable.re
 
-theorem Integrable.im (hf : Integrable f μ) : Integrable (fun x => IsROrC.im (f x)) μ := by
+theorem Integrable.im (hf : Integrable f μ) : Integrable (fun x => RCLike.im (f x)) μ := by
   rw [← memℒp_one_iff_integrable] at hf ⊢
   exact hf.im
 #align measure_theory.integrable.im MeasureTheory.Integrable.im
 
-end IsROrC
+end RCLike
 
 section Trim
 
