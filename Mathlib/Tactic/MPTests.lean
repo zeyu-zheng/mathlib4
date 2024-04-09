@@ -89,7 +89,7 @@ example : True := by
 def testMData (tac : TSyntax ``tacticSeq) : TacticM (Option MessageData) := do
   let fin : TSyntax ``tacticSeq :=
     ⟨(tac.raw.insertAt 0 (← `(tactic| have := 0))).insertRight 0 (← `(tactic| done))⟩
-  testTactic fin "add 'have := 0'" "is mdata correctly handled?"
+  testTactic fin "add 'have := 0'" m!"is mdata correctly handled? {fin}"
 
 open Meta in
 def testFVs (tac : TSyntax ``tacticSeq) : TacticM (Option MessageData) := --Meta.withNewMCtxDepth do
@@ -102,6 +102,10 @@ withMainContext do
   let mut typs : HashSet Expr := HashSet.empty.insert Typ
   for (_, d) in carr do
     typs := typs.insert (d.type)
+  let nonSort ← carr.filterM fun (_, d) =>
+    return d.binderInfo != .instImplicit &&
+      d.kind == .default && d.type.ctorName != "sort" && !(← inferType d.type).isProp
+  dbg_trace "nonSort: '{nonSort.map (·.2.userName)}'"
   let news ← carr.filterM fun (_, d) => return (typs.contains (← inferType d.type))
 --  let st ← Tactic.run ( get)
 --  dbg_trace "here: {news.map (·.2.userName)}"
@@ -111,18 +115,21 @@ withMainContext do
 --  dbg_trace ← carr.mapM fun d =>
 --    return (d.2.kind == .default, d.2.userName, (← ppExpr d.2.type), (← inferType d.2.type) == Typ)
 --  dbg_trace Typ
-  for (_, d) in news do
+  let mut (ntac, con) := (tac.raw, 0)
+  for (_, d) in nonSort do
     let typ ← inferType d.type
 --    dbg_trace (d.userName, d.kind == .default, (← inferType typ) == Typ, !typ.isProp)
     if true || ((d.kind == .default) && (typ == Typ || !typ.isProp)) then
       dbg_trace (← ppExpr d.type, ← ppExpr typ)
       let nid := mkIdent d.userName
       repls := repls.push d.userName
-      evalTactic (← `(tactic| set $nid := $nid))
-  testTactic tac m!"{repls.map fun v => m!"set {v} := {v}"}" "missing withContext?"
+      ntac := ntac.insertAt con (← `(tactic| set $nid := $nid))
+      con := con + 1
+--      evalTactic (← `(tactic| set $nid := $nid))
+  testTactic ⟨ntac⟩ m!"{repls.map fun v => m!"set {v} := {v}"}" m!"missing withContext? {ntac}"
 --  trace[Tactic.tests] "{repls.map fun v => m!"set {v} = {v}"}"
 --  (do evalTactic tac; return none) <|> pure "missing withContext?"
-
+#check instInhabitedSubExpr
 #check getLevelNames
 #check collectLevelParams
 elab "tests " tac:tacticSeq : tactic => do
