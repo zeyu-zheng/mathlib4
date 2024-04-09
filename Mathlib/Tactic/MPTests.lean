@@ -106,40 +106,29 @@ withMainContext do
     return d.binderInfo != .instImplicit &&
       d.kind == .default && d.type.ctorName != "sort" && !(← inferType d.type).isProp
   dbg_trace "nonSort: '{nonSort.map (·.2.userName)}'"
-  let news ← carr.filterM fun (_, d) => return (typs.contains (← inferType d.type))
---  let st ← Tactic.run ( get)
---  dbg_trace "here: {news.map (·.2.userName)}"
---  let types ← carr.mapM fun (_, d) => do inferType d.type
---  let types := types.push Typ
---  let good ← carr.filterM fun (_, d) => return types.contains ((← inferType d.type))
---  dbg_trace ← carr.mapM fun d =>
---    return (d.2.kind == .default, d.2.userName, (← ppExpr d.2.type), (← inferType d.2.type) == Typ)
---  dbg_trace Typ
   let mut (ntac, con) := (tac.raw, 0)
   for (_, d) in nonSort do
     let typ ← inferType d.type
---    dbg_trace (d.userName, d.kind == .default, (← inferType typ) == Typ, !typ.isProp)
     if true || ((d.kind == .default) && (typ == Typ || !typ.isProp)) then
       dbg_trace (← ppExpr d.type, ← ppExpr typ)
       let nid := mkIdent d.userName
       repls := repls.push d.userName
       ntac := ntac.insertAt con (← `(tactic| set $nid := $nid))
       con := con + 1
---      evalTactic (← `(tactic| set $nid := $nid))
   testTactic ⟨ntac⟩ m!"{repls.map fun v => m!"set {v} := {v}"}" m!"missing withContext? {ntac}"
---  trace[Tactic.tests] "{repls.map fun v => m!"set {v} = {v}"}"
---  (do evalTactic tac; return none) <|> pure "missing withContext?"
-#check instInhabitedSubExpr
-#check getLevelNames
-#check collectLevelParams
-elab "tests " tac:tacticSeq : tactic => do
+
+elab "tests " tk:"!"? tac:tacticSeq : tactic => do
   let _ ← for test in [testMData, testFVs] do
     if let some str := ← test tac then
       logWarningAt (← getRef) str
-  evalTactic tac
-#check crossEmoji
+  match tk with
+    | none => evalTactic tac
+    | some _ => return
+
+macro "tests! " tac:tacticSeq : tactic => `(tactic| tests ! $tac)
+
 set_option trace.Tactic.tests true
-example {h : True} : True := by
+example {j : Bool} {h : True} : True := by
   tests buggy_exact h
 
 set_option trace.Tactic.tests true
@@ -148,6 +137,123 @@ example {a b : Nat} : 9 + a + b = b + a + 9 := by
     move_add [← 9]
     move_add [← a]
     rfl
+
+#check Syntax.find?
+#check Syntax.replaceM
+
+def toExample {m : Type → Type} [Monad m] [MonadRef m] [MonadQuotation m] :
+    Syntax → m (Option (Syntax × Syntax))
+  | `($dm:declModifiers theorem $did:declId $ds* : $t $dv:declVal) => do
+    return some (← `($dm:declModifiers example $ds* : $t $dv:declVal), did.raw[0])
+
+  | `($dm:declModifiers lemma $did:declId $ds* : $t $dv:declVal) => do
+    return some (← `($dm:declModifiers example $ds* : $t $dv:declVal), did.raw[0])
+  | _ => return none
+
+elab "test " cmd:command : command => do
+  if let some (_, id) ← toExample cmd then
+    logInfoAt id m!"testing {id}"
+  let ncmd ← cmd.replaceM fun x => do
+    if x.getKind == ``tacticSeq then
+      let xs := ⟨x⟩
+      return some (x.insertAt 0 (← `(tactic| tests! $xs))) else return none
+  logInfo ncmd
+  elabCommand ncmd
+#check declId
+
+def linterTest : Linter where run := withSetOptionIn fun cmd => do
+  if let some (cmd, id) ← toExample cmd then
+    logInfoAt id m!"testing {id}"
+--    let cmd ← toExample cmd
+    withoutModifyingEnv do
+      let ncmd ← cmd.replaceM fun x => do
+        if x.getKind == ``tacticSeq then
+          let xs := ⟨x⟩
+          return some (x.insertAt 0 (← `(tactic| tests! $xs))) else return none
+  --    let ncmd : TSyntax ``Lean.Syntax.Command := ⟨ncmd⟩
+      if ncmd != cmd then
+        let ncmd1 : Command := ⟨ncmd⟩
+        logInfo ncmd
+        let mcd ← `(
+          section once
+          namespace ohNo
+          $ncmd1
+          end ohNo
+          end once)
+        elabCommand cmd
+
+initialize addLinter linterTest
+
+/-
+node Lean.Parser.Command.declaration, none
+|-node Lean.Parser.Command.declModifiers, none
+|   |-node null, none
+|   |-node null, none
+|   |-node null, none
+|   |-node null, none
+|   |-node null, none
+|   |-node null, none
+|-node Lean.Parser.Command.theorem, none
+|   |-atom original: ⟨⟩⟨ ⟩-- 'theorem'
+                                            |   |-node Lean.Parser.Command.declId, none
+                                            |   |   |-ident original: ⟨⟩⟨ ⟩-- (hif,hif)
+                                            |   |   |-node null, none
+|   |-node Lean.Parser.Command.declSig, none
+|   |   |-node null, none
+|   |   |-node Lean.Parser.Term.typeSpec, none
+|   |   |   |-atom original: ⟨⟩⟨ ⟩-- ':'
+|   |   |   |-ident original: ⟨⟩⟨ ⟩-- (True,True)
+
+
+node Lean.Parser.Command.declaration, none
+|-node Lean.Parser.Command.declModifiers, none
+|   |-node null, none
+|   |-node null, none
+|   |-node null, none
+|   |-node null, none
+|   |-node null, none
+|   |-node null, none
+|-node Lean.Parser.Command.example, none
+|   |-atom original: ⟨⟩⟨ ⟩-- 'example'
+|   |-node Lean.Parser.Command.optDeclSig, none
+|   |   |-node null, none
+|   |   |-node null, none
+|   |   |   |-node Lean.Parser.Term.typeSpec, none
+|   |   |   |   |-atom original: ⟨⟩⟨ ⟩-- ':'
+|   |   |   |   |-ident original: ⟨⟩⟨ ⟩-- (True,True)
+-/
+
+
+test
+--inspect
+theorem hif {n m : Nat} {n m : Int} : True := .intro
+
+test
+--inspect
+lemma f {n m : Nat} {n m : Int} : True := .intro
+
+inspect
+example {n : Nat} := True.intro
+
+test
+example : True := by
+  exact .intro
+  skip
+
+set_option trace.Tactic.tests true
+test
+example {j : Bool} {h : True} : True := by
+  buggy_exact h
+
+test
+example {a b : Nat} : 9 + a + b = b + a + 9 := by
+  move_add [← 9]
+  move_add [← a]
+  rfl
+
+
+
+
 
 #exit
 
