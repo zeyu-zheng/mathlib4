@@ -188,6 +188,15 @@ elab "now " tac:tacticSeq : tactic => do
   logInfo m!"{← testInstMVs tac}"
   evalTactic tac
 
+example {a : Nat} (h : a + 0 = a) : a + 0 = a := by
+  have := 0
+  have h' := h
+  buggy_exact h        -- mdata
+  buggy_exact h'       -- missing context
+  less_buggy_exact h'  -- mvars not instantiated
+  md_exact h'          -- further evidence of mvars
+  md_exact h           -- dealing with mdata
+
 
 example {a : Nat} (ha : a = 0) : a = 0 := by
 now
