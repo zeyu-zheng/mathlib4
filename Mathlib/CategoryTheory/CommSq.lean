@@ -77,12 +77,17 @@ theorem vert_inv {g : W ≅ Y} {h : X ≅ Z} (p : CommSq f g.hom h.hom i) :
 
 theorem horiz_inv {f : W ≅ X} {i : Y ≅ Z} (p : CommSq f.hom g h i.hom) :
 <<<<<<< HEAD
+<<<<<<< HEAD
     CommSq f.inv h g i.inv :=
   flip (vert_inv (flip p))
 
 /-- The horizontal composition of two commutative squares as below is a commutative square.
 =======
     CommSq f.inv h g i.inv := flip (vert_inv (flip p))
+=======
+    CommSq f.inv h g i.inv :=
+  flip (vert_inv (flip p))
+>>>>>>> a435f4ca4f (formatting)
 
 <<<<<<< HEAD
 /-- The composite of two commutative squares as below is commutative.
