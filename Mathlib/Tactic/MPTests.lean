@@ -105,12 +105,12 @@ withMainContext do
   let nonSort ← carr.filterM fun (_, d) =>
     return d.binderInfo != .instImplicit &&
       d.kind == .default && d.type.ctorName != "sort" && !(← inferType d.type).isProp
-  dbg_trace "nonSort: '{nonSort.map (·.2.userName)}'"
+--  dbg_trace "nonSort: '{nonSort.map (·.2.userName)}'"
   let mut (ntac, con) := (tac.raw, 0)
   for (_, d) in nonSort do
     let typ ← inferType d.type
     if true || ((d.kind == .default) && (typ == Typ || !typ.isProp)) then
-      dbg_trace (← ppExpr d.type, ← ppExpr typ)
+--      dbg_trace (← ppExpr d.type, ← ppExpr typ)
       let nid := mkIdent d.userName
       repls := repls.push d.userName
       ntac := ntac.insertAt con (← `(tactic| set $nid := $nid))
@@ -141,47 +141,41 @@ example {a b : Nat} : 9 + a + b = b + a + 9 := by
 #check Syntax.find?
 #check Syntax.replaceM
 
+/-- converts
+* `theorem x ...` to  `some (example ... , x)`,
+* `lemma x ...`   to  `some (example ... , x)`,
+* `example ...`   to ``some (example ... , `example)``,
+*  everything else goes to `none`.
+-/
 def toExample {m : Type → Type} [Monad m] [MonadRef m] [MonadQuotation m] :
     Syntax → m (Option (Syntax × Syntax))
   | `($dm:declModifiers theorem $did:declId $ds* : $t $dv:declVal) => do
     return some (← `($dm:declModifiers example $ds* : $t $dv:declVal), did.raw[0])
-
   | `($dm:declModifiers lemma $did:declId $ds* : $t $dv:declVal) => do
     return some (← `($dm:declModifiers example $ds* : $t $dv:declVal), did.raw[0])
+  | `($dm:declModifiers example $ds:optDeclSig $dv:declVal) => do
+    return some (← `($dm:declModifiers example $ds $dv:declVal), mkIdent `example)
   | _ => return none
 
 elab "test " cmd:command : command => do
   if let some (_, id) ← toExample cmd then
-    logInfoAt id m!"testing {id}"
+    trace[Tactic.tests] m!"testing {id}"
   let ncmd ← cmd.replaceM fun x => do
     if x.getKind == ``tacticSeq then
       let xs := ⟨x⟩
       return some (x.insertAt 0 (← `(tactic| tests! $xs))) else return none
-  logInfo ncmd
+--  logInfo ncmd
   elabCommand ncmd
-#check declId
 
 def linterTest : Linter where run := withSetOptionIn fun cmd => do
   if let some (cmd, id) ← toExample cmd then
-    logInfoAt id m!"testing {id}"
---    let cmd ← toExample cmd
-    withoutModifyingEnv do
-      let ncmd ← cmd.replaceM fun x => do
-        if x.getKind == ``tacticSeq then
-          let xs := ⟨x⟩
-          return some (x.insertAt 0 (← `(tactic| tests! $xs))) else return none
-  --    let ncmd : TSyntax ``Lean.Syntax.Command := ⟨ncmd⟩
-      if ncmd != cmd then
-        let ncmd1 : Command := ⟨ncmd⟩
-        logInfo ncmd
-        let mcd ← `(
-          section once
-          namespace ohNo
-          $ncmd1
-          end ohNo
-          end once)
-        elabCommand cmd
-
+    trace[Tactic.tests] m!"testing {id}"
+    let ncmd ← cmd.replaceM fun x => do
+      if x.getKind == ``tacticSeq then
+        let xs := ⟨x⟩  -- convert `x` to a `tacticSeq`
+        return some (x.insertAt 0 (← `(tactic| tests! $xs))) else return none
+    if ncmd != cmd then elabCommand cmd
+  else logInfo "skipped"
 initialize addLinter linterTest
 
 /-
