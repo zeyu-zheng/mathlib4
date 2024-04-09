@@ -7,8 +7,8 @@ import Mathlib.Tactic.Use
 --import Mathlib.Tactic.Abel
 --import Mathlib.Tactic.Ring
 --import Mathlib.Tactic.Convert
-import Mathlib.adomaniLeanUtils.inspect_syntax
---import Mathlib.adomaniLeanUtils.inspect
+--import Mathlib.adomaniLeanUtils.inspect_syntax
+import Mathlib.adomaniLeanUtils.inspect
 --import Mathlib.Tactic.FlexibleLinter
 --import Mathlib.Tactic.SyntaxDataLinter
 --import Mathlib.Tactic.TerminalRefineLinter
@@ -54,7 +54,6 @@ def Lean.Syntax.insertRight (t1 : Syntax) (n : Nat) (t2 : Syntax) : Syntax :=
 
 elab "buggy_exact " h:ident : tactic => do
   let ctx ← getLCtx
---  dbg_trace ctx.fvarIdToDecl.toArray.map (·.2.userName)
   let hh := ctx.findFromUserName? h.getId
   match hh with
     | none => logWarningAt h m!"hypothesis '{h}' not found"
@@ -62,10 +61,32 @@ elab "buggy_exact " h:ident : tactic => do
       let r ← elabTermEnsuringType h h1.type
       -- warning: syntactic matching of the target
       if (← getMainTarget) == h1.type then
---        replaceMainGoal (← (← getMainGoal).apply r)
         replaceMainGoal (← (← getMainGoal).apply r)
       else logWarning "goal does not match"
 
+elab "less_buggy_exact " h:ident : tactic => withMainContext do
+  let ctx ← getLCtx
+  let hh := ctx.findFromUserName? h.getId
+  match hh with
+    | none => logWarningAt h m!"hypothesis '{h}' not found"
+    | some h1 =>
+      let r ← elabTermEnsuringType h h1.type
+      -- warning: syntactic matching of the target
+      if (← getMainTarget) == h1.type then
+        replaceMainGoal (← (← getMainGoal).apply r)
+      else logWarning "goal does not match"
+
+elab "md_exact " h:ident : tactic => withMainContext do
+  let ctx ← getLCtx
+  let hh := ctx.findFromUserName? h.getId
+  match hh with
+    | none => logWarningAt h m!"hypothesis '{h}' not found"
+    | some h1 =>
+      let r ← elabTermEnsuringType h h1.type
+      -- warning: syntactic matching of the target
+      if (← getMainTarget).consumeMData == h1.type then
+        replaceMainGoal (← (← getMainGoal).apply r)
+      else logWarning "goal does not match"
 
 def testTactic (tac : TSyntax ``tacticSeq) (test : MessageData) (fail success : Option MessageData := none) :
     TacticM (Option MessageData) := withoutModifyingState do
@@ -93,8 +114,7 @@ def testMData (tac : TSyntax ``tacticSeq) : TacticM (Option MessageData) := do
 
 open Meta in
 def testFVs (tac : TSyntax ``tacticSeq) : TacticM (Option MessageData) := --Meta.withNewMCtxDepth do
-withoutModifyingState do
-withMainContext do
+withoutModifyingState do withMainContext do
   let ctx ← getLCtx
   let mut repls := #[]
   let carr := ctx.fvarIdToDecl.toArray
@@ -112,13 +132,72 @@ withMainContext do
     if true || ((d.kind == .default) && (typ == Typ || !typ.isProp)) then
 --      dbg_trace (← ppExpr d.type, ← ppExpr typ)
       let nid := mkIdent d.userName
-      repls := repls.push d.userName
+      repls := repls.push (← `(tactic| set $nid := $nid))
       ntac := ntac.insertAt con (← `(tactic| set $nid := $nid))
       con := con + 1
-  testTactic ⟨ntac⟩ m!"{repls.map fun v => m!"set {v} := {v}"}" m!"missing withContext? {ntac}"
+  testTactic ⟨ntac⟩ m!"{repls}" m!"missing withContext? {ntac}"
+
+open Meta in
+def testInstMVs (tac : TSyntax ``tacticSeq) : TacticM (Option MessageData) :=
+withoutModifyingState do withMainContext do
+  let mut ctx ← getLCtx
+--  let mut repls := #[]
+  let carr := ctx.fvarIdToDecl.toArray
+  let props ← carr.filterM fun d => return d.2.kind == .default && ((← inferType d.2.type).isProp)
+  let ids ← props.mapM fun _ => return mkIdent (← mkFreshId)
+  dbg_trace ids
+  dbg_trace ← props.mapM fun (_, d) => ppExpr d.type
+  let mut t1 := tac.raw
+  let mut repls := #[]
+  for (newId, (_, decl)) in ids.zip props do
+    let oldId := mkIdent decl.userName
+--    let newId := mkIdent `hello
+    t1 ← t1.replaceM fun s => do return if s == oldId then some newId else none
+    repls := repls.push (← `(tactic| have $newId := $oldId ))
+    t1 := t1.insertAt 0 (← `(tactic| have $newId := $oldId ))
+    ctx ← getLCtx
+--    t1 := t1.insertAt 0 (← `(tactic| clear $oldId ))
+  t1 := t1.insertRight 0 (← `(tactic| done))
+  dbg_trace t1
+--  dbg_trace t1
+  --withMainContext do
+  testTactic ⟨t1⟩ m!"{indentD t1}" m!"missing instantiateMVars? {t1}"
+--  evalTactic t1
+--  return default
+/-
+  let mut typs : HashSet Expr := HashSet.empty
+  for (_, d) in carr do
+    typs := typs.insert (d.type)
+  let nonSort ← carr.filterM fun (_, d) =>
+    return d.binderInfo != .instImplicit &&
+      d.kind == .default && d.type.ctorName != "sort" && !(← inferType d.type).isProp
+--  dbg_trace "nonSort: '{nonSort.map (·.2.userName)}'"
+  let mut (ntac, con) := (tac.raw, 0)
+  for (_, d) in nonSort do
+    let typ ← inferType d.type
+    if true || ((d.kind == .default) && (typ == Typ || !typ.isProp)) then
+--      dbg_trace (← ppExpr d.type, ← ppExpr typ)
+      let nid := mkIdent d.userName
+      repls := repls.push (← `(tactic| set $nid := $nid))
+      ntac := ntac.insertAt con (← `(tactic| set $nid := $nid))
+      con := con + 1
+  testTactic ⟨ntac⟩ m!"{repls}" m!"missing withContext? {ntac}"
+-/
+
+elab "now " tac:tacticSeq : tactic => do
+  logInfo m!"{← testInstMVs tac}"
+  evalTactic tac
+
+
+example {a : Nat} (ha : a = 0) : a = 0 := by
+now
+--  have h := ha  -- `h` is a metavariable
+--  clear ha
+  md_exact ha
+
 
 elab "tests " tk:"!"? tac:tacticSeq : tactic => do
-  let _ ← for test in [testMData, testFVs] do
+  let _ ← for test in [testMData, testFVs, testInstMVs] do
     if let some str := ← test tac then
       logWarningAt (← getRef) str
   match tk with
@@ -131,15 +210,18 @@ set_option trace.Tactic.tests true
 example {j : Bool} {h : True} : True := by
   tests buggy_exact h
 
+example {h : True} : True := by
+  tests less_buggy_exact h
+
+example {h : True} : True := by
+  tests md_exact h
+
 set_option trace.Tactic.tests true
 example {a b : Nat} : 9 + a + b = b + a + 9 := by
   tests
     move_add [← 9]
     move_add [← a]
     rfl
-
-#check Syntax.find?
-#check Syntax.replaceM
 
 /-- converts
 * `theorem x ...` to  `some (example ... , x)`,
@@ -168,14 +250,15 @@ elab "test " cmd:command : command => do
   elabCommand ncmd
 
 def linterTest : Linter where run := withSetOptionIn fun cmd => do
-  if let some (cmd, id) ← toExample cmd then
-    trace[Tactic.tests] m!"testing {id}"
-    let ncmd ← cmd.replaceM fun x => do
-      if x.getKind == ``tacticSeq then
-        let xs := ⟨x⟩  -- convert `x` to a `tacticSeq`
-        return some (x.insertAt 0 (← `(tactic| tests! $xs))) else return none
-    if ncmd != cmd then elabCommand cmd
-  else logInfo "skipped"
+  if let some (cmd, _) ← toExample cmd then
+    let cmd := ⟨cmd⟩
+    elabCommand (← `(test $cmd))
+--    let ncmd ← cmd.replaceM fun x => do
+--      if x.getKind == ``tacticSeq then
+--        let xs := ⟨x⟩  -- convert `x` to a `tacticSeq`
+--        return some (x.insertAt 0 (← `(tactic| tests! $xs))) else return none
+--    if ncmd != cmd then elabCommand cmd
+  --else logInfo "skipped"
 initialize addLinter linterTest
 
 /-
@@ -234,6 +317,26 @@ example : True := by
   exact .intro
   skip
 
+-- `goal does not match` --> not dealing with `mdata`?
+example {a : Nat} (h : a = 0) : a = 0 := by
+  have := 0
+  buggy_exact h
+
+-- `goal does not match` --> missing `instantiateMVars`?
+example {a : Nat} (ha : a = 0) : a = 0 := by
+  have h := ha  -- `h` is a metavariable
+  clear ha
+  inspect h
+  md_exact h
+
+-- `hypothesis 'h' not found` --> missing `withMainContext`?
+example {a : Nat} (ha : a = 0) : a = 0 := by
+  --have := 0
+  have h := ha
+  clear ha
+  inspect h
+  buggy_exact h
+
 set_option trace.Tactic.tests true
 test
 example {j : Bool} {h : True} : True := by
@@ -245,6 +348,13 @@ example {a b : Nat} : 9 + a + b = b + a + 9 := by
   move_add [← a]
   rfl
 
+
+open Classical in
+example {p q : Prop} (h : 1 = 1) (h1 : False) (hp : p) (hq : q) : (if p ∧ q then 1 else 0) = 1 := by
+  -- split_ifs creates a hypothesis with a type that's a metavariable
+  split_ifs
+  · buggy_exact h
+  · buggy_exact h1
 
 
 
