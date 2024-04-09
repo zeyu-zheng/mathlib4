@@ -26,6 +26,7 @@ import Mathlib.adomaniLeanUtils.tips
 --inspect
 /- notation for `True` -/
 
+
 #check Lean.Parser.Tactic.tacticSeq
 #check Array.insertAt!
 
@@ -51,9 +52,111 @@ def Lean.Syntax.insertRight (t1 : Syntax) (n : Nat) (t2 : Syntax) : Syntax :=
       t1.insertAt (((args.size + 1)/ 2) - n) t2
     | _ => t1
 
+elab "buggy_exact " h:ident : tactic => do
+  let ctx ← getLCtx
+--  dbg_trace ctx.fvarIdToDecl.toArray.map (·.2.userName)
+  let hh := ctx.findFromUserName? h.getId
+  match hh with
+    | none => logWarningAt h m!"hypothesis '{h}' not found"
+    | some h1 =>
+      let r ← elabTermEnsuringType h h1.type
+      -- warning: syntactic matching of the target
+      if (← getMainTarget) == h1.type then
+--        replaceMainGoal (← (← getMainGoal).apply r)
+        replaceMainGoal (← (← getMainGoal).apply r)
+      else logWarning "goal does not match"
+
+
+def testTactic (tac : TSyntax ``tacticSeq) (test : MessageData) (fail success : Option MessageData := none) :
+    TacticM (Option MessageData) := withoutModifyingState do
+  let str ← (do evalTactic tac
+                trace[Tactic.tests] (checkEmoji ++ m!" {test}")
+                return success) <|>
+            (do trace[Tactic.tests] (crossEmoji ++ m!" {test}")
+                return fail)
+  return str
+
+elab "tryme " tac:tacticSeq : tactic => do
+  logInfo m!"{(← testTactic tac "testing me" "i failed" "i succeeded")}"
+#check Meta.getLevelMVarDepth
+set_option trace.Tactic.tests true
+example : True := by
+  tryme assumption
+  tryme exact 0
+  tryme exact .intro
+  exact .intro
+
+def testMData (tac : TSyntax ``tacticSeq) : TacticM (Option MessageData) := do
+  let fin : TSyntax ``tacticSeq :=
+    ⟨(tac.raw.insertAt 0 (← `(tactic| have := 0))).insertRight 0 (← `(tactic| done))⟩
+  testTactic fin "add 'have := 0'" "is mdata correctly handled?"
+
+open Meta in
+def testFVs (tac : TSyntax ``tacticSeq) : TacticM (Option MessageData) := --Meta.withNewMCtxDepth do
+withoutModifyingState do
+withMainContext do
+  let ctx ← getLCtx
+  let mut repls := #[]
+  let carr := ctx.fvarIdToDecl.toArray
+  let Typ ← inferType (.const ``Nat [])
+  let mut typs : HashSet Expr := HashSet.empty.insert Typ
+  for (_, d) in carr do
+    typs := typs.insert (d.type)
+  let news ← carr.filterM fun (_, d) => return (typs.contains (← inferType d.type))
+--  let st ← Tactic.run ( get)
+--  dbg_trace "here: {news.map (·.2.userName)}"
+--  let types ← carr.mapM fun (_, d) => do inferType d.type
+--  let types := types.push Typ
+--  let good ← carr.filterM fun (_, d) => return types.contains ((← inferType d.type))
+--  dbg_trace ← carr.mapM fun d =>
+--    return (d.2.kind == .default, d.2.userName, (← ppExpr d.2.type), (← inferType d.2.type) == Typ)
+--  dbg_trace Typ
+  for (_, d) in news do
+    let typ ← inferType d.type
+--    dbg_trace (d.userName, d.kind == .default, (← inferType typ) == Typ, !typ.isProp)
+    if true || ((d.kind == .default) && (typ == Typ || !typ.isProp)) then
+      dbg_trace (← ppExpr d.type, ← ppExpr typ)
+      let nid := mkIdent d.userName
+      repls := repls.push d.userName
+      evalTactic (← `(tactic| set $nid := $nid))
+  testTactic tac m!"{repls.map fun v => m!"set {v} := {v}"}" "missing withContext?"
+--  trace[Tactic.tests] "{repls.map fun v => m!"set {v} = {v}"}"
+--  (do evalTactic tac; return none) <|> pure "missing withContext?"
+
+#check getLevelNames
+#check collectLevelParams
+elab "tests " tac:tacticSeq : tactic => do
+  let _ ← for test in [testMData, testFVs] do
+    if let some str := ← test tac then
+      logWarningAt (← getRef) str
+  evalTactic tac
+#check crossEmoji
+set_option trace.Tactic.tests true
+example {h : True} : True := by
+  tests buggy_exact h
+
+set_option trace.Tactic.tests true
+example {a b : Nat} : 9 + a + b = b + a + 9 := by
+  tests
+    move_add [← 9]
+    move_add [← a]
+    rfl
+
+#exit
+
 elab "insert " t1:tactic " in " tac:tacticSeq : tactic => do
   let fin : TSyntax ``tacticSeq := ⟨(tac.raw.insertAt 0 t1).insertRight 0 (← `(tactic| done))⟩
   evalTactic fin
+
+def test_mdata (tac : TSyntax ``tacticSeq) : TacticM (Option String) := do
+  let fin : TSyntax ``tacticSeq :=
+    ⟨(tac.raw.insertAt 0 (← `(tactic| have := 0))).insertRight 0 (← `(tactic| done))⟩
+  let tst := "add 'have := 0'"
+  (do evalTactic fin
+      trace[Tactic.tests] "unsuccessful {tst}"
+      return none) <|>
+  (do trace[Tactic.tests] "successful {tst}"
+      return some "is mdata correctly handled?")
 
 elab "test_mdata " tac:tacticSeq : tactic => do
   let fin : TSyntax ``tacticSeq :=
@@ -61,19 +164,49 @@ elab "test_mdata " tac:tacticSeq : tactic => do
   logInfo fin
   evalTactic fin <|> logWarning "is mdata correctly handled?"
 
-def test_fvs (tac : TSyntax ``tacticSeq) : TacticM String := do
+def test_fvs (tac : TSyntax ``tacticSeq) : TacticM (Option String) := do
   let ctx ← getLCtx
+  let mut repls := #[]
   for d in ctx.fvarIdToDecl do
-    if  (d.2.kind == .default) then
+    if (d.2.kind == .default) then
       let nid := mkIdent d.2.userName
+      repls := repls.push d.2.userName
       evalTactic (← `(tactic| set $nid := $nid))
-  (do evalTactic tac; return "") <|> pure "missing withContext?"
+  trace[Tactic.tests] "{repls.map fun v => m!"set {v} = {v}"}"
+  (do evalTactic tac; return none) <|> pure "missing withContext?"
+
+
+elab "tests " tac:tacticSeq : tactic => do
+  let s ← saveState
+  let mut strs := #[]
+  for test in [test_fvs, test_mdata] do
+    strs := strs.push (← test tac)
+  restoreState s
+  let msgs := strs.reduceOption
+  for m in msgs do logWarning m!"{m}"
+  evalTactic tac
+
+set_option trace.Tactic.tests true
+example {a b : Nat} : 9 + a + b = b + a + 9 := by
+  tests
+    move_add [← 9]
+    move_add [← a]
+    rfl
+
+
 
 
 elab "test_fvs " tac:tacticSeq : tactic => do
+  let s ← saveState
+  let str ← test_fvs tac
+  restoreState s
+  if h : str.isSome then logWarning m!"{str.get h}"
+  evalTactic tac
+
 --  let gs ← getGoals
---  let s ← saveState
+/-
   let ctx ← getLCtx
+
 --  let fvs := ctx.fvarIdToDecl --.toArray --.filter (·.2.kind == .default)
   for d in ctx.fvarIdToDecl do
     if  (d.2.kind == .default) then
@@ -81,6 +214,7 @@ elab "test_fvs " tac:tacticSeq : tactic => do
       evalTactic (← `(tactic| set $nid := $nid))
   evalTactic tac <|> logWarning "missing withContext?"
   evalTactic (← `(tactic| repeat sorry))
+-/
 
 elab "test_all" tac:tacticSeq : tactic => do
   let s ← saveState
@@ -94,7 +228,7 @@ elab "test_all" tac:tacticSeq : tactic => do
     restoreState s
   restoreState s
   evalTactic tac
-
+set_option trace.Tactic.tests true
 example {a b : Nat} : 9 + a + b = b + a + 9 := by
   test_fvs
     move_add [← 9]
@@ -104,20 +238,6 @@ example {a b : Nat} : 9 + a + b = b + a + 9 := by
 
 ---  dbg_trace fvs.map (·.2.userName)
 
-
-elab "buggy_exact " h:ident : tactic => do
-  let ctx ← getLCtx
-  dbg_trace ctx.fvarIdToDecl.toArray.map (·.2.userName)
-  let hh := ctx.findFromUserName? h.getId
-  match hh with
-    | none => logWarningAt h m!"hypothesis '{h}' not found"
-    | some h1 =>
-      let r ← elabTermEnsuringType h h1.type
-      -- warning: syntactic matching of the target
-      if (← getMainTarget) == h1.type then
---        replaceMainGoal (← (← getMainGoal).apply r)
-        replaceMainGoal (← (← getMainGoal).apply r)
-      else logWarning "goal does not match"
 
 #check Expr.applyFVarSubst
 #check FVarIdSet
