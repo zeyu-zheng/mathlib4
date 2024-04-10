@@ -109,16 +109,7 @@ elab "buggy_exact " h:ident : tactic => do
       else logWarning "goal does not match"
 
 elab "less_buggy_exact " h:ident : tactic => withMainContext do
-  let ctx ← getLCtx
-  let hh := ctx.findFromUserName? h.getId
-  match hh with
-    | none => logWarningAt h m!"hypothesis '{h}' not found"
-    | some h1 =>
-      let r ← elabTermEnsuringType h h1.type
-      -- warning: syntactic matching of the target
-      if (← getMainTarget) == h1.type then
-        replaceMainGoal (← (← getMainGoal).apply r)
-      else logWarning "goal does not match"
+  evalTactic (← `(tactic| buggy_exact $h))
 
 elab "md_exact " h:ident : tactic => withMainContext do
   let ctx ← getLCtx
