@@ -84,6 +84,7 @@ h 3
   logInfo <| ← haves ⟨tac⟩ 3
 -/
 
+/--  a sample tactic that behaves like `exact` but has bugs. -/
 elab "buggy_exact " md:"clearMD"? h:ident : tactic => do
   let ctx ← getLCtx
   let hh := ctx.findFromUserName? h.getId
@@ -97,14 +98,13 @@ elab "buggy_exact " md:"clearMD"? h:ident : tactic => do
         replaceMainGoal (← (← getMainGoal).apply r)
       else logWarning "goal does not match"
 
-elab "ctx_buggy_exact " md:"clearMD"? h:ident : tactic => withMainContext do
+@[inherit_doc tacticBuggy_exactClearMD_]
+elab "buggy_exact " md:"clearMD"? "withMC" h:ident : tactic => withMainContext do
   if md.isSome then evalTactic (← `(tactic| buggy_exact clearMD $h))
   else              evalTactic (← `(tactic| buggy_exact $h))
 
-elab "less_buggy_exact " h:ident : tactic => withMainContext do
-  evalTactic (← `(tactic| buggy_exact $h))
-
-elab "md_exact " h:ident : tactic => withMainContext do
+@[inherit_doc tacticBuggy_exactClearMD_]
+elab "buggy_exact " "withMC" "clearMD" h:ident : tactic => do
   evalTactic (← `(tactic| buggy_exact clearMD $h))
 
 /--
@@ -120,11 +120,11 @@ warning: goal does not match
 example {a : Nat} (h : a + 0 = a) : a + 0 = a := by
   have := 0
   have h' := h
-  buggy_exact h        -- mdata  `goal does not match`
-  buggy_exact h'       -- missing context  `hypothesis 'h'' not found`
-  less_buggy_exact h'  -- mvars not instantiated  `goal does not match`
-  md_exact h'          -- further evidence of mvars  `goal does not match`
-  md_exact h           -- dealing with mdata
+  buggy_exact h          -- mdata  `goal does not match`
+  buggy_exact h'         -- missing context  `hypothesis 'h'' not found`
+  buggy_exact withMC h'  -- mvars not instantiated  `goal does not match`
+  buggy_exact clearMD withMC h'            -- further evidence of mvars  `goal does not match`
+  buggy_exact clearMD withMC h             -- dealing with mdata
 
 def testTactic (tac : TSyntax ``tacticSeq) (test : MessageData) (fail success : Option MessageData := none) :
     TacticM (Option MessageData) := withoutModifyingState do
@@ -250,13 +250,13 @@ elab "now " tac:tacticSeq : tactic => do
 info: some (missing instantiateMVars?
 
   have ha__ha__0 := ha
-  md_exact ha__ha__0
+  buggy_exact clearMD withMC ha__ha__0
   done)
 ---
 info:
 [Tactic.tests] ❌ 'have's
         have ha__ha__0 := ha
-        md_exact ha__ha__0
+        buggy_exact clearMD withMC ha__ha__0
         done
 -/
 #guard_msgs in
@@ -264,7 +264,7 @@ example {a : Nat} (ha : a = 0) : a = 0 := by
 now
 --  have h := ha  -- `h` is a metavariable
 --  clear ha
-  md_exact ha
+  buggy_exact clearMD withMC ha
 
 
 elab "tests " tk:"!"? tac:tacticSeq : tactic => do
@@ -328,13 +328,13 @@ example {h : True} : True := by
 warning: is mdata correctly handled?
 
   have := 0
-  less_buggy_exact h
+  buggy_exact withMC h
   done
 ---
 warning: missing instantiateMVars?
 
   have h__h__0 := h
-  less_buggy_exact h__h__0
+  buggy_exact withMC h__h__0
   done
 ---
 info:
@@ -343,18 +343,18 @@ info:
 [Tactic.tests] ✅ 'let's []
 [Tactic.tests] ❌ 'have's
         have h__h__0 := h
-        less_buggy_exact h__h__0
+        buggy_exact withMC h__h__0
         done
 -/
 #guard_msgs in
 example {h : True} : True := by
-  tests less_buggy_exact h
+  tests buggy_exact withMC h
 
 /--
 warning: missing instantiateMVars?
 
   have h__h__0 := h
-  md_exact h__h__0
+  buggy_exact clearMD withMC h__h__0
   done
 ---
 info:
@@ -363,12 +363,12 @@ info:
 [Tactic.tests] ✅ 'let's []
 [Tactic.tests] ❌ 'have's
         have h__h__0 := h
-        md_exact h__h__0
+        buggy_exact clearMD withMC h__h__0
         done
 -/
 #guard_msgs in
 example {h : True} : True := by
-  tests md_exact h
+  tests buggy_exact clearMD withMC h
 
 /--
 info:
@@ -478,7 +478,7 @@ example {a : Nat} (ha : a = 0) : a = 0 := by
   have h := ha  -- `h` is a metavariable
   clear ha
 --  inspect h
-  md_exact h
+  buggy_exact clearMD withMC h
   assumption
 
 /--
