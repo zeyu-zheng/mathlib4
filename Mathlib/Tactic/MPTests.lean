@@ -34,7 +34,13 @@ instance : ToString Ordering where
   toString | .lt => "<" | .eq => "=" | .gt => ">"
 
 open Lean Parser Elab Command Tactic
-def Lean.Syntax.insertAt (t1 : Syntax) (n : Nat) (t2 : Syntax) : Syntax :=
+section low_level_syntax
+
+namespace Lean
+
+namespace Syntax
+
+def insertAt (t1 : Syntax) (n : Nat) (t2 : Syntax) : Syntax :=
   -- we check if `t1` is a `tacticSeq` and further split on whether it ends in `;` or not
   match t1 with
     | .node n1 ``tacticSeq #[.node n2 ``tacticSeq1Indented #[.node n3 `null args]] =>
@@ -46,14 +52,24 @@ def Lean.Syntax.insertAt (t1 : Syntax) (n : Nat) (t2 : Syntax) : Syntax :=
       .node n1 ``tacticSeq #[.node n2 ``tacticSeq1Indented #[.node n3 `null nargs]]
     | _ => t1
 
-def Lean.Syntax.insertRight (t1 : Syntax) (n : Nat) (t2 : Syntax) : Syntax :=
+def insertRight (t1 : Syntax) (n : Nat) (t2 : Syntax) : Syntax :=
   match t1 with
     | .node _ ``tacticSeq #[.node _ ``tacticSeq1Indented #[.node _ `null args]] =>
       t1.insertAt (((args.size + 1)/ 2) - n) t2
     | _ => t1
 
-def Lean.Syntax.insertMany (tac : Syntax) (ts : Array Syntax) : Syntax :=
+def insertMany (tac : Syntax) (ts : Array Syntax) : Syntax :=
   (Array.range ts.size).foldl (fun l r => l.insertAt r ts[r]!) tac
+
+end Syntax
+
+def TSyntax.insertMany (tac : TSyntax ``tacticSeq) (ts : Array (TSyntax `tactic)) :
+    TSyntax ``tacticSeq :=
+  ⟨tac.raw.insertMany ts⟩
+
+end Lean
+
+end low_level_syntax
 
 /-
 inspect
@@ -138,11 +154,15 @@ example : True := by
 section tactic_modifications
 variable {m : Type → Type} [Monad m] [MonadRef m] [MonadQuotation m]
 
+def addDone (tac : TSyntax ``tacticSeq) : m (TSyntax ``tacticSeq) :=
+  return tac.insertMany #[(← `(tactic| done))]
+  --return ⟨tac.raw.insertRight 0 (← `(tactic| done))⟩
+
 /-- adds `have := 0` at the beginning and `done` at the end of the input tactic sequence.
 When evaluating the resulting tactic, the goal acquires `mdata`
 as a consequence of the `have := 0`. -/
-def addHaveDone (tac : TSyntax ``tacticSeq) :  m (TSyntax ``tacticSeq) :=
-  return ⟨(tac.raw.insertAt 0 (← `(tactic| have := 0))).insertRight 0 (← `(tactic| done))⟩
+def addHaveDone (tac : TSyntax ``tacticSeq) : m (TSyntax ``tacticSeq) := do
+  addDone (tac.insertMany #[(← `(tactic| have := 0))])
 
 /-- adds at the beginning of the tactic sequence `tac` lines like `set x := x`,
 where `x` is the username of each local declaration in `toSet`.
@@ -154,7 +174,23 @@ def addSets (tac : TSyntax ``tacticSeq) (toSet : Array LocalDecl) :
   for d in toSet do
     let nid := mkIdent d.userName
     repls := repls.push (← `(tactic| set $nid := $nid))
-  return (⟨tac.raw.insertMany repls⟩, repls)
+  return (tac.insertMany repls, repls)
+
+/-- adds at the beginning of the tactic sequence `tac` lines like `have new := old`,
+where `old` is the username of each local declaration in `toHave`.
+It also replaces all `old` names with the `new` ones in `tac`.
+These `have`s introduce the "same" local declarations, but inside a metavariable,
+creating a layer of separation between the original names of the declarations
+and the current ones.  This may help detect missing `instantiateMVars`. -/
+def addPropHaves (tac : TSyntax ``tacticSeq) (toHave : Array (Ident × LocalDecl)) :
+    m (TSyntax ``tacticSeq × Array (TSyntax `tactic)) := do
+  let mut (t1, repls) := (tac, #[])
+  for (newId, decl) in toHave do
+    let oldId := mkIdent decl.userName
+    t1 ← t1.replaceM fun s => return if s == oldId then some newId else none
+    repls := repls.push (← `(tactic| have $newId := $oldId ))
+  t1 ← addDone (t1.insertMany repls)
+  return (t1, repls)
 
 end tactic_modifications
 
