@@ -135,16 +135,37 @@ example : True := by
   tryme exact .intro
   exact .intro
 
+section tactic_modifications
+variable {m : Type → Type} [Monad m] [MonadRef m] [MonadQuotation m]
+
+/-- adds `have := 0` at the beginning and `done` at the end of the input tactic sequence.
+When evaluating the resulting tactic, the goal acquires `mdata`
+as a consequence of the `have := 0`. -/
+def addHaveDone (tac : TSyntax ``tacticSeq) :  m (TSyntax ``tacticSeq) :=
+  return ⟨(tac.raw.insertAt 0 (← `(tactic| have := 0))).insertRight 0 (← `(tactic| done))⟩
+
+/-- adds at the beginning of the tactic sequence `tac` lines like `set x := x`,
+where `x` is the username of each local declaration in `toSet`.
+These `set`s introduce a layer of separation between the original names of the declarations
+and the current ones.  This may help detect missing `withContext`s. -/
+def addSets (tac : TSyntax ``tacticSeq) (toSet : Array LocalDecl) :
+    m (TSyntax ``tacticSeq × Array (TSyntax `tactic)) := do
+  let mut repls := #[]
+  for d in toSet do
+    let nid := mkIdent d.userName
+    repls := repls.push (← `(tactic| set $nid := $nid))
+  return (⟨tac.raw.insertMany repls⟩, repls)
+
+end tactic_modifications
+
 def testMData (tac : TSyntax ``tacticSeq) : TacticM (Option MessageData) := do
-  let fin : TSyntax ``tacticSeq :=
-    ⟨(tac.raw.insertAt 0 (← `(tactic| have := 0))).insertRight 0 (← `(tactic| done))⟩
+  let fin ← addHaveDone tac
   testTactic fin "add 'have := 0'" m!"is mdata correctly handled? {fin}"
 
 open Meta in
 def testFVs (tac : TSyntax ``tacticSeq) : TacticM (Option MessageData) := --Meta.withNewMCtxDepth do
 withoutModifyingState do withMainContext do
   let ctx ← getLCtx
-  let mut repls := #[]
   let carr := ctx.fvarIdToDecl.toArray
   let Typ ← inferType (.const ``Nat [])
   let mut typs : HashSet Expr := HashSet.empty.insert Typ
@@ -154,16 +175,9 @@ withoutModifyingState do withMainContext do
     return d.binderInfo != .instImplicit &&
       d.kind == .default && d.type.ctorName != "sort" && !(← inferType d.type).isProp
 --  dbg_trace "nonSort: '{nonSort.map (·.2.userName)}'"
-  let mut (ntac, con) := (tac.raw, 0)
-  for (_, d) in nonSort do
-    let typ ← inferType d.type
-    if true || ((d.kind == .default) && (typ == Typ || !typ.isProp)) then
---      dbg_trace (← ppExpr d.type, ← ppExpr typ)
-      let nid := mkIdent d.userName
-      repls := repls.push (← `(tactic| set $nid := $nid))
-      ntac := ntac.insertAt con (← `(tactic| set $nid := $nid))
-      con := con + 1
-  testTactic ⟨ntac⟩ m!"{repls}" m!"missing withContext? {ntac}"
+  let toSet := nonSort.map Prod.snd
+  let (ntac, repls) ← addSets tac toSet
+  testTactic ntac m!"{repls}" m!"missing withContext? {ntac}"
 
 open Meta in
 def testInstMVs (tac : TSyntax ``tacticSeq) : TacticM (Option MessageData) :=
