@@ -82,6 +82,7 @@ theorem horiz_inv {f : W ≅ X} {i : Y ≅ Z} (p : CommSq f.hom g h i.hom) :
   flip (vert_inv (flip p))
 
 /-- The horizontal composition of two commutative squares as below is a commutative square.
+<<<<<<< HEAD
 =======
     CommSq f.inv h g i.inv := flip (vert_inv (flip p))
 =======
@@ -95,6 +96,8 @@ theorem horiz_inv {f : W ≅ X} {i : Y ≅ Z} (p : CommSq f.hom g h i.hom) :
 =======
 /-- The composite of two commutative squares as below is a commutative square.
 >>>>>>> 48ef93f625 (comment fix)
+=======
+>>>>>>> 53312b2607 (comment fix)
 ```
   W ---f---> X ---f'--> X'
   |          |          |
@@ -157,7 +160,7 @@ lemma horiz_comp {W X X' Y Z Z' : C} {f : W ⟶ X} {f' : X ⟶ X'} {g : W ⟶ Y}
   ⟨by rw [← Category.assoc, Category.assoc, ← hsq₁.w, hsq₂.w, Category.assoc]⟩
 >>>>>>> 6117a97cf0 (horizontal inv)
 
-/-- The composite of two commutative squares as below is a commutative square.
+/-- The vertical composition of two commutative squares as below is a commutative square.
 ```
   W ---f---> X
   |          |
