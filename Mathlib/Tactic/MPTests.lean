@@ -205,9 +205,12 @@ and the current ones.  This may help detect missing `instantiateMVars`. -/
 def addPropHaves [MonadNameGenerator m] (tac : TSyntax ``tacticSeq) (toHave : Array LocalDecl) :
     m (TSyntax ``tacticSeq × Array (TSyntax `tactic)) := do
   let mut (t1, repls) := (tac, #[])
-  for decl in toHave do
-    let newId := mkIdent (← mkFreshId)
+  for i in [:toHave.size] do
+    let decl := toHave[i]!
     let oldId := mkIdent decl.userName
+    let str := decl.userName.toString ++ "__"++ decl.userName.toString ++ "__" ++ (toString i)
+    -- prefer to `let newId := mkIdent (← mkFreshId)` just for easier copy/pasting
+    let newId : Ident := ⟨.ident .none str str []⟩
     t1 ← t1.replaceM fun s => return if s == oldId then some newId else none
     repls := repls.push (← `(tactic| have $newId := $oldId ))
   t1 ← addDone (t1.insertMany repls)
@@ -223,7 +226,7 @@ open Meta in
 def testFVs (tac : TSyntax ``tacticSeq) : TacticM (Option MessageData) := --Meta.withNewMCtxDepth do
 withoutModifyingState do withMainContext do
   let ctx ← getLCtx
-  let carr := ctx.fvarIdToDecl.toArray
+  let carr := ctx.fvarIdToDecl.toArray.qsort (·.1.name.toString < ·.1.name.toString)
   let Typ ← inferType (.const ``Nat [])
   let mut typs : HashSet Expr := HashSet.empty.insert Typ
   for (_, d) in carr do
@@ -241,7 +244,7 @@ def testInstMVs (tac : TSyntax ``tacticSeq) : TacticM (Option MessageData) :=
 withoutModifyingState do withMainContext do
   let mut ctx ← getLCtx
 --  let mut repls := #[]
-  let carr := ctx.fvarIdToDecl.toArray
+  let carr := ctx.fvarIdToDecl.toArray.qsort (·.1.name.toString < ·.1.name.toString)
   let props ← carr.filterM fun d => return d.2.kind == .default && ((← inferType d.2.type).isProp)
   let (t1, _repls) ← addPropHaves tac (props.map Prod.snd)
   testTactic ⟨t1⟩ m!"{indentD t1}" m!"missing instantiateMVars? {t1}"
@@ -250,7 +253,20 @@ elab "now " tac:tacticSeq : tactic => do
   logInfo m!"{← testInstMVs tac}"
   evalTactic tac
 
---set_option pp.mv
+/--
+info: some (missing instantiateMVars?
+
+  have ha__ha__0 := ha
+  md_exact ha__ha__0
+  done)
+---
+info: [Tactic.tests] ❌
+
+        have ha__ha__0 := ha
+        md_exact ha__ha__0
+        done
+-/
+#guard_msgs in
 example {a : Nat} (ha : a = 0) : a = 0 := by
 now
 --  have h := ha  -- `h` is a metavariable
@@ -269,16 +285,105 @@ elab "tests " tk:"!"? tac:tacticSeq : tactic => do
 macro "tests! " tac:tacticSeq : tactic => `(tactic| tests ! $tac)
 
 set_option trace.Tactic.tests true
+/--
+warning: is mdata correctly handled?
+
+  have := 0
+  buggy_exact h
+  done
+---
+warning: missing instantiateMVars?
+
+  have h__h__0 := h
+  buggy_exact h__h__0
+  done
+---
+info: [Tactic.tests] ❌ add 'have := 0'
+[Tactic.tests] ✅ [set j := j]
+[Tactic.tests] ❌
+
+        have h__h__0 := h
+        buggy_exact h__h__0
+        done
+-/
+#guard_msgs in
 example {j : Bool} {h : True} : True := by
   tests buggy_exact h
 
+/--
+warning: missing instantiateMVars?
+
+  have h__h__0 := h
+  buggy_exact clearMD h__h__0
+  done
+---
+info: [Tactic.tests] ✅ add 'have := 0'
+[Tactic.tests] ✅ []
+[Tactic.tests] ❌
+
+        have h__h__0 := h
+        buggy_exact clearMD h__h__0
+        done
+-/
+#guard_msgs in
+example {h : True} : True := by
+  tests buggy_exact clearMD h
+
+/--
+warning: is mdata correctly handled?
+
+  have := 0
+  less_buggy_exact h
+  done
+---
+warning: missing instantiateMVars?
+
+  have h__h__0 := h
+  less_buggy_exact h__h__0
+  done
+---
+info: [Tactic.tests] ❌ add 'have := 0'
+[Tactic.tests] ✅ []
+[Tactic.tests] ❌
+
+        have h__h__0 := h
+        less_buggy_exact h__h__0
+        done
+-/
+#guard_msgs in
 example {h : True} : True := by
   tests less_buggy_exact h
 
+/--
+warning: missing instantiateMVars?
+
+  have h__h__0 := h
+  md_exact h__h__0
+  done
+---
+info: [Tactic.tests] ✅ add 'have := 0'
+[Tactic.tests] ✅ []
+[Tactic.tests] ❌
+
+        have h__h__0 := h
+        md_exact h__h__0
+        done
+-/
+#guard_msgs in
 example {h : True} : True := by
   tests md_exact h
 
-set_option trace.Tactic.tests true
+/--
+info: [Tactic.tests] ✅ add 'have := 0'
+[Tactic.tests] ✅ [set a := a, set b := b]
+[Tactic.tests] ✅
+
+        move_add [← 9]
+        move_add [← a]
+        rfl
+        done
+-/
+#guard_msgs in
 example {a b : Nat} : 9 + a + b = b + a + 9 := by
   tests
     move_add [← 9]
@@ -363,47 +468,113 @@ node Lean.Parser.Command.declaration, none
 -/
 
 
+/--
+info: [Tactic.tests] testing hif
+[Tactic.tests] ✅ add 'have := 0'
+[Tactic.tests] ✅ [set _n := _n, set _m := _m, set _n := _n, set _m := _m]
+[Tactic.tests] ✅
+
+        have _hn___hn__0 := _hn
+        exact .intro
+        done
+-/
+#guard_msgs in
 test
---inspect
-theorem hif {n m : Nat} {n m : Int} : True := .intro
+theorem hif {_n _m : Nat} {_n _m : Int} (_hn : _n + _m = 0) : True := by
+  exact .intro
 
-test
---inspect
-lemma f {n m : Nat} {n m : Int} : True := .intro
+/--
+info: [Tactic.tests] testing example
+[Tactic.tests] ✅ add 'have := 0'
+[Tactic.tests] ✅ []
+[Tactic.tests] ✅
 
-inspect
-example {n : Nat} := True.intro
-
+        exact .intro
+        skip
+        done
+-/
+#guard_msgs in
 test
 example : True := by
   exact .intro
   skip
 
+/--
+warning: goal does not match
+-/
 -- `goal does not match` --> not dealing with `mdata`?
+#guard_msgs in
 example {a : Nat} (h : a = 0) : a = 0 := by
   have := 0
   buggy_exact h
+  assumption
 
+/--
+warning: goal does not match
+-/
+#guard_msgs in
 -- `goal does not match` --> missing `instantiateMVars`?
 example {a : Nat} (ha : a = 0) : a = 0 := by
   have h := ha  -- `h` is a metavariable
   clear ha
-  inspect h
+--  inspect h
   md_exact h
+  assumption
 
+/--
+warning: hypothesis 'h' not found
+-/
+#guard_msgs in
 -- `hypothesis 'h' not found` --> missing `withMainContext`?
 example {a : Nat} (ha : a = 0) : a = 0 := by
   --have := 0
   have h := ha
   clear ha
-  inspect h
+--  inspect h
   buggy_exact h
+  assumption
 
-set_option trace.Tactic.tests true
+/--
+warning: is mdata correctly handled?
+
+  have := 0
+  buggy_exact h
+  done
+---
+warning: missing instantiateMVars?
+
+  have _h2___h2__0 := _h2
+  have h__h__1 := h
+  buggy_exact h__h__1
+  done
+---
+info: [Tactic.tests] testing example
+[Tactic.tests] ❌ add 'have := 0'
+[Tactic.tests] ✅ [set j := j]
+[Tactic.tests] ❌
+
+        have _h2___h2__0 := _h2
+        have h__h__1 := h
+        buggy_exact h__h__1
+        done
+-/
+#guard_msgs in
 test
-example {j : Bool} {h : True} : True := by
+example {j : Bool} {_h2 : True} {h : True} : True := by
   buggy_exact h
 
+/--
+info: [Tactic.tests] testing example
+[Tactic.tests] ✅ add 'have := 0'
+[Tactic.tests] ✅ [set a := a, set b := b]
+[Tactic.tests] ✅
+
+        move_add [← 9]
+        move_add [← a]
+        rfl
+        done
+-/
+#guard_msgs in
 test
 example {a b : Nat} : 9 + a + b = b + a + 9 := by
   move_add [← 9]
@@ -412,14 +583,11 @@ example {a b : Nat} : 9 + a + b = b + a + 9 := by
 
 
 open Classical in
-example {p q : Prop} (h : 1 = 1) (h1 : False) (hp : p) (hq : q) : (if p ∧ q then 1 else 0) = 1 := by
+example {p q : Prop} (h : 1 = 1) (h1 : False) (_hp : p) (_hq : q) : (if p ∧ q then 1 else 0) = 1 := by
   -- split_ifs creates a hypothesis with a type that's a metavariable
   split_ifs
   · buggy_exact h
   · buggy_exact h1
-
-
-
 
 #exit
 
