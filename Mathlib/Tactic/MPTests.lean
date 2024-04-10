@@ -16,6 +16,9 @@ namespace Lean
 
 namespace Syntax
 
+/-- assumes that `t1` is a tactic sequence and that `t2` is a single tactic.
+Inserts `t2` as the `n`-th tactic of the sequence, defaulting to the last position
+if `n` is larger than the number of tactics in the sequence `t1`. -/
 def insertAt (t1 : Syntax) (n : Nat) (t2 : Syntax) : Syntax :=
   -- we check if `t1` is a `tacticSeq` and further split on whether it ends in `;` or not
   match t1 with
@@ -28,21 +31,27 @@ def insertAt (t1 : Syntax) (n : Nat) (t2 : Syntax) : Syntax :=
       .node n1 ``tacticSeq #[.node n2 ``tacticSeq1Indented #[.node n3 `null nargs]]
     | _ => t1
 
+/-- assumes that `t1` is a tactic sequence and that `t2` is a single tactic.
+Inserts `t2` as the `n`-th tactic of the sequence from the bottom, defaulting to the first position
+if `n` is larger than the number of tactics in the sequence `t1`. -/
 def insertRight (t1 : Syntax) (n : Nat) (t2 : Syntax) : Syntax :=
   match t1 with
     | .node _ ``tacticSeq #[.node _ ``tacticSeq1Indented #[.node _ `null args]] =>
       t1.insertAt (((args.size + 1)/ 2) - n) t2
     | _ => t1
 
+/-- inserts all the tactics in the array `ts` at the beginning of the tactic sequence `tac`. -/
 def insertMany (tac : Syntax) (ts : Array Syntax) : Syntax :=
   (Array.range ts.size).foldl (fun l r => l.insertAt r ts[r]!) tac
 
 end Syntax
 
+/-- inserts all the tactics in the array `ts` at the beginning of the tactic sequence `tac`. -/
 def TSyntax.insertMany (tac : TSyntax ``tacticSeq) (ts : Array (TSyntax `tactic)) :
     TSyntax ``tacticSeq :=
   ⟨tac.raw.insertMany ts⟩
 
+/-- inserts the tactic `ts` at the end of the tactic sequence `tac`. -/
 def TSyntax.insertBack (tac : TSyntax ``tacticSeq) (ts : TSyntax `tactic) :
     TSyntax ``tacticSeq :=
   ⟨tac.raw.insertRight 0 ts⟩
@@ -182,14 +191,15 @@ It also replaces all `old` names with the `new` ones in `tac`.
 These `have`s introduce the "same" local declarations, but inside a metavariable,
 creating a layer of separation between the original names of the declarations
 and the current ones.  This may help detect missing `instantiateMVars`. -/
-def addPropHaves [MonadNameGenerator m] (tac : TSyntax ``tacticSeq) (toHave : Array LocalDecl) :
+def addPropHaves (tac : TSyntax ``tacticSeq) (toHave : Array LocalDecl) :
     m (TSyntax ``tacticSeq × Array (TSyntax `tactic)) := do
   let mut (t1, repls) := (tac, #[])
   for i in [:toHave.size] do
     let decl := toHave[i]!
     let oldId := mkIdent decl.userName
     let str := decl.userName.toString ++ "__"++ decl.userName.toString ++ "__" ++ (toString i)
-    -- prefer to `let newId := mkIdent (← mkFreshId)` just for easier copy/pasting
+    -- prefer to `let newId := mkIdent (← mkFreshId)` that also requires `[MonadNameGenerator m]`
+    -- just for easier copy/pasting
     let newId : Ident := ⟨.ident .none str str []⟩
     t1 ← t1.replaceM fun s => return if s == oldId then some newId else none
     repls := repls.push (← `(tactic| have $newId := $oldId ))
