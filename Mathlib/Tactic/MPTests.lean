@@ -177,12 +177,13 @@ def addHaveDone (tac : TSyntax ``tacticSeq) : m (TSyntax ``tacticSeq) := do
 where `x` is the username of each local declaration in `toSet`.
 These `set`s introduce a layer of separation between the original names of the declarations
 and the current ones.  This may help detect missing `withContext`s. -/
-def addSets (tac : TSyntax ``tacticSeq) (toSet : Array LocalDecl) :
+def addLetsOrSets (lets? : Bool) (tac : TSyntax ``tacticSeq) (toSet : Array LocalDecl) :
     m (TSyntax ``tacticSeq × Array (TSyntax `tactic)) := do
   let mut repls := #[]
   for d in toSet do
     let nid := mkIdent d.userName
-    repls := repls.push (← `(tactic| set $nid := $nid))
+    let next ← if lets? then `(tactic| let $nid := $nid) else `(tactic| set $nid := $nid)
+    repls := repls.push next
   return (tac.insertMany repls, repls)
 
 /-- adds at the beginning of the tactic sequence `tac` lines like `have new := old`,
@@ -213,7 +214,7 @@ def testMData (tac : TSyntax ``tacticSeq) : TacticM (Option MessageData) := do
   testTactic fin "add 'have := 0'" m!"is mdata correctly handled? {fin}"
 
 open Meta in
-def testFVs (tac : TSyntax ``tacticSeq) : TacticM (Option MessageData) := --Meta.withNewMCtxDepth do
+def testFVs (lets? : Bool) (tac : TSyntax ``tacticSeq) : TacticM (Option MessageData) :=
 withoutModifyingState do withMainContext do
   let ctx ← getLCtx
   let carr := ctx.fvarIdToDecl.toArray.qsort (·.1.name.toString < ·.1.name.toString)
@@ -226,14 +227,13 @@ withoutModifyingState do withMainContext do
       d.kind == .default && d.type.ctorName != "sort" && !(← inferType d.type).isProp
 --  dbg_trace "nonSort: '{nonSort.map (·.2.userName)}'"
   let toSet := nonSort.map Prod.snd
-  let (ntac, repls) ← addSets tac toSet
-  testTactic ntac m!"{repls}" m!"missing withContext? {ntac}"
+  let (ntac, repls) ← addLetsOrSets lets? tac toSet
+  testTactic ntac m!"{if lets? then "'let's" else "'set's"} {repls}" m!"missing withContext? {ntac}"
 
 open Meta in
 def testInstMVs (tac : TSyntax ``tacticSeq) : TacticM (Option MessageData) :=
 withoutModifyingState do withMainContext do
-  let mut ctx ← getLCtx
---  let mut repls := #[]
+  let ctx ← getLCtx
   let carr := ctx.fvarIdToDecl.toArray.qsort (·.1.name.toString < ·.1.name.toString)
   let props ← carr.filterM fun d => return d.2.kind == .default && ((← inferType d.2.type).isProp)
   let (t1, _repls) ← addPropHaves tac (props.map Prod.snd)
@@ -265,7 +265,7 @@ now
 
 
 elab "tests " tk:"!"? tac:tacticSeq : tactic => do
-  let _ ← for test in [testMData, testFVs, testInstMVs] do
+  let _ ← for test in [testMData, testFVs false, testFVs true, testInstMVs] do
     if let some str := ← test tac then
       logWarningAt (← getRef) str
   match tk with
@@ -289,7 +289,8 @@ warning: missing instantiateMVars?
   done
 ---
 info: [Tactic.tests] ❌ add 'have := 0'
-[Tactic.tests] ✅ [set j := j]
+[Tactic.tests] ✅ 'set's [set j := j]
+[Tactic.tests] ✅ 'let's [let j := j]
 [Tactic.tests] ❌
 
         have h__h__0 := h
@@ -308,7 +309,8 @@ warning: missing instantiateMVars?
   done
 ---
 info: [Tactic.tests] ✅ add 'have := 0'
-[Tactic.tests] ✅ []
+[Tactic.tests] ✅ 'set's []
+[Tactic.tests] ✅ 'let's []
 [Tactic.tests] ❌
 
         have h__h__0 := h
@@ -333,7 +335,8 @@ warning: missing instantiateMVars?
   done
 ---
 info: [Tactic.tests] ❌ add 'have := 0'
-[Tactic.tests] ✅ []
+[Tactic.tests] ✅ 'set's []
+[Tactic.tests] ✅ 'let's []
 [Tactic.tests] ❌
 
         have h__h__0 := h
@@ -352,7 +355,8 @@ warning: missing instantiateMVars?
   done
 ---
 info: [Tactic.tests] ✅ add 'have := 0'
-[Tactic.tests] ✅ []
+[Tactic.tests] ✅ 'set's []
+[Tactic.tests] ✅ 'let's []
 [Tactic.tests] ❌
 
         have h__h__0 := h
@@ -365,7 +369,8 @@ example {h : True} : True := by
 
 /--
 info: [Tactic.tests] ✅ add 'have := 0'
-[Tactic.tests] ✅ [set a := a, set b := b]
+[Tactic.tests] ✅ 'set's [set a := a, set b := b]
+[Tactic.tests] ✅ 'let's [let a := a, let b := b]
 [Tactic.tests] ✅
 
         move_add [← 9]
@@ -461,7 +466,8 @@ node Lean.Parser.Command.declaration, none
 /--
 info: [Tactic.tests] testing hif
 [Tactic.tests] ✅ add 'have := 0'
-[Tactic.tests] ✅ [set _n := _n, set _m := _m, set _n := _n, set _m := _m]
+[Tactic.tests] ✅ 'set's [set _n := _n, set _m := _m, set _n := _n, set _m := _m]
+[Tactic.tests] ✅ 'let's [let _n := _n, let _m := _m, let _n := _n, let _m := _m]
 [Tactic.tests] ✅
 
         have _hn___hn__0 := _hn
@@ -476,7 +482,8 @@ theorem hif {_n _m : Nat} {_n _m : Int} (_hn : _n + _m = 0) : True := by
 /--
 info: [Tactic.tests] testing example
 [Tactic.tests] ✅ add 'have := 0'
-[Tactic.tests] ✅ []
+[Tactic.tests] ✅ 'set's []
+[Tactic.tests] ✅ 'let's []
 [Tactic.tests] ✅
 
         exact .intro
@@ -540,7 +547,8 @@ warning: missing instantiateMVars?
 ---
 info: [Tactic.tests] testing example
 [Tactic.tests] ❌ add 'have := 0'
-[Tactic.tests] ✅ [set j := j]
+[Tactic.tests] ✅ 'set's [set j := j]
+[Tactic.tests] ✅ 'let's [let j := j]
 [Tactic.tests] ❌
 
         have _h2___h2__0 := _h2
