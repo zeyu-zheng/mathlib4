@@ -1,10 +1,9 @@
 import Mathlib.Tactic.Set
-import Mathlib.Data.Nat.Bits
+import Mathlib.Algebra.Group.Nat
 import Mathlib.Tactic.MoveAdd
 import Mathlib.adomaniLeanUtils.inspect_syntax
 import Mathlib.adomaniLeanUtils.inspect
 import Mathlib.adomaniLeanUtils.tips  -- initialize the trace
-
 
 instance : ToString Ordering where
   toString | .lt => "<" | .eq => "=" | .gt => ">"
