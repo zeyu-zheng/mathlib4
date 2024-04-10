@@ -99,33 +99,28 @@ h 3
   logInfo <| ← haves ⟨tac⟩ 3
 -/
 
-
-elab "buggy_exact " h:ident : tactic => do
+elab "buggy_exact " md:"clearMD"? h:ident : tactic => do
   let ctx ← getLCtx
   let hh := ctx.findFromUserName? h.getId
   match hh with
     | none => logWarningAt h m!"hypothesis '{h}' not found"
     | some h1 =>
       let r ← elabTermEnsuringType h h1.type
+      let tgt := if md.isNone then ← getMainTarget else (← getMainTarget).consumeMData
       -- warning: syntactic matching of the target
-      if (← getMainTarget) == h1.type then
+      if tgt == h1.type then
         replaceMainGoal (← (← getMainGoal).apply r)
       else logWarning "goal does not match"
+
+elab "ctx_buggy_exact " md:"clearMD"? h:ident : tactic => withMainContext do
+  if md.isSome then evalTactic (← `(tactic| buggy_exact clearMD $h))
+  else              evalTactic (← `(tactic| buggy_exact $h))
 
 elab "less_buggy_exact " h:ident : tactic => withMainContext do
   evalTactic (← `(tactic| buggy_exact $h))
 
 elab "md_exact " h:ident : tactic => withMainContext do
-  let ctx ← getLCtx
-  let hh := ctx.findFromUserName? h.getId
-  match hh with
-    | none => logWarningAt h m!"hypothesis '{h}' not found"
-    | some h1 =>
-      let r ← elabTermEnsuringType h h1.type
-      -- warning: syntactic matching of the target
-      if (← getMainTarget).consumeMData == h1.type then
-        replaceMainGoal (← (← getMainGoal).apply r)
-      else logWarning "goal does not match"
+  evalTactic (← `(tactic| buggy_exact clearMD $h))
 
 def testTactic (tac : TSyntax ``tacticSeq) (test : MessageData) (fail success : Option MessageData := none) :
     TacticM (Option MessageData) := withoutModifyingState do
