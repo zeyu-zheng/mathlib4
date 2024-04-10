@@ -7,7 +7,7 @@ import Mathlib.Tactic.Use
 --import Mathlib.Tactic.Abel
 --import Mathlib.Tactic.Ring
 --import Mathlib.Tactic.Convert
---import Mathlib.adomaniLeanUtils.inspect_syntax
+import Mathlib.adomaniLeanUtils.inspect_syntax
 import Mathlib.adomaniLeanUtils.inspect
 --import Mathlib.Tactic.FlexibleLinter
 --import Mathlib.Tactic.SyntaxDataLinter
@@ -51,6 +51,34 @@ def Lean.Syntax.insertRight (t1 : Syntax) (n : Nat) (t2 : Syntax) : Syntax :=
     | .node _ ``tacticSeq #[.node _ ``tacticSeq1Indented #[.node _ `null args]] =>
       t1.insertAt (((args.size + 1)/ 2) - n) t2
     | _ => t1
+
+def Lean.Syntax.insertMany (tac : Syntax) (ts : Array Syntax) : Syntax :=
+  (Array.range ts.size).foldl (fun l r => l.insertAt r ts[r]!) tac
+
+/-
+inspect
+#check 3
+
+def haves {m : Type → Type} [Monad m] [MonadRef m] [MonadQuotation m] (tac : TSyntax ``tacticSeq) (n : Nat) :
+    m Syntax := do
+  let ts ← (Array.range n).mapM fun i => do
+    let j := Syntax.mkNumLit (toString i)
+    `(tactic| have := $j)
+  return (tac.raw.insertMany ts)
+
+elab "h " n:num : command => do
+  let tac ← `(tacticSeq| simp; done)
+  let tac := (← `(tacticSeq| simp)).raw.insertAt 1 (← `(tactic| done))
+  logInfo <| ← haves ⟨tac⟩ n.getNat
+
+h 3
+
+#eval show CoreM _ from do
+--  let tac ← `(tacticSeq| simp; done)
+  let tac := (← `(tacticSeq| simp)).raw.insertAt 1 (← `(done))
+  logInfo <| ← haves ⟨tac⟩ 3
+-/
+
 
 elab "buggy_exact " h:ident : tactic => do
   let ctx ← getLCtx
