@@ -67,6 +67,10 @@ def TSyntax.insertMany (tac : TSyntax ``tacticSeq) (ts : Array (TSyntax `tactic)
     TSyntax ``tacticSeq :=
   ⟨tac.raw.insertMany ts⟩
 
+def TSyntax.insertBack (tac : TSyntax ``tacticSeq) (ts : TSyntax `tactic) :
+    TSyntax ``tacticSeq :=
+  ⟨tac.raw.insertRight 0 ts⟩
+
 end Lean
 
 end low_level_syntax
@@ -146,7 +150,7 @@ section tactic_modifications
 variable {m : Type → Type} [Monad m] [MonadRef m] [MonadQuotation m]
 
 def addDone (tac : TSyntax ``tacticSeq) : m (TSyntax ``tacticSeq) :=
-  return tac.insertMany #[(← `(tactic| done))]
+  return tac.insertBack (← `(tactic| done))
   --return ⟨tac.raw.insertRight 0 (← `(tactic| done))⟩
 
 /-- adds `have := 0` at the beginning and `done` at the end of the input tactic sequence.
@@ -173,10 +177,11 @@ It also replaces all `old` names with the `new` ones in `tac`.
 These `have`s introduce the "same" local declarations, but inside a metavariable,
 creating a layer of separation between the original names of the declarations
 and the current ones.  This may help detect missing `instantiateMVars`. -/
-def addPropHaves (tac : TSyntax ``tacticSeq) (toHave : Array (Ident × LocalDecl)) :
+def addPropHaves [MonadNameGenerator m] (tac : TSyntax ``tacticSeq) (toHave : Array LocalDecl) :
     m (TSyntax ``tacticSeq × Array (TSyntax `tactic)) := do
   let mut (t1, repls) := (tac, #[])
-  for (newId, decl) in toHave do
+  for decl in toHave do
+    let newId := mkIdent (← mkFreshId)
     let oldId := mkIdent decl.userName
     t1 ← t1.replaceM fun s => return if s == oldId then some newId else none
     repls := repls.push (← `(tactic| have $newId := $oldId ))
@@ -213,45 +218,8 @@ withoutModifyingState do withMainContext do
 --  let mut repls := #[]
   let carr := ctx.fvarIdToDecl.toArray
   let props ← carr.filterM fun d => return d.2.kind == .default && ((← inferType d.2.type).isProp)
-  let ids ← props.mapM fun _ => return mkIdent (← mkFreshId)
-  dbg_trace ids
-  dbg_trace ← props.mapM fun (_, d) => ppExpr d.type
-  let mut t1 := tac.raw
-  let mut repls := #[]
-  for (newId, (_, decl)) in ids.zip props do
-    let oldId := mkIdent decl.userName
---    let newId := mkIdent `hello
-    t1 ← t1.replaceM fun s => do return if s == oldId then some newId else none
-    repls := repls.push (← `(tactic| have $newId := $oldId ))
-    t1 := t1.insertAt 0 (← `(tactic| have $newId := $oldId ))
-    ctx ← getLCtx
---    t1 := t1.insertAt 0 (← `(tactic| clear $oldId ))
-  t1 := t1.insertRight 0 (← `(tactic| done))
-  dbg_trace t1
---  dbg_trace t1
-  --withMainContext do
+  let (t1, _repls) ← addPropHaves tac (props.map Prod.snd)
   testTactic ⟨t1⟩ m!"{indentD t1}" m!"missing instantiateMVars? {t1}"
---  evalTactic t1
---  return default
-/-
-  let mut typs : HashSet Expr := HashSet.empty
-  for (_, d) in carr do
-    typs := typs.insert (d.type)
-  let nonSort ← carr.filterM fun (_, d) =>
-    return d.binderInfo != .instImplicit &&
-      d.kind == .default && d.type.ctorName != "sort" && !(← inferType d.type).isProp
---  dbg_trace "nonSort: '{nonSort.map (·.2.userName)}'"
-  let mut (ntac, con) := (tac.raw, 0)
-  for (_, d) in nonSort do
-    let typ ← inferType d.type
-    if true || ((d.kind == .default) && (typ == Typ || !typ.isProp)) then
---      dbg_trace (← ppExpr d.type, ← ppExpr typ)
-      let nid := mkIdent d.userName
-      repls := repls.push (← `(tactic| set $nid := $nid))
-      ntac := ntac.insertAt con (← `(tactic| set $nid := $nid))
-      con := con + 1
-  testTactic ⟨ntac⟩ m!"{repls}" m!"missing withContext? {ntac}"
--/
 
 elab "now " tac:tacticSeq : tactic => do
   logInfo m!"{← testInstMVs tac}"
