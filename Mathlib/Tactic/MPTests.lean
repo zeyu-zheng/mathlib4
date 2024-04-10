@@ -26,10 +26,6 @@ import Mathlib.adomaniLeanUtils.tips
 --inspect
 /- notation for `True` -/
 
-
-#check Lean.Parser.Tactic.tacticSeq
-#check Array.insertAt!
-
 instance : ToString Ordering where
   toString | .lt => "<" | .eq => "=" | .gt => ">"
 
@@ -122,6 +118,25 @@ elab "less_buggy_exact " h:ident : tactic => withMainContext do
 elab "md_exact " h:ident : tactic => withMainContext do
   evalTactic (← `(tactic| buggy_exact clearMD $h))
 
+/--
+warning: goal does not match
+---
+warning: hypothesis 'h'' not found
+---
+warning: goal does not match
+---
+warning: goal does not match
+-/
+#guard_msgs in
+example {a : Nat} (h : a + 0 = a) : a + 0 = a := by
+  have := 0
+  have h' := h
+  buggy_exact h        -- mdata  `goal does not match`
+  buggy_exact h'       -- missing context  `hypothesis 'h'' not found`
+  less_buggy_exact h'  -- mvars not instantiated  `goal does not match`
+  md_exact h'          -- further evidence of mvars  `goal does not match`
+  md_exact h           -- dealing with mdata
+
 def testTactic (tac : TSyntax ``tacticSeq) (test : MessageData) (fail success : Option MessageData := none) :
     TacticM (Option MessageData) := withoutModifyingState do
   let str ← (do evalTactic tac
@@ -133,8 +148,22 @@ def testTactic (tac : TSyntax ``tacticSeq) (test : MessageData) (fail success : 
 
 elab "tryme " tac:tacticSeq : tactic => do
   logInfo m!"{(← testTactic tac "testing me" "i failed" "i succeeded")}"
-#check Meta.getLevelMVarDepth
+
 set_option trace.Tactic.tests true
+/--
+info: some (i failed)
+---
+info: some (i failed)
+---
+info: some (i succeeded)
+---
+info: [Tactic.tests] ❌ testing me
+---
+info: [Tactic.tests] ❌ testing me
+---
+info: [Tactic.tests] ✅ testing me
+-/
+#guard_msgs in
 example : True := by
   tryme assumption
   tryme exact 0
@@ -144,6 +173,7 @@ example : True := by
 section tactic_modifications
 variable {m : Type → Type} [Monad m] [MonadRef m] [MonadQuotation m]
 
+/-- adds `done` at the end of the given tactic sequence. -/
 def addDone (tac : TSyntax ``tacticSeq) : m (TSyntax ``tacticSeq) :=
   return tac.insertBack (← `(tactic| done))
   --return ⟨tac.raw.insertRight 0 (← `(tactic| done))⟩
@@ -220,16 +250,7 @@ elab "now " tac:tacticSeq : tactic => do
   logInfo m!"{← testInstMVs tac}"
   evalTactic tac
 
-example {a : Nat} (h : a + 0 = a) : a + 0 = a := by
-  have := 0
-  have h' := h
-  buggy_exact h        -- mdata
-  buggy_exact h'       -- missing context
-  less_buggy_exact h'  -- mvars not instantiated
-  md_exact h'          -- further evidence of mvars
-  md_exact h           -- dealing with mdata
-
-
+--set_option pp.mv
 example {a : Nat} (ha : a = 0) : a = 0 := by
 now
 --  have h := ha  -- `h` is a metavariable
