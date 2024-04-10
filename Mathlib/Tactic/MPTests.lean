@@ -146,11 +146,14 @@ info: some (i failed)
 ---
 info: some (i succeeded)
 ---
-info: [Tactic.tests] ❌ testing me
+info:
+[Tactic.tests] ❌ testing me
 ---
-info: [Tactic.tests] ❌ testing me
+info:
+[Tactic.tests] ❌ testing me
 ---
-info: [Tactic.tests] ✅ testing me
+info:
+[Tactic.tests] ✅ testing me
 -/
 #guard_msgs in
 example : True := by
@@ -211,7 +214,7 @@ end tactic_modifications
 
 def testMData (tac : TSyntax ``tacticSeq) : TacticM (Option MessageData) := do
   let fin ← addHaveDone tac
-  testTactic fin "add 'have := 0'" m!"is mdata correctly handled? {fin}"
+  testTactic fin "'have := 0'" m!"is mdata correctly handled? {fin}"
 
 open Meta in
 def testFVs (lets? : Bool) (tac : TSyntax ``tacticSeq) : TacticM (Option MessageData) :=
@@ -237,7 +240,7 @@ withoutModifyingState do withMainContext do
   let carr := ctx.fvarIdToDecl.toArray.qsort (·.1.name.toString < ·.1.name.toString)
   let props ← carr.filterM fun d => return d.2.kind == .default && ((← inferType d.2.type).isProp)
   let (t1, _repls) ← addPropHaves tac (props.map Prod.snd)
-  testTactic ⟨t1⟩ m!"{indentD t1}" m!"missing instantiateMVars? {t1}"
+  testTactic ⟨t1⟩ m!"'have's{indentD t1}" m!"missing instantiateMVars? {t1}"
 
 elab "now " tac:tacticSeq : tactic => do
   logInfo m!"{← testInstMVs tac}"
@@ -250,8 +253,8 @@ info: some (missing instantiateMVars?
   md_exact ha__ha__0
   done)
 ---
-info: [Tactic.tests] ❌
-
+info:
+[Tactic.tests] ❌ 'have's
         have ha__ha__0 := ha
         md_exact ha__ha__0
         done
@@ -288,11 +291,11 @@ warning: missing instantiateMVars?
   buggy_exact h__h__0
   done
 ---
-info: [Tactic.tests] ❌ add 'have := 0'
+info:
+[Tactic.tests] ❌ 'have := 0'
 [Tactic.tests] ✅ 'set's [set j := j]
 [Tactic.tests] ✅ 'let's [let j := j]
-[Tactic.tests] ❌
-
+[Tactic.tests] ❌ 'have's
         have h__h__0 := h
         buggy_exact h__h__0
         done
@@ -308,11 +311,11 @@ warning: missing instantiateMVars?
   buggy_exact clearMD h__h__0
   done
 ---
-info: [Tactic.tests] ✅ add 'have := 0'
+info:
+[Tactic.tests] ✅ 'have := 0'
 [Tactic.tests] ✅ 'set's []
 [Tactic.tests] ✅ 'let's []
-[Tactic.tests] ❌
-
+[Tactic.tests] ❌ 'have's
         have h__h__0 := h
         buggy_exact clearMD h__h__0
         done
@@ -334,11 +337,11 @@ warning: missing instantiateMVars?
   less_buggy_exact h__h__0
   done
 ---
-info: [Tactic.tests] ❌ add 'have := 0'
+info:
+[Tactic.tests] ❌ 'have := 0'
 [Tactic.tests] ✅ 'set's []
 [Tactic.tests] ✅ 'let's []
-[Tactic.tests] ❌
-
+[Tactic.tests] ❌ 'have's
         have h__h__0 := h
         less_buggy_exact h__h__0
         done
@@ -354,11 +357,11 @@ warning: missing instantiateMVars?
   md_exact h__h__0
   done
 ---
-info: [Tactic.tests] ✅ add 'have := 0'
+info:
+[Tactic.tests] ✅ 'have := 0'
 [Tactic.tests] ✅ 'set's []
 [Tactic.tests] ✅ 'let's []
-[Tactic.tests] ❌
-
+[Tactic.tests] ❌ 'have's
         have h__h__0 := h
         md_exact h__h__0
         done
@@ -368,11 +371,11 @@ example {h : True} : True := by
   tests md_exact h
 
 /--
-info: [Tactic.tests] ✅ add 'have := 0'
+info:
+[Tactic.tests] ✅ 'have := 0'
 [Tactic.tests] ✅ 'set's [set a := a, set b := b]
 [Tactic.tests] ✅ 'let's [let a := a, let b := b]
-[Tactic.tests] ✅
-
+[Tactic.tests] ✅ 'have's
         move_add [← 9]
         move_add [← a]
         rfl
@@ -423,53 +426,13 @@ def linterTest : Linter where run := withSetOptionIn fun cmd => do
   --else logInfo "skipped"
 initialize addLinter linterTest
 
-/-
-node Lean.Parser.Command.declaration, none
-|-node Lean.Parser.Command.declModifiers, none
-|   |-node null, none
-|   |-node null, none
-|   |-node null, none
-|   |-node null, none
-|   |-node null, none
-|   |-node null, none
-|-node Lean.Parser.Command.theorem, none
-|   |-atom original: ⟨⟩⟨ ⟩-- 'theorem'
-                                            |   |-node Lean.Parser.Command.declId, none
-                                            |   |   |-ident original: ⟨⟩⟨ ⟩-- (hif,hif)
-                                            |   |   |-node null, none
-|   |-node Lean.Parser.Command.declSig, none
-|   |   |-node null, none
-|   |   |-node Lean.Parser.Term.typeSpec, none
-|   |   |   |-atom original: ⟨⟩⟨ ⟩-- ':'
-|   |   |   |-ident original: ⟨⟩⟨ ⟩-- (True,True)
-
-
-node Lean.Parser.Command.declaration, none
-|-node Lean.Parser.Command.declModifiers, none
-|   |-node null, none
-|   |-node null, none
-|   |-node null, none
-|   |-node null, none
-|   |-node null, none
-|   |-node null, none
-|-node Lean.Parser.Command.example, none
-|   |-atom original: ⟨⟩⟨ ⟩-- 'example'
-|   |-node Lean.Parser.Command.optDeclSig, none
-|   |   |-node null, none
-|   |   |-node null, none
-|   |   |   |-node Lean.Parser.Term.typeSpec, none
-|   |   |   |   |-atom original: ⟨⟩⟨ ⟩-- ':'
-|   |   |   |   |-ident original: ⟨⟩⟨ ⟩-- (True,True)
--/
-
-
 /--
-info: [Tactic.tests] testing hif
-[Tactic.tests] ✅ add 'have := 0'
+info:
+[Tactic.tests] testing hif
+[Tactic.tests] ✅ 'have := 0'
 [Tactic.tests] ✅ 'set's [set _n := _n, set _m := _m, set _n := _n, set _m := _m]
 [Tactic.tests] ✅ 'let's [let _n := _n, let _m := _m, let _n := _n, let _m := _m]
-[Tactic.tests] ✅
-
+[Tactic.tests] ✅ 'have's
         have _hn___hn__0 := _hn
         exact .intro
         done
@@ -480,12 +443,12 @@ theorem hif {_n _m : Nat} {_n _m : Int} (_hn : _n + _m = 0) : True := by
   exact .intro
 
 /--
-info: [Tactic.tests] testing example
-[Tactic.tests] ✅ add 'have := 0'
+info:
+[Tactic.tests] testing example
+[Tactic.tests] ✅ 'have := 0'
 [Tactic.tests] ✅ 'set's []
 [Tactic.tests] ✅ 'let's []
-[Tactic.tests] ✅
-
+[Tactic.tests] ✅ 'have's
         exact .intro
         skip
         done
@@ -545,12 +508,12 @@ warning: missing instantiateMVars?
   buggy_exact h__h__1
   done
 ---
-info: [Tactic.tests] testing example
-[Tactic.tests] ❌ add 'have := 0'
+info:
+[Tactic.tests] testing example
+[Tactic.tests] ❌ 'have := 0'
 [Tactic.tests] ✅ 'set's [set j := j]
 [Tactic.tests] ✅ 'let's [let j := j]
-[Tactic.tests] ❌
-
+[Tactic.tests] ❌ 'have's
         have _h2___h2__0 := _h2
         have h__h__1 := h
         buggy_exact h__h__1
