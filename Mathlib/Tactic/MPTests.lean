@@ -1,30 +1,10 @@
-import Lean
-import Std.Tactic.PermuteGoals
---import Mathlib.Algebra.Group.Units
+import Mathlib.Tactic.Set
+import Mathlib.Data.Nat.Bits
 import Mathlib.Tactic.MoveAdd
-import Mathlib.Tactic.Use
---import Mathlib.Tactic.Congrm
---import Mathlib.Tactic.Abel
---import Mathlib.Tactic.Ring
---import Mathlib.Tactic.Convert
 import Mathlib.adomaniLeanUtils.inspect_syntax
 import Mathlib.adomaniLeanUtils.inspect
---import Mathlib.Tactic.FlexibleLinter
---import Mathlib.Tactic.SyntaxDataLinter
---import Mathlib.Tactic.TerminalRefineLinter
---import Mathlib.Tactic.RefineLinter
---import Mathlib.Tactic.SwapVar
---import Mathlib.Tactic.Common
-import Mathlib.Tactic.SplitIfs
-import Mathlib.Data.Nat.Parity
---import Mathlib.Tactic.FunProp
---import Mathlib.Tactic.UnusedTactic
-import Mathlib.adomaniLeanUtils.tips
---import Mathlib.Tactic
---import Lake
---set_option linter.generic false
---inspect
-/- notation for `True` -/
+import Mathlib.adomaniLeanUtils.tips  -- initialize the trace
+
 
 instance : ToString Ordering where
   toString | .lt => "<" | .eq => "=" | .gt => ">"
@@ -385,10 +365,10 @@ info: [Tactic.tests] ✅ add 'have := 0'
 -/
 #guard_msgs in
 example {a b : Nat} : 9 + a + b = b + a + 9 := by
-  tests
-    move_add [← 9]
-    move_add [← a]
-    rfl
+tests
+  move_add [← 9]
+  move_add [← a]
+  rfl
 
 /-- converts
 * `theorem x ...` to  `some (example ... , x)`,
@@ -562,25 +542,6 @@ info: [Tactic.tests] testing example
 test
 example {j : Bool} {_h2 : True} {h : True} : True := by
   buggy_exact h
-
-/--
-info: [Tactic.tests] testing example
-[Tactic.tests] ✅ add 'have := 0'
-[Tactic.tests] ✅ [set a := a, set b := b]
-[Tactic.tests] ✅
-
-        move_add [← 9]
-        move_add [← a]
-        rfl
-        done
--/
-#guard_msgs in
-test
-example {a b : Nat} : 9 + a + b = b + a + 9 := by
-  move_add [← 9]
-  move_add [← a]
-  rfl
-
 
 open Classical in
 example {p q : Prop} (h : 1 = 1) (h1 : False) (_hp : p) (_hq : q) : (if p ∧ q then 1 else 0) = 1 := by
