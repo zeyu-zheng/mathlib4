@@ -97,7 +97,7 @@ section Zero
 
 variable [Zero R]
 
---  porting note: used to be `CoeFun`
+-- porting note: used to be `CoeFun`
 instance : FunLike (ArithmeticFunction R) ℕ R :=
   inferInstanceAs (FunLike (ZeroHom ℕ R) ℕ R)
 

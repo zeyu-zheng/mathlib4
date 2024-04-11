@@ -201,7 +201,7 @@ theorem mk_zero (p : K[X]) : RatFunc.mk p 0 = ofFractionRing (0 : FractionRing K
 #align ratfunc.mk_zero RatFunc.mk_zero
 
 theorem mk_coe_def (p : K[X]) (q : K[X]⁰) :
-    -- Porting note: filled in `(FractionRing K[X])` that was an underscore.
+    -- Porting note(#PPPQQ): filled in `(FractionRing K[X])` that was an underscore.
     RatFunc.mk p q = ofFractionRing (IsLocalization.mk' (FractionRing K[X]) p q) := by
   simp only [mk_eq_div', ← Localization.mk_eq_mk', FractionRing.mk_eq_div]
 #align ratfunc.mk_coe_def RatFunc.mk_coe_def
@@ -1355,13 +1355,13 @@ theorem liftMonoidWithZeroHom_apply {L : Type*} [CommGroupWithZero L] (φ : K[X]
 
 theorem liftRingHom_apply {L : Type*} [Field L] (φ : K[X] →+* L) (hφ : K[X]⁰ ≤ L⁰.comap φ)
     (f : RatFunc K) : liftRingHom φ hφ f = φ f.num / φ f.denom :=
-  liftMonoidWithZeroHom_apply _ hφ _  -- Porting note: added explicit `hφ`
+  liftMonoidWithZeroHom_apply _ hφ _  -- Porting note(#PPPQQ): added explicit `hφ`
 #align ratfunc.lift_ring_hom_apply RatFunc.liftRingHom_apply
 
 theorem liftAlgHom_apply {L S : Type*} [Field L] [CommSemiring S] [Algebra S K[X]] [Algebra S L]
     (φ : K[X] →ₐ[S] L) (hφ : K[X]⁰ ≤ L⁰.comap φ) (f : RatFunc K) :
     liftAlgHom φ hφ f = φ f.num / φ f.denom :=
-  liftMonoidWithZeroHom_apply _ hφ _  -- Porting note: added explicit `hφ`
+  liftMonoidWithZeroHom_apply _ hφ _  -- Porting note(#PPPQQ): added explicit `hφ`
 #align ratfunc.lift_alg_hom_apply RatFunc.liftAlgHom_apply
 
 theorem num_mul_denom_add_denom_mul_num_ne_zero {x y : RatFunc K} (hxy : x + y ≠ 0) :
@@ -1543,7 +1543,7 @@ theorem eval_mul {x y : RatFunc K} (hx : Polynomial.eval₂ f a (denom x) ≠ 0)
     cases mul_eq_zero.mp this <;> contradiction
   rw [div_mul_div_comm, eq_div_iff (mul_ne_zero hx hy), div_eq_mul_inv, mul_right_comm, ←
     div_eq_mul_inv, div_eq_iff hxy]
-  simp only [← Polynomial.eval₂_mul]  -- Porting note: was `repeat' rw [← Polynomial.eval₂_mul]`
+  repeat' rw [← Polynomial.eval₂_mul]
   congr 1
   apply num_denom_mul
 #align ratfunc.eval_mul RatFunc.eval_mul
@@ -1767,7 +1767,7 @@ instance : Algebra (RatFunc F) (LaurentSeries F) :=
 theorem algebraMap_apply_div :
     algebraMap (RatFunc F) (LaurentSeries F) (algebraMap _ _ p / algebraMap _ _ q) =
       algebraMap F[X] (LaurentSeries F) p / algebraMap _ _ q := by
-  -- Porting note: had to supply implicit arguments to `convert`
+  -- Porting note(#PPPPP): had to supply implicit arguments to `convert`
   convert coe_div (algebraMap F[X] (RatFunc F) p) (algebraMap F[X] (RatFunc F) q) <;>
     rw [← mk_one, coe_def, coeAlgHom, mk_eq_div, liftAlgHom_apply_div, map_one, div_one,
       Algebra.ofId_apply]

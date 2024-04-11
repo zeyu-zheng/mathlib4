@@ -263,7 +263,7 @@ theorem restrictDvd_def [Decidable (q = 0)] (hpq : p ∣ q) :
         @restrict F _ p _ _ _
           ⟨splits_of_splits_of_dvd (algebraMap F q.SplittingField) hq (SplittingField.splits q)
               hpq⟩ := by
-  -- Porting note: added `unfold`
+  -- Porting note(#SSSSS): added `unfold`
   unfold restrictDvd
   convert rfl
 #align polynomial.gal.restrict_dvd_def Polynomial.Gal.restrictDvd_def

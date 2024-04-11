@@ -147,7 +147,7 @@ theorem trace_trace_of_basis [Algebra S T] [IsScalarTower R S T] {ι κ : Type*}
   simp only [AlgHom.map_sum, smul_leftMulMatrix, Finset.sum_apply,
     Matrix.diag]
 -- Porting note: the `rw` was inside `simp only`, but it doesn't work anymore.
-  rw [Finset.sum_apply
+  simp only [Finset.sum_apply
       i (Finset.univ : Finset κ) fun y => leftMulMatrix b (leftMulMatrix c x y y)]
   apply Finset.sum_apply
 #align algebra.trace_trace_of_basis Algebra.trace_trace_of_basis

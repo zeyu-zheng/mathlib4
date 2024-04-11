@@ -1317,16 +1317,16 @@ theorem incl_coe : (I.incl.toLinearMap : I →ₗ[R] L) = (I : Submodule R L).su
 
 @[simp]
 theorem comap_incl_self : comap I.incl I = ⊤ := by ext; simp
-  --  porting note: `ext; simp` works also in mathlib3, though the proof used to be
-  --  rw [← LieSubmodule.coe_toSubmodule_eq_iff, LieSubmodule.top_coeSubmodule,
-  --    LieIdeal.comap_coeSubmodule, LieIdeal.incl_coe, Submodule.comap_subtype_self]
+  -- porting note: `ext; simp` works also in mathlib3, though the proof used to be
+  -- rw [← LieSubmodule.coe_toSubmodule_eq_iff, LieSubmodule.top_coeSubmodule,
+  --   LieIdeal.comap_coeSubmodule, LieIdeal.incl_coe, Submodule.comap_subtype_self]
 #align lie_ideal.comap_incl_self LieIdeal.comap_incl_self
 
 @[simp]
 theorem ker_incl : I.incl.ker = ⊥ := by ext; simp
-  --  porting note: `ext; simp` works also in mathlib3, though the proof used to be
-  --  rw [← LieSubmodule.coe_toSubmodule_eq_iff, I.incl.ker_coeSubmodule,
-  --    LieSubmodule.bot_coeSubmodule, incl_coe, Submodule.ker_subtype]
+  -- porting note: `ext; simp` works also in mathlib3, though the proof used to be
+  -- rw [← LieSubmodule.coe_toSubmodule_eq_iff, I.incl.ker_coeSubmodule,
+  --   LieSubmodule.bot_coeSubmodule, incl_coe, Submodule.ker_subtype]
 #align lie_ideal.ker_incl LieIdeal.ker_incl
 
 @[simp]

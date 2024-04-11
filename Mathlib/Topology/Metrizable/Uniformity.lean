@@ -68,7 +68,7 @@ noncomputable def ofPreNNDist (d : X → X → ℝ≥0) (dist_self : ∀ x, d x 
         zipWith_comm_of_comm _ dist_comm]
       simp only [length, length_append]
   dist_triangle x y z := by
-    -- Porting note: added `unfold`
+    -- Porting note(#SSSSS): added `unfold`
     unfold dist
     rw [← NNReal.coe_add, NNReal.coe_le_coe]
     refine' NNReal.le_iInf_add_iInf fun lxy lyz => _

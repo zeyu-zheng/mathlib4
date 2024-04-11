@@ -32,8 +32,8 @@ We give methods for computing coefficients of the characteristic polynomial.
 
 
 noncomputable section
---  porting note: whenever there was `∏ i : n, X - C (M i i)`, I replaced it with
---  `∏ i : n, (X - C (M i i))`, since otherwise Lean would parse as `(∏ i : n, X) - C (M i i)`
+-- porting note: whenever there was `∏ i : n, X - C (M i i)`, I replaced it with
+-- `∏ i : n, (X - C (M i i))`, since otherwise Lean would parse as `(∏ i : n, X) - C (M i i)`
 
 universe u v w z
 
