@@ -50,16 +50,15 @@ theorem toTensorAlgebra_gMul {i j} (a : (⨂[R]^i) M) (b : (⨂[R]^j) M) :
   refine' LinearMap.congr_fun (LinearMap.congr_fun _ a) b
   clear! a b
   ext (a b)
-  -- Porting note: pulled the next two lines out of the long `simp only` below.
+  -- Porting note(#QQQQQ): pulled the next two lines out of the long `simp only` below.
   simp only [LinearMap.compMultilinearMap_apply]
   rw [LinearMap.compr₂_apply, ← gMul_eq_coe_linearMap]
   simp only [LinearMap.compr₂_apply, LinearMap.mul_apply', LinearMap.compl₂_apply,
     LinearMap.comp_apply, LinearMap.compMultilinearMap_apply, PiTensorProduct.lift.tprod,
     TensorPower.tprod_mul_tprod, TensorPower.toTensorAlgebra_tprod, TensorAlgebra.tprod_apply, ←
     gMul_eq_coe_linearMap]
-  refine' Eq.trans _ List.prod_append
-  -- Porting note: was `congr`
-  apply congr_arg
+  refine Eq.trans ?_ List.prod_append
+  congr
   -- Porting note: `erw` for `Function.comp`
   erw [← List.map_ofFn _ (TensorAlgebra.ι R), ← List.map_ofFn _ (TensorAlgebra.ι R), ←
     List.map_ofFn _ (TensorAlgebra.ι R), ← List.map_append, List.ofFn_fin_append]

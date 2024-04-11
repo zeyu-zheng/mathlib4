@@ -380,7 +380,7 @@ variable (hf : ∀ s : S, f s = fS s)
 to a morphism `R[S⁻¹] →* T`. -/
 def universalMulHom : R[S⁻¹] →* T
     where
-  -- Porting note: `simp only []` required for beta reductions
+  -- Porting note(#MMMMM): `simp only []` required for beta reductions
   toFun x :=
     x.liftExpand (fun r s => f r * ((fS s)⁻¹ : Units T)) fun r t s ht => by
       simp only []
@@ -822,7 +822,7 @@ variable {R : Type*} [Ring R] {S : Submonoid R} [OreSet S]
 /-- Negation on the Ore localization is defined via negation on the numerator. -/
 protected def neg : R[S⁻¹] → R[S⁻¹] :=
   liftExpand (fun (r : R) (s : S) => -r /ₒ s) fun r t s ht => by
-    -- Porting note: `simp only []` required for beta reductions
+    -- Porting note(#MMMMM): `simp only []` required for beta reductions
     simp only []
     rw [neg_mul_eq_neg_mul, ← OreLocalization.expand]
 #align ore_localization.neg OreLocalization.neg

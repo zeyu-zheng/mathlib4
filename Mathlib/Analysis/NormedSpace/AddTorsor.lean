@@ -44,9 +44,7 @@ theorem AffineSubspace.isClosed_direction_iff (s : AffineSubspace 𝕜 Q) :
 @[simp]
 theorem dist_center_homothety (p₁ p₂ : P) (c : 𝕜) :
     dist p₁ (homothety p₁ c p₂) = ‖c‖ * dist p₁ p₂ := by
-  -- porting note (#10745): was `simp [homothety_def, norm_smul, ← dist_eq_norm_vsub, dist_comm]`
-  rw [homothety_def, dist_eq_norm_vsub V]
-  simp [norm_smul, ← dist_eq_norm_vsub V, dist_comm]
+  simp [homothety_def, norm_smul, ← dist_eq_norm_vsub, dist_comm]
 #align dist_center_homothety dist_center_homothety
 
 @[simp]
@@ -87,9 +85,7 @@ theorem lipschitzWith_lineMap (p₁ p₂ : P) : LipschitzWith (nndist p₁ p₂)
 
 @[simp]
 theorem dist_lineMap_left (p₁ p₂ : P) (c : 𝕜) : dist (lineMap p₁ p₂ c) p₁ = ‖c‖ * dist p₁ p₂ := by
-  -- Porting note: was
-  -- simpa only [lineMap_apply_zero, dist_zero_right] using dist_lineMap_lineMap p₁ p₂ c 0
-  rw [← dist_zero_right, ← dist_lineMap_lineMap, lineMap_apply_zero]
+  simpa only [lineMap_apply_zero, dist_zero_right] using dist_lineMap_lineMap p₁ p₂ c 0
 #align dist_line_map_left dist_lineMap_left
 
 @[simp]
@@ -112,9 +108,7 @@ theorem nndist_left_lineMap (p₁ p₂ : P) (c : 𝕜) :
 @[simp]
 theorem dist_lineMap_right (p₁ p₂ : P) (c : 𝕜) :
     dist (lineMap p₁ p₂ c) p₂ = ‖1 - c‖ * dist p₁ p₂ := by
-  -- Porting note: was
-  -- `simpa only [lineMap_apply_one, dist_eq_norm'] using dist_lineMap_lineMap p₁ p₂ c 1`
-  rw [← dist_eq_norm', ← dist_lineMap_lineMap, lineMap_apply_one]
+  simpa only [lineMap_apply_one, dist_eq_norm'] using dist_lineMap_lineMap p₁ p₂ c 1
 #align dist_line_map_right dist_lineMap_right
 
 @[simp]

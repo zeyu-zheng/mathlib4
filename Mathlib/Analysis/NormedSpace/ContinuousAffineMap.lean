@@ -190,8 +190,7 @@ noncomputable instance : NormedAddCommGroup (V →A[𝕜] W) :=
         simp [(ContinuousAffineMap.neg_apply)]
       add_le' := fun f g => by
         simp only [coe_add, max_le_iff, Pi.add_apply, add_contLinear]
-        -- Porting note: previously `Pi.add_apply, add_contLinear, ` in the previous `simp only`
-        -- suffices, but now they don't fire. -- xxx: obsolete now?
+        -- xxx: any leftover clean-up?
         exact
           ⟨(norm_add_le _ _).trans (add_le_add (le_max_left _ _) (le_max_left _ _)),
             (norm_add_le _ _).trans (add_le_add (le_max_right _ _) (le_max_right _ _))⟩
@@ -205,9 +204,6 @@ noncomputable instance : NormedAddCommGroup (V →A[𝕜] W) :=
         · rw [norm_eq_zero', contLinear_eq_zero_iff_exists_const] at h₁
           obtain ⟨q, rfl⟩ := h₁
           simp only [norm_le_zero_iff, coe_const, Function.const_apply] at h₂
-
-
-
           rw [h₂]
           rfl }
 

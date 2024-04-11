@@ -200,8 +200,6 @@ theorem pushforwardFamily_compatible {X} (x : ℱ.obj (op X)) :
   erw [← α.naturality (G.preimage _).op]
   erw [← α.naturality (G.preimage _).op]
   refine' congr_fun _ x
-  -- Porting note: these next 3 tactics (simp, rw, simp) were just one big `simp only` in Lean 3
-  -- but I can't get `simp` to do the `rw` line.
   simp only [Functor.comp_map, ← Category.assoc, Functor.op_map, Quiver.Hom.unop_op,
     ← ℱ.map_comp, ← ℱ.map_comp, ← op_comp, G.image_preimage]
   congr 3
@@ -416,7 +414,7 @@ theorem sheafHom_restrict_eq (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val) :
   ext X
   apply yoneda.map_injective
   ext U
-  -- Porting note: didn't need to provide the input to `image_preimage` in Lean 3
+  -- Porting note(#PPPPP): didn't need to provide the input to `image_preimage` in Lean 3
   erw [yoneda.image_preimage ((sheafYonedaHom α).app (G.op.obj X))]
   symm
   change (show (ℱ'.val ⋙ coyoneda.obj (op (unop U))).obj (op (G.obj (unop X))) from _) = _
@@ -446,7 +444,7 @@ theorem sheafHom_eq (α : ℱ ⟶ ℱ'.val) : sheafHom (whiskerLeft G.op α) = �
   apply yoneda.map_injective
   -- Porting note: deleted next line as it's not needed in Lean 4
   ext U
-  -- Porting note: Lean 3 didn't need to be told the explicit input to image_preimage
+  -- Porting note(#PPPPP): Lean 3 didn't need to be told the explicit input to image_preimage
   erw [yoneda.image_preimage ((sheafYonedaHom (whiskerLeft G.op α)).app X)]
   symm
   change (show (ℱ'.val ⋙ coyoneda.obj (op (unop U))).obj (op (unop X)) from _) = _

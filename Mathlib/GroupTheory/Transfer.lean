@@ -100,7 +100,8 @@ the transfer homomorphism is `transfer ϕ : G →+ A`."]
 noncomputable def transfer [FiniteIndex H] : G →* A :=
   let T : leftTransversals (H : Set G) := Inhabited.default
   { toFun := fun g => diff ϕ T (g • T)
-    map_one' := by simp only; rw [one_smul, diff_self] -- Porting note: added `simp only`
+    -- Porting note(#MMMMM): added `simp only`
+    map_one' := by simp only; rw [one_smul, diff_self]
     map_mul' := fun g h => by simp only; rw [mul_smul, ← diff_mul_diff, smul_diff_smul] }
 #align monoid_hom.transfer MonoidHom.transfer
 #align add_monoid_hom.transfer AddMonoidHom.transfer
@@ -168,7 +169,8 @@ theorem transfer_eq_pow [FiniteIndex H] (g : G)
     letI := H.fintypeQuotientOfFiniteIndex
     change ∀ (k g₀) (hk : g₀⁻¹ * g ^ k * g₀ ∈ H), ↑(⟨g₀⁻¹ * g ^ k * g₀, hk⟩ : H) = g ^ k at key
     rw [transfer_eq_prod_quotient_orbitRel_zpowers_quot, ← Finset.prod_to_list]
-    refine' (List.prod_map_hom _ _ _).trans _ -- Porting note: this used to be in the `rw`
+    -- Porting note: this used to be in the `rw`
+    refine' (List.prod_map_hom _ _ _).trans _
     refine' congrArg ϕ (Subtype.coe_injective _)
     simp only -- Porting note: added `simp only`
     rw [H.coe_mk, ← (zpowers g).coe_mk g (mem_zpowers g), ← (zpowers g).coe_pow,

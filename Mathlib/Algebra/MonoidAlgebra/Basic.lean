@@ -848,7 +848,7 @@ theorem induction_on [Semiring k] [Monoid G] {p : MonoidAlgebra k G → Prop} (f
   refine' Finsupp.induction_linear f _ (fun f g hf hg => hadd f g hf hg) fun g r => _
   · simpa using hsmul 0 (of k G 1) (hM 1)
   · convert hsmul r (of k G g) (hM g)
-    -- Porting note: Was `simp only`.
+    -- Porting note(#NNNNN): Was `simp only`.
     rw [of_apply, smul_single', mul_one]
 #align monoid_algebra.induction_on MonoidAlgebra.induction_on
 
@@ -1720,7 +1720,7 @@ theorem induction_on [AddMonoid G] {p : k[G] → Prop} (f : k[G])
   refine' Finsupp.induction_linear f _ (fun f g hf hg => hadd f g hf hg) fun g r => _
   · simpa using hsmul 0 (of k G (Multiplicative.ofAdd 0)) (hM 0)
   · convert hsmul r (of k G (Multiplicative.ofAdd g)) (hM g)
-    -- Porting note: Was `simp only`.
+    -- Porting note(#NNNNN): Was `simp only`.
     rw [of_apply, toAdd_ofAdd, smul_single', mul_one]
 #align add_monoid_algebra.induction_on AddMonoidAlgebra.induction_on
 
@@ -1757,7 +1757,7 @@ protected def AddMonoidAlgebra.toMultiplicative [Semiring k] [Add G] :
       Multiplicative.ofAdd with
     toFun := equivMapDomain Multiplicative.ofAdd
     map_mul' := fun x y => by
-      -- Porting note: `dsimp` is required for beta reduction.
+      -- Porting note(#MMMMM): `dsimp` is required for beta reduction.
       dsimp only []
       repeat' rw [equivMapDomain_eq_mapDomain (M := k)]
       dsimp [Multiplicative.ofAdd]
@@ -1771,7 +1771,7 @@ protected def MonoidAlgebra.toAdditive [Semiring k] [Mul G] :
   { Finsupp.domCongr Additive.ofMul with
     toFun := equivMapDomain Additive.ofMul
     map_mul' := fun x y => by
-      -- Porting note: `dsimp` is required for beta reduction.
+      -- Porting note(#MMMMM): `dsimp` is required for beta reduction.
       dsimp only []
       repeat' rw [equivMapDomain_eq_mapDomain (M := k)]
       dsimp [Additive.ofMul]

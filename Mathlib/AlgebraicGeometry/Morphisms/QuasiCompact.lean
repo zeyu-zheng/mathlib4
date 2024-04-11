@@ -146,7 +146,7 @@ theorem isCompact_basicOpen (X : Scheme) {U : Opens X.carrier} (hU : IsCompact (
   rw [e, Set.iUnion₂_inter]
   apply le_antisymm <;> apply Set.iUnion₂_subset
   · intro i hi
-    -- Porting note: had to make explicit the first given parameter to `Set.subset_iUnion₂`
+    -- Porting note(#PPPQQ): had to make explicit the first given parameter to `Set.subset_iUnion₂`
     exact Set.Subset.trans (Set.Subset.rfl : _ ≤ g ⟨i, hi⟩)
       (@Set.subset_iUnion₂ _ _ _
         (fun (i : Scheme.affineOpens X) (_ : i ∈ Set.range g) => (i : Set X.toPresheafedSpace)) _
@@ -312,7 +312,7 @@ theorem exists_pow_mul_eq_zero_of_res_basicOpen_eq_zero_of_isCompact (X : Scheme
     intro i
     change (i : Opens X.carrier) ≤ U
     rw [e]
-    -- Porting note: `exact le_iSup _ _` no longer works
+    -- Porting note(#PPPQQ): `exact le_iSup _ _` no longer works
     exact le_iSup (fun (i : s) => (i : Opens (X.toPresheafedSpace))) _
   have H' := fun i : s =>
     exists_pow_mul_eq_zero_of_res_basicOpen_eq_zero_of_isAffineOpen X i.1.2
@@ -320,7 +320,7 @@ theorem exists_pow_mul_eq_zero_of_res_basicOpen_eq_zero_of_isCompact (X : Scheme
   swap
   · delta TopCat.Presheaf.restrictOpen TopCat.Presheaf.restrict at H ⊢
     convert congr_arg (X.presheaf.map (homOfLE _).op) H
-    -- Note: the below was `simp only [← comp_apply]`
+    -- Porting note(#NNNNN): the below was `simp only [← comp_apply]`
     · rw [← comp_apply, ← comp_apply]
       simp only [← Functor.map_comp]
       rfl
