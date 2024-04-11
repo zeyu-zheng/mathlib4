@@ -107,8 +107,9 @@ theorem isOpen_iff (U : Set 𝖣.glued) : IsOpen U ↔ ∀ i, IsOpen (𝖣.ι i 
   rw [coequalizer_isOpen_iff]
   dsimp only [GlueData.diagram_l, GlueData.diagram_left, GlueData.diagram_r, GlueData.diagram_right,
     parallelPair_obj_one]
-  rw [colimit_isOpen_iff.{_,u}]  -- Porting note: changed `.{u}` to `.{_,u}`.  fun fact: the proof
-                                 -- breaks down if this `rw` is merged with the `rw` above.
+  -- Porting note: changed `.{u}` to `.{_,u}`.
+  -- fun fact: the proof breaks down if this `rw` is merged with the `rw` above.
+  rw [colimit_isOpen_iff.{_,u}]
   constructor
   · intro h j; exact h ⟨j⟩
   · intro h j; cases j; apply h
@@ -156,7 +157,7 @@ set_option linter.uppercaseLean3 false in
 open CategoryTheory.Limits.WalkingParallelPair
 
 theorem eqvGen_of_π_eq
-    -- Porting note: was `{x y : ∐ D.U} (h : 𝖣.π x = 𝖣.π y)`
+    -- Porting note(#PPPPP): was `{x y : ∐ D.U} (h : 𝖣.π x = 𝖣.π y)`
     {x y : sigmaObj (β := D.toGlueData.J) (C := TopCat) D.toGlueData.U}
     (h : 𝖣.π x = 𝖣.π y) :
     EqvGen
@@ -304,7 +305,7 @@ theorem preimage_image_eq_image' (i j : D.J) (U : Set (𝖣.U i)) :
 set_option linter.uppercaseLean3 false in
 #align Top.glue_data.preimage_image_eq_image' TopCat.GlueData.preimage_image_eq_image'
 
--- Porting note: the goal was simply `IsOpen (𝖣.ι i '' U)`.
+-- Porting note(#PPPQQ): the goal was simply `IsOpen (𝖣.ι i '' U)`.
 -- I had to manually add the explicit type ascription.
 theorem open_image_open (i : D.J) (U : Opens (𝖣.U i)) : IsOpen (𝖣.ι i '' (U : Set (D.U i))) := by
   rw [isOpen_iff]
@@ -500,7 +501,7 @@ theorem fromOpenSubsetsGlue_isOpenMap : IsOpenMap (fromOpenSubsetsGlue U) := by
     apply (Opens.openEmbedding (X := TopCat.of α) (U i)).isOpenMap
     convert hs i using 1
     erw [← ι_fromOpenSubsetsGlue, coe_comp, Set.preimage_comp]
-    --  porting note: `congr 1` did nothing, so I replaced it with `apply congr_arg`
+    -- porting note: `congr 1` did nothing, so I replaced it with `apply congr_arg`
     apply congr_arg
     exact Set.preimage_image_eq _ (fromOpenSubsetsGlue_injective U)
   · refine' ⟨Set.mem_image_of_mem _ hx, _⟩

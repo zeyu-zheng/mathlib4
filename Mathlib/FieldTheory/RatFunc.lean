@@ -222,14 +222,14 @@ theorem mk_def_of_ne (p : K[X]) {q : K[X]} (hq : q ≠ 0) :
 theorem mk_eq_localization_mk (p : K[X]) {q : K[X]} (hq : q ≠ 0) :
     RatFunc.mk p q =
       ofFractionRing (Localization.mk p ⟨q, mem_nonZeroDivisors_iff_ne_zero.mpr hq⟩) := by
-  -- Porting note: the original proof, did not need to pass `hq`
+  -- Porting note(#PPPQQ): the original proof, did not need to pass `hq`
   rw [mk_def_of_ne _ hq, Localization.mk_eq_mk']
 #align ratfunc.mk_eq_localization_mk RatFunc.mk_eq_localization_mk
 
---  porting note: replaced `algebraMap _ _` with `algebraMap K[X] (FractionRing K[X])`
+-- Porting note(#PPPQQ): replaced `algebraMap _ _` with `algebraMap K[X] (FractionRing K[X])`
 theorem mk_one' (p : K[X]) :
     RatFunc.mk p 1 = ofFractionRing (algebraMap K[X] (FractionRing K[X]) p) := by
-  -- Porting note: had to hint `M := K[X]⁰` below
+  -- Porting note(#PPPQQ): had to hint `M := K[X]⁰` below
   rw [← IsLocalization.mk'_one (M := K[X]⁰) (FractionRing K[X]) p, ← mk_coe_def, Submonoid.coe_one]
 #align ratfunc.mk_one' RatFunc.mk_one'
 
@@ -417,7 +417,8 @@ theorem mul_inv_cancel : ∀ {p : RatFunc K}, p ≠ 0 → p * p⁻¹ = 1
   | ⟨p⟩, h => by
     have : p ≠ 0 := fun hp => h <| by rw [hp, ofFractionRing_zero]
     simpa only [← ofFractionRing_inv, ← ofFractionRing_mul, ← ofFractionRing_one,
-      ofFractionRing.injEq] using  -- Porting note: `ofFractionRing.injEq` was not present
+    -- Porting note(#RRRR): added `ofFractionRing.injEq`
+      ofFractionRing.injEq] using
       _root_.mul_inv_cancel this
 #align ratfunc.mul_inv_cancel RatFunc.mul_inv_cancel
 
@@ -607,7 +608,7 @@ def map [MonoidHomClass F R[X] S[X]] (φ : F) (hφ : R[X]⁰ ≤ S[X]⁰.comap �
     RatFunc.liftOn f
       (fun n d => if h : φ d ∈ S[X]⁰ then ofFractionRing (Localization.mk (φ n) ⟨φ d, h⟩) else 0)
       fun {p q p' q'} hq hq' h => by
-      dsimp only -- Porting note: force the function to be applied
+      dsimp only -- Porting note(beta_reduce): force the function to be applied
       rw [dif_pos, dif_pos]
       congr 1 -- Porting note: this was a `rw [ofFractionRing.inj_eq]` which was overkill anyway
       rw [Localization.mk_eq_mk_iff]
@@ -617,12 +618,12 @@ def map [MonoidHomClass F R[X] S[X]] (φ : F) (hφ : R[X]⁰ ≤ S[X]⁰.comap �
       refine' Localization.r_of_eq _
       simpa only [map_mul] using congr_arg φ h
   map_one' := by
-    dsimp only -- Porting note: force the function to be applied
+    dsimp only -- Porting note(beta_reduce): force the function to be applied
     rw [← ofFractionRing_one, ← Localization.mk_one, liftOn_ofFractionRing_mk, dif_pos]
     · simpa using ofFractionRing_one
     · simpa using Submonoid.one_mem _
   map_mul' x y := by
-    dsimp only -- Porting note: force the function to be applied
+    dsimp only -- Porting note(beta_reduce): force the function to be applied
     cases' x with x; cases' y with y
     -- Porting note: added `using Localization.rec` (`Localization.induction_on` didn't work)
     induction' x using Localization.rec with p q
@@ -699,7 +700,7 @@ def liftMonoidWithZeroHom (φ : R[X] →*₀ G₀) (hφ : R[X]⁰ ≤ G₀⁰.co
       rw [div_eq_div_iff, ← map_mul, mul_comm p, h, map_mul, mul_comm] <;>
         exact nonZeroDivisors.ne_zero (hφ ‹_›)
   map_one' := by
-    dsimp only -- Porting note: force the function to be applied
+    dsimp only -- Porting note(beta_reduce): force the function to be applied
     rw [← ofFractionRing_one, ← Localization.mk_one, liftOn_ofFractionRing_mk]
     simp only [map_one, OneMemClass.coe_one, div_one]
   map_mul' x y := by
@@ -712,7 +713,7 @@ def liftMonoidWithZeroHom (φ : R[X] →*₀ G₀) (hφ : R[X]⁰ ≤ G₀⁰.co
     · rfl
     · rfl
   map_zero' := by
-    dsimp only -- Porting note: force the function to be applied
+    dsimp only -- Porting note(beta_reduce): force the function to be applied
     rw [← ofFractionRing_zero, ← Localization.mk_zero (1 : R[X]⁰), liftOn_ofFractionRing_mk]
     simp only [map_zero, zero_div]
 #align ratfunc.lift_monoid_with_zero_hom RatFunc.liftMonoidWithZeroHom
@@ -887,7 +888,8 @@ theorem liftMonoidWithZeroHom_apply_div' {L : Type*} [CommGroupWithZero L]
 
 theorem liftRingHom_apply_div {L : Type*} [Field L] (φ : K[X] →+* L) (hφ : K[X]⁰ ≤ L⁰.comap φ)
     (p q : K[X]) : liftRingHom φ hφ (algebraMap _ _ p / algebraMap _ _ q) = φ p / φ q :=
-  liftMonoidWithZeroHom_apply_div _ hφ _ _  -- Porting note: gave explicitly the `hφ`
+  -- Porting note(#PPPQQ): gave explicitly the `hφ`
+  liftMonoidWithZeroHom_apply_div _ hφ _ _
 #align ratfunc.lift_ring_hom_apply_div RatFunc.liftRingHom_apply_div
 
 -- Porting note: added `simpNF` form of `liftRingHom_apply_div`
@@ -895,7 +897,8 @@ theorem liftRingHom_apply_div {L : Type*} [Field L] (φ : K[X] →+* L) (hφ : K
 theorem liftRingHom_apply_div' {L : Type*} [Field L] (φ : K[X] →+* L) (hφ : K[X]⁰ ≤ L⁰.comap φ)
     (p q : K[X]) : liftRingHom φ hφ (algebraMap _ _ p) / liftRingHom φ hφ (algebraMap _ _ q) =
       φ p / φ q :=
-  liftMonoidWithZeroHom_apply_div' _ hφ _ _  -- Porting note: gave explicitly the `hφ`
+  -- Porting note(#PPPQQ): gave explicitly the `hφ`
+  liftMonoidWithZeroHom_apply_div' _ hφ _ _
 
 variable (K)
 
@@ -953,7 +956,8 @@ def liftAlgHom : RatFunc K →ₐ[S] L :=
 
 theorem liftAlgHom_apply_ofFractionRing_mk (n : K[X]) (d : K[X]⁰) :
     liftAlgHom φ hφ (ofFractionRing (Localization.mk n d)) = φ n / φ d :=
-  liftMonoidWithZeroHom_apply_ofFractionRing_mk _ hφ _ _ -- Porting note: gave explicitly the `hφ`
+  -- Porting note(#PPPQQ): gave explicitly the `hφ`
+  liftMonoidWithZeroHom_apply_ofFractionRing_mk _ hφ _ _
 #align ratfunc.lift_alg_hom_apply_of_fraction_ring_mk RatFunc.liftAlgHom_apply_ofFractionRing_mk
 
 theorem liftAlgHom_injective (φ : K[X] →ₐ[S] L) (hφ : Function.Injective φ)
@@ -966,11 +970,13 @@ theorem liftAlgHom_injective (φ : K[X] →ₐ[S] L) (hφ : Function.Injective �
 @[simp]
 theorem liftAlgHom_apply_div' (p q : K[X]) :
     liftAlgHom φ hφ (algebraMap _ _ p) / liftAlgHom φ hφ (algebraMap _ _ q) = φ p / φ q :=
-  liftMonoidWithZeroHom_apply_div' _ hφ _ _  -- Porting note: gave explicitly the `hφ`
+  -- Porting note(#PPPQQ): gave explicitly the `hφ`
+  liftMonoidWithZeroHom_apply_div' _ hφ _ _
 
 theorem liftAlgHom_apply_div (p q : K[X]) :
     liftAlgHom φ hφ (algebraMap _ _ p / algebraMap _ _ q) = φ p / φ q :=
-  liftMonoidWithZeroHom_apply_div _ hφ _ _  -- Porting note: gave explicitly the `hφ`
+  -- Porting note(#PPPQQ): gave explicitly the `hφ`
+  liftMonoidWithZeroHom_apply_div _ hφ _ _
 #align ratfunc.lift_alg_hom_apply_div RatFunc.liftAlgHom_apply_div
 
 end LiftAlgHom
@@ -1008,8 +1014,8 @@ theorem liftOn'_div {P : Sort v} (p q : K[X]) (f : K[X] → K[X] → P) (f0 : �
     (H) :
     (RatFunc.liftOn' (algebraMap _ (RatFunc K) p / algebraMap _ _ q)) f @H = f p q := by
   rw [RatFunc.liftOn', liftOn_div _ _ _ f0]
-  apply liftOn_condition_of_liftOn'_condition H -- Porting note: `exact` did not work.  Also,
-                                                  -- was `@H` that still works, but is not needed.
+  -- Porting note: `exact` did not work.  Also, was `@H` that still works, but is not needed.
+  apply liftOn_condition_of_liftOn'_condition H
 #align ratfunc.lift_on'_div RatFunc.liftOn'_div
 
 /-- Induction principle for `RatFunc K`: if `f p q : P (p / q)` for all `p q : K[X]`,
@@ -1023,7 +1029,7 @@ protected theorem induction_on {P : RatFunc K → Prop} (x : RatFunc K)
 #align ratfunc.induction_on RatFunc.induction_on
 
 theorem ofFractionRing_mk' (x : K[X]) (y : K[X]⁰) :
-    -- Porting note: I gave explicitly the argument `(FractionRing K[X])`
+    -- Porting note(#PPPQQ): I gave explicitly the argument `(FractionRing K[X])`
     ofFractionRing (IsLocalization.mk' (FractionRing K[X]) x y) =
       IsLocalization.mk' (RatFunc K) x y := by
   rw [IsFractionRing.mk'_eq_div, IsFractionRing.mk'_eq_div, ← mk_eq_div', ← mk_eq_div]
@@ -1355,13 +1361,15 @@ theorem liftMonoidWithZeroHom_apply {L : Type*} [CommGroupWithZero L] (φ : K[X]
 
 theorem liftRingHom_apply {L : Type*} [Field L] (φ : K[X] →+* L) (hφ : K[X]⁰ ≤ L⁰.comap φ)
     (f : RatFunc K) : liftRingHom φ hφ f = φ f.num / φ f.denom :=
-  liftMonoidWithZeroHom_apply _ hφ _  -- Porting note(#PPPQQ): added explicit `hφ`
+  -- Porting note(#PPPQQ): added explicit `hφ`
+  liftMonoidWithZeroHom_apply _ hφ _
 #align ratfunc.lift_ring_hom_apply RatFunc.liftRingHom_apply
 
 theorem liftAlgHom_apply {L S : Type*} [Field L] [CommSemiring S] [Algebra S K[X]] [Algebra S L]
     (φ : K[X] →ₐ[S] L) (hφ : K[X]⁰ ≤ L⁰.comap φ) (f : RatFunc K) :
     liftAlgHom φ hφ f = φ f.num / φ f.denom :=
-  liftMonoidWithZeroHom_apply _ hφ _  -- Porting note(#PPPQQ): added explicit `hφ`
+  -- Porting note(#PPPQQ): added explicit `hφ`
+  liftMonoidWithZeroHom_apply _ hφ _
 #align ratfunc.lift_alg_hom_apply RatFunc.liftAlgHom_apply
 
 theorem num_mul_denom_add_denom_mul_num_ne_zero {x y : RatFunc K} (hxy : x + y ≠ 0) :

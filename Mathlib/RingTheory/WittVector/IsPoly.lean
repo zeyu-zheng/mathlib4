@@ -277,10 +277,10 @@ instance IsPoly₂.diag {f} [hf : IsPoly₂ p f] : IsPoly p fun R _Rcr x => f x 
   ext ⟨i, k⟩;
   fin_cases i <;>
     simp only [Matrix.head_cons, aeval_X, Matrix.cons_val_zero, Matrix.cons_val_one] <;>
-    -- porting note: the end of the proof was added in the port.
-    --open Matrix in
-    --simp only [Fin.mk_zero, Fin.mk_one, cons_val', empty_val', cons_val_fin_one, cons_val_zero,
-    --  aeval_X, head_fin_const, cons_val_one]
+    -- porting note: added these lines
+    open Matrix in
+    simp only [Fin.mk_zero, Fin.mk_one, cons_val', empty_val', cons_val_fin_one, cons_val_zero,
+      aeval_X, head_fin_const, cons_val_one]
 #align witt_vector.is_poly₂.diag WittVector.IsPoly₂.diag
 
 -- Porting note: Lean 4's typeclass inference is sufficiently more powerful that we no longer
@@ -320,7 +320,6 @@ def onePoly (n : ℕ) : MvPolynomial ℕ ℤ :=
 @[simp]
 theorem bind₁_onePoly_wittPolynomial [hp : Fact p.Prime] (n : ℕ) :
     bind₁ onePoly (wittPolynomial p ℤ n) = 1 := by
-  ext  -- Porting note: `ext` was not in the mathport output.
   rw [wittPolynomial_eq_sum_C_mul_X_pow, AlgHom.map_sum, Finset.sum_eq_single 0]
   · simp only [onePoly, one_pow, one_mul, AlgHom.map_pow, C_1, pow_zero, bind₁_X_right, if_true,
       eq_self_iff_true]

@@ -74,7 +74,7 @@ theorem stdBasis_ne (i j : ι) (h : j ≠ i) (b : φ i) : stdBasis R φ i b j = 
 
 theorem stdBasis_eq_pi_diag (i : ι) : stdBasis R φ i = pi (diag i) := by
   ext x j
-  -- Porting note: made types explicit
+  -- Porting note(#PPPQQ): made types explicit
   convert (update_apply (R := R) (φ := φ) (ι := ι) 0 x i j _).symm
   rfl
 #align linear_map.std_basis_eq_pi_diag LinearMap.stdBasis_eq_pi_diag
@@ -220,7 +220,7 @@ protected noncomputable def basis (s : ∀ j, Basis (ιs j) R (Ms j)) :
   Basis.ofRepr
     ((LinearEquiv.piCongrRight fun j => (s j).repr) ≪≫ₗ
       (Finsupp.sigmaFinsuppLEquivPiFinsupp R).symm)
-  --  Porting note: was
+  -- Porting note: was
   -- -- The `AddCommMonoid (Π j, Ms j)` instance was hard to find.
   -- -- Defining this in tactic mode seems to shake up instance search enough
   -- -- that it works by itself.
