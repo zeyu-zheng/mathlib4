@@ -190,7 +190,6 @@ noncomputable instance : NormedAddCommGroup (V →A[𝕜] W) :=
         simp [(ContinuousAffineMap.neg_apply)]
       add_le' := fun f g => by
         simp only [coe_add, max_le_iff, Pi.add_apply, add_contLinear]
-        -- xxx: any leftover clean-up?
         exact
           ⟨(norm_add_le _ _).trans (add_le_add (le_max_left _ _) (le_max_left _ _)),
             (norm_add_le _ _).trans (add_le_add (le_max_right _ _) (le_max_right _ _))⟩

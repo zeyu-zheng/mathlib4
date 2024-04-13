@@ -53,7 +53,7 @@ variable {L : GrothendieckTopology E}
 
 /-- An auxiliary structure that witnesses the fact that `f` factors through an image object of `G`.
 -/
--- Porting note: removed `@[nolint has_nonempty_instance]`
+-- Porting note(#5171): removed `@[nolint has_nonempty_instance]`
 structure Presieve.CoverByImageStructure (G : C ⥤ D) {V U : D} (f : V ⟶ U) where
   obj : C
   lift : V ⟶ G.obj obj
@@ -201,7 +201,7 @@ theorem pushforwardFamily_compatible {X} (x : ℱ.obj (op X)) :
   erw [← α.naturality (G.preimage _).op]
   refine' congr_fun _ x
   simp only [Functor.comp_map, ← Category.assoc, Functor.op_map, Quiver.Hom.unop_op,
-    ← ℱ.map_comp, ← ℱ.map_comp, ← op_comp, G.image_preimage]
+    ← ℱ.map_comp, ← op_comp, G.image_preimage]
   congr 3
   simp [e]
 #align category_theory.cover_dense.types.pushforward_family_compatible CategoryTheory.Functor.IsCoverDense.Types.pushforwardFamily_compatible
