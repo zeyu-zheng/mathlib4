@@ -35,7 +35,7 @@ theorem mem_accumulate [LE α] {x : α} {z : β} : z ∈ Accumulate s x ↔ ∃ 
 theorem subset_accumulate_of_le [LE α] {x y : α} (h : x ≤ y) : s x ⊆ Accumulate s y :=
   subset_iUnion₂ (s := fun x (_ : x ≤ y) ↦ s x) x h
 
-theorem subset_accumulate [Preorder α] {x : α} : s x ⊆ Accumulate s x := 
+theorem subset_accumulate [Preorder α] {x : α} : s x ⊆ Accumulate s x :=
   subset_accumulate_of_le le_rfl
 #align set.subset_accumulate Set.subset_accumulate
 
