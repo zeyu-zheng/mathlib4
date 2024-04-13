@@ -26,7 +26,7 @@ variable (C : Type*) [Category C]
 -- Porting note: removed
 -- local attribute [tidy] tactic.op_induction'
 -- as it isn't needed here. If it is useful elsewhere
--- attribute [local aesop safe cases (rule_sets [CategoryTheory])] Opposite
+-- attribute [local aesop safe cases (rule_sets := [CategoryTheory])] Opposite
 -- should suffice, but may need
 -- https://github.com/JLimperg/aesop/issues/59
 
@@ -105,11 +105,11 @@ set_option linter.uppercaseLean3 false in
 #align algebraic_geometry.SheafedSpace.forget_to_PresheafedSpace AlgebraicGeometry.SheafedSpace.forgetToPresheafedSpace
 
 -- Porting note: can't derive `Full` functor automatically
-instance forgetToPresheafedSpace_full : Full <| forgetToPresheafedSpace (C := C) where
+instance forgetToPresheafedSpace_full : (forgetToPresheafedSpace (C := C)).Full where
   preimage f := f
 
 -- Porting note: can't derive `Faithful` functor automatically
-instance forgetToPresheafedSpace_faithful : Faithful <| forgetToPresheafedSpace (C := C) where
+instance forgetToPresheafedSpace_faithful : (forgetToPresheafedSpace (C := C)).Faithful where
 
 instance is_presheafedSpace_iso {X Y : SheafedSpace C} (f : X ⟶ Y) [IsIso f] :
     @IsIso (PresheafedSpace C) _ _ _ f :=

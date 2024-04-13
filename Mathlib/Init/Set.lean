@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura
 -/
 import Lean.Parser.Term
-import Std.Classes.SetNotation
+import Std.Util.ExtendedBinder
 import Mathlib.Mathport.Rename
 
 /-!
@@ -34,8 +34,9 @@ This file is a port of the core Lean 3 file `lib/lean/library/init/data/set.lean
 
 -/
 
-universe u v
-variable {α : Type u} {β : Type v}
+open Std.ExtendedBinder
+universe u v w
+variable {α : Type u} {β : Type v} {γ : Type w}
 
 /-- A set is a collection of elements of some type `α`.
 
@@ -86,9 +87,8 @@ instance : HasSubset (Set α) :=
   ⟨(· ≤ ·)⟩
 
 instance : EmptyCollection (Set α) :=
-  ⟨⟨λ _ => False⟩⟩
+  ⟨⟨fun _ ↦ False⟩⟩
 
-open Std.ExtendedBinder in
 syntax "{" extBinder " | " term "}" : term
 
 macro_rules
