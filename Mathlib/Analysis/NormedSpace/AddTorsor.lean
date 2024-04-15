@@ -274,8 +274,7 @@ theorem dist_midpoint_midpoint_le (p₁ p₂ p₃ p₄ : V) :
     dist (midpoint ℝ p₁ p₂) (midpoint ℝ p₃ p₄) ≤ (dist p₁ p₃ + dist p₂ p₄) / 2 := by
   -- Porting note: was `simpa using dist_midpoint_midpoint_le' p₁ p₂ p₃ p₄`
   have := dist_midpoint_midpoint_le' (𝕜 := ℝ) p₁ p₂ p₃ p₄
-  rw [Real.norm_eq_abs, abs_two] at this
-  exact this
+  simpa using this
 #align dist_midpoint_midpoint_le dist_midpoint_midpoint_le
 
 theorem nndist_midpoint_midpoint_le (p₁ p₂ p₃ p₄ : V) :
