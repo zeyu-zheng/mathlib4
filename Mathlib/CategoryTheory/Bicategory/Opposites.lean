@@ -5,9 +5,6 @@ Authors: Calle Sönne
 -/
 import Mathlib.CategoryTheory.Bicategory.LocallyDiscrete
 import Mathlib.CategoryTheory.Opposites
-import Mathlib.Tactic.CategoryTheory.Coherence
-
-set_option maxRecDepth 2000
 
 /-!
 # Opposite bicategories
@@ -43,12 +40,16 @@ variable {B : Type u}
 
 notation:max B "ᴮᵒᵖ" => Bicategory.opposite B
 
-
 def bop (a : B) : Bᴮᵒᵖ := ⟨a⟩
 
 theorem bop_injective : Function.Injective (bop : B → Bᴮᵒᵖ) := fun _ _ => congr_arg opposite.unbop
 
 theorem unbop_injective : Function.Injective (unbop : Bᴮᵒᵖ → B) := fun ⟨_⟩⟨_⟩ => by simp
+
+theorem bop_inj_iff (x y : B) : bop x = bop y ↔ x = y := bop_injective.eq_iff
+
+@[simp]
+theorem unmop_inj_iff (x y : Bᴮᵒᵖ) : unbop x = unbop y ↔ x = y := unbop_injective.eq_iff
 
 @[simp]
 theorem bop_unbop (a : Bᴮᵒᵖ) : bop (unbop a) = a :=
@@ -104,8 +105,7 @@ theorem unbop2_inj {a b : Bᴮᵒᵖ} {f g : a ⟶ b} :
     Function.Injective (unbop2 : (f ⟶ g) → (f.unbop ⟶ g.unbop)) :=
   fun _ _ H => congr_arg bop2 H
 
--- TODO: iff versions of these? For simp lemmas...
-
+-- TODO: iff versions of these?
 
 @[simp]
 theorem unbop_bop2 {a b : B} {f g : a ⟶ b} (η : f ⟶ g) : unbop2 (bop2 η) = η := rfl
@@ -146,33 +146,39 @@ theorem unbop2_id_bop {a b : B} {f : a ⟶ b} : unbop2 (𝟙 f.bop) = 𝟙 f :=
 theorem bop2_id_unbop {a b : Bᴮᵒᵖ} {f : a ⟶ b} : bop2 (𝟙 f.unbop) = 𝟙 f :=
   rfl
 
--- TODO: more iso API
-/-- ... -/
-@[simps]
-protected def CategoryTheory.Iso.bop2 {a b : B} {f g : a ⟶ b} (η : f ≅ g) : f.bop ≅ g.bop :=
-  -- TODO: prove hom_inv_id etc manually?
-  { hom := bop2 η.hom,
-    inv := bop2 η.inv
-    hom_inv_id := sorry
-    inv_hom_id := sorry
-  }
+namespace CategoryTheory.Iso
 
+/-- The opposite natural isomorphism  -/
 @[simps]
-protected def Iso.unbop2 {a b : Bᴮᵒᵖ} {f g : a ⟶ b} (η : f ≅ g) : f.unbop ≅ g.unbop where
+protected def bop2 {a b : B} {f g : a ⟶ b} (η : f ≅ g) : f.bop ≅ g.bop where
+  hom := bop2 η.hom
+  inv := bop2 η.inv
+  hom_inv_id := unbop2_inj <| by simp
+  inv_hom_id := unbop2_inj <| by simp
+
+/-- The natural isomorphism obtained from a natural isomorphism in `Bᴮᵒᵖ` -/
+@[simps]
+protected def unbop2 {a b : Bᴮᵒᵖ} {f g : a ⟶ b} (η : f ≅ g) : f.unbop ≅ g.unbop where
   hom := unbop2 η.hom
   inv := unbop2 η.inv
-  hom_inv_id := by
-    apply bop2_inj
-    -- TODO: there is some simp error to fix here... (want bop2_inj <| simp)
-    simp only [bop2_comp, bop_unbop2, Iso.hom_inv_id, bop2_id]
-  inv_hom_id := by
-    -- iso api would be nice here already (unbop commutes!!)
-    sorry
+  hom_inv_id := bop2_inj <| by simp
+  inv_hom_id := bop2_inj <| by simp
+
+@[simp]
+theorem unbop2_bop2 {a b : Bᴮᵒᵖ} {f g : a ⟶ b} (η : f ≅ g) : η.unbop2.bop2 = η := by (ext; rfl)
+
+@[simp]
+theorem unbop2_bop {a b : Bᴮᵒᵖ} {f g : a ⟶ b} (η : f ≅ g) : η.unbop2.bop2 = η := by (ext; rfl)
+
+-- TODO: more iso API? removeOp?
+
+end CategoryTheory.Iso
 
 /-- The 1-dual bicategory `Cᵒᵖ`
 
 See ...
 -/
+@[simps!]
 instance Bicategory.Opposite : Bicategory.{w, v} Bᴮᵒᵖ where
   -- Need to break these out and add lemmas for them probably?
   id := fun a => (𝟙 a.unbop).bop
@@ -180,14 +186,15 @@ instance Bicategory.Opposite : Bicategory.{w, v} Bᴮᵒᵖ where
   whiskerLeft f g h η := bop2 ((unbop2 η) ▷ f.unbop)
   whiskerRight η h := bop2 (h.unbop ◁ (unbop2 η))
   associator f g h := by exact (Bicategory.associator h.unbop g.unbop f.unbop).symm.bop2
-  leftUnitor f := by exact (Bicategory.rightUnitor f.unbop).bop2 -- TODO: alternative is to use leftUnitor + symm
+  -- TODO: alternative is to use leftUnitor + symm
+  leftUnitor f := by exact (Bicategory.rightUnitor f.unbop).bop2
   rightUnitor f := by exact (Bicategory.leftUnitor f.unbop).bop2
   whiskerLeft_id f g := unbop2_inj <| Bicategory.id_whiskerRight g.unbop f.unbop
   whiskerLeft_comp f g h i η θ := unbop2_inj <|
     Bicategory.comp_whiskerRight (unbop2 η) (unbop2 θ) f.unbop
-  -- TODO: do these with pen and paper to actually learn something!
   id_whiskerLeft η := unbop2_inj <| whiskerRight_id (unbop2 η)
-  comp_whiskerLeft {a b c d} f g {h h'} η := unbop2_inj <| whiskerRight_comp (unbop2 η) g.unbop f.unbop
+  comp_whiskerLeft {a b c d} f g {h h'} η := unbop2_inj <|
+    whiskerRight_comp (unbop2 η) g.unbop f.unbop
   id_whiskerRight f g := unbop2_inj <| Bicategory.whiskerLeft_id g.unbop f.unbop
   comp_whiskerRight η θ i := unbop2_inj <| Bicategory.whiskerLeft_comp i.unbop (unbop2 η) (unbop2 θ)
   whiskerRight_id η := unbop2_inj <| id_whiskerLeft (unbop2 η)
@@ -196,3 +203,12 @@ instance Bicategory.Opposite : Bicategory.{w, v} Bᴮᵒᵖ where
   whisker_exchange η θ := by apply unbop2_inj; simp [(whisker_exchange (unbop2 θ) (unbop2 η)).symm]
   pentagon f g h i := by apply unbop2_inj; simp
   triangle f g := by apply unbop2_inj; simp
+
+
+/-
+TODO:
+- simp lemmas
+- compatability with LocallyDiscrete
+-- Want a functor between them?
+
+-/
