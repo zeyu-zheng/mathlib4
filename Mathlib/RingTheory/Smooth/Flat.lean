@@ -12,6 +12,7 @@ import Mathlib.Algebra.Lie.TensorProduct
 import Mathlib.LinearAlgebra.TensorProduct.Tower
 import Mathlib.RingTheory.TensorProduct.Basic
 import Mathlib.Data.Set.Pointwise.Basic
+import Mathlib.RingTheory.MvPolynomial.Basic
 import Mathlib.RingTheory.MvPolynomial.Homogeneous
 import Mathlib.RingTheory.RingOfDefinition
 import Mathlib.Algebra.Category.AlgebraCat.Basic
@@ -260,6 +261,18 @@ noncomputable instance : Ring R^ := inferInstance
 -- Currently this does not work, because the limit is taken in `AlgebarCat` which is the category
 -- of not necessarily commutative algebras over `R`. Unfortunately `CommAlgebraCat` does not seem to exist.
 --noncomputable instance : CommRing R^ := inferInstance
+
+#check (limit (sectionDiag f) : AlgebraCat A)
+#check Basis
+
+/-- The polynomial ring is flat -/
+instance : Module.Flat A R := by
+   let Rbasis : Basis (Fin k →₀ ℕ) A R := MvPolynomial.basisMonomials (Fin k) A
+   have Rfree : Module.Free A R := by
+    apply Module.Free.of_basis (Rbasis)
+   exact inferInstance
+
+--instance : Module.Flat R R^ := sorry
 
 instance : Module.Flat A R^ := sorry
 
