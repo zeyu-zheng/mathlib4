@@ -6,7 +6,6 @@ Authors: Yuma Mizuno, Calle Sönne
 import Mathlib.CategoryTheory.DiscreteCategory
 import Mathlib.CategoryTheory.Bicategory.Functor
 import Mathlib.CategoryTheory.Bicategory.Strict
-import Mathlib.CategoryTheory.Bicategory.EqToHom
 
 #align_import category_theory.bicategory.locally_discrete from "leanprover-community/mathlib"@"c9c9fa15fec7ca18e9ec97306fb8764bfe988a7e"
 
@@ -147,40 +146,3 @@ def Functor.toOplaxFunctor (F : I ⥤ B) : OplaxFunctor (LocallyDiscrete I) B
 #align category_theory.functor.to_oplax_functor CategoryTheory.Functor.toOplaxFunctor
 
 end CategoryTheory
-
-open CategoryTheory Bicategory Discrete LocallyDiscrete
-
-universe w₂ v v₁ v₂ u u₁ u₂
-
-variable {I : Type u₁} [Category.{v₁} I] {B : Type u₂} [Bicategory.{w₂, v₂} B] [Strict B]
-variable {F : Pseudofunctor (LocallyDiscrete I) B}
-
--- These should be stated in terms of strict bicategories
-
--- Pseudofunctors from locally discrete categories to strict bicategories
-lemma map₂_left_unitor' {a b : I} (f : a ⟶ b) : (F.mapComp (mkHom (𝟙 a)) (mkHom f)).inv =
-    (F.mapId ⟨a⟩).hom ▷ F.map (mkHom f) ≫ eqToHom (by simp) := by
-  have h := F.map₂_left_unitor (mkHom f)
-  simp at h
-  rw [F.map₂_eqToHom, ←Iso.inv_comp_eq, comp_eqToHom_iff] at h
-  simp at h
-  apply h
-
-lemma map₂_right_unitor' {a b : I} (f : a ⟶ b) : (F.mapComp (mkHom f) (mkHom (𝟙 b))).inv =
-    F.map (mkHom f) ◁ (F.mapId ⟨b⟩).hom ≫ eqToHom (by simp) := by
-  have h := F.map₂_right_unitor (mkHom f)
-  simp at h
-  rw [F.map₂_eqToHom, ←Iso.inv_comp_eq, comp_eqToHom_iff] at h
-  simp at h
-  apply h
-
-lemma map₂_associator' {a b c d : I} (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d) :
-    (F.mapComp (mkHom f) ((mkHom g) ≫ (mkHom h))).hom ≫ (F.map (mkHom f)) ◁ (F.mapComp (mkHom g) (mkHom h)).hom
-    = eqToHom (by simp) ≫ (F.mapComp ((mkHom f) ≫ (mkHom g)) (mkHom h)).hom ≫
-    (F.mapComp (mkHom f) (mkHom g)).hom ▷ F.map (mkHom h) ≫ eqToHom (by simp)
-    := by
-  have h := F.map₂_associator (mkHom f) (mkHom g) (mkHom h)
-  simp at h
-  rw [F.map₂_eqToHom, ←Iso.inv_comp_eq] at h
-  -- TODO: rewrite thing as inv then move to LHS (+ restate lemma to use this notation instead!)
-  sorry
