@@ -69,7 +69,7 @@ theorem eval_iterate_derivative_rootMultiplicity {p : R[X]} {t : R} :
   conv_lhs => rw [← p.pow_mul_divByMonic_rootMultiplicity_eq t, ← hm]
   rw [iterate_derivative_mul, eval_finset_sum, sum_eq_single_of_mem _ (mem_range.mpr m.succ_pos)]
   · rw [m.choose_zero_right, one_smul, eval_mul, m.sub_zero, iterate_derivative_X_sub_pow_self,
-      eval_nat_cast, nsmul_eq_mul]; rfl
+      eval_natCast, nsmul_eq_mul]; rfl
   · intro b hb hb0
     rw [iterate_derivative_X_sub_pow, eval_smul, eval_mul, eval_smul, eval_pow,
       Nat.sub_sub_self (mem_range_succ_iff.mp hb), eval_sub, eval_X, eval_C, sub_self,
@@ -520,7 +520,7 @@ theorem coeff_inv_units (u : R[X]ˣ) (n : ℕ) : ((↑u : R[X]).coeff n)⁻¹ = 
 #align polynomial.coeff_inv_units Polynomial.coeff_inv_units
 
 theorem monic_normalize [DecidableEq R] (hp0 : p ≠ 0) : Monic (normalize p) := by
-  rw [Ne, ← leadingCoeff_eq_zero, ← Ne.eq_def, ← isUnit_iff_ne_zero] at hp0
+  rw [Ne, ← leadingCoeff_eq_zero, ← Ne, ← isUnit_iff_ne_zero] at hp0
   rw [Monic, leadingCoeff_normalize, normalize_eq_one]
   apply hp0
 #align polynomial.monic_normalize Polynomial.monic_normalize
