@@ -2,10 +2,6 @@ import Mathlib.Data.Nat.Prime
 import Mathlib.CategoryTheory.Category.Basic
 import Mathlib.Data.List.InsertNth
 import Mathlib.Algebra.Group.Basic
--- Adaptation note:
--- Without `attribute [refl] Eq.refl`, `rw?` isn't effective.
--- I'll move this attribute upstream.
-import Mathlib.Init.Core
 
 -- This is partially duplicative with the tests for `rw?` in Lean.
 -- It's useful to re-test here with a larger environment.
@@ -18,7 +14,7 @@ private axiom test_sorry : ∀ {α}, α
 set_option autoImplicit true
 
 /--
-info: Try this: rw [@List.map_append]
+info: Try this: rw [List.map_append]
 -- "no goals"
 -/
 #guard_msgs in
@@ -28,7 +24,7 @@ example (f : α → β) (L M : List α) : (L ++ M).map f = L.map f ++ M.map f :=
 open CategoryTheory
 
 /--
-info: Try this: rw [@Category.id_comp]
+info: Try this: rw [Category.id_comp]
 -- "no goals"
 -/
 #guard_msgs in
@@ -36,7 +32,7 @@ example [Category C] {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) : f ≫ 𝟙 _ ≫ 
   rw?
 
 /--
-info: Try this: rw [@mul_left_eq_self]
+info: Try this: rw [mul_left_eq_self]
 -- "no goals"
 -/
 #guard_msgs in
@@ -48,7 +44,7 @@ example [Group G] (h : G) : 1 * h = h := by
 -- I'm out of time to deal with this, so I'll just drop the test for now.
 -- This may need to wait until the next release.
 -- /--
--- info: Try this: rw [@Nat.prime_iff]
+-- info: Try this: rw [Nat.prime_iff]
 -- -- "no goals"
 -- -/
 -- #guard_msgs in

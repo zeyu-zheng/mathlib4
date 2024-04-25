@@ -122,9 +122,6 @@ lemma norm_fourierSMulRight_le (L : V →L[ℝ] W →L[ℝ] ℝ) (f : V → E) (
   _ ≤ (2 * π) * (‖L‖ * ‖v‖) * ‖f v‖ := by gcongr; exact L.le_opNorm _
   _ = 2 * π * ‖L‖ * ‖v‖ * ‖f v‖ := by ring
 
--- Adaptation note: nightly-2024-04-01
--- This maxHeartbeats was not needed previously.
-set_option maxHeartbeats 400000 in
 lemma _root_.MeasureTheory.AEStronglyMeasurable.fourierSMulRight
     [SecondCountableTopologyEither V (W →L[ℝ] ℝ)] [MeasurableSpace V] [BorelSpace V]
     {L : V →L[ℝ] W →L[ℝ] ℝ} {f : V → E} {μ : Measure V}
@@ -420,7 +417,6 @@ theorem iteratedDeriv_fourierIntegral {f : ℝ → E} {N : ℕ∞} {n : ℕ}
   congr with y
   suffices (-(2 * π * I)) ^ n • y ^ n • f y = (-(2 * π * I * y)) ^ n • f y by
     simpa [innerSL_apply _]
-  have : y ^ n • f y = ((y ^ n : ℝ) : ℂ) • f y := rfl
-  simp only [← neg_mul, this, smul_smul, mul_pow, ofReal_pow, mul_assoc]
+  simp only [← neg_mul, ← coe_smul, smul_smul, mul_pow, ofReal_pow, mul_assoc]
 
 end Real
