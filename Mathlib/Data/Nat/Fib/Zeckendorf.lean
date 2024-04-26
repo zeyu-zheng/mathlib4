@@ -119,7 +119,7 @@ def zeckendorf : ℕ → List ℕ
     have := zeckendorf_aux (n.succ_pos.trans_eq <| Eq.symm ‹_›)
     a :: zeckendorf (m - fib a)
 
-@[simp] lemma zeckendorf_zero : zeckendorf 0 = [] := rfl
+@[simp] lemma zeckendorf_zero : zeckendorf 0 = [] := by simp [zeckendorf]
 -- The equational lemma `zeckendorf` has an unused `have`
 @[simp, nolint unusedHavesSuffices] lemma zeckendorf_succ (n : ℕ) :
     zeckendorf (n + 1) = greatestFib (n + 1) :: zeckendorf (n + 1 - fib (greatestFib (n + 1))) := by
@@ -130,7 +130,7 @@ def zeckendorf : ℕ → List ℕ
   | _n + 1, _ => zeckendorf_succ _
 
 lemma isZeckendorfRep_zeckendorf : ∀ n, (zeckendorf n).IsZeckendorfRep
-  | 0 => Chain.nil
+  | 0 => by simp [IsZeckendorfRep, Chain.nil]
   | n + 1 => by
     rw [zeckendorf_succ, IsZeckendorfRep, List.cons_append]
     have := zeckendorf_aux n.succ_pos
@@ -145,7 +145,7 @@ lemma isZeckendorfRep_zeckendorf : ∀ n, (zeckendorf n).IsZeckendorfRep
       (greatestFib_sub_fib_greatestFib_le_greatestFib n.succ_ne_zero)
 
 lemma zeckendorf_sum_fib : ∀ {l}, IsZeckendorfRep l → zeckendorf (l.map fib).sum = l
-  | [], _ => rfl
+  | [], _ => by simp [IsZeckendorfRep]
   | a :: l, hl => by
     have hl' := hl
     simp only [IsZeckendorfRep, cons_append, chain'_iff_pairwise, pairwise_cons, mem_append,
@@ -162,7 +162,7 @@ lemma zeckendorf_sum_fib : ∀ {l}, IsZeckendorfRep l → zeckendorf (l.map fib)
     exact hl'.sum_fib_lt (by simpa)
 
 @[simp] lemma sum_zeckendorf_fib : ∀ n : ℕ, (n.zeckendorf.map fib).sum = n
-  | 0 => rfl
+  | 0 => by simp only [zeckendorf_zero, map_nil, List.sum_nil]
   | n + 1 => by
     have := zeckendorf_aux n.succ_pos
     rw [zeckendorf_succ, map, List.sum_cons, sum_zeckendorf_fib (n + 1 - _), add_tsub_cancel_iff_le]
