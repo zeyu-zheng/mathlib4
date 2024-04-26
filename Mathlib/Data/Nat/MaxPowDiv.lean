@@ -44,9 +44,8 @@ namespace Nat.maxPowDiv
 
 theorem go_eq {k p n : ℕ} :
     go k p n = if 1 < p ∧ 0 < n ∧ n % p = 0 then go (k+1) p (n / p) else k := by
-  dsimp [go, go._unary]
-  rw [WellFounded.fix_eq]
-  simp
+  conv => lhs; unfold go
+  rfl
 
 theorem go_succ {k p n : ℕ} : go (k+1) p n = go k p n + 1 := by
   rw [go_eq]
