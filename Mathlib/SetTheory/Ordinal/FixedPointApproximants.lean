@@ -217,11 +217,19 @@ def gfpApprox (a : Ordinal.{u}) : α :=
 termination_by a
 decreasing_by exact h
 
-theorem gfpApprox_antitone : Antitone (gfpApprox f x) :=
-  lfpApprox_monotone (OrderHom.dual f) x
+theorem gfpApprox_antitone : Antitone (gfpApprox f x) := by
+  have := lfpApprox_monotone (OrderHom.dual f) x
+  revert this
+  delta gfpApprox lfpApprox
+  intro
+  assumption
 
-theorem gfpApprox_le {a : Ordinal}: gfpApprox f x a ≤ x :=
-  le_lfpApprox (OrderHom.dual f) x
+theorem gfpApprox_le {a : Ordinal}: gfpApprox f x a ≤ x := by
+  have := le_lfpApprox (α := αᵒᵈ) (OrderHom.dual f) x (a := a)
+  revert this
+  delta gfpApprox lfpApprox
+  intro
+  assumption
 
 theorem gfpApprox_add_one (h : f x ≤ x) (a : Ordinal) :
     gfpApprox f x (a+1) = f (gfpApprox f x a) :=
