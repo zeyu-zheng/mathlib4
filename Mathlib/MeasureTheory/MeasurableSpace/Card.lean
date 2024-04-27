@@ -103,6 +103,8 @@ theorem cardinal_generateMeasurableRec_le (s : Set (Set α)) (i : ω₁) :
     rw [mul_eq_max A C]
     exact max_le B le_rfl
   rw [generateMeasurableRec]
+  apply (mk_union_le _ _).trans
+  apply add_le_of_le C
   apply_rules [(mk_union_le _ _).trans, add_le_of_le C, mk_image_le.trans]
   · exact (le_max_left _ _).trans (self_le_power _ one_lt_aleph0.le)
   · rw [mk_singleton]
