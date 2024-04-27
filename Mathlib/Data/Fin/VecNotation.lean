@@ -197,7 +197,7 @@ theorem vecCons_const (a : α) : (vecCons a fun _ : Fin n => a) = fun _ => a :=
 
 theorem vec_single_eq_const (a : α) : ![a] = fun _ => a :=
   let _ : Unique (Fin 1) := inferInstance
-  funext <| Unique.forall_iff.2 rfl
+  funext <| Unique.forall_iff.2 (by rfl)
 #align matrix.vec_single_eq_const Matrix.vec_single_eq_const
 
 /-- `![a, b, ...] 1` is equal to `b`.

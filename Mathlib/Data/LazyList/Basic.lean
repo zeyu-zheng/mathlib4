@@ -31,10 +31,11 @@ def listEquivLazyList (α : Type*) : List α ≃ LazyList α where
   invFun := LazyList.toList
   right_inv := by
     intro xs
-    induction' xs using LazyList.rec with _ _ _ _ ih
+    induction xs using toList.induct
     · rfl
-    · simpa only [toList, ofList, cons.injEq, true_and]
-    · rw [Thunk.get, ih]
+    · rw [toList]
+      simp only [ofList, cons.injEq, true_and, *]
+      rfl
   left_inv := by
     intro xs
     induction xs
@@ -75,17 +76,19 @@ instance : LawfulTraversable LazyList := by
     · ext; apply ih
   · simp only [Equiv.map, listEquivLazyList, Equiv.coe_fn_symm_mk, Equiv.coe_fn_mk, comp,
       Functor.mapConst]
-    induction' xs using LazyList.rec with _ _ _ _ ih
+    induction xs using toList.induct
     · rfl
-    · simpa only [toList, ofList, LazyList.traverse, Seq.seq, Functor.map, cons.injEq, true_and]
-    · congr; apply ih
+    · rw [toList]
+      simp only [ofList, LazyList.traverse, Seq.seq, Functor.map, cons.injEq, true_and,
+        List.map_concat, Thunk.pure, *]
   · simp only [traverse, Equiv.traverse, listEquivLazyList, Equiv.coe_fn_mk, Equiv.coe_fn_symm_mk]
-    induction' xs using LazyList.rec with _ tl ih _ ih
+    induction xs using toList.induct
     · simp only [List.traverse, map_pure]; rfl
-    · replace ih : tl.get.traverse f = ofList <$> tl.get.toList.traverse f := ih
+    next tl ih =>
+      rw [toList]
+      replace ih : tl.get.traverse f = ofList <$> tl.get.toList.traverse f := ih
       simp only [traverse.eq_2, ih, Functor.map_map, seq_map_assoc, toList, List.traverse, map_seq]
-      · rfl
-    · apply ih
+      rfl
 
 /-- `init xs`, if `xs` non-empty, drops the last element of the list.
 Otherwise, return the empty list. -/
