@@ -39,7 +39,7 @@ section LeftExtension
 The unit of this Kan extension is given by the unit of the adjunction. -/
 def Adjunction.isAbsoluteLeftKan {f : a ⟶ b} {u : b ⟶ a} (adj : f ⊣ u) :
     LeftExtension.IsAbsKan (.mk u adj.unit) := fun {x} h ↦
-  .mk (fun s  ↦ LeftExtension.homMk
+  .mk (fun s ↦ LeftExtension.homMk
     (𝟙 _ ⊗≫ u ◁ s.unit ⊗≫ adj.counit ▷ s.extension ⊗≫ 𝟙 _ : u ≫ h ⟶ s.extension) <|
       calc _
         _ = 𝟙 _ ⊗≫ (adj.unit ▷ _ ≫ _ ◁ s.unit) ⊗≫ f ◁ adj.counit ▷ s.extension ⊗≫ 𝟙 _ := by
@@ -174,7 +174,7 @@ def isKanOfWhiskerLeftAdjoint
     let τ : t.extension ⟶ k ≫ u := H.desc (.mk _ <| 𝟙 _ ⊗≫ g ◁ η' ⊗≫ θ ▷ u ⊗≫ 𝟙 _)
     let σ : t.extension ≫ h ⟶ k := H'.desc <| (.mk _ <| (ρ_ _).hom ≫ τ)
     LeftExtension.homMk σ <| (H' g).hom_ext <| by
-      have Hσ : t.extension ◁ η' ⊗≫ σ ▷ u  = 𝟙 _ ⊗≫ τ := by
+      have Hσ : t.extension ◁ η' ⊗≫ σ ▷ u = 𝟙 _ ⊗≫ τ := by
         simpa [bicategoricalComp] using (H' _).fac (.mk _ <| (ρ_ _).hom ≫ τ)
       calc _
         _ = 𝟙 _ ⊗≫ (g ◁ η' ≫ t.unit ▷ (h ≫ u)) ⊗≫ f ◁ σ ▷ u ⊗≫ 𝟙 _ := by

@@ -69,7 +69,7 @@ def hInv (_ : CatCommSq T.functor L R B.functor) : CatCommSq T.inverse R L B.inv
   iso' := isoWhiskerLeft _ (L.rightUnitor.symm ≪≫ isoWhiskerLeft L B.unitIso ≪≫
       (Functor.associator _ _ _).symm ≪≫
       isoWhiskerRight (iso T.functor L R B.functor).symm B.inverse ≪≫
-      Functor.associator _ _ _  ) ≪≫ (Functor.associator _ _ _).symm ≪≫
+      Functor.associator _ _ _ ) ≪≫ (Functor.associator _ _ _).symm ≪≫
       isoWhiskerRight T.counitIso _ ≪≫ Functor.leftUnitor _
 
 lemma hInv_hInv (h : CatCommSq T.functor L R B.functor) :

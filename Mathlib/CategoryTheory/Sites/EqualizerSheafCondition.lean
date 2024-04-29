@@ -288,7 +288,7 @@ The rightmost object of the fork diagram of https://stacks.math.columbia.edu/tag
 The difference between this and `Equalizer.Presieve.SecondObj P (ofArrows X π)` arrises if the
 family of arrows `π` contains duplicates. The `Presieve.ofArrows` doesn't see those.
 -/
-def SecondObj : Type max v u  :=
+def SecondObj : Type max v u :=
   ∏ (fun (ij : I × I) ↦ P.obj (op (pullback (π ij.1) (π ij.2))))
 
 @[ext]

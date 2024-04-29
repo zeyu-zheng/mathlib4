@@ -294,7 +294,7 @@ def ofTypeFunctor (m : Type u → Type v) [_root_.Functor m] [LawfulFunctor m] :
     where
   obj := m
   map f := Functor.map f
-  map_id := fun α => by funext X; apply id_map  /- Porting note: original proof is via
+  map_id := fun α => by funext X; apply id_map /- Porting note: original proof is via
   `fun α => _root_.Functor.map_id` but I cannot get Lean to find this. Reproduced its
   original proof -/
   map_comp f g := funext fun a => LawfulFunctor.comp_map f g _

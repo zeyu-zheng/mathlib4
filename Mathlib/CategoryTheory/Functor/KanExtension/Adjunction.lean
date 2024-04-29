@@ -64,7 +64,7 @@ noncomputable def lanAdjunction : L.lan ⊣ (whiskeringLeft C D H).obj L :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun F G => homEquivOfIsLeftKanExtension _ (L.lanUnit.app F) G
       homEquiv_naturality_left_symm := fun {F₁ F₂ G} f α =>
-        hom_ext_of_isLeftKanExtension _  (L.lanUnit.app F₁) _ _ (by
+        hom_ext_of_isLeftKanExtension _ (L.lanUnit.app F₁) _ _ (by
           ext X
           dsimp [homEquivOfIsLeftKanExtension]
           rw [descOfIsLeftKanExtension_fac_app, NatTrans.comp_app, ← assoc]

@@ -160,7 +160,7 @@ end PresheafHom.IsSheafFor
 variable (F G S)
 
 open PresheafHom.IsSheafFor in
-lemma presheafHom_isSheafFor  :
+lemma presheafHom_isSheafFor :
     Presieve.IsSheafFor (presheafHom F G) S.arrows := by
   intro x hx
   apply exists_unique_of_exists_of_unique

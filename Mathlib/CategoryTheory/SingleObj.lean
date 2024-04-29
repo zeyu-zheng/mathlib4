@@ -276,7 +276,7 @@ def toCat : MonCat ⥤ Cat where
 set_option linter.uppercaseLean3 false in
 #align Mon.to_Cat MonCat.toCat
 
-instance toCat_full : toCat.Full  where
+instance toCat_full : toCat.Full where
   map_surjective := (SingleObj.mapHom _ _).surjective
 set_option linter.uppercaseLean3 false in
 #align Mon.to_Cat_full MonCat.toCat_full

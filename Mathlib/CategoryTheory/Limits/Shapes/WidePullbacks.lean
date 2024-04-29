@@ -379,7 +379,7 @@ theorem hom_eq_lift (g : X ⟶ widePullback _ _ arrows) :
     g = lift (g ≫ base arrows) (fun j => g ≫ π arrows j) (by aesop_cat) := by
   apply eq_lift_of_comp_eq
   aesop_cat
-  rfl  -- Porting note: quite a few missing refl's in aesop_cat now
+  rfl -- Porting note: quite a few missing refl's in aesop_cat now
 #align category_theory.limits.wide_pullback.hom_eq_lift CategoryTheory.Limits.WidePullback.hom_eq_lift
 
 @[ext 1100]

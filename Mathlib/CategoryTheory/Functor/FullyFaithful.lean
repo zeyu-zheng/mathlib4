@@ -65,7 +65,7 @@ theorem map_injective (F : C ⥤ D) [Faithful F] :
 #align category_theory.functor.map_injective CategoryTheory.Functor.map_injective
 
 theorem mapIso_injective (F : C ⥤ D) [Faithful F] :
-    Function.Injective <| (F.mapIso : (X ≅ Y) → (F.obj X ≅ F.obj Y))  := fun _ _ h =>
+    Function.Injective <| (F.mapIso : (X ≅ Y) → (F.obj X ≅ F.obj Y)) := fun _ _ h =>
   Iso.ext (map_injective F (congr_arg Iso.hom h : _))
 #align category_theory.functor.map_iso_injective CategoryTheory.Functor.mapIso_injective
 
@@ -252,7 +252,7 @@ variable {D : Type u₂} [Category.{v₂} D] {E : Type u₃} [Category.{v₃} E]
 variable (F F' : C ⥤ D) (G : D ⥤ E)
 
 instance Faithful.comp [F.Faithful] [G.Faithful] :
-    (F ⋙ G).Faithful  where map_injective p := F.map_injective (G.map_injective p)
+    (F ⋙ G).Faithful where map_injective p := F.map_injective (G.map_injective p)
 #align category_theory.faithful.comp CategoryTheory.Functor.Faithful.comp
 
 theorem Faithful.of_comp [(F ⋙ G).Faithful] : F.Faithful :=

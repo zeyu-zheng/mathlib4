@@ -144,13 +144,13 @@ lemma associator_hom_fst (X Y Z : C) :
 
 @[reassoc (attr := simp)]
 lemma associator_hom_snd_fst (X Y Z : C) :
-    (α_ X Y Z).hom ≫ snd _ _ ≫ fst _ _ = fst _ _ ≫ snd _ _  := by
+    (α_ X Y Z).hom ≫ snd _ _ ≫ fst _ _ = fst _ _ ≫ snd _ _ := by
   erw [lift_snd_assoc, lift_fst]
   rfl
 
 @[reassoc (attr := simp)]
 lemma associator_hom_snd_snd (X Y Z : C) :
-    (α_ X Y Z).hom ≫ snd _ _ ≫ snd _ _ = snd _ _  := by
+    (α_ X Y Z).hom ≫ snd _ _ ≫ snd _ _ = snd _ _ := by
   erw [lift_snd_assoc, lift_snd]
   rfl
 

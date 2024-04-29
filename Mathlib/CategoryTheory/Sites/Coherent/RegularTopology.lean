@@ -62,7 +62,7 @@ instance {Y Y' : C} (π : Y ⟶ X) [EffectiveEpi π]
 
 /-- A sieve is a cover for the regular topology if and only if it contains an `EffectiveEpi`. -/
 theorem mem_sieves_iff_hasEffectiveEpi (S : Sieve X) :
-    (S ∈ (regularTopology C).sieves  X) ↔
+    (S ∈ (regularTopology C).sieves X) ↔
     ∃ (Y : C) (π : Y ⟶ X), EffectiveEpi π ∧ (S.arrows π) := by
   constructor
   · intro h

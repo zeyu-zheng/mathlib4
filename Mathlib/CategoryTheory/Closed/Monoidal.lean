@@ -74,7 +74,7 @@ def unitClosed : Closed (𝟙_ C) where
               dsimp
               rw [leftUnitor_naturality_assoc]
             -- This used to be automatic before leanprover/lean4#2644
-            homEquiv_naturality_right := by  -- aesop failure
+            homEquiv_naturality_right := by -- aesop failure
               dsimp
               simp }}
 #align category_theory.unit_closed CategoryTheory.unitClosed

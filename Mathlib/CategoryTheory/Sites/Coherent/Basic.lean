@@ -59,7 +59,7 @@ class Precoherent : Prop where
       EffectiveEpiFamily X₁ π₁ →
     ∃ (β : Type) (_ : Finite β) (X₂ : β → C) (π₂ : (b : β) → (X₂ b ⟶ B₂)),
       EffectiveEpiFamily X₂ π₂ ∧
-      ∃ (i : β → α) (ι : (b :  β) → (X₂ b ⟶ X₁ (i b))),
+      ∃ (i : β → α) (ι : (b : β) → (X₂ b ⟶ X₁ (i b))),
       ∀ (b : β), ι b ≫ π₁ _ = π₂ _ ≫ f
 
 /--

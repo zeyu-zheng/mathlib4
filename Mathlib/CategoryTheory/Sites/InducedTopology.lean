@@ -149,12 +149,12 @@ variable {C : Type v} [SmallCategory C] {D : Type v} [SmallCategory D] {G : C те
 variable {J : GrothendieckTopology C} {K : GrothendieckTopology D}
 variable (A : Type u) [Category.{v} A]
 
-instance [G.Full] [G.Faithful] [G.IsCoverDense K]  :
+instance [G.Full] [G.Faithful] [G.IsCoverDense K] :
     Functor.IsContinuous G (G.inducedTopologyOfIsCoverDense K) K := by
   apply Functor.IsCoverDense.isContinuous
   exact (G.locallyCoverDense_of_isCoverDense K).inducedTopology_coverPreserving
 
-instance [G.Full] [G.Faithful] [G.IsCoverDense K]  :
+instance [G.Full] [G.Faithful] [G.IsCoverDense K] :
     Functor.IsCocontinuous G (G.inducedTopologyOfIsCoverDense K) K :=
   (G.locallyCoverDense_of_isCoverDense K).inducedTopology_isCocontinuous
 

@@ -747,7 +747,7 @@ def isLimitOfFactors (f : X ⟶ Z) (g : Y ⟶ Z) (h : W ⟶ Z) [Mono h] (x : X �
         (show s.fst ≫ x = s.snd ≫ y from
           (cancel_mono h).1 <| by simp only [Category.assoc, hxh, hyh, s.condition])) :=
   PullbackCone.isLimitAux' _ fun t =>
-    have : fst t ≫ x ≫ h = snd t ≫ y ≫ h := by  -- Porting note: reassoc workaround
+    have : fst t ≫ x ≫ h = snd t ≫ y ≫ h := by -- Porting note: reassoc workaround
       rw [← Category.assoc, ← Category.assoc]
       apply congrArg (· ≫ h) t.condition
     ⟨hs.lift (PullbackCone.mk t.fst t.snd <| by rw [← hxh, ← hyh, this]),
@@ -1009,7 +1009,7 @@ theorem epi_of_isColimitMkIdId (f : X ⟶ Y)
     `y`.  -/
 def isColimitOfFactors (f : X ⟶ Y) (g : X ⟶ Z) (h : X ⟶ W) [Epi h] (x : W ⟶ Y) (y : W ⟶ Z)
     (hhx : h ≫ x = f) (hhy : h ≫ y = g) (s : PushoutCocone f g) (hs : IsColimit s) :
-    have reassoc₁ : h ≫ x ≫ inl s = f ≫ inl s := by  -- Porting note: working around reassoc
+    have reassoc₁ : h ≫ x ≫ inl s = f ≫ inl s := by -- Porting note: working around reassoc
       rw [← Category.assoc]; apply congrArg (· ≫ inl s) hhx
     have reassoc₂ : h ≫ y ≫ inr s = g ≫ inr s := by
       rw [← Category.assoc]; apply congrArg (· ≫ inr s) hhy

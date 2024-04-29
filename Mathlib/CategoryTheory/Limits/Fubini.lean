@@ -145,7 +145,7 @@ def coconeOfCoconeUncurry {D : DiagramOfCocones F} (Q : ∀ j, IsColimit (D.obj 
                 naturality := fun k k' f => by
                   dsimp; simp only [Category.comp_id]
                   conv_lhs =>
-                    arg 1; equals (F.map (𝟙 _)).app _ ≫  (F.obj j).map f =>
+                    arg 1; equals (F.map (𝟙 _)).app _ ≫ (F.obj j).map f =>
                       simp;
                   conv_lhs => arg 1; rw [← uncurry_obj_map F ((𝟙 j,f) : (j,k) ⟶ (j,k'))]
                   rw [c.w] } }
@@ -488,7 +488,7 @@ noncomputable def colimitIsoColimitCurryCompColim : colimit G ≅ colimit (curry
 @[simp, reassoc]
 theorem colimitIsoColimitCurryCompColim_ι_ι_inv {j} {k} :
     colimit.ι ((curry.obj G).obj j) k ≫ colimit.ι (curry.obj G ⋙ colim) j ≫
-      (colimitIsoColimitCurryCompColim G).inv  = colimit.ι _ (j, k) := by
+      (colimitIsoColimitCurryCompColim G).inv = colimit.ι _ (j, k) := by
   set_option tactic.skipAssignedInstances false in
   simp [colimitIsoColimitCurryCompColim, Trans.simple, HasColimit.isoOfNatIso,
     colimitUncurryIsoColimitCompColim]

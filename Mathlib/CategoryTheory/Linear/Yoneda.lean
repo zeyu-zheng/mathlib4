@@ -93,7 +93,7 @@ theorem whiskering_linearCoyoneda₂ :
 #align category_theory.whiskering_linear_coyoneda₂ CategoryTheory.whiskering_linearCoyoneda₂
 
 instance full_linearYoneda : (linearYoneda R C).Full :=
-  let _ :  Functor.Full (linearYoneda R C ⋙ (whiskeringRight _ _ _).obj
+  let _ : Functor.Full (linearYoneda R C ⋙ (whiskeringRight _ _ _).obj
     (forget (ModuleCat.{v} R))) := Yoneda.yoneda_full
   Functor.Full.of_comp_faithful (linearYoneda R C)
     ((whiskeringRight _ _ _).obj (forget (ModuleCat.{v} R)))
