@@ -252,7 +252,7 @@ protected instance _root_.PiFin.toExpr [ToLevel.{u}] [ToExpr α] (n : ℕ) : ToE
 
 -- Porting note: the next decl is commented out. TODO(eric-wieser)
 
--- /-- Convert a vector of pexprs to the pexpr constructing that vector.-/
+-- /-- Convert a vector of pexprs to the pexpr constructing that vector. -/
 -- unsafe def _root_.pi_fin.to_pexpr : ∀ {n}, (Fin n → pexpr) → pexpr
 --   | 0, v => ``(![])
 --   | n + 1, v => ``(vecCons $(v 0) $(_root_.pi_fin.to_pexpr <| vecTail v))
@@ -314,11 +314,11 @@ theorem cons_vecAppend (ho : o + 1 = m + 1 + n) (x : α) (u : Fin m → α) (v :
   split_ifs with h
   · rcases i with ⟨⟨⟩ | i, hi⟩
     · simp
-    · simp only [Nat.succ_eq_add_one, add_lt_add_iff_right, Fin.val_mk] at h
+    · simp only [add_lt_add_iff_right, Fin.val_mk] at h
       simp [h]
   · rcases i with ⟨⟨⟩ | i, hi⟩
     · simp at h
-    · rw [not_lt, Fin.val_mk, Nat.succ_eq_add_one, add_le_add_iff_right] at h
+    · rw [not_lt, Fin.val_mk, add_le_add_iff_right] at h
       simp [h, not_lt.2 h]
 #align matrix.cons_vec_append Matrix.cons_vecAppend
 

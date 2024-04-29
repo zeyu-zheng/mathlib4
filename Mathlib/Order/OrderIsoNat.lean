@@ -8,7 +8,7 @@ import Mathlib.Data.Nat.Lattice
 import Mathlib.Logic.Denumerable
 import Mathlib.Logic.Function.Iterate
 import Mathlib.Order.Hom.Basic
-import Mathlib.Data.Set.Basic
+import Mathlib.Data.Set.Subsingleton
 
 #align_import order.order_iso_nat from "leanprover-community/mathlib"@"210657c4ea4a4a7b234392f70a3a2a83346dfa90"
 
@@ -74,7 +74,7 @@ theorem acc_iff_no_decreasing_seq {x} :
       rintro ⟨x, hx⟩
       cases exists_not_acc_lt_of_not_acc hx with
       | intro w h => exact ⟨⟨w, h.1⟩, h.2⟩
-    obtain ⟨f, h⟩ := Classical.axiom_of_choice this
+    choose f h using this
     refine' fun E =>
       by_contradiction fun hx => E.elim' ⟨natGT (fun n => (f^[n] ⟨x, hx⟩).1) fun n => _, 0, rfl⟩
     simp only [Function.iterate_succ']
@@ -222,7 +222,9 @@ theorem WellFounded.monotone_chain_condition' [Preorder α] :
     exact ⟨n, fun m _ => H _ (Set.mem_range_self _)⟩
   · refine' RelEmbedding.wellFounded_iff_no_descending_seq.2 ⟨fun a => _⟩
     obtain ⟨n, hn⟩ := h (a.swap : ((· < ·) : ℕ → ℕ → Prop) →r ((· < ·) : α → α → Prop)).toOrderHom
-    exact hn n.succ n.lt_succ_self.le ((RelEmbedding.map_rel_iff _).2 n.lt_succ_self)
+    -- Adaptation note: 2024-04-23
+    -- We now need to supply `a.swap`, where previously `_` was enough.
+    exact hn n.succ n.lt_succ_self.le ((RelEmbedding.map_rel_iff a.swap).2 n.lt_succ_self)
 #align well_founded.monotone_chain_condition' WellFounded.monotone_chain_condition'
 
 /-- The "monotone chain condition" below is sometimes a convenient form of well foundedness. -/

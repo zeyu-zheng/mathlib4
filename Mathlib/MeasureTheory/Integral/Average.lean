@@ -363,11 +363,11 @@ theorem average_congr {f g : α → E} (h : f =ᵐ[μ] g) : ⨍ x, f x ∂μ = �
 #align measure_theory.average_congr MeasureTheory.average_congr
 
 theorem setAverage_congr (h : s =ᵐ[μ] t) : ⨍ x in s, f x ∂μ = ⨍ x in t, f x ∂μ := by
-  simp only [setAverage_eq, set_integral_congr_set_ae h, measure_congr h]
+  simp only [setAverage_eq, setIntegral_congr_set_ae h, measure_congr h]
 #align measure_theory.set_average_congr MeasureTheory.setAverage_congr
 
 theorem setAverage_congr_fun (hs : MeasurableSet s) (h : ∀ᵐ x ∂μ, x ∈ s → f x = g x) :
-    ⨍ x in s, f x ∂μ = ⨍ x in s, g x ∂μ := by simp only [average_eq, set_integral_congr_ae hs h]
+    ⨍ x in s, f x ∂μ = ⨍ x in s, g x ∂μ := by simp only [average_eq, setIntegral_congr_ae hs h]
 #align measure_theory.set_average_congr_fun MeasureTheory.setAverage_congr_fun
 
 theorem average_add_measure [IsFiniteMeasure μ] {ν : Measure α} [IsFiniteMeasure ν] {f : α → E}
@@ -525,7 +525,7 @@ theorem measure_le_setAverage_pos (hμ : μ s ≠ 0) (hμ₁ : μ s ≠ ∞) (hf
     exact AEStronglyMeasurable.nullMeasurableSet_le hf.1 aestronglyMeasurable_const
   haveI := Fact.mk hμ₁.lt_top
   refine' (integral_sub_average (μ.restrict s) f).not_gt _
-  refine' (set_integral_pos_iff_support_of_nonneg_ae _ _).2 _
+  refine' (setIntegral_pos_iff_support_of_nonneg_ae _ _).2 _
   · refine' eq_bot_mono (measure_mono fun x hx => _) H
     simp only [Pi.zero_apply, sub_nonneg, mem_compl_iff, mem_setOf_eq, not_le] at hx
     exact hx.le
@@ -839,7 +839,7 @@ theorem tendsto_integral_smul_of_tendsto_average_norm_sub
       apply Integrable.sub _ (hig.smul_const _)
       have A : Function.support (fun y ↦ g i y • f y) ⊆ a i := by
         apply Subset.trans _ hisupp
-        exact Function.support_smul_subset_left _ _
+        exact Function.support_smul_subset_left (g i) f
       rw [← integrableOn_iff_integrable_of_support_subset A]
       apply Integrable.smul_of_top_right hif
       exact memℒp_top_of_bound hig.aestronglyMeasurable.restrict
@@ -863,7 +863,7 @@ theorem tendsto_integral_smul_of_tendsto_average_norm_sub
       intro x hx
       have : g i x = 0 := by rw [← Function.nmem_support]; exact fun h ↦ hx (hi h)
       simp [this]
-    rw [← set_integral_eq_integral_of_forall_compl_eq_zero this (μ := μ)]
+    rw [← setIntegral_eq_integral_of_forall_compl_eq_zero this (μ := μ)]
     refine' integral_mono_of_nonneg (eventually_of_forall (fun x ↦ by positivity)) _
       (eventually_of_forall (fun x ↦ _))
     · apply (Integrable.sub h''i _).norm.const_mul

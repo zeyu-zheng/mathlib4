@@ -54,10 +54,10 @@ theorem eval₂_one_cyclotomic_prime_pow {R S : Type*} [CommRing R] [Semiring S]
 private theorem cyclotomic_neg_one_pos {n : ℕ} (hn : 2 < n) {R} [LinearOrderedCommRing R] :
     0 < eval (-1 : R) (cyclotomic n R) := by
   haveI := NeZero.of_gt hn
-  rw [← map_cyclotomic_int, ← Int.cast_one, ← Int.cast_neg, eval_int_cast_map, Int.coe_castRingHom,
+  rw [← map_cyclotomic_int, ← Int.cast_one, ← Int.cast_neg, eval_intCast_map, Int.coe_castRingHom,
     Int.cast_pos]
   suffices 0 < eval (↑(-1 : ℤ)) (cyclotomic n ℝ) by
-    rw [← map_cyclotomic_int n ℝ, eval_int_cast_map, Int.coe_castRingHom] at this
+    rw [← map_cyclotomic_int n ℝ, eval_intCast_map, Int.coe_castRingHom] at this
     simpa only [Int.cast_pos] using this
   simp only [Int.cast_one, Int.cast_neg]
   have h0 := cyclotomic_coeff_zero ℝ hn.le
@@ -115,13 +115,13 @@ theorem cyclotomic_pos {n : ℕ} (hn : 2 < n) {R} [LinearOrderedCommRing R] (x :
 
 theorem cyclotomic_pos_and_nonneg (n : ℕ) {R} [LinearOrderedCommRing R] (x : R) :
     (1 < x → 0 < eval x (cyclotomic n R)) ∧ (1 ≤ x → 0 ≤ eval x (cyclotomic n R)) := by
-  rcases n with (_ | _ | _ | n) <;>
-    simp [cyclotomic_zero, cyclotomic_one, cyclotomic_two, succ_eq_add_one, eval_X, eval_one,
-      eval_add, eval_sub, sub_nonneg, sub_pos, zero_lt_one, zero_le_one, imp_true_iff, imp_self,
-      and_self_iff]
-  · constructor <;> intro <;> linarith
-  · have : 2 < n + 3 := by linarith
-    constructor <;> intro <;> [skip; apply le_of_lt] <;> apply cyclotomic_pos this
+  rcases n with (_ | _ | _ | n)
+  · simp only [cyclotomic_zero, eval_one, zero_lt_one, implies_true, zero_le_one, and_self]
+  · simp only [zero_add, cyclotomic_one, eval_sub, eval_X, eval_one, sub_pos, imp_self, sub_nonneg,
+      and_self]
+  · simp only [zero_add, reduceAdd, cyclotomic_two, eval_add, eval_X, eval_one]
+    constructor <;> intro <;> linarith
+  · constructor <;> intro <;> [skip; apply le_of_lt] <;> apply cyclotomic_pos (by omega)
 #align polynomial.cyclotomic_pos_and_nonneg Polynomial.cyclotomic_pos_and_nonneg
 
 /-- Cyclotomic polynomials are always positive on inputs larger than one.
@@ -144,7 +144,7 @@ theorem eval_one_cyclotomic_not_prime_pow {R : Type*} [Ring R] {n : ℕ}
   · simp
   have hn : 1 < n := one_lt_iff_ne_zero_and_ne_one.mpr ⟨hn'.ne', (h Nat.prime_two 0).symm⟩
   rsuffices h | h : eval 1 (cyclotomic n ℤ) = 1 ∨ eval 1 (cyclotomic n ℤ) = -1
-  · have := eval_int_cast_map (Int.castRingHom R) (cyclotomic n ℤ) 1
+  · have := eval_intCast_map (Int.castRingHom R) (cyclotomic n ℤ) 1
     simpa only [map_cyclotomic, Int.cast_one, h, eq_intCast] using this
   · exfalso
     linarith [cyclotomic_nonneg n (le_refl (1 : ℤ))]

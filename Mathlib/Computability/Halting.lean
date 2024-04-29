@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
 import Mathlib.Computability.PartrecCode
-import Mathlib.Data.Set.Basic
+import Mathlib.Data.Set.Subsingleton
 
 #align_import computability.halting from "leanprover-community/mathlib"@"a50170a88a47570ed186b809ca754110590f9476"
 
@@ -259,11 +259,11 @@ theorem computable_iff_re_compl_re {p : α → Prop} [DecidablePred p] :
           simp only [Part.mem_map_iff, Part.mem_assert_iff, Part.mem_some_iff, exists_prop,
             and_true, exists_const] at hx hy
           cases hy.1 hx.1)
-      · refine' Partrec.of_eq pk fun n => Part.eq_some_iff.2 _
-        rw [hk]
-        simp only [Part.mem_map_iff, Part.mem_assert_iff, Part.mem_some_iff, exists_prop, and_true,
-          true_eq_decide_iff, and_self, exists_const, false_eq_decide_iff]
-        apply Decidable.em⟩⟩
+      refine' Partrec.of_eq pk fun n => Part.eq_some_iff.2 _
+      rw [hk]
+      simp only [Part.mem_map_iff, Part.mem_assert_iff, Part.mem_some_iff, exists_prop, and_true,
+        true_eq_decide_iff, and_self, exists_const, false_eq_decide_iff]
+      apply Decidable.em⟩⟩
 #align computable_pred.computable_iff_re_compl_re ComputablePred.computable_iff_re_compl_re
 
 theorem computable_iff_re_compl_re' {p : α → Prop} :
@@ -343,7 +343,7 @@ protected theorem map {n f} {g : Vector ℕ (n + 1) → ℕ} (hf : @Partrec' n f
 #align nat.partrec'.map Nat.Partrec'.map
 
 /-- Analogous to `Nat.Partrec'` for `ℕ`-valued functions, a predicate for partial recursive
-  vector-valued functions.-/
+  vector-valued functions. -/
 def Vec {n m} (f : Vector ℕ n → Vector ℕ m) :=
   ∀ i, Partrec' fun v => (f v).get i
 #align nat.partrec'.vec Nat.Partrec'.Vec

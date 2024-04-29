@@ -3,6 +3,7 @@ Copyright (c) 2023 Joël Riou. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 -/
+import Mathlib.Algebra.Order.Ring.CharZero
 import Mathlib.CategoryTheory.Category.Preorder
 import Mathlib.CategoryTheory.EqToHom
 import Mathlib.CategoryTheory.Functor.Const
@@ -355,7 +356,7 @@ lemma map_comp {i j k : Fin (n + 1 + 1)} (hij : i ≤ j) (hjk : j ≤ k) :
     · dsimp
       rw [id_comp]
     · obtain _ | _ | k := k
-      · simp at hjk
+      · simp [Nat.succ.injEq] at hjk
       · simp
       · rfl
     · obtain _ | _ | k := k
@@ -378,7 +379,7 @@ def precomp {X : C} (f : X ⟶ F.left) : ComposableArrows C (n + 1) where
   obj := Precomp.obj F X
   map g := Precomp.map F f _ _ (leOfHom g)
   map_id := Precomp.map_id F f
-  map_comp g g' := (Precomp.map_comp F f (leOfHom g) (leOfHom g'))
+  map_comp g g' := Precomp.map_comp F f (leOfHom g) (leOfHom g')
 
 /-- Constructor for `ComposableArrows C 2`. -/
 @[simp]
@@ -509,8 +510,7 @@ lemma hom_ext_succ {F G : ComposableArrows C (n + 1)} {f g : F ⟶ G}
   ext ⟨i, hi⟩
   obtain _ | i := i
   · exact h₀
-  · rw [Nat.succ_eq_add_one] at hi
-    exact congr_app h₁ ⟨i, by valid⟩
+  · exact congr_app h₁ ⟨i, by valid⟩
 
 /-- Inductive construction of isomorphisms in `ComposableArrows C (n + 1)`: in order to
 construct an isomorphism `F ≅ G`, it suffices to provide `α : F.obj' 0 ≅ G.obj' 0` and

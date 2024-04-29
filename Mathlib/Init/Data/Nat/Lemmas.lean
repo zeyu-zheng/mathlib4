@@ -3,10 +3,10 @@ Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Jeremy Avigad
 -/
-import Std.Data.Nat.Lemmas
 import Std.WF
 import Mathlib.Init.Data.Nat.Basic
 import Mathlib.Init.Order.Defs
+import Std.Data.Nat.Basic
 
 #align_import init.data.nat.lemmas from "leanprover-community/lean"@"38b59111b2b4e6c572582b27e8937e92fc70ac02"
 
@@ -107,7 +107,7 @@ theorem eq_zero_of_mul_eq_zero : ∀ {n m : ℕ}, n * m = 0 → n = 0 ∨ m = 0
 
 #align nat.lt_iff_le_not_le Nat.lt_iff_le_not_le
 
-instance linearOrder : LinearOrder ℕ where
+instance instLinearOrder : LinearOrder ℕ where
   le := Nat.le
   le_refl := @Nat.le_refl
   le_trans := @Nat.le_trans
@@ -118,7 +118,7 @@ instance linearOrder : LinearOrder ℕ where
   decidableLT := inferInstance
   decidableLE := inferInstance
   decidableEq := inferInstance
-#align nat.linear_order Nat.linearOrder
+#align nat.linear_order Nat.instLinearOrder
 
 #align nat.eq_zero_of_le_zero Nat.eq_zero_of_le_zero
 
@@ -214,10 +214,6 @@ protected def ltByCases {a b : ℕ} {C : Sort u} (h₁ : a < b → C) (h₂ : a 
 #align nat.mul_le_mul_of_nonneg_left Nat.mul_le_mul_of_nonneg_left
 
 #align nat.mul_le_mul_of_nonneg_right Nat.mul_le_mul_of_nonneg_right
-
-#align nat.mul_lt_mul Nat.mul_lt_mulₓ
-
-#align nat.mul_lt_mul' Nat.mul_lt_mul'ₓ
 
 -- TODO: there are four variations, depending on which variables we assume to be nonneg
 #align nat.mul_le_mul Nat.mul_le_mul
@@ -404,8 +400,6 @@ Many lemmas are proven more generally in mathlib `algebra/order/sub` -/
 #align nat.add_sub_cancel_left Nat.add_sub_cancel_left
 
 #align nat.sub_sub Nat.sub_sub
-
-#align nat.le_of_le_of_sub_le_sub_right Nat.le_of_le_of_sub_le_sub_right
 
 #align nat.sub_le_sub_iff_right Nat.sub_le_sub_iff_right
 

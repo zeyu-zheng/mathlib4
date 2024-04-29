@@ -3,7 +3,7 @@ Copyright (c) 2014 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Jeremy Avigad
 -/
-import Mathlib.Data.Nat.Order.Basic
+import Mathlib.Algebra.Order.Ring.Nat
 
 #align_import data.nat.dist from "leanprover-community/mathlib"@"d50b12ae8e2bd910d08a94823976adae9825718b"
 
@@ -24,7 +24,7 @@ def dist (n m : ℕ) :=
 -- Should be aligned to `Nat.dist.eq_def`, but that is generated on demand and isn't present yet.
 #noalign nat.dist.def
 
-theorem dist_comm (n m : ℕ) : dist n m = dist m n := by simp [Nat.dist, add_comm]
+theorem dist_comm (n m : ℕ) : dist n m = dist m n := by simp [dist, add_comm]
 #align nat.dist_comm Nat.dist_comm
 
 @[simp]

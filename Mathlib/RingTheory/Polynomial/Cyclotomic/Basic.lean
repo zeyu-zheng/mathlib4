@@ -5,9 +5,9 @@ Authors: Riccardo Brasca
 -/
 import Mathlib.Algebra.NeZero
 import Mathlib.Algebra.Polynomial.BigOperators
+import Mathlib.Algebra.Polynomial.Lifts
+import Mathlib.Algebra.Polynomial.Splits
 import Mathlib.RingTheory.RootsOfUnity.Complex
-import Mathlib.Data.Polynomial.Lifts
-import Mathlib.Data.Polynomial.Splits
 import Mathlib.FieldTheory.RatFunc
 import Mathlib.NumberTheory.ArithmeticFunction
 import Mathlib.RingTheory.RootsOfUnity.Basic
@@ -620,7 +620,7 @@ theorem coprime_of_root_cyclotomic {n : ℕ} (hpos : 0 < n) {p : ℕ} [hprime : 
   apply Nat.Coprime.symm
   rw [hprime.1.coprime_iff_not_dvd]
   intro h
-  replace h := (ZMod.nat_cast_zmod_eq_zero_iff_dvd a p).2 h
+  replace h := (ZMod.natCast_zmod_eq_zero_iff_dvd a p).2 h
   rw [IsRoot.def, eq_natCast, h, ← coeff_zero_eq_eval_zero] at hroot
   by_cases hone : n = 1
   · simp only [hone, cyclotomic_one, zero_sub, coeff_one_zero, coeff_X_zero, neg_eq_zero,

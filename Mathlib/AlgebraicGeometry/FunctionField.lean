@@ -48,8 +48,7 @@ noncomputable instance [IrreducibleSpace X.carrier] (U : Opens X.carrier) [Nonem
   (X.germToFunctionField U).toAlgebra
 
 noncomputable instance [IsIntegral X] : Field X.functionField := by
-  apply fieldOfIsUnitOrEqZero
-  intro a
+  refine .ofIsUnitOrEqZero fun a ↦ ?_
   obtain ⟨U, m, s, rfl⟩ := TopCat.Presheaf.germ_exist _ _ a
   rw [or_iff_not_imp_right, ← (X.presheaf.germ ⟨_, m⟩).map_zero]
   intro ha
@@ -107,7 +106,8 @@ instance functionField_isScalarTower [IrreducibleSpace X.carrier] (U : Opens X.c
   rw [X.presheaf.germ_stalkSpecializes]
 #align algebraic_geometry.function_field_is_scalar_tower AlgebraicGeometry.functionField_isScalarTower
 
-noncomputable instance (R : CommRingCat) [IsDomain R] :
+-- Adaptation note: 2024-04-23
+noncomputable instance (R : CommRingCat.{u}) [IsDomain R] :
     Algebra R (Scheme.Spec.obj <| op R).functionField :=
   RingHom.toAlgebra <| by change CommRingCat.of R ⟶ _; apply StructureSheaf.toStalk
 

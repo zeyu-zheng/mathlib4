@@ -254,10 +254,10 @@ theorem trace_comp_comm :
     (compl₁₂_inj (show Surjective (dualTensorHom R N M) from (dualTensorHomEquiv R N M).surjective)
         (show Surjective (dualTensorHom R M N) from (dualTensorHomEquiv R M N).surjective)).1
   ext g m f n
-  simp only [AlgebraTensorModule.curry_apply, TensorProduct.curry_apply, coe_restrictScalars,
-    -- Note: #8386 had to change `map_smulₛₗ` into `map_smulₛₗ _`
-    compl₁₂_apply, compr₂_apply, llcomp_apply', comp_dualTensorHom, map_smulₛₗ _, RingHom.id_apply,
-    trace_eq_contract_apply, contractLeft_apply, smul_eq_mul, mul_comm, flip_apply]
+  simp only [AlgebraTensorModule.curry_apply, TensorProduct.curry_apply,
+    coe_restrictScalars, compl₁₂_apply, compr₂_apply, flip_apply, llcomp_apply',
+    comp_dualTensorHom, LinearMapClass.map_smul, trace_eq_contract_apply,
+    contractLeft_apply, smul_eq_mul, mul_comm]
 #align linear_map.trace_comp_comm LinearMap.trace_comp_comm
 
 variable {R M N P}
@@ -302,7 +302,7 @@ theorem trace_conj' (f : M →ₗ[R] M) (e : M ≃ₗ[R] N) : trace R N (e.conj 
     haveI := (Module.free_def R N).mpr ⟨_, ⟨(b.map e).reindex (e.toEquiv.image _)⟩⟩
     rw [e.conj_apply, trace_comp_comm', ← comp_assoc, LinearEquiv.comp_coe,
       LinearEquiv.self_trans_symm, LinearEquiv.refl_toLinearMap, id_comp]
-  · rw [trace, trace, dif_neg hM, dif_neg]; rfl
+  · rw [trace, trace, dif_neg hM, dif_neg ?_, zero_apply, zero_apply]
     rintro ⟨s, ⟨b⟩⟩
     exact hM ⟨s.image e.symm, ⟨(b.map e.symm).reindex
       ((e.symm.toEquiv.image s).trans (Equiv.Set.ofEq Finset.coe_image.symm))⟩⟩

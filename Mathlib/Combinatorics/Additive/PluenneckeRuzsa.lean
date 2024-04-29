@@ -3,11 +3,10 @@ Copyright (c) 2022 Yaël Dillies, George Shakan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, George Shakan
 -/
+import Mathlib.Algebra.GroupPower.Order
 import Mathlib.Combinatorics.Enumerative.DoubleCounting
 import Mathlib.Data.Finset.Pointwise
-import Mathlib.Data.NNRat.Lemmas
 import Mathlib.Tactic.GCongr
-import Mathlib.Algebra.GroupPower.Order
 
 #align_import combinatorics.additive.pluennecke_ruzsa from "leanprover-community/mathlib"@"4aab2abced69a9e579b1e6dc2856ed3db48e2cbd"
 
@@ -86,6 +85,12 @@ theorem card_mul_mul_le_card_mul_mul_card_div (A B C : Finset α) :
 #align finset.card_mul_mul_le_card_mul_mul_card_div Finset.card_mul_mul_le_card_mul_mul_card_div
 #align finset.card_add_mul_le_card_add_mul_card_sub Finset.card_add_mul_le_card_add_mul_card_sub
 
+-- Adaptation note: 2024-04-23
+-- This requires a massive increase in the heartbeats limit.
+-- We need to diagnose if the proof is doing something silly,
+-- or if this reflects a regression in IsDefeq from
+-- https://github.com/leanprover/lean4/pull/3965 or https://github.com/leanprover/lean4/pull/3977
+set_option maxHeartbeats 800000
 @[to_additive]
 theorem mul_pluennecke_petridis (C : Finset α)
     (hA : ∀ A' ⊆ A, (A * B).card * A'.card ≤ (A' * B).card * A.card) :

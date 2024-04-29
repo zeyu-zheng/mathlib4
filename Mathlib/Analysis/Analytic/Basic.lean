@@ -956,7 +956,7 @@ theorem Asymptotics.IsBigO.continuousMultilinearMap_apply_eq_zero {n : ℕ} {p :
   · exact norm_eq_zero.mp (by
       -- Porting note: the symmetric difference of the `simpa only` sets:
       -- added `Nat.zero_eq, zero_add, pow_one`
-      -- removed `zero_pow, Ne, Nat.one_ne_zero, not_false_iff`
+      -- removed `zero_pow, Ne.def, Nat.one_ne_zero, not_false_iff`
       simpa only [Nat.zero_eq, fin0_apply_norm, norm_eq_zero, norm_zero, zero_add, pow_one,
         mul_zero, norm_le_zero_iff] using ht 0 (δε (Metric.mem_ball_self δ_pos)))
   · refine' Or.elim (Classical.em (y = 0))
@@ -1022,9 +1022,7 @@ theorem HasFPowerSeriesAt.eq_zero {p : FormalMultilinearSeries 𝕜 𝕜 E} {x :
   funext n
   ext x
   rw [← mkPiRing_apply_one_eq_self (p n)]
-  -- Porting note: nasty hack, was `simp [h.apply_eq_zero n 1]`
-  have := Or.intro_right ?_ (h.apply_eq_zero n 1)
-  simpa using this
+  simp [h.apply_eq_zero n 1]
 #align has_fpower_series_at.eq_zero HasFPowerSeriesAt.eq_zero
 
 /-- One-dimensional formal multilinear series representing the same function are equal. -/

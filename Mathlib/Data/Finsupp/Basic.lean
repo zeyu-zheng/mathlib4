@@ -8,7 +8,7 @@ import Mathlib.Algebra.Regular.SMul
 import Mathlib.Data.Finset.Preimage
 import Mathlib.Data.Rat.BigOperators
 import Mathlib.GroupTheory.GroupAction.Hom
-import Mathlib.Data.Set.Basic
+import Mathlib.Data.Set.Subsingleton
 
 #align_import data.finsupp.basic from "leanprover-community/mathlib"@"f69db8cecc668e2d5894d7e9bfc491da60db3b9f"
 
@@ -481,7 +481,7 @@ theorem mapDomain_comp {f : α → β} {g : β → γ} :
   · intro
     exact single_add _
   refine' sum_congr fun _ _ => sum_single_index _
-  · exact single_zero _
+  exact single_zero _
 #align finsupp.map_domain_comp Finsupp.mapDomain_comp
 
 @[simp]
@@ -882,7 +882,7 @@ def filter (p : α → Prop) [DecidablePred p] (f : α →₀ M) : α →₀ M w
   toFun a := if p a then f a else 0
   support := f.support.filter p
   mem_support_toFun a := by
-    simp only -- Porting note: necessary to beta reduce to activate `split_ifs`
+    beta_reduce -- Porting note(#12129): additional beta reduction needed to activate `split_ifs`
     split_ifs with h <;>
       · simp only [h, mem_filter, mem_support_iff]
         tauto
@@ -1647,15 +1647,19 @@ instance noZeroSMulDivisors [Semiring R] [AddCommMonoid M] [Module R M] {ι : Ty
     [NoZeroSMulDivisors R M] : NoZeroSMulDivisors R (ι →₀ M) :=
   ⟨fun h =>
     or_iff_not_imp_left.mpr fun hc =>
-      Finsupp.ext fun i => (smul_eq_zero.mp (DFunLike.ext_iff.mp h i)).resolve_left hc⟩
+      -- Adaptation note: 2024-04-23
+      -- Prior to https://github.com/leanprover/lean4/pull/3965, we didn't need the `R := R` below.
+      -- Hopefully a fix to https://github.com/leanprover/lean4/pull/3982
+      -- will also address this one.
+      Finsupp.ext fun i => ((smul_eq_zero (R := R)).mp (DFunLike.ext_iff.mp h i)).resolve_left hc⟩
 #align finsupp.no_zero_smul_divisors Finsupp.noZeroSMulDivisors
 
-section DistribMulActionHom
+section DistribMulActionSemiHom
 
 variable [Semiring R]
 variable [AddCommMonoid M] [AddCommMonoid N] [DistribMulAction R M] [DistribMulAction R N]
 
-/-- `Finsupp.single` as a `DistribMulActionHom`.
+/-- `Finsupp.single` as a `DistribMulActionSemiHom`.
 
 See also `Finsupp.lsingle` for the version as a linear map. -/
 def DistribMulActionHom.single (a : α) : M →+[R] α →₀ M :=
@@ -1681,7 +1685,7 @@ theorem distribMulActionHom_ext' {f g : (α →₀ M) →+[R] N}
   distribMulActionHom_ext fun a => DistribMulActionHom.congr_fun (h a)
 #align finsupp.distrib_mul_action_hom_ext' Finsupp.distribMulActionHom_ext'
 
-end DistribMulActionHom
+end DistribMulActionSemiHom
 
 section
 
@@ -1859,7 +1863,7 @@ def splitSupport (l : (Σi, αs i) →₀ M) : Finset ι :=
 #align finsupp.split_support Finsupp.splitSupport
 
 theorem mem_splitSupport_iff_nonzero (i : ι) : i ∈ splitSupport l ↔ split l i ≠ 0 := by
-  rw [splitSupport, @mem_image _ _ (Classical.decEq _), Ne, ← support_eq_empty, ← Ne.eq_def, ←
+  rw [splitSupport, @mem_image _ _ (Classical.decEq _), Ne, ← support_eq_empty, ← Ne, ←
     Finset.nonempty_iff_ne_empty, split, comapDomain, Finset.Nonempty]
   -- porting note (#10754): had to add the `Classical.decEq` instance manually
   simp only [exists_prop, Finset.mem_preimage, exists_and_right, exists_eq_right, mem_support_iff,

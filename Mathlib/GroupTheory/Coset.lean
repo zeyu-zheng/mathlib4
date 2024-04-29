@@ -8,7 +8,7 @@ import Mathlib.Data.Fintype.Prod
 import Mathlib.GroupTheory.GroupAction.Basic
 import Mathlib.GroupTheory.Subgroup.MulOpposite
 import Mathlib.GroupTheory.Subgroup.Actions
-import Mathlib.Data.Set.Basic
+import Mathlib.Data.Set.Subsingleton
 
 #align_import group_theory.coset from "leanprover-community/mathlib"@"f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c"
 
@@ -289,7 +289,7 @@ namespace QuotientGroup
 variable [Group α] (s : Subgroup α)
 
 /-- The equivalence relation corresponding to the partition of a group by left cosets
-of a subgroup.-/
+of a subgroup. -/
 @[to_additive "The equivalence relation corresponding to the partition of a group by left cosets
  of a subgroup."]
 def leftRel : Setoid α :=
