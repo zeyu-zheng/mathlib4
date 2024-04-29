@@ -86,7 +86,7 @@ theorem rightLim_eq_of_tendsto [TopologicalSpace α] [OrderTopology α] [T2Space
 
 theorem rightLim_eq_of_eq_bot [TopologicalSpace α] [OrderTopology α] (f : α → β) {a : α}
     (h : 𝓝[>] a = ⊥) : rightLim f a = f a :=
-  @leftLim_eq_of_eq_bot αᵒᵈ _ _ _ _ _  f a h
+  @leftLim_eq_of_eq_bot αᵒᵈ _ _ _ _ _ f a h
 
 end
 

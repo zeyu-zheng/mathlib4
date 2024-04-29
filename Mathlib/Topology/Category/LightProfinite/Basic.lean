@@ -115,7 +115,7 @@ structure LightProfinite' : Type u where
 
 /-- A `LightProfinite'` yields a `Profinite`. -/
 def LightProfinite'.toProfinite (S : LightProfinite') : Profinite :=
-  limit (S.diagram  ⋙ FintypeCat.Skeleton.equivalence.functor ⋙ FintypeCat.toProfinite.{u})
+  limit (S.diagram ⋙ FintypeCat.Skeleton.equivalence.functor ⋙ FintypeCat.toProfinite.{u})
 
 instance : Category LightProfinite' := InducedCategory.category LightProfinite'.toProfinite
 

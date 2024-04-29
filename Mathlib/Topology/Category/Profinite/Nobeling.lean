@@ -411,7 +411,7 @@ theorem evalFacProps {l : Products I} (J K : I → Prop)
     ext; simp [Homeomorph.setCongr, Products.eval_eq]
   rw [ProjRestricts, ← Function.comp.assoc, this, ← evalFacProp (π C K) J h]
 
-theorem prop_of_isGood  {l : Products I} (J : I → Prop) [∀ j, Decidable (J j)]
+theorem prop_of_isGood {l : Products I} (J : I → Prop) [∀ j, Decidable (J j)]
     (h : l.isGood (π C J)) : ∀ a, a ∈ l.val → J a := by
   intro i hi
   by_contra h'
@@ -478,7 +478,7 @@ theorem eval_eq_πJ (l : Products I) (hl : l.isGood (π C (· ∈ s))) :
   ext f
   simp only [πJ, LocallyConstant.comapₗ, LinearMap.coe_mk, AddHom.coe_mk,
     (continuous_projRestrict C (· ∈ s)), LocallyConstant.coe_comap, Function.comp_apply]
-  exact (congr_fun (Products.evalFacProp C (· ∈ s) (Products.prop_of_isGood  C (· ∈ s) hl)) _).symm
+  exact (congr_fun (Products.evalFacProp C (· ∈ s) (Products.prop_of_isGood C (· ∈ s) hl)) _).symm
 
 /-- `π C (· ∈ s)` is finite for a finite set `s`. -/
 noncomputable
@@ -737,7 +737,7 @@ def P (o : Ordinal) : Prop :=
   (∀ (C : Set (I → Bool)), IsClosed C → contained C o →
     LinearIndependent ℤ (GoodProducts.eval C))
 
-theorem Products.prop_of_isGood_of_contained  {l : Products I} (o : Ordinal) (h : l.isGood C)
+theorem Products.prop_of_isGood_of_contained {l : Products I} (o : Ordinal) (h : l.isGood C)
     (hsC : contained C o) (i : I) (hi : i ∈ l.val) : ord I i < o := by
   by_contra h'
   apply h
@@ -939,7 +939,7 @@ theorem isGood_mono {l : Products I} {o₁ o₂ : Ordinal} (h : o₁ ≤ o₂)
     (hl : l.isGood (π C (ord I · < o₁))) : l.isGood (π C (ord I · < o₂)) := by
   intro hl'
   apply hl
-  rwa [eval_πs_image' C h (prop_of_isGood  C _ hl), ← eval_πs' C h (prop_of_isGood  C _ hl),
+  rwa [eval_πs_image' C h (prop_of_isGood C _ hl), ← eval_πs' C h (prop_of_isGood C _ hl),
     Submodule.apply_mem_span_image_iff_mem_span (injective_πs' C h)] at hl'
 
 end Products
@@ -1032,7 +1032,7 @@ theorem smaller_mono {o₁ o₂ : Ordinal} (h : o₁ ≤ o₂) : smaller C o₁ 
   refine ⟨?_, ?_⟩
   · use ⟨l, Products.isGood_mono C h gl⟩
     ext x
-    rw [eval, ← Products.eval_πs' _ h (Products.prop_of_isGood  C _ gl), eval]
+    rw [eval, ← Products.eval_πs' _ h (Products.prop_of_isGood C _ gl), eval]
   · rw [← LocallyConstant.coe_inj, coe_πs C o₂, ← LocallyConstant.toFun_eq_coe, coe_πs',
       Function.comp.assoc, projRestricts_comp_projRestrict C _, coe_πs]
     rfl
@@ -1065,9 +1065,9 @@ theorem GoodProducts.union : range C = ⋃ (e : {o' // o' < o}), (smaller C e.va
     rw [contained_eq_proj C o hsC, Products.limitOrdinal C ho] at hl
     obtain ⟨o', ho'⟩ := hl
     refine ⟨o', ho'.1, eval (π C (ord I · < o')) ⟨l, ho'.2⟩, ⟨l, ho'.2, rfl⟩, ?_⟩
-    exact Products.eval_πs C (Products.prop_of_isGood  C _ ho'.2)
+    exact Products.eval_πs C (Products.prop_of_isGood C _ ho'.2)
   · obtain ⟨o', h, _, ⟨l, hl, rfl⟩, rfl⟩ := hp
-    refine ⟨l, ?_, (Products.eval_πs C (Products.prop_of_isGood  C _ hl)).symm⟩
+    refine ⟨l, ?_, (Products.eval_πs C (Products.prop_of_isGood C _ hl)).symm⟩
     rw [contained_eq_proj C o hsC]
     exact Products.isGood_mono C (le_of_lt h) hl
 
@@ -1202,7 +1202,7 @@ noncomputable
 def SwapTrue : (I → Bool) → I → Bool :=
   fun f i ↦ if ord I i = o then true else f i
 
-theorem continuous_swapTrue  :
+theorem continuous_swapTrue :
     Continuous (SwapTrue o : (I → Bool) → I → Bool) := by
   dsimp (config := { unfoldPartialApp := true }) [SwapTrue]
   apply continuous_pi
@@ -1389,9 +1389,9 @@ def sum_to : (GoodProducts (π C (ord I · < o))) ⊕ (MaxProducts C ho) → Pro
 
 theorem injective_sum_to : Function.Injective (sum_to C ho) := by
   refine Function.Injective.sum_elim Subtype.val_injective Subtype.val_injective
-    (fun ⟨a,ha⟩ ⟨b,hb⟩  ↦ (fun (hab : a = b) ↦ ?_))
+    (fun ⟨a,ha⟩ ⟨b,hb⟩ ↦ (fun (hab : a = b) ↦ ?_))
   rw [← hab] at hb
-  have ha' := Products.prop_of_isGood  C _ ha (term I ho) hb.2
+  have ha' := Products.prop_of_isGood C _ ha (term I ho) hb.2
   simp only [ord_term_aux, lt_self_iff_false] at ha'
 
 theorem sum_to_range :
@@ -1457,7 +1457,7 @@ theorem square_commutes : SumEval C ho ∘ Sum.inl =
     ModuleCat.ofHom (πs C o) ∘ eval (π C (ord I · < o)) := by
   ext l
   dsimp [SumEval]
-  rw [← Products.eval_πs C (Products.prop_of_isGood  _ _ l.prop)]
+  rw [← Products.eval_πs C (Products.prop_of_isGood _ _ l.prop)]
   rfl
 
 end GoodProducts

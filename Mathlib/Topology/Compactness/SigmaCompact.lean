@@ -113,7 +113,7 @@ lemma Inducing.isSigmaCompact_iff {f : X → Y} {s : Set X}
         exact (subset_iUnion _ n).trans hcov.le
       apply hf.isCompact_iff.mpr (this.symm ▸ (hcomp n))
     · calc ⋃ n, f ⁻¹' L n ∩ s
-        _ = f ⁻¹' (⋃ n, L n) ∩ s  := by rw [preimage_iUnion, iUnion_inter]
+        _ = f ⁻¹' (⋃ n, L n) ∩ s := by rw [preimage_iUnion, iUnion_inter]
         _ = f ⁻¹' (f '' s) ∩ s := by rw [hcov]
         _ = s := inter_eq_right.mpr (subset_preimage_image _ _)
 

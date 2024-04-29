@@ -142,7 +142,7 @@ theorem Set.Finite.isOpen_biInter {s : Set α} {f : α → Set X} (hs : s.Finite
 
 theorem isOpen_iInter_of_finite [Finite ι] {s : ι → Set X} (h : ∀ i, IsOpen (s i)) :
     IsOpen (⋂ i, s i) :=
-  (finite_range _).isOpen_sInter  (forall_mem_range.2 h)
+  (finite_range _).isOpen_sInter (forall_mem_range.2 h)
 #align is_open_Inter isOpen_iInter_of_finite
 
 theorem isOpen_biInter_finset {s : Finset α} {f : α → Set X} (h : ∀ i ∈ s, IsOpen (f i)) :

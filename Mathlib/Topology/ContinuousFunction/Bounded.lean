@@ -1118,7 +1118,7 @@ variable {f g : α →ᵇ β} {x : α} {C : ℝ}
 variable [LipschitzAdd β]
 
 instance instModule : Module 𝕜 (α →ᵇ β) :=
-  DFunLike.coe_injective.module _ ⟨⟨_, coe_zero⟩, coe_add⟩  coe_smul
+  DFunLike.coe_injective.module _ ⟨⟨_, coe_zero⟩, coe_add⟩ coe_smul
 
 variable (𝕜)
 

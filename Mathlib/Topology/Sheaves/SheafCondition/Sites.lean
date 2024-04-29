@@ -144,7 +144,7 @@ theorem coverDense_iff_isBasis [Category ι] (B : ι ⥤ Opens X) :
 #align Top.opens.cover_dense_iff_is_basis TopCat.Opens.coverDense_iff_isBasis
 
 theorem coverDense_inducedFunctor {B : ι → Opens X} (h : Opens.IsBasis (Set.range B)) :
-    (inducedFunctor B).IsCoverDense (Opens.grothendieckTopology X)  :=
+    (inducedFunctor B).IsCoverDense (Opens.grothendieckTopology X) :=
   (coverDense_iff_isBasis _).2 h
 #align Top.opens.cover_dense_induced_functor TopCat.Opens.coverDense_inducedFunctor
 

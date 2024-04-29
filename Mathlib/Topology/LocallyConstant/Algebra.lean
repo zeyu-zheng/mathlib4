@@ -346,7 +346,7 @@ variable [TopologicalSpace Y] {Z : Type*}
 /-- `LocallyConstant.comap` as a `MulHom`. -/
 @[to_additive (attr := simps) "`LocallyConstant.comap` as an `AddHom`."]
 noncomputable
-def comapMulHom [Mul Z]  (f : C(X, Y)) :
+def comapMulHom [Mul Z] (f : C(X, Y)) :
     LocallyConstant Y Z →ₙ* LocallyConstant X Z where
   toFun := comap f
   map_mul' _ _ := rfl
@@ -354,7 +354,7 @@ def comapMulHom [Mul Z]  (f : C(X, Y)) :
 /-- `LocallyConstant.comap` as a `MonoidHom`. -/
 @[to_additive (attr := simps) "`LocallyConstant.comap` as an `AddMonoidHom`."]
 noncomputable
-def comapMonoidHom [MulOneClass Z]  (f : C(X, Y)) :
+def comapMonoidHom [MulOneClass Z] (f : C(X, Y)) :
     LocallyConstant Y Z →* LocallyConstant X Z where
   toFun := comap f
   map_one' := rfl

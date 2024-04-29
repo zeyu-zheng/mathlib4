@@ -185,7 +185,7 @@ def compHausToTop : CompHaus.{u} ⥤ TopCat.{u} :=
 set_option linter.uppercaseLean3 false in
 #align CompHaus_to_Top compHausToTop
 
-instance : compHausToTop.Full  :=
+instance : compHausToTop.Full :=
   show (inducedFunctor _).Full from inferInstance
 
 instance : compHausToTop.Faithful :=

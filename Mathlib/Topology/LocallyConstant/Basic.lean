@@ -74,7 +74,7 @@ theorem isClosed_fiber {f : X → Y} (hf : IsLocallyConstant f) (y : Y) : IsClos
 #align is_locally_constant.is_closed_fiber IsLocallyConstant.isClosed_fiber
 
 theorem isClopen_fiber {f : X → Y} (hf : IsLocallyConstant f) (y : Y) : IsClopen { x | f x = y } :=
-  ⟨isClosed_fiber hf _,  isOpen_fiber hf _⟩
+  ⟨isClosed_fiber hf _, isOpen_fiber hf _⟩
 #align is_locally_constant.is_clopen_fiber IsLocallyConstant.isClopen_fiber
 
 theorem iff_exists_open (f : X → Y) :

@@ -180,7 +180,7 @@ variable {X 𝕜 : Type*} [RCLike 𝕜] [TopologicalSpace X]
 be useful on its own. -/
 theorem exists_mul_le_one_eqOn_ge (f : C(X, ℝ≥0)) {c : ℝ≥0} (hc : 0 < c) :
     ∃ g : C(X, ℝ≥0), (∀ x : X, (g * f) x ≤ 1) ∧ {x : X | c ≤ f x}.EqOn (g * f) 1 :=
-  ⟨{  toFun := (f ⊔ const X c)⁻¹
+  ⟨{ toFun := (f ⊔ const X c)⁻¹
       continuous_toFun :=
         ((map_continuous f).sup <| map_continuous _).inv₀ fun _ => (hc.trans_le le_sup_right).ne' },
     fun x =>

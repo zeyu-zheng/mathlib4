@@ -95,7 +95,7 @@ namespace, while notions associated to metric spaces are mostly in the root name
 @[ext]
 protected theorem PseudoEMetricSpace.ext {α : Type*} {m m' : PseudoEMetricSpace α}
     (h : m.toEDist = m'.toEDist) : m = m' := by
-  cases' m with ed  _ _ _ U hU
+  cases' m with ed _ _ _ U hU
   cases' m' with ed' _ _ _ U' hU'
   congr 1
   exact UniformSpace.ext (((show ed = ed' from h) ▸ hU).trans hU'.symm)
