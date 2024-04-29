@@ -1027,7 +1027,7 @@ theorem blocksFun_sigmaCompositionAux (a : Composition n) (b : Composition a.len
     blocksFun (sigmaCompositionAux a b ⟨i, (length_gather a b).symm ▸ i.2⟩)
         ⟨j, (length_sigmaCompositionAux a b i).symm ▸ j.2⟩ =
       blocksFun a (embedding b i j) :=
-  show get (get _ ⟨_, _⟩) ⟨_, _⟩  = a.blocks.get ⟨_, _⟩ by
+  show get (get _ ⟨_, _⟩) ⟨_, _⟩ = a.blocks.get ⟨_, _⟩ by
     rw [get_of_eq (get_splitWrtComposition _ _ _), get_drop', get_take']; rfl
 #align composition.blocks_fun_sigma_composition_aux Composition.blocksFun_sigmaCompositionAux
 

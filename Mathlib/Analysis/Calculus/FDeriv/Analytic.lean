@@ -128,7 +128,7 @@ theorem AnalyticOn.contDiffOn [CompleteSpace F] (h : AnalyticOn 𝕜 f s) {n : �
   have t_open : IsOpen t := isOpen_analyticAt 𝕜 f
   contDiffOn_of_continuousOn_differentiableOn
     (fun m _ ↦ (H.iteratedFDeriv m).continuousOn.congr
-      fun  _ hx ↦ iteratedFDerivWithin_of_isOpen _ t_open hx)
+      fun _ hx ↦ iteratedFDerivWithin_of_isOpen _ t_open hx)
     (fun m _ ↦ (H.iteratedFDeriv m).differentiableOn.congr
       fun _ hx ↦ iteratedFDerivWithin_of_isOpen _ t_open hx)
 #align analytic_on.cont_diff_on AnalyticOn.contDiffOn
@@ -256,7 +256,7 @@ theorem CPolynomialOn.contDiffOn (h : CPolynomialOn 𝕜 f s) {n : ℕ∞} :
   have t_open : IsOpen t := isOpen_cPolynomialAt 𝕜 f
   contDiffOn_of_continuousOn_differentiableOn
     (fun m _ ↦ (H.iteratedFDeriv m).continuousOn.congr
-      fun  _ hx ↦ iteratedFDerivWithin_of_isOpen _ t_open hx)
+      fun _ hx ↦ iteratedFDerivWithin_of_isOpen _ t_open hx)
     (fun m _ ↦ (H.iteratedFDeriv m).analyticOn.differentiableOn.congr
       fun _ hx ↦ iteratedFDerivWithin_of_isOpen _ t_open hx)
 

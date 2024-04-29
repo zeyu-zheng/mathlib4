@@ -80,7 +80,7 @@ def AddEquiv.lpPiLp : lp E p ≃+ PiLp p E :=
   { Equiv.lpPiLp with map_add' := fun _f _g ↦ rfl }
 #align add_equiv.lp_pi_Lp AddEquiv.lpPiLp
 
-theorem coe_addEquiv_lpPiLp  (f : lp E p) : AddEquiv.lpPiLp f = ⇑f :=
+theorem coe_addEquiv_lpPiLp (f : lp E p) : AddEquiv.lpPiLp f = ⇑f :=
   rfl
 #align coe_add_equiv_lp_pi_Lp coe_addEquiv_lpPiLp
 

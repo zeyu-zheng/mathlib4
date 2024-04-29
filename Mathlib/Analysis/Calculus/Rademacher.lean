@@ -286,7 +286,7 @@ theorem hasFderivAt_of_hasLineDerivAt_of_closure {f : E → F}
   have rho_pos : 0 ≤ ρ := by simp [hρ]
   obtain ⟨y, yq, hy⟩ : ∃ y ∈ q, ‖w - y‖ < δ := by simpa [← dist_eq_norm] using hq w_mem
   have : ‖y - w‖ < δ := by rwa [norm_sub_rev]
-  calc  ‖f (x + v) - f x - L v‖
+  calc ‖f (x + v) - f x - L v‖
       = ‖f (x + ρ • w) - f x - ρ • L w‖ := by simp [hvw]
     _ = ‖(f (x + ρ • w) - f (x + ρ • y)) + (ρ • L y - ρ • L w)
           + (f (x + ρ • y) - f x - ρ • L y)‖ := by congr; abel

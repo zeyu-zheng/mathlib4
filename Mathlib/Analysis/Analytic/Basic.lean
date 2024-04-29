@@ -781,7 +781,7 @@ theorem HasFPowerSeriesOnBall.isBigO_image_sub_image_sub_deriv_principal
       simp only [add_mul]
       have : ‖a‖ < 1 := by simp only [Real.norm_eq_abs, abs_of_pos ha.1, ha.2]
       rw [div_eq_mul_inv, div_eq_mul_inv]
-      exact (hasSum_coe_mul_geometric_of_norm_lt_one this).add  -- Porting note: was `convert`!
+      exact (hasSum_coe_mul_geometric_of_norm_lt_one this).add -- Porting note: was `convert`!
           ((hasSum_geometric_of_norm_lt_one this).mul_left 2)
     exact hA.norm_le_of_bounded hBL hAB
   suffices L =O[𝓟 (EMetric.ball (x, x) r')] fun y => ‖y - (x, x)‖ * ‖y.1 - y.2‖ by

@@ -288,7 +288,7 @@ theorem IntegrableOn.hasBoxIntegral [CompleteSpace E] {f : (ι → ℝ) → E} {
       rw [← SimpleFunc.integral_eq_integral, SimpleFunc.box_integral_eq_integral _ _ _ _ hl,
         hNxn J hJ]
       exact (hfi _).mono_set (Prepartition.le_of_mem _ hJ)
-  · /-  For the last jump, we use the fact that the distance between `f (Nx x) x` and `g x` is less
+  · /- For the last jump, we use the fact that the distance between `f (Nx x) x` and `g x` is less
         than or equal to the distance between `f N₀ x` and `g x` and the integral of
         `‖f N₀ x - g x‖` is less than or equal to `ε`. -/
     refine' le_trans _ hN₀

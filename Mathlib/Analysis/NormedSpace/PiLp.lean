@@ -134,7 +134,7 @@ theorem _root_.WithLp.equiv_pi_apply (x : PiLp p α) (i : ι) : WithLp.equiv p _
 #align pi_Lp.equiv_apply WithLp.equiv_pi_apply
 
 @[simp]
-theorem  _root_.WithLp.equiv_symm_pi_apply (x : ∀ i, α i) (i : ι) :
+theorem _root_.WithLp.equiv_symm_pi_apply (x : ∀ i, α i) (i : ι) :
     (WithLp.equiv p _).symm x i = x i :=
   rfl
 #align pi_Lp.equiv_symm_apply WithLp.equiv_symm_pi_apply

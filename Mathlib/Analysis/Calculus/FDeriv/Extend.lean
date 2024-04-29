@@ -82,7 +82,7 @@ theorem has_fderiv_at_boundary_of_tendsto_fderiv {f : E → F} {s : Set E} {x : 
       simpa using conv.norm_image_sub_le_of_norm_fderivWithin_le' diff bound u_in v_in
     rintro ⟨u, v⟩ uv_in
     refine' ContinuousWithinAt.closure_le uv_in _ _ key
-    have f_cont' : ∀ y ∈ closure s, ContinuousWithinAt (f -  ⇑f') s y := by
+    have f_cont' : ∀ y ∈ closure s, ContinuousWithinAt (f - ⇑f') s y := by
       intro y y_in
       exact Tendsto.sub (f_cont y y_in) f'.cont.continuousWithinAt
     all_goals

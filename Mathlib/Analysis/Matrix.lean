@@ -443,7 +443,7 @@ private theorem norm_unitOf (a : α) : ‖unitOf a‖₊ = 1 := by
     rw [nnnorm_smul, nnnorm_inv, nnnorm_norm, mul_inv_cancel h]
 
 set_option tactic.skipAssignedInstances false in
-private theorem mul_unitOf (a : α) : a * unitOf a = algebraMap _ _ (‖a‖₊ : ℝ)  := by
+private theorem mul_unitOf (a : α) : a * unitOf a = algebraMap _ _ (‖a‖₊ : ℝ) := by
   simp [unitOf]
   split_ifs with h
   · simp [h]
@@ -579,7 +579,7 @@ theorem frobenius_norm_map_eq (A : Matrix m n α) (f : α → β) (hf : ∀ a, �
 @[simp]
 theorem frobenius_nnnorm_transpose (A : Matrix m n α) : ‖Aᵀ‖₊ = ‖A‖₊ := by
   rw [frobenius_nnnorm_def, frobenius_nnnorm_def, Finset.sum_comm]
-  simp_rw [Matrix.transpose_apply]  -- Porting note: added
+  simp_rw [Matrix.transpose_apply] -- Porting note: added
 #align matrix.frobenius_nnnorm_transpose Matrix.frobenius_nnnorm_transpose
 
 @[simp]

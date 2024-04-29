@@ -318,7 +318,7 @@ lemma cfcHom_real_eq_restrict {a : A} (ha : IsSelfAdjoint a) :
   have := UniqueContinuousFunctionalCalculus.compactSpace_spectrum a (R := ℂ)
   ha.spectrumRestricts.cfcHom_eq_restrict Complex.isometry_ofReal ha ha.isStarNormal
 
-lemma cfc_real_eq_complex {a : A} (f : ℝ → ℝ) (ha : IsSelfAdjoint a := by cfc_tac)  :
+lemma cfc_real_eq_complex {a : A} (f : ℝ → ℝ) (ha : IsSelfAdjoint a := by cfc_tac) :
     cfc f a = cfc (fun x ↦ f x.re : ℂ → ℂ) a := by
   have := UniqueContinuousFunctionalCalculus.compactSpace_spectrum a (R := ℂ)
   replace ha : IsSelfAdjoint a := ha -- hack to avoid issues caused by autoParam
@@ -343,7 +343,7 @@ lemma cfcHom_nnreal_eq_restrict {a : A} (ha : 0 ≤ a) :
   have := UniqueContinuousFunctionalCalculus.compactSpace_spectrum a (R := ℝ)
   apply (SpectrumRestricts.nnreal_of_nonneg ha).cfcHom_eq_restrict isometry_subtype_coe
 
-lemma cfc_nnreal_eq_real {a : A} (f : ℝ≥0 → ℝ≥0) (ha : 0 ≤ a := by cfc_tac)  :
+lemma cfc_nnreal_eq_real {a : A} (f : ℝ≥0 → ℝ≥0) (ha : 0 ≤ a := by cfc_tac) :
     cfc f a = cfc (fun x ↦ f x.toNNReal : ℝ → ℝ) a := by
   have := UniqueContinuousFunctionalCalculus.compactSpace_spectrum a (R := ℝ)
   replace ha : 0 ≤ a := ha -- hack to avoid issues caused by autoParam
