@@ -53,6 +53,8 @@ ERR_IND = 17 # second line not correctly indented
 ERR_ARR = 18 # space after "←"
 ERR_NUM_LIN = 19 # file is too large
 ERR_NSP = 20 # non-terminal simp
+ERR_SPACE_COLON = 21 # missing spaces around colon
+ERR_DOUBLE_SPACE = 22 # double space
 
 exceptions = []
 
@@ -244,6 +246,7 @@ def import_only_check(lines, path):
             return False
     return True
 
+'''Validate the copyright header and the authors line.'''
 def regular_check(lines, path):
     errors = []
     copy_started = False
@@ -339,6 +342,34 @@ def left_arrow_check(lines, path):
         newlines.append((line_nr, new_line))
     return errors, newlines
 
+
+def space_around_colon_check(lines, path):
+    errors = []
+    newlines = []
+    for line_nr, line, is_comment, in_string in annotate_strings(annotate_comments(lines)):
+        if is_comment or in_string:
+            newlines.append((line_nr, line))
+            continue
+        # Error if a colon is not surrounded by spaces.
+        new_line = line.replace(":", " : ").replace("  ", " ")
+        if new_line != line:
+            errors += [(ERR_SPACE_COLON, line_nr, path)]
+        newlines.append((line_nr, new_line))
+    return errors, newlines
+
+def double_space_check(lines, path):
+    errors = []
+    newlines = []
+    for line_nr, line, is_comment, in_string in annotate_strings(annotate_comments(lines)):
+        indent = len(line) - len(line.lstrip())
+        new_line = line
+        if "  " in line.strip():
+            # This also removes trailing whitespace: this is fine.
+            new_line = f"{indent}{line.strip().replace("  ", " ")}"
+            errors += [(ERR_DOUBLE_SPACE, line_nr, path)]
+        newlines.append((line_nr, new_line))
+    return errors, newlines
+
 def output_message(path, line_nr, code, msg):
     if len(exceptions) == 0:
         # we are generating a new exceptions file
@@ -375,6 +406,8 @@ def format_errors(errors):
             ERR_IND : ("ERR_IND", "If the theorem/def statement requires multiple lines, indent it correctly (4 spaces or 2 for `|`)"),
             ERR_ARR : ("ERR_ARR", "Missing space after '←'."),
             ERR_NSP : ("ERR_NSP", "Non-terminal simp. Replace with `simp?` and use the suggested output"),
+            ERR_SPACE_COLON : ("ERR_SPACE_COLON", "Please put spaces around colons"),
+            ERR_DOUBLE_SPACE : ("ERR_DOUBLE_SPACE", "Double space, please remove")
         }
         if errno in messages:
             name, message = messages[errno]
@@ -397,7 +430,9 @@ def lint(path, fix=False):
                             isolated_by_dot_semicolon_check,
                             set_option_check,
                             left_arrow_check,
-                            nonterminal_simp_check]:
+                            nonterminal_simp_check,
+                            space_around_colon_check,
+                            double_space_check]:
             errs, newlines = error_check(newlines, path)
             format_errors(errs)
 
