@@ -118,7 +118,7 @@ section restrict
 def restrict (M : Matroid α) (R : Set α) : Matroid α := (M.restrictIndepMatroid R).matroid
 
 /-- `M ↾ R` means `M.restrict R`. -/
-scoped infixl:65  " ↾ " => Matroid.restrict
+scoped infixl:65 " ↾ " => Matroid.restrict
 
 @[simp] theorem restrict_indep_iff : (M ↾ R).Indep I ↔ M.Indep I ∧ I ⊆ R := by
   simp [Matroid.restrict]
@@ -219,10 +219,10 @@ def Restriction (N M : Matroid α) : Prop := ∃ R ⊆ M.E, N = M ↾ R
 def StrictRestriction (N M : Matroid α) : Prop := Restriction N M ∧ ¬ Restriction M N
 
 /-- `N ≤r M` means that `N` is a `Restriction` of `M`. -/
-scoped infix:50  " ≤r " => Restriction
+scoped infix:50 " ≤r " => Restriction
 
 /-- `N <r M` means that `N` is a `StrictRestriction` of `M`. -/
-scoped infix:50  " <r " => StrictRestriction
+scoped infix:50 " <r " => StrictRestriction
 
 /-- A type synonym for matroids with the restriction order.
   (The `PartialOrder` on `Matroid α` is reserved for the minor order)  -/

@@ -460,7 +460,7 @@ theorem add_of_nat (m n) : ((m + n : ℕ) : Num) = m + n :=
   add_ofNat' _ _
 #align num.add_of_nat Num.add_of_nat
 
-@[norm_cast]  -- @[simp] -- Porting note (#10618): simp can prove this
+@[norm_cast] -- @[simp] -- Porting note (#10618): simp can prove this
 theorem to_nat_to_int (n : Num) : ((n : ℕ) : ℤ) = n :=
   cast_to_nat _
 #align num.to_nat_to_int Num.to_nat_to_int
@@ -944,7 +944,7 @@ theorem castNum_shiftLeft (m : Num) (n : Nat) : ↑(m <<< n) = (m : ℕ) <<< (n 
 
 @[simp, norm_cast]
 
-theorem castNum_shiftRight (m : Num) (n : Nat) : ↑(m >>> n) = (m : ℕ) >>> (n : ℕ)  := by
+theorem castNum_shiftRight (m : Num) (n : Nat) : ↑(m >>> n) = (m : ℕ) >>> (n : ℕ) := by
   cases' m with m <;> dsimp only [← shiftr_eq_shiftRight, shiftr];
   · symm
     apply Nat.zero_shiftRight
@@ -964,7 +964,7 @@ theorem castNum_shiftRight (m : Num) (n : Nat) : ↑(m >>> n) = (m : ℕ) >>> (n
   · trans
     apply IH
     change Nat.shiftRight m n = Nat.shiftRight (_root_.bit0 m) (n + 1)
-    rw [add_comm n 1,  @Nat.shiftRight_eq _ (1 + n), Nat.shiftRight_add]
+    rw [add_comm n 1, @Nat.shiftRight_eq _ (1 + n), Nat.shiftRight_add]
     apply congr_arg fun x => Nat.shiftRight x n
     simp [Nat.shiftRight_succ, Nat.shiftRight_zero, ← Nat.div2_val]
 #align num.shiftr_to_nat Num.castNum_shiftRight

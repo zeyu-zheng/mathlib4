@@ -229,7 +229,7 @@ inductive NzsNum : Type
   | msb : Bool → NzsNum
   /-- Add a bit at the end of a `NzsNum`. -/
   | bit : Bool → NzsNum → NzsNum
-  deriving DecidableEq  -- Porting note: Removed `deriving has_reflect`.
+  deriving DecidableEq -- Porting note: Removed `deriving has_reflect`.
 #align nzsnum NzsNum
 
 /-- Alternative representation of integers using a sign bit at the end.
@@ -249,7 +249,7 @@ inductive NzsNum : Type
 inductive SNum : Type
   | zero : Bool → SNum
   | nz : NzsNum → SNum
-  deriving DecidableEq  -- Porting note: Removed `deriving has_reflect`.
+  deriving DecidableEq -- Porting note: Removed `deriving has_reflect`.
 #align snum SNum
 
 instance : Coe NzsNum SNum :=

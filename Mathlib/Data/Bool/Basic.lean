@@ -314,9 +314,9 @@ def ofNat (n : Nat) : Bool :=
 #align bool.of_nat Bool.ofNat
 
 @[simp] lemma toNat_beq_zero (b : Bool) : (b.toNat == 0) = !b := by cases b <;> rfl
-@[simp] lemma toNat_bne_zero (b : Bool) : (b.toNat != 0) =  b := by simp [bne]
-@[simp] lemma toNat_beq_one  (b : Bool) : (b.toNat == 1) =  b := by cases b <;> rfl
-@[simp] lemma toNat_bne_one  (b : Bool) : (b.toNat != 1) = !b := by simp [bne]
+@[simp] lemma toNat_bne_zero (b : Bool) : (b.toNat != 0) = b := by simp [bne]
+@[simp] lemma toNat_beq_one (b : Bool) : (b.toNat == 1) = b := by cases b <;> rfl
+@[simp] lemma toNat_bne_one (b : Bool) : (b.toNat != 1) = !b := by simp [bne]
 
 theorem ofNat_le_ofNat {n m : Nat} (h : n ≤ m) : ofNat n ≤ ofNat m := by
   simp only [ofNat, ne_eq, _root_.decide_not]

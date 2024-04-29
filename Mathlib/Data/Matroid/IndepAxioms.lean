@@ -189,7 +189,7 @@ namespace IndepMatroid
       fun hi ↦ heB <| insert_eq_self.1 (hBmax.2 hi (subset_insert _ _)).symm
 
     -- There is a finite subset `B₀` of `B` so that `B₀ + e` is dependent
-    obtain ⟨B₀, hB₀B, hB₀fin, hB₀e⟩ := htofin B e hBmax.1  heBdep
+    obtain ⟨B₀, hB₀B, hB₀fin, hB₀e⟩ := htofin B e hBmax.1 heBdep
     have hB₀ := indep_subset hBmax.1 hB₀B
 
     -- There is a finite subset `I₀` of `I` so that `I₀` doesn't extend into `B₀`
@@ -333,7 +333,7 @@ protected def ofBddAugment (E : Set α) (Indep : Set α → Prop)
     (indep_empty := indep_empty)
     (indep_subset := indep_subset)
     (indep_aug := by
-      simp_rw [mem_maximals_setOf_iff, not_and, not_forall, exists_prop,  mem_diff,
+      simp_rw [mem_maximals_setOf_iff, not_and, not_forall, exists_prop, mem_diff,
         and_imp, and_assoc]
       rintro I B hI hImax hB hBmax
       obtain ⟨J, hJ, hIJ, hne⟩ := hImax hI

@@ -274,7 +274,7 @@ variable [Ring α] {a b : α} {n : ℤ}
   SemiconjBy.cast_int_mul_right h m
 #align commute.cast_int_mul_right Commute.cast_int_mul_right
 
-@[simp] lemma cast_int_mul_left (h : Commute a b) (m : ℤ) : Commute (m  * a) b :=
+@[simp] lemma cast_int_mul_left (h : Commute a b) (m : ℤ) : Commute (m * a) b :=
   SemiconjBy.cast_int_mul_left h m
 #align commute.cast_int_mul_left Commute.cast_int_mul_left
 

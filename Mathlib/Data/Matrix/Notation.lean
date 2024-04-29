@@ -129,7 +129,7 @@ instance repr [Repr α] : Repr (Matrix (Fin m) (Fin n) α) where
     (Std.Format.bracket "!![" · "]") <|
       (Std.Format.joinSep · (";" ++ Std.Format.line)) <|
         (List.finRange m).map fun i =>
-          Std.Format.fill <|  -- wrap line in a single place rather than all at once
+          Std.Format.fill <| -- wrap line in a single place rather than all at once
             (Std.Format.joinSep · ("," ++ Std.Format.line)) <|
             (List.finRange n).map fun j => _root_.repr (f i j)
 #align matrix.has_repr Matrix.repr

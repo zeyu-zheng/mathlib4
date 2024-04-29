@@ -367,7 +367,7 @@ def graph (f : α → β) : Rel α β := fun x y => f x = y
 
 @[simp] lemma graph_def (f : α → β) (x y) : f.graph x y ↔ (f x = y) := Iff.rfl
 
-theorem graph_id : graph id = @Eq α := by simp  (config := { unfoldPartialApp := true }) [graph]
+theorem graph_id : graph id = @Eq α := by simp (config := { unfoldPartialApp := true }) [graph]
 
 theorem graph_comp {f : β → γ} {g : α → β} : graph (f ∘ g) = Rel.comp (graph g) (graph f) := by
   ext x y

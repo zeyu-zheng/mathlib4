@@ -45,7 +45,7 @@ theorem join_concat (L : List (List α)) (l : List α) : join (L.concat l) = joi
 #align list.join_concat List.join_concat
 
 @[simp]
-theorem join_filter_not_isEmpty  :
+theorem join_filter_not_isEmpty :
     ∀ {L : List (List α)}, join (L.filter fun l => !l.isEmpty) = L.join
   | [] => rfl
   | [] :: L => by

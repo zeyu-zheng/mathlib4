@@ -242,7 +242,7 @@ def imageHom [MulOneClass α] [MulOneClass β] (f : α →* β) : SetSemiring α
   toFun s := up (image f (down s))
   map_zero' := image_empty _
   map_one' := by
-    dsimp only  -- Porting note: structures do not do this automatically any more
+    dsimp only -- Porting note: structures do not do this automatically any more
     rw [down_one, image_one, map_one, singleton_one, up_one]
   map_add' := image_union _
   map_mul' _ _ := image_mul f

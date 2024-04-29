@@ -30,4 +30,4 @@ class SProd (α : Type u) (β : Type v) (γ : outParam (Type w)) where
 
 -- This notation binds more strongly than (pre)images, unions and intersections.
 @[inherit_doc SProd.sprod] infixr:82 " ×ˢ " => SProd.sprod
-macro_rules | `($x ×ˢ $y)   => `(fbinop% SProd.sprod $x $y)
+macro_rules | `($x ×ˢ $y)  => `(fbinop% SProd.sprod $x $y)

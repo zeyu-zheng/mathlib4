@@ -345,7 +345,7 @@ theorem Base.subset_ground (hB : M.Base B) : B ⊆ M.E :=
   M.subset_ground B hB
 
 theorem Base.exchange (hB₁ : M.Base B₁) (hB₂ : M.Base B₂) (hx : e ∈ B₁ \ B₂) :
-    ∃ y ∈ B₂ \ B₁, M.Base (insert y (B₁ \ {e}))  :=
+    ∃ y ∈ B₂ \ B₁, M.Base (insert y (B₁ \ {e})) :=
   M.base_exchange B₁ B₂ hB₁ hB₂ _ hx
 
 theorem Base.exchange_mem (hB₁ : M.Base B₁) (hB₂ : M.Base B₂) (hxB₁ : e ∈ B₁) (hxB₂ : e ∉ B₂) :

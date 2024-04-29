@@ -27,8 +27,8 @@ variable (f : Type u → Type v) [Functor f] [LawfulFunctor f]
 
 /-- Apply a functor to an `Equiv`. -/
 def map_equiv {α β : Type u} (h : α ≃ β) : f α ≃ f β where
-  toFun    := map h
-  invFun   := map h.symm
+  toFun := map h
+  invFun := map h.symm
   left_inv x := by simp [map_map]
   right_inv x := by simp [map_map]
 

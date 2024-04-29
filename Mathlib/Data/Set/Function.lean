@@ -1384,7 +1384,7 @@ variable (f s)
 lemma exists_subset_bijOn : ∃ s' ⊆ s, BijOn f s' (f '' s) :=
   surjOn_iff_exists_bijOn_subset.mp (surjOn_image f s)
 
-lemma exists_image_eq_and_injOn : ∃ u, f '' u =  f '' s ∧ InjOn f u :=
+lemma exists_image_eq_and_injOn : ∃ u, f '' u = f '' s ∧ InjOn f u :=
   let ⟨u, _, hfu⟩ := exists_subset_bijOn s f
   ⟨u, hfu.image_eq, hfu.injOn⟩
 

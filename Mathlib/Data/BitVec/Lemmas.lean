@@ -121,7 +121,7 @@ variable (x y : Fin (2^w))
   simp [HAnd.hAnd, AndOp.and, Fin.land, BitVec.and, toNat_ofFin]
   -- v4.7.0-rc1 issues remove?
 
-@[simp] lemma ofFin_or  : ofFin (x ||| y) = ofFin x ||| ofFin y := by
+@[simp] lemma ofFin_or : ofFin (x ||| y) = ofFin x ||| ofFin y := by
   ext
   simp [HOr.hOr, OrOp.or, Fin.lor, BitVec.or, toNat_ofFin]
   -- v4.7.0-rc1 issues remove?
@@ -131,11 +131,11 @@ variable (x y : Fin (2^w))
   simp [HXor.hXor, Xor.xor, Fin.xor, BitVec.xor, toNat_ofFin]
   -- v4.7.0-rc1 issues remove?
 
-@[simp] lemma ofFin_mul : ofFin (x * y)   = ofFin x * ofFin y   := rfl
+@[simp] lemma ofFin_mul : ofFin (x * y)  = ofFin x * ofFin y  := rfl
 
 -- These should be simp, but Std's simp-lemmas do not allow this yet.
 lemma ofFin_zero : ofFin (0 : Fin (2^w)) = 0 := rfl
-lemma ofFin_one  : ofFin (1 : Fin (2^w)) = 1 := by
+lemma ofFin_one : ofFin (1 : Fin (2^w)) = 1 := by
   simp only [OfNat.ofNat, BitVec.ofNat, and_pow_two_is_mod]
 
 lemma ofFin_nsmul (n : ℕ) (x : Fin (2^w)) : ofFin (n • x) = n • ofFin x := rfl
@@ -165,7 +165,7 @@ variable (x y : BitVec w)
 
 -- These should be simp, but Std's simp-lemmas do not allow this yet.
 lemma toFin_zero : toFin (0 : BitVec w) = 0 := rfl
-lemma toFin_one  : toFin (1 : BitVec w) = 1 := by
+lemma toFin_one : toFin (1 : BitVec w) = 1 := by
   rw [toFin_inj]; simp only [ofNat_eq_ofNat, ofFin_ofNat]
 
 lemma toFin_nsmul (n : ℕ) (x : BitVec w) : toFin (n • x) = n • x.toFin := rfl
