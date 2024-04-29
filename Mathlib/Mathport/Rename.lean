@@ -161,7 +161,7 @@ def suspiciousLean3Name (s : String) : Bool := Id.run do
         let inner := match ← try some <$> resolveGlobalConstWithInfos id4 catch _ => pure none with
         | none => m!""
         | some cs => m!" Did you mean:\n\n\
-              {("\n":MessageData).joinSep (cs.map fun c' => m!"  #align {id3} {c'}")}\n\n\
+              {("\n":MessageData).joinSep (cs.map fun c' => m!" #align {id3} {c'}")}\n\n\
             #align inputs have to be fully qualified. \
             (Double check the lean 3 name too, we can't check that!)"
         throwErrorAt id4 "Declaration {c} not found.{inner}\n{note}"

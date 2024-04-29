@@ -65,7 +65,7 @@ lemma tendsto_tsum_of_dominated_convergence {α β G : Type*} {𝓕 : Filter α}
   have h1 : ∑' (k : (Tᶜ : Set β)), bound k < ε / 3 := by
     calc _ ≤ ‖∑' (k : (Tᶜ : Set β)), bound k‖ := Real.le_norm_self _
          _ = ‖S - ∑ b in T, bound b‖          := congrArg _ ?_
-         _ < ε / 3                            := by rwa [dist_eq_norm, norm_sub_rev] at hT
+         _ < ε / 3              := by rwa [dist_eq_norm, norm_sub_rev] at hT
     simpa only [sum_add_tsum_compl h_sum, eq_sub_iff_add_eq'] using hS.tsum_eq
   have h2 : Tendsto (∑ k in T, f · k) 𝓕 (𝓝 (T.sum g)) := tendsto_finset_sum _ (fun i _ ↦ hab i)
   rw [Metric.tendsto_nhds] at h2

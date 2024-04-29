@@ -24,7 +24,7 @@ section CommSemigroup
 variable [LinearOrder α] [CommSemigroup α] [CommSemigroup β]
 
 @[to_additive]
-lemma fn_min_mul_fn_max  (f : α → β) (a b : α) : f (min a b) * f (max a b) = f a * f b := by
+lemma fn_min_mul_fn_max (f : α → β) (a b : α) : f (min a b) * f (max a b) = f a * f b := by
   obtain h | h := le_total a b <;> simp [h, mul_comm]
 #align fn_min_mul_fn_max fn_min_mul_fn_max
 #align fn_min_add_fn_max fn_min_add_fn_max

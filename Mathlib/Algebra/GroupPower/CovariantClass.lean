@@ -161,7 +161,7 @@ theorem StrictMono.pow_const (hf : StrictMono f) : ∀ {n : ℕ}, n ≠ 0 → St
 #align strict_mono.const_nsmul StrictMono.const_nsmul
 
 /-- See also `pow_left_strictMonoOn`. -/
-@[to_additive nsmul_right_strictMono]  -- Porting note: nolint to_additive_doc
+@[to_additive nsmul_right_strictMono] -- Porting note: nolint to_additive_doc
 theorem pow_left_strictMono (hn : n ≠ 0) : StrictMono (· ^ n : M → M) := strictMono_id.pow_const hn
 #align pow_strict_mono_right' pow_left_strictMono
 #align nsmul_strict_mono_left nsmul_right_strictMono

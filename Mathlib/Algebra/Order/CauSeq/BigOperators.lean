@@ -139,7 +139,7 @@ theorem _root_.cauchy_product (ha : IsCauSeq abs fun m ↦ ∑ n in range m, abv
         have := lt_of_le_of_lt (abv_nonneg _ _) (hQ 0)
         gcongr
         exact (le_abs_self _).trans_lt $ hM _ ((Nat.le_succ_of_le (le_max_right _ _)).trans hNMK.le)
-          _  $ Nat.le_succ_of_le $ le_max_right _ _
+          _ $ Nat.le_succ_of_le $ le_max_right _ _
 #align cauchy_product cauchy_product
 
 variable [Archimedean α]

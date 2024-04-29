@@ -1058,7 +1058,7 @@ theorem mul_self_inj {a b : α} (h1 : 0 ≤ a) (h2 : 0 ≤ b) : a * a = b * b �
   (@strictMonoOn_mul_self α _).eq_iff_eq h1 h2
 #align mul_self_inj mul_self_inj
 
-lemma sign_cases_of_C_mul_pow_nonneg  (h : ∀ n, 0 ≤ a * b ^ n) : a = 0 ∨ 0 < a ∧ 0 ≤ b := by
+lemma sign_cases_of_C_mul_pow_nonneg (h : ∀ n, 0 ≤ a * b ^ n) : a = 0 ∨ 0 < a ∧ 0 ≤ b := by
   have : 0 ≤ a := by simpa only [pow_zero, mul_one] using h 0
   refine this.eq_or_gt.imp_right fun ha ↦ ⟨ha, nonneg_of_mul_nonneg_right ?_ ha⟩
   simpa only [pow_one] using h 1

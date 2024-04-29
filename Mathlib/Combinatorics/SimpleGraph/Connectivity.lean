@@ -2072,7 +2072,7 @@ theorem Preconnected.map {G : SimpleGraph V} {H : SimpleGraph V'} (f : G →g H)
 #align simple_graph.preconnected.map SimpleGraph.Preconnected.map
 
 @[mono]
-protected lemma Preconnected.mono  {G G' : SimpleGraph V} (h : G ≤ G') (hG : G.Preconnected) :
+protected lemma Preconnected.mono {G G' : SimpleGraph V} (h : G ≤ G') (hG : G.Preconnected) :
     G'.Preconnected := fun u v => (hG u v).mono h
 
 lemma top_preconnected : (⊤ : SimpleGraph V).Preconnected := fun x y => by

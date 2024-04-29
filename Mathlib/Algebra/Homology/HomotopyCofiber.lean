@@ -187,7 +187,7 @@ lemma inlX_d (i j k : ι) (hij : c.Rel i j) (hjk : c.Rel j k) :
     inlX φ j i hij ≫ d φ i j = -F.d j k ≫ inlX φ k j hjk + φ.f j ≫ inrX φ j := by
   apply ext_to_X φ j k hjk
   · dsimp
-    simp [d_fstX φ  _ _ _ hij hjk]
+    simp [d_fstX φ _ _ _ hij hjk]
   · simp [d_sndX φ _ _ hij]
 
 @[reassoc]
@@ -255,7 +255,7 @@ noncomputable def inrCompHomotopy :
     · simp only [comp_f, homotopyCofiber_d, zero_f, add_zero,
         inlX_d φ i j _ hij hj, dNext_eq _ hj, dif_pos hj,
         add_neg_cancel_left, inr_f]
-    · rw [dNext_eq_zero _ _  hj, zero_add, zero_f, add_zero, homotopyCofiber_d,
+    · rw [dNext_eq_zero _ _ hj, zero_add, zero_f, add_zero, homotopyCofiber_d,
         inlX_d' _ _ _ _ hj, comp_f, inr_f]
 
 lemma inrCompHomotopy_hom (i j : ι) (hij : c.Rel j i) :

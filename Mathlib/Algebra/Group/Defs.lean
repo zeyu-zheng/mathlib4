@@ -76,9 +76,9 @@ class HSMul (α : Type u) (β : Type v) (γ : outParam (Type w)) where
   The meaning of this notation is type-dependent, but it is intended to be used for left actions. -/
   hSMul : α → β → γ
 
-attribute [notation_class  smul Simps.copySecond] HSMul
-attribute [notation_class nsmul Simps.nsmulArgs]  HSMul
-attribute [notation_class zsmul Simps.zsmulArgs]  HSMul
+attribute [notation_class smul Simps.copySecond] HSMul
+attribute [notation_class nsmul Simps.nsmulArgs] HSMul
+attribute [notation_class zsmul Simps.zsmulArgs] HSMul
 
 /-- Type class for the `+ᵥ` notation. -/
 class VAdd (G : Type u) (P : Type v) where
@@ -881,7 +881,7 @@ class DivInvMonoid (G : Type u) extends Monoid G, Inv G, Div G where
   /-- `a ^ 0 = 1` -/
   protected zpow_zero' : ∀ a : G, zpow 0 a = 1 := by intros; rfl
   /-- `a ^ (n + 1) = a ^ n * a` -/
-  protected zpow_succ' (n : ℕ) (a : G) : zpow (Int.ofNat n.succ) a = zpow (Int.ofNat n) a  * a := by
+  protected zpow_succ' (n : ℕ) (a : G) : zpow (Int.ofNat n.succ) a = zpow (Int.ofNat n) a * a := by
     intros; rfl
   /-- `a ^ -(n + 1) = (a ^ (n + 1))⁻¹` -/
   protected zpow_neg' (n : ℕ) (a : G) : zpow (Int.negSucc n) a = (zpow n.succ a)⁻¹ := by intros; rfl

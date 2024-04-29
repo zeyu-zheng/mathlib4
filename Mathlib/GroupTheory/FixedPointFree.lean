@@ -64,7 +64,7 @@ section Involutive
 variable (h2 : Function.Involutive φ)
 
 theorem coe_eq_inv_of_involutive : ⇑φ = (·⁻¹) :=
-  coe_eq_inv_of_sq_eq_one hφ  (funext h2)
+  coe_eq_inv_of_sq_eq_one hφ (funext h2)
 
 theorem commute_all_of_involutive (g h : G) : Commute g h := by
   have key := map_mul φ g h

@@ -74,8 +74,8 @@ instance mulZeroOneClass [MulOneClass α] : MulZeroOneClass (WithZero α) where
 /-- Coercion as a monoid hom. -/
 @[simps apply]
 def coeMonoidHom : α →* WithZero α where
-  toFun        := (↑)
-  map_one'     := rfl
+  toFun    := (↑)
+  map_one'   := rfl
   map_mul' _ _ := rfl
 
 section lift
@@ -130,7 +130,7 @@ lemma map'_zero (f : α →* β) : map' f 0 = 0 := rfl
 lemma map'_id : map' (MonoidHom.id β) = MonoidHom.id (WithZero β) := by
   ext x; induction x using WithOne.cases_on <;> rfl
 
-lemma map'_map'  (f : α →* β) (g : β →* γ) (x) : map' g (map' f x) = map' (g.comp f) x := by
+lemma map'_map' (f : α →* β) (g : β →* γ) (x) : map' g (map' f x) = map' (g.comp f) x := by
   induction x using WithOne.cases_on <;> rfl
 
 @[simp]

@@ -52,7 +52,7 @@ let `a0 b0 : G` be two elements.  `UniqueMul A B a0 b0` asserts `a0 * b0` can be
 most one way as a product of an element of `A` and an element of `B`. -/
 @[to_additive
       "Let `G` be a Type with addition, let `A B : Finset G` be finite subsets and
-let `a0 b0 : G` be two elements.  `UniqueAdd A B a0 b0` asserts `a0 + b0` can be written in at
+let `a0 b0 : G` be two elements. `UniqueAdd A B a0 b0` asserts `a0 + b0` can be written in at
 most one way as a sum of an element from `A` and an element from `B`."]
 def UniqueMul {G} [Mul G] (A B : Finset G) (a0 b0 : G) : Prop :=
   ∀ ⦃a b⦄, a ∈ A → b ∈ B → a * b = a0 * b0 → a = a0 ∧ b = b0
@@ -397,7 +397,7 @@ open MulOpposite in
     simp_rw [Nat.one_lt_mul_iff, card_pos] at hc
     obtain ⟨a, ha, b, hb, hu⟩ := uniqueMul_of_nonempty hc.1 hc.2.1
     let C := A.map ⟨_, mul_right_injective a⁻¹⟩ -- C = a⁻¹A
-    let D := B.map ⟨_, mul_left_injective b⁻¹⟩  -- D = Bb⁻¹
+    let D := B.map ⟨_, mul_left_injective b⁻¹⟩ -- D = Bb⁻¹
     have hcard : 1 < C.card ∨ 1 < D.card := by simp_rw [C, D, card_map]; exact hc.2.2
     have hC : 1 ∈ C := mem_map.mpr ⟨a, ha, inv_mul_self a⟩
     have hD : 1 ∈ D := mem_map.mpr ⟨b, hb, mul_inv_self b⟩
@@ -414,7 +414,7 @@ open MulOpposite in
       rw [mul_assoc, ← mul_assoc a', he, mul_assoc, mul_assoc] at hu'
       exact hu' rfl
     classical
-    let _ := Finset.mul (α := G)              -- E = D⁻¹C, F = DC⁻¹
+    let _ := Finset.mul (α := G)       -- E = D⁻¹C, F = DC⁻¹
     have := uniqueMul_of_nonempty (A := D.image (·⁻¹) * C) (B := D * C.image (·⁻¹)) ?_ ?_
     · obtain ⟨e, he, f, hf, hu⟩ := this
       clear_value C D

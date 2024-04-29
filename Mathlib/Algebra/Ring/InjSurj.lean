@@ -326,7 +326,7 @@ protected def ring [Ring α] (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f 
 
 /-- Pushforward a `NonUnitalNonAssocCommSemiring` instance along a surjective function. -/
 @[reducible] -- See note [reducible non-instances]
-protected def nonUnitalNonAssocCommSemiring  [NonUnitalNonAssocCommSemiring α] (zero : f 0 = 0)
+protected def nonUnitalNonAssocCommSemiring [NonUnitalNonAssocCommSemiring α] (zero : f 0 = 0)
     (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y)
     (nsmul : ∀ (n : ℕ) (x), f (n • x) = n • f x) : NonUnitalNonAssocCommSemiring β where
   toNonUnitalNonAssocSemiring := hf.nonUnitalNonAssocSemiring f zero add mul nsmul

@@ -64,7 +64,7 @@ theorem exists_eq_pow_of_mul_eq_pow_of_coprime {R : Type*} [CommSemiring R] [IsD
   refine' exists_eq_pow_of_mul_eq_pow (isUnit_of_dvd_one _) h
   obtain ⟨x, y, hxy⟩ := cp
   rw [← hxy]
-  exact  -- Porting note: added `GCDMonoid.` twice
+  exact -- Porting note: added `GCDMonoid.` twice
     dvd_add (dvd_mul_of_dvd_right (GCDMonoid.gcd_dvd_left _ _) _)
       (dvd_mul_of_dvd_right (GCDMonoid.gcd_dvd_right _ _) _)
 #align exists_eq_pow_of_mul_eq_pow_of_coprime exists_eq_pow_of_mul_eq_pow_of_coprime

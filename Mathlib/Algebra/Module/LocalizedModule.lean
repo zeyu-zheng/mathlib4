@@ -367,7 +367,7 @@ private theorem smul_add_aux (x : T) (p q : LocalizedModule S M) :
   induction' p using LocalizedModule.induction_on with m s
   induction' q using LocalizedModule.induction_on with n t
   rw [smul_def, smul_def, mk_add_mk, mk_add_mk]
-  rw [show x • _ =  IsLocalization.mk' T _ _ • _ by rw [IsLocalization.mk'_sec (M := S) T]]
+  rw [show x • _ = IsLocalization.mk' T _ _ • _ by rw [IsLocalization.mk'_sec (M := S) T]]
   rw [← IsLocalization.mk'_cancel _ _ (IsLocalization.sec S x).2, mk'_smul_mk]
   congr 1
   · simp only [Submonoid.smul_def, smul_add, ← mul_smul, Submonoid.coe_mul]; ring_nf
@@ -379,7 +379,7 @@ private theorem smul_zero_aux (x : T) : x • (0 : LocalizedModule S M) = 0 := b
 private theorem add_smul_aux (x y : T) (p : LocalizedModule S M) :
     (x + y) • p = x • p + y • p := by
   induction' p using LocalizedModule.induction_on with m s
-  rw [smul_def T x, smul_def T y, mk_add_mk, show (x + y) • _ =  IsLocalization.mk' T _ _ • _ by
+  rw [smul_def T x, smul_def T y, mk_add_mk, show (x + y) • _ = IsLocalization.mk' T _ _ • _ by
     rw [← IsLocalization.mk'_sec (M := S) T x, ← IsLocalization.mk'_sec (M := S) T y,
       ← IsLocalization.mk'_add, IsLocalization.mk'_cancel _ _ s], mk'_smul_mk, ← smul_assoc,
     ← smul_assoc, ← add_smul]

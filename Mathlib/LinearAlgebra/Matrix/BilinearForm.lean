@@ -317,7 +317,7 @@ theorem BilinForm.toMatrix_compRight (B : BilinForm R₂ M₂) (f : M₂ →ₗ[
 @[simp]
 theorem BilinForm.toMatrix_mul_basis_toMatrix (c : Basis o R₂ M₂) (B : BilinForm R₂ M₂) :
     (b.toMatrix c)ᵀ * BilinForm.toMatrix b B * b.toMatrix c = BilinForm.toMatrix c B :=
-  LinearMap.toMatrix₂_mul_basis_toMatrix _ _ _  _ B
+  LinearMap.toMatrix₂_mul_basis_toMatrix _ _ _ _ B
 #align bilin_form.to_matrix_mul_basis_to_matrix BilinForm.toMatrix_mul_basis_toMatrix
 
 theorem BilinForm.mul_toMatrix_mul (B : BilinForm R₂ M₂) (M : Matrix o n R₂) (N : Matrix n o R₂) :
@@ -333,7 +333,7 @@ theorem BilinForm.mul_toMatrix (B : BilinForm R₂ M₂) (M : Matrix n n R₂) :
 
 theorem BilinForm.toMatrix_mul (B : BilinForm R₂ M₂) (M : Matrix n n R₂) :
     BilinForm.toMatrix b B * M = BilinForm.toMatrix b (B.compRight (Matrix.toLin b b M)) :=
-  LinearMap.toMatrix₂_mul _ _ _  B _
+  LinearMap.toMatrix₂_mul _ _ _ B _
 #align bilin_form.to_matrix_mul BilinForm.toMatrix_mul
 
 theorem Matrix.toBilin_comp (M : Matrix n n R₂) (P Q : Matrix n o R₂) :
