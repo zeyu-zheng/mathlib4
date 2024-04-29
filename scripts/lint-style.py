@@ -354,7 +354,7 @@ def space_around_colon_check(lines, path):
         line = line.strip()
         # Error if a colon is not surrounded by spaces.
         new_line = line.replace(":", " : ").replace(" : =", ":=").replace("  ", " ")
-        new_line = new_line.replace(":=", " := ").replace("  ", " ")
+        new_line = new_line.replace(":=", " := ").replace("  ", " ").rstrip()
         if new_line != line:
             errors += [(ERR_SPACE_COLON, line_nr, path)]
         newlines.append((line_nr, f'{" " * indent}{new_line}\n'))
