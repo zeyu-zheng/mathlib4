@@ -357,7 +357,7 @@ def space_around_colon_check(lines, path):
         new_line = new_line.replace(":=", " := ").replace("  ", " ")
         if new_line != line:
             errors += [(ERR_SPACE_COLON, line_nr, path)]
-        newlines.append((line_nr, (" " * indent) + new_line))
+        newlines.append((line_nr, f'{" " * indent}{new_line}\n'))
     return errors, newlines
 
 def double_space_check(lines, path):
@@ -368,7 +368,7 @@ def double_space_check(lines, path):
         new_line = line
         if "  " in line.strip():
             # This also removes trailing whitespace: this is fine.
-            new_line = f'{indent}{line.strip().replace("  ", " ")}'
+            new_line = f'{" " * indent}{line.strip().replace("  ", " ")}\n'
             errors += [(ERR_DOUBLE_SPACE, line_nr, path)]
         newlines.append((line_nr, new_line))
     return errors, newlines
@@ -477,7 +477,7 @@ if not argv:
     exclude = tuple('Tactic'.split(' '))
     # Lint all non-excluded files whose module name starts with this.
     # So "Foo.Bar" will lint all files in module "Foo.Bar" and "Foo.Bar.Baz", etc.
-    dir = 'Topology'
+    dir = 'Topology.Algebra'
     assert '/' not in dir
     print(f"about to lint all files in directory {dir}")
     files = []
