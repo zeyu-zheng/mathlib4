@@ -370,8 +370,8 @@ def double_space_check(lines, path):
         indent = len(line) - len(line.lstrip())
         new_line = line
         if "  " in line.strip():
-            # Don't lint on manual alignment, including in calc blocks, for now.
-            if line.lstrip().startswith(('⟨{  ', '⟨[{  ', '_ ≤ ', '_ = ', '_ ⊆ ')):
+            # Don't lint on manual alignment, including in calc blocks, for now, neither in match arms.
+            if line.lstrip().startswith(('⟨{  ', '⟨[{  ', '_ ≤ ', '_ = ', '_ ⊆ ', '| ')):
                 newlines.append((line_nr, line))
                 continue
             # ⟨{  toTopologicalSpace
@@ -485,7 +485,7 @@ if not argv:
     exclude = tuple('Tactic'.split(' '))
     # Lint all non-excluded files whose module name starts with this.
     # So "Foo.Bar" will lint all files in module "Foo.Bar" and "Foo.Bar.Baz", etc.
-    dir = 'Topology'
+    dir = 'Data'
     assert '/' not in dir
     print(f"about to lint all files in directory {dir}")
     files = []
