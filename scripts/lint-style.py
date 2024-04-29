@@ -64,18 +64,10 @@ with SCRIPTS_DIR.joinpath("style-exceptions.txt").open(encoding="utf-8") as f:
     for exline in f:
         filename, _, _, _, _, errno, *extra = exline.split()
         path = ROOT_DIR / filename
-        if errno == "ERR_COP":
-            exceptions += [(ERR_COP, path, None)]
-        elif errno == "ERR_MOD":
+        if errno == "ERR_MOD":
             exceptions += [(ERR_MOD, path, None)]
         elif errno == "ERR_LIN":
             exceptions += [(ERR_LIN, path, None)]
-        elif errno == "ERR_OPT":
-            exceptions += [(ERR_OPT, path, None)]
-        elif errno == "ERR_AUT":
-            exceptions += [(ERR_AUT, path, None)]
-        elif errno == "ERR_TAC":
-            exceptions += [(ERR_TAC, path, None)]
         elif errno == "ERR_NUM_LIN":
             exceptions += [(ERR_NUM_LIN, path, extra[1])]
         else:
