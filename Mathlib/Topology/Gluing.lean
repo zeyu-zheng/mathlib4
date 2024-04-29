@@ -107,8 +107,9 @@ theorem isOpen_iff (U : Set 𝖣.glued) : IsOpen U ↔ ∀ i, IsOpen (𝖣.ι i 
   rw [coequalizer_isOpen_iff]
   dsimp only [GlueData.diagram_l, GlueData.diagram_left, GlueData.diagram_r, GlueData.diagram_right,
     parallelPair_obj_one]
-  rw [colimit_isOpen_iff.{_,u}]  -- Porting note: changed `.{u}` to `.{_,u}`.  fun fact: the proof
-                                 -- breaks down if this `rw` is merged with the `rw` above.
+  -- Porting note: changed `.{u}` to `.{_,u}`.
+  -- fun fact: the proof breaks down if this `rw` is merged with the `rw` above.
+  rw [colimit_isOpen_iff.{_,u}]
   constructor
   · intro h j; exact h ⟨j⟩
   · intro h j; cases j; apply h
