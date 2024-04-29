@@ -371,7 +371,7 @@ def double_space_check(lines, path):
         new_line = line
         if "  " in line.strip():
             # Don't lint on manual alignment, including in calc blocks, for now, neither in match arms.
-            if line.lstrip().startswith(('⟨{  ', '⟨[{  ', '_ ≤ ', '_ = ', '_ ⊆ ', '| ')):
+            if line.lstrip().startswith(('⟨{  ', '⟨[{  ', '⟨⟨{', '_ ≤ ', '_ = ', '_ ⊆ ', '| ')):
                 newlines.append((line_nr, line))
                 continue
             # ⟨{  toTopologicalSpace
