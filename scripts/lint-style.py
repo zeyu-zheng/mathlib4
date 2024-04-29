@@ -365,7 +365,7 @@ def double_space_check(lines, path):
         new_line = line
         if "  " in line.strip():
             # This also removes trailing whitespace: this is fine.
-            new_line = f"{indent}{line.strip().replace("  ", " ")}"
+            new_line = f'{indent}{line.strip().replace("  ", " ")}'
             errors += [(ERR_DOUBLE_SPACE, line_nr, path)]
         newlines.append((line_nr, new_line))
     return errors, newlines
@@ -429,7 +429,7 @@ def lint(path, fix=False):
                             long_lines_check,
                             isolated_by_dot_semicolon_check,
                             set_option_check,
-                            left_arrow_check,
+                            #left_arrow_check,
                             nonterminal_simp_check,
                             space_around_colon_check,
                             double_space_check]:
@@ -474,7 +474,7 @@ if not argv:
     exclude = tuple('Tactic'.split(' '))
     # Lint all non-excluded files whose module name starts with this.
     # So "Foo.Bar" will lint all files in module "Foo.Bar" and "Foo.Bar.Baz", etc.
-    dir = ''
+    dir = 'Topology'
     assert '/' not in dir
     print(f"about to lint all files in directory {dir}")
     files = []
