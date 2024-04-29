@@ -139,9 +139,9 @@ lemma coe_edge_down_toOrderHom (n : ℕ) (a b : Fin (n+1)) (hab : a ≤ b) :
 def triangle {n : ℕ} (a b c : Fin (n+1)) (hab : a ≤ b) (hbc : b ≤ c) : Δ[n] _[2] := by
   refine objMk ⟨![a, b, c], ?_⟩
   rw [Fin.monotone_iff_le_succ]
-  simp only [unop_op, len_mk, Fin.forall_fin_two]
-  dsimp
-  simp only [*, Matrix.tail_cons, Matrix.head_cons, true_and]
+  simp only [unop_op, len_mk, Matrix.cons_val_succ, Fin.forall_fin_two, Fin.isValue,
+    Fin.castSucc_zero, Matrix.cons_val_zero, Fin.castSucc_one, Matrix.cons_val_one,
+    Matrix.head_cons, and_self, hab, hbc]
 
 lemma coe_triangle_down_toOrderHom {n : ℕ} (a b c : Fin (n+1)) (hab : a ≤ b) (hbc : b ≤ c) :
     ↑(triangle a b c hab hbc).down.toOrderHom = ![a, b, c] :=

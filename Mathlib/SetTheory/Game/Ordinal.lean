@@ -90,7 +90,7 @@ theorem toPGame_moveLeft_hEq {o : Ordinal} :
 @[simp]
 theorem toPGame_moveLeft' {o : Ordinal} (i) :
     o.toPGame.moveLeft i = (toLeftMovesToPGame.symm i).val.toPGame :=
-  (congr_heq toPGame_moveLeft_hEq.symm (cast_heq _ i)).symm
+  congr_heq toPGame_moveLeft_hEq (HEq.refl i)
 #align ordinal.to_pgame_move_left' Ordinal.toPGame_moveLeft'
 
 theorem toPGame_moveLeft {o : Ordinal} (i) :
