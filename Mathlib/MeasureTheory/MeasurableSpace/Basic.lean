@@ -980,7 +980,7 @@ theorem measurable_pi_lambda (f : α → ∀ a, π a) (hf : ∀ a, Measurable fu
 #align measurable_pi_lambda measurable_pi_lambda
 
 /-- The function `(f, x) ↦ update f a x : (Π a, π a) × π a → Π a, π a` is measurable. -/
-theorem measurable_update'  {a : δ} [DecidableEq δ] :
+theorem measurable_update' {a : δ} [DecidableEq δ] :
     Measurable (fun p : (∀ i, π i) × π a ↦ update p.1 a p.2) := by
   rw [measurable_pi_iff]
   intro j

@@ -561,7 +561,7 @@ lemma of_restrict {μ : Measure α} {s : ℕ → Set α}
     (h : ∀ n, InnerRegularWRT (μ.restrict (s n)) p MeasurableSet)
     (hs : univ ⊆ ⋃ n, s n) (hmono : Monotone s) : InnerRegularWRT μ p MeasurableSet := by
   intro F hF r hr
-  have hBU : ⋃ n, F ∩ s n = F := by  rw [← inter_iUnion, univ_subset_iff.mp hs, inter_univ]
+  have hBU : ⋃ n, F ∩ s n = F := by rw [← inter_iUnion, univ_subset_iff.mp hs, inter_univ]
   have : μ F = ⨆ n, μ (F ∩ s n) := by
     rw [← measure_iUnion_eq_iSup, hBU]
     exact Monotone.directed_le fun m n h ↦ inter_subset_inter_right _ (hmono h)
@@ -727,7 +727,7 @@ then any measurable set of finite measure can be approximated by a
 compact subset. See also `MeasurableSet.exists_isCompact_lt_add` and
 `MeasurableSet.exists_lt_isCompact_of_ne_top`. -/
 theorem _root_.MeasurableSet.exists_isCompact_diff_lt [OpensMeasurableSpace α] [T2Space α]
-    [InnerRegularCompactLTTop μ]  ⦃A : Set α⦄ (hA : MeasurableSet A) (h'A : μ A ≠ ∞)
+    [InnerRegularCompactLTTop μ] ⦃A : Set α⦄ (hA : MeasurableSet A) (h'A : μ A ≠ ∞)
     {ε : ℝ≥0∞} (hε : ε ≠ 0) :
     ∃ K, K ⊆ A ∧ IsCompact K ∧ μ (A \ K) < ε := by
   rcases hA.exists_isCompact_lt_add h'A hε with ⟨K, hKA, hKc, hK⟩

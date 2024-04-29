@@ -555,7 +555,7 @@ theorem measurableSet_preimage_iff_of_surjective [HasCountableSeparatingOn Z Mea
     exact h.compl.analyticSet_image hf
 #align measurable.measurable_set_preimage_iff_of_surjective Measurable.measurableSet_preimage_iff_of_surjective
 
-theorem map_measurableSpace_eq  [HasCountableSeparatingOn Z MeasurableSet univ]
+theorem map_measurableSpace_eq [HasCountableSeparatingOn Z MeasurableSet univ]
     {f : X → Z} (hf : Measurable f)
     (hsurj : Surjective f) : MeasurableSpace.map f ‹MeasurableSpace X› = ‹MeasurableSpace Z› :=
   MeasurableSpace.ext fun _ => hf.measurableSet_preimage_iff_of_surjective hsurj
@@ -870,7 +870,7 @@ theorem _root_.MeasurableSet.image_of_measurable_injOn {f : γ → α}
       tγ _ _ _ (continuous_id_of_le t't) s hs
   exact
     @MeasurableSet.image_of_continuousOn_injOn γ
-      _ _ _ _  s f _ t' t'_polish (@borel γ t') (@BorelSpace.mk _ _ (borel γ) rfl)
+      _ _ _ _ s f _ t' t'_polish (@borel γ t') (@BorelSpace.mk _ _ (borel γ) rfl)
       M (@Continuous.continuousOn γ _ t' _ f s f_cont) f_inj
 #align measurable_set.image_of_measurable_inj_on MeasurableSet.image_of_measurable_injOn
 

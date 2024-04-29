@@ -68,7 +68,7 @@ differentiations of measure that apply in both contexts.
 -- @[nolint has_nonempty_instance]
 structure VitaliFamily {m : MeasurableSpace α} (μ : Measure α) where
   /-- Sets of the family "centered" at a given point. -/
-  setsAt :  α → Set (Set α)
+  setsAt : α → Set (Set α)
   /-- All sets of the family are measurable. -/
   measurableSet : ∀ x : α, ∀ s ∈ setsAt x, MeasurableSet s
   /-- All sets of the family have nonempty interior. -/

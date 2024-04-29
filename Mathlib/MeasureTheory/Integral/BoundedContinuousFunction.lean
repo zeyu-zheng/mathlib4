@@ -83,23 +83,23 @@ variable [MeasurableSpace E] [BorelSpace E]
 
 lemma lintegral_nnnorm_le (f : X →ᵇ E) :
     ∫⁻ x, ‖f x‖₊ ∂μ ≤ ‖f‖₊ * (μ Set.univ) := by
-  calc  ∫⁻ x, ‖f x‖₊ ∂μ
+  calc ∫⁻ x, ‖f x‖₊ ∂μ
     _ ≤ ∫⁻ _, ‖f‖₊ ∂μ         := by gcongr; apply nnnorm_coe_le_nnnorm
     _ = ‖f‖₊ * (μ Set.univ)   := by rw [lintegral_const]
 
 lemma integrable [IsFiniteMeasure μ] (f : X →ᵇ E) :
     Integrable f μ := by
   refine ⟨f.continuous.measurable.aestronglyMeasurable, (hasFiniteIntegral_def _ _).mp ?_⟩
-  calc  ∫⁻ x, ‖f x‖₊ ∂μ
+  calc ∫⁻ x, ‖f x‖₊ ∂μ
     _ ≤ ‖f‖₊ * (μ Set.univ)   := f.lintegral_nnnorm_le μ
-    _ < ∞                     := ENNReal.mul_lt_top ENNReal.coe_ne_top (measure_ne_top μ Set.univ)
+    _ < ∞           := ENNReal.mul_lt_top ENNReal.coe_ne_top (measure_ne_top μ Set.univ)
 #align measure_theory.finite_measure.integrable_of_bounded_continuous_to_real BoundedContinuousFunction.integrable
 
 variable [NormedSpace ℝ E]
 
 lemma norm_integral_le_mul_norm [IsFiniteMeasure μ] (f : X →ᵇ E) :
     ‖∫ x, f x ∂μ‖ ≤ ENNReal.toReal (μ Set.univ) * ‖f‖ := by
-  calc  ‖∫ x, f x ∂μ‖
+  calc ‖∫ x, f x ∂μ‖
     _ ≤ ∫ x, ‖f x‖ ∂μ                       := by exact norm_integral_le_integral_norm _
     _ ≤ ∫ _, ‖f‖ ∂μ                         := ?_
     _ = ENNReal.toReal (μ Set.univ) • ‖f‖   := by rw [integral_const]

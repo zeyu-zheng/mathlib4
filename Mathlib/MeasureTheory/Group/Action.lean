@@ -107,7 +107,7 @@ end MeasurableSMul
 section SMulHomClass
 
 universe uM uN uα uβ
-variable {M : Type uM} {N : Type uN}  {α : Type uα} {β : Type uβ}
+variable {M : Type uM} {N : Type uN} {α : Type uα} {β : Type uβ}
   [MeasurableSpace M] [MeasurableSpace N] [MeasurableSpace α] [MeasurableSpace β]
 
 @[to_additive]

@@ -388,10 +388,10 @@ lemma haarScalarFactor_pos_of_isHaarMeasure (μ' μ : Measure G) [IsHaarMeasure 
   pos_iff_ne_zero.2 (fun H ↦ by simpa [H] using haarScalarFactor_eq_mul μ' μ μ')
 
 @[deprecated] alias haarScalarFactor_pos_of_isOpenPosMeasure :=
-  haarScalarFactor_pos_of_isHaarMeasure  -- deprecated on 2024-02-12
+  haarScalarFactor_pos_of_isHaarMeasure -- deprecated on 2024-02-12
 
 @[deprecated] alias addHaarScalarFactor_pos_of_isOpenPosMeasure :=
-  addHaarScalarFactor_pos_of_isAddHaarMeasure  -- deprecated on 2024-02-12
+  addHaarScalarFactor_pos_of_isAddHaarMeasure -- deprecated on 2024-02-12
 
 /-!
 ### Uniqueness of measure of sets with compact closure

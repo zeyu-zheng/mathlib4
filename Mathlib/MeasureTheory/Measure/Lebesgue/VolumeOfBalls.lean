@@ -68,7 +68,7 @@ variable {E : Type*} [AddCommGroup E] [Module ℝ E] [FiniteDimensional ℝ E] [
   [tE : TopologicalSpace E] [TopologicalAddGroup E] [BorelSpace E] [T2Space E] [ContinuousSMul ℝ E]
   (μ : Measure E) [IsAddHaarMeasure μ] {g : E → ℝ} (h1 : g 0 = 0) (h2 : ∀ x, g (- x) = g x)
   (h3 : ∀ x y, g (x + y) ≤ g x + g y) (h4 : ∀ {x}, g x = 0 → x = 0)
-  (h5 :  ∀ r x, g (r • x) ≤ |r| * (g x))
+  (h5 : ∀ r x, g (r • x) ≤ |r| * (g x))
 
 theorem MeasureTheory.measure_lt_one_eq_integral_div_gamma {p : ℝ} (hp : 0 < p) :
     μ {x : E | g x < 1} =
@@ -209,7 +209,7 @@ theorem MeasureTheory.volume_sum_rpow_lt [Nonempty ι] {p : ℝ} (hp : 1 ≤ p) 
       exact not_le.mpr (lt_of_lt_of_le (Set.mem_setOf.mp hx) hr) (h₂ x)
     rw [this, measure_empty, ← zero_eq_ofReal.mpr hr, zero_pow Fin.size_pos'.ne', zero_mul]
   · rw [← volume_sum_rpow_lt_one _ hp, ← ofReal_pow (le_of_lt hr), ← finrank_pi ℝ]
-    convert addHaar_smul_of_nonneg volume (le_of_lt hr)  {x : ι → ℝ |  ∑ i, |x i| ^ p < 1} using 2
+    convert addHaar_smul_of_nonneg volume (le_of_lt hr) {x : ι → ℝ | ∑ i, |x i| ^ p < 1} using 2
     simp_rw [← Set.preimage_smul_inv₀ (ne_of_gt hr), Set.preimage_setOf_eq, Pi.smul_apply,
       smul_eq_mul, abs_mul, mul_rpow (abs_nonneg _) (abs_nonneg _), abs_inv,
       inv_rpow (abs_nonneg _), ← Finset.mul_sum, abs_eq_self.mpr (le_of_lt hr),
@@ -284,7 +284,7 @@ theorem Complex.volume_sum_rpow_lt [Nonempty ι] {p : ℝ} (hp : 1 ≤ p) (r : �
       exact not_le.mpr (lt_of_lt_of_le (Set.mem_setOf.mp hx) hr) (h₂ x)
     rw [this, measure_empty, ← zero_eq_ofReal.mpr hr, zero_pow Fin.size_pos'.ne', zero_mul]
   · rw [← Complex.volume_sum_rpow_lt_one _ hp, ← ENNReal.ofReal_pow (le_of_lt hr)]
-    convert addHaar_smul_of_nonneg volume (le_of_lt hr) {x : ι → ℂ |  ∑ i, ‖x i‖ ^ p < 1} using 2
+    convert addHaar_smul_of_nonneg volume (le_of_lt hr) {x : ι → ℂ | ∑ i, ‖x i‖ ^ p < 1} using 2
     simp_rw [← Set.preimage_smul_inv₀ (ne_of_gt hr), Set.preimage_setOf_eq, Pi.smul_apply,
       norm_smul, mul_rpow (norm_nonneg _) (norm_nonneg _), Real.norm_eq_abs, abs_inv, inv_rpow
       (abs_nonneg _), ← Finset.mul_sum, abs_eq_self.mpr (le_of_lt hr), inv_mul_lt_iff
@@ -323,7 +323,7 @@ open Fintype Real MeasureTheory MeasureTheory.Measure ENNReal
 
 theorem EuclideanSpace.volume_ball (x : EuclideanSpace ℝ ι) (r : ℝ) :
     volume (Metric.ball x r) = (.ofReal r) ^ card ι *
-      .ofReal (Real.sqrt π  ^ card ι / Gamma (card ι / 2 + 1)) := by
+      .ofReal (Real.sqrt π ^ card ι / Gamma (card ι / 2 + 1)) := by
   obtain hr | hr := le_total r 0
   · rw [Metric.ball_eq_empty.mpr hr, measure_empty, ← zero_eq_ofReal.mpr hr, zero_pow card_ne_zero,
       zero_mul]
@@ -340,7 +340,7 @@ theorem EuclideanSpace.volume_ball (x : EuclideanSpace ℝ ι) (r : ℝ) :
 
 theorem EuclideanSpace.volume_closedBall (x : EuclideanSpace ℝ ι) (r : ℝ) :
     volume (Metric.closedBall x r) = (.ofReal r) ^ card ι *
-      .ofReal (sqrt π  ^ card ι / Gamma (card ι / 2 + 1)) := by
+      .ofReal (sqrt π ^ card ι / Gamma (card ι / 2 + 1)) := by
   rw [addHaar_closedBall_eq_addHaar_ball, EuclideanSpace.volume_ball]
 
 -- 2024-04-06
@@ -369,7 +369,7 @@ theorem InnerProductSpace.volume_ball (x : E) (r : ℝ) :
 
 theorem InnerProductSpace.volume_closedBall (x : E) (r : ℝ) :
     volume (Metric.closedBall x r) = (.ofReal r) ^ finrank ℝ E *
-      .ofReal (sqrt π  ^ finrank ℝ E / Gamma (finrank ℝ E / 2 + 1)) := by
+      .ofReal (sqrt π ^ finrank ℝ E / Gamma (finrank ℝ E / 2 + 1)) := by
   rw [addHaar_closedBall_eq_addHaar_ball, InnerProductSpace.volume_ball _]
 
 end InnerProductSpace

@@ -304,7 +304,7 @@ lemma rnDeriv_self (μ : Measure α) [SigmaFinite μ] : μ.rnDeriv μ =ᵐ[μ] f
 
 lemma singularPart_eq_self [μ.HaveLebesgueDecomposition ν] : μ.singularPart ν = μ ↔ μ ⟂ₘ ν := by
   have h_dec := haveLebesgueDecomposition_add μ ν
-  refine ⟨fun h ↦ ?_, fun  h ↦ ?_⟩
+  refine ⟨fun h ↦ ?_, fun h ↦ ?_⟩
   · rw [← h]
     exact mutuallySingular_singularPart _ _
   · conv_rhs => rw [h_dec]

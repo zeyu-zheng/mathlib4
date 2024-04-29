@@ -288,7 +288,7 @@ theorem FiniteMeasure.limsup_measure_closed_le_of_tendsto {Ω ι : Type*} {L : F
   apply ENNReal.le_of_forall_pos_le_add
   intro ε ε_pos _
   let fs := F_closed.apprSeq
-  have key₁ : Tendsto (fun n ↦ ∫⁻  ω, (fs n ω : ℝ≥0∞) ∂μ) atTop (𝓝 ((μ : Measure Ω) F)) :=
+  have key₁ : Tendsto (fun n ↦ ∫⁻ ω, (fs n ω : ℝ≥0∞) ∂μ) atTop (𝓝 ((μ : Measure Ω) F)) :=
     HasOuterApproxClosed.tendsto_lintegral_apprSeq F_closed (μ : Measure Ω)
   have room₁ : (μ : Measure Ω) F < (μ : Measure Ω) F + ε / 2 := by
     apply
@@ -498,7 +498,7 @@ lemma lintegral_le_liminf_lintegral_of_forall_isOpen_measure_le_liminf_measure
     (h_opens : ∀ G, IsOpen G → μ G ≤ atTop.liminf (fun i ↦ μs i G)) :
     ∫⁻ x, ENNReal.ofReal (f x) ∂μ ≤ atTop.liminf (fun i ↦ ∫⁻ x, ENNReal.ofReal (f x) ∂ (μs i)) := by
   simp_rw [lintegral_eq_lintegral_meas_lt _ (eventually_of_forall f_nn) f_cont.aemeasurable]
-  calc  ∫⁻ (t : ℝ) in Set.Ioi 0, μ {a | t < f a}
+  calc ∫⁻ (t : ℝ) in Set.Ioi 0, μ {a | t < f a}
       ≤ ∫⁻ (t : ℝ) in Set.Ioi 0, atTop.liminf (fun i ↦ (μs i) {a | t < f a}) := ?_ -- (i)
     _ ≤ atTop.liminf (fun i ↦ ∫⁻ (t : ℝ) in Set.Ioi 0, (μs i) {a | t < f a}) := ?_ -- (ii)
   · -- (i)

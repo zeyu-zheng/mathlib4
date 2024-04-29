@@ -85,7 +85,7 @@ lemma prod_prod (s : Set α) (t : Set β) : μ.prod ν (s ×ˢ t) = μ s * ν t 
   simpa using congr_arg ENNReal.ofNNReal aux.symm
 
 lemma map_prod_map {α' : Type*} [MeasurableSpace α'] {β' : Type*} [MeasurableSpace β']
-    {f : α → α'} {g : β → β'}  (f_mble : Measurable f) (g_mble : Measurable g):
+    {f : α → α'} {g : β → β'} (f_mble : Measurable f) (g_mble : Measurable g):
     (μ.map f).prod (ν.map g) = (μ.prod ν).map (Prod.map f g) := by
   apply Subtype.ext
   simp only [val_eq_toMeasure, toMeasure_prod, toMeasure_map]

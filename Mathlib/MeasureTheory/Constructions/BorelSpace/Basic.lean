@@ -287,7 +287,7 @@ instance Subtype.opensMeasurableSpace {α : Type*} [TopologicalSpace α] [Measur
 
 lemma opensMeasurableSpace_iff_forall_measurableSet
     [TopologicalSpace α] [MeasurableSpace α] :
-    OpensMeasurableSpace α ↔  (∀ (s : Set α), IsOpen s → MeasurableSet s) := by
+    OpensMeasurableSpace α ↔ (∀ (s : Set α), IsOpen s → MeasurableSet s) := by
   refine ⟨fun h s hs ↦ ?_, fun h ↦ ⟨generateFrom_le h⟩⟩
   exact OpensMeasurableSpace.borel_le _ <| GenerateMeasurable.basic _ hs
 
@@ -1304,7 +1304,7 @@ theorem Measurable.isGLB_of_mem {ι} [Countable ι] {f : ι → δ → α} {g g'
     (hf : ∀ i, Measurable (f i))
     {s : Set δ} (hs : MeasurableSet s) (hg : ∀ b ∈ s, IsGLB { a | ∃ i, f i b = a } (g b))
     (hg' : EqOn g g' sᶜ) (g'_meas : Measurable g') : Measurable g :=
-  Measurable.isLUB_of_mem (α := αᵒᵈ) hf hs hg hg'  g'_meas
+  Measurable.isLUB_of_mem (α := αᵒᵈ) hf hs hg hg' g'_meas
 
 theorem AEMeasurable.isGLB {ι} {μ : Measure δ} [Countable ι] {f : ι → δ → α} {g : δ → α}
     (hf : ∀ i, AEMeasurable (f i) μ) (hg : ∀ᵐ b ∂μ, IsGLB { a | ∃ i, f i b = a } (g b)) :
