@@ -3,7 +3,7 @@ Copyright (c) 2021 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathlib.Algebra.Ring.Nat
+import Mathlib.Algebra.Group.Nat
 import Mathlib.Data.Fin.Basic
 import Mathlib.Algebra.Group.Defs
 import Mathlib.Algebra.GroupWithZero.Defs
@@ -128,14 +128,7 @@ def isDigit (c : UInt8) : Bool :=
 def isAlphanum (c : UInt8) : Bool :=
   c.isAlpha || c.isDigit
 
-theorem toChar_aux (n : UInt8): n.toUInt32.isValidChar := by
-  rcases n with ⟨⟨n, h⟩⟩
-  constructor
-  dsimp only [UInt8.toUInt32, UInt32.toNat]
-  dsimp only [size] at h
-  omega
-
 /-- The numbers from 0 to 256 are all valid UTF-8 characters, so we can embed one in the other. -/
-def toChar (n : UInt8) : Char := ⟨n.toUInt32, toChar_aux n⟩
+def toChar (n : UInt8) : Char := ⟨n.toUInt32, .inl (n.1.2.trans (by decide))⟩
 
 end UInt8

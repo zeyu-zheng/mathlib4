@@ -169,6 +169,9 @@ alias Iff.imp := imp_congr
 #align imp_iff_right imp_iff_rightₓ -- reorder implicits
 #align imp_iff_not imp_iff_notₓ -- reorder implicits
 
+-- These next two are not marked as `simp`
+-- because they are duplicates of `simp` lemmas in the `Classical` namespace in core.
+-- Perhaps they should just be removed?
 theorem imp_iff_right_iff {a b : Prop} : (a → b ↔ b) ↔ a ∨ b := Decidable.imp_iff_right_iff
 #align imp_iff_right_iff imp_iff_right_iff
 

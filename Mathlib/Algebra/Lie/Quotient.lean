@@ -127,6 +127,12 @@ instance lieQuotientHasBracket : Bracket (L ⧸ I) (L ⧸ I) :=
     · apply lie_mem_left R L I (x₁ - y₁) y₂ h₁⟩
 #align lie_submodule.quotient.lie_quotient_has_bracket LieSubmodule.Quotient.lieQuotientHasBracket
 
+-- Adaptation note: 2024-04-23
+-- This requires an increase in the heartbeats limit.
+-- We need to diagnose if the proof is doing something silly,
+-- or if this reflects a regression in IsDefeq from
+-- https://github.com/leanprover/lean4/pull/3965 or https://github.com/leanprover/lean4/pull/3977
+set_option maxHeartbeats 400000 in
 @[simp]
 theorem mk_bracket (x y : L) : mk ⁅x, y⁆ = ⁅(mk x : L ⧸ I), (mk y : L ⧸ I)⁆ :=
   rfl
@@ -189,7 +195,7 @@ theorem surjective_mk' : Function.Surjective (mk' N) := surjective_quot_mk _
 theorem range_mk' : LieModuleHom.range (mk' N) = ⊤ := by simp [LieModuleHom.range_eq_top]
 
 instance isNoetherian [IsNoetherian R M] : IsNoetherian R (M ⧸ N) :=
-  Submodule.Quotient.isNoetherian (N : Submodule R M)
+  inferInstanceAs (IsNoetherian R (M ⧸ (N : Submodule R M)))
 
 -- Porting note: LHS simplifies @[simp]
 theorem mk_eq_zero {m : M} : mk' N m = 0 ↔ m ∈ N :=
