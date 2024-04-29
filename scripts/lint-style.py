@@ -350,12 +350,14 @@ def space_around_colon_check(lines, path):
         if is_comment or in_string:
             newlines.append((line_nr, line))
             continue
+        indent = len(line) - len(line.lstrip())
+        line = line.strip()
         # Error if a colon is not surrounded by spaces.
         new_line = line.replace(":", " : ").replace(" : =", ":=").replace("  ", " ")
         new_line = new_line.replace(":=", " := ").replace("  ", " ")
         if new_line != line:
             errors += [(ERR_SPACE_COLON, line_nr, path)]
-        newlines.append((line_nr, new_line))
+        newlines.append((line_nr, (" " * indent) + new_line))
     return errors, newlines
 
 def double_space_check(lines, path):
