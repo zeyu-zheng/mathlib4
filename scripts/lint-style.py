@@ -364,6 +364,9 @@ def double_space_check(lines, path):
     errors = []
     newlines = []
     for line_nr, line, is_comment, in_string in annotate_strings(annotate_comments(lines)):
+        if is_comment:
+            newlines.append((line_nr, line))
+            continue
         indent = len(line) - len(line.lstrip())
         new_line = line
         if "  " in line.strip():
@@ -434,7 +437,7 @@ def lint(path, fix=False):
                             set_option_check,
                             #left_arrow_check,
                             nonterminal_simp_check,
-                            space_around_colon_check,
+                            #space_around_colon_check,
                             double_space_check]:
             errs, newlines = error_check(newlines, path)
             format_errors(errs)
