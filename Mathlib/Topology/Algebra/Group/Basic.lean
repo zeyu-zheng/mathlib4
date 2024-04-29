@@ -2152,8 +2152,8 @@ theorem toTopologicalSpace_le {x y : GroupTopology α} :
 @[to_additive]
 instance : Top (GroupTopology α) :=
   let _t : TopologicalSpace α := ⊤
-  ⟨{  continuous_mul := continuous_top
-      continuous_inv := continuous_top }⟩
+  ⟨{ continuous_mul := continuous_top
+     continuous_inv := continuous_top }⟩
 
 @[to_additive (attr := simp)]
 theorem toTopologicalSpace_top : (⊤ : GroupTopology α).toTopologicalSpace = ⊤ :=
@@ -2164,10 +2164,10 @@ theorem toTopologicalSpace_top : (⊤ : GroupTopology α).toTopologicalSpace = �
 @[to_additive]
 instance : Bot (GroupTopology α) :=
   let _t : TopologicalSpace α := ⊥
-  ⟨{  continuous_mul := by
-        haveI := discreteTopology_bot α
-        continuity
-      continuous_inv := continuous_bot }⟩
+  ⟨{ continuous_mul := by
+      haveI := discreteTopology_bot α
+      continuity
+     continuous_inv := continuous_bot }⟩
 
 @[to_additive (attr := simp)]
 theorem toTopologicalSpace_bot : (⊥ : GroupTopology α).toTopologicalSpace = ⊥ :=
