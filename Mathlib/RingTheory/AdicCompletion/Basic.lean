@@ -83,7 +83,14 @@ def Hausdorffification : Type _ :=
   M ⧸ (⨅ n : ℕ, I ^ n • ⊤ : Submodule R M)
 #align Hausdorffification Hausdorffification
 
-set_option backward.isDefEq.lazyWhnfCore false in -- See https://github.com/leanprover-community/mathlib4/issues/12534
+/-- The canonical linear map `M ⧸ (I ^ n • ⊤) →ₗ[R] M ⧸ (I ^ m • ⊤)` for `m ≤ n` used
+to define `AdicCompletion`. -/
+def AdicCompletion.transitionMap {m n : ℕ} (hmn : m ≤ n) :
+    M ⧸ (I ^ n • ⊤ : Submodule R M) →ₗ[R] M ⧸ (I ^ m • ⊤ : Submodule R M) :=
+  liftQ (I ^ n • ⊤ : Submodule R M) (mkQ (I ^ m • ⊤ : Submodule R M)) (by
+    rw [ker_mkQ]
+    exact smul_mono (Ideal.pow_le_pow_right hmn) le_rfl)
+
 /-- The completion of a module with respect to an ideal. This is not necessarily Hausdorff.
 In fact, this is only complete if the ideal is finitely generated. -/
 def AdicCompletion : Type _ :=
@@ -243,11 +250,7 @@ theorem eval_apply (n : ℕ) (f : AdicCompletion I M) : eval I M n f = f.1 n :=
   rfl
 #align adic_completion.eval_apply AdicCompletion.eval_apply
 
--- Adaptation note: 2024-04-23
--- Previously the right hand side was just `mkQ _ x`.
--- After nightly-2024-04-23, that times out, unless we use
--- set_option backward.isDefEq.lazyWhnfCore false in
-theorem eval_of (n : ℕ) (x : M) : eval I M n (of I M x) = mkQ (I ^ n • (⊤ : Submodule R M)) x :=
+theorem eval_of (n : ℕ) (x : M) : eval I M n (of I M x) = mkQ (I ^ n • ⊤ : Submodule R M) x :=
   rfl
 #align adic_completion.eval_of AdicCompletion.eval_of
 
