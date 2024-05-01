@@ -5,7 +5,7 @@ Authors: Heather Macbeth
 -/
 import Mathlib.Order.ConditionallyCompleteLattice.Basic
 import Mathlib.Order.LatticeIntervals
-import Mathlib.Data.Set.Intervals.OrdConnected
+import Mathlib.Order.Interval.Set.OrdConnected
 
 #align_import order.complete_lattice_intervals from "leanprover-community/mathlib"@"207cfac9fcd06138865b5d04f7091e46d9320432"
 
@@ -252,7 +252,8 @@ instance instCompleteLattice : CompleteLattice (Iic a) where
   le_sSup S b hb := le_sSup <| mem_image_of_mem Subtype.val hb
   sSup_le S b hb := sSup_le <| fun c' ⟨c, hc, hc'⟩ ↦ hc' ▸ hb c hc
   sInf_le S b hb := inf_le_of_right_le <| sInf_le <| mem_image_of_mem Subtype.val hb
-  le_sInf S b hb := le_inf_iff.mpr ⟨b.property, le_sInf fun d' ⟨d, hd, hd'⟩  ↦ hd' ▸ hb d hd⟩
+  le_sInf S b hb := le_inf_iff.mpr
+    ⟨b.property, le_sInf fun d' ⟨d, hd, hd'⟩  ↦ hd' ▸ hb d hd⟩
   le_top := by simp
   bot_le := by simp
 

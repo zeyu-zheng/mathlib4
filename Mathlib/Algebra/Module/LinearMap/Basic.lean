@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathaniel Thomas, Jeremy Avigad, Johannes Hölzl, Mario Carneiro, Anne Baanen,
   Frédéric Dupuis, Heather Macbeth
 -/
+import Mathlib.Algebra.Module.Basic
 import Mathlib.Algebra.Module.Pi
 import Mathlib.Algebra.Ring.CompTypeclasses
 import Mathlib.Algebra.Star.Basic
@@ -677,7 +678,7 @@ def toSemilinearMap (fₗ : M →ₑ+[σ.toMonoidHom] M₂) : M →ₛₗ[σ] M�
 
 instance : SemilinearMapClass (M →ₑ+[σ.toMonoidHom] M₂) σ M M₂ where
 
-instance : CoeTC (M →ₑ+[σ.toMonoidHom] M₂) (M →ₛₗ[σ] M₂) :=
+instance instCoeTCSemilinearMap : CoeTC (M →ₑ+[σ.toMonoidHom] M₂) (M →ₛₗ[σ] M₂) :=
   ⟨toSemilinearMap⟩
 
 /-- A `DistribMulActionHom` between two modules is a linear map. -/
@@ -685,7 +686,7 @@ def toLinearMap (fₗ : M →+[R] M₃) : M →ₗ[R] M₃ :=
   { fₗ with }
 #align distrib_mul_action_hom.to_linear_map DistribMulActionHom.toLinearMap
 
-instance : CoeTC (M →+[R] M₃) (M →ₗ[R] M₃) :=
+instance instCoeTCLinearMap : CoeTC (M →+[R] M₃) (M →ₗ[R] M₃) :=
   ⟨toLinearMap⟩
 
 /-- A `DistribMulActionHom` between two modules is a linear map. -/
@@ -934,6 +935,15 @@ theorem default_def : (default : M →ₛₗ[σ₁₂] M₂) = 0 :=
   rfl
 #align linear_map.default_def LinearMap.default_def
 
+instance uniqueOfLeft [Subsingleton M] : Unique (M →ₛₗ[σ₁₂] M₂) :=
+  { inferInstanceAs (Inhabited (M →ₛₗ[σ₁₂] M₂)) with
+    uniq := fun f => ext fun x => by rw [Subsingleton.elim x 0, map_zero, map_zero] }
+#align linear_map.unique_of_left LinearMap.uniqueOfLeft
+
+instance uniqueOfRight [Subsingleton M₂] : Unique (M →ₛₗ[σ₁₂] M₂) :=
+  coe_injective.unique
+#align linear_map.unique_of_right LinearMap.uniqueOfRight
+
 /-- The sum of two linear maps is linear. -/
 instance : Add (M →ₛₗ[σ₁₂] M₂) :=
   ⟨fun f g ↦
@@ -1009,6 +1019,22 @@ instance addCommGroup : AddCommGroup (M →ₛₗ[σ₁₂] N₂) :=
   DFunLike.coe_injective.addCommGroup _ rfl (fun _ _ ↦ rfl) (fun _ ↦ rfl) (fun _ _ ↦ rfl)
     (fun _ _ ↦ rfl) fun _ _ ↦ rfl
 
+/-- Evaluation of a `σ₁₂`-linear map at a fixed `a`, as an `AddMonoidHom`. -/
+@[simps]
+def evalAddMonoidHom (a : M) : (M →ₛₗ[σ₁₂] M₂) →+ M₂ where
+  toFun f := f a
+  map_add' f g := LinearMap.add_apply f g a
+  map_zero' := rfl
+#align linear_map.eval_add_monoid_hom LinearMap.evalAddMonoidHom
+
+/-- `LinearMap.toAddMonoidHom` promoted to an `AddMonoidHom`. -/
+@[simps]
+def toAddMonoidHom' : (M →ₛₗ[σ₁₂] M₂) →+ M →+ M₂ where
+  toFun := toAddMonoidHom
+  map_zero' := by ext; rfl
+  map_add' := by intros; ext; rfl
+#align linear_map.to_add_monoid_hom' LinearMap.toAddMonoidHom'
+
 end Arithmetic
 
 section Actions
@@ -1028,8 +1054,14 @@ instance : DistribMulAction S (M →ₛₗ[σ₁₂] M₂)
     where
   one_smul _ := ext fun _ ↦ one_smul _ _
   mul_smul _ _ _ := ext fun _ ↦ mul_smul _ _ _
-  smul_add _ _ _ := ext fun _ ↦ smul_add _ _ _
-  smul_zero _ := ext fun _ ↦ smul_zero _
+  -- Adaptation note: 2024-04-24
+  -- Prior to https://github.com/leanprover/lean4/pull/3965 this was just
+  -- `smul_add _ _ _ := ext fun _ ↦ smul_add _ _ _`
+  smul_add s _ _ := ext fun _ ↦ smul_add s _ _
+  -- Adaptation note: 2024-04-24
+  -- Prior to https://github.com/leanprover/lean4/pull/3965 this was just
+  -- `smul_zero _ := ext fun _ ↦ smul_zero _`
+  smul_zero s := ext fun _ ↦ smul_zero s
 
 theorem smul_comp (a : S₃) (g : M₂ →ₛₗ[σ₂₃] M₃) (f : M →ₛₗ[σ₁₂] M₂) :
     (a • g).comp f = a • g.comp f :=
@@ -1058,7 +1090,10 @@ variable [Semiring S] [Module S M] [Module S M₂] [SMulCommClass R₂ S M₂]
 
 instance module : Module S (M →ₛₗ[σ₁₂] M₂) where
   add_smul _ _ _ := ext fun _ ↦ add_smul _ _ _
-  zero_smul _ := ext fun _ ↦ zero_smul _ _
+  -- Adaptation note: 2024-04-24
+  -- Prior to https://github.com/leanprover/lean4/pull/3965 this was just
+  -- `zero_smul _ := ext fun _ ↦ zero_smul _ _`
+  zero_smul _ := ext fun _ ↦ zero_smul S _
 
 instance [NoZeroSMulDivisors S M₂] : NoZeroSMulDivisors S (M →ₛₗ[σ₁₂] M₂) :=
   coe_injective.noZeroSMulDivisors _ rfl coe_smul
