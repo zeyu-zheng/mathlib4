@@ -1156,7 +1156,6 @@ lemma base_nonempty {n : ℕ} (hn : 0 < n) : (Finset.Ico (⌊b (min_bi b) / 2 * 
                                  _ ≤ 1 * n        := by gcongr; norm_num
                                  _ = n             := by simp
 
-set_option maxHeartbeats 400000 in -- Adaptation note: 2024-04-23
 /-- The main proof of the upper bound part of the Akra-Bazzi theorem. The factor
 `1 - ε n` does not change the asymptotic order, but is needed for the induction step to go
 through. -/
@@ -1224,7 +1223,10 @@ lemma T_isBigO_smoothingFn_mul_asympBound :
             gcongr (∑ i, a i * ?_) + g n with i _
             · exact le_of_lt <| R.a_pos _
             · if ri_lt_n₀ : r i n < n₀ then
-                exact h_base _ <| by aesop
+                exact h_base _ <| by
+                  simp_all only [gt_iff_lt, Nat.ofNat_pos, div_pos_iff_of_pos_right,
+                    eventually_atTop, ge_iff_le, sub_pos, one_div, mem_Ico, and_imp,
+                    forall_true_left, mem_univ, and_self, b', C, base_max]
               else
                 push_neg at ri_lt_n₀
                 exact h_ind (r i n) (R.r_lt_n _ _ (n₀_ge_Rn₀.trans hn)) ri_lt_n₀

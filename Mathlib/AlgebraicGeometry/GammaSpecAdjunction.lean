@@ -263,10 +263,9 @@ theorem comp_ring_hom_ext {X : LocallyRingedSpace.{u}} {R : CommRingCat.{u}} {f 
           toOpen R (basicOpen r) ≫ β.1.c.app (op (basicOpen r))) :
     X.toΓSpec ≫ Spec.locallyRingedSpaceMap f = β := by
   ext1
-  -- Porting note: need more hand holding here
+  -- Porting note: was `apply Spec.basicOpen_hom_ext`
   refine Spec.basicOpen_hom_ext w ?_
   intro r U
-  -- Porting note: changed `rw` to `erw`
   rw [LocallyRingedSpace.comp_val_c_app]
   erw [toOpen_comp_comap_assoc]
   rw [Category.assoc]
@@ -319,14 +318,10 @@ def identityToΓSpec : 𝟭 LocallyRingedSpace.{u} ⟶ Γ.rightOp ⋙ Spec.toLoc
 
 namespace ΓSpec
 
-set_option maxHeartbeats 400000 in -- Adaptation note: 2024-04-23
+set_option backward.isDefEq.lazyWhnfCore false in -- See https://github.com/leanprover-community/mathlib4/issues/12534
 theorem left_triangle (X : LocallyRingedSpace) :
-    SpecΓIdentity.inv.app (Γ.obj (op X)) ≫ (identityToΓSpec.app X).val.c.app (op ⊤) = 𝟙 _ := by
-  simpa only [Γ_obj, unop_op, Functor.id_obj, Functor.comp_obj, Functor.rightOp_obj,
-    Spec.toLocallyRingedSpace_obj, Spec.locallyRingedSpaceObj_toSheafedSpace,
-    Spec.sheafedSpaceObj_carrier, pushforwardObj_obj, Functor.op_obj, Opens.map_top,
-    Spec.sheafedSpaceObj_presheaf, SpecΓIdentity_inv_app, toΓSpec_val_base] using
-    X.Γ_Spec_left_triangle
+    SpecΓIdentity.inv.app (Γ.obj (op X)) ≫ (identityToΓSpec.app X).val.c.app (op ⊤) = 𝟙 _ :=
+  X.Γ_Spec_left_triangle
 #align algebraic_geometry.Γ_Spec.left_triangle AlgebraicGeometry.ΓSpec.left_triangle
 
 /-- `SpecΓIdentity` is iso so these are mutually two-sided inverses. -/
@@ -400,7 +395,7 @@ theorem adjunction_homEquiv_symm_apply {X : Scheme} {R : CommRingCatᵒᵖ}
   by rw [adjunction_homEquiv]; rfl
 #align algebraic_geometry.Γ_Spec.adjunction_hom_equiv_symm_apply AlgebraicGeometry.ΓSpec.adjunction_homEquiv_symm_apply
 
-set_option maxHeartbeats 400000 in -- Adaptation note: 2024-04-23
+set_option backward.isDefEq.lazyWhnfCore false in -- See https://github.com/leanprover-community/mathlib4/issues/12534
 @[simp]
 theorem adjunction_counit_app {R : CommRingCatᵒᵖ} :
     ΓSpec.adjunction.counit.app R = locallyRingedSpaceAdjunction.counit.app R := by

@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Scott Morrison
 -/
 import Mathlib.Algebra.BigOperators.Finsupp
+import Mathlib.Algebra.Module.Basic
 import Mathlib.Algebra.Regular.SMul
 import Mathlib.Data.Finset.Preimage
 import Mathlib.Data.Rat.BigOperators
@@ -851,8 +852,8 @@ theorem prod_option_index [AddCommMonoid M] [CommMonoid N] (f : Option α →₀
     · simp [some_zero, h_zero]
     · intro f₁ f₂ h₁ h₂
       rw [Finsupp.prod_add_index, h₁, h₂, some_add, Finsupp.prod_add_index]
-      simp only [h_add, Pi.add_apply, Finsupp.coe_add]
-      rw [mul_mul_mul_comm]
+      · simp only [h_add, Pi.add_apply, Finsupp.coe_add]
+        rw [mul_mul_mul_comm]
       all_goals simp [h_zero, h_add]
     · rintro (_ | a) m <;> simp [h_zero, h_add]
 #align finsupp.prod_option_index Finsupp.prod_option_index
@@ -1599,9 +1600,9 @@ theorem mapRange_smul {_ : Monoid R} [AddMonoid M] [DistribMulAction R M] [AddMo
     [DistribMulAction R N] {f : M → N} {hf : f 0 = 0} (c : R) (v : α →₀ M)
     (hsmul : ∀ x, f (c • x) = c • f x) : mapRange f hf (c • v) = c • mapRange f hf v := by
   erw [← mapRange_comp]
-  have : f ∘ (c • ·) = (c • ·) ∘ f := funext hsmul
-  simp_rw [this]
-  apply mapRange_comp
+  · have : f ∘ (c • ·) = (c • ·) ∘ f := funext hsmul
+    simp_rw [this]
+    apply mapRange_comp
   simp only [Function.comp_apply, smul_zero, hf]
 #align finsupp.map_range_smul Finsupp.mapRange_smul
 
@@ -1647,11 +1648,7 @@ instance noZeroSMulDivisors [Semiring R] [AddCommMonoid M] [Module R M] {ι : Ty
     [NoZeroSMulDivisors R M] : NoZeroSMulDivisors R (ι →₀ M) :=
   ⟨fun h =>
     or_iff_not_imp_left.mpr fun hc =>
-      -- Adaptation note: 2024-04-23
-      -- Prior to https://github.com/leanprover/lean4/pull/3965, we didn't need the `R := R` below.
-      -- Hopefully a fix to https://github.com/leanprover/lean4/pull/3982
-      -- will also address this one.
-      Finsupp.ext fun i => ((smul_eq_zero (R := R)).mp (DFunLike.ext_iff.mp h i)).resolve_left hc⟩
+      Finsupp.ext fun i => (smul_eq_zero.mp (DFunLike.ext_iff.mp h i)).resolve_left hc⟩
 #align finsupp.no_zero_smul_divisors Finsupp.noZeroSMulDivisors
 
 section DistribMulActionSemiHom

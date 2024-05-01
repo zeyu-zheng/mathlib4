@@ -695,7 +695,7 @@ theorem measure_setLaverage_le_pos (hμ : μ s ≠ 0) (hs : NullMeasurableSet s 
   rintro x ⟨hfx, hx⟩
   dsimp at hfx
   rw [← toReal_laverage hg.aemeasurable, toReal_le_toReal (setLaverage_lt_top hint).ne hx] at hfx
-  exact hfx.trans (hgf _)
+  · exact hfx.trans (hgf _)
   · simp_rw [ae_iff, not_ne_iff]
     exact measure_eq_top_of_lintegral_ne_top hg.aemeasurable hint
 #align measure_theory.measure_set_laverage_le_pos MeasureTheory.measure_setLaverage_le_pos
@@ -839,7 +839,7 @@ theorem tendsto_integral_smul_of_tendsto_average_norm_sub
       apply Integrable.sub _ (hig.smul_const _)
       have A : Function.support (fun y ↦ g i y • f y) ⊆ a i := by
         apply Subset.trans _ hisupp
-        exact Function.support_smul_subset_left (g i) f
+        exact Function.support_smul_subset_left _ _
       rw [← integrableOn_iff_integrable_of_support_subset A]
       apply Integrable.smul_of_top_right hif
       exact memℒp_top_of_bound hig.aestronglyMeasurable.restrict
