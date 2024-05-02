@@ -678,7 +678,7 @@ def toSemilinearMap (fₗ : M →ₑ+[σ.toMonoidHom] M₂) : M →ₛₗ[σ] M�
 
 instance : SemilinearMapClass (M →ₑ+[σ.toMonoidHom] M₂) σ M M₂ where
 
-instance instCoeTCSemilinearMap : CoeTC (M →ₑ+[σ.toMonoidHom] M₂) (M →ₛₗ[σ] M₂) :=
+instance : CoeTC (M →ₑ+[σ.toMonoidHom] M₂) (M →ₛₗ[σ] M₂) :=
   ⟨toSemilinearMap⟩
 
 /-- A `DistribMulActionHom` between two modules is a linear map. -/
@@ -686,7 +686,7 @@ def toLinearMap (fₗ : M →+[R] M₃) : M →ₗ[R] M₃ :=
   { fₗ with }
 #align distrib_mul_action_hom.to_linear_map DistribMulActionHom.toLinearMap
 
-instance instCoeTCLinearMap : CoeTC (M →+[R] M₃) (M →ₗ[R] M₃) :=
+instance : CoeTC (M →+[R] M₃) (M →ₗ[R] M₃) :=
   ⟨toLinearMap⟩
 
 /-- A `DistribMulActionHom` between two modules is a linear map. -/
@@ -1054,14 +1054,8 @@ instance : DistribMulAction S (M →ₛₗ[σ₁₂] M₂)
     where
   one_smul _ := ext fun _ ↦ one_smul _ _
   mul_smul _ _ _ := ext fun _ ↦ mul_smul _ _ _
-  -- Adaptation note: 2024-04-24
-  -- Prior to https://github.com/leanprover/lean4/pull/3965 this was just
-  -- `smul_add _ _ _ := ext fun _ ↦ smul_add _ _ _`
-  smul_add s _ _ := ext fun _ ↦ smul_add s _ _
-  -- Adaptation note: 2024-04-24
-  -- Prior to https://github.com/leanprover/lean4/pull/3965 this was just
-  -- `smul_zero _ := ext fun _ ↦ smul_zero _`
-  smul_zero s := ext fun _ ↦ smul_zero s
+  smul_add _ _ _ := ext fun _ ↦ smul_add _ _ _
+  smul_zero _ := ext fun _ ↦ smul_zero _
 
 theorem smul_comp (a : S₃) (g : M₂ →ₛₗ[σ₂₃] M₃) (f : M →ₛₗ[σ₁₂] M₂) :
     (a • g).comp f = a • g.comp f :=
@@ -1090,10 +1084,7 @@ variable [Semiring S] [Module S M] [Module S M₂] [SMulCommClass R₂ S M₂]
 
 instance module : Module S (M →ₛₗ[σ₁₂] M₂) where
   add_smul _ _ _ := ext fun _ ↦ add_smul _ _ _
-  -- Adaptation note: 2024-04-24
-  -- Prior to https://github.com/leanprover/lean4/pull/3965 this was just
-  -- `zero_smul _ := ext fun _ ↦ zero_smul _ _`
-  zero_smul _ := ext fun _ ↦ zero_smul S _
+  zero_smul _ := ext fun _ ↦ zero_smul _ _
 
 instance [NoZeroSMulDivisors S M₂] : NoZeroSMulDivisors S (M →ₛₗ[σ₁₂] M₂) :=
   coe_injective.noZeroSMulDivisors _ rfl coe_smul
