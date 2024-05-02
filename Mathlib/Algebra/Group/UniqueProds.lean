@@ -414,7 +414,7 @@ open MulOpposite in
       rw [mul_assoc, ← mul_assoc a', he, mul_assoc, mul_assoc] at hu'
       exact hu' rfl
     classical
-    let _ := Finset.mul (α := G)              -- E = D⁻¹C, F = DC⁻¹
+    let _ := Finset.mul (α := G)       -- E = D⁻¹C, F = DC⁻¹
     have := uniqueMul_of_nonempty (A := D.image (·⁻¹) * C) (B := D * C.image (·⁻¹)) ?_ ?_
     · obtain ⟨e, he, f, hf, hu⟩ := this
       clear_value C D
