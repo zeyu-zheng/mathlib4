@@ -228,7 +228,7 @@ theorem frobenius_frobeniusRotation {a₁ a₂ : 𝕎 k} (ha₁ : a₁.coeff 0 �
       frobeniusRotationCoeff, Nat.zero_eq]
     apply solution_spec' _ ha₁
   · simp only [nthRemainder_spec, WittVector.coeff_frobenius_charP, frobeniusRotationCoeff,
-      frobeniusRotation]
+      frobeniusRotation, WittVector.coeff_mk]
     have :=
       succNthVal_spec' p n a₁ a₂ (fun i : Fin (n + 1) => frobeniusRotationCoeff p ha₁ ha₂ i.val)
         ha₁ ha₂
