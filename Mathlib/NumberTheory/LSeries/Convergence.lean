@@ -78,7 +78,7 @@ lemma LSeries.abscissaOfAbsConv_le_of_forall_lt_LSeriesSummable' {f : ℕ → �
   · refine le_of_eq <| sInf_eq_bot.mpr fun y hy ↦ ?_
     induction' y using EReal.rec with z
     · simp only [gt_iff_lt, lt_self_iff_false] at hy
-    · exact ⟨z - 1, ⟨z-1, h (z - 1) <| EReal.bot_lt_coe _, rfl⟩, by norm_cast; exact sub_one_lt z⟩
+    · exact ⟨z - 1,  ⟨z-1, h (z - 1) <| EReal.bot_lt_coe _, rfl⟩, by norm_cast; exact sub_one_lt z⟩
     · exact ⟨0, ⟨0, h 0 <| EReal.bot_lt_coe 0, rfl⟩, EReal.zero_lt_top⟩
   · exact abscissaOfAbsConv_le_of_forall_lt_LSeriesSummable <| by exact_mod_cast h
   · exact le_top

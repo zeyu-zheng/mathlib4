@@ -50,7 +50,7 @@ These also prevent non-computable instances being used to construct these instan
 -/
 
 instance instAddCommMonoidWithOne : AddCommMonoidWithOne ℕ := by infer_instance
-instance instDistrib       : Distrib ℕ       := by infer_instance
-instance instSemiring       : Semiring ℕ       := by infer_instance
+instance instDistrib              : Distrib ℕ              := by infer_instance
+instance instSemiring             : Semiring ℕ             := by infer_instance
 
 end Nat

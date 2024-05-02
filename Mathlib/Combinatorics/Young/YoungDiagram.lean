@@ -459,7 +459,7 @@ protected def cellsOfRowLens : List ℕ → Finset (ℕ × ℕ)
 #align young_diagram.cells_of_row_lens YoungDiagram.cellsOfRowLens
 
 protected theorem mem_cellsOfRowLens {w : List ℕ} {c : ℕ × ℕ} :
-    c ∈ YoungDiagram.cellsOfRowLens w ↔ ∃ h : c.fst < w.length, c.snd < w.get ⟨c.fst, h⟩ := by
+    c ∈ YoungDiagram.cellsOfRowLens w ↔ ∃ h : c.fst < w.length, c.snd < w.get ⟨c.fst, h⟩  := by
   induction' w with w_hd w_tl w_ih generalizing c <;> rw [YoungDiagram.cellsOfRowLens]
   · simp [YoungDiagram.cellsOfRowLens]
   · rcases c with ⟨⟨_, _⟩, _⟩
@@ -478,7 +478,7 @@ def ofRowLens (w : List ℕ) (hw : w.Sorted (· ≥ ·)) : YoungDiagram where
     refine' ⟨hi.trans_lt h1, _⟩
     calc
       j1 ≤ j2 := hj
-      _ < w.get ⟨i2, _⟩ := h2
+      _ < w.get ⟨i2, _⟩  := h2
       _ ≤ w.get ⟨i1, _⟩ := by
         obtain rfl | h := eq_or_lt_of_le hi
         · convert le_refl (w.get ⟨i1, h1⟩)

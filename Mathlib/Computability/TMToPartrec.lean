@@ -1557,7 +1557,7 @@ theorem pred_ok (q₁ q₂ s v) (c d : List Γ') : ∃ s',
     refine' TransGen.head rfl _
     simp only [Option.mem_def, TM2.stepAux, elim_main, List.head?_cons, Option.some.injEq,
       decide_False, List.tail_cons, elim_update_main, ne_eq, Function.update_noteq, elim_rev,
-      elim_update_rev, natEnd, Function.update_same, cond_true, cond_false]
+      elim_update_rev, natEnd, Function.update_same,  cond_true, cond_false]
     convert unrev_ok using 2
     simp
   simp only [Num.succ']
@@ -1639,7 +1639,7 @@ theorem tr_ret_respects (k v s) : ∃ b₂,
           (fun x h => Bool.decide_false (trList_ne_consₗ _ _ h)) ⟨rfl, rfl⟩
     refine' (move₂_ok (by decide) _ (splitAtPred_false _)).trans _; · rfl
     simp only [TM2.step, Option.mem_def, Option.elim, elim_update_stack, elim_main,
-      List.append_nil, elim_update_main, id_eq, elim_update_aux, ne_eq, Function.update_noteq,
+      List.append_nil, elim_update_main,  id_eq, elim_update_aux, ne_eq, Function.update_noteq,
       elim_aux, elim_stack]
     exact h₂
   | cons₂ ns k IH =>
@@ -1963,7 +1963,7 @@ theorem trStmts₁_supports {S q} (H₁ : (q : Λ').Supports S) (HS₁ : trStmts
     refine' supports_union.2 ⟨_, _⟩
     · exact q₁_ih H₁.1 fun _ h => h₂.2 _ (Or.inl h)
     · exact q₂_ih H₁.2 fun _ h => h₂.2 _ (Or.inr h)
-  · exact supports_singleton.2 (ret_supports H₁) -- ret
+  · exact supports_singleton.2 (ret_supports H₁)  -- ret
 #align turing.partrec_to_TM2.tr_stmts₁_supports Turing.PartrecToTM2.trStmts₁_supports
 
 theorem trStmts₁_supports' {S q K} (H₁ : (q : Λ').Supports S) (H₂ : trStmts₁ q ∪ K ⊆ S)

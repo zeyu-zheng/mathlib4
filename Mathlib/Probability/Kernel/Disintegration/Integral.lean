@@ -178,7 +178,7 @@ lemma set_lintegral_condKernel (hf : Measurable f) {s : Set β}
     ∫⁻ b in s, ∫⁻ ω in t, f (b, ω) ∂(ρ.condKernel b) ∂ρ.fst
       = ∫⁻ x in s ×ˢ t, f x ∂ρ := by
   conv_rhs => rw [← compProd_fst_condKernel ρ]
-  rw [set_lintegral_compProd hf hs ht]
+  rw [set_lintegral_compProd  hf hs ht]
 #align probability_theory.set_lintegral_cond_kernel MeasureTheory.Measure.set_lintegral_condKernel
 
 lemma set_lintegral_condKernel_univ_right (hf : Measurable f) {s : Set β}

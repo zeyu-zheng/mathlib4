@@ -60,8 +60,8 @@ elab "assert_not_exists " n:ident : command => do
     for i in [idx.toNat+1:env.header.moduleData.size] do
       if env.header.moduleData[i]!.imports.any (·.module == env.header.moduleNames[idx.toNat]!) then
         idx := i
-        msg := msg ++ m!"\n which is imported by {env.header.moduleNames[i]!},"
-    pure <| msg ++ m!"\n which is imported by this file.")
+        msg := msg ++ m!"\n  which is imported by {env.header.moduleNames[i]!},"
+    pure <| msg ++ m!"\n  which is imported by this file.")
   throw <| .error n m!"{msg}\n\n\
     These invariants are maintained by `assert_not_exists` statements, \
     and exist in order to ensure that \"complicated\" parts of the library \

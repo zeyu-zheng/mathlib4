@@ -591,7 +591,7 @@ such that `f z' / f d = z` and `f w' / f d = w`. -/
     "Given a localization map `f : M →+ N`, and `z w : N`, there exist `z' w' : M` and `d : S`
 such that `f z' - f d = z` and `f w' - f d = w`."]
 theorem surj₂ (f : LocalizationMap S N) (z w : N) : ∃ z' w' : M, ∃ d : S,
-    (z * f.toMap d = f.toMap z') ∧ (w * f.toMap d = f.toMap w') := by
+    (z * f.toMap d = f.toMap z') ∧  (w * f.toMap d = f.toMap w') := by
   let ⟨a, ha⟩ := surj f z
   let ⟨b, hb⟩ := surj f w
   refine ⟨a.1 * b.2, a.2 * b.1, a.2 * b.2, ?_, ?_⟩
@@ -1095,7 +1095,7 @@ the induced map `k.lift` for `l` is equal to the  induced map `f.lift` for `l`. 
     "Given Localization maps `f : M →+ N` for a Submonoid `S ⊆ M` and
 `k : M →+ Q` for a Submonoid `T ⊆ M`, such that `S ≤ T`, and we have
 `l : M →+ A`, the composition of the induced map `f.lift` for `k` with
-the induced map `k.lift` for `l` is equal to the induced map `f.lift` for `l`"]
+the induced map `k.lift` for `l` is equal to the  induced map `f.lift` for `l`"]
 theorem lift_comp_lift {T : Submonoid M} (hST : S ≤ T) {Q : Type*} [CommMonoid Q]
     (k : LocalizationMap T Q) {A : Type*} [CommMonoid A] {l : M →* A}
     (hl : ∀ w : T, IsUnit (l w)) :
@@ -1867,7 +1867,7 @@ namespace Submonoid
 
 variable {S N} in
 /-- If `S` contains `0` then the localization at `S` is trivial. -/
-theorem LocalizationMap.subsingleton (f : Submonoid.LocalizationMap S N) (h : 0 ∈ S) :
+theorem LocalizationMap.subsingleton  (f : Submonoid.LocalizationMap S N) (h : 0 ∈ S) :
     Subsingleton N := by
   refine ⟨fun a b ↦ ?_⟩
   rw [← LocalizationMap.mk'_sec f a, ← LocalizationMap.mk'_sec f b, LocalizationMap.eq]
@@ -2154,7 +2154,7 @@ instance [LinearOrderedCancelCommMonoid α] {s : Submonoid α} :
         simp_rw [mk_le_mk]
         exact le_total _ _
     decidableLE := Localization.decidableLE
-    decidableLT := Localization.decidableLT -- Porting note: was wrong in mathlib3
+    decidableLT := Localization.decidableLT  -- Porting note: was wrong in mathlib3
     decidableEq := Localization.decidableEq }
 
 end Localization

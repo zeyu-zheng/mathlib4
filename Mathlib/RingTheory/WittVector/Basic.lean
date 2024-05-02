@@ -94,7 +94,7 @@ macro "map_fun_tac" : tactic => `(tactic| (
     -- Porting note: the lemmas on the next line do not have the `simp` tag in mathlib4
     add_coeff, sub_coeff, mul_coeff, neg_coeff, nsmul_coeff, zsmul_coeff, pow_coeff,
     peval, map_aeval, algebraMap_int_eq, coe_eval₂Hom] <;>
-  try { cases n <;> simp <;> done } <;> -- Porting note: this line solves `one`
+  try { cases n <;> simp <;> done } <;>  -- Porting note: this line solves `one`
   apply eval₂Hom_congr (RingHom.ext_int _ _) _ rfl <;>
   ext ⟨i, k⟩ <;>
     fin_cases i <;> rfl))

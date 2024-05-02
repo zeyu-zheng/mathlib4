@@ -143,7 +143,7 @@ lemma fermatLastTheoremWith_of_fermatLastTheoremWith_coprime {n : ℕ} {R : Type
   rw [← Finset.gcd_mul_left, gcd_eq_gcd_image, image_insert, image_insert, image_singleton,
       id_eq, id_eq, id_eq, ← hA, ← hB, ← hC]
 
-lemma dvd_c_of_prime_of_dvd_a_of_dvd_b_of_FLT {n : ℕ} {p : ℤ} (hp : Prime p) {a b c : ℤ}
+lemma dvd_c_of_prime_of_dvd_a_of_dvd_b_of_FLT {n : ℕ} {p : ℤ} (hp : Prime p)  {a b c : ℤ}
     (hpa : p ∣ a) (hpb : p ∣ b) (HF : a ^ n + b ^ n + c ^ n = 0) : p ∣ c := by
   rcases eq_or_ne n 0 with rfl | hn
   · simp at HF
@@ -155,7 +155,7 @@ lemma isCoprime_of_gcd_eq_one_of_FLT {n : ℕ} {a b c : ℤ} (Hgcd: Finset.gcd {
     (HF : a ^ n + b ^ n + c ^ n = 0) : IsCoprime a b := by
   rcases eq_or_ne n 0 with rfl | hn
   · simp only [pow_zero, Int.reduceAdd, OfNat.ofNat_ne_zero] at HF
-  refine isCoprime_of_prime_dvd ?_ <| (fun p hp hpa hpb ↦ hp.not_dvd_one ?_)
+  refine isCoprime_of_prime_dvd  ?_ <| (fun p hp hpa hpb ↦ hp.not_dvd_one ?_)
   · rintro ⟨rfl, rfl⟩
     simp only [ne_eq, hn, not_false_eq_true, zero_pow, add_zero, zero_add, pow_eq_zero_iff]
       at HF

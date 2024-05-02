@@ -170,7 +170,7 @@ theorem mul_le : M * N ≤ P ↔ ∀ m ∈ M, ∀ n ∈ N, m * n ∈ P :=
 
 theorem mul_toAddSubmonoid (M N : Submodule R A) :
     (M * N).toAddSubmonoid = M.toAddSubmonoid * N.toAddSubmonoid := by
-  dsimp [HMul.hMul, Mul.mul] -- Porting note: added `hMul`
+  dsimp [HMul.hMul, Mul.mul]  -- Porting note: added `hMul`
   rw [map₂, iSup_toAddSubmonoid]
   rfl
 #align submodule.mul_to_add_submonoid Submodule.mul_toAddSubmonoid
@@ -264,12 +264,12 @@ protected theorem map_mul {A'} [Semiring A'] [Algebra R A'] (f : A →ₐ[R] A')
       apply congr_arg sSup
       ext S
       constructor <;> rintro ⟨y, hy⟩
-      · use ⟨f y, mem_map.mpr ⟨y.1, y.2, rfl⟩⟩ -- Porting note: added `⟨⟩`
+      · use ⟨f y, mem_map.mpr ⟨y.1, y.2, rfl⟩⟩  -- Porting note: added `⟨⟩`
         refine' Eq.trans _ hy
         ext
         simp
       · obtain ⟨y', hy', fy_eq⟩ := mem_map.mp y.2
-        use ⟨y', hy'⟩ -- Porting note: added `⟨⟩`
+        use ⟨y', hy'⟩  -- Porting note: added `⟨⟩`
         refine' Eq.trans _ hy
         rw [f.toLinearMap_apply] at fy_eq
         ext
@@ -745,7 +745,7 @@ theorem one_le_one_div {I : Submodule R A} : 1 ≤ 1 / I ↔ I ≤ 1 := by
 #align submodule.one_le_one_div Submodule.one_le_one_div
 
 theorem le_self_mul_one_div {I : Submodule R A} (hI : I ≤ 1) : I ≤ I * (1 / I) := by
-  refine (mul_one I).symm.trans_le ?_ -- Porting note: drop `rw {occs := _}` in favor of `refine`
+  refine (mul_one I).symm.trans_le ?_  -- Porting note: drop `rw {occs := _}` in favor of `refine`
   apply mul_le_mul_right (one_le_one_div.mpr hI)
 #align submodule.le_self_mul_one_div Submodule.le_self_mul_one_div
 

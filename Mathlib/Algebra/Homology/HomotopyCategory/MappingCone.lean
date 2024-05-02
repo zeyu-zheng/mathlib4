@@ -51,7 +51,7 @@ open HomComplex
 
 /-- The left inclusion in the mapping cone, as a cochain of degree `-1`. -/
 noncomputable def inl : Cochain F (mappingCone φ) (-1) :=
-  Cochain.mk (fun p q hpq => homotopyCofiber.inlX φ p q (by dsimp; omega))
+  Cochain.mk (fun p q hpq => homotopyCofiber.inlX φ p q  (by dsimp; omega))
 
 /-- The right inclusion in the mapping cone. -/
 noncomputable def inr : G ⟶ mappingCone φ := homotopyCofiber.inr φ
@@ -376,7 +376,7 @@ end
 /-- Constructor for homotopies between morphisms from a mapping cone. -/
 noncomputable def descHomotopy {K : CochainComplex C ℤ} (f₁ f₂ : mappingCone φ ⟶ K)
     (γ₁ : Cochain F K (-2)) (γ₂ : Cochain G K (-1))
-    (h₁ : (inl φ).comp (Cochain.ofHom f₁) (add_zero (-1)) =
+    (h₁ : (inl φ).comp (Cochain.ofHom f₁) (add_zero (-1))  =
       δ (-2) (-1) γ₁ + (Cochain.ofHom φ).comp γ₂ (zero_add (-1)) +
       (inl φ).comp (Cochain.ofHom f₂) (add_zero (-1)))
     (h₂ : Cochain.ofHom (inr φ ≫ f₁) = δ (-1) 0 γ₂ + Cochain.ofHom (inr φ ≫ f₂)) :

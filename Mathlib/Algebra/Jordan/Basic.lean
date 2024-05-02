@@ -232,7 +232,7 @@ private theorem aux3 {a b c : A} :
   -- Porting note: was `nth_rw` instead of `conv_lhs`
   conv_lhs => enter [1, 1, 2, 2, 2]; rw [mul_comm a b]
   conv_lhs => enter [1, 2, 2, 2, 1]; rw [mul_comm c a]
-  conv_lhs => enter [  2, 2, 2, 2]; rw [mul_comm b c]
+  conv_lhs => enter [   2, 2, 2, 2]; rw [mul_comm b c]
   iterate 3 rw [two_nsmul_lie_lmul_lmul_add_eq_lie_lmul_lmul_add]
   iterate 2 rw [← lie_skew (L (a * a)), ← lie_skew (L (b * b)), ← lie_skew (L (c * c))]
   abel

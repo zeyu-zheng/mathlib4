@@ -168,7 +168,7 @@ theorem smeval_at_natCast (q : ℕ[X]): ∀(n : ℕ), q.smeval (n : S) = q.smeva
     intro n
     rw [smeval_monomial, smeval_monomial, nsmul_eq_mul, smul_eq_mul, Nat.cast_mul, Nat.cast_npow]
 
-theorem smeval_at_zero : p.smeval (0 : S) = (p.coeff 0) • (1 : S) := by
+theorem smeval_at_zero : p.smeval (0 : S) = (p.coeff 0) • (1 : S)  := by
   induction p using Polynomial.induction_on' with
   | h_add p q ph qh =>
     simp_all only [smeval_add, coeff_add, add_smul]
@@ -240,7 +240,7 @@ theorem smeval_monomial_mul (n : ℕ) :
   | h_monomial n a =>
     rw [smeval_monomial, monomial_mul_monomial, smeval_monomial, npow_add, mul_smul, mul_smul_comm]
 
-theorem smeval_mul : (p * q).smeval x = p.smeval x * q.smeval x := by
+theorem smeval_mul : (p * q).smeval x  = p.smeval x * q.smeval x := by
   induction p using Polynomial.induction_on' with
   | h_add r s hr hs =>
     simp only [add_comp, hr, hs, smeval_add, add_mul]
@@ -253,7 +253,7 @@ theorem smeval_pow : ∀ (n : ℕ), (p^n).smeval x = (p.smeval x)^n
   | n + 1 => by
     rw [npow_add, smeval_mul, smeval_pow n, pow_one, npow_add, npow_one]
 
-theorem smeval_comp : (p.comp q).smeval x = p.smeval (q.smeval x) := by
+theorem smeval_comp : (p.comp q).smeval x  = p.smeval (q.smeval x) := by
   induction p using Polynomial.induction_on' with
   | h_add r s hr hs =>
     simp [add_comp, hr, hs, smeval_add]

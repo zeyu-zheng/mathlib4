@@ -1035,7 +1035,7 @@ theorem finrank_eq_one_iff_of_nonzero (v : V) (nz : v ≠ 0) :
     finrank_eq_card_basis
       (Basis.mk (linearIndependent_singleton nz)
         (by
-          convert s.ge -- Porting note: added `.ge` to make things easier for `convert`
+          convert s.ge  -- Porting note: added `.ge` to make things easier for `convert`
           simp))⟩
 #align finrank_eq_one_iff_of_nonzero finrank_eq_one_iff_of_nonzero
 

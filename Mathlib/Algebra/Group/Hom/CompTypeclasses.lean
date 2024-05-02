@@ -39,7 +39,7 @@ section MonoidHomCompTriple
 namespace MonoidHom
 
 /-- Class of composing triples -/
-class CompTriple {M N P : Type*} [Monoid M] [Monoid N] [Monoid P]
+class CompTriple  {M N P : Type*} [Monoid M] [Monoid N] [Monoid P]
   (φ : M →* N) (ψ : N →* P) (χ : outParam (M →* P)) : Prop where
   /-- The maps form a commuting triangle -/
   comp_eq : ψ.comp φ = χ
@@ -58,7 +58,7 @@ class IsId (σ : M →* M) : Prop where
 instance instIsId {M : Type*} [Monoid M] : IsId (MonoidHom.id M) where
   eq_id := rfl
 
-instance {σ : M →* M} [h : _root_.CompTriple.IsId σ] : IsId σ where
+instance {σ : M →* M} [h : _root_.CompTriple.IsId σ] : IsId σ  where
   eq_id := by ext; exact _root_.congr_fun h.eq_id _
 
 instance instComp_id {N P : Type*} [Monoid N] [Monoid P]
@@ -78,7 +78,7 @@ lemma comp_inv {φ : M →* N} {ψ : N →* M} (h : Function.RightInverse φ ψ)
     simp only [IsId.eq_id, ← DFunLike.coe_fn_eq, coe_comp, h.id]
     rfl
 
-instance instRootCompTriple {φ : M →* N} {ψ : N →* P} {χ : M →* P} [κ : CompTriple φ ψ χ] :
+instance instRootCompTriple {φ : M →* N} {ψ : N  →* P} {χ : M →* P} [κ : CompTriple φ ψ χ] :
     _root_.CompTriple φ ψ χ where
   comp_eq := by rw [← MonoidHom.coe_comp, κ.comp_eq]
 

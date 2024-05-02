@@ -52,7 +52,7 @@ theorem MonoidAlgebra.mem_ideal_span_of_image [Monoid G] [Semiring k] {s : Set G
     exact (one_mul _).symm
   · intro hx
     rw [← Finsupp.sum_single x]
-    refine Ideal.sum_mem _ fun i hi => ?_ -- Porting note: changed `apply` to `refine`
+    refine Ideal.sum_mem _ fun i hi => ?_  -- Porting note: changed `apply` to `refine`
     obtain ⟨d, hd, d2, rfl⟩ := hx _ hi
     convert Ideal.mul_mem_left _ (id <| Finsupp.single d2 <| x (d2 * d) : MonoidAlgebra k G) _
     pick_goal 3

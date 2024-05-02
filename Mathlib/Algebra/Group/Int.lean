@@ -58,14 +58,14 @@ These also prevent non-computable instances like `Int.normedCommRing` being used
 these instances non-computably.
 -/
 
-instance instAddCommMonoid  : AddCommMonoid ℤ  := by infer_instance
-instance instAddMonoid    : AddMonoid ℤ    := by infer_instance
-instance instMonoid      : Monoid ℤ      := by infer_instance
-instance instCommSemigroup  : CommSemigroup ℤ  := by infer_instance
-instance instSemigroup    : Semigroup ℤ    := by infer_instance
-instance instAddGroup     : AddGroup ℤ     := by infer_instance
+instance instAddCommMonoid    : AddCommMonoid ℤ    := by infer_instance
+instance instAddMonoid        : AddMonoid ℤ        := by infer_instance
+instance instMonoid           : Monoid ℤ           := by infer_instance
+instance instCommSemigroup    : CommSemigroup ℤ    := by infer_instance
+instance instSemigroup        : Semigroup ℤ        := by infer_instance
+instance instAddGroup         : AddGroup ℤ         := by infer_instance
 instance instAddCommSemigroup : AddCommSemigroup ℤ := by infer_instance
-instance instAddSemigroup   : AddSemigroup ℤ   := by infer_instance
+instance instAddSemigroup     : AddSemigroup ℤ     := by infer_instance
 
 /-! ### Miscellaneous lemmas -/
 

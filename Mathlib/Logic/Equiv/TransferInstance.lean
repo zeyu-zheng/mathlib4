@@ -558,7 +558,7 @@ protected theorem isDomain [Ring α] [Ring β] [IsDomain β] (e : α ≃+* β) :
 #align equiv.is_domain Equiv.isDomain
 
 noncomputable instance [Small.{v} α] [Ring α] [IsDomain α] : IsDomain (Shrink.{v} α) :=
-  Equiv.isDomain (Shrink.ringEquiv α)
+  Equiv.isDomain  (Shrink.ringEquiv α)
 
 /-- Transfer `NNRatCast` across an `Equiv` -/
 @[reducible] protected def nnratCast [NNRatCast β] : NNRatCast α where nnratCast q := e.symm q

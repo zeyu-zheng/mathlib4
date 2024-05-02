@@ -317,7 +317,7 @@ instance : Module (HahnSeries Γ R) (SummableFamily Γ R α) where
   smul_zero _ := ext fun _ => mul_zero _
   zero_smul _ := ext fun _ => zero_mul _
   one_smul _ := ext fun _ => one_mul _
-  add_smul _ _ _ := ext fun _ => add_mul _ _ _
+  add_smul _ _ _  := ext fun _ => add_mul _ _ _
   smul_add _ _ _ := ext fun _ => mul_add _ _ _
   mul_smul _ _ _ := ext fun _ => mul_assoc _ _ _
 

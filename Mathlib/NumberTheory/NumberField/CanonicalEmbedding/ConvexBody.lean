@@ -151,7 +151,7 @@ end convexBodyLT
 
 section convexBodyLT'
 
-open Metric ENNReal NNReal
+open  Metric ENNReal NNReal
 
 open scoped Classical
 
@@ -197,8 +197,8 @@ theorem convexBodyLT'_convex : Convex ℝ (convexBodyLT' K f w₀) := by
   refine Convex.prod (convex_pi (fun _ _ => convex_ball _ _)) (convex_pi (fun _ _ => ?_))
   split_ifs
   · simp_rw [abs_lt]
-    refine Convex.inter ((convex_halfspace_re_gt _).inter (convex_halfspace_re_lt _))
-      ((convex_halfspace_im_gt _).inter (convex_halfspace_im_lt _))
+    refine Convex.inter ((convex_halfspace_re_gt _).inter  (convex_halfspace_re_lt _))
+      ((convex_halfspace_im_gt _).inter  (convex_halfspace_im_lt _))
   · exact convex_ball _ _
 
 open MeasureTheory MeasureTheory.Measure
@@ -235,7 +235,7 @@ theorem convexBodyLT'_volume :
     · exact measurableSet_lt (measurable_norm.comp Complex.measurable_im) measurable_const
   calc
     _ = (∏ x : {w // InfinitePlace.IsReal w}, ENNReal.ofReal (2 * (f x.val))) *
-          ((∏ x in Finset.univ.erase w₀, ENNReal.ofReal (f x.val) ^ 2 * pi) *
+          ((∏ x in Finset.univ.erase  w₀, ENNReal.ofReal (f x.val) ^ 2 * pi) *
           (4 * (f w₀) ^ 2)) := by
       simp_rw [volume_eq_prod, prod_prod, volume_pi, pi_pi, Real.volume_ball]
       rw [← Finset.prod_erase_mul _ _ (Finset.mem_univ w₀)]
@@ -245,7 +245,7 @@ theorem convexBodyLT'_volume :
       · simpa only [ite_true] using vol_box (f w₀)
     _ = ((2 : ℝ≥0) ^ NrRealPlaces K *
           (∏ x : {w // InfinitePlace.IsReal w}, ENNReal.ofReal (f x.val))) *
-            ((∏ x in Finset.univ.erase w₀, ENNReal.ofReal (f x.val) ^ 2) *
+            ((∏ x in Finset.univ.erase  w₀, ENNReal.ofReal (f x.val) ^ 2) *
               ↑pi ^ (NrComplexPlaces K - 1) * (4 * (f w₀) ^ 2)) := by
       simp_rw [ofReal_mul (by norm_num : 0 ≤ (2 : ℝ)), Finset.prod_mul_distrib, Finset.prod_const,
         Finset.card_erase_of_mem (Finset.mem_univ _), Finset.card_univ, ofReal_ofNat,
@@ -347,7 +347,7 @@ theorem convexBodySumFun_continuous :
 
 /-- The convex body equal to the set of points `x : E` such that
   `∑ w real, ‖x w‖ + 2 * ∑ w complex, ‖x w‖ ≤ B`. -/
-abbrev convexBodySum : Set (E K) := { x | convexBodySumFun x ≤ B }
+abbrev convexBodySum : Set (E K)  := { x | convexBodySumFun x ≤ B }
 
 theorem convexBodySum_volume_eq_zero_of_le_zero {B} (hB : B ≤ 0) :
     volume (convexBodySum K B) = 0 := by
@@ -479,7 +479,7 @@ noncomputable def minkowskiBound : ℝ≥0∞ :=
 
 theorem volume_fundamentalDomain_fractionalIdealLatticeBasis :
     volume (fundamentalDomain (fractionalIdealLatticeBasis K I)) =
-      .ofReal (FractionalIdeal.absNorm I.1) * volume (fundamentalDomain (latticeBasis K)) := by
+      .ofReal (FractionalIdeal.absNorm I.1) *  volume (fundamentalDomain (latticeBasis K)) := by
   let e : (Module.Free.ChooseBasisIndex ℤ I) ≃ (Module.Free.ChooseBasisIndex ℤ (𝓞 K)) := by
     refine Fintype.equivOfCardEq ?_
     rw [← finrank_eq_card_chooseBasisIndex, ← finrank_eq_card_chooseBasisIndex,
@@ -623,7 +623,7 @@ theorem exists_ne_zero_mem_ideal_of_norm_le {B : ℝ}
   obtain ⟨a, ha, rfl⟩ := hx
   refine ⟨a, ha, by simpa using h_nz, ?_⟩
   rw [← rpow_natCast, ← rpow_le_rpow_iff (by simp only [Rat.cast_abs, abs_nonneg])
-      (rpow_nonneg h2 _) h1, ← rpow_mul h2, mul_inv_cancel (Nat.cast_ne_zero.mpr
+      (rpow_nonneg h2 _) h1, ← rpow_mul h2,  mul_inv_cancel (Nat.cast_ne_zero.mpr
       (ne_of_gt finrank_pos)), rpow_one, le_div_iff' (Nat.cast_pos.mpr finrank_pos)]
   refine le_trans ?_ ((convexBodySum_mem K B).mp h_mem)
   rw [← le_div_iff' (Nat.cast_pos.mpr finrank_pos), ← sum_mult_eq, Nat.cast_sum]

@@ -1206,8 +1206,8 @@ theorem induce_self_verts : G'.induce G'.verts = G' := by
 #align simple_graph.subgraph.induce_self_verts SimpleGraph.Subgraph.induce_self_verts
 
 lemma le_induce_top_verts : G' ≤ (⊤ : G.Subgraph).induce G'.verts :=
-  calc G' = G'.induce G'.verts        := Subgraph.induce_self_verts.symm
-       _ ≤ (⊤ : G.Subgraph).induce G'.verts := Subgraph.induce_mono_left le_top
+  calc G' = G'.induce G'.verts               := Subgraph.induce_self_verts.symm
+       _  ≤ (⊤ : G.Subgraph).induce G'.verts := Subgraph.induce_mono_left le_top
 
 lemma le_induce_union : G'.induce s ⊔ G'.induce s' ≤ G'.induce (s ∪ s') := by
   constructor

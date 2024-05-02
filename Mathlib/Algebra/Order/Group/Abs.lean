@@ -120,7 +120,7 @@ variable [CovariantClass α α (swap (· * ·)) (· ≤ ·)]
 
 @[to_additive (attr := simp) abs_nonneg] lemma one_le_mabs (a : α) : 1 ≤ |a|ₘ := by
   apply pow_two_semiclosed _
-  rw [mabs, pow_two, mul_sup, sup_mul, ← pow_two, mul_left_inv, sup_comm, ← sup_assoc]
+  rw [mabs, pow_two, mul_sup,  sup_mul, ← pow_two, mul_left_inv, sup_comm, ← sup_assoc]
   apply le_sup_right
 #align abs_nonneg abs_nonneg
 

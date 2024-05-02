@@ -374,11 +374,11 @@ equivalent. -/
 def equivOfIsometry (e : Q₁.IsometryEquiv Q₂) : CliffordAlgebra Q₁ ≃ₐ[R] CliffordAlgebra Q₂ :=
   AlgEquiv.ofAlgHom (map e.toIsometry) (map e.symm.toIsometry)
     ((map_comp_map _ _).trans <| by
-      convert map_id Q₂ using 2 -- Porting note: replaced `_` with `Q₂`
+      convert map_id Q₂ using 2  -- Porting note: replaced `_` with `Q₂`
       ext m
       exact e.toLinearEquiv.apply_symm_apply m)
     ((map_comp_map _ _).trans <| by
-      convert map_id Q₁ using 2 -- Porting note: replaced `_` with `Q₁`
+      convert map_id Q₁ using 2  -- Porting note: replaced `_` with `Q₁`
       ext m
       exact e.toLinearEquiv.symm_apply_apply m)
 #align clifford_algebra.equiv_of_isometry CliffordAlgebra.equivOfIsometry

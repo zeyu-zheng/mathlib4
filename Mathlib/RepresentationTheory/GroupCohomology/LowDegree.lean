@@ -166,7 +166,7 @@ where the vertical arrows are `oneCochainsLequiv` and `twoCochainsLequiv` respec
 theorem dOne_comp_eq : dOne A ∘ₗ oneCochainsLequiv A =
     twoCochainsLequiv A ∘ₗ (inhomogeneousCochains A).d 1 2 := by
   ext x y
-  show A.ρ y.1 (x _) - x _ + x _ = _ + _
+  show A.ρ y.1 (x _) - x _ + x _ =  _ + _
   rw [Fin.sum_univ_two]
   simp only [Fin.val_zero, zero_add, pow_one, neg_smul, one_smul, Fin.val_one,
     Nat.one_add, neg_one_sq, sub_eq_add_neg, add_assoc]
@@ -740,7 +740,7 @@ cochains, is isomorphic to the invariants of the representation on `A`. -/
 def isoH0 : groupCohomology A 0 ≅ ModuleCat.of k (H0 A) :=
   (CochainComplex.isoHomologyπ₀ _).symm ≪≫ isoZeroCocycles A
 
-lemma groupCohomologyπ_comp_isoH0_hom :
+lemma groupCohomologyπ_comp_isoH0_hom  :
     groupCohomologyπ A 0 ≫ (isoH0 A).hom = (isoZeroCocycles A).hom := by
   simp [isoH0]
 
@@ -786,7 +786,7 @@ def isoH1 : groupCohomology A 1 ≅ ModuleCat.of k (H1 A) :=
   (inhomogeneousCochains A).homologyIsoSc' _ _ _ (by aesop) (by aesop) ≪≫
     homologyMapIso (shortComplexH1Iso A) ≪≫ (shortComplexH1 A).moduleCatHomologyIso
 
-lemma groupCohomologyπ_comp_isoH1_hom :
+lemma groupCohomologyπ_comp_isoH1_hom  :
     groupCohomologyπ A 1 ≫ (isoH1 A).hom =
       (isoOneCocycles A).hom ≫ (shortComplexH1 A).moduleCatHomologyπ := by
   simp [isoH1, isoOneCocycles]
@@ -834,7 +834,7 @@ def isoH2 : groupCohomology A 2 ≅ ModuleCat.of k (H2 A) :=
   (inhomogeneousCochains A).homologyIsoSc' _ _ _ (by aesop) (by aesop) ≪≫
     homologyMapIso (shortComplexH2Iso A) ≪≫ (shortComplexH2 A).moduleCatHomologyIso
 
-lemma groupCohomologyπ_comp_isoH2_hom :
+lemma groupCohomologyπ_comp_isoH2_hom  :
     groupCohomologyπ A 2 ≫ (isoH2 A).hom =
       (isoTwoCocycles A).hom ≫ (shortComplexH2 A).moduleCatHomologyπ := by
   simp [isoH2, isoTwoCocycles]

@@ -159,7 +159,7 @@ end Zero
 
 /-- Coerce an arithmetic function with values in `ℕ` to one with values in `R`. We cannot inline
 this in `natCoe` because it gets unfolded too much. -/
-@[coe] -- Porting note: added `coe` tag.
+@[coe]  -- Porting note: added `coe` tag.
 def natToArithmeticFunction [AddMonoidWithOne R] :
     (ArithmeticFunction ℕ) → (ArithmeticFunction R) :=
   fun f => ⟨fun n => ↑(f n), by simp⟩
@@ -745,7 +745,7 @@ theorem pdiv [CommGroupWithZero R] {f g : ArithmeticFunction R} (hf : IsMultipli
 
 /-- For any multiplicative function `f` and any `n > 0`,
 we can evaluate `f n` by evaluating `f` at `p ^ k` over the factorization of `n` -/
-nonrec -- Porting note: added
+nonrec  -- Porting note: added
 theorem multiplicative_factorization [CommMonoidWithZero R] (f : ArithmeticFunction R)
     (hf : f.IsMultiplicative) {n : ℕ} (hn : n ≠ 0) :
     f n = n.factorization.prod fun p k => f (p ^ k) :=
@@ -837,7 +837,7 @@ end IsMultiplicative
 section SpecialFunctions
 
 /-- The identity on `ℕ` as an `ArithmeticFunction`.  -/
-nonrec -- Porting note (#11445): added
+nonrec  -- Porting note (#11445): added
 def id : ArithmeticFunction ℕ :=
   ⟨id, rfl⟩
 #align nat.arithmetic_function.id ArithmeticFunction.id
@@ -856,7 +856,7 @@ def pow (k : ℕ) : ArithmeticFunction ℕ :=
 theorem pow_apply {k n : ℕ} : pow k n = if k = 0 ∧ n = 0 then 0 else n ^ k := by
   cases k
   · simp [pow]
-  rename_i k -- Porting note: added
+  rename_i k  -- Porting note: added
   simp [pow, k.succ_pos.ne']
 #align nat.arithmetic_function.pow_apply ArithmeticFunction.pow_apply
 

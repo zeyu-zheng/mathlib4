@@ -474,12 +474,12 @@ theorem symm_trans_self (f : M₁ ≃ₛₗ[σ₁₂] M₂) : f.symm.trans f = L
   simp
 #align linear_equiv.symm_trans_self LinearEquiv.symm_trans_self
 
-@[simp] -- Porting note: norm_cast
+@[simp]  -- Porting note: norm_cast
 theorem refl_toLinearMap [Module R M] : (LinearEquiv.refl R M : M →ₗ[R] M) = LinearMap.id :=
   rfl
 #align linear_equiv.refl_to_linear_map LinearEquiv.refl_toLinearMap
 
-@[simp] -- Porting note: norm_cast
+@[simp]  -- Porting note: norm_cast
 theorem comp_coe [Module R M] [Module R M₂] [Module R M₃] (f : M ≃ₗ[R] M₂) (f' : M₂ ≃ₗ[R] M₃) :
     (f' : M₂ →ₗ[R] M₃).comp (f : M →ₗ[R] M₂) = (f.trans f' : M ≃ₗ[R] M₃) :=
   rfl

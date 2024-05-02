@@ -45,7 +45,7 @@ semiconjugates `-x` to `-y`."]
 theorem units_inv_right {a : M} {x y : Mˣ} (h : SemiconjBy a x y) : SemiconjBy a ↑x⁻¹ ↑y⁻¹ :=
   calc
     a * ↑x⁻¹ = ↑y⁻¹ * (y * a) * ↑x⁻¹ := by rw [Units.inv_mul_cancel_left]
-    _    = ↑y⁻¹ * a       := by rw [← h.eq, mul_assoc, Units.mul_inv_cancel_right]
+    _        = ↑y⁻¹ * a              := by rw [← h.eq, mul_assoc, Units.mul_inv_cancel_right]
 #align semiconj_by.units_inv_right SemiconjBy.units_inv_right
 #align add_semiconj_by.add_units_neg_right AddSemiconjBy.addUnits_neg_right
 

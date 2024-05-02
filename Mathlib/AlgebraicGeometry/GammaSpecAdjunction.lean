@@ -475,10 +475,10 @@ instance Spec.preservesLimits : Limits.PreservesLimits Scheme.Spec :=
 #align algebraic_geometry.Spec.preserves_limits AlgebraicGeometry.Spec.preservesLimits
 
 /-- Spec is a full functor. -/
-instance : Spec.toLocallyRingedSpace.Full :=
+instance : Spec.toLocallyRingedSpace.Full  :=
   R_full_of_counit_isIso ΓSpec.locallyRingedSpaceAdjunction
 
-instance Spec.full : Scheme.Spec.Full :=
+instance Spec.full : Scheme.Spec.Full  :=
   R_full_of_counit_isIso ΓSpec.adjunction
 #align algebraic_geometry.Spec.full AlgebraicGeometry.Spec.full
 

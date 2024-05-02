@@ -219,7 +219,7 @@ variable (i)
 
 /-- The map `K.opcycles i ⟶ K.X j` induced by the differential `K.d i j`. -/
 noncomputable def fromOpcycles :
-  K.opcycles i ⟶ K.X j :=
+  K.opcycles i ⟶ K.X j  :=
   K.descOpcycles (K.d i j) (c.prev i) rfl (K.d_comp_d _ _ _)
 
 @[reassoc (attr := simp)]
@@ -755,7 +755,7 @@ lemma pOpcycles_opcyclesIsoSc'_hom :
 lemma opcyclesIsoSc'_inv_fromOpcycles :
     (K.opcyclesIsoSc' i j k hi hk).inv ≫ K.fromOpcycles j k =
       (K.sc' i j k).fromOpcycles := by
-  simp only [← cancel_epi (K.sc' i j k).pOpcycles, pOpcycles_opcyclesIsoSc'_inv_assoc,
+  simp only [← cancel_epi (K.sc' i j k).pOpcycles,  pOpcycles_opcyclesIsoSc'_inv_assoc,
     p_fromOpcycles, ShortComplex.p_fromOpcycles, shortComplexFunctor'_obj_g]
 
 /-- The opcycles of a homological complex in degree `j` can be computed

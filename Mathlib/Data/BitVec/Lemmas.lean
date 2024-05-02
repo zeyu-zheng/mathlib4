@@ -131,7 +131,7 @@ variable (x y : Fin (2^w))
   simp [HXor.hXor, Xor.xor, Fin.xor, BitVec.xor, toNat_ofFin]
   -- v4.7.0-rc1 issues remove?
 
-@[simp] lemma ofFin_mul : ofFin (x * y) = ofFin x * ofFin y := rfl
+@[simp] lemma ofFin_mul : ofFin (x * y)  = ofFin x * ofFin y  := rfl
 
 -- These should be simp, but Std's simp-lemmas do not allow this yet.
 lemma ofFin_zero : ofFin (0 : Fin (2^w)) = 0 := rfl

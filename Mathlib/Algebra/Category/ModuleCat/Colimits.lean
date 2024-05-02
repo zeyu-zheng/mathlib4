@@ -59,7 +59,7 @@ noncomputable def coconePointSMul :
 noncomputable def colimitCocone : Cocone F where
   pt := mkOfSMul (coconePointSMul F)
   ι :=
-    { app := fun j => homMk (colimit.ι (F ⋙ forget₂ _ AddCommGroupCat) j) (fun r => by
+    { app := fun j => homMk (colimit.ι (F ⋙ forget₂ _ AddCommGroupCat)  j) (fun r => by
         dsimp
         -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
         erw [mkOfSMul_smul]

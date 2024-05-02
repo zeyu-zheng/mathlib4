@@ -659,7 +659,7 @@ lemma prod_bijective (e : ι → κ) (he : e.Bijective) (hst : ∀ i, i ∈ s �
 
 @[to_additive]
 lemma prod_of_injOn (e : ι → κ) (he : Set.InjOn e s) (hest : Set.MapsTo e s t)
-    (h' : ∀ i ∈ t, i ∉ e '' s → g i = 1) (h : ∀ i ∈ s, f i = g (e i)) :
+    (h' : ∀ i ∈ t, i ∉ e '' s → g i = 1) (h : ∀ i ∈ s, f i = g (e i))  :
     ∏ i in s, f i = ∏ j in t, g j := by
   classical
   exact (prod_nbij e (fun a ↦ mem_image_of_mem e) he (by simp [Set.surjOn_image]) h).trans <|
@@ -1269,7 +1269,7 @@ variable {κ : Type*}
 `n ↦ (· ^ n)`, which maps a second argument of `1` to `1`. Then if `f` is replaced by the
 corresponding multiplicative indicator function, the finset may be replaced by a possibly larger
 finset without changing the value of the product. -/
-@[to_additive "Consider a sum of `g i (f i)` over a finset. Suppose `g` is a function such as
+@[to_additive "Consider a sum of `g i (f i)` over a finset.  Suppose `g` is a function such as
 `n ↦ (n • ·)`, which maps a second argument of `0` to `0` (or a weighted sum of `f i * h i` or
 `f i • h i`, where `f` gives the weights that are multiplied by some other function `h`). Then if
 `f` is replaced by the corresponding indicator function, the finset may be replaced by a possibly
@@ -1662,7 +1662,7 @@ theorem prod_pow (s : Finset α) (n : ℕ) (f : α → β) : ∏ x in s, f x ^ n
 #align finset.sum_nsmul Finset.sum_nsmul
 
 @[to_additive sum_nsmul_assoc]
-lemma prod_pow_eq_pow_sum (s : Finset ι) (f : ι → ℕ) (a : β) :
+lemma prod_pow_eq_pow_sum  (s : Finset ι) (f : ι → ℕ) (a : β) :
     ∏ i in s, a ^ f i = a ^ ∑ i in s, f i :=
   cons_induction (by simp) (fun _ _ _ _ ↦ by simp [prod_cons, sum_cons, pow_add, *]) s
 #align finset.prod_pow_eq_pow_sum Finset.prod_pow_eq_pow_sum

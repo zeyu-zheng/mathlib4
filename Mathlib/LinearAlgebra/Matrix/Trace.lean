@@ -117,7 +117,7 @@ theorem trace_sum (s : Finset ι) (f : ι → Matrix n n R) :
 #align matrix.trace_sum Matrix.trace_sum
 
 theorem _root_.AddMonoidHom.map_trace [AddCommMonoid S] (f : R →+ S) (A : Matrix n n R) :
-    f (trace A) = trace (f.mapMatrix A) :=
+    f (trace A)  = trace (f.mapMatrix A) :=
   map_sum f (fun i => diag A i) Finset.univ
 
 lemma trace_blockDiagonal [DecidableEq p] (M : p → Matrix n n R) :

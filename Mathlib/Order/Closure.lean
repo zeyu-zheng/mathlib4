@@ -319,9 +319,9 @@ end ClosureOperator
 @[simps apply symm_apply]
 def OrderIso.equivClosureOperator {α β} [Preorder α] [Preorder β] (e : α ≃o β) :
     ClosureOperator α ≃ ClosureOperator β where
-  toFun   c := c.conjBy e
-  invFun  c := c.conjBy e.symm
-  left_inv c := Eq.trans (c.conjBy_trans _ _).symm
+  toFun     c := c.conjBy e
+  invFun    c := c.conjBy e.symm
+  left_inv  c := Eq.trans (c.conjBy_trans _ _).symm
                  <| Eq.trans (congrArg _ e.self_trans_symm) c.conjBy_refl
   right_inv c := Eq.trans (c.conjBy_trans _ _).symm
                  <| Eq.trans (congrArg _ e.symm_trans_self) c.conjBy_refl

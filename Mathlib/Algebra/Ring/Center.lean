@@ -70,7 +70,7 @@ variable {M}
 
 @[simp]
 theorem add_mem_center [Distrib M] {a b : M} (ha : a ∈ Set.center M) (hb : b ∈ Set.center M) :
-    a + b ∈ Set.center M where
+    a + b ∈ Set.center M  where
   comm _ := by rw [add_mul, mul_add, ha.comm, hb.comm]
   left_assoc _ _ := by rw [add_mul, ha.left_assoc, hb.left_assoc, ← add_mul, ← add_mul]
   mid_assoc _ _ := by rw [mul_add, add_mul, ha.mid_assoc, hb.mid_assoc, ← mul_add, ← add_mul]

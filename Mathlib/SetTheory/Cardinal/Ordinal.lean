@@ -958,7 +958,7 @@ theorem add_nat_le_add_nat_iff {α β : Cardinal} (n : ℕ) : α + n ≤ β + n 
 #align cardinal.add_nat_le_add_nat_iff_of_lt_aleph_0 Cardinal.add_nat_le_add_nat_iff
 
 @[deprecated]
-alias add_nat_le_add_nat_iff_of_lt_aleph_0 := add_nat_le_add_nat_iff -- deprecated on 2024-02-12
+alias add_nat_le_add_nat_iff_of_lt_aleph_0 := add_nat_le_add_nat_iff  -- deprecated on 2024-02-12
 
 @[simp]
 theorem add_one_le_add_one_iff {α β : Cardinal} : α + 1 ≤ β + 1 ↔ α ≤ β :=
@@ -966,7 +966,7 @@ theorem add_one_le_add_one_iff {α β : Cardinal} : α + 1 ≤ β + 1 ↔ α ≤
 #align cardinal.add_one_le_add_one_iff_of_lt_aleph_0 Cardinal.add_one_le_add_one_iff
 
 @[deprecated]
-alias add_one_le_add_one_iff_of_lt_aleph_0 := add_one_le_add_one_iff -- deprecated on 2024-02-12
+alias add_one_le_add_one_iff_of_lt_aleph_0 := add_one_le_add_one_iff  -- deprecated on 2024-02-12
 
 /-! ### Properties about power -/
 section pow

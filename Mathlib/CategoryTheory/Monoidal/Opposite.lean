@@ -331,9 +331,9 @@ variable (C)
 
 /-- The (identity) equivalence between `C` and its monoidal opposite. -/
 @[simps] def MonoidalOpposite.mopEquiv : C ≌ Cᴹᵒᵖ where
-  functor  := mopFunctor C
-  inverse  := unmopFunctor C
-  unitIso  := Iso.refl _
+  functor   := mopFunctor C
+  inverse   := unmopFunctor C
+  unitIso   := Iso.refl _
   counitIso := Iso.refl _
 
 /-- The (identity) equivalence between `Cᴹᵒᵖ` and `C`. -/

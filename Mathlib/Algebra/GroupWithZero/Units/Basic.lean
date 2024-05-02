@@ -396,11 +396,11 @@ lemma div_mul_div_cancel (a : G₀) (hc : c ≠ 0) : a / c * (c / b) = a / b := 
 #align div_mul_div_cancel div_mul_div_cancel
 
 lemma div_mul_cancel_of_imp (h : b = 0 → a = 0) : a / b * b = a := by
-  obtain rfl | hb := eq_or_ne b 0 <;> simp [*]
+  obtain rfl | hb := eq_or_ne b 0 <;>  simp [*]
 #align div_mul_cancel_of_imp div_mul_cancel_of_imp
 
 lemma mul_div_cancel_of_imp (h : b = 0 → a = 0) : a * b / b = a := by
-  obtain rfl | hb := eq_or_ne b 0 <;> simp [*]
+  obtain rfl | hb := eq_or_ne b 0 <;>  simp [*]
 #align mul_div_cancel_of_imp mul_div_cancel_of_imp
 
 @[simp] lemma divp_mk0 (a : G₀) (hb : b ≠ 0) : a /ₚ Units.mk0 b hb = a / b := divp_eq_div _ _

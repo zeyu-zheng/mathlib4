@@ -145,7 +145,7 @@ lemma isCrystallographic_iff :
 lemma isReduced_iff : P.IsReduced ↔ ∀ (i j : ι), i ≠ j →
     ¬ LinearIndependent R ![P.root i, P.root j] → P.root i = - P.root j := by
   rw [IsReduced]
-  refine ⟨fun h i j hij hLin ↦ ?_, fun h i j hLin ↦ ?_⟩
+  refine ⟨fun h i j hij hLin ↦ ?_, fun h i j hLin  ↦ ?_⟩
   · specialize h i j hLin
     simp_all only [ne_eq, EmbeddingLike.apply_eq_iff_eq, false_or]
   · by_cases h' : i = j

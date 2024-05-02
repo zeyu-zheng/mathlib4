@@ -154,7 +154,7 @@ variable (M)
 
 @[to_additive (attr := simp) zero_mem_addCenter]
 theorem one_mem_center [MulOneClass M] : (1 : M) ∈ Set.center M where
-  comm _ := by rw [one_mul, mul_one]
+  comm _  := by rw [one_mul, mul_one]
   left_assoc _ _ := by rw [one_mul, one_mul]
   mid_assoc _ _ := by rw [mul_one, one_mul]
   right_assoc _ _ := by rw [mul_one, mul_one]

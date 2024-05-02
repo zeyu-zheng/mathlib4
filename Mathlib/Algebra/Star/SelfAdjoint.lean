@@ -454,7 +454,7 @@ instance instSMulRat : SMul ℚ (selfAdjoint R) where
 #align self_adjoint.coe_rat_smul selfAdjoint.val_qsmul
 
 instance instField : Field (selfAdjoint R) :=
-  Subtype.coe_injective.field _ (selfAdjoint R).coe_zero val_one
+  Subtype.coe_injective.field _  (selfAdjoint R).coe_zero val_one
     (selfAdjoint R).coe_add val_mul (selfAdjoint R).coe_neg (selfAdjoint R).coe_sub
     val_inv val_div (swap (selfAdjoint R).coe_nsmul) (by intros; rfl) val_nnqsmul
     val_qsmul val_pow val_zpow (fun _ => rfl) (fun _ => rfl) val_nnratCast val_ratCast

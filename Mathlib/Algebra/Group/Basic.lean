@@ -77,7 +77,7 @@ section Semigroup
 variable [Semigroup α]
 
 @[to_additive]
-instance Semigroup.to_isAssociative : Std.Associative (α := α) (· * ·) := ⟨mul_assoc⟩
+instance Semigroup.to_isAssociative : Std.Associative (α := α)  (· * ·) := ⟨mul_assoc⟩
 #align semigroup.to_is_associative Semigroup.to_isAssociative
 #align add_semigroup.to_is_associative AddSemigroup.to_isAssociative
 

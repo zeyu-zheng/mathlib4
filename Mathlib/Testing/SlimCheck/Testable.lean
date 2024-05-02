@@ -324,7 +324,7 @@ partial def minimizeAux [SampleableExt α] {β : α → Prop} [∀ x, Testable (
     OptionT Gen (Σ x, TestResult (β (SampleableExt.interp x))) := do
   let candidates := SampleableExt.shrink.shrink x
   if cfg.traceShrinkCandidates then
-    slimTrace s!"Candidates for {var} := {repr x}:\n {repr candidates}"
+    slimTrace s!"Candidates for {var} := {repr x}:\n  {repr candidates}"
   for candidate in candidates do
     if cfg.traceShrinkCandidates then
       slimTrace s!"Trying {var} := {repr candidate}"

@@ -361,7 +361,7 @@ instance toDivisionRing (s : Subfield K) : DivisionRing s :=
 instance toField {K} [Field K] (s : Subfield K) : Field s :=
   Subtype.coe_injective.field ((↑) : s → K) rfl rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl)
     (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl)
-    (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (by intros; rfl) (fun _ => rfl)
+    (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (by intros; rfl)  (fun _ => rfl)
     (fun _ => rfl) (by intros; rfl) fun _ => rfl
 #align subfield.to_field Subfield.toField
 

@@ -799,7 +799,7 @@ returns a multiplicative equivalence with `toFun = f` and `invFun = g`.  This co
 useful if the underlying type(s) have specialized `ext` lemmas for monoid homomorphisms. -/
 @[to_additive (attr := simps (config := .asFn))
   "Given a pair of additive monoid homomorphisms `f`, `g` such that `g.comp f = id`
-  and `f.comp g = id`, returns an additive equivalence with `toFun = f` and `invFun = g`. This
+  and `f.comp g = id`, returns an additive equivalence with `toFun = f` and `invFun = g`.  This
   constructor is useful if the underlying type(s) have specialized `ext` lemmas for additive
   monoid homomorphisms."]
 def MonoidHom.toMulEquiv [MulOneClass M] [MulOneClass N] (f : M →* N) (g : N →* M)

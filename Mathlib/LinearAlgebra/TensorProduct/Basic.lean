@@ -733,7 +733,7 @@ theorem comm_symm_tmul (m : M) (n : N) : (TensorProduct.comm R M N).symm (n ⊗�
   rfl
 #align tensor_product.comm_symm_tmul TensorProduct.comm_symm_tmul
 
-lemma lift_comp_comm_eq (f : M →ₗ[R] N →ₗ[R] P) :
+lemma lift_comp_comm_eq  (f : M →ₗ[R] N →ₗ[R] P) :
     lift f ∘ₗ TensorProduct.comm R N M = lift f.flip :=
   ext rfl
 end

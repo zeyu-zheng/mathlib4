@@ -586,7 +586,7 @@ theorem limNthHom_spec (r : R) :
   use N
   intro n hn
   apply _root_.lt_trans _ hε'
-  change (padicNormE _ : ℝ) < _
+  change (padicNormE _  : ℝ) < _
   norm_cast
   exact hN _ hn
 #align padic_int.lim_nth_hom_spec PadicInt.limNthHom_spec

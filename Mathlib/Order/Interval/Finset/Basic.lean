@@ -1091,7 +1091,7 @@ lemma transGen_wcovBy_of_le [Preorder α] [LocallyFiniteOrder α] {x y : α} (hx
     have z_card : (Icc x z).card <(Icc x y).card := calc
       (Icc x z).card ≤ (Ico x y).card :=
         card_le_card <| Icc_subset_Ico_right (mem_Ico.mp z_mem).2
-      _       < (Icc x y).card := this
+      _              < (Icc x y).card := this
     have h₁ := transGen_wcovBy_of_le (mem_Ico.mp z_mem).1
     have h₂ : z ⩿ y := by
       refine ⟨(mem_Ico.mp z_mem).2.le, fun c hzc hcy ↦ hz c ?_ hzc⟩

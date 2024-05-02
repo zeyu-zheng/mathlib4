@@ -120,7 +120,7 @@ lemma eventually_zero_of_frequently_zero (hf : GrowsPolynomially f) (hf' : ∃�
       refine hx ⟨?lb₁, ?ub₁⟩
       case lb₁ =>
         rw [one_div, ← zpow_neg_one, ← mul_assoc, ← zpow_add₀ (by norm_num)]
-        have h₁ : (-1 : ℤ) + (-k - 1) = -k - 2 := by ring
+        have h₁ : (-1 : ℤ)  + (-k - 1) = -k - 2 := by ring
         have h₂ : -(k + (1:ℤ)) - 1 = -k - 2 := by ring
         rw [h₁]
         rw [h₂] at hz
@@ -214,7 +214,7 @@ lemma eventually_atTop_nonneg_or_nonpos (hf : GrowsPolynomially f) :
         have half_z_to_base : f (1/2 * z) = f (max n₀ 2) := by
           refine hyp_ind (1/2 * z) ⟨?lb, ?ub⟩
           case lb =>
-            calc max n₀ 2 ≤ ((1:ℝ)/(2:ℝ)) * (2:ℝ) ^ 1 * max n₀ 2 := by simp
+            calc max n₀ 2 ≤ ((1:ℝ)/(2:ℝ)) * (2:ℝ) ^ 1  * max n₀ 2 := by simp
                         _ ≤ ((1:ℝ)/(2:ℝ)) * (2:ℝ) ^ n * max n₀ 2 := by gcongr; norm_num
                         _ ≤ _ := by rw [mul_assoc]; gcongr; exact_mod_cast hz.1
           case ub =>
@@ -686,7 +686,7 @@ lemma GrowsPolynomially.of_isTheta {f g : ℝ → ℝ} (hg : GrowsPolynomially g
     with x hf_pos h_lb h_ub hg_bound hx_pos
   intro u hu
   have hbx : b * x ≤ x :=
-    calc b * x ≤ 1 * x  := by gcongr; exact le_of_lt hb.2
+    calc b * x ≤ 1 * x    := by gcongr; exact le_of_lt hb.2
              _ = x        := by rw [one_mul]
   have hg_bound := hg_bound x hbx
   refine ⟨?lb, ?ub⟩
