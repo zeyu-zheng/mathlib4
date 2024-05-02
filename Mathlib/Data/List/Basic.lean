@@ -1233,9 +1233,6 @@ theorem get?_length (l : List α) : l.get? l.length = none := get?_len_le le_rfl
 theorem nthLe_mem (l : List α) (n h) : nthLe l n h ∈ l := get_mem ..
 #align list.nth_le_mem List.nthLe_mem
 
-theorem nthLe_congr {l : List α} {n p : ℕ} {h : n < length l} (hnp : n = p) :
-    nthLe l n h = nthLe l p (hnp ▸ h) := by simp [hnp]
-
 #align list.nth_mem List.get?_mem
 
 @[deprecated mem_iff_get] -- 2023-01-05
@@ -1296,11 +1293,9 @@ theorem nthLe_of_eq {L L' : List α} (h : L = L') {i : ℕ} (hi : i < L.length) 
 theorem nthLe_singleton (a : α) {n : ℕ} (hn : n < 1) : nthLe [a] n hn = a := get_singleton ..
 #align list.nth_le_singleton List.nthLe_singleton
 
-@[deprecated] -- 2023-01-05 -- FIXME: replacement -- it's not `get_zero` and it's not `get?_zero`
-theorem nthLe_zero [Inhabited α] {L : List α} (h : 0 < L.length) : List.nthLe L 0 h = L.head! := by
-  cases L
-  cases h
-  simp [nthLe]
+@[deprecated get_mk_zero] -- 2023-01-05
+theorem nthLe_zero {L : List α} (h : 0 < L.length) : List.nthLe L 0 h = L.head (length_pos.1 h) :=
+  get_mk_zero h
 #align list.nth_le_zero List.nthLe_zero
 
 #align list.nth_le_append List.get_append

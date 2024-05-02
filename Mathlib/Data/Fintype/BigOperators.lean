@@ -175,15 +175,12 @@ lemma card_filter_piFinset_const (s : Finset κ) (i : ι) (j : κ) :
 end Fintype
 end Pi
 
--- FIXME ouch, this should be in the main file.
+-- TODO: this is a basic thereom about `Fintype.card`,
+-- and ideally could be moved to `Mathlib.Data.Fintype.Card`.
 theorem Fintype.card_fun [DecidableEq α] [Fintype α] [Fintype β] :
     Fintype.card (α → β) = Fintype.card β ^ Fintype.card α := by
-  rw [Fintype.card_pi, Finset.prod_const]; rfl
+  simp
 #align fintype.card_fun Fintype.card_fun
-
-@[simp]
-theorem Fintype.card_exp_univ_card_eq [Fintype α] [Fintype β] :
-    card β ^ univ.card (α := α) = card β ^ card α := rfl
 
 @[simp]
 theorem card_vector [Fintype α] (n : ℕ) : Fintype.card (Vector α n) = Fintype.card α ^ n := by
