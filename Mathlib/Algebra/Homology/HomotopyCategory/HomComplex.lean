@@ -567,7 +567,7 @@ def HomComplex : CochainComplex AddCommGroupCat ℤ where
   X i := AddCommGroupCat.of (Cochain F G i)
   d i j := AddCommGroupCat.ofHom (δ_hom ℤ F G i j)
   shape _ _ hij := by ext; apply δ_shape _ _ hij
-  d_comp_d' _ _ _ _ _  := by ext; apply δ_δ
+  d_comp_d' _ _ _ _ _ := by ext; apply δ_δ
 
 namespace HomComplex
 

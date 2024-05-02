@@ -250,7 +250,7 @@ lemma rotateHomotopyEquiv_comm₂ :
       (HomotopyCategory.quotient _ _ ).map (rotateHomotopyEquiv φ).hom =
       (HomotopyCategory.quotient _ _ ).map (inr (inr φ)) := by
   simpa only [Functor.map_comp]
-    using HomotopyCategory.eq_of_homotopy _ _  (rotateHomotopyEquivComm₂Homotopy φ)
+    using HomotopyCategory.eq_of_homotopy _ _ (rotateHomotopyEquivComm₂Homotopy φ)
 
 @[reassoc (attr := simp)]
 lemma rotateHomotopyEquiv_comm₃ :

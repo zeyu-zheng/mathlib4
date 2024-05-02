@@ -499,7 +499,7 @@ lemma mem_singleton_set_smul [SMulCommClass R S M] (r : S) (x : M) :
       t n memₜ memₙ t n mem h m₁ m₂ mem₁ mem₂ h₁ h₂
     · aesop
     · rcases h with ⟨n, hn, rfl⟩
-      exact ⟨t • n, by aesop,  smul_comm _ _ _⟩
+      exact ⟨t • n, by aesop, smul_comm _ _ _⟩
     · rcases h₁ with ⟨m₁, h₁, rfl⟩
       rcases h₂ with ⟨m₂, h₂, rfl⟩
       exact ⟨m₁ + m₂, Submodule.add_mem _ h₁ h₂, by aesop⟩

@@ -267,7 +267,7 @@ def quotientEquiv [Fintype ι] :
     exact QuotientAddGroup.leftRel_apply.mp h
   · refine Quotient.inductionOn₂ x y (fun _ _ hxy => ?_)
     rw [Quotient.liftOn_mk (s := quotientRel (span ℤ (Set.range b))), fractRestrict,
-      Quotient.liftOn_mk (s := quotientRel (span ℤ (Set.range b))),  fractRestrict,
+      Quotient.liftOn_mk (s := quotientRel (span ℤ (Set.range b))), fractRestrict,
       Subtype.mk.injEq] at hxy
     apply Quotient.sound'
     rwa [QuotientAddGroup.leftRel_apply, mem_toAddSubgroup, ← fract_eq_fract]
@@ -297,7 +297,7 @@ theorem discreteTopology_pi_basisFun [Finite ι] :
   simp_rw [← coe_eq_zero, Function.funext_iff, Pi.zero_apply, Real.norm_eq_abs]
   refine forall_congr' (fun i => ?_)
   rsuffices ⟨y, hy⟩ : ∃ (y : ℤ), (y : ℝ) = (x : ι → ℝ) i
-  · rw [← hy, ← Int.cast_abs, ← Int.cast_one,  Int.cast_lt, Int.abs_lt_one_iff, Int.cast_eq_zero]
+  · rw [← hy, ← Int.cast_abs, ← Int.cast_one, Int.cast_lt, Int.abs_lt_one_iff, Int.cast_eq_zero]
   exact ((Pi.basisFun ℝ ι).mem_span_iff_repr_mem ℤ x).mp (SetLike.coe_mem x) i
 
 variable [NormedAddCommGroup E] [NormedSpace ℝ E] (b : Basis ι ℝ E)
@@ -434,7 +434,7 @@ theorem Zlattice.FG [hs : IsZlattice K L] : AddSubgroup.FG L := by
       exact span_mono (by simp only [Subtype.range_coe_subtype, Set.setOf_mem_eq, subset_rfl]))
     rw [show span ℤ s = span ℤ (Set.range b) by simp [b, Basis.coe_mk, Subtype.range_coe_subtype]]
     have : Fintype s := h_lind.setFinite.fintype
-    refine Set.Finite.of_finite_image (f := ((↑) : _ →  E) ∘ Zspan.quotientEquiv b) ?_
+    refine Set.Finite.of_finite_image (f := ((↑) : _ → E) ∘ Zspan.quotientEquiv b) ?_
       (Function.Injective.injOn (Subtype.coe_injective.comp (Zspan.quotientEquiv b).injective) _)
     have : Set.Finite ((Zspan.fundamentalDomain b) ∩ L) :=
       Metric.finite_isBounded_inter_isClosed (Zspan.fundamentalDomain_isBounded b) inferInstance
@@ -549,7 +549,7 @@ theorem Zlattice.rank [hs : IsZlattice K L] : finrank ℤ L = finrank K E := by
     -- We prove finally that `e ∪ {v}` is not ℤ-linear independent or, equivalently,
     -- not ℚ-linear independent by showing that `v ∈ span ℚ e`.
     rw [LinearIndependent.iff_fractionRing ℤ ℚ,
-      linearIndependent_insert (Set.not_mem_of_mem_diff hv),  not_and, not_not]
+      linearIndependent_insert (Set.not_mem_of_mem_diff hv), not_and, not_not]
     intro _
     -- But that follows from the fact that there exist `n, m : ℕ`, `n ≠ m`
     -- such that `(n - m) • v ∈ span ℤ e` which is true since `n ↦ Zspan.fract e (n • v)`
@@ -586,7 +586,7 @@ def Basis.ofZlatticeBasis :
     Basis ι K E := by
   have : Finite ℤ L := Zlattice.module_finite K L
   have : Free ℤ L := Zlattice.module_free K L
-  let e :=  Basis.indexEquiv (Free.chooseBasis ℤ L) b
+  let e := Basis.indexEquiv (Free.chooseBasis ℤ L) b
   have : Fintype ι := Fintype.ofEquiv _ e
   refine basisOfTopLeSpanOfCardEqFinrank (L.subtype.toIntLinearMap ∘ b) ?_ ?_
   · rw [← span_span_of_tower ℤ, Set.range_comp, ← map_span, Basis.span_eq, Submodule.map_top,
@@ -596,7 +596,7 @@ def Basis.ofZlatticeBasis :
 
 @[simp]
 theorem Basis.ofZlatticeBasis_apply (i : ι) :
-    b.ofZlatticeBasis K L i =  b i := by simp [Basis.ofZlatticeBasis]
+    b.ofZlatticeBasis K L i = b i := by simp [Basis.ofZlatticeBasis]
 
 @[simp]
 theorem Basis.ofZlatticeBasis_repr_apply (x : L) (i : ι) :
