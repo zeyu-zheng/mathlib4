@@ -1428,16 +1428,16 @@ namespace PUnit
 variable (a b : PUnit.{u + 1})
 
 instance instLinearOrder : LinearOrder PUnit where
-  le  := fun _ _ ↦ True
-  lt  := fun _ _ ↦ False
+  le := fun _ _ ↦ True
+  lt := fun _ _ ↦ False
   max := fun _ _ ↦ unit
   min := fun _ _ ↦ unit
   decidableEq := inferInstance
   decidableLE := fun _ _ ↦ Decidable.isTrue trivial
   decidableLT := fun _ _ ↦ Decidable.isFalse id
-  le_refl     := by intros; trivial
-  le_trans    := by intros; trivial
-  le_total    := by intros; exact Or.inl trivial
+  le_refl   := by intros; trivial
+  le_trans  := by intros; trivial
+  le_total  := by intros; exact Or.inl trivial
   le_antisymm := by intros; rfl
   lt_iff_le_not_le := by simp only [not_true, and_false, forall_const]
 

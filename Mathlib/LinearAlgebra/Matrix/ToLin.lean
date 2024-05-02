@@ -360,7 +360,7 @@ theorem Matrix.toLin'_toMatrix' (f : (n → R) →ₗ[R] m → R) :
 theorem LinearMap.toMatrix'_apply (f : (n → R) →ₗ[R] m → R) (i j) :
     LinearMap.toMatrix' f i j = f (fun j' ↦ if j' = j then 1 else 0) i := by
   simp only [LinearMap.toMatrix', LinearEquiv.coe_mk, of_apply]
-  refine congr_fun ?_ _  -- Porting note: `congr` didn't do this
+  refine congr_fun ?_ _ -- Porting note: `congr` didn't do this
   congr
   ext j'
   split_ifs with h
@@ -903,19 +903,19 @@ such as the trace form or norm map for algebras.
 noncomputable def leftMulMatrix : S →ₐ[R] Matrix m m R where
   toFun x := LinearMap.toMatrix b b (Algebra.lmul R S x)
   map_zero' := by
-    dsimp only  -- porting node: needed due to new-style structures
+    dsimp only -- porting node: needed due to new-style structures
     rw [AlgHom.map_zero, LinearEquiv.map_zero]
   map_one' := by
-    dsimp only  -- porting node: needed due to new-style structures
+    dsimp only -- porting node: needed due to new-style structures
     rw [AlgHom.map_one, LinearMap.toMatrix_one]
   map_add' x y := by
-    dsimp only  -- porting node: needed due to new-style structures
+    dsimp only -- porting node: needed due to new-style structures
     rw [AlgHom.map_add, LinearEquiv.map_add]
   map_mul' x y := by
-    dsimp only  -- porting node: needed due to new-style structures
+    dsimp only -- porting node: needed due to new-style structures
     rw [AlgHom.map_mul, LinearMap.toMatrix_mul]
   commutes' r := by
-    dsimp only  -- porting node: needed due to new-style structures
+    dsimp only -- porting node: needed due to new-style structures
     ext
     rw [lmul_algebraMap, toMatrix_lsmul, algebraMap_eq_diagonal, Pi.algebraMap_def,
       Algebra.id.map_eq_self]

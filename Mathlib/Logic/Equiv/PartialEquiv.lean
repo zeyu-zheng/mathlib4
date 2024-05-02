@@ -899,8 +899,8 @@ def prod (e : PartialEquiv α β) (e' : PartialEquiv γ δ) : PartialEquiv (α �
   invFun p := (e.symm p.1, e'.symm p.2)
   map_source' p hp := by simp_all
   map_target' p hp := by simp_all
-  left_inv' p hp   := by simp_all
-  right_inv' p hp  := by simp_all
+  left_inv' p hp  := by simp_all
+  right_inv' p hp := by simp_all
 #align local_equiv.prod PartialEquiv.prod
 
 @[simp, mfld_simps]

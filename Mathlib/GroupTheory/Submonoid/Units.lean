@@ -56,7 +56,7 @@ lemma Submonoid.units_mono : Monotone (Submonoid.units (M := M)) :=
 
 @[to_additive (attr := simp)]
 lemma Submonoid.ofUnits_units_le (S : Submonoid M) : S.units.ofUnits ≤ S :=
-  fun  _ ⟨_, hm, he⟩ => he ▸ hm.1
+  fun _ ⟨_, hm, he⟩ => he ▸ hm.1
 
 @[to_additive]
 lemma Subgroup.ofUnits_mono : Monotone (Subgroup.ofUnits (M := M)) :=
@@ -174,7 +174,7 @@ lemma units_left_inverse :
 /-- The equivalence between the subgroup of units of `S` and the submonoid of unit
 elements of `S`. -/
 @[to_additive " The equivalence between the additive subgroup of additive units of
-`S` and the additive submonoid of additive unit elements of `S`.  "]
+`S` and the additive submonoid of additive unit elements of `S`. "]
 noncomputable def unitsEquivIsUnitSubmonoid (S : Submonoid M) : S.units ≃* IsUnit.submonoid S :=
 S.unitsEquivUnitsType.trans unitsTypeEquivIsUnitSubmonoid
 
@@ -301,11 +301,11 @@ lemma ofUnits_le_ofUnits_iff {S T : Subgroup Mˣ} : S.ofUnits ≤ T.ofUnits ↔ 
 /-- The equivalence between the top subgroup of `Mˣ` coerced to a submonoid `M` and the
 units of `M`. -/
 @[to_additive " The equivalence between the additive subgroup of additive units of
-`S` and the additive submonoid of additive unit elements of `S`.  "]
+`S` and the additive submonoid of additive unit elements of `S`. "]
 noncomputable def ofUnitsTopEquiv : (⊤ : Subgroup Mˣ).ofUnits ≃* Mˣ :=
   (⊤ : Subgroup Mˣ).ofUnitsEquivType.trans topEquiv
 
-variable {G : Type*}  [Group G]
+variable {G : Type*} [Group G]
 
 @[to_additive]
 lemma mem_units_iff_val_mem (H : Subgroup G) (x : Gˣ): x ∈ H.units ↔ (x : G) ∈ H := by

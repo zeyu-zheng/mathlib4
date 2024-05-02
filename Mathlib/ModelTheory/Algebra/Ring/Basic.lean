@@ -315,7 +315,7 @@ are local instances.
       rfl
     funMap_one := by
       simp only [Fin.forall_fin_succ_pi, Fin.cons_zero, Fin.forall_fin_zero_pi];
-      rfl  }
+      rfl }
 
 end Ring
 

@@ -184,7 +184,7 @@ when `p` is not prime. -/
 def equivProdNatFactoredNumbers {s : Finset ℕ} {p : ℕ} (hp: p.Prime) (hs : p ∉ s) :
     ℕ × factoredNumbers s ≃ factoredNumbers (insert p s) where
   toFun := fun ⟨e, n⟩ ↦ ⟨p ^ e * n, pow_mul_mem_factoredNumbers hp e n.2⟩
-  invFun := fun ⟨m, _⟩  ↦ (m.factorization p,
+  invFun := fun ⟨m, _⟩ ↦ (m.factorization p,
                             ⟨(m.factors.filter (· ∈ s)).prod, prod_mem_factoredNumbers ..⟩)
   left_inv := by
     rintro ⟨e, m, hm₀, hm⟩
@@ -375,7 +375,7 @@ lemma eq_prod_primes_mul_sq_of_mem_smoothNumbers {n k : ℕ} (h : n ∈ smoothNu
     ∃ s ∈ k.primesBelow.powerset, ∃ m, n = m ^ 2 * (s.prod id) := by
   obtain ⟨l, m, H₁, H₂⟩ := sq_mul_squarefree n
   have hl : l ∈ smoothNumbers k := mem_smoothNumbers_of_dvd h (Dvd.intro_left (m ^ 2) H₁)
-  refine ⟨l.factors.toFinset, ?_,  m, ?_⟩
+  refine ⟨l.factors.toFinset, ?_, m, ?_⟩
   · simp only [toFinset_factors, Finset.mem_powerset]
     refine fun p hp ↦ mem_primesBelow.mpr ⟨?_, (mem_primeFactors.mp hp).1⟩
     rw [mem_primeFactors] at hp

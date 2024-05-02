@@ -115,10 +115,10 @@ within the definition.
 -/
 @[simps]
 def compAEval : Derivation R R[X] <| AEval R M a where
-  toFun f          := AEval.of R M a (d (aeval a f))
-  map_add'         := by simp
-  map_smul'        := by simp
-  leibniz'         := by simp [AEval.of_aeval_smul, -Derivation.map_aeval]
+  toFun f     := AEval.of R M a (d (aeval a f))
+  map_add'     := by simp
+  map_smul'    := by simp
+  leibniz'     := by simp [AEval.of_aeval_smul, -Derivation.map_aeval]
   map_one_eq_zero' := by simp
 
 /--

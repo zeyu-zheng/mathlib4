@@ -430,7 +430,7 @@ instance [MulZeroClass α] [Preorder α] [MulPosReflectLE α] : MulPosReflectLE 
 instance orderedCommSemiring [CanonicallyOrderedCommSemiring α] [Nontrivial α] :
     OrderedCommSemiring (WithBot α) :=
   { WithBot.zeroLEOneClass, WithBot.orderedAddCommMonoid, WithBot.commSemiring with
-    mul_le_mul_of_nonneg_left  := fun _ _ _ => mul_le_mul_of_nonneg_left
+    mul_le_mul_of_nonneg_left := fun _ _ _ => mul_le_mul_of_nonneg_left
     mul_le_mul_of_nonneg_right := fun _ _ _ => mul_le_mul_of_nonneg_right }
 
 end WithBot

@@ -157,7 +157,7 @@ The family of these maps indexed by the connected components of `G` proves to be
 of the kernel of `lapMatrix G R` -/
 def lapMatrix_ker_basis_aux (c : G.ConnectedComponent) :
     LinearMap.ker (Matrix.toLin' (G.lapMatrix ℝ)) :=
-  ⟨fun i ↦ if G.connectedComponentMk i = c then (1 : ℝ)  else 0,
+  ⟨fun i ↦ if G.connectedComponentMk i = c then (1 : ℝ) else 0,
     mem_ker_toLin'_lapMatrix_of_connectedComponent c⟩
 
 lemma linearIndependent_lapMatrix_ker_basis_aux :

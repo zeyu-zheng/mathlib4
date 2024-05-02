@@ -164,7 +164,7 @@ theorem ext {f g : X →ₑ[φ] Y} :
   DFunLike.ext f g
 #align mul_action_hom.ext MulActionHom.ext
 
-theorem ext_iff  {f g : X →ₑ[φ] Y} :
+theorem ext_iff {f g : X →ₑ[φ] Y} :
     f = g ↔ ∀ x, f x = g x :=
   DFunLike.ext_iff
 #align mul_action_hom.ext_iff MulActionHom.ext_iff
@@ -287,7 +287,7 @@ def inverse' (f : X →ₑ[φ] Y) (g : Y → X) (k : Function.RightInverse φ' �
 
 lemma inverse_eq_inverse' (f : X →[M] Y₁) (g : Y₁ → X)
     (h₁ : Function.LeftInverse g f) (h₂ : Function.RightInverse g f) :
-  inverse f g h₁ h₂ =  inverse' f g (congrFun rfl) h₁ h₂ := by
+  inverse f g h₁ h₂ = inverse' f g (congrFun rfl) h₁ h₂ := by
   rfl
 
 theorem inverse'_inverse'
@@ -430,7 +430,7 @@ see also Algebra.Hom.Group -/
 def _root_.DistribMulActionSemiHomClass.toDistribMulActionHom
     [DistribMulActionSemiHomClass F φ A B]
     (f : F) : A →ₑ+[φ] B :=
-  { (f : A →+ B),  (f : A →ₑ[φ] B) with }
+  { (f : A →+ B), (f : A →ₑ[φ] B) with }
 
 /-- Any type satisfying `MulActionHomClass` can be cast into `MulActionHom`
 via `MulActionHomClass.toMulActionHom`. -/
@@ -727,7 +727,7 @@ see also Algebra.Hom.Group -/
 def _root_.MulSemiringActionHomClass.toMulSemiringActionHom
     [MulSemiringActionSemiHomClass F φ R S]
     (f : F) : R →ₑ+*[φ] S :=
- { (f : R →+* S),  (f : R →ₑ+[φ] S) with }
+ { (f : R →+* S), (f : R →ₑ+[φ] S) with }
 
 /-- Any type satisfying `MulSemiringActionHomClass` can be cast into `MulSemiringActionHom` via
   `MulSemiringActionHomClass.toMulSemiringActionHom`. -/

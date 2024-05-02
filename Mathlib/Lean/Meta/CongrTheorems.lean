@@ -149,9 +149,9 @@ partial def mkRichHCongr (fType : Expr) (info : FunInfo)
     withLocalDeclD `e (← mkEq ef ef') fun ee => do
     withNewEqs xs ys fixedParams fun kinds eqs => do
       let fParams := if fixedFun then #[ef] else #[ef, ef', ee]
-      let mut hs := fParams     -- parameters to the basic congruence lemma
-      let mut hs' := fParams    -- parameters to the richer congruence lemma
-      let mut vals' := fParams  -- how to calculate the basic parameters from the richer ones
+      let mut hs := fParams   -- parameters to the basic congruence lemma
+      let mut hs' := fParams  -- parameters to the richer congruence lemma
+      let mut vals' := fParams -- how to calculate the basic parameters from the richer ones
       for i in [0 : info.getArity] do
         hs := hs.push xs[i]!
         hs' := hs'.push xs[i]!

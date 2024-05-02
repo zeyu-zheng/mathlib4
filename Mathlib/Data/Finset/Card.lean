@@ -346,9 +346,9 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
     · rintro ⟨i, hi, rfl⟩; apply hf'
   calc
     s.card = ((range n).attach.image fun i => f i.1 (mem_range.1 i.2)).card := by rw [this]
-    _      = (range n).attach.card := ?_
-    _      = (range n).card := card_attach
-    _      = n := card_range n
+    _   = (range n).attach.card := ?_
+    _   = (range n).card := card_attach
+    _   = n := card_range n
   apply card_image_of_injective
   intro ⟨i, hi⟩ ⟨j, hj⟩ eq
   exact Subtype.eq <| f_inj i j (mem_range.1 hi) (mem_range.1 hj) eq
@@ -360,8 +360,8 @@ theorem card_congr {t : Finset β} (f : ∀ a ∈ s, β) (h₁ : ∀ a ha, f a h
   classical
   calc
     s.card = s.attach.card := card_attach.symm
-    _      = (s.attach.image fun a : { a // a ∈ s } => f a.1 a.2).card := Eq.symm ?_
-    _      = t.card := ?_
+    _   = (s.attach.image fun a : { a // a ∈ s } => f a.1 a.2).card := Eq.symm ?_
+    _   = t.card := ?_
   · apply card_image_of_injective
     intro ⟨_, _⟩ ⟨_, _⟩ h
     simpa using h₂ _ _ _ _ h
@@ -377,7 +377,7 @@ theorem card_le_card_of_inj_on {t : Finset β} (f : α → β) (hf : ∀ a ∈ s
   classical
   calc
     s.card = (s.image f).card := (card_image_of_injOn f_inj).symm
-    _      ≤ t.card           := card_le_card <| image_subset_iff.2 hf
+    _   ≤ t.card      := card_le_card <| image_subset_iff.2 hf
 #align finset.card_le_card_of_inj_on Finset.card_le_card_of_inj_on
 
 /-- If there are more pigeons than pigeonholes, then there are two pigeons in the same pigeonhole.

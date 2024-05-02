@@ -746,10 +746,10 @@ def toConstProdLinearMap : (V1 →ᵃ[k] V2) ≃ₗ[R] V2 × (V1 →ₗ[k] V2) w
   left_inv f := by
     ext
     rw [f.decomp]
-    simp [const_apply _ _]  -- Porting note: `simp` needs `_`s to use this lemma
+    simp [const_apply _ _] -- Porting note: `simp` needs `_`s to use this lemma
   right_inv := by
     rintro ⟨v, f⟩
-    ext <;> simp [const_apply _ _, const_linear _ _]  -- Porting note: `simp` needs `_`s
+    ext <;> simp [const_apply _ _, const_linear _ _] -- Porting note: `simp` needs `_`s
   map_add' := by simp
   map_smul' := by simp
 #align affine_map.to_const_prod_linear_map AffineMap.toConstProdLinearMap

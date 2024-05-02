@@ -231,9 +231,9 @@ theorem LiftR_RelLast_iff (x y : F (α ::: β)) :
     -- Porting note: proof was
     -- rw [MvFunctor.map_map, MvFunctor.map_map, (· ⊚ ·), (· ⊚ ·)]
     -- congr <;> ext i ⟨x, _⟩ <;> cases i <;> rfl
-    suffices  (fun i t => t.val.fst) = ((fun i x => (MvFunctor.f' rr n α i x).val.fst))
+    suffices (fun i t => t.val.fst) = ((fun i x => (MvFunctor.f' rr n α i x).val.fst))
             ∧ (fun i t => t.val.snd) = ((fun i x => (MvFunctor.f' rr n α i x).val.snd))
-    by  rcases this with ⟨left, right⟩
+    by rcases this with ⟨left, right⟩
         rw [left, right];
     constructor <;> ext i ⟨x, _⟩ <;> cases i <;> rfl
 #align mvfunctor.liftr_last_rel_iff MvFunctor.LiftR_RelLast_iff

@@ -114,9 +114,9 @@ def WeakFEPair.symm (P : WeakFEPair E) : WeakFEPair E where
   hg_int := P.hf_int
   hf_top := P.hg_top
   hg_top := P.hf_top
-  hε     := inv_ne_zero P.hε
-  hk     := P.hk
-  h_feq  := P.h_feq'
+  hε   := inv_ne_zero P.hε
+  hk   := P.hk
+  h_feq := P.h_feq'
 
 /-- The hypotheses are symmetric in `f` and `g`, with the constant `ε` replaced by `ε⁻¹`. -/
 def StrongFEPair.symm (P : StrongFEPair E) : StrongFEPair E where
@@ -297,13 +297,13 @@ lemma hf_modif_FE (x : ℝ) (hx : 0 < x) :
 /-- Given a weak FE-pair `(f, g)`, modify it into a strong FE-pair by subtracting suitable
 correction terms from `f` and `g`. -/
 def toStrongFEPair : StrongFEPair E where
-  hf_int   := P.hf_modif_int
-  hg_int   := P.symm.hf_modif_int
-  h_feq    := P.hf_modif_FE
-  hε       := P.hε
-  hk       := P.hk
-  hf₀      := rfl
-  hg₀      := rfl
+  hf_int  := P.hf_modif_int
+  hg_int  := P.symm.hf_modif_int
+  h_feq  := P.hf_modif_FE
+  hε    := P.hε
+  hk    := P.hk
+  hf₀   := rfl
+  hg₀   := rfl
   hf_top r := by
     refine (P.hf_top r).congr' ?_ (by rfl)
     filter_upwards [eventually_gt_atTop 1] with x hx
@@ -336,7 +336,7 @@ lemma f_modif_aux1 : EqOn (fun x ↦ P.f_modif x - P.f x + P.f₀)
 /-- Compute the Mellin transform of the modifying term used to kill off the constants at
 `0` and `∞`. -/
 lemma f_modif_aux2 {s : ℂ} (hs : P.k < re s) :
-    mellin (fun x ↦ P.f_modif x - P.f x + P.f₀) s = (1 / s) • P.f₀ + (P.ε  / (P.k - s)) • P.g₀ := by
+    mellin (fun x ↦ P.f_modif x - P.f x + P.f₀) s = (1 / s) • P.f₀ + (P.ε / (P.k - s)) • P.g₀ := by
   have h_re1 : -1 < re (s - 1) := by simpa using P.hk.trans hs
   have h_re2 : -1 < re (s - P.k - 1) := by simpa using hs
   calc
@@ -369,7 +369,7 @@ lemma f_modif_aux2 {s : ℂ} (hs : P.k < re s) :
       integral_cpow (Or.inl h_re1), integral_cpow (Or.inl h_re2), ofReal_zero, ofReal_one,
       one_cpow, sub_add_cancel, zero_cpow fun h ↦ lt_irrefl _ (P.hk.le.trans_lt (zero_re ▸ h ▸ hs)),
       zero_cpow (sub_ne_zero.mpr (fun h ↦ lt_irrefl _ ((ofReal_re _) ▸ h ▸ hs)) : s - P.k ≠ 0),
-      sub_zero, sub_eq_add_neg (_ •  _), ← mul_smul, ← neg_smul, mul_one_div, ← div_neg, neg_sub]
+      sub_zero, sub_eq_add_neg (_ • _), ← mul_smul, ← neg_smul, mul_one_div, ← div_neg, neg_sub]
 
 /-!
 ## Main theorems on weak FE-pairs

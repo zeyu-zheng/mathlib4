@@ -254,8 +254,8 @@ noncomputable
 def lTensor.linearEquiv_of_rightInverse {h : P → N} (hgh : Function.RightInverse h g) :
     ((Q ⊗[R] N) ⧸ (LinearMap.range (lTensor Q f))) ≃ₗ[R] (Q ⊗[R] P) := {
   toLinearMap := lTensor.toFun Q hfg
-  invFun    := lTensor.inverse_of_rightInverse Q hfg hgh
-  left_inv  := fun y ↦ by
+  invFun  := lTensor.inverse_of_rightInverse Q hfg hgh
+  left_inv := fun y ↦ by
     simp only [lTensor.toFun, AddHom.toFun_eq_coe, coe_toAddHom]
     obtain ⟨y, rfl⟩ := Submodule.mkQ_surjective _ y
     simp only [Submodule.mkQ_apply, Submodule.liftQ_apply, lTensor.inverse_of_rightInverse_apply]
@@ -296,7 +296,7 @@ noncomputable def rTensor.toFun :
 /-- The inverse map in `rTensor.equiv_of_rightInverse` (computably, given a right inverse) -/
 noncomputable def rTensor.inverse_of_rightInverse {h : P → N} (hgh : Function.RightInverse h g) :
     P ⊗[R] Q →ₗ[R] N ⊗[R] Q ⧸ LinearMap.range (rTensor Q f) :=
-  TensorProduct.lift  {
+  TensorProduct.lift {
     toFun := fun p ↦ Submodule.mkQ _ ∘ₗ TensorProduct.mk R _ _ (h p)
     map_add' := fun p p' => LinearMap.ext fun q => (Submodule.Quotient.eq _).mpr <| by
       change h (p + p') ⊗ₜ[R] q - (h p ⊗ₜ[R] q + h p' ⊗ₜ[R] q) ∈ range (rTensor Q f)
@@ -359,12 +359,12 @@ noncomputable
 def rTensor.linearEquiv_of_rightInverse {h : P → N} (hgh : Function.RightInverse h g) :
     ((N ⊗[R] Q) ⧸ (range (rTensor Q f))) ≃ₗ[R] (P ⊗[R] Q) := {
   toLinearMap := rTensor.toFun Q hfg
-  invFun      := rTensor.inverse_of_rightInverse Q hfg hgh
-  left_inv    := fun y ↦ by
+  invFun   := rTensor.inverse_of_rightInverse Q hfg hgh
+  left_inv  := fun y ↦ by
     simp only [rTensor.toFun, AddHom.toFun_eq_coe, coe_toAddHom]
     obtain ⟨y, rfl⟩ := Submodule.mkQ_surjective _ y
     simp only [Submodule.mkQ_apply, Submodule.liftQ_apply, rTensor.inverse_of_rightInverse_apply]
-  right_inv   := fun z ↦ by
+  right_inv  := fun z ↦ by
     simp only [AddHom.toFun_eq_coe, coe_toAddHom]
     obtain ⟨y, rfl⟩ := rTensor_surjective Q hgh.surjective z
     rw [rTensor.inverse_of_rightInverse_apply]

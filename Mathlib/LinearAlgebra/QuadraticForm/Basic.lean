@@ -774,7 +774,7 @@ theorem polarBilin_toQuadraticForm : polarBilin (toQuadraticForm B) = B + B.flip
     toQuadraticForm (polarBilin Q) = 2 • Q :=
   QuadraticForm.ext fun x => (polar_self _ x).trans <| by simp
 
-theorem  _root_.QuadraticForm.polarBilin_injective (h : IsUnit (2 : R)) :
+theorem _root_.QuadraticForm.polarBilin_injective (h : IsUnit (2 : R)) :
     Function.Injective (polarBilin : QuadraticForm R M → _) :=
   fun Q₁ Q₂ h₁₂ => QuadraticForm.ext fun x => h.mul_left_cancel <| by
     simpa using DFunLike.congr_fun (congr_arg toQuadraticForm h₁₂) x
@@ -1225,7 +1225,7 @@ theorem exists_orthogonal_basis [hK : Invertible (2 : K)] {B : BilinForm K V} (h
   obtain ⟨x, hx⟩ := exists_bilinForm_self_ne_zero hB₁ hB₂
   rw [← Submodule.finrank_add_eq_of_isCompl (isCompl_span_singleton_orthogonal hx).symm,
     finrank_span_singleton (ne_zero_of_map hx)] at hd
-  let B' :=  B.domRestrict₁₂ (Submodule.orthogonalBilin (K ∙ x) B )
+  let B' := B.domRestrict₁₂ (Submodule.orthogonalBilin (K ∙ x) B )
     (Submodule.orthogonalBilin (K ∙ x) B )
   obtain ⟨v', hv₁⟩ := ih (hB₂.domRestrict _ : B'.IsSymm) (Nat.succ.inj hd)
   -- concatenate `x` with the basis obtained by induction
