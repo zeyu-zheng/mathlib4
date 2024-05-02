@@ -189,7 +189,7 @@ theorem multinomial_update (a : α) (f : α →₀ ℕ) :
 #align finsupp.multinomial_update Finsupp.multinomial_update
 
 @[simp]
-theorem multinomial_zero [DecidableEq α] : multinomial (0 : α →₀ ℕ) = 1 := by
+theorem multinomial_zero : multinomial (0 : α →₀ ℕ) = 1 := by
   simp [Finsupp.multinomial]
 
 end Finsupp
