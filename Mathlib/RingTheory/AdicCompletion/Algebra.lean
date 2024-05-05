@@ -217,3 +217,72 @@ instance : IsScalarTower R (AdicCompletion I R) (AdicCompletion I M) where
 Both agree definitionally. -/
 theorem smul_eq_mul (r s : AdicCompletion I R) : r • s = r * s :=
   rfl
+
+section
+
+variable (R)
+variable {A : Type*} [CommRing A] [Algebra R A] (I : Ideal A)
+
+def transitionMap'ₐ {m n : ℕ} (hmn : m ≤ n) :
+    A ⧸ (I ^ n) →ₐ[R] A ⧸ (I ^ m) :=
+  have h : I ^ n ≤ I ^ m := Ideal.pow_le_pow_right (by omega)
+  AlgHom.mk (Ideal.Quotient.factor (I ^ n) (I ^ m) h) (fun r ↦ by simp; rfl)
+
+@[simp]
+theorem transitionMap'ₐ_apply {m n : ℕ} (hmn : m ≤ n) (x : A) :
+    transitionMap'ₐ R I hmn x = x :=
+  rfl
+
+@[simp]
+lemma transitionMap'ₐ_id (n : ℕ) :
+    transitionMap'ₐ R I (Nat.le_refl n) = AlgHom.id R (A ⧸ (I ^ n)) := by
+  ext x
+  refine Quotient.inductionOn' x (fun x ↦ ?_)
+  rfl
+
+@[simp]
+lemma transitionMap'ₐ_comp {m n k : ℕ} (hmn : m ≤ n) (hnk : n ≤ k) :
+    (transitionMap'ₐ R I hmn).comp (transitionMap'ₐ R I hnk)  = transitionMap'ₐ R I (hmn.trans hnk) := by
+  ext x
+  refine Quotient.inductionOn' x (fun x ↦ ?_)
+  rfl
+
+def comparisonMap (n : ℕ) : (A ⧸ I ^ n) ≃ₐ[R] A ⧸ (I ^ n • ⊤ : Ideal A) :=
+  Ideal.quotientEquivAlgOfEq R (by ext; simp)
+
+theorem transitionMap_comparisonMap_apply {m n : ℕ} (hmn : m ≤ n) (x : A ⧸ I ^ n) :
+    transitionMap I A hmn (comparisonMap R I n x) =
+      comparisonMap R I m (transitionMap'ₐ R I hmn x) := by
+  refine Quotient.inductionOn' x (fun x ↦ ?_)
+  rfl
+
+variable {B : Type*} [CommRing B] [Algebra R B]
+
+instance : Algebra A (AdicCompletion I A) :=
+  inferInstance
+instance : Algebra R (AdicCompletion I A) :=
+  RingHom.toAlgebra ((algebraMap A (AdicCompletion I A)).comp (algebraMap R A))
+
+def liftₐ (f : ∀ (n : ℕ), B →ₐ[R] A ⧸ (I ^ n))
+    (h : ∀ {m n : ℕ} (hle : m ≤ n), (transitionMap'ₐ R I hle).comp (f n) = f m) :
+    B →ₐ[R] AdicCompletion I A where
+  toFun := fun x ↦ ⟨fun n ↦ comparisonMap R I n (f n x), by
+    intro m n hmn
+    simp only [← h hmn, AlgHom.coe_comp, Function.comp_apply,
+      transitionMap_comparisonMap_apply R I hmn]⟩
+  map_zero' := by ext; simp
+  map_one' := by ext; simp
+  map_add' x y := by ext; simp
+  map_mul' x y := by ext; simp
+  commutes' r := by ext; simp; rfl
+
+@[simp]
+theorem evalₐ_liftₐ_apply (f : ∀ (n : ℕ), B →ₐ[R] A ⧸ (I ^ n))
+    (h : ∀ {m n : ℕ} (hle : m ≤ n), (transitionMap'ₐ R I hle).comp (f n) = f m)
+    (n : ℕ) (b : B) :
+    evalₐ I n (liftₐ R I f h b) = f n b := by
+  simp [liftₐ, evalₐ]
+  refine Quotient.inductionOn' (f n b) (fun x ↦ ?_)
+  rfl
+
+end

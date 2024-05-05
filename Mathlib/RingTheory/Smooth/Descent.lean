@@ -411,6 +411,8 @@ lemma hAux₀_eval (a : MvPolynomial ι R₀) (ha : a ∈ I₀):
 
 end
 
+set_option maxHeartbeats 500000
+
 /-- https://stacks.math.columbia.edu/tag/00TP -/
 theorem descent : ∃ (R₀ : Subring R) (A₀ : Type u) (_ : CommRing A₀) (_ : Algebra R₀ A₀)
     (_ : A ≃ₐ[R] R ⊗[R₀] A₀),
