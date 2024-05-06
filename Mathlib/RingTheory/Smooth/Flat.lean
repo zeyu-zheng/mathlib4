@@ -260,9 +260,7 @@ variable [IsNoetherianRing A]
 instance : Algebra.Flat R (AdicCompletion I R) := AdicCompletion.flat I
 
 /-- The polynomial ring is flat -/
-instance : Module.Flat A R :=
-   haveI Rfree : Module.Free A R := Module.Free.of_basis (MvPolynomial.basisMonomials (Fin k) A)
-   inferInstance
+instance : Module.Flat A R := inferInstance
 
 instance : Module.Flat A (AdicCompletion I R) :=
   Module.Flat.comp A R (AdicCompletion I R)
