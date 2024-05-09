@@ -742,7 +742,8 @@ lemma KaehlerDifferential.range_mapBaseChange :
   apply le_antisymm
   · rintro _ ⟨x, rfl⟩
     induction' x using TensorProduct.induction_on with r s
-    · simp
+    · #adaptation_note /-- After https://github.com/leanprover/lean4/pull/4114 this takes longer. -/
+      set_option synthInstance.maxHeartbeats 21000 in simp
     · obtain ⟨x, rfl⟩ := total_surjective _ _ s
       simp only [mapBaseChange_tmul, LinearMap.mem_ker, map_smul]
       induction x using Finsupp.induction_linear
