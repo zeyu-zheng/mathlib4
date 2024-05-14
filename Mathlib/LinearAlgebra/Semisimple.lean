@@ -3,7 +3,6 @@ Copyright (c) 2024 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 -/
-import Mathlib.RingTheory.DedekindDomain.Basic
 import Mathlib.FieldTheory.Perfect
 import Mathlib.LinearAlgebra.Basis.VectorSpace
 import Mathlib.LinearAlgebra.AnnihilatingPolynomial
@@ -129,7 +128,6 @@ theorem IsSemisimple.minpoly_squarefree : Squarefree (minpoly K f) :=
 protected theorem IsSemisimple.aeval (p : K[X]) : (aeval f p).IsSemisimple :=
   let R := K[X] ⧸ Ideal.span {minpoly K f}
   have : Finite K R := (AdjoinRoot.powerBasis' <| minpoly.monic <| isIntegral f).finite
-  have : IsArtinianRing R := .of_finite K R
   have : IsReduced R := (Ideal.isRadical_iff_quotient_reduced _).mp <|
     span_minpoly_eq_annihilator K f ▸ hf.annihilator_isRadical
   isSemisimple_of_squarefree_aeval_eq_zero ((minpoly.isRadical K _).squarefree <|
@@ -158,7 +156,12 @@ theorem IsSemisimple.of_mem_adjoin_pair {a : End K M} (ha : a ∈ Algebra.adjoin
   let S := AdjoinRoot ((minpoly K g).map <| algebraMap K R)
   have : Finite K R := (AdjoinRoot.powerBasis' <| minpoly.monic <| isIntegral f).finite
   have : Finite R S := (AdjoinRoot.powerBasis' <| (minpoly.monic <| isIntegral g).map _).finite
-  have : IsScalarTower K R S := .of_algebraMap_eq fun _ ↦ rfl
+  #adaptation_note
+  /--
+  After https://github.com/leanprover/lean4/pull/4119 we either need
+  to specify the `(S := R)` argument, or use `set_option maxSynthPendingDepth 2 in`.
+  -/
+  have : IsScalarTower K R S := .of_algebraMap_eq (S := R) fun _ ↦ rfl
   have : Finite K S := .trans R S
   have : IsArtinianRing R := .of_finite K R
   have : IsReduced R := (Ideal.isRadical_iff_quotient_reduced _).mp <|

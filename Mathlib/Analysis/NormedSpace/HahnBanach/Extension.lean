@@ -51,12 +51,12 @@ theorem exists_extension_norm_eq (p : Subspace ℝ E) (f : p →L[ℝ] ℝ) :
       fun x => le_trans (le_abs_self _) (f.le_opNorm _) with ⟨g, g_eq, g_le⟩
   set g' :=
     g.mkContinuous ‖f‖ fun x => abs_le.2 ⟨neg_le.1 <| g.map_neg x ▸ norm_neg x ▸ g_le (-x), g_le x⟩
-  · refine' ⟨g', g_eq, _⟩
-    · apply le_antisymm (g.mkContinuous_norm_le (norm_nonneg f) _)
-      refine' f.opNorm_le_bound (norm_nonneg _) fun x => _
-      dsimp at g_eq
-      rw [← g_eq]
-      apply g'.le_opNorm
+  refine' ⟨g', g_eq, _⟩
+  apply le_antisymm (g.mkContinuous_norm_le (norm_nonneg f) _)
+  refine' f.opNorm_le_bound (norm_nonneg _) fun x => _
+  dsimp at g_eq
+  rw [← g_eq]
+  apply g'.le_opNorm
 #align real.exists_extension_norm_eq Real.exists_extension_norm_eq
 
 end Real
@@ -148,6 +148,16 @@ open ContinuousLinearEquiv Submodule
 open scoped Classical
 
 theorem coord_norm' {x : E} (h : x ≠ 0) : ‖(‖x‖ : 𝕜) • coord 𝕜 x h‖ = 1 := by
+  #adaptation_note
+  /--
+  `set_option maxSynthPendingDepth 2` required after https://github.com/leanprover/lean4/pull/4119
+  Alternatively, we can add:
+  ```
+  let X : SeminormedAddCommGroup (↥(span 𝕜 {x}) →L[𝕜] 𝕜) := inferInstance
+  have : BoundedSMul 𝕜 (↥(span 𝕜 {x}) →L[𝕜] 𝕜) := @NormedSpace.boundedSMul 𝕜 _ _ X _
+  ```
+  -/
+  set_option maxSynthPendingDepth 2 in
   rw [norm_smul (α := 𝕜) (x := coord 𝕜 x h), RCLike.norm_coe_norm, coord_norm,
     mul_inv_cancel (mt norm_eq_zero.mp h)]
 #align coord_norm' coord_norm'
