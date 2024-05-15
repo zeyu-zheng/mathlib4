@@ -778,7 +778,7 @@ theorem trans_refl_restr' (s : Set β) :
 
 theorem restr_trans (s : Set α) : (e.restr s).trans e' = (e.trans e').restr s :=
   PartialEquiv.ext (fun x => rfl) (fun x => rfl) <| by
-    simp [trans_source, inter_comm, inter_assoc]
+    simp only [trans_source, restr_source, restr_coe, inter_assoc, inter_comm s]
 #align local_equiv.restr_trans PartialEquiv.restr_trans
 
 /-- A lemma commonly useful when `e` and `e'` are charts of a manifold. -/
