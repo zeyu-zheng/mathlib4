@@ -1118,7 +1118,9 @@ lemma mul_div_mul_comm_of_dvd_dvd (hba : b ∣ a) (hdc : d ∣ c) :
 lemma pow_mod (a b n : ℕ) : a ^ b % n = (a % n) ^ b % n := by
   induction b with
   | zero => rfl
-  | succ b ih => simp [Nat.pow_succ, Nat.mul_mod, ih]
+  | succ b ih =>
+    conv_lhs => rw [Nat.pow_succ, Nat.mul_mod, ih]
+    conv_rhs => rw [Nat.pow_succ, Nat.mul_mod, Nat.mod_mod]
 #align nat.pow_mod Nat.pow_mod
 
 lemma not_pos_pow_dvd : ∀ {a n : ℕ} (_ : 1 < a) (_ : 1 < n), ¬ a ^ n ∣ a

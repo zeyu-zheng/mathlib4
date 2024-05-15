@@ -319,7 +319,7 @@ def curry : (α × β →o γ) ≃o (α →o β →o γ) where
   invFun f := ⟨Function.uncurry fun x ↦ f x, fun x y h ↦ (f.mono h.1 x.2).trans ((f y.1).mono h.2)⟩
   left_inv _ := rfl
   right_inv _ := rfl
-  map_rel_iff' := by simp [le_def]
+  map_rel_iff' := by simp [le_def, -mk_le_mk]
 #align order_hom.curry OrderHom.curry
 
 @[simp]
