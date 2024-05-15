@@ -44,7 +44,7 @@ attribute [local simp] cmpUsing
 
 @[simp]
 theorem cmpUsing_eq_lt (a b : α) : (cmpUsing lt a b = Ordering.lt) = lt a b := by
-  simp only [cmpUsing, Ordering.ite_eq_lt_distrib, ite_self, if_false_right, and_true]
+  simp only [cmpUsing, Ordering.ite_eq_lt_distrib, if_false_right, and_false, and_true]
 #align cmp_using_eq_lt cmpUsing_eq_lt
 
 @[simp]

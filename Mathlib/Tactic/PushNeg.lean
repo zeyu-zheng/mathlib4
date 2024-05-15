@@ -39,7 +39,8 @@ theorem not_gt_eq (a b : β) : (¬ (a > b)) = (a ≤ b) := propext not_lt
 theorem not_nonempty_eq (s : Set γ) : (¬ s.Nonempty) = (s = ∅) := by
   have A : ∀ (x : γ), ¬(x ∈ (∅ : Set γ)) := fun x ↦ id
   simp only [Set.Nonempty, not_exists, eq_iff_iff]
-  exact ⟨fun h ↦ Set.ext (fun x ↦ by simp only [h x, false_iff, A]), fun h ↦ by rwa [h]⟩
+  exact ⟨fun h ↦ Set.ext (fun x ↦ by simp only [h x, A, false_iff, not_false_eq_true]),
+         fun h ↦ by rwa [h]⟩
 
 theorem ne_empty_eq_nonempty (s : Set γ) : (s ≠ ∅) = s.Nonempty := by
   rw [ne_eq, ← not_nonempty_eq s, not_not]
