@@ -175,8 +175,8 @@ theorem bodd_add (m n : ℤ) : bodd (m + n) = xor (bodd m) (bodd n) := by
   cases' n with n n <;>
   simp only [ofNat_eq_coe, ofNat_add_negSucc, negSucc_add_ofNat,
              negSucc_add_negSucc, bodd_subNatNat] <;>
-  simp only [negSucc_coe, bodd_neg, bodd_coe, ← Nat.bodd_add, Bool.xor_comm, ← Nat.cast_add]
-  rw [← Nat.succ_add, add_assoc]
+  simp only [negSucc_coe, bodd_neg, bodd_coe, ← Nat.bodd_add, Bool.xor_comm, ← Nat.cast_add,
+    Nat.succ_add, Nat.add_succ, Nat.add_comm]
 -- Porting note: Heavily refactored proof, used to work all with `simp`:
 -- `by cases m with m m; cases n with n n; unfold has_add.add;`
 -- `simp [int.add, -of_nat_eq_coe, bool.xor_comm]`

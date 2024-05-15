@@ -909,7 +909,7 @@ lemma surjOn_of_subsingleton [Subsingleton α] (f : α → α) (s : Set α) : Su
 #align set.surj_on_of_subsingleton Set.surjOn_of_subsingleton
 
 theorem surjective_iff_surjOn_univ : Surjective f ↔ SurjOn f univ univ := by
-  simp [Surjective, SurjOn, subset_def]
+  simp [Surjective, SurjOn, subset_def, -univ_subset_iff]
 #align set.surjective_iff_surj_on_univ Set.surjective_iff_surjOn_univ
 
 theorem surjOn_iff_surjective : SurjOn f s univ ↔ Surjective (s.restrict f) :=

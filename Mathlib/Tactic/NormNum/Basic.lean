@@ -85,7 +85,7 @@ theorem isNat_natAbs_pos : {n : ℤ} → {a : ℕ} → IsNat n a → IsNat n.nat
   | _, _, ⟨rfl⟩ => ⟨rfl⟩
 
 theorem isNat_natAbs_neg : {n : ℤ} → {a : ℕ} → IsInt n (.negOfNat a) → IsNat n.natAbs a
-  | _, _, ⟨rfl⟩ => ⟨by simp⟩
+  | _, _, ⟨rfl⟩ => ⟨by simp [-Int.cast_id]⟩
 
 /-- The `norm_num` extension which identifies the expression `Int.natAbs n` such that
 `norm_num` successfully recognizes `n`. -/
