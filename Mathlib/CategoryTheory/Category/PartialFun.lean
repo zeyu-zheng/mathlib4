@@ -183,10 +183,5 @@ noncomputable def typeToPartialFunIsoPartialFunToPointed :
         inv_hom_id := rfl })
     fun f =>
     Pointed.Hom.ext _ _ <|
-      funext fun a => Option.recOn a rfl fun a => by
-        simp
-        rw [← Part.get_eq_iff_mem]
-        · rfl
-        · trivial
-
+      funext fun a => Option.recOn a rfl fun _ => by simp [typeToPartialFun]
 #align Type_to_PartialFun_iso_PartialFun_to_Pointed typeToPartialFunIsoPartialFunToPointed
