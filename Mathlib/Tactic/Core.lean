@@ -251,7 +251,7 @@ open Lean
 /-- Returns the root directory which contains the package root file, e.g. `Mathlib.lean`. -/
 def getPackageDir (pkg : String) : IO System.FilePath := do
   let sp ← initSrcSearchPath
-  let root? ← sp.findM? fun p =>
+  let root? ← sp.findM? fun p : System.FilePath =>
     (p / pkg).isDir <||> ((p / pkg).withExtension "lean").pathExists
   if let some root := root? then return root
   throw <| IO.userError s!"Could not find {pkg} directory. \
