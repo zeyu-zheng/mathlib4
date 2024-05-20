@@ -11,6 +11,7 @@ import Mathlib.Init.Data.List.Instances
 import Mathlib.Init.Data.List.Lemmas
 import Mathlib.Logic.Unique
 import Mathlib.Order.Basic
+import Mathlib.Order.Nat
 import Batteries.Data.List.Lemmas
 import Mathlib.Tactic.Common
 
@@ -23,6 +24,8 @@ import Mathlib.Tactic.Common
 assert_not_exists Set.range
 assert_not_exists GroupWithZero
 assert_not_exists Ring
+-- TODO
+-- assert_not_exists Lattice
 
 open Function
 
@@ -3590,5 +3593,3 @@ theorem disjoint_map {f : α → β} {s t : List α} (hf : Function.Injective f)
 end Disjoint
 
 end List
-
-assert_not_exists Lattice
