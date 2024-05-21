@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
 import Mathlib.Data.List.Basic
+import Mathlib.Tactic.NthRewrite
 
 #align_import data.list.infix from "leanprover-community/mathlib"@"26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2"
 
@@ -234,7 +235,7 @@ theorem prefix_take_iff {x y : List α} {n : ℕ} : x <+: y.take n ↔ x <+: y �
     have hl' := hp.length_le
     rw [List.prefix_iff_eq_take] at *
     rw [hp, List.take_take]
-    simp [min_eq_left, hl, hl']
+    simp [Nat.min_eq_left, hl, hl']
 
 theorem concat_get_prefix {x y : List α} (h : x <+: y) (hl : x.length < y.length) :
     x ++ [y.get ⟨x.length, hl⟩] <+: y := by
@@ -281,7 +282,7 @@ theorem prefix_take_le_iff {L : List (List (Option α))} (hm : m < L.length) :
     L.take m <+: L.take n ↔ m ≤ n := by
   simp only [prefix_iff_eq_take, length_take]
   induction m generalizing L n with
-  | zero => simp [min_eq_left, eq_self_iff_true, Nat.zero_le, take]
+  | zero => simp [Nat.min_eq_left, eq_self_iff_true, Nat.zero_le, take]
   | succ m IH =>
     cases L with
     | nil => simp_all

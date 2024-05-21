@@ -7,6 +7,7 @@ import Mathlib.Logic.Relation
 import Mathlib.Data.List.Forall2
 import Mathlib.Data.List.Lex
 import Mathlib.Data.List.Infix
+import Mathlib.Tactic.ByContra
 
 #align_import data.list.chain from "leanprover-community/mathlib"@"dd71334db81d0bd444af1ee339a29298bef40734"
 

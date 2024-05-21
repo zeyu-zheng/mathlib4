@@ -3,16 +3,21 @@ Copyright (c) 2014 Parikshit Khanna. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Parikshit Khanna, Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Mario Carneiro
 -/
+import Batteries.Data.List.Lemmas
+import Mathlib.Data.List.Defs
 import Mathlib.Data.Nat.Defs
 import Mathlib.Data.Option.Basic
-import Mathlib.Data.List.Defs
+import Mathlib.Data.Prod.Basic
+import Mathlib.Data.Subtype
 import Mathlib.Init.Data.List.Basic
 import Mathlib.Init.Data.List.Instances
 import Mathlib.Init.Data.List.Lemmas
 import Mathlib.Logic.Unique
-import Mathlib.Order.Basic
-import Batteries.Data.List.Lemmas
-import Mathlib.Tactic.Common
+import Mathlib.Tactic.Congrm
+import Mathlib.Tactic.Convert
+import Mathlib.Tactic.Says
+import Mathlib.Tactic.SimpRw
+import Mathlib.Tactic.Use
 
 #align_import data.list.basic from "leanprover-community/mathlib"@"65a1391a0106c9204fe45bc73a039f056558cb83"
 
@@ -22,9 +27,9 @@ import Mathlib.Tactic.Common
 
 assert_not_exists Set.range
 assert_not_exists GroupWithZero
-assert_not_exists Ring
--- TODO
--- assert_not_exists Lattice
+assert_not_exists Lattice
+assert_not_exists Monoid
+assert_not_exists Preorder
 
 open Function
 
@@ -887,8 +892,7 @@ def nthLe (l : List α) (n) (h : n < l.length) : α := get l ⟨n, h⟩
 
 theorem nthLe_cons_aux {l : List α} {a : α} {n} (hn : n ≠ 0) (h : n < (a :: l).length) :
     n - 1 < l.length := by
-  contrapose! h
-  rw [length_cons]
+  rw [length_cons] at h
   omega
 #align list.nth_le_cons_aux List.nthLe_cons_aux
 
@@ -1099,7 +1103,7 @@ alias sublist_nil_iff_eq_nil := sublist_nil
 theorem sublist_replicate_iff {l : List α} {a : α} {n : ℕ} :
     l <+ replicate n a ↔ ∃ k ≤ n, l = replicate k a :=
   ⟨fun h =>
-    ⟨l.length, h.length_le.trans_eq (length_replicate _ _),
+    ⟨l.length, length_replicate n a ▸ h.length_le,
       eq_replicate_length.mpr fun b hb => eq_of_mem_replicate (h.subset hb)⟩,
     by rintro ⟨k, h, rfl⟩; exact (replicate_sublist_replicate _).mpr h⟩
 #align list.sublist_replicate_iff List.sublist_replicate_iff
@@ -3519,9 +3523,7 @@ end Forall
 /-! ### Miscellaneous lemmas -/
 
 theorem getLast_reverse {l : List α} (hl : l.reverse ≠ [])
-    (hl' : 0 < l.length := (by
-      contrapose! hl
-      simpa [length_eq_zero] using hl)) :
+    (hl' : 0 < l.length := (by simpa using hl)) :
     l.reverse.getLast hl = l.get ⟨0, hl'⟩ := by
   rw [getLast_eq_get, get_reverse']
   · simp
