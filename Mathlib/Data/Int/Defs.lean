@@ -26,6 +26,9 @@ Split this file into:
 * `Data.Int.Basic` for the lemmas that require mathlib definitions
 -/
 
+assert_not_exists Monoid
+assert_not_exists Preorder
+
 open Nat
 
 namespace Int

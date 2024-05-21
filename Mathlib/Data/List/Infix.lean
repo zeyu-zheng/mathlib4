@@ -339,17 +339,17 @@ protected theorem IsPrefix.reduceOption {l₁ l₂ : List (Option α)} (h : l₁
 instance : IsPartialOrder (List α) (· <+: ·) where
   refl := prefix_refl
   trans _ _ _ := IsPrefix.trans
-  antisymm _ _ h₁ h₂ := eq_of_prefix_of_length_eq h₁ <| h₁.length_le.antisymm h₂.length_le
+  antisymm _ _ h₁ h₂ := eq_of_prefix_of_length_eq h₁ <| Nat.le_antisymm h₁.length_le h₂.length_le
 
 instance : IsPartialOrder (List α) (· <:+ ·) where
   refl := suffix_refl
   trans _ _ _ := IsSuffix.trans
-  antisymm _ _ h₁ h₂ := eq_of_suffix_of_length_eq h₁ <| h₁.length_le.antisymm h₂.length_le
+  antisymm _ _ h₁ h₂ := eq_of_suffix_of_length_eq h₁ <| Nat.le_antisymm h₁.length_le h₂.length_le
 
 instance : IsPartialOrder (List α) (· <:+: ·) where
   refl := infix_refl
   trans _ _ _ := IsInfix.trans
-  antisymm _ _ h₁ h₂ := eq_of_infix_of_length_eq h₁ <| h₁.length_le.antisymm h₂.length_le
+  antisymm _ _ h₁ h₂ := eq_of_infix_of_length_eq h₁ <| Nat.le_antisymm h₁.length_le h₂.length_le
 
 end Fix
 
@@ -550,7 +550,7 @@ theorem IsPrefix.ne_nil {x y : List α} (h : x <+: y) (hx : x ≠ []) : y ≠ []
   rintro rfl; exact hx <| List.prefix_nil.mp h
 
 theorem IsPrefix.get_eq {x y : List α} (h : x <+: y) {n} (hn : n < x.length) :
-    x.get ⟨n, hn⟩ = y.get ⟨n, hn.trans_le h.length_le⟩ := by
+    x.get ⟨n, hn⟩ = y.get ⟨n, Nat.lt_of_lt_of_le hn h.length_le⟩ := by
   obtain ⟨_, rfl⟩ := h
   exact (List.get_append n hn).symm
 

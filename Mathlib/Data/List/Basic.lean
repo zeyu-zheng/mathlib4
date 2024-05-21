@@ -11,7 +11,6 @@ import Mathlib.Init.Data.List.Instances
 import Mathlib.Init.Data.List.Lemmas
 import Mathlib.Logic.Unique
 import Mathlib.Order.Basic
-import Mathlib.Order.Nat
 import Batteries.Data.List.Lemmas
 import Mathlib.Tactic.Common
 
@@ -1183,7 +1182,8 @@ theorem indexOf_of_not_mem {l : List α} {a : α} : a ∉ l → indexOf a l = le
 #align list.index_of_of_not_mem List.indexOf_of_not_mem
 
 theorem indexOf_le_length {a : α} {l : List α} : indexOf a l ≤ length l := by
-  induction' l with b l ih; · rfl
+  induction' l with b l ih
+  · simp
   simp only [length, indexOf_cons, cond_eq_if, beq_iff_eq]
   by_cases h : b = a
   · rw [if_pos h]; exact Nat.zero_le _
@@ -1192,7 +1192,7 @@ theorem indexOf_le_length {a : α} {l : List α} : indexOf a l ≤ length l := b
 
 theorem indexOf_lt_length {a} {l : List α} : indexOf a l < length l ↔ a ∈ l :=
   ⟨fun h => Decidable.by_contradiction fun al => Nat.ne_of_lt h <| indexOf_eq_length.2 al,
-   fun al => (lt_of_le_of_ne indexOf_le_length) fun h => indexOf_eq_length.1 h al⟩
+   fun al => (Nat.lt_of_le_of_ne indexOf_le_length) fun h => indexOf_eq_length.1 h al⟩
 #align list.index_of_lt_length List.indexOf_lt_length
 
 theorem indexOf_append_of_mem {a : α} (h : a ∈ l₁) : indexOf a (l₁ ++ l₂) = indexOf a l₁ := by
@@ -1232,7 +1232,7 @@ theorem nthLe_get? {l : List α} {n} (h) : get? l n = some (nthLe l n h) := get?
 #align list.nth_len_le List.get?_len_le
 
 @[simp]
-theorem get?_length (l : List α) : l.get? l.length = none := get?_len_le le_rfl
+theorem get?_length (l : List α) : l.get? l.length = none := get?_len_le (Nat.le_refl _)
 #align list.nth_length List.get?_length
 
 #align list.nth_eq_some List.get?_eq_some
@@ -1450,7 +1450,7 @@ theorem modifyNthTail_modifyNthTail_le {f g : List α → List α} (m n : ℕ) (
 
 theorem modifyNthTail_modifyNthTail_same {f g : List α → List α} (n : ℕ) (l : List α) :
     (l.modifyNthTail f n).modifyNthTail g n = l.modifyNthTail (g ∘ f) n := by
-  rw [modifyNthTail_modifyNthTail_le n n l (le_refl n), Nat.sub_self]; rfl
+  rw [modifyNthTail_modifyNthTail_le n n l (Nat.le_refl n), Nat.sub_self]; rfl
 #align list.modify_nth_tail_modify_nth_tail_same List.modifyNthTail_modifyNthTail_same
 
 #align list.modify_nth_tail_id List.modifyNthTail_id
@@ -2096,11 +2096,12 @@ set_option linter.deprecated false in
 theorem nthLe_succ_scanl {i : ℕ} {h : i + 1 < (scanl f b l).length} :
     (scanl f b l).nthLe (i + 1) h =
       f ((scanl f b l).nthLe i (Nat.lt_of_succ_lt h))
-        (l.nthLe i (Nat.lt_of_succ_lt_succ (lt_of_lt_of_le h (le_of_eq (length_scanl b l))))) := by
+        (l.nthLe i
+          (Nat.lt_of_succ_lt_succ (Nat.lt_of_lt_of_le h (Nat.le_of_eq (length_scanl b l))))) := by
   induction i generalizing b l with
   | zero =>
     cases l
-    · simp only [length, zero_eq, lt_self_iff_false] at h
+    · simp only [length, zero_eq, Nat.lt_irrefl] at h
     · simp [scanl_cons, singleton_append, nthLe_zero_scanl, nthLe_cons]
   | succ i hi =>
     cases l
@@ -2115,7 +2116,8 @@ theorem nthLe_succ_scanl {i : ℕ} {h : i + 1 < (scanl f b l).length} :
 theorem get_succ_scanl {i : ℕ} {h : i + 1 < (scanl f b l).length} :
     (scanl f b l).get ⟨i + 1, h⟩ =
       f ((scanl f b l).get ⟨i, Nat.lt_of_succ_lt h⟩)
-        (l.get ⟨i, Nat.lt_of_succ_lt_succ (lt_of_lt_of_le h (le_of_eq (length_scanl b l)))⟩) :=
+        (l.get
+          ⟨i, Nat.lt_of_succ_lt_succ (Nat.lt_of_lt_of_le h (Nat.le_of_eq (length_scanl b l)))⟩) :=
   nthLe_succ_scanl
 
 -- FIXME: we should do the proof the other way around
@@ -2301,7 +2303,7 @@ variable (p : α → Bool) (xs ys : List α) (ls : List (List α)) (f : List α 
 theorem splitAt_eq_take_drop (n : ℕ) (l : List α) : splitAt n l = (take n l, drop n l) := by
   by_cases h : n < l.length <;> rw [splitAt, go_eq_take_drop]
   · rw [if_pos h]; rfl
-  · rw [if_neg h, take_all_of_le <| le_of_not_lt h, drop_eq_nil_of_le <| le_of_not_lt h]
+  · rw [if_neg h, take_all_of_le <| Nat.le_of_not_lt h, drop_eq_nil_of_le <| Nat.le_of_not_lt h]
 where
   go_eq_take_drop (n : ℕ) (l xs : List α) (acc : Array α) : splitAt.go l xs n acc =
       if n < xs.length then (acc.toList ++ take n xs, drop n xs) else (l, []) := by
@@ -2629,8 +2631,7 @@ theorem get_pmap {p : α → Prop} (f : ∀ a, p a → β) {l : List α} (h : �
       f (get l ⟨n, @length_pmap _ _ p f l h ▸ hn⟩)
         (h _ (get_mem l n (@length_pmap _ _ p f l h ▸ hn))) := by
   induction' l with hd tl hl generalizing n
-  · simp only [length, pmap] at hn
-    exact absurd hn (not_lt_of_le n.zero_le)
+  · simp only [length, pmap, not_lt_zero] at hn
   · cases n
     · simp
     · simp [hl]
@@ -3129,7 +3130,7 @@ theorem length_eraseIdx_add_one {l : List ι} {i : ℕ} (h : i < l.length) :
   (l.eraseIdx i).length + 1
   _ = (l.take i ++ l.drop (i + 1)).length + 1         := by rw [eraseIdx_eq_take_drop_succ]
   _ = (l.take i).length + (l.drop (i + 1)).length + 1 := by rw [length_append]
-  _ = i + (l.drop (i + 1)).length + 1                 := by rw [length_take_of_le (le_of_lt h)]
+  _ = i + (l.drop (i + 1)).length + 1                 := by rw [length_take_of_le (Nat.le_of_lt h)]
   _ = i + (l.length - (i + 1)) + 1                    := by rw [length_drop]
   _ = (i + 1) + (l.length - (i + 1))                  := by omega
   _ = l.length                                        := Nat.add_sub_cancel' (succ_le_of_lt h)
@@ -3562,7 +3563,7 @@ theorem sizeOf_dropSlice_lt [SizeOf α] (i j : ℕ) (hj : 0 < j) (xs : List α) 
     · cases j with
       | zero => contradiction
       | succ n =>
-        dsimp only [drop]; apply lt_of_le_of_lt (drop_sizeOf_le xs n)
+        dsimp only [drop]; apply Nat.lt_of_le_of_lt (drop_sizeOf_le xs n)
         simp only [cons.sizeOf_spec]; omega
     · simp only [cons.sizeOf_spec, Nat.add_lt_add_iff_left]
       apply xs_ih _ j hj

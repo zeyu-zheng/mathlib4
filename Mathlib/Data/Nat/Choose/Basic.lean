@@ -5,6 +5,7 @@ Authors: Chris Hughes, Bhavik Mehta, Stuart Presnell
 -/
 import Mathlib.Data.Nat.Factorial.Basic
 import Mathlib.Order.Monotone.Basic
+import Mathlib.Order.Nat
 
 #align_import data.nat.choose.basic from "leanprover-community/mathlib"@"2f3994e1b117b1e1da49bcfb67334f33460c3ce4"
 

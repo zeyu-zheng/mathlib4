@@ -137,7 +137,7 @@ theorem unzip_zip_right {l₁ : List α} {l₂ : List β} (h : length l₂ ≤ l
 theorem unzip_zip {l₁ : List α} {l₂ : List β} (h : length l₁ = length l₂) :
     unzip (zip l₁ l₂) = (l₁, l₂) := by
   rw [← Prod.mk.eta (p := unzip (zip l₁ l₂)),
-    unzip_zip_left (le_of_eq h), unzip_zip_right (ge_of_eq h)]
+    unzip_zip_left (Nat.le_of_eq h), unzip_zip_right (Nat.le_of_eq h.symm)]
 #align list.unzip_zip List.unzip_zip
 
 theorem zip_of_prod {l : List α} {l' : List β} {lp : List (α × β)} (hl : lp.map Prod.fst = l)
@@ -233,7 +233,7 @@ instance (f : α → α → β) [IsSymmOp α β f] : IsSymmOp (List α) (List β
 
 @[simp]
 theorem length_revzip (l : List α) : length (revzip l) = length l := by
-  simp only [revzip, length_zip, length_reverse, min_self]
+  simp only [revzip, length_zip, length_reverse, Nat.min_self]
 #align list.length_revzip List.length_revzip
 
 @[simp]

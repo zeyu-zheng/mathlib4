@@ -59,7 +59,7 @@ theorem eraseIdx_insertNth (n : ℕ) (l : List α) : (l.insertNth n a).eraseIdx 
 theorem insertNth_eraseIdx_of_ge :
     ∀ n m as,
       n < length as → n ≤ m → insertNth m a (as.eraseIdx n) = (as.insertNth (m + 1) a).eraseIdx n
-  | 0, 0, [], has, _ => (lt_irrefl _ has).elim
+  | 0, 0, [], has, _ => (Nat.lt_irrefl _ has).elim
   | 0, 0, _ :: as, _, _ => by simp [eraseIdx, insertNth]
   | 0, m + 1, a :: as, _, _ => rfl
   | n + 1, m + 1, a :: as, has, hmn =>
@@ -121,22 +121,24 @@ theorem insertNth_length_self (l : List α) (x : α) : insertNth l.length x l = 
 
 theorem length_le_length_insertNth (l : List α) (x : α) (n : ℕ) :
     l.length ≤ (insertNth n x l).length := by
-  rcases le_or_lt n l.length with hn | hn
+  rcases (Nat.lt_or_ge l.length n).symm with hn | hn
   · rw [length_insertNth _ _ hn]
-    exact (Nat.lt_succ_self _).le
+    exact Nat.le_of_lt (Nat.lt_succ_self _)
   · rw [insertNth_of_length_lt _ _ _ hn]
+    exact Nat.le_refl _
 #align list.length_le_length_insert_nth List.length_le_length_insertNth
 
 theorem length_insertNth_le_succ (l : List α) (x : α) (n : ℕ) :
     (insertNth n x l).length ≤ l.length + 1 := by
-  rcases le_or_lt n l.length with hn | hn
+  rcases (Nat.lt_or_ge l.length n).symm with hn | hn
   · rw [length_insertNth _ _ hn]
+    exact Nat.le_refl _
   · rw [insertNth_of_length_lt _ _ _ hn]
-    exact (Nat.lt_succ_self _).le
+    exact Nat.le_of_lt (Nat.lt_succ_self _)
 #align list.length_insert_nth_le_succ List.length_insertNth_le_succ
 
 theorem get_insertNth_of_lt (l : List α) (x : α) (n k : ℕ) (hn : k < n) (hk : k < l.length)
-    (hk' : k < (insertNth n x l).length := hk.trans_le (length_le_length_insertNth _ _ _)) :
+    (hk' : k < (insertNth n x l).length := Nat.lt_of_lt_of_le hk (length_le_length_insertNth ..)) :
     (insertNth n x l).get ⟨k, hk'⟩ = l.get ⟨k, hk⟩ := by
   induction' n with n IH generalizing k l
   · simp at hn
@@ -150,7 +152,7 @@ theorem get_insertNth_of_lt (l : List α) (x : α) (n k : ℕ) (hn : k < n) (hk 
 set_option linter.deprecated false in
 @[deprecated get_insertNth_of_lt] -- 2023-01-05
 theorem nthLe_insertNth_of_lt : ∀ (l : List α) (x : α) (n k : ℕ), k < n → ∀ (hk : k < l.length)
-    (hk' : k < (insertNth n x l).length := hk.trans_le (length_le_length_insertNth _ _ _)),
+    (hk' : k < (insertNth n x l).length := Nat.lt_of_lt_of_le hk (length_le_length_insertNth ..)),
     (insertNth n x l).nthLe k hk' = l.nthLe k hk := @get_insertNth_of_lt _
 #align list.nth_le_insert_nth_of_lt List.nthLe_insertNth_of_lt
 

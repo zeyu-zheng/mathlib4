@@ -22,6 +22,7 @@ and results involving the order structure of `ℤ`.
 By contrast, this file's only import beyond `Data.Int.Cast.Defs` is `Algebra.Group.Basic`.
 -/
 
+assert_not_exists Preorder
 
 universe u
 
