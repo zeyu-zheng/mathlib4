@@ -80,7 +80,7 @@ theorem decide_addLsb_mod_two {x b} : decide (addLsb x b % 2 = 1) = b := by
   simp [addLsb]
 #align bitvec.to_bool_add_lsb_mod_two BitVec.decide_addLsb_mod_two
 
-lemma ofNat_toNat' (x : BitVec w) : (x.toNat)#w = x := by
+lemma ofNat_toNat' (x : BitVec w) : .ofNat w x.toNat = x := by
   rw [ofNat_toNat, truncate_eq]
 
 lemma ofNat_toNat_of_eq (x : BitVec w) (h : w = v):
