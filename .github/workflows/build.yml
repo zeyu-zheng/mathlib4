@@ -207,7 +207,7 @@ jobs:
         with:
           linters: gcc
           run: |
-            ./scripts/run_linters.sh
+            bash -o pipefail -c ./scripts/run_linters.sh
 
       - name: configure git setup
         run: |
