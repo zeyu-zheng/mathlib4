@@ -18,7 +18,7 @@ Historically, these were ported from the `lint-style.py` Python script.
 
 open Lean Elab Command
 
-namespace Mathlib.Linter
+namespace Mathlib.Linter.Style
 
 /-- The `setOption` linter emits a warning on a `set_option` command, term or tactic
 which sets a `pp`, `profiler` or `trace` option. -/
@@ -27,7 +27,14 @@ register_option linter.setOption : Bool := {
   descr := "enable the `setOption` linter"
 }
 
-namespace Style.SetOption
+/-- The `lambdaFunction` linter emits a warning upon any use of the syntax `λ x => x` to define
+anonymous functions. -/
+register_option linter.lambdaFunction : Bool := {
+  defValue := true
+  descr := "enable the `lambdaFunction` linter"
+}
+
+namespace SetOption
 
 /-- Whether a syntax element is a `set_option` command, tactic or term:
 Return the name of the option being set, if any. -/
@@ -67,6 +74,38 @@ def setOptionLinter : Linter where run := withSetOptionIn fun stx => do
 
 initialize addLinter setOptionLinter
 
-end Style.SetOption
+end SetOption
 
-end Mathlib.Linter
+namespace AnonymousFunctions
+
+/-- Whether a syntax element is an anonymous function. -/
+def isAnonymousFunctionWithLambda : Syntax → Bool --:=
+  | `(fun $_binders => $_body) => true
+  -- | `(λ $_x => _) => true
+  | _ => false--fun stx ↦ stx matches `(λ $_x => _) -- matches ↦ as well
+
+/-- Gets the value of the `linter.lambdaFunction` option. -/
+def getLinterHash (o : Options) : Bool := Linter.getLinterValue linter.lambdaFunction o
+
+/-- The `lambdaFunction` linter: this lints any `set_option` command, term or tactic
+which sets a `pp`, `profiler` or `trace` option.
+
+**Why is this bad?** These options are good for debugging, but should not be
+used in production code.
+**How to fix this?** Remove these options: usually, they are not necessary for production code.
+(Some tests will intentionally use one of these options; in this case, simply allow the linter.)
+-/
+def lambdaFunctionLinter : Linter where run := withSetOptionIn fun stx => do
+    unless getLinterHash (← getOptions) do
+      return
+    if (← MonadState.get).messages.hasErrors then
+      return
+    if let some (head) := stx.find? isAnonymousFunctionWithLambda then
+      Linter.logLint linter.lambdaFunction head m!"Anonymous function syntax with λ is deprecated\
+                                                   Please use the `fun` keyword instead"
+
+initialize addLinter lambdaFunctionLinter
+
+end AnonymousFunctions
+
+end Mathlib.Linter.Style

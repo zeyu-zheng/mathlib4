@@ -106,3 +106,16 @@ lemma foo' : True := trivial
 -- TODO: add terms for the term form
 
 end setOption
+
+-- Tests for the linter on anonymous lambda syntax.
+section lambdaSyntax
+
+set_option linter.lambdaFunction true
+
+set_option linter.lambdaFunction false
+
+def foo : ℕ → ℕ := λ _n ↦ 2
+
+def bar : ℕ → ℕ := fun _n ↦ 2
+
+end lambdaSyntax
