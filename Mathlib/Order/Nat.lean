@@ -224,3 +224,61 @@ theorem StrictMono.id_le {φ : ℕ → ℕ} (h : StrictMono φ) : ∀ n, n ≤ �
 #align strict_mono.id_le StrictMono.id_le
 
 end Preorder
+
+namespace Function
+
+variable [Preorder α] {f : α → α}
+
+theorem monotone_iterate_of_id_le (h : id ≤ f) : Monotone fun m => f^[m] :=
+  monotone_nat_of_le_succ fun n x => by
+    rw [iterate_succ_apply']
+    exact h _
+#align function.monotone_iterate_of_id_le Function.monotone_iterate_of_id_le
+
+theorem antitone_iterate_of_le_id (h : f ≤ id) : Antitone fun m => f^[m] := fun m n hmn =>
+  @monotone_iterate_of_id_le αᵒᵈ _ f h m n hmn
+#align function.antitone_iterate_of_le_id Function.antitone_iterate_of_le_id
+
+end Function
+
+namespace Monotone
+
+variable [Preorder α] {f : α → α} {x : α}
+
+/-- If `f` is a monotone map and `x ≤ f x` at some point `x`, then the iterates `f^[n] x` form
+a monotone sequence. -/
+theorem monotone_iterate_of_le_map (hf : Monotone f) (hx : x ≤ f x) : Monotone fun n => f^[n] x :=
+  monotone_nat_of_le_succ fun n => by
+    rw [iterate_succ_apply]
+    exact hf.iterate n hx
+#align monotone.monotone_iterate_of_le_map Monotone.monotone_iterate_of_le_map
+
+/-- If `f` is a monotone map and `f x ≤ x` at some point `x`, then the iterates `f^[n] x` form
+an antitone sequence. -/
+theorem antitone_iterate_of_map_le (hf : Monotone f) (hx : f x ≤ x) : Antitone fun n => f^[n] x :=
+  hf.dual.monotone_iterate_of_le_map hx
+#align monotone.antitone_iterate_of_map_le Monotone.antitone_iterate_of_map_le
+
+end Monotone
+
+namespace StrictMono
+
+variable [Preorder α] {f : α → α} {x : α}
+
+/-- If `f` is a strictly monotone map and `x < f x` at some point `x`, then the iterates `f^[n] x`
+form a strictly monotone sequence. -/
+theorem strictMono_iterate_of_lt_map (hf : StrictMono f) (hx : x < f x) :
+    StrictMono fun n => f^[n] x :=
+  strictMono_nat_of_lt_succ fun n => by
+    rw [iterate_succ_apply]
+    exact hf.iterate n hx
+#align strict_mono.strict_mono_iterate_of_lt_map StrictMono.strictMono_iterate_of_lt_map
+
+/-- If `f` is a strictly antitone map and `f x < x` at some point `x`, then the iterates `f^[n] x`
+form a strictly antitone sequence. -/
+theorem strictAnti_iterate_of_map_lt (hf : StrictMono f) (hx : f x < x) :
+    StrictAnti fun n => f^[n] x :=
+  hf.dual.strictMono_iterate_of_lt_map hx
+#align strict_mono.strict_anti_iterate_of_map_lt StrictMono.strictAnti_iterate_of_map_lt
+
+end StrictMono

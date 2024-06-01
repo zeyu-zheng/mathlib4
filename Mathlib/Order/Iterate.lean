@@ -5,7 +5,6 @@ Authors: Yury G. Kudryashov
 -/
 import Mathlib.Logic.Function.Iterate
 import Mathlib.Order.Monotone.Basic
-import Mathlib.Order.Nat
 
 #align_import order.iterate from "leanprover-community/mathlib"@"2258b40dacd2942571c8ce136215350c702dc78f"
 
@@ -45,20 +44,20 @@ theorem seq_le_seq (hf : Monotone f) (n : ℕ) (h₀ : x 0 ≤ y 0) (hx : ∀ k 
   induction' n with n ihn
   · exact h₀
   · refine (hx _ n.lt_succ_self).trans ((hf <| ihn ?_ ?_).trans (hy _ n.lt_succ_self))
-    · exact fun k hk => hx _ (hk.trans n.lt_succ_self)
-    · exact fun k hk => hy _ (hk.trans n.lt_succ_self)
+    · exact fun k hk => hx _ (Nat.lt_trans hk n.lt_succ_self)
+    · exact fun k hk => hy _ (Nat.lt_trans hk n.lt_succ_self)
 #align monotone.seq_le_seq Monotone.seq_le_seq
 
 theorem seq_pos_lt_seq_of_lt_of_le (hf : Monotone f) {n : ℕ} (hn : 0 < n) (h₀ : x 0 ≤ y 0)
     (hx : ∀ k < n, x (k + 1) < f (x k)) (hy : ∀ k < n, f (y k) ≤ y (k + 1)) : x n < y n := by
   induction' n with n ihn
-  · exact hn.false.elim
+  · exact Nat.lt_irrefl _ hn |>.elim
   suffices x n ≤ y n from (hx n n.lt_succ_self).trans_le ((hf this).trans <| hy n n.lt_succ_self)
   cases n with
   | zero => exact h₀
   | succ n =>
     refine (ihn n.zero_lt_succ (fun k hk => hx _ ?_) fun k hk => hy _ ?_).le <;>
-    exact hk.trans n.succ.lt_succ_self
+    exact Nat.lt_trans hk n.succ.lt_succ_self
 #align monotone.seq_pos_lt_seq_of_lt_of_le Monotone.seq_pos_lt_seq_of_lt_of_le
 
 theorem seq_pos_lt_seq_of_le_of_lt (hf : Monotone f) {n : ℕ} (hn : 0 < n) (h₀ : x 0 ≤ y 0)
@@ -140,16 +139,6 @@ theorem iterate_le_id_of_le_id (h : f ≤ id) (n : ℕ) : f^[n] ≤ id :=
   @id_le_iterate_of_id_le αᵒᵈ _ f h n
 #align function.iterate_le_id_of_le_id Function.iterate_le_id_of_le_id
 
-theorem monotone_iterate_of_id_le (h : id ≤ f) : Monotone fun m => f^[m] :=
-  monotone_nat_of_le_succ fun n x => by
-    rw [iterate_succ_apply']
-    exact h _
-#align function.monotone_iterate_of_id_le Function.monotone_iterate_of_id_le
-
-theorem antitone_iterate_of_le_id (h : f ≤ id) : Antitone fun m => f^[m] := fun m n hmn =>
-  @monotone_iterate_of_id_le αᵒᵈ _ f h m n hmn
-#align function.antitone_iterate_of_le_id Function.antitone_iterate_of_le_id
-
 end Preorder
 
 /-!
@@ -224,45 +213,3 @@ theorem iterate_pos_eq_iff_map_eq (h : Commute f g) (hf : Monotone f) (hg : Stri
 end Commute
 
 end Function
-
-namespace Monotone
-
-variable {α : Type*} [Preorder α] {f : α → α} {x : α}
-
-/-- If `f` is a monotone map and `x ≤ f x` at some point `x`, then the iterates `f^[n] x` form
-a monotone sequence. -/
-theorem monotone_iterate_of_le_map (hf : Monotone f) (hx : x ≤ f x) : Monotone fun n => f^[n] x :=
-  monotone_nat_of_le_succ fun n => by
-    rw [iterate_succ_apply]
-    exact hf.iterate n hx
-#align monotone.monotone_iterate_of_le_map Monotone.monotone_iterate_of_le_map
-
-/-- If `f` is a monotone map and `f x ≤ x` at some point `x`, then the iterates `f^[n] x` form
-an antitone sequence. -/
-theorem antitone_iterate_of_map_le (hf : Monotone f) (hx : f x ≤ x) : Antitone fun n => f^[n] x :=
-  hf.dual.monotone_iterate_of_le_map hx
-#align monotone.antitone_iterate_of_map_le Monotone.antitone_iterate_of_map_le
-
-end Monotone
-
-namespace StrictMono
-
-variable {α : Type*} [Preorder α] {f : α → α} {x : α}
-
-/-- If `f` is a strictly monotone map and `x < f x` at some point `x`, then the iterates `f^[n] x`
-form a strictly monotone sequence. -/
-theorem strictMono_iterate_of_lt_map (hf : StrictMono f) (hx : x < f x) :
-    StrictMono fun n => f^[n] x :=
-  strictMono_nat_of_lt_succ fun n => by
-    rw [iterate_succ_apply]
-    exact hf.iterate n hx
-#align strict_mono.strict_mono_iterate_of_lt_map StrictMono.strictMono_iterate_of_lt_map
-
-/-- If `f` is a strictly antitone map and `f x < x` at some point `x`, then the iterates `f^[n] x`
-form a strictly antitone sequence. -/
-theorem strictAnti_iterate_of_map_lt (hf : StrictMono f) (hx : f x < x) :
-    StrictAnti fun n => f^[n] x :=
-  hf.dual.strictMono_iterate_of_lt_map hx
-#align strict_mono.strict_anti_iterate_of_map_lt StrictMono.strictAnti_iterate_of_map_lt
-
-end StrictMono
