@@ -3,10 +3,10 @@ Copyright (c) 2023 Iván Renison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Iván Renison
 -/
+import Mathlib.Algebra.Order.Ring.Abs
 import Mathlib.Combinatorics.SimpleGraph.Coloring
 import Mathlib.Combinatorics.SimpleGraph.Hasse
-import Mathlib.Data.Nat.Parity
-import Mathlib.Data.ZMod.Basic
+import Mathlib.Order.OmegaCompletePartialOrder
 
 /-!
 # Concrete colorings of common graphs
