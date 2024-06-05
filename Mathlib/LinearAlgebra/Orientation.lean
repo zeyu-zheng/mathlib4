@@ -36,16 +36,11 @@ that index type is a `Fintype` and there exists a basis of the same cardinality.
 
 noncomputable section
 
-open BigOperators
-
 section OrderedCommSemiring
 
 variable (R : Type*) [StrictOrderedCommSemiring R]
-
 variable (M : Type*) [AddCommMonoid M] [Module R M]
-
 variable {N : Type*} [AddCommMonoid N] [Module R N]
-
 variable (ι ι' : Type*)
 
 /-- An orientation of a module, intended to be used when `ι` is a `Fintype` with the same
@@ -143,7 +138,6 @@ end OrderedCommSemiring
 section OrderedCommRing
 
 variable {R : Type*} [StrictOrderedCommRing R]
-
 variable {M N : Type*} [AddCommGroup M] [AddCommGroup N] [Module R M] [Module R N]
 
 @[simp]
@@ -220,9 +214,7 @@ end OrderedCommRing
 section LinearOrderedCommRing
 
 variable {R : Type*} [LinearOrderedCommRing R]
-
 variable {M : Type*} [AddCommGroup M] [Module R M]
-
 variable {ι : Type*}
 
 namespace Orientation
@@ -363,9 +355,7 @@ end LinearOrderedCommRing
 section LinearOrderedField
 
 variable {R : Type*} [LinearOrderedField R]
-
 variable {M : Type*} [AddCommGroup M] [Module R M]
-
 variable {ι : Type*}
 
 namespace Orientation

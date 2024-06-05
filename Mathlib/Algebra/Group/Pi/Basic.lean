@@ -28,6 +28,8 @@ comment `--pi_instance` is inserted before all fields which were previously deri
 -- We enforce to only import `Algebra.Group.Defs` and basic logic
 assert_not_exists Set.range
 assert_not_exists MonoidHom
+assert_not_exists MonoidWithZero
+assert_not_exists DenselyOrdered
 
 open Function
 
@@ -40,7 +42,6 @@ variable {α β γ : Type*}
 
 -- The families of types already equipped with instances
 variable {f : I → Type v₁} {g : I → Type v₂} {h : I → Type v₃}
-
 variable (x y : ∀ i, f i) (i : I)
 
 namespace Pi
@@ -151,7 +152,7 @@ theorem pow_comp [Pow γ α] (x : β → γ) (a : α) (y : I → β) : (x ^ a) �
 Porting note: `bit0` and `bit1` are deprecated. This section can be removed entirely
 (without replacement?).
 -/
-section deprecated
+section deprecated -- since the port, 2022-11-28
 
 set_option linter.deprecated false
 
@@ -352,7 +353,6 @@ instance cancelCommMonoid [∀ i, CancelCommMonoid (f i)] : CancelCommMonoid (�
 section
 
 variable [DecidableEq I]
-
 variable [∀ i, One (f i)] [∀ i, One (g i)] [∀ i, One (h i)]
 
 /-- The function supported at `i`, with value `x` there, and `1` elsewhere. -/
