@@ -169,7 +169,7 @@ end AlgebraInstances
 namespace FiniteIntegralAdeles
 
 /-- The inclusion of `R_hat` in `K_hat` as an algebra homomorphism. -/
-def Coe.algHom : AlgHom R (R_hat R K) (K_hat R K) :=
+def Coe.algHom : (R_hat R K) →ₐ[R] (K_hat R K) :=
   { Coe.ringHom R K with
     toFun := (↑)
     commutes' := fun _ => rfl }
@@ -360,9 +360,22 @@ section Topology
 
 open Classical
 
-local notation "R_hat" => FiniteIntegralAdeles
+instance : Algebra (R_hat R K) (FiniteAdeleRing R K) where
+  smul rhat khat := ⟨fun v ↦ rhat v * khat.1 v, by
+    show ProdAdicCompletions.IsFiniteAdele (fun v ↦ rhat v * khat.1 v : K_hat R K)
+    have this : ProdAdicCompletions.IsFiniteAdele (fun v ↦ khat.1 v : K_hat R K) := khat.2
+    rw [ProdAdicCompletions.IsFiniteAdele, Filter.eventually_cofinite] at this ⊢
 
-local notation "K_hat" => ProdAdicCompletions
+    have := khat.2
+
+    sorry⟩
+  toFun := _
+  map_one' := _
+  map_mul' := _
+  map_zero' := _
+  map_add' := _
+  commutes' := _
+  smul_def' := _
 
 private theorem _root_.Subset.three_union {α : Type _} (f g h : α → Prop) :
     {a : α | ¬(f a ∧ g a ∧ h a)} ⊆ {a : α | ¬f a} ∪ {a : α | ¬g a} ∪ {a : α | ¬h a} := by
