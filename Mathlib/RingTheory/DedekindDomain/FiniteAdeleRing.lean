@@ -336,26 +336,20 @@ instance : Algebra (FiniteAdeleRing R K) (K_hat R K) := Algebra.ofSubsemiring _
 instance : Algebra R (FiniteAdeleRing R K) :=
   RingHom.toAlgebra ((algebraMap K (FiniteAdeleRing R K)).comp (algebraMap R K))
 
-open scoped algebraMap
-
--- example (A C : Type) [CommRing A] [CommRing C] [Algebra A C] (B : Subalgebra A C) :
---   Algebra A B := Subalgebra.algebra _
-
--- example (A C : Type) [CommRing A] [CommRing C] [Algebra A C] (B : Subalgebra A C) :
---   Algebra B C := Algebra.ofSubsemiring B.toSubsemiring
-
--- example (A C : Type) [CommRing A] [CommRing C] [Algebra A C] (a : A) (c : C) :
---     a • c = (a : C) * c := Algebra.smul_def a c
-
 instance : IsScalarTower R K (FiniteAdeleRing R K) where
-  smul_assoc r k khat := by
+  smul_assoc r k fadele := by
     simp only [Algebra.smul_def, map_mul]
     apply mul_assoc
 
+instance : IsScalarTower K (FiniteAdeleRing R K) (K_hat R K) where
+  smul_assoc k fadele khat := by
+    simp only [Algebra.smul_def, map_mul]
+    apply mul_assoc
 
--- #synth Algebra R K
--- #synth Algebra K (FiniteAdeleRing R K)
--- #synth Algebra R (FiniteAdeleRing R K)
+instance : IsScalarTower R (FiniteAdeleRing R K) (K_hat R K) where
+  smul_assoc r fadele khat := by
+    simp only [Algebra.smul_def, map_mul]
+    apply mul_assoc
 
 -- example (A B C : Type) [CommRing A] [CommRing B] [CommRing C] [Algebra A B] [Algebra B C] :
 --   Algebra A C := RingHom.toAlgebra ((algebraMap B C).comp (algebraMap A B))
@@ -404,8 +398,8 @@ lemma mem_FiniteAdeleRing (x : K_hat R K) : x ∈
   } : Subalgebra K (K_hat R K)) ↔ {v | x v ∉ adicCompletionIntegers K v}.Finite := Iff.rfl
 
 instance : Algebra (R_hat R K) (FiniteAdeleRing R K) where
-  smul rhat khat := ⟨fun v ↦ rhat v * khat.1 v, by
-    have this := khat.2
+  smul rhat fadele := ⟨fun v ↦ rhat v * fadele.1 v, by
+    have this := fadele.2
     rw [mem_FiniteAdeleRing] at this ⊢
     apply Finite.subset this (fun v hv ↦ ?_)
     rw [mem_setOf_eq, mem_adicCompletionIntegers] at hv ⊢
@@ -413,7 +407,11 @@ instance : Algebra (R_hat R K) (FiniteAdeleRing R K) where
     rw [map_mul]
     exact mul_le_one₀ (rhat v).2 hv
     ⟩
-  toFun r := ⟨r, by simp⟩
+  toFun r := ⟨r, by
+    have : ∀ v, (r : K_hat R K) v = (r v : adicCompletion K v) := fun v ↦ rfl
+    have : ∀ v, (r v : adicCompletion K v) ∈ adicCompletionIntegers K v := fun v ↦ (r v).2
+    simp_all
+  ⟩
   map_one' := by ext; rfl
   map_mul' _ _ := by ext; rfl
   map_zero' := by ext; rfl
@@ -421,10 +419,43 @@ instance : Algebra (R_hat R K) (FiniteAdeleRing R K) where
   commutes' _ _ := mul_comm _ _
   smul_def' r x := rfl
 
-instance : IsScalarTower R (R_hat R K) (FiniteAdeleRing R K) := ⟨rfl⟩
+instance : IsScalarTower R (R_hat R K) (FiniteAdeleRing R K) where
+  smul_assoc r rhat khat := by
+    simp only [Algebra.smul_def, map_mul]
+    apply mul_assoc
 
-#check RingSubgroupsBasis
+instance : IsScalarTower (R_hat R K) (FiniteAdeleRing R K) (K_hat R K) where
+  smul_assoc rhat fadele khat := by
+    simp only [Algebra.smul_def, map_mul]
+    apply mul_assoc
 
+instance : IsScalarTower R (FiniteAdeleRing R K) (K_hat R K) where
+  smul_assoc r fadele khat := by
+    simp only [Algebra.smul_def, map_mul]
+    apply mul_assoc
+
+open nonZeroDivisors
+
+-- should be using `SubmodulesRingBasis`
+
+theorem foo : SubmodulesRingBasis
+theorem foo : RingSubgroupsBasis
+    (fun (r : R⁰) ↦ AddSubgroup.map (algebraMap R (FiniteAdeleRing R K) : R →+ FiniteAdeleRing R K)
+    (Ideal.span ({(r : R)} : Set R)).toAddSubgroup) where
+  inter i j := ⟨i * j, by
+    rw [le_inf_iff, Submonoid.coe_mul]
+    refine ⟨?_, ?_⟩
+    · apply AddSubgroup.map_mono
+
+      sorry
+    ·
+      sorry
+  ⟩
+  mul := _
+  leftMul := _
+  rightMul := _
+
+#exit
 private theorem _root_.Subset.three_union {α : Type _} (f g h : α → Prop) :
     {a : α | ¬(f a ∧ g a ∧ h a)} ⊆ {a : α | ¬f a} ∪ {a : α | ¬g a} ∪ {a : α | ¬h a} := by
   intro a ha
