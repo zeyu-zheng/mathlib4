@@ -6,6 +6,7 @@ Authors: María Inés de Frutos-Fernández
 import Mathlib.RingTheory.DedekindDomain.AdicValuation
 import Mathlib.RingTheory.DedekindDomain.Factorization
 import Mathlib.Algebra.Order.GroupWithZero.WithZero
+import Mathlib.Tactic
 
 #align_import ring_theory.dedekind_domain.finite_adele_ring from "leanprover-community/mathlib"@"f0c8bf9245297a541f468be517f1bde6195105e9"
 
@@ -438,23 +439,70 @@ open nonZeroDivisors
 
 -- should be using `SubmodulesRingBasis`
 
+open scoped algebraMap -- coercion from R to FiniteAdeleRing R K
+
+lemma bar (a : FiniteAdeleRing R K) : ∃ (b : R⁰) (c : R_hat R K), a * (b : R) = c := by
+  sorry
+
+#check Submodule.pointwiseMulActionWithZero
+
+open scoped Pointwise
+
+-- would be nice to have this as as rewrite rule
+example (M : Submodule R K) (a b : K) : a ∈ b • M ↔ ∃ m ∈ M, b * m = a := by rfl
+
+example (A B : Type) [CommRing A] [CommRing B] [Algebra A B] (a : A) (b : B) :
+    a • b = (a : B) * b := by
+  rw [Algebra.smul_def']
+  rfl
+
 theorem foo : SubmodulesRingBasis
-theorem foo : RingSubgroupsBasis
-    (fun (r : R⁰) ↦ AddSubgroup.map (algebraMap R (FiniteAdeleRing R K) : R →+ FiniteAdeleRing R K)
-    (Ideal.span ({(r : R)} : Set R)).toAddSubgroup) where
+    (fun (r : R⁰) ↦ Submodule.span (R_hat R K) {((r : R) : FiniteAdeleRing R K)}) where
   inter i j := ⟨i * j, by
-    rw [le_inf_iff, Submonoid.coe_mul]
-    refine ⟨?_, ?_⟩
-    · apply AddSubgroup.map_mono
-
-      sorry
-    ·
-      sorry
+    push_cast
+    simp only [le_inf_iff, Submodule.span_singleton_le_iff_mem, Submodule.mem_span_singleton]
+    refine ⟨⟨((j : R) : R_hat R K), ?_⟩, ⟨((i : R) : R_hat R K), rfl⟩⟩
+    rw [mul_comm]
+    rfl
+    ⟩
+  leftMul a r := by
+    rcases bar R K a with ⟨b, c, h⟩
+    use r * b
+    rintro x ⟨m, hm, rfl⟩
+    simp only [Submonoid.coe_mul, SetLike.mem_coe] at hm
+    rw [Submodule.mem_span_singleton] at hm ⊢
+    rcases hm with ⟨n, rfl⟩
+    simp only [LinearMapClass.map_smul, DistribMulAction.toLinearMap_apply, smul_eq_mul]
+    use n * c
+    push_cast
+    rw [mul_left_comm, h, mul_comm _ (c : FiniteAdeleRing R K),
+      Algebra.smul_def', Algebra.smul_def', ← mul_assoc]
+    rfl
+  mul r := ⟨r, by
+    intro x hx
+    rw [mem_mul] at hx
+    rcases hx with ⟨a, ha, b, hb, rfl⟩
+    simp only [SetLike.mem_coe, Submodule.mem_span_singleton] at ha hb ⊢
+    rcases ha with ⟨m, rfl⟩
+    rcases hb with ⟨n, rfl⟩
+    use m * n * (r : R)
+    simp only [Algebra.smul_def', map_mul]
+    rw [mul_mul_mul_comm, mul_assoc]
+    rfl
   ⟩
-  mul := _
-  leftMul := _
-  rightMul := _
 
+instance : Nonempty (R⁰) := ⟨1, Submonoid.one_mem R⁰⟩
+
+instance : TopologicalSpace (FiniteAdeleRing R K) := SubmodulesRingBasis.topology (foo R K)
+
+#synth TopologicalRing (FiniteAdeleRing R K) -- works
+end Topology
+
+end FiniteAdeleRing
+
+end DedekindDomain
+
+end
 #exit
 private theorem _root_.Subset.three_union {α : Type _} (f g h : α → Prop) :
     {a : α | ¬(f a ∧ g a ∧ h a)} ⊆ {a : α | ¬f a} ∪ {a : α | ¬g a} ∪ {a : α | ¬h a} := by
