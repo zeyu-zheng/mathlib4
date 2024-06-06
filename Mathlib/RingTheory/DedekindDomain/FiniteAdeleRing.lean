@@ -310,6 +310,9 @@ end ProdAdicCompletions
 
 open ProdAdicCompletions.IsFiniteAdele
 
+instance : IsScalarTower R K (K_hat R K) := inferInstance
+
+
 /-- The finite adèle ring of `R` is the restricted product over all maximal ideals `v` of `R`
 of `adicCompletion` with respect to `adicCompletionIntegers`. -/
 def FiniteAdeleRing : Type _ := (
@@ -327,6 +330,35 @@ namespace FiniteAdeleRing
 instance : CommRing (FiniteAdeleRing R K) := Subalgebra.toCommRing _
 
 instance : Algebra K (FiniteAdeleRing R K) := Subalgebra.algebra _
+
+instance : Algebra (FiniteAdeleRing R K) (K_hat R K) := Algebra.ofSubsemiring _
+
+instance : Algebra R (FiniteAdeleRing R K) :=
+  RingHom.toAlgebra ((algebraMap K (FiniteAdeleRing R K)).comp (algebraMap R K))
+
+open scoped algebraMap
+
+-- example (A C : Type) [CommRing A] [CommRing C] [Algebra A C] (B : Subalgebra A C) :
+--   Algebra A B := Subalgebra.algebra _
+
+-- example (A C : Type) [CommRing A] [CommRing C] [Algebra A C] (B : Subalgebra A C) :
+--   Algebra B C := Algebra.ofSubsemiring B.toSubsemiring
+
+-- example (A C : Type) [CommRing A] [CommRing C] [Algebra A C] (a : A) (c : C) :
+--     a • c = (a : C) * c := Algebra.smul_def a c
+
+instance : IsScalarTower R K (FiniteAdeleRing R K) where
+  smul_assoc r k khat := by
+    simp only [Algebra.smul_def, map_mul]
+    apply mul_assoc
+
+
+-- #synth Algebra R K
+-- #synth Algebra K (FiniteAdeleRing R K)
+-- #synth Algebra R (FiniteAdeleRing R K)
+
+-- example (A B C : Type) [CommRing A] [CommRing B] [CommRing C] [Algebra A B] [Algebra B C] :
+--   Algebra A C := RingHom.toAlgebra ((algebraMap B C).comp (algebraMap A B))
 
 instance : Coe (FiniteAdeleRing R K) (K_hat R K) where
   coe := fun x ↦ x.1
@@ -360,22 +392,38 @@ section Topology
 
 open Classical
 
+@[simp]
+lemma mem_FiniteAdeleRing (x : K_hat R K) : x ∈
+  (
+  { carrier := {x : K_hat R K | x.IsFiniteAdele}
+    mul_mem' := mul
+    one_mem' := one
+    add_mem' := add
+    zero_mem' := zero
+    algebraMap_mem' := algebraMap'
+  } : Subalgebra K (K_hat R K)) ↔ {v | x v ∉ adicCompletionIntegers K v}.Finite := Iff.rfl
+
 instance : Algebra (R_hat R K) (FiniteAdeleRing R K) where
   smul rhat khat := ⟨fun v ↦ rhat v * khat.1 v, by
-    show ProdAdicCompletions.IsFiniteAdele (fun v ↦ rhat v * khat.1 v : K_hat R K)
-    have this : ProdAdicCompletions.IsFiniteAdele (fun v ↦ khat.1 v : K_hat R K) := khat.2
-    rw [ProdAdicCompletions.IsFiniteAdele, Filter.eventually_cofinite] at this ⊢
+    have this := khat.2
+    rw [mem_FiniteAdeleRing] at this ⊢
+    apply Finite.subset this (fun v hv ↦ ?_)
+    rw [mem_setOf_eq, mem_adicCompletionIntegers] at hv ⊢
+    contrapose! hv
+    rw [map_mul]
+    exact mul_le_one₀ (rhat v).2 hv
+    ⟩
+  toFun r := ⟨r, by simp⟩
+  map_one' := by ext; rfl
+  map_mul' _ _ := by ext; rfl
+  map_zero' := by ext; rfl
+  map_add' _ _ := by ext; rfl
+  commutes' _ _ := mul_comm _ _
+  smul_def' r x := rfl
 
-    have := khat.2
+instance : IsScalarTower R (R_hat R K) (FiniteAdeleRing R K) := ⟨rfl⟩
 
-    sorry⟩
-  toFun := _
-  map_one' := _
-  map_mul' := _
-  map_zero' := _
-  map_add' := _
-  commutes' := _
-  smul_def' := _
+#check RingSubgroupsBasis
 
 private theorem _root_.Subset.three_union {α : Type _} (f g h : α → Prop) :
     {a : α | ¬(f a ∧ g a ∧ h a)} ⊆ {a : α | ¬f a} ∪ {a : α | ¬g a} ∪ {a : α | ¬h a} := by
