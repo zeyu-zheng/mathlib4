@@ -30,11 +30,14 @@ universe w₂ v v₁ v₂ u u₁ u₂
 
 variable {C : Type u}
 
-/-- A type synonym for promoting any type to a category,
-with the only morphisms being equalities.
+/-- A wrapper for promoting any category to a bicategory,
+with the only 2-morphisms being equalities.
 -/
 @[ext]
 structure LocallyDiscrete (C : Type u) where
+  /-- A wrapper for promoting any category to a bicategory,
+  with the only 2-morphisms being equalities.
+  -/
   as : C
 
 namespace LocallyDiscrete
@@ -42,6 +45,7 @@ namespace LocallyDiscrete
 @[simp]
 theorem mk_as (a : LocallyDiscrete C) : mk a.as = a := rfl
 
+/-- `LocallyDiscrete C` is equivalent to the original type `C`. -/
 @[simps]
 def locallyDiscreteEquiv : LocallyDiscrete C ≃ C where
   toFun := LocallyDiscrete.as
@@ -52,28 +56,23 @@ def locallyDiscreteEquiv : LocallyDiscrete C ≃ C where
 instance [DecidableEq C] : DecidableEq (LocallyDiscrete C) :=
   locallyDiscreteEquiv.decidableEq
 
-instance [Inhabited C] : Inhabited (LocallyDiscrete C) := ⟨⟨default⟩⟩
+instance [Inhabited C] : Inhabited (LocallyDiscrete C) :=
+  ⟨⟨default⟩⟩
 
--- TODO: figure out how to name these lemmas manually
-@[simps]
-instance [CategoryStruct.{v} C] : CategoryStruct (LocallyDiscrete C)
-    where
+instance categoryStruct [CategoryStruct.{v} C] : CategoryStruct (LocallyDiscrete C) where
   Hom := fun a b => Discrete (a.as ⟶ b.as)
   id := fun a => ⟨𝟙 a.as⟩
   comp f g := ⟨f.as ≫ g.as⟩
 
 variable [CategoryStruct.{v} C]
 
--- TODO rename? Maybe dot notation with "toLoc" (I think dot notation is better)
-@[simps]
-def mkHom {a b : C} (f : a ⟶ b) : mk a ⟶ mk b := ⟨f⟩
+@[simp]
+lemma id_as (a : LocallyDiscrete C) : (𝟙 a : Discrete (a.as ⟶ a.as)).as = 𝟙 a.as :=
+  rfl
 
 @[simp]
-lemma id_mk (a : C) : mkHom (𝟙 a) = 𝟙 (mk a) := rfl
-
-@[simp]
-lemma comp_mk {a b c : C} (f : a ⟶ b) (g : b ⟶ c) :
-    mkHom (f ≫ g) = mkHom f ≫ mkHom g := rfl
+lemma comp_as {a b c : LocallyDiscrete C} (f : a ⟶ b) (g : b ⟶ c) : (f ≫ g).as = f.as ≫ g.as :=
+  rfl
 
 instance (priority := 900) homSmallCategory (a b : LocallyDiscrete C) : SmallCategory (a ⟶ b) :=
   CategoryTheory.discreteCategory (a.as ⟶ b.as)
@@ -90,14 +89,14 @@ theorem eq_of_hom {X Y : LocallyDiscrete C} {f g : X ⟶ Y} (η : f ⟶ g) : f =
 
 end LocallyDiscrete
 
-variable {C : Type u} [Category.{v} C]
+variable (C)
+variable [Category.{v} C]
 
 /-- The locally discrete bicategory on a category is a bicategory in which the objects and the
 1-morphisms are the same as those in the underlying category, and the 2-morphisms are the
 equalities between 1-morphisms.
 -/
-instance locallyDiscreteBicategory (C : Type u) [Category.{v} C] : Bicategory (LocallyDiscrete C)
-    where
+instance locallyDiscreteBicategory : Bicategory (LocallyDiscrete C) where
   whiskerLeft f g h η := eqToHom (congr_arg₂ (· ≫ ·) rfl (LocallyDiscrete.eq_of_hom η))
   whiskerRight η h := eqToHom (congr_arg₂ (· ≫ ·) (LocallyDiscrete.eq_of_hom η) rfl)
   associator f g h := eqToIso <| by apply Discrete.ext; simp
@@ -121,11 +120,10 @@ lemma LocallyDiscrete.assoc {a b c d : LocallyDiscrete C} (f : a ⟶ b) (g : b �
   Discrete.ext _ _ (Category.assoc _ _ _)
 
 /-- A locally discrete bicategory is strict. -/
-instance locallyDiscreteBicategory.strict : Strict (LocallyDiscrete C)
-    where
-  id_comp f := LocallyDiscrete.id_comp f
-  comp_id f := LocallyDiscrete.comp_id f
-  assoc f g h := LocallyDiscrete.assoc f g h
+instance locallyDiscreteBicategory.strict : Strict (LocallyDiscrete C) where
+  id_comp f := Discrete.ext _ _ (Category.id_comp _)
+  comp_id f := Discrete.ext _ _ (Category.comp_id _)
+  assoc f g h := Discrete.ext _ _ (Category.assoc _ _ _)
 #align category_theory.locally_discrete_bicategory.strict CategoryTheory.locallyDiscreteBicategory.strict
 
 
@@ -133,11 +131,22 @@ variable {I : Type u₁} [Category.{v₁} I] {B : Type u₂} [Bicategory.{w₂, 
 
 /--
 If `B` is a strict bicategory and `I` is a (1-)category, any functor (of 1-categories) `I ⥤ B` can
+be promoted to a pseudofunctor from `LocallyDiscrete I` to `B`.
+-/
+@[simps]
+def Functor.toPseudoFunctor (F : I ⥤ B) : Pseudofunctor (LocallyDiscrete I) B where
+  obj i := F.obj i.as
+  map f := F.map f.as
+  map₂ η := eqToHom (congr_arg _ (LocallyDiscrete.eq_of_hom η))
+  mapId i := eqToIso (F.map_id i.as)
+  mapComp f g := eqToIso (F.map_comp f.as g.as)
+
+/--
+If `B` is a strict bicategory and `I` is a (1-)category, any functor (of 1-categories) `I ⥤ B` can
 be promoted to an oplax functor from `LocallyDiscrete I` to `B`.
 -/
 @[simps]
-def Functor.toOplaxFunctor (F : I ⥤ B) : OplaxFunctor (LocallyDiscrete I) B
-    where
+def Functor.toOplaxFunctor (F : I ⥤ B) : OplaxFunctor (LocallyDiscrete I) B where
   obj i := F.obj i.as
   map f := F.map f.as
   map₂ η := eqToHom (congr_arg _ (LocallyDiscrete.eq_of_hom η))
@@ -146,3 +155,27 @@ def Functor.toOplaxFunctor (F : I ⥤ B) : OplaxFunctor (LocallyDiscrete I) B
 #align category_theory.functor.to_oplax_functor CategoryTheory.Functor.toOplaxFunctor
 
 end CategoryTheory
+
+section Quiver
+
+open CategoryTheory LocallyDiscrete
+
+universe v u
+
+variable {C : Type u} [CategoryStruct.{v} C]
+
+/-- The 1-morphism in `LocallyDiscrete C` associated to a given morphism `f : a ⟶ b` in `C` -/
+@[simps]
+def Quiver.Hom.toLoc {a b : C} (f : a ⟶ b) : LocallyDiscrete.mk a ⟶ LocallyDiscrete.mk b :=
+  ⟨f⟩
+
+@[simp]
+lemma Quiver.Hom.id_toLoc (a : C) : (𝟙 a).toLoc = 𝟙 (LocallyDiscrete.mk a) :=
+  rfl
+
+@[simp]
+lemma Quiver.Hom.comp_toLoc {a b c : C} (f : a ⟶ b) (g : b ⟶ c) :
+    (f ≫ g).toLoc = f.toLoc ≫ g.toLoc :=
+  rfl
+
+end Quiver
