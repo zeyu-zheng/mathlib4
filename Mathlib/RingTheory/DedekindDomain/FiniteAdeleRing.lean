@@ -441,10 +441,98 @@ open nonZeroDivisors
 
 open scoped algebraMap -- coercion from R to FiniteAdeleRing R K
 
-lemma bar (a : FiniteAdeleRing R K) : ∃ (b : R⁰) (c : R_hat R K), a * (b : R) = c := by
-  sorry
+instance : CoeFun (FiniteAdeleRing R K)
+    (fun _ => (v : HeightOneSpectrum R) → v.adicCompletion K) where
+  coe a := fun v ↦ (a : K_hat R K) v
 
-#check Submodule.pointwiseMulActionWithZero
+variable {R K} in
+lemma baz (a : FiniteAdeleRing R K) :
+    {v | (a : K_hat R K) v ∉ adicCompletionIntegers K v}.Finite :=
+  a.2
+
+#print Multiplicative
+
+open Multiplicative in
+variable {K} in
+def negval (t : adicCompletion K v) : ℕ :=
+  match Valued.v t with
+  | none => 0
+  | some mz => (toAdd mz).natAbs
+open scoped DiscreteValuation
+
+open Multiplicative in
+@[simp] lemma thing1 (mz : Multiplicative ℤ) : toAdd mz < 0 ↔ mz < 1 := by rfl
+
+open Multiplicative in
+@[simp] lemma thing2 (mz : Multiplicative ℤ) : toAdd mz ≤ 0 ↔ mz ≤ 1 := by rfl
+
+open Multiplicative in
+@[simp] lemma thing3 (mz : Multiplicative ℤ) : 0 ≤ toAdd mz ↔ 1 ≤ mz := by rfl
+
+open Multiplicative in
+lemma negval.prop {t : adicCompletion K v} (ht : t ∉ adicCompletionIntegers K v) :
+    Valued.v t = some (ofAdd (negval R v t : ℤ)) :=
+  match h : Valued.v t with
+  | 0 => by
+      change ¬ (_ ≤ (1 : ℤₘ₀)) at ht
+      change _ = 0 at h
+      simp_all
+  | (mz : Multiplicative ℤ) => by
+    congr
+    simp only [negval, h, Int.natCast_natAbs, ofAdd_neg]
+    change (_ = ↑mz) at h
+    rw [abs_eq_self.2]
+    · simp
+    · rw [thing3]
+      apply le_of_lt
+      rw [mem_adicCompletionIntegers] at ht
+      simp [h] at ht
+      change ((1 : Multiplicative ℤ) : ℤₘ₀) < mz at ht
+      rcases ht with ⟨w, ⟨hw1⟩, hw2⟩
+      exact hw2 1 rfl
+
+lemma aargh (k : K_hat R K) (hk : ∀ v : HeightOneSpectrum R, k v ∈ adicCompletionIntegers K v) :
+    ∃ r : R_hat R K, k = r := ⟨fun v ↦ ⟨k v, hk v⟩, rfl⟩
+
+lemma aargh2 (k : FiniteAdeleRing R K) (hk : ∀ v : HeightOneSpectrum R, k v ∈ adicCompletionIntegers K v) :
+    ∃ r : R_hat R K, k = r := ⟨fun v ↦ ⟨k v, hk v⟩, rfl⟩
+
+lemma bar (a : FiniteAdeleRing R K) : ∃ (b : R⁰) (c : R_hat R K), a * (b : R) = c := by
+  have := baz a
+  let I := finprod
+    (fun v : {v // (a : K_hat R K) v ∉ adicCompletionIntegers K v} ↦
+      v.1.asIdeal ^ (negval R v (a v)))
+  have hI : I ≠ 0 := by
+    apply finprod_induction (fun J : Ideal R ↦ J ≠ 0)
+    · simp
+    · apply mul_ne_zero
+    · rintro ⟨v, hv⟩
+      exact pow_ne_zero _ v.ne_bot
+  obtain ⟨i, hiI, hi0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hI
+  use ⟨i, mem_nonZeroDivisors_of_ne_zero hi0⟩
+  simp only
+  apply aargh2
+  intro v
+  dsimp
+  by_cases hv : a v ∈ adicCompletionIntegers K v
+  · change a v * i ∈ _
+    apply mul_mem hv
+    rw [mem_adicCompletionIntegers]
+    have h :
+        (algebraMap R (adicCompletion K v)) i = (i : adicCompletion K v) := rfl
+    rw [← h]
+    rw [← Valued.valuedCompletion_apply]
+    have := v.valuation_le_one (K := K) i
+    simp
+    letI this3 : Valued K ℤₘ₀ := adicValued v
+    change Valued.v _ ≤ 1 at this
+    rw [← Valued.valuedCompletion_apply] at this
+    exact this
+  · rw [mem_adicCompletionIntegers]
+    push_cast
+    -- change Valued.v (_ * _) ≤ 1
+
+    sorry
 
 open scoped Pointwise
 
