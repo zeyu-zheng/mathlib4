@@ -3,10 +3,10 @@ Copyright (c) 2021 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathlib.Algebra.BigOperators.List.Basic
+import Mathlib.Algebra.BigOperators.Group.List
 import Mathlib.Algebra.Group.InjSurj
 import Mathlib.Data.List.FinRange
-import Mathlib.GroupTheory.GroupAction.Defs
+import Mathlib.Algebra.Group.Action.Defs
 import Mathlib.Data.SetLike.Basic
 import Mathlib.Algebra.Group.Submonoid.Basic
 import Mathlib.Data.Sigma.Basic
@@ -191,7 +191,8 @@ theorem mk_mul_mk [Add ι] [GMul A] {i j} (a : A i) (b : A j) :
 
 namespace GMonoid
 
-variable {A} [AddMonoid ι] [GMul A] [GOne A]
+variable {A}
+variable [AddMonoid ι] [GMul A] [GOne A]
 
 /-- A default implementation of power on a graded monoid, like `npowRec`.
 `GMonoid.gnpow` should be used instead. -/

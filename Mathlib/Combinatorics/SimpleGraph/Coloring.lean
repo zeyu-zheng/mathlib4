@@ -69,7 +69,8 @@ This is also known as a proper coloring.
 abbrev Coloring (α : Type v) := G →g (⊤ : SimpleGraph α)
 #align simple_graph.coloring SimpleGraph.Coloring
 
-variable {G} {α β : Type*} (C : G.Coloring α)
+variable {G}
+variable {α β : Type*} (C : G.Coloring α)
 
 theorem Coloring.valid {v w : V} (h : G.Adj v w) : C v ≠ C w :=
   C.map_rel h
@@ -257,7 +258,7 @@ theorem colorable_iff_exists_bdd_nat_coloring (n : ℕ) :
     cases' C with color valid
     exact Fin.is_lt (color v)
   · rintro ⟨C, Cf⟩
-    refine' ⟨Coloring.mk _ _⟩
+    refine ⟨Coloring.mk ?_ ?_⟩
     · exact fun v => ⟨C v, Cf v⟩
     · rintro v w hvw
       simp only [Fin.mk_eq_mk, Ne]
@@ -297,8 +298,7 @@ theorem chromaticNumber_le_iff_colorable {n : ℕ} : G.chromaticNumber ≤ n ↔
   rw [Set.mem_setOf_eq] at this
   exact this.mono h
 
--- 2024-03-21
-@[deprecated Colorable.chromaticNumber_le]
+@[deprecated Colorable.chromaticNumber_le (since := "2024-03-21")]
 theorem chromaticNumber_le_card [Fintype α] (C : G.Coloring α) :
     G.chromaticNumber ≤ Fintype.card α := C.colorable.chromaticNumber_le
 #align simple_graph.chromatic_number_le_card SimpleGraph.chromaticNumber_le_card
