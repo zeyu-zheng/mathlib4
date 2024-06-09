@@ -27,7 +27,6 @@ variable (F : OplaxFunctor B C)
 @[simp]
 lemma map₂_eqToHom {a b : B} {f g : a ⟶ b} (h : f = g) :
     F.map₂ (eqToHom h) = eqToHom (F.congr_map h) := by
-  -- TODO: dot notation...?
   subst h; simp only [eqToHom_refl, OplaxFunctor.map₂_id]
 
 end Pseudofunctor
@@ -58,18 +57,17 @@ lemma map₂_rightUnitor_strict {a b : B} (f : a ⟶ b) : (F.mapComp f) (𝟙 b)
 
 lemma map₂_associator_strict {a b c d : B} (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d) :
     F.mapComp f (g ≫ h) ≫ F.map f ◁ F.mapComp g h = eqToHom (by simp) ≫
-    F.mapComp (f ≫ g) h ≫ (F.mapComp f g) ▷ F.map h ≫ eqToHom (by simp) := by
+    (F.mapComp (f ≫ g) h ≫ (F.mapComp f g) ▷ F.map h) ≫ eqToHom (by simp) := by
   have h' := by simpa using F.map₂_associator f g h
   rw [eqToHom_comp_iff] at h'
+  conv_rhs => congr; rfl; rw [assoc]
   exact h'
 
 lemma map₂_associator_strict' {a b c d : B} (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d) :
     F.mapComp (f ≫ g) h ≫ (F.mapComp f g) ▷ F.map h = eqToHom (by simp) ≫
-    F.mapComp f (g ≫ h) ≫ F.map f ◁ F.mapComp g h ≫ eqToHom (by simp) := by
-  conv_rhs => congr; rfl; rw [← assoc]
-  rw [eqToHom_conj_iff]; symm
-  simp
-  apply map₂_associator_strict F f g h
+    (F.mapComp f (g ≫ h) ≫ F.map f ◁ F.mapComp g h) ≫ eqToHom (by simp) := by
+  rw [eqToHom_conj_iff]
+  apply (map₂_associator_strict F f g h).symm
 
 end
 
@@ -100,13 +98,13 @@ lemma mapComp_id_right_strict' {a b : B} (f : a ⟶ b) :
 
 protected lemma map₂_associator_strict {a b c d : B} (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d) :
     (F.mapComp f (g ≫ h)).hom ≫ (F.map f) ◁ (F.mapComp g h).hom
-    = eqToHom (by simp) ≫ (F.mapComp (f ≫ g) h).hom ≫
-    (F.mapComp f g).hom ▷ F.map h ≫ eqToHom (by simp) := by
+    = eqToHom (by simp) ≫ ((F.mapComp (f ≫ g) h).hom ≫
+    (F.mapComp f g).hom ▷ F.map h) ≫ eqToHom (by simp) := by
   apply map₂_associator_strict F.toOplax
 
 protected lemma map₂_associator_strict' {a b c d : B} (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d) :
     (F.mapComp (f ≫ g) h).hom ≫ (F.mapComp f g).hom ▷ F.map h = eqToHom (by simp) ≫
-    (F.mapComp f (g ≫ h)).hom ≫ (F.map f) ◁ (F.mapComp g h).hom ≫ eqToHom (by simp) := by
+    ((F.mapComp f (g ≫ h)).hom ≫ (F.map f) ◁ (F.mapComp g h).hom) ≫ eqToHom (by simp) := by
   apply map₂_associator_strict' F.toOplax
 
 end Pseudofunctor
