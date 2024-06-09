@@ -263,7 +263,7 @@ theorem inv_intCast_num (a : ℤ) : (a : ℚ)⁻¹.num = Int.sign a := by
   · obtain ⟨a, rfl⟩ : ∃ b, -b = a := ⟨-a, a.neg_neg⟩
     simp at lt
     simp [Rat.inv_neg, inv_intCast_num_of_pos lt, (Int.sign_eq_one_iff_pos _).mpr lt]
-  · rfl
+  · simp
   · simp [inv_intCast_num_of_pos gt, (Int.sign_eq_one_iff_pos _).mpr gt]
 #align rat.inv_coe_int_num Rat.inv_intCast_num
 
@@ -284,7 +284,7 @@ theorem inv_intCast_den (a : ℤ) : (a : ℚ)⁻¹.den = if a = 0 then 1 else a.
     simp at lt
     rw [if_neg (by omega)]
     simp [Rat.inv_neg, inv_intCast_den_of_pos lt, abs_of_pos lt]
-  · rfl
+  · simp
   · rw [if_neg (by omega)]
     simp [inv_intCast_den_of_pos gt, abs_of_pos gt]
 #align rat.inv_coe_int_denom Rat.inv_intCast_den
