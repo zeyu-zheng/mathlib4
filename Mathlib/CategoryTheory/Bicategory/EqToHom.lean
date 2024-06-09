@@ -6,7 +6,6 @@ Authors: Calle Sönne
 
 import Mathlib.CategoryTheory.Bicategory.Functor.Oplax
 import Mathlib.CategoryTheory.EqToHom
-import Mathlib.CategoryTheory.Bicategory.Strict
 
 /-!
 # EqToHom lemmas for bicategories
