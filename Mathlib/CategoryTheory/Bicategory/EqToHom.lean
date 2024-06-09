@@ -1,6 +1,7 @@
 import Mathlib.CategoryTheory.Bicategory.Functor
-import Mathlib.CategoryTheory.EqToHom
+import Mathlib.CategoryTheory.Bicategory.Strict
 import Mathlib.CategoryTheory.Bicategory.LocallyDiscrete
+import Mathlib.CategoryTheory.EqToHom
 
 namespace CategoryTheory
 
@@ -55,7 +56,6 @@ lemma map₂_rightUnitor' {a b : B} (f : a ⟶ b) : (F.mapComp f) (𝟙 b) ≫ F
   rw [← comp_eqToHom_iff (comp_id _).symm, eqToHom_trans] at h
   exact h.symm
 
--- TODO: other conjugation also
 lemma map₂_associator' {a b c d : B} (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d) :
     F.mapComp f (g ≫ h) ≫ F.map f ◁ F.mapComp g h = eqToHom (by simp) ≫
     F.mapComp (f ≫ g) h ≫ (F.mapComp f g) ▷ F.map h ≫ eqToHom (by simp) := by
@@ -78,7 +78,7 @@ namespace Pseudofunctor
 
 variable (F : Pseudofunctor B C)
 
-lemma map₂_left_unitor_hom {a b : B} (f : a ⟶ b) : ((F.mapComp (𝟙 a)) f).hom =
+lemma map₂_left_unitor_hom {a b : B} (f : a ⟶ b) : (F.mapComp (𝟙 a) f).hom =
     eqToHom (by simp) ≫ (F.mapId a).inv ▷ F.map f := by
   rw [← whiskerRightIso_inv, Iso.eq_comp_inv]
   apply map₂_leftUnitor' F.toOplax
@@ -88,21 +88,25 @@ lemma map₂_left_unitor_inv {a b : B} (f : a ⟶ b) :
   rw [Iso.eq_inv_comp, map₂_left_unitor_hom]
   simp
 
-lemma map₂_right_unitor' {a b : B} (f : a ⟶ b) : (F.mapComp f (𝟙 b)).inv =
-    F.map f ◁ (F.mapId b).hom ≫ eqToHom (by simp only [comp_id]) := by
-  have h := by simpa using F.map₂_right_unitor f
-  rw [←Iso.inv_comp_eq, comp_eqToHom_iff] at h
-  simpa using h
+lemma map₂_right_unitor_hom {a b : B} (f : a ⟶ b) : (F.mapComp f (𝟙 b)).hom =
+    eqToHom (by simp) ≫ F.map f ◁ (F.mapId b).inv := by
+  rw [← whiskerLeftIso_inv, Iso.eq_comp_inv]
+  apply map₂_rightUnitor' F.toOplax
 
--- TODO: other conjugation also
-lemma map₂_associator' {a b c d : B} (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d) :
+lemma map₂_right_unitor_inv {a b : B} (f : a ⟶ b) :
+    (F.map f) ◁ (F.mapId b).hom = ((F.mapComp f (𝟙 b)).inv) ≫ eqToHom (by simp) := by
+  rw [Iso.eq_inv_comp, map₂_right_unitor_hom]
+  simp
+
+lemma map₂_associator_asdf' {a b c d : B} (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d) :
     (F.mapComp f (g ≫ h)).hom ≫ (F.map f) ◁ (F.mapComp g h).hom
     = eqToHom (by simp) ≫ (F.mapComp (f ≫ g) h).hom ≫
     (F.mapComp f g).hom ▷ F.map h ≫ eqToHom (by simp) := by
-  have h' : eqToHom _ = (((F.mapComp (f ≫ g) h).hom ≫ (F.mapComp f g).hom ▷ F.map h ≫
-      eqToHom _) ≫ (whiskerLeftIso (F.map f) (F.mapComp g h)).inv) ≫ (F.mapComp f (g ≫ h)).inv := by
-    simpa using F.map₂_associator f g h
-  rw [Iso.eq_comp_inv, Iso.eq_comp_inv] at h'
-  simpa [eqToHom_comp_iff] using h'
+  apply map₂_associator' F.toOplax
+
+lemma map₂_associator_asdf'' {a b c d : B} (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d) :
+    (F.mapComp (f ≫ g) h).hom ≫ (F.mapComp f g).hom ▷ F.map h = eqToHom (by simp) ≫
+    (F.mapComp f (g ≫ h)).hom ≫ (F.map f) ◁ (F.mapComp g h).hom ≫ eqToHom (by simp) := by
+  apply map₂_associator'' F.toOplax
 
 end Pseudofunctor
