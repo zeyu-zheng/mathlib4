@@ -93,25 +93,24 @@ lemma ℱ.id_comp {a b : ℱ F} (f : a ⟶ b) : 𝟙 a ≫ f = f := by
   · simp
   dsimp
   rw [←assoc, ←(F.mapId ⟨op a.1⟩).inv.naturality f.2, assoc]
+  -- TODO: inv appearing, maybe I made wrong convention for definition of homs?
+  rw [F.mapComp_id_right_strict_inv f.1.op.toLoc]
   rw [←Cat.whiskerLeft_app, ←NatTrans.comp_app]
-  rw [map₂_right_unitor' (F:=F) f.1.op]
   nth_rw 1 [←assoc]
-  rw [←Bicategory.whiskerLeft_comp]
-  simp_rw [NatTrans.comp_app]
-  rw [eqToHom_app]
+  rw [←Bicategory.whiskerLeft_comp, Iso.inv_hom_id]
   simp
+
 
 lemma ℱ.comp_id {a b : ℱ F} (f : a ⟶ b) : f ≫ 𝟙 b = f := by
   ext
   · simp
   dsimp
+  rw [F.mapComp_id_left_strict_inv f.1.op.toLoc]
   rw [←Cat.whiskerRight_app, ←NatTrans.comp_app]
-  rw [map₂_left_unitor' (F:=F) f.1.op.toLoc]
   nth_rw 1 [←assoc]
-  rw [←Bicategory.comp_whiskerRight]
-  simp_rw [NatTrans.comp_app]
-  rw [eqToHom_app]
+  rw [←Bicategory.comp_whiskerRight, Iso.inv_hom_id]
   simp
+
 
 /-- The category structure on the fibered category associated to a presheaf valued in types. -/
 instance : Category (ℱ F) where
@@ -125,11 +124,13 @@ instance : Category (ℱ F) where
     rw [assoc, assoc, ←assoc (f:=(F.mapComp g.1.op.toLoc f.1.op.toLoc).inv.app c.2)]
     rw [←(F.mapComp g.1.op.toLoc f.1.op.toLoc).inv.naturality h.2]
     rw [←Cat.whiskerLeft_app, assoc, ←NatTrans.comp_app]
-    rw [map₂_associator_inv' (F:=F) h.1.op g.1.op f.1.op]
-    -- End of this proof is VERY slow...
-    simp
-    congr
-    apply eqToHom_app
+    -- need an inv version here....
+    sorry
+    -- rw [map₂_associator_inv' (F:=F) h.1.op g.1.op f.1.op]
+    -- -- End of this proof is VERY slow...
+    -- simp
+    -- congr
+    -- apply eqToHom_app
 
 /-- The projection `ℱ F ⥤ 𝒮` given by projecting both objects and homs to the first factor -/
 @[simps]

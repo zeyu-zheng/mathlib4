@@ -72,24 +72,55 @@ namespace Pseudofunctor
 
 variable (F : Pseudofunctor B C)
 
-lemma mapComp_id_left_strict {a b : B} (f : a ⟶ b) : (F.mapComp (𝟙 a) f).hom =
-    eqToHom (by simp) ≫ (F.mapId a).inv ▷ F.map f := by
-  rw [← whiskerRightIso_inv, Iso.eq_comp_inv]
+-- TODO: need "inv iso" here
+lemma mapComp_id_left_strict {a b : B} (f : a ⟶ b) : F.mapComp (𝟙 a) f =
+    eqToIso (by simp) ≪≫ (whiskerRightIso (F.mapId a) (F.map f)).symm := by
+  ext
+  simp only [Iso.trans_hom, eqToIso.hom, Iso.symm_hom, Iso.eq_comp_inv]
   apply map₂_leftUnitor_strict F.toOplax
 
-lemma mapComp_id_left_strict' {a b : B} (f : a ⟶ b) :
-    (F.mapId a).hom ▷ F.map f = ((F.mapComp (𝟙 a)) f).inv ≫ eqToHom (by simp) := by
-  rw [Iso.eq_inv_comp, mapComp_id_left_strict]
-  simp
+-- TODO: reverse
+lemma mapComp_id_left_strict' {a b : B} (f : a ⟶ b) : F.mapComp (𝟙 a) f =
+    eqToIso (by simp) ≪≫ (whiskerRightIso (F.mapId a) (F.map f)).symm := by
+  ext
+  simp only [Iso.trans_hom, eqToIso.hom, Iso.symm_hom, Iso.eq_comp_inv]
+  apply map₂_leftUnitor_strict F.toOplax
 
-lemma mapComp_id_right_strict {a b : B} (f : a ⟶ b) : (F.mapComp f (𝟙 b)).hom =
+-- These for are unecessary.....
+lemma mapComp_id_left_strict_hom {a b : B} (f : a ⟶ b) : (F.mapComp (𝟙 a) f).hom =
+    eqToHom (by simp) ≫ (F.mapId a).inv ▷ F.map f := by
+  simp [mapComp_id_left_strict]
+
+lemma mapComp_id_left_strict_inv {a b : B} (f : a ⟶ b) : (F.mapComp (𝟙 a) f).inv =
+    (F.mapId a).hom ▷ F.map f ≫ eqToHom (by simp) := by
+  simp [mapComp_id_left_strict]
+
+lemma mapComp_id_left_strict'_hom {a b : B} (f : a ⟶ b) :
+    (F.mapId a).hom ▷ F.map f = ((F.mapComp (𝟙 a)) f).inv ≫ eqToHom (by simp) := by
+  simp [mapComp_id_left_strict]
+
+lemma mapComp_id_left_strict'_inv {a b : B} (f : a ⟶ b) :
+    (F.mapId a).inv ▷ F.map f = eqToHom (by simp) ≫ ((F.mapComp (𝟙 a)) f).hom := by
+  simp [mapComp_id_left_strict]
+
+lemma mapComp_id_right_strict {a b : B} (f : a ⟶ b) : F.mapComp f (𝟙 b) =
+    eqToIso (by simp) ≪≫ (whiskerLeftIso (F.map f) (F.mapId b)).symm := by
+  ext
+  simp only [Iso.trans_hom, eqToIso.hom, Iso.symm_hom, Iso.eq_comp_inv]
+  apply map₂_rightUnitor_strict F.toOplax
+
+lemma mapComp_id_right_strict'' {a b : B} (f : a ⟶ b) : (F.mapComp f (𝟙 b)).hom =
     eqToHom (by simp) ≫ F.map f ◁ (F.mapId b).inv := by
   rw [← whiskerLeftIso_inv, Iso.eq_comp_inv]
   apply map₂_rightUnitor_strict F.toOplax
 
+lemma mapComp_id_right_strict_inv {a b : B} (f : a ⟶ b) : (F.mapComp f (𝟙 b)).inv =
+    ((F.map f) ◁ (F.mapId b).hom) ≫ eqToHom (by simp) := by
+  simp [mapComp_id_right_strict]
+
 lemma mapComp_id_right_strict' {a b : B} (f : a ⟶ b) :
     (F.map f) ◁ (F.mapId b).hom = ((F.mapComp f (𝟙 b)).inv) ≫ eqToHom (by simp) := by
-  rw [Iso.eq_inv_comp, mapComp_id_right_strict]
+  rw [Iso.eq_inv_comp, mapComp_id_right_strict'']
   simp
 
 protected lemma map₂_associator_strict {a b c d : B} (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d) :
