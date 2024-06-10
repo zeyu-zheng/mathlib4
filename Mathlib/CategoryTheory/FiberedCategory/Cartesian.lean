@@ -124,7 +124,7 @@ instance of_comp_iso {b' : 𝒳} (φ' : b ≅ b') [IsHomLift p (𝟙 S) φ'.hom]
   universal_property := by
     intro c ψ hψ
     use inducedMap p f φ (ψ ≫ φ'.inv)
-    refine ⟨⟨inferInstance, by simp [← assoc, inducedMap_comp]⟩, ?_⟩
+    refine ⟨⟨inferInstance, by simp [← assoc, inducedMap_comp, assoc]⟩, ?_⟩
     rintro τ ⟨hτ₁, hτ₂⟩
     apply inducedMap_unique
     rw [Iso.eq_comp_inv]
