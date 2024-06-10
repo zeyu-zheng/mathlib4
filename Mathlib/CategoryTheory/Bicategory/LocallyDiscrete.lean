@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno, Calle Sönne
 -/
 import Mathlib.CategoryTheory.DiscreteCategory
-import Mathlib.CategoryTheory.Bicategory.Functor
+import Mathlib.CategoryTheory.Bicategory.Functor.Pseudofunctor
 import Mathlib.CategoryTheory.Bicategory.Strict
 
 #align_import category_theory.bicategory.locally_discrete from "leanprover-community/mathlib"@"c9c9fa15fec7ca18e9ec97306fb8764bfe988a7e"
@@ -104,12 +104,28 @@ instance locallyDiscreteBicategory : Bicategory (LocallyDiscrete C) where
   rightUnitor f := eqToIso <| by apply Discrete.ext; simp
 #align category_theory.locally_discrete_bicategory CategoryTheory.locallyDiscreteBicategory
 
+@[simp]
+lemma LocallyDiscrete.id_comp {a b : LocallyDiscrete C} (f : a ⟶ b) : 𝟙 a ≫ f = f := by
+  apply Discrete.ext
+  apply Category.id_comp
+
+@[simp]
+lemma LocallyDiscrete.comp_id {a b : LocallyDiscrete C} (f : a ⟶ b) : f ≫ 𝟙 b = f := by
+  apply Discrete.ext
+  apply Category.comp_id
+
+@[simp]
+lemma LocallyDiscrete.assoc {a b c d : LocallyDiscrete C} (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d) :
+    (f ≫ g) ≫ h = f ≫ (g ≫ h) :=
+  Discrete.ext _ _ (Category.assoc _ _ _)
+
 /-- A locally discrete bicategory is strict. -/
 instance locallyDiscreteBicategory.strict : Strict (LocallyDiscrete C) where
   id_comp f := Discrete.ext _ _ (Category.id_comp _)
   comp_id f := Discrete.ext _ _ (Category.comp_id _)
   assoc f g h := Discrete.ext _ _ (Category.assoc _ _ _)
 #align category_theory.locally_discrete_bicategory.strict CategoryTheory.locallyDiscreteBicategory.strict
+
 
 variable {I : Type u₁} [Category.{v₁} I] {B : Type u₂} [Bicategory.{w₂, v₂} B] [Strict B]
 
