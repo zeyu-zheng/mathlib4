@@ -123,11 +123,25 @@ lemma mapComp_id_right_strict' {a b : B} (f : a ⟶ b) :
   rw [Iso.eq_inv_comp, mapComp_id_right_strict'']
   simp
 
-protected lemma map₂_associator_strict {a b c d : B} (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d) :
+lemma map₂_associator_iso_strict {a b c d : B} (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d) :
+    (F.mapComp f (g ≫ h)) ≪≫ (whiskerLeftIso (F.map f) (F.mapComp g h))
+    = eqToIso (by simp) ≪≫ ((F.mapComp (f ≫ g) h) ≪≫
+    whiskerRightIso (F.mapComp f g) (F.map h)) ≪≫ eqToIso (by simp) := by
+  ext
+  apply map₂_associator_strict F.toOplax
+
+protected lemma map₂_associator_strict_hom {a b c d : B} (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d) :
     (F.mapComp f (g ≫ h)).hom ≫ (F.map f) ◁ (F.mapComp g h).hom
     = eqToHom (by simp) ≫ ((F.mapComp (f ≫ g) h).hom ≫
     (F.mapComp f g).hom ▷ F.map h) ≫ eqToHom (by simp) := by
   apply map₂_associator_strict F.toOplax
+
+protected lemma map₂_associator_strict_inv {a b c d : B} (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d) :
+    (F.map f) ◁ (F.mapComp g h).inv ≫ (F.mapComp f (g ≫ h)).inv
+    = eqToHom (by simp) ≫ ((F.mapComp f g).inv ▷ F.map h ≫
+    (F.mapComp (f ≫ g) h).inv) ≫ eqToHom (by simp) := by
+  sorry
+
 
 protected lemma map₂_associator_strict' {a b c d : B} (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d) :
     (F.mapComp (f ≫ g) h).hom ≫ (F.mapComp f g).hom ▷ F.map h = eqToHom (by simp) ≫

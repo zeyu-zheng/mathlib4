@@ -29,6 +29,7 @@ We also provide a `HasFibers` instance `ℱ F`, such that the fiber over `S` is 
 
 ## References
 [Vistoli2008] "Notes on Grothendieck Topologies, Fibered Categories and Descent Theory" by Angelo Vistoli
+
 -/
 
 /-
@@ -71,6 +72,7 @@ def ℱ (F : Pseudofunctor (LocallyDiscrete 𝒮ᵒᵖ) Cat.{v₂, u₂}) := (S 
 
 @[simps]
 instance ℱ.CategoryStruct : CategoryStruct (ℱ F) where
+  -- Can I flip the second morphism?
   Hom X Y := (f : X.1 ⟶ Y.1) × (X.2 ⟶ (F.map f.op.toLoc).obj Y.2)
   id X := ⟨𝟙 X.1, (F.mapId ⟨op X.1⟩).inv.app X.2⟩
   comp {_ _ Z} f g := ⟨f.1 ≫ g.1, f.2 ≫ (F.map f.1.op.toLoc).map g.2 ≫ (F.mapComp g.1.op.toLoc f.1.op.toLoc).inv.app Z.2⟩
@@ -124,6 +126,7 @@ instance : Category (ℱ F) where
     rw [assoc, assoc, ←assoc (f:=(F.mapComp g.1.op.toLoc f.1.op.toLoc).inv.app c.2)]
     rw [←(F.mapComp g.1.op.toLoc f.1.op.toLoc).inv.naturality h.2]
     rw [←Cat.whiskerLeft_app, assoc, ←NatTrans.comp_app]
+    rw [F.map₂_associator_strict_inv h.1.op g.1.op f.1.op]
     -- need an inv version here....
     sorry
     -- rw [map₂_associator_inv' (F:=F) h.1.op g.1.op f.1.op]
@@ -131,6 +134,8 @@ instance : Category (ℱ F) where
     -- simp
     -- congr
     -- apply eqToHom_app
+
+#exit
 
 /-- The projection `ℱ F ⥤ 𝒮` given by projecting both objects and homs to the first factor -/
 @[simps]
