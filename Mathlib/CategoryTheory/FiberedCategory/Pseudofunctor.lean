@@ -34,6 +34,7 @@ We also provide a `HasFibers` instance `ℱ F`, such that the fiber over `S` is 
 
 /-
 TODO:
+- Fix "↑F.toPrelaxFunctor.obj" instead of "F.obj"
 - Fix naming
 - (Later) splittings & functoriality
 - Make `presheaf.lean` a special instance of the above
@@ -92,6 +93,7 @@ lemma ℱ.hom_ext_iff {a b : ℱ F} (f g : a ⟶ b) : f = g ↔
   mp := fun hfg => ⟨by rw [hfg], by simp [hfg]⟩
   mpr := fun ⟨hfg₁, hfg₂⟩ => ℱ.hom_ext f g hfg₁ hfg₂
 
+@[simp]
 lemma ℱ.id_comp {a b : ℱ F} (f : a ⟶ b) : 𝟙 a ≫ f = f := by
   ext
   · simp
@@ -108,7 +110,7 @@ lemma ℱ.id_comp {a b : ℱ F} (f : a ⟶ b) : 𝟙 a ≫ f = f := by
   -- rw [←Bicategory.whiskerLeft_comp, Iso.inv_hom_id]
   simp
 
-
+@[simp]
 lemma ℱ.comp_id {a b : ℱ F} (f : a ⟶ b) : f ≫ 𝟙 b = f := by
   ext
   · simp
@@ -129,7 +131,7 @@ instance : Category (ℱ F) where
     · simp
     dsimp
     conv_lhs =>
-      rw [assoc, assoc] -- ←assoc (f:=(F.mapComp g.1.op.toLoc f.1.op.toLoc).inv.app c.2)]
+      rw [assoc, assoc]
       rw [←(F.mapComp g.1.op.toLoc f.1.op.toLoc).inv.naturality_assoc h.2]
       rw [←Cat.whiskerLeft_app, ←NatTrans.comp_app]
       rw [F.map₂_associator_ofStrict_inv h.1.op.toLoc g.1.op.toLoc f.1.op.toLoc]
@@ -138,8 +140,6 @@ instance : Category (ℱ F) where
     congr 3
     rw [←Cat.whiskerRight_app, NatTrans.comp_app]
     simp only [Cat.comp_obj, assoc]
-
-#exit
 
 /-- The projection `ℱ F ⥤ 𝒮` given by projecting both objects and homs to the first factor -/
 @[simps]
@@ -155,51 +155,46 @@ abbrev ℱ.pullback_obj {R S : 𝒮} (a : F.obj ⟨op S⟩) (f : R ⟶ S) : ℱ 
 abbrev ℱ.pullback_map {R S : 𝒮} (a : F.obj ⟨op S⟩) (f : R ⟶ S) : ℱ.pullback_obj a f ⟶ ⟨S, a⟩ :=
   ⟨f, 𝟙 _⟩
 
-lemma ℱ.pullback_IsHomLift {R S : 𝒮} (a : F.obj ⟨op S⟩) (f : R ⟶ S) :
-    IsHomLift (ℱ.π F) f (ℱ.pullback_map a f) where
-  ObjLiftDomain := rfl
-  ObjLiftCodomain := rfl
-  HomLift := {
-    w := by simp
-  }
+instance ℱ.pullback_IsHomLift {R S : 𝒮} (a : F.obj ⟨op S⟩) (f : R ⟶ S) :
+    IsHomLift (ℱ.π F) f (ℱ.pullback_map a f) :=
+  -- TODO: rename
+  instIsHomLiftMap (ℱ.π F) (ℱ.pullback_map a f)
 
-abbrev ℱ.pullback_inducedMap {R S : 𝒮} (a : F.obj ⟨op S⟩) {f : R ⟶ S} {a' : ℱ F}
-    {φ' : a' ⟶ ⟨S, a⟩} {g : a'.1 ⟶ R} (hφ' : IsHomLift (ℱ.π F) (g ≫ f) φ') : a' ⟶ ℱ.pullback_obj a f :=
-  have : g ≫ f = φ'.1 := by simpa using IsHomLift.hom_eq hφ'
-  have : φ'.1.op.toLoc = f.op.toLoc ≫ g.op.toLoc := by simp [this.symm]
-  ⟨g, φ'.2 ≫ eqToHom (by rw [this]) ≫ (F.mapComp f.op.toLoc g.op.toLoc).hom.app a⟩
 
-lemma ℱ.pullback_inducedMap_isHomLift {R S : 𝒮} (a : F.obj ⟨op S⟩) {f : R ⟶ S} {a' : ℱ F}
-    {φ' : a' ⟶ ⟨S, a⟩} {g : a'.1 ⟶ R} (hφ' : IsHomLift (ℱ.π F) (g ≫ f) φ') :
-      IsHomLift (ℱ.π F) g (ℱ.pullback_inducedMap a hφ') where
-  ObjLiftDomain := rfl
-  ObjLiftCodomain := rfl
-  HomLift := ⟨by simp⟩
+abbrev ℱ.pullback_inducedMap {R S : 𝒮} {a : F.obj ⟨op S⟩} (f : R ⟶ S) {a' : ℱ F} (g : a'.1 ⟶ R)
+    (φ' : a' ⟶ ⟨S, a⟩) [IsHomLift (ℱ.π F) (g ≫ f) φ'] : a' ⟶ ℱ.pullback_obj a f :=
+  have : g ≫ f = φ'.1 := by simpa using IsHomLift.fac (ℱ.π F) (g ≫ f) φ'
+  ⟨g, φ'.2 ≫ eqToHom (by simp [this.symm]) ≫ (F.mapComp f.op.toLoc g.op.toLoc).hom.app a⟩
+
+instance ℱ.pullback_inducedMap_isHomLift {R S : 𝒮} (a : F.obj ⟨op S⟩) {f : R ⟶ S} {a' : ℱ F}
+    {φ' : a' ⟶ ⟨S, a⟩} {g : a'.1 ⟶ R} [IsHomLift (ℱ.π F) (g ≫ f) φ'] :
+      IsHomLift (ℱ.π F) g (ℱ.pullback_inducedMap f g φ') :=
+  instIsHomLiftMap (ℱ.π F) (ℱ.pullback_inducedMap f g φ')
 
 lemma ℱ.pullback_IsPullback {R S : 𝒮} (a : F.obj ⟨op S⟩) (f : R ⟶ S) :
-    IsPullback (ℱ.π F) f (ℱ.pullback_map a f) := by
-  apply IsPullback.mk' (ℱ.pullback_IsHomLift a f)
-  intros a' g φ' hφ'
-  -- This should be included in API somehow...
-  have : g ≫ f = φ'.1 := by simpa using IsHomLift.hom_eq hφ'
-  use ℱ.pullback_inducedMap a hφ'
-  refine ⟨⟨ℱ.pullback_inducedMap_isHomLift a hφ', ?_⟩, ?_⟩
-  ext
-  · exact this
-  · simp
-  rintro χ' ⟨hχ', hχ'₁⟩
-  symm at hχ'₁
-  subst hχ'₁
-  -- Again this should also be included in API somehow
-  have hgχ' : g = χ'.1 := by simpa using IsHomLift.hom_eq hχ'
-  subst hgχ'
-  ext
-  · simp
-  simp
+    IsStronglyCartesian (ℱ.π F) f (ℱ.pullback_map a f) where
+  universal_property' := by
+    intros a' g φ' hφ'
+    -- This should be included in API somehow...
+    have : g ≫ f = φ'.1 := by simpa using IsHomLift.fac (ℱ.π F) (g ≫ f) φ'
+    use ℱ.pullback_inducedMap f g φ'
+    refine ⟨⟨inferInstance, ?_⟩, ?_⟩
+    ext
+    · exact this
+    · simp
+    rintro χ' ⟨hχ', hχ'₁⟩
+    symm at hχ'₁
+    subst hχ'₁
+    -- Again this should also be included in API somehow
+    have hgχ' : g = χ'.1 := by simpa using IsHomLift.fac (ℱ.π F) g χ'
+    subst hgχ'
+    ext
+    · simp
+    simp
 
 /-- `ℱ.π` is a fibered category. -/
 instance : IsFibered (ℱ.π F) := by
-  apply IsFibered.mk'
+  apply IsFibered.of_has_pullbacks'
   intros a R f
   use ℱ.pullback_obj a.2 f, ℱ.pullback_map a.2 f
   exact ℱ.pullback_IsPullback a.2 f
@@ -228,10 +223,16 @@ def ℱ.ι (S : 𝒮) : F.obj ⟨op S⟩ ⥤ ℱ F where
     nth_rw 3 [←assoc]
     rw [←(F.mapId ⟨op S⟩).inv.naturality ψ]
     rw [←Cat.whiskerRight_app, ←assoc (h:= eqToHom _), ←NatTrans.comp_app]
-    rw [map₂_left_unitor' (F:=F)]
+    rw [F.mapComp_id_left_ofStrict_inv]
     nth_rw 2 [←assoc (h:= eqToHom _)]
+    -- TODO: this might be usable above?
     rw [inv_hom_whiskerRight, NatTrans.comp_app, eqToHom_app]
     simp
+    conv_rhs =>
+      congr; rfl; congr; rfl;
+      rw [CategoryTheory.NatTrans.id_app]
+    sorry
+
 
 @[simps]
 def ℱ.comp_iso (S : 𝒮) : (ℱ.ι F S) ⋙ ℱ.π F ≅ (const (F.obj ⟨op S⟩)).obj S where
@@ -241,25 +242,28 @@ def ℱ.comp_iso (S : 𝒮) : (ℱ.ι F S) ⋙ ℱ.π F ≅ (const (F.obj ⟨op 
 lemma ℱ.comp_const (S : 𝒮) : (ℱ.ι F S) ⋙ ℱ.π F = (const (F.obj ⟨op S⟩)).obj S := by
   apply Functor.ext_of_iso (ℱ.comp_iso F S) <;> simp
 
-noncomputable instance (S : 𝒮) : Functor.Full (FiberInducedFunctor (ℱ.comp_const F S)) := by
-  apply fullOfExists
-  intro X Y f
-  have hf : f.1.1 = 𝟙 S := by simpa using IsHomLift.hom_eq' f.2
-  use f.1.2 ≫ eqToHom (by simp [hf]) ≫ (F.mapId ⟨op S⟩).hom.app Y
-  ext
-  · simp [hf]
-  · simp
+noncomputable instance (S : 𝒮) : Functor.Full (Fiber.InducedFunctor (ℱ.comp_const F S)) where
+  map_surjective := by
+    intro X Y f
+    have hf : f.1.1 = 𝟙 S := by simpa using (IsHomLift.fac (ℱ.π F) (𝟙 S) f.1).symm
+    use f.1.2 ≫ eqToHom (by simp [hf]) ≫ (F.mapId ⟨op S⟩).hom.app Y
+    ext
+    · simp [hf]
+    · simp
 
-instance (S : 𝒮) : Functor.Faithful (FiberInducedFunctor (ℱ.comp_const F S)) where
+instance (S : 𝒮) : Functor.Faithful (Fiber.InducedFunctor (ℱ.comp_const F S)) where
   map_injective := by
     intros a b f g heq
     rw [←Subtype.val_inj] at heq
     obtain ⟨_, heq₂⟩ := (ℱ.hom_ext_iff _ _).1 heq
     dsimp at heq₂
     rw [←CategoryTheory.NatIso.app_inv, CategoryTheory.Iso.comp_inv_eq] at heq₂
-    simpa using heq₂
+    -- TODO: seems to be error here and above where 𝟙 doesnt disappear...
+    simp at heq₂
+    sorry
+    --simpa using heq₂
 
-noncomputable instance (S : 𝒮) : Functor.EssSurj (FiberInducedFunctor (ℱ.comp_const F S)) := by
+noncomputable instance (S : 𝒮) : Functor.EssSurj (Fiber.InducedFunctor (ℱ.comp_const F S)) := by
   apply essSurj_of_surj
   intro Y
   have hYS : Y.1.1 = S := by simpa using Y.2
@@ -269,9 +273,7 @@ noncomputable instance (S : 𝒮) : Functor.EssSurj (FiberInducedFunctor (ℱ.co
   · simp [hYS]
   simp
 
-
-noncomputable instance (S : 𝒮) : Functor.IsEquivalence (FiberInducedFunctor (ℱ.comp_const F S)) :=
-  Functor.IsEquivalence.ofFullyFaithfullyEssSurj _
+noncomputable instance (S : 𝒮) : Functor.IsEquivalence (Fiber.InducedFunctor (ℱ.comp_const F S)) where
 
 noncomputable instance : HasFibers (ℱ.π F) where
   Fib S := F.obj ⟨op S⟩

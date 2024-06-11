@@ -65,13 +65,13 @@ class HasFibers (p : 𝒳 ⥤ 𝒮) where
   /-- The type of objects of the category `Fib S` for each `S`. -/
   Fib (S : 𝒮) : Type u₃
   /-- `Fib S` is a category. -/
-  isCategory (S : 𝒮) : Category.{v₃} (Fib S)
+  isCategory (S : 𝒮) : Category.{v₃} (Fib S) := by infer_instance
   /-- The functor `ι : Fib S ⥤ 𝒳`. -/
   ι (S : 𝒮) : (Fib S) ⥤ 𝒳
   /-- The composition with the functor `p` is *equal* to the constant functor mapping to `S`. -/
   comp_const (S : 𝒮) : (ι S) ⋙ p = (const (Fib S)).obj S
   /-- The induced functor from `Fib S` to the fiber of `𝒳 ⥤ 𝒮` over `S` is an equivalence. -/
-  equiv (S : 𝒮) : Functor.IsEquivalence (InducedFunctor (comp_const S))
+  equiv (S : 𝒮) : Functor.IsEquivalence (InducedFunctor (comp_const S)) := by infer_instance
 
 namespace HasFibers
 
