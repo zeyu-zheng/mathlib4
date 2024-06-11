@@ -9,7 +9,10 @@ import Mathlib.CategoryTheory.Bicategory.EqToHom
 import Mathlib.CategoryTheory.Bicategory.Strict
 
 /-!
-# API for ...
+# Bifunctors between strict bicategories
+
+This file develops some API for working with bifunctors between strict bicategories. In those cases,
+the properties can be simplified since the associators and unitors can be replaced by eqToIsos.
 
 -/
 
