@@ -75,7 +75,8 @@ instance ℱ.CategoryStruct : CategoryStruct (ℱ F) where
   -- Can I flip the second morphism?
   Hom X Y := (f : X.1 ⟶ Y.1) × (X.2 ⟶ (F.map f.op.toLoc).obj Y.2)
   id X := ⟨𝟙 X.1, (F.mapId ⟨op X.1⟩).inv.app X.2⟩
-  comp {_ _ Z} f g := ⟨f.1 ≫ g.1, f.2 ≫ (F.map f.1.op.toLoc).map g.2 ≫ (F.mapComp g.1.op.toLoc f.1.op.toLoc).inv.app Z.2⟩
+  comp {_ _ Z} f g := ⟨f.1 ≫ g.1, f.2 ≫ (F.map f.1.op.toLoc).map g.2 ≫
+    (F.mapComp g.1.op.toLoc f.1.op.toLoc).inv.app Z.2⟩
 
 @[ext]
 lemma ℱ.hom_ext {a b : ℱ F} (f g : a ⟶ b) (hfg₁ : f.1 = g.1)
@@ -86,7 +87,8 @@ lemma ℱ.hom_ext {a b : ℱ F} (f g : a ⟶ b) (hfg₁ : f.1 = g.1)
   simp only [hfg₂, eqToHom_refl, id_comp]
 
 -- Might not need this lemma in the end
-lemma ℱ.hom_ext_iff {a b : ℱ F} (f g : a ⟶ b) : f = g ↔ ∃ (hfg : f.1 = g.1), f.2 = g.2 ≫ eqToHom (hfg ▸ rfl) where
+lemma ℱ.hom_ext_iff {a b : ℱ F} (f g : a ⟶ b) : f = g ↔
+    ∃ (hfg : f.1 = g.1), f.2 = g.2 ≫ eqToHom (hfg ▸ rfl) where
   mp := fun hfg => ⟨by rw [hfg], by simp [hfg]⟩
   mpr := fun ⟨hfg₁, hfg₂⟩ => ℱ.hom_ext f g hfg₁ hfg₂
 
@@ -94,12 +96,16 @@ lemma ℱ.id_comp {a b : ℱ F} (f : a ⟶ b) : 𝟙 a ≫ f = f := by
   ext
   · simp
   dsimp
-  rw [←assoc, ←(F.mapId ⟨op a.1⟩).inv.naturality f.2, assoc]
-  -- TODO: inv appearing, maybe I made wrong convention for definition of homs?
-  rw [F.mapComp_id_right_strict_inv f.1.op.toLoc]
-  rw [←Cat.whiskerLeft_app, ←NatTrans.comp_app]
-  nth_rw 1 [←assoc]
-  rw [←Bicategory.whiskerLeft_comp, Iso.inv_hom_id]
+  rw [F.mapComp_id_right_ofStrict_inv f.1.op.toLoc]
+  rw [←(F.mapId ⟨op a.1⟩).inv.naturality_assoc f.2]
+  conv_lhs =>
+    congr; rfl;
+    rw [←Cat.whiskerLeft_app, ←NatTrans.comp_app, ←assoc]
+    rw [←Bicategory.whiskerLeft_comp, Iso.inv_hom_id]
+    -- TODO: simp here?
+  -- rw [←Cat.whiskerLeft_app, ←NatTrans.comp_app]
+  -- nth_rw 1 [←assoc]
+  -- rw [←Bicategory.whiskerLeft_comp, Iso.inv_hom_id]
   simp
 
 
@@ -107,12 +113,11 @@ lemma ℱ.comp_id {a b : ℱ F} (f : a ⟶ b) : f ≫ 𝟙 b = f := by
   ext
   · simp
   dsimp
-  rw [F.mapComp_id_left_strict_inv f.1.op.toLoc]
+  rw [F.mapComp_id_left_ofStrict_inv f.1.op.toLoc]
   rw [←Cat.whiskerRight_app, ←NatTrans.comp_app]
   nth_rw 1 [←assoc]
   rw [←Bicategory.comp_whiskerRight, Iso.inv_hom_id]
   simp
-
 
 /-- The category structure on the fibered category associated to a presheaf valued in types. -/
 instance : Category (ℱ F) where
@@ -123,17 +128,16 @@ instance : Category (ℱ F) where
     ext
     · simp
     dsimp
-    rw [assoc, assoc, ←assoc (f:=(F.mapComp g.1.op.toLoc f.1.op.toLoc).inv.app c.2)]
-    rw [←(F.mapComp g.1.op.toLoc f.1.op.toLoc).inv.naturality h.2]
-    rw [←Cat.whiskerLeft_app, assoc, ←NatTrans.comp_app]
-    rw [F.map₂_associator_strict_inv h.1.op g.1.op f.1.op]
-    -- need an inv version here....
-    sorry
-    -- rw [map₂_associator_inv' (F:=F) h.1.op g.1.op f.1.op]
-    -- -- End of this proof is VERY slow...
-    -- simp
-    -- congr
-    -- apply eqToHom_app
+    conv_lhs =>
+      rw [assoc, assoc] -- ←assoc (f:=(F.mapComp g.1.op.toLoc f.1.op.toLoc).inv.app c.2)]
+      rw [←(F.mapComp g.1.op.toLoc f.1.op.toLoc).inv.naturality_assoc h.2]
+      rw [←Cat.whiskerLeft_app, ←NatTrans.comp_app]
+      rw [F.map₂_associator_ofStrict_inv h.1.op.toLoc g.1.op.toLoc f.1.op.toLoc]
+      rw [NatTrans.comp_app, NatTrans.comp_app, eqToHom_app, eqToHom_app, eqToHom_refl, id_comp]
+    conv_rhs => simp only [Cat.comp_obj, Cat.comp_map, map_comp, assoc]
+    congr 3
+    rw [←Cat.whiskerRight_app, NatTrans.comp_app]
+    simp only [Cat.comp_obj, assoc]
 
 #exit
 

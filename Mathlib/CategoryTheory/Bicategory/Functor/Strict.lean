@@ -62,21 +62,12 @@ lemma map₂_associator_ofStrict {a b c d : B} (f : a ⟶ b) (g : b ⟶ c) (h : 
   conv_rhs => congr; rfl; rw [assoc]
   exact h'
 
--- TODO: might be unecessary
-lemma map₂_associator_ofStrict' {a b c d : B} (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d) :
-    F.mapComp (f ≫ g) h ≫ (F.mapComp f g) ▷ F.map h = eqToHom (by simp) ≫
-    (F.mapComp f (g ≫ h) ≫ F.map f ◁ F.mapComp g h) ≫ eqToHom (by simp) := by
-  rw [eqToHom_conj_iff]
-  apply (map₂_associator_ofStrict F f g h).symm
-
 end
-
 
 namespace Pseudofunctor
 
 variable (F : Pseudofunctor B C)
 
--- TODO: need "inv iso" here
 lemma mapComp_id_left_ofStrict {a b : B} (f : a ⟶ b) : F.mapComp (𝟙 a) f =
     eqToIso (by simp) ≪≫ (whiskerRightIso (F.mapId a) (F.map f)).symm := by
   ext
@@ -109,42 +100,43 @@ lemma mapComp_id_right_ofStrict {a b : B} (f : a ⟶ b) : F.mapComp f (𝟙 b) =
   simp only [Iso.trans_hom, eqToIso.hom, Iso.symm_hom, Iso.eq_comp_inv]
   apply map₂_rightUnitor_ofStrict F.toOplax
 
-lemma mapComp_id_right_ofStrict'' {a b : B} (f : a ⟶ b) : (F.mapComp f (𝟙 b)).hom =
+lemma mapComp_id_right_ofStrict_hom {a b : B} (f : a ⟶ b) : (F.mapComp f (𝟙 b)).hom =
     eqToHom (by simp) ≫ F.map f ◁ (F.mapId b).inv := by
-  rw [← whiskerLeftIso_inv, Iso.eq_comp_inv]
-  apply map₂_rightUnitor_ofStrict F.toOplax
+  simp [mapComp_id_right_ofStrict]
 
 lemma mapComp_id_right_ofStrict_inv {a b : B} (f : a ⟶ b) : (F.mapComp f (𝟙 b)).inv =
     ((F.map f) ◁ (F.mapId b).hom) ≫ eqToHom (by simp) := by
   simp [mapComp_id_right_ofStrict]
 
-lemma mapComp_id_right_ofStrict' {a b : B} (f : a ⟶ b) :
-    (F.map f) ◁ (F.mapId b).hom = ((F.mapComp f (𝟙 b)).inv) ≫ eqToHom (by simp) := by
-  rw [Iso.eq_inv_comp, mapComp_id_right_ofStrict'']
-  simp
+lemma mapId_whiskerLeft_ofStrict {a b : B} (f : a ⟶ b) :
+    whiskerLeftIso (F.map f) (F.mapId b) = (F.mapComp f (𝟙 b)).symm ≪≫ eqToIso (by simp) := by
+  simp [mapComp_id_right_ofStrict]
 
-lemma map₂_associator_iso_ofStrict {a b c d : B} (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d) :
+lemma mapId_whiskerLeft_ofStrict_hom {a b : B} (f : a ⟶ b) :
+    (F.map f) ◁ (F.mapId b).hom = ((F.mapComp f (𝟙 b)).inv) ≫ eqToHom (by simp) := by
+  simp [mapComp_id_right_ofStrict]
+
+lemma mapId_whiskerLeft_ofStrict_inv {a b : B} (f : a ⟶ b) :
+    (F.map f) ◁ (F.mapId b).inv = eqToHom (by simp) ≫ (F.mapComp f (𝟙 b)).hom := by
+  simp [mapComp_id_right_ofStrict]
+
+lemma map₂_associator_ofStrict_iso {a b c d : B} (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d) :
     (F.mapComp f (g ≫ h)) ≪≫ (whiskerLeftIso (F.map f) (F.mapComp g h))
     = eqToIso (by simp) ≪≫ ((F.mapComp (f ≫ g) h) ≪≫
     whiskerRightIso (F.mapComp f g) (F.map h)) ≪≫ eqToIso (by simp) := by
   ext
   apply map₂_associator_ofStrict F.toOplax
 
-protected lemma map₂_associator_ofStrict_hom {a b c d : B} (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d) :
+lemma map₂_associator_ofStrict_hom {a b c d : B} (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d) :
     (F.mapComp f (g ≫ h)).hom ≫ (F.map f) ◁ (F.mapComp g h).hom
     = eqToHom (by simp) ≫ ((F.mapComp (f ≫ g) h).hom ≫
     (F.mapComp f g).hom ▷ F.map h) ≫ eqToHom (by simp) := by
   apply map₂_associator_ofStrict F.toOplax
 
-protected lemma map₂_associator_ofStrict_inv {a b c d : B} (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d) :
+lemma map₂_associator_ofStrict_inv {a b c d : B} (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d) :
     (F.map f) ◁ (F.mapComp g h).inv ≫ (F.mapComp f (g ≫ h)).inv
     = eqToHom (by simp) ≫ ((F.mapComp f g).inv ▷ F.map h ≫
     (F.mapComp (f ≫ g) h).inv) ≫ eqToHom (by simp) := by
-  simpa using congrArg (·.inv) (map₂_associator_iso_ofStrict F f g h)
-
-protected lemma map₂_associator_ofStrict' {a b c d : B} (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d) :
-    (F.mapComp (f ≫ g) h).hom ≫ (F.mapComp f g).hom ▷ F.map h = eqToHom (by simp) ≫
-    ((F.mapComp f (g ≫ h)).hom ≫ (F.map f) ◁ (F.mapComp g h).hom) ≫ eqToHom (by simp) := by
-  apply map₂_associator_ofStrict' F.toOplax
+  simpa using congrArg (·.inv) (map₂_associator_ofStrict_iso F f g h)
 
 end Pseudofunctor
