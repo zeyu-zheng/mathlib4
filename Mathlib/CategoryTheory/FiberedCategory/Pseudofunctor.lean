@@ -126,6 +126,7 @@ instance : Category (ℱ F) where
   toCategoryStruct := ℱ.CategoryStruct
   id_comp := ℱ.id_comp
   comp_id := ℱ.comp_id
+  -- This one is especially slow!
   assoc {a b c d} f g h := by
     ext
     · simp
