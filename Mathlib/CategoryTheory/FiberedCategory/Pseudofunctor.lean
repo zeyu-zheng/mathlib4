@@ -60,11 +60,11 @@ lemma Cat.whiskerRight_app {C D E : Cat} {F G : C ⟶ D} (H : D ⟶ E) (η : F �
     (η ▷ H).app X = H.map (η.app X) :=
   CategoryTheory.whiskerRight_app η H X
 
+-- already in mathlib!
 @[simp]
 lemma Quiver.Hom.eqToHom_toLoc {C : Type u₁} [Category.{v₁} C] {a b : C}
     (h : a = b) : (eqToHom h).toLoc = eqToHom (congrArg LocallyDiscrete.mk h) := by
   subst h; rfl
-
 
 end mathlib_lemmas
 
