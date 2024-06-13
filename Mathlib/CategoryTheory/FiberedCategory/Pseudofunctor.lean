@@ -85,7 +85,7 @@ instance ℱ.CategoryStruct : CategoryStruct (ℱ F) where
 lemma ℱ.hom_ext {a b : ℱ F} (f g : a ⟶ b) (hfg₁ : f.1 = g.1)
     (hfg₂ : f.2 = g.2 ≫ eqToHom (hfg₁ ▸ rfl)) : f = g := by
   apply Sigma.ext hfg₁
-  rw [←conj_eqToHom_iff_heq _ _ rfl (hfg₁ ▸ rfl)]
+  rw [← conj_eqToHom_iff_heq _ _ rfl (hfg₁ ▸ rfl)]
   simp only [hfg₂, eqToHom_refl, id_comp]
 
 -- Might not need this lemma in the end
@@ -100,12 +100,11 @@ protected lemma ℱ.id_comp {a b : ℱ F} (f : a ⟶ b) : 𝟙 a ≫ f = f := by
   · simp
   dsimp
   rw [F.mapComp_id_right_ofStrict_inv f.1.op.toLoc]
-  rw [←(F.mapId ⟨op a.1⟩).inv.naturality_assoc f.2]
+  rw [← (F.mapId ⟨op a.1⟩).inv.naturality_assoc f.2]
   conv_lhs =>
     congr; rfl;
-    rw [←Cat.whiskerLeft_app, ←NatTrans.comp_app, ←assoc]
-    rw [←Bicategory.whiskerLeft_comp, Iso.inv_hom_id]
-    -- TODO: simp here?
+    rw [← Cat.whiskerLeft_app, ← NatTrans.comp_app, ← assoc]
+    rw [← Bicategory.whiskerLeft_comp, Iso.inv_hom_id]
   simp
 
 @[simp]
@@ -114,9 +113,9 @@ protected lemma ℱ.comp_id {a b : ℱ F} (f : a ⟶ b) : f ≫ 𝟙 b = f := by
   · simp
   dsimp
   rw [F.mapComp_id_left_ofStrict_inv f.1.op.toLoc]
-  rw [←Cat.whiskerRight_app, ←NatTrans.comp_app]
-  nth_rw 1 [←assoc]
-  rw [←Bicategory.comp_whiskerRight, Iso.inv_hom_id]
+  rw [← Cat.whiskerRight_app, ← NatTrans.comp_app]
+  nth_rw 1 [← assoc]
+  rw [← Bicategory.comp_whiskerRight, Iso.inv_hom_id]
   simp
 
 /-- The category structure on the fibered category associated to a presheaf valued in types. -/
@@ -131,13 +130,13 @@ instance : Category (ℱ F) where
     dsimp
     conv_lhs =>
       rw [assoc, assoc]
-      rw [←(F.mapComp g.1.op.toLoc f.1.op.toLoc).inv.naturality_assoc h.2]
-      rw [←Cat.whiskerLeft_app, ←NatTrans.comp_app]
+      rw [← (F.mapComp g.1.op.toLoc f.1.op.toLoc).inv.naturality_assoc h.2]
+      rw [← Cat.whiskerLeft_app, ← NatTrans.comp_app]
       rw [F.map₂_associator_ofStrict_inv h.1.op.toLoc g.1.op.toLoc f.1.op.toLoc]
       rw [NatTrans.comp_app, NatTrans.comp_app, eqToHom_app, eqToHom_app, eqToHom_refl, id_comp]
     conv_rhs => simp only [Cat.comp_obj, Cat.comp_map, map_comp, assoc]
     congr 3
-    rw [←Cat.whiskerRight_app, NatTrans.comp_app]
+    rw [← Cat.whiskerRight_app, NatTrans.comp_app]
     simp only [Cat.comp_obj, assoc]
 
 /-- The projection `ℱ F ⥤ 𝒮` given by projecting both objects and homs to the first factor -/
@@ -212,15 +211,9 @@ def ℱ.ι : F.obj ⟨op S⟩ ⥤ ℱ F where
     dsimp
     conv_rhs =>
       congr; rw [assoc]; congr; rfl
-      -- rw [Functor.map_comp]
-      -- TODO: remove this ...
-      simp
-      rw [←(F.mapId ⟨op S⟩).inv.naturality_assoc ψ]
-      rw [←Cat.whiskerRight_app, ←NatTrans.comp_app]
-      rw [F.mapComp_id_left_ofStrict_inv]
-      rw [←assoc (h := eqToHom _)]
-      rw [inv_hom_whiskerRight, NatTrans.comp_app, eqToHom_app]
-      rw [CategoryTheory.NatTrans.id_app]
+      rw [Functor.map_comp, assoc, ← (F.mapId ⟨op S⟩).inv.naturality_assoc ψ]
+      rw [← Cat.whiskerRight_app, ← NatTrans.comp_app, F.mapComp_id_left_ofStrict_inv]
+      rw [← assoc (h := eqToHom _), inv_hom_whiskerRight]
     simp
 
 
@@ -243,7 +236,7 @@ instance : Functor.Faithful (Fiber.InducedFunctor (ℱ.comp_const F S)) where
   map_injective := by
     intros a b f g heq
     -- can be made a one liner...
-    rw [←Subtype.val_inj] at heq
+    rw [← Subtype.val_inj] at heq
     obtain ⟨_, heq₂⟩ := (ℱ.hom_ext_iff _ _).1 heq
     simpa [cancel_mono] using heq₂
 
