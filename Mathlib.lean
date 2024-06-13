@@ -1309,6 +1309,7 @@ import Mathlib.CategoryTheory.FiberedCategory.Fiber
 import Mathlib.CategoryTheory.FiberedCategory.Fibered
 import Mathlib.CategoryTheory.FiberedCategory.HasFibers
 import Mathlib.CategoryTheory.FiberedCategory.HomLift
+import Mathlib.CategoryTheory.FiberedCategory.Pseudofunctor
 import Mathlib.CategoryTheory.Filtered.Basic
 import Mathlib.CategoryTheory.Filtered.Connected
 import Mathlib.CategoryTheory.Filtered.Final
