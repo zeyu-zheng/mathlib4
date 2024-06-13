@@ -81,7 +81,6 @@ instance ℱ.CategoryStruct : CategoryStruct (ℱ F) where
 
 @[ext]
 lemma ℱ.hom_ext {a b : ℱ F} (f g : a ⟶ b) (hfg₁ : f.1 = g.1)
-    -- Is the substitution here problematic...?
     (hfg₂ : f.2 = g.2 ≫ eqToHom (hfg₁ ▸ rfl)) : f = g := by
   apply Sigma.ext hfg₁
   rw [←conj_eqToHom_iff_heq _ _ rfl (hfg₁ ▸ rfl)]
@@ -94,7 +93,7 @@ lemma ℱ.hom_ext_iff {a b : ℱ F} (f g : a ⟶ b) : f = g ↔
   mpr := fun ⟨hfg₁, hfg₂⟩ => ℱ.hom_ext f g hfg₁ hfg₂
 
 @[simp]
-lemma ℱ.id_comp {a b : ℱ F} (f : a ⟶ b) : 𝟙 a ≫ f = f := by
+protected lemma ℱ.id_comp {a b : ℱ F} (f : a ⟶ b) : 𝟙 a ≫ f = f := by
   ext
   · simp
   dsimp
@@ -105,13 +104,10 @@ lemma ℱ.id_comp {a b : ℱ F} (f : a ⟶ b) : 𝟙 a ≫ f = f := by
     rw [←Cat.whiskerLeft_app, ←NatTrans.comp_app, ←assoc]
     rw [←Bicategory.whiskerLeft_comp, Iso.inv_hom_id]
     -- TODO: simp here?
-  -- rw [←Cat.whiskerLeft_app, ←NatTrans.comp_app]
-  -- nth_rw 1 [←assoc]
-  -- rw [←Bicategory.whiskerLeft_comp, Iso.inv_hom_id]
   simp
 
 @[simp]
-lemma ℱ.comp_id {a b : ℱ F} (f : a ⟶ b) : f ≫ 𝟙 b = f := by
+protected lemma ℱ.comp_id {a b : ℱ F} (f : a ⟶ b) : f ≫ 𝟙 b = f := by
   ext
   · simp
   dsimp
@@ -206,33 +202,24 @@ variable (F)
 def ℱ.ι (S : 𝒮) : F.obj ⟨op S⟩ ⥤ ℱ F where
   obj := fun a => ⟨S, a⟩
   map := @fun a b φ => ⟨𝟙 S, φ ≫ (F.mapId ⟨op S⟩).inv.app b⟩
-  map_id := by
-    intro a
-    dsimp
-    -- why doesnt ext work as I think it should?!
-    ext
-    · simp
-    rw [←conj_eqToHom_iff_heq _ _ rfl (by simp)]
-    simp
+  map_id := fun a => by ext <;> simp
   map_comp := by
     intro a b c φ ψ
-    dsimp
     ext
     · simp
-    rw [←conj_eqToHom_iff_heq _ _ rfl (by simp)]
-    simp
-    nth_rw 3 [←assoc]
-    rw [←(F.mapId ⟨op S⟩).inv.naturality ψ]
-    rw [←Cat.whiskerRight_app, ←assoc (h:= eqToHom _), ←NatTrans.comp_app]
-    rw [F.mapComp_id_left_ofStrict_inv]
-    nth_rw 2 [←assoc (h:= eqToHom _)]
-    -- TODO: this might be usable above?
-    rw [inv_hom_whiskerRight, NatTrans.comp_app, eqToHom_app]
-    simp
+    dsimp
     conv_rhs =>
-      congr; rfl; congr; rfl;
+      congr; rw [assoc]; congr; rfl
+      -- rw [Functor.map_comp]
+      -- TODO: remove this ...
+      simp
+      rw [←(F.mapId ⟨op S⟩).inv.naturality_assoc ψ]
+      rw [←Cat.whiskerRight_app, ←NatTrans.comp_app]
+      rw [F.mapComp_id_left_ofStrict_inv]
+      rw [←assoc (h := eqToHom _)]
+      rw [inv_hom_whiskerRight, NatTrans.comp_app, eqToHom_app]
       rw [CategoryTheory.NatTrans.id_app]
-    sorry
+    simp
 
 
 @[simps]
@@ -248,21 +235,15 @@ noncomputable instance (S : 𝒮) : Functor.Full (Fiber.InducedFunctor (ℱ.comp
     intro X Y f
     have hf : f.1.1 = 𝟙 S := by simpa using (IsHomLift.fac (ℱ.π F) (𝟙 S) f.1).symm
     use f.1.2 ≫ eqToHom (by simp [hf]) ≫ (F.mapId ⟨op S⟩).hom.app Y
-    ext
-    · simp [hf]
-    · simp
+    ext <;> simp [hf]
 
 instance (S : 𝒮) : Functor.Faithful (Fiber.InducedFunctor (ℱ.comp_const F S)) where
   map_injective := by
     intros a b f g heq
+    -- can be made a one liner...
     rw [←Subtype.val_inj] at heq
     obtain ⟨_, heq₂⟩ := (ℱ.hom_ext_iff _ _).1 heq
-    dsimp at heq₂
-    rw [←CategoryTheory.NatIso.app_inv, CategoryTheory.Iso.comp_inv_eq] at heq₂
-    -- TODO: seems to be error here and above where 𝟙 doesnt disappear...
-    simp at heq₂
-    sorry
-    --simpa using heq₂
+    simpa [cancel_mono] using heq₂
 
 noncomputable instance (S : 𝒮) : Functor.EssSurj (Fiber.InducedFunctor (ℱ.comp_const F S)) := by
   apply essSurj_of_surj
@@ -270,9 +251,7 @@ noncomputable instance (S : 𝒮) : Functor.EssSurj (Fiber.InducedFunctor (ℱ.c
   have hYS : Y.1.1 = S := by simpa using Y.2
   use (hYS.symm ▸ Y.1.2)
   apply Subtype.val_inj.1
-  apply Sigma.ext
-  · simp [hYS]
-  simp
+  apply Sigma.ext <;> simp [hYS]
 
 noncomputable instance (S : 𝒮) : Functor.IsEquivalence (Fiber.InducedFunctor (ℱ.comp_const F S)) where
 
