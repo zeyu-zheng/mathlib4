@@ -28,7 +28,8 @@ The projection functor `ℱ F ⥤ 𝒮` is then given by projecting to the first
 We also provide a `HasFibers` instance `ℱ F`, such that the fiber over `S` is the category `F(S)`.
 
 ## References
-[Vistoli2008] "Notes on Grothendieck Topologies, Fibered Categories and Descent Theory" by Angelo Vistoli
+[Vistoli2008] "Notes on Grothendieck Topologies, Fibered Categories and Descent Theory" by
+Angelo Vistoli
 
 -/
 
@@ -38,7 +39,8 @@ TODO:
 - Fix naming
 - (Later) splittings & functoriality
 - Make `presheaf.lean` a special instance of the above
-  - Isomorphism between the overcategory and fibered category associated to the corresponding presheaf?
+  - Isomorphism between the overcategory and fibered category associated to the corresponding
+  presheaf?
 -/
 
 
@@ -196,10 +198,10 @@ instance : IsFibered (ℱ.π F) := by
   use ℱ.pullback_obj a.2 f, ℱ.pullback_map a.2 f
   exact ℱ.pullback_IsPullback a.2 f
 
-variable (F)
+variable (F) (S : 𝒮)
 
 @[simps]
-def ℱ.ι (S : 𝒮) : F.obj ⟨op S⟩ ⥤ ℱ F where
+def ℱ.ι : F.obj ⟨op S⟩ ⥤ ℱ F where
   obj := fun a => ⟨S, a⟩
   map := @fun a b φ => ⟨𝟙 S, φ ≫ (F.mapId ⟨op S⟩).inv.app b⟩
   map_id := fun a => by ext <;> simp
@@ -223,21 +225,21 @@ def ℱ.ι (S : 𝒮) : F.obj ⟨op S⟩ ⥤ ℱ F where
 
 
 @[simps]
-def ℱ.comp_iso (S : 𝒮) : (ℱ.ι F S) ⋙ ℱ.π F ≅ (const (F.obj ⟨op S⟩)).obj S where
+def ℱ.comp_iso : (ℱ.ι F S) ⋙ ℱ.π F ≅ (const (F.obj ⟨op S⟩)).obj S where
   hom := { app := fun a => 𝟙 _ }
   inv := { app := fun a => 𝟙 _ }
 
-lemma ℱ.comp_const (S : 𝒮) : (ℱ.ι F S) ⋙ ℱ.π F = (const (F.obj ⟨op S⟩)).obj S := by
+lemma ℱ.comp_const : (ℱ.ι F S) ⋙ ℱ.π F = (const (F.obj ⟨op S⟩)).obj S := by
   apply Functor.ext_of_iso (ℱ.comp_iso F S) <;> simp
 
-noncomputable instance (S : 𝒮) : Functor.Full (Fiber.InducedFunctor (ℱ.comp_const F S)) where
+noncomputable instance : Functor.Full (Fiber.InducedFunctor (ℱ.comp_const F S)) where
   map_surjective := by
     intro X Y f
     have hf : f.1.1 = 𝟙 S := by simpa using (IsHomLift.fac (ℱ.π F) (𝟙 S) f.1).symm
     use f.1.2 ≫ eqToHom (by simp [hf]) ≫ (F.mapId ⟨op S⟩).hom.app Y
     ext <;> simp [hf]
 
-instance (S : 𝒮) : Functor.Faithful (Fiber.InducedFunctor (ℱ.comp_const F S)) where
+instance : Functor.Faithful (Fiber.InducedFunctor (ℱ.comp_const F S)) where
   map_injective := by
     intros a b f g heq
     -- can be made a one liner...
@@ -245,7 +247,7 @@ instance (S : 𝒮) : Functor.Faithful (Fiber.InducedFunctor (ℱ.comp_const F S
     obtain ⟨_, heq₂⟩ := (ℱ.hom_ext_iff _ _).1 heq
     simpa [cancel_mono] using heq₂
 
-noncomputable instance (S : 𝒮) : Functor.EssSurj (Fiber.InducedFunctor (ℱ.comp_const F S)) := by
+noncomputable instance : Functor.EssSurj (Fiber.InducedFunctor (ℱ.comp_const F S)) := by
   apply essSurj_of_surj
   intro Y
   have hYS : Y.1.1 = S := by simpa using Y.2
@@ -253,7 +255,7 @@ noncomputable instance (S : 𝒮) : Functor.EssSurj (Fiber.InducedFunctor (ℱ.c
   apply Subtype.val_inj.1
   apply Sigma.ext <;> simp [hYS]
 
-noncomputable instance (S : 𝒮) : Functor.IsEquivalence (Fiber.InducedFunctor (ℱ.comp_const F S)) where
+noncomputable instance : Functor.IsEquivalence (Fiber.InducedFunctor (ℱ.comp_const F S)) where
 
 noncomputable instance : HasFibers (ℱ.π F) where
   Fib S := F.obj ⟨op S⟩
