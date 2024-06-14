@@ -12,7 +12,7 @@ import Mathlib.CategoryTheory.Bicategory.Strict
 # Bifunctors between strict bicategories
 
 This file develops some API for working with bifunctors between strict bicategories. In those cases,
-the properties can be simplified since the associators and unitors can be replaced by eqToIsos.
+the properties can be simplified since the associators and unitors are eqToIsos.
 
 -/
 
@@ -28,7 +28,7 @@ variable {C : Type u} [Category.{v} C]
 
 lemma eqToHom_conj_iff {a b c d : C} (f : a ⟶ b) (g : c ⟶ d) (hac : a = c) (hdb : d = b) :
     f = eqToHom hac ≫ g ≫ eqToHom hdb ↔ eqToHom hac.symm ≫ f ≫ eqToHom hdb.symm = g := by
-  subst hac hdb; simp only [eqToHom_refl, comp_id, id_comp]
+  rw [eqToHom_comp_iff, comp_eqToHom_iff, assoc]
 
 end
 
@@ -57,10 +57,7 @@ lemma map₂_rightUnitor_ofStrict {a b : B} (f : a ⟶ b) : (F.mapComp f) (𝟙 
 lemma map₂_associator_ofStrict {a b c d : B} (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d) :
     F.mapComp f (g ≫ h) ≫ F.map f ◁ F.mapComp g h = eqToHom (by simp) ≫
     (F.mapComp (f ≫ g) h ≫ (F.mapComp f g) ▷ F.map h) ≫ eqToHom (by simp) := by
-  have h' := by simpa using F.map₂_associator f g h
-  rw [eqToHom_comp_iff] at h'
-  conv_rhs => congr; rfl; rw [assoc]
-  exact h'
+  simpa [eqToHom_comp_iff] using F.map₂_associator f g h
 
 end
 
