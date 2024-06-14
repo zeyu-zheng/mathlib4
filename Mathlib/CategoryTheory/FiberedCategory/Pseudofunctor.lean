@@ -153,32 +153,32 @@ def π (F : Pseudofunctor (LocallyDiscrete 𝒮ᵒᵖ) Cat.{v₂, u₂}) : F.toF
   obj := fun X => X.1
   map := fun f => f.1
 
+section
+
+variable {R S : 𝒮} (a : F.obj ⟨op S⟩) (f : R ⟶ S)
+
 -- TODO: improve comment after I know final form of this...
 /-- An object of `F.toFibered` lying over `S`, given by some `a : F(T)` and `S ⟶ T` -/
-abbrev pullback_obj {R S : 𝒮} (a : F.obj ⟨op S⟩) (f : R ⟶ S) : F.toFibered :=
-  ⟨R, (F.map f.op.toLoc).obj a⟩
+abbrev pullback_obj : F.toFibered := ⟨R, (F.map f.op.toLoc).obj a⟩
 
-abbrev pullback_map {R S : 𝒮} (a : F.obj ⟨op S⟩) (f : R ⟶ S) : pullback_obj a f ⟶ ⟨S, a⟩ :=
-  ⟨f, 𝟙 _⟩
+abbrev pullback_map : pullback_obj a f ⟶ ⟨S, a⟩ := ⟨f, 𝟙 _⟩
 
-instance pullback_IsHomLift {R S : 𝒮} (a : F.obj ⟨op S⟩) (f : R ⟶ S) :
-    IsHomLift (π F) f (pullback_map a f) :=
+instance pullback_IsHomLift : IsHomLift (π F) f (pullback_map a f) :=
   -- TODO: rename
   instIsHomLiftMap (π F) (pullback_map a f)
 
-
-abbrev pullback_inducedMap {R S : 𝒮} {a : F.obj ⟨op S⟩} (f : R ⟶ S) {a' : F.toFibered} (g : a'.1 ⟶ R)
+-- TODO a implicit here?
+abbrev pullback_inducedMap {a : F.obj ⟨op S⟩} (f : R ⟶ S) {a' : F.toFibered} (g : a'.1 ⟶ R)
     (φ' : a' ⟶ ⟨S, a⟩) [IsHomLift (π F) (g ≫ f) φ'] : a' ⟶ pullback_obj a f :=
   have : g ≫ f = φ'.1 := by simpa using IsHomLift.fac (π F) (g ≫ f) φ'
   ⟨g, φ'.2 ≫ eqToHom (by simp [this.symm]) ≫ (F.mapComp f.op.toLoc g.op.toLoc).hom.app a⟩
 
-instance pullback_inducedMap_isHomLift {R S : 𝒮} (a : F.obj ⟨op S⟩) {f : R ⟶ S} {a' : F.toFibered}
+instance pullback_inducedMap_isHomLift {a : F.obj ⟨op S⟩} (f : R ⟶ S) {a' : F.toFibered}
     {φ' : a' ⟶ ⟨S, a⟩} {g : a'.1 ⟶ R} [IsHomLift (π F) (g ≫ f) φ'] :
       IsHomLift (π F) g (pullback_inducedMap f g φ') :=
   instIsHomLiftMap (π F) (pullback_inducedMap f g φ')
 
-lemma pullback_IsPullback {R S : 𝒮} (a : F.obj ⟨op S⟩) (f : R ⟶ S) :
-    IsStronglyCartesian (π F) f (pullback_map a f) where
+lemma pullback_IsPullback : IsStronglyCartesian (π F) f (pullback_map a f) where
   universal_property' := by
     intros a' g φ' hφ'
     have : g ≫ f = φ'.1 := by simpa using IsHomLift.fac (π F) (g ≫ f) φ'
@@ -194,6 +194,8 @@ lemma pullback_IsPullback {R S : 𝒮} (a : F.obj ⟨op S⟩) (f : R ⟶ S) :
     subst hgχ'
     ext <;> simp
 
+end
+
 /-- `π` is a fibered category. -/
 instance : IsFibered (π F) := by
   apply IsFibered.of_has_pullbacks'
@@ -201,6 +203,7 @@ instance : IsFibered (π F) := by
   use pullback_obj a.2 f, pullback_map a.2 f
   exact pullback_IsPullback a.2 f
 
+-- section?
 variable (F) (S : 𝒮)
 
 @[simps]
