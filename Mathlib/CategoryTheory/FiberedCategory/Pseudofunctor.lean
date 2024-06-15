@@ -105,8 +105,7 @@ protected lemma id_comp : 𝟙 a ≫ f = f := by
   dsimp
   rw [F.mapComp_id_right_ofStrict_inv f.1.op.toLoc]
   rw [← (F.mapId ⟨op a.1⟩).inv.naturality_assoc f.2]
-  conv_lhs =>
-    congr; rfl;
+  slice_lhs 2 3 =>
     rw [← Cat.whiskerLeft_app, ← NatTrans.comp_app, ← assoc]
     rw [← Bicategory.whiskerLeft_comp, Iso.inv_hom_id]
   simp
@@ -128,13 +127,12 @@ protected lemma assoc {a b c d : F.toFibered} (f : a ⟶ b) (g : b ⟶ c) (h : c
   ext
   · simp
   dsimp
-  conv_lhs =>
-    rw [assoc, assoc]
+  slice_lhs 3 5 =>
     rw [← (F.mapComp g.1.op.toLoc f.1.op.toLoc).inv.naturality_assoc h.2]
     rw [← Cat.whiskerLeft_app, ← NatTrans.comp_app]
     rw [F.map₂_associator_ofStrict_inv h.1.op.toLoc g.1.op.toLoc f.1.op.toLoc]
     rw [NatTrans.comp_app, NatTrans.comp_app, eqToHom_app, eqToHom_app, eqToHom_refl, id_comp]
-  conv_rhs => simp only [Cat.comp_obj, Cat.comp_map, map_comp, assoc]
+  simp only [Cat.comp_obj, Cat.comp_map, map_comp, assoc]
   congr 3
   rw [← Cat.whiskerRight_app, NatTrans.comp_app]
   simp only [Cat.comp_obj, assoc]
@@ -216,8 +214,7 @@ def ι : F.obj ⟨op S⟩ ⥤ F.toFibered where
     ext
     · simp
     dsimp
-    conv_rhs =>
-      congr; rw [assoc]; congr; rfl
+    slice_rhs 2 4 =>
       rw [Functor.map_comp, assoc, ← (F.mapId ⟨op S⟩).inv.naturality_assoc ψ]
       rw [← Cat.whiskerRight_app, ← NatTrans.comp_app, F.mapComp_id_left_ofStrict_inv]
       rw [← assoc (h := eqToHom _), inv_hom_whiskerRight]
