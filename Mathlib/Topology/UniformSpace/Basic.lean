@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
 -/
 import Mathlib.Order.Filter.SmallSets
-import Mathlib.Tactic.Monotonicity
 import Mathlib.Topology.Compactness.Compact
 import Mathlib.Topology.NhdsSet
 import Mathlib.Algebra.Group.Defs
@@ -626,10 +625,11 @@ theorem comp_comp_symm_mem_uniformity_sets {s : Set (α × α)} (hs : s ∈ 𝓤
   -- Porting note: Needed the following `have`s to make `mono` work
   have ht := Subset.refl t
   have hw := Subset.refl w
+  -- TODO: all of these were `by mono`; how to make gcongr work?
   calc
-    t ○ t ○ t ⊆ w ○ t := by mono
-    _ ⊆ w ○ (t ○ t) := by mono
-    _ ⊆ w ○ w := by mono
+    t ○ t ○ t ⊆ w ○ t := compRel_mono t_sub ht --by gcongr
+    _ ⊆ w ○ (t ○ t) := compRel_mono hw this--gcongr
+    _ ⊆ w ○ w := compRel_mono hw t_sub--gcongr
     _ ⊆ s := w_sub
 #align comp_comp_symm_mem_uniformity_sets comp_comp_symm_mem_uniformity_sets
 

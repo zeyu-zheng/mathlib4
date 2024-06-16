@@ -357,7 +357,12 @@ instance instCompleteSpace [CompleteSpace β] : CompleteSpace (α →ᵇ β) :=
       calc
         dist (F x) (F y) ≤ dist (f 0 x) (f 0 y) + (dist (f 0 x) (F x) + dist (f 0 y) (F y)) :=
           dist_triangle4_left _ _ _ _
-        _ ≤ C + (b 0 + b 0) := by mono
+        _ ≤ C + (b 0 + b 0) := by
+          -- TODO: can gcongr use local hypotheses? just `mono` would suffice...
+          gcongr
+          · exact hC x y
+          · exact fF_bdd x 0
+          · exact fF_bdd y 0
     · -- Check that `F` is close to `f N` in distance terms
       refine tendsto_iff_dist_tendsto_zero.2 (squeeze_zero (fun _ => dist_nonneg) ?_ b_lim)
       exact fun N => (dist_le (b0 _)).2 fun x => fF_bdd x N
