@@ -114,8 +114,8 @@ protected lemma comp_id : f ≫ 𝟙 b = f := by
   ext
   · simp
   dsimp
-  rw [F.mapComp_id_left_ofStrict_inv f.1.op.toLoc]
   rw [← Cat.whiskerRight_app, ← NatTrans.comp_app]
+  rw [F.mapComp_id_left_ofStrict_inv f.1.op.toLoc]
   nth_rw 1 [← assoc]
   rw [← Bicategory.comp_whiskerRight, Iso.inv_hom_id]
   simp

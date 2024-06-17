@@ -276,6 +276,13 @@ def comp (F : OplaxFunctor B C) (G : OplaxFunctor C D) : OplaxFunctor B D :=
         assoc] }
 #align category_theory.oplax_functor.comp CategoryTheory.OplaxFunctor.comp
 
+@[simps]
+def map₂Iso (F : OplaxFunctor B C) {a b : B} {f g : a ⟶ b} (η : f ≅ g) : F.map f ≅ F.map g where
+  hom := F.map₂ η.hom
+  inv := F.map₂ η.inv
+  hom_inv_id := by rw [←F.map₂_comp]; simp only [Iso.hom_inv_id, map₂_id]
+  inv_hom_id := by rw [←F.map₂_comp]; simp only [Iso.inv_hom_id, map₂_id]
+
 /-- A structure on an oplax functor that promotes an oplax functor to a pseudofunctor.
 See `Pseudofunctor.mkOfOplax`.
 -/
