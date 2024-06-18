@@ -30,14 +30,14 @@ theorem getElem?_iterate (f : α → α) (a : α) :
   | n + 1, 0    , _ => by simp
   | n + 1, i + 1, h => by simp [getElem?_iterate f (f a) n i (by simpa using h)]
 
-theorem get?_iterate (f : α → α) (a : α) (n i : ℕ) (h : i < n) :
-    get? (iterate f a n) i = f^[i] a := by
-  simp [getElem?_iterate, h]
-
 @[simp]
 theorem getElem_iterate (f : α → α) (a : α) (n : ℕ) (i : Nat) (h : i < (iterate f a n).length) :
     (iterate f a n)[i] = f^[↑i] a :=
-  (get?_eq_some.1 <| get?_iterate f a n i (by simpa using h)).2
+  (getElem?_eq_some.1 <| getElem?_iterate f a n i (by simpa using h)).2
+
+theorem get?_iterate (f : α → α) (a : α) (n i : ℕ) (h : i < n) :
+    get? (iterate f a n) i = f^[i] a := by
+  simp [getElem?_iterate, h]
 
 theorem get_iterate (f : α → α) (a : α) (n : ℕ) (i : Fin (iterate f a n).length) :
     get (iterate f a n) i = f^[↑i] a := by
