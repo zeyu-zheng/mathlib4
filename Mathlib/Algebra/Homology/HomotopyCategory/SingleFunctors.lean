@@ -28,6 +28,7 @@ namespace CochainComplex
 
 open HomologicalComplex
 
+#adaptation_note /-- Slowdown since nightly-2024-06-12 -/
 set_option maxHeartbeats 400000 in
 /-- The collection of all single functors `C ⥤ CochainComplex C ℤ` along with
 their compatibilites with shifts. (This definition has purposely no `simps`
@@ -49,10 +50,14 @@ noncomputable def singleFunctors : SingleFunctors C (CochainComplex C ℤ) ℤ w
       simp [single])
   shiftIso_zero a := by
     ext
-    simp [single, shiftFunctorZero_eq, XIsoOfEq]
+    dsimp
+    simp only [single, shiftFunctorZero_eq, shiftFunctorZero'_hom_app_f,
+      XIsoOfEq, eqToIso.hom]
   shiftIso_add n m a a' a'' ha' ha'' := by
     ext
-    simp [shiftFunctorAdd_eq, XIsoOfEq]
+    dsimp
+    simp only [shiftFunctorAdd_eq, shiftFunctorAdd'_hom_app_f, XIsoOfEq,
+      eqToIso.hom, eqToHom_trans, id_comp]
 
 instance (n : ℤ) : ((singleFunctors C).functor n).Additive := by
   dsimp only [singleFunctors]
