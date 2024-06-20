@@ -95,20 +95,19 @@ theorem toFinsupp_singleton (x : M) [DecidablePred (getD [x] · 0 ≠ 0)] :
   ext ⟨_ | i⟩ <;> simp [Finsupp.single_apply, (Nat.zero_lt_succ _).ne]
 #align list.to_finsupp_singleton List.toFinsupp_singleton
 
-@[deprecated "This lemma is unused, and cna be proved by `simp`." (since := "2024-06-12")]
+@[deprecated "This lemma is unused, and can be proved by `simp`." (since := "2024-06-12")]
 theorem toFinsupp_cons_apply_zero (x : M) (xs : List M)
     [DecidablePred (getD (x::xs) · 0 ≠ 0)] : (x::xs).toFinsupp 0 = x :=
   rfl
 #align list.to_finsupp_cons_apply_zero List.toFinsupp_cons_apply_zero
 
-@[deprecated "This lemma is unused, and cna be proved by `simp`." (since := "2024-06-12")]
+@[deprecated "This lemma is unused, and can be proved by `simp`." (since := "2024-06-12")]
 theorem toFinsupp_cons_apply_succ (x : M) (xs : List M) (n : ℕ)
     [DecidablePred (getD (x::xs) · 0 ≠ 0)] [DecidablePred (getD xs · 0 ≠ 0)] :
     (x::xs).toFinsupp n.succ = xs.toFinsupp n :=
   rfl
 #align list.to_finsupp_cons_apply_succ List.toFinsupp_cons_apply_succ
 
--- Porting note (#10756): new theorem
 theorem toFinsupp_append {R : Type*} [AddZeroClass R] (l₁ l₂ : List R)
     [DecidablePred (getD (l₁ ++ l₂) · 0 ≠ 0)] [DecidablePred (getD l₁ · 0 ≠ 0)]
     [DecidablePred (getD l₂ · 0 ≠ 0)] :

@@ -408,13 +408,11 @@ theorem append_left_injective (t : List α) : Injective fun s ↦ s ++ t :=
 
 /-! ### replicate -/
 
-@[simp] lemma replicate_zero (a : α) : replicate 0 a = [] := rfl
 #align list.replicate_zero List.replicate_zero
 
 attribute [simp] replicate_succ
 #align list.replicate_succ List.replicate_succ
 
-lemma replicate_one (a : α) : replicate 1 a = [a] := rfl
 #align list.replicate_one List.replicate_one
 
 #align list.length_replicate List.length_replicate
@@ -431,7 +429,7 @@ theorem eq_replicate_length {a : α} : ∀ {l : List α}, l = replicate l.length
 #align list.eq_replicate List.eq_replicate
 
 theorem replicate_add (m n) (a : α) : replicate (m + n) a = replicate m a ++ replicate n a := by
-  induction m <;> simp [*, succ_add, replicate]
+  rw [append_replicate_replicate]
 #align list.replicate_add List.replicate_add
 
 theorem replicate_succ' (n) (a : α) : replicate (n + 1) a = replicate n a ++ [a] :=
@@ -446,17 +444,12 @@ theorem subset_singleton_iff {a : α} {L : List α} : L ⊆ [a] ↔ ∃ n, L = r
   simp only [eq_replicate, subset_def, mem_singleton, exists_eq_left']
 #align list.subset_singleton_iff List.subset_singleton_iff
 
-@[simp] theorem map_replicate (f : α → β) (n) (a : α) :
-    map f (replicate n a) = replicate n (f a) := by
-  induction n <;> [rfl; simp only [*, replicate, map]]
 #align list.map_replicate List.map_replicate
 
 @[simp] theorem tail_replicate (a : α) (n) :
     tail (replicate n a) = replicate (n - 1) a := by cases n <;> rfl
 #align list.tail_replicate List.tail_replicate
 
-@[simp] theorem join_replicate_nil (n : ℕ) : join (replicate n []) = @nil α := by
-  induction n <;> [rfl; simp only [*, replicate, join, append_nil]]
 #align list.join_replicate_nil List.join_replicate_nil
 
 theorem replicate_right_injective {n : ℕ} (hn : n ≠ 0) : Injective (@replicate α n) :=
@@ -468,7 +461,7 @@ theorem replicate_right_inj {a b : α} {n : ℕ} (hn : n ≠ 0) :
   (replicate_right_injective hn).eq_iff
 #align list.replicate_right_inj List.replicate_right_inj
 
-@[simp] theorem replicate_right_inj' {a b : α} : ∀ {n},
+theorem replicate_right_inj' {a b : α} : ∀ {n},
     replicate n a = replicate n b ↔ n = 0 ∨ a = b
   | 0 => by simp
   | n + 1 => (replicate_right_inj n.succ_ne_zero).trans <| by simp only [n.succ_ne_zero, false_or]
@@ -478,7 +471,7 @@ theorem replicate_left_injective (a : α) : Injective (replicate · a) :=
   LeftInverse.injective (length_replicate · a)
 #align list.replicate_left_injective List.replicate_left_injective
 
-@[simp] theorem replicate_left_inj {a : α} {n m : ℕ} : replicate n a = replicate m a ↔ n = m :=
+theorem replicate_left_inj {a : α} {n m : ℕ} : replicate n a = replicate m a ↔ n = m :=
   (replicate_left_injective a).eq_iff
 #align list.replicate_left_inj List.replicate_left_inj
 
@@ -592,10 +585,6 @@ theorem map_reverseAux (f : α → β) (l₁ l₂ : List α) :
 
 #align list.mem_reverse List.mem_reverse
 
-@[simp] theorem reverse_replicate (n) (a : α) : reverse (replicate n a) = replicate n a :=
-  eq_replicate.2
-    ⟨by rw [length_reverse, length_replicate],
-     fun b h => eq_of_mem_replicate (mem_reverse.1 h)⟩
 #align list.reverse_replicate List.reverse_replicate
 
 /-! ### empty -/
@@ -671,6 +660,22 @@ theorem getLast_replicate_succ (m : ℕ) (a : α) :
   exact getLast_append_singleton _
 #align list.last_replicate_succ List.getLast_replicate_succ
 
+/-- If the last element of `l` does not satisfy `p`, then it is also the last element of
+`l.filter p`. -/
+lemma getLast_filter {p : α → Bool} :
+    ∀ (l : List α) (hlp : l.filter p ≠ []), p (l.getLast (hlp <| ·.symm ▸ rfl)) = true →
+      (l.filter p).getLast hlp = l.getLast (hlp <| ·.symm ▸ rfl)
+  | [a], h, h' => by rw [List.getLast_singleton'] at h'; simp [List.filter_cons, h']
+  | a :: b :: as, h, h' => by
+    rw [List.getLast_cons_cons] at h' ⊢
+    simp only [List.filter_cons (x := a)] at h ⊢
+    obtain ha | ha := Bool.eq_false_or_eq_true (p a)
+    · simp only [ha, ite_true]
+      rw [getLast_cons, getLast_filter (b :: as) _ h']
+      exact ne_nil_of_mem <| mem_filter.2 ⟨getLast_mem _, h'⟩
+    · simp only [ha, cond_false] at h ⊢
+      exact getLast_filter (b :: as) h h'
+
 /-! ### getLast? -/
 
 -- Porting note: Moved earlier in file, for use in subsequent lemmas.
@@ -679,11 +684,13 @@ theorem getLast?_cons_cons (a b : α) (l : List α) :
     getLast? (a :: b :: l) = getLast? (b :: l) := rfl
 
 @[simp]
-theorem getLast?_isNone : ∀ {l : List α}, (getLast? l).isNone ↔ l = []
+theorem getLast?_eq_none : ∀ {l : List α}, getLast? l = none ↔ l = []
   | [] => by simp
   | [a] => by simp
-  | a :: b :: l => by simp [@getLast?_isNone (b :: l)]
-#align list.last'_is_none List.getLast?_isNone
+  | a :: b :: l => by simp [@getLast?_eq_none (b :: l)]
+#align list.last'_is_none List.getLast?_eq_none
+
+@[deprecated (since := "2024-06-20")] alias getLast?_isNone := getLast?_eq_none
 
 @[simp]
 theorem getLast?_isSome : ∀ {l : List α}, l.getLast?.isSome ↔ l ≠ []
@@ -1041,6 +1048,15 @@ theorem Sublist.cons_cons {l₁ l₂ : List α} (a : α) (s : l₁ <+ l₂) : a 
   Sublist.cons₂ _ s
 #align list.sublist.cons_cons List.Sublist.cons_cons
 
+lemma cons_sublist_cons' {a b : α} : a :: l₁ <+ b :: l₂ ↔ a :: l₁ <+ l₂ ∨ a = b ∧ l₁ <+ l₂ := by
+  constructor
+  · rintro (_ | _)
+    · exact Or.inl ‹_›
+    · exact Or.inr ⟨rfl, ‹_›⟩
+  · rintro (h | ⟨rfl, h⟩)
+    · exact h.cons _
+    · rwa [cons_sublist_cons]
+
 #align list.sublist_append_left List.sublist_append_left
 #align list.sublist_append_right List.sublist_append_right
 
@@ -1333,7 +1349,7 @@ theorem ext_get?' {l₁ l₂ : List α} (h' : ∀ n < max l₁.length l₂.lengt
   intro n
   rcases Nat.lt_or_ge n <| max l₁.length l₂.length with hn | hn
   · exact h' n hn
-  · simp_all [Nat.max_le, getElem?_eq_none.mpr]
+  · simp_all [Nat.max_le, getElem?_eq_none]
 
 theorem ext_get?_iff {l₁ l₂ : List α} : l₁ = l₂ ↔ ∀ n, l₁.get? n = l₂.get? n :=
   ⟨by rintro rfl _; rfl, ext_get?⟩
@@ -2888,12 +2904,12 @@ theorem Sublist.map (f : α → β) {l₁ l₂ : List α} (s : l₁ <+ l₂) : m
 
 theorem filterMap_eq_bind_toList (f : α → Option β) (l : List α) :
     l.filterMap f = l.bind fun a ↦ (f a).toList := by
-  induction' l with a l ih <;> simp
+  induction' l with a l ih <;> simp [filterMap_cons]
   rcases f a <;> simp [ih]
 
 theorem filterMap_congr {f g : α → Option β} {l : List α}
     (h : ∀ x ∈ l, f x = g x) : l.filterMap f = l.filterMap g := by
-  induction' l with a l ih <;> simp
+  induction' l with a l ih <;> simp [filterMap_cons]
   simp [ih (fun x hx ↦ h x (List.mem_cons_of_mem a hx))]
   cases' hfa : f a with b
   · have : g a = none := Eq.symm (by simpa [hfa] using h a (by simp))
@@ -2906,7 +2922,7 @@ theorem filterMap_eq_map_iff_forall_eq_some {f : α → Option β} {g : α → �
   mp := by
     induction' l with a l ih
     · simp
-    cases' ha : f a with b <;> simp [ha]
+    cases' ha : f a with b <;> simp [ha, filterMap_cons]
     · intro h
       simpa [show (filterMap f l).length = l.length + 1 from by simp[h], Nat.add_one_le_iff]
         using List.length_filterMap_le f l
@@ -3063,12 +3079,6 @@ theorem dropWhile_eq_nil_iff : dropWhile p l = [] ↔ ∀ x ∈ l, p x := by
   · simp [dropWhile]
   · by_cases hp : p x <;> simp [hp, dropWhile, IH]
 #align list.drop_while_eq_nil_iff List.dropWhile_eq_nil_iff
-
-theorem takeWhile_cons {x : α} :
-    List.takeWhile p (x :: l) = (match p x with
-      | true  => x :: takeWhile p l
-      | false => []) :=
-  rfl
 
 theorem takeWhile_cons_of_pos {x : α} (h : p x) :
     List.takeWhile p (x :: l) = x :: takeWhile p l := by

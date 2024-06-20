@@ -492,7 +492,7 @@ theorem comp_summable_nnreal (q : FormalMultilinearSeries 𝕜 F G) (p : FormalM
           (‖q c.length‖₊ * ∏ i, ‖p (c.blocksFun i)‖₊) * r ^ n :=
         mul_le_mul' (q.compAlongComposition_nnnorm p c) le_rfl
       _ = ‖q c.length‖₊ * rq ^ n * ((∏ i, ‖p (c.blocksFun i)‖₊) * rp ^ n) * r0 ^ n := by
-        simp only [mul_pow]; ring
+        ring
       _ ≤ Cq * Cp ^ n * r0 ^ n := mul_le_mul' (mul_le_mul' A B) le_rfl
       _ = Cq / 4 ^ n := by
         simp only [r0]
@@ -855,6 +855,12 @@ theorem AnalyticAt.comp {g : F → G} {f : E → F} {x : E} (hg : AnalyticAt �
   let ⟨_p, hp⟩ := hf
   (hq.comp hp).analyticAt
 #align analytic_at.comp AnalyticAt.comp
+
+/-- Version of `AnalyticAt.comp` where point equality is a separate hypothesis. -/
+theorem AnalyticAt.comp_of_eq {g : F → G} {f : E → F} {y : F} {x : E} (hg : AnalyticAt 𝕜 g y)
+    (hf : AnalyticAt 𝕜 f x) (hy : f x = y) : AnalyticAt 𝕜 (g ∘ f) x := by
+  rw [← hy] at hg
+  exact hg.comp hf
 
 /-- If two functions `g` and `f` are analytic respectively on `s.image f` and `s`, then `g ∘ f` is
 analytic on `s`. -/
