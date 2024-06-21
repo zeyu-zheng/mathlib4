@@ -165,9 +165,7 @@ noncomputable def partialFunEquivPointed : PartialFun.{u} ≌ Pointed :=
         classical
         simp [Option.casesOn'_eq_elim,
           @Part.elim_toOption _ _ _ (Classical.propDecidable _), ha]
-        split_ifs with h
-        · simpa [eq_comm] using h
-        · simp
+        tauto
 #align PartialFun_equiv_Pointed partialFunEquivPointed
 
 /-- Forgetting that maps are total and making them total again by adding a point is the same as just
