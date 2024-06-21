@@ -163,7 +163,7 @@ noncomputable def partialFunEquivPointed : PartialFun.{u} ≌ Pointed :=
         obtain _ | ⟨a, ha⟩ := a
         · exact f.map_point.symm
         classical
-        simp [Option.casesOn'_eq_elim, -Option.elim,
+        simp [Option.casesOn'_eq_elim,
           @Part.elim_toOption _ _ _ (Classical.propDecidable _), ha]
         split_ifs with h
         · simpa [eq_comm] using h
