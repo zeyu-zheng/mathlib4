@@ -115,7 +115,7 @@ theorem left_le_pair (a b : ℕ) : a ≤ pair a b := by simpa using unpair_left_
 #align nat.left_le_mkpair Nat.left_le_pair
 
 theorem right_le_pair (a b : ℕ) : b ≤ pair a b := by
-  by_cases h : a < b <;> simp [pair, h]
+  by_cases h : a < b <;> simp only [pair, h, ↓reduceIte, le_add_left]
   exact le_trans (le_mul_self _) (Nat.le_add_right _ _)
 #align nat.right_le_mkpair Nat.right_le_pair
 
