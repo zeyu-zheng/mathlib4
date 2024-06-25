@@ -36,6 +36,11 @@ export UsableInSimplexAlgorithm (setElem getValues ofValues swapRows subtractRow
 instance (n m : Nat) (matType : Nat → Nat → Type) [UsableInSimplexAlgorithm matType] :
     GetElem (matType n m) (Nat × Nat) Rat fun _ p => p.1 < n ∧ p.2 < m where
   getElem mat p _ := UsableInSimplexAlgorithm.getElem mat p.1 p.2
+  getElem? mat p := if p.1 < n ∧ p.2 < m then
+      some (UsableInSimplexAlgorithm.getElem mat p.1 p.2)
+    else
+      none
+  getElem! mat p := UsableInSimplexAlgorithm.getElem mat p.1 p.2
 
 /--
 Structure for matrices over ℚ.

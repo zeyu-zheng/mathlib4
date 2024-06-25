@@ -24,7 +24,7 @@ require «doc-gen4» from git "https://github.com/leanprover/doc-gen4" @ "main"
 require batteries from git "https://github.com/leanprover-community/batteries" @ "lean-pr-testing-4560"
 require Qq from git "https://github.com/leanprover-community/quote4" @ "nightly-testing"
 require aesop from git "https://github.com/leanprover-community/aesop" @ "nightly-testing"
-require proofwidgets from git "https://github.com/leanprover-community/ProofWidgets4" @ "v0.0.36"
+require proofwidgets from git "https://github.com/leanprover-community/ProofWidgets4" @ "v0.0.38-pre4560"
 require importGraph from git "https://github.com/leanprover-community/import-graph.git" @ "nightly-testing"
 
 /-!
