@@ -278,6 +278,8 @@ theorem toList_take {n m : ℕ} (v : Vector α m) : toList (take n v) = List.tak
 #align vector.to_list_take Vector.toList_take
 
 instance : GetElem (Vector α n) Nat α fun _ i => i < n where
-  getElem := fun x i h => get x ⟨i, h⟩
+  getElem x i h := get x ⟨i, h⟩
+  getElem? x i := if h : i < n then some (get x ⟨i, h⟩) else none
+  getElem! x i := if h : i < n then get x ⟨i, h⟩ else outOfBounds
 
 end Vector
