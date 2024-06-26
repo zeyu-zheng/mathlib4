@@ -765,7 +765,7 @@ theorem length_toList (s : Multiset α) : s.toList.length = card s := by
   rw [← coe_card, coe_toList]
 #align multiset.length_to_list Multiset.length_toList
 
-@[simp, nolint simpNF] -- Porting note (#10675): `dsimp` can not prove this, yet linter complains
+@[simp] -- Porting note (#10675): `dsimp` can not prove this, yet linter complains
 theorem card_zero : @card α 0 = 0 :=
   rfl
 #align multiset.card_zero Multiset.card_zero
@@ -1043,7 +1043,7 @@ theorem coe_erase (l : List α) (a : α) : erase (l : Multiset α) a = l.erase a
   rfl
 #align multiset.coe_erase Multiset.coe_erase
 
-@[simp, nolint simpNF] -- Porting note (#10675): `dsimp` can not prove this, yet linter complains
+@[simp] -- Porting note (#10675): `dsimp` can not prove this, yet linter complains
 theorem erase_zero (a : α) : (0 : Multiset α).erase a = 0 :=
   rfl
 #align multiset.erase_zero Multiset.erase_zero
@@ -1193,7 +1193,7 @@ theorem map_congr {f g : α → β} {s t : Multiset α} :
     s = t → (∀ x ∈ t, f x = g x) → map f s = map g t := by
   rintro rfl h
   induction s using Quot.inductionOn
-  exact congr_arg _ (List.map_congr h)
+  exact congr_arg _ (List.map_congr_left h)
 #align multiset.map_congr Multiset.map_congr
 
 theorem map_hcongr {β' : Type v} {m : Multiset α} {f : α → β} {f' : α → β'} (h : β = β')
@@ -1978,6 +1978,11 @@ theorem filter_zero : filter p 0 = 0 :=
   rfl
 #align multiset.filter_zero Multiset.filter_zero
 
+#adaptation_note
+/--
+Please re-enable the linter once we moved to `nightly-2024-06-22` or later.
+-/
+set_option linter.deprecated false in
 theorem filter_congr {p q : α → Prop} [DecidablePred p] [DecidablePred q] {s : Multiset α} :
     (∀ x ∈ s, p x ↔ q x) → filter p s = filter q s :=
   Quot.inductionOn s fun _l h => congr_arg ofList <| filter_congr' <| by simpa using h
@@ -2435,7 +2440,7 @@ theorem coe_count (a : α) (l : List α) : count a (ofList l) = l.count a := by
   rfl
 #align multiset.coe_count Multiset.coe_count
 
-@[simp, nolint simpNF] -- Porting note (#10618): simp can prove this at EOF, but not right now
+@[simp] -- Porting note (#10618): simp can prove this at EOF, but not right now
 theorem count_zero (a : α) : count a 0 = 0 :=
   rfl
 #align multiset.count_zero Multiset.count_zero
