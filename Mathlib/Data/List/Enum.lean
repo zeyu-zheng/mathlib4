@@ -135,7 +135,7 @@ theorem enumFrom_append (xs ys : List α) (n : ℕ) :
   induction' xs with x xs IH generalizing ys n
   · simp
   · rw [cons_append, enumFrom_cons, IH, ← cons_append, ← enumFrom_cons, length, Nat.add_right_comm,
-      Nat.add_assoc]
+      ← Nat.add_assoc']
 #align list.enum_from_append List.enumFrom_append
 
 theorem enum_append (xs ys : List α) : enum (xs ++ ys) = enum xs ++ enumFrom xs.length ys := by

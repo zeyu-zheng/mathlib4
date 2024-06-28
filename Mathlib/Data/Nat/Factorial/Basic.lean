@@ -88,7 +88,7 @@ theorem factorial_le {m n} (h : m ≤ n) : m ! ≤ n ! :=
 theorem factorial_mul_pow_le_factorial : ∀ {m n : ℕ}, m ! * (m + 1) ^ n ≤ (m + n)!
   | m, 0 => by simp
   | m, n + 1 => by
-    rw [← Nat.add_assoc, factorial_succ, Nat.mul_comm (_ + 1), Nat.pow_succ, ← Nat.mul_assoc]
+    rw [Nat.add_assoc', factorial_succ, Nat.mul_comm (_ + 1), Nat.pow_succ, ← Nat.mul_assoc]
     exact Nat.mul_le_mul factorial_mul_pow_le_factorial (succ_le_succ (le_add_right _ _))
 #align nat.factorial_mul_pow_le_factorial Nat.factorial_mul_pow_le_factorial
 
@@ -166,14 +166,14 @@ theorem add_factorial_lt_factorial_add {i n : ℕ} (hi : 2 ≤ i) (hn : 1 ≤ n)
 theorem add_factorial_succ_le_factorial_add_succ (i : ℕ) (n : ℕ) :
     i + (n + 1)! ≤ (i + (n + 1))! := by
   cases (le_or_lt (2 : ℕ) i)
-  · rw [← Nat.add_assoc]
+  · rw [Nat.add_assoc']
     apply Nat.le_of_lt
     apply add_factorial_succ_lt_factorial_add_succ
     assumption
   · match i with
     | 0 => simp
     | 1 =>
-      rw [← Nat.add_assoc, factorial_succ (1 + n), Nat.add_mul, Nat.one_mul, Nat.add_comm 1 n,
+      rw [Nat.add_assoc', factorial_succ (1 + n), Nat.add_mul, Nat.one_mul, Nat.add_comm 1 n,
         Nat.add_le_add_iff_right]
       exact Nat.mul_pos n.succ_pos n.succ.factorial_pos
     | succ (succ n) => contradiction
@@ -238,7 +238,7 @@ theorem succ_ascFactorial (n : ℕ) :
     ∀ k, n * n.succ.ascFactorial k = (n + k) * n.ascFactorial k
   | 0 => by rw [Nat.add_zero, ascFactorial_zero, ascFactorial_zero]
   | k + 1 => by rw [ascFactorial, Nat.mul_left_comm, succ_ascFactorial n k, ascFactorial, succ_add,
-    ← Nat.add_assoc]
+    Nat.add_assoc']
 #align nat.succ_asc_factorial Nat.succ_ascFactorial
 
 /-- `(n + 1).ascFactorial k = (n + k) ! / n !` but without ℕ-division. See
@@ -246,7 +246,7 @@ theorem succ_ascFactorial (n : ℕ) :
 theorem factorial_mul_ascFactorial (n : ℕ) : ∀ k, n ! * (n + 1).ascFactorial k = (n + k)!
   | 0 => by rw [ascFactorial_zero, Nat.add_zero, Nat.mul_one]
   | k + 1 => by
-    rw [ascFactorial_succ, ← Nat.add_assoc, factorial_succ, Nat.mul_comm (n + 1 + k),
+    rw [ascFactorial_succ, Nat.add_assoc', factorial_succ, Nat.mul_comm (n + 1 + k),
       ← Nat.mul_assoc, factorial_mul_ascFactorial n k, Nat.mul_comm, Nat.add_right_comm]
 #align nat.factorial_mul_asc_factorial Nat.factorial_mul_ascFactorial
 
@@ -297,7 +297,7 @@ theorem pow_lt_ascFactorial (n : ℕ) : ∀ {k : ℕ}, 2 ≤ k → (n + 1) ^ k <
 theorem ascFactorial_le_pow_add (n : ℕ) : ∀ k : ℕ, (n+1).ascFactorial k ≤ (n + k) ^ k
   | 0 => by rw [ascFactorial_zero, Nat.pow_zero]
   | k + 1 => by
-    rw [ascFactorial_succ, Nat.pow_succ, Nat.mul_comm, ← Nat.add_assoc, Nat.add_right_comm n 1 k]
+    rw [ascFactorial_succ, Nat.pow_succ, Nat.mul_comm, Nat.add_assoc', Nat.add_right_comm n 1 k]
     exact Nat.mul_le_mul_right _
       (Nat.le_trans (ascFactorial_le_pow_add _ k) (Nat.pow_le_pow_left (le_succ _) _))
 #align nat.asc_factorial_le_pow_add Nat.ascFactorial_le_pow_add

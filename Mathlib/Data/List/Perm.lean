@@ -641,7 +641,7 @@ theorem length_permutationsAux :
   rw [permutationsAux_cons,
     length_foldr_permutationsAux2' _ _ _ _ _ fun l m => (perm_of_mem_permutations m).length_eq,
     permutations, length, length, IH2, Nat.succ_add, Nat.factorial_succ, Nat.mul_comm (_ + 1),
-    ← Nat.succ_eq_add_one, ← IH1, Nat.add_comm (_ * _), Nat.add_assoc, Nat.mul_succ, Nat.mul_comm]
+    ← Nat.succ_eq_add_one, ← IH1, Nat.add_comm (_ * _), ← Nat.add_assoc', Nat.mul_succ, Nat.mul_comm]
 #align list.length_permutations_aux List.length_permutationsAux
 
 theorem length_permutations (l : List α) : length (permutations l) = (length l)! :=
@@ -860,7 +860,7 @@ theorem nodup_permutations'Aux_iff {s : List α} {x : α} : Nodup (permutations'
       erw [length_insertNth _ _ hk.le, Nat.succ_lt_succ_iff, Nat.succ_add] at hn
       rw [nthLe_insertNth_add_succ]
       · convert nthLe_insertNth_add_succ s x k m.succ (by simpa using hn) using 2
-        · simp [Nat.add_assoc, Nat.add_left_comm]
+        · simp [← Nat.add_assoc', Nat.add_left_comm]
         · simp [Nat.add_left_comm, Nat.add_comm]
       · simpa [Nat.succ_add] using hn
 #align list.nodup_permutations'_aux_iff List.nodup_permutations'Aux_iff

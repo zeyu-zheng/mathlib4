@@ -311,7 +311,7 @@ lemma add_pos_iff_pos_or_pos : 0 < m + n ↔ 0 < m ∨ 0 < n := by omega
 #align nat.add_pos_iff_pos_or_pos Nat.add_pos_iff_pos_or_pos
 
 lemma add_eq_one_iff : m + n = 1 ↔ m = 0 ∧ n = 1 ∨ m = 1 ∧ n = 0 := by
-  cases n <;> simp [succ_eq_add_one, ← Nat.add_assoc, succ_inj']
+  cases n <;> simp [succ_eq_add_one, Nat.add_assoc', succ_inj']
 #align nat.add_eq_one_iff Nat.add_eq_one_iff
 
 lemma add_eq_two_iff : m + n = 2 ↔ m = 0 ∧ n = 2 ∨ m = 1 ∧ n = 1 ∨ m = 2 ∧ n = 0 := by
@@ -334,7 +334,7 @@ lemma le_and_le_add_one_iff : n ≤ m ∧ m ≤ n + 1 ↔ m = n ∨ m = n + 1 :=
 #align nat.le_and_le_add_one_iff Nat.le_and_le_add_one_iff
 
 lemma add_succ_lt_add (hab : a < b) (hcd : c < d) : a + c + 1 < b + d := by
-  rw [Nat.add_assoc]; exact Nat.add_lt_add_of_lt_of_le hab (Nat.succ_le_iff.2 hcd)
+  rw [← Nat.add_assoc']; exact Nat.add_lt_add_of_lt_of_le hab (Nat.succ_le_iff.2 hcd)
 #align nat.add_succ_lt_add Nat.add_succ_lt_add
 
 theorem le_or_le_of_add_eq_add_pred (h : a + c = b + d - 1) : b ≤ a ∨ d ≤ c := by
@@ -1371,14 +1371,14 @@ lemma succ_div : ∀ a b : ℕ, (a + 1) / b = a / b + if b ∣ a + 1 then 1 else
       have h₂ : 0 < b + 1 ∧ b + 1 ≤ a + 1 := ⟨succ_pos _, Nat.add_le_add_iff_right.2 hb_le_a⟩
       have dvd_iff : b + 1 ∣ a - b + 1 ↔ b + 1 ∣ a + 1 + 1 := by
         rw [Nat.dvd_add_iff_left (Nat.dvd_refl (b + 1)), ← Nat.add_sub_add_right a 1 b,
-          Nat.add_comm (_ - _), Nat.add_assoc, Nat.sub_add_cancel (succ_le_succ hb_le_a),
+          Nat.add_comm (_ - _), ← Nat.add_assoc', Nat.sub_add_cancel (succ_le_succ hb_le_a),
           Nat.add_comm 1]
       have wf : a - b < a + 1 := lt_succ_of_le (Nat.sub_le _ _)
       rw [if_pos h₁, if_pos h₂, Nat.add_sub_add_right, Nat.add_sub_add_right, Nat.add_comm a,
         Nat.add_sub_assoc hb_le_a, Nat.add_comm 1,
         have := wf
         succ_div (a - b)]
-      simp [dvd_iff, succ_eq_add_one, Nat.add_comm 1, Nat.add_assoc]
+      simp [dvd_iff, succ_eq_add_one, Nat.add_comm 1, ← Nat.add_assoc']
     · have hba : ¬b ≤ a := not_le_of_gt (lt_trans (lt_succ_self a) (lt_of_not_ge hb_le_a1))
       have hb_dvd_a : ¬b + 1 ∣ a + 2 := fun h =>
         hb_le_a1 (le_of_succ_le_succ (le_of_dvd (succ_pos _) h))
@@ -1510,7 +1510,7 @@ private lemma AM_GM : {a b : ℕ} → (4 * a * b ≤ (a + b) * (a + b))
   | _, 0 => by rw [Nat.mul_zero]; exact zero_le _
   | a + 1, b + 1 => by
     simpa only [Nat.mul_add, Nat.add_mul, show (4 : ℕ) = 1 + 1 + 1 + 1 from rfl, Nat.one_mul,
-      Nat.mul_one, Nat.add_assoc, Nat.add_left_comm, Nat.add_le_add_iff_left]
+      Nat.mul_one, ← Nat.add_assoc', Nat.add_left_comm, Nat.add_le_add_iff_left]
       using Nat.add_le_add_right (@AM_GM a b) 4
 
 -- These two lemmas seem like they belong to `Batteries.Data.Nat.Basic`.
@@ -1546,7 +1546,7 @@ lemma sqrt.lt_iter_succ_sq (n guess : ℕ) (hn : n < (guess + 1) * (guess + 1)) 
       show guess + n / guess + 2 = (guess + n / guess + 1) + 1 from rfl]
     have aux_lemma {a : ℕ} : a ≤ 2 * ((a + 1) / 2) := by omega
     refine lt_of_lt_of_le ?_ (Nat.mul_le_mul_left _ aux_lemma)
-    rw [Nat.add_assoc, Nat.mul_add]
+    rw [← Nat.add_assoc', Nat.mul_add]
     exact Nat.add_lt_add_left (lt_mul_div_succ _ (lt_of_le_of_lt (Nat.zero_le m) h)) _
   · simpa only [dif_neg h] using hn
 
@@ -1578,8 +1578,8 @@ private lemma sqrt_isSqrt (n : ℕ) : IsSqrt n (sqrt n) := by
     have h : ¬ (n + 2) ≤ 1 := by simp
     simp only [IsSqrt, sqrt, h, ite_false]
     refine ⟨sqrt.iter_sq_le _ _, sqrt.lt_iter_succ_sq _ _ ?_⟩
-    simp only [Nat.mul_add, Nat.add_mul, Nat.one_mul, Nat.mul_one, ← Nat.add_assoc]
-    rw [Nat.lt_add_one_iff, Nat.add_assoc, ← Nat.mul_two]
+    simp only [Nat.mul_add, Nat.add_mul, Nat.one_mul, Nat.mul_one, Nat.add_assoc']
+    rw [Nat.lt_add_one_iff, ← Nat.add_assoc', ← Nat.mul_two]
     refine le_trans (Nat.le_of_eq (div_add_mod' (n + 2) 2).symm) ?_
     rw [Nat.add_comm, Nat.add_le_add_iff_right, add_mod_right]
     simp only [Nat.zero_lt_two, add_div_right, succ_mul_succ]
@@ -1660,7 +1660,7 @@ lemma sqrt_add_eq (n : ℕ) (h : a ≤ n + n) : sqrt (n * n + a) = n :=
   le_antisymm
     (le_of_lt_succ <|
       sqrt_lt.2 <| by
-        rw [succ_mul, mul_succ, add_succ, Nat.add_assoc];
+        rw [succ_mul, mul_succ, add_succ, ← Nat.add_assoc'];
           exact lt_succ_of_le (Nat.add_le_add_left h _))
     (le_sqrt.2 <| Nat.le_add_right _ _)
 #align nat.sqrt_add_eq Nat.sqrt_add_eq

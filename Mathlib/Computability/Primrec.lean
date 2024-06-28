@@ -130,7 +130,7 @@ theorem pred : Nat.Primrec pred :=
 
 theorem add : Nat.Primrec (unpaired (· + ·)) :=
   (prec .id ((Primrec.succ.comp right).comp right)).of_eq fun p => by
-    simp; induction p.unpair.2 <;> simp [*, Nat.add_assoc]
+    simp; induction p.unpair.2 <;> simp [*, ← Nat.add_assoc']
 #align nat.primrec.add Nat.Primrec.add
 
 theorem sub : Nat.Primrec (unpaired (· - ·)) :=

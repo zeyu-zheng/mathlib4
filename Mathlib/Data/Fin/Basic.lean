@@ -1781,7 +1781,7 @@ theorem modNat_rev (i : Fin (m * n)) : i.rev.modNat = i.modNat.rev := by
     (m * n - (i + 1)) % n = (m * n - ((i / n) * n + i % n + 1)) % n := by rw [Nat.div_add_mod']
     _ = ((m - i / n - 1) * n + (n - (i % n + 1))) % n := by
       rw [Nat.mul_sub_right_distrib, Nat.one_mul, Nat.sub_add_sub_cancel _ H₁,
-        Nat.mul_sub_right_distrib, Nat.sub_sub, Nat.add_assoc]
+        Nat.mul_sub_right_distrib, Nat.sub_sub, ← Nat.add_assoc']
       exact Nat.le_mul_of_pos_left _ <| Nat.le_sub_of_add_le' H₂
     _ = n - (i % n + 1) := by
       rw [Nat.mul_comm, Nat.mul_add_mod, Nat.mod_eq_of_lt]; exact i.modNat.rev.is_lt

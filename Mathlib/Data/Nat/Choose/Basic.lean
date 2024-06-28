@@ -137,7 +137,7 @@ theorem choose_mul_factorial_mul_factorial : ∀ {n k}, k ≤ n → choose n k *
         simp [factorial_succ, Nat.mul_comm, Nat.mul_left_comm, Nat.mul_assoc]
       have h₃ : k * n ! ≤ n * n ! := Nat.mul_le_mul_right _ (le_of_succ_le_succ hk)
       rw [choose_succ_succ, Nat.add_mul, Nat.add_mul, succ_sub_succ, h, h₁, h₂, Nat.add_mul,
-        Nat.mul_sub_right_distrib, factorial_succ, ← Nat.add_sub_assoc h₃, Nat.add_assoc,
+        Nat.mul_sub_right_distrib, factorial_succ, ← Nat.add_sub_assoc h₃, ← Nat.add_assoc',
         ← Nat.add_mul, Nat.add_sub_cancel_left, Nat.add_comm]
     · rw [hk₁]; simp [hk₁, Nat.mul_comm, choose, Nat.sub_self]
 #align nat.choose_mul_factorial_mul_factorial Nat.choose_mul_factorial_mul_factorial
@@ -206,7 +206,7 @@ theorem choose_symm_add {a b : ℕ} : choose (a + b) a = choose (a + b) b :=
 
 theorem choose_symm_half (m : ℕ) : choose (2 * m + 1) (m + 1) = choose (2 * m + 1) m := by
   apply choose_symm_of_eq_add
-  rw [Nat.add_comm m 1, Nat.add_assoc 1 m m, Nat.add_comm (2 * m) 1, Nat.two_mul m]
+  rw [Nat.add_comm m 1, ← Nat.add_assoc' 1 m m, Nat.add_comm (2 * m) 1, Nat.two_mul m]
 #align nat.choose_symm_half Nat.choose_symm_half
 
 theorem choose_succ_right_eq (n k : ℕ) : choose n (k + 1) * (k + 1) = choose n k * (n - k) := by
@@ -412,7 +412,7 @@ theorem multichoose_eq : ∀ n k : ℕ, multichoose n k = (n + k - 1).choose k
   | n + 1, k + 1 => by
     have : n + (k + 1) < (n + 1) + (k + 1) := Nat.add_lt_add_right (Nat.lt_succ_self _) _
     have : (n + 1) + k < (n + 1) + (k + 1) := Nat.add_lt_add_left (Nat.lt_succ_self _) _
-    erw [multichoose_succ_succ, Nat.add_comm, Nat.succ_add_sub_one, ← Nat.add_assoc,
+    erw [multichoose_succ_succ, Nat.add_comm, Nat.succ_add_sub_one, Nat.add_assoc',
       Nat.choose_succ_succ]
     simp [multichoose_eq n (k+1), multichoose_eq (n+1) k]
   termination_by a b => a + b

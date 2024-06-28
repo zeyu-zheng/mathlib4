@@ -92,7 +92,7 @@ protected theorem oldMapIdxCore_append : ∀ (f : ℕ → α → β) (n : ℕ) (
         apply ih (n + 1) _ _ _
         simp only [cons_append, length_cons, length_append, Nat.succ.injEq] at h
         simp only [length_append, h]
-      rw [Nat.add_assoc]; simp only [Nat.add_comm]
+      rw [← Nat.add_assoc']; simp only [Nat.add_comm]
 
 protected theorem oldMapIdx_append : ∀ (f : ℕ → α → β) (l : List α) (e : α),
     List.oldMapIdx f (l ++ [e]) = List.oldMapIdx f l ++ [f l.length e] := by
@@ -168,7 +168,7 @@ theorem map_enumFrom_eq_zipWith : ∀ (l : List α) (n : ℕ) (f : ℕ → α �
           rw [this]
           rfl
         funext n' a
-        simp only [comp, Nat.add_assoc, Nat.add_comm, Nat.add_succ]
+        simp only [comp, ← Nat.add_assoc', Nat.add_comm, Nat.add_succ]
       simp only [length_cons, Nat.succ.injEq] at e; exact e
 
 theorem mapIdx_eq_enum_map (l : List α) (f : ℕ → α → β) :
@@ -191,7 +191,7 @@ theorem mapIdx_append (K L : List α) (f : ℕ → α → β) :
     (K ++ L).mapIdx f = K.mapIdx f ++ L.mapIdx fun i a ↦ f (i + K.length) a := by
   induction' K with a J IH generalizing f
   · rfl
-  · simp [IH fun i ↦ f (i + 1), Nat.add_assoc, Nat.succ_eq_add_one]
+  · simp [IH fun i ↦ f (i + 1), ← Nat.add_assoc', Nat.succ_eq_add_one]
 #align list.map_with_index_append List.mapIdx_append
 
 @[simp]

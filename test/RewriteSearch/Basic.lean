@@ -33,7 +33,7 @@ example (xs ys : List α) :
   rw_search
 
 /-
-info: Try this: rw [List.length_append, List.length_append, Nat.two_mul, Nat.add_assoc, Nat.add_left_comm, Nat.add_right_comm, Nat.add_assoc]
+info: Try this: rw [List.length_append, List.length_append, Nat.two_mul, ← Nat.add_assoc', Nat.add_left_comm, Nat.add_right_comm, ← Nat.add_assoc']
 -/
 #guard_msgs (drop info) in
 example (xs ys : List α) :

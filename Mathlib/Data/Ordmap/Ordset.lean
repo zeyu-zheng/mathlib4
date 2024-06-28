@@ -1672,7 +1672,7 @@ theorem size_erase_of_mem [@DecidableRel α (· ≤ ·)] {x : α} {t a₁ a₂} 
       have h_pos_t_r_size := pos_size_of_mem h.right.sz h_mem
       revert h_pos_t_r_size; cases' t_r.size with t_r_size <;> intro h_pos_t_r_size
       · cases h_pos_t_r_size
-      · simp [Nat.add_assoc]
+      · simp [← Nat.add_assoc']
 #align ordnode.size_erase_of_mem Ordnode.size_erase_of_mem
 
 end

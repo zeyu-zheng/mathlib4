@@ -702,7 +702,7 @@ lemma pow_three (a : M) : a ^ 3 = a * (a * a) := by rw [pow_succ', pow_two]
 @[to_additive add_nsmul]
 lemma pow_add (a : M) (m : ℕ) : ∀ n, a ^ (m + n) = a ^ m * a ^ n
   | 0 => by rw [Nat.add_zero, pow_zero, mul_one]
-  | n + 1 => by rw [pow_succ, ← mul_assoc, ← pow_add, ← pow_succ, Nat.add_assoc]
+  | n + 1 => by rw [pow_succ, ← mul_assoc, ← pow_add, ← pow_succ, ← Nat.add_assoc']
 #align pow_add pow_add
 
 @[to_additive] lemma pow_mul_comm (a : M) (m n : ℕ) : a ^ m * a ^ n = a ^ n * a ^ m := by

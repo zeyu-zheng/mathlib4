@@ -88,7 +88,7 @@ def height : Tree α → ℕ
 #align tree.height Tree.height
 
 theorem numLeaves_eq_numNodes_succ (x : Tree α) : x.numLeaves = x.numNodes + 1 := by
-  induction x <;> simp [*, Nat.add_comm, Nat.add_assoc, Nat.add_left_comm]
+  induction x <;> simp [*, Nat.add_comm, ← Nat.add_assoc', Nat.add_left_comm]
 #align tree.num_leaves_eq_num_nodes_succ Tree.numLeaves_eq_numNodes_succ
 
 theorem numLeaves_pos (x : Tree α) : 0 < x.numLeaves := by

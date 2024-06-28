@@ -254,7 +254,7 @@ def append (p q : RelSeries r) (connect : r p.last q.head) : RelSeries r where
       convert q.step ⟨i - (p.length + 1), Nat.sub_lt_left_of_lt_add hi <|
         by convert i.2 using 1; abel⟩
       rw [Fin.succ_mk, Nat.sub_eq_iff_eq_add (le_of_lt hi : p.length ≤ i),
-        Nat.add_assoc _ 1, add_comm 1, Nat.sub_add_cancel]
+        ← Nat.add_assoc' _ 1, add_comm 1, Nat.sub_add_cancel]
       exact hi
 
 lemma append_apply_left (p q : RelSeries r) (connect : r p.last q.head)

@@ -75,7 +75,7 @@ lemma bodd_succ (n : ℕ) : bodd (succ n) = not (bodd n) := by
 lemma bodd_add (m n : ℕ) : bodd (m + n) = bxor (bodd m) (bodd n) := by
   induction n
   case zero => simp
-  case succ n ih => simp [← Nat.add_assoc, Bool.xor_not, ih]
+  case succ n ih => simp [Nat.add_assoc', Bool.xor_not, ih]
 #align nat.bodd_add Nat.bodd_add
 
 @[simp]
@@ -116,7 +116,7 @@ lemma div2_succ (n : ℕ) : div2 (succ n) = cond (bodd n) (succ (div2 n)) (div2 
   rcases boddDiv2 n with ⟨_|_, _⟩ <;> simp
 #align nat.div2_succ Nat.div2_succ
 
-attribute [local simp] Nat.add_comm Nat.add_assoc Nat.add_left_comm Nat.mul_comm Nat.mul_assoc
+attribute [local simp] Nat.add_comm ← Nat.add_assoc' Nat.add_left_comm Nat.mul_comm Nat.mul_assoc
 
 lemma bodd_add_div2 : ∀ n, cond (bodd n) 1 0 + 2 * div2 n = n
   | 0 => rfl

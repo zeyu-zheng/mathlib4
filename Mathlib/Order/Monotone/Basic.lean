@@ -630,7 +630,7 @@ lemma StrictMono.add_le_nat {f : ℕ → ℕ} (hf : StrictMono f) (m n : ℕ) : 
   rw [Nat.add_comm m, Nat.add_comm m]
   induction' m with m ih
   · rw [Nat.add_zero, Nat.add_zero]
-  · rw [← Nat.add_assoc, ← Nat.add_assoc, Nat.succ_le]
+  · rw [Nat.add_assoc', Nat.add_assoc', Nat.succ_le]
     exact ih.trans_lt (hf (n + m).lt_succ_self)
 
 protected theorem StrictMono.ite' (hf : StrictMono f) (hg : StrictMono g) {p : α → Prop}
