@@ -130,9 +130,7 @@ theorem toMatrix_injective [DecidableEq n] [MonoidWithZero α] [Nontrivial α] :
     use i
     cases' hf : f i with fi
     · cases' hg : g i with gi
-      -- Porting note: was `cc`
-      · rw [hf, hg] at hi
-        exact (hi rfl).elim
+      · rw [hf, hg] at hi; exact (hi rfl).elim
       · use gi
         simp
     · use fi
@@ -145,13 +143,6 @@ theorem toMatrix_swap [DecidableEq n] [Ring α] (i j : n) :
         (single j i).toMatrix := by
   ext
   dsimp [toMatrix, single, Equiv.swap_apply_def, Equiv.toPEquiv, one_apply]
-  #adaptation_note
-  /--
-  Following https://github.com/leanprover/lean4/pull/4481
-  `dsimp` doesn't not manage to apply `one_apply` in one location, and we need to do it via `rw`.
-  This seems mysterious!
-  -/
-  rw [one_apply]
   split_ifs <;> simp_all
 #align pequiv.to_matrix_swap PEquiv.toMatrix_swap
 
