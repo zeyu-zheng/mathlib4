@@ -170,7 +170,7 @@ theorem num_series' [Field α] (i : ℕ) :
         simp only [Prod.forall, mem_filter, not_and, mem_antidiagonal]
         rintro _ h₁ h₂ ⟨a, rfl⟩ rfl
         apply h
-        simp [← h₂]
+        simp [← h₂, -Nat.add_assoc']
   · simp [zero_pow]
 #align theorems_100.num_series' Theorems100.num_series'
 
