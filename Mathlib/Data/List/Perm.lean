@@ -641,7 +641,8 @@ theorem length_permutationsAux :
   rw [permutationsAux_cons,
     length_foldr_permutationsAux2' _ _ _ _ _ fun l m => (perm_of_mem_permutations m).length_eq,
     permutations, length, length, IH2, Nat.succ_add, Nat.factorial_succ, Nat.mul_comm (_ + 1),
-    ← Nat.succ_eq_add_one, ← IH1, Nat.add_comm (_ * _), ← Nat.add_assoc', Nat.mul_succ, Nat.mul_comm]
+    ← Nat.succ_eq_add_one, ← IH1, Nat.add_comm (_ * _), ← Nat.add_assoc', Nat.mul_succ,
+    Nat.mul_comm]
 #align list.length_permutations_aux List.length_permutationsAux
 
 theorem length_permutations (l : List α) : length (permutations l) = (length l)! :=
