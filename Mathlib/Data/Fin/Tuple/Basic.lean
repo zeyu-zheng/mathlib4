@@ -384,7 +384,7 @@ theorem elim0_append {α : Type*} (v : Fin n → α) :
 #align fin.elim0_append Fin.elim0_append
 
 theorem append_assoc {p : ℕ} {α : Type*} (a : Fin m → α) (b : Fin n → α) (c : Fin p → α) :
-    append (append a b) c = append a (append b c) ∘ Fin.cast (← Nat.add_assoc' ..) := by
+    append (append a b) c = append a (append b c) ∘ Fin.cast (Nat.add_assoc' ..).symm := by
   ext i
   rw [Function.comp_apply]
   refine Fin.addCases (fun l => ?_) (fun r => ?_) i

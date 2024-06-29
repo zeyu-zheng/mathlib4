@@ -424,7 +424,7 @@ theorem Sized.rotateL_size {l x r} (hm : Sized r) :
     size (@Ordnode.rotateL α l x r) = size l + size r + 1 := by
   cases r <;> simp [Ordnode.rotateL]
   simp only [hm.1]
-  split_ifs <;> simp [node3L_size, node4L_size hm.2.1] <;> abel
+  split_ifs <;> simp [node3L_size, node4L_size hm.2.1]
 #align ordnode.sized.rotate_l_size Ordnode.Sized.rotateL_size
 
 theorem Sized.rotateR_size {l x r} (hl : Sized l) :
@@ -725,7 +725,7 @@ theorem balance_eq_balance' {l x r} (hl : Balanced l) (hr : Balanced r) (sl : Si
         all_goals dsimp only [size]; decide
       · symm; rw [if_neg, if_pos, rotateR]
         · dsimp only [size_node]; split_ifs
-          · simp [node3R, node']; abel
+          · simp [node3R, node']
           · simp [node4R, node', sl.2.2.1]; abel
         · apply Nat.zero_lt_succ
         · exact not_le_of_gt (Nat.succ_lt_succ (add_pos sl.2.1.pos sl.2.2.pos))

@@ -427,7 +427,7 @@ theorem isRotated_next_eq {l l' : List α} (h : l ~r l') (hn : Nodup l) {x : α}
   rw [next_get _ hn]
   simp_rw [get_eq_get_rotate _ n k]
   rw [next_get _ (h.nodup_iff.mp hn), get_eq_get_rotate _ n]
-  simp [add_assoc]
+  simp
 #align list.is_rotated_next_eq List.isRotated_next_eq
 
 theorem isRotated_prev_eq {l l' : List α} (h : l ~r l') (hn : Nodup l) {x : α} (hx : x ∈ l) :

@@ -91,7 +91,7 @@ theorem dist_eq_intro {n m k l : ℕ} (h : n + m = k + l) : dist n k = dist l m 
 
 theorem dist.triangle_inequality (n m k : ℕ) : dist n k ≤ dist n m + dist m k := by
   have : dist n m + dist m k = n - m + (m - k) + (k - m + (m - n)) := by
-    simp [dist, add_comm, add_left_comm, add_assoc]
+    simp [dist, add_comm, add_left_comm]
   rw [this, dist]
   exact add_le_add tsub_le_tsub_add_tsub tsub_le_tsub_add_tsub
 #align nat.dist.triangle_inequality Nat.dist.triangle_inequality

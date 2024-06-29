@@ -67,7 +67,7 @@ theorem lt_of_sum_four_squares_eq_mul {a b c d k m : ℕ}
     (_root_.lt_of_mul_lt_mul_left ?_ (zero_le (2 ^ 2))) (zero_le m)
   calc
     2 ^ 2 * (k * ↑m) = ∑ i : Fin 4, (2 * ![a, b, c, d] i) ^ 2 := by
-      simp [← h, Fin.sum_univ_succ, mul_add, mul_pow, add_assoc]
+      simp [← h, Fin.sum_univ_succ, mul_add, mul_pow]
     _ < ∑ _i : Fin 4, m ^ 2 := Finset.sum_lt_sum_of_nonempty Finset.univ_nonempty fun i _ ↦ by
       refine pow_lt_pow_left ?_ (zero_le _) two_ne_zero
       fin_cases i <;> assumption

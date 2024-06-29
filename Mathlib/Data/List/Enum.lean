@@ -144,7 +144,9 @@ theorem enum_append (xs ys : List α) : enum (xs ++ ys) = enum xs ++ enumFrom xs
 
 theorem map_fst_add_enumFrom_eq_enumFrom (l : List α) (n k : ℕ) :
     map (Prod.map (· + n) id) (enumFrom k l) = enumFrom (n + k) l :=
-  ext_get? fun i ↦ by simp [(· ∘ ·), Nat.add_comm, Nat.add_left_comm]
+  ext_get? fun i ↦ by
+    simp [(· ∘ ·), Nat, Nat.add_left_comm]
+    rw [Nat.add_rotate, Nat.add_rotate]
 #align list.map_fst_add_enum_from_eq_enum_from List.map_fst_add_enumFrom_eq_enumFrom
 
 theorem map_fst_add_enum_eq_enumFrom (l : List α) (n : ℕ) :

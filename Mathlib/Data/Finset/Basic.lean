@@ -3564,7 +3564,8 @@ def proveFinsetNonempty {u : Level} {α : Q(Type u)} (s : Q(Finset $α)) :
     { terminal := true, -- Fail if the new goal is not closed.
       generateScript := false,
       useDefaultSimpSet := false, -- Avoiding the whole simp set to speed up the tactic.
-      warnOnNonterminal := false } -- Don't show a warning on failure, simply return `none`.
+      warnOnNonterminal := false, -- Don't show a warning on failure, simply return `none`.
+      forwardMaxDepth? := none } -- TODO
   let rules ← Aesop.mkLocalRuleSet rulesets options
   let (remainingGoals, _) ←
     try Aesop.search (options := options.toOptions) mvar (.some rules)

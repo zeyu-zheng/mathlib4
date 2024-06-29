@@ -225,7 +225,7 @@ lemma farFromTriangleFree [ExplicitDisjoint t] {ε : 𝕜}
     (graph t).FarFromTriangleFree ε :=
   farFromTriangleFree_of_disjoint_triangles (t.map toTriangle)
     (map_subset_iff_subset_preimage.2 fun x hx ↦ by simpa using toTriangle_is3Clique hx)
-    (map_toTriangle_disjoint t) $ by simpa [add_assoc] using ht
+    (map_toTriangle_disjoint t) $ by simpa using ht
 
 end Fintype
 end DecidableEq

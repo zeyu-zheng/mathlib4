@@ -62,7 +62,7 @@ theorem hyperoperation_one : hyperoperation 1 = (· + ·) := by
   induction' k with bn bih
   · rw [Nat.add_zero m, hyperoperation]
   · rw [hyperoperation_recursion, bih, hyperoperation_zero]
-    exact ← Nat.add_assoc' m bn 1
+    exact Nat.add_assoc' m bn 1
 #align hyperoperation_one hyperoperation_one
 
 @[simp]

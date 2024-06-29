@@ -393,7 +393,7 @@ theorem length_append {u v w : V} (p : G.Walk u v) (q : G.Walk v w) :
     (p.append q).length = p.length + q.length := by
   induction p with
   | nil => simp
-  | cons _ _ ih => simp [ih, add_comm, add_left_comm, add_assoc]
+  | cons _ _ ih => simp [ih, add_comm, add_left_comm]
 #align simple_graph.walk.length_append SimpleGraph.Walk.length_append
 
 @[simp]

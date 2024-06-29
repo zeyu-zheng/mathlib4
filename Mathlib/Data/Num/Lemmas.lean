@@ -27,8 +27,6 @@ set_option linter.deprecated false
 -- Porting note: Required for the notation `-[n+1]`.
 open Int Function
 
-attribute [local simp] add_assoc
-
 namespace PosNum
 
 variable {α : Type*}
@@ -75,7 +73,7 @@ theorem succ_to_nat : ∀ n, (succ n : ℕ) = n + 1
   | bit0 p => rfl
   | bit1 p =>
     (congr_arg _root_.bit0 (succ_to_nat p)).trans <|
-      show ↑p + 1 + ↑p + 1 = ↑p + ↑p + 1 + 1 by simp [add_left_comm]
+      show ↑p + 1 + ↑p + 1 = ↑p + ↑p + 1 + 1 by simp [Nat.add_right_comm]
 #align pos_num.succ_to_nat PosNum.succ_to_nat
 
 theorem one_add (n : PosNum) : 1 + n = succ n := by cases n <;> rfl
@@ -91,13 +89,15 @@ theorem add_to_nat : ∀ m n, ((m + n : PosNum) : ℕ) = m + n
   | bit0 a, bit0 b => (congr_arg _root_.bit0 (add_to_nat a b)).trans <| add_add_add_comm _ _ _ _
   | bit0 a, bit1 b =>
     (congr_arg _root_.bit1 (add_to_nat a b)).trans <|
-      show (a + b + (a + b) + 1 : ℕ) = a + a + (b + b + 1) by simp [add_left_comm]
+      show (a + b + (a + b) + 1 : ℕ) = a + a + (b + b + 1) by
+        simp [Nat.add_right_comm]
   | bit1 a, bit0 b =>
     (congr_arg _root_.bit1 (add_to_nat a b)).trans <|
-      show (a + b + (a + b) + 1 : ℕ) = a + a + 1 + (b + b) by simp [add_comm, add_left_comm]
+      show (a + b + (a + b) + 1 : ℕ) = a + a + 1 + (b + b) by
+        simp [Nat.add_right_comm]
   | bit1 a, bit1 b =>
     show (succ (a + b) + succ (a + b) : ℕ) = a + a + 1 + (b + b + 1) by
-      rw [succ_to_nat, add_to_nat a b]; simp [add_left_comm]
+      rw [succ_to_nat, add_to_nat a b]; simp [Nat.add_right_comm]
 #align pos_num.add_to_nat PosNum.add_to_nat
 
 theorem add_succ : ∀ m n : PosNum, m + succ n = succ (m + n)
@@ -257,7 +257,7 @@ theorem ofNat'_succ : ∀ {n}, ofNat' (n + 1) = ofNat' n + 1 :=
     · erw [ofNat'_bit true n, ofNat'_bit]
       simp only [← bit1_of_bit1, ← bit0_of_bit0, cond, _root_.bit1]
     · erw [show n.bit true + 1 = (n + 1).bit false by
-        simpa [Nat.bit, _root_.bit1, _root_.bit0] using Nat.add_left_comm n 1 1,
+        simpa [Nat.bit, _root_.bit1, _root_.bit0] using Nat.add_right_comm n n 1,
         ofNat'_bit, ofNat'_bit, ih]
       simp only [cond, add_one, bit1_succ])
 #align num.of_nat'_succ Num.ofNat'_succ
@@ -594,12 +594,12 @@ example (n : PosNum) (m : PosNum) : n ≤ n + m := by transfer
 ```
 -/
 scoped macro (name := transfer) "transfer" : tactic => `(tactic|
-    (intros; transfer_rw; try simp [add_comm, add_left_comm, mul_comm, mul_left_comm]))
+    (intros; transfer_rw; try simp [mul_comm, mul_left_comm]))
 
 instance addCommSemigroup : AddCommSemigroup PosNum where
   add := (· + ·)
   add_assoc := by transfer
-  add_comm := by transfer
+  add_comm := by transfer; simp [add_comm]
 #align pos_num.add_comm_semigroup PosNum.addCommSemigroup
 
 instance commMonoid : CommMonoid PosNum where
@@ -1001,6 +1001,8 @@ end Num
 
 namespace ZNum
 
+attribute [local simp] add_assoc
+
 variable {α : Type*}
 
 open PosNum
@@ -1149,6 +1151,8 @@ theorem add_one : ∀ n : ZNum, n + 1 = succ n
 end ZNum
 
 namespace PosNum
+
+attribute [local simp] add_assoc
 
 variable {α : Type*}
 
