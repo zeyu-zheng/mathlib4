@@ -1048,12 +1048,12 @@ def choice_of_byContradiction' {α : Sort*} (contra : ¬(α → False) → α) :
 
 end Classical
 
-set_option autoImplicit true in
 /-- This function has the same type as `Exists.recOn`, and can be used to case on an equality,
 but `Exists.recOn` can only eliminate into Prop, while this version eliminates into any universe
 using the axiom of choice. -/
 -- @[elab_as_elim] -- FIXME
-noncomputable def Exists.classicalRecOn {p : α → Prop} (h : ∃ a, p a) {C} (H : ∀ a, p a → C) : C :=
+noncomputable def Exists.classicalRecOn {α : Sort*} {p : α → Prop} (h : ∃ a, p a)
+    {C : Sort*} (H : ∀ a, p a → C) : C :=
   H (Classical.choose h) (Classical.choose_spec h)
 #align exists.classical_rec_on Exists.classicalRecOn
 
@@ -1167,19 +1167,9 @@ theorem exists_mem_or_left :
   exact Iff.trans (exists_congr fun x ↦ or_and_right) exists_or
 #align bex_or_left_distrib exists_mem_or_left
 
-@[deprecated (since := "2023-03-23")] alias not_ball_of_bex_not := not_forall₂_of_exists₂_not
-@[deprecated (since := "2023-03-23")] alias Decidable.not_ball := Decidable.not_forall₂
-@[deprecated (since := "2023-03-23")] alias not_ball := not_forall₂
-@[deprecated (since := "2023-03-23")] alias ball_true_iff := forall₂_true_iff
-@[deprecated (since := "2023-03-23")] alias ball_and := forall₂_and
-@[deprecated (since := "2023-03-23")] alias not_bex := not_exists_mem
-@[deprecated (since := "2023-03-23")] alias bex_or := exists_mem_or
-@[deprecated (since := "2023-03-23")] alias ball_or_left := forall₂_or_left
-@[deprecated (since := "2023-03-23")] alias bex_or_left := exists_mem_or_left
-
 end BoundedQuantifiers
 
-#align classical.not_ball not_ball
+#align classical.not_ball not_forall₂
 
 section ite
 
