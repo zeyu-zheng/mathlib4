@@ -397,7 +397,7 @@ def OpenCover.fromAffineRefinement {X : Scheme.{u}} (𝓤 : X.OpenCover) :
   idx j := j.fst
   app j := (𝓤.obj j.fst).affineCover.map _
 
-/-- If two global sections agree after restriction to each member of a finite open cover, then
+/-- If two global sections agree after restriction to each member of an open cover, then
 they agree globally. -/
 lemma OpenCover.ext_elem {X : Scheme.{u}} {U : Opens X} (f g : Γ(X, U)) (𝒰 : X.OpenCover)
     (h : ∀ i : 𝒰.J, (𝒰.map i).app U f = (𝒰.map i).app U g) : f = g := by
@@ -430,7 +430,7 @@ lemma isNilpotent_of_isNilpotent_cover {X : Scheme.{u}} {U : Opens X} (s : Γ(X,
   let N : ℕ := Finset.sup Finset.univ fn
   have hfnleN (i : 𝒰.J) : fn i ≤ N := Finset.le_sup (Finset.mem_univ i)
   use N
-  apply zero_of_zero_cover
+  apply zero_of_zero_cover _ 𝒰
   intro i
   simp only [map_pow]
   exact pow_eq_zero_of_le (hfnleN i) (hfn i)
