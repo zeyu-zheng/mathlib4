@@ -139,7 +139,7 @@ noncomputable def preservesFinOfPreservesBinaryAndTerminal :
       extendFanIsLimit (fun i => F.obj (f i)) (isLimitOfHasProductOfPreservesLimit F _)
         (isLimitOfHasBinaryProductOfPreservesLimit F _ _)
     refine IsLimit.ofIsoLimit this ?_
-    apply Cones.ext _ _
+    apply Cones.ext
     · apply Iso.refl _
     rintro ⟨j⟩
     refine Fin.inductionOn j ?_ ?_
@@ -279,7 +279,7 @@ noncomputable def preservesFinOfPreservesBinaryAndInitial :
         (isColimitOfHasCoproductOfPreservesColimit F _)
         (isColimitOfHasBinaryCoproductOfPreservesColimit F _ _)
     refine IsColimit.ofIsoColimit this ?_
-    apply Cocones.ext _ _
+    apply Cocones.ext
     · apply Iso.refl _
     rintro ⟨j⟩
     refine Fin.inductionOn j ?_ ?_

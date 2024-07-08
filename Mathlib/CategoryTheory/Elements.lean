@@ -239,7 +239,7 @@ theorem from_toCostructuredArrow_eq (F : Cᵒᵖ ⥤ Type v) :
     (toCostructuredArrow F).rightOp ⋙ fromCostructuredArrow F = 𝟭 _ := by
   refine Functor.ext ?_ ?_
   · intro X
-    exact Functor.Elements.ext _ _ rfl (by simp [yonedaEquiv])
+    exact Functor.Elements.ext rfl (by simp [yonedaEquiv])
   · intro X Y f
     have : ∀ {a b : F.Elements} (H : a = b),
         (eqToHom H).1 = eqToHom (show a.fst = b.fst by cases H; rfl) := by
