@@ -118,7 +118,7 @@ set_option linter.uppercaseLean3 false in
 @[simp]
 theorem Spec.sheafedSpaceMap_id {R : CommRingCat.{u}} :
     Spec.sheafedSpaceMap (𝟙 R) = 𝟙 (Spec.sheafedSpaceObj R) :=
-  AlgebraicGeometry.PresheafedSpace.Hom.ext (Spec.topMap_id R) <| by
+  AlgebraicGeometry.PresheafedSpace.Hom.ext _ _ (Spec.topMap_id R) <| by
     ext
     dsimp
     erw [comap_id (by simp)]
@@ -128,7 +128,7 @@ set_option linter.uppercaseLean3 false in
 
 theorem Spec.sheafedSpaceMap_comp {R S T : CommRingCat.{u}} (f : R ⟶ S) (g : S ⟶ T) :
     Spec.sheafedSpaceMap (f ≫ g) = Spec.sheafedSpaceMap g ≫ Spec.sheafedSpaceMap f :=
-  AlgebraicGeometry.PresheafedSpace.Hom.ext (Spec.topMap_comp f g) <| by
+  AlgebraicGeometry.PresheafedSpace.Hom.ext _ _ (Spec.topMap_comp f g) <| by
     ext
     -- Porting note: was one liner
     -- `dsimp, rw category_theory.functor.map_id, rw category.comp_id, erw comap_comp f g, refl`
