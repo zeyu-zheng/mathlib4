@@ -200,10 +200,10 @@ lemma map_eq_iff {X Y : C} (φ ψ : W.LeftFraction₂ X Y) :
     dsimp at t₁ t₂ t₁' t₂' hst hft hst' hft' ht ht'
     have ⟨α, hα⟩ := (RightFraction.mk _ ht (φ.s ≫ t₁')).exists_leftFraction
     simp only [Category.assoc] at hα
-    obtain ⟨Z'', u, hu, fac⟩ := HasLeftCalculusOfFractions.ext _ φ.hs hα
+    obtain ⟨Z'', u, hu, fac⟩ := HasLeftCalculusOfFractions.ext _ _ _ φ.hs hα
     have hα' : ψ.s ≫ t₂ ≫ α.f ≫ u = ψ.s ≫ t₂' ≫ α.s ≫ u := by
       rw [← reassoc_of% hst, ← reassoc_of% hα, ← reassoc_of% hst']
-    obtain ⟨Z''', u', hu', fac'⟩ := HasLeftCalculusOfFractions.ext _ ψ.hs hα'
+    obtain ⟨Z''', u', hu', fac'⟩ := HasLeftCalculusOfFractions.ext _ _ _ ψ.hs hα'
     simp only [Category.assoc] at fac fac'
     refine ⟨Z''', t₁' ≫ α.s ≫ u ≫ u', t₂' ≫ α.s ≫ u ≫ u', ?_, ?_, ?_, ?_⟩
     · rw [reassoc_of% hst']

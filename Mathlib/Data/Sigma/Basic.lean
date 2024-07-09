@@ -66,9 +66,6 @@ theorem eta : ∀ x : Σa, β a, Sigma.mk x.1 x.2 = x
 #align sigma.eta Sigma.eta
 
 #align sigma.ext Sigma.ext
-
-theorem ext_iff {x₀ x₁ : Sigma β} : x₀ = x₁ ↔ x₀.1 = x₁.1 ∧ HEq x₀.2 x₁.2 := by
-  cases x₀; cases x₁; exact Sigma.mk.inj_iff
 #align sigma.ext_iff Sigma.ext_iff
 
 /-- A version of `Iff.mp Sigma.ext_iff` for functions from a nonempty type to a sigma type. -/
@@ -265,9 +262,6 @@ theorem mk.inj_iff {a₁ a₂ : α} {b₁ : β a₁} {b₂ : β a₂} :
 #align psigma.mk.inj_iff PSigma.mk.inj_iff
 
 #align psigma.ext PSigma.ext
-
-theorem ext_iff {x₀ x₁ : PSigma β} : x₀ = x₁ ↔ x₀.1 = x₁.1 ∧ HEq x₀.2 x₁.2 := by
-  cases x₀; cases x₁; exact PSigma.mk.inj_iff
 #align psigma.ext_iff PSigma.ext_iff
 
 @[simp]

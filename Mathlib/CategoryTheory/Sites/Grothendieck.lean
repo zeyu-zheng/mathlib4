@@ -554,13 +554,13 @@ theorem coe_pullback {Z : C} (f : Y ⟶ X) (g : Z ⟶ Y) (S : J.Cover X) :
 
 /-- The isomorphism between `S` and the pullback of `S` w.r.t. the identity. -/
 def pullbackId (S : J.Cover X) : S.pullback (𝟙 X) ≅ S :=
-  eqToIso <| Cover.ext fun Y f => by simp
+  eqToIso <| Cover.ext _ _ fun Y f => by simp
 #align category_theory.grothendieck_topology.cover.pullback_id CategoryTheory.GrothendieckTopology.Cover.pullbackId
 
 /-- Pulling back with respect to a composition is the composition of the pullbacks. -/
 def pullbackComp {X Y Z : C} (S : J.Cover X) (f : Z ⟶ Y) (g : Y ⟶ X) :
     S.pullback (f ≫ g) ≅ (S.pullback g).pullback f :=
-  eqToIso <| Cover.ext fun Y f => by simp
+  eqToIso <| Cover.ext _ _ fun Y f => by simp
 #align category_theory.grothendieck_topology.cover.pullback_comp CategoryTheory.GrothendieckTopology.Cover.pullbackComp
 
 /-- Combine a family of covers over a cover. -/
