@@ -339,12 +339,6 @@ protected theorem ext (e' : PartialHomeomorph X Y) (h : ∀ x, e x = e' x)
     (hinv : ∀ x, e.symm x = e'.symm x) (hs : e.source = e'.source) : e = e' :=
   toPartialEquiv_injective (PartialEquiv.ext h hinv hs)
 #align local_homeomorph.ext PartialHomeomorph.ext
-
-protected theorem ext_iff {e e' : PartialHomeomorph X Y} :
-    e = e' ↔ (∀ x, e x = e' x) ∧ (∀ x, e.symm x = e'.symm x) ∧ e.source = e'.source :=
-  ⟨by
-    rintro rfl
-    exact ⟨fun x => rfl, fun x => rfl, rfl⟩, fun h => e.ext e' h.1 h.2.1 h.2.2⟩
 #align local_homeomorph.ext_iff PartialHomeomorph.ext_iff
 
 @[simp, mfld_simps]
@@ -769,7 +763,7 @@ theorem restr_univ {e : PartialHomeomorph X Y} : e.restr univ = e :=
 #align local_homeomorph.restr_univ PartialHomeomorph.restr_univ
 
 theorem restr_source_inter (s : Set X) : e.restr (e.source ∩ s) = e.restr s := by
-  refine PartialHomeomorph.ext (fun x => rfl) (fun x => rfl) ?_
+  refine PartialHomeomorph.ext _ _ (fun x => rfl) (fun x => rfl) ?_
   simp [e.open_source.interior_eq, ← inter_assoc]
 #align local_homeomorph.restr_source_inter PartialHomeomorph.restr_source_inter
 
@@ -917,7 +911,7 @@ theorem refl_trans : (PartialHomeomorph.refl X).trans e = e :=
 #align local_homeomorph.refl_trans PartialHomeomorph.refl_trans
 
 theorem trans_ofSet {s : Set Y} (hs : IsOpen s) : e.trans (ofSet s hs) = e.restr (e ⁻¹' s) :=
-  PartialHomeomorph.ext (fun _ => rfl) (fun _ => rfl) <| by
+  PartialHomeomorph.ext _ _ (fun _ => rfl) (fun _ => rfl) <| by
     rw [trans_source, restr_source, ofSet_source, ← preimage_interior, hs.interior_eq]
 #align local_homeomorph.trans_of_set PartialHomeomorph.trans_ofSet
 
@@ -926,7 +920,7 @@ theorem trans_of_set' {s : Set Y} (hs : IsOpen s) :
 #align local_homeomorph.trans_of_set' PartialHomeomorph.trans_of_set'
 
 theorem ofSet_trans {s : Set X} (hs : IsOpen s) : (ofSet s hs).trans e = e.restr s :=
-  PartialHomeomorph.ext (fun x => rfl) (fun x => rfl) <| by simp [hs.interior_eq, inter_comm]
+  PartialHomeomorph.ext _ _ (fun x => rfl) (fun x => rfl) <| by simp [hs.interior_eq, inter_comm]
 #align local_homeomorph.of_set_trans PartialHomeomorph.ofSet_trans
 
 theorem ofSet_trans' {s : Set X} (hs : IsOpen s) :
@@ -1059,7 +1053,7 @@ theorem prod_symm (eX : PartialHomeomorph X X') (eY : PartialHomeomorph Y Y') :
 @[simp]
 theorem refl_prod_refl :
     (PartialHomeomorph.refl X).prod (PartialHomeomorph.refl Y) = PartialHomeomorph.refl (X × Y) :=
-  PartialHomeomorph.ext (fun _ => rfl) (fun _ => rfl) univ_prod_univ
+  PartialHomeomorph.ext _ _ (fun _ => rfl) (fun _ => rfl) univ_prod_univ
 #align local_homeomorph.refl_prod_refl PartialHomeomorph.refl_prod_refl
 
 @[simp, mfld_simps]

@@ -67,7 +67,7 @@ theorem π_map (p q : ActionCategory M X) (f : p ⟶ q) : (π M X).map f = f.val
 
 @[simp]
 theorem π_obj (p : ActionCategory M X) : (π M X).obj p = SingleObj.star M :=
-  Unit.ext
+  Unit.ext _ _
 #align category_theory.action_category.π_obj CategoryTheory.ActionCategory.π_obj
 
 variable {M X}

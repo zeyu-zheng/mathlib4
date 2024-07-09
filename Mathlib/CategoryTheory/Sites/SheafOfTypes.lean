@@ -247,7 +247,7 @@ instance : Category (SheafOfTypes J) where
 -- It would be nice if this boilerplate weren't necessary.
 @[ext]
 theorem Hom.ext' {X Y : SheafOfTypes J} (f g : X ⟶ Y) (w : f.val = g.val) : f = g :=
-  Hom.ext f g w
+  Hom.ext w
 
 -- Let's make the inhabited linter happy...
 instance (X : SheafOfTypes J) : Inhabited (Hom X X) :=

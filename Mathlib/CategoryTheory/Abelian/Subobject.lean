@@ -32,7 +32,7 @@ variable {C : Type u} [Category.{v} C]
 def subobjectIsoSubobjectOp [Abelian C] (X : C) : Subobject X ≃o (Subobject (op X))ᵒᵈ := by
   refine OrderIso.ofHomInv (cokernelOrderHom X) (kernelOrderHom X) ?_ ?_
   · change (cokernelOrderHom X).comp (kernelOrderHom X) = _
-    refine OrderHom.ext (funext (Subobject.ind _ ?_))
+    refine OrderHom.ext _ _ (funext (Subobject.ind _ ?_))
     intro A f hf
     dsimp only [OrderHom.comp_coe, Function.comp_apply, kernelOrderHom_coe, Subobject.lift_mk,
       cokernelOrderHom_coe, OrderHom.id_coe, id]
@@ -47,7 +47,7 @@ def subobjectIsoSubobjectOp [Abelian C] (X : C) : Subobject X ≃o (Subobject (o
         cokernel.π_desc, Category.comp_id]
     · exact Quiver.Hom.unop_inj (by simp only [unop_comp, Quiver.Hom.unop_op, comp_epiDesc])
   · change (kernelOrderHom X).comp (cokernelOrderHom X) = _
-    refine OrderHom.ext (funext (Subobject.ind _ ?_))
+    refine OrderHom.ext _ _ (funext (Subobject.ind _ ?_))
     intro A f hf
     dsimp only [OrderHom.comp_coe, Function.comp_apply, cokernelOrderHom_coe, Subobject.lift_mk,
       kernelOrderHom_coe, OrderHom.id_coe, id, unop_op, Quiver.Hom.unop_op]
