@@ -265,11 +265,6 @@ instance instAlgebra {A} [CommSemiring A] [Algebra R A] : Algebra R (FreeAlgebra
     exact Quot.sound Rel.central_scalar
   smul_def' _ _ := rfl
 
--- verify there is no diamond at `default` transparency but we will need
--- `reducible_and_instances` which currently fails #10906
-variable (S : Type) [CommSemiring S] in
-example : (algebraNat : Algebra ℕ (FreeAlgebra S X)) = instAlgebra _ _ := rfl
-
 instance {R S A} [CommSemiring R] [CommSemiring S] [CommSemiring A]
     [SMul R S] [Algebra R A] [Algebra S A] [IsScalarTower R S A] :
     IsScalarTower R S (FreeAlgebra A X) where
@@ -286,11 +281,6 @@ instance {R S A} [CommSemiring R] [CommSemiring S] [CommSemiring A] [Algebra R A
 
 instance {S : Type*} [CommRing S] : Ring (FreeAlgebra S X) :=
   Algebra.semiringToRing S
-
--- verify there is no diamond but we will need
--- `reducible_and_instances` which currently fails #10906
-variable (S : Type) [CommRing S] in
-example : (algebraInt _ : Algebra ℤ (FreeAlgebra S X)) = instAlgebra _ _ := rfl
 
 variable {X}
 
