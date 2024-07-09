@@ -134,7 +134,7 @@ theorem cast_cast {i j k} (h : i = j) (h' : j = k) (a : ⨂[R]^i M) :
   reindex_reindex _ _ _
 #align tensor_power.cast_cast TensorPower.cast_cast
 
-@[ext]
+@[ext (iff := false)]
 theorem gradedMonoid_eq_of_cast {a b : GradedMonoid fun n => ⨂[R] _ : Fin n, M} (h : a.fst = b.fst)
     (h2 : cast R M h a.snd = b.snd) : a = b := by
   refine gradedMonoid_eq_of_reindex_cast h ?_

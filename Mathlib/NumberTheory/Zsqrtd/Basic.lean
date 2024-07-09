@@ -252,7 +252,7 @@ instance : StarRing (ℤ√d) where
 
 -- Porting note: proof was `by decide`
 instance nontrivial : Nontrivial (ℤ√d) :=
-  ⟨⟨0, 1, (Zsqrtd.ext_iff 0 1).not.mpr (by simp)⟩⟩
+  ⟨⟨0, 1, Zsqrtd.ext_iff.not.mpr (by simp)⟩⟩
 
 @[simp]
 theorem natCast_re (n : ℕ) : (n : ℤ√d).re = n :=
@@ -379,7 +379,7 @@ theorem coprime_of_dvd_coprime {a b : ℤ√d} (hcoprime : IsCoprime a.re a.im) 
     IsCoprime b.re b.im := by
   apply isCoprime_of_dvd
   · rintro ⟨hre, him⟩
-    obtain rfl : b = 0 := Zsqrtd.ext b 0 hre him
+    obtain rfl : b = 0 := Zsqrtd.ext hre him
     rw [zero_dvd_iff] at hdvd
     simp [hdvd, zero_im, zero_re, not_isCoprime_zero_zero] at hcoprime
   · rintro z hz - hzdvdu hzdvdv

@@ -854,12 +854,8 @@ instance : IsStarNormal a := inferInstanceAs <| IsStarNormal (R := ℍ[R,-1,-1])
 
 @[ext]
 theorem ext : a.re = b.re → a.imI = b.imI → a.imJ = b.imJ → a.imK = b.imK → a = b :=
-  QuaternionAlgebra.ext a b
+  QuaternionAlgebra.ext
 #align quaternion.ext Quaternion.ext
-
-theorem ext_iff {a b : ℍ[R]} :
-    a = b ↔ a.re = b.re ∧ a.imI = b.imI ∧ a.imJ = b.imJ ∧ a.imK = b.imK :=
-  QuaternionAlgebra.ext_iff a b
 #align quaternion.ext_iff Quaternion.ext_iff
 
 /-- The imaginary part of a quaternion. -/

@@ -921,7 +921,7 @@ We endow `PrimeSpectrum R` with a partial order, where `x ≤ y` if and only if 
 
 
 instance : PartialOrder (PrimeSpectrum R) :=
-  PartialOrder.lift asIdeal (PrimeSpectrum.ext)
+  PartialOrder.lift asIdeal (fun _ _ => PrimeSpectrum.ext)
 
 @[simp]
 theorem asIdeal_le_asIdeal (x y : PrimeSpectrum R) : x.asIdeal ≤ y.asIdeal ↔ x ≤ y :=
