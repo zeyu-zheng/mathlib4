@@ -61,7 +61,7 @@ def Scheme.emptyTo (X : Scheme.{u}) : ∅ ⟶ X :=
 @[ext]
 theorem Scheme.empty_ext {X : Scheme.{u}} (f g : ∅ ⟶ X) : f = g :=
   -- Porting note (#11041): `ext` regression
-  LocallyRingedSpace.Hom.ext <| PresheafedSpace.ext (by ext a; exact PEmpty.elim a) <|
+  LocallyRingedSpace.Hom.ext <| PresheafedSpace.ext _ _ (by ext a; exact PEmpty.elim a) <|
     NatTrans.ext <| funext fun a => by aesop_cat
 #align algebraic_geometry.Scheme.empty_ext AlgebraicGeometry.Scheme.empty_ext
 
