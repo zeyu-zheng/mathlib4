@@ -212,10 +212,6 @@ variable {α : Type u} {β : Type v} {γ : Type w} {ι : Sort x} {a b : α} {s s
 instance : Inhabited (Set α) :=
   ⟨∅⟩
 
-theorem ext_iff {s t : Set α} : s = t ↔ ∀ x, x ∈ s ↔ x ∈ t :=
-  ⟨fun h x => by rw [h], ext⟩
-#align set.ext_iff Set.ext_iff
-
 @[trans]
 theorem mem_of_mem_of_subset {x : α} {s t : Set α} (hx : x ∈ s) (h : s ⊆ t) : x ∈ t :=
   h hx
@@ -1253,7 +1249,7 @@ theorem eq_of_mem_singleton {x y : α} (h : x ∈ ({y} : Set α)) : x = y :=
 
 @[simp]
 theorem singleton_eq_singleton_iff {x y : α} : {x} = ({y} : Set α) ↔ x = y :=
-  ext_iff.trans eq_iff_eq_cancel_left
+  Set.ext_iff.trans eq_iff_eq_cancel_left
 #align set.singleton_eq_singleton_iff Set.singleton_eq_singleton_iff
 
 theorem singleton_injective : Injective (singleton : α → Set α) := fun _ _ =>
@@ -1370,7 +1366,7 @@ theorem mem_sep_iff : x ∈ { x ∈ s | p x } ↔ x ∈ s ∧ p x :=
 #align set.mem_sep_iff Set.mem_sep_iff
 
 theorem sep_ext_iff : { x ∈ s | p x } = { x ∈ s | q x } ↔ ∀ x ∈ s, p x ↔ q x := by
-  simp_rw [ext_iff, mem_sep_iff, and_congr_right_iff]
+  simp_rw [Set.ext_iff, mem_sep_iff, and_congr_right_iff]
 #align set.sep_ext_iff Set.sep_ext_iff
 
 theorem sep_eq_of_subset (h : s ⊆ t) : { x ∈ t | x ∈ s } = s :=
@@ -1383,12 +1379,12 @@ theorem sep_subset (s : Set α) (p : α → Prop) : { x ∈ s | p x } ⊆ s := f
 
 @[simp]
 theorem sep_eq_self_iff_mem_true : { x ∈ s | p x } = s ↔ ∀ x ∈ s, p x := by
-  simp_rw [ext_iff, mem_sep_iff, and_iff_left_iff_imp]
+  simp_rw [Set.ext_iff, mem_sep_iff, and_iff_left_iff_imp]
 #align set.sep_eq_self_iff_mem_true Set.sep_eq_self_iff_mem_true
 
 @[simp]
 theorem sep_eq_empty_iff_mem_false : { x ∈ s | p x } = ∅ ↔ ∀ x ∈ s, ¬p x := by
-  simp_rw [ext_iff, mem_sep_iff, mem_empty_iff_false, iff_false_iff, not_and]
+  simp_rw [Set.ext_iff, mem_sep_iff, mem_empty_iff_false, iff_false_iff, not_and]
 #align set.sep_eq_empty_iff_mem_false Set.sep_eq_empty_iff_mem_false
 
 --Porting note (#10618): removed `simp` attribute because `simp` can prove it
@@ -2530,38 +2526,40 @@ end Subsingleton
 
 namespace Set
 
-variable {α : Type u} (s t : Set α) (a : α)
+variable {α : Type u} (s t : Set α) (a b : α)
 
 instance decidableSdiff [Decidable (a ∈ s)] [Decidable (a ∈ t)] : Decidable (a ∈ s \ t) :=
-  (by infer_instance : Decidable (a ∈ s ∧ a ∉ t))
+  inferInstanceAs (Decidable (a ∈ s ∧ a ∉ t))
 #align set.decidable_sdiff Set.decidableSdiff
 
 instance decidableInter [Decidable (a ∈ s)] [Decidable (a ∈ t)] : Decidable (a ∈ s ∩ t) :=
-  (by infer_instance : Decidable (a ∈ s ∧ a ∈ t))
+  inferInstanceAs (Decidable (a ∈ s ∧ a ∈ t))
 #align set.decidable_inter Set.decidableInter
 
 instance decidableUnion [Decidable (a ∈ s)] [Decidable (a ∈ t)] : Decidable (a ∈ s ∪ t) :=
-  (by infer_instance : Decidable (a ∈ s ∨ a ∈ t))
+  inferInstanceAs (Decidable (a ∈ s ∨ a ∈ t))
 #align set.decidable_union Set.decidableUnion
 
 instance decidableCompl [Decidable (a ∈ s)] : Decidable (a ∈ sᶜ) :=
-  (by infer_instance : Decidable (a ∉ s))
+  inferInstanceAs (Decidable (a ∉ s))
 #align set.decidable_compl Set.decidableCompl
 
-instance decidableEmptyset : DecidablePred (· ∈ (∅ : Set α)) := fun _ => Decidable.isFalse (by simp)
+instance decidableEmptyset : Decidable (a ∈ (∅ : Set α)) := Decidable.isFalse (by simp)
 #align set.decidable_emptyset Set.decidableEmptyset
 
-instance decidableUniv : DecidablePred (· ∈ (Set.univ : Set α)) := fun _ =>
-  Decidable.isTrue (by simp)
+instance decidableUniv : Decidable (a ∈ univ) := Decidable.isTrue (by simp)
 #align set.decidable_univ Set.decidableUniv
+
+instance decidableInsert [Decidable (a = b)] [Decidable (a ∈ s)] : Decidable (a ∈ insert b s) :=
+  inferInstanceAs (Decidable (_ ∨ _))
+
+-- Porting note: Lean 3 unfolded `{a}` before finding instances but Lean 4 needs additional help
+instance decidableSingleton [Decidable (a = b)] : Decidable (a ∈ ({b} : Set α)) :=
+  inferInstanceAs (Decidable (a = b))
 
 instance decidableSetOf (p : α → Prop) [Decidable (p a)] : Decidable (a ∈ { a | p a }) := by
   assumption
 #align set.decidable_set_of Set.decidableSetOf
-
--- Porting note: Lean 3 unfolded `{a}` before finding instances but Lean 4 needs additional help
-instance decidableMemSingleton {a b : α} [DecidableEq α] :
-    Decidable (a ∈ ({b} : Set α)) := decidableSetOf _ (· = b)
 
 end Set
 

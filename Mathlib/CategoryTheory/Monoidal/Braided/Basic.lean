@@ -421,7 +421,7 @@ instance categoryLaxBraidedFunctor : Category (LaxBraidedFunctor C D) :=
 -- Porting note: added, as `MonoidalNatTrans.ext` does not apply to morphisms.
 @[ext]
 lemma ext' {F G : LaxBraidedFunctor C D} {α β : F ⟶ G} (w : ∀ X : C, α.app X = β.app X) : α = β :=
-  MonoidalNatTrans.ext _ _ (funext w)
+  MonoidalNatTrans.ext (funext w)
 
 @[simp]
 theorem comp_toNatTrans {F G H : LaxBraidedFunctor C D} {α : F ⟶ G} {β : G ⟶ H} :
@@ -495,7 +495,7 @@ instance categoryBraidedFunctor : Category (BraidedFunctor C D) :=
 -- Porting note: added, as `MonoidalNatTrans.ext` does not apply to morphisms.
 @[ext]
 lemma ext' {F G : BraidedFunctor C D} {α β : F ⟶ G} (w : ∀ X : C, α.app X = β.app X) : α = β :=
-  MonoidalNatTrans.ext _ _ (funext w)
+  MonoidalNatTrans.ext (funext w)
 
 @[simp]
 theorem comp_toNatTrans {F G H : BraidedFunctor C D} {α : F ⟶ G} {β : G ⟶ H} :
@@ -561,7 +561,7 @@ theorem tensor_μ_natural {X₁ X₂ Y₁ Y₂ U₁ U₂ V₁ V₂ : C} (f₁ : 
 #align category_theory.tensor_μ_natural CategoryTheory.tensor_μ_natural
 
 @[reassoc]
-theorem tensor_μ_natural_left {X₁ X₂ Y₁ Y₂ : C} (f₁: X₁ ⟶ Y₁) (f₂ : X₂ ⟶ Y₂) (Z₁ Z₂ : C) :
+theorem tensor_μ_natural_left {X₁ X₂ Y₁ Y₂ : C} (f₁ : X₁ ⟶ Y₁) (f₂ : X₂ ⟶ Y₂) (Z₁ Z₂ : C) :
     (f₁ ⊗ f₂) ▷ (Z₁ ⊗ Z₂) ≫ tensor_μ C (Y₁, Y₂) (Z₁, Z₂) =
       tensor_μ C (X₁, X₂) (Z₁, Z₂) ≫ (f₁ ▷ Z₁ ⊗ f₂ ▷ Z₂) := by
   convert tensor_μ_natural C f₁ f₂ (𝟙 Z₁) (𝟙 Z₂) using 1 <;> simp

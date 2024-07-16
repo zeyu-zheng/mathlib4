@@ -128,14 +128,11 @@ theorem filter_eq_iff : f = g ↔ f.sets = g.sets :=
   ⟨congr_arg _, filter_eq⟩
 #align filter.filter_eq_iff Filter.filter_eq_iff
 
-protected theorem ext_iff : f = g ↔ ∀ s, s ∈ f ↔ s ∈ g := by
-  simp only [filter_eq_iff, ext_iff, Filter.mem_sets]
-#align filter.ext_iff Filter.ext_iff
-
 @[ext]
-protected theorem ext : (∀ s, s ∈ f ↔ s ∈ g) → f = g :=
-  Filter.ext_iff.2
+protected theorem ext (h : ∀ s, s ∈ f ↔ s ∈ g) : f = g := by
+  simpa [filter_eq_iff, Set.ext_iff, Filter.mem_sets]
 #align filter.ext Filter.ext
+#align filter.ext_iff Filter.ext_iff
 
 /-- An extensionality lemma that is useful for filters with good lemmas about `sᶜ ∈ f` (e.g.,
 `Filter.comap`, `Filter.coprod`, `Filter.Coprod`, `Filter.cofinite`). -/
@@ -1569,7 +1566,7 @@ theorem EventuallyEq.mul [Mul β] {f f' g g' : α → β} {l : Filter α} (h : f
 #align filter.eventually_eq.add Filter.EventuallyEq.add
 
 @[to_additive const_smul]
-theorem EventuallyEq.pow_const {γ} [Pow β γ] {f g : α → β} {l : Filter α} (h : f =ᶠ[l] g) (c : γ):
+theorem EventuallyEq.pow_const {γ} [Pow β γ] {f g : α → β} {l : Filter α} (h : f =ᶠ[l] g) (c : γ) :
     (fun x => f x ^ c) =ᶠ[l] fun x => g x ^ c :=
   h.fun_comp (· ^ c)
 #align filter.eventually_eq.const_smul Filter.EventuallyEq.const_smul

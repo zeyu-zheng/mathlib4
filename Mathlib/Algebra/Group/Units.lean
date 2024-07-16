@@ -146,10 +146,12 @@ theorem val_mk (a : α) (b h₁ h₂) : ↑(Units.mk a b h₁ h₂) = a :=
 @[to_additive (attr := ext)]
 theorem ext : Function.Injective (val : αˣ → α)
   | ⟨v, i₁, vi₁, iv₁⟩, ⟨v', i₂, vi₂, iv₂⟩, e => by
-    simp only at e; subst v'; congr;
+    simp only at e; subst v'; congr
     simpa only [iv₂, vi₁, one_mul, mul_one] using mul_assoc i₂ v i₁
 #align units.ext Units.ext
 #align add_units.ext AddUnits.ext
+#align units.ext_iff Units.ext_iff
+#align add_units.ext_iff AddUnits.ext_iff
 
 @[to_additive (attr := norm_cast)]
 theorem eq_iff {a b : αˣ} : (a : α) = b ↔ a = b :=
@@ -157,16 +159,10 @@ theorem eq_iff {a b : αˣ} : (a : α) = b ↔ a = b :=
 #align units.eq_iff Units.eq_iff
 #align add_units.eq_iff AddUnits.eq_iff
 
-@[to_additive]
-theorem ext_iff {a b : αˣ} : a = b ↔ (a : α) = b :=
-  eq_iff.symm
-#align units.ext_iff Units.ext_iff
-#align add_units.ext_iff AddUnits.ext_iff
-
 /-- Units have decidable equality if the base `Monoid` has decidable equality. -/
 @[to_additive "Additive units have decidable equality
 if the base `AddMonoid` has deciable equality."]
-instance [DecidableEq α] : DecidableEq αˣ := fun _ _ => decidable_of_iff' _ ext_iff
+instance [DecidableEq α] : DecidableEq αˣ := fun _ _ => decidable_of_iff' _ Units.ext_iff
 
 @[to_additive (attr := simp)]
 theorem mk_val (u : αˣ) (y h₁ h₂) : mk (u : α) y h₁ h₂ = u :=

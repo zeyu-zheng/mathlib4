@@ -18,7 +18,7 @@ We construct various limits and colimits in the category of schemes.
 * The preceding two results imply that `Scheme` has all finite limits.
 * The empty scheme is the (strict) initial object.
 
-## Todo
+## TODO
 
 * Coproducts exists (and the forgetful functors preserve them).
 
@@ -61,8 +61,8 @@ def Scheme.emptyTo (X : Scheme.{u}) : ∅ ⟶ X :=
 @[ext]
 theorem Scheme.empty_ext {X : Scheme.{u}} (f g : ∅ ⟶ X) : f = g :=
   -- Porting note (#11041): `ext` regression
-  LocallyRingedSpace.Hom.ext _ _ <| PresheafedSpace.ext _ _ (by ext a; exact PEmpty.elim a) <|
-    NatTrans.ext _ _ <| funext fun a => by aesop_cat
+  LocallyRingedSpace.Hom.ext <| PresheafedSpace.ext _ _ (by ext a; exact PEmpty.elim a) <|
+    NatTrans.ext <| funext fun a => by aesop_cat
 #align algebraic_geometry.Scheme.empty_ext AlgebraicGeometry.Scheme.empty_ext
 
 theorem Scheme.eq_emptyTo {X : Scheme.{u}} (f : ∅ ⟶ X) : f = Scheme.emptyTo X :=

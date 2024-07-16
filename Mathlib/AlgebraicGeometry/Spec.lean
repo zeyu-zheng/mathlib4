@@ -291,7 +291,7 @@ set_option linter.uppercaseLean3 false in
 @[simp]
 theorem Spec.locallyRingedSpaceMap_id (R : CommRingCat.{u}) :
     Spec.locallyRingedSpaceMap (𝟙 R) = 𝟙 (Spec.locallyRingedSpaceObj R) :=
-  LocallyRingedSpace.Hom.ext _ _ <| by
+  LocallyRingedSpace.Hom.ext <| by
     rw [Spec.locallyRingedSpaceMap_val, Spec.sheafedSpaceMap_id]; rfl
 set_option linter.uppercaseLean3 false in
 #align algebraic_geometry.Spec.LocallyRingedSpace_map_id AlgebraicGeometry.Spec.locallyRingedSpaceMap_id
@@ -299,7 +299,7 @@ set_option linter.uppercaseLean3 false in
 theorem Spec.locallyRingedSpaceMap_comp {R S T : CommRingCat.{u}} (f : R ⟶ S) (g : S ⟶ T) :
     Spec.locallyRingedSpaceMap (f ≫ g) =
       Spec.locallyRingedSpaceMap g ≫ Spec.locallyRingedSpaceMap f :=
-  LocallyRingedSpace.Hom.ext _ _ <| by
+  LocallyRingedSpace.Hom.ext <| by
     rw [Spec.locallyRingedSpaceMap_val, Spec.sheafedSpaceMap_comp]; rfl
 set_option linter.uppercaseLean3 false in
 #align algebraic_geometry.Spec.LocallyRingedSpace_map_comp AlgebraicGeometry.Spec.locallyRingedSpaceMap_comp
@@ -338,7 +338,7 @@ set_option linter.uppercaseLean3 false in
 theorem Spec_Γ_naturality {R S : CommRingCat.{u}} (f : R ⟶ S) :
     f ≫ toSpecΓ S = toSpecΓ R ≫ Γ.map (Spec.toLocallyRingedSpace.map f.op).op := by
   -- Porting note: `ext` failed to pick up one of the three lemmas
-  refine RingHom.ext fun x => Subtype.ext <| funext fun x' => ?_; symm;
+  refine RingHom.ext fun x => Subtype.ext <| funext fun x' => ?_; symm
   apply Localization.localRingHom_to_map
 set_option linter.uppercaseLean3 false in
 #align algebraic_geometry.Spec_Γ_naturality AlgebraicGeometry.Spec_Γ_naturality

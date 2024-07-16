@@ -278,7 +278,7 @@ theorem mk_le_of_comm {B A : C} {X : Subobject B} {f : A ⟶ B} [Mono f] (g : A 
 
 /-- To show that two subobjects are equal, it suffices to exhibit an isomorphism commuting with
     the arrows. -/
-@[ext]
+@[ext (iff := false)]
 theorem eq_of_comm {B : C} {X Y : Subobject B} (f : (X : C) ≅ (Y : C))
     (w : f.hom ≫ Y.arrow = X.arrow) : X = Y :=
   le_antisymm (le_of_comm f.hom w) <| le_of_comm f.inv <| f.inv_comp_eq.2 w.symm
@@ -649,11 +649,11 @@ theorem map_pullback [HasPullbacks C] {X Y Z W : C} {f : X ⟶ Y} {g : X ⟶ Z} 
   intro a
   apply Quotient.sound
   apply ThinSkeleton.equiv_of_both_ways
-  · refine MonoOver.homMk (pullback.lift pullback.fst _ ?_) (pullback.lift_snd _ _ _)
-    change _ ≫ a.arrow ≫ h = (pullback.snd ≫ g) ≫ _
+  · refine MonoOver.homMk (pullback.lift (pullback.fst _ _) _ ?_) (pullback.lift_snd _ _ _)
+    change _ ≫ a.arrow ≫ h = (pullback.snd _ _ ≫ g) ≫ _
     rw [assoc, ← comm, pullback.condition_assoc]
-  · refine MonoOver.homMk (pullback.lift pullback.fst
-      (PullbackCone.IsLimit.lift t (pullback.fst ≫ a.arrow) pullback.snd _)
+  · refine MonoOver.homMk (pullback.lift (pullback.fst _ _)
+      (PullbackCone.IsLimit.lift t (pullback.fst _ _ ≫ a.arrow) (pullback.snd _ _) _)
       (PullbackCone.IsLimit.lift_fst _ _ _ ?_).symm) ?_
     · rw [← pullback.condition, assoc]
       rfl

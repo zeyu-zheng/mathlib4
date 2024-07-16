@@ -7,7 +7,7 @@ import Mathlib.CategoryTheory.Monoidal.Braided.Basic
 import Mathlib.CategoryTheory.Monoidal.Discrete
 import Mathlib.CategoryTheory.Monoidal.CoherenceLemmas
 import Mathlib.CategoryTheory.Limits.Shapes.Terminal
-import Mathlib.Algebra.PUnitInstances
+import Mathlib.Algebra.PUnitInstances.Algebra
 
 #align_import category_theory.monoidal.Mon_ from "leanprover-community/mathlib"@"a836c6dba9bd1ee2a0cdc9af0006a596f243031c"
 
@@ -119,7 +119,7 @@ instance : Category (Mon_ C) where
 -- Porting note: added, as `Hom.ext` does not apply to a morphism.
 @[ext]
 lemma ext {X Y : Mon_ C} {f g : X ⟶ Y} (w : f.hom = g.hom) : f = g :=
-  Hom.ext _ _ w
+  Hom.ext w
 
 @[simp]
 theorem id_hom' (M : Mon_ C) : (𝟙 M : Hom M M).hom = 𝟙 M.X :=

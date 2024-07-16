@@ -166,7 +166,7 @@ theorem ofCoprodI_of (i : ι) (g : G i) :
 
 theorem induction_on {motive : PushoutI φ → Prop}
     (x : PushoutI φ)
-    (of  : ∀ (i : ι) (g : G i), motive (of i g))
+    (of : ∀ (i : ι) (g : G i), motive (of i g))
     (base : ∀ h, motive (base φ h))
     (mul : ∀ x y, motive x → motive y → motive (x * y)) : motive x := by
   delta PushoutI PushoutI.of PushoutI.base at *
@@ -279,9 +279,6 @@ theorem ext {w₁ w₂ : NormalWord d} (hhead : w₁.head = w₂.head)
   rcases w₁ with ⟨⟨_, _, _⟩, _, _⟩
   rcases w₂ with ⟨⟨_, _, _⟩, _, _⟩
   simp_all
-
-theorem ext_iff {w₁ w₂ : NormalWord d} : w₁ = w₂ ↔ w₁.head = w₂.head ∧ w₁.toList = w₂.toList :=
-  ⟨fun h => by simp [h], fun ⟨h₁, h₂⟩ => ext h₁ h₂⟩
 
 open Subgroup.IsComplement
 

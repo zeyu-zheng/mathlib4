@@ -377,7 +377,7 @@ theorem span_smul_eq_of_isUnit (s : Set M) (r : R) (hr : IsUnit r) : span R (r �
 
 @[simp]
 theorem coe_iSup_of_directed {ι} [Nonempty ι] (S : ι → Submodule R M)
-    (H : Directed (· ≤ ·) S) : ((iSup S: Submodule R M) : Set M) = ⋃ i, S i :=
+    (H : Directed (· ≤ ·) S) : ((iSup S : Submodule R M) : Set M) = ⋃ i, S i :=
   let s : Submodule R M :=
     { __ := AddSubmonoid.copy _ _ (AddSubmonoid.coe_iSup_of_directed H).symm
       smul_mem' := fun r _ hx ↦ have ⟨i, hi⟩ := Set.mem_iUnion.mp hx
@@ -1069,12 +1069,14 @@ variable {R M}
 
 theorem toSpanSingleton_isIdempotentElem_iff {e : R} :
     IsIdempotentElem (toSpanSingleton R R e) ↔ IsIdempotentElem e := by
-  simp_rw [IsIdempotentElem, ext_iff, mul_apply, toSpanSingleton_apply, smul_eq_mul, mul_assoc]
+  simp_rw [IsIdempotentElem, LinearMap.ext_iff, mul_apply, toSpanSingleton_apply,
+    smul_eq_mul, mul_assoc]
   exact ⟨fun h ↦ by conv_rhs => rw [← one_mul e, ← h, one_mul], fun h _ ↦ by rw [h]⟩
 
 theorem isIdempotentElem_apply_one_iff {f : Module.End R R} :
     IsIdempotentElem (f 1) ↔ IsIdempotentElem f := by
-  rw [IsIdempotentElem, ← smul_eq_mul, ← map_smul, smul_eq_mul, mul_one, IsIdempotentElem, ext_iff]
+  rw [IsIdempotentElem, ← smul_eq_mul, ← map_smul, smul_eq_mul, mul_one,
+    IsIdempotentElem, LinearMap.ext_iff]
   simp_rw [mul_apply]
   exact ⟨fun h r ↦ by rw [← mul_one r, ← smul_eq_mul, map_smul, map_smul, h], (· 1)⟩
 

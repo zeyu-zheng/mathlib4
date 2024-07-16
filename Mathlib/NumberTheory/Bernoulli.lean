@@ -248,7 +248,7 @@ theorem sum_bernoulli (n : ℕ) :
 theorem bernoulli_spec' (n : ℕ) :
     (∑ k ∈ antidiagonal n, ((k.1 + k.2).choose k.2 : ℚ) / (k.2 + 1) * bernoulli k.1) =
       if n = 0 then 1 else 0 := by
-  cases' n with n n;
+  cases' n with n n
   · simp
   rw [if_neg (succ_ne_zero _)]
   -- algebra facts
@@ -276,7 +276,7 @@ def bernoulliPowerSeries :=
 theorem bernoulliPowerSeries_mul_exp_sub_one : bernoulliPowerSeries A * (exp A - 1) = X := by
   ext n
   -- constant coefficient is a special case
-  cases' n with n n;
+  cases' n with n n
   · simp
   simp only [bernoulliPowerSeries, coeff_mul, coeff_X, sum_antidiagonal_succ', one_div, coeff_mk,
     coeff_one, coeff_exp, LinearMap.map_sub, factorial, if_pos, cast_succ, cast_one, cast_mul,
@@ -341,7 +341,8 @@ theorem sum_range_pow (n p : ℕ) :
         mk fun p =>
           ∑ i ∈ range (p + 1), bernoulli i * (p + 1).choose i * (n : ℚ) ^ (p + 1 - i) / (p + 1)! by
       rw [← div_eq_iff (hne p), div_eq_mul_inv, sum_mul]
-      rw [PowerSeries.ext_iff] at this
+      -- Adaptation_note (2024-07-08): this was rw, but that created an instance goal
+      simp_rw [PowerSeries.ext_iff] at this
       simpa using this p
     -- the power series `exp ℚ - 1` is non-zero, a fact we need in order to use `mul_right_inj'`
     have hexp : exp ℚ - 1 ≠ 0 := by

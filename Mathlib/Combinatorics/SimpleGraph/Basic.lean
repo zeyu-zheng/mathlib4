@@ -29,7 +29,7 @@ This module defines simple graphs on a vertex type `V` as an irreflexive symmetr
   `CompleteAtomicBooleanAlgebra`. In other words, this is the complete lattice of spanning subgraphs
   of the complete graph.
 
-## Todo
+## TODO
 
 * This is the simplest notion of an unoriented graph.  This should
   eventually fit into a more complete combinatorics hierarchy which
@@ -203,7 +203,7 @@ theorem ne_of_adj_of_not_adj {v w x : V} (h : G.Adj v x) (hn : ¬G.Adj w x) : v 
 #align simple_graph.ne_of_adj_of_not_adj SimpleGraph.ne_of_adj_of_not_adj
 
 theorem adj_injective : Injective (Adj : SimpleGraph V → V → V → Prop) :=
-  SimpleGraph.ext
+  fun _ _ => SimpleGraph.ext
 #align simple_graph.adj_injective SimpleGraph.adj_injective
 
 @[simp]

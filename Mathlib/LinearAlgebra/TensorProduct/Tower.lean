@@ -120,7 +120,7 @@ nonrec def lift (f : M →ₗ[A] N →ₗ[R] P) : M ⊗[R] N →ₗ[A] P :=
           (lift (f.restrictScalars R)).comp (lsmul R R _ c) x =
             (lsmul R R _ c).comp (lift (f.restrictScalars R)) x
         from
-        ext_iff.1 <|
+        LinearMap.ext_iff.1 <|
           TensorProduct.ext' fun x y => by
             simp only [comp_apply, Algebra.lsmul_coe, smul_tmul', lift.tmul,
               coe_restrictScalars, f.map_smul, smul_apply] }
@@ -394,7 +394,7 @@ theorem leftComm_tmul (m : M) (p : P) (q : Q) :
   rfl
 
 @[simp]
-theorem leftComm_symm_tmul (m : M) (p : P) (q : Q):
+theorem leftComm_symm_tmul (m : M) (p : P) (q : Q) :
     (leftComm R A M P Q).symm (p ⊗ₜ (m ⊗ₜ q)) = m ⊗ₜ (p ⊗ₜ q) :=
   rfl
 
@@ -425,7 +425,7 @@ theorem rightComm_tmul (m : M) (p : P) (q : Q) :
   rfl
 
 @[simp]
-theorem rightComm_symm_tmul (m : M) (p : P) (q : Q):
+theorem rightComm_symm_tmul (m : M) (p : P) (q : Q) :
     (rightComm R A M P Q).symm ((m ⊗ₜ q) ⊗ₜ p) = (m ⊗ₜ p) ⊗ₜ q :=
   rfl
 

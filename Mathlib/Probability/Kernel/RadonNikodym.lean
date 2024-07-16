@@ -263,8 +263,7 @@ lemma rnDeriv_eq_top_iff (κ η : kernel α γ) (a : α) (x : γ) :
 
 lemma rnDeriv_eq_top_iff' (κ η : kernel α γ) (a : α) (x : γ) :
     rnDeriv κ η a x = ∞ ↔ x ∈ mutuallySingularSetSlice κ η a := by
-  rw [rnDeriv_eq_top_iff]
-  rfl
+  rw [rnDeriv_eq_top_iff, mutuallySingularSet, mutuallySingularSetSlice, mem_setOf, mem_setOf]
 
 /-- Singular part of the kernel `κ` with respect to the kernel `η`. -/
 noncomputable
@@ -300,18 +299,13 @@ lemma singularPart_compl_mutuallySingularSetSlice (κ η : kernel α γ) [IsSFin
   · exact measurable_singularPart_fun_right κ η a
   · exact measurable_singularPart_fun κ η
   refine ae_of_all _ (fun x hx ↦ ?_)
-  simp only [mem_compl_iff, mem_setOf_eq] at hx
+  simp only [mem_compl_iff, mutuallySingularSetSlice, mem_setOf, not_le] at hx
   simp_rw [rnDeriv]
   rw [← ENNReal.ofReal_div_of_pos, div_eq_inv_mul, ← ENNReal.ofReal_mul, ← mul_assoc,
-    mul_inv_cancel, one_mul, tsub_self]
-  · rfl
-  · rw [ne_eq, sub_eq_zero]
-    rw [not_mem_mutuallySingularSetSlice] at hx
-    exact hx.ne'
-  · rw [not_mem_mutuallySingularSetSlice] at hx
-    simp [hx.le]
-  · simp only [sub_pos]
-    exact not_le.mp hx
+    mul_inv_cancel, one_mul, tsub_self, Pi.zero_apply]
+  · simp only [ne_eq, sub_eq_zero, hx.ne', not_false_eq_true]
+  · simp only [sub_nonneg, hx.le]
+  · simp only [sub_pos, hx]
 
 lemma singularPart_of_subset_compl_mutuallySingularSetSlice [IsFiniteKernel κ]
     [IsFiniteKernel η] {a : α} {s : Set γ} (hs : s ⊆ (mutuallySingularSetSlice κ η a)ᶜ) :
@@ -457,7 +451,7 @@ lemma singularPart_eq_zero_iff_measure_eq_zero (κ η : kernel α γ)
     [IsFiniteKernel κ] [IsFiniteKernel η] (a : α) :
     singularPart κ η a = 0 ↔ κ a (mutuallySingularSetSlice κ η a) = 0 := by
   have h_eq_add := rnDeriv_add_singularPart κ η
-  simp_rw [ext_iff, Measure.ext_iff] at h_eq_add
+  simp_rw [kernel.ext_iff, Measure.ext_iff] at h_eq_add
   specialize h_eq_add a (mutuallySingularSetSlice κ η a)
     (measurableSet_mutuallySingularSetSlice κ η a)
   simp only [coeFn_add, Pi.add_apply, Measure.coe_add,
@@ -469,7 +463,7 @@ lemma withDensity_rnDeriv_eq_zero_iff_measure_eq_zero (κ η : kernel α γ)
     [IsFiniteKernel κ] [IsFiniteKernel η] (a : α) :
     withDensity η (rnDeriv κ η) a = 0 ↔ κ a (mutuallySingularSetSlice κ η a)ᶜ = 0 := by
   have h_eq_add := rnDeriv_add_singularPart κ η
-  simp_rw [ext_iff, Measure.ext_iff] at h_eq_add
+  simp_rw [kernel.ext_iff, Measure.ext_iff] at h_eq_add
   specialize h_eq_add a (mutuallySingularSetSlice κ η a)ᶜ
     (measurableSet_mutuallySingularSetSlice κ η a).compl
   simp only [coeFn_add, Pi.add_apply, Measure.coe_add,

@@ -92,7 +92,7 @@ instance : Quiver LocallyRingedSpace :=
   ⟨Hom⟩
 
 @[ext] lemma Hom.ext' (X Y : LocallyRingedSpace.{u}) {f g : X ⟶ Y} (h : f.val = g.val) : f = g :=
-  Hom.ext _ _ h
+  Hom.ext h
 
 -- TODO perhaps we should make a bundled `LocalRing` and return one here?
 -- TODO define `sheaf.stalk` so we can write `X.𝒪.stalk` here?
@@ -146,9 +146,9 @@ instance : Category LocallyRingedSpace.{u} where
   Hom := Hom
   id := id
   comp {X Y Z} f g := comp f g
-  comp_id {X Y} f := Hom.ext _ _ <| by simp [comp]
-  id_comp {X Y} f := Hom.ext _ _ <| by simp [comp]
-  assoc {_ _ _ _} f g h := Hom.ext _ _ <| by simp [comp]
+  comp_id {X Y} f := Hom.ext <| by simp [comp]
+  id_comp {X Y} f := Hom.ext <| by simp [comp]
+  assoc {_ _ _ _} f g h := Hom.ext <| by simp [comp]
 
 /-- The forgetful functor from `LocallyRingedSpace` to `SheafedSpace CommRing`. -/
 @[simps]
@@ -159,7 +159,7 @@ set_option linter.uppercaseLean3 false in
 #align algebraic_geometry.LocallyRingedSpace.forget_to_SheafedSpace AlgebraicGeometry.LocallyRingedSpace.forgetToSheafedSpace
 
 instance : forgetToSheafedSpace.Faithful where
-  map_injective {_ _} _ _ h := Hom.ext _ _ h
+  map_injective {_ _} _ _ h := Hom.ext h
 
 /-- The forgetful functor from `LocallyRingedSpace` to `Top`. -/
 @[simps!]
@@ -221,15 +221,15 @@ def isoOfSheafedSpaceIso {X Y : LocallyRingedSpace.{u}} (f : X.toSheafedSpace �
     X ≅ Y where
   hom := homOfSheafedSpaceHomOfIsIso f.hom
   inv := homOfSheafedSpaceHomOfIsIso f.inv
-  hom_inv_id := Hom.ext _ _ f.hom_inv_id
-  inv_hom_id := Hom.ext _ _ f.inv_hom_id
+  hom_inv_id := Hom.ext f.hom_inv_id
+  inv_hom_id := Hom.ext f.inv_hom_id
 set_option linter.uppercaseLean3 false in
 #align algebraic_geometry.LocallyRingedSpace.iso_of_SheafedSpace_iso AlgebraicGeometry.LocallyRingedSpace.isoOfSheafedSpaceIso
 
 instance : forgetToSheafedSpace.ReflectsIsomorphisms where reflects {_ _} f i :=
   { out :=
       ⟨homOfSheafedSpaceHomOfIsIso (CategoryTheory.inv (forgetToSheafedSpace.map f)),
-        Hom.ext _ _ (IsIso.hom_inv_id (I := i)), Hom.ext _ _ (IsIso.inv_hom_id (I := i))⟩ }
+        Hom.ext (IsIso.hom_inv_id (I := i)), Hom.ext (IsIso.inv_hom_id (I := i))⟩ }
 
 instance is_sheafedSpace_iso {X Y : LocallyRingedSpace.{u}} (f : X ⟶ Y) [IsIso f] : IsIso f.1 :=
   LocallyRingedSpace.forgetToSheafedSpace.map_isIso f
@@ -299,6 +299,30 @@ theorem Γ_map_op {X Y : LocallyRingedSpace.{u}} (f : X ⟶ Y) : Γ.map f.op = f
 set_option linter.uppercaseLean3 false in
 #align algebraic_geometry.LocallyRingedSpace.Γ_map_op AlgebraicGeometry.LocallyRingedSpace.Γ_map_op
 
+/-- The empty locally ringed space. -/
+def empty : LocallyRingedSpace.{u} where
+  carrier := TopCat.of PEmpty
+  presheaf := (CategoryTheory.Functor.const _).obj (CommRingCat.of PUnit)
+  IsSheaf := Presheaf.isSheaf_of_isTerminal _ CommRingCat.punitIsTerminal
+  localRing x := PEmpty.elim x
+
+instance : EmptyCollection LocallyRingedSpace.{u} := ⟨LocallyRingedSpace.empty⟩
+
+/-- The canonical map from the empty locally ringed space. -/
+def emptyTo (X : LocallyRingedSpace) : ∅ ⟶ X :=
+  ⟨⟨⟨fun x => PEmpty.elim x, by fun_prop⟩,
+    { app := fun U => by refine ⟨⟨⟨0, ?_⟩, ?_⟩, ?_, ?_⟩ <;> intros <;> rfl }⟩,
+    fun x => PEmpty.elim x⟩
+
+noncomputable
+instance {X : LocallyRingedSpace} : Unique (∅ ⟶ X) where
+  default := LocallyRingedSpace.emptyTo X
+  uniq f := by ext ⟨⟩ x; aesop_cat
+
+/-- The empty space is initial in `LocallyRingedSpace`. -/
+noncomputable
+def emptyIsInitial : Limits.IsInitial (∅ : LocallyRingedSpace.{u}) := Limits.IsInitial.ofUnique _
+
 theorem preimage_basicOpen {X Y : LocallyRingedSpace.{u}} (f : X ⟶ Y) {U : Opens Y}
     (s : Y.presheaf.obj (op U)) :
     (Opens.map f.1.base).obj (Y.toRingedSpace.basicOpen s) =
@@ -335,10 +359,11 @@ lemma basicOpen_eq_bot_of_isNilpotent (X : LocallyRingedSpace.{u}) (U : Opens X.
     (f : (X.presheaf.obj <| op U)) (hf : IsNilpotent f) :
     X.toRingedSpace.basicOpen f = ⊥ := by
   obtain ⟨n, hn⟩ := hf
-  by_cases h : 0 < n
-  · rw [←  X.toRingedSpace.basicOpen_pow f n h, hn]
+  cases n.eq_zero_or_pos with
+  | inr h =>
+    rw [←  X.toRingedSpace.basicOpen_pow f n h, hn]
     simp [basicOpen_zero]
-  · rw [not_lt, nonpos_iff_eq_zero] at h
+  | inl h =>
     rw [h, pow_zero] at hn
     simp [eq_zero_of_zero_eq_one hn.symm f, basicOpen_zero]
 

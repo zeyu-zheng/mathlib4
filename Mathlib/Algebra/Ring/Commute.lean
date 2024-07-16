@@ -47,22 +47,22 @@ section deprecated
 set_option linter.deprecated false
 
 @[deprecated (since := "2022-11-28")]
-theorem bit0_right [Distrib R] {x y : R} (h : Commute x y) : Commute x (bit0 y) :=
+theorem bit0_right [Distrib R] {x y : R} (h : Commute x y) : Commute x (y + y) :=
   h.add_right h
 #align commute.bit0_right Commute.bit0_right
 
 @[deprecated (since := "2022-11-28")]
-theorem bit0_left [Distrib R] {x y : R} (h : Commute x y) : Commute (bit0 x) y :=
+theorem bit0_left [Distrib R] {x y : R} (h : Commute x y) : Commute (x + x) y :=
   h.add_left h
 #align commute.bit0_left Commute.bit0_left
 
 @[deprecated (since := "2022-11-28")]
-theorem bit1_right [NonAssocSemiring R] {x y : R} (h : Commute x y) : Commute x (bit1 y) :=
+theorem bit1_right [NonAssocSemiring R] {x y : R} (h : Commute x y) : Commute x ((y + y) + 1) :=
   h.bit0_right.add_right (Commute.one_right x)
 #align commute.bit1_right Commute.bit1_right
 
 @[deprecated (since := "2022-11-28")]
-theorem bit1_left [NonAssocSemiring R] {x y : R} (h : Commute x y) : Commute (bit1 x) y :=
+theorem bit1_left [NonAssocSemiring R] {x y : R} (h : Commute x y) : Commute ((x + x) + 1) y :=
   h.bit0_left.add_left (Commute.one_left y)
 #align commute.bit1_left Commute.bit1_left
 
@@ -182,13 +182,13 @@ lemma neg_pow' (a : R) (n : ℕ) : (-a) ^ n = a ^ n * (-1) ^ n :=
 section
 set_option linter.deprecated false
 
-lemma neg_pow_bit0 (a : R) (n : ℕ) : (-a) ^ bit0 n = a ^ bit0 n := by
+lemma neg_pow_bit0 (a : R) (n : ℕ) : (-a) ^ (2 * n) = a ^ (2 * n) := by
   rw [pow_bit0', neg_mul_neg, pow_bit0']
 #align neg_pow_bit0 neg_pow_bit0
 
 @[simp]
-lemma neg_pow_bit1 (a : R) (n : ℕ) : (-a) ^ bit1 n = -a ^ bit1 n := by
-  simp only [bit1, pow_succ', neg_pow_bit0, neg_mul_eq_neg_mul]
+lemma neg_pow_bit1 (a : R) (n : ℕ) : (-a) ^ (2 * n + 1) = -a ^ (2 * n + 1) := by
+  simp only [pow_succ', neg_pow_bit0, neg_mul_eq_neg_mul]
 #align neg_pow_bit1 neg_pow_bit1
 
 end
@@ -287,7 +287,7 @@ lemma eq_or_eq_neg_of_sq_eq_sq (a b : R) : a ^ 2 = b ^ 2 → a = b ∨ a = -b :=
 namespace Units
 
 protected lemma sq_eq_sq_iff_eq_or_eq_neg {a b : Rˣ} : a ^ 2 = b ^ 2 ↔ a = b ∨ a = -b := by
-  simp_rw [ext_iff, val_pow_eq_pow_val, sq_eq_sq_iff_eq_or_eq_neg, Units.val_neg]
+  simp_rw [Units.ext_iff, val_pow_eq_pow_val, sq_eq_sq_iff_eq_or_eq_neg, Units.val_neg]
 #align units.sq_eq_sq_iff_eq_or_eq_neg Units.sq_eq_sq_iff_eq_or_eq_neg
 
 protected lemma eq_or_eq_neg_of_sq_eq_sq (a b : Rˣ) (h : a ^ 2 = b ^ 2) : a = b ∨ a = -b :=
@@ -303,7 +303,7 @@ namespace Units
   one's additive inverse. -/
 theorem inv_eq_self_iff [Ring R] [NoZeroDivisors R] (u : Rˣ) : u⁻¹ = u ↔ u = 1 ∨ u = -1 := by
   rw [inv_eq_iff_mul_eq_one]
-  simp only [ext_iff]
+  simp only [Units.ext_iff]
   push_cast
   exact mul_self_eq_one_iff
 #align units.inv_eq_self_iff Units.inv_eq_self_iff

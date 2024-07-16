@@ -116,7 +116,7 @@ def functor : C ⥤ Quotient r where
 #align category_theory.quotient.functor CategoryTheory.Quotient.functor
 
 instance full_functor : (functor r).Full where
-  map_surjective f:= ⟨Quot.out f, by simp [functor]⟩
+  map_surjective f := ⟨Quot.out f, by simp [functor]⟩
 
 instance essSurj_functor : (functor r).EssSurj where
   mem_essImage Y :=
@@ -234,7 +234,7 @@ variable {r}
 
 lemma natTrans_ext {F G : Quotient r ⥤ D} (τ₁ τ₂ : F ⟶ G)
     (h : whiskerLeft (Quotient.functor r) τ₁ = whiskerLeft (Quotient.functor r) τ₂) : τ₁ = τ₂ :=
-  NatTrans.ext _ _ (by ext1 ⟨X⟩; exact NatTrans.congr_app h X)
+  NatTrans.ext (by ext1 ⟨X⟩; exact NatTrans.congr_app h X)
 
 variable (r)
 

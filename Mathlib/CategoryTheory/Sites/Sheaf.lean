@@ -344,9 +344,9 @@ instance instCategorySheaf : Category (Sheaf J A) where
   Hom := Hom
   id _ := ⟨𝟙 _⟩
   comp f g := ⟨f.val ≫ g.val⟩
-  id_comp _ := Hom.ext _ _ <| id_comp _
-  comp_id _ := Hom.ext _ _ <| comp_id _
-  assoc _ _ _ := Hom.ext _ _ <| assoc _ _ _
+  id_comp _ := Hom.ext <| id_comp _
+  comp_id _ := Hom.ext <| comp_id _
+  assoc _ _ _ := Hom.ext <| assoc _ _ _
 
 -- Let's make the inhabited linter happy.../sips
 instance (X : Sheaf J A) : Inhabited (Hom X X) :=
@@ -355,7 +355,7 @@ instance (X : Sheaf J A) : Inhabited (Hom X X) :=
 -- Porting note: added because `Sheaf.Hom.ext` was not triggered automatically
 @[ext]
 lemma hom_ext {X Y : Sheaf J A} (x y : X ⟶ Y) (h : x.val = y.val) : x = y :=
-  Sheaf.Hom.ext _ _ h
+  Sheaf.Hom.ext h
 
 end Sheaf
 
@@ -515,7 +515,7 @@ set_option linter.uppercaseLean3 false in
 
 instance Sheaf.Hom.addCommGroup : AddCommGroup (P ⟶ Q) :=
   Function.Injective.addCommGroup (fun f : Sheaf.Hom P Q => f.1)
-    (fun _ _ h => Sheaf.Hom.ext _ _ h) rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
+    (fun _ _ h => Sheaf.Hom.ext h) rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
     (fun _ _ => by aesop_cat) (fun _ _ => by aesop_cat)
 
 instance : Preadditive (Sheaf J A) where
@@ -654,12 +654,12 @@ def secondObj : A :=
 
 /-- The map `pr₀*` of <https://stacks.math.columbia.edu/tag/00VM>. -/
 def firstMap : firstObj R P ⟶ secondObj R P :=
-  Pi.lift fun _ => Pi.π _ _ ≫ P.map pullback.fst.op
+  Pi.lift fun _ => Pi.π _ _ ≫ P.map (pullback.fst _ _).op
 #align category_theory.presheaf.first_map CategoryTheory.Presheaf.firstMap
 
 /-- The map `pr₁*` of <https://stacks.math.columbia.edu/tag/00VM>. -/
 def secondMap : firstObj R P ⟶ secondObj R P :=
-  Pi.lift fun _ => Pi.π _ _ ≫ P.map pullback.snd.op
+  Pi.lift fun _ => Pi.π _ _ ≫ P.map (pullback.snd _ _).op
 #align category_theory.presheaf.second_map CategoryTheory.Presheaf.secondMap
 
 theorem w : forkMap R P ≫ firstMap R P = forkMap R P ≫ secondMap R P := by

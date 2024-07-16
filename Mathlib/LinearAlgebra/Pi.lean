@@ -62,8 +62,8 @@ theorem ker_pi (f : (i : ι) → M₂ →ₗ[R] φ i) : ker (pi f) = ⨅ i : ι,
 #align linear_map.ker_pi LinearMap.ker_pi
 
 theorem pi_eq_zero (f : (i : ι) → M₂ →ₗ[R] φ i) : pi f = 0 ↔ ∀ i, f i = 0 := by
-  simp only [LinearMap.ext_iff, pi_apply, funext_iff];
-    exact ⟨fun h a b => h b a, fun h a b => h b a⟩
+  simp only [LinearMap.ext_iff, pi_apply, funext_iff]
+  exact ⟨fun h a b => h b a, fun h a b => h b a⟩
 #align linear_map.pi_eq_zero LinearMap.pi_eq_zero
 
 theorem pi_zero : pi (fun i => 0 : (i : ι) → M₂ →ₗ[R] φ i) = 0 := by ext; rfl
@@ -193,9 +193,6 @@ theorem pi_ext' (h : ∀ i, f.comp (single i) = g.comp (single i)) : f = g := by
   refine pi_ext fun i x => ?_
   convert LinearMap.congr_fun (h i) x
 #align linear_map.pi_ext' LinearMap.pi_ext'
-
-theorem pi_ext'_iff : f = g ↔ ∀ i, f.comp (single i) = g.comp (single i) :=
-  ⟨fun h _ => h ▸ rfl, pi_ext'⟩
 #align linear_map.pi_ext'_iff LinearMap.pi_ext'_iff
 
 end Ext

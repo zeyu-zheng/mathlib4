@@ -167,7 +167,7 @@ variable [NonUnitalNonAssocSemiring C] [DistribMulAction T C]
 -- instance : CoeFun (A →ₙₐ[R] B) fun _ => A → B :=
 --   ⟨toFun⟩
 
-instance  : DFunLike (A →ₛₙₐ[φ] B) A fun _ => B where
+instance : DFunLike (A →ₛₙₐ[φ] B) A fun _ => B where
   coe f := f.toFun
   coe_injective' := by rintro ⟨⟨⟨f, _⟩, _⟩, _⟩ ⟨⟨⟨g, _⟩, _⟩, _⟩ h; congr
 
@@ -208,11 +208,6 @@ instance : NonUnitalAlgSemiHomClass (A →ₛₙₐ[φ] B) φ A B where
 theorem ext {f g : A →ₛₙₐ[φ] B} (h : ∀ x, f x = g x) : f = g :=
   coe_injective <| funext h
 #align non_unital_alg_hom.ext NonUnitalAlgHom.ext
-
-theorem ext_iff {f g : A →ₛₙₐ[φ] B} : f = g ↔ ∀ x, f x = g x :=
-  ⟨by
-    rintro rfl x
-    rfl, ext⟩
 #align non_unital_alg_hom.ext_iff NonUnitalAlgHom.ext_iff
 
 theorem congr_fun {f g : A →ₛₙₐ[φ] B} (h : f = g) (x : A) : f x = g x :=
@@ -340,7 +335,7 @@ variable {φ' : S →* R} {ψ : S →* T} {χ : R →* T}
 
 set_option linter.unusedVariables false in
 /-- The composition of morphisms is a morphism. -/
-def comp (f : B →ₛₙₐ[ψ] C) (g : A →ₛₙₐ[φ] B) [κ : MonoidHom.CompTriple φ ψ χ]:
+def comp (f : B →ₛₙₐ[ψ] C) (g : A →ₛₙₐ[φ] B) [κ : MonoidHom.CompTriple φ ψ χ] :
     A →ₛₙₐ[χ] C :=
   { (f : B →ₙ* C).comp (g : A →ₙ* B), (f : B →ₑ+[ψ] C).comp (g : A →ₑ+[φ] B) with }
 #align non_unital_alg_hom.comp NonUnitalAlgHom.comp
@@ -354,7 +349,7 @@ theorem comp_apply (f : B →ₛₙₐ[ψ] C) (g : A →ₛₙₐ[φ] B) [Monoid
     f.comp g x = f (g x) := rfl
 #align non_unital_alg_hom.comp_apply NonUnitalAlgHom.comp_apply
 
-variable {B₁: Type*} [NonUnitalNonAssocSemiring B₁] [DistribMulAction R B₁]
+variable {B₁ : Type*} [NonUnitalNonAssocSemiring B₁] [DistribMulAction R B₁]
 
 /-- The inverse of a bijective morphism is a morphism. -/
 def inverse (f : A →ₙₐ[R] B₁) (g : B₁ → A)

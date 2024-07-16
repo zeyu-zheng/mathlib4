@@ -90,7 +90,7 @@ protected theorem weight_vector_multiplication (M₁ M₂ M₃ : Type*)
   let f₁ : Module.End R (M₁ ⊗[R] M₂) := (toEnd R L M₁ x - χ₁ • ↑1).rTensor M₂
   let f₂ : Module.End R (M₁ ⊗[R] M₂) := (toEnd R L M₂ x - χ₂ • ↑1).lTensor M₁
   have h_comm_square : F ∘ₗ ↑g = (g : M₁ ⊗[R] M₂ →ₗ[R] M₃).comp (f₁ + f₂) := by
-    ext m₁ m₂;
+    ext m₁ m₂
     simp only [f₁, f₂, F, ← g.map_lie x (m₁ ⊗ₜ m₂), add_smul, sub_tmul, tmul_sub, smul_tmul,
       lie_tmul_right, tmul_smul, toEnd_apply_apply, LieModuleHom.map_smul,
       LinearMap.one_apply, LieModuleHom.coe_toLinearMap, LinearMap.smul_apply, Function.comp_apply,
@@ -210,7 +210,7 @@ variable {M}
 @[ext] lemma ext {χ₁ χ₂ : Weight R L M} (h : ∀ x, χ₁ x = χ₂ x) : χ₁ = χ₂ := by
   cases' χ₁ with f₁ _; cases' χ₂ with f₂ _; aesop
 
-lemma ext_iff {χ₁ χ₂ : Weight R L M} : (χ₁ : L → R) = χ₂ ↔ χ₁ = χ₂ := by aesop
+lemma ext_iff' {χ₁ χ₂ : Weight R L M} : (χ₁ : L → R) = χ₂ ↔ χ₁ = χ₂ := by aesop
 
 lemma exists_ne_zero (χ : Weight R L M) :
     ∃ x ∈ weightSpace M χ, x ≠ 0 := by
@@ -238,7 +238,7 @@ def IsZero (χ : Weight R L M) := (χ : L → R) = 0
 @[simp] lemma coe_eq_zero_iff (χ : Weight R L M) : (χ : L → R) = 0 ↔ χ.IsZero := Iff.rfl
 
 lemma isZero_iff_eq_zero [Nontrivial (weightSpace M (0 : L → R))] {χ : Weight R L M} :
-    χ.IsZero ↔ χ = 0 := ext_iff (χ₂ := 0)
+    χ.IsZero ↔ χ = 0 := Weight.ext_iff' (χ₂ := 0)
 
 lemma isZero_zero [Nontrivial (weightSpace M (0 : L → R))] : IsZero (0 : Weight R L M) := rfl
 

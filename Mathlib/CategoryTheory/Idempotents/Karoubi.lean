@@ -23,10 +23,9 @@ complete category. It is also preadditive when `C` is preadditive.
 
 -/
 
-
 noncomputable section
 
-open CategoryTheory.Category CategoryTheory.Preadditive CategoryTheory.Limits BigOperators
+open CategoryTheory.Category CategoryTheory.Preadditive CategoryTheory.Limits
 
 namespace CategoryTheory
 
@@ -56,7 +55,7 @@ variable {C}
 
 attribute [reassoc (attr := simp)] idem
 
-@[ext]
+@[ext (iff := false)]
 theorem ext {P Q : Karoubi C} (h_X : P.X = Q.X) (h_p : P.p ≫ eqToHom h_X = eqToHom h_X ≫ Q.p) :
     P = Q := by
   cases P

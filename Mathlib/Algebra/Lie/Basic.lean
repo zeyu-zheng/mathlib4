@@ -276,7 +276,7 @@ instance Module.Dual.instLieModule : LieModule R L (M →ₗ[R] R) where
 end BasicProperties
 
 /-- A morphism of Lie algebras is a linear map respecting the bracket operations. -/
-structure LieHom (R L L': Type*) [CommRing R] [LieRing L] [LieAlgebra R L]
+structure LieHom (R L L' : Type*) [CommRing R] [LieRing L] [LieAlgebra R L]
   [LieRing L'] [LieAlgebra R L'] extends L →ₗ[R] L' where
   /-- A morphism of Lie algebras is compatible with brackets. -/
   map_lie' : ∀ {x y : L}, toFun ⁅x, y⁆ = ⁅toFun x, toFun y⁆
@@ -397,11 +397,6 @@ theorem coe_injective : @Function.Injective (L₁ →ₗ⁅R⁆ L₂) (L₁ → 
 theorem ext {f g : L₁ →ₗ⁅R⁆ L₂} (h : ∀ x, f x = g x) : f = g :=
   coe_injective <| funext h
 #align lie_hom.ext LieHom.ext
-
-theorem ext_iff {f g : L₁ →ₗ⁅R⁆ L₂} : f = g ↔ ∀ x, f x = g x :=
-  ⟨by
-    rintro rfl x
-    rfl, ext⟩
 #align lie_hom.ext_iff LieHom.ext_iff
 
 theorem congr_fun {f g : L₁ →ₗ⁅R⁆ L₂} (h : f = g) (x : L₁) : f x = g x :=
@@ -809,11 +804,6 @@ theorem coe_injective : @Function.Injective (M →ₗ⁅R,L⁆ N) (M → N) (↑
 theorem ext {f g : M →ₗ⁅R,L⁆ N} (h : ∀ m, f m = g m) : f = g :=
   coe_injective <| funext h
 #align lie_module_hom.ext LieModuleHom.ext
-
-theorem ext_iff {f g : M →ₗ⁅R,L⁆ N} : f = g ↔ ∀ m, f m = g m :=
-  ⟨by
-    rintro rfl m
-    rfl, ext⟩
 #align lie_module_hom.ext_iff LieModuleHom.ext_iff
 
 theorem congr_fun {f g : M →ₗ⁅R,L⁆ N} (h : f = g) (x : M) : f x = g x :=

@@ -281,7 +281,7 @@ attribute [-simp, nolint simpNF] IsBilimit.mk.injEq
 attribute [local ext] Bicone.IsBilimit
 
 instance subsingleton_isBilimit {f : J → C} {c : Bicone f} : Subsingleton c.IsBilimit :=
-  ⟨fun _ _ => Bicone.IsBilimit.ext _ _ (Subsingleton.elim _ _) (Subsingleton.elim _ _)⟩
+  ⟨fun _ _ => Bicone.IsBilimit.ext (Subsingleton.elim _ _) (Subsingleton.elim _ _)⟩
 #align category_theory.limits.bicone.subsingleton_is_bilimit CategoryTheory.Limits.Bicone.subsingleton_isBilimit
 
 section Whisker
@@ -1766,7 +1766,7 @@ theorem biprod.map_eq_map' {W X Y Z : C} [HasBinaryBiproduct W X] [HasBinaryBipr
   ext
   · simp only [mapPair_left, IsColimit.ι_map, IsLimit.map_π, biprod.inl_fst_assoc,
       Category.assoc, ← BinaryBicone.toCone_π_app_left, ← BinaryBiproduct.bicone_fst, ←
-      BinaryBicone.toCocone_ι_app_left, ← BinaryBiproduct.bicone_inl];
+      BinaryBicone.toCocone_ι_app_left, ← BinaryBiproduct.bicone_inl]
     dsimp; simp
   · simp only [mapPair_left, IsColimit.ι_map, IsLimit.map_π, zero_comp, biprod.inl_snd_assoc,
       Category.assoc, ← BinaryBicone.toCone_π_app_right, ← BinaryBiproduct.bicone_snd, ←

@@ -117,12 +117,11 @@ variable {R}
 theorem ext {φ ψ} (h : ∀ n : σ →₀ ℕ, coeff R n φ = coeff R n ψ) : φ = ψ :=
   funext h
 #align mv_power_series.ext MvPowerSeries.ext
+#align mv_power_series.ext_iff MvPowerSeries.ext_iff
 
 /-- Two multivariate formal power series are equal
- if and only if all their coefficients are equal. -/
-theorem ext_iff {φ ψ : MvPowerSeries σ R} : φ = ψ ↔ ∀ n : σ →₀ ℕ, coeff R n φ = coeff R n ψ :=
-  Function.funext_iff
-#align mv_power_series.ext_iff MvPowerSeries.ext_iff
+if and only if all their coefficients are equal. -/
+add_decl_doc MvPowerSeries.ext_iff
 
 theorem monomial_def [DecidableEq σ] (n : σ →₀ ℕ) :
     (monomial R n) = LinearMap.stdBasis R (fun _ ↦ R) n := by
@@ -249,7 +248,8 @@ theorem coeff_add_mul_monomial (a : R) :
 @[simp]
 theorem commute_monomial {a : R} {n} :
     Commute φ (monomial R n a) ↔ ∀ m, Commute (coeff R m φ) a := by
-  refine ext_iff.trans ⟨fun h m => ?_, fun h m => ?_⟩
+  rw [commute_iff_eq, MvPowerSeries.ext_iff]
+  refine ⟨fun h m => ?_, fun h m => ?_⟩
   · have := h (m + n)
     rwa [coeff_add_mul_monomial, add_comm, coeff_add_monomial_mul] at this
   · rw [coeff_mul_monomial, coeff_monomial_mul]
@@ -755,7 +755,7 @@ instance [Nonempty σ] [Nontrivial R] : Nontrivial (Subalgebra R (MvPowerSeries 
       refine ⟨X default, ?_⟩
       simp only [Algebra.mem_bot, not_exists, Set.mem_range, iff_true_iff, Algebra.mem_top]
       intro x
-      rw [ext_iff, not_forall]
+      rw [MvPowerSeries.ext_iff, not_forall]
       refine ⟨Finsupp.single default 1, ?_⟩
       simp [algebraMap_apply, coeff_C]⟩⟩
 
@@ -827,19 +827,8 @@ theorem coe_C (a : R) : ((C a : MvPolynomial σ R) : MvPowerSeries σ R) = MvPow
 set_option linter.uppercaseLean3 false in
 #align mv_polynomial.coe_C MvPolynomial.coe_C
 
-set_option linter.deprecated false in
-@[simp, norm_cast]
-theorem coe_bit0 :
-    ((bit0 φ : MvPolynomial σ R) : MvPowerSeries σ R) = bit0 (φ : MvPowerSeries σ R) :=
-  coe_add _ _
-#align mv_polynomial.coe_bit0 MvPolynomial.coe_bit0
-
-set_option linter.deprecated false in
-@[simp, norm_cast]
-theorem coe_bit1 :
-    ((bit1 φ : MvPolynomial σ R) : MvPowerSeries σ R) = bit1 (φ : MvPowerSeries σ R) := by
-  rw [bit1, bit1, coe_add, coe_one, coe_bit0]
-#align mv_polynomial.coe_bit1 MvPolynomial.coe_bit1
+#noalign mv_polynomial.coe_bit0
+#noalign mv_polynomial.coe_bit1
 
 @[simp, norm_cast]
 theorem coe_X (s : σ) : ((X s : MvPolynomial σ R) : MvPowerSeries σ R) = MvPowerSeries.X s :=
