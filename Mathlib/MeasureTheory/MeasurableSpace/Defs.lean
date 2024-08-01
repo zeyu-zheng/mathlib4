@@ -61,13 +61,9 @@ instance [h : MeasurableSpace α] : MeasurableSpace αᵒᵈ := h
 def MeasurableSet [MeasurableSpace α] (s : Set α) : Prop :=
   ‹MeasurableSpace α›.MeasurableSet' s
 
--- Porting note (#11215): TODO: `scoped[MeasureTheory]` doesn't work for unknown reason
-namespace MeasureTheory
-set_option quotPrecheck false in
 /-- Notation for `MeasurableSet` with respect to a non-standard σ-algebra. -/
-scoped notation "MeasurableSet[" m "]" => @MeasurableSet _ m
+scoped[MeasureTheory] notation "MeasurableSet[" m "]" => @MeasurableSet _ m
 
-end MeasureTheory
 open MeasureTheory
 
 section
@@ -475,13 +471,8 @@ end MeasurableSpace
 def Measurable [MeasurableSpace α] [MeasurableSpace β] (f : α → β) : Prop :=
   ∀ ⦃t : Set β⦄, MeasurableSet t → MeasurableSet (f ⁻¹' t)
 
-namespace MeasureTheory
-
-set_option quotPrecheck false in
 /-- Notation for `Measurable` with respect to a non-standanrd σ-algebra in the domain. -/
-scoped notation "Measurable[" m "]" => @Measurable _ _ m _
-
-end MeasureTheory
+scoped[MeasureTheory] notation "Measurable[" m "]" => @Measurable _ _ m _
 
 section MeasurableFunctions
 

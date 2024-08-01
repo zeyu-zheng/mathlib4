@@ -319,16 +319,11 @@ namespace Involutive
 
 variable {α : Type*} {f : α → α} {n : ℕ}
 
-set_option linter.deprecated false in
-section
-
 lemma iterate_bit0 (hf : Involutive f) (n : ℕ) : f^[2 * n] = id := by
   rw [iterate_mul, involutive_iff_iter_2_eq_id.1 hf, iterate_id]
 
 lemma iterate_bit1 (hf : Involutive f) (n : ℕ) : f^[2 * n + 1] = f := by
   rw [← succ_eq_add_one, iterate_succ, hf.iterate_bit0, id_comp]
-
-end
 
 lemma iterate_two_mul (hf : Involutive f) (n : ℕ) : f^[2 * n] = id := by
   rw [iterate_mul, involutive_iff_iter_2_eq_id.1 hf, iterate_id]

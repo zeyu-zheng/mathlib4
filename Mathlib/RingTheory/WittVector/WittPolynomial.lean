@@ -87,16 +87,12 @@ This allows us to simply write `W n` or `W_ ℤ n`. -/
 
 
 -- Notation with ring of coefficients explicit
-set_option quotPrecheck false in
 @[inherit_doc]
-scoped[Witt] notation "W_" => wittPolynomial p
+local notation "W_" => wittPolynomial p
 
 -- Notation with ring of coefficients implicit
-set_option quotPrecheck false in
 @[inherit_doc]
-scoped[Witt] notation "W" => wittPolynomial p _
-
-open Witt
+local notation "W" => wittPolynomial p _
 
 open MvPolynomial
 

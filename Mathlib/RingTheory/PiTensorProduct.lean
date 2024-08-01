@@ -44,7 +44,6 @@ noncomputable section NonUnitalNonAssocSemiring
 variable [CommSemiring R] [∀ i, NonUnitalNonAssocSemiring (A i)]
 variable [∀ i, Module R (A i)] [∀ i, SMulCommClass R (A i) (A i)] [∀ i, IsScalarTower R (A i) (A i)]
 
-attribute [aesop safe] mul_add mul_smul_comm smul_mul_assoc add_mul in
 /--
 The multiplication in tensor product of rings is induced by `(xᵢ) * (yᵢ) = (xᵢ * yᵢ)`
 -/

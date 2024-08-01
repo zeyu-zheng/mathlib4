@@ -23,6 +23,9 @@ and can thus be imported without a linting false positive when only the notation
 -/
 
 namespace Set.Notation
+
+open Lean PrettyPrinter Delaborator SubExpr
+
 /--
 Given two sets `A` and `B`, `A ↓∩ B` denotes the intersection of `A` and `B` as a set in `Set A`.
 
@@ -35,7 +38,6 @@ scoped notation3 A:67 " ↓∩ " B:67 => (Subtype.val ⁻¹' (B : type_of% A) : 
 /-- Coercion using `(Subtype.val '' ·)` -/
 instance {α : Type*} {s : Set α} : CoeHead (Set s) (Set α) := ⟨fun t => (Subtype.val '' t)⟩
 
-open Lean PrettyPrinter Delaborator SubExpr in
 /--
 If the `Set.Notation` namespace is open, sets of a subtype coerced to the ambient type are
 represented with `↑`.
