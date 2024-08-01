@@ -710,7 +710,7 @@ lemma pow_mul_norm_iteratedFDeriv_fourierIntegral_le [FiniteDimensional ℝ V]
       ∑ p in Finset.range (k + 1) ×ˢ Finset.range (n + 1),
         ∫ v, ‖v‖ ^ p.1 * ‖iteratedFDeriv ℝ p.2 f v‖ := by
   have Z : ‖w‖ ^ n * (‖w‖ ^ n * ‖iteratedFDeriv ℝ k (𝓕 f) w‖) ≤
-      ‖w‖ ^ n * ((2 * (π * ‖innerSL ℝ‖)) ^ k * ((2 * k + 2) ^ n *
+      ‖w‖ ^ n * ((2 * (π * ‖innerSL (E := V) ℝ‖)) ^ k * ((2 * k + 2) ^ n *
           ∑ p ∈ Finset.range (k + 1) ×ˢ Finset.range (n + 1),
             ∫ (v : V), ‖v‖ ^ p.1 * ‖iteratedFDeriv ℝ p.2 f v‖ ∂volume)) := by
     have := VectorFourier.pow_mul_norm_iteratedFDeriv_fourierIntegral_le (innerSL ℝ) hf h'f hk hn
@@ -720,7 +720,7 @@ lemma pow_mul_norm_iteratedFDeriv_fourierIntegral_le [FiniteDimensional ℝ V]
     rwa [pow_two, mul_pow, mul_assoc] at this
   rcases eq_or_ne n 0 with rfl | hn
   · simp only [pow_zero, one_mul, mul_one, zero_add, Finset.range_one, Finset.product_singleton,
-      Finset.sum_map, Function.Embedding.coeFn_mk, norm_iteratedFDeriv_zero, ge_iff_le] at Z ⊢
+      Finset.sum_map, Function.Embedding.coeFn_mk, norm_iteratedFDeriv_zero] at Z ⊢
     apply Z.trans
     conv_rhs => rw [← mul_one π]
     gcongr
