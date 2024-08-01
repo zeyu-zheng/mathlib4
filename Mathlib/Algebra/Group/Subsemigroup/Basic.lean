@@ -102,6 +102,16 @@ instance : MulMemClass (Subsemigroup M) M where mul_mem := fun {_ _ _} => Subsem
 initialize_simps_projections Subsemigroup (carrier → coe)
 initialize_simps_projections AddSubsemigroup (carrier → coe)
 
+@[to_additive]
+instance : CanLift (Set M) (Subsemigroup M) (↑) (fun s ↦ ∀ {x y}, x ∈ s → y ∈ s → x * y ∈ s) where
+  prf s h := ⟨{ carrier := s, mul_mem' := h }, rfl⟩
+
+/-- Turn an element of a type `S` satisfying `MulMemClass S M` into an actual `Subsemigroup M`. -/
+@[to_additive]
+def ofClass {S : Type*} [SetLike S M] [MulMemClass S M] (s : S) : Subsemigroup M where
+  carrier := s
+  mul_mem' := mul_mem
+
 @[to_additive (attr := simp)]
 theorem mem_carrier {s : Subsemigroup M} {x : M} : x ∈ s.carrier ↔ x ∈ s :=
   Iff.rfl
@@ -286,6 +296,21 @@ theorem closure_mono ⦃s t : Set M⦄ (h : s ⊆ t) : closure s ≤ closure t :
 @[to_additive]
 theorem closure_eq_of_le (h₁ : s ⊆ S) (h₂ : S ≤ closure s) : closure s = S :=
   le_antisymm (closure_le.2 h₁) h₂
+
+@[to_additive (attr := simp)]
+lemma closure_subset {S : Type*} [SetLike S M] [MulMemClass S M] {t : Set M} {s : S} :
+    (closure t : Set M) ⊆ s ↔ t ⊆ s :=
+  closure_le (S := .ofClass s)
+
+@[to_additive]
+lemma mem_of_mem_closure {S : Type*} [SetLike S M] [MulMemClass S M] {t : Set M} {s : S}
+    (h : t ⊆ s) {x : M} (hx : x ∈ closure t) : x ∈ s :=
+  closure_subset.mpr h hx
+
+@[to_additive (attr := simp)]
+lemma coe_closure_eq_self {S : Type*} [SetLike S M] [MulMemClass S M] {s : S} :
+    (closure (s : Set M) : Set M) = s :=
+  congr(($(closure_eq_of_le (S := ofClass s) le_rfl subset_closure) : Set M))
 
 variable (S)
 
