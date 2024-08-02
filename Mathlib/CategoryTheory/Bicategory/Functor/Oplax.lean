@@ -5,8 +5,6 @@ Authors: Yuma Mizuno
 -/
 import Mathlib.CategoryTheory.Bicategory.Basic
 
-#align_import category_theory.bicategory.functor from "leanprover-community/mathlib"@"369525b73f229ccd76a6ec0e0e0bf2be57599768"
-
 /-!
 # Oplax functors
 
@@ -53,7 +51,6 @@ structure PrelaxFunctor (B : Type u₁) [Quiver.{v₁ + 1} B] [∀ a b : B, Quiv
   Prefunctor B C where
   /-- The action of a prelax functor on 2-morphisms. -/
   map₂ {a b : B} {f g : a ⟶ b} : (f ⟶ g) → (map f ⟶ map g)
-#align category_theory.prelax_functor CategoryTheory.PrelaxFunctor
 
 initialize_simps_projections PrelaxFunctor (+toPrefunctor, -obj, -map)
 
@@ -66,22 +63,13 @@ attribute [coe] CategoryTheory.PrelaxFunctor.toPrefunctor
 
 instance hasCoeToPrefunctor : Coe (PrelaxFunctor B C) (Prefunctor B C) :=
   ⟨toPrefunctor⟩
-#align category_theory.prelax_functor.has_coe_to_prefunctor CategoryTheory.PrelaxFunctor.hasCoeToPrefunctor
 
 variable (F : PrelaxFunctor B C)
-
--- Porting note: deleted syntactic tautologies `toPrefunctor_eq_coe : F.toPrefunctor = F`
--- and `to_prefunctor_obj : (F : Prefunctor B C).obj = F.obj`
--- and `to_prefunctor_map`
-#noalign category_theory.prelax_functor.to_prefunctor_eq_coe
-#noalign category_theory.prelax_functor.to_prefunctor_obj
-#noalign category_theory.prelax_functor.to_prefunctor_map
 
 /-- The identity prelax functor. -/
 @[simps]
 def id (B : Type u₁) [Quiver.{v₁ + 1} B] [∀ a b : B, Quiver.{w₁ + 1} (a ⟶ b)] : PrelaxFunctor B B :=
   { Prefunctor.id B with map₂ := fun η => η }
-#align category_theory.prelax_functor.id CategoryTheory.PrelaxFunctor.id
 
 instance : Inhabited (PrelaxFunctor B B) :=
   ⟨PrelaxFunctor.id B⟩
@@ -91,7 +79,6 @@ instance : Inhabited (PrelaxFunctor B B) :=
 @[simps]
 def comp (F : PrelaxFunctor B C) (G : PrelaxFunctor C D) : PrelaxFunctor B D :=
   { (F : Prefunctor B C).comp ↑G with map₂ := fun η => by exact G.map₂ (F.map₂ η) }
-#align category_theory.prelax_functor.comp CategoryTheory.PrelaxFunctor.comp
 
 end PrelaxFunctor
 
@@ -101,19 +88,6 @@ section
 
 variable {B : Type u₁} [Bicategory.{w₁, v₁} B] {C : Type u₂} [Bicategory.{w₂, v₂} C]
 variable {D : Type u₃} [Bicategory.{w₃, v₃} D]
-
--- Porting note: in Lean 3 the below auxiliary definition was only used once, in the definition
--- of oplax functor, with a comment that it had to be used to fix a timeout. The timeout is
--- not present in Lean 4, however Lean 4 is not as good at seeing through the definition,
--- meaning that `simp` wasn't functioning as well as it should. I have hence removed
--- the auxiliary definition.
---@[simp]
---def OplaxFunctor.Map₂AssociatorAux (obj : B → C) (map : ∀ {X Y : B}, (X ⟶ Y) → (obj X ⟶ obj Y))
---    (map₂ : ∀ {a b : B} {f g : a ⟶ b}, (f ⟶ g) → (map f ⟶ map g))
---    (map_comp : ∀ {a b c : B} (f : a ⟶ b) (g : b ⟶ c), map (f ≫ g) ⟶ map f ≫ map g) {a b c d : B}
---    (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d) : Prop := ...
-
-#noalign category_theory.oplax_functor.map₂_associator_aux
 
 /-- An oplax functor `F` between bicategories `B` and `C` consists of a function between objects
 `F.obj`, a function between 1-morphisms `F.map`, and a function between 2-morphisms `F.map₂`.
@@ -158,20 +132,6 @@ structure OplaxFunctor (B : Type u₁) [Bicategory.{w₁, v₁} B] (C : Type u�
     ∀ {a b : B} (f : a ⟶ b),
       map₂ (ρ_ f).hom = mapComp f (𝟙 b) ≫ map f ◁ mapId b ≫ (ρ_ (map f)).hom := by
     aesop_cat
-#align category_theory.oplax_functor CategoryTheory.OplaxFunctor
-#align category_theory.oplax_functor.map_id CategoryTheory.OplaxFunctor.mapId
-#align category_theory.oplax_functor.map_comp CategoryTheory.OplaxFunctor.mapComp
-#align category_theory.oplax_functor.map_comp_naturality_left' CategoryTheory.OplaxFunctor.mapComp_naturality_left
-#align category_theory.oplax_functor.map_comp_naturality_left CategoryTheory.OplaxFunctor.mapComp_naturality_left
-#align category_theory.oplax_functor.map_comp_naturality_right' CategoryTheory.OplaxFunctor.mapComp_naturality_right
-#align category_theory.oplax_functor.map_comp_naturality_right CategoryTheory.OplaxFunctor.mapComp_naturality_right
-#align category_theory.oplax_functor.map₂_id' CategoryTheory.OplaxFunctor.map₂_id
-#align category_theory.oplax_functor.map₂_comp' CategoryTheory.OplaxFunctor.map₂_comp
-#align category_theory.oplax_functor.map₂_associator' CategoryTheory.OplaxFunctor.map₂_associator
-#align category_theory.oplax_functor.map₂_left_unitor CategoryTheory.OplaxFunctor.map₂_leftUnitor
-#align category_theory.oplax_functor.map₂_left_unitor' CategoryTheory.OplaxFunctor.map₂_leftUnitor
-#align category_theory.oplax_functor.map₂_right_unitor CategoryTheory.OplaxFunctor.map₂_rightUnitor
-#align category_theory.oplax_functor.map₂_right_unitor' CategoryTheory.OplaxFunctor.map₂_rightUnitor
 
 initialize_simps_projections OplaxFunctor (+toPrelaxFunctor, -obj, -map, -map₂)
 
@@ -205,29 +165,14 @@ attribute [nolint docBlame] CategoryTheory.OplaxFunctor.mapId
 
 instance hasCoeToPrelax : Coe (OplaxFunctor B C) (PrelaxFunctor B C) :=
   ⟨toPrelaxFunctor⟩
-#align category_theory.oplax_functor.has_coe_to_prelax CategoryTheory.OplaxFunctor.hasCoeToPrelax
 
 variable (F : OplaxFunctor B C)
-
--- Porting note: `to_prelax_eq_coe` and `to_prelaxFunctor_obj` are
--- syntactic tautologies in lean 4
-#noalign category_theory.oplax_functor.to_prelax_eq_coe
-#noalign category_theory.oplax_functor.to_prelax_functor_obj
-
--- Porting note: removed lemma `to_prelaxFunctor_map` relating the now
--- nonexistent `PrelaxFunctor.map` and `OplaxFunctor.map`
-#noalign CategoryTheory.OplaxFunctor.to_prelaxFunctor_map
-
--- Porting note: removed lemma `to_prelaxFunctor_map₂` relating
--- `PrelaxFunctor.map₂` to nonexistent `OplaxFunctor.map₂`
-#noalign category_theory.oplax_functor.to_prelax_functor_map₂
 
 /-- Function between 1-morphisms as a functor. -/
 @[simps]
 def mapFunctor (a b : B) : (a ⟶ b) ⥤ (F.obj a ⟶ F.obj b) where
   obj f := F.map f
   map η := F.map₂ η
-#align category_theory.oplax_functor.map_functor CategoryTheory.OplaxFunctor.mapFunctor
 
 /-- The identity oplax functor. -/
 @[simps]
@@ -236,7 +181,6 @@ def id (B : Type u₁) [Bicategory.{w₁, v₁} B] : OplaxFunctor B B :=
     mapId := fun a => 𝟙 (𝟙 a)
     mapComp := fun f g => 𝟙 (f ≫ g)
   }
-#align category_theory.oplax_functor.id CategoryTheory.OplaxFunctor.id
 
 instance : Inhabited (OplaxFunctor B B) :=
   ⟨id B⟩
@@ -260,8 +204,6 @@ def comp (F : OplaxFunctor B C) (G : OplaxFunctor C D) : OplaxFunctor B D :=
         assoc]
     map₂_associator := fun f g h => by
       dsimp
-      -- Porting note: if you use the `map₂_associator_aux` hack in the definition of
-      -- `map₂_associator` then the `simp only` call below does not seem to apply `map₂_associator`
       simp only [map₂_associator, ← map₂_comp_assoc, ← mapComp_naturality_right_assoc,
         whiskerLeft_comp, assoc]
       simp only [map₂_associator, map₂_comp, mapComp_naturality_left_assoc, comp_whiskerRight,
@@ -274,7 +216,6 @@ def comp (F : OplaxFunctor B C) (G : OplaxFunctor C D) : OplaxFunctor B D :=
       dsimp
       simp only [map₂_rightUnitor, map₂_comp, mapComp_naturality_right_assoc, whiskerLeft_comp,
         assoc] }
-#align category_theory.oplax_functor.comp CategoryTheory.OplaxFunctor.comp
 
 @[simps]
 def map₂Iso (F : OplaxFunctor B C) {a b : B} {f g : a ⟶ b} (η : f ≅ g) : F.map f ≅ F.map g where
@@ -286,17 +227,12 @@ def map₂Iso (F : OplaxFunctor B C) {a b : B} {f g : a ⟶ b} (η : f ≅ g) : 
 /-- A structure on an oplax functor that promotes an oplax functor to a pseudofunctor.
 See `Pseudofunctor.mkOfOplax`.
 -/
--- Porting note(#5171): linter not ported yet
--- @[nolint has_nonempty_instance]
--- Porting note: removing primes in structure name because
--- my understanding is that they're no longer needed
 structure PseudoCore (F : OplaxFunctor B C) where
   mapIdIso (a : B) : F.map (𝟙 a) ≅ 𝟙 (F.obj a)
   mapCompIso {a b c : B} (f : a ⟶ b) (g : b ⟶ c) : F.map (f ≫ g) ≅ F.map f ≫ F.map g
   mapIdIso_hom : ∀ {a : B}, (mapIdIso a).hom = F.mapId a := by aesop_cat
   mapCompIso_hom :
     ∀ {a b c : B} (f : a ⟶ b) (g : b ⟶ c), (mapCompIso f g).hom = F.mapComp f g := by aesop_cat
-#align category_theory.oplax_functor.pseudo_core CategoryTheory.OplaxFunctor.PseudoCore
 
 attribute [nolint docBlame] CategoryTheory.OplaxFunctor.PseudoCore.mapIdIso
   CategoryTheory.OplaxFunctor.PseudoCore.mapCompIso
@@ -310,3 +246,5 @@ end
 end OplaxFunctor
 
 end
+
+end CategoryTheory
