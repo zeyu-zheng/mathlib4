@@ -33,9 +33,7 @@ Angelo Vistoli
 
 /-
 TODO:
-- Fix "↑F.toPrelaxFunctor.obj" instead of "F.obj"
 - Fix naming
-- (Later) splittings & functoriality
 - Make `presheaf.lean` a special instance of the above
   - Isomorphism between the overcategory and fibered category associated to the corresponding
   presheaf?
