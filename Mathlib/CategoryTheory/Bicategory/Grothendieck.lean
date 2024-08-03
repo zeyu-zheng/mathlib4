@@ -43,6 +43,7 @@ open CategoryTheory Functor Category Opposite Discrete Bicategory
 variable {𝒮 : Type u₁} [Category.{v₁} 𝒮] {F : Pseudofunctor (LocallyDiscrete 𝒮ᵒᵖ) Cat.{v₂, u₂}}
 
 /-- The type of objects in the fibered category associated to a presheaf valued in types. -/
+@[ext]
 structure Pseudofunctor.Grothendieck (F : Pseudofunctor (LocallyDiscrete 𝒮ᵒᵖ) Cat.{v₂, u₂}) where
   /-- The underlying object in the base category. -/
   base : 𝒮

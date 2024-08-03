@@ -114,10 +114,10 @@ def ι : F.obj ⟨op S⟩ ⥤ ∫ F where
     dsimp
     slice_rhs 2 4 =>
       rw [Functor.map_comp, assoc, ← (F.mapId ⟨op S⟩).inv.naturality_assoc ψ]
-      rw [← Cat.whiskerRight_app, ← NatTrans.comp_app, F.mapComp_id_left_ofStrict_inv]
-      rw [← assoc (h := eqToHom _), inv_hom_whiskerRight]
+      rw [← Cat.whiskerRight_app, ← NatTrans.comp_app, F.mapComp_id_left_inv]
+      congr; rfl; congr; rfl
+      rw [← assoc, inv_hom_whiskerRight]
     simp
-
 
 @[simps]
 def comp_iso : (ι F S) ⋙ forget F ≅ (const (F.obj ⟨op S⟩)).obj S where
@@ -148,7 +148,7 @@ noncomputable instance : Functor.EssSurj (Fiber.InducedFunctor (comp_const F S))
   have hYS : Y.1.1 = S := by simpa using Y.2
   use (hYS.symm ▸ Y.1.2)
   apply Subtype.val_inj.1
-  apply Sigma.ext <;> simp [hYS]
+  ext <;> simp [hYS]
 
 noncomputable instance : Functor.IsEquivalence (Fiber.InducedFunctor (comp_const F S)) where
 
