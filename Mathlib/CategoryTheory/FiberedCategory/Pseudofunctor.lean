@@ -23,7 +23,8 @@ The projection functor `F.toFibered ⥤ 𝒮` is then given by projecting to the
 * On objects, it sends `(S, a)` to `S`
 * On morphisms, it sends `(f, h)` to `f`
 
-We also provide a `HasFibers` instance `F.toFibered`, such that the fiber over `S` is the category `F(S)`.
+We also provide a `HasFibers` instance `F.toFibered`, such that the fiber over `S` is the
+category `F(S)`.
 
 ## References
 [Vistoli2008] "Notes on Grothendieck Topologies, Fibered Categories and Descent Theory" by
@@ -58,7 +59,6 @@ abbrev pullback_obj : ∫ F := ⟨R, (F.map f.op.toLoc).obj a⟩
 abbrev pullback_map : pullback_obj a f ⟶ ⟨S, a⟩ := ⟨f, 𝟙 _⟩
 
 instance pullback_IsHomLift : IsHomLift (forget F) f (pullback_map a f) :=
-  -- TODO: rename
   instIsHomLiftMap (forget F) (pullback_map a f)
 
 -- TODO a implicit here?
