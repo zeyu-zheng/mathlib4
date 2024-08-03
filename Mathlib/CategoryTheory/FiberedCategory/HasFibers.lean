@@ -118,8 +118,8 @@ section
 variable {p : 𝒳 ⥤ 𝒮} [HasFibers p]
 
 @[simp]
-lemma proj_eq {S : 𝒮} (a : Fib p S) : p.obj ((ι S).obj a) = S :=
-  by simp only [← comp_obj, comp_const, const_obj_obj]
+lemma proj_eq {S : 𝒮} (a : Fib p S) : p.obj ((ι S).obj a) = S := by
+  simp only [← comp_obj, comp_const, const_obj_obj]
 
 /-- The morphism `R ⟶ S` in `𝒮` obtained by projecting a morphism
 `φ : (ι R).obj a ⟶ (ι S).obj b`. -/
@@ -203,10 +203,10 @@ R ====== R --f--> S
 ```
 Then the induced map τ : b' ⟶ b can be lifted to the fiber over R -/
 noncomputable def inducedMap : b ⟶ b' :=
-  mapPreimage (IsCartesian.inducedMap p f ψ φ)
+  mapPreimage (IsCartesian.map p f ψ φ)
 
 lemma inducedMap_comp : (ι R).map (inducedMap f ψ φ) ≫ ψ = φ := by
-  simp only [inducedMap, mapPreimage_eq, IsCartesian.inducedMap_comp]
+  simp only [inducedMap, mapPreimage_eq, IsCartesian.fac]
 
 end
 
