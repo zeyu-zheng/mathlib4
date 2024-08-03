@@ -8,22 +8,13 @@ import Mathlib.CategoryTheory.Bicategory.Grothendieck
 import Mathlib.CategoryTheory.FiberedCategory.HasFibers
 
 /-!
-# The fibered category associated to a pseudofunctor
+# The fibered category obtained from the Grothendieck construction
 
-Given a category `𝒮` and any pseudofunctor valued in `Cat` we associate to it a fibered category
-category `F.toFibered ⥤ 𝒮`.
+Given a category `𝒮` and any pseudofunctor valued in `Cat`, the Grothendieck construction
+associates to it a category `∫ F` and a functor `∫ F ⥤ 𝒮`. In this file, we show that this functor
+makes `∫ F` a fibered category over `𝒮`.
 
-The category `F.toFibered` is defined as follows:
-* Objects: pairs `(S, a)` where `S` is an object of the base category and `a` is an object of the
-  category `F(S)`
-* Morphisms: morphisms `(R, b) ⟶ (S, a)` are defined as pairs `(f, h)` where `f : R ⟶ S` is a
-  morphism in `𝒮` and `h : b ⟶ F(f)(a)`
-
-The projection functor `F.toFibered ⥤ 𝒮` is then given by projecting to the first factors, i.e.
-* On objects, it sends `(S, a)` to `S`
-* On morphisms, it sends `(f, h)` to `f`
-
-We also provide a `HasFibers` instance `F.toFibered`, such that the fiber over `S` is the
+We also provide a `HasFibers` instance `∫ F`, such that the fiber over `S` is the
 category `F(S)`.
 
 ## References
