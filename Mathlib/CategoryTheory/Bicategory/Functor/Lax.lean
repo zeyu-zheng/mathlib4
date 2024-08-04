@@ -58,11 +58,11 @@ structure LaxFunctor (B: Type u₁) [Bicategory.{w₁, v₁} B] (C : Type u₂) 
   mapId (a : B) : 𝟙 (obj a) ⟶ map (𝟙 a)
   /-- The 2-morphism underlying the lax functoriality constraint. -/
   mapComp {a b c : B} (f : a ⟶ b) (g : b ⟶ c) : map f ≫ map g ⟶ map (f ≫ g)
-  /-- Naturality of the lax functoriality constraight, on the left. -/
+  /-- Naturality of the lax functoriality constraint, on the left. -/
   mapComp_naturality_left :
     ∀ {a b c : B} {f f' : a ⟶ b} (η : f ⟶ f') (g : b ⟶ c),
       mapComp f g ≫ map₂ (η ▷ g) = map₂ η ▷ map g ≫ mapComp f' g:= by aesop_cat
-  /-- Naturality of the lax functoriality constraight, on the right. -/
+  /-- Naturality of the lax functoriality constraint, on the right. -/
   mapComp_naturality_right :
     ∀ {a b c : B} (f : a ⟶ b) {g g' : b ⟶ c} (η : g ⟶ g'),
      mapComp f g ≫ map₂ (f ◁ η) = map f ◁ map₂ η ≫ mapComp f g' := by aesop_cat
