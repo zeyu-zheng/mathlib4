@@ -171,6 +171,10 @@ theorem le_one (i : ι) (x : M) : f i x ≤ 1 :=
 theorem sum_nonneg (x : M) : 0 ≤ ∑ᶠ i, f i x :=
   f.toPartitionOfUnity.sum_nonneg x
 
+theorem finsum_smul_mem_convex {g : ι → M → F} {t : Set F} {x : M} (hx : x ∈ s)
+    (hg : ∀ i, f i x ≠ 0 → g i x ∈ t) (ht : Convex ℝ t) : ∑ᶠ i, f i x • g i x ∈ t :=
+  ht.finsum_mem (fun _ => f.nonneg _ _) (f.sum_eq_one hx) hg
+
 theorem contMDiff_smul {g : M → F} {i} (hg : ∀ x ∈ tsupport (f i), ContMDiffAt I 𝓘(ℝ, F) n g x) :
     ContMDiff I 𝓘(ℝ, F) n fun x => f i x • g x :=
   contMDiff_of_tsupport fun x hx =>
@@ -211,10 +215,6 @@ theorem contDiffAt_finsum {s : Set E} (f : SmoothPartitionOfUnity ι 𝓘(ℝ, E
     ContDiffAt ℝ n (fun x ↦ ∑ᶠ i, f i x • g i x) x₀ := by
   simp only [← contMDiffAt_iff_contDiffAt] at *
   exact f.contMDiffAt_finsum hφ
-
-theorem finsum_smul_mem_convex {g : ι → M → F} {t : Set F} {x : M} (hx : x ∈ s)
-    (hg : ∀ i, f i x ≠ 0 → g i x ∈ t) (ht : Convex ℝ t) : ∑ᶠ i, f i x • g i x ∈ t :=
-  ht.finsum_mem (fun _ => f.nonneg _ _) (f.sum_eq_one hx) hg
 
 section finsupport
 
@@ -371,8 +371,7 @@ theorem IsSubordinate.support_subset {fs : SmoothBumpCovering ι I M s} {U : M �
     (h : fs.IsSubordinate U) (i : ι) : support (fs i) ⊆ U (fs.c i) :=
   Subset.trans subset_closure (h i)
 
-variable (I)
-
+variable (I) in
 /-- Let `M` be a smooth manifold with corners modelled on a finite dimensional real vector space.
 Suppose also that `M` is a Hausdorff `σ`-compact topological space. Let `s` be a closed set
 in `M` and `U : M → Set M` be a collection of sets such that `U x ∈ 𝓝 x` for every `x ∈ s`.
@@ -428,6 +427,14 @@ theorem apply_ind (x : M) (hx : x ∈ s) : fs (fs.ind x hx) x = 1 :=
 theorem mem_support_ind (x : M) (hx : x ∈ s) : x ∈ support (fs <| fs.ind x hx) := by
   simp [fs.apply_ind x hx]
 
+theorem mem_chartAt_source_of_eq_one {i : ι} {x : M} (h : fs i x = 1) :
+    x ∈ (chartAt H (fs.c i)).source :=
+  (fs i).support_subset_source <| by simp [h]
+
+theorem mem_extChartAt_source_of_eq_one {i : ι} {x : M} (h : fs i x = 1) :
+    x ∈ (extChartAt I (fs.c i)).source := by
+  rw [extChartAt_source]; exact fs.mem_chartAt_source_of_eq_one h
+
 theorem mem_chartAt_ind_source (x : M) (hx : x ∈ s) : x ∈ (chartAt H (fs.c (fs.ind x hx))).source :=
   fs.mem_chartAt_source_of_eq_one (fs.apply_ind x hx)
 
@@ -440,6 +447,7 @@ protected def fintype [CompactSpace M] : Fintype ι :=
   fs.locallyFinite.fintypeOfCompact fun i => (fs i).nonempty_support
 
 variable [T2Space M]
+variable [SmoothManifoldWithCorners I M]
 
 /-- Reinterpret a `SmoothBumpCovering` as a continuous `BumpCovering`. Note that not every
 `f : BumpCovering ι M s` with smooth functions `f i` is a `SmoothBumpCovering`. -/
