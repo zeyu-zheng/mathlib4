@@ -6,7 +6,6 @@ Authors: Chris Hughes
 
 import Mathlib.GroupTheory.CoprodI
 import Mathlib.GroupTheory.Coprod.Basic
-import Mathlib.GroupTheory.QuotientGroup
 import Mathlib.GroupTheory.Complement
 
 /-!
@@ -166,7 +165,7 @@ theorem ofCoprodI_of (i : ι) (g : G i) :
 
 theorem induction_on {motive : PushoutI φ → Prop}
     (x : PushoutI φ)
-    (of  : ∀ (i : ι) (g : G i), motive (of i g))
+    (of : ∀ (i : ι) (g : G i), motive (of i g))
     (base : ∀ h, motive (base φ h))
     (mul : ∀ x y, motive x → motive y → motive (x * y)) : motive x := by
   delta PushoutI PushoutI.of PushoutI.base at *
@@ -318,12 +317,12 @@ theorem eq_one_of_smul_normalized (w : CoprodI.Word G) {i : ι} (h : H)
       dsimp
       split_ifs with hep
       · rcases hep with ⟨hnil, rfl⟩
-        rw [head?_eq_head _ hnil]
+        rw [head?_eq_head hnil]
         simp_all
       · push_neg at hep
         by_cases hw : w.toList = []
         · simp [hw, Word.fstIdx]
-        · simp [head?_eq_head _ hw, Word.fstIdx, hep hw]
+        · simp [head?_eq_head hw, Word.fstIdx, hep hw]
 
 theorem ext_smul {w₁ w₂ : NormalWord d} (i : ι)
     (h : CoprodI.of (φ i w₁.head) • w₁.toWord =
