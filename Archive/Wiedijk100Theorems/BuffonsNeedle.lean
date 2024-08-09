@@ -76,7 +76,7 @@ namespace BuffonsNeedle
 
 variable
   /- Probability theory variables. -/
-  {Ω : Type*} [MeasureSpace Ω] [IsProbabilityMeasure (ℙ : Measure Ω)]
+  {Ω : Type*} [MeasureSpace Ω]
 
   /- Buffon's needle variables. -/
 
@@ -124,7 +124,7 @@ noncomputable def N : Ω → ℝ := needleCrossesIndicator l ∘ B
 /--
   The possible x-positions and angle relative to the y-axis of a needle.
 -/
-abbrev needleSpace: Set (ℝ × ℝ) := Set.Icc (-d / 2) (d / 2) ×ˢ Set.Icc 0 π
+abbrev needleSpace : Set (ℝ × ℝ) := Set.Icc (-d / 2) (d / 2) ×ˢ Set.Icc 0 π
 
 lemma volume_needleSpace : ℙ (needleSpace d) = ENNReal.ofReal (d * π) := by
   simp_rw [MeasureTheory.Measure.volume_eq_prod, MeasureTheory.Measure.prod_prod, Real.volume_Icc,
@@ -312,6 +312,7 @@ lemma integral_zero_to_arcsin_min :
 -/
 lemma integral_arcsin_to_pi_div_two_min (h : d ≤ l) :
     ∫ θ in (d / l).arcsin..(π / 2), min d (θ.sin * l) = (π / 2 - (d / l).arcsin) * d := by
+  clear! Ω B hd
   have : Set.EqOn (fun θ => min d (θ.sin * l)) (fun _ => d) (Set.uIcc (d / l).arcsin (π / 2)) := by
     intro θ ⟨hθ₁, hθ₂⟩
     wlog hθ_ne_pi_div_two : θ ≠ π / 2
