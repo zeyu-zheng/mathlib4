@@ -299,7 +299,7 @@ protected theorem map_sub [Sub α] [Sub β] (f : α → β) (hf : ∀ a₁ a₂,
     (M N : Matrix m n α) : (M - N).map f = M.map f - N.map f :=
   ext fun _ _ => hf _ _
 
-theorem map_smul [SMul R α] [SMul R β] (f : α → β) (r : R) (hf : ∀ a, f (r • a) = r • f a)
+protected theorem map_smul [SMul R α] [SMul R β] (f : α → β) (r : R) (hf : ∀ a, f (r • a) = r • f a)
     (M : Matrix m n α) : (r • M).map f = r • M.map f :=
   ext fun _ _ => hf _
 
@@ -518,7 +518,7 @@ theorem one_apply_ne' {i j} : j ≠ i → (1 : Matrix n n α) i j = 0 :=
   diagonal_apply_ne' _
 
 @[simp]
-theorem map_one [Zero β] [One β] (f : α → β) (h₀ : f 0 = 0) (h₁ : f 1 = 1) :
+protected theorem map_one [Zero β] [One β] (f : α → β) (h₀ : f 0 = 0) (h₁ : f 1 = 1) :
     (1 : Matrix n n α).map f = (1 : Matrix n n β) := by
   ext
   simp only [one_apply, map_apply]
@@ -1015,7 +1015,7 @@ instance nonAssocSemiring [Fintype n] [DecidableEq n] : NonAssocSemiring (Matrix
     mul_one := Matrix.mul_one }
 
 @[simp]
-theorem map_mul [Fintype n] {L : Matrix m n α} {M : Matrix n o α} [NonAssocSemiring β]
+protected theorem map_mul [Fintype n] {L : Matrix m n α} {M : Matrix n o α} [NonAssocSemiring β]
     {f : α →+* β} : (L * M).map f = L.map f * M.map f := by
   ext
   simp [mul_apply, map_sum]
