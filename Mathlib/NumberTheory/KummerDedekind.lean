@@ -99,6 +99,7 @@ lemma mem_coeSubmodule_conductor {L} [CommRing L] [Algebra S L] [Algebra R L]
       obtain ⟨y, _, e⟩ := H 1
       rw [map_one, mul_one] at e
       subst e
+      -- Ideal.map_mul
       simp only [← _root_.map_mul, (NoZeroSMulDivisors.algebraMap_injective S L).eq_iff,
         exists_eq_right] at H
       exact ⟨_, H, rfl⟩
@@ -160,6 +161,7 @@ theorem comap_map_eq_map_adjoin_of_coprime_conductor
           (show z ∈ I.map (algebraMap R S) by rwa [Ideal.mem_comap] at hy))
       use a + algebraMap R R<x> q * ⟨z, hz⟩
       refine ⟨Ideal.add_mem (I.map (algebraMap R R<x>)) ha.left ?_, by
+          -- Ideal.map_mul
           simp only [ha.right, map_add, _root_.map_mul, add_right_inj]; rfl⟩
       rw [mul_comm]
       exact Ideal.mul_mem_left (I.map (algebraMap R R<x>)) _ (Ideal.mem_map_of_mem _ hq)
