@@ -186,6 +186,7 @@ The map `Aᵢ ⟶ ⨂ᵢ Aᵢ` given by `a ↦ 1 ⊗ ... ⊗ a ⊗ 1 ⊗ ...`
 @[simps]
 def singleAlgHom [DecidableEq ι] (i : ι) : A i →ₐ[R] ⨂[R] i, A i where
   toFun a := tprod R (MonoidHom.mulSingle _ i a)
+  -- PiTensorProduct.map_one
   map_one' := by simp only [_root_.map_one]; rfl
   map_mul' a a' := by simp
   map_zero' := MultilinearMap.map_update_zero _ _ _
