@@ -90,19 +90,19 @@ theorem map_coeIdeal (I : Ideal R) : (I : FractionalIdeal S P).map g = I := by
     exact ⟨_, ⟨y, hy, rfl⟩, g.commutes y⟩
 
 @[simp]
-theorem map_one : (1 : FractionalIdeal S P).map g = 1 :=
+protected theorem map_one : (1 : FractionalIdeal S P).map g = 1 :=
   map_coeIdeal g ⊤
 
 @[simp]
-theorem map_zero : (0 : FractionalIdeal S P).map g = 0 :=
+protected theorem map_zero : (0 : FractionalIdeal S P).map g = 0 :=
   map_coeIdeal g 0
 
 @[simp]
-theorem map_add : (I + J).map g = I.map g + J.map g :=
+protected theorem map_add : (I + J).map g = I.map g + J.map g :=
   coeToSubmodule_injective (Submodule.map_sup _ _ _)
 
 @[simp]
-theorem map_mul : (I * J).map g = I.map g * J.map g := by
+protected theorem map_mul : (I * J).map g = I.map g * J.map g := by
   simp only [mul_def]
   exact coeToSubmodule_injective (Submodule.map_mul _ _ _)
 
@@ -127,8 +127,8 @@ theorem map_injective (f : P →ₐ[R] P') (h : Function.Injective f) :
 def mapEquiv (g : P ≃ₐ[R] P') : FractionalIdeal S P ≃+* FractionalIdeal S P' where
   toFun := map g
   invFun := map g.symm
-  map_add' I J := map_add I J _
-  map_mul' I J := map_mul I J _
+  map_add' I J := FractionalIdeal.map_add I J _
+  map_mul' I J := FractionalIdeal.map_mul I J _
   left_inv I := by rw [← map_comp, AlgEquiv.symm_comp, map_id]
   right_inv I := by rw [← map_comp, AlgEquiv.comp_symm, map_id]
 
@@ -289,7 +289,7 @@ theorem map_ne_zero [Nontrivial R] (hI : I ≠ 0) : I.map h ≠ 0 := by
 
 @[simp]
 theorem map_eq_zero_iff [Nontrivial R] : I.map h = 0 ↔ I = 0 :=
-  ⟨not_imp_not.mp (map_ne_zero _), fun hI => hI.symm ▸ map_zero h⟩
+  ⟨not_imp_not.mp (map_ne_zero _), fun hI => hI.symm ▸ FractionalIdeal.map_zero h⟩
 
 theorem coeIdeal_injective : Function.Injective (fun (I : Ideal R) ↦ (I : FractionalIdeal R⁰ K)) :=
   coeIdeal_injective' le_rfl
@@ -428,7 +428,7 @@ theorem le_div_iff_mul_le {I J J' : FractionalIdeal R₁⁰ K} (hJ' : J' ≠ 0) 
   exact Submodule.le_div_iff_mul_le
 
 @[simp]
-theorem div_one {I : FractionalIdeal R₁⁰ K} : I / 1 = I := by
+protected theorem div_one {I : FractionalIdeal R₁⁰ K} : I / 1 = I := by
   rw [div_nonzero (one_ne_zero' (FractionalIdeal R₁⁰ K))]
   ext
   constructor <;> intro h
@@ -465,14 +465,14 @@ variable {K' : Type*} [Field K'] [Algebra R₁ K'] [IsFractionRing R₁ K']
 theorem map_div (I J : FractionalIdeal R₁⁰ K) (h : K ≃ₐ[R₁] K') :
     (I / J).map (h : K →ₐ[R₁] K') = I.map h / J.map h := by
   by_cases H : J = 0
-  · rw [H, div_zero, map_zero, div_zero]
+  · rw [H, div_zero, FractionalIdeal.map_zero, div_zero]
   · -- Porting note: `simp` wouldn't apply these lemmas so do them manually using `rw`
     rw [← coeToSubmodule_inj, div_nonzero H, div_nonzero (map_ne_zero _ H)]
     simp [Submodule.map_div]
 
 -- Porting note: doesn't need to be @[simp] because this follows from `map_one` and `map_div`
 theorem map_one_div (I : FractionalIdeal R₁⁰ K) (h : K ≃ₐ[R₁] K') :
-    (1 / I).map (h : K →ₐ[R₁] K') = 1 / I.map h := by rw [map_div, map_one]
+    (1 / I).map (h : K →ₐ[R₁] K') = 1 / I.map h := by rw [map_div, FractionalIdeal.map_one]
 
 end Quotient
 
