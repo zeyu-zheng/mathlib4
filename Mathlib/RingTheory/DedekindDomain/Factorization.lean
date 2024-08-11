@@ -250,6 +250,7 @@ theorem finprod_heightOneSpectrum_factorization_principal {I : FractionalIdeal R
   have hnd : mk' K n d = k := choose_spec (choose_spec (mk'_surjective R⁰ k))
   have hn0 : n ≠ 0 := by
     by_contra h
+    -- FractionalIdeal.map_zero
     rw [← hnd, h, IsFractionRing.mk'_eq_div, _root_.map_zero,
       zero_div, spanSingleton_zero] at hk
     exact hI hk
@@ -488,6 +489,7 @@ theorem count_coe {J : Ideal R} (hJ : J ≠ 0) :
     Nat.cast_eq_zero, ← Ideal.one_eq_top, Associates.mk_one, Associates.factors_one,
     Associates.count_zero v.associates_irreducible]
   · simpa only [ne_eq, coeIdeal_eq_zero]
+  -- FractionalIdeal.map_one
   · simp only [_root_.map_one, inv_one, spanSingleton_one, one_mul]
 
 theorem count_coe_nonneg (J : Ideal R) : 0 ≤ count K v J := by

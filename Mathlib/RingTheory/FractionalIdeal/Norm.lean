@@ -137,10 +137,12 @@ theorem absNorm_span_singleton [Module.Finite ℚ K] (x : K) :
   · rw [Ideal.absNorm_span_singleton]
     simp_rw [Int.cast_natAbs, Int.cast_abs, show ((Algebra.norm ℤ _) : ℚ) = algebraMap ℤ ℚ
       (Algebra.norm ℤ _) by rfl, ← Algebra.norm_localization ℤ ℤ⁰ (Sₘ := K) _]
+    -- FractionalIdeal.map_mul
     rw [hr, Algebra.smul_def, _root_.map_mul, abs_mul, mul_div_assoc, mul_div_cancel₀ _ (by
       rw [ne_eq, abs_eq_zero, Algebra.norm_eq_zero_iff, IsFractionRing.to_map_eq_zero_iff]
       exact nonZeroDivisors.coe_ne_zero _)]
   · ext
+    -- FractionalIdeal.map_mul
     simp_rw [← SetLike.mem_coe, Submodule.coe_pointwise_smul, Set.mem_smul_set, SetLike.mem_coe,
       mem_coe, mem_spanSingleton, Submodule.mem_map, Algebra.linearMap_apply, Submonoid.smul_def,
       Ideal.mem_span_singleton', exists_exists_eq_and, _root_.map_mul, hr, ← Algebra.smul_def,
