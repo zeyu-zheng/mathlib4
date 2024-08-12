@@ -17,11 +17,11 @@ package mathlib where
 ## Mathlib dependencies on upstream projects.
 -/
 
-require "leanprover-community" / "batteries" @ "git#nightly-testing-2024-07-09"
-require "leanprover-community" / "Qq" @ "git#master"
-require "leanprover-community" / "aesop" @ "git#master"
-require "leanprover-community" / "proofwidgets" @ "git#v0.0.40"
-require "leanprover-community" / "importGraph" @ "git#nightly-testing"
+require "leanprover-community" / "batteries" @ git "nightly-testing"
+require "leanprover-community" / "Qq" @ git "nightly-testing"
+require "leanprover-community" / "aesop" @ git "nightly-testing"
+require "leanprover-community" / "proofwidgets" @ git "v0.0.42-pre2"
+require "leanprover-community" / "importGraph" @ git "main"
 
 /-!
 ## Mathlib libraries

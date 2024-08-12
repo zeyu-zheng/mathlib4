@@ -198,9 +198,6 @@ instance : Add ℍ[R,c₁,c₂] :=
 
 @[simp] theorem add_imK : (a + b).imK = a.imK + b.imK := rfl
 
-@[simp] theorem add_im : (a + b).im = a.im + b.im :=
-  QuaternionAlgebra.ext (zero_add _).symm rfl rfl rfl
-
 @[simp]
 theorem mk_add_mk (a₁ a₂ a₃ a₄ b₁ b₂ b₃ b₄ : R) :
     (mk a₁ a₂ a₃ a₄ : ℍ[R,c₁,c₂]) + mk b₁ b₂ b₃ b₄ = mk (a₁ + b₁) (a₂ + b₂) (a₃ + b₃) (a₄ + b₄) :=
@@ -232,9 +229,6 @@ instance : Neg ℍ[R,c₁,c₂] := ⟨fun a => ⟨-a.1, -a.2, -a.3, -a.4⟩⟩
 @[simp] theorem neg_imJ : (-a).imJ = -a.imJ := rfl
 
 @[simp] theorem neg_imK : (-a).imK = -a.imK := rfl
-
-@[simp] theorem neg_im : (-a).im = -a.im :=
-  QuaternionAlgebra.ext neg_zero.symm rfl rfl rfl
 
 @[simp]
 theorem neg_mk (a₁ a₂ a₃ a₄ : R) : -(mk a₁ a₂ a₃ a₄ : ℍ[R,c₁,c₂]) = ⟨-a₁, -a₂, -a₃, -a₄⟩ :=
@@ -285,6 +279,11 @@ theorem sub_self_im : a - a.im = a.re :=
 @[simp]
 theorem sub_self_re : a - a.re = a.im :=
   QuaternionAlgebra.ext (sub_self _) (sub_zero _) (sub_zero _) (sub_zero _)
+
+end AddGroup
+
+section Ring
+variable [Ring R]
 
 /-- Multiplication is given by
 
@@ -343,7 +342,7 @@ instance [SMulCommClass S T R] : SMulCommClass S T ℍ[R,c₁,c₂] where
 
 @[simp] theorem smul_imK : (s • a).imK = s • a.imK := rfl
 
-@[simp] theorem smul_im {S} [SMulZeroClass S R] (s : S) : (s • a).im = s • a.im :=
+@[simp] theorem smul_im {S} [CommRing R] [SMulZeroClass S R] (s : S) : (s • a).im = s • a.im :=
   QuaternionAlgebra.ext (smul_zero s).symm rfl rfl rfl
 
 @[simp]
