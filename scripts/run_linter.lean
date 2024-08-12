@@ -1,7 +1,8 @@
+import Lean.Util.SearchPath
 import Batteries.Tactic.Lint
 import Batteries.Data.Array.Basic
+
 import Batteries.Data.List.Basic
-import Batteries.Lean.Util.Path
 import Cli.Basic
 
 set_option autoImplicit true
