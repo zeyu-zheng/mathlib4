@@ -14,6 +14,7 @@ import Mathlib.GroupTheory.GroupAction.Group
 
 -/
 
+assert_not_exists Multiset
 assert_not_exists Nonneg.inv
 assert_not_exists Multiset
 

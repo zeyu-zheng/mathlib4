@@ -26,6 +26,8 @@ This could be generalized to similar results about finite abelian groups.
 
 assert_not_exists legendreSym.quadratic_reciprocity
 
+assert_not_exists legendre_sym.quadratic_reciprocity
+
 open Finset Nat FiniteField ZMod
 
 open scoped Nat

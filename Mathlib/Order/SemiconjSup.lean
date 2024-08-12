@@ -34,6 +34,9 @@ homeomorphisms to the real line first.
 -- Guard against import creep
 assert_not_exists Finset
 
+-- Guard against import creep
+assert_not_exists Finset
+
 variable {α β γ : Type*}
 
 open Set

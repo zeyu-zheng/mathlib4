@@ -22,6 +22,11 @@ assert_not_exists InnerProductSpace
 assert_not_exists Real.arctan
 assert_not_exists FiniteDimensional.proper
 
+-- Guard against import creep:
+assert_not_exists InnerProductSpace
+assert_not_exists Real.arctan
+assert_not_exists FiniteDimensional.proper
+
 noncomputable section
 
 open NNReal ENNReal

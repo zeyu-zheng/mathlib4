@@ -15,6 +15,9 @@ import Mathlib.GroupTheory.Submonoid.Center
 assert_not_exists Multiset
 assert_not_exists Ring
 
+assert_not_exists Multiset
+assert_not_exists Ring
+
 open Function
 open Int
 

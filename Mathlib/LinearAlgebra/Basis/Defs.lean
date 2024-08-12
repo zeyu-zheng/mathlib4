@@ -55,6 +55,9 @@ basis, bases
 assert_not_exists LinearIndependent
 assert_not_exists Cardinal
 
+assert_not_exists LinearIndependent
+assert_not_exists Cardinal
+
 noncomputable section
 
 universe u
