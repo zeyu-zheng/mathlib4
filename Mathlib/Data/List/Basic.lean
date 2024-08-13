@@ -609,7 +609,6 @@ def reverseRecOn {motive : List α → Sort*} (l : List α) (nil : motive [])
       append_singleton _ head <| reverseRecOn (reverse tail) nil append_singleton
 termination_by l.length
 decreasing_by
-  simp_wf
   rw [← length_reverse l, h, length_cons]
   simp [Nat.lt_succ]
 

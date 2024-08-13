@@ -209,7 +209,7 @@ in these situations.
       else
         minFacAux n (k + 2)
 termination_by k => sqrt n + 2 - k
-decreasing_by simp_wf; apply minFac_lemma n k; assumption
+decreasing_by simp; apply minFac_lemma n k; assumption
 
 /-- Returns the smallest prime factor of `n ≠ 1`. -/
 def minFac (n : ℕ) : ℕ :=
