@@ -11,9 +11,6 @@ import Qq
 -- Tools for analysing imports, like `#find_home`, `#minimize_imports`, ...
 import ImportGraph.Imports
 
--- Import common Batteries tactics and commands
-import Batteries.Tactic.Where
-
 -- Import Mathlib-specific linters.
 import Mathlib.Tactic.Linter.Lint
 
