@@ -117,12 +117,18 @@ def assertNotExistsLinter : Linter where run := withSetOptionIn fun stx ↦ do
     return
   if (← MonadState.get).messages.hasErrors then
     return
-  unless [``commandAssert_not_exists_, ``commandAssert_not_imported_].contains stx.getKind do return
-  let upToStx ← parseUpToHere stx "\nassert_not_exists XXX" <|> return Syntax.missing
-  if ! onlyImportsModDocsAsserts upToStx then
-    Linter.logLint linter.style.assertNotExists stx
-      m!"`{stx}` appears too late: it can only be preceded by `import` statements \
-      doc-module strings and other `assert_not_exists` statements."
+  if stx.isOfKind ``commandAssert_not_imported_ then
+    let upToStx ← parseUpToHere stx "\nassert_not_imported XXX" <|> return Syntax.missing
+    if ! onlyImportsModDocsAssertImporteds upToStx then
+      Linter.logLint linter.style.assertNotExists stx
+        m!"`{stx}` appears too late: it can only be preceded\nby `import` statements, \
+        module doc-strings and other `assert_not_exists` statements."
+  else if stx.isOfKind ``commandAssert_not_exists_ then
+    let upToStx ← parseUpToHere stx "\nassert_not_exists XXX" <|> return Syntax.missing
+    if ! onlyImportsModDocsAsserts upToStx then
+      Linter.logLint linter.style.assertNotExists stx
+        m!"`{stx}` appears too late: it can only be preceded\nby `import` statements, \
+        module doc-strings and other\n`assert_not_exists` statements."
 
 initialize addLinter assertNotExistsLinter
 

@@ -8,14 +8,53 @@ import Mathlib.Tactic.Linter.AssertNotExists
 
 /- more comments -/
 
-assert_not_exists Nats
-assert_not_exists Nats
-assert_not_exists Nats
+assert_not_imported Tactic.Common
 assert_not_exists Nats
 
 /--
-warning: `assert_not_exists   Nats` appears too late: it can only be preceded by
-`import` statements doc-module strings and other `assert_not_exists` statements.
+warning: `assert_not_imported Tactic.Common` appears too late: it can only be preceded
+by `import` statements, module doc-strings and other `assert_not_exists` statements.
+note: this linter can be disabled with `set_option linter.style.assertNotExists false`
+-/
+#guard_msgs in
+assert_not_imported Tactic.Common
+/--
+warning: `assert_not_exists Nats` appears too late: it can only be preceded
+by `import` statements, module doc-strings and other
+`assert_not_exists` statements.
+note: this linter can be disabled with `set_option linter.style.assertNotExists false`
+-/
+#guard_msgs in
+assert_not_exists Nats
+
+/--
+warning: `assert_not_imported Tactic.Common` appears too late: it can only be preceded
+by `import` statements, module doc-strings and other `assert_not_exists` statements.
+note: this linter can be disabled with `set_option linter.style.assertNotExists false`
+-/
+#guard_msgs in
+assert_not_imported Tactic.Common
+/--
+warning: `assert_not_exists Nats` appears too late: it can only be preceded
+by `import` statements, module doc-strings and other
+`assert_not_exists` statements.
+note: this linter can be disabled with `set_option linter.style.assertNotExists false`
+-/
+#guard_msgs in
+assert_not_exists Nats
+/--
+warning: `assert_not_exists Nats` appears too late: it can only be preceded
+by `import` statements, module doc-strings and other
+`assert_not_exists` statements.
+note: this linter can be disabled with `set_option linter.style.assertNotExists false`
+-/
+#guard_msgs in
+assert_not_exists Nats
+
+/--
+warning: `assert_not_exists Nats` appears too late: it can only be preceded
+by `import` statements, module doc-strings and other
+`assert_not_exists` statements.
 note: this linter can be disabled with `set_option linter.style.assertNotExists false`
 -/
 #guard_msgs in
