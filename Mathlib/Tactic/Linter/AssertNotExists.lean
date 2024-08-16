@@ -5,6 +5,7 @@ Authors: Damiano Testa
 -/
 import Lean.Linter.Util
 import Mathlib.Util.AssertExists
+import Mathlib.Util.AssertNotImported
 
 /-!
 #  The "assertNotExists" linter
@@ -13,12 +14,18 @@ The "assertNotExists" style linter checks that a file starts with
 ```
 import*
 doc-module*
+assert_not_imported*
 assert_not_exists*
-[no more assert_not_exists]
+[no more assert_not_exists or assert_not_imported]
 ```
-It emits a warning on each `assert_not_exists` that is not preceded by
+It emits a warning on each `assert_not_imported` command that is not preceded by
 * possibly some import statements,
 * possibly some doc-module strings, and
+* possible some `assert_not_imported` commands,
+as well as on each `assert_not_exists` command that is not preceded by
+* possibly some import statements,
+* possibly some doc-module strings, and
+* possible some `assert_not_imported` commands, and
 * possibly some `assert_not_exists` commands
 
 in this order.
@@ -28,10 +35,28 @@ open Lean Elab Command
 
 namespace Mathlib.Linter
 
+/-- `onlyImportsModDocsAssertImporteds stx` checks whether `stx` is the syntax for a module that
+only consists of
+* any number of `import` statements (possibly none) followed by
+* any number of doc-module strings (possibly none) followed by
+* any number of `assert_not_imported` commands (possibly none),
+
+and nothing else.
+-/
+def onlyImportsModDocsAssertImporteds : Syntax → Bool
+  | .node _ ``Lean.Parser.Module.module #[_header, .node _ `null args] =>
+    let dropDocs := args.toList.dropWhile (·.isOfKind ``Lean.Parser.Command.moduleDoc)
+    let dropAssertNotImporteds := dropDocs.dropWhile (·.isOfKind ``commandAssert_not_imported_)
+    dropAssertNotImporteds.isEmpty
+  | _=> false
+
+-- TODO: double-check this logic!
+
 /-- `onlyImportsModDocsAsserts stx` checks whether `stx` is the syntax for a module that
 only consists of
 * any number of `import` statements (possibly none) followed by
 * any number of doc-module strings (possibly none) followed by
+* any number of `assert_not_imported` commands (possibly none),
 * any number of `assert_not_exists` commands (possibly none),
 
 and nothing else.
@@ -39,7 +64,8 @@ and nothing else.
 def onlyImportsModDocsAsserts : Syntax → Bool
   | .node _ ``Lean.Parser.Module.module #[_header, .node _ `null args] =>
     let dropDocs := args.toList.dropWhile (·.isOfKind ``Lean.Parser.Command.moduleDoc)
-    let dropAssertNotExists := dropDocs.dropWhile (·.isOfKind ``commandAssert_not_exists_)
+    let dropAssertNotImporteds := dropDocs.dropWhile (·.isOfKind ``commandAssert_not_imported_)
+    let dropAssertNotExists := dropAssertNotImporteds.dropWhile (·.isOfKind ``commandAssert_not_exists_)
     dropAssertNotExists.isEmpty
   | _=> false
 
