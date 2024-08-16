@@ -34,6 +34,56 @@ open Lean Elab Command
 
 namespace Mathlib.Linter
 
+/-- `parseUpToHere stx post` takes as input a `Syntax` `stx` and a `String` `post`.
+It parses the file containing `stx` up to and excluding `stx`, appending `post` at the end.
+
+The option of appending a final string to the text gives more control to avoid syntax errors,
+for instance in the presence of `#guard_msgs in` or `set_option ... in`.
+-/
+def parseUpToHere (stx : Syntax) (post : String := "") : CommandElabM Syntax := do
+  let fm ← getFileMap
+  let startPos := stx.getPos?.getD default
+  let upToHere : Substring:= { str := fm.source, startPos := ⟨0⟩, stopPos := startPos}
+  -- append a further string after the `upToHere` content
+  Parser.testParseModule (← getEnv) "linter.assertNotExists" (upToHere.toString ++ post)
+
+/-- The `missingModuleDocstring` linter verifies that the current module either only contains
+imports (and documentation comments), or has a module docstring, coming right after the imports.
+-/
+register_option linter.style.missingModuleDocstring : Bool := {
+  defValue := true
+  descr := "enable the `missingModuleDocstring` linter"
+}
+
+namespace Style.missingModuleDocstring
+
+/- `nicelyPlacedModuleDocstring stx` checks whether `stx` in the syntax for a module that
+either consists only of imports, or begins with a module docstring, before any other commands.
+-/
+def nicelyPlacedModuleDocstring : Syntax → Bool
+   | .node _ ``Lean.Parser.Module.module #[_header, .node _ `null args] =>
+    -- Multiple module doc-strings are fine: later doc-strings can document sections, for instance.
+    match args[0]? with
+    | none => true -- import-only file
+    | some arg => arg.isOfKind ``Lean.Parser.Command.moduleDoc
+   | _=> false
+
+@[inherit_doc Mathlib.Linter.linter.style.missingModuleDocstring]
+def moduleDocstringLinter : Linter where run := withSetOptionIn fun stx ↦ do
+  unless Linter.getLinterValue linter.style.missingModuleDocstring (← getOptions) do
+    return
+  if (← MonadState.get).messages.hasErrors then
+    return
+  unless stx.isOfKind ``Lean.Parser.Command.eoi do return
+  if ! nicelyPlacedModuleDocstring (← parseUpToHere stx) then
+    Linter.logLint linter.style.missingModuleDocstring stx
+      m!"Missing or wrongly placed module docstring: module doc-strings must be placed after \
+      import statements, and before any other commands."
+
+initialize addLinter moduleDocstringLinter
+
+end Style.missingModuleDocstring
+
 /-- `onlyImportsModDocsAssertImporteds stx` checks whether `stx` is the syntax for a module that
 only consists of
 * any number of `import` statements (possibly none) followed by
@@ -65,19 +115,6 @@ def onlyImportsModDocsAsserts : Syntax → Bool
     let dropAssertNotExists := dropAssertNotImporteds.dropWhile (·.isOfKind ``commandAssert_not_exists_)
     dropAssertNotExists.isEmpty
   | _=> false
-
-/-- `parseUpToHere stx post` takes as input a `Syntax` `stx` and a `String` `post`.
-It parses the file containing `stx` up to and excluding `stx`, appending `post` at the end.
-
-The option of appending a final string to the text gives more control to avoid syntax errors,
-for instance in the presence of `#guard_msgs in` or `set_option ... in`.
--/
-def parseUpToHere (stx : Syntax) (post : String := "") : CommandElabM Syntax := do
-  let fm ← getFileMap
-  let startPos := stx.getPos?.getD default
-  let upToHere : Substring:= { str := fm.source, startPos := ⟨0⟩, stopPos := startPos}
-  -- append a further string after the `upToHere` content
-  Parser.testParseModule (← getEnv) "linter.assertNotExists" (upToHere.toString ++ post)
 
 /--
 The "assertNotExists" style linter checks that a file starts with
