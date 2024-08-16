@@ -5,7 +5,6 @@ Authors: Damiano Testa
 -/
 import Lean.Linter.Util
 import Mathlib.Util.AssertExists
-import Mathlib.Util.AssertNotImported
 
 /-!
 #  The "assertNotExists" linter
@@ -50,8 +49,6 @@ def onlyImportsModDocsAssertImporteds : Syntax → Bool
     dropAssertNotImporteds.isEmpty
   | _=> false
 
--- TODO: double-check this logic!
-
 /-- `onlyImportsModDocsAsserts stx` checks whether `stx` is the syntax for a module that
 only consists of
 * any number of `import` statements (possibly none) followed by
@@ -86,13 +83,19 @@ def parseUpToHere (stx : Syntax) (post : String := "") : CommandElabM Syntax := 
 The "assertNotExists" style linter checks that a file starts with
 ```
 import*
-/-! doc-module -/*
+/-! module docstring -/*
+assert_not_imported*
 assert_not_exists*
-[no more `assert_not_exists`]
+[no more `assert_not_exists` nor `assert_not_imported`]
 ```
-It emits a warning on each `assert_not_exists` that is not preceded by
-* possibly some `import` statements,
+It emits a warning on each `assert_not_imported` command that is not preceded by
+* possibly some import statements,
 * possibly some doc-module strings, and
+* possible some `assert_not_imported` commands,
+as well as on each `assert_not_exists` command that is not preceded by
+* possibly some import statements,
+* possibly some doc-module strings, and
+* possible some `assert_not_imported` commands, and
 * possibly some `assert_not_exists` commands
 
 in this order.
@@ -114,7 +117,7 @@ def assertNotExistsLinter : Linter where run := withSetOptionIn fun stx ↦ do
     return
   if (← MonadState.get).messages.hasErrors then
     return
-  unless stx.isOfKind ``commandAssert_not_exists_ do return
+  unless [``commandAssert_not_exists_, ``commandAssert_not_imported_].contains stx.getKind do return
   let upToStx ← parseUpToHere stx "\nassert_not_exists XXX" <|> return Syntax.missing
   if ! onlyImportsModDocsAsserts upToStx then
     Linter.logLint linter.style.assertNotExists stx
