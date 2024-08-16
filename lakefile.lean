@@ -17,12 +17,15 @@ abbrev mathlibOnlyLinters : Array LeanOption := #[
   ⟨`linter.setOption, true⟩
 ]
 
+-- Default build options for mathlib
+abbrev mathlibBuildOptions : Array LeanOption := #[
+  ⟨`pp.unicode.fun, true⟩, -- pretty-prints `fun a ↦ b`
+  ⟨`autoImplicit, false⟩
+]
+
 /-- These options are passed as `leanOptions` to building mathlib, as well as the
 `Archive` and `Counterexamples`. (`tests` omits the first two options.) -/
-abbrev mathlibLeanOptions := #[
-    ⟨`pp.unicode.fun, true⟩, -- pretty-prints `fun a ↦ b`
-    ⟨`autoImplicit, false⟩
-  ] ++ -- options that are used in `lake build`
+abbrev mathlibLeanOptions := mathlibBuildOptions ++ -- options that are used in `lake build`
     mathlibOnlyLinters.map fun s ↦ { s with name := `weak ++ s.name }
 
 package mathlib where
@@ -36,11 +39,11 @@ package mathlib where
   -- weakLeanArgs := #[]
 
 lean_lib Archive where
-  leanOptions := mathlibLeanOptions
+  leanOptions := mathlibBuildOptions ++ mathlibOnlyLinters
   moreServerOptions := mathlibOnlyLinters
 
 lean_lib Counterexamples where
-  leanOptions := mathlibLeanOptions
+  leanOptions := mathlibBuildOptions ++ mathlibOnlyLinters
   moreServerOptions := mathlibOnlyLinters
 
 /-!
@@ -117,6 +120,7 @@ You can also use it as e.g. `lake exe test conv eval_elab` to only run the named
 -/
 @[test_driver]
 lean_exe test where
+  leanOptions := mathlibBuildOptions ++ mathlibOnlyLinters
   moreServerOptions := mathlibOnlyLinters
   srcDir := "scripts"
 
