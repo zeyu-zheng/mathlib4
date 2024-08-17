@@ -158,45 +158,30 @@ theorem CNF_foldr {b : Ordinal} (hb : 1 < b) (l : List (Σ _ : Ordinal, Ordinal)
     CNF b (l.foldr (fun p r ↦ b ^ p.1 * p.2 + r) 0) = l := by
   have hb' : b ≠ 0 := (zero_lt_one.trans hb).ne'
   induction' l with a l IH
-  · simp
-  · rw [CNF_ne_zero]
-    simp
+  · rw [foldr_nil, CNF_zero]
+  · have ha := h_lt _ (mem_cons_self _ _)
     have H := foldr_lt' hb' l h_sort h_lt
-    have H₁ : log b (b ^ a.fst * a.snd + foldr (fun p r ↦ b ^ p.fst * p.snd + r) 0 l) = a.fst := by
+    have H' : log b (b ^ a.fst * a.snd + foldr (fun p r ↦ b ^ p.fst * p.snd + r) 0 l) = a.fst := by
       apply _root_.le_antisymm
       · rw [← Order.lt_succ_iff, ← lt_opow_iff_log_lt hb]
-        · apply opow_mul_add_lt_opow_succ
-          · apply (h_lt _ _).2
-            simp
-          · exact H
-        · apply ne_of_gt (opow_mul_add_pos hb' _ _ _)
-          · apply (h_lt _ _).1
-            simp
+        · exact opow_mul_add_lt_opow_succ ha.2 H
+        · exact (opow_mul_add_pos hb' _ ha.1 _).ne'
       · conv_lhs => rw [← log_opow hb a.fst]
-        apply log_mono_right
-        apply (le_mul_left _ _).trans (le_add_right _ _)
-        apply Ordinal.pos_iff_ne_zero.2 <| (h_lt _ _).1
-        simp
-    rw [H₁]
-    constructor
-    · ext
-      · simp
-      · simp
-        rw [mul_add_div _ (opow_ne_zero _ hb'), div_eq_zero_of_lt H, add_zero]
-    · convert IH _ _
+        exact log_mono_right _ <|
+          (le_mul_left _ (Ordinal.pos_iff_ne_zero.2 <| ha.1)).trans (le_add_right _ _)
+    obtain ⟨a₁, a₂⟩ := a
+    rw [CNF_ne_zero, foldr_cons, cons.injEq, H', Sigma.mk.inj_iff]
+    refine ⟨⟨rfl, ?_⟩, ?_⟩
+    · rw [mul_add_div _ (opow_ne_zero _ hb'), div_eq_zero_of_lt H, add_zero]
+    · convert IH (h_sort.of_cons) _
       · rw [mul_add_mod_self]
-        apply mod_eq_of_lt
-        exact H
-      · exact h_sort.of_cons
+        exact mod_eq_of_lt H
       · intro p hp
-        apply h_lt
-        exact mem_cons_of_mem a hp
-    simp
-    intro h
-    obtain (h | h) := mul_eq_zero.1 <| left_eq_zero_of_add_eq_zero h
-    · exact opow_ne_zero _ hb' h
-    · apply (h_lt _ _).1 h
-      exact mem_cons_self _ _
+        exact h_lt _ <| mem_cons_of_mem _ hp
+    · intro h
+      obtain (h | h) := mul_eq_zero.1 <| left_eq_zero_of_add_eq_zero h
+      · exact opow_ne_zero _ hb' h
+      · exact ha.1 h
 
 theorem CNF_opow_mul {b : Ordinal} (hb : 1 < b) (o e x : Ordinal) :
     CNF b (b ^ x * o) = (CNF b o).map (fun y => ⟨y.1 + x, y.2⟩) := by
