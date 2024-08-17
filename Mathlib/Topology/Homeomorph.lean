@@ -503,6 +503,15 @@ section
 
 variable (X Y Z)
 
+/-- `Sum.swap` as a homeomorphism -/
+def swap : X ⊕ Y ≃ₜ Y ⊕ X where
+  toEquiv := Sum.swapEquiv
+  continuous_toFun := Continuous.swap
+  continuous_invFun := Continuous.swap
+
+@[simp]
+theorem swap_symm : (swap X Y).symm = swap Y X := rfl
+
 /-- `X × Y` is homeomorphic to `Y × X`. -/
 def prodComm : X × Y ≃ₜ Y × X where
   continuous_toFun := continuous_snd.prod_mk continuous_fst

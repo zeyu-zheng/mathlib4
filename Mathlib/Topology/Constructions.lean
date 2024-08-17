@@ -820,6 +820,7 @@ theorem continuous_sum_elim {f : X → Z} {g : Y → Z} :
     Continuous (Sum.elim f g) ↔ Continuous f ∧ Continuous g :=
   continuous_sum_dom
 
+
 @[continuity, fun_prop]
 theorem Continuous.sum_elim {f : X → Z} {g : Y → Z} (hf : Continuous f) (hg : Continuous g) :
     Continuous (Sum.elim f g) :=
@@ -840,6 +841,17 @@ theorem continuous_inl : Continuous (@inl X Y) := ⟨fun _ => And.left⟩
 @[continuity, fun_prop]
 -- Porting note: the proof was `continuous_sup_rng_right continuous_coinduced_rng`
 theorem continuous_inr : Continuous (@inr X Y) := ⟨fun _ => And.right⟩
+
+-- NB: this morally belongs to `Batteries`, but `Equiv` is only defined in mathlib.
+/-- `Sum.swap X Y`, as an `Equiv` -/
+def Equiv.sum_swap {α β : Type*} : α ⊕ β ≃ β ⊕ α where
+  toFun := Sum.swap
+  invFun := Sum.swap
+  left_inv := Sum.swap_leftInverse
+  right_inv := Sum.swap_leftInverse
+
+lemma Continuous.swap : Continuous (@Sum.swap X Y) :=
+  Continuous.sum_elim continuous_inr continuous_inl
 
 theorem isOpen_sum_iff {s : Set (X ⊕ Y)} : IsOpen s ↔ IsOpen (inl ⁻¹' s) ∧ IsOpen (inr ⁻¹' s) :=
   Iff.rfl
