@@ -347,7 +347,8 @@ theorem opow_mul_add_pos {b v : Ordinal} (hb : b â‰  0) (u : Ordinal) (hv : v â‰
     (le_mul_left _ <| Ordinal.pos_iff_ne_zero.2 hv).trans <| le_add_right _ _
 
 theorem opow_mul_add_lt_opow_mul_succ {b u w : Ordinal} (v : Ordinal) (hw : w < b ^ u) :
-    b ^ u * v + w < b ^ u * succ v := by rwa [mul_succ, add_lt_add_iff_left]
+    b ^ u * v + w < b ^ u * succ v := by
+  rwa [mul_succ, add_lt_add_iff_left]
 
 theorem opow_mul_add_lt_opow_succ {b u v w : Ordinal} (hvb : v < b) (hw : w < b ^ u) :
     b ^ u * v + w < b ^ succ u := by
