@@ -87,6 +87,16 @@ theorem CNF_ne_zero {b o : Ordinal} (ho : o ≠ 0) :
     CNF b o = ⟨log b o, o / b ^ log b o⟩::CNF b (o % b ^ log b o) :=
   CNFRec_pos b ho _ _
 
+@[simp]
+theorem CNF_eq_nil {b o : Ordinal} : CNF b o = [] ↔ o = 0 := by
+  constructor
+  · intro h
+    by_contra ho
+    rw [CNF_ne_zero ho] at h
+    exact cons_ne_nil _ _ h
+  · rintro rfl
+    exact CNF_zero b
+
 theorem zero_CNF {o : Ordinal} (ho : o ≠ 0) : CNF 0 o = [⟨0, o⟩] := by
   simp [CNF_ne_zero ho]
 
@@ -195,7 +205,17 @@ theorem CNF_AList_entries (b o : Ordinal) : (CNF_AList b o).entries = CNF b o :=
 theorem CNF_AList_keys (b o : Ordinal) : (CNF_AList b o).keys = CNF.exponents b o :=
   rfl
 
-theorem mem_CNF_AList_lookup {b o e c : Ordinal} :
+@[simp]
+theorem CNF_AList_eq_empty {b o : Ordinal} : CNF_AList b o = ∅ ↔ o = 0 := by
+  rw [AList.ext_iff]
+  exact CNF_eq_nil
+
+@[simp]
+theorem mem_CNF_AList_iff {b o e : Ordinal} : e ∈ CNF_AList b o ↔ e ∈ CNF.exponents b o :=
+  Iff.rfl
+
+@[simp]
+theorem mem_CNF_AList_lookup_iff {b o e c : Ordinal} :
     c ∈ (CNF_AList b o).lookup e ↔ ⟨e, c⟩ ∈ CNF b o :=
   mem_lookup_iff
 
@@ -221,18 +241,20 @@ theorem CNF_coeff_of_mem_CNF {b o e c : Ordinal} (h : ⟨e, c⟩ ∈ CNF b o) :
 
 theorem CNF_coeff_eq_pos_iff {b o e c : Ordinal} (hc : c ≠ 0) :
     CNF_coeff b o e = c ↔ ⟨e, c⟩ ∈ CNF b o := by
-  rw [CNF_coeff, lookupFinsupp_eq_iff_of_ne_zero hc, mem_CNF_AList_lookup]
-
-theorem CNF_coeff_of_not_mem_CNF {b o e : Ordinal} (h : e ∉ CNF.exponents b o) :
-    CNF_coeff b o e = 0 := by
-  rw [CNF_coeff, lookupFinsupp_apply, lookup_eq_none.2 h, Option.getD_none]
+  rw [CNF_coeff, lookupFinsupp_eq_iff_of_ne_zero hc, mem_CNF_AList_lookup_iff]
 
 theorem CNF_coeff_eq_zero_iff {b o e : Ordinal} : CNF_coeff b o e = 0 ↔ e ∉ CNF.exponents b o := by
-  rw [CNF_coeff, lookupFinsupp_eq_iff_of_ne_zero hc, mem_CNF_AList_lookup]
+  rw [CNF_coeff, lookupFinsupp_eq_zero_iff, mem_CNF_AList_lookup_iff]
+  constructor
+  · rintro (h | h)
+    · exact h
+    · exact (lt_irrefl 0 <| pos_of_mem_CNF_coefficients (mem_map_of_mem Sigma.snd h)).elim
+  · exact Or.inl
+
+alias ⟨_, CNF_coeff_of_not_mem_CNF⟩ := CNF_coeff_eq_zero_iff
 
 theorem CNF_coeff_zero_apply (b e : Ordinal) : CNF_coeff b 0 e = 0 := by
-  apply CNF_coeff_of_not_mem_CNF
-  rw [CNF.exponents_zero]
+  rw [CNF_coeff_eq_zero_iff, CNF.exponents_zero]
   exact not_mem_nil e
 
 @[simp]
@@ -249,9 +271,7 @@ theorem CNF_coeff_of_le_one {b : Ordinal} (hb : b ≤ 1) (o : Ordinal) :
     · apply CNF_coeff_of_mem_CNF
       rw [CNF_of_le_one hb ho]
       simp
-    · rw [single_eq_of_ne ha.symm]
-      apply CNF_coeff_of_not_mem_CNF
-      rw [CNF.exponents, CNF_of_le_one hb ho]
+    · rw [single_eq_of_ne ha.symm, CNF_coeff_eq_zero_iff, CNF.exponents, CNF_of_le_one hb ho]
       simpa using ha
 
 @[simp]
@@ -265,10 +285,21 @@ theorem one_CNF_coeff (o : Ordinal) : CNF_coeff 1 o = single 0 o :=
 theorem CNF_coeff_opow {b : Ordinal} (hb : 1 < b) (e : Ordinal) :
     CNF_coeff b (b^e) = single e 1 := by
   ext a
-  obtain rfl | ha := eq_or_ne a e
+  obtain rfl | ha := eq_or_ne e a
   · rw [single_eq_same]
     apply CNF_coeff_of_mem_CNF
     rw [CNF_opow hb]
     exact mem_cons_self _ _
+  · rw [single_eq_of_ne ha, CNF_coeff_eq_zero_iff, CNF.exponents, CNF_opow hb,
+      List.keys_singleton, mem_singleton]
+    exact ha.symm
+
+theorem CNF_coeff_one {b : Ordinal} (hb : 1 < b) : CNF_coeff b 1 = single 0 1 := by
+  convert CNF_coeff_opow hb 0
+  exact (opow_zero b).symm
+
+theorem CNF_coeff_self {b : Ordinal} (hb : 1 < b) : CNF_coeff b b = single 1 1 := by
+  convert CNF_coeff_opow hb 1
+  exact (opow_one b).symm
 
 end Ordinal

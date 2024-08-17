@@ -47,6 +47,9 @@ theorem keys_nil : @keys α β [] = [] :=
 theorem keys_cons {s} {l : List (Sigma β)} : (s :: l).keys = s.1 :: l.keys :=
   rfl
 
+theorem keys_singleton {s : Sigma β} : [s].keys = [s.1] :=
+  rfl
+
 theorem mem_keys_of_mem {s : Sigma β} {l : List (Sigma β)} : s ∈ l → s.1 ∈ l.keys :=
   mem_map_of_mem Sigma.fst
 
