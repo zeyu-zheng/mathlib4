@@ -226,8 +226,8 @@ theorem opow_mul_add_lt_opow_mul_succ {b u w : Ordinal} (v : Ordinal) (hw : w < 
 
 theorem opow_mul_add_lt_opow_succ {b u v w : Ordinal} (hvb : v < b) (hw : w < b ^ u) :
     b ^ u * v + w < b ^ succ u := by
-  convert (opow_mul_add_lt_opow_mul_succ v hw).trans_le (mul_le_mul_left' (succ_le_of_lt hvb) _)
-    using 1
+  convert (opow_mul_add_lt_opow_mul_succ v hw).trans_le
+    (mul_le_mul_left' (succ_le_of_lt hvb) _) using 1
   exact opow_succ b u
 
 /-! ### Ordinal logarithm -/
@@ -413,6 +413,13 @@ theorem div_opow_log_pos (b : Ordinal) {o : Ordinal} (ho : o ≠ 0) : 0 < o / (b
 theorem div_opow_log_lt {b : Ordinal} (o : Ordinal) (hb : 1 < b) : o / (b ^ log b o) < b := by
   rw [div_lt (opow_pos _ (zero_lt_one.trans hb)).ne', ← opow_succ]
   exact lt_opow_succ_log_self hb o
+
+theorem add_log_le_log_mul {x y : Ordinal} (b : Ordinal) (hx : x ≠ 0) (hy : y ≠ 0) :
+    log b x + log b y ≤ log b (x * y) := by
+  obtain hb | hb := lt_or_le 1 b
+  · rw [← opow_le_iff_le_log hb (mul_ne_zero hx hy), opow_add]
+    exact mul_le_mul' (opow_log_le_self b hx) (opow_log_le_self b hy)
+  · simpa only [log_of_left_le_one hb, zero_add] using le_rfl
 
 /-! ### Interaction with `Nat.cast` -/
 
