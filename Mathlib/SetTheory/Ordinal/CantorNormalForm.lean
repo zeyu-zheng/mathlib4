@@ -288,73 +288,11 @@ theorem CNF_eq {b : Ordinal} (hb : 1 < b) (l : List (Σ _ : Ordinal, Ordinal))
 
 open AList Finsupp
 
-/-- Cantor normal form `CNF` as an `AList`. -/
-@[pp_nodot]
-def CNF_AList (b o : Ordinal) : AList (fun _ : Ordinal => Ordinal) :=
-  ⟨_, CNF_nodupKeys b o⟩
-
-@[simp]
-theorem CNF_AList_entries (b o : Ordinal) : (CNF_AList b o).entries = CNF b o :=
-  rfl
-
-@[simp]
-theorem CNF_AList_keys (b o : Ordinal) : (CNF_AList b o).keys = CNF.exponents b o :=
-  rfl
-
-@[simp]
-theorem mem_CNF_AList_iff {b o e : Ordinal} : e ∈ CNF_AList b o ↔ e ∈ CNF.exponents b o :=
-  Iff.rfl
-
-@[simp]
-theorem mem_CNF_AList_lookup_iff {b o e c : Ordinal} :
-    (CNF_AList b o).lookup e = some c ↔ ⟨e, c⟩ ∈ CNF b o :=
-  mem_lookup_iff
-
-@[simp]
-theorem CNF_AList_eq_empty {b o : Ordinal} : CNF_AList b o = ∅ ↔ o = 0 := by
-  rw [AList.ext_iff]
-  exact CNF_eq_nil
-
-@[simp]
-theorem CNF_AList_zero (b : Ordinal) : CNF_AList b 0 = ∅ :=
-  AList.ext <| CNF_zero b
-
-theorem zero_CNF_AList {o : Ordinal} (ho : o ≠ 0) : CNF_AList 0 o = AList.singleton 0 o :=
-  AList.ext <| zero_CNF ho
-
-theorem one_CNF_AList {o : Ordinal} (ho : o ≠ 0) : CNF_AList 1 o = AList.singleton 0 o :=
-  AList.ext <| one_CNF ho
-
-theorem CNF_AList_of_le_one {b o : Ordinal} (hb : b ≤ 1) (ho : o ≠ 0) :
-    CNF_AList b o = AList.singleton 0 o :=
-  AList.ext <| CNF_of_le_one hb ho
-
-theorem CNF_AList_of_lt {b o : Ordinal} (ho : o ≠ 0) (hb : o < b) :
-    CNF_AList b o = AList.singleton 0 o :=
-  AList.ext <| CNF_of_lt ho hb
-
-theorem CNF_AList_opow {b : Ordinal} (hb : 1 < b) (e : Ordinal) :
-    CNF_AList b (b ^ e) = AList.singleton e 1 :=
-  AList.ext <| CNF_opow hb e
-
-theorem CNF_AList_one {b : Ordinal} (hb : 1 < b) : CNF_AList b 1 = AList.singleton 0 1 :=
-  AList.ext <| CNF_one hb
-
-theorem CNF_AList_self {b : Ordinal} (hb : 1 < b) : CNF_AList b b = AList.singleton 1 1 :=
-  AList.ext <| CNF_self hb
-
-theorem CNF_AList_injective (b : Ordinal) : Function.Injective (CNF_AList b) :=
-  fun _ _ h => CNF_injective _ (AList.ext_iff.1 h)
-
-@[simp]
-theorem CNF_AList_eq_iff {b o₁ o₂ : Ordinal} : CNF_AList b o₁ = CNF_AList b o₂ ↔ o₁ = o₂ :=
-  (CNF_AList_injective b).eq_iff
-
 /-- `CNF_coeff b o` is the finitely supported function, returning the coefficient of `b ^ e` in the
 `CNF` of `o`, for each `e`. -/
 @[pp_nodot]
 def CNF_coeff (b o : Ordinal) : Ordinal →₀ Ordinal :=
-  (CNF_AList b o).lookupFinsupp
+  lookupFinsupp ⟨_, CNF_nodupKeys b o⟩
 
 theorem CNF_coeff_def (b o e : Ordinal) : CNF_coeff b o e = ((CNF b o).dlookup e).getD 0 := by
   rw [CNF_coeff, lookupFinsupp_apply]
@@ -370,20 +308,21 @@ theorem CNF_coeff_support (b o : Ordinal) :
 
 theorem CNF_coeff_of_mem_CNF {b o e c : Ordinal} (h : ⟨e, c⟩ ∈ CNF b o) :
     CNF_coeff b o e = c := by
-  rw [← CNF_AList_entries] at h
   rw [CNF_coeff, lookupFinsupp_apply, mem_lookup_iff.2 h]
   rfl
 
 theorem CNF_coeff_eq_pos_iff {b o e c : Ordinal} (hc : c ≠ 0) :
     CNF_coeff b o e = c ↔ ⟨e, c⟩ ∈ CNF b o := by
-  rw [CNF_coeff, lookupFinsupp_eq_iff_of_ne_zero hc, Option.mem_iff, mem_CNF_AList_lookup_iff]
+  rw [CNF_coeff, lookupFinsupp_eq_iff_of_ne_zero hc]
+  exact mem_lookup_iff
 
 theorem CNF_coeff_eq_zero_iff {b o e : Ordinal} : CNF_coeff b o e = 0 ↔ e ∉ CNF.exponents b o := by
-  rw [CNF_coeff, lookupFinsupp_eq_zero_iff, Option.mem_iff, mem_CNF_AList_lookup_iff]
+  rw [CNF_coeff, lookupFinsupp_eq_zero_iff]
   constructor
   · rintro (h | h)
     · exact h
-    · exact (lt_irrefl 0 <| pos_of_mem_CNF_coefficients (mem_map_of_mem Sigma.snd h)).elim
+    · exact (lt_irrefl 0 <| pos_of_mem_CNF_coefficients <|
+        mem_map_of_mem Sigma.snd <| mem_lookup_iff.1 h).elim
   · exact Or.inl
 
 alias ⟨_, CNF_coeff_of_not_mem_CNF⟩ := CNF_coeff_eq_zero_iff
