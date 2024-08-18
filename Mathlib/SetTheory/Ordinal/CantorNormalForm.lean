@@ -37,6 +37,8 @@ open List
 
 namespace Ordinal
 
+variable {b : Ordinal}
+
 /-- Inducts on the base `b` expansion of an ordinal. -/
 @[elab_as_elim]
 noncomputable def CNFRec (b : Ordinal) {C : Ordinal → Sort*} (H0 : C 0)
@@ -78,10 +80,10 @@ theorem CNF_zero (b : Ordinal) : CNF b 0 = [] :=
 theorem CNF.exponents_zero (b : Ordinal) : CNF.exponents b 0 = [] := by
   rw [exponents, CNF_zero, keys_nil]
 
-theorem mem_CNF_exponents_iff {b o e : Ordinal} : e ∈ CNF.exponents b o ↔ ∃ c, ⟨e, c⟩ ∈ CNF b o :=
+theorem mem_CNF_exponents_iff {o e : Ordinal} : e ∈ CNF.exponents b o ↔ ∃ c, ⟨e, c⟩ ∈ CNF b o :=
   mem_keys
 
-theorem mem_CNF_exponents_of_mem {b o e c : Ordinal} (h : ⟨e, c⟩ ∈ CNF b o) :
+theorem mem_CNF_exponents_of_mem {o e c : Ordinal} (h : ⟨e, c⟩ ∈ CNF b o) :
     e ∈ CNF.exponents b o :=
   mem_CNF_exponents_iff.2 ⟨c, h⟩
 
@@ -89,21 +91,21 @@ theorem mem_CNF_exponents_of_mem {b o e c : Ordinal} (h : ⟨e, c⟩ ∈ CNF b o
 theorem CNF.coefficients_zero (b : Ordinal) : CNF.coefficients b 0 = [] := by
   rw [coefficients, CNF_zero, map_nil]
 
-theorem mem_CNF_coefficients_iff {b o c : Ordinal} :
+theorem mem_CNF_coefficients_iff {o c : Ordinal} :
     c ∈ CNF.coefficients b o ↔ ∃ e, ⟨e, c⟩ ∈ CNF b o := by
   simp [CNF.coefficients]
 
-theorem mem_CNF_coefficients_of_mem {b o e c : Ordinal} (h : ⟨e, c⟩ ∈ CNF b o) :
+theorem mem_CNF_coefficients_of_mem {o e c : Ordinal} (h : ⟨e, c⟩ ∈ CNF b o) :
     c ∈ CNF.coefficients b o :=
   mem_CNF_coefficients_iff.2 ⟨e, h⟩
 
 /-- Recursive definition for the Cantor normal form. -/
-theorem CNF_ne_zero {b o : Ordinal} (ho : o ≠ 0) :
+theorem CNF_ne_zero {o : Ordinal} (ho : o ≠ 0) :
     CNF b o = ⟨log b o, o / b ^ log b o⟩::CNF b (o % b ^ log b o) :=
   CNFRec_pos b ho _ _
 
 @[simp]
-theorem CNF_eq_nil {b o : Ordinal} : CNF b o = [] ↔ o = 0 := by
+theorem CNF_eq_nil {o : Ordinal} : CNF b o = [] ↔ o = 0 := by
   constructor
   · intro h
     by_contra ho
@@ -118,28 +120,28 @@ theorem zero_CNF {o : Ordinal} (ho : o ≠ 0) : CNF 0 o = [⟨0, o⟩] := by
 theorem one_CNF {o : Ordinal} (ho : o ≠ 0) : CNF 1 o = [⟨0, o⟩] := by
   simp [CNF_ne_zero ho]
 
-theorem CNF_of_le_one {b o : Ordinal} (hb : b ≤ 1) (ho : o ≠ 0) : CNF b o = [⟨0, o⟩] := by
+theorem CNF_of_le_one {o : Ordinal} (hb : b ≤ 1) (ho : o ≠ 0) : CNF b o = [⟨0, o⟩] := by
   rcases le_one_iff.1 hb with (rfl | rfl)
   · exact zero_CNF ho
   · exact one_CNF ho
 
-theorem CNF_of_lt {b o : Ordinal} (ho : o ≠ 0) (hb : o < b) : CNF b o = [⟨0, o⟩] := by
+theorem CNF_of_lt {o : Ordinal} (ho : o ≠ 0) (hb : o < b) : CNF b o = [⟨0, o⟩] := by
   simp only [CNF_ne_zero ho, log_eq_zero hb, opow_zero, div_one, mod_one, CNF_zero]
 
-theorem CNF_opow {b : Ordinal} (hb : 1 < b) (e : Ordinal) : CNF b (b ^ e) = [⟨e, 1⟩] := by
+theorem CNF_opow (hb : 1 < b) (e : Ordinal) : CNF b (b ^ e) = [⟨e, 1⟩] := by
   have H := (opow_pos e (zero_le_one.trans_lt hb)).ne'
   rw [CNF_ne_zero H]
   simpa [log_opow hb e] using div_self H
 
-theorem CNF_one {b : Ordinal} (hb : 1 < b) : CNF b 1 = [⟨0, 1⟩] := by
+theorem CNF_one (hb : 1 < b) : CNF b 1 = [⟨0, 1⟩] := by
   convert CNF_opow hb 0
   exact (opow_zero b).symm
 
-theorem CNF_self {b : Ordinal} (hb : 1 < b) : CNF b b = [⟨1, 1⟩] := by
+theorem CNF_self (hb : 1 < b) : CNF b b = [⟨1, 1⟩] := by
   convert CNF_opow hb 1
   exact (opow_one b).symm
 
-theorem CNF_opow_mul {b : Ordinal} (hb : 1 < b) (o x : Ordinal) :
+theorem CNF_opow_mul (hb : 1 < b) (o x : Ordinal) :
     CNF b (b ^ x * o) = (CNF b o).map (fun y => ⟨x + y.1, y.2⟩) := by
   refine CNFRec b ?_ ?_ o
   · simp
@@ -242,7 +244,7 @@ theorem CNF_injective (b : Ordinal) : Function.Injective (CNF b) :=
 theorem CNF_eq_iff {b o₁ o₂ : Ordinal} : CNF b o₁ = CNF b o₂ ↔ o₁ = o₂ :=
   (CNF_injective b).eq_iff
 
-theorem foldr_lt {b : Ordinal} {x} {l : List (Σ _ : Ordinal, Ordinal)}
+theorem foldr_lt {x} {l : List (Σ _ : Ordinal, Ordinal)}
     (h_sort : (x :: l).keys.Sorted (· > ·))
     (h_lt : ∀ p ∈ x :: l, p.2 < b) :
     l.foldr (fun p r ↦ b ^ p.1 * p.2 + r) 0 < b ^ x.1 := by
@@ -263,7 +265,7 @@ theorem foldr_lt {b : Ordinal} {x} {l : List (Σ _ : Ordinal, Ordinal)}
       exact h_lt p (mem_cons_of_mem x hp)
 
 /-- The cantor normal form of an ordinal is unique. -/
-theorem CNF_eq {b : Ordinal} (hb : 1 < b) (l : List (Σ _ : Ordinal, Ordinal))
+theorem CNF_eq (hb : 1 < b) (l : List (Σ _ : Ordinal, Ordinal))
     (h_sort : l.keys.Sorted (· > ·))
     (h_lt : ∀ p ∈ l, p.2 ≠ 0 ∧ p.2 < b) :
     CNF b (l.foldr (fun p r ↦ b ^ p.1 * p.2 + r) 0) = l := by
@@ -336,7 +338,7 @@ theorem CNF_coeff_zero (b : Ordinal) : CNF_coeff b 0 = 0 := by
   ext e
   exact CNF_coeff_zero_apply b e
 
-theorem CNF_coeff_of_le_one {b : Ordinal} (hb : b ≤ 1) (o : Ordinal) :
+theorem CNF_coeff_of_le_one (hb : b ≤ 1) (o : Ordinal) :
     CNF_coeff b o = single 0 o := by
   ext a
   obtain rfl | ho := eq_or_ne o 0
@@ -356,7 +358,7 @@ theorem zero_CNF_coeff (o : Ordinal) : CNF_coeff 0 o = single 0 o :=
 theorem one_CNF_coeff (o : Ordinal) : CNF_coeff 1 o = single 0 o :=
   CNF_coeff_of_le_one le_rfl o
 
-theorem CNF_coeff_opow {b : Ordinal} (hb : 1 < b) (e : Ordinal) :
+theorem CNF_coeff_opow (hb : 1 < b) (e : Ordinal) :
     CNF_coeff b (b ^ e) = single e 1 := by
   ext a
   obtain rfl | ha := eq_or_ne e a
@@ -368,11 +370,11 @@ theorem CNF_coeff_opow {b : Ordinal} (hb : 1 < b) (e : Ordinal) :
       List.keys_singleton, mem_singleton]
     exact ha.symm
 
-theorem CNF_coeff_one {b : Ordinal} (hb : 1 < b) : CNF_coeff b 1 = single 0 1 := by
+theorem CNF_coeff_one (hb : 1 < b) : CNF_coeff b 1 = single 0 1 := by
   convert CNF_coeff_opow hb 0
   exact (opow_zero b).symm
 
-theorem CNF_coeff_self {b : Ordinal} (hb : 1 < b) : CNF_coeff b b = single 1 1 := by
+theorem CNF_coeff_self (hb : 1 < b) : CNF_coeff b b = single 1 1 := by
   convert CNF_coeff_opow hb 1
   exact (opow_one b).symm
 
@@ -388,7 +390,7 @@ theorem CNF_coeff_of_gt {b o e : Ordinal} (he : o < b ^ e) : CNF_coeff b o e = 0
       exact (le_log_of_mem_CNF_exponents (mem_CNF_exponents_of_mem hc)).not_lt he
 
 /-- The function `CNF_coeff b (b ^ x * o)` is the translation of `CNF_coeff b o` by `x`. -/
-theorem CNF_coeff_opow_mul {b : Ordinal} (hb : 1 < b) (o x : Ordinal) :
+theorem CNF_coeff_opow_mul (hb : 1 < b) (o x : Ordinal) :
     (CNF_coeff b (b ^ x * o)).comapDomain (x + ·)
       (fun _ _ _ _ => (add_left_cancel x).1) = CNF_coeff b o := by
   ext e
@@ -397,7 +399,7 @@ theorem CNF_coeff_opow_mul {b : Ordinal} (hb : 1 < b) (o x : Ordinal) :
   intro a b h
   rwa [add_left_cancel] at h
 
-theorem CNF_coeff_opow_mul_of_ge {b : Ordinal} (hb : 1 < b) (o x e : Ordinal) :
+theorem CNF_coeff_opow_mul_of_ge (hb : 1 < b) (o x e : Ordinal) :
     CNF_coeff b (b ^ x * o) (x + e) = CNF_coeff b o e := by
   rw [← CNF_coeff_opow_mul hb o x]
   rfl
@@ -448,7 +450,7 @@ theorem CNF_coeff_opow_mul_add_apply {b x o₂ : Ordinal} (o₁ : Ordinal) (ho�
   rw [CNF_coeff_opow_mul_add _ ho₂]
   rfl
 
-theorem CNF_coeff_apply_zero {b : Ordinal} (hb : b ≠ 1) (o : Ordinal) :
+theorem CNF_coeff_apply_zero (hb : b ≠ 1) (o : Ordinal) :
     CNF_coeff b o 0 = o % b := by
   obtain hb | hb' := le_or_lt b 1
   · obtain rfl | rfl := Ordinal.le_one_iff.1 hb
@@ -464,7 +466,7 @@ theorem CNF_coeff_apply_zero {b : Ordinal} (hb : b ≠ 1) (o : Ordinal) :
           mod_eq_of_lt <| (log_eq_zero_iff hb').1 h]
       · rw [dlookup_cons_ne _ _ h.symm, IH, mod_mod_of_dvd o (dvd_opow b h)]
 
-theorem CNF_coeff_apply {b : Ordinal} (hb : 1 < b) (o e : Ordinal) :
+theorem CNF_coeff_apply (hb : 1 < b) (o e : Ordinal) :
     CNF_coeff b o e = o / b ^ e % b := by
   have h := mod_lt o (opow_ne_zero e (zero_lt_one.trans hb).ne')
   conv_lhs => rw [← div_add_mod o (b ^ e)]
@@ -474,7 +476,7 @@ theorem CNF_coeff_apply {b : Ordinal} (hb : 1 < b) (o e : Ordinal) :
   rw [H, CNF_coeff_apply_zero hb.ne', CNF_coeff_of_gt h, add_zero]
 
 /-- The function `CNF_coeff b (o / b ^ x)` is the translation of `CNF_coeff b o` by `x`. -/
-theorem CNF_coeff_opow_div {b : Ordinal} (hb : 1 < b) (o x : Ordinal) :
+theorem CNF_coeff_opow_div (hb : 1 < b) (o x : Ordinal) :
     CNF_coeff b (o / b ^ x) = (CNF_coeff b o).comapDomain (x + ·)
       (fun _ _ _ _ => (add_left_cancel x).1) := by
   ext e
@@ -484,11 +486,13 @@ theorem CNF_coeff_opow_div {b : Ordinal} (hb : 1 < b) (o x : Ordinal) :
   · exact mod_lt o (opow_ne_zero x (zero_lt_one.trans hb).ne')
   · exact le_add_right x e
 
-theorem CNF_coeff_opow_div_apply {b : Ordinal} (hb : 1 < b) (o x e : Ordinal) :
+theorem CNF_coeff_opow_div_apply (hb : 1 < b) (o x e : Ordinal) :
     CNF_coeff b (o / b ^ x) e = CNF_coeff b o (x + e) := by
   rw [CNF_coeff_opow_div hb]
   rfl
 
 /-! ### Addition -/
+
+--theorem CNF_coeff_add_of_ge (o₁ o₂ e : Ordinal) : CNF_coeff b (o₁ + o₂) e = CNF_coeff b o₁ e
 
 end Ordinal
