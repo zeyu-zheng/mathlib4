@@ -257,7 +257,7 @@ theorem CNF_eq {b : Ordinal} (hb : 1 < b) (l : List (Σ _ : Ordinal, Ordinal))
   · rw [foldr_nil, CNF_zero]
   · have ha := h_lt a (mem_cons_self a l)
     have H := foldr_lt h_sort (fun p hp => (h_lt p hp).2)
-    have H' := log_opow_mul_add hb ha.1 ha.2 H
+    have H' := log_opow_mul_add' hb ha.1 ha.2 H
     rw [CNF_ne_zero, foldr_cons, cons.injEq, H', Sigma.mk.inj_iff]
     refine ⟨⟨rfl, ?_⟩, ?_⟩
     · rw [mul_add_div _ (opow_ne_zero _ hb'), div_eq_zero_of_lt H, add_zero]
@@ -422,17 +422,20 @@ theorem CNF_coeff_self {b : Ordinal} (hb : 1 < b) : CNF_coeff b b = single 1 1 :
   convert CNF_coeff_opow hb 1
   exact (opow_one b).symm
 
+/-- The function `CNF_coeff b (b ^ x * o)` is the translation of `CNF_coeff b o` by `x`. -/
 theorem CNF_coeff_opow_mul' {b : Ordinal} (hb : 1 < b) (o x : Ordinal) :
-    CNF_coeff b (b ^ x * o) = CNF_coeff b o e := by
+    (CNF_coeff b (b ^ x * o)).comapDomain (x + ·)
+      (fun _ _ _ _ => (add_left_cancel x).1) = CNF_coeff b o := by
+  ext e
+  dsimp
   rw [CNF_coeff_def, CNF_coeff_def, CNF_opow_mul hb, dlookup_map₁]
   intro a b h
   rwa [add_left_cancel] at h
 
 theorem CNF_coeff_opow_mul {b : Ordinal} (hb : 1 < b) (o x e : Ordinal) :
     CNF_coeff b (b ^ x * o) (x + e) = CNF_coeff b o e := by
-  rw [CNF_coeff_def, CNF_coeff_def, CNF_opow_mul hb, dlookup_map₁]
-  intro a b h
-  rwa [add_left_cancel] at h
+  rw [← CNF_coeff_opow_mul' hb o x]
+  rfl
 
 theorem CNF_coeff_opow_mul_of_lt {b e x : Ordinal} (hb : 1 < b) (o : Ordinal) (he : e < x) :
     CNF_coeff b (b ^ x * o) e = 0 := by
