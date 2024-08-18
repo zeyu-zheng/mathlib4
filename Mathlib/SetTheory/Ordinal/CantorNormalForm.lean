@@ -425,6 +425,12 @@ theorem CNF_coeff_opow_mul {b : Ordinal} (hb : 1 < b) (o x e : Ordinal) :
   intro a b h
   rwa [add_left_cancel] at h
 
+theorem CNF_coeff_opow_mul_of_lt {b : Ordinal} (hb : 1 < b) (o x e : Ordinal) :
+    CNF_coeff b (b ^ x * o) (x + e) = CNF_coeff b o e := by
+  rw [CNF_coeff_def, CNF_coeff_def, CNF_opow_mul hb, dlookup_map]
+  intro a b h
+  rwa [add_left_cancel] at h
+
 /-theorem CNF_coeff_apply (b o e : Ordinal) : CNF_coeff b o e = o / b ^ e % b := by
   conv_rhs => rw [← CNF_foldr b o]-/
 
