@@ -408,28 +408,15 @@ theorem CNF_coeff_self {b : Ordinal} (hb : 1 < b) : CNF_coeff b b = single 1 1 :
   convert CNF_coeff_opow hb 1
   exact (opow_one b).symm
 
--- TODO: move elsewhere
-private lemma dlookup_map {α β γ} [DecidableEq α] [DecidableEq γ]
-    {l : List (Σ _ : α, β)} {f : α → γ} (hf : Function.Injective f) (a : α) :
-    (l.map fun x => ⟨f x.1, x.2⟩ : List (Σ _ : γ, β)).dlookup (f a) = l.dlookup a := by
-  induction' l with b l IH
-  · rw [map_nil, dlookup_nil, dlookup_nil]
-  · simp
-    obtain h | h := eq_or_ne (f a) (f b.1)
-    · rw [h, hf h, dlookup_cons_eq, dlookup_cons_eq]
-    · rw [dlookup_cons_ne _ _ h, dlookup_cons_ne _ _ (fun he => (he ▸ h) rfl), IH]
-
 theorem CNF_coeff_opow_mul {b : Ordinal} (hb : 1 < b) (o x e : Ordinal) :
     CNF_coeff b (b ^ x * o) (x + e) = CNF_coeff b o e := by
-  rw [CNF_coeff_def, CNF_coeff_def, CNF_opow_mul hb, dlookup_map]
+  rw [CNF_coeff_def, CNF_coeff_def, CNF_opow_mul hb, dlookup_map₁]
   intro a b h
   rwa [add_left_cancel] at h
 
 theorem CNF_coeff_opow_mul_of_lt {b : Ordinal} (hb : 1 < b) (o x e : Ordinal) :
     CNF_coeff b (b ^ x * o) (x + e) = CNF_coeff b o e := by
-  rw [CNF_coeff_def, CNF_coeff_def, CNF_opow_mul hb, dlookup_map]
-  intro a b h
-  rwa [add_left_cancel] at h
+  sorry
 
 /-theorem CNF_coeff_apply (b o e : Ordinal) : CNF_coeff b o e = o / b ^ e % b := by
   conv_rhs => rw [← CNF_foldr b o]-/
