@@ -44,29 +44,38 @@ open FiniteDimensional Set
 
 noncomputable section
 
--- Let M, M' and W be smooth manifolds.
-variable {E E' E'' E''' H H' H'' H''' : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+variable {E E' E'' E''' : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
   [NormedAddCommGroup E'] [NormedSpace ℝ E'] [NormedAddCommGroup E'']  [NormedSpace ℝ E'']
   [NormedAddCommGroup E'''] [NormedSpace ℝ E''']
+
+-- TODO: rethink the remaining implicit variables: we tacitly include a model space E,
+-- and we also fix the topological space E...
+
+variable (E) in
+/-- A **singular `n`-manifold** on a topological space `X` consists of a
+closed smooth `n`-manifold `M` and a continuous map `f : M → X`. -/
+structure SingularNManifold (X : Type*) [TopologicalSpace X] (n : ℕ) (H : Type*)
+    [TopologicalSpace H] [FiniteDimensional ℝ E] where
+  /-- The domain of the singular `n`-manifold. -/
+  domain : Type*
+  [top : TopologicalSpace domain]
+  [charts : ChartedSpace H domain]
+  model : ModelWithCorners ℝ E H
+  [smooth: SmoothManifoldWithCorners model domain]
+  [compact : CompactSpace domain]
+  [boundaryless : BoundarylessManifold model domain]
+  [hdim : Fact (finrank ℝ E = n)]
+  /-- The underlying map `M → X` of a singular `n`-manifold `(M,f)` on `X` -/
+  f : domain → X
+  hf : Continuous f
+
+variable {H H' H'' H''' : Type*}
   [TopologicalSpace H] [TopologicalSpace H'] [TopologicalSpace H''] [TopologicalSpace H''']
 
 variable {X Y Z : Type*} [TopologicalSpace X] [TopologicalSpace Y] [TopologicalSpace Z]
 
-/-- A **singular `n`-manifold** on a topological space `X` consists of a
-closed smooth `n`-manifold `M` and a continuous map `f : M → X`. -/
-structure SingularNManifold (X : Type*) [TopologicalSpace X] (n : ℕ)
-    (M : Type*) [TopologicalSpace M] [ChartedSpace H M]
-    (I : ModelWithCorners ℝ E H) [SmoothManifoldWithCorners I M]
-    [CompactSpace M] [BoundarylessManifold I M] [FiniteDimensional ℝ E] where
-  [hdim : Fact (finrank ℝ E = n)]
-  /-- The underlying map `M → X` of a singular `n`-manifold `(M,f)` on `X` -/
-  f : M → X
-  hf : Continuous f
-
 namespace SingularNManifold
 
--- We declare these variables *after* the definition above, so `SingularNManifold` can have
--- its current order of arguments.
 variable {M : Type*} [TopologicalSpace M] [ChartedSpace H M]
   {I : ModelWithCorners ℝ E H} [SmoothManifoldWithCorners I M]
   {M' : Type*} [TopologicalSpace M'] [ChartedSpace H' M']
@@ -74,47 +83,60 @@ variable {M : Type*} [TopologicalSpace M] [ChartedSpace H M]
   [BoundarylessManifold I M] [CompactSpace M] [FiniteDimensional ℝ E]
   [BoundarylessManifold I' M'] [CompactSpace M'] [FiniteDimensional ℝ E']
 
+variable (M I) in
 /-- If `M` is `n`-dimensional and closed, it is a singular `n`-manifold over itself. -/
-noncomputable def refl (hdim : finrank ℝ E = n) : SingularNManifold M n M I where
+noncomputable def refl (hdim : finrank ℝ E = n) : SingularNManifold M n H (E := E) where
+  model := I
   hdim := Fact.mk hdim
   f := id
   hf := continuous_id
 
 /-- A map of topological spaces induces a corresponding map of singular n-manifolds. -/
 -- This is part of proving functoriality of the bordism groups.
-noncomputable def map [Fact (finrank ℝ E = n)] (s : SingularNManifold X n M I)
-    {φ : X → Y} (hφ : Continuous φ) : SingularNManifold Y n M I where
+noncomputable def map [Fact (finrank ℝ E = n)] (s : SingularNManifold E X n H)
+    {φ : X → Y} (hφ : Continuous φ) : SingularNManifold Y n H (E := E) where
+  domain := s.domain
+  top := s.top
+  charts := s.charts
+  smooth := s.smooth
+  model := s.model
+  compact := s.compact
+  boundaryless := s.boundaryless
   f := φ ∘ s.f
-  hf := hφ.comp s.hf
+  hf := sorry -- TODO: what broke here? synthesized order is different, wut? have := s.top; hφ.comp s.hf
 
 @[simp]
 lemma map_f [Fact (finrank ℝ E = n)]
-    (s : SingularNManifold X n M I) {φ : X → Y} (hφ : Continuous φ) : (s.map hφ).f = φ ∘ s.f :=
+    (s : SingularNManifold E X n H) {φ : X → Y} (hφ : Continuous φ) : (s.map hφ).f = φ ∘ s.f :=
   rfl
 
 /-- If `(M', f)` is a singular `n`-manifold on `X` and `M'` another `n`-dimensional smooth manifold,
 a smooth map `φ : M → M'` induces a singular `n`-manifold structore on `M`. -/
-noncomputable def comap [Fact (finrank ℝ E = n)] (s : SingularNManifold X n M' I')
-    {φ : M → M'} (hφ : Smooth I I' φ) : SingularNManifold X n M I where
+noncomputable def comap [Fact (finrank ℝ E = n)] (s : SingularNManifold E X n H)
+    {φ : M → s.domain} (hφ : Smooth I s.model φ) : SingularNManifold E X n H where
+  domain := M
+  model := s.model
   f := s.f ∘ φ
-  hf := s.hf.comp hφ.continuous
+  hf := sorry -- same issue! s.hf.comp hφ.continuous
 
 @[simp]
-lemma comap_f [Fact (finrank ℝ E = n)] (s : SingularNManifold X n M' I')
+lemma comap_f [Fact (finrank ℝ E = n)] (s : SingularNManifold E X n H)
     {φ : M → M'} (hφ : Smooth I I' φ) : (s.comap hφ).f = s.f ∘ φ :=
   rfl
 
 variable (M) in
 /-- The canonical singular `n`-manifold associated to the empty set (seen as an `n`-dimensional
 manifold, i.e. modelled on an `n`-dimensional space). -/
-def empty [Fact (finrank ℝ E = n)] [IsEmpty M] : SingularNManifold X n M I where
+def empty [Fact (finrank ℝ E = n)] [IsEmpty M] : SingularNManifold E X n H where
   f := fun x ↦ (IsEmpty.false x).elim
   hf := by
     rw [continuous_iff_continuousAt]
     exact fun x ↦ (IsEmpty.false x).elim
 
 /-- An `n`-dimensional manifold induces a singular `n`-manifold on the one-point space. -/
-def trivial [Fact (finrank ℝ E = n)] : SingularNManifold PUnit n M I where
+def trivial [Fact (finrank ℝ E = n)] : SingularNManifold E PUnit n H where
+  domain := M
+  model := I
   f := fun _ ↦ PUnit.unit
   hf := continuous_const
 
@@ -123,12 +145,17 @@ is a singular `n+m`-manifold. -/
 -- FUTURE: prove that this observation inducess a commutative ring structure
 -- on the unoriented bordism group `Ω_n^O = Ω_n^O(pt)`.
 def prod {m n : ℕ} [h : Fact (finrank ℝ E = m)] [k : Fact (finrank ℝ E' = n)] :
-    SingularNManifold PUnit (m + n) (M × M') (I.prod I') where
+    SingularNManifold E PUnit (m + n) H where
+  domain := M × M'
+  charts := sorry -- should be automatic
+  model := I.prod I'
   f := fun _ ↦ PUnit.unit
   hf := continuous_const
   hdim := Fact.mk (by rw [finrank_prod, h.out, k.out])
 
 end SingularNManifold
+
+#exit
 
 -- TODO: for now, assume all manifolds are modelled on the same chart and model space...
 -- Is this necessary (`H` presumably is necessary for disjoint unions to work out)?
