@@ -78,9 +78,17 @@ theorem CNF_zero (b : Ordinal) : CNF b 0 = [] :=
 theorem CNF.exponents_zero (b : Ordinal) : CNF.exponents b 0 = [] := by
   rw [exponents, CNF_zero, keys_nil]
 
+theorem CNF_mem_exponents_iff {b o e : Ordinal} :
+    e ∈ CNF.exponents b o ↔ ∃ c, ⟨e, c⟩ ∈ CNF b o := by
+  rw [CNF.exponents, mem_keys]
+
 @[simp]
 theorem CNF.coefficients_zero (b : Ordinal) : CNF.coefficients b 0 = [] := by
   rw [coefficients, CNF_zero, map_nil]
+
+theorem CNF_mem_coefficients_iff {b o c : Ordinal} :
+    c ∈ CNF.coefficients b o ↔ ∃ e, ⟨e, c⟩ ∈ CNF b o := by
+  simp [CNF.coefficients]
 
 /-- Recursive definition for the Cantor normal form. -/
 theorem CNF_ne_zero {b o : Ordinal} (ho : o ≠ 0) :
@@ -124,77 +132,17 @@ theorem CNF_self {b : Ordinal} (hb : 1 < b) : CNF b b = [⟨1, 1⟩] := by
   convert CNF_opow hb 1
   exact (opow_one b).symm
 
-theorem foldr_lt {b : Ordinal} {x} (hb : b ≠ 0) (l : List (Σ _ : Ordinal, Ordinal))
-    (h_sort : (x :: l).keys.Sorted (· > ·))
-    (h_lt : ∀ p ∈ x :: l, p.2 < b) :
-    l.foldr (fun p r ↦ b ^ p.1 * p.2 + r) 0 < b ^ x.1 := by
-  replace hb := Ordinal.pos_iff_ne_zero.2 hb
-  revert x
-  induction' l with a l IH
-  · intros
-    rw [foldr_nil]
-    exact opow_pos _ hb
-  · intro x h_sort h_lt
-    rw [foldr_cons]
-    apply (opow_mul_add_lt_opow_succ (h_lt _ _) _).trans_le
-    · apply opow_le_opow_right hb <| Order.succ_le_of_lt _
-      exact rel_of_sorted_cons h_sort _ (mem_cons_self _ _)
-    · exact mem_cons_of_mem _ (mem_cons_self _ _)
-    · apply IH h_sort.of_cons
-      intro p hp
-      exact h_lt _ (mem_cons_of_mem _ hp)
-
-private theorem foldr_lt' {b : Ordinal} {x} (hb : b ≠ 0) (l : List (Σ _ : Ordinal, Ordinal))
-    (h_sort : (x :: l).keys.Sorted (· > ·))
-    (h_lt : ∀ p ∈ x :: l, p.2 ≠ 0 ∧ p.2 < b) :
-    l.foldr (fun p r ↦ b ^ p.1 * p.2 + r) 0 < b ^ x.1 := by
-  apply foldr_lt hb l h_sort
-  intro p hp
-  exact (h_lt p hp).2
-
-theorem CNF_foldr {b : Ordinal} (hb : 1 < b) (l : List (Σ _ : Ordinal, Ordinal))
-    (h_sort : l.keys.Sorted (· > ·))
-    (h_lt : ∀ p ∈ l, p.2 ≠ 0 ∧ p.2 < b) :
-    CNF b (l.foldr (fun p r ↦ b ^ p.1 * p.2 + r) 0) = l := by
-  have hb' : b ≠ 0 := (zero_lt_one.trans hb).ne'
-  induction' l with a l IH
-  · rw [foldr_nil, CNF_zero]
-  · have ha := h_lt _ (mem_cons_self _ _)
-    have H := foldr_lt' hb' l h_sort h_lt
-    have H' : log b (b ^ a.fst * a.snd + foldr (fun p r ↦ b ^ p.fst * p.snd + r) 0 l) = a.fst := by
-      apply _root_.le_antisymm
-      · rw [← Order.lt_succ_iff, ← lt_opow_iff_log_lt hb]
-        · exact opow_mul_add_lt_opow_succ ha.2 H
-        · exact (opow_mul_add_pos hb' _ ha.1 _).ne'
-      · conv_lhs => rw [← log_opow hb a.fst]
-        exact log_mono_right _ <|
-          (le_mul_left _ (Ordinal.pos_iff_ne_zero.2 <| ha.1)).trans (le_add_right _ _)
-    obtain ⟨a₁, a₂⟩ := a
-    rw [CNF_ne_zero, foldr_cons, cons.injEq, H', Sigma.mk.inj_iff]
-    refine ⟨⟨rfl, ?_⟩, ?_⟩
-    · rw [mul_add_div _ (opow_ne_zero _ hb'), div_eq_zero_of_lt H, add_zero]
-    · convert IH (h_sort.of_cons) _
-      · rw [mul_add_mod_self]
-        exact mod_eq_of_lt H
-      · intro p hp
-        exact h_lt _ <| mem_cons_of_mem _ hp
-    · intro h
-      obtain (h | h) := mul_eq_zero.1 <| left_eq_zero_of_add_eq_zero h
-      · exact opow_ne_zero _ hb' h
-      · exact ha.1 h
-
-theorem CNF_opow_mul {b : Ordinal} (hb : 1 < b) (o e x : Ordinal) :
-    CNF b (b ^ x * o) = (CNF b o).map (fun y => ⟨y.1 + x, y.2⟩) := by
-  sorry
-
-#exit
-/-- Evaluating the Cantor normal form of an ordinal returns the ordinal. -/
-theorem CNF_foldr (b o : Ordinal) : (CNF b o).foldr (fun p r ↦ b ^ p.1 * p.2 + r) 0 = o := by
+theorem CNF_opow_mul {b : Ordinal} (hb : 1 < b) (o x : Ordinal) :
+    CNF b (b ^ x * o) = (CNF b o).map (fun y => ⟨x + y.1, y.2⟩) := by
   refine CNFRec b ?_ ?_ o
-  · rw [CNF_zero]
-    rfl
+  · rw [mul_zero, CNF_zero, map_nil]
   · intro o ho IH
-    rw [CNF_ne_zero ho, foldr_cons, IH, div_add_mod]
+    have hx := opow_ne_zero x (zero_lt_one.trans hb).ne'
+    rw [CNF_ne_zero ho, CNF_ne_zero (mul_ne_zero hx ho), log_opow_mul hb ho, opow_add,
+      map_cons, cons.injEq]
+    constructor
+    · rw [mul_div_mul_cancel hx]
+    · rw [mul_mod_mul, IH]
 
 /-- Every exponent in the Cantor normal form `CNF b o` is less or equal to `log b o`. -/
 theorem le_log_of_mem_CNF_exponents {b o : Ordinal.{u}} {x : Ordinal} :
@@ -253,13 +201,75 @@ theorem CNF_exponents_sorted (b o : Ordinal) : (CNF.exponents b o).Sorted (· > 
         intro a H
         exact (le_log_of_mem_CNF_exponents H).trans_lt <| log_mod_opow_log_lt_log_self hb hbo
 
+theorem CNF_nodupKeys (b o : Ordinal) : (CNF b o).NodupKeys :=
+  (CNF_exponents_sorted b o).nodup
+
+/-- Evaluating the Cantor normal form of an ordinal returns the ordinal. -/
+theorem CNF_foldr (b o : Ordinal) : (CNF b o).foldr (fun p r ↦ b ^ p.1 * p.2 + r) 0 = o := by
+  refine CNFRec b ?_ ?_ o
+  · rw [CNF_zero]
+    rfl
+  · intro o ho IH
+    rw [CNF_ne_zero ho, foldr_cons, IH, div_add_mod]
+
+theorem foldr_lt {b : Ordinal} {x} (hb : b ≠ 0) (l : List (Σ _ : Ordinal, Ordinal))
+    (h_sort : (x :: l).keys.Sorted (· > ·))
+    (h_lt : ∀ p ∈ x :: l, p.2 < b) :
+    l.foldr (fun p r ↦ b ^ p.1 * p.2 + r) 0 < b ^ x.1 := by
+  replace hb := Ordinal.pos_iff_ne_zero.2 hb
+  revert x
+  induction' l with a l IH
+  · intros
+    rw [foldr_nil]
+    exact opow_pos _ hb
+  · intro x h_sort h_lt
+    rw [foldr_cons]
+    apply (opow_mul_add_lt_opow_succ (h_lt _ _) _).trans_le
+    · apply opow_le_opow_right hb <| Order.succ_le_of_lt _
+      exact rel_of_sorted_cons h_sort _ (mem_cons_self _ _)
+    · exact mem_cons_of_mem _ (mem_cons_self _ _)
+    · apply IH h_sort.of_cons
+      intro p hp
+      exact h_lt _ (mem_cons_of_mem _ hp)
+
+/-- The cantor normal form of an ordinal is unique. -/
+theorem CNF_eq {b : Ordinal} (hb : 1 < b) (l : List (Σ _ : Ordinal, Ordinal))
+    (h_sort : l.keys.Sorted (· > ·))
+    (h_lt : ∀ p ∈ l, p.2 ≠ 0 ∧ p.2 < b) :
+    CNF b (l.foldr (fun p r ↦ b ^ p.1 * p.2 + r) 0) = l := by
+  have hb' : b ≠ 0 := (zero_lt_one.trans hb).ne'
+  induction' l with a l IH
+  · rw [foldr_nil, CNF_zero]
+  · have ha := h_lt _ (mem_cons_self _ _)
+    have H := foldr_lt hb' l h_sort (fun p hp => (h_lt p hp).2)
+    have H' : log b (b ^ a.fst * a.snd + foldr (fun p r ↦ b ^ p.fst * p.snd + r) 0 l) = a.fst := by
+      apply _root_.le_antisymm
+      · rw [← Order.lt_succ_iff, ← lt_opow_iff_log_lt hb]
+        · exact opow_mul_add_lt_opow_succ ha.2 H
+        · exact (opow_mul_add_pos hb' _ ha.1 _).ne'
+      · conv_lhs => rw [← log_opow hb a.fst]
+        exact log_mono_right _ <|
+          (le_mul_left _ (Ordinal.pos_iff_ne_zero.2 <| ha.1)).trans (le_add_right _ _)
+    obtain ⟨a₁, a₂⟩ := a
+    rw [CNF_ne_zero, foldr_cons, cons.injEq, H', Sigma.mk.inj_iff]
+    refine ⟨⟨rfl, ?_⟩, ?_⟩
+    · rw [mul_add_div _ (opow_ne_zero _ hb'), div_eq_zero_of_lt H, add_zero]
+    · convert IH (h_sort.of_cons) _
+      · rw [mul_add_mod_self]
+        exact mod_eq_of_lt H
+      · intro p hp
+        exact h_lt _ <| mem_cons_of_mem _ hp
+    · intro h
+      obtain (h | h) := mul_eq_zero.1 <| left_eq_zero_of_add_eq_zero h
+      · exact opow_ne_zero _ hb' h
+      · exact ha.1 h
+
 open AList Finsupp
 
 /-- Cantor normal form `CNF` as an `AList`. -/
 @[pp_nodot]
-def CNF_AList (b o : Ordinal) : AList (fun _ : Ordinal => Ordinal) where
-  entries := CNF b o
-  nodupKeys := (CNF_exponents_sorted b o).nodup
+def CNF_AList (b o : Ordinal) : AList (fun _ : Ordinal => Ordinal) :=
+  ⟨_, CNF_nodupKeys b o⟩
 
 @[simp]
 theorem CNF_AList_entries (b o : Ordinal) : (CNF_AList b o).entries = CNF b o :=
@@ -270,11 +280,6 @@ theorem CNF_AList_keys (b o : Ordinal) : (CNF_AList b o).keys = CNF.exponents b 
   rfl
 
 @[simp]
-theorem CNF_AList_eq_empty {b o : Ordinal} : CNF_AList b o = ∅ ↔ o = 0 := by
-  rw [AList.ext_iff]
-  exact CNF_eq_nil
-
-@[simp]
 theorem mem_CNF_AList_iff {b o e : Ordinal} : e ∈ CNF_AList b o ↔ e ∈ CNF.exponents b o :=
   Iff.rfl
 
@@ -283,11 +288,48 @@ theorem mem_CNF_AList_lookup_iff {b o e c : Ordinal} :
     c ∈ (CNF_AList b o).lookup e ↔ ⟨e, c⟩ ∈ CNF b o :=
   mem_lookup_iff
 
+@[simp]
+theorem CNF_AList_eq_empty {b o : Ordinal} : CNF_AList b o = ∅ ↔ o = 0 := by
+  rw [AList.ext_iff]
+  exact CNF_eq_nil
+
+@[simp]
+theorem CNF_AList_zero (b : Ordinal) : CNF_AList b 0 = ∅ :=
+  AList.ext <| CNF_zero b
+
+theorem zero_CNF_AList {o : Ordinal} (ho : o ≠ 0) : CNF_AList 0 o = AList.singleton 0 o :=
+  AList.ext <| zero_CNF ho
+
+theorem one_CNF_AList {o : Ordinal} (ho : o ≠ 0) : CNF_AList 1 o = AList.singleton 0 o :=
+  AList.ext <| one_CNF ho
+
+theorem CNF_AList_of_le_one {b o : Ordinal} (hb : b ≤ 1) (ho : o ≠ 0) :
+    CNF_AList b o = AList.singleton 0 o :=
+  AList.ext <| CNF_of_le_one hb ho
+
+theorem CNF_AList_of_lt {b o : Ordinal} (ho : o ≠ 0) (hb : o < b) :
+    CNF_AList b o = AList.singleton 0 o :=
+  AList.ext <| CNF_of_lt ho hb
+
+theorem CNF_AList_opow {b : Ordinal} (hb : 1 < b) (e : Ordinal) :
+    CNF_AList b (b ^ e) = AList.singleton e 1 :=
+  AList.ext <| CNF_opow hb e
+
+theorem CNF_AList_one {b : Ordinal} (hb : 1 < b) : CNF_AList b 1 = AList.singleton 0 1 :=
+  AList.ext <| CNF_one hb
+
+theorem CNF_AList_self {b : Ordinal} (hb : 1 < b) : CNF_AList b b = AList.singleton 1 1 :=
+  AList.ext <| CNF_self hb
+
 /-- `CNF_coeff b o` is the finitely supported function, returning the coefficient of `b ^ e` in the
 `CNF` of `o`, for each `e`. -/
 @[pp_nodot]
 def CNF_coeff (b o : Ordinal) : Ordinal →₀ Ordinal :=
   (CNF_AList b o).lookupFinsupp
+
+theorem CNF_coeff_def (b o e : Ordinal) : CNF_coeff b o e = ((CNF b o).dlookup e).getD 0 := by
+  rw [CNF_coeff, lookupFinsupp_apply]
+  rfl
 
 theorem CNF_coeff_support (b o : Ordinal) :
     (CNF_coeff b o).support = (CNF.exponents b o).toFinset := by
@@ -366,12 +408,25 @@ theorem CNF_coeff_self {b : Ordinal} (hb : 1 < b) : CNF_coeff b b = single 1 1 :
   convert CNF_coeff_opow hb 1
   exact (opow_one b).symm
 
-theorem CNF_coeff_mul_opow {b : Ordinal} (hb : 1 < b) (o x e : Ordinal) :
-    CNF_coeff b (o * b ^ x) e = CNF_coeff b o e + x := by
-  sorry
+-- TODO: move elsewhere
+private lemma dlookup_map {α β γ} [DecidableEq α] [DecidableEq γ]
+    {l : List (Σ _ : α, β)} {f : α → γ} (hf : Function.Injective f) (a : α) :
+    (l.map fun x => ⟨f x.1, x.2⟩ : List (Σ _ : γ, β)).dlookup (f a) = l.dlookup a := by
+  induction' l with b l IH
+  · rw [map_nil, dlookup_nil, dlookup_nil]
+  · simp
+    obtain h | h := eq_or_ne (f a) (f b.1)
+    · rw [h, hf h, dlookup_cons_eq, dlookup_cons_eq]
+    · rw [dlookup_cons_ne _ _ h, dlookup_cons_ne _ _ (fun he => (he ▸ h) rfl), IH]
 
-theorem CNF_coeff_apply (b o e : Ordinal) : CNF_coeff b o e = o / b ^ e % b := by
-  conv_rhs => rw [← CNF_foldr b o]
+theorem CNF_coeff_opow_mul {b : Ordinal} (hb : 1 < b) (o x e : Ordinal) :
+    CNF_coeff b (b ^ x * o) (x + e) = CNF_coeff b o e := by
+  rw [CNF_coeff_def, CNF_coeff_def, CNF_opow_mul hb, dlookup_map]
+  intro a b h
+  rwa [add_left_cancel] at h
+
+/-theorem CNF_coeff_apply (b o e : Ordinal) : CNF_coeff b o e = o / b ^ e % b := by
+  conv_rhs => rw [← CNF_foldr b o]-/
 
 
 

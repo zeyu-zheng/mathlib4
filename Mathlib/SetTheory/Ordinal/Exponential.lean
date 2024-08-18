@@ -368,8 +368,7 @@ theorem log_opow_mul_add {b u v w : Ordinal} (hb : 1 < b) (hv : v ≠ 0) (hvb : 
     exact (not_lt_of_le h) (opow_mul_add_lt_opow_succ hvb hw)
 
 theorem log_opow {b : Ordinal} (hb : 1 < b) (x : Ordinal) : log b (b ^ x) = x := by
-  convert log_opow_mul_add hb zero_ne_one.symm hb (opow_pos x (zero_lt_one.trans hb))
-    using 1
+  convert log_opow_mul_add hb zero_ne_one.symm hb (opow_pos x (zero_lt_one.trans hb)) using 1
   rw [add_zero, mul_one]
 
 theorem div_opow_log_pos (b : Ordinal) {o : Ordinal} (ho : o ≠ 0) : 0 < o / (b ^ log b o) := by
@@ -389,6 +388,15 @@ theorem add_log_le_log_mul {x y : Ordinal} (b : Ordinal) (hx : x ≠ 0) (hy : y 
     exact mul_le_mul' (opow_log_le_self b hx) (opow_log_le_self b hy)
   -- Porting note: `le_refl` is required.
   simp only [log_of_not_one_lt_left hb, zero_add, le_refl]
+
+theorem log_opow_mul {b u v : Ordinal} (hb : 1 < b) (hv : v ≠ 0) :
+    log b (b ^ u * v) = u + log b v := by
+  have h := opow_ne_zero u (zero_lt_one.trans hb).ne'
+  apply le_antisymm
+  · rw [← Order.lt_succ_iff, ← lt_opow_iff_log_lt hb (mul_ne_zero h hv), ← add_succ, opow_add]
+    exact mul_lt_mul_of_pos_left (lt_opow_succ_log_self hb v) (Ordinal.pos_iff_ne_zero.2 h)
+  · conv_lhs => rw [← log_opow hb u]
+    exact add_log_le_log_mul b h hv
 
 /-! ### Interaction with `Nat.cast` -/
 
