@@ -143,8 +143,6 @@ theorem CNF_opow_mul {b : Ordinal} (hb : 1 < b) (o x : Ordinal) :
     · rw [mul_div_mul_cancel hx]
     · rw [mul_mod_mul, IH]
 
-
-
 theorem CNF_opow_mul_add {b x o₂ : Ordinal} (hb : 1 < b) (o₁ : Ordinal) (ho₂ : o₂ < b ^ x) :
     CNF b (b ^ x * o₁ + o₂) = CNF b (b ^ x * o₁) ++ CNF b o₂ := by
   refine CNFRec b ?_ ?_ o₁
@@ -152,11 +150,11 @@ theorem CNF_opow_mul_add {b x o₂ : Ordinal} (hb : 1 < b) (o₁ : Ordinal) (ho�
   · intro o₁ ho₁ IH
     have h₁ : b ^ x * o₁ + o₂ ≠ 0 := sorry
     have h₂ : b ^ x * o₁ ≠ 0 := sorry
+    have h₃ : b ^ x ≠ 0 := sorry
     rw [CNF_ne_zero h₁, CNF_ne_zero h₂]
     simp [log_opow_mul hb _ ho₁, log_opow_mul_add hb ho₁ ho₂]
     constructor
-    · rw [opow_add, mul_div_mul_cancel, ← opow_add]
-      sorry
+    · rwa [opow_add, mul_div_mul_cancel, mul_add_div_mul ho₂]
     · rw [opow_add, mul_mod_mul, ← IH]
 
 #exit
