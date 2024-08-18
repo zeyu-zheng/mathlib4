@@ -148,16 +148,14 @@ theorem CNF_opow_mul_add {b x o₂ : Ordinal} (hb : 1 < b) (o₁ : Ordinal) (ho�
   refine CNFRec b ?_ ?_ o₁
   · simp
   · intro o₁ ho₁ IH
-    have h₁ : b ^ x * o₁ + o₂ ≠ 0 := sorry
-    have h₂ : b ^ x * o₁ ≠ 0 := sorry
-    have h₃ : b ^ x ≠ 0 := sorry
-    rw [CNF_ne_zero h₁, CNF_ne_zero h₂]
+    have h₁ : b ^ x ≠ 0 := opow_ne_zero x (zero_lt_one.trans hb).ne'
+    have h₂ : b ^ x * o₁ ≠ 0 := mul_ne_zero h₁ ho₁
+    rw [CNF_ne_zero (add_ne_zero_of_left h₂ o₂), CNF_ne_zero h₂]
     simp [log_opow_mul hb _ ho₁, log_opow_mul_add hb ho₁ ho₂]
     constructor
     · rwa [opow_add, mul_div_mul_cancel, mul_add_div_mul ho₂]
-    · rw [opow_add, mul_mod_mul, ← IH]
+    · rw [opow_add, mul_mod_mul, ← IH, mul_add_mod_mul ho₂]
 
-#exit
 /-- Every exponent in the Cantor normal form `CNF b o` is less or equal to `log b o`. -/
 theorem le_log_of_mem_CNF_exponents {b o : Ordinal.{u}} {x : Ordinal} :
     x ∈ CNF.exponents b o → x ≤ log b o := by

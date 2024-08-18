@@ -146,6 +146,12 @@ theorem left_eq_zero_of_add_eq_zero {a b : Ordinal} (h : a + b = 0) : a = 0 :=
 theorem right_eq_zero_of_add_eq_zero {a b : Ordinal} (h : a + b = 0) : b = 0 :=
   (add_eq_zero_iff.1 h).2
 
+theorem add_ne_zero_of_left {a : Ordinal} (h : a ≠ 0) (b : Ordinal) : a + b ≠ 0 :=
+  fun hn => h <| left_eq_zero_of_add_eq_zero hn
+
+theorem add_ne_zero_of_right {b : Ordinal} (h : b ≠ 0) (a : Ordinal) : a + b ≠ 0 :=
+  fun hn => h <| right_eq_zero_of_add_eq_zero hn
+
 /-! ### The predecessor of an ordinal -/
 
 open Classical in
