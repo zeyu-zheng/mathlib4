@@ -76,6 +76,14 @@ theorem one_opow (a : Ordinal) : (1 : Ordinal) ^ a = 1 := by
     rw [opow_le_of_limit Ordinal.one_ne_zero l]
     exact ⟨fun H => by simpa only [opow_zero] using H 0 l.pos, fun H b' h => by rwa [IH _ h]⟩
 
+theorem opow_le_one {a : Ordinal} (ha : a ≤ 1) (b : Ordinal) : a ^ b ≤ 1 := by
+  obtain rfl | rfl := Ordinal.le_one_iff.1 ha
+  · obtain rfl | ho := eq_or_ne b 0
+    · rw [opow_zero]
+    · rw [zero_opow ho]
+      exact zero_le_one
+  · rw [one_opow]
+
 theorem opow_pos {a : Ordinal} (b : Ordinal) (a0 : 0 < a) : 0 < a ^ b := by
   have h0 : 0 < a ^ (0 : Ordinal) := by simp only [opow_zero, zero_lt_one]
   induction b using limitRecOn with
@@ -179,10 +187,15 @@ theorem opow_add (a b c : Ordinal) : a ^ (b + c) = a ^ b * a ^ c := by
               (opow_isNormal a1)).limit_le
           l).symm
 
-theorem opow_one_add (a b : Ordinal) : a ^ (1 + b) = a * a ^ b := by rw [opow_add, opow_one]
+theorem opow_one_add (a b : Ordinal) : a ^ (1 + b) = a * a ^ b := by
+  rw [opow_add, opow_one]
 
 theorem opow_dvd_opow (a : Ordinal) {b c : Ordinal} (h : b ≤ c) : a ^ b ∣ a ^ c :=
   ⟨a ^ (c - b), by rw [← opow_add, Ordinal.add_sub_cancel_of_le h]⟩
+
+theorem dvd_opow (a : Ordinal) {b : Ordinal} (h : b ≠ 0) : a ∣ a ^ b := by
+  convert opow_dvd_opow a (Ordinal.one_le_iff_ne_zero.2 h)
+  rw [opow_one]
 
 theorem opow_dvd_opow_iff {a b c : Ordinal} (a1 : 1 < a) : a ^ b ∣ a ^ c ↔ b ≤ c :=
   ⟨fun h =>
@@ -355,6 +368,15 @@ theorem log_eq {b x : Ordinal} (hb : 1 < b) (hx : x ≠ 0) (y : Ordinal) :
     apply le_antisymm
     · rwa [← lt_succ_iff, ← lt_opow_iff_log_lt hb hx]
     · rwa [← opow_le_iff_le_log hb hx]
+
+theorem log_eq_zero_iff {b x : Ordinal} (hb : 1 < b) : log b x = 0 ↔ x < b := by
+  constructor
+  · intro h
+    obtain rfl | hx := eq_or_ne x 0
+    · exact zero_lt_one.trans hb
+    · rw [log_eq hb hx, succ_zero, opow_one] at h
+      exact h.2
+  · exact log_eq_zero
 
 theorem log_opow_mul_add {b u v w : Ordinal} (hb : 1 < b) (hv : v ≠ 0) (hw : w < b ^ u) :
     log b (b ^ u * v + w) = u + log b v := by
