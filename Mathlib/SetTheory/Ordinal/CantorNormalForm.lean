@@ -473,6 +473,22 @@ theorem CNF_coeff_apply {b : Ordinal} (hb : 1 < b) (o e : Ordinal) :
   rw [add_zero] at H
   rw [H, CNF_coeff_apply_zero hb.ne', CNF_coeff_of_gt h, add_zero]
 
+/-- The function `CNF_coeff b (o / b ^ x)` is the translation of `CNF_coeff b o` by `x`. -/
+theorem CNF_coeff_opow_div {b : Ordinal} (hb : 1 < b) (o x : Ordinal) :
+    CNF_coeff b (o / b ^ x) = (CNF_coeff b o).comapDomain (x + ·)
+      (fun _ _ _ _ => (add_left_cancel x).1) := by
+  ext e
+  dsimp
+  conv_rhs => rw [← div_add_mod o (b ^ x)]
+  rw [CNF_coeff_opow_mul_add_of_ge, CNF_coeff_opow_mul_of_ge hb ]
+  · exact mod_lt o (opow_ne_zero x (zero_lt_one.trans hb).ne')
+  · exact le_add_right x e
+
+theorem CNF_coeff_opow_div_apply {b : Ordinal} (hb : 1 < b) (o x e : Ordinal) :
+    CNF_coeff b (o / b ^ x) e = CNF_coeff b o (x + e) := by
+  rw [CNF_coeff_opow_div hb]
+  rfl
+
 /-! ### Addition -/
 
 end Ordinal
