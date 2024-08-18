@@ -346,13 +346,6 @@ theorem log_le_self (b x : Ordinal) : log b x ≤ x := by
     · rw [log_of_left_le_one hb]
       exact Ordinal.zero_le _
 
-theorem add_log_le_log_mul {x y : Ordinal} (b : Ordinal) (hx : x ≠ 0) (hy : y ≠ 0) :
-    log b x + log b y ≤ log b (x * y) := by
-  obtain hb | hb := lt_or_le 1 b
-  · rw [← opow_le_iff_le_log hb (mul_ne_zero hx hy), opow_add]
-    exact mul_le_mul' (opow_log_le_self b hx) (opow_log_le_self b hy)
-  · simpa only [log_of_left_le_one hb, zero_add] using le_rfl
-
 theorem log_eq {b x : Ordinal} (hb : 1 < b) (hx : x ≠ 0) (y : Ordinal) :
     log b x = y ↔ x ∈ Set.Ico (b ^ y) (b ^ (succ y)) := by
   constructor

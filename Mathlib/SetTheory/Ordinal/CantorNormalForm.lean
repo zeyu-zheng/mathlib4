@@ -137,13 +137,13 @@ theorem CNF_opow_mul {b : Ordinal} (hb : 1 < b) (o x : Ordinal) :
   · simp
   · intro o ho IH
     have hx := opow_ne_zero x (zero_lt_one.trans hb).ne'
-    rw [CNF_ne_zero ho, CNF_ne_zero (mul_ne_zero hx ho), log_opow_mul hb ho, opow_add,
+    rw [CNF_ne_zero ho, CNF_ne_zero (mul_ne_zero hx ho), log_opow_mul hb x ho, opow_add,
       map_cons, cons.injEq]
     constructor
     · rw [mul_div_mul_cancel hx]
     · rw [mul_mod_mul, IH]
 
-theorem CNF_opow_mul_add {b x o₂ : Ordinal} (hb : 1 < b) (o₁ : Ordinal) (ho₂ : o₂ < b ^ x) :
+/-theorem CNF_opow_mul_add {b x o₂ : Ordinal} (hb : 1 < b) (o₁ : Ordinal) (ho₂ : o₂ < b ^ x) :
     CNF b (b ^ x * o₁ + o₂) = CNF b (b ^ x * o₁) ++ CNF b o₂ := by
   refine CNFRec b ?_ ?_ o₁
   · simp
@@ -153,10 +153,8 @@ theorem CNF_opow_mul_add {b x o₂ : Ordinal} (hb : 1 < b) (o₁ : Ordinal) (ho�
     rw [CNF_ne_zero h₁, CNF_ne_zero h₂]
     simp [log_opow_mul hb ho₁]
     refine ⟨⟨?_, ?_⟩, ?_⟩
-    · 
+    ·-/
 
-
-#exit
 
 /-- Every exponent in the Cantor normal form `CNF b o` is less or equal to `log b o`. -/
 theorem le_log_of_mem_CNF_exponents {b o : Ordinal.{u}} {x : Ordinal} :
@@ -423,6 +421,12 @@ theorem CNF_coeff_one {b : Ordinal} (hb : 1 < b) : CNF_coeff b 1 = single 0 1 :=
 theorem CNF_coeff_self {b : Ordinal} (hb : 1 < b) : CNF_coeff b b = single 1 1 := by
   convert CNF_coeff_opow hb 1
   exact (opow_one b).symm
+
+theorem CNF_coeff_opow_mul' {b : Ordinal} (hb : 1 < b) (o x : Ordinal) :
+    CNF_coeff b (b ^ x * o) = CNF_coeff b o e := by
+  rw [CNF_coeff_def, CNF_coeff_def, CNF_opow_mul hb, dlookup_map₁]
+  intro a b h
+  rwa [add_left_cancel] at h
 
 theorem CNF_coeff_opow_mul {b : Ordinal} (hb : 1 < b) (o x e : Ordinal) :
     CNF_coeff b (b ^ x * o) (x + e) = CNF_coeff b o e := by
