@@ -4,8 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Violeta Hernández Palacios
 -/
 import Mathlib.Data.Finsupp.AList
-import Mathlib.SetTheory.Ordinal.Arithmetic
-import Mathlib.SetTheory.Ordinal.Exponential
+import Mathlib.SetTheory.Ordinal.Principal
 
 /-!
 # Cantor Normal Form
@@ -493,6 +492,18 @@ theorem CNF_coeff_opow_div_apply (hb : 1 < b) (o x e : Ordinal) :
 
 /-! ### Addition -/
 
---theorem CNF_coeff_add_of_ge (o₁ o₂ e : Ordinal) : CNF_coeff b (o₁ + o₂) e = CNF_coeff b o₁ e
+theorem add_div_eq_of_principal_add (hb : Principal (· + ·) b) {o₁ o₂ : Ordinal} (ho₂ : o₂ < b) :
+    (o₁ + o₂) / b = o₁ / b := by
+  have hb₀ := ((Ordinal.zero_le _).trans_lt ho₂).ne'
+  apply (div_le_left (le_add_right _ _) _).antisymm'
+  rw [← Order.lt_succ_iff, div_lt hb₀, mul_succ]
+  conv_lhs => rw [← div_add_mod o₁ b]
+  rw [add_assoc]
+  exact add_lt_add_left (hb (mod_lt _ hb₀) ho₂) _
+
+theorem CNF_coeff_add_of_gt {o₂ e : Ordinal} (hb : Principal (· + ·) b)
+    (o₁ : Ordinal) (he : log b o₂ < e) : CNF_coeff b (o₁ + o₂) e = CNF_coeff b o₁ e := by
+  sorry
+  --rw [CNF_coeff_opow_div_apply]
 
 end Ordinal
