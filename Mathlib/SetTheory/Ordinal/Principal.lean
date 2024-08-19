@@ -266,6 +266,14 @@ theorem add_mod_of_lt_of_principal_add {a b c : Ordinal} (hc : Principal (· + �
 theorem add_absorp {a b c : Ordinal} (h₁ : a < ω ^ b) (h₂ : ω ^ b ≤ c) : a + c = c := by
   rw [← Ordinal.add_sub_cancel_of_le h₂, ← add_assoc, add_omega_opow h₁]
 
+theorem lt_omega_opow {a b : Ordinal} (ha : a < ω ^ b) (hb : b ≠ 0) :
+    ∃ c < b, ∃ n : ℕ, a < ω ^ c * n := by
+  use log ω a, lt_log_of_lt_opow hb ha
+  obtain ⟨n, hn⟩ := lt_omega.1 (div_opow_log_lt a one_lt_omega)
+  use n.succ
+  rw [natCast_succ, ← hn]
+  exact lt_mul_succ_div a (opow_ne_zero _ omega_ne_zero)
+
 theorem mul_principal_add_is_principal_add (a : Ordinal.{u}) {b : Ordinal.{u}} (hb₁ : b ≠ 1)
     (hb : Principal (· + ·) b) : Principal (· + ·) (a * b) := by
   rcases eq_zero_or_pos a with (rfl | _)
