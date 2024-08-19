@@ -38,6 +38,9 @@ namespace Ordinal
 
 variable {b : Ordinal}
 
+/-! ### Recursion principle -/
+
+
 /-- Inducts on the base `b` expansion of an ordinal. -/
 @[elab_as_elim]
 noncomputable def CNFRec (b : Ordinal) {C : Ordinal → Sort*} (H0 : C 0)
@@ -55,6 +58,9 @@ theorem CNFRec_pos (b : Ordinal) {o : Ordinal} {C : Ordinal → Sort*} (ho : o �
     (H : ∀ o, o ≠ 0 → C (o % b ^ log b o) → C o) :
     CNFRec b H0 H o = H o ho (@CNFRec b C H0 H _) := by
   rw [CNFRec, dif_neg ho]
+
+/-! ### Cantor normal form as a list -/
+
 
 /-- The Cantor normal form of an ordinal `o` is the list of coefficients and exponents in the
 base-`b` expansion of `o`.
@@ -287,6 +293,9 @@ theorem CNF_eq (hb : 1 < b) (l : List (Σ _ : Ordinal, Ordinal))
       · exact opow_ne_zero _ hb' h
       · exact ha.1 h
 
+/-! ### Cantor normal form as a finsupp -/
+
+
 open AList Finsupp
 
 /-- `CNF_coeff b o` is the finitely supported function, returning the coefficient of `b ^ e` in the
@@ -500,7 +509,8 @@ theorem CNF_coeff_mod_opow_of_ge {x e : Ordinal} (hb : b ≠ 0) (o : Ordinal) (h
   CNF_coeff_of_gt <| (mod_lt _ (opow_ne_zero x hb)).trans_le <|
     opow_le_opow_right (Ordinal.pos_iff_ne_zero.2 hb) he
 
-/-! ### Addition -/
+/-! ### Characterization of addition -/
+
 
 theorem CNF_coeff_add_of_gt {o₂ e : Ordinal} (hb : Principal (· + ·) b) (o₁ : Ordinal)
     (he : log b o₂ < e) : CNF_coeff b (o₁ + o₂) e = CNF_coeff b o₁ e := by
