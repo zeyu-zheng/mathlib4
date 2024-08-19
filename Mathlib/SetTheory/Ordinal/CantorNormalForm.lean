@@ -492,18 +492,26 @@ theorem CNF_coeff_opow_div_apply (hb : 1 < b) (o x e : Ordinal) :
 
 /-! ### Addition -/
 
-theorem add_div_eq_of_principal_add (hb : Principal (· + ·) b) {o₁ o₂ : Ordinal} (ho₂ : o₂ < b) :
-    (o₁ + o₂) / b = o₁ / b := by
-  have hb₀ := ((Ordinal.zero_le _).trans_lt ho₂).ne'
-  apply (div_le_left (le_add_right _ _) _).antisymm'
-  rw [← Order.lt_succ_iff, div_lt hb₀, mul_succ]
-  conv_lhs => rw [← div_add_mod o₁ b]
-  rw [add_assoc]
-  exact add_lt_add_left (hb (mod_lt _ hb₀) ho₂) _
+theorem CNF_coeff_add_of_gt {o₂ e : Ordinal} (hb : Principal (· + ·) b) (o₁ : Ordinal)
+    (he : log b o₂ < e) : CNF_coeff b (o₁ + o₂) e = CNF_coeff b o₁ e := by
+  obtain hb' | hb' := le_or_lt b 1
+  · rw [log_of_left_le_one hb'] at he
+    iterate 2 rw [CNF_coeff_of_le_one hb', single_eq_of_ne he.ne]
+  · rw [CNF_coeff_apply hb', CNF_coeff_apply hb', add_div_of_lt_of_principal_add (hb.opow e)]
+    apply lt_opow_of_log_lt hb' he
 
-theorem CNF_coeff_add_of_gt {o₂ e : Ordinal} (hb : Principal (· + ·) b)
-    (o₁ : Ordinal) (he : log b o₂ < e) : CNF_coeff b (o₁ + o₂) e = CNF_coeff b o₁ e := by
-  sorry
-  --rw [CNF_coeff_opow_div_apply]
+theorem CNF_coeff_add_of_eq {o₂ : Ordinal} (hb : Principal (· + ·) b) (o₁ : Ordinal) :
+    CNF_coeff b (o₁ + o₂) (log b o₂) = CNF_coeff b o₁ (log b o₂) + CNF_coeff b o₂ (log b o₂) := by
+  obtain rfl | ho₂ := eq_or_ne o₂ 0
+  · simp
+  · obtain hb' | hb' := le_or_lt b 1
+    · iterate 3 rw [CNF_coeff_of_le_one hb']
+      rw [single_add]
+      rfl
+    · have ho₂' := div_opow_log_lt o₂ hb'
+      iterate 3 rw [CNF_coeff_apply hb']
+      rw [add_div_of_ge_of_principal_add (hb.opow _), add_mod_of_lt_of_principal_add hb ho₂',
+        mod_eq_of_lt ho₂']
+      exact opow_log_le_self b ho₂
 
 end Ordinal

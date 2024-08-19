@@ -323,6 +323,11 @@ theorem opow_le_iff_le_log {b x c : Ordinal} (hb : 1 < b) (hx : x ≠ 0) :
 theorem lt_opow_iff_log_lt {b x c : Ordinal} (hb : 1 < b) (hx : x ≠ 0) : x < b ^ c ↔ log b x < c :=
   lt_iff_lt_of_le_iff_le (opow_le_iff_le_log hb hx)
 
+theorem lt_opow_of_log_lt {b x c : Ordinal} (hb : 1 < b) (h : log b x < c) : x < b ^ c := by
+  obtain rfl | hx := eq_or_ne x 0
+  · exact opow_pos c (zero_lt_one.trans hb)
+  · exact (lt_opow_iff_log_lt hb hx).2 h
+
 theorem log_pos {b o : Ordinal} (hb : 1 < b) (ho : o ≠ 0) (hbo : b ≤ o) : 0 < log b o := by
   rwa [← succ_le_iff, succ_zero, ← opow_le_iff_le_log hb ho, opow_one]
 

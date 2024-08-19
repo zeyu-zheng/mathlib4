@@ -147,6 +147,15 @@ theorem principal_add_iff_add_left_eq_self {o : Ordinal} :
   · rw [← h a hao]
     exact (add_isNormal a).strictMono hbo
 
+theorem Principal.add_absorp {a o : Ordinal} (ho : Principal (· + ·) o) (ha : a < o) :
+    a + o = o :=
+  principal_add_iff_add_left_eq_self.1 ho a ha
+
+theorem Principal.add_absorp_of_ge {a b c : Ordinal} (hb : Principal (· + ·) b)
+    (hab : a < b) (hbc : b ≤ c) : a + c = c := by
+  rw [← Ordinal.add_sub_cancel_of_le hbc, ← add_assoc, hb.add_absorp hab,
+    Ordinal.add_sub_cancel_of_le hbc]
+
 theorem exists_lt_add_of_not_principal_add {a} (ha : ¬Principal (· + ·) a) :
     ∃ b < a, ∃ c < a, b + c = a := by
   rw [not_principal_iff] at ha
@@ -228,6 +237,32 @@ theorem opow_principal_add_of_principal_add {a} (ha : Principal (· + ·) a) (b 
   · rw [← opow_mul]
     exact principal_add_omega_opow _
 
+alias Principal.opow := opow_principal_add_of_principal_add
+
+theorem add_div_of_lt_of_principal_add {a b c : Ordinal} (hc : Principal (· + ·) c)
+    (hbc : b < c) : (a + b) / c = a / c := by
+  have hc' := ((Ordinal.zero_le _).trans_lt hbc).ne'
+  apply (div_le_left (le_add_right _ _) _).antisymm'
+  rw [← Order.lt_succ_iff, div_lt hc', mul_succ]
+  conv_lhs => rw [← div_add_mod a c]
+  rw [add_assoc]
+  exact add_lt_add_left (hc (mod_lt _ hc') hbc) _
+
+theorem add_div_of_ge_of_principal_add {a b c : Ordinal} (hc : Principal (· + ·) c)
+    (hcb : c ≤ b) : (a + b) / c = a / c + b / c := by
+  obtain rfl | hc₀ := eq_or_ne c 0
+  · iterate 3 rw [div_zero]
+    rw [add_zero]
+  · conv_lhs => rw [← div_add_mod a c]
+    rw [add_assoc, mul_add_div _ hc₀, add_left_cancel, hc.add_absorp_of_ge (mod_lt a hc₀) hcb]
+
+theorem add_mod_of_lt_of_principal_add {a b c : Ordinal} (hc : Principal (· + ·) c)
+    (hbc : b < c) : (a + b) % c = a % c + b := by
+  rw [mod_def, add_div_of_lt_of_principal_add hc hbc]
+  apply sub_eq_of_add_eq
+  rw [← add_assoc, div_add_mod]
+
+@[deprecated Principal.add_absorp (since := "2024-08-19")]
 theorem add_absorp {a b c : Ordinal} (h₁ : a < ω ^ b) (h₂ : ω ^ b ≤ c) : a + c = c := by
   rw [← Ordinal.add_sub_cancel_of_le h₂, ← add_assoc, add_omega_opow h₁]
 
