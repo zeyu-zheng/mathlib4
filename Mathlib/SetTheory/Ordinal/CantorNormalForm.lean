@@ -490,6 +490,16 @@ theorem CNF_coeff_opow_div_apply (hb : 1 < b) (o x e : Ordinal) :
   rw [CNF_coeff_opow_div hb]
   rfl
 
+theorem CNF_coeff_mod_opow_of_lt {x e : Ordinal} (hb : 1 < b) (o : Ordinal) (he : e < x) :
+    CNF_coeff b (o % b ^ x) e = CNF_coeff b o e := by
+  conv_rhs => rw [← div_add_mod o (b ^ x),
+    CNF_coeff_opow_mul_add_of_lt hb _ (mod_lt _ (opow_ne_zero x (zero_lt_one.trans hb).ne')) he]
+
+theorem CNF_coeff_mod_opow_of_ge {x e : Ordinal} (hb : b ≠ 0) (o : Ordinal) (he : x ≤ e) :
+    CNF_coeff b (o % b ^ x) e = 0 :=
+  CNF_coeff_of_gt <| (mod_lt _ (opow_ne_zero x hb)).trans_le <|
+    opow_le_opow_right (Ordinal.pos_iff_ne_zero.2 hb) he
+
 /-! ### Addition -/
 
 theorem CNF_coeff_add_of_gt {o₂ e : Ordinal} (hb : Principal (· + ·) b) (o₁ : Ordinal)
@@ -500,7 +510,7 @@ theorem CNF_coeff_add_of_gt {o₂ e : Ordinal} (hb : Principal (· + ·) b) (o�
   · rw [CNF_coeff_apply hb', CNF_coeff_apply hb', add_div_of_lt_of_principal_add (hb.opow e)]
     apply lt_opow_of_log_lt hb' he
 
-theorem CNF_coeff_add_of_eq {o₂ : Ordinal} (hb : Principal (· + ·) b) (o₁ : Ordinal) :
+theorem CNF_coeff_add_of_eq (hb : Principal (· + ·) b) (o₁ o₂ : Ordinal) :
     CNF_coeff b (o₁ + o₂) (log b o₂) = CNF_coeff b o₁ (log b o₂) + CNF_coeff b o₂ (log b o₂) := by
   obtain rfl | ho₂ := eq_or_ne o₂ 0
   · simp
@@ -513,5 +523,21 @@ theorem CNF_coeff_add_of_eq {o₂ : Ordinal} (hb : Principal (· + ·) b) (o₁ 
       rw [add_div_of_ge_of_principal_add (hb.opow _), add_mod_of_lt_of_principal_add hb ho₂',
         mod_eq_of_lt ho₂']
       exact opow_log_le_self b ho₂
+
+theorem CNF_coeff_add_of_lt {o₂ e : Ordinal} (hb : Principal (· + ·) b) (o₁ : Ordinal)
+    (he : e < log b o₂) : CNF_coeff b (o₁ + o₂) e = CNF_coeff b o₂ e := by
+  have ho₂ : o₂ ≠ 0 := by
+    rintro rfl
+    rw [log_zero_right] at he
+    exact Ordinal.not_lt_zero e he
+  obtain hb' | hb' := le_or_lt b 1
+  · rw [log_of_left_le_one hb'] at he
+    exact (Ordinal.not_lt_zero e he).elim
+  · conv_lhs => rw [← div_add_mod o₁ (b ^ log b o₂)]
+    have h := opow_ne_zero (log b o₂) (zero_lt_one.trans hb').ne'
+    rw [add_assoc, (hb.opow _).add_absorp_of_ge (mod_lt o₁ h) (opow_log_le_self _ ho₂)]
+    conv_lhs => left; right; right; rw [← div_add_mod o₂ (b ^ log b o₂)]
+    rw [← add_assoc, ← mul_add, CNF_coeff_opow_mul_add_of_lt hb' _
+      (mod_lt o₂ h) he, CNF_coeff_mod_opow_of_lt hb' _ he]
 
 end Ordinal
