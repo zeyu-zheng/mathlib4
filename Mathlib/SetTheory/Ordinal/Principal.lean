@@ -156,7 +156,7 @@ theorem Principal.add_absorp_of_ge {a b c : Ordinal} (hb : Principal (· + ·) b
   rw [← Ordinal.add_sub_cancel_of_le hbc, ← add_assoc, hb.add_absorp hab,
     Ordinal.add_sub_cancel_of_le hbc]
 
-theorem exists_lt_add_of_not_principal_add {a} (ha : ¬Principal (· + ·) a) :
+theorem exists_lt_add_of_not_principal_add {a} (ha : ¬ Principal (· + ·) a) :
     ∃ b < a, ∃ c < a, b + c = a := by
   rw [not_principal_iff] at ha
   rcases ha with ⟨b, hb, c, hc, H⟩
@@ -172,33 +172,43 @@ theorem principal_add_iff_add_lt_ne_self {a} :
     rcases exists_lt_add_of_not_principal_add ha with ⟨b, hb, c, hc, rfl⟩
     exact (H b hb c hc).irrefl⟩
 
-theorem add_omega {a : Ordinal} (h : a < ω) : a + ω = ω := by
-  rcases lt_omega.1 h with ⟨n, rfl⟩
-  clear h; induction' n with n IH
-  · rw [Nat.cast_zero, zero_add]
-  · rwa [Nat.cast_succ, add_assoc, one_add_of_omega_le (le_refl _)]
+theorem principal_add_omega : Principal (· + ·) ω := fun a b ha hb =>
+  match a, b, lt_omega.1 ha, lt_omega.1 hb with
+  | _, _, ⟨m, rfl⟩, ⟨n, rfl⟩ => by
+    dsimp only; rw [← Nat.cast_add]
+    apply nat_lt_omega
 
-theorem principal_add_omega : Principal (· + ·) ω :=
-  principal_add_iff_add_left_eq_self.2 fun _ => add_omega
+theorem add_omega {a : Ordinal} : a < ω → a + ω = ω :=
+  principal_add_omega.add_absorp
 
-theorem add_omega_opow {a b : Ordinal} (h : a < ω ^ b) : a + ω ^ b = ω ^ b := by
-  refine le_antisymm ?_ (le_add_left _ a)
-  induction' b using limitRecOn with b _ b l IH
-  · rw [opow_zero, ← succ_zero, lt_succ_iff, Ordinal.le_zero] at h
-    rw [h, zero_add]
-  · rw [opow_succ] at h
-    rcases (lt_mul_of_limit omega_isLimit).1 h with ⟨x, xo, ax⟩
-    apply (add_le_add_right ax.le _).trans
-    rw [opow_succ, ← mul_add, add_omega xo]
-  · rcases (lt_opow_of_limit omega_ne_zero l).1 h with ⟨x, xb, ax⟩
-    apply (((add_isNormal a).trans <| opow_isNormal one_lt_omega).limit_le l).2
-    intro y yb
-    calc a + ω ^ y ≤ a + ω ^ max x y :=
-      add_le_add_left (opow_le_opow_right omega_pos (le_max_right x y)) _
-    _ ≤ ω ^ max x y :=
-      IH _ (max_lt xb yb) <| ax.trans_le <| opow_le_opow_right omega_pos <| le_max_left x y
-    _ ≤ ω ^ b :=
-      opow_le_opow_right omega_pos <| (max_lt xb yb).le
+theorem lt_omega_opow {a b : Ordinal} (ha : a < ω ^ b) (hb : b ≠ 0) :
+    ∃ c < b, ∃ n : ℕ, a < ω ^ c * n := by
+  use log ω a, lt_log_of_lt_opow hb ha
+  obtain ⟨n, hn⟩ := lt_omega.1 (div_opow_log_lt a one_lt_omega)
+  use n.succ
+  rw [natCast_succ, ← hn]
+  exact lt_mul_succ_div a (opow_ne_zero _ omega_ne_zero)
+
+theorem lt_omega_opow_mul_nat (a : Ordinal) (n : ℕ) : ω ^ a * n < ω ^ succ a := by
+  rw [opow_succ]
+  exact mul_lt_mul_of_pos_left (nat_lt_omega n) (opow_pos a omega_pos)
+
+theorem principal_omega_opow (x : Ordinal) : Principal (· + ·) (ω ^ x) := by
+  obtain rfl | ha' := eq_or_ne x 0
+  · rw [opow_zero, principal_one_iff, zero_add]
+  · intro a b ha hb
+    obtain ⟨c, hc, m, hm⟩ := lt_omega_opow ha ha'
+    obtain ⟨d, hd, n, hn⟩ := lt_omega_opow hb ha'
+    have H₁ := mul_le_mul_right' (opow_le_opow_right omega_pos (le_max_left c d)) m
+    have H₂ := mul_le_mul_right' (opow_le_opow_right omega_pos (le_max_right c d)) n
+    apply (add_lt_add_of_le_of_lt hm.le hn).trans_le <| (add_le_add H₁ H₂).trans _
+    rw [← mul_add, ← Nat.cast_add]
+    apply (lt_omega_opow_mul_nat _ _).le.trans
+    rw [succ_max, opow_le_opow_iff_right one_lt_omega, max_le_iff]
+    constructor <;> rwa [succ_le_iff]
+
+theorem add_omega_opow {a b : Ordinal} : a < ω ^ b → a + ω ^ b = ω ^ b :=
+  (principal_omega_opow b).add_absorp
 
 theorem principal_add_omega_opow (o : Ordinal) : Principal (· + ·) (ω ^ o) :=
   principal_add_iff_add_left_eq_self.2 fun _ => add_omega_opow
@@ -265,14 +275,6 @@ theorem add_mod_of_lt_of_principal_add {a b c : Ordinal} (hc : Principal (· + �
 @[deprecated Principal.add_absorp (since := "2024-08-19")]
 theorem add_absorp {a b c : Ordinal} (h₁ : a < ω ^ b) (h₂ : ω ^ b ≤ c) : a + c = c := by
   rw [← Ordinal.add_sub_cancel_of_le h₂, ← add_assoc, add_omega_opow h₁]
-
-theorem lt_omega_opow {a b : Ordinal} (ha : a < ω ^ b) (hb : b ≠ 0) :
-    ∃ c < b, ∃ n : ℕ, a < ω ^ c * n := by
-  use log ω a, lt_log_of_lt_opow hb ha
-  obtain ⟨n, hn⟩ := lt_omega.1 (div_opow_log_lt a one_lt_omega)
-  use n.succ
-  rw [natCast_succ, ← hn]
-  exact lt_mul_succ_div a (opow_ne_zero _ omega_ne_zero)
 
 theorem mul_principal_add_is_principal_add (a : Ordinal.{u}) {b : Ordinal.{u}} (hb₁ : b ≠ 1)
     (hb : Principal (· + ·) b) : Principal (· + ·) (a * b) := by

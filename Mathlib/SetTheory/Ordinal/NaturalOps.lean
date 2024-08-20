@@ -729,9 +729,9 @@ lemma sub_opow_log_omega_lt {a : Ordinal} (ha : a ≠ 0) : a - ω ^ log ω a < a
     apply opow_ne_zero _ omega_ne_zero
 
 /-! The hard part of this proof is showing that `ω ^ c * n ♯ b < ω ^ a + b` for `c < a` and `n ∈ ℕ`.
-To do this, we write `b = ω ^ d + x`. If `d < c`, we write `ω ^ c * n ♯ b = ω ^ d ♯ (ω ^ c * n ♯ x)`
-and apply the inductive hypothesis. Otherwise, we write
-`ω ^ c * n ♯ b = ω ^ c ♯ ... ♯ ω ^ c ♯ ω ^ d` and repeatedly apply the inductive hypothesis. -/
+To do this, we write `b = ω ^ d + x`. If `d > c`, we write `ω ^ c * n ♯ b = ω ^ d ♯ (ω ^ c * n ♯ x)`
+and apply the inductive hypothesis. Otherwise, we write `ω ^ c * n ♯ b = ω ^ c ♯ ... ♯ ω ^ c ♯ b`
+and repeatedly apply the inductive hypothesis. -/
 
 theorem omega_opow_nadd {a b : Ordinal} (h : b < ω ^ succ a) : ω ^ a ♯ b = ω ^ a + b := by
   obtain rfl | hb := eq_or_ne b 0; simp
@@ -755,7 +755,7 @@ theorem omega_opow_nadd {a b : Ordinal} (h : b < ω ^ succ a) : ω ^ a ♯ b = �
           rw [add_comm, Nat.cast_add, Nat.cast_one, mul_one_add, ← omega_opow_nadd, nadd_comm, IH]
           apply (mul_lt_mul_of_pos_left (nat_lt_omega m) (opow_pos c omega_pos)).trans_le
           rw [opow_succ]
-      cases lt_or_le b (ω ^ succ c)
+      obtain _ | _ := lt_or_le b (ω ^ succ c)
       · suffices ω ^ c * n ♯ b < ω ^ succ c by
           apply this.trans_le <| (opow_le_opow_right omega_pos _).trans (le_add_right _ b)
           rwa [succ_le_iff]
@@ -769,10 +769,8 @@ theorem omega_opow_nadd {a b : Ordinal} (h : b < ω ^ succ a) : ω ^ a ♯ b = �
       · have H₃ := omega_opow_nadd <| H₂.trans (lt_opow_succ_log_self one_lt_omega b)
         have H₄ : ω ^ c * ↑n ♯ (b - ω ^ log ω b) < b := by
           have : ω ^ c * ↑n < ω ^ log ω b := by
-            apply (mul_lt_mul_of_pos_left (nat_lt_omega _) (opow_pos c omega_pos)).trans_le
-            rw [← opow_succ]
-            apply opow_le_opow_right omega_pos
-            rwa [← opow_le_iff_le_log one_lt_omega hb]
+            apply (lt_omega_opow_mul_nat c n).trans_le
+            rwa [opow_le_opow_iff_right one_lt_omega, ← opow_le_iff_le_log one_lt_omega hb]
           apply (nadd_lt_nadd_right this _).trans_le
           rw [H₃, Ordinal.add_sub_cancel_of_le]
           exact opow_log_le_self ω hb
@@ -811,8 +809,17 @@ theorem omega_nmul_nat (a : Ordinal) (n : ℕ) : ω ^ a ⨳ n = ω ^ a * n := by
 theorem nat_nmul_omega (a : Ordinal) (n : ℕ) : n ⨳ ω ^ a = ω ^ a * n := by
   rw [nmul_comm, omega_nmul_nat]
 
-/-theorem CNF_coeff_nadd {b : Ordinal} (o₁ o₂ : Ordinal) :
-    CNF_coeff b (o₁ ♯ o₂) = CNF_coeff b o₁ + CNF_coeff b o₂ := by
+theorem omega_opow_nmul {a b : Ordinal} (h : b < ω ^ ω ^ succ a) :
+    ω ^ ω ^ a ⨳ b = ω ^ ω ^ a * b := by
+  apply le_antisymm
+  · rw [nmul_le_iff]
+    intro c hc d hd
+    sorry
+  ·
+
+/-@[simp]
+theorem CNF_coeff_nadd (o₁ o₂ : Ordinal) :
+    CNF_coeff ω (o₁ ♯ o₂) = CNF_coeff ω o₁ + CNF_coeff ω o₂ := by
   sorry-/
 
 end Ordinal
