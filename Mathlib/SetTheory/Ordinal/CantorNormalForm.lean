@@ -150,7 +150,7 @@ theorem CNF_of_le_one {o : Ordinal} (hb : b ≤ 1) (ho : o ≠ 0) : CNF b o = [�
   · exact zero_CNF ho
   · exact one_CNF ho
 
-theorem CNF_of_lt {o : Ordinal} (ho : o ≠ 0) (hb : o < b) : CNF b o = [⟨0, o⟩] := by
+theorem CNF_of_lt_self {o : Ordinal} (ho : o ≠ 0) (hb : o < b) : CNF b o = [⟨0, o⟩] := by
   simp only [CNF_ne_zero ho, log_eq_zero hb, opow_zero, div_one, mod_one, CNF_zero]
 
 theorem CNF_opow (hb : 1 < b) (e : Ordinal) : CNF b (b ^ e) = [⟨e, 1⟩] := by
@@ -244,7 +244,7 @@ theorem CNF_exponents_sorted (b o : Ordinal) : (CNF.exponents b o).Sorted (· > 
     · rw [CNF_of_le_one hb ho]
       exact sorted_singleton _
     · obtain hob | hbo := lt_or_le o b
-      · rw [CNF_of_lt ho hob]
+      · rw [CNF_of_lt_self ho hob]
         exact sorted_singleton _
       · rw [CNF_ne_zero ho, keys_cons, sorted_cons]
         refine ⟨?_, IH⟩
@@ -366,8 +366,7 @@ theorem CNF_coeff_zero (b : Ordinal) : CNF_coeff b 0 = 0 := by
   ext e
   exact CNF_coeff_zero_apply b e
 
-theorem CNF_coeff_of_le_one (hb : b ≤ 1) (o : Ordinal) :
-    CNF_coeff b o = single 0 o := by
+theorem CNF_coeff_of_le_one (hb : b ≤ 1) (o : Ordinal) : CNF_coeff b o = single 0 o := by
   ext a
   obtain rfl | ho := eq_or_ne o 0
   · simp
@@ -377,6 +376,14 @@ theorem CNF_coeff_of_le_one (hb : b ≤ 1) (o : Ordinal) :
       simp
     · rw [single_eq_of_ne ha.symm, CNF_coeff_eq_zero_iff, CNF.exponents, CNF_of_le_one hb ho]
       simpa using ha
+
+theorem CNF_coeff_lt (hb : 1 < b) (o e : Ordinal) : CNF_coeff b o e < b := by
+  by_cases h : e ∈ CNF.exponents b o
+  · obtain ⟨c, hc⟩ := mem_CNF_exponents_iff.1 h
+    rw [CNF_coeff_of_mem_CNF hc]
+    exact lt_of_mem_CNF_coefficients hb <| mem_CNF_coefficients_of_mem hc
+  · rw [CNF_coeff_of_not_mem_CNF h]
+    exact zero_lt_one.trans hb
 
 @[simp]
 theorem zero_CNF_coeff (o : Ordinal) : CNF_coeff 0 o = single 0 o :=
@@ -405,6 +412,19 @@ theorem CNF_coeff_one (hb : 1 < b) : CNF_coeff b 1 = single 0 1 := by
 theorem CNF_coeff_self (hb : 1 < b) : CNF_coeff b b = single 1 1 := by
   convert CNF_coeff_opow hb 1
   exact (opow_one b).symm
+
+theorem CNF_coeff_of_lt_self {o : Ordinal} (ho : o < b) : CNF_coeff b o = single 0 o := by
+  obtain rfl | ho' := eq_or_ne o 0
+  · simp
+  · ext e
+    obtain rfl | he := eq_or_ne e 0
+    · rw [single_eq_same]
+      apply CNF_coeff_of_mem_CNF
+      rw [CNF_of_lt_self ho' ho, mem_singleton]
+    · rw [single_eq_of_ne he.symm, CNF_coeff_eq_zero_iff, mem_CNF_exponents_iff]
+      rintro ⟨c, hc⟩
+      rw [CNF_of_lt_self ho' ho, mem_singleton, Sigma.mk.inj_iff] at hc
+      exact he hc.1
 
 theorem CNF_coeff_of_gt {b o e : Ordinal} (he : o < b ^ e) : CNF_coeff b o e = 0 := by
   obtain hb | hb := le_or_lt b 1
@@ -439,6 +459,18 @@ theorem CNF_coeff_opow_mul_of_lt {b e x : Ordinal} (hb : 1 < b) (o : Ordinal) (h
   push_neg
   rintro c _ _ ⟨rfl, rfl⟩
   exact (le_add_right _ _).not_lt he
+
+theorem CNF_coeff_opow_mul_of_lt_self {b x : Ordinal} (hb : 1 < b) (o : Ordinal) (ho : o < b) :
+    CNF_coeff b (b ^ x * o) = single x o := by
+  ext e
+  obtain he | he := lt_or_le e x
+  · rw [CNF_coeff_opow_mul_of_lt hb o he, single_eq_of_ne he.ne']
+  · conv_lhs => rw [← Ordinal.add_sub_cancel_of_le he]
+    rw [CNF_coeff_opow_mul_of_ge hb, CNF_coeff_of_lt_self ho]
+    obtain rfl | he := he.eq_or_lt
+    · simp
+    · rw [single_eq_of_ne, single_eq_of_ne he.ne]
+      rwa [Ne.eq_def, Eq.comm, Ordinal.sub_eq_zero_iff_le, not_le]
 
 theorem CNF_coeff_opow_mul_add_of_lt {b x o₂ e : Ordinal} (hb : 1 < b) (o₁ : Ordinal)
     (ho₂ : o₂ < b ^ x) (he : e < x) : CNF_coeff b (b ^ x * o₁ + o₂) e = CNF_coeff b o₂ e := by

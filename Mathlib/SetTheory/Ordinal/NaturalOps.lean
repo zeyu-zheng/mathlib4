@@ -3,6 +3,7 @@ Copyright (c) 2022 Violeta Hernández Palacios. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández Palacios
 -/
+import Mathlib.Data.Prod.Lex
 import Mathlib.SetTheory.Ordinal.CantorNormalForm
 import Mathlib.Tactic.Abel
 
@@ -713,7 +714,7 @@ theorem mul_le_nmul (a b : Ordinal.{u}) : a * b ≤ a ⨳ b := by
 /-! ### Cantor normal forms -/
 
 /-! The hard part of this proof is showing that `ω ^ c * n ♯ b < ω ^ a + b` for `c < a` and `n ∈ ℕ`.
-To do this, we write `b = ω ^ d + x`. If `d > c`, we write `ω ^ c * n ♯ b = ω ^ d ♯ (ω ^ c * n ♯ x)`
+To do this, we write `b = ω ^ d + x`. If `c < d`, we write `ω ^ c * n ♯ b = ω ^ d ♯ (ω ^ c * n ♯ x)`
 and apply the inductive hypothesis. Otherwise, we write `ω ^ c * n ♯ b = ω ^ c ♯ ⋯ ♯ ω ^ c ♯ b` and
 repeatedly apply the inductive hypothesis. -/
 
@@ -730,7 +731,7 @@ theorem omega_opow_nadd {a b : Ordinal} (h : b < ω ^ succ a) : ω ^ a ♯ b = �
       apply (nadd_lt_nadd_right hn b).trans
       clear hd hn d
       have H₁ : log ω b ≤ a := by rwa [lt_opow_iff_log_lt one_lt_omega hb, lt_succ_iff] at h
-      have H₂ : b - ω ^ log ω b < b := sub_opow_log_omega_lt hb
+      have H₂ := sub_opow_log_omega_lt hb
       have H : ∀ m : ℕ, ω ^ c * m = ω ^ c ⨳ m := by
         intro m
         induction' m with m IH
@@ -768,20 +769,19 @@ termination_by (a, b)
 decreasing_by
 · exact Prod.Lex.left _ _ hc
 · exact Prod.Lex.left _ _ hc
-· exact Prod.Lex.mk_lt_of_le_of_lt H₁ H₂
-· exact Prod.Lex.mk_lt_of_le_of_lt H₁ H₄
+· exact Prod.Lex.toLex_strictMono <| Prod.mk_lt_mk_of_le_of_lt H₁ H₂
+· exact Prod.Lex.toLex_strictMono <| Prod.mk_lt_mk_of_le_of_lt H₁ H₄
 · exact Prod.Lex.right _ hd
 
 theorem omega_nadd_opow {a b : Ordinal} (h : a < ω ^ succ b) : a ♯ ω ^ b = ω ^ b + a := by
   rw [nadd_comm, omega_opow_nadd h]
 
-@[simp]
 theorem omega_opow_nadd_self (a : Ordinal) : ω ^ a ♯ ω ^ a = ω ^ a + ω ^ a := by
   rw [omega_opow_nadd]
   rw [opow_lt_opow_iff_right one_lt_omega, lt_succ_iff]
 
 @[simp]
-theorem omega_nmul_nat (a : Ordinal) (n : ℕ) : ω ^ a ⨳ n = ω ^ a * n := by
+theorem omega_opow_nmul_nat (a : Ordinal) (n : ℕ) : ω ^ a ⨳ n = ω ^ a * n := by
   induction' n with n IH
   · rw [Nat.cast_zero, nmul_zero, mul_zero]
   · conv_lhs => rw [Nat.cast_succ, nmul_add_one, nadd_comm]
@@ -790,39 +790,94 @@ theorem omega_nmul_nat (a : Ordinal) (n : ℕ) : ω ^ a ⨳ n = ω ^ a * n := by
     exact mul_lt_mul_of_pos_left (nat_lt_omega _) (opow_pos a omega_pos)
 
 @[simp]
-theorem nat_nmul_omega (a : Ordinal) (n : ℕ) : n ⨳ ω ^ a = ω ^ a * n := by
-  rw [nmul_comm, omega_nmul_nat]
+theorem nat_nmul_omega_opow (a : Ordinal) (n : ℕ) : n ⨳ ω ^ a = ω ^ a * n := by
+  rw [nmul_comm, omega_opow_nmul_nat]
+
+theorem principal_nadd_omega_opow (a : Ordinal) : Principal (· ♯ ·) (ω ^ a) := by
+  obtain rfl | ha := eq_or_ne a 0
+  · rw [opow_zero, principal_one_iff, zero_nadd]
+  · intro b c hb hc
+    obtain ⟨x, hx, m, hm⟩ := lt_omega_opow hb ha
+    obtain ⟨y, hy, n, hn⟩ := lt_omega_opow hc ha
+    sorry
+
+
+
+theorem omega_opow_add_nmul_assoc (a : Ordinal) {b c : Ordinal}
+    (hb : b < ω ^ succ a) (hc : c < ω ^ succ a) : ω ^ a + b ♯ c = ω ^ a + (b ♯ c) := by
+  rw [← omega_opow_nadd hb, nadd_assoc, omega_opow_nadd]
 
 theorem omega_opow_mul_nadd {a b : Ordinal} (h : b < ω ^ succ a) (c : Ordinal) :
     ω ^ a * c ♯ b = ω ^ a * c + b := by
   refine CNFRec_omega ?_ ?_ c
-  · simp
+  · rw [mul_zero, zero_nadd, zero_add]
   · intro o ho IH
     conv_lhs => rw [← add_sub_cancel_omega_opow_log ho]
     have : ω ^ a * (o - ω ^ log ω o) + b < ω ^ succ (a + log ω o) := by
       apply principal_add_omega_opow
       · rw [← add_succ, opow_add, mul_lt_mul_iff_left (opow_pos a omega_pos)]
-        apply (sub_le_self _ _).trans_lt
-        apply lt_opow_succ_log_self one_lt_omega
+        exact (sub_le_self o _).trans_lt <| lt_opow_succ_log_self one_lt_omega _
       · apply h.trans_le
         rw [opow_le_opow_iff_right one_lt_omega, succ_le_succ_iff]
-        apply le_add_right
-    rw [mul_add, ← opow_add, ← omega_opow_nadd ((le_add_right _ _).trans_lt this), nadd_assoc, IH,
+        exact le_add_right a _
+    rw [mul_add, ← opow_add, ← omega_opow_nadd <| (le_add_right _ _).trans_lt this, nadd_assoc, IH,
       omega_opow_nadd this, opow_add, ← add_assoc, ← mul_add, add_sub_cancel_omega_opow_log ho]
 
-/-
+theorem nadd_omega_opow_mul {a b : Ordinal} (h : b < ω ^ succ a) (c : Ordinal) :
+    b ♯ ω ^ a * c = ω ^ a * c + b := by
+  rw [nadd_comm, omega_opow_mul_nadd h]
+
 theorem omega_opow_nmul {a b : Ordinal} (h : b < ω ^ ω ^ succ a) :
     ω ^ ω ^ a ⨳ b = ω ^ ω ^ a * b := by
-  apply le_antisymm
-  · rw [nmul_le_iff]
-    intro c hc d hd
+  apply (mul_le_nmul _ _).antisymm'
+  rw [nmul_le_iff]
+  intro c hc d hd
+  rw [omega_opow_nmul (hd.trans h), nadd_comm]
+  sorry
+termination_by (a, b)
 
-    sorry
-  ·
+private lemma CNF_coeff_omega_comm {o₁ o₂ : Ordinal} :
+    CNF_coeff ω o₁ + CNF_coeff ω o₂ = CNF_coeff ω o₂ + CNF_coeff ω o₁ := by
+  ext e
+  obtain ⟨m, hm⟩ := lt_omega.1 (CNF_coeff_lt one_lt_omega o₁ e)
+  obtain ⟨n, hn⟩ := lt_omega.1 (CNF_coeff_lt one_lt_omega o₂ e)
+  dsimp
+  rw [hm, hn, ← Nat.cast_add, ← Nat.cast_add, add_comm]
+
+private theorem CNF_coeff_nadd_aux {o₁ o₂ : Ordinal} :
+    CNF_coeff ω (o₁ ♯ o₂) = CNF_coeff ω o₁ + CNF_coeff ω o₂ := by
+  refine CNFRec ω ?_ ?_ o₁
+  · simp
+  · intro o
+    wlog h : o ≤ o₂
+    --ho IH
+    conv_lhs => rw [← div_add_mod o (ω ^ log ω o)]
+    rw [← omega_opow_mul_nadd, nadd_assoc, omega_opow_mul_nadd, CNF_coeff_opow_mul_add, IH]
+    conv_rhs => rw [← div_add_mod o (ω ^ log ω o)]
+    rw [CNF_coeff_opow_mul_add, add_assoc]
+    · apply mod_lt _ (opow_ne_zero _ omega_ne_zero)
+    ·
+
+
+
+#exit
+
 
 @[simp]
 theorem CNF_coeff_nadd (o₁ o₂ : Ordinal) :
     CNF_coeff ω (o₁ ♯ o₂) = CNF_coeff ω o₁ + CNF_coeff ω o₂ := by
-  sorry-/
+  obtain h | h := le_or_lt o₂ o₁
+  · exact CNF_coeff_nadd_aux h
+  · rw [nadd_comm, CNF_coeff_nadd_aux h.le]
+    ext e
+    obtain ⟨m, hm⟩ := lt_omega.1 (CNF_coeff_lt one_lt_omega o₁ e)
+    obtain ⟨n, hn⟩ := lt_omega.1 (CNF_coeff_lt one_lt_omega o₂ e)
+    dsimp
+    rw [hm, hn, ← Nat.cast_add, ← Nat.cast_add, add_comm]
+
+theorem CNF_coeff_nadd_apply (o₁ o₂ e : Ordinal) :
+    CNF_coeff ω (o₁ ♯ o₂) e = CNF_coeff ω o₁ e + CNF_coeff ω o₂ e := by
+  rw [CNF_coeff_nadd]
+  rfl
 
 end Ordinal
