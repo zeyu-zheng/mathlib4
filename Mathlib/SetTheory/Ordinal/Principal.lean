@@ -135,7 +135,7 @@ theorem principal_add_isLimit {o : Ordinal} (ho₁ : 1 < o) (ho : Principal (· 
     · refine lt_of_le_of_lt ?_ (ho hao hao)
       rwa [← add_one_eq_succ, add_le_add_iff_left, one_le_iff_ne_zero]
 
-theorem principal_add_iff_add_left_eq_self {o : Ordinal} :
+theorem principal_add_iff_add_left_eq {o : Ordinal} :
     Principal (· + ·) o ↔ ∀ a < o, a + o = o := by
   refine ⟨fun ho a hao => ?_, fun h a b hao hbo => ?_⟩
   · cases' lt_or_le 1 o with ho₁ ho₁
@@ -147,9 +147,11 @@ theorem principal_add_iff_add_left_eq_self {o : Ordinal} :
   · rw [← h a hao]
     exact (add_isNormal a).strictMono hbo
 
-theorem Principal.add_absorp {a o : Ordinal} (ho : Principal (· + ·) o) (ha : a < o) :
-    a + o = o :=
-  principal_add_iff_add_left_eq_self.1 ho a ha
+@[deprecated principal_add_iff_add_left_eq (since := "2024-08-19")]
+alias principal_add_iff_add_left_eq_self := principal_add_iff_add_left_eq
+
+theorem Principal.add_absorp {a o : Ordinal} (ho : Principal (· + ·) o) (ha : a < o) : a + o = o :=
+  principal_add_iff_add_left_eq.1 ho a ha
 
 theorem Principal.add_absorp_of_ge {a b c : Ordinal} (hb : Principal (· + ·) b)
     (hab : a < b) (hbc : b ≤ c) : a + c = c := by
@@ -160,8 +162,7 @@ theorem exists_lt_add_of_not_principal_add {a} (ha : ¬ Principal (· + ·) a) :
     ∃ b < a, ∃ c < a, b + c = a := by
   rw [not_principal_iff] at ha
   rcases ha with ⟨b, hb, c, hc, H⟩
-  refine
-    ⟨b, hb, _, lt_of_le_of_ne (sub_le_self a b) fun hab => ?_, Ordinal.add_sub_cancel_of_le hb.le⟩
+  refine ⟨b, hb, _, (sub_le_self a b).lt_of_ne fun hab => ?_, Ordinal.add_sub_cancel_of_le hb.le⟩
   rw [← sub_le, hab] at H
   exact H.not_lt hc
 
@@ -181,18 +182,6 @@ theorem principal_add_omega : Principal (· + ·) ω := fun a b ha hb =>
 theorem add_omega {a : Ordinal} : a < ω → a + ω = ω :=
   principal_add_omega.add_absorp
 
-theorem lt_omega_opow {a b : Ordinal} (ha : a < ω ^ b) (hb : b ≠ 0) :
-    ∃ c < b, ∃ n : ℕ, a < ω ^ c * n := by
-  use log ω a, lt_log_of_lt_opow hb ha
-  obtain ⟨n, hn⟩ := lt_omega.1 (div_opow_log_lt a one_lt_omega)
-  use n.succ
-  rw [natCast_succ, ← hn]
-  exact lt_mul_succ_div a (opow_ne_zero _ omega_ne_zero)
-
-theorem lt_omega_opow_mul_nat (a : Ordinal) (n : ℕ) : ω ^ a * n < ω ^ succ a := by
-  rw [opow_succ]
-  exact mul_lt_mul_of_pos_left (nat_lt_omega n) (opow_pos a omega_pos)
-
 theorem principal_omega_opow (x : Ordinal) : Principal (· + ·) (ω ^ x) := by
   obtain rfl | ha' := eq_or_ne x 0
   · rw [opow_zero, principal_one_iff, zero_add]
@@ -203,7 +192,7 @@ theorem principal_omega_opow (x : Ordinal) : Principal (· + ·) (ω ^ x) := by
     have H₂ := mul_le_mul_right' (opow_le_opow_right omega_pos (le_max_right c d)) n
     apply (add_lt_add_of_le_of_lt hm.le hn).trans_le <| (add_le_add H₁ H₂).trans _
     rw [← mul_add, ← Nat.cast_add]
-    apply (lt_omega_opow_mul_nat _ _).le.trans
+    apply (omega_opow_mul_nat_lt _ _).le.trans
     rw [succ_max, opow_le_opow_iff_right one_lt_omega, max_le_iff]
     constructor <;> rwa [succ_le_iff]
 
@@ -211,14 +200,14 @@ theorem add_omega_opow {a b : Ordinal} : a < ω ^ b → a + ω ^ b = ω ^ b :=
   (principal_omega_opow b).add_absorp
 
 theorem principal_add_omega_opow (o : Ordinal) : Principal (· + ·) (ω ^ o) :=
-  principal_add_iff_add_left_eq_self.2 fun _ => add_omega_opow
+  principal_add_iff_add_left_eq.2 fun _ => add_omega_opow
 
 /-- The main characterization theorem for additive principal ordinals. -/
 theorem principal_add_iff_zero_or_omega_opow {o : Ordinal} :
     Principal (· + ·) o ↔ o = 0 ∨ o ∈ Set.range (ω ^ · : Ordinal → Ordinal) := by
   rcases eq_or_ne o 0 with (rfl | ho)
   · simp only [principal_zero, Or.inl]
-  · rw [principal_add_iff_add_left_eq_self]
+  · rw [principal_add_iff_add_left_eq]
     simp only [ho, false_or_iff]
     refine
       ⟨fun H => ⟨_, ((lt_or_eq_of_le (opow_log_le_self _ ho)).resolve_left fun h => ?_)⟩,
@@ -328,7 +317,7 @@ theorem principal_add_of_principal_mul {o : Ordinal} (ho : Principal (· * ·) o
 
 theorem principal_mul_isLimit {o : Ordinal.{u}} (ho₂ : 2 < o) (ho : Principal (· * ·) o) :
     o.IsLimit :=
-  principal_add_isLimit ((lt_succ 1).trans (by simpa using ho₂))
+  principal_add_isLimit ((lt_succ 1).trans (by rwa [succ_one]))
     (principal_add_of_principal_mul ho (ne_of_gt ho₂))
 
 theorem principal_mul_iff_mul_left_eq {o : Ordinal} :
@@ -337,7 +326,7 @@ theorem principal_mul_iff_mul_left_eq {o : Ordinal} :
   · cases' le_or_gt o 2 with ho ho
     · convert one_mul o
       apply le_antisymm
-      · have : a < succ 1 := hao.trans_le (by simpa using ho)
+      · have : a < succ 1 := hao.trans_le (by rwa [succ_one])
         rwa [lt_succ_iff] at this
       · rwa [← succ_le_iff, succ_zero] at ha₀
     · exact op_eq_self_of_principal hao (mul_isNormal ha₀) h (principal_mul_isLimit ho h)
@@ -347,28 +336,18 @@ theorem principal_mul_iff_mul_left_eq {o : Ordinal} :
     rw [← h a ha hao]
     exact (mul_isNormal ha).strictMono hbo
 
+theorem Principal.mul_absorp {a o : Ordinal} (ho : Principal (· * ·) o)
+    (h0 : 0 < a) (ha : a < o) : a * o = o :=
+  principal_mul_iff_mul_left_eq.1 ho a h0 ha
+
 theorem principal_mul_omega : Principal (· * ·) ω := fun a b ha hb =>
   match a, b, lt_omega.1 ha, lt_omega.1 hb with
   | _, _, ⟨m, rfl⟩, ⟨n, rfl⟩ => by
     dsimp only; rw [← natCast_mul]
     apply nat_lt_omega
 
-theorem mul_omega {a : Ordinal} (a0 : 0 < a) (ha : a < ω) : a * ω = ω :=
-  principal_mul_iff_mul_left_eq.1 principal_mul_omega a a0 ha
-
-theorem mul_lt_omega_opow {a b c : Ordinal} (c0 : 0 < c) (ha : a < ω ^ c) (hb : b < ω) :
-    a * b < ω ^ c := by
-  rcases zero_or_succ_or_limit c with (rfl | ⟨c, rfl⟩ | l)
-  · exact (lt_irrefl _).elim c0
-  · rw [opow_succ] at ha
-    rcases ((mul_isNormal <| opow_pos _ omega_pos).limit_lt omega_isLimit).1 ha with ⟨n, hn, an⟩
-    apply (mul_le_mul_right' (le_of_lt an) _).trans_lt
-    rw [opow_succ, mul_assoc, mul_lt_mul_iff_left (opow_pos _ omega_pos)]
-    exact principal_mul_omega hn hb
-  · rcases ((opow_isNormal one_lt_omega).limit_lt l).1 ha with ⟨x, hx, ax⟩
-    refine (mul_le_mul' (le_of_lt ax) (le_of_lt hb)).trans_lt ?_
-    rw [← opow_succ, opow_lt_opow_iff_right one_lt_omega]
-    exact l.2 _ hx
+theorem mul_omega {a : Ordinal} : 0 < a → a < ω → a * ω = ω :=
+  principal_mul_omega.mul_absorp
 
 theorem mul_omega_opow_opow {a b : Ordinal} (a0 : 0 < a) (h : a < ω ^ ω ^ b) :
     a * ω ^ ω ^ b = ω ^ ω ^ b := by

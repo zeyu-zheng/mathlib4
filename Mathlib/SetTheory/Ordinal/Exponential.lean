@@ -21,6 +21,9 @@ universe u v w
 
 namespace Ordinal
 
+/-! ### Ordinal exponential -/
+
+
 /-- The ordinal exponential, defined by transfinite recursion. -/
 instance pow : Pow Ordinal Ordinal :=
   ⟨fun a b => if a = 0 then 1 - b else limitRecOn b 1 (fun _ IH => IH * a) fun b _ => bsup.{u, u} b⟩
@@ -475,7 +478,29 @@ theorem add_log_le_log_mul {x y : Ordinal} (b : Ordinal) (hx : x ≠ 0) (hy : y 
     exact mul_le_mul' (opow_log_le_self b hx) (opow_log_le_self b hy)
   · simpa only [log_of_left_le_one hb, zero_add] using le_rfl
 
+theorem lt_omega_opow {a b : Ordinal} (ha : a < ω ^ b) (hb : b ≠ 0) :
+    ∃ c < b, ∃ n : ℕ, a < ω ^ c * n := by
+  use log ω a, lt_log_of_lt_opow hb ha
+  obtain ⟨n, hn⟩ := lt_omega.1 (div_opow_log_lt a one_lt_omega)
+  use n.succ
+  rw [natCast_succ, ← hn]
+  exact lt_mul_succ_div a (opow_ne_zero _ omega_ne_zero)
+
+theorem omega_opow_mul_nat_lt (a : Ordinal) (n : ℕ) : ω ^ a * n < ω ^ succ a := by
+  rw [opow_succ]
+  exact mul_lt_mul_of_pos_left (nat_lt_omega n) (opow_pos a omega_pos)
+
+theorem mul_lt_omega_opow {a b c : Ordinal} (c0 : 0 < c) (ha : a < ω ^ c) (hb : b < ω) :
+    a * b < ω ^ c := by
+  obtain ⟨d, hd, m, hm⟩ := lt_omega_opow ha c0.ne'
+  obtain ⟨n, rfl⟩ := lt_omega.1 hb
+  apply (mul_le_mul_right' hm.le _).trans_lt
+  rw [mul_assoc, ← natCast_mul]
+  apply (omega_opow_mul_nat_lt _ _).trans_le
+  rwa [opow_le_opow_iff_right one_lt_omega, succ_le_iff]
+
 /-! ### Interaction with `Nat.cast` -/
+
 
 @[simp, norm_cast]
 theorem natCast_opow (m : ℕ) : ∀ n : ℕ, ↑(m ^ n : ℕ) = (m : Ordinal) ^ (n : Ordinal)
