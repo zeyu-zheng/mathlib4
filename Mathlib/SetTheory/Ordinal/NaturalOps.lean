@@ -712,26 +712,10 @@ theorem mul_le_nmul (a b : Ordinal.{u}) : a * b ≤ a ⨳ b := by
 
 /-! ### Cantor normal forms -/
 
-lemma sub_opow_log_omega_lt {a : Ordinal} (ha : a ≠ 0) : a - ω ^ log ω a < a := by
-  conv_lhs => left; rw [← div_add_mod a (ω ^ log ω a)]
-  conv_rhs => rw [← div_add_mod a (ω ^ log ω a)]
-  obtain ⟨n, hn⟩ := lt_omega.1 (div_opow_log_lt a one_lt_omega)
-  rw [hn]
-  obtain rfl | n := n
-  · have := div_opow_log_pos ω ha
-    rw [hn, Nat.cast_zero] at this
-    exact (irrefl 0 this).elim
-  · conv_lhs => rw [add_comm, Nat.cast_add, Nat.cast_one, mul_one_add, add_assoc,
-      Ordinal.add_sub_cancel]
-    conv_rhs => rw [Nat.cast_succ, mul_add_one, add_assoc]
-    rw [add_lt_add_iff_left]
-    apply (mod_lt _ _).trans_le (le_add_right _ _)
-    apply opow_ne_zero _ omega_ne_zero
-
 /-! The hard part of this proof is showing that `ω ^ c * n ♯ b < ω ^ a + b` for `c < a` and `n ∈ ℕ`.
 To do this, we write `b = ω ^ d + x`. If `d > c`, we write `ω ^ c * n ♯ b = ω ^ d ♯ (ω ^ c * n ♯ x)`
-and apply the inductive hypothesis. Otherwise, we write `ω ^ c * n ♯ b = ω ^ c ♯ ... ♯ ω ^ c ♯ b`
-and repeatedly apply the inductive hypothesis. -/
+and apply the inductive hypothesis. Otherwise, we write `ω ^ c * n ♯ b = ω ^ c ♯ ⋯ ♯ ω ^ c ♯ b` and
+repeatedly apply the inductive hypothesis. -/
 
 theorem omega_opow_nadd {a b : Ordinal} (h : b < ω ^ succ a) : ω ^ a ♯ b = ω ^ a + b := by
   obtain rfl | hb := eq_or_ne b 0; simp
@@ -769,7 +753,7 @@ theorem omega_opow_nadd {a b : Ordinal} (h : b < ω ^ succ a) : ω ^ a ♯ b = �
       · have H₃ := omega_opow_nadd <| H₂.trans (lt_opow_succ_log_self one_lt_omega b)
         have H₄ : ω ^ c * ↑n ♯ (b - ω ^ log ω b) < b := by
           have : ω ^ c * ↑n < ω ^ log ω b := by
-            apply (lt_omega_opow_mul_nat c n).trans_le
+            apply (omega_opow_mul_nat_lt c n).trans_le
             rwa [opow_le_opow_iff_right one_lt_omega, ← opow_le_iff_le_log one_lt_omega hb]
           apply (nadd_lt_nadd_right this _).trans_le
           rw [H₃, Ordinal.add_sub_cancel_of_le]
@@ -809,15 +793,34 @@ theorem omega_nmul_nat (a : Ordinal) (n : ℕ) : ω ^ a ⨳ n = ω ^ a * n := by
 theorem nat_nmul_omega (a : Ordinal) (n : ℕ) : n ⨳ ω ^ a = ω ^ a * n := by
   rw [nmul_comm, omega_nmul_nat]
 
+theorem omega_opow_mul_nadd {a b : Ordinal} (h : b < ω ^ succ a) (c : Ordinal) :
+    ω ^ a * c ♯ b = ω ^ a * c + b := by
+  refine CNFRec_omega ?_ ?_ c
+  · simp
+  · intro o ho IH
+    conv_lhs => rw [← add_sub_cancel_omega_opow_log ho]
+    have : ω ^ a * (o - ω ^ log ω o) + b < ω ^ succ (a + log ω o) := by
+      apply principal_add_omega_opow
+      · rw [← add_succ, opow_add, mul_lt_mul_iff_left (opow_pos a omega_pos)]
+        apply (sub_le_self _ _).trans_lt
+        apply lt_opow_succ_log_self one_lt_omega
+      · apply h.trans_le
+        rw [opow_le_opow_iff_right one_lt_omega, succ_le_succ_iff]
+        apply le_add_right
+    rw [mul_add, ← opow_add, ← omega_opow_nadd ((le_add_right _ _).trans_lt this), nadd_assoc, IH,
+      omega_opow_nadd this, opow_add, ← add_assoc, ← mul_add, add_sub_cancel_omega_opow_log ho]
+
+/-
 theorem omega_opow_nmul {a b : Ordinal} (h : b < ω ^ ω ^ succ a) :
     ω ^ ω ^ a ⨳ b = ω ^ ω ^ a * b := by
   apply le_antisymm
   · rw [nmul_le_iff]
     intro c hc d hd
+
     sorry
   ·
 
-/-@[simp]
+@[simp]
 theorem CNF_coeff_nadd (o₁ o₂ : Ordinal) :
     CNF_coeff ω (o₁ ♯ o₂) = CNF_coeff ω o₁ + CNF_coeff ω o₂ := by
   sorry-/
