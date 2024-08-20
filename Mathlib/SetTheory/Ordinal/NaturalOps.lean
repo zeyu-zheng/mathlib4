@@ -755,7 +755,7 @@ theorem omega_opow_nadd {a b : Ordinal} (h : b < ω ^ succ a) : ω ^ a ♯ b = �
           rw [add_comm, Nat.cast_add, Nat.cast_one, mul_one_add, ← omega_opow_nadd, nadd_comm, IH]
           apply (mul_lt_mul_of_pos_left (nat_lt_omega m) (opow_pos c omega_pos)).trans_le
           rw [opow_succ]
-      obtain _ | _ := lt_or_le b (ω ^ succ c)
+      cases lt_or_le b (ω ^ succ c)
       · suffices ω ^ c * n ♯ b < ω ^ succ c by
           apply this.trans_le <| (opow_le_opow_right omega_pos _).trans (le_add_right _ b)
           rwa [succ_le_iff]
