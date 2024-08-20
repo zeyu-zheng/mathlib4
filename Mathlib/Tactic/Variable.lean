@@ -3,6 +3,7 @@ Copyright (c) 2023 Kyle Miller. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 -/
+import Mathlib.Init
 import Lean.Meta.Tactic.TryThis
 
 /-!
@@ -109,7 +110,7 @@ def pendingActionableSynthMVar (binder : TSyntax ``bracketedBinder) :
   for mvarId in pendingMVars.reverse do
     let some decl ← Term.getSyntheticMVarDecl? mvarId | continue
     match decl.kind with
-    | .typeClass =>
+    | .typeClass _ =>
       let ty ← instantiateMVars (← mvarId.getType)
       if !ty.hasExprMVar then
         return mvarId
@@ -307,3 +308,9 @@ where
 def ignorevariable? : Lean.Linter.IgnoreFunction := fun _ stack _ =>
   stack.matches [`null, none, `null, ``Mathlib.Command.Variable.variable?]
   || stack.matches [`null, none, `null, `null, ``Mathlib.Command.Variable.variable?]
+
+end Variable
+
+end Command
+
+end Mathlib
