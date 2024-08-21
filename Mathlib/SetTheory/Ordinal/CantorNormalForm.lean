@@ -11,7 +11,8 @@ import Mathlib.SetTheory.Ordinal.Principal
 
 The Cantor normal form of an ordinal is generally defined as its base `ω` expansion, with its
 non-zero exponents in decreasing order. Here, we more generally define a base `b` expansion
-`Ordinal.CNF` in this manner, which is well-behaved for any `b ≥ 2`.
+`Ordinal.CNF` in this manner, which is well-behaved for any `b ≥ 2`. From it, we define
+`Ordinal.CNF_coeff`, which represents the Cantor normal form as a finsupp `Ordinal →₀ Ordinal`.
 
 # Implementation notes
 
@@ -21,12 +22,7 @@ normal form:
 
 - It is ordered.
 - It has finitely many entries.
-
-# Todo
-
-- Prove the basic results relating the CNF to the arithmetic operations on ordinals.
 -/
-
 
 noncomputable section
 

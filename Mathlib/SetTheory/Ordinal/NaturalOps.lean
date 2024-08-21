@@ -3,6 +3,7 @@ Copyright (c) 2022 Violeta Hernández Palacios. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández Palacios
 -/
+import Mathlib.Algebra.MonoidAlgebra.Basic
 import Mathlib.Data.Prod.Lex
 import Mathlib.SetTheory.Ordinal.CantorNormalForm
 import Mathlib.Tactic.Abel
@@ -26,18 +27,13 @@ combinatorial `Game`s. This makes them particularly useful for game theory.
 Finally, both operations admit simple, intuitive descriptions in terms of the Cantor normal form.
 The natural addition of two ordinals corresponds to adding their Cantor normal forms as if they were
 polynomials in `ω`. Likewise, their natural multiplication corresponds to multiplying the Cantor
-normal forms as polynomials.
+normal forms as polynomials. These results are proven as `CNF_coeff_nadd` and `CNF_coeff_nmul`.
 
 # Implementation notes
 
 Given the rich algebraic structure of these two operations, we choose to create a type synonym
 `NatOrdinal`, where we provide the appropriate instances. However, to avoid casting back and forth
 between both types, we attempt to prove and state most results on `Ordinal`.
-
-# Todo
-
-- Prove the characterizations of natural addition and multiplication in terms of the Cantor normal
-  form.
 -/
 
 universe u v
@@ -350,6 +346,17 @@ theorem toOrdinal_cast_nat (n : ℕ) : toOrdinal n = n := by
   · change (toOrdinal n) ♯ 1 = n + 1
     rw [hn]; exact nadd_one n
 
+@[simp]
+theorem _root_.Ordinal.toNatOrdinal_cast_nat (n : ℕ) : toNatOrdinal n = n := by
+  rw [← toOrdinal_cast_nat n]
+  rfl
+
+instance : CharZero NatOrdinal where
+  cast_injective := by
+    intro a b h
+    iterate 2 rw [← toNatOrdinal_cast_nat] at h
+    rwa [toNatOrdinal.apply_eq_iff_eq, Nat.cast_inj] at h
+
 end NatOrdinal
 
 open NatOrdinal
@@ -359,11 +366,6 @@ open NaturalOps
 namespace Ordinal
 
 theorem nadd_eq_add (a b : Ordinal) : a ♯ b = toOrdinal (toNatOrdinal a + toNatOrdinal b) :=
-  rfl
-
-@[simp]
-theorem toNatOrdinal_cast_nat (n : ℕ) : toNatOrdinal n = n := by
-  rw [← toOrdinal_cast_nat n]
   rfl
 
 theorem lt_of_nadd_lt_nadd_left : ∀ {a b c}, a ♯ b < a ♯ c → b < c :=
@@ -540,6 +542,34 @@ theorem nmul_le_nmul_right (h : a ≤ b) (c) : a ⨳ c ≤ b ⨳ c := by
   rw [nmul_comm, nmul_comm b]
   exact nmul_le_nmul_left h c
 
+theorem le_nmul_self_of_pos (a) {b} (h : 0 < b) : a ≤ b ⨳ a := by
+  rw [← Ordinal.one_le_iff_pos] at h
+  simpa using nmul_le_nmul_right h a
+
+theorem le_self_nmul_of_pos (a) {b} (h : 0 < b) : a ≤ a ⨳ b := by
+  rw [nmul_comm]
+  exact le_nmul_self_of_pos a h
+
+theorem nmul_ne_zero_iff {a b} : a ⨳ b ≠ 0 ↔ a ≠ 0 ∧ b ≠ 0 := by
+  constructor
+  · rw [← not_or]
+    rintro h (rfl | rfl)
+    · rw [zero_nmul] at h
+      contradiction
+    · rw [nmul_zero] at h
+      contradiction
+  · iterate 3 rw [← Ordinal.pos_iff_ne_zero]
+    rintro ⟨ha, hb⟩
+    have := nmul_lt_nmul_of_pos_left hb ha
+    rwa [nmul_zero] at this
+
+theorem nmul_ne_zero {a b} (ha : a ≠ 0) (hb : b ≠ 0) : a ⨳ b ≠ 0 :=
+  nmul_ne_zero_iff.2 ⟨ha, hb⟩
+
+theorem nmul_eq_zero_iff {a b} : a ⨳ b = 0 ↔ a = 0 ∨ b = 0 := by
+  rw [← not_iff_not]
+  simpa using nmul_ne_zero_iff
+
 theorem nmul_nadd (a b c : Ordinal) : a ⨳ (b ♯ c) = a ⨳ b ♯ a ⨳ c := by
   refine le_antisymm (nmul_le_iff.2 fun a' ha d hd => ?_)
     (nadd_le_iff.2 ⟨fun d hd => ?_, fun d hd => ?_⟩)
@@ -697,6 +727,9 @@ instance : OrderedCommSemiring NatOrdinal.{u} :=
     zero_le_one := @zero_le_one Ordinal _ _ _ _
     mul_le_mul_of_nonneg_left := fun a b c h _ => nmul_le_nmul_left h c
     mul_le_mul_of_nonneg_right := fun a b c h _ => nmul_le_nmul_right h c }
+
+instance : NoZeroDivisors NatOrdinal.{u} where
+  eq_zero_or_eq_zero_of_mul_eq_zero := nmul_eq_zero_iff.1
 
 namespace Ordinal
 
@@ -907,9 +940,67 @@ theorem omega_opow_nmul {a b : Ordinal} : b < ω ^ ω ^ succ a → ω ^ ω ^ a �
 /-! ### Cantor normal forms -/
 
 
-/-- The base `ω` Cantor normal form of `o₁ ♯ o₂` is obtained by directly adding up the coefficients
-of those for `o₁` and `o₂`. -/
-theorem CNF_coeff_nadd {o₁ o₂ : Ordinal} :
+open Classical in
+/-- We create an alias for `CNF_coeff ω` in order to properly state our results. -/
+@[pp_nodot]
+def CNF_coeff_omega (o : Ordinal) : AddMonoidAlgebra ℕ NatOrdinal where
+  toFun e := Classical.choose <| lt_omega.1 <| CNF_coeff_lt one_lt_omega o (NatOrdinal.toOrdinal e)
+  support := (CNF_coeff ω o).support.map toNatOrdinal
+  mem_support_toFun e := by
+    generalize_proofs h
+    dsimp
+    rw [← @Nat.cast_inj Ordinal, ← Classical.choose_spec (h e)]
+    simp
+    rfl
+
+theorem CNF_coeff_omega_apply' (o : Ordinal) (e : NatOrdinal) :
+    toOrdinal (CNF_coeff_omega o e) = CNF_coeff ω o (toOrdinal e) := by
+  rw [CNF_coeff_omega]
+  generalize_proofs h
+  simpa using (Classical.choose_spec (h e)).symm
+
+@[simp]
+theorem CNF_coeff_omega_apply (o : Ordinal) (e : NatOrdinal) :
+    CNF_coeff_omega o e = toNatOrdinal (CNF_coeff ω o (toOrdinal e)) := by
+  rw [← toOrdinal.apply_eq_iff_eq, CNF_coeff_omega_apply']
+  rfl
+
+@[simp]
+theorem CNF_coeff_omega_zero : CNF_coeff_omega 0 = 0 := by
+  apply Finsupp.ext
+  intro a
+  apply @Nat.cast_injective NatOrdinal
+  rw [CNF_coeff_omega_apply, CNF_coeff_zero]
+  rfl
+
+@[simp]
+theorem CNF_coeff_omega_add_apply (o₁ o₂ : Ordinal) (e : NatOrdinal) :
+    (CNF_coeff_omega o₁ + CNF_coeff_omega o₂) e =
+    toNatOrdinal (CNF_coeff ω o₁ (toOrdinal e) ♯ CNF_coeff ω o₂ (toOrdinal e)) := by
+  change CNF_coeff_omega o₁ e + CNF_coeff_omega o₂ e = _
+  rw [CNF_coeff_omega_apply, CNF_coeff_omega_apply]
+  rfl
+
+  #exit
+
+theorem CNF_coeff_omega_opow_add_of_principal_add {x o : Ordinal} (ho₂ : o < ω ^ Order.succ x) :
+    CNF_coeff_omega (ω ^ x + o) = CNF_coeff_omega (ω ^ x) + CNF_coeff_omega o := by
+  apply Finsupp.ext
+  intro e
+  apply @Nat.cast_injective NatOrdinal
+  simp
+  iterate 3 rw [CNF_coeff_omega_apply]
+  apply CNF_coeff_opow_add_of_principal_add
+
+private theorem CNF_coeff_omega_comm (o₁ o₂ : Ordinal) :
+    CNF_coeff ω o₁ + CNF_coeff ω o₂ = CNF_coeff ω o₂ + CNF_coeff ω o₁ := by
+  ext e
+  obtain ⟨m, hm⟩ := lt_omega.1 (CNF_coeff_lt one_lt_omega o₁ e)
+  obtain ⟨n, hn⟩ := lt_omega.1 (CNF_coeff_lt one_lt_omega o₂ e)
+  dsimp
+  rw [hm, hn, ← Nat.cast_add, ← Nat.cast_add, add_comm]-/
+
+theorem CNF_coeff_nadd (o₁ o₂ : NatOrdinal) :
     CNF_coeff ω (o₁ ♯ o₂) = CNF_coeff ω o₁ + CNF_coeff ω o₂ := by
   obtain rfl | ho₁ := eq_or_ne o₁ 0; simp
   obtain rfl | ho₂ := eq_or_ne o₂ 0; simp
@@ -942,5 +1033,26 @@ theorem CNF_coeff_nadd_apply (o₁ o₂ e : Ordinal) :
     CNF_coeff ω (o₁ ♯ o₂) e = CNF_coeff ω o₁ e + CNF_coeff ω o₂ e := by
   rw [CNF_coeff_nadd]
   rfl
+
+/-- The product of Cantor normal forms as polynomials.
+
+We use the axiom of choice to  -/
+def CNF_mul (f g : Ordinal →₀ Ordinal) : Ordinal →₀ Ordinal :=
+  (f.support.toList.map (fun e₁ =>
+    (g.support.toList.map (fun e₂ => Finsupp.single (e₁ ♯ e₂) (f e₁ * f e₂))).sum)).sum
+
+#exit
+
+/-- The base `ω` Cantor normal form of `o₁ ⨳ o₂` is obtained by directly adding up the coefficients
+of those for `o₁` and `o₂`.
+
+This corresponds to the product on `AddMonoidAlgebra ℕ NatOrdinal`. However, it's very hard to state
+the result in this way, as `CNF_coeff ω o` is nominally of type `Ordinal →₀ Ordinal`. We instead
+implement this operation from scratch as `CNF_mul` and prove the result in terms of it. -/
+theorem CNF_coeff_nmul (o₁ o₂ : Ordinal) : CNF_coeff ω (o₁ ⨳ o₂) =
+    (@AddMonoidAlgebra.hasMul NatOrdinal Ordinal).mul (CNF_coeff ω o₁) (CNF_coeff ω o₂) := by
+  obtain rfl | ho₁ := eq_or_ne o₁ 0
+  · simp
+    exact (zero_mul (M₀ := AddMonoidAlgebra NatOrdinal Ordinal) _).symm
 
 end Ordinal
