@@ -643,4 +643,12 @@ theorem CNF_coeff_opow_add_of_principal_add {b x o : Ordinal} (hp : Principal (�
   convert CNF_coeff_opow_mul_add_of_principal_add hp 1 ho₂ using 1 <;>
   rw [mul_one]
 
+theorem CNF_coeff_omega_comm (o₁ o₂ : Ordinal) :
+    CNF_coeff ω o₁ + CNF_coeff ω o₂ = CNF_coeff ω o₂ + CNF_coeff ω o₁ := by
+  ext e
+  obtain ⟨m, hm⟩ := lt_omega.1 (CNF_coeff_lt one_lt_omega o₁ e)
+  obtain ⟨n, hn⟩ := lt_omega.1 (CNF_coeff_lt one_lt_omega o₂ e)
+  dsimp
+  rw [hm, hn, ← Nat.cast_add, ← Nat.cast_add, add_comm]
+
 end Ordinal

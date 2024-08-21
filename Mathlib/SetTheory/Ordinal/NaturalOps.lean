@@ -414,21 +414,41 @@ theorem nadd_left_cancel_iff : ∀ {a b c}, a ♯ b = a ♯ c ↔ b = c :=
 theorem nadd_right_cancel_iff : ∀ {a b c}, b ♯ a = c ♯ a ↔ b = c :=
   @add_right_cancel_iff NatOrdinal _ _
 
-theorem le_nadd_self {a b} : a ≤ b ♯ a := by simpa using nadd_le_nadd_right (Ordinal.zero_le b) a
+theorem le_nadd_self (a b) : a ≤ b ♯ a := by
+  simpa using nadd_le_nadd_right (Ordinal.zero_le b) a
 
-theorem le_nadd_left {a b c} (h : a ≤ c) : a ≤ b ♯ c :=
-  le_nadd_self.trans (nadd_le_nadd_left h b)
+theorem le_nadd_left {a c} (h : a ≤ c) (b) : a ≤ b ♯ c :=
+  (le_nadd_self a b).trans (nadd_le_nadd_left h b)
 
-theorem le_self_nadd {a b} : a ≤ a ♯ b := by simpa using nadd_le_nadd_left (Ordinal.zero_le b) a
+theorem le_self_nadd (a b) : a ≤ a ♯ b := by
+  simpa using nadd_le_nadd_left (Ordinal.zero_le b) a
 
-theorem le_nadd_right {a b c} (h : a ≤ b) : a ≤ b ♯ c :=
-  le_self_nadd.trans (nadd_le_nadd_right h c)
+theorem le_nadd_right {a b} (h : a ≤ b) (c) : a ≤ b ♯ c :=
+  (le_self_nadd a c).trans (nadd_le_nadd_right h c)
 
 theorem nadd_left_comm : ∀ a b c, a ♯ (b ♯ c) = b ♯ (a ♯ c) :=
   @add_left_comm NatOrdinal _
 
 theorem nadd_right_comm : ∀ a b c, a ♯ b ♯ c = a ♯ c ♯ b :=
   @add_right_comm NatOrdinal _
+
+theorem nadd_eq_zero_iff {a b} : a ♯ b = 0 ↔ a = 0 ∧ b = 0 := by
+  constructor
+  · intro h
+    rw [← Ordinal.le_zero, ← Ordinal.le_zero, ← h]
+    exact ⟨le_self_nadd a b, le_nadd_self b a⟩
+  · rintro ⟨rfl, rfl⟩
+    exact nadd_zero 0
+
+theorem nadd_ne_zero_iff {a b} : a ♯ b ≠ 0 ↔ a ≠ 0 ∨ b ≠ 0 := by
+  rw [← not_iff_not]
+  simpa using nadd_eq_zero_iff
+
+theorem nadd_ne_zero_of_left {a} (h : a ≠ 0) (b) : a ♯ b ≠ 0 :=
+  nadd_ne_zero_iff.2 <| Or.inl h
+
+theorem nadd_ne_zero_of_right (a) {b} (h : b ≠ 0) : a ♯ b ≠ 0 :=
+  nadd_ne_zero_iff.2 <| Or.inr h
 
 /-! ### Natural multiplication -/
 
@@ -441,7 +461,7 @@ theorem nmul_def (a b : Ordinal) :
 /-- The set in the definition of `nmul` is nonempty. -/
 theorem nmul_nonempty (a b : Ordinal.{u}) :
     {c : Ordinal.{u} | ∀ a' < a, ∀ b' < b, a' ⨳ b ♯ a ⨳ b' < c ♯ a' ⨳ b'}.Nonempty :=
-  ⟨_, fun _ ha _ hb => (lt_blsub₂.{u, u, u} _ ha hb).trans_le le_self_nadd⟩
+  ⟨_, fun _ ha _ hb => (lt_blsub₂.{u, u, u} _ ha hb).trans_le <| le_self_nadd _ _⟩
 
 theorem nmul_nadd_lt {a' b' : Ordinal} (ha : a' < a) (hb : b' < b) :
     a' ⨳ b ♯ a ⨳ b' < a ⨳ b ♯ a' ⨳ b' := by
@@ -711,14 +731,14 @@ theorem mul_le_nmul (a b : Ordinal.{u}) : a * b ≤ a ⨳ b := by
     · rw [← IsNormal.blsub_eq.{u, u} (mul_isNormal ha) hc, blsub_le_iff]
       exact fun i hi => (H i hi).trans_lt (nmul_lt_nmul_of_pos_left hi ha)
 
-/-! ### Cantor normal forms -/
+/-! ### Powers of omega -/
 
 /-! The hard part of this proof is showing that `ω ^ c * n ♯ b < ω ^ a + b` for `c < a` and `n ∈ ℕ`.
 To do this, we write `b = ω ^ d + x`. If `c < d`, we write `ω ^ c * n ♯ b = ω ^ d ♯ (ω ^ c * n ♯ x)`
 and apply the inductive hypothesis. Otherwise, we write `ω ^ c * n ♯ b = ω ^ c ♯ ⋯ ♯ ω ^ c ♯ b` and
 repeatedly apply the inductive hypothesis. -/
 
-theorem omega_opow_nadd {a b : Ordinal} (h : b < ω ^ succ a) : ω ^ a ♯ b = ω ^ a + b := by
+theorem omega_opow_nadd_of_lt {a b : Ordinal} (h : b < ω ^ succ a) : ω ^ a ♯ b = ω ^ a + b := by
   obtain rfl | hb := eq_or_ne b 0; simp
   obtain rfl | ha := eq_or_ne a 0
   · rw [succ_zero, opow_one] at h
@@ -737,7 +757,8 @@ theorem omega_opow_nadd {a b : Ordinal} (h : b < ω ^ succ a) : ω ^ a ♯ b = �
         induction' m with m IH
         · rw [Nat.cast_zero, mul_zero, nmul_zero]
         · conv_rhs => rw [Nat.cast_succ, nmul_add_one]
-          rw [add_comm, Nat.cast_add, Nat.cast_one, mul_one_add, ← omega_opow_nadd, nadd_comm, IH]
+          rw [add_comm, Nat.cast_add, Nat.cast_one, mul_one_add, ← omega_opow_nadd_of_lt, nadd_comm,
+            IH]
           apply (mul_lt_mul_of_pos_left (nat_lt_omega m) (opow_pos c omega_pos)).trans_le
           rw [opow_succ]
       cases lt_or_le b (ω ^ succ c)
@@ -747,11 +768,11 @@ theorem omega_opow_nadd {a b : Ordinal} (h : b < ω ^ succ a) : ω ^ a ♯ b = �
         induction' n with n IH
         · rwa [Nat.cast_zero, mul_zero, zero_nadd]
         · rw [H, Nat.cast_succ, nmul_add_one, nadd_comm _ (ω ^ c), nadd_assoc, ← H,
-            omega_opow_nadd IH]
+            omega_opow_nadd_of_lt IH]
           apply principal_add_omega_opow _ _ IH
           rw [opow_lt_opow_iff_right one_lt_omega]
           exact lt_succ c
-      · have H₃ := omega_opow_nadd <| H₂.trans (lt_opow_succ_log_self one_lt_omega b)
+      · have H₃ := omega_opow_nadd_of_lt <| H₂.trans (lt_opow_succ_log_self one_lt_omega b)
         have H₄ : ω ^ c * ↑n ♯ (b - ω ^ log ω b) < b := by
           have : ω ^ c * ↑n < ω ^ log ω b := by
             apply (omega_opow_mul_nat_lt c n).trans_le
@@ -761,9 +782,9 @@ theorem omega_opow_nadd {a b : Ordinal} (h : b < ω ^ succ a) : ω ^ a ♯ b = �
           exact opow_log_le_self ω hb
         conv_lhs => rw [← Ordinal.add_sub_cancel_of_le (opow_log_le_self ω hb)]
         rw [← H₃, ← nadd_assoc, nadd_comm (ω ^ c * n), nadd_assoc,
-          omega_opow_nadd (H₄.trans <| lt_opow_succ_log_self one_lt_omega b)]
+          omega_opow_nadd_of_lt (H₄.trans <| lt_opow_succ_log_self one_lt_omega b)]
         exact add_lt_add_of_le_of_lt (opow_le_opow_right omega_pos H₁) H₄
-    · rw [omega_opow_nadd (hd.trans h)]
+    · rw [omega_opow_nadd_of_lt (hd.trans h)]
       exact add_lt_add_left hd _
 termination_by (a, b)
 decreasing_by
@@ -773,11 +794,11 @@ decreasing_by
 · exact Prod.Lex.toLex_strictMono <| Prod.mk_lt_mk_of_le_of_lt H₁ H₄
 · exact Prod.Lex.right _ hd
 
-theorem omega_nadd_opow {a b : Ordinal} (h : a < ω ^ succ b) : a ♯ ω ^ b = ω ^ b + a := by
-  rw [nadd_comm, omega_opow_nadd h]
+theorem nadd_omega_opow_of_lt {a b : Ordinal} (h : a < ω ^ succ b) : a ♯ ω ^ b = ω ^ b + a := by
+  rw [nadd_comm, omega_opow_nadd_of_lt h]
 
 theorem omega_opow_nadd_self (a : Ordinal) : ω ^ a ♯ ω ^ a = ω ^ a + ω ^ a := by
-  rw [omega_opow_nadd]
+  rw [omega_opow_nadd_of_lt]
   rw [opow_lt_opow_iff_right one_lt_omega, lt_succ_iff]
 
 @[simp]
@@ -785,7 +806,7 @@ theorem omega_opow_nmul_nat (a : Ordinal) (n : ℕ) : ω ^ a ⨳ n = ω ^ a * n 
   induction' n with n IH
   · rw [Nat.cast_zero, nmul_zero, mul_zero]
   · conv_lhs => rw [Nat.cast_succ, nmul_add_one, nadd_comm]
-    rw [add_comm, Nat.cast_add, Nat.cast_one, mul_one_add, IH, omega_opow_nadd]
+    rw [add_comm, Nat.cast_add, Nat.cast_one, mul_one_add, IH, omega_opow_nadd_of_lt]
     rw [opow_succ]
     exact mul_lt_mul_of_pos_left (nat_lt_omega _) (opow_pos a omega_pos)
 
@@ -807,9 +828,10 @@ theorem principal_nadd_omega_opow (a : Ordinal) : Principal (· ♯ ·) (ω ^ a)
 
 theorem omega_opow_add_nadd_assoc (a : Ordinal) {b c : Ordinal}
     (hb : b < ω ^ succ a) (hc : c < ω ^ succ a) : ω ^ a + b ♯ c = ω ^ a + (b ♯ c) := by
-  rw [← omega_opow_nadd hb, nadd_assoc, omega_opow_nadd (principal_nadd_omega_opow _ hb hc)]
+  rw [← omega_opow_nadd_of_lt hb, nadd_assoc,
+    omega_opow_nadd_of_lt (principal_nadd_omega_opow _ hb hc)]
 
-theorem omega_opow_mul_nadd {a c : Ordinal} (h : c < ω ^ succ a) (b : Ordinal) :
+theorem omega_opow_mul_nadd_of_lt {a c : Ordinal} (h : c < ω ^ succ a) (b : Ordinal) :
     ω ^ a * b ♯ c = ω ^ a * b + c := by
   refine CNFRec_omega ?_ ?_ b
   · rw [mul_zero, zero_nadd, zero_add]
@@ -825,29 +847,68 @@ theorem omega_opow_mul_nadd {a c : Ordinal} (h : c < ω ^ succ a) (b : Ordinal) 
 
 theorem nadd_omega_opow_mul {a b : Ordinal} (h : b < ω ^ succ a) (c : Ordinal) :
     b ♯ ω ^ a * c = ω ^ a * c + b := by
-  rw [nadd_comm, omega_opow_mul_nadd h]
+  rw [nadd_comm, omega_opow_mul_nadd_of_lt h]
 
 theorem omega_opow_mul_add_nadd_assoc (a b : Ordinal) {c d : Ordinal}
     (hc : c < ω ^ succ a) (hd : d < ω ^ succ a) : ω ^ a * b + c ♯ d = ω ^ a * b + (c ♯ d) := by
-  rw [← omega_opow_mul_nadd hc, nadd_assoc, omega_opow_mul_nadd (principal_nadd_omega_opow _ hc hd)]
+  rw [← omega_opow_mul_nadd_of_lt hc, nadd_assoc,
+    omega_opow_mul_nadd_of_lt (principal_nadd_omega_opow _ hc hd)]
 
-theorem omega_opow_nmul {a b : Ordinal} (h : b < ω ^ ω ^ succ a) :
-    ω ^ ω ^ a ⨳ b = ω ^ ω ^ a * b := by
-  apply (mul_le_nmul _ _).antisymm'
-  rw [nmul_le_iff]
-  intro c hc d hd
-  rw [omega_opow_nmul (hd.trans h), nadd_comm]
-  sorry
+theorem omega_opow_nadd {a b : Ordinal} : ω ^ (a ♯ b) = ω ^ a ⨳ ω ^ b := by
+  obtain rfl | ha := eq_or_ne a 0; simp
+  obtain rfl | hb := eq_or_ne b 0; simp
+  apply le_antisymm
+  · apply le_of_forall_lt
+    intro c hc
+    obtain ⟨d, hd, n, hn⟩ := lt_omega_opow hc (nadd_ne_zero_of_left ha _)
+    apply hn.trans
+    obtain ⟨e, he, he'⟩ | ⟨e, he, he'⟩ := lt_nadd_iff.1 hd <;>
+    apply (mul_le_mul_right' (opow_le_opow_right omega_pos he') _).trans_lt
+    · rw [← omega_opow_nmul_nat, omega_opow_nadd, nmul_comm, ← nmul_assoc, nat_nmul_omega_opow]
+      apply nmul_lt_nmul_of_pos_right ((omega_opow_mul_nat_lt _ _).trans_le _)
+        (opow_pos b omega_pos)
+      rwa [opow_le_opow_iff_right one_lt_omega, succ_le_iff]
+    · rw [← omega_opow_nmul_nat, omega_opow_nadd, nmul_assoc, omega_opow_nmul_nat]
+      apply nmul_lt_nmul_of_pos_left ((omega_opow_mul_nat_lt _ _).trans_le _)
+        (opow_pos a omega_pos)
+      rwa [opow_le_opow_iff_right one_lt_omega, succ_le_iff]
+  · rw [nmul_le_iff]
+    intro c hc d hd
+    obtain ⟨e, he, m, hm⟩ := lt_omega_opow hc ha
+    obtain ⟨f, hf, n, hn⟩ := lt_omega_opow hd hb
+    apply (principal_nadd_omega_opow _ _ _).trans_le (le_self_nadd _ _)
+    · apply (nmul_lt_nmul_of_pos_right hm (opow_pos b omega_pos)).trans
+      rw [← omega_opow_nmul_nat, nmul_assoc, nmul_comm m, ← nmul_assoc, ← omega_opow_nadd,
+        omega_opow_nmul_nat]
+      apply (omega_opow_mul_nat_lt _ _).trans_le
+      rwa [opow_le_opow_iff_right one_lt_omega, succ_le_iff, nadd_lt_nadd_iff_right]
+    · apply (nmul_lt_nmul_of_pos_left hn (opow_pos a omega_pos)).trans
+      rw [← omega_opow_nmul_nat, ← nmul_assoc, ← omega_opow_nadd, omega_opow_nmul_nat]
+      apply (omega_opow_mul_nat_lt _ _).trans_le
+      rwa [opow_le_opow_iff_right one_lt_omega, succ_le_iff, nadd_lt_nadd_iff_left]
 termination_by (a, b)
 
-private lemma CNF_coeff_omega_comm (o₁ o₂ : Ordinal) :
-    CNF_coeff ω o₁ + CNF_coeff ω o₂ = CNF_coeff ω o₂ + CNF_coeff ω o₁ := by
-  ext e
-  obtain ⟨m, hm⟩ := lt_omega.1 (CNF_coeff_lt one_lt_omega o₁ e)
-  obtain ⟨n, hn⟩ := lt_omega.1 (CNF_coeff_lt one_lt_omega o₂ e)
-  dsimp
-  rw [hm, hn, ← Nat.cast_add, ← Nat.cast_add, add_comm]
+theorem omega_opow_nmul {a b : Ordinal} : b < ω ^ ω ^ succ a → ω ^ ω ^ a ⨳ b = ω ^ ω ^ a * b := by
+  refine CNFRec_omega ?_ ?_ b
+  · simp
+  · intro o ho IH ho'
+    have H₁ : log ω o < ω ^ succ a := by
+      rwa [← lt_opow_iff_log_lt one_lt_omega ho]
+    have H₂ := (sub_le_self o (ω ^ log ω o)).trans_lt (lt_opow_succ_log_self one_lt_omega o)
+    have H₃ : o - ω ^ log ω o < ω ^ ω ^ succ a := by
+      apply H₂.trans_le
+      rwa [opow_le_opow_iff_right one_lt_omega, succ_le_iff]
+    have H₄ : ω ^ ω ^ a * (o - ω ^ log ω o) < ω ^ succ (ω ^ a + log ω o) := by
+      rwa [← add_succ, opow_add, mul_lt_mul_iff_left (opow_pos _ omega_pos)]
+    conv_lhs => rw [← add_sub_cancel_omega_opow_log ho]
+    rw [← omega_opow_nadd_of_lt H₂, nmul_nadd, IH H₃, ← omega_opow_nadd, omega_opow_nadd_of_lt H₁,
+      omega_opow_nadd_of_lt H₄, opow_add, ← mul_add, add_sub_cancel_omega_opow_log ho]
 
+/-! ### Cantor normal forms -/
+
+
+/-- The base `ω` Cantor normal form of `o₁ ♯ o₂` is obtained by directly adding up the coefficients
+of those for `o₁` and `o₂`. -/
 theorem CNF_coeff_nadd {o₁ o₂ : Ordinal} :
     CNF_coeff ω (o₁ ♯ o₂) = CNF_coeff ω o₁ + CNF_coeff ω o₂ := by
   obtain rfl | ho₁ := eq_or_ne o₁ 0; simp
