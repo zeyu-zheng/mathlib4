@@ -325,7 +325,7 @@ theorem CNF_coeff_def (b o e : Ordinal) : CNF_coeff b o e = ((CNF b o).dlookup e
   rw [CNF_coeff, lookupFinsupp_apply]
   rfl
 
-theorem CNF_coeff_support (b o : Ordinal) :
+theorem support_CNF_coeff (b o : Ordinal) :
     (CNF_coeff b o).support = (CNF.exponents b o).toFinset := by
   rw [CNF_coeff, lookupFinsupp_support]
   congr
@@ -353,6 +353,11 @@ theorem CNF_coeff_eq_zero_iff {o e : Ordinal} : CNF_coeff b o e = 0 ↔ e ∉ CN
   · exact Or.inl
 
 alias ⟨_, CNF_coeff_of_not_mem_CNF⟩ := CNF_coeff_eq_zero_iff
+
+theorem CNF_coeff_ne_zero {o e : Ordinal} (h : e ∈ CNF.exponents b o) : CNF_coeff b o e ≠ 0 := by
+  intro h
+  rw [CNF_coeff_eq_zero_iff] at h
+  contradiction
 
 theorem CNF_coeff_zero_apply (b e : Ordinal) : CNF_coeff b 0 e = 0 := by
   rw [CNF_coeff_eq_zero_iff, CNF.exponents_zero]
@@ -423,7 +428,7 @@ theorem CNF_coeff_of_lt_self {o : Ordinal} (ho : o < b) : CNF_coeff b o = single
       rw [CNF_of_lt_self ho' ho, mem_singleton, Sigma.mk.inj_iff] at hc
       exact he hc.1
 
-theorem CNF_coeff_of_gt {b o e : Ordinal} (he : o < b ^ e) : CNF_coeff b o e = 0 := by
+theorem CNF_coeff_of_gt {o e : Ordinal} (he : o < b ^ e) : CNF_coeff b o e = 0 := by
   obtain hb | hb := le_or_lt b 1
   · rw [CNF_coeff_of_le_one hb, Ordinal.lt_one_iff_zero.1 <| he.trans_le (opow_le_one hb e)]
     simp
@@ -434,20 +439,11 @@ theorem CNF_coeff_of_gt {b o e : Ordinal} (he : o < b ^ e) : CNF_coeff b o e = 0
       rw [lt_opow_iff_log_lt hb ho] at he
       exact (le_log_of_mem_CNF_exponents (mem_CNF_exponents_of_mem hc)).not_lt he
 
-/-- The function `CNF_coeff b (b ^ x * o)` is the translation of `CNF_coeff b o` by `x`. -/
-theorem CNF_coeff_opow_mul (hb : 1 < b) (o x : Ordinal) :
-    (CNF_coeff b (b ^ x * o)).comapDomain (x + ·)
-      (fun _ _ _ _ => (add_left_cancel x).1) = CNF_coeff b o := by
-  ext e
-  dsimp
+theorem CNF_coeff_opow_mul_of_ge (hb : 1 < b) (o x e : Ordinal) :
+    CNF_coeff b (b ^ x * o) (x + e) = CNF_coeff b o e := by
   rw [CNF_coeff_def, CNF_coeff_def, CNF_opow_mul hb, dlookup_map₁]
   intro a b h
   rwa [add_left_cancel] at h
-
-theorem CNF_coeff_opow_mul_of_ge (hb : 1 < b) (o x e : Ordinal) :
-    CNF_coeff b (b ^ x * o) (x + e) = CNF_coeff b o e := by
-  rw [← CNF_coeff_opow_mul hb o x]
-  rfl
 
 theorem CNF_coeff_opow_mul_of_lt {b e x : Ordinal} (hb : 1 < b) (o : Ordinal) (he : e < x) :
     CNF_coeff b (b ^ x * o) e = 0 := by
@@ -457,7 +453,14 @@ theorem CNF_coeff_opow_mul_of_lt {b e x : Ordinal} (hb : 1 < b) (o : Ordinal) (h
   rintro c _ _ ⟨rfl, rfl⟩
   exact (le_add_right _ _).not_lt he
 
-theorem CNF_coeff_opow_mul_of_lt_self {b x : Ordinal} (hb : 1 < b) (o : Ordinal) (ho : o < b) :
+/-- The function `CNF_coeff b (b ^ x * o)` is the translation of `CNF_coeff b o` by `x`. -/
+theorem CNF_coeff_opow_mul (hb : 1 < b) (o x : Ordinal) :
+    (CNF_coeff b (b ^ x * o)).comapDomain (x + ·)
+      (fun _ _ _ _ => (add_left_cancel x).1) = CNF_coeff b o := by
+  ext e
+  exact CNF_coeff_opow_mul_of_ge hb o x e
+
+theorem CNF_coeff_opow_mul_of_lt_self {x o : Ordinal} (hb : 1 < b) (ho : o < b) :
     CNF_coeff b (b ^ x * o) = single x o := by
   ext e
   obtain he | he := lt_or_le e x
@@ -469,7 +472,7 @@ theorem CNF_coeff_opow_mul_of_lt_self {b x : Ordinal} (hb : 1 < b) (o : Ordinal)
     · rw [single_eq_of_ne, single_eq_of_ne he.ne]
       rwa [Ne.eq_def, Eq.comm, Ordinal.sub_eq_zero_iff_le, not_le]
 
-theorem CNF_coeff_opow_mul_add_of_lt {b x o₂ e : Ordinal} (hb : 1 < b) (o₁ : Ordinal)
+theorem CNF_coeff_opow_mul_add_of_lt {x o₂ e : Ordinal} (hb : 1 < b) (o₁ : Ordinal)
     (ho₂ : o₂ < b ^ x) (he : e < x) : CNF_coeff b (b ^ x * o₁ + o₂) e = CNF_coeff b o₂ e := by
   rw [CNF_coeff_def, CNF_opow_mul_add' hb _ ho₂, dlookup_append_of_not_mem_left]
   · rw [CNF_coeff_def]
@@ -477,7 +480,7 @@ theorem CNF_coeff_opow_mul_add_of_lt {b x o₂ e : Ordinal} (hb : 1 < b) (o₁ :
     rintro ⟨_, _, ⟨_, ⟨h, _⟩⟩⟩
     exact (le_add_right _ _).not_lt he
 
-theorem CNF_coeff_opow_mul_add_of_ge {b x o₂ e : Ordinal} (o₁ : Ordinal) (ho₂ : o₂ < b ^ x)
+theorem CNF_coeff_opow_mul_add_of_ge {x o₂ e : Ordinal} (o₁ : Ordinal) (ho₂ : o₂ < b ^ x)
     (he : x ≤ e) : CNF_coeff b (b ^ x * o₁ + o₂) e = CNF_coeff b (b ^ x * o₁) e := by
   obtain hb | hb := le_or_lt b 1
   · obtain rfl := Ordinal.lt_one_iff_zero.1 <| ho₂.trans_le (opow_le_one hb x)
@@ -490,7 +493,7 @@ theorem CNF_coeff_opow_mul_add_of_ge {b x o₂ e : Ordinal} (o₁ : Ordinal) (ho
         rw [lt_opow_iff_log_lt hb ho] at ho₂
         exact ((le_log_of_mem_CNF_exponents h).trans_lt ho₂).not_le he
 
-theorem CNF_coeff_opow_mul_add {b x o₂ : Ordinal} (o₁ : Ordinal) (ho₂ : o₂ < b ^ x) :
+theorem CNF_coeff_opow_mul_add {x o₂ : Ordinal} (o₁ : Ordinal) (ho₂ : o₂ < b ^ x) :
     CNF_coeff b (b ^ x * o₁ + o₂) = CNF_coeff b (b ^ x * o₁) + CNF_coeff b o₂ := by
   obtain hb | hb := le_or_lt b 1
   · obtain rfl := Ordinal.lt_one_iff_zero.1 <| ho₂.trans_le (opow_le_one hb x)
@@ -502,7 +505,7 @@ theorem CNF_coeff_opow_mul_add {b x o₂ : Ordinal} (o₁ : Ordinal) (ho₂ : o�
     · rw [CNF_coeff_opow_mul_add_of_ge _ ho₂ he,
         CNF_coeff_of_gt <| ho₂.trans_le <| opow_le_opow_right (zero_lt_one.trans hb) he, add_zero]
 
-theorem CNF_coeff_opow_mul_add_apply {b x o₂ : Ordinal} (o₁ : Ordinal) (ho₂ : o₂ < b ^ x) (e) :
+theorem CNF_coeff_opow_mul_add_apply {x o₂ : Ordinal} (o₁ : Ordinal) (ho₂ : o₂ < b ^ x) (e) :
     CNF_coeff b (b ^ x * o₁ + o₂) e = CNF_coeff b (b ^ x * o₁) e + CNF_coeff b o₂ e := by
   rw [CNF_coeff_opow_mul_add _ ho₂]
   rfl
@@ -532,21 +535,19 @@ theorem CNF_coeff_apply (hb : 1 < b) (o e : Ordinal) :
   rw [add_zero] at H
   rw [H, CNF_coeff_apply_zero hb.ne', CNF_coeff_of_gt h, add_zero]
 
-/-- The function `CNF_coeff b (o / b ^ x)` is the translation of `CNF_coeff b o` by `x`. -/
-theorem CNF_coeff_opow_div (hb : 1 < b) (o x : Ordinal) :
-    CNF_coeff b (o / b ^ x) = (CNF_coeff b o).comapDomain (x + ·)
-      (fun _ _ _ _ => (add_left_cancel x).1) := by
-  ext e
-  dsimp
+theorem CNF_coeff_opow_div_apply (hb : 1 < b) (o x e : Ordinal) :
+    CNF_coeff b (o / b ^ x) e = CNF_coeff b o (x + e) := by
   conv_rhs => rw [← div_add_mod o (b ^ x)]
   rw [CNF_coeff_opow_mul_add_of_ge, CNF_coeff_opow_mul_of_ge hb ]
   · exact mod_lt o (opow_ne_zero x (zero_lt_one.trans hb).ne')
   · exact le_add_right x e
 
-theorem CNF_coeff_opow_div_apply (hb : 1 < b) (o x e : Ordinal) :
-    CNF_coeff b (o / b ^ x) e = CNF_coeff b o (x + e) := by
-  rw [CNF_coeff_opow_div hb]
-  rfl
+/-- The function `CNF_coeff b (o / b ^ x)` is the translation of `CNF_coeff b o` by `x`. -/
+theorem CNF_coeff_opow_div (hb : 1 < b) (o x : Ordinal) :
+    CNF_coeff b (o / b ^ x) = (CNF_coeff b o).comapDomain (x + ·)
+      (fun _ _ _ _ => (add_left_cancel x).1) := by
+  ext e
+  exact CNF_coeff_opow_div_apply hb o x e
 
 theorem CNF_coeff_mod_opow_of_lt {x e : Ordinal} (hb : 1 < b) (o : Ordinal) (he : e < x) :
     CNF_coeff b (o % b ^ x) e = CNF_coeff b o e := by
@@ -604,21 +605,20 @@ theorem CNF_coeff_add_of_lt {o₂ e : Ordinal} (hp : Principal (· + ·) b) (o�
     rw [← add_assoc, ← mul_add, CNF_coeff_opow_mul_add_of_lt hb _
       (mod_lt o₂ h) he, CNF_coeff_mod_opow_of_lt hb _ he]
 
-theorem CNF_coeff_opow_mul_add_of_principal_add {b x o₂ : Ordinal} (hp : Principal (· + ·) b)
-    (o₁ : Ordinal) (ho₂ : o₂ < b ^ Order.succ x) :
-    CNF_coeff b (b ^ x * o₁ + o₂) = CNF_coeff b (b ^ x * o₁) + CNF_coeff b o₂ := by
+theorem CNF_coeff_opow_mul_add_of_principal_add_apply {b x o₂ : Ordinal} (hp : Principal (· + ·) b)
+    (o₁ : Ordinal) (ho₂ : o₂ < b ^ Order.succ x) (e) :
+    CNF_coeff b (b ^ x * o₁ + o₂) e = CNF_coeff b (b ^ x * o₁) e + CNF_coeff b o₂ e := by
   obtain hb | hb := le_or_lt b 1
   · obtain rfl := Ordinal.lt_one_iff_zero.1 <| ho₂.trans_le (opow_le_one hb _)
     simp
   · have hb₀ := (zero_lt_one.trans hb).ne'
     have hbx := opow_ne_zero x hb₀
     obtain ho₂' | ho₂' := lt_or_le o₂ (b ^ x)
-    · exact CNF_coeff_opow_mul_add o₁ ho₂'
+    · rw [CNF_coeff_opow_mul_add o₁ ho₂']
+      rfl
     · have H₁ : o₂ % b ^ x < b ^ x := mod_lt o₂ hbx
-      rw [← div_add_mod o₂ (b ^ x), ← add_assoc, ← mul_add, CNF_coeff_opow_mul_add _ H₁,
-        CNF_coeff_opow_mul_add _ H₁, ← add_assoc]
-      ext e
-      dsimp
+      rw [← div_add_mod o₂ (b ^ x), ← add_assoc, ← mul_add, CNF_coeff_opow_mul_add_apply _ H₁,
+        CNF_coeff_opow_mul_add_apply _ H₁, ← add_assoc]
       obtain he | he := lt_or_le e x
       · iterate 3 rw [CNF_coeff_opow_mul_of_lt hb _ he]
         simp
@@ -634,55 +634,75 @@ theorem CNF_coeff_opow_mul_add_of_principal_add {b x o₂ : Ordinal} (hp : Princ
           rw [← H₃] at he
           rw [CNF_coeff_add_of_gt hp _ he, CNF_coeff_of_gt H₄, add_zero]
 
+theorem CNF_coeff_opow_mul_add_of_principal_add {b x o₂ : Ordinal} (hp : Principal (· + ·) b)
+    (o₁ : Ordinal) (ho₂ : o₂ < b ^ Order.succ x) :
+    CNF_coeff b (b ^ x * o₁ + o₂) = CNF_coeff b (b ^ x * o₁) + CNF_coeff b o₂ := by
+  ext e
+  exact CNF_coeff_opow_mul_add_of_principal_add_apply hp o₁ ho₂ e
+
+theorem CNF_coeff_opow_add_of_principal_add_apply {b x o : Ordinal} (hp : Principal (· + ·) b)
+    (ho₂ : o < b ^ Order.succ x) (e) :
+    CNF_coeff b (b ^ x + o) e = CNF_coeff b (b ^ x) e + CNF_coeff b o e := by
+  convert CNF_coeff_opow_mul_add_of_principal_add_apply hp 1 ho₂ e using 1 <;>
+  rw [mul_one]
+
 theorem CNF_coeff_opow_add_of_principal_add {b x o : Ordinal} (hp : Principal (· + ·) b)
     (ho₂ : o < b ^ Order.succ x) :
     CNF_coeff b (b ^ x + o) = CNF_coeff b (b ^ x) + CNF_coeff b o := by
-  convert CNF_coeff_opow_mul_add_of_principal_add hp 1 ho₂ using 1 <;>
-  rw [mul_one]
+  ext e
+  exact CNF_coeff_opow_add_of_principal_add_apply hp ho₂ e
 
 /-! ### Base ω -/
 
 /-- A specialization of `CNF_coeff` to base `ω`, which takes advantage of knowing all coefficients
-are less than `ω` and thus natural numbers.
--/
+are less than `ω` and thus natural numbers. -/
 @[pp_nodot]
-def CNF_coeff_omega (o : Ordinal) : Ordinal →₀ ℕ where
-  toFun e := Classical.choose <| lt_omega.1 <| CNF_coeff_lt one_lt_omega o e
-  support := (CNF_coeff ω o).support
-  mem_support_toFun e := by
-    generalize_proofs h
-    dsimp
-    rw [← @Nat.cast_inj Ordinal, ← Classical.choose_spec (h e), Nat.cast_zero, mem_support_iff]
+def CNF_coeff_omega (o : Ordinal) : Ordinal →₀ ℕ :=
+  (CNF_coeff ω o).mapRange _ toNat_zero
 
 @[simp]
 theorem natCast_CNF_coeff_omega (o e : Ordinal) : CNF_coeff_omega o e = CNF_coeff ω o e := by
-  rw [CNF_coeff_omega]
-  generalize_proofs h
-  exact (Classical.choose_spec (h e)).symm
+  rw [CNF_coeff_omega, mapRange_apply, natCast_toNat (CNF_coeff_lt one_lt_omega o e)]
 
-theorem CNF_coeff_omega_support (o : Ordinal) :
-    (CNF_coeff_omega o).support = (CNF.exponents ω o).toFinset :=
-  CNF_coeff_support ω o
+theorem CNF_coeff_omega_eq_iff {o e : Ordinal} {x : ℕ} :
+    CNF_coeff_omega o e = x ↔ CNF_coeff ω o e = x := by
+  rw [← @Nat.cast_inj Ordinal, natCast_CNF_coeff_omega]
+
+theorem support_CNF_coeff_omega (o : Ordinal) :
+    (CNF_coeff_omega o).support = (CNF.exponents ω o).toFinset := by
+  rw [CNF_coeff_omega, mapRange, support_onFinset, support_CNF_coeff]
+  apply Finset.filter_eq_self.2
+  intro e he
+  obtain ⟨n, hn⟩ := lt_omega.1 <| CNF_coeff_lt one_lt_omega o e
+  rw [Function.comp_apply, hn, toNat_natCast, ← (@Nat.cast_injective Ordinal _).ne_iff, ← hn,
+    Nat.cast_zero]
+  exact CNF_coeff_ne_zero (mem_toFinset.1 he)
 
 theorem CNF_coeff_omega_of_mem_CNF {o e : Ordinal} {c : ℕ} (h : ⟨e, c⟩ ∈ CNF ω o) :
     CNF_coeff_omega o e = c := by
-  rw [← @Nat.cast_inj Ordinal, natCast_CNF_coeff_omega]
+  rw [CNF_coeff_omega_eq_iff]
   exact CNF_coeff_of_mem_CNF h
 
 theorem CNF_coeff_omega_eq_pos_iff {o e : Ordinal} {c : ℕ} (hc : c ≠ 0) :
     CNF_coeff_omega o e = c ↔ ⟨e, c⟩ ∈ CNF ω o := by
-  rw [Ne.eq_1, ← @Nat.cast_inj Ordinal] at hc
-  rw [← @Nat.cast_inj Ordinal, natCast_CNF_coeff_omega]
+  rw [CNF_coeff_omega_eq_iff]
+  rw [← (@Nat.cast_injective Ordinal).ne_iff] at hc
   exact CNF_coeff_eq_pos_iff hc
 
 theorem CNF_coeff_omega_eq_zero_iff {o e : Ordinal} :
     CNF_coeff_omega o e = 0 ↔ e ∉ CNF.exponents ω o := by
-  rw [← @Nat.cast_inj Ordinal, Nat.cast_zero, natCast_CNF_coeff_omega, CNF_coeff_eq_zero_iff]
+  rw [CNF_coeff_omega_eq_iff, Nat.cast_zero, CNF_coeff_eq_zero_iff]
 
 alias ⟨_, CNF_omega_coeff_of_not_mem_CNF⟩ := CNF_coeff_omega_eq_zero_iff
 
+theorem CNF_coeff_omega_ne_zero {o e : Ordinal} (h : e ∈ CNF.exponents ω o) :
+    CNF_coeff_omega o e ≠ 0 := by
+  intro h
+  rw [CNF_coeff_omega_eq_zero_iff] at h
+  contradiction
+
 theorem CNF_coeff_omega_zero_apply (e : Ordinal) : CNF_coeff_omega 0 e = 0 := by
-  rw [← @Nat.cast_inj Ordinal, Nat.cast_zero, natCast_CNF_coeff_omega, CNF_coeff_zero_apply]
+  rw [CNF_coeff_omega_eq_iff, Nat.cast_zero, CNF_coeff_zero_apply]
 
 @[simp]
 theorem CNF_coeff_omega_zero : CNF_coeff_omega 0 = 0 := by
@@ -691,246 +711,135 @@ theorem CNF_coeff_omega_zero : CNF_coeff_omega 0 = 0 := by
 
 theorem CNF_coeff_omega_opow (e : Ordinal) : CNF_coeff_omega (ω ^ e) = single e 1 := by
   ext a
-  rw [← @Nat.cast_inj Ordinal, natCast_CNF_coeff_omega, CNF_coeff_opow one_lt_omega, map_single]
+  rw [CNF_coeff_omega_eq_iff, CNF_coeff_opow one_lt_omega]
+  convert (apply_single' _ _ e 1 a).symm <;>
+  simp
 
 @[simp]
-theorem CNF_coeff_omega_one : CNF_coeff_omega b 1 = single 0 1 := by
-  convert CNF_coeff_opow hb 0
-  exact (opow_zero b).symm
+theorem CNF_coeff_omega_one : CNF_coeff_omega 1 = single 0 1 := by
+  convert CNF_coeff_omega_opow 0
+  exact (opow_zero ω).symm
 
 @[simp]
 theorem CNF_coeff_omega_omega : CNF_coeff_omega ω = single 1 1 := by
-  convert CNF_coeff_opow hb 1
-  exact (opow_one b).symm
+  convert CNF_coeff_omega_opow 1
+  exact (opow_one ω).symm
 
-theorem CNF_coeff_of_lt_self {o : Ordinal} (ho : o < b) : CNF_coeff b o = single 0 o := by
-  obtain rfl | ho' := eq_or_ne o 0
-  · simp
-  · ext e
-    obtain rfl | he := eq_or_ne e 0
-    · rw [single_eq_same]
-      apply CNF_coeff_of_mem_CNF
-      rw [CNF_of_lt_self ho' ho, mem_singleton]
-    · rw [single_eq_of_ne he.symm, CNF_coeff_eq_zero_iff, mem_CNF_exponents_iff]
-      rintro ⟨c, hc⟩
-      rw [CNF_of_lt_self ho' ho, mem_singleton, Sigma.mk.inj_iff] at hc
-      exact he hc.1
-
-theorem CNF_coeff_of_gt {b o e : Ordinal} (he : o < b ^ e) : CNF_coeff b o e = 0 := by
-  obtain hb | hb := le_or_lt b 1
-  · rw [CNF_coeff_of_le_one hb, Ordinal.lt_one_iff_zero.1 <| he.trans_le (opow_le_one hb e)]
-    simp
-  · obtain rfl | ho := eq_or_ne o 0
-    · simp
-    · rw [CNF_coeff_eq_zero_iff, mem_CNF_exponents_iff]
-      rintro ⟨c, hc⟩
-      rw [lt_opow_iff_log_lt hb ho] at he
-      exact (le_log_of_mem_CNF_exponents (mem_CNF_exponents_of_mem hc)).not_lt he
-
-/-- The function `CNF_coeff b (b ^ x * o)` is the translation of `CNF_coeff b o` by `x`. -/
-theorem CNF_coeff_opow_mul (hb : 1 < b) (o x : Ordinal) :
-    (CNF_coeff b (b ^ x * o)).comapDomain (x + ·)
-      (fun _ _ _ _ => (add_left_cancel x).1) = CNF_coeff b o := by
+@[simp]
+theorem CNF_coeff_omega_natCast {n : ℕ} : CNF_coeff_omega n = single 0 n := by
   ext e
-  dsimp
-  rw [CNF_coeff_def, CNF_coeff_def, CNF_opow_mul hb, dlookup_map₁]
-  intro a b h
-  rwa [add_left_cancel] at h
+  rw [CNF_coeff_omega_eq_iff, CNF_coeff_of_lt_self (nat_lt_omega n)]
+  exact (apply_single' _ rfl 0 n e).symm
 
-theorem CNF_coeff_opow_mul_of_ge (hb : 1 < b) (o x e : Ordinal) :
-    CNF_coeff b (b ^ x * o) (x + e) = CNF_coeff b o e := by
-  rw [← CNF_coeff_opow_mul hb o x]
-  rfl
+theorem CNF_coeff_omega_of_gt {b o e : Ordinal} (he : o < ω ^ e) : CNF_coeff_omega o e = 0 := by
+  rw [CNF_coeff_omega_eq_iff, Nat.cast_zero, CNF_coeff_of_gt he]
 
-theorem CNF_coeff_opow_mul_of_lt {b e x : Ordinal} (hb : 1 < b) (o : Ordinal) (he : e < x) :
-    CNF_coeff b (b ^ x * o) e = 0 := by
-  rw [CNF_coeff_eq_zero_iff, mem_CNF_exponents_iff, CNF_opow_mul hb]
-  simp_rw [mem_map]
-  push_neg
-  rintro c _ _ ⟨rfl, rfl⟩
-  exact (le_add_right _ _).not_lt he
+theorem CNF_coeff_omega_opow_mul_of_ge (o x e : Ordinal) :
+    CNF_coeff_omega (ω ^ x * o) (x + e) = CNF_coeff_omega o e := by
+  rw [CNF_coeff_omega_eq_iff, CNF_coeff_opow_mul_of_ge one_lt_omega, natCast_CNF_coeff_omega]
 
-theorem CNF_coeff_opow_mul_of_lt_self {b x : Ordinal} (hb : 1 < b) (o : Ordinal) (ho : o < b) :
-    CNF_coeff b (b ^ x * o) = single x o := by
+theorem CNF_coeff_omega_opow_mul_of_lt {e x : Ordinal} (o : Ordinal) (he : e < x) :
+    CNF_coeff_omega (ω ^ x * o) e = 0 := by
+  rw [CNF_coeff_omega_eq_iff, Nat.cast_zero, CNF_coeff_opow_mul_of_lt one_lt_omega o he]
+
+/-- The function `CNF_coeff_omega (ω ^ x * o)` is the translation of `CNF_coeff_omega o` by `x`. -/
+theorem CNF_coeff_omega_opow_mul (o x : Ordinal) :
+    (CNF_coeff_omega (ω ^ x * o)).comapDomain (x + ·)
+      (fun _ _ _ _ => (add_left_cancel x).1) = CNF_coeff_omega o := by
   ext e
-  obtain he | he := lt_or_le e x
-  · rw [CNF_coeff_opow_mul_of_lt hb o he, single_eq_of_ne he.ne']
-  · conv_lhs => rw [← Ordinal.add_sub_cancel_of_le he]
-    rw [CNF_coeff_opow_mul_of_ge hb, CNF_coeff_of_lt_self ho]
-    obtain rfl | he := he.eq_or_lt
-    · simp
-    · rw [single_eq_of_ne, single_eq_of_ne he.ne]
-      rwa [Ne.eq_def, Eq.comm, Ordinal.sub_eq_zero_iff_le, not_le]
+  exact CNF_coeff_omega_opow_mul_of_ge o x e
 
-theorem CNF_coeff_opow_mul_add_of_lt {b x o₂ e : Ordinal} (hb : 1 < b) (o₁ : Ordinal)
-    (ho₂ : o₂ < b ^ x) (he : e < x) : CNF_coeff b (b ^ x * o₁ + o₂) e = CNF_coeff b o₂ e := by
-  rw [CNF_coeff_def, CNF_opow_mul_add' hb _ ho₂, dlookup_append_of_not_mem_left]
-  · rw [CNF_coeff_def]
-  · simp_rw [List.mem_keys, mem_map]
-    rintro ⟨_, _, ⟨_, ⟨h, _⟩⟩⟩
-    exact (le_add_right _ _).not_lt he
+theorem CNF_coeff_omega_opow_mul_nat {x : Ordinal} (n : ℕ) :
+    CNF_coeff_omega (ω ^ x * n) = single x n := by
+  ext e
+  rw [CNF_coeff_omega_eq_iff, CNF_coeff_opow_mul_of_lt_self one_lt_omega (nat_lt_omega n)]
+  exact (apply_single' _ rfl _ _ _).symm
 
-theorem CNF_coeff_opow_mul_add_of_ge {b x o₂ e : Ordinal} (o₁ : Ordinal) (ho₂ : o₂ < b ^ x)
-    (he : x ≤ e) : CNF_coeff b (b ^ x * o₁ + o₂) e = CNF_coeff b (b ^ x * o₁) e := by
-  obtain hb | hb := le_or_lt b 1
-  · obtain rfl := Ordinal.lt_one_iff_zero.1 <| ho₂.trans_le (opow_le_one hb x)
-    simp
-  · rw [CNF_coeff_def, CNF_opow_mul_add _ ho₂, dlookup_append_of_not_mem_right]
-    · rw [CNF_coeff_def]
-    · obtain rfl | ho := eq_or_ne o₂ 0
-      · simp
-      · intro h
-        rw [lt_opow_iff_log_lt hb ho] at ho₂
-        exact ((le_log_of_mem_CNF_exponents h).trans_lt ho₂).not_le he
+theorem CNF_coeff_omega_opow_mul_add_of_lt {x o₂ e : Ordinal} (o₁ : Ordinal) (ho₂ : o₂ < ω ^ x)
+    (he : e < x) : CNF_coeff_omega (ω ^ x * o₁ + o₂) e = CNF_coeff_omega o₂ e := by
+  rw [CNF_coeff_omega_eq_iff, CNF_coeff_opow_mul_add_of_lt one_lt_omega o₁ ho₂ he,
+    natCast_CNF_coeff_omega]
 
-theorem CNF_coeff_opow_mul_add {b x o₂ : Ordinal} (o₁ : Ordinal) (ho₂ : o₂ < b ^ x) :
-    CNF_coeff b (b ^ x * o₁ + o₂) = CNF_coeff b (b ^ x * o₁) + CNF_coeff b o₂ := by
-  obtain hb | hb := le_or_lt b 1
-  · obtain rfl := Ordinal.lt_one_iff_zero.1 <| ho₂.trans_le (opow_le_one hb x)
-    simp
-  · ext e
-    dsimp
-    obtain he | he := lt_or_le e x
-    · rw [CNF_coeff_opow_mul_add_of_lt hb _ ho₂ he, CNF_coeff_opow_mul_of_lt hb _ he, zero_add]
-    · rw [CNF_coeff_opow_mul_add_of_ge _ ho₂ he,
-        CNF_coeff_of_gt <| ho₂.trans_le <| opow_le_opow_right (zero_lt_one.trans hb) he, add_zero]
+theorem CNF_coeff_omega_opow_mul_add_of_ge {x o₂ e : Ordinal} (o₁ : Ordinal) (ho₂ : o₂ < ω ^ x)
+    (he : x ≤ e) : CNF_coeff_omega (ω ^ x * o₁ + o₂) e = CNF_coeff_omega (ω ^ x * o₁) e := by
+  rw [CNF_coeff_omega_eq_iff, CNF_coeff_opow_mul_add_of_ge o₁ ho₂ he, natCast_CNF_coeff_omega]
 
-theorem CNF_coeff_opow_mul_add_apply {b x o₂ : Ordinal} (o₁ : Ordinal) (ho₂ : o₂ < b ^ x) (e) :
-    CNF_coeff b (b ^ x * o₁ + o₂) e = CNF_coeff b (b ^ x * o₁) e + CNF_coeff b o₂ e := by
-  rw [CNF_coeff_opow_mul_add _ ho₂]
-  rfl
+theorem CNF_coeff_omega_opow_mul_add_apply {x o₂ : Ordinal} (o₁ : Ordinal)
+    (ho₂ : o₂ < ω ^ x) (e) : CNF_coeff_omega (ω ^ x * o₁ + o₂) e =
+      CNF_coeff_omega (ω ^ x * o₁) e + CNF_coeff_omega o₂ e := by
+  rw [CNF_coeff_omega_eq_iff, CNF_coeff_opow_mul_add_apply o₁ ho₂ e, Nat.cast_add,
+    natCast_CNF_coeff_omega, natCast_CNF_coeff_omega]
 
-theorem CNF_coeff_apply_zero (hb : b ≠ 1) (o : Ordinal) :
-    CNF_coeff b o 0 = o % b := by
-  obtain hb | hb' := le_or_lt b 1
-  · obtain rfl | rfl := Ordinal.le_one_iff.1 hb
-    · simp
-    · contradiction
-  · rw [CNF_coeff_def]
-    refine CNFRec b ?_ ?_ o
-    · simp
-    · intro o ho IH
-      rw [CNF_ne_zero ho]
-      obtain h | h := eq_or_ne (log b o) 0
-      · rw [h, dlookup_cons_eq, Option.getD_some, opow_zero, div_one,
-          mod_eq_of_lt <| (log_eq_zero_iff hb').1 h]
-      · rw [dlookup_cons_ne _ _ h.symm, IH, mod_mod_of_dvd o (dvd_opow b h)]
+theorem CNF_coeff_omega_opow_mul_add {x o₂ : Ordinal} (o₁ : Ordinal) (ho₂ : o₂ < ω ^ x) :
+    CNF_coeff_omega (ω ^ x * o₁ + o₂) = CNF_coeff_omega (ω ^ x * o₁) + CNF_coeff_omega o₂ := by
+  ext e
+  rw [coe_add, Pi.add_apply, CNF_coeff_omega_opow_mul_add_apply o₁ ho₂]
 
-theorem CNF_coeff_apply (hb : 1 < b) (o e : Ordinal) :
-    CNF_coeff b o e = o / b ^ e % b := by
-  have h := mod_lt o (opow_ne_zero e (zero_lt_one.trans hb).ne')
-  conv_lhs => rw [← div_add_mod o (b ^ e)]
-  rw [CNF_coeff_opow_mul_add_apply _ h]
-  have H := CNF_coeff_opow_mul_of_ge hb (o / b ^ e) e 0
-  rw [add_zero] at H
-  rw [H, CNF_coeff_apply_zero hb.ne', CNF_coeff_of_gt h, add_zero]
+theorem CNF_coeff_omega_apply_zero (o : Ordinal) : CNF_coeff_omega o 0 = o % ω := by
+  rw [natCast_CNF_coeff_omega, CNF_coeff_apply_zero omega_ne_one]
+
+theorem CNF_coeff_omega_apply (o e : Ordinal) : CNF_coeff_omega o e = o / ω ^ e % ω := by
+  rw [natCast_CNF_coeff_omega, CNF_coeff_apply one_lt_omega]
+
+theorem CNF_coeff_omega_opow_div_apply (o x e : Ordinal) :
+    CNF_coeff_omega (o / ω ^ x) e = CNF_coeff_omega o (x + e) := by
+  rw [CNF_coeff_omega_eq_iff, CNF_coeff_opow_div_apply one_lt_omega, natCast_CNF_coeff_omega]
 
 /-- The function `CNF_coeff b (o / b ^ x)` is the translation of `CNF_coeff b o` by `x`. -/
-theorem CNF_coeff_opow_div (hb : 1 < b) (o x : Ordinal) :
-    CNF_coeff b (o / b ^ x) = (CNF_coeff b o).comapDomain (x + ·)
+theorem CNF_omega_coeff_opow_div (o x : Ordinal) :
+    CNF_coeff_omega (o / ω ^ x) = (CNF_coeff_omega o).comapDomain (x + ·)
       (fun _ _ _ _ => (add_left_cancel x).1) := by
   ext e
-  dsimp
-  conv_rhs => rw [← div_add_mod o (b ^ x)]
-  rw [CNF_coeff_opow_mul_add_of_ge, CNF_coeff_opow_mul_of_ge hb ]
-  · exact mod_lt o (opow_ne_zero x (zero_lt_one.trans hb).ne')
-  · exact le_add_right x e
+  exact CNF_coeff_omega_opow_div_apply o x e
 
-theorem CNF_coeff_opow_div_apply (hb : 1 < b) (o x e : Ordinal) :
-    CNF_coeff b (o / b ^ x) e = CNF_coeff b o (x + e) := by
-  rw [CNF_coeff_opow_div hb]
-  rfl
+theorem CNF_coeff_omega_mod_opow_of_lt {x e : Ordinal} (o : Ordinal) (he : e < x) :
+    CNF_coeff_omega (o % ω ^ x) e = CNF_coeff_omega o e := by
+  rw [CNF_coeff_omega_eq_iff, CNF_coeff_mod_opow_of_lt one_lt_omega o he, natCast_CNF_coeff_omega]
 
-theorem CNF_coeff_mod_opow_of_lt {x e : Ordinal} (hb : 1 < b) (o : Ordinal) (he : e < x) :
-    CNF_coeff b (o % b ^ x) e = CNF_coeff b o e := by
-  conv_rhs => rw [← div_add_mod o (b ^ x),
-    CNF_coeff_opow_mul_add_of_lt hb _ (mod_lt _ (opow_ne_zero x (zero_lt_one.trans hb).ne')) he]
+theorem CNF_coeff_omega_mod_opow_of_ge {x e : Ordinal} (o : Ordinal) (he : x ≤ e) :
+    CNF_coeff_omega (o % ω ^ x) e = 0 := by
+  rw [CNF_coeff_omega_eq_iff, Nat.cast_zero, CNF_coeff_mod_opow_of_ge omega_ne_zero o he]
 
-theorem CNF_coeff_mod_opow_of_ge {x e : Ordinal} (hb : b ≠ 0) (o : Ordinal) (he : x ≤ e) :
-    CNF_coeff b (o % b ^ x) e = 0 :=
-  CNF_coeff_of_gt <| (mod_lt _ (opow_ne_zero x hb)).trans_le <|
-    opow_le_opow_right (Ordinal.pos_iff_ne_zero.2 hb) he
+theorem CNF_coeff_omega_add_of_gt {o₂ e : Ordinal} (o₁ : Ordinal) (he : log ω o₂ < e) :
+    CNF_coeff_omega (o₁ + o₂) e = CNF_coeff_omega o₁ e := by
+  rw [CNF_coeff_omega_eq_iff, CNF_coeff_add_of_gt principal_add_omega o₁ he,
+    natCast_CNF_coeff_omega]
 
-/-! ### Characterization of addition -/
+theorem CNF_coeff_omega_add_of_eq (o₁ o₂ : Ordinal) : CNF_coeff_omega (o₁ + o₂) (log ω o₂) =
+    CNF_coeff_omega o₁ (log ω o₂) + CNF_coeff_omega o₂ (log ω o₂) := by
+  rw [CNF_coeff_omega_eq_iff, CNF_coeff_add_of_eq principal_add_omega, Nat.cast_add,
+    natCast_CNF_coeff_omega, natCast_CNF_coeff_omega]
 
-
-theorem CNF_coeff_add_of_gt {o₂ e : Ordinal} (hp : Principal (· + ·) b) (o₁ : Ordinal)
-    (he : log b o₂ < e) : CNF_coeff b (o₁ + o₂) e = CNF_coeff b o₁ e := by
-  obtain hb | hb := le_or_lt b 1
-  · rw [log_of_left_le_one hb] at he
-    iterate 2 rw [CNF_coeff_of_le_one hb, single_eq_of_ne he.ne]
-  · rw [CNF_coeff_apply hb, CNF_coeff_apply hb, add_div_of_lt_of_principal_add (hp.opow e)]
-    apply lt_opow_of_log_lt hb he
-
-theorem CNF_coeff_add_of_eq (hp : Principal (· + ·) b) (o₁ o₂ : Ordinal) :
-    CNF_coeff b (o₁ + o₂) (log b o₂) = CNF_coeff b o₁ (log b o₂) + CNF_coeff b o₂ (log b o₂) := by
-  obtain rfl | ho₂ := eq_or_ne o₂ 0
-  · simp
-  · obtain hb | hb := le_or_lt b 1
-    · iterate 3 rw [CNF_coeff_of_le_one hb]
-      rw [single_add]
-      rfl
-    · have ho₂' := div_opow_log_lt o₂ hb
-      iterate 3 rw [CNF_coeff_apply hb]
-      rw [add_div_of_ge_of_principal_add (hp.opow _), add_mod_of_lt_of_principal_add hp ho₂',
-        mod_eq_of_lt ho₂']
-      exact opow_log_le_self b ho₂
-
-theorem CNF_coeff_add_of_eq' {e o₂ : Ordinal} (hp : Principal (· + ·) b) (o₁ : Ordinal)
-    (he : log b o₂ = e) : CNF_coeff b (o₁ + o₂) e = CNF_coeff b o₁ e + CNF_coeff b o₂ e := by
+theorem CNF_coeff_omega_add_of_eq' {e o₂ : Ordinal} (o₁ : Ordinal) (he : log ω o₂ = e) :
+    CNF_coeff_omega (o₁ + o₂) e = CNF_coeff_omega o₁ e + CNF_coeff_omega o₂ e := by
   obtain rfl := he
-  exact CNF_coeff_add_of_eq hp o₁ o₂
+  exact CNF_coeff_omega_add_of_eq o₁ o₂
 
-theorem CNF_coeff_add_of_lt {o₂ e : Ordinal} (hp : Principal (· + ·) b) (o₁ : Ordinal)
-    (he : e < log b o₂) : CNF_coeff b (o₁ + o₂) e = CNF_coeff b o₂ e := by
-  have ho₂ : o₂ ≠ 0 := by
-    rintro rfl
-    rw [log_zero_right] at he
-    exact Ordinal.not_lt_zero e he
-  obtain hb | hb := le_or_lt b 1
-  · rw [log_of_left_le_one hb] at he
-    exact (Ordinal.not_lt_zero e he).elim
-  · conv_lhs => rw [← div_add_mod o₁ (b ^ log b o₂)]
-    have h := opow_ne_zero (log b o₂) (zero_lt_one.trans hb).ne'
-    rw [add_assoc, (hp.opow _).add_absorp_of_ge (mod_lt o₁ h) (opow_log_le_self _ ho₂)]
-    conv_lhs => left; right; right; rw [← div_add_mod o₂ (b ^ log b o₂)]
-    rw [← add_assoc, ← mul_add, CNF_coeff_opow_mul_add_of_lt hb _
-      (mod_lt o₂ h) he, CNF_coeff_mod_opow_of_lt hb _ he]
+theorem CNF_coeff_omega_add_of_lt {o₂ e : Ordinal} (o₁ : Ordinal) (he : e < log ω o₂) :
+    CNF_coeff_omega (o₁ + o₂) e = CNF_coeff_omega o₂ e := by
+  rw [CNF_coeff_omega_eq_iff, CNF_coeff_add_of_lt principal_add_omega o₁ he,
+    natCast_CNF_coeff_omega]
 
-theorem CNF_coeff_opow_mul_add_of_principal_add {b x o₂ : Ordinal} (hp : Principal (· + ·) b)
-    (o₁ : Ordinal) (ho₂ : o₂ < b ^ Order.succ x) :
-    CNF_coeff b (b ^ x * o₁ + o₂) = CNF_coeff b (b ^ x * o₁) + CNF_coeff b o₂ := by
-  obtain hb | hb := le_or_lt b 1
-  · obtain rfl := Ordinal.lt_one_iff_zero.1 <| ho₂.trans_le (opow_le_one hb _)
-    simp
-  · have hb₀ := (zero_lt_one.trans hb).ne'
-    have hbx := opow_ne_zero x hb₀
-    obtain ho₂' | ho₂' := lt_or_le o₂ (b ^ x)
-    · exact CNF_coeff_opow_mul_add o₁ ho₂'
-    · have H₁ : o₂ % b ^ x < b ^ x := mod_lt o₂ hbx
-      rw [← div_add_mod o₂ (b ^ x), ← add_assoc, ← mul_add, CNF_coeff_opow_mul_add _ H₁,
-        CNF_coeff_opow_mul_add _ H₁, ← add_assoc]
-      ext e
-      dsimp
-      obtain he | he := lt_or_le e x
-      · iterate 3 rw [CNF_coeff_opow_mul_of_lt hb _ he]
-        simp
-      · rw [mul_add]
-        have H₂ := ((div_pos hbx).2 ho₂').ne'
-        have H₃ : log b (b ^ x * (o₂ / b ^ x)) = x := by
-          rw [log_opow_mul hb _ H₂, log_eq_zero, add_zero]
-          rwa [div_lt hbx, ← opow_succ]
-        obtain rfl | he := he.eq_or_lt
-        · rw [CNF_coeff_add_of_eq' hp _ H₃]
-        · have H₄ : b ^ x * (o₂ / b ^ x) < b ^ e := by
-            rwa [lt_opow_iff_log_lt hb (mul_ne_zero hbx H₂), H₃]
-          rw [← H₃] at he
-          rw [CNF_coeff_add_of_gt hp _ he, CNF_coeff_of_gt H₄, add_zero]
+theorem CNF_coeff_omega_opow_mul_add'_apply {x o₂ : Ordinal} (o₁ : Ordinal)
+    (ho₂ : o₂ < ω ^ Order.succ x) (e) : CNF_coeff_omega (ω ^ x * o₁ + o₂) e =
+      CNF_coeff_omega (ω ^ x * o₁) e + CNF_coeff_omega o₂ e := by
+  rw [CNF_coeff_omega_eq_iff, CNF_coeff_opow_mul_add_of_principal_add_apply
+    principal_add_omega o₁ ho₂ e, Nat.cast_add, natCast_CNF_coeff_omega, natCast_CNF_coeff_omega]
 
-theorem CNF_coeff_opow_add_of_principal_add {b x o : Ordinal} (hp : Principal (· + ·) b)
-    (ho₂ : o < b ^ Order.succ x) :
-    CNF_coeff b (b ^ x + o) = CNF_coeff b (b ^ x) + CNF_coeff b o := by
-  convert CNF_coeff_opow_mul_add_of_principal_add hp 1 ho₂ using 1 <;>
+theorem CNF_coeff_omega_opow_mul_add' {x o₂ : Ordinal} (o₁ : Ordinal)
+    (ho₂ : o₂ < ω ^ Order.succ x) : CNF_coeff_omega (ω ^ x * o₁ + o₂) =
+      CNF_coeff_omega (ω ^ x * o₁) + CNF_coeff_omega o₂ := by
+  ext e
+  exact CNF_coeff_omega_opow_mul_add'_apply o₁ ho₂ e
+
+theorem CNF_coeff_opow_add'_apply {x o : Ordinal} (ho₂ : o < ω ^ Order.succ x) (e) :
+    CNF_coeff_omega (ω ^ x + o) e = CNF_coeff_omega (ω ^ x) e + CNF_coeff_omega o e := by
+  convert CNF_coeff_omega_opow_mul_add'_apply 1 ho₂ e using 1 <;>
   rw [mul_one]
+
+theorem CNF_coeff_opow_add' {x o : Ordinal} (ho₂ : o < ω ^ Order.succ x) :
+    CNF_coeff_omega (ω ^ x + o) = CNF_coeff_omega (ω ^ x) + CNF_coeff_omega o := by
+  ext e
+  exact CNF_coeff_opow_add'_apply ho₂ e
 
 end Ordinal

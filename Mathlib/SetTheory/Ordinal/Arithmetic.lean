@@ -2169,7 +2169,11 @@ theorem omega_pos : 0 < ω :=
 theorem omega_ne_zero : ω ≠ 0 :=
   omega_pos.ne'
 
-theorem one_lt_omega : 1 < ω := by simpa only [Nat.cast_one] using nat_lt_omega 1
+theorem one_lt_omega : 1 < ω := by
+  simpa only [Nat.cast_one] using nat_lt_omega 1
+
+theorem omega_ne_one : ω ≠ 1 :=
+  one_lt_omega.ne'
 
 theorem omega_isLimit : IsLimit ω :=
   ⟨omega_ne_zero, fun o h => by
@@ -2273,6 +2277,10 @@ theorem toNat_natCast (n : ℕ) : toNat n = n := by
   have h := nat_lt_omega n
   rw [toNat, dif_pos h, ← @Nat.cast_inj Ordinal, ← Classical.choose_spec (lt_omega.1 h)]
 
+theorem natCast_toNat {o : Ordinal} (h : o < ω) : toNat o = o := by
+  obtain ⟨n, rfl⟩ := lt_omega.1 h
+  rw [toNat_natCast]
+
 theorem toNat_of_omega_le {o : Ordinal} (h : ω ≤ o) : toNat o = 0 :=
   dif_neg h.not_lt
 
@@ -2289,10 +2297,9 @@ theorem toNat_omega : toNat ω = 0 :=
   toNat_of_omega_le le_rfl
 
 theorem toNat_le_self (o : Ordinal) : toNat o ≤ o := by
-  obtain ho | ho := lt_or_le o ω
-  · obtain ⟨n, rfl⟩ := lt_omega.1 ho
-    rw [toNat_natCast]
-  · rw [toNat_of_omega_le ho]
+  obtain h | h := lt_or_le o ω
+  · rw [natCast_toNat h]
+  · rw [toNat_of_omega_le h]
     exact Ordinal.zero_le o
 
 theorem toNat_mul (a b : Ordinal) : toNat (a * b) = toNat a * toNat b := by
