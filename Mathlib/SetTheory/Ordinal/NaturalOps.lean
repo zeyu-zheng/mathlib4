@@ -796,7 +796,8 @@ theorem nat_nmul_omega_opow (a : Ordinal) (n : ℕ) : n ⨳ ω ^ a = ω ^ a * n 
 theorem principal_nadd_omega_opow (a : Ordinal) : Principal (· ♯ ·) (ω ^ a) := by
   obtain rfl | ha := eq_or_ne a 0
   · rw [opow_zero, principal_one_iff, zero_nadd]
-  · intro b c hb hc
+  · rw [principal_mono_iff]
+    intro b c hb hc
     obtain ⟨x, hx, m, hm⟩ := lt_omega_opow hb ha
     obtain ⟨y, hy, n, hn⟩ := lt_omega_opow hc ha
     sorry
