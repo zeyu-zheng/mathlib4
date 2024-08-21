@@ -731,7 +731,7 @@ theorem CNF_coeff_omega_natCast {n : ℕ} : CNF_coeff_omega n = single 0 n := by
   rw [CNF_coeff_omega_eq_iff, CNF_coeff_of_lt_self (nat_lt_omega n)]
   exact (apply_single' _ rfl 0 n e).symm
 
-theorem CNF_coeff_omega_of_gt {b o e : Ordinal} (he : o < ω ^ e) : CNF_coeff_omega o e = 0 := by
+theorem CNF_coeff_omega_of_gt {o e : Ordinal} (he : o < ω ^ e) : CNF_coeff_omega o e = 0 := by
   rw [CNF_coeff_omega_eq_iff, Nat.cast_zero, CNF_coeff_of_gt he]
 
 theorem CNF_coeff_omega_opow_mul_of_ge (o x e : Ordinal) :
@@ -832,14 +832,14 @@ theorem CNF_coeff_omega_opow_mul_add' {x o₂ : Ordinal} (o₁ : Ordinal)
   ext e
   exact CNF_coeff_omega_opow_mul_add'_apply o₁ ho₂ e
 
-theorem CNF_coeff_opow_add'_apply {x o : Ordinal} (ho₂ : o < ω ^ Order.succ x) (e) :
+theorem CNF_coeff_omega_opow_add'_apply {x o : Ordinal} (ho₂ : o < ω ^ Order.succ x) (e) :
     CNF_coeff_omega (ω ^ x + o) e = CNF_coeff_omega (ω ^ x) e + CNF_coeff_omega o e := by
   convert CNF_coeff_omega_opow_mul_add'_apply 1 ho₂ e using 1 <;>
   rw [mul_one]
 
-theorem CNF_coeff_opow_add' {x o : Ordinal} (ho₂ : o < ω ^ Order.succ x) :
+theorem CNF_coeff_omega_opow_add' {x o : Ordinal} (ho₂ : o < ω ^ Order.succ x) :
     CNF_coeff_omega (ω ^ x + o) = CNF_coeff_omega (ω ^ x) + CNF_coeff_omega o := by
   ext e
-  exact CNF_coeff_opow_add'_apply ho₂ e
+  exact CNF_coeff_omega_opow_add'_apply ho₂ e
 
 end Ordinal

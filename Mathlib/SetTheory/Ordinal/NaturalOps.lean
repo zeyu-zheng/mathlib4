@@ -847,6 +847,12 @@ theorem omega_opow_nmul_nat (a : Ordinal) (n : ℕ) : ω ^ a ⨳ n = ω ^ a * n 
 theorem nat_nmul_omega_opow (a : Ordinal) (n : ℕ) : n ⨳ ω ^ a = ω ^ a * n := by
   rw [nmul_comm, omega_opow_nmul_nat]
 
+theorem nadd_sub_cancel_omega_opow_log {a : Ordinal} (ha : a ≠ 0) :
+    ω ^ log ω a ♯ (a - ω ^ log ω a) = a := by
+  rw [omega_opow_nadd_of_lt, Ordinal.add_sub_cancel_of_le]
+  · exact opow_log_le_self ω ha
+  · exact (sub_le_self a _).trans_lt (lt_opow_succ_log_self one_lt_omega a)
+
 theorem principal_nadd_omega_opow (a : Ordinal) : Principal (· ♯ ·) (ω ^ a) := by
   obtain rfl | ha := eq_or_ne a 0
   · rw [opow_zero, principal_one_iff, zero_nadd]
@@ -941,67 +947,21 @@ theorem omega_opow_nmul {a b : Ordinal} : b < ω ^ ω ^ succ a → ω ^ ω ^ a �
 
 
 open Classical in
-/-- We create an alias for `CNF_coeff ω` in order to properly state our results. -/
+/-- Casts `CNF_coeff_omega` into `AddMonoidAlgebra ℕ NatOrdinal`. -/
 @[pp_nodot]
-def CNF_coeff_omega (o : Ordinal) : AddMonoidAlgebra ℕ NatOrdinal where
-  toFun e := Classical.choose <| lt_omega.1 <| CNF_coeff_lt one_lt_omega o (NatOrdinal.toOrdinal e)
-  support := (CNF_coeff ω o).support.map toNatOrdinal
-  mem_support_toFun e := by
-    generalize_proofs h
-    dsimp
-    rw [← @Nat.cast_inj Ordinal, ← Classical.choose_spec (h e)]
-    simp
-    rfl
-
-theorem CNF_coeff_omega_apply' (o : Ordinal) (e : NatOrdinal) :
-    toOrdinal (CNF_coeff_omega o e) = CNF_coeff ω o (toOrdinal e) := by
-  rw [CNF_coeff_omega]
-  generalize_proofs h
-  simpa using (Classical.choose_spec (h e)).symm
+def CNF_coeff_omega' (o : Ordinal) : AddMonoidAlgebra ℕ NatOrdinal :=
+  (CNF_coeff_omega o).equivMapDomain toNatOrdinal
 
 @[simp]
-theorem CNF_coeff_omega_apply (o : Ordinal) (e : NatOrdinal) :
-    CNF_coeff_omega o e = toNatOrdinal (CNF_coeff ω o (toOrdinal e)) := by
-  rw [← toOrdinal.apply_eq_iff_eq, CNF_coeff_omega_apply']
+theorem CNF_coeff_omega'_zero : CNF_coeff_omega' 0 = 0 :=
+  Finsupp.ext <| CNF_coeff_omega_zero_apply
+
+theorem CNF_coeff_omega'_apply (o : Ordinal) (e : NatOrdinal) :
+    CNF_coeff_omega' o e = CNF_coeff_omega o (toOrdinal e) :=
   rfl
 
-@[simp]
-theorem CNF_coeff_omega_zero : CNF_coeff_omega 0 = 0 := by
-  apply Finsupp.ext
-  intro a
-  apply @Nat.cast_injective NatOrdinal
-  rw [CNF_coeff_omega_apply, CNF_coeff_zero]
-  rfl
-
-@[simp]
-theorem CNF_coeff_omega_add_apply (o₁ o₂ : Ordinal) (e : NatOrdinal) :
-    (CNF_coeff_omega o₁ + CNF_coeff_omega o₂) e =
-    toNatOrdinal (CNF_coeff ω o₁ (toOrdinal e) ♯ CNF_coeff ω o₂ (toOrdinal e)) := by
-  change CNF_coeff_omega o₁ e + CNF_coeff_omega o₂ e = _
-  rw [CNF_coeff_omega_apply, CNF_coeff_omega_apply]
-  rfl
-
-  #exit
-
-theorem CNF_coeff_omega_opow_add_of_principal_add {x o : Ordinal} (ho₂ : o < ω ^ Order.succ x) :
-    CNF_coeff_omega (ω ^ x + o) = CNF_coeff_omega (ω ^ x) + CNF_coeff_omega o := by
-  apply Finsupp.ext
-  intro e
-  apply @Nat.cast_injective NatOrdinal
-  simp
-  iterate 3 rw [CNF_coeff_omega_apply]
-  apply CNF_coeff_opow_add_of_principal_add
-
-private theorem CNF_coeff_omega_comm (o₁ o₂ : Ordinal) :
-    CNF_coeff ω o₁ + CNF_coeff ω o₂ = CNF_coeff ω o₂ + CNF_coeff ω o₁ := by
-  ext e
-  obtain ⟨m, hm⟩ := lt_omega.1 (CNF_coeff_lt one_lt_omega o₁ e)
-  obtain ⟨n, hn⟩ := lt_omega.1 (CNF_coeff_lt one_lt_omega o₂ e)
-  dsimp
-  rw [hm, hn, ← Nat.cast_add, ← Nat.cast_add, add_comm]-/
-
-theorem CNF_coeff_nadd (o₁ o₂ : NatOrdinal) :
-    CNF_coeff ω (o₁ ♯ o₂) = CNF_coeff ω o₁ + CNF_coeff ω o₂ := by
+theorem CNF_coeff_omega_nadd (o₁ o₂ : Ordinal) :
+    CNF_coeff_omega (o₁ ♯ o₂) = CNF_coeff_omega o₁ + CNF_coeff_omega o₂ := by
   obtain rfl | ho₁ := eq_or_ne o₁ 0; simp
   obtain rfl | ho₂ := eq_or_ne o₂ 0; simp
   obtain ho | ho := le_or_lt o₂ o₁
@@ -1011,48 +971,70 @@ theorem CNF_coeff_nadd (o₁ o₂ : NatOrdinal) :
     have H₂ := (sub_le_self _ (ω ^ log ω o₁)).trans_lt H₀
     have := Ordinal.sub_opow_log_omega_lt ho₁
     conv_lhs => rw [← add_sub_cancel_omega_opow_log ho₁]
-    rw [omega_opow_add_nadd_assoc _ H₂ H₁, CNF_coeff_opow_add_of_principal_add principal_add_omega
-      (principal_nadd_omega_opow _ H₂ H₁), CNF_coeff_nadd, ← add_assoc]
+    rw [omega_opow_add_nadd_assoc _ H₂ H₁, CNF_coeff_omega_opow_add'
+      (principal_nadd_omega_opow _ H₂ H₁), CNF_coeff_omega_nadd, ← add_assoc]
     conv_rhs => rw [← add_sub_cancel_omega_opow_log ho₁]
-    rw [CNF_coeff_opow_add_of_principal_add principal_add_omega H₂]
-  · rw [nadd_comm, CNF_coeff_omega_comm]
+    rw [CNF_coeff_omega_opow_add' H₂]
+  · rw [nadd_comm, add_comm]
     have H₀ := lt_opow_succ_log_self one_lt_omega o₂
     have H₁ := ho.le.trans_lt H₀
     have H₂ := (sub_le_self _ (ω ^ log ω o₂)).trans_lt H₀
     have := Ordinal.sub_opow_log_omega_lt ho₂
     conv_lhs => rw [← add_sub_cancel_omega_opow_log ho₂]
-    rw [omega_opow_add_nadd_assoc _ H₂ H₁, CNF_coeff_opow_add_of_principal_add principal_add_omega
+    rw [omega_opow_add_nadd_assoc _ H₂ H₁, CNF_coeff_omega_opow_add'
       (principal_nadd_omega_opow _ H₂ H₁)]
     dsimp
-    rw [nadd_comm, CNF_coeff_nadd, CNF_coeff_omega_comm o₁, ← add_assoc]
+    rw [nadd_comm, CNF_coeff_omega_nadd, add_comm (CNF_coeff_omega o₁), ← add_assoc]
     conv_rhs => rw [← add_sub_cancel_omega_opow_log ho₂]
-    rw [CNF_coeff_opow_add_of_principal_add principal_add_omega H₂]
+    rw [CNF_coeff_omega_opow_add' H₂]
 termination_by (o₁, o₂)
 
-theorem CNF_coeff_nadd_apply (o₁ o₂ e : Ordinal) :
-    CNF_coeff ω (o₁ ♯ o₂) e = CNF_coeff ω o₁ e + CNF_coeff ω o₂ e := by
-  rw [CNF_coeff_nadd]
+theorem CNF_coeff_omega_nadd_apply (o₁ o₂ e : Ordinal) :
+    CNF_coeff_omega (o₁ ♯ o₂) e = CNF_coeff_omega o₁ e + CNF_coeff_omega o₂ e := by
+  rw [CNF_coeff_omega_nadd]
   rfl
 
-/-- The product of Cantor normal forms as polynomials.
+theorem CNF_coeff_omega'_nadd_apply (o₁ o₂ : Ordinal) (e : NatOrdinal) :
+    CNF_coeff_omega' (o₁ ♯ o₂) e = CNF_coeff_omega' o₁ e + CNF_coeff_omega' o₂ e :=
+  CNF_coeff_omega_nadd_apply _ _ _
 
-We use the axiom of choice to  -/
-def CNF_mul (f g : Ordinal →₀ Ordinal) : Ordinal →₀ Ordinal :=
-  (f.support.toList.map (fun e₁ =>
-    (g.support.toList.map (fun e₂ => Finsupp.single (e₁ ♯ e₂) (f e₁ * f e₂))).sum)).sum
+theorem CNF_coeff_omega'_nadd (o₁ o₂ : Ordinal) :
+    CNF_coeff_omega' (o₁ ♯ o₂) = CNF_coeff_omega' o₁ + CNF_coeff_omega' o₂ :=
+  Finsupp.ext <| CNF_coeff_omega'_nadd_apply _ _
 
-#exit
+theorem CNF_coeff_omega'_omega_opow (x : Ordinal) :
+    CNF_coeff_omega' (ω ^ x) = AddMonoidAlgebra.single (toNatOrdinal x) 1 := by
+  apply Finsupp.ext
+  intro a
+  rw [CNF_coeff_omega'_apply, CNF_coeff_omega_opow]
+  rfl
 
-/-- The base `ω` Cantor normal form of `o₁ ⨳ o₂` is obtained by directly adding up the coefficients
-of those for `o₁` and `o₂`.
+private theorem CNF_coeff_omega'_opow_nmul_opow (x y : Ordinal) :
+    CNF_coeff_omega' (ω ^ x ⨳ ω ^ y) = CNF_coeff_omega' (ω ^ x) * CNF_coeff_omega' (ω ^ y) := by
+  rw [← omega_opow_nadd]
+  iterate 3 rw [CNF_coeff_omega'_omega_opow]
+  rw [AddMonoidAlgebra.single_mul_single, mul_one]
+  rfl
 
-This corresponds to the product on `AddMonoidAlgebra ℕ NatOrdinal`. However, it's very hard to state
-the result in this way, as `CNF_coeff ω o` is nominally of type `Ordinal →₀ Ordinal`. We instead
-implement this operation from scratch as `CNF_mul` and prove the result in terms of it. -/
-theorem CNF_coeff_nmul (o₁ o₂ : Ordinal) : CNF_coeff ω (o₁ ⨳ o₂) =
-    (@AddMonoidAlgebra.hasMul NatOrdinal Ordinal).mul (CNF_coeff ω o₁) (CNF_coeff ω o₂) := by
-  obtain rfl | ho₁ := eq_or_ne o₁ 0
+private theorem CNF_coeff_omega'_nmul_opow (o x : Ordinal) :
+    CNF_coeff_omega' (o ⨳ ω ^ x) = CNF_coeff_omega' o * CNF_coeff_omega' (ω ^ x) := by
+  refine CNFRec_omega ?_ ?_ o
   · simp
-    exact (zero_mul (M₀ := AddMonoidAlgebra NatOrdinal Ordinal) _).symm
+  · intro o ho IH
+    conv_lhs => rw [← nadd_sub_cancel_omega_opow_log ho, nadd_nmul, CNF_coeff_omega'_nadd, IH,
+      CNF_coeff_omega'_opow_nmul_opow, ← add_mul, ← CNF_coeff_omega'_nadd,
+      nadd_sub_cancel_omega_opow_log ho]
+
+/-- The base `ω` Cantor normal form of `o₁ ⨳ o₂` is obtained by multiplying the coefficients of
+those for `o₁` and `o₂` as polynomials in `ω`, adding coefficients through natural addition. This
+corresponds to the product on `AddMonoidAlgebra ℕ NatOrdinal` -/
+theorem CNF_coeff_omega'_nmul (o₁ o₂ : Ordinal) : CNF_coeff_omega' (o₁ ⨳ o₂) =
+    CNF_coeff_omega' o₁ * CNF_coeff_omega' o₂ := by
+  refine CNFRec_omega ?_ ?_ o₂
+  · simp
+  · intro o ho IH
+    conv_lhs => rw [← nadd_sub_cancel_omega_opow_log ho, nmul_nadd, CNF_coeff_omega'_nadd, IH,
+      CNF_coeff_omega'_nmul_opow, ← mul_add, ← CNF_coeff_omega'_nadd,
+      nadd_sub_cancel_omega_opow_log ho]
 
 end Ordinal
