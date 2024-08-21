@@ -693,12 +693,13 @@ theorem CNF_coeff_omega_opow (e : Ordinal) : CNF_coeff_omega (ω ^ e) = single e
   ext a
   rw [← @Nat.cast_inj Ordinal, natCast_CNF_coeff_omega, CNF_coeff_opow one_lt_omega, map_single]
 
-
-theorem CNF_coeff_one (hb : 1 < b) : CNF_coeff b 1 = single 0 1 := by
+@[simp]
+theorem CNF_coeff_omega_one : CNF_coeff_omega b 1 = single 0 1 := by
   convert CNF_coeff_opow hb 0
   exact (opow_zero b).symm
 
-theorem CNF_coeff_self (hb : 1 < b) : CNF_coeff b b = single 1 1 := by
+@[simp]
+theorem CNF_coeff_omega_omega : CNF_coeff_omega ω = single 1 1 := by
   convert CNF_coeff_opow hb 1
   exact (opow_one b).symm
 
