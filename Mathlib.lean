@@ -1402,6 +1402,7 @@ import Mathlib.CategoryTheory.Category.RelCat
 import Mathlib.CategoryTheory.Category.TwoP
 import Mathlib.CategoryTheory.Category.ULift
 import Mathlib.CategoryTheory.ChosenFiniteProducts
+import Mathlib.CategoryTheory.ChosenFiniteProducts.Cat
 import Mathlib.CategoryTheory.ChosenFiniteProducts.FunctorCategory
 import Mathlib.CategoryTheory.Closed.Cartesian
 import Mathlib.CategoryTheory.Closed.Functor
@@ -2307,6 +2308,7 @@ import Mathlib.Data.Multiset.Sym
 import Mathlib.Data.NNRat.BigOperators
 import Mathlib.Data.NNRat.Defs
 import Mathlib.Data.NNRat.Lemmas
+import Mathlib.Data.NNRat.Order
 import Mathlib.Data.NNReal.Basic
 import Mathlib.Data.NNReal.Star
 import Mathlib.Data.Nat.BitIndices
@@ -2593,7 +2595,8 @@ import Mathlib.FieldTheory.Finite.Trace
 import Mathlib.FieldTheory.Finiteness
 import Mathlib.FieldTheory.Fixed
 import Mathlib.FieldTheory.Galois
-import Mathlib.FieldTheory.IntermediateField
+import Mathlib.FieldTheory.IntermediateField.Algebraic
+import Mathlib.FieldTheory.IntermediateField.Basic
 import Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure
 import Mathlib.FieldTheory.IsAlgClosed.Basic
 import Mathlib.FieldTheory.IsAlgClosed.Classification
@@ -3419,7 +3422,8 @@ import Mathlib.NumberTheory.Padics.Hensel
 import Mathlib.NumberTheory.Padics.PadicIntegers
 import Mathlib.NumberTheory.Padics.PadicNorm
 import Mathlib.NumberTheory.Padics.PadicNumbers
-import Mathlib.NumberTheory.Padics.PadicVal
+import Mathlib.NumberTheory.Padics.PadicVal.Basic
+import Mathlib.NumberTheory.Padics.PadicVal.Defs
 import Mathlib.NumberTheory.Padics.RingHoms
 import Mathlib.NumberTheory.Pell
 import Mathlib.NumberTheory.PellMatiyasevic
