@@ -796,37 +796,40 @@ theorem nat_nmul_omega_opow (a : Ordinal) (n : ℕ) : n ⨳ ω ^ a = ω ^ a * n 
 theorem principal_nadd_omega_opow (a : Ordinal) : Principal (· ♯ ·) (ω ^ a) := by
   obtain rfl | ha := eq_or_ne a 0
   · rw [opow_zero, principal_one_iff, zero_nadd]
-  · rw [principal_mono_iff]
-    intro b c hb hc
+  · rw [principal_mono_iff
+      (fun b _ _ h => nadd_le_nadd_left h b) (fun b _ _ h => nadd_le_nadd_right h b)]
+    intro b hb
     obtain ⟨x, hx, m, hm⟩ := lt_omega_opow hb ha
-    obtain ⟨y, hy, n, hn⟩ := lt_omega_opow hc ha
-    sorry
+    apply (nadd_lt_nadd_of_le_of_lt hm.le hm).trans
+    rw [← omega_opow_nmul_nat, ← nmul_nadd, nadd_nat, ← Nat.cast_add, omega_opow_nmul_nat]
+    apply (omega_opow_mul_nat_lt _ _).trans_le
+    rwa [opow_le_opow_iff_right one_lt_omega, succ_le_iff]
 
-
-
-theorem omega_opow_add_nmul_assoc (a : Ordinal) {b c : Ordinal}
+theorem omega_opow_add_nadd_assoc (a : Ordinal) {b c : Ordinal}
     (hb : b < ω ^ succ a) (hc : c < ω ^ succ a) : ω ^ a + b ♯ c = ω ^ a + (b ♯ c) := by
-  rw [← omega_opow_nadd hb, nadd_assoc, omega_opow_nadd]
+  rw [← omega_opow_nadd hb, nadd_assoc, omega_opow_nadd (principal_nadd_omega_opow _ hb hc)]
 
-theorem omega_opow_mul_nadd {a b : Ordinal} (h : b < ω ^ succ a) (c : Ordinal) :
-    ω ^ a * c ♯ b = ω ^ a * c + b := by
-  refine CNFRec_omega ?_ ?_ c
+theorem omega_opow_mul_nadd {a c : Ordinal} (h : c < ω ^ succ a) (b : Ordinal) :
+    ω ^ a * b ♯ c = ω ^ a * b + c := by
+  refine CNFRec_omega ?_ ?_ b
   · rw [mul_zero, zero_nadd, zero_add]
   · intro o ho IH
     conv_lhs => rw [← add_sub_cancel_omega_opow_log ho]
-    have : ω ^ a * (o - ω ^ log ω o) + b < ω ^ succ (a + log ω o) := by
-      apply principal_add_omega_opow
-      · rw [← add_succ, opow_add, mul_lt_mul_iff_left (opow_pos a omega_pos)]
-        exact (sub_le_self o _).trans_lt <| lt_opow_succ_log_self one_lt_omega _
-      · apply h.trans_le
-        rw [opow_le_opow_iff_right one_lt_omega, succ_le_succ_iff]
-        exact le_add_right a _
-    rw [mul_add, ← opow_add, ← omega_opow_nadd <| (le_add_right _ _).trans_lt this, nadd_assoc, IH,
-      omega_opow_nadd this, opow_add, ← add_assoc, ← mul_add, add_sub_cancel_omega_opow_log ho]
+    rw [mul_add, ← opow_add, omega_opow_add_nadd_assoc, IH, opow_add, ← add_assoc, ← mul_add,
+      add_sub_cancel_omega_opow_log ho]
+    · rw [← add_succ, opow_add, mul_lt_mul_iff_left (opow_pos a omega_pos)]
+      exact (sub_le_self o _).trans_lt <| lt_opow_succ_log_self one_lt_omega _
+    · apply h.trans_le
+      rw [opow_le_opow_iff_right one_lt_omega, succ_le_succ_iff]
+      exact le_add_right a _
 
 theorem nadd_omega_opow_mul {a b : Ordinal} (h : b < ω ^ succ a) (c : Ordinal) :
     b ♯ ω ^ a * c = ω ^ a * c + b := by
   rw [nadd_comm, omega_opow_mul_nadd h]
+
+theorem omega_opow_mul_add_nadd_assoc (a b : Ordinal) {c d : Ordinal}
+    (hc : c < ω ^ succ a) (hd : d < ω ^ succ a) : ω ^ a * b + c ♯ d = ω ^ a * b + (c ♯ d) := by
+  rw [← omega_opow_mul_nadd hc, nadd_assoc, omega_opow_mul_nadd (principal_nadd_omega_opow _ hc hd)]
 
 theorem omega_opow_nmul {a b : Ordinal} (h : b < ω ^ ω ^ succ a) :
     ω ^ ω ^ a ⨳ b = ω ^ ω ^ a * b := by
@@ -837,7 +840,7 @@ theorem omega_opow_nmul {a b : Ordinal} (h : b < ω ^ ω ^ succ a) :
   sorry
 termination_by (a, b)
 
-private lemma CNF_coeff_omega_comm {o₁ o₂ : Ordinal} :
+private lemma CNF_coeff_omega_comm (o₁ o₂ : Ordinal) :
     CNF_coeff ω o₁ + CNF_coeff ω o₂ = CNF_coeff ω o₂ + CNF_coeff ω o₁ := by
   ext e
   obtain ⟨m, hm⟩ := lt_omega.1 (CNF_coeff_lt one_lt_omega o₁ e)
@@ -845,36 +848,34 @@ private lemma CNF_coeff_omega_comm {o₁ o₂ : Ordinal} :
   dsimp
   rw [hm, hn, ← Nat.cast_add, ← Nat.cast_add, add_comm]
 
-private theorem CNF_coeff_nadd_aux {o₁ o₂ : Ordinal} :
+theorem CNF_coeff_nadd {o₁ o₂ : Ordinal} :
     CNF_coeff ω (o₁ ♯ o₂) = CNF_coeff ω o₁ + CNF_coeff ω o₂ := by
-  refine CNFRec ω ?_ ?_ o₁
-  · simp
-  · intro o
-    wlog h : o ≤ o₂
-    --ho IH
-    conv_lhs => rw [← div_add_mod o (ω ^ log ω o)]
-    rw [← omega_opow_mul_nadd, nadd_assoc, omega_opow_mul_nadd, CNF_coeff_opow_mul_add, IH]
-    conv_rhs => rw [← div_add_mod o (ω ^ log ω o)]
-    rw [CNF_coeff_opow_mul_add, add_assoc]
-    · apply mod_lt _ (opow_ne_zero _ omega_ne_zero)
-    ·
-
-
-
-#exit
-
-
-@[simp]
-theorem CNF_coeff_nadd (o₁ o₂ : Ordinal) :
-    CNF_coeff ω (o₁ ♯ o₂) = CNF_coeff ω o₁ + CNF_coeff ω o₂ := by
-  obtain h | h := le_or_lt o₂ o₁
-  · exact CNF_coeff_nadd_aux h
-  · rw [nadd_comm, CNF_coeff_nadd_aux h.le]
-    ext e
-    obtain ⟨m, hm⟩ := lt_omega.1 (CNF_coeff_lt one_lt_omega o₁ e)
-    obtain ⟨n, hn⟩ := lt_omega.1 (CNF_coeff_lt one_lt_omega o₂ e)
+  obtain rfl | ho₁ := eq_or_ne o₁ 0; simp
+  obtain rfl | ho₂ := eq_or_ne o₂ 0; simp
+  obtain ho | ho := le_or_lt o₂ o₁
+  -- Both halves of the proof are completely analogous.
+  · have H₀ := lt_opow_succ_log_self one_lt_omega o₁
+    have H₁ := ho.trans_lt H₀
+    have H₂ := (sub_le_self _ (ω ^ log ω o₁)).trans_lt H₀
+    have := Ordinal.sub_opow_log_omega_lt ho₁
+    conv_lhs => rw [← add_sub_cancel_omega_opow_log ho₁]
+    rw [omega_opow_add_nadd_assoc _ H₂ H₁, CNF_coeff_opow_add_of_principal_add principal_add_omega
+      (principal_nadd_omega_opow _ H₂ H₁), CNF_coeff_nadd, ← add_assoc]
+    conv_rhs => rw [← add_sub_cancel_omega_opow_log ho₁]
+    rw [CNF_coeff_opow_add_of_principal_add principal_add_omega H₂]
+  · rw [nadd_comm, CNF_coeff_omega_comm]
+    have H₀ := lt_opow_succ_log_self one_lt_omega o₂
+    have H₁ := ho.le.trans_lt H₀
+    have H₂ := (sub_le_self _ (ω ^ log ω o₂)).trans_lt H₀
+    have := Ordinal.sub_opow_log_omega_lt ho₂
+    conv_lhs => rw [← add_sub_cancel_omega_opow_log ho₂]
+    rw [omega_opow_add_nadd_assoc _ H₂ H₁, CNF_coeff_opow_add_of_principal_add principal_add_omega
+      (principal_nadd_omega_opow _ H₂ H₁)]
     dsimp
-    rw [hm, hn, ← Nat.cast_add, ← Nat.cast_add, add_comm]
+    rw [nadd_comm, CNF_coeff_nadd, CNF_coeff_omega_comm o₁, ← add_assoc]
+    conv_rhs => rw [← add_sub_cancel_omega_opow_log ho₂]
+    rw [CNF_coeff_opow_add_of_principal_add principal_add_omega H₂]
+termination_by (o₁, o₂)
 
 theorem CNF_coeff_nadd_apply (o₁ o₂ e : Ordinal) :
     CNF_coeff ω (o₁ ♯ o₂) e = CNF_coeff ω o₁ e + CNF_coeff ω o₂ e := by

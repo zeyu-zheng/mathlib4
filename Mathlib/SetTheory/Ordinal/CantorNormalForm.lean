@@ -586,6 +586,11 @@ theorem CNF_coeff_add_of_eq (hp : Principal (· + ·) b) (o₁ o₂ : Ordinal) :
         mod_eq_of_lt ho₂']
       exact opow_log_le_self b ho₂
 
+theorem CNF_coeff_add_of_eq' {e o₂ : Ordinal} (hp : Principal (· + ·) b) (o₁ : Ordinal)
+    (he : log b o₂ = e) : CNF_coeff b (o₁ + o₂) e = CNF_coeff b o₁ e + CNF_coeff b o₂ e := by
+  obtain rfl := he
+  exact CNF_coeff_add_of_eq hp o₁ o₂
+
 theorem CNF_coeff_add_of_lt {o₂ e : Ordinal} (hp : Principal (· + ·) b) (o₁ : Ordinal)
     (he : e < log b o₂) : CNF_coeff b (o₁ + o₂) e = CNF_coeff b o₂ e := by
   have ho₂ : o₂ ≠ 0 := by
@@ -601,5 +606,41 @@ theorem CNF_coeff_add_of_lt {o₂ e : Ordinal} (hp : Principal (· + ·) b) (o�
     conv_lhs => left; right; right; rw [← div_add_mod o₂ (b ^ log b o₂)]
     rw [← add_assoc, ← mul_add, CNF_coeff_opow_mul_add_of_lt hb _
       (mod_lt o₂ h) he, CNF_coeff_mod_opow_of_lt hb _ he]
+
+theorem CNF_coeff_opow_mul_add_of_principal_add {b x o₂ : Ordinal} (hp : Principal (· + ·) b)
+    (o₁ : Ordinal) (ho₂ : o₂ < b ^ Order.succ x) :
+    CNF_coeff b (b ^ x * o₁ + o₂) = CNF_coeff b (b ^ x * o₁) + CNF_coeff b o₂ := by
+  obtain hb | hb := le_or_lt b 1
+  · obtain rfl := Ordinal.lt_one_iff_zero.1 <| ho₂.trans_le (opow_le_one hb _)
+    simp
+  · have hb₀ := (zero_lt_one.trans hb).ne'
+    have hbx := opow_ne_zero x hb₀
+    obtain ho₂' | ho₂' := lt_or_le o₂ (b ^ x)
+    · exact CNF_coeff_opow_mul_add o₁ ho₂'
+    · have H₁ : o₂ % b ^ x < b ^ x := mod_lt o₂ hbx
+      rw [← div_add_mod o₂ (b ^ x), ← add_assoc, ← mul_add, CNF_coeff_opow_mul_add _ H₁,
+        CNF_coeff_opow_mul_add _ H₁, ← add_assoc]
+      ext e
+      dsimp
+      obtain he | he := lt_or_le e x
+      · iterate 3 rw [CNF_coeff_opow_mul_of_lt hb _ he]
+        simp
+      · rw [mul_add]
+        have H₂ := ((div_pos hbx).2 ho₂').ne'
+        have H₃ : log b (b ^ x * (o₂ / b ^ x)) = x := by
+          rw [log_opow_mul hb _ H₂, log_eq_zero, add_zero]
+          rwa [div_lt hbx, ← opow_succ]
+        obtain rfl | he := he.eq_or_lt
+        · rw [CNF_coeff_add_of_eq' hp _ H₃]
+        · have H₄ : b ^ x * (o₂ / b ^ x) < b ^ e := by
+            rwa [lt_opow_iff_log_lt hb (mul_ne_zero hbx H₂), H₃]
+          rw [← H₃] at he
+          rw [CNF_coeff_add_of_gt hp _ he, CNF_coeff_of_gt H₄, add_zero]
+
+theorem CNF_coeff_opow_add_of_principal_add {b x o : Ordinal} (hp : Principal (· + ·) b)
+    (ho₂ : o < b ^ Order.succ x) :
+    CNF_coeff b (b ^ x + o) = CNF_coeff b (b ^ x) + CNF_coeff b o := by
+  convert CNF_coeff_opow_mul_add_of_principal_add hp 1 ho₂ using 1 <;>
+  rw [mul_one]
 
 end Ordinal
