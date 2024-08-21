@@ -239,8 +239,10 @@ theorem opow_principal_add_of_principal_add {a} (ha : Principal (· + ·) a) (b 
 
 alias Principal.opow := opow_principal_add_of_principal_add
 
-@[deprecated Principal.add_absorp_of_ge (since := "2024-08-19")]
-theorem add_absorp {a b c : Ordinal} : a < ω ^ b → ω ^ b ≤ c → a + c = c :=
+theorem add_absorp {a b : Ordinal} : a < ω ^ b → a + ω ^ b = ω ^ b :=
+  (principal_add_omega_opow b).add_absorp
+
+theorem add_absorp_of_ge {a b c : Ordinal} : a < ω ^ b → ω ^ b ≤ c → a + c = c :=
   (principal_add_omega_opow b).add_absorp_of_ge
 
 theorem add_div_of_lt_of_principal_add {a b c : Ordinal} (hc : Principal (· + ·) c) (hbc : b < c) :
