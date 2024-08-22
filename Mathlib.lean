@@ -1661,6 +1661,7 @@ import Mathlib.CategoryTheory.Monad.Adjunction
 import Mathlib.CategoryTheory.Monad.Algebra
 import Mathlib.CategoryTheory.Monad.Basic
 import Mathlib.CategoryTheory.Monad.Coequalizer
+import Mathlib.CategoryTheory.Monad.Comonadicity
 import Mathlib.CategoryTheory.Monad.Equalizer
 import Mathlib.CategoryTheory.Monad.EquivMon
 import Mathlib.CategoryTheory.Monad.Kleisli
@@ -2197,6 +2198,7 @@ import Mathlib.Data.Int.Log
 import Mathlib.Data.Int.ModEq
 import Mathlib.Data.Int.NatPrime
 import Mathlib.Data.Int.Notation
+import Mathlib.Data.Int.Order.Basic
 import Mathlib.Data.Int.Order.Lemmas
 import Mathlib.Data.Int.Order.Units
 import Mathlib.Data.Int.Range
@@ -2814,7 +2816,6 @@ import Mathlib.GroupTheory.Transfer
 import Mathlib.InformationTheory.Hamming
 import Mathlib.Init
 import Mathlib.Init.Algebra.Classes
-import Mathlib.Init.Data.Int.Order
 import Mathlib.Init.Data.List.Lemmas
 import Mathlib.Init.Data.Nat.Lemmas
 import Mathlib.Init.Data.Quot
@@ -3773,6 +3774,7 @@ import Mathlib.RingTheory.Flat.CategoryTheory
 import Mathlib.RingTheory.Flat.EquationalCriterion
 import Mathlib.RingTheory.Flat.Stability
 import Mathlib.RingTheory.FractionalIdeal.Basic
+import Mathlib.RingTheory.FractionalIdeal.Extended
 import Mathlib.RingTheory.FractionalIdeal.Norm
 import Mathlib.RingTheory.FractionalIdeal.Operations
 import Mathlib.RingTheory.FreeCommRing
@@ -4663,6 +4665,7 @@ import Mathlib.Topology.VectorBundle.Constructions
 import Mathlib.Topology.VectorBundle.Hom
 import Mathlib.Util.AddRelatedDecl
 import Mathlib.Util.AssertExists
+import Mathlib.Util.AssertExistsExt
 import Mathlib.Util.AssertNoSorry
 import Mathlib.Util.AtomM
 import Mathlib.Util.CompileInductive
