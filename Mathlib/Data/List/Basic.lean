@@ -207,18 +207,6 @@ theorem append_eq_has_append {L₁ L₂ : List α} : List.append L₁ L₂ = L�
 
 @[deprecated (since := "2024-01-18")] alias append_right_cancel := append_cancel_right
 
-@[simp] theorem append_left_eq_self {x y : List α} : x ++ y = y ↔ x = [] := by
-  rw [← append_left_inj (s₁ := x), nil_append]
-
-@[simp] theorem self_eq_append_left {x y : List α} : y = x ++ y ↔ x = [] := by
-  rw [eq_comm, append_left_eq_self]
-
-@[simp] theorem append_right_eq_self {x y : List α} : x ++ y = x ↔ y = [] := by
-  rw [← append_right_inj (t₁ := y), append_nil]
-
-@[simp] theorem self_eq_append_right {x y : List α} : x = x ++ y ↔ y = [] := by
-  rw [eq_comm, append_right_eq_self]
-
 theorem append_right_injective (s : List α) : Injective fun t ↦ s ++ t :=
   fun _ _ ↦ append_cancel_left
 
