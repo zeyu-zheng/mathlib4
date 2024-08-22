@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Violeta Hernández Palacios
 -/
 import Mathlib.Data.Finsupp.AList
+import Mathlib.Data.Nat.Bitwise
 import Mathlib.SetTheory.Ordinal.Principal
 
 /-!
@@ -263,7 +264,7 @@ theorem CNF_injective (b : Ordinal) : Function.Injective (CNF b) :=
   Function.LeftInverse.injective (CNF_foldr b)
 
 @[simp]
-theorem CNF_eq_iff {b o₁ o₂ : Ordinal} : CNF b o₁ = CNF b o₂ ↔ o₁ = o₂ :=
+theorem CNF_inj {b o₁ o₂ : Ordinal} : CNF b o₁ = CNF b o₂ ↔ o₁ = o₂ :=
   (CNF_injective b).eq_iff
 
 theorem foldr_lt {x} {l : List (Σ _ : Ordinal, Ordinal)}
@@ -844,6 +845,7 @@ theorem CNF_coeff_omega_opow_add' {x o : Ordinal} (ho₂ : o < ω ^ Order.succ x
 
 /-! ### Evaluating Cantor normal forms -/
 
+
 /-- Evaluates a finitely supported function `Ordinal →₀ Ordinal` as a base `b` Cantor normal form.
 This is the (left) inverse of `CNF_coeff`. -/
 @[pp_nodot]
@@ -886,6 +888,13 @@ theorem CNF_eval_CNF_coeff (b o : Ordinal) : CNF_eval b (CNF_coeff b o) = o := b
   apply foldr_ext
   intro x hx r
   rw [CNF_coeff_of_mem_CNF hx]
+
+theorem CNF_coeff_injective (b : Ordinal) : Function.Injective (CNF_coeff b) :=
+  Function.LeftInverse.injective (CNF_eval_CNF_coeff b)
+
+@[simp]
+theorem CNF_coeff_inj {b o₁ o₂ : Ordinal} : CNF_coeff b o₁ = CNF_coeff b o₂ ↔ o₁ = o₂ :=
+  (CNF_coeff_injective b).eq_iff
 
 /-- Evaluates a finitely supported function `Ordinal →₀ ℕ` as a base `ω` Cantor normal form.
 This is the (two-sided) inverse of `CNF_coeff_omega`. -/
@@ -942,5 +951,107 @@ theorem CNF_coeff_omega_CNF_omega_eval (f : Ordinal →₀ ℕ) :
   intro e c f hf _ IH
   rw [CNF_omega_eval_cons c hf, CNF_coeff_omega_opow_mul_add c (CNF_omega_eval_lt hf),
     CNF_coeff_omega_opow_mul_nat, IH]
+
+theorem CNF_coeff_omega_CNF_omega_eval_apply (f : Ordinal →₀ ℕ) (e : Ordinal) :
+    CNF_coeff_omega (CNF_omega_eval f) e = f e := by
+  rw [CNF_coeff_omega_CNF_omega_eval]
+
+theorem CNF_coeff_omega_injective : Function.Injective CNF_coeff_omega :=
+  Function.LeftInverse.injective CNF_omega_eval_CNF_coeff_omega
+
+theorem CNF_coeff_omega_surjective : Function.Surjective CNF_coeff_omega :=
+  Function.RightInverse.surjective CNF_coeff_omega_CNF_omega_eval
+
+theorem CNF_coeff_omega_bijective : Function.Bijective CNF_coeff_omega :=
+  ⟨CNF_coeff_omega_injective, CNF_coeff_omega_surjective⟩
+
+@[simp]
+theorem CNF_coeff_omega_inj {o₁ o₂ : Ordinal} : CNF_coeff_omega o₁ = CNF_coeff_omega o₂ ↔ o₁ = o₂ :=
+  CNF_coeff_omega_injective.eq_iff
+
+theorem CNF_omega_eval_injective : Function.Injective CNF_omega_eval :=
+  Function.LeftInverse.injective CNF_coeff_omega_CNF_omega_eval
+
+theorem CNF_omega_eval_surjective : Function.Surjective CNF_omega_eval :=
+  Function.RightInverse.surjective CNF_omega_eval_CNF_coeff_omega
+
+theorem CNF_omega_eval_bijective : Function.Bijective CNF_omega_eval :=
+  ⟨CNF_omega_eval_injective, CNF_omega_eval_surjective⟩
+
+@[simp]
+theorem CNF_omega_eval_inj {f₁ f₂ : Ordinal →₀ ℕ} :
+    CNF_omega_eval f₁ = CNF_omega_eval f₂ ↔ f₁ = f₂ :=
+  CNF_omega_eval_injective.eq_iff
+
+/-! ### Ordinal XOR -/
+
+/-- The XOR of two ordinals is computed by XOR-ing each pair of corresponding natural coefficients
+in the base `ω` Cantor normal form. -/
+instance : Xor Ordinal :=
+  ⟨fun a b => CNF_omega_eval <| (CNF_coeff_omega a).zipWith _ (Nat.zero_xor 0) (CNF_coeff_omega b)⟩
+
+theorem CNF_coeff_omega_xor (a b e : Ordinal) :
+    CNF_coeff_omega (a ^^^ b) e = CNF_coeff_omega a e ^^^ CNF_coeff_omega b e :=
+  CNF_coeff_omega_CNF_omega_eval_apply _ e
+
+/-! We port the results from Mathlib.Data.Nat.Bitwise in a mostly one to one manner. -/
+
+@[simp]
+protected theorem xor_self (a : Ordinal) : a ^^^ a = 0 := by
+  rw [← CNF_coeff_omega_inj]
+  ext e
+  rw [CNF_coeff_omega_xor, Nat.xor_self, CNF_coeff_omega_zero_apply]
+
+protected theorem xor_comm (a b : Ordinal) : a ^^^ b = b ^^^ a := by
+  rw [← CNF_coeff_omega_inj]
+  ext e
+  rw [CNF_coeff_omega_xor, Nat.xor_comm, CNF_coeff_omega_xor]
+
+protected theorem xor_assoc (a b c : Ordinal) : a ^^^ b ^^^ c = a ^^^ (b ^^^ c) := by
+  rw [← CNF_coeff_omega_inj]
+  ext e
+  rw [CNF_coeff_omega_xor, CNF_coeff_omega_xor, Nat.xor_assoc,
+    CNF_coeff_omega_xor, CNF_coeff_omega_xor]
+
+@[simp]
+protected theorem zero_xor (a : Ordinal) : 0 ^^^ a = a := by
+  rw [← CNF_coeff_omega_inj]
+  ext e
+  rw [CNF_coeff_omega_xor, CNF_coeff_omega_zero_apply, Nat.zero_xor]
+
+@[simp]
+protected theorem xor_zero (a : Ordinal) : a ^^^ 0 = a := by
+  rw [Ordinal.xor_comm, Ordinal.zero_xor]
+
+protected theorem xor_cancel_right (a b : Ordinal) : b ^^^ a ^^^ a = b := by
+  rw [Ordinal.xor_assoc, Ordinal.xor_self, Ordinal.xor_zero]
+
+protected theorem xor_cancel_left (a b : Ordinal) : a ^^^ (a ^^^ b) = b := by
+  rw [← Ordinal.xor_assoc, Ordinal.xor_self, Ordinal.zero_xor]
+
+protected theorem xor_right_injective (a : Ordinal) : Function.Injective (a ^^^ ·) := by
+  intro b c h
+  dsimp at h
+  rw [← Ordinal.xor_cancel_left a b, h, Ordinal.xor_cancel_left]
+
+protected theorem xor_left_injective (a : Ordinal) : Function.Injective (· ^^^ a) := by
+  intro b c h
+  dsimp at h
+  rw [← Ordinal.xor_cancel_right a b, h, Ordinal.xor_cancel_right]
+
+@[simp]
+protected theorem xor_right_inj {a b c : Ordinal} : a ^^^ b = a ^^^ c ↔ b = c :=
+  (Ordinal.xor_right_injective a).eq_iff
+
+@[simp]
+protected theorem xor_left_inj {a b c : Ordinal} : b ^^^ a = c ^^^ a ↔ b = c :=
+  (Ordinal.xor_left_injective a).eq_iff
+
+@[simp]
+protected theorem xor_eq_zero {a b : Ordinal} : a ^^^ b = 0 ↔ a = b := by
+  rw [← Ordinal.xor_self b, Ordinal.xor_left_inj]
+
+protected theorem xor_ne_zero {a b : Ordinal} : a ^^^ b ≠ 0 ↔ a ≠ b := 
+  Ordinal.xor_eq_zero.not
 
 end Ordinal
