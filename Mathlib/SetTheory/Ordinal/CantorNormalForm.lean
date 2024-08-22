@@ -13,7 +13,7 @@ The Cantor normal form of an ordinal is generally defined as its base `ω` expan
 non-zero exponents in decreasing order. Here, we more generally define a base `b` expansion
 `Ordinal.CNF` in this manner, which is well-behaved for any `b ≥ 2`. From it, we define
 `Ordinal.CNF_coeff`, which represents the Cantor normal form as a finsupp `Ordinal →₀ Ordinal`. This
-is then further specialized to `Ordinal.CNF_coeff_omega : Ordinal → N`.
+is then further specialized to `Ordinal.CNF_coeff_omega : Ordinal → ℕ`.
 
 # Implementation notes
 
@@ -313,21 +313,21 @@ theorem CNF_eq (hb : 1 < b) (l : List (Σ _ : Ordinal, Ordinal))
 /-! ### Cantor normal form as a finsupp -/
 
 
-open AList Finsupp
+open Finsupp
 
 /-- `CNF_coeff b o` is the finitely supported function, returning the coefficient of `b ^ e` in the
 `CNF` of `o`, for each `e`. -/
 @[pp_nodot]
 def CNF_coeff (b o : Ordinal) : Ordinal →₀ Ordinal :=
-  lookupFinsupp ⟨_, CNF_nodupKeys b o⟩
+  AList.lookupFinsupp ⟨_, CNF_nodupKeys b o⟩
 
 theorem CNF_coeff_def (b o e : Ordinal) : CNF_coeff b o e = ((CNF b o).dlookup e).getD 0 := by
-  rw [CNF_coeff, lookupFinsupp_apply]
+  rw [CNF_coeff, AList.lookupFinsupp_apply]
   rfl
 
 theorem support_CNF_coeff (b o : Ordinal) :
     (CNF_coeff b o).support = (CNF.exponents b o).toFinset := by
-  rw [CNF_coeff, lookupFinsupp_support]
+  rw [CNF_coeff, AList.lookupFinsupp_support]
   congr
   apply List.filter_eq_self.2
   intro a h
@@ -335,21 +335,21 @@ theorem support_CNF_coeff (b o : Ordinal) :
 
 theorem CNF_coeff_of_mem_CNF {o e c : Ordinal} (h : ⟨e, c⟩ ∈ CNF b o) :
     CNF_coeff b o e = c := by
-  rw [CNF_coeff, lookupFinsupp_apply, mem_lookup_iff.2 h]
+  rw [CNF_coeff, AList.lookupFinsupp_apply, AList.mem_lookup_iff.2 h]
   rfl
 
 theorem CNF_coeff_eq_pos_iff {o e c : Ordinal} (hc : c ≠ 0) :
     CNF_coeff b o e = c ↔ ⟨e, c⟩ ∈ CNF b o := by
-  rw [CNF_coeff, lookupFinsupp_eq_iff_of_ne_zero hc]
-  exact mem_lookup_iff
+  rw [CNF_coeff, AList.lookupFinsupp_eq_iff_of_ne_zero hc]
+  exact AList.mem_lookup_iff
 
 theorem CNF_coeff_eq_zero_iff {o e : Ordinal} : CNF_coeff b o e = 0 ↔ e ∉ CNF.exponents b o := by
-  rw [CNF_coeff, lookupFinsupp_eq_zero_iff]
+  rw [CNF_coeff, AList.lookupFinsupp_eq_zero_iff]
   constructor
   · rintro (h | h)
     · exact h
     · exact (lt_irrefl 0 <| pos_of_mem_CNF_coefficients <|
-        mem_map_of_mem Sigma.snd <| mem_lookup_iff.1 h).elim
+        mem_map_of_mem Sigma.snd <| AList.mem_lookup_iff.1 h).elim
   · exact Or.inl
 
 alias ⟨_, CNF_coeff_of_not_mem_CNF⟩ := CNF_coeff_eq_zero_iff
@@ -668,15 +668,15 @@ theorem CNF_coeff_omega_eq_iff {o e : Ordinal} {x : ℕ} :
     CNF_coeff_omega o e = x ↔ CNF_coeff ω o e = x := by
   rw [← @Nat.cast_inj Ordinal, natCast_CNF_coeff_omega]
 
+theorem CNF_coeff_omega_mapRange (o : Ordinal) :
+    (CNF_coeff_omega o).mapRange _ Nat.cast_zero = CNF_coeff ω o := by
+  ext e
+  rw [mapRange_apply, natCast_CNF_coeff_omega]
+
 theorem support_CNF_coeff_omega (o : Ordinal) :
     (CNF_coeff_omega o).support = (CNF.exponents ω o).toFinset := by
-  rw [CNF_coeff_omega, mapRange, support_onFinset, support_CNF_coeff]
-  apply Finset.filter_eq_self.2
-  intro e he
-  obtain ⟨n, hn⟩ := lt_omega.1 <| CNF_coeff_lt one_lt_omega o e
-  rw [Function.comp_apply, hn, toNat_natCast, ← (@Nat.cast_injective Ordinal _).ne_iff, ← hn,
-    Nat.cast_zero]
-  exact CNF_coeff_ne_zero (mem_toFinset.1 he)
+  rw [← support_CNF_coeff, ← CNF_coeff_omega_mapRange,
+    support_mapRange_of_injective _ _ Nat.cast_injective]
 
 theorem CNF_coeff_omega_of_mem_CNF {o e : Ordinal} {c : ℕ} (h : ⟨e, c⟩ ∈ CNF ω o) :
     CNF_coeff_omega o e = c := by
@@ -841,5 +841,92 @@ theorem CNF_coeff_omega_opow_add' {x o : Ordinal} (ho₂ : o < ω ^ Order.succ x
     CNF_coeff_omega (ω ^ x + o) = CNF_coeff_omega (ω ^ x) + CNF_coeff_omega o := by
   ext e
   exact CNF_coeff_omega_opow_add'_apply ho₂ e
+
+/-! ### Evaluating Cantor normal forms -/
+
+/-- Evaluates a finitely supported function `Ordinal →₀ Ordinal` as a base `b` Cantor normal form.
+This is the (left) inverse of `CNF_coeff`. -/
+def CNF_eval (b : Ordinal) (f : Ordinal →₀ Ordinal) : Ordinal :=
+  (f.support.sort (· ≥ ·)).foldr (fun e r ↦ b ^ e * f e + r) 0
+
+@[simp]
+theorem CNF_eval_zero (b : Ordinal) : CNF_eval b 0 = 0 := by
+  rw [CNF_eval]
+  simp
+
+@[simp]
+theorem CNF_eval_single (b e c : Ordinal) : CNF_eval b (single e c) = b ^ e * c := by
+  obtain rfl | hc := eq_or_ne c 0
+  · simp
+  · rw [CNF_eval, support_single_ne_zero e hc]
+    simp
+
+theorem CNF_eval_cons (b : Ordinal) {f : Ordinal →₀ Ordinal} {e : Ordinal} (c : Ordinal)
+    (h : ∀ a ∈ f.support, a < e) : CNF_eval b (single e c + f) = b ^ e * c + CNF_eval b f := by
+  obtain rfl | hc := eq_or_ne c 0; simp
+  have he := fun h' => (h e h').false
+  rw [CNF_eval, support_single_add he hc, Finset.sort_insert _ (fun x hx => (h x hx).le) he,
+    foldr_cons, coe_add, Pi.add_apply, single_eq_same, not_mem_support_iff.1 he, add_zero,
+    add_left_cancel]
+  apply foldr_ext
+  intro x hx y
+  rw [Pi.add_apply, single_eq_of_ne (h x <| (Finset.mem_sort _).1 hx).ne', zero_add]
+
+  #exit
+
+theorem CNF_eval_list_foldr (b : Ordinal) (f : Ordinal →₀ Ordinal) (l : List Ordinal)
+    (hl : l.Sorted (· > ·)) (hf : f.support = l.toFinset) :
+    CNF_eval b f = l.foldr (fun e r ↦ b ^ e * f e + r) 0 := by
+  rw [CNF_eval, hf, (toFinset_sort _ hl.nodup).2 hl.ge_of_gt]
+
+@[simp]
+theorem CNF_eval_CNF_coeff (b o : Ordinal) : CNF_eval b (CNF_coeff b o) = o := by
+  rw [CNF_eval_list_foldr b _ _ (CNF_exponents_sorted b o) (support_CNF_coeff b o)]
+  conv_rhs => rw [← CNF_foldr b o]
+  rw [CNF.exponents, List.keys, foldr_map]
+  apply foldr_ext
+  intro x hx r
+  rw [CNF_coeff_of_mem_CNF hx]
+
+/-- Evaluates a finitely supported function `Ordinal →₀ ℕ` as a base `ω` Cantor normal form.
+This is the (two-sided) inverse of `CNF_coeff_omega`. -/
+def CNF_omega_eval (f : Ordinal →₀ ℕ) : Ordinal :=
+  CNF_eval ω <| f.mapRange _ Nat.cast_zero
+
+@[simp]
+theorem CNF_omega_eval_zero : CNF_omega_eval 0 = 0 := by
+  rw [CNF_omega_eval]
+  simp
+
+@[simp]
+theorem CNF_omega_eval_single (e : Ordinal) (c : ℕ) : CNF_omega_eval (single e c) = ω ^ e * c := by
+  rw [CNF_omega_eval, mapRange_single, CNF_eval_single]
+
+theorem CNF_omega_eval_list_foldr (f : Ordinal →₀ ℕ) (l : List Ordinal)
+    (hl : l.Sorted (· > ·)) (hf : f.support = l.toFinset) :
+    CNF_omega_eval f = l.foldr (fun e r ↦ ω ^ e * f e + r) 0 := by
+  rw [CNF_omega_eval, CNF_eval_list_foldr ω _ l hl]
+  · rfl
+  · rwa [support_mapRange_of_injective _ _ Nat.cast_injective]
+
+@[simp]
+theorem CNF_omega_eval_CNF_coeff_omega (o : Ordinal) :
+    CNF_omega_eval (CNF_coeff_omega o) = o := by
+  rw [CNF_omega_eval, CNF_coeff_omega_mapRange, CNF_eval_CNF_coeff]
+
+theorem CNF_omega_eval_add_single (f : Ordinal →₀ ℕ) {e : Ordinal} (c : ℕ)
+    (h : ∀ a ∈ f.support, a < e) : CNF_omega_eval (single e c + f) =
+      ω ^ e * c + CNF_omega_eval f := by
+  have : (single e c + f).support = insert e f.support := sorry
+  rw [CNF_omega_eval, CNF_eval]
+
+
+@[simp]
+theorem CNF_coeff_omega_CNF_omega_eval (f : Ordinal →₀ ℕ) :
+    CNF_coeff_omega (CNF_omega_eval f) = f := by
+  ext e
+  rw [← @Nat.cast_inj Ordinal, CNF_coeff_omega_apply]
+
+
 
 end Ordinal
