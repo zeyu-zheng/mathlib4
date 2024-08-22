@@ -865,6 +865,7 @@ theorem CNF_eval_cons (b : Ordinal) {f : Ordinal →₀ Ordinal} {e : Ordinal} (
     (h : ∀ a ∈ f.support, a < e) : CNF_eval b (single e c + f) = b ^ e * c + CNF_eval b f := by
   obtain rfl | hc := eq_or_ne c 0; simp
   have he := fun h' => (h e h').false
+  have := Finsupp.induction
   rw [CNF_eval, support_single_add he hc, Finset.sort_insert _ (fun x hx => (h x hx).le) he,
     foldr_cons, coe_add, Pi.add_apply, single_eq_same, not_mem_support_iff.1 he, add_zero,
     add_left_cancel]
