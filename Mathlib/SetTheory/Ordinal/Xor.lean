@@ -10,7 +10,7 @@ import Mathlib.SetTheory.Ordinal.CantorNormalForm
 # Ordinal XOR
 
 We define a bitwise XOR on ordinals by taking the pairwise `Nat.Xor` of coefficients in their base ω
-Cantor normal forms.
+Cantor normal forms. We port the results from Data.Nat.Bitwise in a mostly one to one manner.
 
 This operation is relevant to game theory, where it describes the Sprague-Grundy value of a sum of
 two Nim heaps.
@@ -32,11 +32,10 @@ theorem xor_def (a b : Ordinal) : a ^^^ b =
     CNF_omega_eval ((CNF_omega_coeff a).zipWith _ (Nat.zero_xor 0) (CNF_omega_coeff b)) := by
   rfl
 
+@[simp]
 theorem CNF_omega_coeff_xor (a b e : Ordinal) :
     CNF_omega_coeff (a ^^^ b) e = CNF_omega_coeff a e ^^^ CNF_omega_coeff b e :=
   CNF_omega_coeff_CNF_omega_eval_apply _ e
-
-/-! We port the results from Mathlib.Data.Nat.Bitwise in a mostly one to one manner. -/
 
 @[simp]
 protected theorem xor_self (a : Ordinal) : a ^^^ a = 0 := by
@@ -101,7 +100,38 @@ theorem natCast_xor (m n : ℕ) : (m : Ordinal) ^^^ n = (m ^^^ n : ℕ) := by
   rw [xor_def]
   simp
 
+/-! To prove `Ordinal.xor_trichotomy`, we consider the largest exponent that differs in the CNF of
+`a` and `b ^^^ c`, and use `Nat.xor_trichotomy` on it. -/
+
+open Finsupp Finset
+
+-- TODO: figure out how to name these and move them.
+private theorem xor_rotate_right {a b c : ℕ} : a ^^^ b = c ↔ c ^^^ a = b := by
+  conv_lhs => rw [← @Nat.xor_right_inj a, Nat.xor_cancel_left, eq_comm, Nat.xor_comm]
+
+private theorem xor_rotate_left {a b c : ℕ} : a ^^^ b = c ↔ b ^^^ c = a := by
+  rw [xor_rotate_right, xor_rotate_right]
+
+private theorem neLocus_xor₁ {a b c : Ordinal} :
+    (CNF_omega_coeff (b ^^^ c)).neLocus (CNF_omega_coeff a) =
+    (CNF_omega_coeff (a ^^^ b)).neLocus (CNF_omega_coeff c) := by
+  ext e
+  simpa [not_iff_not] using xor_rotate_right
+
+private theorem neLocus_xor₂ {a b c : Ordinal} :
+    (CNF_omega_coeff (b ^^^ c)).neLocus (CNF_omega_coeff a) =
+    (CNF_omega_coeff (a ^^^ c)).neLocus (CNF_omega_coeff b) := by
+  rw [neLocus_xor₁, neLocus_xor₁, Ordinal.xor_comm]
+
 protected theorem xor_trichotomy {a b c : Ordinal} (h : a ≠ b ^^^ c) :
-  b ^^^ c < a ∨ a ^^^ c < b ∨ a ^^^ b < c := sorry
+    b ^^^ c < a ∨ a ^^^ c < b ∨ a ^^^ b < c := by
+  rw [ne_comm, ← CNF_omega_coeff_injective.ne_iff, ← nonempty_neLocus_iff] at h
+  have H := max'_mem _ h
+  rw [Finsupp.mem_neLocus, CNF_omega_coeff_xor] at H
+  obtain h | h | h := Nat.xor_trichotomy H.symm
+  on_goal 1 => left; rw [← CNF_omega_coeff_xor] at h
+  on_goal 2 => right; left; simp_rw [← CNF_omega_coeff_xor, neLocus_xor₂] at h
+  on_goal 3 => right; right; simp_rw [← CNF_omega_coeff_xor, neLocus_xor₁] at h
+  all_goals exact (CNF_omega_coeff_max_neLocus_lt_iff (isGreatest_max' _ _)).1 h
 
 end Ordinal

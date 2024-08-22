@@ -1063,17 +1063,25 @@ theorem CNF_coeff_le_iff_le {b o₁ o₂ : Ordinal} :
     toLex ((CNF_coeff b o₂).equivMapDomain toDual) ↔ o₁ ≤ o₂ :=
   (CNF_coeff_strictMono b).le_iff_le
 
+theorem CNF_omega_coeff_neLocus (o₁ o₂ : Ordinal) :
+    (CNF_omega_coeff o₁).neLocus (CNF_omega_coeff o₂) =
+    (CNF_coeff ω o₁).neLocus (CNF_coeff ω o₂) := by
+  ext e
+  rw [mem_neLocus, mem_neLocus, not_iff_not, CNF_omega_coeff_eq_iff]
+
 /-- If `o₁ < o₂`, the greatest distinct coefficient of both is smaller for `o₁` than for `o₂`. -/
 theorem CNF_omega_coeff_max_neLocus_lt {o₁ o₂ e : Ordinal} (h : o₁ ≤ o₂)
-    (he : IsGreatest ((CNF_coeff ω o₁).neLocus (CNF_coeff ω o₂)) e) :
+    (he : IsGreatest ((CNF_omega_coeff o₁).neLocus (CNF_omega_coeff o₂)) e) :
     CNF_omega_coeff o₁ e < CNF_omega_coeff o₂ e := by
   rw [CNF_omega_coeff_lt_iff]
+  rw [CNF_omega_coeff_neLocus] at he
   exact CNF_coeff_max_neLocus_lt h he
 
 /-- `o₁ < o₂` iff the greatest distinct coefficient of both is smaller for `o₁` than for `o₂`. -/
 theorem CNF_omega_coeff_max_neLocus_lt_iff {o₁ o₂ e : Ordinal}
-    (he : IsGreatest ((CNF_coeff ω o₁).neLocus (CNF_coeff ω o₂)) e) :
+    (he : IsGreatest ((CNF_omega_coeff o₁).neLocus (CNF_omega_coeff o₂)) e) :
     CNF_omega_coeff o₁ e < CNF_omega_coeff o₂ e ↔ o₁ < o₂ := by
+  rw [CNF_omega_coeff_neLocus] at he
   rw [CNF_omega_coeff_lt_iff, CNF_coeff_max_neLocus_lt_iff he]
 
 /-- If `o₁ < o₂`, then `CNF_omega_coeff o₁ < CNF_omega_coeff o₂` in the lexicographic order on

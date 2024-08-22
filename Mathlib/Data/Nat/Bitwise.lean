@@ -381,7 +381,7 @@ theorem xor_trichotomy {a b c : ℕ} (h : a ≠ b ^^^ c) :
     conv_rhs =>
       right
       rw [← Nat.xor_comm]
-    rw [← Nat.xor_assoc, ← Nat.xor_assoc, xor_self, zero_xor, Nat.xor_comm]
+    rw [← Nat.xor_assoc, xor_cancel_left, Nat.xor_comm]
   have hbc : b ^^^ c = a ^^^ v := by simp [hv, ← Nat.xor_assoc]
   -- If `i` is the position of the most significant bit of `v`, then at least one of `a`, `b`, `c`
   -- has a one bit at position `i`.
