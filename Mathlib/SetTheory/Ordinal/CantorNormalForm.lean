@@ -5,7 +5,7 @@ Authors: Mario Carneiro, Violeta Hernández Palacios
 -/
 import Mathlib.Data.Finsupp.AList
 import Mathlib.Data.Finsupp.Lex
-import Mathlib.Data.Nat.Bitwise
+import Mathlib.Data.Finsupp.NeLocus
 import Mathlib.SetTheory.Ordinal.Principal
 
 /-!
@@ -671,9 +671,21 @@ def CNF_omega_coeff (o : Ordinal) : Ordinal →₀ ℕ :=
 theorem natCast_CNF_omega_coeff (o e : Ordinal) : CNF_omega_coeff o e = CNF_coeff ω o e := by
   rw [CNF_omega_coeff, mapRange_apply, natCast_toNat (CNF_coeff_lt one_lt_omega o e)]
 
-theorem CNF_omega_coeff_eq_iff {o e : Ordinal} {x : ℕ} :
+theorem CNF_omega_coeff_eq_iff' {o e : Ordinal} {x : ℕ} :
     CNF_omega_coeff o e = x ↔ CNF_coeff ω o e = x := by
   rw [← @Nat.cast_inj Ordinal, natCast_CNF_omega_coeff]
+
+theorem CNF_omega_coeff_eq_iff {o₁ o₂ e₁ e₂ : Ordinal} :
+    CNF_omega_coeff o₁ e₁ = CNF_omega_coeff o₂ e₂ ↔ CNF_coeff ω o₁ e₁ = CNF_coeff ω o₂ e₂ := by
+  rw [CNF_omega_coeff_eq_iff', natCast_CNF_omega_coeff]
+
+theorem CNF_omega_coeff_lt_iff {o₁ o₂ e₁ e₂ : Ordinal} :
+    CNF_omega_coeff o₁ e₁ < CNF_omega_coeff o₂ e₂ ↔ CNF_coeff ω o₁ e₁ < CNF_coeff ω o₂ e₂ := by
+  rw [← @Nat.cast_lt Ordinal, natCast_CNF_omega_coeff, natCast_CNF_omega_coeff]
+
+theorem CNF_omega_coeff_le_iff {o₁ o₂ e₁ e₂ : Ordinal} :
+    CNF_omega_coeff o₁ e₁ ≤ CNF_omega_coeff o₂ e₂ ↔ CNF_coeff ω o₁ e₁ ≤ CNF_coeff ω o₂ e₂ := by
+  rw [← @Nat.cast_le Ordinal, natCast_CNF_omega_coeff, natCast_CNF_omega_coeff]
 
 theorem CNF_omega_coeff_mapRange (o : Ordinal) :
     (CNF_omega_coeff o).mapRange _ Nat.cast_zero = CNF_coeff ω o := by
@@ -687,18 +699,18 @@ theorem support_CNF_omega_coeff (o : Ordinal) :
 
 theorem CNF_omega_coeff_of_mem_CNF {o e : Ordinal} {c : ℕ} (h : ⟨e, c⟩ ∈ CNF ω o) :
     CNF_omega_coeff o e = c := by
-  rw [CNF_omega_coeff_eq_iff]
+  rw [CNF_omega_coeff_eq_iff']
   exact CNF_coeff_of_mem_CNF h
 
 theorem CNF_omega_coeff_eq_pos_iff {o e : Ordinal} {c : ℕ} (hc : c ≠ 0) :
     CNF_omega_coeff o e = c ↔ ⟨e, c⟩ ∈ CNF ω o := by
-  rw [CNF_omega_coeff_eq_iff]
+  rw [CNF_omega_coeff_eq_iff']
   rw [← (@Nat.cast_injective Ordinal).ne_iff] at hc
   exact CNF_coeff_eq_pos_iff hc
 
 theorem CNF_omega_coeff_eq_zero_iff {o e : Ordinal} :
     CNF_omega_coeff o e = 0 ↔ e ∉ CNF.exponents ω o := by
-  rw [CNF_omega_coeff_eq_iff, Nat.cast_zero, CNF_coeff_eq_zero_iff]
+  rw [CNF_omega_coeff_eq_iff', Nat.cast_zero, CNF_coeff_eq_zero_iff]
 
 alias ⟨_, CNF_omega_coeff_of_not_mem_CNF⟩ := CNF_omega_coeff_eq_zero_iff
 
@@ -709,7 +721,7 @@ theorem CNF_omega_coeff_ne_zero {o e : Ordinal} (h : e ∈ CNF.exponents ω o) :
   contradiction
 
 theorem CNF_omega_coeff_zero_apply (e : Ordinal) : CNF_omega_coeff 0 e = 0 := by
-  rw [CNF_omega_coeff_eq_iff, Nat.cast_zero, CNF_coeff_zero_apply]
+  rw [CNF_omega_coeff_eq_iff', Nat.cast_zero, CNF_coeff_zero_apply]
 
 @[simp]
 theorem CNF_omega_coeff_zero : CNF_omega_coeff 0 = 0 := by
@@ -718,7 +730,7 @@ theorem CNF_omega_coeff_zero : CNF_omega_coeff 0 = 0 := by
 
 theorem CNF_omega_coeff_opow (e : Ordinal) : CNF_omega_coeff (ω ^ e) = single e 1 := by
   ext a
-  rw [CNF_omega_coeff_eq_iff, CNF_coeff_opow one_lt_omega]
+  rw [CNF_omega_coeff_eq_iff', CNF_coeff_opow one_lt_omega]
   convert (apply_single' _ _ e 1 a).symm <;>
   simp
 
@@ -735,19 +747,19 @@ theorem CNF_omega_coeff_omega : CNF_omega_coeff ω = single 1 1 := by
 @[simp]
 theorem CNF_omega_coeff_natCast {n : ℕ} : CNF_omega_coeff n = single 0 n := by
   ext e
-  rw [CNF_omega_coeff_eq_iff, CNF_coeff_of_lt_self (nat_lt_omega n)]
+  rw [CNF_omega_coeff_eq_iff', CNF_coeff_of_lt_self (nat_lt_omega n)]
   exact (apply_single' _ rfl 0 n e).symm
 
 theorem CNF_omega_coeff_of_gt {o e : Ordinal} (he : o < ω ^ e) : CNF_omega_coeff o e = 0 := by
-  rw [CNF_omega_coeff_eq_iff, Nat.cast_zero, CNF_coeff_of_gt he]
+  rw [CNF_omega_coeff_eq_iff', Nat.cast_zero, CNF_coeff_of_gt he]
 
 theorem CNF_omega_coeff_opow_mul_of_ge (o x e : Ordinal) :
     CNF_omega_coeff (ω ^ x * o) (x + e) = CNF_omega_coeff o e := by
-  rw [CNF_omega_coeff_eq_iff, CNF_coeff_opow_mul_of_ge one_lt_omega, natCast_CNF_omega_coeff]
+  rw [CNF_omega_coeff_eq_iff, CNF_coeff_opow_mul_of_ge one_lt_omega]
 
 theorem CNF_omega_coeff_opow_mul_of_lt {e x : Ordinal} (o : Ordinal) (he : e < x) :
     CNF_omega_coeff (ω ^ x * o) e = 0 := by
-  rw [CNF_omega_coeff_eq_iff, Nat.cast_zero, CNF_coeff_opow_mul_of_lt one_lt_omega o he]
+  rw [CNF_omega_coeff_eq_iff', Nat.cast_zero, CNF_coeff_opow_mul_of_lt one_lt_omega o he]
 
 /-- The function `CNF_omega_coeff (ω ^ x * o)` is the translation of `CNF_omega_coeff o` by `x`. -/
 theorem CNF_omega_coeff_opow_mul (o x : Ordinal) :
@@ -759,22 +771,21 @@ theorem CNF_omega_coeff_opow_mul (o x : Ordinal) :
 theorem CNF_omega_coeff_opow_mul_nat {x : Ordinal} (n : ℕ) :
     CNF_omega_coeff (ω ^ x * n) = single x n := by
   ext e
-  rw [CNF_omega_coeff_eq_iff, CNF_coeff_opow_mul_of_lt_self one_lt_omega (nat_lt_omega n)]
+  rw [CNF_omega_coeff_eq_iff', CNF_coeff_opow_mul_of_lt_self one_lt_omega (nat_lt_omega n)]
   exact (apply_single' _ rfl _ _ _).symm
 
 theorem CNF_omega_coeff_opow_mul_add_of_lt {x o₂ e : Ordinal} (o₁ : Ordinal) (ho₂ : o₂ < ω ^ x)
     (he : e < x) : CNF_omega_coeff (ω ^ x * o₁ + o₂) e = CNF_omega_coeff o₂ e := by
-  rw [CNF_omega_coeff_eq_iff, CNF_coeff_opow_mul_add_of_lt one_lt_omega o₁ ho₂ he,
-    natCast_CNF_omega_coeff]
+  rw [CNF_omega_coeff_eq_iff, CNF_coeff_opow_mul_add_of_lt one_lt_omega o₁ ho₂ he]
 
 theorem CNF_omega_coeff_opow_mul_add_of_ge {x o₂ e : Ordinal} (o₁ : Ordinal) (ho₂ : o₂ < ω ^ x)
     (he : x ≤ e) : CNF_omega_coeff (ω ^ x * o₁ + o₂) e = CNF_omega_coeff (ω ^ x * o₁) e := by
-  rw [CNF_omega_coeff_eq_iff, CNF_coeff_opow_mul_add_of_ge o₁ ho₂ he, natCast_CNF_omega_coeff]
+  rw [CNF_omega_coeff_eq_iff, CNF_coeff_opow_mul_add_of_ge o₁ ho₂ he]
 
 theorem CNF_omega_coeff_opow_mul_add_apply {x o₂ : Ordinal} (o₁ : Ordinal)
     (ho₂ : o₂ < ω ^ x) (e) : CNF_omega_coeff (ω ^ x * o₁ + o₂) e =
       CNF_omega_coeff (ω ^ x * o₁) e + CNF_omega_coeff o₂ e := by
-  rw [CNF_omega_coeff_eq_iff, CNF_coeff_opow_mul_add_apply o₁ ho₂ e, Nat.cast_add,
+  rw [CNF_omega_coeff_eq_iff', CNF_coeff_opow_mul_add_apply o₁ ho₂ e, Nat.cast_add,
     natCast_CNF_omega_coeff, natCast_CNF_omega_coeff]
 
 theorem CNF_omega_coeff_opow_mul_add {x o₂ : Ordinal} (o₁ : Ordinal) (ho₂ : o₂ < ω ^ x) :
@@ -784,7 +795,7 @@ theorem CNF_omega_coeff_opow_mul_add {x o₂ : Ordinal} (o₁ : Ordinal) (ho₂ 
 
 theorem CNF_omega_coeff_opow_mul_div {x e : Ordinal} (o : Ordinal) (he : x ≤ e) :
     CNF_omega_coeff (ω ^ x * (o / ω ^ x)) e = CNF_omega_coeff o e := by
-  rw [CNF_omega_coeff_eq_iff, CNF_coeff_opow_mul_div one_lt_omega o he, natCast_CNF_omega_coeff]
+  rw [CNF_omega_coeff_eq_iff, CNF_coeff_opow_mul_div one_lt_omega o he]
 
 theorem CNF_omega_coeff_apply_zero (o : Ordinal) : CNF_omega_coeff o 0 = o % ω := by
   rw [natCast_CNF_omega_coeff, CNF_coeff_apply_zero omega_ne_one]
@@ -794,7 +805,7 @@ theorem CNF_omega_coeff_apply (o e : Ordinal) : CNF_omega_coeff o e = o / ω ^ e
 
 theorem CNF_omega_coeff_opow_div_apply (o x e : Ordinal) :
     CNF_omega_coeff (o / ω ^ x) e = CNF_omega_coeff o (x + e) := by
-  rw [CNF_omega_coeff_eq_iff, CNF_coeff_opow_div_apply one_lt_omega, natCast_CNF_omega_coeff]
+  rw [CNF_omega_coeff_eq_iff, CNF_coeff_opow_div_apply one_lt_omega]
 
 /-- The function `CNF_coeff b (o / b ^ x)` is the translation of `CNF_coeff b o` by `x`. -/
 theorem CNF_omega_coeff_opow_div (o x : Ordinal) :
@@ -805,20 +816,19 @@ theorem CNF_omega_coeff_opow_div (o x : Ordinal) :
 
 theorem CNF_omega_coeff_mod_opow_of_lt {x e : Ordinal} (o : Ordinal) (he : e < x) :
     CNF_omega_coeff (o % ω ^ x) e = CNF_omega_coeff o e := by
-  rw [CNF_omega_coeff_eq_iff, CNF_coeff_mod_opow_of_lt one_lt_omega o he, natCast_CNF_omega_coeff]
+  rw [CNF_omega_coeff_eq_iff, CNF_coeff_mod_opow_of_lt one_lt_omega o he]
 
 theorem CNF_omega_coeff_mod_opow_of_ge {x e : Ordinal} (o : Ordinal) (he : x ≤ e) :
     CNF_omega_coeff (o % ω ^ x) e = 0 := by
-  rw [CNF_omega_coeff_eq_iff, Nat.cast_zero, CNF_coeff_mod_opow_of_ge omega_ne_zero o he]
+  rw [CNF_omega_coeff_eq_iff', Nat.cast_zero, CNF_coeff_mod_opow_of_ge omega_ne_zero o he]
 
 theorem CNF_omega_coeff_add_of_gt {o₂ e : Ordinal} (o₁ : Ordinal) (he : log ω o₂ < e) :
     CNF_omega_coeff (o₁ + o₂) e = CNF_omega_coeff o₁ e := by
-  rw [CNF_omega_coeff_eq_iff, CNF_coeff_add_of_gt principal_add_omega o₁ he,
-    natCast_CNF_omega_coeff]
+  rw [CNF_omega_coeff_eq_iff, CNF_coeff_add_of_gt principal_add_omega o₁ he]
 
 theorem CNF_omega_coeff_add_of_eq (o₁ o₂ : Ordinal) : CNF_omega_coeff (o₁ + o₂) (log ω o₂) =
     CNF_omega_coeff o₁ (log ω o₂) + CNF_omega_coeff o₂ (log ω o₂) := by
-  rw [CNF_omega_coeff_eq_iff, CNF_coeff_add_of_eq principal_add_omega, Nat.cast_add,
+  rw [CNF_omega_coeff_eq_iff', CNF_coeff_add_of_eq principal_add_omega, Nat.cast_add,
     natCast_CNF_omega_coeff, natCast_CNF_omega_coeff]
 
 theorem CNF_omega_coeff_add_of_eq' {e o₂ : Ordinal} (o₁ : Ordinal) (he : log ω o₂ = e) :
@@ -828,13 +838,12 @@ theorem CNF_omega_coeff_add_of_eq' {e o₂ : Ordinal} (o₁ : Ordinal) (he : log
 
 theorem CNF_omega_coeff_add_of_lt {o₂ e : Ordinal} (o₁ : Ordinal) (he : e < log ω o₂) :
     CNF_omega_coeff (o₁ + o₂) e = CNF_omega_coeff o₂ e := by
-  rw [CNF_omega_coeff_eq_iff, CNF_coeff_add_of_lt principal_add_omega o₁ he,
-    natCast_CNF_omega_coeff]
+  rw [CNF_omega_coeff_eq_iff, CNF_coeff_add_of_lt principal_add_omega o₁ he]
 
 theorem CNF_omega_coeff_opow_mul_add'_apply {x o₂ : Ordinal} (o₁ : Ordinal)
     (ho₂ : o₂ < ω ^ succ x) (e) : CNF_omega_coeff (ω ^ x * o₁ + o₂) e =
       CNF_omega_coeff (ω ^ x * o₁) e + CNF_omega_coeff o₂ e := by
-  rw [CNF_omega_coeff_eq_iff, CNF_coeff_opow_mul_add_of_principal_add_apply
+  rw [CNF_omega_coeff_eq_iff', CNF_coeff_opow_mul_add_of_principal_add_apply
     principal_add_omega o₁ ho₂ e, Nat.cast_add, natCast_CNF_omega_coeff, natCast_CNF_omega_coeff]
 
 theorem CNF_omega_coeff_opow_mul_add' {x o₂ : Ordinal} (o₁ : Ordinal)
@@ -994,51 +1003,16 @@ theorem CNF_omega_eval_inj {f₁ f₂ : Ordinal →₀ ℕ} :
 /-! ### Comparison -/
 
 
-/-- The finset of exponents in `CNF_coeff b o₁` and `CNF_coeff b o₂` yielding distinct coefficients.
--/
-private def distinct (b o₁ o₂ : Ordinal) : Finset Ordinal :=
-  ((CNF_coeff b o₁).support ∪ (CNF_coeff b o₂).support).filter
-    (fun e => CNF_coeff b o₁ e ≠ CNF_coeff b o₂ e)
-
-private theorem mem_distinct_iff {b o₁ o₂ e : Ordinal} :
-    e ∈ distinct b o₁ o₂ ↔ CNF_coeff b o₁ e ≠ CNF_coeff b o₂ e := by
-  rw [distinct, Finset.mem_filter, Finset.mem_union, mem_support_iff, mem_support_iff,
-    and_iff_right_iff_imp]
-  exact Ne.ne_or_ne 0
-
-private theorem not_mem_distinct_iff {b o₁ o₂ e : Ordinal} :
-    e ∉ distinct b o₁ o₂ ↔ CNF_coeff b o₁ e = CNF_coeff b o₂ e :=
-  by rw [mem_distinct_iff, not_not]
-
-theorem mod_div_self (a : Ordinal) {b : Ordinal} (hb : b ≠ 0) : a % b / b = 0 :=
-  div_eq_zero_of_lt <| mod_lt a hb
-
-theorem mod_opow_succ_div (b o x : Ordinal) : o % b ^ succ x / b ^ x = o / b ^ x % b := by
-  have H : o = b ^ succ x * (o / b ^ succ x) + (b ^ x * (o % b ^ succ x / b ^ x) +
-      (o % b ^ succ x) % b ^ x) := by
-    rw [div_add_mod, div_add_mod]
-  obtain rfl | hb := eq_or_ne b 0; simp
-  have hx₁ := opow_ne_zero x hb
-  have hx₂ := opow_ne_zero (succ x) hb
-  rw [H, mul_add_mod_self, mod_eq_of_lt, mul_add_div _ hx₁, mod_div_self _ hx₁, add_zero]
-  conv_rhs => left; left; left; left; rw [opow_succ]
-  rw [mul_assoc, ← add_assoc, ← mul_add, mul_add_div _ hx₁, add_assoc, mul_add_mod_self,
-    mod_div_self _ hx₁, add_zero, @mod_eq_of_lt _ b]
-  · rw [div_lt hx₁, ← opow_succ]
-    exact mod_lt _ hx₂
-  · rw [div_add_mod]
-    exact mod_lt _ hx₂
-
-/-- We write `o₁ = b ^ (e + 1) * c₁ + b ^ e * c₂ + c₃` and
-`o₂ = b ^ (e + 1) * d₁ + b ^ e * d₂ + d₃`. We then show `c₁ = d₁` and `c₂ < d₂`. -/
-private theorem strictMono_aux {o₁ o₂ e : Ordinal} (h : o₁ < o₂)
-    (he : IsGreatest (distinct b o₁ o₂) e) : CNF_coeff b o₁ e < CNF_coeff b o₂ e := by
-  apply (mem_distinct_iff.1 he.1).lt_of_le
+/-- If `o₁ < o₂`, the greatest distinct coefficient of both is smaller for `o₁` than for `o₂`. -/
+theorem CNF_coeff_max_neLocus_lt {o₁ o₂ e : Ordinal} (h : o₁ ≤ o₂)
+    (he : IsGreatest ((CNF_coeff b o₁).neLocus (CNF_coeff b o₂)) e) :
+    CNF_coeff b o₁ e < CNF_coeff b o₂ e := by
+  apply (mem_neLocus.1 he.1).lt_of_le
   obtain hb | hb := le_or_lt b 1
   · iterate 2 rw [CNF_coeff_of_le_one hb]
     obtain rfl | he' := eq_or_ne 0 e
     · iterate 2 rw [single_eq_same]
-      exact h.le
+      exact h
     · iterate 2 rw [single_eq_of_ne he']
   · have H : b ^ succ e * (o₁ / b ^ succ e) = b ^ succ e * (o₂ / b ^ succ e) := by
       rw [← @CNF_coeff_inj b]
@@ -1047,30 +1021,37 @@ private theorem strictMono_aux {o₁ o₂ e : Ordinal} (h : o₁ < o₂)
       · iterate 2 rw [CNF_coeff_opow_mul_of_lt hb _ hx]
       · iterate 2 rw [CNF_coeff_opow_mul_div hb _ hx]
         contrapose! hx
-        exact lt_succ_iff.2 <| he.2 <| mem_distinct_iff.2 hx
+        exact lt_succ_iff.2 <| he.2 <| mem_neLocus.2 hx
     rw [← div_add_mod o₁ (b ^ succ e), ← div_add_mod o₂ (b ^ succ e), H,
-      add_lt_add_iff_left] at h
+      add_le_add_iff_left] at h
     iterate 2 rw [CNF_coeff_apply hb, ← mod_opow_succ_div]
-    exact div_le_left h.le _
+    exact div_le_left h _
+
+/-- `o₁ < o₂` iff the greatest distinct coefficient of both is smaller for `o₁` than for `o₂`. -/
+theorem CNF_coeff_max_neLocus_lt_iff {o₁ o₂ e : Ordinal}
+    (he : IsGreatest ((CNF_coeff b o₁).neLocus (CNF_coeff b o₂)) e) :
+    CNF_coeff b o₁ e < CNF_coeff b o₂ e ↔ o₁ < o₂ := by
+  refine ⟨fun h => ?_, fun ho => CNF_coeff_max_neLocus_lt ho.le he⟩
+  by_contra! ho
+  rw [neLocus_comm] at he
+  exact (CNF_coeff_max_neLocus_lt ho he).not_lt h
 
 /-- If `o₁ < o₂`, then `CNF_coeff b o₁ < CNF_coeff b o₂` in the lexicographic order on
 `Ordinalᵒᵈ →₀ Ordinal`. -/
 theorem CNF_coeff_strictMono (b : Ordinal) :
     StrictMono (fun o => toLex <| (CNF_coeff b o).equivMapDomain toDual) := by
   intro o₁ o₂ h
-  obtain hs | hs := Finset.eq_empty_or_nonempty (distinct b o₁ o₂)
+  obtain hs | hs := Finset.eq_empty_or_nonempty ((CNF_coeff b o₁).neLocus (CNF_coeff b o₂))
   · apply (h.ne _).elim
     rw [← CNF_coeff_inj]
     ext e
     have H := Finset.not_mem_empty e
-    rw [← hs, mem_distinct_iff] at H
-    exact not_not.1 H
-  · refine ⟨_, ⟨?_, strictMono_aux h (Finset.isGreatest_max' _ hs)⟩⟩
+    rwa [← hs, not_mem_neLocus] at H
+  · refine ⟨_, ⟨?_, CNF_coeff_max_neLocus_lt h.le (Finset.isGreatest_max' _ hs)⟩⟩
     dsimp
     intro e he
-    rw [← not_mem_distinct_iff]
-    intro h
-    exact (Finset.le_max' _ _ h).not_lt he
+    rw [← not_mem_neLocus]
+    exact fun h => (Finset.le_max' _ _ h).not_lt he
 
 theorem CNF_coeff_lt_iff_lt {b o₁ o₂ : Ordinal} :
     toLex ((CNF_coeff b o₁).equivMapDomain toDual) <
@@ -1082,11 +1063,18 @@ theorem CNF_coeff_le_iff_le {b o₁ o₂ : Ordinal} :
     toLex ((CNF_coeff b o₂).equivMapDomain toDual) ↔ o₁ ≤ o₂ :=
   (CNF_coeff_strictMono b).le_iff_le
 
-theorem Finsupp.Lex.mapRange {α β γ} [LinearOrder α] [PartialOrder β] [PartialOrder γ]
-    [Zero β] [Zero γ] (e : β → γ) (e0 : e 0 = 0) (he : StrictMono e) :
-    StrictMono (fun f : Lex (α →₀ β) => toLex <| (ofLex f).mapRange e e0) := by
-  rintro f g ⟨i, ⟨hi, hi'⟩⟩
-  use i, fun j hj => congr_arg e (hi j hj), he hi'
+/-- If `o₁ < o₂`, the greatest distinct coefficient of both is smaller for `o₁` than for `o₂`. -/
+theorem CNF_omega_coeff_max_neLocus_lt {o₁ o₂ e : Ordinal} (h : o₁ ≤ o₂)
+    (he : IsGreatest ((CNF_coeff ω o₁).neLocus (CNF_coeff ω o₂)) e) :
+    CNF_omega_coeff o₁ e < CNF_omega_coeff o₂ e := by
+  rw [CNF_omega_coeff_lt_iff]
+  exact CNF_coeff_max_neLocus_lt h he
+
+/-- `o₁ < o₂` iff the greatest distinct coefficient of both is smaller for `o₁` than for `o₂`. -/
+theorem CNF_omega_coeff_max_neLocus_lt_iff {o₁ o₂ e : Ordinal}
+    (he : IsGreatest ((CNF_coeff ω o₁).neLocus (CNF_coeff ω o₂)) e) :
+    CNF_omega_coeff o₁ e < CNF_omega_coeff o₂ e ↔ o₁ < o₂ := by
+  rw [CNF_omega_coeff_lt_iff, CNF_coeff_max_neLocus_lt_iff he]
 
 /-- If `o₁ < o₂`, then `CNF_omega_coeff o₁ < CNF_omega_coeff o₂` in the lexicographic order on
 `Ordinalᵒᵈ →₀ ℕ`. -/
@@ -1094,13 +1082,7 @@ theorem CNF_omega_coeff_strictMono :
     StrictMono (fun o => toLex <| (CNF_omega_coeff o).equivMapDomain toDual) := by
   intro o₁ o₂ h
   obtain ⟨i, ⟨hi, hi'⟩⟩ := CNF_coeff_strictMono ω h
-  use i
-  dsimp
-  constructor
-  · intro j hj
-    rw [← @Nat.cast_inj Ordinal, natCast_CNF_omega_coeff, natCast_CNF_omega_coeff]
-    exact hi j hj
-  · rwa [← @Nat.cast_lt Ordinal, natCast_CNF_omega_coeff, natCast_CNF_omega_coeff]
+  use i, fun j hj => CNF_omega_coeff_eq_iff.2 <| hi j hj, CNF_omega_coeff_lt_iff.2 hi'
 
 theorem CNF_omega_coeff_lt_iff_lt {o₁ o₂ : Ordinal} :
     toLex ((CNF_omega_coeff o₁).equivMapDomain toDual) <
@@ -1125,81 +1107,5 @@ def CNF_iso : Ordinal ≃o Lex (Ordinalᵒᵈ →₀ ℕ) where
     dsimp
     rw [CNF_omega_coeff_CNF_omega_eval, ← toDual_symm_eq, equivMapDomain_comp_symm, toLex_ofLex]
   map_rel_iff' := @CNF_omega_coeff_le_iff_le
-
-/-! ### Ordinal XOR -/
--- TODO: put this in its own file.
-
-
-/-- The XOR of two ordinals is computed by XOR-ing each pair of corresponding natural coefficients
-in the base `ω` Cantor normal form. -/
-instance : Xor Ordinal :=
-  ⟨fun a b => CNF_omega_eval <| (CNF_omega_coeff a).zipWith _ (Nat.zero_xor 0) (CNF_omega_coeff b)⟩
-
-theorem CNF_omega_coeff_xor (a b e : Ordinal) :
-    CNF_omega_coeff (a ^^^ b) e = CNF_omega_coeff a e ^^^ CNF_omega_coeff b e :=
-  CNF_omega_coeff_CNF_omega_eval_apply _ e
-
-/-! We port the results from Mathlib.Data.Nat.Bitwise in a mostly one to one manner. -/
-
-@[simp]
-protected theorem xor_self (a : Ordinal) : a ^^^ a = 0 := by
-  rw [← CNF_omega_coeff_inj]
-  ext e
-  rw [CNF_omega_coeff_xor, Nat.xor_self, CNF_omega_coeff_zero_apply]
-
-protected theorem xor_comm (a b : Ordinal) : a ^^^ b = b ^^^ a := by
-  rw [← CNF_omega_coeff_inj]
-  ext e
-  rw [CNF_omega_coeff_xor, Nat.xor_comm, CNF_omega_coeff_xor]
-
-protected theorem xor_assoc (a b c : Ordinal) : a ^^^ b ^^^ c = a ^^^ (b ^^^ c) := by
-  rw [← CNF_omega_coeff_inj]
-  ext e
-  rw [CNF_omega_coeff_xor, CNF_omega_coeff_xor, Nat.xor_assoc,
-    CNF_omega_coeff_xor, CNF_omega_coeff_xor]
-
-@[simp]
-protected theorem zero_xor (a : Ordinal) : 0 ^^^ a = a := by
-  rw [← CNF_omega_coeff_inj]
-  ext e
-  rw [CNF_omega_coeff_xor, CNF_omega_coeff_zero_apply, Nat.zero_xor]
-
-@[simp]
-protected theorem xor_zero (a : Ordinal) : a ^^^ 0 = a := by
-  rw [Ordinal.xor_comm, Ordinal.zero_xor]
-
-protected theorem xor_cancel_right (a b : Ordinal) : b ^^^ a ^^^ a = b := by
-  rw [Ordinal.xor_assoc, Ordinal.xor_self, Ordinal.xor_zero]
-
-protected theorem xor_cancel_left (a b : Ordinal) : a ^^^ (a ^^^ b) = b := by
-  rw [← Ordinal.xor_assoc, Ordinal.xor_self, Ordinal.zero_xor]
-
-protected theorem xor_right_injective (a : Ordinal) : Function.Injective (a ^^^ ·) := by
-  intro b c h
-  dsimp at h
-  rw [← Ordinal.xor_cancel_left a b, h, Ordinal.xor_cancel_left]
-
-protected theorem xor_left_injective (a : Ordinal) : Function.Injective (· ^^^ a) := by
-  intro b c h
-  dsimp at h
-  rw [← Ordinal.xor_cancel_right a b, h, Ordinal.xor_cancel_right]
-
-@[simp]
-protected theorem xor_right_inj {a b c : Ordinal} : a ^^^ b = a ^^^ c ↔ b = c :=
-  (Ordinal.xor_right_injective a).eq_iff
-
-@[simp]
-protected theorem xor_left_inj {a b c : Ordinal} : b ^^^ a = c ^^^ a ↔ b = c :=
-  (Ordinal.xor_left_injective a).eq_iff
-
-@[simp]
-protected theorem xor_eq_zero {a b : Ordinal} : a ^^^ b = 0 ↔ a = b := by
-  rw [← Ordinal.xor_self b, Ordinal.xor_left_inj]
-
-protected theorem xor_ne_zero {a b : Ordinal} : a ^^^ b ≠ 0 ↔ a ≠ b :=
-  Ordinal.xor_eq_zero.not
-
-protected theorem xor_trichotomy {a b c : Ordinal} (h : a ≠ b ^^^ c) :
-  b ^^^ c < a ∨ a ^^^ c < b ∨ a ^^^ b < c := sorry
 
 end Ordinal

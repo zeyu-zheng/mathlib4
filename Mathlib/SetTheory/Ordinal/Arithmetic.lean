@@ -946,6 +946,9 @@ theorem mod_self (a : Ordinal) : a % a = 0 :=
 @[simp]
 theorem mod_one (a : Ordinal) : a % 1 = 0 := by simp only [mod_def, div_one, one_mul, sub_self]
 
+theorem mod_div_self (a : Ordinal) {b : Ordinal} (hb : b ≠ 0) : a % b / b = 0 :=
+  div_eq_zero_of_lt <| mod_lt a hb
+
 theorem dvd_of_mod_eq_zero {a b : Ordinal} (H : a % b = 0) : b ∣ a :=
   ⟨a / b, by simpa [H] using (div_add_mod a b).symm⟩
 

@@ -471,6 +471,22 @@ theorem div_opow_log_lt {b : Ordinal} (o : Ordinal) (hb : 1 < b) : o / (b ^ log 
   rw [div_lt (opow_pos _ (zero_lt_one.trans hb)).ne', ← opow_succ]
   exact lt_opow_succ_log_self hb o
 
+theorem mod_opow_succ_div (b o x : Ordinal) : o % b ^ succ x / b ^ x = o / b ^ x % b := by
+  have H : o = b ^ succ x * (o / b ^ succ x) + (b ^ x * (o % b ^ succ x / b ^ x) +
+      (o % b ^ succ x) % b ^ x) := by
+    rw [div_add_mod, div_add_mod]
+  obtain rfl | hb := eq_or_ne b 0; simp
+  have hx₁ := opow_ne_zero x hb
+  have hx₂ := opow_ne_zero (succ x) hb
+  rw [H, mul_add_mod_self, mod_eq_of_lt, mul_add_div _ hx₁, mod_div_self _ hx₁, add_zero]
+  conv_rhs => left; left; left; left; rw [opow_succ]
+  rw [mul_assoc, ← add_assoc, ← mul_add, mul_add_div _ hx₁, add_assoc, mul_add_mod_self,
+    mod_div_self _ hx₁, add_zero, @mod_eq_of_lt _ b]
+  · rw [div_lt hx₁, ← opow_succ]
+    exact mod_lt _ hx₂
+  · rw [div_add_mod]
+    exact mod_lt _ hx₂
+
 theorem add_log_le_log_mul {x y : Ordinal} (b : Ordinal) (hx : x ≠ 0) (hy : y ≠ 0) :
     log b x + log b y ≤ log b (x * y) := by
   obtain hb | hb := lt_or_le 1 b
