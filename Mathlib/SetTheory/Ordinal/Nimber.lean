@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández Palacios
 -/
 import Mathlib.SetTheory.Ordinal.Arithmetic
+import Mathlib.Tactic.Abel
 
 /-!
 # Nimbers
@@ -232,21 +233,17 @@ private theorem add_ne_of_lt (a b : Nimber) :
   rw [← add_def] at H
   simpa using H
 
-instance : IsLeftCancelAdd Nimber := by
-  constructor
-  intro a b c h
-  apply le_antisymm <;>
-  apply le_of_not_lt
-  · exact fun hc => (add_ne_of_lt a b).2 c hc h.symm
-  · exact fun hb => (add_ne_of_lt a c).2 b hb h
-
-instance : IsRightCancelAdd Nimber := by
-  constructor
-  intro a b c h
-  apply le_antisymm <;>
-  apply le_of_not_lt
-  · exact fun hc => (add_ne_of_lt a b).1 c hc h.symm
-  · exact fun ha => (add_ne_of_lt c b).1 a ha h
+instance : IsCancelAdd Nimber where
+  add_left_cancel a b c h := by
+    apply le_antisymm <;>
+    apply le_of_not_lt
+    · exact fun hc => (add_ne_of_lt a b).2 c hc h.symm
+    · exact fun hb => (add_ne_of_lt a c).2 b hb h
+  add_right_cancel a b c h := by
+    apply le_antisymm <;>
+    apply le_of_not_lt
+    · exact fun hc => (add_ne_of_lt a b).1 c hc h.symm
+    · exact fun ha => (add_ne_of_lt c b).1 a ha h
 
 -- Ideally the proof would be an easy induction on `add_def`, but rewriting under binders trips up
 -- the termination checker.
@@ -337,7 +334,18 @@ instance : AddCommGroupWithOne Nimber where
   neg_add_cancel := add_self
   add_comm := Nimber.add_comm
 
+@[simp]
+protected theorem sub_eq (a b : Nimber) : a - b = a + b :=
+  rfl
+
 -- TODO: add CharP 2 instance
+
+@[simp]
+theorem two_nsmul (a : Nimber) : 2 • a = 0 := by
+  rw [succ_nsmul, one_nsmul, add_self]
+
+theorem two_zsmul (a : Nimber) : (2 : ℤ) • a = 0 :=
+  two_nsmul a
 
 theorem add_cancel_right (a b : Nimber) : a + b + b = a := by
   rw [add_assoc, add_self, add_zero]
@@ -345,8 +353,13 @@ theorem add_cancel_right (a b : Nimber) : a + b + b = a := by
 theorem add_cancel_left (a b : Nimber) : a + (a + b) = b := by
   rw [← add_assoc, add_self, zero_add]
 
-theorem add_trichotomy {a b c : Nimber} (h : a ≠ b + c) :
-    b + c < a ∨ a + c < b ∨ a + b < c := by
+theorem add_eq_of_eq_add (h : a = b + c) : a + c = b :=
+  sub_eq_of_eq_add h
+
+theorem eq_add_of_add_eq (h : a + b = c) : a = c + b :=
+  eq_sub_of_add_eq h
+
+theorem add_trichotomy (h : a ≠ b + c) : b + c < a ∨ a + c < b ∨ a + b < c := by
   rw [← add_ne_zero_iff, ← Nimber.pos_iff_ne_zero] at h
   obtain ⟨x, hx, hx'⟩ | ⟨x, hx, hx'⟩ := exists_of_lt_add h <;>
   rw [add_eq_zero_iff] at hx'
@@ -361,6 +374,7 @@ theorem add_trichotomy {a b c : Nimber} (h : a ≠ b + c) :
 
 /-! ### Nimber multiplication -/
 
+
 /-- Nimber multiplication is recursively defined so that `a * b` is the smallest number not equal to
 `a' * b + a * b' + a' * b'` for `a' < a` and `b' < b`. -/
 -- We write the binders like this so that the termination checker works.
@@ -368,5 +382,123 @@ protected def mul (a b : Nimber.{u}) : Nimber.{u} :=
   sInf {x | ∃ a', ∃ (_ : a' < a), ∃ b', ∃ (_ : b' < b),
     Nimber.mul a' b + Nimber.mul a b' + Nimber.mul a' b' = x}ᶜ
 termination_by (a, b)
+
+instance : Mul Nimber :=
+  ⟨Nimber.mul⟩
+
+theorem mul_def (a b : Nimber) :
+    a * b = sInf {x | ∃ a' < a, ∃ b' < b, a' * b + a * b' + a' * b' = x}ᶜ := by
+  change Nimber.mul a b = _
+  rw [Nimber.mul]
+  simp_rw [exists_prop]
+  rfl
+
+open Ordinal in
+/-- The set in the definition of `Nimber.mul` is nonempty. -/
+theorem mul_nonempty (a b : Nimber) :
+    {x | ∃ a' < a, ∃ b' < b, a' * b + a * b' + a' * b' = x}ᶜ.Nonempty := by
+  use Ordinal.blsub₂ a b @fun x _ y _ =>
+    toNimber x * b + a * toNimber y + toNimber x * toNimber y
+  simp only [Set.mem_compl_iff, Set.mem_setOf_eq, not_exists, not_and]
+  intro x hx y hy
+  apply ne_of_lt
+  exact lt_blsub₂ _ hx hy
+
+theorem exists_of_lt_mul (h : c < a * b) : ∃ a' < a, ∃ b' < b, a' * b + a * b' + a' * b' = c := by
+  rw [mul_def] at h
+  have := not_mem_of_lt_csInf h ⟨_, bot_mem_lowerBounds _⟩
+  rwa [Set.mem_compl_iff, not_not] at this
+
+theorem mul_le_of_forall_ne (h : ∀ a' < a, ∀ b' < b, a' * b + a * b' + a' * b' ≠ c) :
+    a * b ≤ c := by
+  by_contra! h'
+  have := exists_of_lt_mul h'
+  tauto
+
+protected theorem mul_zero (a : Nimber) : a * 0 = 0 := by
+  rw [← Nimber.le_zero]
+  apply mul_le_of_forall_ne
+  intro _ _ _ h
+  exact (Nimber.not_lt_zero _ h).elim
+
+protected theorem zero_mul (a : Nimber) : 0 * a = 0 := by
+  rw [← Nimber.le_zero]
+  apply mul_le_of_forall_ne
+  intro _ h
+  exact (Nimber.not_lt_zero _ h).elim
+
+private theorem mul_ne_of_lt : ∀ a' < a, ∀ b' < b, a' * b + a * b' + a' * b' ≠ a * b := by
+  have H := csInf_mem (mul_nonempty a b)
+  rw [← mul_def] at H
+  simpa using H
+
+protected theorem mul_comm (a b : Nimber) : a * b = b * a := by
+  apply le_antisymm <;>
+  apply mul_le_of_forall_ne <;>
+  intro x hx y hy
+  on_goal 1 => rw [add_comm (x * _), Nimber.mul_comm a, Nimber.mul_comm x b, Nimber.mul_comm x y]
+  on_goal 2 => rw [add_comm (x * _), ← Nimber.mul_comm y b, ← Nimber.mul_comm a x,
+    ← Nimber.mul_comm y x]
+  all_goals exact mul_ne_of_lt y hy x hx
+termination_by (a, b)
+
+protected theorem mul_add (a b c : Nimber) : a * (b + c) = a * b + a * c := by
+  apply le_antisymm
+  · apply mul_le_of_forall_ne
+    intro a' ha x hx
+    obtain (⟨b', h, rfl⟩ | ⟨c', h, rfl⟩) := exists_of_lt_add hx <;>
+    rw [Nimber.mul_add a', Nimber.mul_add a, Nimber.mul_add a']
+    on_goal 1 => rw [← add_ne_add_left (a * c)]
+    on_goal 2 => rw [← add_ne_add_left (a * b)]
+    all_goals
+      abel_nf
+      simp only [two_zsmul, zero_add]
+      rw [← add_assoc]
+      exact mul_ne_of_lt _ ha _ h
+  · apply add_le_of_forall_ne <;>
+    intro x' hx' <;>
+    obtain ⟨x, hx, y, hy, rfl⟩ := exists_of_lt_mul hx'
+    · obtain h | h | h := lt_trichotomy (y + c) (b + c)
+      · have H := mul_ne_of_lt _ hx _ h
+        rw [Nimber.mul_add x, Nimber.mul_add a, Nimber.mul_add x] at H
+        abel_nf at H ⊢
+        simpa only [two_zsmul, zero_add] using H
+      · exact (hy.ne <| add_left_injective _ h).elim
+      · obtain ⟨z, hz, hz'⟩ | ⟨c', hc, hc'⟩ := exists_of_lt_add h
+        · exact ((hz.trans hy).ne <| add_left_injective _ hz').elim
+        · have := add_eq_of_eq_add hc'
+          have H := mul_ne_of_lt _ hx _ hc
+          rw [← hc', Nimber.mul_add a y c', ← add_ne_add_left (a * y), ← add_ne_add_left (a * c),
+            ← add_ne_add_left (a * c'), ← add_eq_of_eq_add hc', Nimber.mul_add x, Nimber.mul_add x]
+          abel_nf at H ⊢
+          simpa only [two_zsmul, add_zero, zero_add] using H
+    · obtain h | h | h := lt_trichotomy (b + y) (b + c)
+      · have H := mul_ne_of_lt _ hx _ h
+        rw [Nimber.mul_add x, Nimber.mul_add a, Nimber.mul_add x] at H
+        abel_nf at H ⊢
+        simpa only [two_zsmul, zero_add] using H
+      · exact (hy.ne <| add_right_injective _ h).elim
+      · obtain ⟨b', hb, hb'⟩ | ⟨z, hz, hz'⟩ := exists_of_lt_add h
+        · have H := mul_ne_of_lt _ hx _ hb
+          have hb'' := add_eq_of_eq_add (add_comm b c ▸ hb')
+          rw [← hb', Nimber.mul_add a b', ← add_ne_add_left (a * y), ← add_ne_add_left (a * b),
+            ← add_ne_add_left (a * b'), ← hb'', Nimber.mul_add x, Nimber.mul_add x]
+          abel_nf at H ⊢
+          simpa only [two_zsmul, add_zero, zero_add] using H
+        · exact ((hz.trans hy).ne <| add_right_injective _ hz').elim
+termination_by (a, b, c)
+
+
+/-protected theorem mul_assoc (a b c : Nimber) : a * b * c = a * (b * c) := by
+  apply le_antisymm <;>
+  apply mul_le_of_forall_ne
+  · intro x hx c' hc
+    obtain ⟨a', ha, b', hb, h⟩ := exists_of_lt_mul hx
+-/
+
+
+/-instance : IsCancelMulZero Nimber where
+  mul_left_cancel_of_ne_zero ha h := by-/
+
 
 end Nimber
