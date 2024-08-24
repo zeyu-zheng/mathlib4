@@ -818,9 +818,10 @@ partial def transformDeclAux
   if isProtected (← getEnv) src then
     setEnv <| addProtected (← getEnv) tgt
   if let some matcherInfo ← getMatcherInfo? src then
-    -- Use
-    --   Match.addMatcherInfo tgt matcherInfo
-    -- once https://github.com/leanprover/lean4/pull/5068 is in
+    /-
+    Use `Match.addMatcherInfo tgt matcherInfo`
+    once https://github.com/leanprover/lean4/pull/5068 is in
+    -/
     modifyEnv fun env => Match.Extension.addMatcherInfo env tgt matcherInfo
 
 /-- Copy the instance attribute in a `to_additive`
