@@ -47,14 +47,14 @@ noncomputable section
 
 /-- A type synonym for ordinals with natural addition and multiplication. -/
 def Nimber : Type _ :=
-  -- Porting note: used to derive LinearOrder & SuccOrder but need to manually define
-  Ordinal deriving Zero, Inhabited, One, WellFoundedRelation
+  Ordinal deriving Zero, Inhabited, One, Nontrivial, WellFoundedRelation
 
 instance Nimber.linearOrder : LinearOrder Nimber := {Ordinal.linearOrder with}
 instance Nimber.succOrder : SuccOrder Nimber := {Ordinal.succOrder with}
 instance Nimber.orderBot : OrderBot Nimber := {Ordinal.orderBot with}
 instance Nimber.noMaxOrder : NoMaxOrder Nimber := {Ordinal.noMaxOrder with}
 instance Nimber.zeroLEOneClass : ZeroLEOneClass Nimber := {Ordinal.zeroLEOneClass with}
+instance Nimber.NeZero.one : NeZero (1 : Nimber) := Ordinal.NeZero.one
 
 /-- The identity function between `Ordinal` and `Nimber`. -/
 @[match_pattern]
@@ -130,14 +130,25 @@ protected def rec {β : Nimber → Sort*} (h : ∀ a, β (toNimber a)) : ∀ a, 
 theorem induction {p : Nimber → Prop} : ∀ (i) (_ : ∀ j, (∀ k, k < j → p k) → p j), p i :=
   Ordinal.induction
 
-protected theorem le_zero {a : Nimber} : a ≤ 0 ↔ a = 0 :=
+variable {a : Nimber}
+
+protected theorem le_zero : a ≤ 0 ↔ a = 0 :=
   Ordinal.le_zero
 
 protected theorem not_lt_zero (a : Nimber) : ¬ a < 0 :=
   Ordinal.not_lt_zero a
 
-protected theorem pos_iff_ne_zero {a : Nimber} : 0 < a ↔ a ≠ 0 :=
+protected theorem pos_iff_ne_zero : 0 < a ↔ a ≠ 0 :=
   Ordinal.pos_iff_ne_zero
+
+theorem lt_one_iff_zero : a < 1 ↔ a = 0 :=
+  Ordinal.lt_one_iff_zero
+
+theorem one_le_iff_pos : 1 ≤ a ↔ 0 < a :=
+  Ordinal.one_le_iff_pos
+
+theorem one_le_iff_ne_zero : 1 ≤ a ↔ a ≠ 0 :=
+  Ordinal.one_le_iff_ne_zero
 
 end Nimber
 
@@ -415,22 +426,30 @@ theorem mul_le_of_forall_ne (h : ∀ a' < a, ∀ b' < b, a' * b + a * b' + a' * 
   have := exists_of_lt_mul h'
   tauto
 
-protected theorem mul_zero (a : Nimber) : a * 0 = 0 := by
-  rw [← Nimber.le_zero]
-  apply mul_le_of_forall_ne
-  intro _ _ _ h
-  exact (Nimber.not_lt_zero _ h).elim
-
-protected theorem zero_mul (a : Nimber) : 0 * a = 0 := by
-  rw [← Nimber.le_zero]
-  apply mul_le_of_forall_ne
-  intro _ h
-  exact (Nimber.not_lt_zero _ h).elim
+instance : MulZeroClass Nimber where
+  mul_zero a := by
+    rw [← Nimber.le_zero]
+    apply mul_le_of_forall_ne
+    intro _ _ _ h
+    exact (Nimber.not_lt_zero _ h).elim
+  zero_mul a := by
+    rw [← Nimber.le_zero]
+    apply mul_le_of_forall_ne
+    intro _ h
+    exact (Nimber.not_lt_zero _ h).elim
 
 private theorem mul_ne_of_lt : ∀ a' < a, ∀ b' < b, a' * b + a * b' + a' * b' ≠ a * b := by
   have H := csInf_mem (mul_nonempty a b)
   rw [← mul_def] at H
   simpa using H
+
+instance : NoZeroDivisors Nimber := by
+  constructor
+  intro a b h
+  by_contra! hab
+  iterate 2 rw [← Nimber.pos_iff_ne_zero] at hab
+  apply (mul_ne_of_lt _ hab.1 _ hab.2).symm
+  simpa only [zero_add, mul_zero, zero_mul]
 
 protected theorem mul_comm (a b : Nimber) : a * b = b * a := by
   apply le_antisymm <;>
@@ -488,17 +507,76 @@ protected theorem mul_add (a b c : Nimber) : a * (b + c) = a * b + a * c := by
         · exact ((hz.trans hy).ne <| add_right_injective _ hz').elim
 termination_by (a, b, c)
 
+protected theorem add_mul (a b c : Nimber) : (a + b) * c = a * c + b * c := by
+  rw [Nimber.mul_comm, Nimber.mul_add, Nimber.mul_comm, Nimber.mul_comm b]
 
-/-protected theorem mul_assoc (a b c : Nimber) : a * b * c = a * (b * c) := by
+protected theorem mul_assoc (a b c : Nimber) : a * b * c = a * (b * c) := by
   apply le_antisymm <;>
-  apply mul_le_of_forall_ne
-  · intro x hx c' hc
-    obtain ⟨a', ha, b', hb, h⟩ := exists_of_lt_mul hx
--/
+  apply mul_le_of_forall_ne <;>
+  intro x hx y hy
+  · obtain ⟨a', ha, b', hb, rfl⟩ := exists_of_lt_mul hx
+    have H : (a + a') * ((b + b') * (c + y)) ≠ 0 := by
+      apply mul_ne_zero _ (mul_ne_zero _ _)
+      all_goals
+        rw [add_ne_zero_iff]
+        apply ne_of_gt
+        assumption
+    simp only [Nimber.add_mul, Nimber.mul_add] at H ⊢
+    iterate 7 rw [Nimber.mul_assoc]
+    rw [← add_ne_add_left (a * (b * c))]
+    abel_nf at H ⊢
+    simpa only [two_zsmul, zero_add] using H
+  · obtain ⟨b', hb, c', hc, rfl⟩ := exists_of_lt_mul hy
+    have H : (a + x) * (b + b') * (c + c') ≠ 0 := by
+      apply mul_ne_zero (mul_ne_zero _ _)
+      all_goals
+        rw [add_ne_zero_iff]
+        apply ne_of_gt
+        assumption
+    simp only [Nimber.add_mul, Nimber.mul_add] at H ⊢
+    iterate 7 rw [← Nimber.mul_assoc]
+    rw [← add_ne_add_left (a * b * c)]
+    abel_nf at H ⊢
+    simpa only [two_zsmul, zero_add] using H
+termination_by (a, b, c)
 
+instance : IsCancelMulZero Nimber where
+  mul_left_cancel_of_ne_zero ha h := by
+    rw [← add_eq_zero_iff, ← Nimber.mul_add, mul_eq_zero] at h
+    exact add_eq_zero_iff.1 (h.resolve_left ha)
+  mul_right_cancel_of_ne_zero ha h := by
+    rw [← add_eq_zero_iff, ← Nimber.add_mul, mul_eq_zero] at h
+    exact add_eq_zero_iff.1 (h.resolve_right ha)
 
-/-instance : IsCancelMulZero Nimber where
-  mul_left_cancel_of_ne_zero ha h := by-/
+protected theorem one_mul (a : Nimber) : 1 * a = a := by
+  apply le_antisymm
+  · apply mul_le_of_forall_ne
+    intro x hx y hy
+    rw [Nimber.lt_one_iff_zero] at hx
+    rw [hx, Nimber.one_mul, zero_mul, zero_mul, add_zero, zero_add]
+    exact hy.ne
+  · -- by_contra! doesn't work for whatever reason.
+    by_contra h
+    replace h := lt_of_not_le h
+    exact (mul_left_cancel₀ one_ne_zero <| Nimber.one_mul _).not_lt h
+termination_by a
 
+protected theorem mul_one (a : Nimber) : a * 1 = a := by
+  rw [Nimber.mul_comm, Nimber.one_mul]
+
+instance : CommRing Nimber where
+  left_distrib := Nimber.mul_add
+  right_distrib := Nimber.add_mul
+  zero_mul := zero_mul
+  mul_zero := mul_zero
+  mul_assoc := Nimber.mul_assoc
+  mul_comm := Nimber.mul_comm
+  one_mul := Nimber.one_mul
+  mul_one := Nimber.mul_one
+  zsmul := zsmulRec
+  neg_add_cancel := add_self
+
+instance : IsDomain Nimber :=
+  { }
 
 end Nimber
