@@ -351,7 +351,6 @@ protected theorem sub_eq (a b : Nimber) : a - b = a + b :=
 
 -- TODO: add CharP 2 instance
 
-@[simp]
 theorem two_nsmul (a : Nimber) : 2 • a = 0 := by
   rw [succ_nsmul, one_nsmul, add_self]
 
