@@ -230,7 +230,7 @@ theorem add_nonempty (a b : Nimber) :
 theorem exists_of_lt_add (h : c < a + b) : (∃ a' < a, a' + b = c) ∨ ∃ b' < b, a + b' = c := by
   rw [add_def] at h
   have := not_mem_of_lt_csInf h ⟨_, bot_mem_lowerBounds _⟩
-  rwa [Set.mem_compl_iff, not_not] at this
+  rwa [Set.not_mem_compl_iff] at this
 
 theorem add_le_of_forall_ne (h₁ : ∀ a' < a, a' + b ≠ c) (h₂ : ∀ b' < b, a + b' ≠ c) :
     a + b ≤ c := by
@@ -364,11 +364,11 @@ theorem add_cancel_right (a b : Nimber) : a + b + b = a := by
 theorem add_cancel_left (a b : Nimber) : a + (a + b) = b := by
   rw [← add_assoc, add_self, zero_add]
 
-theorem add_eq_of_eq_add (h : a = b + c) : a + c = b :=
-  sub_eq_of_eq_add h
+theorem add_eq_iff_eq_add : a + b = c ↔ a = c + b :=
+  sub_eq_iff_eq_add
 
-theorem eq_add_of_add_eq (h : a + b = c) : a = c + b :=
-  eq_sub_of_add_eq h
+theorem eq_add_iff_add_eq : a = b + c ↔ a + c = b :=
+  eq_sub_iff_add_eq
 
 theorem add_trichotomy (h : a ≠ b + c) : b + c < a ∨ a + c < b ∨ a + b < c := by
   rw [← add_ne_zero_iff, ← Nimber.pos_iff_ne_zero] at h
@@ -418,7 +418,7 @@ theorem mul_nonempty (a b : Nimber) :
 theorem exists_of_lt_mul (h : c < a * b) : ∃ a' < a, ∃ b' < b, a' * b + a * b' + a' * b' = c := by
   rw [mul_def] at h
   have := not_mem_of_lt_csInf h ⟨_, bot_mem_lowerBounds _⟩
-  rwa [Set.mem_compl_iff, not_not] at this
+  rwa [Set.not_mem_compl_iff] at this
 
 theorem mul_le_of_forall_ne (h : ∀ a' < a, ∀ b' < b, a' * b + a * b' + a' * b' ≠ c) :
     a * b ≤ c := by
@@ -485,10 +485,11 @@ protected theorem mul_add (a b c : Nimber) : a * (b + c) = a * b + a * c := by
       · exact (hy.ne <| add_left_injective _ h).elim
       · obtain ⟨z, hz, hz'⟩ | ⟨c', hc, hc'⟩ := exists_of_lt_add h
         · exact ((hz.trans hy).ne <| add_left_injective _ hz').elim
-        · have := add_eq_of_eq_add hc'
+        · have := add_eq_iff_eq_add.1 hc'
           have H := mul_ne_of_lt _ hx _ hc
           rw [← hc', Nimber.mul_add a y c', ← add_ne_add_left (a * y), ← add_ne_add_left (a * c),
-            ← add_ne_add_left (a * c'), ← add_eq_of_eq_add hc', Nimber.mul_add x, Nimber.mul_add x]
+            ← add_ne_add_left (a * c'), ← add_eq_iff_eq_add.2 hc', Nimber.mul_add x,
+            Nimber.mul_add x]
           abel_nf at H ⊢
           simpa only [two_zsmul, add_zero, zero_add] using H
     · obtain h | h | h := lt_trichotomy (b + y) (b + c)
@@ -499,7 +500,7 @@ protected theorem mul_add (a b c : Nimber) : a * (b + c) = a * b + a * c := by
       · exact (hy.ne <| add_right_injective _ h).elim
       · obtain ⟨b', hb, hb'⟩ | ⟨z, hz, hz'⟩ := exists_of_lt_add h
         · have H := mul_ne_of_lt _ hx _ hb
-          have hb'' := add_eq_of_eq_add (add_comm b c ▸ hb')
+          have hb'' := add_eq_iff_eq_add.2 (add_comm b c ▸ hb')
           rw [← hb', Nimber.mul_add a b', ← add_ne_add_left (a * y), ← add_ne_add_left (a * b),
             ← add_ne_add_left (a * b'), ← hb'', Nimber.mul_add x, Nimber.mul_add x]
           abel_nf at H ⊢
@@ -579,6 +580,9 @@ instance : CommRing Nimber where
 instance : IsDomain Nimber :=
   { }
 
+instance : CancelMonoidWithZero Nimber :=
+  { }
+
 
 /-! ### Nimber division -/
 
@@ -586,17 +590,17 @@ instance : IsDomain Nimber :=
 /-- The nimber inverse `a⁻¹` is recursively defined as the smallest nimber not in the set `s`, which
 itself is recursively defined as the smallest set with `0 ∈ s` and `(1 + (a + a') * b) / a' ∈ s`
 for `0 < a' < a` and `b ∈ s`. For simplicity, we refer to this operation on "cons" in theorem names,
-in analogy to other inductive types.
+in analogy to inductive types.
 
 This preliminary definition "accidentally" satisfies `inv' 0 = 1`, which the real inverse corrects.
 -/
 def inv' (a : Nimber) : Nimber :=
-  sInf (⋂₀ {s | 0 ∈ s ∧ ∀ a' < a, a' ≠ 0 → ∀ b ∈ s, (1 + (a + a') * b) * inv' a' ∈ s})ᶜ
+  sInf (⋂₀ {s | 0 ∈ s ∧ ∀ a' < a, a' ≠ 0 → ∀ b ∈ s, inv' a' * (1 + (a + a') * b) ∈ s})ᶜ
 termination_by a
 
-/-- The set in the definition of `inv' a`. -/
+/-- The (complement of the) set in the definition of `inv' a`. -/
 def inv'_set (a : Nimber) : Set Nimber :=
-  ⋂₀ {s | 0 ∈ s ∧ ∀ a' < a, a' ≠ 0 → ∀ b ∈ s, (1 + (a + a') * b) * inv' a' ∈ s}
+  ⋂₀ {s | 0 ∈ s ∧ ∀ a' < a, a' ≠ 0 → ∀ b ∈ s, inv' a' * (1 + (a + a') * b) ∈ s}
 
 theorem inv'_def (a : Nimber) : inv' a = sInf (inv'_set a)ᶜ := by
   rw [inv']
@@ -606,13 +610,13 @@ theorem zero_mem_inv'_set (a : Nimber) : 0 ∈ inv'_set a :=
   Set.mem_sInter.2 fun _ hs => hs.1
 
 theorem cons_mem_inv'_set {a' : Nimber} (ha₀ : a' ≠ 0) (ha : a' < a) (hb : b ∈ inv'_set a) :
-    (1 + (a + a') * b) * inv' a' ∈ inv'_set a :=
+    inv' a' * (1 + (a + a') * b) ∈ inv'_set a :=
   Set.mem_sInter.2 fun _ hs => hs.2 _ ha ha₀ _ (Set.mem_sInter.1 hb _ hs)
 
 /-- A recursion principle for `inv'_set`. -/
 @[elab_as_elim]
 theorem inv'_recOn (a : Nimber) {p : Nimber → Prop} (h0 : p 0)
-    (hi : ∀ a' < a, a' ≠ 0 → ∀ b, p b → p ((1 + (a + a') * b) * inv' a')) {x : Nimber}
+    (hi : ∀ a' < a, a' ≠ 0 → ∀ b, p b → p (inv' a' * (1 + (a + a') * b))) {x : Nimber}
     (hx : x ∈ inv'_set a) : p x := by
   revert x
   change inv'_set a ⊆ setOf p
@@ -628,7 +632,7 @@ private inductive InvTy (a : Nimber.{u}) : Type u
 private def InvTy.toNimber {a : Nimber} : InvTy a → Nimber
   | zero => 0
   | cons x b => let a' := Ordinal.toNimber (Ordinal.typein (α := a.out.α) (· < ·) x)
-      (1 + (a + a') * (toNimber b)) * inv' a'
+      inv' a' * (1 + (a + a') * (toNimber b))
 
 /-- The complement of `inv'_set a` is nonempty. -/
 theorem inv'_set_nonempty (a : Nimber.{u}) : (inv'_set a)ᶜ.Nonempty := by
@@ -646,5 +650,81 @@ theorem inv'_ne_zero (a : Nimber) : inv' a ≠ 0 := by
   rw [inv'_def]
   intro h
   exact h ▸ csInf_mem (inv'_set_nonempty a) <| zero_mem_inv'_set a
+
+theorem mem_inv'_set_of_lt_inv' (h : b < inv' a) : b ∈ inv'_set a := by
+  rw [inv'_def] at h
+  have := not_mem_of_lt_csInf h ⟨_, bot_mem_lowerBounds _⟩
+  rwa [Set.not_mem_compl_iff] at this
+
+theorem inv'_not_mem_inv'_set (a : Nimber) : inv' a ∉ inv'_set a := by
+  rw [inv'_def]
+  exact csInf_mem (inv'_set_nonempty a)
+
+theorem mem_inv'_set_of_inv'_lt (ha : a ≠ 0) (hb : a < b) : inv' a ∈ inv'_set b := by
+  have H := cons_mem_inv'_set ha hb (zero_mem_inv'_set b)
+  rwa [mul_zero, add_zero, mul_one] at H
+
+private theorem inv'_ne_of_lt (ha : a ≠ 0) (hb : a < b) : inv' a ≠ inv' b :=
+  fun h => inv'_not_mem_inv'_set b (h ▸ mem_inv'_set_of_inv'_lt ha hb)
+
+theorem inv'_injective : Set.InjOn inv' {0}ᶜ := by
+  intro a ha b hb h
+  obtain hab | rfl | hab := lt_trichotomy a b
+  · exact (inv'_ne_of_lt ha hab h).elim
+  · rfl
+  · exact (inv'_ne_of_lt hb hab h.symm).elim
+
+theorem inv'_inj (ha : a ≠ 0) (hb : b ≠ 0) : inv' a = inv' b ↔ a = b :=
+  inv'_injective.eq_iff ha hb
+
+
+/-- We set up a simultaneous induction to prove that `inv' a` is the inverse of `a`, and no element
+in its defining set `inv'_set a` is. -/
+private theorem main (a : Nimber) : (∀ b ∈ inv'_set a, a * b ≠ 1) ∧ (a ≠ 0 → a * inv' a = 1) := by
+  have H₁ : ∀ b ∈ inv'_set a, a * b ≠ 1 := by
+    intro b hb
+    refine inv'_recOn a ?_ ?_ hb
+    · rw [mul_zero]
+      exact zero_ne_one
+    · intro a' ha ha' b hb
+      rw [ne_eq, mul_comm, ← mul_right_inj' ha', ← mul_assoc, ← mul_assoc, (main a').2 ha',
+        one_mul, mul_one, add_mul, one_mul, ← add_left_inj a', add_self, mul_assoc, mul_comm b,
+        add_assoc, add_comm _ a', ← add_assoc, ← mul_one_add, ← ne_eq, mul_ne_zero_iff,
+        add_ne_zero_iff, add_ne_zero_iff]
+      use ha.ne', hb.symm
+  use H₁
+  intro ha₀
+  apply le_antisymm
+  · apply mul_le_of_forall_ne
+    intro a' ha b hb H
+    replace hb := mem_inv'_set_of_lt_inv' hb
+    rw [add_assoc, ← add_mul, ← eq_add_iff_add_eq] at H
+    obtain rfl | ha' := eq_or_ne a' 0
+    · rw [zero_mul, add_zero, ← add_eq_iff_eq_add, zero_add] at H
+      exact H₁ _ hb H
+    · rw [← mul_right_inj' (inv'_ne_zero a'), ← mul_assoc, mul_comm _ a', (main a').2 ha',
+        one_mul] at H
+      exact inv'_not_mem_inv'_set a (H ▸ cons_mem_inv'_set ha' ha hb)
+  · rw [one_le_iff_ne_zero, mul_ne_zero_iff]
+    use ha₀, inv'_ne_zero a
+termination_by a
+
+theorem mul_inv'_cancel (h : a ≠ 0) : a * inv' a = 1 :=
+  (main a).2 h
+
+instance : Inv Nimber :=
+  ⟨fun a => if a = 0 then 0 else inv' a⟩
+
+theorem inv_def (ha : a ≠ 0) : a⁻¹ = inv' a :=
+  dif_neg ha
+
+protected theorem mul_inv_cancel (ha : a ≠ 0) : a * a⁻¹ = 1 := by
+  rw [inv_def ha, mul_inv'_cancel ha]
+
+instance : Field Nimber where
+  mul_inv_cancel := @Nimber.mul_inv_cancel
+  inv_zero := dif_pos rfl
+  nnqsmul := _
+  qsmul := _
 
 end Nimber
