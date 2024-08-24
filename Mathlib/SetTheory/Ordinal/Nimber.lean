@@ -31,9 +31,7 @@ isomorphisms `Ordinal.toNimber` and `Nimber.toOrdinal` allow us to cast between 
 needed.
 
 ## Todo
-
-- Define nim multiplication and prove nimbers are a commutative ring.
-- Define nim division and prove nimbers are a field.
+.
 - Show the nimbers are algebraically closed.
 -/
 
@@ -44,6 +42,7 @@ open Function Order
 noncomputable section
 
 /-! ### Basic casts between `Ordinal` and `Nimber` -/
+
 
 /-- A type synonym for ordinals with natural addition and multiplication. -/
 def Nimber : Type _ :=
@@ -193,6 +192,7 @@ theorem toNimber_min (a b : Ordinal) :
 end Ordinal
 
 /-! ### Nimber addition -/
+
 
 namespace Nimber
 
@@ -589,8 +589,7 @@ instance : CancelMonoidWithZero Nimber :=
 
 /-- The nimber inverse `a⁻¹` is recursively defined as the smallest nimber not in the set `s`, which
 itself is recursively defined as the smallest set with `0 ∈ s` and `(1 + (a + a') * b) / a' ∈ s`
-for `0 < a' < a` and `b ∈ s`. For simplicity, we refer to this operation on "cons" in theorem names,
-in analogy to inductive types.
+for `0 < a' < a` and `b ∈ s`.
 
 This preliminary definition "accidentally" satisfies `inv' 0 = 1`, which the real inverse corrects.
 -/
@@ -609,6 +608,7 @@ theorem inv'_def (a : Nimber) : inv' a = sInf (inv'_set a)ᶜ := by
 theorem zero_mem_inv'_set (a : Nimber) : 0 ∈ inv'_set a :=
   Set.mem_sInter.2 fun _ hs => hs.1
 
+/-- "cons" is our operation `(1 + (a + a') * b) / a'` in the definition of the inverse. -/
 theorem cons_mem_inv'_set {a' : Nimber} (ha₀ : a' ≠ 0) (ha : a' < a) (hb : b ∈ inv'_set a) :
     inv' a' * (1 + (a + a') * b) ∈ inv'_set a :=
   Set.mem_sInter.2 fun _ hs => hs.2 _ ha ha₀ _ (Set.mem_sInter.1 hb _ hs)
@@ -677,7 +677,6 @@ theorem inv'_injective : Set.InjOn inv' {0}ᶜ := by
 theorem inv'_inj (ha : a ≠ 0) (hb : b ≠ 0) : inv' a = inv' b ↔ a = b :=
   inv'_injective.eq_iff ha hb
 
-
 /-- We set up a simultaneous induction to prove that `inv' a` is the inverse of `a`, and no element
 in its defining set `inv'_set a` is. -/
 private theorem main (a : Nimber) : (∀ b ∈ inv'_set a, a * b ≠ 1) ∧ (a ≠ 0 → a * inv' a = 1) := by
@@ -692,9 +691,7 @@ private theorem main (a : Nimber) : (∀ b ∈ inv'_set a, a * b ≠ 1) ∧ (a �
         add_assoc, add_comm _ a', ← add_assoc, ← mul_one_add, ← ne_eq, mul_ne_zero_iff,
         add_ne_zero_iff, add_ne_zero_iff]
       use ha.ne', hb.symm
-  use H₁
-  intro ha₀
-  apply le_antisymm
+  refine ⟨H₁, fun ha₀ => le_antisymm ?_ ?_⟩
   · apply mul_le_of_forall_ne
     intro a' ha b hb H
     replace hb := mem_inv'_set_of_lt_inv' hb
