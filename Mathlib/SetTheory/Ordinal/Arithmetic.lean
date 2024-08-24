@@ -1464,6 +1464,10 @@ theorem lsub_not_mem_range {ι : Type u} (f : ι → Ordinal.{max u v}) :
     lsub.{_, v} f ∉ Set.range f := fun ⟨i, h⟩ =>
   h.not_lt (lt_lsub f i)
 
+theorem nonempty_compl_of_small {s : Set Ordinal.{u}} (h : Small.{u, u + 1} s) : sᶜ.Nonempty := by
+  obtain ⟨a, ha⟩ := @bddAbove_of_small s h
+  exact ⟨_, fun ha' => (lt_succ a).not_le <| ha ha'⟩
+
 theorem nonempty_compl_range {ι : Type u} (f : ι → Ordinal.{max u v}) : (Set.range f)ᶜ.Nonempty :=
   ⟨_, lsub_not_mem_range.{_, v} f⟩
 

@@ -198,7 +198,7 @@ namespace Nimber
 
 variable {a b c : Nimber.{u}}
 
-/-- Nimber addition is recursively defined so that `a + b` is the smallest number not equal to
+/-- Nimber addition is recursively defined so that `a + b` is the smallest nimber not equal to
 `a' + b` or `a + b'` for `a' < a` and `b' < b`. -/
 -- We write the binders like this so that the termination checker works.
 protected def add (a b : Nimber.{u}) : Nimber.{u} :=
@@ -386,7 +386,7 @@ theorem add_trichotomy (h : a ≠ b + c) : b + c < a ∨ a + c < b ∨ a + b < c
 /-! ### Nimber multiplication -/
 
 
-/-- Nimber multiplication is recursively defined so that `a * b` is the smallest number not equal to
+/-- Nimber multiplication is recursively defined so that `a * b` is the smallest nimber not equal to
 `a' * b + a * b' + a' * b'` for `a' < a` and `b' < b`. -/
 -- We write the binders like this so that the termination checker works.
 protected def mul (a b : Nimber.{u}) : Nimber.{u} :=
@@ -578,5 +578,73 @@ instance : CommRing Nimber where
 
 instance : IsDomain Nimber :=
   { }
+
+
+/-! ### Nimber division -/
+
+
+/-- The nimber inverse `a⁻¹` is recursively defined as the smallest nimber not in the set `s`, which
+itself is recursively defined as the smallest set with `0 ∈ s` and `(1 + (a + a') * b) / a' ∈ s`
+for `0 < a' < a` and `b ∈ s`. For simplicity, we refer to this operation on "cons" in theorem names,
+in analogy to other inductive types.
+
+This preliminary definition "accidentally" satisfies `inv' 0 = 1`, which the real inverse corrects.
+-/
+def inv' (a : Nimber) : Nimber :=
+  sInf (⋂₀ {s | 0 ∈ s ∧ ∀ a' < a, a' ≠ 0 → ∀ b ∈ s, (1 + (a + a') * b) * inv' a' ∈ s})ᶜ
+termination_by a
+
+/-- The set in the definition of `inv' a`. -/
+def inv'_set (a : Nimber) : Set Nimber :=
+  ⋂₀ {s | 0 ∈ s ∧ ∀ a' < a, a' ≠ 0 → ∀ b ∈ s, (1 + (a + a') * b) * inv' a' ∈ s}
+
+theorem inv'_def (a : Nimber) : inv' a = sInf (inv'_set a)ᶜ := by
+  rw [inv']
+  rfl
+
+theorem zero_mem_inv'_set (a : Nimber) : 0 ∈ inv'_set a :=
+  Set.mem_sInter.2 fun _ hs => hs.1
+
+theorem cons_mem_inv'_set {a' : Nimber} (ha₀ : a' ≠ 0) (ha : a' < a) (hb : b ∈ inv'_set a) :
+    (1 + (a + a') * b) * inv' a' ∈ inv'_set a :=
+  Set.mem_sInter.2 fun _ hs => hs.2 _ ha ha₀ _ (Set.mem_sInter.1 hb _ hs)
+
+/-- A recursion principle for `inv'_set`. -/
+@[elab_as_elim]
+theorem inv'_recOn (a : Nimber) {p : Nimber → Prop} (h0 : p 0)
+    (hi : ∀ a' < a, a' ≠ 0 → ∀ b, p b → p ((1 + (a + a') * b) * inv' a')) {x : Nimber}
+    (hx : x ∈ inv'_set a) : p x := by
+  revert x
+  change inv'_set a ⊆ setOf p
+  exact Set.sInter_subset_of_mem ⟨h0, hi⟩
+
+/--- An auxiliary type for enumerating the elements of `inv'_set`, and proving that its complement
+is nonempty. -/
+private inductive InvTy (a : Nimber.{u}) : Type u
+  | zero : InvTy a
+  | cons : (toOrdinal a).out.α → InvTy a → InvTy a
+
+/-- An enumeration of elements in the complement of `inv'_set` by a type in the same universe. -/
+private def InvTy.toNimber {a : Nimber} : InvTy a → Nimber
+  | zero => 0
+  | cons x b => let a' := Ordinal.toNimber (Ordinal.typein (α := a.out.α) (· < ·) x)
+      (1 + (a + a') * (toNimber b)) * inv' a'
+
+/-- The complement of `inv'_set a` is nonempty. -/
+theorem inv'_set_nonempty (a : Nimber.{u}) : (inv'_set a)ᶜ.Nonempty := by
+  apply Ordinal.nonempty_compl_of_small
+  apply @small_subset.{u, u + 1} _ _ _ _ (small_range (@InvTy.toNimber.{u} a))
+  intro x hx
+  refine inv'_recOn a ⟨InvTy.zero, rfl⟩ ?_ hx
+  rintro a' ha _ _ ⟨b, rfl⟩
+  rw [← Ordinal.type_lt a] at ha
+  use InvTy.cons (Ordinal.enum (α := a.out.α) (· < ·) a' ha) b
+  rw [InvTy.toNimber, Ordinal.typein_enum]
+  rfl
+
+theorem inv'_ne_zero (a : Nimber) : inv' a ≠ 0 := by
+  rw [inv'_def]
+  intro h
+  exact h ▸ csInf_mem (inv'_set_nonempty a) <| zero_mem_inv'_set a
 
 end Nimber
