@@ -723,4 +723,72 @@ instance : Field Nimber where
   nnqsmul := _
   qsmul := _
 
+def ordinalAdd (a b : Nimber) : Nimber := Ordinal.toNimber (toOrdinal a + toOrdinal b)
+
+local infixl:65 " +ₒ " => ordinalAdd
+
+lemma lt_ordinalAdd_iff (a b c : Nimber) : a < b +ₒ c ↔ a < b ∨ ∃ d < c, b +ₒ d = a :=
+  Ordinal.lt_add_iff a b c
+
+def ordinalMul (a b : Nimber) : Nimber := Ordinal.toNimber (toOrdinal a * toOrdinal b)
+
+local infixl:70 " *ₒ " => ordinalMul
+
+def ordinalDiv (a b : Nimber) : Nimber := Ordinal.toNimber (toOrdinal a / toOrdinal b)
+
+local infixl:70 " /ₒ " => ordinalDiv
+
+def ordinalMod (a b : Nimber) : Nimber := Ordinal.toNimber (toOrdinal a % toOrdinal b)
+
+local infixl:70 " %ₒ " => ordinalMod
+
+lemma ordinalDiv_ordinalAdd_ordinalMod (a b : Nimber) :
+    b *ₒ (a /ₒ b) +ₒ a %ₒ b = a :=
+  Ordinal.div_add_mod (toOrdinal a) (toOrdinal b)
+
+def IsGroup (x : Nimber) : Prop :=
+  ∀ y < x, ∀ z < x, y + z < x
+
+lemma lemma1 {x : Nimber} (hx : IsGroup x) {y z : Nimber} (hz : z < x) :
+    x *ₒ y + z = x *ₒ y +ₒ z := by
+  have xne : x ≠ 0 := fun nh ↦ by
+    simp [nh, Nimber.not_lt_zero] at hz
+  have add_lt_of_lt (w : Nimber) (h : w < x *ₒ y) : w + z < x *ₒ y := by
+    have : w = x *ₒ (w /ₒ x) +ₒ w %ₒ x :=
+      (ordinalDiv_ordinalAdd_ordinalMod w x).symm
+    have _ : w /ₒ x < y := by
+      apply (Ordinal.div_lt xne).mpr
+      exact h
+    have _ : w %ₒ x < x :=
+      Ordinal.mod_lt _ xne
+    have _ : w %ₒ x + z < x := by
+      apply hx <;> assumption
+    rw [← lemma1 hx ‹_›] at this
+    · rw [this, add_assoc, lemma1 hx ‹_›]
+      apply lt_of_lt_of_le (b := x *ₒ (w /ₒ x) +ₒ x)
+      · unfold ordinalAdd
+        simp only [OrderIso.lt_iff_lt, add_lt_add_iff_left]
+        assumption
+      · unfold ordinalAdd ordinalMul
+        simp only [Ordinal.toNimber_toOrdinal, map_le_map_iff]
+        rw [← Ordinal.mul_succ, Ordinal.mul_le_mul_iff_left]
+        · simpa
+        · simpa [Ordinal.pos_iff_ne_zero]
+  rw [add_def]
+  trans sInf {w | w < x *ₒ y +ₒ z}ᶜ
+  · congr! with w
+    rw [lt_ordinalAdd_iff]
+    congr! 3 with d
+    · simp_rw [add_eq_iff_eq_add, exists_eq_right]
+      constructor
+      · convert add_lt_of_lt (w + z)
+        rw [add_assoc, add_self, add_zero]
+      · apply add_lt_of_lt
+    · rw [and_congr_right_iff]
+      intro hd
+      congr! 1
+      apply lemma1 hx (hd.trans hz)
+  · simp [Set.Iio_def]
+termination_by (y, z)
+
 end Nimber
