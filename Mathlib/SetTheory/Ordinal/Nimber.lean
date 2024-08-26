@@ -767,8 +767,7 @@ lemma lemma1 {x : Nimber} (hx : IsGroup x) {y z : Nimber} (hz : z < x) :
     · rw [this, add_assoc, lemma1 hx ‹_›]
       apply lt_of_lt_of_le (b := x *ₒ (w /ₒ x) +ₒ x)
       · unfold ordinalAdd
-        simp only [OrderIso.lt_iff_lt, add_lt_add_iff_left]
-        assumption
+        simpa only [OrderIso.lt_iff_lt, add_lt_add_iff_left]
       · unfold ordinalAdd ordinalMul
         simp only [Ordinal.toNimber_toOrdinal, map_le_map_iff]
         rw [← Ordinal.mul_succ, Ordinal.mul_le_mul_iff_left]
@@ -790,5 +789,98 @@ lemma lemma1 {x : Nimber} (hx : IsGroup x) {y z : Nimber} (hz : z < x) :
       apply lemma1 hx (hd.trans hz)
   · simp [Set.Iio_def]
 termination_by (y, z)
+
+def IsRing (x : Nimber) : Prop :=
+  IsGroup x ∧ ∀ y < x, ∀ z < x, y * z < x
+
+def IsField (x : Nimber) : Prop :=
+  IsRing x ∧ ∀ y < x, y⁻¹ < x
+
+def addify (x : Nimber.{u}) : Nimber.{u} :=
+  Ordinal.blsub₂ (toOrdinal x) (toOrdinal x)
+    (fun {a} _ {b} _ ↦ toOrdinal (Ordinal.toNimber a + Ordinal.toNimber b))
+
+lemma mem_addify {x y z : Nimber} (hy : y < x) (hz : z < x) :
+    y + z < x.addify :=
+  Ordinal.lt_blsub₂ _ hy hz
+
+def mulify (x : Nimber.{u}) : Nimber.{u} :=
+  Ordinal.blsub₂ (toOrdinal x) (toOrdinal x)
+    (fun {a} _ {b} _ ↦ toOrdinal (Ordinal.toNimber a * Ordinal.toNimber b))
+
+lemma mem_mulify {x y z : Nimber} (hy : y < x) (hz : z < x) :
+    y * z < x.mulify :=
+  Ordinal.lt_blsub₂ _ hy hz
+
+def invify (x : Nimber.{u}) : Nimber.{u} :=
+  Ordinal.blsub (toOrdinal x) (fun {a} _ ↦ toOrdinal (Ordinal.toNimber a)⁻¹)
+
+lemma mem_invify {x y : Nimber} (hy : y < x) :
+    y⁻¹ < x.invify :=
+  Ordinal.lt_blsub _ _ hy
+
+@[reducible]
+def fieldify (x : Nimber) : Nimber :=
+  x ⊔ addify x ⊔ mulify x ⊔ invify x
+
+lemma le_fieldify (x : Nimber) : x ≤ fieldify x := by simp
+
+lemma add_mem_fieldify {x y z : Nimber} (hy : y < x) (hz : z < x) :
+    y + z < x.fieldify :=
+  (mem_addify hy hz).trans_le (by simp)
+
+lemma mul_mem_fieldify {x y z : Nimber} (hy : y < x) (hz : z < x) :
+    y * z < x.fieldify :=
+  (mem_mulify hy hz).trans_le (by simp)
+
+lemma inv_mem_fieldify {x y : Nimber} (hy : y < x) :
+    y⁻¹ < x.fieldify :=
+  (mem_invify hy).trans_le (by simp)
+
+lemma le_iterate_of_forall_le {α : Type*} [Preorder α] (f : α → α)
+    (hf : ∀ x, x ≤ f x) (x : α) (n : ℕ) :
+    x ≤ f^[n] x := by
+  induction n generalizing x
+  · simp
+  · trans f x
+    · apply hf
+    · simp only [iterate_succ, comp_apply, *]
+
+lemma monotone_iterate_of_forall_le {α : Type*} [Preorder α] {f : α → α}
+    (hf : ∀ x, x ≤ f x) (x : α) :
+    Monotone (fun n ↦ f^[n] x) := by
+  intro n m hnm
+  have : m = (m - n) + n := by omega
+  rw [this]
+  simp only [iterate_add_apply]
+  apply le_iterate_of_forall_le f hf
+
+lemma lemma3 (x : Nimber) :
+    ∃ y ≥ x, IsField y := by
+  use Ordinal.sup fun (n : ℕ) ↦ fieldify^[n] x
+  constructor
+  · exact Ordinal.le_sup _ 0
+  constructor
+  constructor
+  repeat {
+    intro y hy z hz
+    rw [Ordinal.lt_sup] at *
+    obtain ⟨yi, hy⟩ := hy
+    obtain ⟨zi, hz⟩ := hz
+    replace hy : y < fieldify^[max yi zi] x :=
+      hy.trans_le (by apply monotone_iterate_of_forall_le le_fieldify; simp)
+    replace hz : z < fieldify^[max yi zi] x :=
+      hz.trans_le (by apply monotone_iterate_of_forall_le le_fieldify; simp)
+    use (max yi zi) + 1
+    simp only [iterate_succ', comp_apply]
+    try apply add_mem_fieldify hy hz
+    try apply mul_mem_fieldify hy hz
+  }
+  · intro y hy
+    rw [Ordinal.lt_sup] at *
+    obtain ⟨yi, hy⟩ := hy
+    use yi + 1
+    simp only [iterate_succ', comp_apply]
+    apply inv_mem_fieldify hy
 
 end Nimber
