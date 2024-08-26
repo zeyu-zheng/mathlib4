@@ -262,6 +262,11 @@ theorem coeff_mem_coeffs (p : R[X]) (n : ℕ) (h : p.coeff n ≠ 0) : p.coeff n 
 
 @[deprecated (since := "2024-05-17")] alias coeff_mem_frange := coeff_mem_coeffs
 
+@[simp]
+theorem coeffs_eq_empty {p : R[X]} : coeffs p = ∅ ↔ p = 0 := by
+  classical
+  rw [coeffs, image_eq_empty, support_eq_empty]
+
 theorem geom_sum_X_comp_X_add_one_eq_sum (n : ℕ) :
     (∑ i ∈ range n, (X : R[X]) ^ i).comp (X + 1) =
       (Finset.range n).sum fun i : ℕ => (n.choose (i + 1) : R[X]) * X ^ i := by
