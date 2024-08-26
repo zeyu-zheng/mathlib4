@@ -31,8 +31,7 @@ local infixl:70 " %ₒ " => ordinalMod
 lemma lt_ordinalAdd_iff (a b c : Nimber) : a < b +ₒ c ↔ a < b ∨ ∃ d < c, b +ₒ d = a :=
   Ordinal.lt_add_iff a b c
 
-lemma ordinalDiv_ordinalAdd_ordinalMod (a b : Nimber) :
-    b *ₒ (a /ₒ b) +ₒ a %ₒ b = a :=
+lemma ordinalDiv_ordinalAdd_ordinalMod (a b : Nimber) : b *ₒ (a /ₒ b) +ₒ a %ₒ b = a :=
   Ordinal.div_add_mod _ _
 
 /-- We consider a nimber to be a group when nimbers less than it are closed under addition. Note we
@@ -90,67 +89,49 @@ lemma mul_mem_fieldify {x y z : Nimber} (hy : y < x) (hz : z < x) : y * z < x.fi
 lemma inv_mem_fieldify {x y : Nimber} (hy : y < x) : y⁻¹ < x.fieldify :=
   (mem_invify hy).trans_le (by simp)
 
-lemma monotone_iterate_of_forall_le {α : Type*} [Preorder α] {f : α → α}
-    (hf : ∀ x, x ≤ f x) (x : α) :
-    Monotone (fun n ↦ f^[n] x) := by
-  intro n m hnm
-  have : m = (m - n) + n := by omega
-  rw [this]
-  simp only [iterate_add_apply]
-  apply id_le_iterate_of_id_le hf
+lemma monotone_iterate_of_id_le {α : Type*} [Preorder α] {f : α → α} (hf : id ≤ f) (x : α) :
+    Monotone fun n ↦ f^[n] x :=
+  monotone_nat_of_le_succ fun n ↦ iterate_succ' f n ▸ hf _
 
-lemma lemma3 (x : Nimber) :
-    ∃ y ≥ x, IsField y := by
-  use Ordinal.sup fun (n : ℕ) ↦ fieldify^[n] x
-  constructor
-  · exact Ordinal.le_sup _ 0
-  constructor
-  constructor
-  repeat {
+/-- The nimbers that form fields are a proper class. -/
+lemma unbounded_isField : Set.Unbounded (· < ·) {x | IsField x} := by
+  intro x
+  simp_rw [not_lt, and_comm]
+  refine ⟨Ordinal.sup fun n ↦ fieldify^[n] x, Ordinal.le_sup _ 0, ⟨?_, ?_⟩, ?_⟩
+  iterate 2 {
     intro y hy z hz
     rw [Ordinal.lt_sup] at *
     obtain ⟨yi, hy⟩ := hy
     obtain ⟨zi, hz⟩ := hz
-    replace hy : y < fieldify^[max yi zi] x :=
-      hy.trans_le (by apply monotone_iterate_of_forall_le le_fieldify; simp)
-    replace hz : z < fieldify^[max yi zi] x :=
-      hz.trans_le (by apply monotone_iterate_of_forall_le le_fieldify; simp)
+    replace hy := hy.trans_le (monotone_iterate_of_id_le le_fieldify x <| le_max_left yi zi)
+    replace hz := hz.trans_le (monotone_iterate_of_id_le le_fieldify x <| le_max_right yi zi)
     use (max yi zi) + 1
-    simp only [iterate_succ', comp_apply]
-    try apply add_mem_fieldify hy hz
-    try apply mul_mem_fieldify hy hz
+    rw [iterate_succ']
+    try exact add_mem_fieldify hy hz
+    try exact mul_mem_fieldify hy hz
   }
-  · intro y hy
-    rw [Ordinal.lt_sup] at *
-    obtain ⟨yi, hy⟩ := hy
-    use yi + 1
-    simp only [iterate_succ', comp_apply]
-    apply inv_mem_fieldify hy
+  intro y hy
+  rw [Ordinal.lt_sup] at *
+  obtain ⟨yi, hy⟩ := hy
+  use yi + 1
+  rw [iterate_succ']
+  exact inv_mem_fieldify hy
 
-lemma ordinalMul_add_of_isGroup {x : Nimber} (hx : IsGroup x) {y z : Nimber} (hz : z < x) :
+lemma ordinalMul_add_of_isGroup {x z : Nimber} (hx : IsGroup x) (y : Nimber) (hz : z < x) :
     x *ₒ y + z = x *ₒ y +ₒ z := by
-  have xne : x ≠ 0 := fun nh ↦ by
-    simp [nh, Nimber.not_lt_zero] at hz
+  have xne : x ≠ 0 := fun nh ↦ Nimber.not_lt_zero _ <| nh ▸ hz
   have add_lt_of_lt (w : Nimber) (h : w < x *ₒ y) : w + z < x *ₒ y := by
-    have : w = x *ₒ (w /ₒ x) +ₒ w %ₒ x :=
-      (ordinalDiv_ordinalAdd_ordinalMod w x).symm
-    have _ : w /ₒ x < y := by
-      apply (Ordinal.div_lt xne).mpr
-      exact h
-    have _ : w %ₒ x < x :=
-      Ordinal.mod_lt _ xne
-    have _ : w %ₒ x + z < x := by
-      apply hx <;> assumption
-    rw [← ordinalMul_add_of_isGroup hx ‹_›] at this
-    · rw [this, add_assoc, ordinalMul_add_of_isGroup hx ‹_›]
-      apply lt_of_lt_of_le (b := x *ₒ (w /ₒ x) +ₒ x)
-      · unfold ordinalAdd
-        simpa only [OrderIso.lt_iff_lt, add_lt_add_iff_left]
-      · unfold ordinalAdd ordinalMul
-        simp only [Ordinal.toNimber_toOrdinal, map_le_map_iff]
-        rw [← Ordinal.mul_succ, Ordinal.mul_le_mul_iff_left]
-        · simpa
-        · simpa [Ordinal.pos_iff_ne_zero]
+    have h₁ : w /ₒ x < y := (Ordinal.div_lt xne).mpr h
+    have h₂ : w %ₒ x < x := Ordinal.mod_lt w xne
+    have h₃ : w %ₒ x + z < x := hx _ h₂ z hz
+    rw [← ordinalDiv_ordinalAdd_ordinalMod w x, ← ordinalMul_add_of_isGroup hx _ h₂, add_assoc,
+      ordinalMul_add_of_isGroup hx _ h₃]
+    unfold ordinalAdd ordinalMul
+    apply lt_of_lt_of_le
+    · rwa [OrderIso.lt_iff_lt, add_lt_add_iff_left, OrderIso.lt_iff_lt]
+    · simp only [Ordinal.toNimber_toOrdinal, map_le_map_iff]
+      rwa [← Ordinal.mul_succ, Ordinal.mul_le_mul_iff_left, succ_le_iff, OrderIso.lt_iff_lt]
+      rwa [Ordinal.pos_iff_ne_zero, ne_eq, toOrdinal_eq_zero]
   rw [add_def]
   trans sInf {w | w < x *ₒ y +ₒ z}ᶜ
   · congr! with w
@@ -160,11 +141,11 @@ lemma ordinalMul_add_of_isGroup {x : Nimber} (hx : IsGroup x) {y z : Nimber} (hz
       constructor
       · convert add_lt_of_lt (w + z)
         rw [add_assoc, add_self, add_zero]
-      · apply add_lt_of_lt
+      · exact add_lt_of_lt _
     · rw [and_congr_right_iff]
       intro hd
       congr! 1
-      apply ordinalMul_add_of_isGroup hx (hd.trans hz)
+      exact ordinalMul_add_of_isGroup hx _ (hd.trans hz)
   · simp [Set.Iio_def]
 termination_by (y, z)
 
