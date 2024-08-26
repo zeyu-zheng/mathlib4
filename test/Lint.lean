@@ -190,6 +190,10 @@ example : True := by
       ⟩
   trivial
 
+example : True := by
+  let h := fun {i j k : ℕ} (a : Bool) => True
+  trivial
+
 -- Code such as the following would require walking the infotree instead:
 -- the inner set_option is ignore (in either direction).
 -- As this seems unlikely to occur by accident and its use is dubious, we don't worry about this.

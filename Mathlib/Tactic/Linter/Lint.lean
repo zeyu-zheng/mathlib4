@@ -293,6 +293,49 @@ initialize addLinter lambdaSyntaxLinter
 
 end Style.lambdaSyntax
 
+/--
+The `funArrows` linter flags uses of the symbol `=>` to define anonymous functions.
+This is syntactically equivalent to the `↦` keyword; mathlib style prefers using the latter.
+-/
+register_option linter.style.funArrows : Bool := {
+  defValue := false
+  descr := "enable the `funArrows` linter"
+}
+
+/--
+`findFunSyntax stx` extracts from `stx` all syntax nodes which define a function symbol
+in a `Term.basicFun` node. -/
+partial
+def findFunSyntax : Syntax → Array Syntax
+  | (.node _ kind args) =>
+    if kind == ``Parser.Term.basicFun then
+      -- This node always has four arguments: the first one are a list of binders,
+      -- the second is an optional type of this function, the third is the function symbol
+      -- and the last is the definition of the function.
+      (findFunSyntax args[3]!).push args[2]!
+    else
+      (args.map findFunSyntax).flatten
+  |_ => #[]
+
+namespace Style.funArrows
+
+@[inherit_doc linter.style.funArrows]
+def lambdaSyntaxLinter : Linter where run := withSetOptionIn fun stx ↦ do
+    --unless Linter.getLinterValue linter.style.funArrows (← getOptions) do
+    --  return
+    if (← MonadState.get).messages.hasErrors then
+      return
+    for s in findFunSyntax stx do
+      if let .atom _ "=>" := s then
+        Linter.logLint linter.style.funArrows s m!"\
+        Please use '↦' (typed as '\\mapsto'  and not '=>' to define anonymous functions."
+      -- else if let .atom _ "↦" := s then
+      --   Linter.logLint linter.style.funArrows s m!"all is well, just checking this works"
+
+initialize addLinter lambdaSyntaxLinter
+
+end Style.funArrows
+
 /-! # The "longLine linter" -/
 
 /-- The "longLine" linter emits a warning on lines longer than 100 characters.
