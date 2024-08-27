@@ -250,7 +250,15 @@ termination_by (y, z)
 
 lemma Polynomial.degree_erase_lt_of_degree_le  {R : Type u} [Semiring R] (p : Polynomial R) {n : ℕ}
     (hp : p.degree ≤ n) : (p.erase n).degree < n := by
-  sorry
+  apply lt_or_eq_of_le at hp
+  rcases hp with hp | hp
+  · exact (degree_erase_le _ _).trans_lt hp
+  · rw [← hp]
+    have hp₂ := natDegree_eq_of_degree_eq_some hp
+    rw [← hp₂]
+    apply Polynomial.degree_erase_lt
+    intro nh
+    simp [nh] at hp
 
 private lemma lemma2' {x : Nimber} {n m : ℕ} (hx : IsField x) (hm : m ≤ n)
     (h : ∀ p : Polynomial hx.toSubfield, p.degree < n → ∃ y, p.IsRoot y) :
@@ -258,6 +266,7 @@ private lemma lemma2' {x : Nimber} {n m : ℕ} (hx : IsField x) (hm : m ≤ n)
     (∀ p : Polynomial hx.toSubfield, p.degree < m → aeval x p < x ^ₒ m) ∧
     (x ^ₒ m).IsGroup ∧
     ∀ y < x, x ^ m * y = x ^ₒ m *ₒ y := by
+  have xne : x ≠ 0 := fun nh ↦ absurd hx.2 (by simp [nh])
   induction m with
   | zero => simp [lt_one_iff_zero]
   | succ m hind =>
@@ -266,8 +275,15 @@ private lemma lemma2' {x : Nimber} {n m : ℕ} (hx : IsField x) (hm : m ≤ n)
       aeval x p = y := by
     intro y hy
     have := ordinalDiv_ordinalAdd_ordinalMod y (x ^ₒ m)
-    have b1 : y /ₒ (x ^ₒ m) < x := sorry
-    have b2 : y %ₒ (x ^ₒ m) < x ^ₒ m := sorry
+    have b1 : y /ₒ (x ^ₒ m) < x := by
+      apply_fun toOrdinal
+      simp [ordinalDiv, ordinalPow]
+      rw [Ordinal.div_lt, ← pow_succ]
+      exact hy
+      simp [xne]
+    have b2 : y %ₒ (x ^ₒ m) < x ^ₒ m := by
+      apply mod_lt
+      simp [xne, ordinalPow]
     rw [← ordinalMul_add_of_isGroup pg _ b2, ← pindl _ b1] at this
     obtain ⟨q, hq, h⟩ := psl1 (y %ₒ (x ^ₒ m)) b2
     use X ^ m * C ⟨_, b1⟩ + q, ?_, ?_
@@ -301,7 +317,7 @@ private lemma lemma2' {x : Nimber} {n m : ℕ} (hx : IsField x) (hm : m ≤ n)
         rw [Ordinal.mul_le_mul_iff_left]
         · simp only [succ_le_iff, OrderIso.lt_iff_lt]
           exact (p.coeff m).2
-        · sorry
+        · simp [Ordinal.pos_iff_ne_zero, xne]
     exact (p.coeff m).2
   use sl2
   constructor
@@ -311,11 +327,7 @@ private lemma lemma2' {x : Nimber} {n m : ℕ} (hx : IsField x) (hm : m ≤ n)
     rw [← map_add]
     apply sl2
     apply Polynomial.degree_add_lt_of_degree_lt apd bpd
-  · sorry
-  -- case succ m hind =>
-  -- specialize hind (by omega)
-
-  -- sorry
+  sorry
 
 /-- The lexicographic ordering on polynomials. -/
 def polynomial_LT (p q : Nimber[X]) : Prop :=
