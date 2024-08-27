@@ -1523,7 +1523,8 @@ theorem StrictAntiOn.comp_strictMonoOn [Preorder α] [Preorder β] [Preorder γ]
 
 @[simp]
 theorem strictMono_restrict [Preorder α] [Preorder β] {f : α → β} {s : Set α} :
-    StrictMono (s.restrict f) ↔ StrictMonoOn f s := by simp [Set.restrict, StrictMono, StrictMonoOn]
+    StrictMono (s.restrict f) ↔ StrictMonoOn f s := by
+  simp [Set.restrict, StrictMono, StrictMonoOn]
 
 alias ⟨_root_.StrictMono.of_restrict, _root_.StrictMonoOn.restrict⟩ := strictMono_restrict
 

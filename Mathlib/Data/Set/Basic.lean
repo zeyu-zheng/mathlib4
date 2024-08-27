@@ -1906,19 +1906,19 @@ variable [Preorder α] [Preorder β] {f : α → β}
 
 theorem monotoneOn_iff_monotone : MonotoneOn f s ↔
     Monotone fun a : s => f a := by
-  simp [Monotone, MonotoneOn, Subtype.forall]
+  simp [Monotone, MonotoneOn]
 
 theorem antitoneOn_iff_antitone : AntitoneOn f s ↔
     Antitone fun a : s => f a := by
-  simp [Antitone, AntitoneOn, Subtype.forall]
+  simp [Antitone, AntitoneOn]
 
 theorem strictMonoOn_iff_strictMono : StrictMonoOn f s ↔
     StrictMono fun a : s => f a := by
-  simp [StrictMono, StrictMonoOn, Subtype.forall]
+  simp [StrictMono, StrictMonoOn]
 
 theorem strictAntiOn_iff_strictAnti : StrictAntiOn f s ↔
     StrictAnti fun a : s => f a := by
-  simp [StrictAnti, StrictAntiOn, Subtype.forall]
+  simp [StrictAnti, StrictAntiOn]
 
 end Preorder
 
