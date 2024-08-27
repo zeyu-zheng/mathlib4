@@ -390,6 +390,7 @@ theorem bit1_bits (n : ℕ) : (2 * n + 1).bits = true :: n.bits :=
 @[simp]
 theorem one_bits : Nat.bits 1 = [true] := by
   convert bit1_bits 0
+  exact Eq.symm zero_bits
 
 -- TODO Find somewhere this can live.
 -- example : bits 3423 = [true, true, true, true, true, false, true, false, true, false, true, true]
