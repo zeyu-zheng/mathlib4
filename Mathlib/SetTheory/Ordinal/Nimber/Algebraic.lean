@@ -16,19 +16,22 @@ noncomputable section
 
 namespace Nimber
 
-/-- Add nimbers as ordinals. We introduce the notation `a +∘ b` for this. -/
+/-- Add nimbers as ordinals. We introduce the notation `a +ₒ b` for this. -/
 def ordinalAdd (a b : Nimber) : Nimber := toNimber (toOrdinal a + toOrdinal b)
-/-- Multiply nimbers as ordinals. We introduce the notation `a *∘ b` for this. -/
+/-- Multiply nimbers as ordinals. We introduce the notation `a *ₒ b` for this. -/
 def ordinalMul (a b : Nimber) : Nimber := toNimber (toOrdinal a * toOrdinal b)
-/-- Divide nimbers as ordinals. We introduce the notation `a /∘ b` for this. -/
+/-- Divide nimbers as ordinals. We introduce the notation `a /ₒ b` for this. -/
 def ordinalDiv (a b : Nimber) : Nimber := toNimber (toOrdinal a / toOrdinal b)
-/-- Take moduli of nimbers as ordinals. We introduce the notation `a %∘ b` for this. -/
+/-- Take moduli of nimbers as ordinals. We introduce the notation `a %ₒ b` for this. -/
 def ordinalMod (a b : Nimber) : Nimber := toNimber (toOrdinal a % toOrdinal b)
+/-- Exponent of nimbers as ordinals. We introduce the notation `a ^ₒ b` for this. -/
+def ordinalPow (a : Nimber) (b : ℕ) : Nimber := toNimber (toOrdinal a ^ b)
 
 local infixl:65 " +ₒ " => ordinalAdd
 local infixl:70 " *ₒ " => ordinalMul
 local infixl:70 " /ₒ " => ordinalDiv
 local infixl:70 " %ₒ " => ordinalMod
+local infixr:80 " ^ₒ " => ordinalPow
 
 lemma lt_ordinalAdd_iff (a b c : Nimber) : a < b +ₒ c ↔ a < b ∨ ∃ d < c, b +ₒ d = a :=
   lt_add_iff a b c
@@ -36,10 +39,19 @@ lemma lt_ordinalAdd_iff (a b c : Nimber) : a < b +ₒ c ↔ a < b ∨ ∃ d < c,
 lemma ordinalDiv_ordinalAdd_ordinalMod (a b : Nimber) : b *ₒ (a /ₒ b) +ₒ a %ₒ b = a :=
   div_add_mod a b
 
+@[simp]
+lemma ordinalPow_zero (a : Nimber) : a ^ₒ 0 = 1 := by simp [ordinalPow]
+
+@[simp]
+lemma one_ordinalMul (a : Nimber) : 1 *ₒ a = a := by simp [ordinalMul]
+
 /-- We consider a nimber to be a group when nimbers less than it are closed under addition. Note we
 don't actually require `0 < x`. -/
 def IsGroup (x : Nimber) : Prop :=
   ∀ y < x, ∀ z < x, y + z < x
+
+@[simp]
+lemma IsGroup_one : IsGroup 1 := by intro _ _ _ _; simp_all [lt_one_iff_zero]
 
 /-- We consider a nimber to be a ring when it is a group, and nimbers less than it are closed under
 multiplication. -/
@@ -48,8 +60,20 @@ def IsRing (x : Nimber) : Prop :=
 
 /-- We consider a nimber to be a field when it is a ring, and nimbers less than it are closed under
 inverses. -/
-def IsField (x : Nimber) : Prop :=
+def IsPrefield (x : Nimber) : Prop :=
   IsRing x ∧ ∀ y < x, y⁻¹ < x
+
+def IsField (x : Nimber) : Prop :=
+  IsPrefield x ∧ 1 < x
+
+def IsField.toSubfield {x : Nimber} (hx : IsField x) : Subfield Nimber where
+  carrier := Set.Iio x
+  mul_mem' {a b} (ha hb) := hx.1.1.2 a ha b hb
+  add_mem' {a b} (ha hb) := hx.1.1.1 a ha b hb
+  inv_mem' := hx.1.2
+  one_mem' := hx.2
+  zero_mem' := zero_lt_one.trans hx.2
+  neg_mem' := id
 
 /-- The smallest nimber containing all additions of nimbers less than `x`. -/
 def addify (x : Nimber.{u}) : Nimber.{u} :=
@@ -168,7 +192,7 @@ lemma monotone_iterate_of_id_le {α : Type*} [Preorder α] {f : α → α} (hf :
 
 /-- The nimbers that form fields are a proper class. -/
 -- Lemma 3
-lemma unbounded_isField : Set.Unbounded (· < ·) {x | IsField x} := by
+lemma unbounded_isField : Set.Unbounded (· < ·) {x | IsPrefield x} := by
   intro x
   simp_rw [not_lt, and_comm]
   refine ⟨sup fun n ↦ fieldify^[n] x, le_sup _ 0, ⟨?_, ?_⟩, ?_⟩
@@ -224,6 +248,75 @@ lemma ordinalMul_add_of_isGroup {x z : Nimber} (hx : IsGroup x) (y : Nimber) (hz
   · simp [Set.Iio_def]
 termination_by (y, z)
 
+lemma Polynomial.degree_erase_lt_of_degree_le  {R : Type u} [Semiring R] (p : Polynomial R) {n : ℕ}
+    (hp : p.degree ≤ n) : (p.erase n).degree < n := by
+  sorry
+
+private lemma lemma2' {x : Nimber} {n m : ℕ} (hx : IsField x) (hm : m ≤ n)
+    (h : ∀ p : Polynomial hx.toSubfield, p.degree < n → ∃ y, p.IsRoot y) :
+    (∀ y < x ^ₒ m, ∃ p : Polynomial hx.toSubfield, p.degree < m ∧ aeval x p = y) ∧
+    (∀ p : Polynomial hx.toSubfield, p.degree < m → aeval x p < x ^ₒ m) ∧
+    (x ^ₒ m).IsGroup ∧
+    ∀ y < x, x ^ m * y = x ^ₒ m *ₒ y := by
+  induction m with
+  | zero => simp [lt_one_iff_zero]
+  | succ m hind =>
+  obtain ⟨psl1, psl2, pg, pindl⟩ := hind (by omega)
+  have sl1 : ∀ y < x ^ₒ (m + 1), ∃ p : Polynomial hx.toSubfield, p.degree < (m + 1) ∧
+      aeval x p = y := by
+    intro y hy
+    have := ordinalDiv_ordinalAdd_ordinalMod y (x ^ₒ m)
+    have b1 : y /ₒ (x ^ₒ m) < x := sorry
+    have b2 : y %ₒ (x ^ₒ m) < x ^ₒ m := sorry
+    rw [← ordinalMul_add_of_isGroup pg _ b2, ← pindl _ b1] at this
+    obtain ⟨q, hq, h⟩ := psl1 (y %ₒ (x ^ₒ m)) b2
+    use X ^ m * C ⟨_, b1⟩ + q, ?_, ?_
+    · change _ < Order.succ (m : WithBot ℕ)
+      rw [lt_succ_iff]
+      apply Polynomial.degree_add_le_of_degree_le
+      · rw [mul_comm]
+        apply Polynomial.degree_C_mul_X_pow_le
+      · exact hq.le
+    simp only [map_add, map_mul, aeval_C, map_pow, aeval_X, h]
+    conv =>
+      rhs; rw [← this]
+    simp only [add_left_inj]
+    rfl
+  use sl1
+  have sl2 : ∀ p : Polynomial hx.toSubfield, p.degree < m + 1 → aeval x p < x ^ₒ (m + 1) := by
+    intro p hp
+    change _ < Order.succ (m : WithBot ℕ) at hp
+    rw [lt_succ_iff] at hp
+    rw [← Polynomial.monomial_add_erase p m]
+    simp only [map_add, aeval_monomial]
+    have : (aeval x) (erase m p) < x ^ₒ m := by
+      apply psl2
+      apply Polynomial.degree_erase_lt_of_degree_le _ hp
+    rw [mul_comm, pindl, ordinalMul_add_of_isGroup pg _ this]
+    · apply lt_of_lt_of_le
+        (b := x ^ₒ m *ₒ (algebraMap (↥hx.toSubfield) Nimber) (p.coeff m) +ₒ x ^ₒ m)
+      · simp only [ordinalAdd, OrderIso.lt_iff_lt, add_lt_add_iff_left, this]
+      · simp only [ordinalAdd, ordinalMul, ordinalPow, toNimber_toOrdinal, OrderIso.le_iff_le,
+          ← Ordinal.mul_succ, pow_succ]
+        rw [Ordinal.mul_le_mul_iff_left]
+        · simp only [succ_le_iff, OrderIso.lt_iff_lt]
+          exact (p.coeff m).2
+        · sorry
+    exact (p.coeff m).2
+  use sl2
+  constructor
+  · intro a ha b hb
+    obtain ⟨ap, apd, rfl⟩ := sl1 a ha
+    obtain ⟨bp, bpd, rfl⟩ := sl1 b hb
+    rw [← map_add]
+    apply sl2
+    apply Polynomial.degree_add_lt_of_degree_lt apd bpd
+  · sorry
+  -- case succ m hind =>
+  -- specialize hind (by omega)
+
+  -- sorry
+
 /-- The lexicographic ordering on polynomials. -/
 def polynomial_LT (p q : Nimber[X]) : Prop :=
   Finsupp.Lex (· > ·) (· < ·) p.toFinsupp q.toFinsupp
@@ -240,7 +333,7 @@ def poly (x : Nimber) : Set Nimber[X] :=
   {p | 1 ≤ p.degree ∧ (∀ c ∈ p.coeffs, c < x) ∧ ∀ r ∈ p.roots, x ≤ r}
 
 -- Lemma 4
-lemma mem_min_roots_of_isField {x : Nimber} (hx : IsField x) (hp : (poly x).Nonempty) :
+lemma mem_min_roots_of_isField {x : Nimber} (hx : IsPrefield x) (hp : (poly x).Nonempty) :
     x ∈ (wellFounded_polynomial_LT.min _ hp).roots :=
   sorry
 

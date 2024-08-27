@@ -723,6 +723,12 @@ theorem lt_mul_of_limit {a b c : Ordinal} (h : IsLimit c) : a < b * c ↔ ∃ c'
 theorem mul_lt_mul_iff_left {a b c : Ordinal} (a0 : 0 < a) : a * b < a * c ↔ b < c :=
   (mul_isNormal a0).lt_iff
 
+instance : PosMulStrictMono Ordinal where
+  elim := by
+    intro a b c hab
+    simp only
+    rwa [mul_lt_mul_iff_left a.2]
+
 theorem mul_le_mul_iff_left {a b c : Ordinal} (a0 : 0 < a) : a * b ≤ a * c ↔ b ≤ c :=
   (mul_isNormal a0).le_iff
 
