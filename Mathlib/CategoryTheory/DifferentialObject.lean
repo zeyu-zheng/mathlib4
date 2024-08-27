@@ -105,16 +105,19 @@ def forget : DifferentialObject S C ⥤ C where
 
 instance forget_faithful : (forget S C).Faithful where
 
+variable {S C}
+
+section
 variable [(shiftFunctor C (1 : S)).PreservesZeroMorphisms]
 
 instance {X Y : DifferentialObject S C} : Zero (X ⟶ Y) := ⟨{f := 0}⟩
-
-variable {S C}
 
 @[simp]
 theorem zero_f (P Q : DifferentialObject S C) : (0 : P ⟶ Q).f = 0 := rfl
 
 instance hasZeroMorphisms : HasZeroMorphisms (DifferentialObject S C) where
+
+end
 
 /-- An isomorphism of differential objects gives an isomorphism of the underlying objects. -/
 @[simps]
@@ -178,8 +181,8 @@ def mapDifferentialObject (F : C ⥤ D)
         slice_lhs 2 3 => rw [← Functor.comp_map F (shiftFunctor D (1 : S)), ← η.naturality f.f]
         slice_lhs 1 2 => rw [Functor.comp_map, ← F.map_comp, f.comm, F.map_comp]
         rw [Category.assoc] }
-  map_id := by intros; ext; simp [autoParam]
-  map_comp := by intros; ext; simp [autoParam]
+  map_id := by intros; ext; simp
+  map_comp := by intros; ext; simp
 
 end Functor
 

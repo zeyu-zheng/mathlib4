@@ -121,9 +121,7 @@ theorem powerSeriesPart_eq_zero (x : LaurentSeries R) : x.powerSeriesPart = 0 �
   · contrapose!
     simp only [ne_eq]
     intro h
-    #adaptation_note /-- (2024-07-08): this was all in one rw, but that created an instance goal -/
-    simp_rw [PowerSeries.ext_iff]
-    rw [not_forall]
+    rw [PowerSeries.ext_iff, not_forall]
     refine ⟨0, ?_⟩
     simp [coeff_order_ne_zero h]
   · rintro rfl
@@ -150,7 +148,7 @@ theorem single_order_mul_powerSeriesPart (x : LaurentSeries R) :
 theorem ofPowerSeries_powerSeriesPart (x : LaurentSeries R) :
     ofPowerSeries ℤ R x.powerSeriesPart = single (-x.order) 1 * x := by
   refine Eq.trans ?_ (congr rfl x.single_order_mul_powerSeriesPart)
-  rw [← mul_assoc, single_mul_single, neg_add_self, mul_one, ← C_apply, C_one, one_mul]
+  rw [← mul_assoc, single_mul_single, neg_add_cancel, mul_one, ← C_apply, C_one, one_mul]
 
 end Semiring
 
@@ -480,7 +478,7 @@ theorem valuation_single_zpow (s : ℤ) :
     Valued.v (HahnSeries.single s (1 : K) : LaurentSeries K) =
       Multiplicative.ofAdd (-(s : ℤ)) := by
   have : Valued.v (1 : LaurentSeries K) = (1 : ℤₘ₀) := Valued.v.map_one
-  rw [← single_zero_one, ← add_right_neg s, ← mul_one 1, ← single_mul_single, map_mul,
+  rw [← single_zero_one, ← add_neg_cancel s, ← mul_one 1, ← single_mul_single, map_mul,
     mul_eq_one_iff_eq_inv₀] at this
   · rw [this]
     induction' s with s s

@@ -1,7 +1,7 @@
 /-
-Copyright (c) 2024 Antoine Chambert-Loir, María Inés de Frutos Fernández. All rights reserved.
+Copyright (c) 2024 Antoine Chambert-Loir, María Inés de Frutos-Fernández. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Antoine Chambert-Loir, María Inés de Frutos Fernández
+Authors: Antoine Chambert-Loir, María Inés de Frutos-Fernández
 -/
 
 import Mathlib.Algebra.Order.BigOperators.Group.Finset
@@ -145,7 +145,7 @@ variable {M : Type*} [CanonicallyOrderedAddCommMonoid M] (w : σ → M)
 
 theorem le_weight_of_ne_zero' {s : σ} {f : σ →₀ ℕ} (hs : f s ≠ 0) :
     w s ≤ weight w f :=
-  le_weight_of_ne_zero w (fun _ ↦ zero_le _) hs
+  le_weight_of_ne_zero (fun _ ↦ zero_le _) hs
 
 /-- If `M` is a `CanonicallyOrderedAddCommMonoid`, then `weight f` is zero iff `f=0. -/
 theorem weight_eq_zero_iff_eq_zero

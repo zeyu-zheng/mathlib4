@@ -174,7 +174,6 @@ theorem coeff_monomial (m n : ℕ) (a : R) : coeff R m (monomial R n a) = if m =
     coeff R m (monomial R n a) = _ := MvPowerSeries.coeff_monomial _ _ _
     _ = if m = n then a else 0 := by simp only [Finsupp.unique_single_eq_iff]
 
-
 theorem monomial_eq_mk (n : ℕ) (a : R) : monomial R n a = mk fun m => if m = n then a else 0 :=
   ext fun m => by rw [coeff_monomial, coeff_mk]
 
@@ -416,7 +415,7 @@ theorem isUnit_constantCoeff (φ : R⟦X⟧) (h : IsUnit φ) : IsUnit (constantC
 theorem eq_shift_mul_X_add_const (φ : R⟦X⟧) :
     φ = (mk fun p => coeff R (p + 1) φ) * X + C R (constantCoeff R φ) := by
   ext (_ | n)
-  · simp only [Nat.zero_eq, coeff_zero_eq_constantCoeff, map_add, map_mul, constantCoeff_X,
+  · simp only [coeff_zero_eq_constantCoeff, map_add, map_mul, constantCoeff_X,
       mul_zero, coeff_zero_C, zero_add]
   · simp only [coeff_succ_mul_X, coeff_mk, LinearMap.map_add, coeff_C, n.succ_ne_zero, sub_zero,
       if_false, add_zero]
@@ -425,7 +424,7 @@ theorem eq_shift_mul_X_add_const (φ : R⟦X⟧) :
 theorem eq_X_mul_shift_add_const (φ : R⟦X⟧) :
     φ = (X * mk fun p => coeff R (p + 1) φ) + C R (constantCoeff R φ) := by
   ext (_ | n)
-  · simp only [Nat.zero_eq, coeff_zero_eq_constantCoeff, map_add, map_mul, constantCoeff_X,
+  · simp only [coeff_zero_eq_constantCoeff, map_add, map_mul, constantCoeff_X,
       zero_mul, coeff_zero_C, zero_add]
   · simp only [coeff_succ_X_mul, coeff_mk, LinearMap.map_add, coeff_C, n.succ_ne_zero, sub_zero,
       if_false, add_zero]

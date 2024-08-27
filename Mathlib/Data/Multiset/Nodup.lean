@@ -3,8 +3,8 @@ Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathlib.Data.List.Range
 import Mathlib.Data.Multiset.Range
+import Mathlib.Data.List.Pairwise
 
 /-!
 # The `Nodup` predicate for multisets without duplicate elements.
@@ -192,7 +192,7 @@ theorem range_le {m n : ℕ} : range m ≤ range n ↔ m ≤ n :=
 theorem mem_sub_of_nodup [DecidableEq α] {a : α} {s t : Multiset α} (d : Nodup s) :
     a ∈ s - t ↔ a ∈ s ∧ a ∉ t :=
   ⟨fun h =>
-    ⟨mem_of_le tsub_le_self h, fun h' => by
+    ⟨mem_of_le (Multiset.sub_le_self ..) h, fun h' => by
       refine count_eq_zero.1 ?_ h
       rw [count_sub a s t, Nat.sub_eq_zero_iff_le]
       exact le_trans (nodup_iff_count_le_one.1 d _) (count_pos.2 h')⟩,

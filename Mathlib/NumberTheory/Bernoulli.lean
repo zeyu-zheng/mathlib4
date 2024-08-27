@@ -256,7 +256,7 @@ theorem bernoulliPowerSeries_mul_exp_sub_one : bernoulliPowerSeries A * (exp A -
   · simp
   simp only [bernoulliPowerSeries, coeff_mul, coeff_X, sum_antidiagonal_succ', one_div, coeff_mk,
     coeff_one, coeff_exp, LinearMap.map_sub, factorial, if_pos, cast_succ, cast_one, cast_mul,
-    sub_zero, RingHom.map_one, add_eq_zero_iff, if_false, _root_.inv_one, zero_add, one_ne_zero,
+    sub_zero, RingHom.map_one, add_eq_zero, if_false, _root_.inv_one, zero_add, one_ne_zero,
     mul_zero, and_false_iff, sub_self, ← RingHom.map_mul, ← map_sum]
   cases' n with n
   · simp
@@ -293,7 +293,7 @@ theorem sum_range_pow (n p : ℕ) :
     apply sum_congr rfl
     intros m h
     simp only [f, exp_pow_eq_rescale_exp, rescale, one_div, coeff_mk, RingHom.coe_mk, coeff_exp,
-      RingHom.id_apply, cast_mul, algebraMap_rat_rat]
+      RingHom.id_apply, cast_mul, Algebra.id.map_eq_id]
     -- manipulate factorials and binomial coefficients
     simp? at h says simp only [succ_eq_add_one, mem_range] at h
     rw [choose_eq_factorial_div_factorial h.le, eq_comm, div_eq_iff (hne q.succ), succ_eq_add_one,
@@ -316,9 +316,7 @@ theorem sum_range_pow (n p : ℕ) :
         mk fun p =>
           ∑ i ∈ range (p + 1), bernoulli i * (p + 1).choose i * (n : ℚ) ^ (p + 1 - i) / (p + 1)! by
       rw [← div_eq_iff (hne p), div_eq_mul_inv, sum_mul]
-      #adaptation_note
-      /-- (2024-07-08): this was rw, but that created an instance goal -/
-      simp_rw [PowerSeries.ext_iff] at this
+      rw [PowerSeries.ext_iff] at this
       simpa using this p
     -- the power series `exp ℚ - 1` is non-zero, a fact we need in order to use `mul_right_inj'`
     have hexp : exp ℚ - 1 ≠ 0 := by

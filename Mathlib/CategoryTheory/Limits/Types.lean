@@ -496,7 +496,6 @@ theorem colimitEquivQuot_symm_apply (j : J) (x : F.obj j) :
     (colimitEquivQuot F).symm (Quot.mk _ ⟨j, x⟩) = colimit.ι F j x :=
   congrFun (IsColimit.comp_coconePointUniqueUpToIso_inv (colimit.isColimit F) _ _) x
 
-
 @[simp]
 theorem colimitEquivQuot_apply (j : J) (x : F.obj j) :
     (colimitEquivQuot F) (colimit.ι F j x) = Quot.mk _ ⟨j, x⟩ := by
@@ -643,6 +642,7 @@ private noncomputable def limitOfSurjectionsSurjective.preimage
     | 0 => a
     | n+1 => (hF n (preimage a n)).choose
 
+include hF in
 open limitOfSurjectionsSurjective in
 /-- Auxiliary lemma. Use `limit_of_surjections_surjective` instead. -/
 lemma surjective_π_app_zero_of_surjective_map_aux :
