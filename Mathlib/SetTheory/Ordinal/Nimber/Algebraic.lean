@@ -20,7 +20,12 @@ namespace Nimber
 
 instance : CharP Nimber 2 where
   cast_eq_zero_iff' x := by
-    sorry
+    rcases Nat.even_or_odd x with ⟨r, rfl⟩ | ⟨r, rfl⟩
+    · simp only [Nat.cast_add, add_self, true_iff]
+      omega
+    · simp only [Nat.cast_add, Nat.cast_mul, Nat.cast_ofNat, Nat.cast_one, add_eq_zero_iff,
+      Nat.not_two_dvd_bit1, iff_false]
+      simp only [two_mul, add_self, zero_ne_one, not_false_eq_true]
 
 
 /-- Add nimbers as ordinals. We introduce the notation `a +ₒ b` for this. -/
@@ -46,6 +51,9 @@ lemma lt_ordinalAdd_iff (a b c : Nimber) : a < b +ₒ c ↔ a < b ∨ ∃ d < c,
 lemma ordinalDiv_ordinalAdd_ordinalMod (a b : Nimber) : b *ₒ (a /ₒ b) +ₒ a %ₒ b = a :=
   div_add_mod a b
 
+lemma ordinalMod_lt (a : Nimber) {b : Nimber} (hb : b ≠ 0) : a %ₒ b < b :=
+  Ordinal.mod_lt a hb
+
 @[simp]
 lemma ordinalPow_zero (a : Nimber) : a ^ₒ 0 = 1 := by simp [ordinalPow]
 
@@ -55,34 +63,37 @@ lemma one_ordinalMul (a : Nimber) : 1 *ₒ a = a := by simp [ordinalMul]
 @[simp]
 lemma ordinalMul_one (a : Nimber) : a *ₒ 1 = a := by simp [ordinalMul]
 
+theorem ordinalDiv_lt {a b c : Nimber} (b0 : b ≠ 0) : a /ₒ b < c ↔ a < b *ₒ c :=
+  Ordinal.div_lt b0
+
 /-- We consider a nimber to be a group when nimbers less than it are closed under addition. Note we
 don't actually require `0 < x`. -/
-def IsGroup (x : Nimber) : Prop :=
-  ∀ y < x, ∀ z < x, y + z < x
+structure IsGroup (x : Nimber) : Prop :=
+  add_lt : ∀ y < x, ∀ z < x, y + z < x
 
 @[simp]
-lemma IsGroup_one : IsGroup 1 := by intro _ _ _ _; simp_all [lt_one_iff_zero]
+lemma IsGroup_one : IsGroup 1 := by constructor; intro _ _ _ _; simp_all [lt_one_iff_zero]
 
 /-- We consider a nimber to be a ring when it is a group, and nimbers less than it are closed under
 multiplication. -/
-def IsRing (x : Nimber) : Prop :=
-  IsGroup x ∧ ∀ y < x, ∀ z < x, y * z < x
+structure IsRing (x : Nimber) extends IsGroup x : Prop :=
+  mul_lt : ∀ y < x, ∀ z < x, y * z < x
 
 /-- We consider a nimber to be a field when it is a ring, and nimbers less than it are closed under
 inverses. -/
-def IsPrefield (x : Nimber) : Prop :=
-  IsRing x ∧ ∀ y < x, y⁻¹ < x
+structure IsPrefield (x : Nimber) extends IsRing x : Prop :=
+  inv_lt : ∀ y < x, y⁻¹ < x
 
-def IsField (x : Nimber) : Prop :=
-  IsPrefield x ∧ 1 < x
+structure IsField (x : Nimber) extends IsPrefield x : Prop :=
+  one_lt : 1 < x
 
 def IsField.toSubfield {x : Nimber} (hx : IsField x) : Subfield Nimber where
   carrier := Set.Iio x
-  mul_mem' {a b} (ha hb) := hx.1.1.2 a ha b hb
-  add_mem' {a b} (ha hb) := hx.1.1.1 a ha b hb
-  inv_mem' := hx.1.2
-  one_mem' := hx.2
-  zero_mem' := zero_lt_one.trans hx.2
+  mul_mem' {a b} (ha hb) := hx.mul_lt a ha b hb
+  add_mem' {a b} (ha hb) := hx.add_lt a ha b hb
+  inv_mem' := hx.inv_lt
+  one_mem' := hx.one_lt
+  zero_mem' := zero_lt_one.trans hx.one_lt
   neg_mem' := id
 
 @[simp]
@@ -210,7 +221,7 @@ lemma monotone_iterate_of_id_le {α : Type*} [Preorder α] {f : α → α} (hf :
 lemma unbounded_isField : Set.Unbounded (· < ·) {x | IsPrefield x} := by
   intro x
   simp_rw [not_lt, and_comm]
-  refine ⟨sup fun n ↦ fieldify^[n] x, le_sup _ 0, ⟨?_, ?_⟩, ?_⟩
+  refine ⟨sup fun n ↦ fieldify^[n] x, le_sup _ 0, ⟨⟨?_⟩, ?_⟩, ?_⟩
   iterate 2 {
     intro y hy z hz
     rw [lt_sup] at *
@@ -237,7 +248,7 @@ lemma ordinalMul_add_of_isGroup {x z : Nimber} (hx : IsGroup x) (y : Nimber) (hz
   have add_lt_of_lt (w : Nimber) (h : w < x *ₒ y) : w + z < x *ₒ y := by
     have h₁ : w /ₒ x < y := (div_lt xne).mpr h
     have h₂ : w %ₒ x < x := mod_lt w xne
-    have h₃ : w %ₒ x + z < x := hx _ h₂ z hz
+    have h₃ : w %ₒ x + z < x := hx.add_lt _ h₂ z hz
     rw [← ordinalDiv_ordinalAdd_ordinalMod w x, ← ordinalMul_add_of_isGroup hx _ h₂, add_assoc,
       ordinalMul_add_of_isGroup hx _ h₃]
     unfold ordinalAdd ordinalMul
@@ -283,7 +294,64 @@ lemma two_eq_zero : (2 : Nimber) = 0 := calc
   _ = Nat.cast 1 + 1 := Nat.cast_add_one 1
   _ = 0 := by simp
 
-count_heartbeats in
+private lemma extracted_1 {x : Nimber} {n : ℕ} (hx : x.IsField)
+    (h : ∀ (p : (hx.toSubfield)[X]), 0 < p.degree → p.degree ≤ ↑n → ∃ y, p.IsRoot y) (m : ℕ)
+    (hm : m + 1 ≤ n)
+    (psl2 : ∀ (p : (↥hx.toSubfield)[X]), p.degree < ↑m → (aeval x) p < x ^ₒ m)
+    (psl4 : x ^ m = x ^ₒ m)
+    (p : (↥hx.toSubfield)[X]) (pd : p.degree < ↑m + 1) :
+    ∃ a' < x ^ m, ∃ b' < x, a' * x + x ^ m * b' + a' * b' = (aeval x) p := by
+  haveI : CharP hx.toSubfield 2 := inferInstance
+  let f := X ^ (m + 1) + p
+  have pf : p = f + X ^ (m + 1) := calc
+    p = (C 0) * X ^ (m + 1) + p := by simp
+    _ = (C (1 + 1)) * X ^ (m + 1) + p := by
+      reduce_mod_char!
+    _ = X ^ (m + 1) + X ^ (m + 1) + p := by simp [add_mul]
+    _ = (X ^ (m + 1) + p) + X ^ (m + 1) := by ring
+    _ = f + X ^ (m + 1) := rfl
+  have fdeg : f.degree = m + 1 := by
+    rw [Polynomial.degree_add_eq_left_of_degree_lt]
+    · simp
+    · simp [pd]
+  have fmonic : f.Monic := by
+    apply Polynomial.Monic.add_of_left
+    · simp
+    · simp [pd]
+  obtain ⟨r, hr⟩ := h f (by simp only [fdeg]; norm_cast; omega)
+    (by simp only [fdeg]; exact_mod_cast hm)
+  rw [← Polynomial.mul_div_eq_iff_isRoot] at hr
+  generalize hg : f / (X - C r) = g at hr
+  have gmonic : g.Monic := by
+    simp [← hg, Polynomial.Monic.def, Polynomial.leadingCoeff_div
+      (show (X - C r).degree ≤ f.degree by simp only [degree_X_sub_C, fdeg]; norm_cast; omega)]
+    exact fmonic
+  have gdeg : g.degree = m := by
+    apply_fun Polynomial.degree at hr
+    simp [fdeg] at hr
+    rw [add_comm] at hr
+    exact WithBot.add_right_cancel (by simp) hr
+  use aeval x (g + X ^ m), ?_, r, ?_
+  · rw [pf, ← hr]
+    simp only [map_add, map_pow, aeval_X, map_mul, map_sub, aeval_C, algebraMap_subfield,
+      Nimber.sub_eq]
+    ring_nf
+    rw [two_eq_zero]
+    ring
+  · rw [psl4]
+    apply psl2
+    rw [← gdeg]
+    convert Polynomial.degree_eraseLead_lt _ using 2
+    · rw [← Polynomial.self_sub_C_mul_X_pow, gmonic]
+      simp only [map_one, one_mul]
+      reduce_mod_char!
+      congr
+      rw [eq_comm]
+      exact natDegree_eq_of_degree_eq_some gdeg
+    · intro nh
+      simp [nh] at gmonic
+  · exact r.2
+
 private lemma lemma2' {x : Nimber} {n m : ℕ} (hx : IsField x) (hm : m ≤ n)
     (h : ∀ p : Polynomial hx.toSubfield, 0 < p.degree → p.degree ≤ n → ∃ y, p.IsRoot y) :
     (∀ y < x ^ₒ m, ∃ p : Polynomial hx.toSubfield, p.degree < m ∧ aeval x p = y) ∧
@@ -298,7 +366,6 @@ private lemma lemma2' {x : Nimber} {n m : ℕ} (hx : IsField x) (hm : m ≤ n)
   clear hind
   have sl1 : ∀ y < x ^ₒ (m + 1), ∃ p : Polynomial hx.toSubfield, p.degree < (m + 1) ∧
       aeval x p = y := by
-    -- sorry
     intro y hy
     have := ordinalDiv_ordinalAdd_ordinalMod y (x ^ₒ m)
     have b1 : y /ₒ (x ^ₒ m) < x := by
@@ -326,7 +393,6 @@ private lemma lemma2' {x : Nimber} {n m : ℕ} (hx : IsField x) (hm : m ≤ n)
     rfl
   use sl1
   have sl2 : ∀ p : Polynomial hx.toSubfield, p.degree < m + 1 → aeval x p < x ^ₒ (m + 1) := by
-    -- sorry
     intro p hp
     change _ < Order.succ (m : WithBot ℕ) at hp
     rw [lt_succ_iff] at hp
@@ -347,14 +413,15 @@ private lemma lemma2' {x : Nimber} {n m : ℕ} (hx : IsField x) (hm : m ≤ n)
         · simp [Ordinal.pos_iff_ne_zero, xne]
     exact (p.coeff m).2
   use sl2
-  constructor
-  · -- sorry
+  have slg : (x ^ₒ (m + 1)).IsGroup := by
+    constructor
     intro a ha b hb
     obtain ⟨ap, apd, rfl⟩ := sl1 a ha
     obtain ⟨bp, bpd, rfl⟩ := sl1 b hb
     rw [← map_add]
     apply sl2
     apply Polynomial.degree_add_lt_of_degree_lt apd bpd
+  use slg
   have sl3 : ∀ y < x ^ₒ (m + 1), ∀ a < x, y * a < x ^ₒ (m + 1) := by
     intro y hy a ha
     obtain ⟨p, pd, rfl⟩ := sl1 y hy
@@ -367,68 +434,15 @@ private lemma lemma2' {x : Nimber} {n m : ℕ} (hx : IsField x) (hm : m ≤ n)
     simp only [mul_one, ordinalMul_one] at psl4
     rw [pow_succ, mul_def]
     trans sInf (Set.Iio (x ^ₒ (m + 1)))ᶜ
-    · simp
+    · simp only [Set.compl_Iio, csInf_Ici]
     congr
     ext y
+    rw [Set.mem_Iio, Set.mem_setOf_eq]
     constructor
-    · haveI : CharP hx.toSubfield 2 := inferInstance
-      intro hy
-      rw [Set.mem_Iio] at hy
-      obtain ⟨p, pd, rfl⟩ := sl1 y hy
-      rw [Set.mem_setOf_eq]
-      let f := X ^ (m + 1) + p
-      have pf : p = f + X ^ (m + 1) := calc
-        p = (C 0) * X ^ (m + 1) + p := by simp
-        _ = (C (1 + 1)) * X ^ (m + 1) + p := by
-          reduce_mod_char!
-        _ = X ^ (m + 1) + X ^ (m + 1) + p := by simp [add_mul]
-        _ = (X ^ (m + 1) + p) + X ^ (m + 1) := by ring
-        _ = f + X ^ (m + 1) := rfl
-      have fdeg : f.degree = m + 1 := by
-        rw [Polynomial.degree_add_eq_left_of_degree_lt]
-        · simp
-        · simp [pd]
-      have fmonic : f.Monic := by
-        apply Polynomial.Monic.add_of_left
-        · simp
-        · simp [pd]
-      obtain ⟨r, hr⟩ := h f (by simp only [fdeg]; norm_cast; omega)
-        (by simp only [fdeg]; exact_mod_cast hm)
-      rw [← Polynomial.mul_div_eq_iff_isRoot] at hr
-      generalize hg : f / (X - C r) = g at hr
-      have gmonic : g.Monic := by
-        simp [← hg, Polynomial.Monic.def, Polynomial.leadingCoeff_div
-          (show (X - C r).degree ≤ f.degree by simp only [degree_X_sub_C, fdeg]; norm_cast; omega)]
-        exact fmonic
-      have gdeg : g.degree = m := by
-        apply_fun Polynomial.degree at hr
-        simp [fdeg] at hr
-        rw [add_comm] at hr
-        exact WithBot.add_right_cancel (by simp) hr
-      use aeval x (g + X ^ m), ?_, r, ?_
-      · rw [pf, ← hr]
-        simp only [map_add, map_pow, aeval_X, map_mul, map_sub, aeval_C, algebraMap_subfield,
-          Nimber.sub_eq]
-        ring_nf
-        rw [two_eq_zero]
-        ring
-      · rw [psl4]
-        apply psl2
-        rw [← gdeg]
-        convert Polynomial.degree_eraseLead_lt _ using 2
-        · rw [← Polynomial.self_sub_C_mul_X_pow, gmonic]
-          simp only [map_one, one_mul]
-          reduce_mod_char!
-          congr
-          rw [eq_comm]
-          exact natDegree_eq_of_degree_eq_some gdeg
-        · intro nh
-          simp [nh] at gmonic
-      · exact r.2
     · intro hy
-      simp only [Set.mem_setOf_eq] at hy
-      rw [Set.mem_Iio]
-      obtain ⟨a, ha, b, hb, rfl⟩ := hy
+      obtain ⟨p, pd, rfl⟩ := sl1 y hy
+      exact extracted_1 hx h m hm psl2 psl4 p pd
+    · rintro ⟨a, ha, b, hb, rfl⟩
       rw [psl4] at ha
       obtain ⟨p, pdeg, rfl⟩ := psl1 a ha
       convert_to aeval x (p * X + X ^ m * C ⟨b, hb⟩ + p * C ⟨b, hb⟩) < _
@@ -447,7 +461,57 @@ private lemma lemma2' {x : Nimber} {n m : ℕ} (hx : IsField x) (hm : m ≤ n)
         · exact pdeg.succ_le
       · rfl
       · exact pdeg.le
-  sorry
+  intro y hy
+  rw [← sl4]
+  induction' y using induction with y hind
+  rw [mul_def]
+  trans sInf (Set.Iio (x ^ₒ (m + 1) *ₒ y))ᶜ
+  · congr
+    ext z
+    rw [Set.mem_setOf_eq, Set.mem_Iio]
+    constructor
+    · rintro ⟨a, ha, b, hb, rfl⟩
+      have : a * (y + b) < x ^ₒ (m + 1) := sl3 a ha _ (hx.add_lt _ hy _ (hb.trans hy))
+      calc
+        a * y + x ^ₒ (m + 1) * b + a * b = x ^ₒ (m + 1) * b + a * (y + b) := by ring
+        _ = x ^ₒ (m + 1) *ₒ b + a * (y + b) := by rw [hind b hb (hb.trans hy)]
+        _ = x ^ₒ (m + 1) *ₒ b +ₒ a * (y + b) := by rw [ordinalMul_add_of_isGroup slg _ this]
+        _ < x ^ₒ (m + 1) *ₒ b +ₒ x ^ₒ (m + 1) := by simpa [ordinalAdd]
+        _ = x ^ₒ (m + 1) *ₒ (b +ₒ 1) := by simp [ordinalAdd, ordinalMul, Ordinal.mul_succ]
+        _ ≤ x ^ₒ (m + 1) *ₒ y := by
+          simp only [ordinalMul, map_le_map_iff]
+          gcongr
+          exact hb.succ_le
+    · intro hz
+      let b := z /ₒ (x ^ₒ (m + 1))
+      have hb : b < y := by
+        rw [ordinalDiv_lt]
+        exact hz
+        simp [ordinalPow, xne]
+      use (z %ₒ (x ^ₒ (m + 1))) / (b + y), ?_, b, hb
+      · have : b + y ≠ 0 := by simp; intro nh; simp [nh] at hb
+        have : z = x ^ₒ (m + 1) *ₒ (z /ₒ (x ^ₒ (m + 1))) +ₒ z %ₒ (x ^ₒ (m + 1)) :=
+          (ordinalDiv_ordinalAdd_ordinalMod z (x ^ₒ (m + 1))).symm
+        rw [← ordinalMul_add_of_isGroup slg _ (ordinalMod_lt _ (by simp [ordinalPow, xne]))] at this
+        · rw [← hind _ hb (hb.trans hy)] at this
+          nth_rw 3 [this]
+          field_simp
+          unfold_let b
+          ring
+      · rw [div_eq_mul_inv]
+        apply sl3
+        · apply ordinalMod_lt
+          simp [ordinalPow, xne]
+        · apply hx.inv_lt
+          apply hx.add_lt _ (hb.trans hy) _ hy
+  · simp
+
+lemma lemma2 {x : Nimber} {n m : ℕ} (hx : IsField x) (hm : m ≤ n)
+    (h : ∀ p : Polynomial hx.toSubfield, 0 < p.degree → p.degree ≤ n → ∃ y, p.IsRoot y) :
+    ∀ y < x, x ^ m * y = x ^ₒ m *ₒ y :=
+  (lemma2' hx hm h).2.2.2
+
+#print axioms lemma2
 
 /-- The lexicographic ordering on polynomials. -/
 def polynomial_LT (p q : Nimber[X]) : Prop :=
