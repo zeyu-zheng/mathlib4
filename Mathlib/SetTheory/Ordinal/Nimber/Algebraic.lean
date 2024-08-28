@@ -7,6 +7,8 @@ Authors: Violeta Hernández Palacios, Daniel Weber
 import Mathlib.Data.Finsupp.WellFounded
 import Mathlib.FieldTheory.IsAlgClosed.Basic
 import Mathlib.SetTheory.Ordinal.Nimber.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Algebra.CharP.Subring
 
 universe u v
 
@@ -15,6 +17,11 @@ open Function Order Ordinal Polynomial
 noncomputable section
 
 namespace Nimber
+
+instance : CharP Nimber 2 where
+  cast_eq_zero_iff' x := by
+    sorry
+
 
 /-- Add nimbers as ordinals. We introduce the notation `a +ₒ b` for this. -/
 def ordinalAdd (a b : Nimber) : Nimber := toNimber (toOrdinal a + toOrdinal b)
@@ -45,6 +52,9 @@ lemma ordinalPow_zero (a : Nimber) : a ^ₒ 0 = 1 := by simp [ordinalPow]
 @[simp]
 lemma one_ordinalMul (a : Nimber) : 1 *ₒ a = a := by simp [ordinalMul]
 
+@[simp]
+lemma ordinalMul_one (a : Nimber) : a *ₒ 1 = a := by simp [ordinalMul]
+
 /-- We consider a nimber to be a group when nimbers less than it are closed under addition. Note we
 don't actually require `0 < x`. -/
 def IsGroup (x : Nimber) : Prop :=
@@ -74,6 +84,11 @@ def IsField.toSubfield {x : Nimber} (hx : IsField x) : Subfield Nimber where
   one_mem' := hx.2
   zero_mem' := zero_lt_one.trans hx.2
   neg_mem' := id
+
+@[simp]
+lemma algebraMap_subfield {α : Type*} [Field α] {f : Subfield α} (x : f) :
+    algebraMap f α x = x :=
+  rfl
 
 /-- The smallest nimber containing all additions of nimbers less than `x`. -/
 def addify (x : Nimber.{u}) : Nimber.{u} :=
@@ -250,18 +265,27 @@ termination_by (y, z)
 
 lemma Polynomial.degree_erase_lt_of_degree_le  {R : Type u} [Semiring R] (p : Polynomial R) {n : ℕ}
     (hp : p.degree ≤ n) : (p.erase n).degree < n := by
-  apply lt_or_eq_of_le at hp
-  rcases hp with hp | hp
+  rcases lt_or_eq_of_le hp with hp | hp
   · exact (degree_erase_le _ _).trans_lt hp
-  · rw [← hp]
-    have hp₂ := natDegree_eq_of_degree_eq_some hp
-    rw [← hp₂]
+  · rw [← hp, ← natDegree_eq_of_degree_eq_some hp]
     apply Polynomial.degree_erase_lt
     intro nh
     simp [nh] at hp
 
+lemma degree_C_mul_le {R : Type u} [Semiring R] (p : Polynomial R) (x : R) :
+    (C x * p).degree ≤ p.degree := calc
+  (C x * p).degree ≤ (C x).degree + p.degree := degree_mul_le (C x) p
+  _ ≤ 0 + p.degree := by gcongr; exact degree_C_le
+  _ = p.degree := zero_add _
+
+lemma two_eq_zero : (2 : Nimber) = 0 := calc
+  (2 : Nimber) = Nat.cast 2 := rfl
+  _ = Nat.cast 1 + 1 := Nat.cast_add_one 1
+  _ = 0 := by simp
+
+count_heartbeats in
 private lemma lemma2' {x : Nimber} {n m : ℕ} (hx : IsField x) (hm : m ≤ n)
-    (h : ∀ p : Polynomial hx.toSubfield, p.degree < n → ∃ y, p.IsRoot y) :
+    (h : ∀ p : Polynomial hx.toSubfield, 0 < p.degree → p.degree ≤ n → ∃ y, p.IsRoot y) :
     (∀ y < x ^ₒ m, ∃ p : Polynomial hx.toSubfield, p.degree < m ∧ aeval x p = y) ∧
     (∀ p : Polynomial hx.toSubfield, p.degree < m → aeval x p < x ^ₒ m) ∧
     (x ^ₒ m).IsGroup ∧
@@ -271,8 +295,10 @@ private lemma lemma2' {x : Nimber} {n m : ℕ} (hx : IsField x) (hm : m ≤ n)
   | zero => simp [lt_one_iff_zero]
   | succ m hind =>
   obtain ⟨psl1, psl2, pg, pindl⟩ := hind (by omega)
+  clear hind
   have sl1 : ∀ y < x ^ₒ (m + 1), ∃ p : Polynomial hx.toSubfield, p.degree < (m + 1) ∧
       aeval x p = y := by
+    -- sorry
     intro y hy
     have := ordinalDiv_ordinalAdd_ordinalMod y (x ^ₒ m)
     have b1 : y /ₒ (x ^ₒ m) < x := by
@@ -300,6 +326,7 @@ private lemma lemma2' {x : Nimber} {n m : ℕ} (hx : IsField x) (hm : m ≤ n)
     rfl
   use sl1
   have sl2 : ∀ p : Polynomial hx.toSubfield, p.degree < m + 1 → aeval x p < x ^ₒ (m + 1) := by
+    -- sorry
     intro p hp
     change _ < Order.succ (m : WithBot ℕ) at hp
     rw [lt_succ_iff] at hp
@@ -321,12 +348,105 @@ private lemma lemma2' {x : Nimber} {n m : ℕ} (hx : IsField x) (hm : m ≤ n)
     exact (p.coeff m).2
   use sl2
   constructor
-  · intro a ha b hb
+  · -- sorry
+    intro a ha b hb
     obtain ⟨ap, apd, rfl⟩ := sl1 a ha
     obtain ⟨bp, bpd, rfl⟩ := sl1 b hb
     rw [← map_add]
     apply sl2
     apply Polynomial.degree_add_lt_of_degree_lt apd bpd
+  have sl3 : ∀ y < x ^ₒ (m + 1), ∀ a < x, y * a < x ^ₒ (m + 1) := by
+    intro y hy a ha
+    obtain ⟨p, pd, rfl⟩ := sl1 y hy
+    convert_to aeval x (C ⟨a, ha⟩ * p) < _
+    · simp [mul_comm]
+    apply sl2
+    exact (degree_C_mul_le _ _).trans_lt pd
+  have sl4 : x ^ₒ (m + 1) = x ^ (m + 1) := by
+    have psl4 := pindl 1 hx.2
+    simp only [mul_one, ordinalMul_one] at psl4
+    rw [pow_succ, mul_def]
+    trans sInf (Set.Iio (x ^ₒ (m + 1)))ᶜ
+    · simp
+    congr
+    ext y
+    constructor
+    · haveI : CharP hx.toSubfield 2 := inferInstance
+      intro hy
+      rw [Set.mem_Iio] at hy
+      obtain ⟨p, pd, rfl⟩ := sl1 y hy
+      rw [Set.mem_setOf_eq]
+      let f := X ^ (m + 1) + p
+      have pf : p = f + X ^ (m + 1) := calc
+        p = (C 0) * X ^ (m + 1) + p := by simp
+        _ = (C (1 + 1)) * X ^ (m + 1) + p := by
+          reduce_mod_char!
+        _ = X ^ (m + 1) + X ^ (m + 1) + p := by simp [add_mul]
+        _ = (X ^ (m + 1) + p) + X ^ (m + 1) := by ring
+        _ = f + X ^ (m + 1) := rfl
+      have fdeg : f.degree = m + 1 := by
+        rw [Polynomial.degree_add_eq_left_of_degree_lt]
+        · simp
+        · simp [pd]
+      have fmonic : f.Monic := by
+        apply Polynomial.Monic.add_of_left
+        · simp
+        · simp [pd]
+      obtain ⟨r, hr⟩ := h f (by simp only [fdeg]; norm_cast; omega)
+        (by simp only [fdeg]; exact_mod_cast hm)
+      rw [← Polynomial.mul_div_eq_iff_isRoot] at hr
+      generalize hg : f / (X - C r) = g at hr
+      have gmonic : g.Monic := by
+        simp [← hg, Polynomial.Monic.def, Polynomial.leadingCoeff_div
+          (show (X - C r).degree ≤ f.degree by simp only [degree_X_sub_C, fdeg]; norm_cast; omega)]
+        exact fmonic
+      have gdeg : g.degree = m := by
+        apply_fun Polynomial.degree at hr
+        simp [fdeg] at hr
+        rw [add_comm] at hr
+        exact WithBot.add_right_cancel (by simp) hr
+      use aeval x (g + X ^ m), ?_, r, ?_
+      · rw [pf, ← hr]
+        simp only [map_add, map_pow, aeval_X, map_mul, map_sub, aeval_C, algebraMap_subfield,
+          Nimber.sub_eq]
+        ring_nf
+        rw [two_eq_zero]
+        ring
+      · rw [psl4]
+        apply psl2
+        rw [← gdeg]
+        convert Polynomial.degree_eraseLead_lt _ using 2
+        · rw [← Polynomial.self_sub_C_mul_X_pow, gmonic]
+          simp only [map_one, one_mul]
+          reduce_mod_char!
+          congr
+          rw [eq_comm]
+          exact natDegree_eq_of_degree_eq_some gdeg
+        · intro nh
+          simp [nh] at gmonic
+      · exact r.2
+    · intro hy
+      simp only [Set.mem_setOf_eq] at hy
+      rw [Set.mem_Iio]
+      obtain ⟨a, ha, b, hb, rfl⟩ := hy
+      rw [psl4] at ha
+      obtain ⟨p, pdeg, rfl⟩ := psl1 a ha
+      convert_to aeval x (p * X + X ^ m * C ⟨b, hb⟩ + p * C ⟨b, hb⟩) < _
+      · simp
+        rw [mul_comm]
+      apply sl2
+      change _ < Order.succ (m : WithBot ℕ)
+      rw [lt_succ_iff]
+      compute_degree
+      simp
+      constructor
+      constructor
+      · generalize p.degree = pd at pdeg ⊢
+        cases pd
+        · simp
+        · exact pdeg.succ_le
+      · rfl
+      · exact pdeg.le
   sorry
 
 /-- The lexicographic ordering on polynomials. -/
