@@ -492,12 +492,12 @@ private lemma lemma2' {x : Nimber} {n m : ℕ} (hx : IsField x) (hm : m ≤ n)
       · have : b + y ≠ 0 := by simp; intro nh; simp [nh] at hb
         have : z = x ^ₒ (m + 1) *ₒ (z /ₒ (x ^ₒ (m + 1))) +ₒ z %ₒ (x ^ₒ (m + 1)) :=
           (ordinalDiv_ordinalAdd_ordinalMod z (x ^ₒ (m + 1))).symm
-        rw [← ordinalMul_add_of_isGroup slg _ (ordinalMod_lt _ (by simp [ordinalPow, xne]))] at this
-        · rw [← hind _ hb (hb.trans hy)] at this
-          nth_rw 3 [this]
-          field_simp
-          unfold_let b
-          ring
+        rw [← ordinalMul_add_of_isGroup slg _ (ordinalMod_lt _ (by simp [ordinalPow, xne])),
+          ← hind _ hb (hb.trans hy)] at this
+        nth_rw 3 [this]
+        field_simp
+        unfold_let b
+        ring
       · rw [div_eq_mul_inv]
         apply sl3
         · apply ordinalMod_lt
