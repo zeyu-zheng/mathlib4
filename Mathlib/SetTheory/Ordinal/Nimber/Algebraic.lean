@@ -29,15 +29,15 @@ instance : CharP Nimber 2 where
 
 
 /-- Add nimbers as ordinals. We introduce the notation `a +ₒ b` for this. -/
-def ordinalAdd (a b : Nimber) : Nimber := toNimber (toOrdinal a + toOrdinal b)
+abbrev ordinalAdd (a b : Nimber) : Nimber := toNimber (toOrdinal a + toOrdinal b)
 /-- Multiply nimbers as ordinals. We introduce the notation `a *ₒ b` for this. -/
-def ordinalMul (a b : Nimber) : Nimber := toNimber (toOrdinal a * toOrdinal b)
+abbrev ordinalMul (a b : Nimber) : Nimber := toNimber (toOrdinal a * toOrdinal b)
 /-- Divide nimbers as ordinals. We introduce the notation `a /ₒ b` for this. -/
-def ordinalDiv (a b : Nimber) : Nimber := toNimber (toOrdinal a / toOrdinal b)
+abbrev ordinalDiv (a b : Nimber) : Nimber := toNimber (toOrdinal a / toOrdinal b)
 /-- Take moduli of nimbers as ordinals. We introduce the notation `a %ₒ b` for this. -/
-def ordinalMod (a b : Nimber) : Nimber := toNimber (toOrdinal a % toOrdinal b)
+abbrev ordinalMod (a b : Nimber) : Nimber := toNimber (toOrdinal a % toOrdinal b)
 /-- Exponent of nimbers as ordinals. We introduce the notation `a ^ₒ b` for this. -/
-def ordinalPow (a : Nimber) (b : ℕ) : Nimber := toNimber (toOrdinal a ^ b)
+abbrev ordinalPow (a : Nimber) (b : ℕ) : Nimber := toNimber (toOrdinal a ^ b)
 
 local infixl:65 " +ₒ " => ordinalAdd
 local infixl:70 " *ₒ " => ordinalMul
@@ -55,7 +55,7 @@ lemma ordinalMod_lt (a : Nimber) {b : Nimber} (hb : b ≠ 0) : a %ₒ b < b :=
   Ordinal.mod_lt a hb
 
 @[simp]
-lemma ordinalPow_zero (a : Nimber) : a ^ₒ 0 = 1 := by simp [ordinalPow]
+lemma ordinalPow_zero (a : Nimber) : a ^ₒ 0 = 1 := by simp
 
 @[simp]
 lemma one_ordinalMul (a : Nimber) : 1 *ₒ a = a := by simp [ordinalMul]
@@ -79,11 +79,12 @@ multiplication. -/
 structure IsRing (x : Nimber) extends IsGroup x : Prop :=
   mul_lt : ∀ y < x, ∀ z < x, y * z < x
 
-/-- We consider a nimber to be a field when it is a ring, and nimbers less than it are closed under
-inverses. -/
+/-- We consider a nimber to be a prefield when it is a ring, and nimbers less than it are closed
+under inverses. -/
 structure IsPrefield (x : Nimber) extends IsRing x : Prop :=
   inv_lt : ∀ y < x, y⁻¹ < x
 
+/-- We consider a nimber to be a field when it is a prefield which contains 0 and 1. -/
 structure IsField (x : Nimber) extends IsPrefield x : Prop :=
   one_lt : 1 < x
 
@@ -212,10 +213,6 @@ lemma mul_mem_fieldify {x y z : Nimber} (hy : y < x) (hz : z < x) : y * z < x.fi
 lemma inv_mem_fieldify {x y : Nimber} (hy : y < x) : y⁻¹ < x.fieldify :=
   (mem_invify hy).trans_le (by simp)
 
-lemma monotone_iterate_of_id_le {α : Type*} [Preorder α] {f : α → α} (hf : id ≤ f) (x : α) :
-    Monotone fun n ↦ f^[n] x :=
-  monotone_nat_of_le_succ fun n ↦ iterate_succ' f n ▸ hf _
-
 /-- The nimbers that form fields are a proper class. -/
 -- Lemma 3
 lemma unbounded_isField : Set.Unbounded (· < ·) {x | IsPrefield x} := by
@@ -227,8 +224,8 @@ lemma unbounded_isField : Set.Unbounded (· < ·) {x | IsPrefield x} := by
     rw [lt_sup] at *
     obtain ⟨yi, hy⟩ := hy
     obtain ⟨zi, hz⟩ := hz
-    replace hy := hy.trans_le (monotone_iterate_of_id_le le_fieldify x <| le_max_left yi zi)
-    replace hz := hz.trans_le (monotone_iterate_of_id_le le_fieldify x <| le_max_right yi zi)
+    replace hy := hy.trans_le (monotone_iterate_of_id_le le_fieldify (le_max_left yi zi) x)
+    replace hz := hz.trans_le (monotone_iterate_of_id_le le_fieldify (le_max_right yi zi) x)
     use (max yi zi) + 1
     rw [iterate_succ']
     try exact add_mem_fieldify hy hz
@@ -251,11 +248,10 @@ lemma ordinalMul_add_of_isGroup {x z : Nimber} (hx : IsGroup x) (y : Nimber) (hz
     have h₃ : w %ₒ x + z < x := hx.add_lt _ h₂ z hz
     rw [← ordinalDiv_ordinalAdd_ordinalMod w x, ← ordinalMul_add_of_isGroup hx _ h₂, add_assoc,
       ordinalMul_add_of_isGroup hx _ h₃]
-    unfold ordinalAdd ordinalMul
     apply lt_of_lt_of_le
     · rwa [OrderIso.lt_iff_lt, add_lt_add_iff_left, OrderIso.lt_iff_lt]
     · simp only [toNimber_toOrdinal, map_le_map_iff]
-      rwa [← mul_succ, mul_le_mul_iff_left, succ_le_iff, OrderIso.lt_iff_lt]
+      rwa [← mul_succ, mul_le_mul_iff_left, succ_le_iff]
       rwa [Ordinal.pos_iff_ne_zero, ne_eq, toOrdinal_eq_zero]
   rw [add_def]
   trans sInf {w | w < x *ₒ y +ₒ z}ᶜ
@@ -274,7 +270,7 @@ lemma ordinalMul_add_of_isGroup {x z : Nimber} (hx : IsGroup x) (y : Nimber) (hz
   · simp [Set.Iio_def]
 termination_by (y, z)
 
-lemma Polynomial.degree_erase_lt_of_degree_le  {R : Type u} [Semiring R] (p : Polynomial R) {n : ℕ}
+lemma degree_erase_lt_of_degree_le  {R : Type u} [Semiring R] (p : Polynomial R) {n : ℕ}
     (hp : p.degree ≤ n) : (p.erase n).degree < n := by
   rcases lt_or_eq_of_le hp with hp | hp
   · exact (degree_erase_le _ _).trans_lt hp
@@ -286,7 +282,7 @@ lemma Polynomial.degree_erase_lt_of_degree_le  {R : Type u} [Semiring R] (p : Po
 lemma degree_C_mul_le {R : Type u} [Semiring R] (p : Polynomial R) (x : R) :
     (C x * p).degree ≤ p.degree := calc
   (C x * p).degree ≤ (C x).degree + p.degree := degree_mul_le (C x) p
-  _ ≤ 0 + p.degree := by gcongr; exact degree_C_le
+  _ ≤ 0 + p.degree := add_le_add_right degree_C_le p.degree
   _ = p.degree := zero_add _
 
 lemma two_eq_zero : (2 : Nimber) = 0 := calc
@@ -297,9 +293,9 @@ lemma two_eq_zero : (2 : Nimber) = 0 := calc
 private lemma extracted_1 {x : Nimber} {n : ℕ} (hx : x.IsField)
     (h : ∀ (p : (hx.toSubfield)[X]), 0 < p.degree → p.degree ≤ ↑n → ∃ y, p.IsRoot y) (m : ℕ)
     (hm : m + 1 ≤ n)
-    (psl2 : ∀ (p : (↥hx.toSubfield)[X]), p.degree < ↑m → (aeval x) p < x ^ₒ m)
+    (psl2 : ∀ (p : (hx.toSubfield)[X]), p.degree < ↑m → (aeval x) p < x ^ₒ m)
     (psl4 : x ^ m = x ^ₒ m)
-    (p : (↥hx.toSubfield)[X]) (pd : p.degree < ↑m + 1) :
+    (p : (hx.toSubfield)[X]) (pd : p.degree < m + 1) :
     ∃ a' < x ^ m, ∃ b' < x, a' * x + x ^ m * b' + a' * b' = (aeval x) p := by
   haveI : CharP hx.toSubfield 2 := inferInstance
   let f := X ^ (m + 1) + p
@@ -353,9 +349,9 @@ private lemma extracted_1 {x : Nimber} {n : ℕ} (hx : x.IsField)
   · exact r.2
 
 private lemma lemma2' {x : Nimber} {n m : ℕ} (hx : IsField x) (hm : m ≤ n)
-    (h : ∀ p : Polynomial hx.toSubfield, 0 < p.degree → p.degree ≤ n → ∃ y, p.IsRoot y) :
-    (∀ y < x ^ₒ m, ∃ p : Polynomial hx.toSubfield, p.degree < m ∧ aeval x p = y) ∧
-    (∀ p : Polynomial hx.toSubfield, p.degree < m → aeval x p < x ^ₒ m) ∧
+    (h : ∀ p : (hx.toSubfield)[X], 0 < p.degree → p.degree ≤ n → ∃ y, p.IsRoot y) :
+    (∀ y < x ^ₒ m, ∃ p : (hx.toSubfield)[X], p.degree < m ∧ aeval x p = y) ∧
+    (∀ p : (hx.toSubfield)[X], p.degree < m → aeval x p < x ^ₒ m) ∧
     (x ^ₒ m).IsGroup ∧
     ∀ y < x, x ^ m * y = x ^ₒ m *ₒ y := by
   have xne : x ≠ 0 := fun nh ↦ absurd hx.2 (by simp [nh])
@@ -364,27 +360,27 @@ private lemma lemma2' {x : Nimber} {n m : ℕ} (hx : IsField x) (hm : m ≤ n)
   | succ m hind =>
   obtain ⟨psl1, psl2, pg, pindl⟩ := hind (by omega)
   clear hind
-  have sl1 : ∀ y < x ^ₒ (m + 1), ∃ p : Polynomial hx.toSubfield, p.degree < (m + 1) ∧
+  have sl1 : ∀ y < x ^ₒ (m + 1), ∃ p : (hx.toSubfield)[X], p.degree < (m + 1) ∧
       aeval x p = y := by
     intro y hy
     have := ordinalDiv_ordinalAdd_ordinalMod y (x ^ₒ m)
     have b1 : y /ₒ (x ^ₒ m) < x := by
       apply_fun toOrdinal
-      simp [ordinalDiv, ordinalPow]
+      simp
       rw [Ordinal.div_lt, ← pow_succ]
       exact hy
       simp [xne]
     have b2 : y %ₒ (x ^ₒ m) < x ^ₒ m := by
       apply mod_lt
-      simp [xne, ordinalPow]
+      simp [xne]
     rw [← ordinalMul_add_of_isGroup pg _ b2, ← pindl _ b1] at this
     obtain ⟨q, hq, h⟩ := psl1 (y %ₒ (x ^ₒ m)) b2
     use X ^ m * C ⟨_, b1⟩ + q, ?_, ?_
     · change _ < Order.succ (m : WithBot ℕ)
       rw [lt_succ_iff]
-      apply Polynomial.degree_add_le_of_degree_le
+      apply degree_add_le_of_degree_le
       · rw [mul_comm]
-        apply Polynomial.degree_C_mul_X_pow_le
+        apply degree_C_mul_X_pow_le
       · exact hq.le
     simp only [map_add, map_mul, aeval_C, map_pow, aeval_X, h]
     conv =>
@@ -392,20 +388,20 @@ private lemma lemma2' {x : Nimber} {n m : ℕ} (hx : IsField x) (hm : m ≤ n)
     simp only [add_left_inj]
     rfl
   use sl1
-  have sl2 : ∀ p : Polynomial hx.toSubfield, p.degree < m + 1 → aeval x p < x ^ₒ (m + 1) := by
+  have sl2 : ∀ p : (hx.toSubfield)[X], p.degree < m + 1 → aeval x p < x ^ₒ (m + 1) := by
     intro p hp
     change _ < Order.succ (m : WithBot ℕ) at hp
     rw [lt_succ_iff] at hp
-    rw [← Polynomial.monomial_add_erase p m]
+    rw [← monomial_add_erase p m]
     simp only [map_add, aeval_monomial]
     have : (aeval x) (erase m p) < x ^ₒ m := by
       apply psl2
-      apply Polynomial.degree_erase_lt_of_degree_le _ hp
+      apply degree_erase_lt_of_degree_le _ hp
     rw [mul_comm, pindl, ordinalMul_add_of_isGroup pg _ this]
     · apply lt_of_lt_of_le
         (b := x ^ₒ m *ₒ (algebraMap (↥hx.toSubfield) Nimber) (p.coeff m) +ₒ x ^ₒ m)
-      · simp only [ordinalAdd, OrderIso.lt_iff_lt, add_lt_add_iff_left, this]
-      · simp only [ordinalAdd, ordinalMul, ordinalPow, toNimber_toOrdinal, OrderIso.le_iff_le,
+      · simp only [OrderIso.lt_iff_lt, add_lt_add_iff_left, this]
+      · simp only [toNimber_toOrdinal, OrderIso.le_iff_le,
           ← Ordinal.mul_succ, pow_succ]
         rw [Ordinal.mul_le_mul_iff_left]
         · simp only [succ_le_iff, OrderIso.lt_iff_lt]
@@ -420,7 +416,7 @@ private lemma lemma2' {x : Nimber} {n m : ℕ} (hx : IsField x) (hm : m ≤ n)
     obtain ⟨bp, bpd, rfl⟩ := sl1 b hb
     rw [← map_add]
     apply sl2
-    apply Polynomial.degree_add_lt_of_degree_lt apd bpd
+    apply degree_add_lt_of_degree_lt apd bpd
   use slg
   have sl3 : ∀ y < x ^ₒ (m + 1), ∀ a < x, y * a < x ^ₒ (m + 1) := by
     intro y hy a ha
@@ -476,10 +472,10 @@ private lemma lemma2' {x : Nimber} {n m : ℕ} (hx : IsField x) (hm : m ≤ n)
         a * y + x ^ₒ (m + 1) * b + a * b = x ^ₒ (m + 1) * b + a * (y + b) := by ring
         _ = x ^ₒ (m + 1) *ₒ b + a * (y + b) := by rw [hind b hb (hb.trans hy)]
         _ = x ^ₒ (m + 1) *ₒ b +ₒ a * (y + b) := by rw [ordinalMul_add_of_isGroup slg _ this]
-        _ < x ^ₒ (m + 1) *ₒ b +ₒ x ^ₒ (m + 1) := by simpa [ordinalAdd]
-        _ = x ^ₒ (m + 1) *ₒ (b +ₒ 1) := by simp [ordinalAdd, ordinalMul, Ordinal.mul_succ]
+        _ < x ^ₒ (m + 1) *ₒ b +ₒ x ^ₒ (m + 1) := by simpa
+        _ = x ^ₒ (m + 1) *ₒ (b +ₒ 1) := by simp [Ordinal.mul_succ]
         _ ≤ x ^ₒ (m + 1) *ₒ y := by
-          simp only [ordinalMul, map_le_map_iff]
+          simp only [map_le_map_iff]
           gcongr
           exact hb.succ_le
     · intro hz
@@ -487,7 +483,7 @@ private lemma lemma2' {x : Nimber} {n m : ℕ} (hx : IsField x) (hm : m ≤ n)
       have hb : b < y := by
         rw [ordinalDiv_lt]
         exact hz
-        simp [ordinalPow, xne]
+        simp [xne]
       use (z %ₒ (x ^ₒ (m + 1))) / (b + y), ?_, b, hb
       · have : b + y ≠ 0 := by simp; intro nh; simp [nh] at hb
         have : z = x ^ₒ (m + 1) *ₒ (z /ₒ (x ^ₒ (m + 1))) +ₒ z %ₒ (x ^ₒ (m + 1)) :=
@@ -501,13 +497,13 @@ private lemma lemma2' {x : Nimber} {n m : ℕ} (hx : IsField x) (hm : m ≤ n)
       · rw [div_eq_mul_inv]
         apply sl3
         · apply ordinalMod_lt
-          simp [ordinalPow, xne]
+          simp [xne]
         · apply hx.inv_lt
           apply hx.add_lt _ (hb.trans hy) _ hy
   · simp
 
 lemma lemma2 {x : Nimber} {n m : ℕ} (hx : IsField x) (hm : m ≤ n)
-    (h : ∀ p : Polynomial hx.toSubfield, 0 < p.degree → p.degree ≤ n → ∃ y, p.IsRoot y) :
+    (h : ∀ p : (hx.toSubfield)[X], 0 < p.degree → p.degree ≤ n → ∃ y, p.IsRoot y) :
     ∀ y < x, x ^ m * y = x ^ₒ m *ₒ y :=
   (lemma2' hx hm h).2.2.2
 
