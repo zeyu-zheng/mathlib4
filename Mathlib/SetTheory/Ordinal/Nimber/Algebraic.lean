@@ -388,7 +388,6 @@ theorem fieldify_mono : Monotone fieldify := by
   · exact invify_mono h
   · exact algify_mono h
 
-#exit
 lemma root_mem_nfp_fieldify {x y : Nimber} {p : Nimber[X]}
     (hp : ∀ c ∈ p.coeffs, c < nfp fieldify x) (hy : y ∈ p.roots) : y < nfp fieldify x := by
   -- Why can't simp_rw do this the other way around?
@@ -407,16 +406,18 @@ lemma root_mem_nfp_fieldify {x y : Nimber} {p : Nimber[X]}
     Finset.le_max' _ _ _
   simpa [s] using ⟨c, hc, rfl⟩
 
+lemma one_lt_two : (1 : Nimber) < toNimber 2 := by
+  change (1 : Ordinal) < (2 : Ordinal)
+  norm_cast
+
 /-- The nimbers that form fields are a proper class. -/
 -- Lemma 3
 lemma unbounded_isField : Set.Unbounded (· < ·) {x | IsField x} := by
   intro x
-  refine ⟨nfp fieldify (max 2 x), ?_, ?_⟩
-  · apply isField_nfp_fieldify (lt_max_of_lt_left _)
-    change (1 : Ordinal) < (2 : Ordinal)
-    norm_cast
-  · rw [not_lt]
-    exact (le_max_right _ x).trans (le_nfp _ _)
+  refine ⟨nfp fieldify (max (toNimber 2) x),
+    isField_nfp_fieldify (lt_max_of_lt_left one_lt_two), ?_⟩
+  rw [not_lt]
+  exact (le_max_right _ x).trans (le_nfp _ _)
 
 -- Lemma 1
 lemma ordinalMul_add_of_isGroup {x z : Nimber} (hx : IsGroup x) (y : Nimber) (hz : z < x) :
@@ -679,20 +680,57 @@ theorem wellFounded_polynomial_LT : WellFounded (· ≺ ·) := by
 /-- For a nimber `x`, the set of non-constant polynomials with coefficients less than `x`, without a
 root less than `x`. -/
 def poly (x : Nimber) : Set Nimber[X] :=
-  {p | 1 ≤ p.degree ∧ (∀ c ∈ p.coeffs, c < x) ∧ ∀ r ∈ p.roots, x ≤ r}
+  {p | 0 < p.degree ∧ (∀ c ∈ p.coeffs, c < x) ∧ ∀ r ∈ p.roots, x ≤ r}
 
 -- Lemma 4
-lemma mem_min_roots_of_isField {x : Nimber} (hx : IsPrefield x) (hp : (poly x).Nonempty) :
+lemma mem_min_roots_of_isField {x : Nimber} (hx : IsField x) (hp : (poly x).Nonempty) :
     x ∈ (wellFounded_polynomial_LT.min _ hp).roots :=
   sorry
+
+theorem ne_zero_of_mem_coeffs {R : Type*} [Semiring R] {x : R} {p : R[X]}
+    (hx : x ∈ p.coeffs) : x ≠ 0 := by
+  rw [mem_coeffs_iff] at hx
+  obtain ⟨n, hn, rfl⟩ := hx
+  exact mem_support_iff.1 hn
+
+theorem _root_.Irreducible.degree_pos {F : Type*} [Field F] {f : Polynomial F} (h : Irreducible f) :
+    0 < f.degree :=
+  natDegree_pos_iff_degree_pos.1 h.natDegree_pos
 
 /-- The nimbers are algebraically closed. -/
 instance : IsAlgClosed Nimber := by
   apply IsAlgClosed.of_exists_root
-  intro p hp₁ hp₂
+  intro p
   apply wellFounded_polynomial_LT.induction p
-  intro p IH
-  let x := p.coeffs.max
-  sorry
+  intro p IH hp₁ hp₂
+  obtain hr | hr := p.roots.toFinset.eq_empty_or_nonempty
+  · have hp : p.coeffs.Nonempty := by
+      rw [coeffs_nonempty]
+      exact hp₁.ne_zero
+    let x := p.coeffs.max' hp
+    use nfp fieldify (succ x)
+    apply (mem_roots'.1 _).2
+    have hx : 1 < succ x := by
+      rw [← succ_zero, succ_lt_succ_iff]
+      have := ne_zero_of_mem_coeffs (p.coeffs.max'_mem hp)
+      rwa [Nimber.pos_iff_ne_zero]
+    have H : p ∈ poly (nfp fieldify (succ x)) := by
+      refine ⟨?_, ?_, ?_⟩
+      · exact hp₂.degree_pos
+      · intro c hc
+        apply (Finset.le_max' _ _ hc).trans_lt
+        rw [← succ_le_iff]
+        exact le_nfp _ _
+      · intro x hx
+        rw [Multiset.toFinset_eq_empty] at hr
+        rw [hr] at hx
+        exact (Multiset.not_mem_zero x hx).elim
+    have := mem_min_roots_of_isField (isField_nfp_fieldify hx) ⟨p, H⟩
+    convert this
+    sorry
+  · obtain ⟨x, hx⟩ := hr
+    rw [Multiset.mem_toFinset, mem_roots'] at hx
+    exact ⟨x, hx.2⟩
+
 
 end Nimber
