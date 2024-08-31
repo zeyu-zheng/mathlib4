@@ -631,12 +631,12 @@ theorem inv'_recOn (a : Nimber) {p : Nimber → Prop} (h0 : p 0)
 is nonempty. -/
 private inductive InvTy (a : Nimber.{u}) : Type u
   | zero : InvTy a
-  | cons : (toOrdinal a).out.α → InvTy a → InvTy a
+  | cons : (toOrdinal a).toType → InvTy a → InvTy a
 
 /-- An enumeration of elements in the complement of `inv'_set` by a type in the same universe. -/
 private def InvTy.toNimber {a : Nimber} : InvTy a → Nimber
   | zero => 0
-  | cons x b => let a' := Ordinal.toNimber (Ordinal.typein (α := a.out.α) (· < ·) x)
+  | cons x b => let a' := Ordinal.toNimber ((Ordinal.enumIsoToType (toOrdinal a)).symm x)
       inv' a' * (1 + (a + a') * (toNimber b))
 
 /-- The complement of `inv'_set a` is nonempty. -/
@@ -646,10 +646,9 @@ theorem inv'_set_nonempty (a : Nimber.{u}) : (inv'_set a)ᶜ.Nonempty := by
   intro x hx
   refine inv'_recOn a ⟨InvTy.zero, rfl⟩ ?_ hx
   rintro a' ha _ _ ⟨b, rfl⟩
-  rw [← Ordinal.type_lt a] at ha
-  use InvTy.cons (Ordinal.enum (α := a.out.α) (· < ·) a' ha) b
-  rw [InvTy.toNimber, Ordinal.typein_enum]
-  rfl
+  use InvTy.cons (Ordinal.enumIsoToType _ ⟨toOrdinal a', ha⟩) b
+  rw [InvTy.toNimber]
+  simp [- Ordinal.enumIsoToType_apply]
 
 theorem inv'_ne_zero (a : Nimber) : inv' a ≠ 0 := by
   rw [inv'_def]

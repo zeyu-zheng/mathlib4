@@ -72,6 +72,12 @@ theorem Ordinal.sSup_eq_zero {s : Set Ordinal} (hs : BddAbove s) : sSup s = 0 �
     rw [Set.subset_singleton_iff] at hs'
     exact hs' a ha
 
+/-- The zero element on `o.toType` is the bottom element. -/
+def zero_toType {o : Ordinal} (ho : o ≠ 0) : Zero o.toType :=
+  ⟨enumIsoOut o ⟨0, Ordinal.pos_iff_ne_zero.2 ho⟩⟩
+
+attribute [-simp] enumIsoOut_apply
+
 end MissingOrdinalStuff
 
 namespace Nimber
@@ -189,22 +195,14 @@ def algify (x : Nimber.{u}) : Nimber.{u} :=
   ⨆ p : {p : Polynomial Nimber // ∀ c ∈ p.coeffs, c < x},
     succ (p.1.roots.toFinset.max.recOn 0 id)
 
--- TODO: PR
-/-- The zero element on `o.out.α` is the bottom element. -/
-def zero_out {o : Ordinal} (ho : o ≠ 0) : Zero o.out.α :=
-  ⟨enumIsoOut o ⟨0, Ordinal.pos_iff_ne_zero.2 ho⟩⟩
-
--- This will be done in an upcoming Mathlib PR.
-attribute [-simp] enumIsoOut_apply
-
 -- TODO: Generalize the universes in the existing version of this
 theorem bddAbove_range {ι : Type*} [Small.{u} ι] (f : ι → Ordinal.{u}) : BddAbove (Set.range f) :=
   EquivLike.range_comp f (equivShrink ι).symm ▸ Ordinal.bddAbove_range _
 
 open Classical in
 /-- Enumerates the polynomials in the definition of `algify x` by a type in the same universe. -/
-def algify_enum {x : Nimber.{u}} (hx : x ≠ 0) (f : ℕ → (toOrdinal x).out.α) : Nimber.{u}[X] :=
-  let H : Zero (toOrdinal x).out.α := zero_out hx
+def algify_enum {x : Nimber.{u}} (hx : x ≠ 0) (f : ℕ → (toOrdinal x).toType) : Nimber.{u}[X] :=
+  let H : Zero (toOrdinal x).toType := zero_toType hx
   if hf : (Function.support f).Finite then Polynomial.ofFinsupp <| Finsupp.mk
     hf.toFinset
     (fun n => toNimber <| (enumIsoOut _).symm (f n))
@@ -219,14 +217,14 @@ def algify_enum {x : Nimber.{u}} (hx : x ≠ 0) (f : ℕ → (toOrdinal x).out.�
     )
   else 0
 
-theorem small_aux (x : Nimber.{u}) :
+theorem small_algify (x : Nimber.{u}) :
     Small.{u} {p : Polynomial Nimber.{u} // ∀ c ∈ p.coeffs, c < x} := by
   obtain rfl | hx := eq_or_ne x 0
   · simp_rw [Nimber.not_lt_zero, imp_false, ← Finset.eq_empty_iff_forall_not_mem, coeffs_eq_empty]
     exact small_subsingleton _
   · apply small_subset (s := Set.range <| algify_enum hx)
     intro p (hp : ∀ c ∈ p.coeffs, _)
-    let H : Zero (toOrdinal x).out.α := zero_out hx
+    let H : Zero (toOrdinal x).toType := zero_toType hx
     use Finsupp.mk
       p.support
       (fun n => enumIsoOut _ ⟨toOrdinal <| p.coeff n, by
@@ -249,7 +247,7 @@ theorem small_aux (x : Nimber.{u}) :
 lemma bddAbove_algify (x : Nimber) : BddAbove <| Set.range
     fun p : {p : Polynomial Nimber // ∀ c ∈ p.coeffs, c < x} =>
       (succ (p.1.roots.toFinset.max.recOn 0 id) : Nimber) :=
-  @bddAbove_range _ (small_aux x) _
+  @bddAbove_range _ (small_algify x) _
 
 lemma mem_algify {x y : Nimber} {p : Nimber[X]}
     (hp : ∀ c ∈ p.coeffs, c < x) (hy : y ∈ p.roots) : y < x.algify := by
