@@ -487,10 +487,6 @@ theorem relIso_enum {α β : Type u} {r : α → α → Prop} {s : β → β →
           exact ⟨f.symm⟩) :=
   relIso_enum' _ _ _ _
 
-/-- The zero element on `o.out.α` is the bottom element. -/
-def zero_out {o : Ordinal} (ho : o ≠ 0) : Zero o.out.α :=
-  ⟨enum (· < ·) 0 (by rwa [type_lt, Ordinal.pos_iff_ne_zero])⟩ 
-
 theorem lt_wf : @WellFounded Ordinal (· < ·) :=
 /-
   wellFounded_iff_wellFounded_subrel.mpr (·.induction_on fun ⟨_, r, wo⟩ ↦

@@ -126,29 +126,37 @@ def invify (x : Nimber.{u}) : Nimber.{u} :=
 lemma mem_invify {x y : Nimber} (hy : y < x) : y⁻¹ < x.invify :=
   lt_blsub _ _ hy
 
-/-def max' (s : Finset Nimber) : Nimber :=
-  s.max.recOn 0 id
-
-theorem le_max' (s : Finset Nimber) (y : Nimber) : y ≤ s-/
-
 /-- The smallest nimber containing all the roots of polynomials with coefficients less than `x`. -/
 def algify (x : Nimber.{u}) : Nimber.{u} :=
   ⨆ p : {p : Polynomial Nimber // ∀ c ∈ p.coeffs, c < x},
     succ (p.1.roots.toFinset.max.recOn 0 id)
 
+-- TODO: PR
+/-- The zero element on `o.out.α` is the bottom element. -/
+def zero_out {o : Ordinal} (ho : o ≠ 0) : Zero o.out.α :=
+  ⟨enumIsoOut o ⟨0, Ordinal.pos_iff_ne_zero.2 ho⟩⟩
+
+-- This will be done in an upcoming Mathlib PR.
+attribute [-simp] enumIsoOut_apply
+
+-- TODO: Generalize the universes in the existing version of this
+theorem bddAbove_range {ι : Type*} [Small.{u} ι] (f : ι → Ordinal.{u}) : BddAbove (Set.range f) :=
+  EquivLike.range_comp f (equivShrink ι).symm ▸ Ordinal.bddAbove_range _
+
 open Classical in
 /-- Enumerates the polynomials in the definition of `algify x` by a type in the same universe. -/
 def algify_enum {x : Nimber.{u}} (hx : x ≠ 0) (f : ℕ → (toOrdinal x).out.α) : Nimber.{u}[X] :=
   let H : Zero (toOrdinal x).out.α := zero_out hx
-  have _ : IsWellOrder (toOrdinal x).out.α (· < ·) := inferInstance
   if hf : (Function.support f).Finite then Polynomial.ofFinsupp <| Finsupp.mk
     hf.toFinset
-    (fun n => toNimber <| typein (· < ·) (f n))
+    (fun n => toNimber <| (enumIsoOut _).symm (f n))
     (by
-      have : toNimber (typein (· < ·) H.zero) = 0 := typein_enum _ _
+      have : toNimber ((enumIsoOut _).symm H.zero) = 0 :=
+        Subtype.ext_iff.1 <| (enumIsoOut _).symm_apply_apply _
+      dsimp
       rw [← this]
-      simp
-      intro
+      intro a
+      simp [← Subtype.ext_iff]
       rfl
     )
   else 0
@@ -163,39 +171,38 @@ theorem small_aux (x : Nimber.{u}) :
     let H : Zero (toOrdinal x).out.α := zero_out hx
     use Finsupp.mk
       p.support
-      (fun n => enum (· < ·) (toOrdinal <| p.coeff n) (by
-        rw [type_lt]
+      (fun n => enumIsoOut _ ⟨toOrdinal <| p.coeff n, by
         obtain hn | hn := eq_or_ne (p.coeff n) 0
         · rw [hn]
           exact Nimber.pos_iff_ne_zero.2 hx
         · exact hp _ <| coeff_mem_coeffs p n hn
-      ))
+      ⟩)
       (by
         intro a
-        change _ ↔ enum (· < ·) _ _ ≠ (zero_out hx).zero
-        unfold Zero.zero zero_out
-        dsimp
-        rw [enum_inj, mem_support_iff]
-        rfl
+        change _ ↔ _ ≠ enumIsoOut (toOrdinal x) _
+        simp
       )
     simp_rw [algify_enum, Finsupp.finite_support]
     simp
     ext
     rfl
 
-/-lemma mem_algify {x y : Nimber} {p : Nimber[X]}
+lemma mem_algify {x y : Nimber} {p : Nimber[X]}
     (hp : ∀ c ∈ p.coeffs, c < x) (hy : y ∈ p.roots) : y < x.algify := by
   rw [← succ_le_iff]
-  apply (le_ciSup_iff' _).2
-  · sorry
-  · apply @bddAbove_of_small _ _
-    apply small_subset
-
-
-
-
-
-#exit-/
+  have : succ y ≤ succ (p.roots.toFinset.max.recOn 0 id) := by
+    rw [succ_le_succ_iff]
+    rw [← Multiset.mem_toFinset] at hy
+    obtain ⟨m, hm⟩ := Finset.max_of_mem hy
+    rw [hm]
+    change y ≤ m
+    rw [← WithBot.coe_le_coe, ← hm]
+    exact Finset.le_max hy
+  apply this.trans
+  let p : {p : Polynomial Nimber // ∀ c ∈ p.coeffs, c < x} := ⟨p, hp⟩
+  convert le_ciSup _ p
+  · rfl
+  · exact @bddAbove_range _ (small_aux x) _
 
 /-- The smallest nimber containing all sums, products, and inverses of nimbers less than `x`. -/
 @[reducible]
