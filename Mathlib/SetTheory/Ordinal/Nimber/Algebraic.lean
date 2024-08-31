@@ -16,6 +16,64 @@ open Function Order Ordinal Polynomial
 
 noncomputable section
 
+-- Not all needed, but still could be PR'd.
+section MissingPolynomialStuff
+
+variable {R : Type*} [Semiring R]
+
+@[simp]
+theorem coeffs_zero : coeffs (0 : R[X]) = ∅ := by
+  simp
+
+@[simp]
+theorem coeff_monomial_same (n : ℕ) {c : R} : (monomial n c).coeff n = c :=
+  Finsupp.single_eq_same
+
+theorem coeffs_monomial (n : ℕ) {c : R} (hc : c ≠ 0) : (monomial n c).coeffs = {c} := by
+  rw [coeffs, support_monomial n hc]
+  simp
+
+theorem X_ne_C [Nontrivial R] (c : R) : X ≠ C c := by
+  intro h
+  have := congr_arg natDegree h
+  simp at this
+
+theorem coeff_X_mem (R : Type*) [Semiring R] (n : ℕ) :
+    coeff (X : R[X]) n = 0 ∨ coeff (X : R[X]) n = 1 := by
+  rw [coeff_X]
+  obtain rfl | hn := eq_or_ne 1 n
+  · simp
+  · simp [hn]
+
+end MissingPolynomialStuff
+
+section MissingOrdinalStuff
+
+protected theorem Ordinal.csSup_le_csSup {s t : Set Ordinal} (ht : BddAbove t) (h : s ⊆ t) :
+    sSup s ≤ sSup t := by
+  obtain rfl | hs := Set.eq_empty_or_nonempty s
+  · simp
+  · exact csSup_le_csSup ht hs h
+
+theorem Ordinal.sSup_empty : sSup (∅ : Set Ordinal) = 0 :=
+  csSup_empty
+
+theorem Ordinal.sSup_eq_zero {s : Set Ordinal} (hs : BddAbove s) : sSup s = 0 ↔ s ⊆ {0} := by
+  constructor
+  · intro h a ha
+    have := le_csSup hs ha
+    rw [h, Ordinal.le_zero] at this
+    exact this
+  · intro hs'
+    rw [← Ordinal.le_zero]
+    apply csSup_le'
+    intro a ha
+    rw [Ordinal.le_zero]
+    rw [Set.subset_singleton_iff] at hs'
+    exact hs' a ha
+
+end MissingOrdinalStuff
+
 namespace Nimber
 
 instance : CharP Nimber 2 where
@@ -187,6 +245,12 @@ theorem small_aux (x : Nimber.{u}) :
     ext
     rfl
 
+/-- The function in the definition of `algify` has a range bounded above. -/
+lemma bddAbove_algify (x : Nimber) : BddAbove <| Set.range
+    fun p : {p : Polynomial Nimber // ∀ c ∈ p.coeffs, c < x} =>
+      (succ (p.1.roots.toFinset.max.recOn 0 id) : Nimber) :=
+  @bddAbove_range _ (small_aux x) _
+
 lemma mem_algify {x y : Nimber} {p : Nimber[X]}
     (hp : ∀ c ∈ p.coeffs, c < x) (hy : y ∈ p.roots) : y < x.algify := by
   rw [← succ_le_iff]
@@ -198,11 +262,49 @@ lemma mem_algify {x y : Nimber} {p : Nimber[X]}
     change y ≤ m
     rw [← WithBot.coe_le_coe, ← hm]
     exact Finset.le_max hy
-  apply this.trans
-  let p : {p : Polynomial Nimber // ∀ c ∈ p.coeffs, c < x} := ⟨p, hp⟩
-  convert le_ciSup _ p
-  · rfl
-  · exact @bddAbove_range _ (small_aux x) _
+  exact this.trans <| le_ciSup (bddAbove_algify x) ⟨p, hp⟩
+
+theorem self_le_algify {x : Nimber} : x ≤ algify x := by
+  obtain hx' | hx' := le_or_lt x 1
+  · rw [le_one_iff] at hx'
+    obtain rfl | rfl := hx'
+    · exact Nimber.zero_le _
+    · rw [algify]
+      convert le_ciSup (bddAbove_algify 1) ⟨0, by simp⟩
+      simp
+      exact succ_zero.symm
+  · apply le_of_forall_lt
+    intro c hc
+    apply mem_algify (p := X + C c)
+    · intro a ha
+      rw [coeffs] at ha
+      simp only [coeff_add, Finset.mem_image, mem_support_iff, ne_eq, add_eq_zero_iff] at ha
+      obtain ⟨n, hn₁, hn₂⟩ := ha
+      cases n with
+      | zero =>
+        simp at hn₂
+        rwa [← hn₂]
+      | succ n =>
+        simp at hn₂
+        obtain hX | hX := coeff_X_mem Nimber (n + 1) <;>
+        rw [hX] at hn₂ <;>
+        rw [← hn₂]
+        · exact zero_lt_one.trans hx'
+        · exact hx'
+    · simp
+      rw [← add_left_inj (C c), add_assoc, ← C_add, add_self, map_zero, add_zero, zero_add]
+      exact X_ne_C c
+
+theorem algify_mono : Monotone algify := by
+  intro x y h
+  rw [algify, algify]
+  apply Ordinal.csSup_le_csSup (bddAbove_algify _)
+  rintro a ⟨p, rfl⟩
+  have : ∀ c ∈ p.1.coeffs, c < y := by
+    intro c hc
+    exact (p.2 c hc).trans_le h
+  simp
+  use p.1
 
 /-- The smallest nimber containing all sums, products, and inverses of nimbers less than `x`. -/
 @[reducible]
@@ -224,11 +326,12 @@ lemma inv_mem_fieldify {x y : Nimber} (hy : y < x) : y⁻¹ < x.fieldify :=
 -- Lemma 3
 lemma unbounded_isField : Set.Unbounded (· < ·) {x | IsPrefield x} := by
   intro x
-  simp_rw [not_lt, and_comm]
-  refine ⟨sup fun n ↦ fieldify^[n] x, le_sup _ 0, ⟨⟨?_⟩, ?_⟩, ?_⟩
+  use nfp fieldify x
+  simp_rw [not_lt]
+  refine ⟨⟨⟨⟨?_⟩, ?_⟩, ?_⟩, le_nfp _ _⟩
   iterate 2 {
     intro y hy z hz
-    rw [lt_sup] at *
+    rw [lt_nfp] at *
     obtain ⟨yi, hy⟩ := hy
     obtain ⟨zi, hz⟩ := hz
     replace hy := hy.trans_le (monotone_iterate_of_id_le le_fieldify (le_max_left yi zi) x)
@@ -239,7 +342,7 @@ lemma unbounded_isField : Set.Unbounded (· < ·) {x | IsPrefield x} := by
     try exact mul_mem_fieldify hy hz
   }
   intro y hy
-  rw [lt_sup] at *
+  rw [lt_nfp] at *
   obtain ⟨yi, hy⟩ := hy
   use yi + 1
   rw [iterate_succ']
@@ -536,9 +639,27 @@ lemma mem_min_roots_of_isField {x : Nimber} (hx : IsPrefield x) (hp : (poly x).N
     x ∈ (wellFounded_polynomial_LT.min _ hp).roots :=
   sorry
 
+/-- Fixed point of the `algify` function. -/
+def algify' (x : Nimber) : Nimber :=
+  nfp algify x --toNimber (nfp (toOrdinal ∘ algify ∘ toNimber) (toOrdinal x))
 
-
-
+lemma mem_algify' {x y : Nimber} {p : Nimber[X]}
+    (hp : ∀ c ∈ p.coeffs, c < x.algify') (hy : y ∈ p.roots) : y < x.algify' := by
+  -- Why can't simp_rw do this the other way around?
+  have : ∀ c ∈ p.coeffs, ∃ n : ℕ, c < algify^[n] x := by
+    simp_rw [← lt_nfp]
+    exact hp
+  choose f hf using this
+  rw [algify', lt_nfp]
+  let s := p.coeffs.attach.image (fun x => f x.1 x.2)
+  have hs : s.Nonempty := by simpa [s] using ne_zero_of_mem_roots hy
+  use (s.max' hs).succ
+  rw [iterate_succ_apply']
+  apply mem_algify _ hy
+  intro c hc
+  apply (hf c hc).trans_le <| algify_mono.monotone_iterate_of_le_map self_le_algify <|
+    Finset.le_max' _ _ _
+  simpa [s] using ⟨c, hc, rfl⟩
 
 /-- The nimbers are algebraically closed. -/
 instance : IsAlgClosed Nimber := by
@@ -546,5 +667,6 @@ instance : IsAlgClosed Nimber := by
   intro p _ _
   apply wellFounded_polynomial_LT.induction p
   intro p IH
+  sorry
 
 end Nimber

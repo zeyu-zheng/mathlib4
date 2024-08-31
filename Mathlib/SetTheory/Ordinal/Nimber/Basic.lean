@@ -131,6 +131,9 @@ theorem induction {p : Nimber → Prop} : ∀ (i) (_ : ∀ j, (∀ k, k < j → 
 
 variable {a : Nimber}
 
+protected theorem zero_le (a : Nimber) : 0 ≤ a :=
+  Ordinal.zero_le a
+
 protected theorem le_zero : a ≤ 0 ↔ a = 0 :=
   Ordinal.le_zero
 
@@ -139,6 +142,9 @@ protected theorem not_lt_zero (a : Nimber) : ¬ a < 0 :=
 
 protected theorem pos_iff_ne_zero : 0 < a ↔ a ≠ 0 :=
   Ordinal.pos_iff_ne_zero
+
+theorem le_one_iff : a ≤ 1 ↔ a = 0 ∨ a = 1 :=
+  Ordinal.le_one_iff
 
 theorem lt_one_iff_zero : a < 1 ↔ a = 0 :=
   Ordinal.lt_one_iff_zero

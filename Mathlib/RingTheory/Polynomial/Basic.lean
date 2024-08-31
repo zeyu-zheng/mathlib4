@@ -267,6 +267,10 @@ theorem coeffs_eq_empty {p : R[X]} : coeffs p = ∅ ↔ p = 0 := by
   classical
   rw [coeffs, image_eq_empty, support_eq_empty]
 
+@[simp]
+theorem coeffs_nonempty {p : R[X]} : (coeffs p).Nonempty ↔ p ≠ 0 := by
+  rw [← not_iff_not, not_nonempty_iff_eq_empty, coeffs_eq_empty, not_ne_iff]
+
 theorem geom_sum_X_comp_X_add_one_eq_sum (n : ℕ) :
     (∑ i ∈ range n, (X : R[X]) ^ i).comp (X + 1) =
       (Finset.range n).sum fun i : ℕ => (n.choose (i + 1) : R[X]) * X ^ i := by
