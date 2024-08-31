@@ -12,7 +12,7 @@ import Mathlib.Algebra.CharP.Subring
 
 universe u v
 
-open Function Order Ordinal Polynomial
+open Function Order Ordinal Polynomial Set
 
 noncomputable section
 
@@ -78,6 +78,10 @@ def zero_toType {o : Ordinal} (ho : o ≠ 0) : Zero o.toType :=
 
 end MissingOrdinalStuff
 
+instance (o : Nimber.{u}) : Small.{u} (Iio o) :=
+  inferInstanceAs (Small.{u} (Iio (Nimber.toOrdinal o)))
+
+-- I'll PR this soon.
 attribute [-simp] enumIsoToType_apply
 
 namespace Nimber
@@ -90,7 +94,6 @@ instance : CharP Nimber 2 where
     · simp only [Nat.cast_add, Nat.cast_mul, Nat.cast_ofNat, Nat.cast_one, add_eq_zero_iff,
       Nat.not_two_dvd_bit1, iff_false]
       simp only [two_mul, add_self, zero_ne_one, not_false_eq_true]
-
 
 /-- Add nimbers as ordinals. We introduce the notation `a +ₒ b` for this. -/
 abbrev ordinalAdd (a b : Nimber) : Nimber := toNimber (toOrdinal a + toOrdinal b)
@@ -152,6 +155,9 @@ structure IsPrefield (x : Nimber) extends IsRing x : Prop :=
 structure IsField (x : Nimber) extends IsPrefield x : Prop :=
   one_lt : 1 < x
 
+theorem IsField.ne_zero {x : Nimber} (hx : IsField x) : x ≠ 0 :=
+  fun h => zero_lt_one.asymm (h ▸ hx.one_lt)
+
 def IsField.toSubfield {x : Nimber} (hx : IsField x) : Subfield Nimber where
   carrier := Set.Iio x
   mul_mem' {a b} (ha hb) := hx.mul_lt a ha b hb
@@ -168,36 +174,62 @@ lemma algebraMap_subfield {α : Type*} [Field α] {f : Subfield α} (x : f) :
 
 /-- The smallest nimber containing all additions of nimbers less than `x`. -/
 def addify (x : Nimber.{u}) : Nimber.{u} :=
-  blsub₂ (toOrdinal x) (toOrdinal x)
-    (fun {a} _ {b} _ ↦ toOrdinal (toNimber a + toNimber b))
+  ⨆ p : Iio x × Iio x, succ (p.1 + p.2)
 
-lemma mem_addify {x y z : Nimber} (hy : y < x) (hz : z < x) : y + z < x.addify :=
-  lt_blsub₂ _ hy hz
+theorem bddAbove_addify (x : Nimber.{u}) :
+    BddAbove (range fun p : Iio x × Iio x => succ (p.1.1 + p.2)) :=
+  bddAbove_of_small _
+
+lemma mem_addify {x y z : Nimber} (hy : y < x) (hz : z < x) : y + z < x.addify := by
+  rw [← succ_le_iff]
+  exact le_ciSup (bddAbove_addify _) (⟨y, hy⟩, ⟨z, hz⟩)
+
+theorem addify_mono : Monotone addify := by
+  intro x y h
+  apply Ordinal.csSup_le_csSup (bddAbove_addify _)
+  rintro a ⟨⟨⟨a, ha⟩, ⟨b, hb⟩⟩, rfl⟩
+  simpa using ⟨a, ha.trans_le h, b, hb.trans_le h, rfl⟩
 
 /-- The smallest nimber containing all products of nimbers less than `x`. -/
 def mulify (x : Nimber.{u}) : Nimber.{u} :=
-  blsub₂ (toOrdinal x) (toOrdinal x)
-    (fun {a} _ {b} _ ↦ toOrdinal (toNimber a * toNimber b))
+  ⨆ p : Iio x × Iio x, succ (p.1 * p.2)
 
-lemma mem_mulify {x y z : Nimber} (hy : y < x) (hz : z < x) :
-    y * z < x.mulify :=
-  lt_blsub₂ _ hy hz
+theorem bddAbove_mulify (x : Nimber.{u}) :
+    BddAbove (range fun p : Iio x × Iio x => succ (p.1.1 * p.2)) :=
+  bddAbove_of_small _
+
+lemma mem_mulify {x y z : Nimber} (hy : y < x) (hz : z < x) : y * z < x.mulify := by
+  rw [← succ_le_iff]
+  exact le_ciSup (bddAbove_mulify _) (⟨y, hy⟩, ⟨z, hz⟩)
+
+theorem mulify_mono : Monotone mulify := by
+  intro x y h
+  apply Ordinal.csSup_le_csSup (bddAbove_mulify _)
+  rintro a ⟨⟨⟨a, ha⟩, ⟨b, hb⟩⟩, rfl⟩
+  simpa using ⟨a, ha.trans_le h, b, hb.trans_le h, rfl⟩
 
 /-- The smallest nimber containing all inverses of nimbers less than `x`. -/
 def invify (x : Nimber.{u}) : Nimber.{u} :=
-  blsub (toOrdinal x) (fun {a} _ ↦ toOrdinal (toNimber a)⁻¹)
+  ⨆ a : Iio x, succ (a⁻¹)
 
-lemma mem_invify {x y : Nimber} (hy : y < x) : y⁻¹ < x.invify :=
-  lt_blsub _ _ hy
+theorem bddAbove_invify (x : Nimber.{u}) :
+    BddAbove (range fun a : Iio x  => succ (a.1⁻¹)) :=
+  bddAbove_of_small _
+
+lemma mem_invify {x y : Nimber} (hy : y < x) : y⁻¹ < x.invify := by
+  rw [← succ_le_iff, invify]
+  exact le_ciSup (bddAbove_invify _) ⟨y, hy⟩
+
+theorem invify_mono : Monotone invify := by
+  intro x y h
+  apply Ordinal.csSup_le_csSup (bddAbove_invify _)
+  rintro a ⟨⟨a, ha⟩, rfl⟩
+  simpa using ⟨a, ha.trans_le h, rfl⟩
 
 /-- The smallest nimber containing all the roots of polynomials with coefficients less than `x`. -/
 def algify (x : Nimber.{u}) : Nimber.{u} :=
   ⨆ p : {p : Polynomial Nimber // ∀ c ∈ p.coeffs, c < x},
     succ (p.1.roots.toFinset.max.recOn 0 id)
-
--- TODO: Generalize the universes in the existing version of this
-theorem bddAbove_range {ι : Type*} [Small.{u} ι] (f : ι → Ordinal.{u}) : BddAbove (Set.range f) :=
-  EquivLike.range_comp f (equivShrink ι).symm ▸ Ordinal.bddAbove_range _
 
 open Classical in
 /-- Enumerates the polynomials in the definition of `algify x` by a type in the same universe. -/
@@ -217,7 +249,7 @@ def algify_enum {x : Nimber.{u}} (hx : x ≠ 0) (f : ℕ → (toOrdinal x).toTyp
     )
   else 0
 
-theorem small_algify (x : Nimber.{u}) :
+instance small_algify (x : Nimber.{u}) :
     Small.{u} {p : Polynomial Nimber.{u} // ∀ c ∈ p.coeffs, c < x} := by
   obtain rfl | hx := eq_or_ne x 0
   · simp_rw [Nimber.not_lt_zero, imp_false, ← Finset.eq_empty_iff_forall_not_mem, coeffs_eq_empty]
@@ -246,7 +278,7 @@ theorem small_algify (x : Nimber.{u}) :
 lemma bddAbove_algify (x : Nimber) : BddAbove <| Set.range
     fun p : {p : Polynomial Nimber // ∀ c ∈ p.coeffs, c < x} =>
       (succ (p.1.roots.toFinset.max.recOn 0 id) : Nimber) :=
-  @bddAbove_range _ (small_algify x) _
+  bddAbove_of_small _
 
 lemma mem_algify {x y : Nimber} {p : Nimber[X]}
     (hp : ∀ c ∈ p.coeffs, c < x) (hy : y ∈ p.roots) : y < x.algify := by
@@ -303,10 +335,11 @@ theorem algify_mono : Monotone algify := by
   simp
   use p.1
 
-/-- The smallest nimber containing all sums, products, and inverses of nimbers less than `x`. -/
+/-- The smallest nimber containing all sums, products, and inverses of nimbers less than `x`, as
+well as roots of polynomials with coefficients less than `x`. -/
 @[reducible]
 def fieldify (x : Nimber) : Nimber :=
-  x ⊔ addify x ⊔ mulify x ⊔ invify x
+  x ⊔ addify x ⊔ mulify x ⊔ invify x ⊔ algify x
 
 lemma le_fieldify (x : Nimber) : x ≤ fieldify x := by simp
 
@@ -319,13 +352,12 @@ lemma mul_mem_fieldify {x y z : Nimber} (hy : y < x) (hz : z < x) : y * z < x.fi
 lemma inv_mem_fieldify {x y : Nimber} (hy : y < x) : y⁻¹ < x.fieldify :=
   (mem_invify hy).trans_le (by simp)
 
-/-- The nimbers that form fields are a proper class. -/
--- Lemma 3
-lemma unbounded_isField : Set.Unbounded (· < ·) {x | IsPrefield x} := by
-  intro x
-  use nfp fieldify x
-  simp_rw [not_lt]
-  refine ⟨⟨⟨⟨?_⟩, ?_⟩, ?_⟩, le_nfp _ _⟩
+lemma root_mem_fieldify {x y : Nimber} {p : Nimber[X]}
+    (hp : ∀ c ∈ p.coeffs, c < x) (hy : y ∈ p.roots) : y < x.fieldify :=
+  (mem_algify hp hy).trans_le (by simp)
+
+lemma isPrefield_nfp_fieldify (x : Nimber) : IsPrefield (nfp fieldify x) := by
+  refine ⟨⟨⟨?_⟩, ?_⟩, ?_⟩
   iterate 2 {
     intro y hy z hz
     rw [lt_nfp] at *
@@ -344,6 +376,47 @@ lemma unbounded_isField : Set.Unbounded (· < ·) {x | IsPrefield x} := by
   use yi + 1
   rw [iterate_succ']
   exact inv_mem_fieldify hy
+
+lemma isField_nfp_fieldify {x : Nimber} (hx : 1 < x) : IsField (nfp fieldify x) :=
+  ⟨isPrefield_nfp_fieldify x, hx.trans_le (le_nfp _ _)⟩
+
+theorem fieldify_mono : Monotone fieldify := by
+  intro x y h
+  apply_rules [sup_le_sup]
+  · exact addify_mono h
+  · exact mulify_mono h
+  · exact invify_mono h
+  · exact algify_mono h
+
+#exit
+lemma root_mem_nfp_fieldify {x y : Nimber} {p : Nimber[X]}
+    (hp : ∀ c ∈ p.coeffs, c < nfp fieldify x) (hy : y ∈ p.roots) : y < nfp fieldify x := by
+  -- Why can't simp_rw do this the other way around?
+  have : ∀ c ∈ p.coeffs, ∃ n : ℕ, c < fieldify^[n] x := by
+    simp_rw [← lt_nfp]
+    exact hp
+  choose f hf using this
+  rw [lt_nfp]
+  let s := p.coeffs.attach.image (fun x => f x.1 x.2)
+  have hs : s.Nonempty := by simpa [s] using ne_zero_of_mem_roots hy
+  use (s.max' hs).succ
+  rw [iterate_succ_apply']
+  apply root_mem_fieldify _ hy
+  intro c hc
+  apply (hf c hc).trans_le <| fieldify_mono.monotone_iterate_of_le_map (le_fieldify _) <|
+    Finset.le_max' _ _ _
+  simpa [s] using ⟨c, hc, rfl⟩
+
+/-- The nimbers that form fields are a proper class. -/
+-- Lemma 3
+lemma unbounded_isField : Set.Unbounded (· < ·) {x | IsField x} := by
+  intro x
+  refine ⟨nfp fieldify (max 2 x), ?_, ?_⟩
+  · apply isField_nfp_fieldify (lt_max_of_lt_left _)
+    change (1 : Ordinal) < (2 : Ordinal)
+    norm_cast
+  · rw [not_lt]
+    exact (le_max_right _ x).trans (le_nfp _ _)
 
 -- Lemma 1
 lemma ordinalMul_add_of_isGroup {x z : Nimber} (hx : IsGroup x) (y : Nimber) (hz : z < x) :
@@ -437,33 +510,28 @@ private lemma pow_excluded_eq_aeval {x : Nimber} {n : ℕ} (hx : x.IsField)
     rw [← self_sub_C_mul_X_pow, gmonic, map_one, one_mul, CharTwo.sub_eq_add,
       ← natDegree_eq_of_degree_eq_some gdeg]
 
-private lemma lemma2' {x : Nimber} {n m : ℕ} (hx : IsField x) (hm : m ≤ n)
+private lemma pow_mul_of_isField' {x : Nimber} {n m : ℕ} (hx : IsField x) (hm : m ≤ n)
     (h : ∀ p : hx.toSubfield[X], 0 < p.degree → p.degree ≤ n → ∃ y, p.IsRoot y) :
     (∀ y < x ^ₒ m, ∃ p : hx.toSubfield[X], p.degree < m ∧ aeval x p = y) ∧
     (∀ p : hx.toSubfield[X], p.degree < m → aeval x p < x ^ₒ m) ∧
     (x ^ₒ m).IsGroup ∧
     ∀ y < x, x ^ m * y = x ^ₒ m *ₒ y := by
-  have xne : x ≠ 0 := fun nh ↦ absurd hx.2 (by simp [nh])
+  have xne : x ≠ 0 := hx.ne_zero
   induction m with
   | zero => simp [lt_one_iff_zero]
   | succ m hind =>
-  obtain ⟨psl1, psl2, pg, pindl⟩ := hind (by omega)
+  obtain ⟨psl1, psl2, pg, pindl⟩ := hind ((le_succ m).trans hm)
   clear hind
-  have sl1 : ∀ y < x ^ₒ (m + 1), ∃ p : hx.toSubfield[X], p.degree < (m + 1) ∧
-      aeval x p = y := by
+  have sl1 : ∀ y < x ^ₒ (m + 1), ∃ p : hx.toSubfield[X], p.degree < m + 1 ∧ aeval x p = y := by
     intro y hy
     have := ordinalDiv_ordinalAdd_ordinalMod y (x ^ₒ m)
-    have b1 : y /ₒ (x ^ₒ m) < x := by
+    have b0 : toOrdinal x ^ m ≠ 0 := pow_ne_zero _ xne
+    have b1 : y /ₒ x ^ₒ m < x := by
       apply_fun toOrdinal
-      simp
-      rw [Ordinal.div_lt, ← pow_succ]
-      exact hy
-      simp [xne]
-    have b2 : y %ₒ (x ^ₒ m) < x ^ₒ m := by
-      apply mod_lt
-      simp [xne]
+      rwa [toNimber_toOrdinal, toNimber_toOrdinal, Ordinal.div_lt b0, ← pow_succ]
+    have b2 : y %ₒ x ^ₒ m < x ^ₒ m := mod_lt _ b0
     rw [← ordinalMul_add_of_isGroup pg _ b2, ← pindl _ b1] at this
-    obtain ⟨q, hq, h⟩ := psl1 (y %ₒ (x ^ₒ m)) b2
+    obtain ⟨q, hq, h⟩ := psl1 (y %ₒ x ^ₒ m) b2
     use X ^ m * C ⟨_, b1⟩ + q, ?_, ?_
     · change _ < Order.succ (m : WithBot ℕ)
       rw [lt_succ_iff]
@@ -591,12 +659,12 @@ private lemma lemma2' {x : Nimber} {n m : ℕ} (hx : IsField x) (hm : m ≤ n)
           apply hx.add_lt _ (hb.trans hy) _ hy
   · simp
 
-lemma lemma2 {x : Nimber} {n m : ℕ} (hx : IsField x) (hm : m ≤ n)
+lemma pow_mul_of_isField {x : Nimber} {n m : ℕ} (hx : IsField x) (hm : m ≤ n)
     (h : ∀ p : hx.toSubfield[X], 0 < p.degree → p.degree ≤ n → ∃ y, p.IsRoot y) :
     ∀ y < x, x ^ m * y = x ^ₒ m *ₒ y :=
-  (lemma2' hx hm h).2.2.2
+  (pow_mul_of_isField' hx hm h).2.2.2
 
-#print axioms lemma2
+#print axioms pow_mul_of_isField
 
 /-- The lexicographic ordering on polynomials. -/
 def polynomial_LT (p q : Nimber[X]) : Prop :=
@@ -617,28 +685,6 @@ def poly (x : Nimber) : Set Nimber[X] :=
 lemma mem_min_roots_of_isField {x : Nimber} (hx : IsPrefield x) (hp : (poly x).Nonempty) :
     x ∈ (wellFounded_polynomial_LT.min _ hp).roots :=
   sorry
-
-/-- Fixed point of the `algify` function. -/
-def algify' (x : Nimber) : Nimber :=
-  nfp algify x --toNimber (nfp (toOrdinal ∘ algify ∘ toNimber) (toOrdinal x))
-
-lemma mem_algify' {x y : Nimber} {p : Nimber[X]}
-    (hp : ∀ c ∈ p.coeffs, c < x.algify') (hy : y ∈ p.roots) : y < x.algify' := by
-  -- Why can't simp_rw do this the other way around?
-  have : ∀ c ∈ p.coeffs, ∃ n : ℕ, c < algify^[n] x := by
-    simp_rw [← lt_nfp]
-    exact hp
-  choose f hf using this
-  rw [algify', lt_nfp]
-  let s := p.coeffs.attach.image (fun x => f x.1 x.2)
-  have hs : s.Nonempty := by simpa [s] using ne_zero_of_mem_roots hy
-  use (s.max' hs).succ
-  rw [iterate_succ_apply']
-  apply mem_algify _ hy
-  intro c hc
-  apply (hf c hc).trans_le <| algify_mono.monotone_iterate_of_le_map self_le_algify <|
-    Finset.le_max' _ _ _
-  simpa [s] using ⟨c, hc, rfl⟩
 
 /-- The nimbers are algebraically closed. -/
 instance : IsAlgClosed Nimber := by
