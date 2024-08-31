@@ -74,11 +74,11 @@ theorem Ordinal.sSup_eq_zero {s : Set Ordinal} (hs : BddAbove s) : sSup s = 0 �
 
 /-- The zero element on `o.toType` is the bottom element. -/
 def zero_toType {o : Ordinal} (ho : o ≠ 0) : Zero o.toType :=
-  ⟨enumIsoOut o ⟨0, Ordinal.pos_iff_ne_zero.2 ho⟩⟩
-
-attribute [-simp] enumIsoOut_apply
+  ⟨enumIsoToType o ⟨0, Ordinal.pos_iff_ne_zero.2 ho⟩⟩
 
 end MissingOrdinalStuff
+
+attribute [-simp] enumIsoToType_apply
 
 namespace Nimber
 
@@ -205,10 +205,10 @@ def algify_enum {x : Nimber.{u}} (hx : x ≠ 0) (f : ℕ → (toOrdinal x).toTyp
   let H : Zero (toOrdinal x).toType := zero_toType hx
   if hf : (Function.support f).Finite then Polynomial.ofFinsupp <| Finsupp.mk
     hf.toFinset
-    (fun n => toNimber <| (enumIsoOut _).symm (f n))
+    (fun n => toNimber <| (enumIsoToType _).symm (f n))
     (by
-      have : toNimber ((enumIsoOut _).symm H.zero) = 0 :=
-        Subtype.ext_iff.1 <| (enumIsoOut _).symm_apply_apply _
+      have : toNimber ((enumIsoToType _).symm H.zero) = 0 :=
+        Subtype.ext_iff.1 <| (enumIsoToType _).symm_apply_apply _
       dsimp
       rw [← this]
       intro a
@@ -227,7 +227,7 @@ theorem small_algify (x : Nimber.{u}) :
     let H : Zero (toOrdinal x).toType := zero_toType hx
     use Finsupp.mk
       p.support
-      (fun n => enumIsoOut _ ⟨toOrdinal <| p.coeff n, by
+      (fun n => enumIsoToType _ ⟨toOrdinal <| p.coeff n, by
         obtain hn | hn := eq_or_ne (p.coeff n) 0
         · rw [hn]
           exact Nimber.pos_iff_ne_zero.2 hx
@@ -235,7 +235,7 @@ theorem small_algify (x : Nimber.{u}) :
       ⟩)
       (by
         intro a
-        change _ ↔ _ ≠ enumIsoOut (toOrdinal x) _
+        change _ ↔ _ ≠ enumIsoToType (toOrdinal x) _
         simp
       )
     simp_rw [algify_enum, Finsupp.finite_support]
