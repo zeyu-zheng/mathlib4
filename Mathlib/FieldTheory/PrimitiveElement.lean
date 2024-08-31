@@ -3,8 +3,10 @@ Copyright (c) 2020 Thomas Browning, Patrick Lutz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning, Patrick Lutz
 -/
-import Mathlib.FieldTheory.IsAlgClosed.Basic
+import Mathlib.Algebra.Algebra.Equiv.Card
+import Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure
 import Mathlib.RingTheory.IntegralDomain
+import Mathlib.LinearAlgebra.FreeModule.Finite.Matrix
 
 /-!
 # Primitive Element Theorem
@@ -348,13 +350,22 @@ end Field
 variable (F E : Type*) [Field F] [Field E] [Algebra F E]
     [FiniteDimensional F E] [Algebra.IsSeparable F E]
 
+theorem AlgHom.natCard_of_splits (L : Type*) [Field L] [Algebra F L]
+    (hL : ∀ x : E, (minpoly F x).Splits (algebraMap F L)) :
+    Nat.card (E →ₐ[F] L) = finrank F E :=
+  (AlgHom.natCard_of_powerBasis (L := L) (Field.powerBasisOfFiniteOfSeparable F E)
+    (Algebra.IsSeparable.isSeparable _ _) <| hL _).trans
+      (PowerBasis.finrank _).symm
+
 @[simp]
 theorem AlgHom.card_of_splits (L : Type*) [Field L] [Algebra F L]
     (hL : ∀ x : E, (minpoly F x).Splits (algebraMap F L)) :
     Fintype.card (E →ₐ[F] L) = finrank F E := by
-  convert (AlgHom.card_of_powerBasis (L := L) (Field.powerBasisOfFiniteOfSeparable F E)
-    (Algebra.IsSeparable.isSeparable _ _) <| hL _).trans
-      (PowerBasis.finrank _).symm
+  rw [Fintype.card_eq_nat_card, AlgHom.natCard_of_splits F E L hL]
+
+theorem AlgHom.natCard (K : Type*) [Field K] [IsAlgClosed K] [Algebra F K] :
+    Nat.card (E →ₐ[F] K) = finrank F E :=
+  AlgHom.natCard_of_splits _ _ _ (fun _ ↦ IsAlgClosed.splits_codomain _)
 
 @[simp]
 theorem AlgHom.card (K : Type*) [Field K] [IsAlgClosed K] [Algebra F K] :
@@ -407,3 +418,27 @@ theorem primitive_element_iff_algHom_eq_of_eval (α : E)
 end Field
 
 end iff
+
+variable (K K' : Type*) [Field K] [IsAlgClosed K] [Field K'] [Algebra K K'] [IsAlgClosure K K']
+
+lemma aux1 : Nat.card (K' →ₐ[K] K') = 1 := by
+  have := IsAlgClosure.isAlgClosed K (K := K')
+  rw [AlgHom.natCard K K' K']
+  let e := (IsAlgClosure.equiv K K K').toLinearEquiv
+  rw [← e.finrank_eq, Module.finrank_self]
+
+instance : Subsingleton (K' →ₐ[K] K') :=
+  Finite.card_le_one_iff_subsingleton.mp (aux1 ..).le
+
+instance AlgHom.instUnique : Unique (K' →ₐ[K] K') :=
+  uniqueOfSubsingleton (.id _ _)
+
+lemma aux : Nat.card (K' ≃ₐ[K] K') ≤ 1 := by
+  rw [← aux1 K K']
+  exact AlgEquiv.natCard_le _ _ _
+
+instance : Subsingleton (K' ≃ₐ[K] K') :=
+  Finite.card_le_one_iff_subsingleton.mp (aux ..)
+
+instance AlgEquiv.instUnique : Unique (K' ≃ₐ[K] K') :=
+  uniqueOfSubsingleton .refl

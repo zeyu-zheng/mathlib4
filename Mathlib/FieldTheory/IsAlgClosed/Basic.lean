@@ -451,7 +451,7 @@ def IntermediateField.algHomEquivAlgHomOfSplits (L : IntermediateField F A)
     ((Algebra.IsIntegral.isIntegral x).map f).mem_intermediateField_of_minpoly_splits <| by
       rw [minpoly.algHom_eq f f.injective]; exact hL x
   left_inv _ := rfl
-  right_inv _ := by rfl
+  right_inv _ := rfl
 
 theorem IntermediateField.algHomEquivAlgHomOfSplits_apply_apply (L : IntermediateField F A)
     (hL : ∀ x : K, (minpoly F x).Splits (algebraMap F L)) (f : K →ₐ[F] L) (x : K) :
@@ -473,3 +473,7 @@ theorem Algebra.IsAlgebraic.algHomEquivAlgHomOfSplits_apply_apply (L : Type*) [F
     Algebra.IsAlgebraic.algHomEquivAlgHomOfSplits A L hL f x = algebraMap L A (f x) := rfl
 
 end Algebra.IsAlgebraic
+
+instance (K K' : Type*) [Field K] [IsAlgClosed K] [Field K'] [Algebra K K'] [IsAlgClosure K K'] :
+    FiniteDimensional K K' :=
+  .equiv (M := K) (IsAlgClosure.equiv K K K')
