@@ -35,8 +35,8 @@ theorem coeffs_monomial (n : ℕ) {c : R} (hc : c ≠ 0) : (monomial n c).coeffs
 
 theorem X_ne_C [Nontrivial R] (c : R) : X ≠ C c := by
   intro h
-  have := congr_arg natDegree h
-  simp at this
+  apply_fun natDegree at h
+  simp at h
 
 theorem coeff_X_mem (R : Type*) [Semiring R] (n : ℕ) :
     coeff (X : R[X]) n = 0 ∨ coeff (X : R[X]) n = 1 := by
@@ -238,10 +238,9 @@ theorem small_algify (x : Nimber.{u}) :
         change _ ↔ _ ≠ enumIsoToType (toOrdinal x) _
         simp
       )
+    ext
     simp_rw [algify_enum, Finsupp.finite_support]
     simp
-    ext
-    rfl
 
 /-- The function in the definition of `algify` has a range bounded above. -/
 lemma bddAbove_algify (x : Nimber) : BddAbove <| Set.range
@@ -378,7 +377,7 @@ lemma ordinalMul_add_of_isGroup {x z : Nimber} (hx : IsGroup x) (y : Nimber) (hz
   · simp [Set.Iio_def]
 termination_by (y, z)
 
-lemma degree_erase_lt_of_degree_le  {R : Type u} [Semiring R] (p : Polynomial R) {n : ℕ}
+lemma degree_erase_lt_of_degree_le {R : Type u} [Semiring R] (p : Polynomial R) {n : ℕ}
     (hp : p.degree ≤ n) : (p.erase n).degree < n := by
   rcases lt_or_eq_of_le hp with hp | hp
   · exact (degree_erase_le _ _).trans_lt hp
@@ -393,73 +392,55 @@ lemma degree_C_mul_le {R : Type u} [Semiring R] (p : Polynomial R) (x : R) :
   _ ≤ 0 + p.degree := add_le_add_right degree_C_le p.degree
   _ = p.degree := zero_add _
 
-lemma two_eq_zero : (2 : Nimber) = 0 := calc
-  (2 : Nimber) = Nat.cast 2 := rfl
-  _ = Nat.cast 1 + 1 := Nat.cast_add_one 1
-  _ = 0 := by simp
-
-private lemma extracted_1 {x : Nimber} {n : ℕ} (hx : x.IsField)
-    (h : ∀ (p : (hx.toSubfield)[X]), 0 < p.degree → p.degree ≤ ↑n → ∃ y, p.IsRoot y) (m : ℕ)
+private lemma pow_excluded_eq_aeval {x : Nimber} {n : ℕ} (hx : x.IsField)
+    (h : ∀ p : hx.toSubfield[X], 0 < p.degree → p.degree ≤ ↑n → ∃ y, p.IsRoot y) {m : ℕ}
     (hm : m + 1 ≤ n)
-    (psl2 : ∀ (p : (hx.toSubfield)[X]), p.degree < ↑m → (aeval x) p < x ^ₒ m)
+    (psl2 : ∀ p : hx.toSubfield[X], p.degree < ↑m → aeval x p < x ^ₒ m)
     (psl4 : x ^ m = x ^ₒ m)
-    (p : (hx.toSubfield)[X]) (pd : p.degree < m + 1) :
-    ∃ a' < x ^ m, ∃ b' < x, a' * x + x ^ m * b' + a' * b' = (aeval x) p := by
-  haveI : CharP hx.toSubfield 2 := inferInstance
+    (p : hx.toSubfield[X]) (pd : p.degree < m + 1) :
+    ∃ a' < x ^ m, ∃ b' < x, a' * x + x ^ m * b' + a' * b' = aeval x p := by
+  have : CharP hx.toSubfield 2 := inferInstance
   let f := X ^ (m + 1) + p
-  have pf : p = f + X ^ (m + 1) := calc
-    p = (C 0) * X ^ (m + 1) + p := by simp
-    _ = (C (1 + 1)) * X ^ (m + 1) + p := by
-      reduce_mod_char!
-    _ = X ^ (m + 1) + X ^ (m + 1) + p := by simp [add_mul]
-    _ = (X ^ (m + 1) + p) + X ^ (m + 1) := by ring
-    _ = f + X ^ (m + 1) := rfl
+  have pf : p = f + X ^ (m + 1) := by
+    rw [add_assoc, add_comm, add_assoc, CharTwo.add_self_eq_zero, add_zero]
+  have xd : ((X : hx.toSubfield[X]) ^ (m + 1)).degree = m + 1 := by simp
   have fdeg : f.degree = m + 1 := by
-    rw [Polynomial.degree_add_eq_left_of_degree_lt]
-    · simp
-    · simp [pd]
+    rwa [degree_add_eq_left_of_degree_lt]
+    rwa [xd]
   have fmonic : f.Monic := by
-    apply Polynomial.Monic.add_of_left
-    · simp
-    · simp [pd]
-  obtain ⟨r, hr⟩ := h f (by simp only [fdeg]; norm_cast; omega)
-    (by simp only [fdeg]; exact_mod_cast hm)
-  rw [← Polynomial.mul_div_eq_iff_isRoot] at hr
+    apply Monic.add_of_left (monic_X_pow _)
+    rwa [xd]
+  obtain ⟨r, hr⟩ := h f (by rw [fdeg]; exact_mod_cast Nat.succ_pos m)
+    (by rw [fdeg]; exact_mod_cast hm)
+  rw [← mul_div_eq_iff_isRoot] at hr
   generalize hg : f / (X - C r) = g at hr
+  have hdeg : (X - C r).degree ≤ f.degree := by
+    rw [degree_X_sub_C, fdeg]
+    exact_mod_cast self_le_add_left 1 m
   have gmonic : g.Monic := by
-    simp [← hg, Polynomial.Monic.def, Polynomial.leadingCoeff_div
-      (show (X - C r).degree ≤ f.degree by simp only [degree_X_sub_C, fdeg]; norm_cast; omega)]
-    exact fmonic
+    rwa [← hg, Monic.def, leadingCoeff_div hdeg, leadingCoeff_X_sub_C, Monic.leadingCoeff,
+      _root_.div_one]
   have gdeg : g.degree = m := by
-    apply_fun Polynomial.degree at hr
-    simp [fdeg] at hr
-    rw [add_comm] at hr
-    exact WithBot.add_right_cancel (by simp) hr
-  use aeval x (g + X ^ m), ?_, r, ?_
+    apply_fun degree at hr
+    apply WithBot.add_right_cancel WithBot.one_ne_bot
+    rwa [degree_mul, degree_X_sub_C, fdeg, add_comm] at hr
+  use aeval x (g + X ^ m), ?_, r, r.2
   · rw [pf, ← hr]
     simp only [map_add, map_pow, aeval_X, map_mul, map_sub, aeval_C, algebraMap_subfield,
       Nimber.sub_eq]
     ring_nf
-    rw [two_eq_zero]
-    ring
+    rw [CharTwo.two_eq_zero, mul_zero, add_zero]
   · rw [psl4]
     apply psl2
     rw [← gdeg]
-    convert Polynomial.degree_eraseLead_lt _ using 2
-    · rw [← Polynomial.self_sub_C_mul_X_pow, gmonic]
-      simp only [map_one, one_mul]
-      reduce_mod_char!
-      congr
-      rw [eq_comm]
-      exact natDegree_eq_of_degree_eq_some gdeg
-    · intro nh
-      simp [nh] at gmonic
-  · exact r.2
+    convert degree_eraseLead_lt gmonic.ne_zero using 2
+    rw [← self_sub_C_mul_X_pow, gmonic, map_one, one_mul, CharTwo.sub_eq_add,
+      ← natDegree_eq_of_degree_eq_some gdeg]
 
 private lemma lemma2' {x : Nimber} {n m : ℕ} (hx : IsField x) (hm : m ≤ n)
-    (h : ∀ p : (hx.toSubfield)[X], 0 < p.degree → p.degree ≤ n → ∃ y, p.IsRoot y) :
-    (∀ y < x ^ₒ m, ∃ p : (hx.toSubfield)[X], p.degree < m ∧ aeval x p = y) ∧
-    (∀ p : (hx.toSubfield)[X], p.degree < m → aeval x p < x ^ₒ m) ∧
+    (h : ∀ p : hx.toSubfield[X], 0 < p.degree → p.degree ≤ n → ∃ y, p.IsRoot y) :
+    (∀ y < x ^ₒ m, ∃ p : hx.toSubfield[X], p.degree < m ∧ aeval x p = y) ∧
+    (∀ p : hx.toSubfield[X], p.degree < m → aeval x p < x ^ₒ m) ∧
     (x ^ₒ m).IsGroup ∧
     ∀ y < x, x ^ m * y = x ^ₒ m *ₒ y := by
   have xne : x ≠ 0 := fun nh ↦ absurd hx.2 (by simp [nh])
@@ -468,7 +449,7 @@ private lemma lemma2' {x : Nimber} {n m : ℕ} (hx : IsField x) (hm : m ≤ n)
   | succ m hind =>
   obtain ⟨psl1, psl2, pg, pindl⟩ := hind (by omega)
   clear hind
-  have sl1 : ∀ y < x ^ₒ (m + 1), ∃ p : (hx.toSubfield)[X], p.degree < (m + 1) ∧
+  have sl1 : ∀ y < x ^ₒ (m + 1), ∃ p : hx.toSubfield[X], p.degree < (m + 1) ∧
       aeval x p = y := by
     intro y hy
     have := ordinalDiv_ordinalAdd_ordinalMod y (x ^ₒ m)
@@ -496,7 +477,7 @@ private lemma lemma2' {x : Nimber} {n m : ℕ} (hx : IsField x) (hm : m ≤ n)
     simp only [add_left_inj]
     rfl
   use sl1
-  have sl2 : ∀ p : (hx.toSubfield)[X], p.degree < m + 1 → aeval x p < x ^ₒ (m + 1) := by
+  have sl2 : ∀ p : hx.toSubfield[X], p.degree < m + 1 → aeval x p < x ^ₒ (m + 1) := by
     intro p hp
     change _ < Order.succ (m : WithBot ℕ) at hp
     rw [lt_succ_iff] at hp
@@ -545,7 +526,7 @@ private lemma lemma2' {x : Nimber} {n m : ℕ} (hx : IsField x) (hm : m ≤ n)
     constructor
     · intro hy
       obtain ⟨p, pd, rfl⟩ := sl1 y hy
-      exact extracted_1 hx h m hm psl2 psl4 p pd
+      exact pow_excluded_eq_aeval hx h hm psl2 psl4 p pd
     · rintro ⟨a, ha, b, hb, rfl⟩
       rw [psl4] at ha
       obtain ⟨p, pdeg, rfl⟩ := psl1 a ha
@@ -611,7 +592,7 @@ private lemma lemma2' {x : Nimber} {n m : ℕ} (hx : IsField x) (hm : m ≤ n)
   · simp
 
 lemma lemma2 {x : Nimber} {n m : ℕ} (hx : IsField x) (hm : m ≤ n)
-    (h : ∀ p : (hx.toSubfield)[X], 0 < p.degree → p.degree ≤ n → ∃ y, p.IsRoot y) :
+    (h : ∀ p : hx.toSubfield[X], 0 < p.degree → p.degree ≤ n → ∃ y, p.IsRoot y) :
     ∀ y < x, x ^ m * y = x ^ₒ m *ₒ y :=
   (lemma2' hx hm h).2.2.2
 
@@ -662,9 +643,10 @@ lemma mem_algify' {x y : Nimber} {p : Nimber[X]}
 /-- The nimbers are algebraically closed. -/
 instance : IsAlgClosed Nimber := by
   apply IsAlgClosed.of_exists_root
-  intro p _ _
+  intro p hp₁ hp₂
   apply wellFounded_polynomial_LT.induction p
   intro p IH
+  let x := p.coeffs.max
   sorry
 
 end Nimber
