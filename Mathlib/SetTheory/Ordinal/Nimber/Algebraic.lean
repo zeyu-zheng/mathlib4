@@ -33,6 +33,12 @@ theorem coeffs_monomial (n : ℕ) {c : R} (hc : c ≠ 0) : (monomial n c).coeffs
   rw [coeffs, support_monomial n hc]
   simp
 
+theorem ne_zero_of_mem_coeffs {R : Type*} [Semiring R] {x : R} {p : R[X]}
+   (hx : x ∈ p.coeffs) : x ≠ 0 := by
+  rw [mem_coeffs_iff] at hx
+  obtain ⟨n, hn, rfl⟩ := hx
+  exact mem_support_iff.1 hn
+
 theorem X_ne_C [Nontrivial R] (c : R) : X ≠ C c := by
   intro h
   apply_fun natDegree at h
@@ -727,12 +733,6 @@ lemma mem_min_roots_of_isField {x : Nimber} (hx : IsField x) (hp : (noRoots x).N
     x ∈ (isWellOrder_polynomial_LT.wf.min _ hp).roots :=
   sorry
 
-theorem ne_zero_of_mem_coeffs {R : Type*} [Semiring R] {x : R} {p : R[X]}
-   (hx : x ∈ p.coeffs) : x ≠ 0 := by
-  rw [mem_coeffs_iff] at hx
-  obtain ⟨n, hn, rfl⟩ := hx
-  exact mem_support_iff.1 hn
-
 theorem exists_root_of_degree_pos {p : Nimber[X]} : 0 < p.degree → ∃ r, p.eval r = 0 := by
   apply isWellOrder_polynomial_LT.wf.induction p
   intro p IH hd
@@ -743,12 +743,10 @@ theorem exists_root_of_degree_pos {p : Nimber[X]} : 0 < p.degree → ∃ r, p.ev
       rw [degree_zero] at hd
       exact not_lt_bot hd
     let x := p.coeffs.max' hc
-    use nextField (succ x)
-    apply (mem_roots'.1 _).2
+    refine ⟨nextField (succ x), (mem_roots'.1 ?_).2⟩
     have hx : 1 < succ x := by
-      rw [← succ_zero, succ_lt_succ_iff]
-      have := ne_zero_of_mem_coeffs (p.coeffs.max'_mem hc)
-      rwa [Nimber.pos_iff_ne_zero]
+      rw [← succ_zero, succ_lt_succ_iff, Nimber.pos_iff_ne_zero]
+      exact ne_zero_of_mem_coeffs (p.coeffs.max'_mem hc)
     have H : p ∈ noRoots (nextField (succ x)) := by
       refine ⟨hd, ?_, ?_⟩
       · intro c hc
