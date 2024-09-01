@@ -45,6 +45,12 @@ theorem coeff_X_mem (R : Type*) [Semiring R] (n : ℕ) :
   · simp
   · simp [hn]
 
+variable {F : Type*} [Field F]
+
+theorem Irreducible.degree_pos {f : Polynomial F} (h : Irreducible f) :
+    0 < f.degree :=
+  natDegree_pos_iff_degree_pos.1 h.natDegree_pos
+
 end MissingPolynomialStuff
 
 section MissingOrdinalStuff
@@ -356,29 +362,35 @@ lemma root_mem_fieldify {x y : Nimber} {p : Nimber[X]}
     (hp : ∀ c ∈ p.coeffs, c < x) (hy : y ∈ p.roots) : y < x.fieldify :=
   (mem_algify hp hy).trans_le (by simp)
 
-lemma isPrefield_nfp_fieldify (x : Nimber) : IsPrefield (nfp fieldify x) := by
+/-- The next fixed point of the `fieldify` function, which is the smallest field containing `x`, as
+well as all the roots for the polynomials within it. This will be an algebraically closed field,
+though we don't know it yet. -/
+def nextField (x : Nimber) : Nimber :=
+  nfp fieldify x
+
+lemma isPrefield_nextField (x : Nimber) : IsPrefield (nextField x) := by
   refine ⟨⟨⟨?_⟩, ?_⟩, ?_⟩
   iterate 2 {
     intro y hy z hz
-    rw [lt_nfp] at *
+    rw [nextField, lt_nfp] at *
     obtain ⟨yi, hy⟩ := hy
     obtain ⟨zi, hz⟩ := hz
     replace hy := hy.trans_le (monotone_iterate_of_id_le le_fieldify (le_max_left yi zi) x)
     replace hz := hz.trans_le (monotone_iterate_of_id_le le_fieldify (le_max_right yi zi) x)
-    use (max yi zi) + 1
+    use max yi zi + 1
     rw [iterate_succ']
     try exact add_mem_fieldify hy hz
     try exact mul_mem_fieldify hy hz
   }
   intro y hy
-  rw [lt_nfp] at *
+  rw [nextField, lt_nfp] at *
   obtain ⟨yi, hy⟩ := hy
   use yi + 1
   rw [iterate_succ']
   exact inv_mem_fieldify hy
 
-lemma isField_nfp_fieldify {x : Nimber} (hx : 1 < x) : IsField (nfp fieldify x) :=
-  ⟨isPrefield_nfp_fieldify x, hx.trans_le (le_nfp _ _)⟩
+lemma isField_nextField {x : Nimber} (hx : 1 < x) : IsField (nextField x) :=
+  ⟨isPrefield_nextField x, hx.trans_le (le_nfp _ _)⟩
 
 theorem fieldify_mono : Monotone fieldify := by
   intro x y h
@@ -388,14 +400,14 @@ theorem fieldify_mono : Monotone fieldify := by
   · exact invify_mono h
   · exact algify_mono h
 
-lemma root_mem_nfp_fieldify {x y : Nimber} {p : Nimber[X]}
-    (hp : ∀ c ∈ p.coeffs, c < nfp fieldify x) (hy : y ∈ p.roots) : y < nfp fieldify x := by
+lemma root_mem_nextField {x y : Nimber} {p : Nimber[X]}
+    (hp : ∀ c ∈ p.coeffs, c < nextField x) (hy : y ∈ p.roots) : y < nextField x := by
   -- Why can't simp_rw do this the other way around?
   have : ∀ c ∈ p.coeffs, ∃ n : ℕ, c < fieldify^[n] x := by
     simp_rw [← lt_nfp]
     exact hp
   choose f hf using this
-  rw [lt_nfp]
+  rw [nextField, lt_nfp]
   let s := p.coeffs.attach.image (fun x => f x.1 x.2)
   have hs : s.Nonempty := by simpa [s] using ne_zero_of_mem_roots hy
   use (s.max' hs).succ
@@ -414,8 +426,7 @@ lemma one_lt_two : (1 : Nimber) < toNimber 2 := by
 -- Lemma 3
 lemma unbounded_isField : Set.Unbounded (· < ·) {x | IsField x} := by
   intro x
-  refine ⟨nfp fieldify (max (toNimber 2) x),
-    isField_nfp_fieldify (lt_max_of_lt_left one_lt_two), ?_⟩
+  refine ⟨nextField (max (toNimber 2) x), isField_nextField (lt_max_of_lt_left one_lt_two), ?_⟩
   rw [not_lt]
   exact (le_max_right _ x).trans (le_nfp _ _)
 
@@ -669,54 +680,77 @@ lemma pow_mul_of_isField {x : Nimber} {n m : ℕ} (hx : IsField x) (hm : m ≤ n
 
 /-- The lexicographic ordering on polynomials. -/
 def polynomial_LT (p q : Nimber[X]) : Prop :=
-  Finsupp.Lex (· > ·) (· < ·) p.toFinsupp q.toFinsupp
+  (toLex <| p.toFinsupp.equivMapDomain OrderDual.toDual) <
+  (toLex <| q.toFinsupp.equivMapDomain OrderDual.toDual)
 
 local infixl:50 " ≺ " => polynomial_LT
 
-theorem wellFounded_polynomial_LT : WellFounded (· ≺ ·) := by
-  apply InvImage.wf
-  exact Finsupp.Lex.wellFounded' Nimber.not_lt_zero lt_wf Nat.lt_wfRel.wf
+theorem _root_.InvImage.isTrichotomous {α : Sort u} {β : Sort v} {r : β → β → Prop}
+    {f : α → β} (hf : Injective f) [h : IsTrichotomous β r] : IsTrichotomous α (InvImage r f) := by
+  constructor
+  intros
+  rw [← hf.eq_iff]
+  exact h.trichotomous _ _
+
+theorem _root_.InvImage.isTrans {α : Sort u} {β : Sort v} {r : β → β → Prop}
+    (f : α → β) [h : IsTrans β r] : IsTrans α (InvImage r f) := by
+  constructor
+  intro a b c
+  exact h.trans _ _ _
+
+instance isWellOrder_polynomial_LT : IsWellOrder _ (· ≺ ·) where
+  wf := by
+    apply InvImage.wf
+    exact Finsupp.Lex.wellFounded' Nimber.not_lt_zero lt_wf Nat.lt_wfRel.wf
+  trichotomous := by
+    apply (InvImage.isTrichotomous _).trichotomous
+    intro p q h
+    dsimp at h
+    rw [toLex_inj, Finsupp.ext_iff] at h
+    rw [← toFinsupp_inj, Finsupp.ext_iff]
+    exact fun a => h a
+  trans := (InvImage.isTrans _).trans
 
 /-- For a nimber `x`, the set of non-constant polynomials with coefficients less than `x`, without a
 root less than `x`. -/
-def poly (x : Nimber) : Set Nimber[X] :=
+def noRoots (x : Nimber) : Set Nimber[X] :=
   {p | 0 < p.degree ∧ (∀ c ∈ p.coeffs, c < x) ∧ ∀ r ∈ p.roots, x ≤ r}
 
+theorem roots_of_mem_noRoots_nextField {x : Nimber} {p : Nimber[X]}
+    (hp : p ∈ noRoots (nextField x)) : p.roots = 0 := by
+  apply (Multiset.empty_or_exists_mem _).resolve_right
+  rintro ⟨r, hr⟩
+  exact (hp.2.2 r hr).not_lt <| root_mem_nextField hp.2.1 hr
+
 -- Lemma 4
-lemma mem_min_roots_of_isField {x : Nimber} (hx : IsField x) (hp : (poly x).Nonempty) :
-    x ∈ (wellFounded_polynomial_LT.min _ hp).roots :=
+lemma mem_min_roots_of_isField {x : Nimber} (hx : IsField x) (hp : (noRoots x).Nonempty) :
+    x ∈ (isWellOrder_polynomial_LT.wf.min _ hp).roots :=
   sorry
 
 theorem ne_zero_of_mem_coeffs {R : Type*} [Semiring R] {x : R} {p : R[X]}
-    (hx : x ∈ p.coeffs) : x ≠ 0 := by
+   (hx : x ∈ p.coeffs) : x ≠ 0 := by
   rw [mem_coeffs_iff] at hx
   obtain ⟨n, hn, rfl⟩ := hx
   exact mem_support_iff.1 hn
 
-theorem _root_.Irreducible.degree_pos {F : Type*} [Field F] {f : Polynomial F} (h : Irreducible f) :
-    0 < f.degree :=
-  natDegree_pos_iff_degree_pos.1 h.natDegree_pos
-
-/-- The nimbers are algebraically closed. -/
-instance : IsAlgClosed Nimber := by
-  apply IsAlgClosed.of_exists_root
-  intro p
-  apply wellFounded_polynomial_LT.induction p
-  intro p IH hp₁ hp₂
+theorem exists_root_of_degree_pos {p : Nimber[X]} : 0 < p.degree → ∃ r, p.eval r = 0 := by
+  apply isWellOrder_polynomial_LT.wf.induction p
+  intro p IH hd
   obtain hr | hr := p.roots.toFinset.eq_empty_or_nonempty
-  · have hp : p.coeffs.Nonempty := by
+  · have hc : p.coeffs.Nonempty := by
       rw [coeffs_nonempty]
-      exact hp₁.ne_zero
-    let x := p.coeffs.max' hp
-    use nfp fieldify (succ x)
+      rintro rfl
+      rw [degree_zero] at hd
+      exact not_lt_bot hd
+    let x := p.coeffs.max' hc
+    use nextField (succ x)
     apply (mem_roots'.1 _).2
     have hx : 1 < succ x := by
       rw [← succ_zero, succ_lt_succ_iff]
-      have := ne_zero_of_mem_coeffs (p.coeffs.max'_mem hp)
+      have := ne_zero_of_mem_coeffs (p.coeffs.max'_mem hc)
       rwa [Nimber.pos_iff_ne_zero]
-    have H : p ∈ poly (nfp fieldify (succ x)) := by
-      refine ⟨?_, ?_, ?_⟩
-      · exact hp₂.degree_pos
+    have H : p ∈ noRoots (nextField (succ x)) := by
+      refine ⟨hd, ?_, ?_⟩
       · intro c hc
         apply (Finset.le_max' _ _ hc).trans_lt
         rw [← succ_le_iff]
@@ -725,12 +759,23 @@ instance : IsAlgClosed Nimber := by
         rw [Multiset.toFinset_eq_empty] at hr
         rw [hr] at hx
         exact (Multiset.not_mem_zero x hx).elim
-    have := mem_min_roots_of_isField (isField_nfp_fieldify hx) ⟨p, H⟩
+    have := mem_min_roots_of_isField (isField_nextField hx) ⟨p, H⟩
     convert this
-    sorry
+    apply ((trichotomous_of (· ≺ ·) _ _).resolve_left _).resolve_right
+    · intro hlt
+      have hm := (isWellOrder_polynomial_LT.wf.min_mem _ ⟨p, H⟩)
+      obtain ⟨r, hr⟩ := IH _ hlt hm.1
+      rw [← IsRoot.def] at hr
+      have := (mem_roots (ne_zero_of_degree_gt hm.1)).2 hr
+      rw [roots_of_mem_noRoots_nextField hm] at this
+      exact Multiset.not_mem_zero r this
+    · exact isWellOrder_polynomial_LT.wf.not_lt_min _ _ H
   · obtain ⟨x, hx⟩ := hr
     rw [Multiset.mem_toFinset, mem_roots'] at hx
     exact ⟨x, hx.2⟩
 
+/-- The nimbers are algebraically closed. -/
+instance : IsAlgClosed Nimber :=
+  IsAlgClosed.of_exists_root _ fun _ _ hp => exists_root_of_degree_pos hp.degree_pos
 
 end Nimber
