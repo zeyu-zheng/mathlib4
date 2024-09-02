@@ -266,7 +266,7 @@ theorem inv_intCast_den (a : ℤ) : (a : ℚ)⁻¹.den = if a = 0 then 1 else a.
   · obtain ⟨a, rfl⟩ : ∃ b, -b = a := ⟨-a, a.neg_neg⟩
     simp at lt
     rw [if_neg (by omega)]
-    simp [Rat.inv_neg, inv_intCast_den_of_pos lt, abs_of_pos lt]
+    simp [Rat.inv_neg, inv_intCast_den_of_pos lt, Int.natAbs_of_nonneg (le_of_lt lt)]
   · simp
   · rw [if_neg (by omega)]
     simp only [inv_intCast_den_of_pos gt]
