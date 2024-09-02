@@ -2,12 +2,50 @@ import Lake
 
 open Lake DSL
 
-package mathlib where
-  leanOptions := #[
+
+/-!
+## Mathlib dependencies on upstream projects
+-/
+
+require "leanprover-community" / "batteries" @ git "nightly-testing"
+require "leanprover-community" / "Qq" @ git "nightly-testing"
+require "leanprover-community" / "aesop" @ git "nightly-testing"
+require "leanprover-community" / "proofwidgets" @ git "v0.0.42-pre2"
+require "leanprover-community" / "importGraph" @ git "main"
+
+/-!
+## Options for building mathlib
+-/
+
+/-- These options are used
+* as `leanOptions`, prefixed by `` `weak``, so that `lake build` uses them;
+* as `moreServerArgs`, to set their default value in mathlib
+  (as well as `Archive`, `Counterexamples` and `test`).
+-/
+abbrev mathlibOnlyLinters : Array LeanOption := #[
+  ⟨`linter.hashCommand, true⟩,
+  ⟨`linter.missingEnd, true⟩,
+  ⟨`linter.cdot, true⟩,
+  ⟨`linter.dollarSyntax, true⟩,
+  ⟨`linter.style.lambdaSyntax, true⟩,
+  ⟨`linter.longLine, true⟩,
+  ⟨`linter.oldObtain, true,⟩,
+  ⟨`linter.refine, true⟩,
+  ⟨`linter.style.setOption, true⟩
+]
+
+/-- These options are passed as `leanOptions` to building mathlib, as well as the
+`Archive` and `Counterexamples`. (`tests` omits the first two options.) -/
+abbrev mathlibLeanOptions := #[
     ⟨`pp.unicode.fun, true⟩, -- pretty-prints `fun a ↦ b`
-    ⟨`autoImplicit, false⟩,
-    ⟨`relaxedAutoImplicit, false⟩
-  ]
+    ⟨`autoImplicit, false⟩
+  ] ++ -- options that are used in `lake build`
+    mathlibOnlyLinters.map fun s ↦ { s with name := `weak ++ s.name }
+
+package mathlib where
+  leanOptions := mathlibLeanOptions
+  -- Mathlib also enforces these linter options, which are not active by default.
+  moreServerOptions := mathlibOnlyLinters
   -- These are additional settings which do not affect the lake hash,
   -- so they can be enabled in CI and disabled locally or vice versa.
   -- Warning: Do not put any options here that actually change the olean files,
@@ -36,11 +74,18 @@ require importGraph from git "https://github.com/leanprover-community/import-gra
 lean_lib Mathlib
 
 -- NB. When adding further libraries, check if they should be excluded from `getLeanLibs` in
--- `Mathlib/Util/GetAllModules.lean`.
+-- `scripts/mk_all.lean`.
 lean_lib Cache
 lean_lib LongestPole
-lean_lib Archive
-lean_lib Counterexamples
+
+lean_lib Archive where
+  leanOptions := mathlibLeanOptions
+  moreServerOptions := mathlibOnlyLinters
+
+lean_lib Counterexamples where
+  leanOptions := mathlibLeanOptions
+  moreServerOptions := mathlibOnlyLinters
+
 /-- Additional documentation in the form of modules that only contain module docstrings. -/
 lean_lib docs where
   roots := #[`docs]
@@ -53,8 +98,8 @@ lean_lib docs where
 lean_exe cache where
   root := `Cache.Main
 
-/-- `lake exe checkYaml` verifies that all declarations referred to in `docs/*.yaml` files exist. -/
-lean_exe checkYaml where
+/-- `lake exe check-yaml` verifies that all declarations referred to in `docs/*.yaml` files exist. -/
+lean_exe «check-yaml» where
   srcDir := "scripts"
   supportInterpreter := true
 
@@ -62,11 +107,17 @@ lean_exe checkYaml where
 lean_exe mk_all where
   srcDir := "scripts"
   supportInterpreter := true
+  -- Executables which import `Lake` must set `-lLake`.
+  weakLinkArgs := #["-lLake"]
 
 /-- `lake exe shake` checks files for unnecessary imports. -/
 lean_exe shake where
   root := `Shake.Main
   supportInterpreter := true
+
+/-- `lake exe lint-style` runs text-based style linters. -/
+lean_exe «lint-style» where
+  srcDir := "scripts"
 
 /--
 `lake exe pole` queries the Mathlib speedcenter for build times for the current commit,
@@ -76,6 +127,8 @@ and then calculates the longest pole
 lean_exe pole where
   root := `LongestPole.Main
   supportInterpreter := true
+  -- Executables which import `Lake` must set `-lLake`.
+  weakLinkArgs := #["-lLake"]
 
 /--
 `lake exe test` is a thin wrapper around `lake exe batteries/test`, until
@@ -85,6 +138,8 @@ You can also use it as e.g. `lake exe test conv eval_elab` to only run the named
 -/
 @[test_driver]
 lean_exe test where
+  -- We could add the above `leanOptions` and `moreServerOptions`: currently, these do not take
+  -- effect as `test` is a `lean_exe`. With a `lean_lib`, it would work...
   srcDir := "scripts"
 
 /-!
