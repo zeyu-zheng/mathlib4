@@ -392,7 +392,6 @@ theorem bit1_bits (n : ℕ) : (2 * n + 1).bits = true :: n.bits :=
 theorem one_bits : Nat.bits 1 = [true] := by
   convert bit1_bits 0
   simp
-#align nat.one_bits Nat.one_bits
 
 -- TODO Find somewhere this can live.
 -- example : bits 3423 = [true, true, true, true, true, false, true, false, true, false, true, true]
