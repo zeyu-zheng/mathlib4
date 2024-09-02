@@ -1,10 +1,10 @@
 {"version": "1.1.0",
  "packagesDir": ".lake/packages",
  "packages":
- [{"url": "https://github.com/nomeata/batteries",
+ [{"url": "https://github.com/leanprover-community/batteries",
    "type": "git",
    "subDir": null,
-   "rev": "b07fbb59fd387414b99ed54c01989d7b35690892",
+   "rev": "8461f8d67f04396336611f0cbb2a6d30734c9925",
    "name": "batteries",
    "manifestFile": "lake-manifest.json",
    "inputRev": "lean-pr-testing-3772",
