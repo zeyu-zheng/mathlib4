@@ -6,6 +6,7 @@ Authors: Michael Rothgang
 
 import Batteries.Data.String.Matcher
 import Mathlib.Data.Nat.Notation
+import ImportGraph.Imports
 
 /-!
 ## Text-based linters
@@ -275,6 +276,21 @@ def adaptationNoteLinter : TextbasedLinter := fun lines ↦ Id.run do
       errors := errors.push (StyleError.adaptationNote, lineNumber)
     lineNumber := lineNumber + 1
   return errors
+
+open Lean Elab Command
+
+def broadImportsLinter2 (moduleName : Name) : CommandElabM (Array Lean.Import) := do
+  let env ← getEnv -- TODO: can I use this? run this? call this somewhere?
+  -- TODO: can I get line numbers with this? how?
+  let imp := env.importsOf moduleName
+  let lake_imports := imp.filter (·.getRoot == `Lake)
+  if imp.contains `Mathlib.Tactic then
+    let m := 42
+    -- errors := errors.push (StyleError.broadImport BroadImports.TacticFolder, lineNumber)
+  else if lake_imports.size > 0 then
+    let m := 42--errors := errors.push (StyleError.broadImport BroadImports.Lake, lineNumber)
+  return env.header.imports
+
 
 /-- Lint a collection of input strings if one of them contains an unnecessarily broad import. -/
 def broadImportsLinter : TextbasedLinter := fun lines ↦ Id.run do
