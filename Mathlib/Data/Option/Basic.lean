@@ -151,16 +151,7 @@ theorem map_pbind (f : β → γ) (x : Option α) (g : ∀ a, a ∈ x → Option
 theorem pbind_map (f : α → β) (x : Option α) (g : ∀ b : β, b ∈ x.map f → Option γ) :
     pbind (Option.map f x) g = x.pbind fun a h ↦ g (f a) (mem_map_of_mem _ h) := by cases x <;> rfl
 
-@[simp]
-theorem pmap_none (f : ∀ a : α, p a → β) {H} : pmap f (@none α) H = none :=
-  rfl
-
-@[simp]
-theorem pmap_some (f : ∀ a : α, p a → β) {x : α} (h : p x) :
-    pmap f (some x) = fun _ ↦ some (f x h) :=
-  rfl
-
-theorem mem_pmem {a : α} (h : ∀ a ∈ x, p a) (ha : a ∈ x) : f a (h a ha) ∈ pmap f x h := by
+theorem mem_pmap {a : α} (h : ∀ a ∈ x, p a) (ha : a ∈ x) : f a (h a ha) ∈ pmap f x h := by
   rw [mem_def] at ha ⊢
   subst ha
   rfl
