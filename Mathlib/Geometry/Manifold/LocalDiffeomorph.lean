@@ -292,10 +292,46 @@ lemma RightInverse.of_composition {f : E →L[R] F} {g : F →L[R] E}
   LeftInverse.of_composition hinv
 end helper
 
+noncomputable section
+
 section Differential
 variable {I J} {f : M → N} {x : M} --(hn : 1 ≤ n)
   [SmoothManifoldWithCorners I M] [SmoothManifoldWithCorners J N]
 variable {n}
+
+/-- The local inverse of a local diffeomorphism `M → N` at `x ∈ M`:
+for any `y ∈ N` sufficiently near `f x`, this returns the local inverse.
+-/
+def IsLocalDiffeomorphAt.localInverseAt [Nonempty M]
+    (hf : IsLocalDiffeomorphAt I J n f x) (q : N) : M := f.invFunOn univ q
+
+lemma IsLocalDiffeomorph.leftInverse [Nonempty M] (hf : IsLocalDiffeomorph I J n f)
+    (p : M) : (hf p).localInverseAt (f p) = p := by
+  -- choose Φ hyp using hf p
+  -- --unfold (hf p).localInverseAt--have h : ∃ p' ⇨,
+  -- have : ∃ a ∈ univ, f a = (f p) := ⟨p, trivial, rfl⟩
+  -- unfold IsLocalDiffeomorphAt.localInverseAt
+
+  -- let aux := f.invFunOn_pos (s := univ) this
+  -- obtain ⟨_as, aux2⟩ := aux
+  -- apply aux2
+  sorry
+
+lemma IsLocalDiffeomorphAt.rightInverse [Nonempty M] (hf : IsLocalDiffeomorphAt I J n f x)
+    (q : N) : f (hf.localInverseAt q) = q := sorry
+
+open scoped Topology
+
+variable [Nonempty M] (hf : IsLocalDiffeomorphAt I J n f x) (hn : 1 ≤ n)
+
+lemma foo (q : N) : (𝓝 q).EventuallyEq (f ∘ (fun q' ↦ hf.localInverseAt q')) id := by
+  sorry
+
+lemma bar (p : M) : (𝓝 p).EventuallyEq ((fun q' ↦ hf.localInverseAt q') ∘ f) id := by
+  sorry
+
+-- TODO: prove that localInverseAt has differential mfderiv J I Φ.invFun... or so
+-- then: use Filter.EventuallyEq.mfderiv_eq
 
 /-- If `f` is a `C^n` local diffeomorphism at `x`, for `n ≥ 1`,
   the differential `df_x` is a linear equivalence. -/
