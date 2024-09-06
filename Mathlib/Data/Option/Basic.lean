@@ -144,10 +144,6 @@ theorem map_bind {α β γ} (f : β → γ) (x : Option α) (g : α → Option �
 theorem map_bind' (f : β → γ) (x : Option α) (g : α → Option β) :
     Option.map f (x.bind g) = x.bind fun a ↦ Option.map f (g a) := by cases x <;> simp
 
-theorem map_pbind (f : β → γ) (x : Option α) (g : ∀ a, a ∈ x → Option β) :
-    Option.map f (x.pbind g) = x.pbind fun a H ↦ Option.map f (g a H) := by
-  cases x <;> simp only [pbind, map_none']
-
 theorem pbind_map (f : α → β) (x : Option α) (g : ∀ b : β, b ∈ x.map f → Option γ) :
     pbind (Option.map f x) g = x.pbind fun a h ↦ g (f a) (mem_map_of_mem _ h) := by cases x <;> rfl
 
