@@ -74,15 +74,38 @@ private noncomputable def inductiveStepRealization (n : ℕ)
   | (InductiveStep.max hk hk' x y) => max ((X _ hk).2 x) ((X _ hk').2 y)
   | (InductiveStep.coeq _ _ _ _ f g) => coeq f g
 
+private def Nat_fix {motive : ℕ → Sort u} (F : (x : ℕ) → ((y : ℕ) → y < x → motive y) → motive x) :
+  (x : ℕ) → motive x :=
+  let rec go : ∀ (fuel : Nat) (x : ℕ), (x < fuel) → motive x :=
+  Nat.rec
+    (fun _ hfuel => (Nat.not_succ_le_zero _ hfuel).elim)
+    (fun _ ih x hfuel => F x fun y hy => ih y (Nat.lt_of_lt_of_le hy (Nat.le_of_lt_add_one hfuel)))
+  fun x => go (x + 1) x (Nat.lt_add_one _)
+  -- fun x => F x (fun x _ => go (x + 1) x (Nat.lt_add_one _))
+  -- fun x => F x (fun x _ => F x (fun x _ => go (x + 1) x (Nat.lt_add_one _)))
+
+private theorem Nat_fix.go_fuel_congr {motive : ℕ → Sort u}
+    (F : (x : ℕ) → ((y : ℕ) → y < x → motive y) → motive x)
+    (fuel1 fuel2 : Nat) (x : ℕ) (hfuel1 : x < fuel1) (hfuel2 : x < fuel2) :
+    Nat_fix.go F fuel1 x hfuel1 = Nat_fix.go F fuel2 x hfuel2 := by
+  induction fuel1 generalizing fuel2 x hfuel2 with
+  | zero => contradiction
+  | succ fuel1 IH => cases fuel2 with
+    | zero => contradiction
+    | succ fuel2 => show F .. =  F ..; congr; ext y hy; apply IH
+
+theorem Nat.fix_eq {motive : ℕ → Sort u}  (F : (x : ℕ) → ((y : ℕ) → y < x → motive y) → motive x)
+    (x : ℕ) : Nat_fix F x = F x (fun y _ => Nat_fix F y) := by
+  show F .. =  F ..; congr; ext y hy
+  apply Nat_fix.go_fuel_congr
+
 /-- All steps of building the abstract filtered closure together with the realization function,
     as a function of `ℕ`.
-
-   The function is defined by well-founded recursion, but we really want to use its
-   definitional equalities in the proofs below, so lets make it semireducible.  -/
-@[semireducible] private noncomputable def bundledAbstractFilteredClosure :
-    ℕ → Σ t : Type (max v w), t → C
+ -/
+private noncomputable def bundledAbstractFilteredClosure :
+    ℕ → Σ t : Type (max v w), t → C := Nat_fix fun n ih => match n with
   | 0 => ⟨ULift.{v} α, f ∘ ULift.down⟩
-  | (n + 1) => ⟨_, inductiveStepRealization (n + 1) (fun m _ => bundledAbstractFilteredClosure m)⟩
+  | (n + 1) => ⟨_, inductiveStepRealization (n + 1) (fun m h => ih m h)⟩
 
 /-- The small type modelling the filtered closure. -/
 private noncomputable def AbstractFilteredClosure : Type (max v w) :=
@@ -104,9 +127,23 @@ theorem small_fullSubcategory_filteredClosure :
   | max hj₁ hj₂ ih ih' =>
     rcases ih with ⟨⟨n, x⟩, rfl⟩
     rcases ih' with ⟨⟨m, y⟩, rfl⟩
-    refine ⟨⟨(Max.max n m).succ, FilteredClosureSmall.InductiveStep.max ?_ ?_ x y⟩, rfl⟩
-    all_goals apply Nat.lt_succ_of_le
-    exacts [Nat.le_max_left _ _, Nat.le_max_right _ _]
+    dsimp [CategoryTheory.IsFiltered.FilteredClosureSmall.abstractFilteredClosureRealization,
+           CategoryTheory.IsFiltered.FilteredClosureSmall.AbstractFilteredClosure]
+    use ⟨(Max.max n m).succ, ?x⟩
+    case x =>
+      apply FilteredClosureSmall.InductiveStep.max (k := n) (k' := m)
+      · rw [CategoryTheory.IsFiltered.FilteredClosureSmall.bundledAbstractFilteredClosure,
+            CategoryTheory.IsFiltered.FilteredClosureSmall.Nat_fix,
+            CategoryTheory.IsFiltered.FilteredClosureSmall.Nat_fix.go_fuel_congr (fuel2 := ((Max.max n m).succ))] at x
+        exact x
+        omega
+      · rw [CategoryTheory.IsFiltered.FilteredClosureSmall.bundledAbstractFilteredClosure,
+            CategoryTheory.IsFiltered.FilteredClosureSmall.Nat_fix,
+            CategoryTheory.IsFiltered.FilteredClosureSmall.Nat_fix.go_fuel_congr (fuel2 := ((Max.max n m).succ))] at y
+        exact y
+        omega
+    case h =>
+      rfl
   | coeq hj₁ hj₂ g g' ih ih' =>
     rcases ih with ⟨⟨n, x⟩, rfl⟩
     rcases ih' with ⟨⟨m, y⟩, rfl⟩
