@@ -66,6 +66,9 @@ variable (M) in
 /-- The **interior** of a manifold `M` is the set of its interior points. -/
 protected def interior : Set M := { x : M | I.IsInteriorPoint x }
 
+protected lemma mem_interior {x : M} : x ∈ ModelWithCorners.interior I M ↔ I.IsInteriorPoint x :=
+  mem_setOf
+
 lemma isInteriorPoint_iff {x : M} :
     I.IsInteriorPoint x ↔ extChartAt I x x ∈ interior (extChartAt I x).target :=
   ⟨fun h ↦ (chartAt H x).mem_interior_extend_target _ (mem_chart_target H x) h,
@@ -158,10 +161,9 @@ instance [BoundarylessManifold I M] : IsEmpty (I.boundary M) :=
 lemma Boundaryless.iff_boundary_eq_empty : I.boundary M = ∅ ↔ BoundarylessManifold I M := by
   refine ⟨fun h ↦ { isInteriorPoint' := ?_ }, fun a ↦ boundary_eq_empty I⟩
   intro x
-  show x ∈ I.interior M
   rw [← compl_interior, compl_empty_iff] at h
-  rw [h]
-  trivial
+  rw [← ModelWithCorners.mem_interior, h]
+  exact mem_univ _
 
 /-- Manifolds with empty boundary are boundaryless. -/
 lemma Boundaryless.of_boundary_eq_empty (h : I.boundary M = ∅) : BoundarylessManifold I M :=
@@ -185,14 +187,13 @@ lemma interior_prod :
   have aux : (interior (range ↑I)) ×ˢ (interior (range J)) = interior (range (I.prod J)) := by
     rw [← interior_prod_eq, ← Set.range_prod_map, modelWithCorners_prod_coe]
   constructor <;> intro hp
-  · replace hp : (I.prod J).IsInteriorPoint p := hp
-    rw [IsInteriorPoint, ← aux] at hp
-    exact hp
-  · show (I.prod J).IsInteriorPoint p
+  · rw [ModelWithCorners.mem_interior, IsInteriorPoint, ← aux] at hp
+    exact hp -- TODO
+  · rw [ModelWithCorners.mem_interior]
     rw [IsInteriorPoint, ← aux, mem_prod]
     obtain h := Set.mem_prod.mp hp
     rw [ModelWithCorners.interior] at h
-    exact h
+    exact h -- TODO
 
 /-- The boundary of `M × N` is `∂M × N ∪ (M × ∂N)`. -/
 lemma boundary_prod :
@@ -202,7 +203,7 @@ lemma boundary_prod :
     _ = ((I.interior M) ×ˢ (J.interior N))ᶜ := by rw [interior_prod]
     _ = (I.interior M)ᶜ ×ˢ univ ∪ univ ×ˢ (J.interior N)ᶜ := by rw [compl_prod_eq_union]
   rw [h, I.compl_interior, J.compl_interior, union_comm]
-  rfl
+  rfl -- TODO
 
 /-- If `M` is boundaryless, `∂(M×N) = M × ∂N`. -/
 lemma boundary_of_boundaryless_left [BoundarylessManifold I M] :
