@@ -99,7 +99,7 @@ def equivEquivIso {A B : FintypeCat} : A ≃ B ≃ (A ≅ B) where
   left_inv := by aesop_cat
   right_inv := by aesop_cat
 
-instance foo (X Y : FintypeCat) : Finite (X ⟶ Y) :=
+instance (X Y : FintypeCat) : Finite (X ⟶ Y) :=
   inferInstanceAs <| Finite (X → Y)
 
 instance (X Y : FintypeCat) : Finite (X ≅ Y) :=
