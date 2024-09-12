@@ -100,7 +100,7 @@ theorem existsUnique_congr {p q : α → Prop} (h : ∀ a, p a ↔ q a) : (∃! 
     (∃! x, p x) ↔ ∃ x, p x :=
   ⟨fun h ↦ h.exists, Exists.imp fun x hx ↦ ⟨hx, fun y _ ↦ Subsingleton.elim y x⟩⟩
 
-theorem exists_unique_const {b : Prop} (α : Sort*) [i : Nonempty α] [Subsingleton α] :
+theorem exists_unique_const {b : Prop} (α : Type*) [i : Nonempty α] [Subsingleton α] :
     (∃! _ : α, b) ↔ b := by simp
 
 @[simp] theorem exists_unique_eq {a' : α} : ∃! a, a = a' := by
@@ -114,7 +114,7 @@ theorem exists_unique_prop {p q : Prop} : (∃! _ : p, q) ↔ p ∧ q := by simp
 @[simp] theorem exists_unique_false : ¬∃! _ : α, False := fun ⟨_, h, _⟩ ↦ h
 
 theorem exists_unique_prop_of_true {p : Prop} {q : p → Prop} (h : p) : (∃! h' : p, q h') ↔ q h :=
-  @exists_unique_const (q h) p ⟨h⟩ _
+  ⟨fun ⟨_, hq, _⟩ ↦ hq, fun hq ↦ ⟨h, hq, fun _ _ ↦ Subsingleton.elim _ _⟩⟩
 
 theorem ExistsUnique.elim₂ {p : α → Sort*} [∀ x, Subsingleton (p x)]
     {q : ∀ (x) (_ : p x), Prop} {b : Prop} (h₂ : ∃! x, ∃! h : p x, q x h)

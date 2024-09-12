@@ -1096,7 +1096,7 @@ def subtypeSubtypeEquivSubtypeExists (p : α → Prop) (q : Subtype p → Prop) 
 def subtypeSubtypeEquivSubtypeInter {α : Type u} (p q : α → Prop) :
     { x : Subtype p // q x.1 } ≃ Subtype fun x => p x ∧ q x :=
   (subtypeSubtypeEquivSubtypeExists p _).trans <|
-    subtypeEquivRight fun x => @exists_prop (q x) (p x)
+    subtypeEquivRight fun x => @exists_prop (p x) (q x)
 
 /-- If the outer subtype has more restrictive predicate than the inner one,
 then we can drop the latter. -/
