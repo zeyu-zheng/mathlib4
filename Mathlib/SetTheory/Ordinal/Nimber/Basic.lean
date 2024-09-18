@@ -49,7 +49,7 @@ def Nimber : Type _ :=
   Ordinal deriving Zero, Inhabited, One, Nontrivial, WellFoundedRelation
 
 instance Nimber.linearOrder : LinearOrder Nimber := {Ordinal.linearOrder with}
-instance Nimber.succOrder : SuccOrder Nimber := {Ordinal.succOrder with}
+instance Nimber.instSuccOrder : SuccOrder Nimber := {Ordinal.instSuccOrder with}
 instance Nimber.orderBot : OrderBot Nimber := {Ordinal.orderBot with}
 instance Nimber.noMaxOrder : NoMaxOrder Nimber := {Ordinal.noMaxOrder with}
 instance Nimber.zeroLEOneClass : ZeroLEOneClass Nimber := {Ordinal.zeroLEOneClass with}
@@ -150,7 +150,7 @@ theorem lt_one_iff_zero : a < 1 ↔ a = 0 :=
   Ordinal.lt_one_iff_zero
 
 theorem one_le_iff_pos : 1 ≤ a ↔ 0 < a :=
-  Ordinal.one_le_iff_pos
+  Order.one_le_iff_pos (α := Ordinal)
 
 theorem one_le_iff_ne_zero : 1 ≤ a ↔ a ≠ 0 :=
   Ordinal.one_le_iff_ne_zero
@@ -620,8 +620,8 @@ theorem cons_mem_inv'_set {a' : Nimber} (ha₀ : a' ≠ 0) (ha : a' < a) (hb : b
 
 /-- A recursion principle for `inv'_set`. -/
 @[elab_as_elim]
-theorem inv'_recOn (a : Nimber) {p : Nimber → Prop} (h0 : p 0)
-    (hi : ∀ a' < a, a' ≠ 0 → ∀ b, p b → p (inv' a' * (1 + (a + a') * b))) {x : Nimber}
+theorem inv'_recOn {p : Nimber → Prop} (a : Nimber) (h0 : p 0)
+    (hi : ∀ a' < a, a' ≠ 0 → ∀ b, p b → p (inv' a' * (1 + (a + a') * b))) (x : Nimber)
     (hx : x ∈ inv'_set a) : p x := by
   revert x
   change inv'_set a ⊆ setOf p
@@ -640,11 +640,11 @@ private def InvTy.toNimber {a : Nimber} : InvTy a → Nimber
       inv' a' * (1 + (a + a') * (toNimber b))
 
 /-- The complement of `inv'_set a` is nonempty. -/
-theorem inv'_set_nonempty (a : Nimber.{u}) : (inv'_set a)ᶜ.Nonempty := by
+private theorem inv'_set_nonempty (a : Nimber.{u}) : (inv'_set a)ᶜ.Nonempty := by
   apply Ordinal.nonempty_compl_of_small
   apply @small_subset.{u, u + 1} _ _ _ _ (small_range (@InvTy.toNimber.{u} a))
   intro x hx
-  refine inv'_recOn a ⟨InvTy.zero, rfl⟩ ?_ hx
+  refine inv'_recOn a ⟨InvTy.zero, rfl⟩ ?_ x hx
   rintro a' ha _ _ ⟨b, rfl⟩
   use InvTy.cons (Ordinal.enumIsoToType _ ⟨toOrdinal a', ha⟩) b
   rw [InvTy.toNimber]
@@ -686,7 +686,7 @@ in its defining set `inv'_set a` is. -/
 private theorem main (a : Nimber) : (∀ b ∈ inv'_set a, a * b ≠ 1) ∧ (a ≠ 0 → a * inv' a = 1) := by
   have H₁ : ∀ b ∈ inv'_set a, a * b ≠ 1 := by
     intro b hb
-    refine inv'_recOn a ?_ ?_ hb
+    refine inv'_recOn a ?_ ?_ b hb
     · rw [mul_zero]
       exact zero_ne_one
     · intro a' ha ha' b hb

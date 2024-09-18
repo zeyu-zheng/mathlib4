@@ -21,14 +21,6 @@ section MissingPolynomialStuff
 
 variable {R : Type*} [Semiring R]
 
-@[simp]
-theorem coeffs_zero : coeffs (0 : R[X]) = ∅ := by
-  simp
-
-@[simp]
-theorem coeff_monomial_same (n : ℕ) {c : R} : (monomial n c).coeff n = c :=
-  Finsupp.single_eq_same
-
 theorem coeffs_monomial (n : ℕ) {c : R} (hc : c ≠ 0) : (monomial n c).coeffs = {c} := by
   rw [coeffs, support_monomial n hc]
   simp
@@ -38,11 +30,6 @@ theorem ne_zero_of_mem_coeffs {R : Type*} [Semiring R] {x : R} {p : R[X]}
   rw [mem_coeffs_iff] at hx
   obtain ⟨n, hn, rfl⟩ := hx
   exact mem_support_iff.1 hn
-
-theorem X_ne_C [Nontrivial R] (c : R) : X ≠ C c := by
-  intro h
-  apply_fun natDegree at h
-  simp at h
 
 theorem coeff_X_mem (R : Type*) [Semiring R] (n : ℕ) :
     coeff (X : R[X]) n = 0 ∨ coeff (X : R[X]) n = 1 := by
@@ -60,12 +47,6 @@ theorem Irreducible.degree_pos {f : Polynomial F} (h : Irreducible f) :
 end MissingPolynomialStuff
 
 section MissingOrdinalStuff
-
-protected theorem Ordinal.csSup_le_csSup {s t : Set Ordinal} (ht : BddAbove t) (h : s ⊆ t) :
-    sSup s ≤ sSup t := by
-  obtain rfl | hs := Set.eq_empty_or_nonempty s
-  · simp
-  · exact csSup_le_csSup ht hs h
 
 theorem Ordinal.sSup_empty : sSup (∅ : Set Ordinal) = 0 :=
   csSup_empty
@@ -92,9 +73,6 @@ end MissingOrdinalStuff
 
 instance (o : Nimber.{u}) : Small.{u} (Iio o) :=
   inferInstanceAs (Small.{u} (Iio (Nimber.toOrdinal o)))
-
--- I'll PR this soon.
-attribute [-simp] enumIsoToType_apply
 
 namespace Nimber
 
@@ -198,7 +176,7 @@ lemma mem_addify {x y z : Nimber} (hy : y < x) (hz : z < x) : y + z < x.addify :
 
 theorem addify_mono : Monotone addify := by
   intro x y h
-  apply Ordinal.csSup_le_csSup (bddAbove_addify _)
+  apply csSup_le_csSup' (bddAbove_addify _)
   rintro a ⟨⟨⟨a, ha⟩, ⟨b, hb⟩⟩, rfl⟩
   simpa using ⟨a, ha.trans_le h, b, hb.trans_le h, rfl⟩
 
@@ -216,7 +194,7 @@ lemma mem_mulify {x y z : Nimber} (hy : y < x) (hz : z < x) : y * z < x.mulify :
 
 theorem mulify_mono : Monotone mulify := by
   intro x y h
-  apply Ordinal.csSup_le_csSup (bddAbove_mulify _)
+  apply csSup_le_csSup' (bddAbove_mulify _)
   rintro a ⟨⟨⟨a, ha⟩, ⟨b, hb⟩⟩, rfl⟩
   simpa using ⟨a, ha.trans_le h, b, hb.trans_le h, rfl⟩
 
@@ -234,9 +212,9 @@ lemma mem_invify {x y : Nimber} (hy : y < x) : y⁻¹ < x.invify := by
 
 theorem invify_mono : Monotone invify := by
   intro x y h
-  apply Ordinal.csSup_le_csSup (bddAbove_invify _)
+  apply csSup_le_csSup' (bddAbove_invify _)
   rintro a ⟨⟨a, ha⟩, rfl⟩
-  simpa using ⟨a, ha.trans_le h, rfl⟩
+  simpa using ha.trans_le h
 
 /-- The smallest nimber containing all the roots of polynomials with coefficients less than `x`. -/
 def algify (x : Nimber.{u}) : Nimber.{u} :=
@@ -284,10 +262,10 @@ instance small_algify (x : Nimber.{u}) :
       )
     ext
     simp_rw [algify_enum, Finsupp.finite_support]
-    simp
+    simp?
 
 /-- The function in the definition of `algify` has a range bounded above. -/
-lemma bddAbove_algify (x : Nimber) : BddAbove <| Set.range
+private lemma bddAbove_algify (x : Nimber) : BddAbove <| Set.range
     fun p : {p : Polynomial Nimber // ∀ c ∈ p.coeffs, c < x} =>
       (succ (p.1.roots.toFinset.max.recOn 0 id) : Nimber) :=
   bddAbove_of_small _
