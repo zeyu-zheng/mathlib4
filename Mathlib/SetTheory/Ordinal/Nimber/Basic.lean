@@ -369,9 +369,11 @@ theorem add_cancel_right (a b : Nimber) : a + b + b = a := by
 theorem add_cancel_left (a b : Nimber) : a + (a + b) = b := by
   rw [← add_assoc, add_self, zero_add]
 
+-- Generalize to CharP 2
 theorem add_eq_iff_eq_add : a + b = c ↔ a = c + b :=
   sub_eq_iff_eq_add
 
+-- Generalize to CharP 2
 theorem eq_add_iff_add_eq : a = b + c ↔ a + c = b :=
   eq_sub_iff_add_eq
 

@@ -401,13 +401,13 @@ lemma root_mem_nextField {x y : Nimber} {p : Nimber[X]}
     Finset.le_max' _ _ _
   simpa [s] using ⟨c, hc, rfl⟩
 
-lemma one_lt_two : (1 : Nimber) < toNimber 2 := by
+lemma one_lt_two : 1 < toNimber 2 := by
   change (1 : Ordinal) < (2 : Ordinal)
   norm_cast
 
 /-- The nimbers that form fields are a proper class. -/
--- TODO: we should have used `¬ BddAbove` instead.
 -- Lemma 3
+-- This doesn't actually seem necessary in this form - `nextField` is what we really care about.
 lemma unbounded_isField : Set.Unbounded (· < ·) {x | IsField x} := by
   intro x
   refine ⟨nextField (max (toNimber 2) x), isField_nextField (lt_max_of_lt_left one_lt_two), ?_⟩
@@ -462,9 +462,9 @@ lemma degree_C_mul_le {R : Type u} [Semiring R] (p : Polynomial R) (x : R) :
   _ = p.degree := zero_add _
 
 private lemma pow_excluded_eq_aeval {x : Nimber} {n : ℕ} (hx : x.IsField)
-    (h : ∀ p : hx.toSubfield[X], 0 < p.degree → p.degree ≤ ↑n → ∃ y, p.IsRoot y) {m : ℕ}
+    (h : ∀ p : hx.toSubfield[X], 0 < p.degree → p.degree ≤ n → ∃ y, p.IsRoot y) {m : ℕ}
     (hm : m + 1 ≤ n)
-    (psl2 : ∀ p : hx.toSubfield[X], p.degree < ↑m → aeval x p < x ^ₒ m)
+    (psl2 : ∀ p : hx.toSubfield[X], p.degree < m → aeval x p < x ^ₒ m)
     (psl4 : x ^ m = x ^ₒ m)
     (p : hx.toSubfield[X]) (pd : p.degree < m + 1) :
     ∃ a' < x ^ m, ∃ b' < x, a' * x + x ^ m * b' + a' * b' = aeval x p := by
@@ -699,6 +699,7 @@ theorem polynomialLT_def {p q : Nimber[X]} : p ≺ q ↔ ∃ a,
 
 /-- For a nimber `x`, the set of non-constant polynomials with coefficients less than `x`, without a
 root less than `x`. -/
+-- TODO: this probably should have been written in terms of `x.toSubfield[X]`.
 def noRoots (x : Nimber) : Set Nimber[X] :=
   {p | 0 < p.degree ∧ (∀ c ∈ p.coeffs, c < x) ∧ ∀ r ∈ p.roots, x ≤ r}
 
@@ -748,7 +749,7 @@ lemma monic_leadingCoeff_inv_smul {p : Nimber[X]} (hp : p ≠ 0) : Monic (p.lead
 
 -- Lemma 4
 lemma mem_min_roots_of_isField {x : Nimber} (hx : IsField x) (hp : (noRoots x).Nonempty) :
-    x ∈ (isWellOrder_polynomialLT.wf.min _ hp).roots :=
+    x ∈ (isWellOrder_polynomialLT.wf.min _ hp).roots := by
   let p := isWellOrder_polynomialLT.wf.min _ hp
   have hpm : p ∈ _ := isWellOrder_polynomialLT.wf.min_mem _ hp
   have hpm' : ∀ _ ∈ _, ¬ _ ≺ p :=
@@ -773,7 +774,18 @@ lemma mem_min_roots_of_isField {x : Nimber} (hx : IsField x) (hp : (noRoots x).N
     apply this
     intro n hn
     rw [coeff_eq_zero_of_natDegree_lt hn, mul_zero]
-  sorry
+  suffices x ^ p.natDegree = (p.erase p.natDegree).eval x by
+    have H := monomial_add_erase p p.natDegree
+    rw [coeff_natDegree, hm.leadingCoeff, add_comm, ← eq_sub_iff_add_eq, CharTwo.sub_eq_add] at H
+    rw [H] at this
+    simp at this
+    rw [mem_roots]
+    · exact this
+    · exact h0
+  apply le_antisymm
+  · sorry
+  · apply le_of_not_lt
+    intro hx
 
 theorem exists_root_of_degree_pos {p : Nimber[X]} : 0 < p.degree → ∃ r, p.eval r = 0 := by
   apply isWellOrder_polynomialLT.wf.induction p
