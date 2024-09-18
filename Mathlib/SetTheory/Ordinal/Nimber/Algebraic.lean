@@ -406,6 +406,7 @@ lemma one_lt_two : (1 : Nimber) < toNimber 2 := by
   norm_cast
 
 /-- The nimbers that form fields are a proper class. -/
+-- TODO: we should have used `¬ BddAbove` instead.
 -- Lemma 3
 lemma unbounded_isField : Set.Unbounded (· < ·) {x | IsField x} := by
   intro x
@@ -660,11 +661,11 @@ lemma pow_mul_of_isField {x : Nimber} {n m : ℕ} (hx : IsField x) (hm : m ≤ n
   (pow_mul_of_isField' hx hm h).2.2.2
 
 /-- The lexicographic ordering on polynomials. -/
-def polynomial_LT (p q : Nimber[X]) : Prop :=
+def polynomialLT (p q : Nimber[X]) : Prop :=
   (toLex <| p.toFinsupp.equivMapDomain OrderDual.toDual) <
   (toLex <| q.toFinsupp.equivMapDomain OrderDual.toDual)
 
-local infixl:50 " ≺ " => polynomial_LT
+local infixl:50 " ≺ " => polynomialLT
 
 theorem _root_.InvImage.isTrichotomous {α : Sort u} {β : Sort v} {r : β → β → Prop}
     {f : α → β} (hf : Injective f) [h : IsTrichotomous β r] : IsTrichotomous α (InvImage r f) := by
@@ -679,7 +680,7 @@ theorem _root_.InvImage.isTrans {α : Sort u} {β : Sort v} {r : β → β → P
   intro a b c
   exact h.trans _ _ _
 
-instance isWellOrder_polynomial_LT : IsWellOrder _ (· ≺ ·) where
+instance isWellOrder_polynomialLT : IsWellOrder _ (· ≺ ·) where
   wf := by
     apply InvImage.wf
     exact Finsupp.Lex.wellFounded' Nimber.not_lt_zero lt_wf Nat.lt_wfRel.wf
@@ -692,6 +693,10 @@ instance isWellOrder_polynomial_LT : IsWellOrder _ (· ≺ ·) where
     exact fun a => h a
   trans := (InvImage.isTrans _).trans
 
+theorem polynomialLT_def {p q : Nimber[X]} : p ≺ q ↔ ∃ a,
+    (∀ b, a < b → p.coeff b = q.coeff b) ∧ p.coeff a < q.coeff a :=
+  Iff.rfl
+
 /-- For a nimber `x`, the set of non-constant polynomials with coefficients less than `x`, without a
 root less than `x`. -/
 def noRoots (x : Nimber) : Set Nimber[X] :=
@@ -703,14 +708,75 @@ theorem roots_of_mem_noRoots_nextField {x : Nimber} {p : Nimber[X]}
   rintro ⟨r, hr⟩
   exact (hp.2.2 r hr).not_lt <| root_mem_nextField hp.2.1 hr
 
+theorem mul_mem_noRoots {x : Nimber} (hx : IsField x) {p : Nimber[X]} (hp : p ∈ noRoots x)
+    {a : Nimber} (h0 : a ≠ 0) (ha : a < x) : a • p ∈ noRoots x := by
+  refine ⟨?_, ?_, ?_⟩
+  · rw [degree_smul_of_smul_regular]
+    · exact hp.1
+    · apply IsUnit.isSMulRegular
+      rwa [isUnit_iff_ne_zero]
+  · intro c hc
+    rw [mem_coeffs_iff] at hc
+    simp [h0] at hc
+    obtain ⟨n, hn, rfl⟩ := hc
+    apply hx.mul_lt _ ha
+    apply hp.2.1
+    exact coeff_mem_coeffs p n hn
+  · intro r hr
+    rw [roots_smul_nonzero _ h0] at hr
+    exact hp.2.2 r hr
+
+@[simp]
+lemma isSMulRegular_iff_zero {a : Nimber} : IsSMulRegular Nimber a ↔ a ≠ 0 := by
+  constructor
+  · rintro h rfl
+    exact IsSMulRegular.not_zero h
+  · intro h
+    apply IsUnit.isSMulRegular
+    simpa
+
+lemma leadingCoeff_mem_coeffs {p : Nimber[X]} (hp : p ≠ 0) : p.leadingCoeff ∈ p.coeffs := by
+  rw [mem_coeffs_iff]
+  use p.natDegree
+  simp [hp]
+
+lemma monic_leadingCoeff_inv_smul {p : Nimber[X]} (hp : p ≠ 0) : Monic (p.leadingCoeff⁻¹ • p) := by
+  rw [Monic, leadingCoeff_smul_of_smul_regular]
+  · rw [_root_.smul_eq_mul, inv_mul_eq_one₀]
+    rwa [ne_eq, leadingCoeff_eq_zero]
+  · simpa
+
 -- Lemma 4
 lemma mem_min_roots_of_isField {x : Nimber} (hx : IsField x) (hp : (noRoots x).Nonempty) :
-    x ∈ (isWellOrder_polynomial_LT.wf.min _ hp).roots :=
-  let p := isWellOrder_polynomial_LT.wf.min _ hp
+    x ∈ (isWellOrder_polynomialLT.wf.min _ hp).roots :=
+  let p := isWellOrder_polynomialLT.wf.min _ hp
+  have hpm : p ∈ _ := isWellOrder_polynomialLT.wf.min_mem _ hp
+  have hpm' : ∀ _ ∈ _, ¬ _ ≺ p :=
+    fun q (h : q ∈ _) ↦ isWellOrder_polynomialLT.wf.not_lt_min _ hp h
+  have h0 : p ≠ 0 := by
+    intro h0
+    rw [h0] at hpm
+    simpa using hpm.1
+  have hm : p.Monic := by
+    have H₁ : p.leadingCoeff⁻¹ ≠ 0 := by
+      rwa [ne_eq, inv_eq_zero, ← ne_eq, leadingCoeff_ne_zero]
+    have H₂ : p.leadingCoeff⁻¹ < x := by
+      apply hx.inv_lt
+      apply hpm.2.1
+      exact leadingCoeff_mem_coeffs h0
+    have := mul_mem_noRoots hx hpm H₁ H₂
+    have := hpm' _ this
+    rw [polynomialLT_def] at this
+    push_neg at this
+    have := this p.natDegree
+    simp [h0, le_one_iff] at this
+    apply this
+    intro n hn
+    rw [coeff_eq_zero_of_natDegree_lt hn, mul_zero]
   sorry
 
 theorem exists_root_of_degree_pos {p : Nimber[X]} : 0 < p.degree → ∃ r, p.eval r = 0 := by
-  apply isWellOrder_polynomial_LT.wf.induction p
+  apply isWellOrder_polynomialLT.wf.induction p
   intro p IH hd
   obtain hr | hr := p.roots.toFinset.eq_empty_or_nonempty
   · have hc : p.coeffs.Nonempty := by
@@ -737,13 +803,13 @@ theorem exists_root_of_degree_pos {p : Nimber[X]} : 0 < p.degree → ∃ r, p.ev
     convert this
     apply ((trichotomous_of (· ≺ ·) _ _).resolve_left _).resolve_right
     · intro hlt
-      have hm := (isWellOrder_polynomial_LT.wf.min_mem _ ⟨p, H⟩)
+      have hm := (isWellOrder_polynomialLT.wf.min_mem _ ⟨p, H⟩)
       obtain ⟨r, hr⟩ := IH _ hlt hm.1
       rw [← IsRoot.def] at hr
       have := (mem_roots (ne_zero_of_degree_gt hm.1)).2 hr
       rw [roots_of_mem_noRoots_nextField hm] at this
       exact Multiset.not_mem_zero r this
-    · exact isWellOrder_polynomial_LT.wf.not_lt_min _ _ H
+    · exact isWellOrder_polynomialLT.wf.not_lt_min _ _ H
   · obtain ⟨x, hx⟩ := hr
     rw [Multiset.mem_toFinset, mem_roots'] at hx
     exact ⟨x, hx.2⟩
