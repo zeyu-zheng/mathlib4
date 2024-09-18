@@ -3,7 +3,6 @@ Copyright (c) 2024 Violeta Hernández Palacios. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández Palacios, Daniel Weber
 -/
-
 import Mathlib.Data.Finsupp.WellFounded
 import Mathlib.FieldTheory.IsAlgClosed.Basic
 import Mathlib.SetTheory.Ordinal.Nimber.Basic
@@ -262,7 +261,7 @@ instance small_algify (x : Nimber.{u}) :
       )
     ext
     simp_rw [algify_enum, Finsupp.finite_support]
-    simp?
+    simp
 
 /-- The function in the definition of `algify` has a range bounded above. -/
 private lemma bddAbove_algify (x : Nimber) : BddAbove <| Set.range
@@ -317,7 +316,7 @@ theorem self_le_algify {x : Nimber} : x ≤ algify x := by
 theorem algify_mono : Monotone algify := by
   intro x y h
   rw [algify, algify]
-  apply Ordinal.csSup_le_csSup (bddAbove_algify _)
+  apply csSup_le_csSup' (bddAbove_algify _)
   rintro a ⟨p, rfl⟩
   have : ∀ c ∈ p.1.coeffs, c < y := by
     intro c hc
@@ -468,7 +467,7 @@ private lemma pow_excluded_eq_aeval {x : Nimber} {n : ℕ} (hx : x.IsField)
     (psl4 : x ^ m = x ^ₒ m)
     (p : hx.toSubfield[X]) (pd : p.degree < m + 1) :
     ∃ a' < x ^ m, ∃ b' < x, a' * x + x ^ m * b' + a' * b' = aeval x p := by
-  have : CharP hx.toSubfield 2 := inferInstance
+  have : CharP hx.toSubfield 2 := CharP.subring _ _ _
   let f := X ^ (m + 1) + p
   have pf : p = f + X ^ (m + 1) := by
     rw [add_assoc, add_comm, add_assoc, CharTwo.add_self_eq_zero, add_zero]
@@ -660,8 +659,6 @@ lemma pow_mul_of_isField {x : Nimber} {n m : ℕ} (hx : IsField x) (hm : m ≤ n
     ∀ y < x, x ^ m * y = x ^ₒ m *ₒ y :=
   (pow_mul_of_isField' hx hm h).2.2.2
 
-#print axioms pow_mul_of_isField
-
 /-- The lexicographic ordering on polynomials. -/
 def polynomial_LT (p q : Nimber[X]) : Prop :=
   (toLex <| p.toFinsupp.equivMapDomain OrderDual.toDual) <
@@ -709,6 +706,7 @@ theorem roots_of_mem_noRoots_nextField {x : Nimber} {p : Nimber[X]}
 -- Lemma 4
 lemma mem_min_roots_of_isField {x : Nimber} (hx : IsField x) (hp : (noRoots x).Nonempty) :
     x ∈ (isWellOrder_polynomial_LT.wf.min _ hp).roots :=
+  let p := isWellOrder_polynomial_LT.wf.min _ hp
   sorry
 
 theorem exists_root_of_degree_pos {p : Nimber[X]} : 0 < p.degree → ∃ r, p.eval r = 0 := by

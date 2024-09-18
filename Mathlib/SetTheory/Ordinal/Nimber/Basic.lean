@@ -648,7 +648,7 @@ private theorem inv'_set_nonempty (a : Nimber.{u}) : (inv'_set a)ᶜ.Nonempty :=
   rintro a' ha _ _ ⟨b, rfl⟩
   use InvTy.cons (Ordinal.enumIsoToType _ ⟨toOrdinal a', ha⟩) b
   rw [InvTy.toNimber]
-  simp [- Ordinal.enumIsoToType_apply]
+  simp
 
 theorem inv'_ne_zero (a : Nimber) : inv' a ≠ 0 := by
   rw [inv'_def]
