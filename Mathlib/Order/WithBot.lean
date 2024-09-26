@@ -294,7 +294,7 @@ instance preorder [Preorder α] : Preorder (WithBot α) where
     intros a b
     cases a <;> cases b <;> simp [lt_iff_le_not_le]
   le_refl _ a ha := ⟨a, ha, le_rfl⟩
-  le_trans _ _ o₃ h₁ h₂ a ha :=
+  le_trans _ _ _ h₁ h₂ a ha :=
     let ⟨b, hb, ab⟩ := h₁ a ha
     let ⟨c, hc, bc⟩ := h₂ b hb
     ⟨c, hc, le_trans ab bc⟩
