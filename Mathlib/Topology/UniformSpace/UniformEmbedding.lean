@@ -332,8 +332,8 @@ theorem completeSpace_extension {m : β → α} (hm : UniformInducing m) (dense 
     have : NeBot (comap m g) :=
       comap_neBot fun _ ht =>
         let ⟨t', ht', ht_mem⟩ := (mem_lift_sets <| monotone_lift' monotone_const mp₀).mp ht
-        let ⟨t'', ht'', ht'_sub⟩ := (mem_lift'_sets mp₁).mp ht_mem
-        let ⟨x, (hx : x ∈ t'')⟩ := hf.left.nonempty_of_mem ht''
+        let ⟨_, ht'', ht'_sub⟩ := (mem_lift'_sets mp₁).mp ht_mem
+        let ⟨x, hx⟩ := hf.left.nonempty_of_mem ht''
         have h₀ : NeBot (𝓝[range m] x) := dense.nhdsWithin_neBot x
         have h₁ : { y | (x, y) ∈ t' } ∈ 𝓝[range m] x :=
           @mem_inf_of_left α (𝓝 x) (𝓟 (range m)) _ <| mem_nhds_left x ht'
@@ -343,9 +343,9 @@ theorem completeSpace_extension {m : β → α} (hm : UniformInducing m) (dense 
         let ⟨_, xyt', b, b_eq⟩ := h₀.nonempty_of_mem this
         ⟨b, b_eq.symm ▸ ht'_sub ⟨x, hx, xyt'⟩⟩
     have : Cauchy g :=
-      ⟨‹NeBot g›, fun s hs =>
-        let ⟨s₁, hs₁, (comp_s₁ : compRel s₁ s₁ ⊆ s)⟩ := comp_mem_uniformity_sets hs
-        let ⟨s₂, hs₂, (comp_s₂ : compRel s₂ s₂ ⊆ s₁)⟩ := comp_mem_uniformity_sets hs₁
+      ⟨‹NeBot g›, fun _ hs =>
+        let ⟨s₁, hs₁, comp_s₁⟩ := comp_mem_uniformity_sets hs
+        let ⟨s₂, hs₂, comp_s₂⟩ := comp_mem_uniformity_sets hs₁
         let ⟨t, ht, (prod_t : t ×ˢ t ⊆ s₂)⟩ := mem_prod_same_iff.mp (hf.right hs₂)
         have hg₁ : p (preimage Prod.swap s₁) t ∈ g :=
           mem_lift (symm_le_uniformity hs₁) <| @mem_lift' α α f _ t ht

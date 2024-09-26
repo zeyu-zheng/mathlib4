@@ -157,7 +157,7 @@ def prodToProdTop : πₓ A × πₓ B ⥤ πₓ (TopCat.of (A × B)) where
     rfl
   map_comp {x y z} f g :=
     match x, y, z, f, g with
-    | (_, _), (_, _), (z₀, z₁), (f₀, f₁), (g₀, g₁) =>
+    | (_, _), (_, _), (_, _), (f₀, f₁), (g₀, g₁) =>
       (Path.Homotopic.comp_prod_eq_prod_comp f₀ f₁ g₀ g₁).symm
 
 theorem prodToProdTop_map {x₀ x₁ : πₓ A} {y₀ y₁ : πₓ B} (p₀ : x₀ ⟶ x₁) (p₁ : y₀ ⟶ y₁) :

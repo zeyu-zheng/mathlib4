@@ -202,8 +202,8 @@ instance : CompleteSpace (CauchyFilter α) :=
   completeSpace_extension uniformInducing_pureCauchy denseRange_pureCauchy fun f hf =>
     let f' : CauchyFilter α := ⟨f, hf⟩
     have : map pureCauchy f ≤ (𝓤 <| CauchyFilter α).lift' (preimage (Prod.mk f')) :=
-      le_lift'.2 fun s hs =>
-        let ⟨t, ht₁, (ht₂ : gen t ⊆ s)⟩ := (mem_lift'_sets monotone_gen).mp hs
+      le_lift'.2 fun _ hs =>
+        let ⟨t, ht₁, ht₂⟩ := (mem_lift'_sets monotone_gen).mp hs
         let ⟨t', ht', (h : t' ×ˢ t' ⊆ t)⟩ := mem_prod_same_iff.mp (hf.right ht₁)
         have : t' ⊆ { y : α | (f', pureCauchy y) ∈ gen t } := fun x hx =>
           (f ×ˢ pure x).sets_of_superset (prod_mem_prod ht' hx) h
