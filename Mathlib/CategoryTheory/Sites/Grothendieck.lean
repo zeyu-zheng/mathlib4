@@ -242,7 +242,7 @@ theorem le_def {J₁ J₂ : GrothendieckTopology C} : J₁ ≤ J₂ ↔ (J₁ : 
 instance : PartialOrder (GrothendieckTopology C) :=
   { instLEGrothendieckTopology with
     le_refl := fun _ => le_def.mpr le_rfl
-    le_trans := fun _ _ J₃ h₁₂ h₂₃ => le_def.mpr (le_trans h₁₂ h₂₃)
+    le_trans := fun _ _ _ h₁₂ h₂₃ => le_def.mpr (le_trans h₁₂ h₂₃)
     le_antisymm := fun _ _ h₁₂ h₂₁ => GrothendieckTopology.ext (le_antisymm h₁₂ h₂₁) }
 
 /-- See <https://stacks.math.columbia.edu/tag/00Z7> -/

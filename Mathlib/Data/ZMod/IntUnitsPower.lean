@@ -40,7 +40,7 @@ instance : Module (ZMod 2) (Additive ℤˣ) where
     dsimp only [ZMod.smul_units_def, toMul_nsmul]
     rw [← pow_mul, ZMod.val_mul, ← Int.units_pow_eq_pow_mod_two, mul_comm]
   smul_zero _ := Additive.toMul.injective <| one_pow _
-  smul_add _ _ au₂ := Additive.toMul.injective <| mul_pow _ _ _
+  smul_add _ _ _ := Additive.toMul.injective <| mul_pow _ _ _
   add_smul z₁ z₂ au := Additive.toMul.injective <| by
     dsimp only [ZMod.smul_units_def, toMul_nsmul, toMul_add]
     rw [← pow_add, ZMod.val_add, ← Int.units_pow_eq_pow_mod_two]

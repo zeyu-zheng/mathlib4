@@ -549,7 +549,7 @@ instance mul_nf : ∀ (o₁ o₂) [NF o₁] [NF o₂], NF (o₁ * o₂)
 @[simp]
 theorem repr_mul : ∀ (o₁ o₂) [NF o₁] [NF o₂], repr (o₁ * o₂) = repr o₁ * repr o₂
   | 0, o, _, h₂ => by cases o <;> exact (zero_mul _).symm
-  | oadd _ _ a₁, 0, _, _ => (mul_zero _).symm
+  | oadd _ _ _, 0, _, _ => (mul_zero _).symm
   | oadd e₁ n₁ a₁, oadd e₂ n₂ a₂, h₁, h₂ => by
     have IH : repr (mul _ _) = _ := @repr_mul _ _ h₁ h₂.snd
     conv =>

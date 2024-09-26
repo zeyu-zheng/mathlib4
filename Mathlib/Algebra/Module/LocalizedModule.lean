@@ -59,7 +59,7 @@ theorem r.isEquiv : IsEquiv _ (r S M) :=
       have hu2' := congr_arg ((u1 * s1) • ·) hu2.symm
       simp only [← mul_smul, smul_assoc, mul_assoc, mul_comm, mul_left_comm] at hu1' hu2' ⊢
       rw [hu2', hu1']
-    symm := fun ⟨_, _⟩ ⟨m2, s2⟩ ⟨u, hu⟩ => ⟨u, hu.symm⟩ }
+    symm := fun ⟨_, _⟩ ⟨_, _⟩ ⟨u, hu⟩ => ⟨u, hu.symm⟩ }
 
 instance r.setoid : Setoid (M × S) where
   r := r S M

@@ -232,7 +232,7 @@ instance gsemiring : DirectSum.GSemiring fun i => ⨂[R]^i M :=
     mul_zero := fun _ => LinearMap.map_zero _
     zero_mul := fun _ => LinearMap.map_zero₂ _ _
     mul_add := fun _ _ _ => LinearMap.map_add _ _ _
-    add_mul := fun _ _ b => LinearMap.map_add₂ _ _ _ _
+    add_mul := fun _ _ _ => LinearMap.map_add₂ _ _ _ _
     natCast := fun n => algebraMap₀ (n : R)
     natCast_zero := by simp only [Nat.cast_zero, map_zero]
     natCast_succ := fun n => by simp only [Nat.cast_succ, map_add, algebraMap₀_one] }

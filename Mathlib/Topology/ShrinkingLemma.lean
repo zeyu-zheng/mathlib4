@@ -75,7 +75,7 @@ open Classical in
 instance : PartialOrder (PartialRefinement u s) where
   le v₁ v₂ := v₁.carrier ⊆ v₂.carrier ∧ ∀ i ∈ v₁.carrier, v₁ i = v₂ i
   le_refl _ := ⟨Subset.refl _, fun _ _ => rfl⟩
-  le_trans _ _ v₃ h₁₂ h₂₃ :=
+  le_trans _ _ _ h₁₂ h₂₃ :=
     ⟨Subset.trans h₁₂.1 h₂₃.1, fun i hi => (h₁₂.2 i hi).trans (h₂₃.2 i <| h₁₂.1 hi)⟩
   le_antisymm v₁ v₂ h₁₂ h₂₁ :=
     have hc : v₁.carrier = v₂.carrier := Subset.antisymm h₁₂.1 h₂₁.1

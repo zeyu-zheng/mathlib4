@@ -166,7 +166,7 @@ instance : Monoid CircleDeg1Lift where
   one := ⟨.id, fun _ => rfl⟩
   mul_one _ := rfl
   one_mul _ := rfl
-  mul_assoc _ _ f₃ := DFunLike.coe_injective rfl
+  mul_assoc _ _ _ := DFunLike.coe_injective rfl
 
 instance : Inhabited CircleDeg1Lift := ⟨1⟩
 
@@ -355,18 +355,18 @@ noncomputable instance : Lattice CircleDeg1Lift where
       map_add_one' := fun x => by simp [max_add_add_right] }
   le f g := ∀ x, f x ≤ g x
   le_refl f x := le_refl (f x)
-  le_trans _ _ f₃ h₁₂ h₂₃ x := le_trans (h₁₂ x) (h₂₃ x)
+  le_trans _ _ _ h₁₂ h₂₃ x := le_trans (h₁₂ x) (h₂₃ x)
   le_antisymm _ _ h₁₂ h₂₁ := ext fun x => le_antisymm (h₁₂ x) (h₂₁ x)
   le_sup_left f g x := le_max_left (f x) (g x)
   le_sup_right f g x := le_max_right (f x) (g x)
-  sup_le _ _ f₃ h₁ h₂ x := max_le (h₁ x) (h₂ x)
+  sup_le _ _ _ h₁ h₂ x := max_le (h₁ x) (h₂ x)
   inf f g :=
     { toFun := fun x => min (f x) (g x)
       monotone' := fun _ _ h => min_le_min (f.mono h) (g.mono h)
       map_add_one' := fun x => by simp [min_add_add_right] }
   inf_le_left f g x := min_le_left (f x) (g x)
   inf_le_right f g x := min_le_right (f x) (g x)
-  le_inf _ _ f₃ h₂ h₃ x := le_min (h₂ x) (h₃ x)
+  le_inf _ _ _ h₂ h₃ x := le_min (h₂ x) (h₃ x)
 
 @[simp]
 theorem sup_apply (x : ℝ) : (f ⊔ g) x = max (f x) (g x) :=

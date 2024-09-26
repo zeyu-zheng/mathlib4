@@ -901,7 +901,7 @@ theorem measure_toMeasurable_add_inter_right {s t : Set α} (hs : MeasurableSet 
 instance instPartialOrder [MeasurableSpace α] : PartialOrder (Measure α) where
   le m₁ m₂ := ∀ s, m₁ s ≤ m₂ s
   le_refl _ _ := le_rfl
-  le_trans _ _ m₃ h₁ h₂ s := le_trans (h₁ s) (h₂ s)
+  le_trans _ _ _ h₁ h₂ s := le_trans (h₁ s) (h₂ s)
   le_antisymm _ _ h₁ h₂ := ext fun s _ => le_antisymm (h₁ s) (h₂ s)
 
 theorem toOuterMeasure_le : μ₁.toOuterMeasure ≤ μ₂.toOuterMeasure ↔ μ₁ ≤ μ₂ := .rfl

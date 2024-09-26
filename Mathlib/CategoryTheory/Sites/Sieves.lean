@@ -295,7 +295,7 @@ We generate this directly rather than using the galois insertion for nicer defin
 instance : CompleteLattice (Sieve X) where
   le S R := ∀ ⦃Y⦄ (f : Y ⟶ X), S f → R f
   le_refl _ _ _ := id
-  le_trans _ _ S₃ S₁₂ S₂₃ Y f h := S₂₃ _ (S₁₂ _ h)
+  le_trans _ _ _ S₁₂ S₂₃ _ _ h := S₂₃ _ (S₁₂ _ h)
   le_antisymm _ _ p q := Sieve.ext fun _ _ => ⟨p _, q _⟩
   top :=
     { arrows := fun _ => Set.univ
