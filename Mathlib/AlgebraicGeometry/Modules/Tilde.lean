@@ -49,7 +49,7 @@ def isFraction {U : Opens (PrimeSpectrum R)} (f : ∀ 𝔭 : U, Localizations M 
 The property of a function `f : ∏_{x ∈ U}, Mₓ` being a fraction is stable under restriction.
 -/
 def isFractionPrelocal : PrelocalPredicate (Localizations M) where
-  pred {U} f := isFraction M f
+  pred {_} f := isFraction M f
   res := by rintro V U i f ⟨m, s, w⟩; exact ⟨m, s, fun x => w (i x)⟩
 
 /--
@@ -143,10 +143,10 @@ instance (U : (Opens (PrimeSpectrum.Top R))ᵒᵖ) :
 -/
 def preTildeInAddCommGrp : Presheaf AddCommGrp (PrimeSpectrum.Top R) where
   obj U := .of ((M.tildeInType).1.obj U)
-  map {U V} i :=
+  map {_ _} i :=
     { toFun := M.tildeInType.1.map i
       map_zero' := rfl
-      map_add' := fun x y => rfl}
+      map_add' := fun _ _ => rfl}
 
 /--
 `M^~` as a sheaf of abelian groups over `Spec R`

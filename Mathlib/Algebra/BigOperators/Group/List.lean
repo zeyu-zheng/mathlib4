@@ -200,7 +200,7 @@ theorem prod_take_mul_prod_drop : ∀ (L : List M) (i : ℕ), (L.take i).prod * 
 theorem prod_take_succ :
     ∀ (L : List M) (i : ℕ) (p : i < L.length), (L.take (i + 1)).prod = (L.take i).prod * L[i]
   | [], i, p => by cases p
-  | h :: t, 0, _ => rfl
+  | _ :: _, 0, _ => rfl
   | h :: t, n + 1, p => by
     dsimp
     rw [prod_cons, prod_cons, prod_take_succ t n (Nat.lt_of_succ_lt_succ p), mul_assoc]
@@ -426,7 +426,7 @@ theorem prod_reverse_noncomm : ∀ L : List G, L.reverse.prod = (L.map fun x => 
   "Counterpart to `List.sum_take_succ` when we have a negation operation"]
 theorem prod_drop_succ :
     ∀ (L : List G) (i : ℕ) (p : i < L.length), (L.drop (i + 1)).prod = L[i]⁻¹ * (L.drop i).prod
-  | [], i, p => False.elim (Nat.not_lt_zero _ p)
+  | [], _, p => False.elim (Nat.not_lt_zero _ p)
   | _ :: _, 0, _ => by simp
   | _ :: xs, i + 1, p => prod_drop_succ xs i (Nat.lt_of_succ_lt_succ p)
 

@@ -502,7 +502,7 @@ lemma coverEntropyEnt_le_coverEntropyInfEnt {T : X → X} {F : Set X} (F_inv : M
     {U : Set (X × X)} (U_symm : SymmetricRel U) :
     coverEntropyEnt T F (U ○ U) ≤ coverEntropyInfEnt T F U :=
   (le_liminf_of_le) (eventually_atTop.2
-    ⟨1, fun m m_pos ↦ coverEntropyEnt_le_log_coverMincard_div F_inv U_symm m_pos⟩)
+    ⟨1, fun _ m_pos ↦ coverEntropyEnt_le_log_coverMincard_div F_inv U_symm m_pos⟩)
 
 lemma coverEntropyEnt_finite_of_isCompact_invariant [UniformSpace X] {T : X → X} {F : Set X}
     (F_comp : IsCompact F) (F_inv : MapsTo T F F) {U : Set (X × X)} (U_uni : U ∈ 𝓤 X) :

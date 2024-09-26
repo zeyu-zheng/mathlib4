@@ -627,7 +627,7 @@ protected theorem lt_sup_iff : a < s.sup f ↔ ∃ b ∈ s, a < f b := by
 
 @[simp]
 protected theorem sup_lt_iff (ha : ⊥ < a) : s.sup f < a ↔ ∀ b ∈ s, f b < a :=
-  ⟨fun hs b hb => lt_of_le_of_lt (le_sup hb) hs,
+  ⟨fun hs _ hb => lt_of_le_of_lt (le_sup hb) hs,
     Finset.cons_induction_on s (fun _ => ha) fun c t hc => by
       simpa only [sup_cons, sup_lt_iff, mem_cons, forall_eq_or_imp] using And.imp_right⟩
 
@@ -1527,9 +1527,9 @@ theorem min_erase_ne_self {s : Finset α} : (s.erase x).min ≠ x := by
 
 theorem exists_next_right {x : α} {s : Finset α} (h : ∃ y ∈ s, x < y) :
     ∃ y ∈ s, x < y ∧ ∀ z ∈ s, x < z → y ≤ z :=
-  have Hne : (s.filter (x < ·)).Nonempty := h.imp fun y hy => mem_filter.2 (by simpa)
+  have Hne : (s.filter (x < ·)).Nonempty := h.imp fun _ hy => mem_filter.2 (by simpa)
   have aux := mem_filter.1 (min'_mem _ Hne)
-  ⟨min' _ Hne, aux.1, by simp, fun z hzs hz => min'_le _ _ <| mem_filter.2 ⟨hzs, by simpa⟩⟩
+  ⟨min' _ Hne, aux.1, by simp, fun _ hzs hz => min'_le _ _ <| mem_filter.2 ⟨hzs, by simpa⟩⟩
 
 theorem exists_next_left {x : α} {s : Finset α} (h : ∃ y ∈ s, y < x) :
     ∃ y ∈ s, y < x ∧ ∀ z ∈ s, z < x → z ≤ y :=
@@ -1810,7 +1810,7 @@ theorem maximal_iff_forall_insert (hP : ∀ ⦃s t⦄, P t → s ⊆ t → P s) 
 theorem minimal_iff_forall_diff_singleton (hP : ∀ ⦃s t⦄, P t → t ⊆ s → P s) :
     Minimal P s ↔ P s ∧ ∀ x ∈ s, ¬ P (s.erase x) where
   mp h := ⟨h.prop, fun x hxs hx ↦ by simpa using h.le_of_le hx (erase_subset _ _) hxs⟩
-  mpr h := ⟨h.1, fun t ht hts x hxs ↦ by_contra fun hxt ↦
+  mpr h := ⟨h.1, fun _ ht hts x hxs ↦ by_contra fun hxt ↦
     h.2 x hxs <| hP ht (subset_erase.2 ⟨hts, hxt⟩)⟩
 
 end minimal

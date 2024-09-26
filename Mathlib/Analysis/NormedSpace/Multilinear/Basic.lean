@@ -619,8 +619,8 @@ def prodL :
   invFun f :=
     ((ContinuousLinearMap.fst 𝕜 G G').compContinuousMultilinearMap f,
       (ContinuousLinearMap.snd 𝕜 G G').compContinuousMultilinearMap f)
-  map_add' f g := rfl
-  map_smul' c f := rfl
+  map_add' _ _ := rfl
+  map_smul' _ _ := rfl
   left_inv f := by ext <;> rfl
   right_inv f := by ext <;> rfl
   norm_map' f := opNorm_prod f.1 f.2
@@ -838,7 +838,7 @@ ones. We register this bijection as a linear isometry in
 `ContinuousMultilinearMap.piFieldEquiv`. -/
 protected def piFieldEquiv : G ≃ₗᵢ[𝕜] ContinuousMultilinearMap 𝕜 (fun _ : ι => 𝕜) G where
   toFun z := ContinuousMultilinearMap.mkPiRing 𝕜 ι z
-  invFun f := f fun i => 1
+  invFun f := f fun _ => 1
   map_add' z z' := by
     ext m
     simp [smul_add]

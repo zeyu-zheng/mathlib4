@@ -62,7 +62,7 @@ corresponds to the presheaf of modules which sends `X` to the colimit of `F ⋙ 
 @[simps]
 noncomputable def colimitBundledCore : BundledCorePresheafOfModules R where
   obj X := colimit (F ⋙ evaluation R X)
-  map {X Y} f := colimMap (whiskerLeft F (restriction R f)) ≫
+  map {_ Y} f := colimMap (whiskerLeft F (restriction R f)) ≫
     (preservesColimitIso (ModuleCat.restrictScalars (R.map f)) (F ⋙ evaluation R Y)).inv
   map_id X := colimit.hom_ext (fun j => by
     dsimp

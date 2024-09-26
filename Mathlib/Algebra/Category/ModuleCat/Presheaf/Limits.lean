@@ -61,7 +61,7 @@ corresponds to the presheaf of modules which sends `X` to the limit of `F ⋙ ev
 @[simps]
 noncomputable def limitBundledCore : BundledCorePresheafOfModules R where
   obj X := limit (F ⋙ evaluation R X)
-  map {X Y} f := limMap (whiskerLeft F (restriction R f)) ≫
+  map {_ Y} f := limMap (whiskerLeft F (restriction R f)) ≫
     (preservesLimitIso (ModuleCat.restrictScalars (R.map f)) (F ⋙ evaluation R Y)).inv
   map_id X := by
     dsimp

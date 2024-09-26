@@ -111,7 +111,7 @@ private theorem comp_gen : (((𝓤 α).lift' gen).lift' fun s => compRel s s) �
       · exact monotone_gen
       · exact monotone_id.compRel monotone_id
     _ ≤ (𝓤 α).lift' fun s => gen <| compRel s s :=
-      lift'_mono' fun s _hs => compRel_gen_gen_subset_gen_compRel
+      lift'_mono' fun _ _hs => compRel_gen_gen_subset_gen_compRel
     _ = ((𝓤 α).lift' fun s : Set (α × α) => compRel s s).lift' gen := by
       rw [lift'_lift'_assoc]
       · exact monotone_id.compRel monotone_id

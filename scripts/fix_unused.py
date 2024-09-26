@@ -1,9 +1,11 @@
 #! /usr/bin/env python3
-import re
-import sys
 
 # https://chatgpt.com/share/66f4e420-66bc-8001-8349-ce3cfb4f23c3
 # Usage: lake build | scripts/fix_unused.py
+
+import re
+import sys
+from wcwidth import wcswidth
 
 # Parse warning messages and extract file paths, line, column, and variable names
 def parse_warnings(warning_lines):
@@ -23,6 +25,17 @@ def parse_warnings(warning_lines):
 
     return warnings
 
+# Find the actual column index, adjusting for wide Unicode characters
+def find_column_index(line, target_col):
+    """Return the index in the string where the visual column equals target_col."""
+    current_col = 0
+    for idx, char in enumerate(line):
+        char_width = wcswidth(char)  # Calculate the display width of the character
+        if current_col >= target_col:
+            return idx
+        current_col += char_width
+    return len(line)  # Return the end if column number exceeds the line length
+
 # Replace variable with `_` at the specified line and column in the file
 def process_file(file_path, edits):
     with open(file_path, 'r', encoding='utf-8') as f:
@@ -34,8 +47,11 @@ def process_file(file_path, edits):
         var_name = edit['var_name']
         line = lines[line_num]
 
+        # Find the actual starting column index for the variable, considering wide characters
+        actual_col = find_column_index(line, col_num)
+
         # Replace the variable with `_`
-        new_line = line[:col_num] + line[col_num:].replace(var_name, '_', 1)
+        new_line = line[:actual_col] + line[actual_col:].replace(var_name, '_', 1)
         lines[line_num] = new_line
 
     with open(file_path, 'w', encoding='utf-8') as f:

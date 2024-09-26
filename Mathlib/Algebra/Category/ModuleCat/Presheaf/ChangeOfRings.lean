@@ -50,7 +50,7 @@ induced by a morphism of presheaves of rings `R ⟶ R'`. -/
 noncomputable def restrictScalars (α : R ⟶ R') :
     PresheafOfModules.{v} R' ⥤ PresheafOfModules.{v} R where
   obj M' := (M'.restrictScalarsBundledCore α).toPresheafOfModules
-  map {M₁' M₂'} φ :=
+  map {_ M₂'} φ :=
     { hom := φ.hom
       map_smul := fun X r ↦ φ.map_smul X (α.app _ r) }
 

@@ -364,7 +364,7 @@ noncomputable def standardSimplex : SimplexCategory ⥤ SSet.Augmented.{u} where
   obj Δ :=
     { left := SSet.standardSimplex.obj Δ
       right := terminal _
-      hom := { app := fun Δ' => terminal.from _ } }
+      hom := { app := fun _ => terminal.from _ } }
   map θ :=
     { left := SSet.standardSimplex.map θ
       right := terminal.from _ }

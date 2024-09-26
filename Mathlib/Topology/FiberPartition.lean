@@ -29,7 +29,7 @@ variable [TopologicalSpace S]
 /-- The canonical map from the disjoint union induced by `f` to `S`. -/
 @[simps apply]
 def sigmaIsoHom : C((x : Fiber f) × x.val, S) where
-  toFun := fun ⟨a, x⟩ ↦ x.val
+  toFun := fun ⟨_, x⟩ ↦ x.val
 
 lemma sigmaIsoHom_inj : Function.Injective (sigmaIsoHom f) := by
   rintro ⟨⟨_, _, rfl⟩, ⟨_, hx⟩⟩ ⟨⟨_, _, rfl⟩, ⟨_, hy⟩⟩ h

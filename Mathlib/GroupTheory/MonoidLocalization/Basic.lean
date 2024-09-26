@@ -1134,7 +1134,7 @@ def ofMulEquivOfLocalizations (k : N ≃* P) : LocalizationMap S P :=
       let ⟨z, hz⟩ := k.toEquiv.surjective v
       let ⟨x, hx⟩ := f.surj z
       ⟨x, show v * k _ = k _ by rw [← hx, map_mul, ← hz]; rfl⟩)
-    fun x y ↦ (k.apply_eq_iff_eq.trans f.eq_iff_exists).1
+    fun _ _ ↦ (k.apply_eq_iff_eq.trans f.eq_iff_exists).1
 
 @[to_additive (attr := simp)]
 theorem ofMulEquivOfLocalizations_apply {k : N ≃* P} (x) :

@@ -31,8 +31,8 @@ instance mulActionClosedBallBall : MulAction (closedBall (0 : 𝕜) 1) (ball (0 
         simpa only [norm_smul, one_mul] using
           mul_lt_mul' (mem_closedBall_zero_iff.1 c.2) (mem_ball_zero_iff.1 x.2) (norm_nonneg _)
             one_pos⟩
-  one_smul x := Subtype.ext <| one_smul 𝕜 _
-  mul_smul c₁ c₂ x := Subtype.ext <| mul_smul _ _ _
+  one_smul _c₂ := Subtype.ext <| one_smul 𝕜 _
+  mul_smul _ _ _ := Subtype.ext <| mul_smul _ _ _
 
 instance continuousSMul_closedBall_ball : ContinuousSMul (closedBall (0 : 𝕜) 1) (ball (0 : E) r) :=
   ⟨(continuous_subtype_val.fst'.smul continuous_subtype_val.snd').subtype_mk _⟩

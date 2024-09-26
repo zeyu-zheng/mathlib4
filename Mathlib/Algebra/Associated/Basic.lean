@@ -825,7 +825,7 @@ instance instCommMonoid : CommMonoid (Associates α) where
 instance instPreorder : Preorder (Associates α) where
   le := Dvd.dvd
   le_refl := dvd_refl
-  le_trans a b c := dvd_trans
+  le_trans _ _ _ := dvd_trans
 
 /-- `Associates.mk` as a `MonoidHom`. -/
 protected def mkMonoidHom : α →* Associates α where

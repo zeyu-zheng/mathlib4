@@ -548,7 +548,7 @@ noncomputable def forgetToPresheafModuleCatMap
   { app := fun c =>
     { toFun := f.app c
       map_add' := (f.app c).map_add
-      map_smul' := fun r (m : M.presheaf.obj c) => (f.app c).map_smul (R.1.map (hX.to c) _) m }
+      map_smul' := fun _ (m : M.presheaf.obj c) => (f.app c).map_smul (R.1.map (hX.to c) _) m }
     naturality := fun {c₁ c₂} i => by ext x; exact congr($(f.hom.naturality i) x) }
 
 /--

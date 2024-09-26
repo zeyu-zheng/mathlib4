@@ -165,7 +165,7 @@ theorem Measure.MeasureDense.fin_meas (h𝒜 : μ.MeasureDense 𝒜) :
 this algebra of sets is measure-dense. -/
 theorem Measure.MeasureDense.of_generateFrom_isSetAlgebra_finite [IsFiniteMeasure μ]
     (h𝒜 : IsSetAlgebra 𝒜) (hgen : m = MeasurableSpace.generateFrom 𝒜) : μ.MeasureDense 𝒜 where
-  measurable := fun s hs ↦ hgen ▸ measurableSet_generateFrom hs
+  measurable := fun _ hs ↦ hgen ▸ measurableSet_generateFrom hs
   approx := by
     -- We want to show that any measurable set can be approximated by sets in `𝒜`. To do so, it is
     -- enough to show that such sets constitute a `σ`-algebra containing `𝒜`. This is contained in
@@ -256,7 +256,7 @@ of sets is measure-dense. -/
 theorem Measure.MeasureDense.of_generateFrom_isSetAlgebra_sigmaFinite (h𝒜 : IsSetAlgebra 𝒜)
     (S : μ.FiniteSpanningSetsIn 𝒜) (hgen : m = MeasurableSpace.generateFrom 𝒜) :
     μ.MeasureDense 𝒜 where
-  measurable s hs := hgen ▸ measurableSet_generateFrom hs
+  measurable _ hs := hgen ▸ measurableSet_generateFrom hs
   approx := by
     -- We use partial unions of (Sₙ) to get a monotone family spanning `X`.
     let T := Accumulate S.set

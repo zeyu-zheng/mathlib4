@@ -455,8 +455,8 @@ theorem exists_list_of_mem_closure {s : Set G} {a : G} (h : a ∈ closure s) :
     ∃ l : List G, (∀ x ∈ l, x ∈ s ∨ x⁻¹ ∈ s) ∧ l.prod = a :=
   InClosure.recOn h (fun {x} hxs => ⟨[x], List.forall_mem_singleton.2 <| Or.inl hxs, one_mul _⟩)
     ⟨[], List.forall_mem_nil _, rfl⟩
-    (fun {x} _ ⟨L, HL1, HL2⟩ =>
-      ⟨L.reverse.map Inv.inv, fun x hx =>
+    (fun {_} _ ⟨L, HL1, HL2⟩ =>
+      ⟨L.reverse.map Inv.inv, fun _ hx =>
         let ⟨y, hy1, hy2⟩ := List.exists_of_mem_map hx
         hy2 ▸ Or.imp id (by rw [inv_inv]; exact id) (HL1 _ <| List.mem_reverse.1 hy1).symm,
         HL2 ▸
