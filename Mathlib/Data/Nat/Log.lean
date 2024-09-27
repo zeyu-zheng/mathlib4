@@ -21,6 +21,14 @@ left adjoints of `Nat.pow b`. See `pow_le_iff_le_log` and `le_pow_iff_clog_le`.
 
 namespace Nat
 
+#adaptation_note
+/--
+After leanprover/lean4#5338 we just unused argument warnings,
+but these are used in the decreasing by blocks.
+If instead we inline the `have` blocks, the unusedHavesSuffices linter triggers.
+-/
+set_option linter.unusedVariables false
+
 /-! ### Floor logarithm -/
 
 
@@ -28,12 +36,12 @@ namespace Nat
 such that `b^k ≤ n`, so if `b^k = n`, it returns exactly `k`. -/
 @[pp_nodot]
 def log (b : ℕ) : ℕ → ℕ
-  | n =>
-    if h : b ≤ n ∧ 1 < b then
-      have : n / b < n := div_lt_self ((Nat.zero_lt_one.trans h.2).trans_le h.1) h.2
-      log b (n / b) + 1
-    else
-      0
+  | n => if h : b ≤ n ∧ 1 < b then log b (n / b) + 1 else 0
+decreasing_by
+  -- putting this in the def triggers the `unusedHavesSuffices` linter:
+  -- https://github.com/leanprover-community/batteries/issues/428
+  have : n / b < n := div_lt_self ((Nat.zero_lt_one.trans h.2).trans_le h.1) h.2
+  decreasing_trivial
 
 @[simp]
 theorem log_eq_zero_iff {b n : ℕ} : log b n = 0 ↔ n < b ∨ b ≤ 1 := by
@@ -224,12 +232,12 @@ lemma log2_eq_log_two {n : ℕ} : Nat.log2 n = Nat.log 2 n := by
 `k : ℕ` such that `n ≤ b^k`, so if `b^k = n`, it returns exactly `k`. -/
 @[pp_nodot]
 def clog (b : ℕ) : ℕ → ℕ
-  | n =>
-    if h : 1 < b ∧ 1 < n then
-      have : (n + b - 1) / b < n := add_pred_div_lt h.1 h.2
-      clog b ((n + b - 1) / b) + 1
-    else
-      0
+  | n => if h : 1 < b ∧ 1 < n then clog b ((n + b - 1) / b) + 1 else 0
+decreasing_by
+  -- putting this in the def triggers the `unusedHavesSuffices` linter:
+  -- https://github.com/leanprover-community/batteries/issues/428
+  have : (n + b - 1) / b < n := add_pred_div_lt h.1 h.2
+  decreasing_trivial
 
 theorem clog_of_left_le_one {b : ℕ} (hb : b ≤ 1) (n : ℕ) : clog b n = 0 := by
   rw [clog, dif_neg fun h : 1 < b ∧ 1 < n => h.1.not_le hb]
