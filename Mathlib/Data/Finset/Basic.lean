@@ -2606,7 +2606,7 @@ lemma range_nontrivial {n : ℕ} (hn : 1 < n) : (Finset.range n).Nontrivial := b
 
 theorem exists_nat_subset_range (s : Finset ℕ) : ∃ n : ℕ, s ⊆ range n :=
   s.induction_on (by simp)
-    fun a s _ ⟨n, hn⟩ => ⟨max (a + 1) n, insert_subset (by simp) (hn.trans (by simp))⟩
+    fun a _ _ ⟨n, hn⟩ => ⟨max (a + 1) n, insert_subset (by simp) (hn.trans (by simp))⟩
 
 end Range
 
