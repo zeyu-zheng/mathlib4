@@ -1,11 +1,11 @@
 {"version": "1.1.0",
  "packagesDir": ".lake/packages",
  "packages":
- [{"url": "https://github.com/leanprover-community/batteries",
+ [{"url": "https://github.com/Seppel3210/batteries",
    "type": "git",
    "subDir": null,
    "scope": "leanprover-community",
-   "rev": "e0b13c946e9c3805f1eec785c72955e103a9cbaf",
+   "rev": "e3ffef5301b0c391097368dc3b4d372934381418",
    "name": "batteries",
    "manifestFile": "lake-manifest.json",
    "inputRev": "main",
