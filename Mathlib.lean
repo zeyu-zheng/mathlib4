@@ -37,6 +37,7 @@ import Mathlib.Algebra.AlgebraicCard
 import Mathlib.Algebra.Associated.Basic
 import Mathlib.Algebra.Associated.OrderedCommMonoid
 import Mathlib.Algebra.BigOperators.Associated
+import Mathlib.Algebra.BigOperators.Balance
 import Mathlib.Algebra.BigOperators.Expect
 import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.Algebra.BigOperators.Finprod
@@ -628,6 +629,7 @@ import Mathlib.Algebra.Order.Module.Pointwise
 import Mathlib.Algebra.Order.Module.Rat
 import Mathlib.Algebra.Order.Module.Synonym
 import Mathlib.Algebra.Order.Monoid.Basic
+import Mathlib.Algebra.Order.Monoid.Canonical.Basic
 import Mathlib.Algebra.Order.Monoid.Canonical.Defs
 import Mathlib.Algebra.Order.Monoid.Defs
 import Mathlib.Algebra.Order.Monoid.NatCast
@@ -985,6 +987,7 @@ import Mathlib.Analysis.Calculus.ContDiff.FTaylorSeries
 import Mathlib.Analysis.Calculus.ContDiff.FiniteDimension
 import Mathlib.Analysis.Calculus.ContDiff.RCLike
 import Mathlib.Analysis.Calculus.Darboux
+import Mathlib.Analysis.Calculus.Deriv.Abs
 import Mathlib.Analysis.Calculus.Deriv.Add
 import Mathlib.Analysis.Calculus.Deriv.AffineMap
 import Mathlib.Analysis.Calculus.Deriv.Basic
@@ -1097,6 +1100,7 @@ import Mathlib.Analysis.Convex.Cone.Extension
 import Mathlib.Analysis.Convex.Cone.InnerDual
 import Mathlib.Analysis.Convex.Cone.Pointed
 import Mathlib.Analysis.Convex.Cone.Proper
+import Mathlib.Analysis.Convex.Continuous
 import Mathlib.Analysis.Convex.Contractible
 import Mathlib.Analysis.Convex.Deriv
 import Mathlib.Analysis.Convex.EGauge
@@ -1231,6 +1235,7 @@ import Mathlib.Analysis.Normed.Group.SemiNormedGrp.Kernels
 import Mathlib.Analysis.Normed.Group.Seminorm
 import Mathlib.Analysis.Normed.Group.Submodule
 import Mathlib.Analysis.Normed.Group.Tannery
+import Mathlib.Analysis.Normed.Group.Ultra
 import Mathlib.Analysis.Normed.Group.Uniform
 import Mathlib.Analysis.Normed.Group.ZeroAtInfty
 import Mathlib.Analysis.Normed.Lp.LpEquiv
@@ -1260,6 +1265,7 @@ import Mathlib.Analysis.Normed.Order.UpperLower
 import Mathlib.Analysis.Normed.Ring.Seminorm
 import Mathlib.Analysis.Normed.Ring.SeminormFromBounded
 import Mathlib.Analysis.Normed.Ring.SeminormFromConst
+import Mathlib.Analysis.Normed.Ring.Ultra
 import Mathlib.Analysis.Normed.Ring.Units
 import Mathlib.Analysis.NormedSpace.BallAction
 import Mathlib.Analysis.NormedSpace.ConformalLinearMap
@@ -1538,6 +1544,7 @@ import Mathlib.CategoryTheory.Functor.Trifunctor
 import Mathlib.CategoryTheory.Galois.Action
 import Mathlib.CategoryTheory.Galois.Basic
 import Mathlib.CategoryTheory.Galois.Decomposition
+import Mathlib.CategoryTheory.Galois.EssSurj
 import Mathlib.CategoryTheory.Galois.Examples
 import Mathlib.CategoryTheory.Galois.Full
 import Mathlib.CategoryTheory.Galois.GaloisObjects
@@ -2173,6 +2180,7 @@ import Mathlib.Data.Finset.Grade
 import Mathlib.Data.Finset.Image
 import Mathlib.Data.Finset.Interval
 import Mathlib.Data.Finset.Lattice
+import Mathlib.Data.Finset.Max
 import Mathlib.Data.Finset.MulAntidiagonal
 import Mathlib.Data.Finset.NAry
 import Mathlib.Data.Finset.NatAntidiagonal
@@ -2518,6 +2526,7 @@ import Mathlib.Data.Real.GoldenRatio
 import Mathlib.Data.Real.Hyperreal
 import Mathlib.Data.Real.Irrational
 import Mathlib.Data.Real.Pi.Bounds
+import Mathlib.Data.Real.Pi.Irrational
 import Mathlib.Data.Real.Pi.Leibniz
 import Mathlib.Data.Real.Pi.Wallis
 import Mathlib.Data.Real.Pointwise
@@ -3570,6 +3579,7 @@ import Mathlib.Order.CompactlyGenerated.Intervals
 import Mathlib.Order.Compare
 import Mathlib.Order.CompleteBooleanAlgebra
 import Mathlib.Order.CompleteLattice
+import Mathlib.Order.CompleteLattice.Finset
 import Mathlib.Order.CompleteLatticeIntervals
 import Mathlib.Order.CompletePartialOrder
 import Mathlib.Order.CompleteSublattice
@@ -4067,8 +4077,10 @@ import Mathlib.RingTheory.TensorProduct.MvPolynomial
 import Mathlib.RingTheory.Trace.Basic
 import Mathlib.RingTheory.Trace.Defs
 import Mathlib.RingTheory.TwoSidedIdeal.Basic
+import Mathlib.RingTheory.TwoSidedIdeal.BigOperators
 import Mathlib.RingTheory.TwoSidedIdeal.Instances
 import Mathlib.RingTheory.TwoSidedIdeal.Lattice
+import Mathlib.RingTheory.TwoSidedIdeal.Operations
 import Mathlib.RingTheory.UniqueFactorizationDomain
 import Mathlib.RingTheory.Unramified.Basic
 import Mathlib.RingTheory.Unramified.Derivations
