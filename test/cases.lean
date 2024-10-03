@@ -3,6 +3,8 @@ import Mathlib.Tactic.Cases
 import Mathlib.Data.Nat.Notation
 
 set_option autoImplicit true
+set_option linter.unusedVariables false
+
 example (x : α × β × γ) : True := by
   cases' x with a b; cases' b with b c
   guard_hyp a : α
