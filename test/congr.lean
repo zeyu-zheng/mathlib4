@@ -5,6 +5,7 @@ import Mathlib.Data.Subtype
 
 private axiom test_sorry : ∀ {α}, α
 set_option autoImplicit true
+set_option linter.unusedVariables false
 
 -- Useful for debugging the generated congruence theorems
 --set_option trace.Meta.CongrTheorems true

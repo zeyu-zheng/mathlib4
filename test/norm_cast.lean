@@ -6,6 +6,8 @@ import Mathlib.Tactic.Ring
 import Mathlib.Data.Complex.Basic
 import Mathlib.Data.ENNReal.Inv
 
+set_option linter.unusedVariables false
+
 -- set_option trace.Tactic.norm_cast true
 -- set_option trace.Meta.Tactic.simp true
 set_option autoImplicit true

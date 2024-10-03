@@ -7,6 +7,8 @@ Authors: Kim Morrison
 import Mathlib.Tactic.IntervalCases
 import Mathlib.Tactic.Set
 
+set_option linter.unusedVariables false
+
 example (n : ℕ) : True := by
   fail_if_success interval_cases n
   trivial

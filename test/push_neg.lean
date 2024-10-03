@@ -7,6 +7,8 @@ Authors: Alice Laroche, Frédéric Dupuis, Jireh Loreaux
 import Mathlib.Order.Defs
 import Mathlib.Tactic.PushNeg
 
+set_option linter.unusedVariables false
+
 private axiom test_sorry : ∀ {α}, α
 set_option autoImplicit true
 variable {α β : Type} [LinearOrder β] {p q : Prop} {p' q' : α → Prop}

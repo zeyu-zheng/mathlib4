@@ -56,6 +56,7 @@ example (p : Prop) : ¬p ∨ p := by itauto! [p]
 example (p : Prop) : ¬p ∨ p := by itauto! *
 
 set_option linter.unusedTactic false in
+set_option linter.unusedVariables false in
 -- failure tests
 example (p q r : Prop) : True := by
   haveI : p ∨ ¬p := by (fail_if_success itauto); sorry

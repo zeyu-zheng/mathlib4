@@ -9,6 +9,7 @@ import Batteries.Tactic.PermuteGoals
 import Batteries.Test.Internal.DummyLabelAttr
 
 set_option autoImplicit true
+set_option linter.unusedVariables false
 
 example (h : Nat) : Nat := by solve_by_elim
 example {α β : Type} (f : α → β) (a : α) : β := by solve_by_elim

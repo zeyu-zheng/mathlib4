@@ -1,4 +1,7 @@
 import Mathlib.Tactic.SuccessIfFailWithMsg
+
+set_option linter.unusedVariables false
+
 example : True := by
   success_if_fail_with_msg "no goals to be solved" trivial; trivial
   trivial

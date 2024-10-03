@@ -9,6 +9,8 @@ import Mathlib.Data.Set.List
 import Mathlib.Data.Rat.Defs
 import Mathlib.Data.PNat.Defs
 
+set_option linter.unusedVariables false
+
 /-! Some tests of the `lift` tactic. -/
 
 example (n : ℤ) (hn : 0 ≤ n) : 0 ≤ n + 1 := by
