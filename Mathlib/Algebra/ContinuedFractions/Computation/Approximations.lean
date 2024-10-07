@@ -496,7 +496,9 @@ theorem abs_sub_convergents_le' {b : K}
     · have : 0 < b := zero_lt_one.trans_le (of_one_le_get?_partDen nth_partDen_eq)
       apply_rules [mul_pos]
     · conv_rhs => rw [mul_comm]
-      exact mul_le_mul_of_nonneg_right (le_of_succ_get?_den nth_partDen_eq) hB.le
+      gcongr
+      · exact hB.le
+      · exact le_of_succ_get?_den nth_partDen_eq
 
 end ErrorTerm
 
