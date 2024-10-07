@@ -183,18 +183,20 @@ theorem one_le_inv_iff : 1 ≤ a⁻¹ ↔ 0 < a ∧ a ≤ 1 :=
 @[mono, gcongr, bound]
 lemma div_le_div_of_nonneg_right (hab : a ≤ b) (hc : 0 ≤ c) : a / c ≤ b / c := by
   rw [div_eq_mul_one_div a c, div_eq_mul_one_div b c]
-  exact mul_le_mul_of_nonneg_right hab (one_div_nonneg.2 hc)
+  gcongr
+  exact one_div_nonneg.2 hc
 
 @[gcongr, bound]
 lemma div_lt_div_of_pos_right (h : a < b) (hc : 0 < c) : a / c < b / c := by
   rw [div_eq_mul_one_div a c, div_eq_mul_one_div b c]
-  exact mul_lt_mul_of_pos_right h (one_div_pos.2 hc)
+  gcongr
+  exact one_div_pos.2 hc
 
 -- Not a `mono` lemma b/c `div_le_div` is strictly more general
 @[gcongr]
 lemma div_le_div_of_nonneg_left (ha : 0 ≤ a) (hc : 0 < c) (h : c ≤ b) : a / b ≤ a / c := by
   rw [div_eq_mul_inv, div_eq_mul_inv]
-  exact mul_le_mul_of_nonneg_left ((inv_le_inv (hc.trans_le h) hc).mpr h) ha
+  gcongr <;> assumption
 
 @[gcongr, bound]
 lemma div_lt_div_of_pos_left (ha : 0 < a) (hc : 0 < c) (h : c < b) : a / b < a / c := by
@@ -366,7 +368,8 @@ theorem mul_le_mul_of_mul_div_le (h : a * (b / c) ≤ d) (hc : 0 < c) : b * a �
 theorem div_mul_le_div_mul_of_div_le_div (h : a / b ≤ c / d) (he : 0 ≤ e) :
     a / (b * e) ≤ c / (d * e) := by
   rw [div_mul_eq_div_mul_one_div, div_mul_eq_div_mul_one_div]
-  exact mul_le_mul_of_nonneg_right h (one_div_nonneg.2 he)
+  gcongr
+  exact one_div_nonneg.2 he
 
 theorem exists_pos_mul_lt {a : α} (h : 0 < a) (b : α) : ∃ c : α, 0 < c ∧ b * c < a := by
   have : 0 < a / max (b + 1) 1 := div_pos h (lt_max_iff.2 (Or.inr zero_lt_one))
