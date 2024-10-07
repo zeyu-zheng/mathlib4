@@ -352,7 +352,7 @@ set_option maxSynthPendingDepth 2 in
 theorem norm_precompR_le (L : E →L[𝕜] Fₗ →L[𝕜] Gₗ) : ‖precompR Eₗ L‖ ≤ ‖L‖ :=
   calc
     ‖precompR Eₗ L‖ ≤ ‖compL 𝕜 Eₗ Fₗ Gₗ‖ * ‖L‖ := opNorm_comp_le _ _
-    _ ≤ 1 * ‖L‖ := mul_le_mul_of_nonneg_right (norm_compL_le _ _ _ _) (norm_nonneg L)
+    _ ≤ 1 * ‖L‖ := by gcongr; apply norm_compL_le
     _ = ‖L‖ := by rw [one_mul]
 
 #adaptation_note
@@ -417,7 +417,7 @@ theorem norm_smulRight_apply (c : E →L[𝕜] 𝕜) (f : Fₗ) : ‖smulRight c
   · refine opNorm_le_bound _ (mul_nonneg (norm_nonneg _) (norm_nonneg _)) fun x => ?_
     calc
       ‖c x • f‖ = ‖c x‖ * ‖f‖ := norm_smul _ _
-      _ ≤ ‖c‖ * ‖x‖ * ‖f‖ := mul_le_mul_of_nonneg_right (le_opNorm _ _) (norm_nonneg _)
+      _ ≤ ‖c‖ * ‖x‖ * ‖f‖ := by gcongr; apply le_opNorm
       _ = ‖c‖ * ‖f‖ * ‖x‖ := by ring
   · obtain hf | hf := (norm_nonneg f).eq_or_gt
     · simp [hf]

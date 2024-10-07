@@ -81,7 +81,6 @@ theorem hasFDerivAt_integral_of_dominated_loc_of_lip' {F' : α → H →L[𝕜] 
   have nneg : ∀ x, 0 ≤ ‖x - x₀‖⁻¹ := fun x ↦ inv_nonneg.mpr (norm_nonneg _)
   set b : α → ℝ := fun a ↦ |bound a|
   have b_int : Integrable b μ := bound_integrable.norm
-  have b_nonneg : ∀ a, 0 ≤ b a := fun a ↦ abs_nonneg _
   replace h_lipsch : ∀ᵐ a ∂μ, ∀ x ∈ ball x₀ ε, ‖F x a - F x₀ a‖ ≤ b a * ‖x - x₀‖ :=
     h_lipsch.mono fun a ha x hx ↦
       (ha x hx).trans <| mul_le_mul_of_nonneg_right (le_abs_self _) (norm_nonneg _)
@@ -91,14 +90,14 @@ theorem hasFDerivAt_integral_of_dominated_loc_of_lip' {F' : α → H →L[𝕜] 
       refine h_lipsch.mono fun a ha ↦ (ha x x_in).trans ?_
       rw [mul_comm ε]
       rw [mem_ball, dist_eq_norm] at x_in
-      exact mul_le_mul_of_nonneg_left x_in.le (b_nonneg _)
+      gcongr
     exact integrable_of_norm_sub_le (hF_meas x x_in) hF_int
       (bound_integrable.norm.const_mul ε) this
   have hF'_int : Integrable F' μ :=
     have : ∀ᵐ a ∂μ, ‖F' a‖ ≤ b a := by
       apply (h_diff.and h_lipsch).mono
       rintro a ⟨ha_diff, ha_lip⟩
-      exact ha_diff.le_of_lip' (b_nonneg a) (mem_of_superset (ball_mem_nhds _ ε_pos) <| ha_lip)
+      exact ha_diff.le_of_lip' (by positivity) (mem_of_superset (ball_mem_nhds _ ε_pos) <| ha_lip)
     b_int.mono' hF'_meas this
   refine ⟨hF'_int, ?_⟩
   /- Discard the trivial case where `E` is not complete, as all integrals vanish. -/

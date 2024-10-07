@@ -245,7 +245,7 @@ theorem opNorm_extend_le :
   · rw [extend_eq]
     calc
       ‖f x‖ ≤ ‖f‖ * ‖x‖ := le_opNorm _ _
-      _ ≤ ‖f‖ * (N * ‖e x‖) := mul_le_mul_of_nonneg_left (h_e x) (norm_nonneg _)
+      _ ≤ ‖f‖ * (N * ‖e x‖) := by gcongr; exact h_e x
       _ ≤ N * ‖f‖ * ‖e x‖ := by rw [mul_comm ↑N ‖f‖, mul_assoc]
 
 @[deprecated (since := "2024-02-02")] alias op_norm_extend_le := opNorm_extend_le

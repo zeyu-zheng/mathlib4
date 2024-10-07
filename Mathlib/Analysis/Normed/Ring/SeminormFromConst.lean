@@ -94,7 +94,7 @@ theorem seminormFromConst_seq_antitone (x : R) : Antitone (seminormFromConst_seq
   · have hnm : n - m = 0 := by rw [heq, Nat.sub_self n]
     rw [hnm, heq, div_le_div_right (pow_pos hc_pos _), pow_zero]
     conv_rhs => rw [← mul_one (f (x * c ^ n))]
-    exact mul_le_mul_of_nonneg_left hf1 (apply_nonneg f _)
+    gcongr
   · have h1 : 1 ≤ n - m := by
       rw [Nat.one_le_iff_ne_zero, ne_eq, Nat.sub_eq_zero_iff_le, not_le]
       exact lt_of_le_of_ne hmn heq

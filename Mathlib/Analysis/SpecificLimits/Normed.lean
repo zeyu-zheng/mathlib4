@@ -178,7 +178,8 @@ theorem isLittleO_pow_const_const_pow_of_one_lt {R : Type*} [NormedRing R] (k : 
     (isBigO_of_le' _ this).pow _
   intro n
   rw [mul_right_comm]
-  refine n.norm_cast_le.trans (mul_le_mul_of_nonneg_right ?_ (norm_nonneg _))
+  refine n.norm_cast_le.trans ?_--
+  gcongr
   simpa [_root_.div_eq_inv_mul, Real.norm_eq_abs, abs_of_nonneg h0] using n.cast_le_pow_div_sub h1
 
 /-- For a real `r > 1` we have `n = o(r ^ n)` as `n → ∞`. -/
@@ -740,7 +741,8 @@ theorem summable_powerSeries_of_norm_lt {w z : α}
     (fun n ↦ ?_)
   rw [norm_mul, norm_pow, div_pow, ← mul_comm_div]
   conv at hC => enter [n]; rw [norm_mul, norm_pow, ← _root_.le_div_iff₀ (by positivity)]
-  exact mul_le_mul_of_nonneg_right (hC n) (pow_nonneg (norm_nonneg z) n)
+  gcongr
+  exact hC n
 
 /-- If a power series converges at 1, it converges absolutely at all `z` of smaller norm. -/
 theorem summable_powerSeries_of_norm_lt_one {z : α}
@@ -775,7 +777,8 @@ theorem Monotone.cauchySeq_series_mul_of_tendsto_zero_of_bounded (hfa : Monotone
     simp_rw [sum_range_sub, sub_eq_add_neg]
     exact (Tendsto.cauchySeq hf0).add_const
   · rw [norm_smul, mul_comm]
-    exact mul_le_mul_of_nonneg_right (hgb _) (abs_nonneg _)
+    gcongr
+    exact hgb _
 
 /-- **Dirichlet's test** for antitone sequences. -/
 theorem Antitone.cauchySeq_series_mul_of_tendsto_zero_of_bounded (hfa : Antitone f)
