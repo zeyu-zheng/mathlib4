@@ -222,21 +222,13 @@ theorem floor_eq_zero : ⌊a⌋₊ = 0 ↔ a < 1 := by
   rw [← lt_one_iff, ← @cast_one α]
   exact floor_lt' Nat.one_ne_zero
 
-#adaptation_note
-/--
-After nightly-2024-09-06 we can remove the `_root_` prefix below.
--/
 theorem floor_eq_iff (ha : 0 ≤ a) : ⌊a⌋₊ = n ↔ ↑n ≤ a ∧ a < ↑n + 1 := by
   rw [← le_floor_iff ha, ← Nat.cast_one, ← Nat.cast_add, ← floor_lt ha, Nat.lt_add_one_iff,
-    le_antisymm_iff, _root_.and_comm]
+    le_antisymm_iff, and_comm]
 
-#adaptation_note
-/--
-After nightly-2024-09-06 we can remove the `_root_` prefix below.
--/
 theorem floor_eq_iff' (hn : n ≠ 0) : ⌊a⌋₊ = n ↔ ↑n ≤ a ∧ a < ↑n + 1 := by
   rw [← le_floor_iff' hn, ← Nat.cast_one, ← Nat.cast_add, ← floor_lt' (Nat.add_one_ne_zero n),
-    Nat.lt_add_one_iff, le_antisymm_iff, _root_.and_comm]
+    Nat.lt_add_one_iff, le_antisymm_iff, and_comm]
 
 theorem floor_eq_on_Ico (n : ℕ) : ∀ a ∈ (Set.Ico n (n + 1) : Set α), ⌊a⌋₊ = n := fun _ ⟨h₀, h₁⟩ =>
   (floor_eq_iff <| n.cast_nonneg.trans h₀).mpr ⟨h₀, h₁⟩
@@ -328,14 +320,10 @@ theorem floor_lt_ceil_of_lt_of_pos {a b : α} (h : a < b) (h' : 0 < b) : ⌊a⌋
     exact h.trans_le (le_ceil _)
   · rwa [floor_of_nonpos ha.le, lt_ceil, Nat.cast_zero]
 
-#adaptation_note
-/--
-After nightly-2024-09-06 we can remove the `_root_` prefix below.
--/
 theorem ceil_eq_iff (hn : n ≠ 0) : ⌈a⌉₊ = n ↔ ↑(n - 1) < a ∧ a ≤ n := by
   rw [← ceil_le, ← not_le, ← ceil_le, not_le,
     tsub_lt_iff_right (Nat.add_one_le_iff.2 (pos_iff_ne_zero.2 hn)), Nat.lt_add_one_iff,
-    le_antisymm_iff, _root_.and_comm]
+    le_antisymm_iff, and_comm]
 
 @[simp]
 theorem preimage_ceil_zero : (Nat.ceil : α → ℕ) ⁻¹' {0} = Iic 0 :=
@@ -496,7 +484,7 @@ theorem floor_div_nat (a : α) (n : ℕ) : ⌊a / n⌋₊ = ⌊a⌋₊ / n := by
   · exact div_nonneg ha n.cast_nonneg
   constructor
   · exact cast_div_le.trans (div_le_div_of_nonneg_right (floor_le ha) n.cast_nonneg)
-  rw [div_lt_iff, add_mul, one_mul, ← cast_mul, ← cast_add, ← floor_lt ha]
+  rw [div_lt_iff₀, add_mul, one_mul, ← cast_mul, ← cast_add, ← floor_lt ha]
   · exact lt_div_mul_add hn
   · exact cast_pos.2 hn
 
@@ -527,7 +515,7 @@ lemma ceil_lt_mul (hb : 1 < b) (hba : ⌈(b - 1)⁻¹⌉₊ / b < a) : ⌈a⌉�
   obtain hab | hba := le_total a (b - 1)⁻¹
   · calc
       ⌈a⌉₊ ≤ (⌈(b - 1)⁻¹⌉₊ : α) := by gcongr
-      _ < b * a := by rwa [← div_lt_iff']; positivity
+      _ < b * a := by rwa [← div_lt_iff₀']; positivity
   · rw [← sub_pos] at hb
     calc
       ⌈a⌉₊ < a + 1 := ceil_lt_add_one <| hba.trans' <| by positivity
@@ -538,7 +526,7 @@ lemma ceil_lt_mul (hb : 1 < b) (hba : ⌈(b - 1)⁻¹⌉₊ / b < a) : ⌈a⌉�
 lemma ceil_le_mul (hb : 1 < b) (hba : ⌈(b - 1)⁻¹⌉₊ / b ≤ a) : ⌈a⌉₊ ≤ b * a := by
   obtain rfl | hba := hba.eq_or_lt
   · rw [mul_div_cancel₀, cast_le, ceil_le]
-    exact _root_.div_le_self (by positivity) hb.le
+    · exact _root_.div_le_self (by positivity) hb.le
     · positivity
   · exact (ceil_lt_mul hb hba).le
 
@@ -1039,7 +1027,7 @@ theorem sub_floor_div_mul_nonneg (a : k) (hb : 0 < b) : 0 ≤ a - ⌊a / b⌋ * 
 theorem sub_floor_div_mul_lt (a : k) (hb : 0 < b) : a - ⌊a / b⌋ * b < b :=
   sub_lt_iff_lt_add.2 <| by
     -- Porting note: `← one_add_mul` worked in mathlib3 without the argument
-    rw [← one_add_mul _ b, ← div_lt_iff hb, add_comm]
+    rw [← one_add_mul _ b, ← div_lt_iff₀ hb, add_comm]
     exact lt_floor_add_one _
 
 theorem fract_div_natCast_eq_div_natCast_mod {m n : ℕ} : fract ((m : k) / n) = ↑(m % n) / n := by
@@ -1273,7 +1261,7 @@ lemma ceil_div_ceil_inv_sub_one (ha : 1 ≤ a) : ⌈⌈(a - 1)⁻¹⌉ / a⌉ = 
   have : 0 < ⌈(a - 1)⁻¹⌉ := ceil_pos.2 <| by positivity
   refine le_antisymm (ceil_le.2 <| div_le_self (by positivity) ha.le) <| ?_
   rw [le_ceil_iff, sub_lt_comm, div_eq_mul_inv, ← mul_one_sub,
-      ← lt_div_iff (sub_pos.2 <| inv_lt_one ha)]
+      ← lt_div_iff₀ (sub_pos.2 <| inv_lt_one ha)]
   convert ceil_lt_add_one _ using 1
   field_simp
 
@@ -1281,7 +1269,7 @@ lemma ceil_lt_mul (hb : 1 < b) (hba : ⌈(b - 1)⁻¹⌉ / b < a) : ⌈a⌉ < b 
   obtain hab | hba := le_total a (b - 1)⁻¹
   · calc
       ⌈a⌉ ≤ (⌈(b - 1)⁻¹⌉ : k) := by gcongr
-      _ < b * a := by rwa [← div_lt_iff']; positivity
+      _ < b * a := by rwa [← div_lt_iff₀']; positivity
   · rw [← sub_pos] at hb
     calc
       ⌈a⌉ < a + 1 := ceil_lt_add_one _
@@ -1465,7 +1453,7 @@ section LinearOrderedField
 variable [LinearOrderedField α] [FloorRing α]
 
 theorem round_eq (x : α) : round x = ⌊x + 1 / 2⌋ := by
-  simp_rw [round, (by simp only [lt_div_iff', two_pos] : 2 * fract x < 1 ↔ fract x < 1 / 2)]
+  simp_rw [round, (by simp only [lt_div_iff₀', two_pos] : 2 * fract x < 1 ↔ fract x < 1 / 2)]
   cases' lt_or_le (fract x) (1 / 2) with hx hx
   · conv_rhs => rw [← fract_add_floor x, add_assoc, add_left_comm, floor_int_add]
     rw [if_pos hx, self_eq_add_right, floor_eq_iff, cast_zero, zero_add]

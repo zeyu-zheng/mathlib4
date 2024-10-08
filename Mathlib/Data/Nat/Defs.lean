@@ -137,14 +137,19 @@ lemma one_lt_iff_ne_zero_and_ne_one : ∀ {n : ℕ}, 1 < n ↔ n ≠ 0 ∧ n ≠
 
 lemma le_one_iff_eq_zero_or_eq_one : ∀ {n : ℕ}, n ≤ 1 ↔ n = 0 ∨ n = 1 := by simp [le_succ_iff]
 
-#adaptation_note
-/-- This was accidently left off when upstreamed in Lean in
-https://github.com/leanprover/lean4/pull/5478.
-It can be removed again after nightly-2024-09-28.
--/
-attribute [simp] lt_one_iff
-
 lemma one_le_of_lt (h : a < b) : 1 ≤ b := Nat.lt_of_le_of_lt (Nat.zero_le _) h
+
+protected lemma min_left_comm (a b c : ℕ) : min a (min b c) = min b (min a c) := by
+  rw [← Nat.min_assoc, ← Nat.min_assoc, b.min_comm]
+
+protected lemma max_left_comm (a b c : ℕ) : max a (max b c) = max b (max a c) := by
+  rw [← Nat.max_assoc, ← Nat.max_assoc, b.max_comm]
+
+protected lemma min_right_comm (a b c : ℕ) : min (min a b) c = min (min a c) b := by
+  rw [Nat.min_assoc, Nat.min_assoc, b.min_comm]
+
+protected lemma max_right_comm (a b c : ℕ) : max (max a b) c = max (max a c) b := by
+  rw [Nat.max_assoc, Nat.max_assoc, b.max_comm]
 
 @[simp] lemma min_eq_zero_iff : min m n = 0 ↔ m = 0 ∨ n = 0 := by omega
 @[simp] lemma max_eq_zero_iff : max m n = 0 ↔ m = 0 ∧ n = 0 := by omega
@@ -218,8 +223,7 @@ attribute [simp] le_add_left le_add_right Nat.lt_add_left_iff_pos Nat.lt_add_rig
 
 -- Sometimes a bare `Nat.add` or similar appears as a consequence of unfolding during pattern
 -- matching. These lemmas package them back up as typeclass mediated operations.
--- TODO: This is a duplicate of `Nat.add_eq`
-@[simp] lemma add_def : Nat.add m n = m + n := rfl
+@[deprecated (since := "2024-04-05")] alias add_def := add_eq
 
 -- We want to use these two lemmas earlier than the lemmas simp can prove them with
 @[simp, nolint simpNF] protected lemma add_eq_left : a + b = a ↔ b = 0 := by omega
@@ -595,9 +599,6 @@ protected lemma pow_le_pow_iff_left {n : ℕ} (hn : n ≠ 0) : a ^ n ≤ b ^ n �
 
 protected lemma pow_lt_pow_iff_left (hn : n ≠ 0) : a ^ n < b ^ n ↔ a < b := by
   simp only [← Nat.not_le, Nat.pow_le_pow_iff_left hn]
-
-@[deprecated (since := "2023-12-23")] alias pow_lt_pow_of_lt_left := Nat.pow_lt_pow_left
-@[deprecated (since := "2023-12-23")] alias pow_le_iff_le_left := Nat.pow_le_pow_iff_left
 
 lemma pow_left_injective (hn : n ≠ 0) : Injective (fun a : ℕ ↦ a ^ n) := by
   simp [Injective, le_antisymm_iff, Nat.pow_le_pow_iff_left hn]
