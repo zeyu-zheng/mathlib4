@@ -109,51 +109,31 @@ theorem exists_inverse {φ : ℝ → F} (hφ : Isometry φ) (φz : φ 0 = 0) :
       exact ⟨f, nf, by rw [hfk, nk]⟩
     refine ⟨f, nf, fun s ⟨hs1, hs2⟩ ↦ ?_⟩
     have ⟨h1, h2⟩ : f (φ k) = k ∧ f (φ (-k)) = -k := by
-      refine eq_of_abs_le_sub_eq ?_ ?_ (by rw [← map_sub, hf])
-      · rw [← norm_eq_abs]
-        convert f.le_opNorm (φ k)
+      refine eq_of_abs_le_sub_eq ?_ ?_ (by rw [← map_sub, hf]) <;> rw [← norm_eq_abs]
+      · convert f.le_opNorm (φ k)
         rw [nf, one_mul, hφ.norm_map_of_map_zero φz, norm_of_nonneg (by positivity)]
-      · rw [← norm_eq_abs]
-        convert f.le_opNorm (φ (-k))
+      · convert f.le_opNorm (φ (-k))
         rw [nf, one_mul, hφ.norm_map_of_map_zero φz, norm_of_nonpos (by simp), neg_neg]
     obtain hs | hs := le_total s 0
     · exact jsp2 hφ φz nf h2 ⟨hs1, hs⟩
     · exact jsp hφ φz nf h1 ⟨hs, hs2⟩
   choose! f nf hf using this
-  obtain ⟨g, hg⟩ : ∃ g : WeakDual ℝ F, MapClusterPt g atTop f := by
+  obtain ⟨g, ng, hg⟩ : ∃ g ∈ toNormedDual ⁻¹' closedBall 0 1, MapClusterPt g atTop f := by
     have aux : atTop.map f ≤ 𝓟 (toNormedDual ⁻¹' closedBall 0 1) := by
       rw [le_principal_iff, ← eventually_mem_set, eventually_map]
       exact Eventually.of_forall fun n ↦ by simp [-coe_toNormedDual, nf]
-    obtain ⟨g, -, hg⟩ := (WeakDual.isCompact_closedBall _ _ _).exists_clusterPt aux
-    exact ⟨g, hg⟩
+    exact (WeakDual.isCompact_closedBall _ _ _).exists_clusterPt aux
   have (t : ℝ) : g (φ t) = t := by
-    have := hg.tendsto_comp ((eval_continuous (φ t)).tendsto g)
-    obtain ⟨ψ, hψ, h⟩ := TopologicalSpace.FirstCountableTopology.tendsto_subseq this
+    obtain ⟨ψ, hψ, h⟩ := TopologicalSpace.FirstCountableTopology.tendsto_subseq <|
+      hg.tendsto_comp ((eval_continuous (φ t)).tendsto g)
     have : Tendsto (fun n ↦ f (ψ n) (φ t)) atTop (𝓝 t) := by
-      refine tendsto_atTop_of_eventually_const (i₀ := Nat.ceil |t|) fun i hi ↦ hf _ _ ?_
-      replace hi : Nat.ceil |t| ≤ ψ i := hi.trans hψ.le_apply
+      refine tendsto_atTop_of_eventually_const (i₀ := ⌈|t|⌉₊) fun i hi ↦ hf _ _ ?_
+      replace hi : ⌈|t|⌉₊ ≤ ψ i := hi.trans hψ.le_apply
       rw [mem_Icc]
       rwa [Nat.ceil_le, abs_le] at hi
     exact tendsto_nhds_unique h this
-  refine ⟨toNormedDual g, ?_, this⟩
-  apply le_antisymm
-  · refine opNorm_le_of_unit_norm (by norm_num) fun x hx ↦ le_of_forall_lt
-      fun c (hc : c < |g x|) ↦ ?_
-    wlog hgx : 0 ≤ g x generalizing x
-    · exact this (-x) (by rwa [norm_neg]) (by rwa [map_neg, abs_neg]) (by rw [map_neg]; linarith)
-    rw [abs_of_nonneg hgx] at hc
-    rw [mapClusterPt_iff] at hg
-    let s := (fun (f : WeakDual ℝ F) ↦ f x) ⁻¹' (Ioi c)
-    specialize hg s ((isOpen_Ioi.preimage (eval_continuous x)).mem_nhds hc)
-    rw [frequently_atTop] at hg
-    obtain ⟨b, -, hfb⟩ := hg 0
-    obtain hc | hc := lt_or_le c 0
-    · linarith
-    · simp_rw [s, mem_preimage, mem_Ioi] at hfb
-      have : f b x ≤ 1 := by
-        rw [← norm_of_nonneg (r := f b x) (by linarith), ← nf b, ← mul_one ‖toNormedDual _‖, ← hx]
-        exact le_opNorm _ _
-      linarith
+  refine ⟨toNormedDual g, le_antisymm ?_ ?_, this⟩
+  · rwa [mem_preimage, mem_closedBall, dist_zero_right] at ng
   · apply le_opNorm_of' (x := φ 1)
     · rw [hφ.norm_map_of_map_zero φz, norm_one]
     · rw [toNormedDual_apply, this, norm_one]
@@ -174,19 +154,18 @@ theorem exists_inverse' [FiniteDimensional ℝ E] [Nontrivial E]
     {φ : E → F} (hφ : Isometry φ) (φz : φ 0 = 0)
     (hdφ : Dense (span ℝ (range φ) : Set F)) :
     ∃ (f : F →L[ℝ] E), ‖f‖ = 1 ∧ f ∘ φ = id := by
-  have main (x : E) (nx : ‖x‖ = 1) : ∃ f : F →L[ℝ] ℝ, ‖f‖ = 1 ∧ ∀ t : ℝ, f (φ (t • x)) = t := by
+  have (x : E) (nx : ‖x‖ = 1) : ∃ f : F →L[ℝ] ℝ, ‖f‖ = 1 ∧ ∀ t : ℝ, f (φ (t • x)) = t := by
     refine exists_inverse (Isometry.of_dist_eq fun x₁ x₂ ↦ ?_) (by simpa)
     rw [hφ.dist_eq, dist_eq_norm, ← sub_smul, norm_smul, nx, mul_one, dist_eq_norm]
-  choose! f nf hf using main
-  have dense_diff : Dense {x : E | DifferentiableAt ℝ (‖·‖) x} :=
-    dense_differentiableAt_norm
-  let s : Set (E →ₗ[ℝ] ℝ) := {fderiv ℝ (‖·‖) x' | (x' : E) (_ : DifferentiableAt ℝ (‖·‖) x')}
+  choose! f nf hf using this
+  have dense_diff : Dense {x : E | DifferentiableAt ℝ (‖·‖) x} := dense_differentiableAt_norm
+  let s : Set (E →ₗ[ℝ] ℝ) := {fderiv ℝ (‖·‖) x | (x : E) (_ : DifferentiableAt ℝ (‖·‖) x)}
   have aux3 (z : E) (hz : z ≠ 0) : ∃ f ∈ s, f z ≠ 0 := by
     obtain ⟨u, hu, htu⟩ := dense_seq dense_diff z
     have := (htu.fderiv_norm_tendsto_norm hu).eventually_ne (norm_ne_zero_iff.2 hz)
     rcases eventually_atTop.1 this with ⟨N, hN⟩
     exact ⟨fderiv ℝ (‖·‖) (u N), ⟨u N, hu N, rfl⟩, hN N le_rfl⟩
-  let b := (Basis.ofSpan (span_eq_top_of_ne_zero (s := s) aux3))
+  let b := (Basis.ofSpan (span_eq_top_of_ne_zero aux3))
   have hb i : ∃ y : E, ‖y‖ = 1 ∧ DifferentiableAt ℝ (‖·‖) y ∧ b i = fderiv ℝ (‖·‖) y := by
     obtain ⟨y, dy, hy⟩ := Basis.ofSpan_subset (span_eq_top_of_ne_zero aux3) ⟨i, rfl⟩
     have yn : y ≠ 0 := ne_zero_of_differentiableAt_norm dy
@@ -202,7 +181,7 @@ theorem exists_inverse' [FiniteDimensional ℝ E] [Nontrivial E]
     { toFun := fun z ↦ ∑ i, (f (y i) z) • (c i)
       map_add' := fun _ ↦ by simp [Finset.sum_add_distrib, add_smul]
       map_smul' := fun _ ↦ by simp [Finset.smul_sum, smul_smul]
-      cont := continuous_finset_sum (@Finset.univ _ _) fun _ ↦ by fun_prop }
+      cont := by fun_prop }
   use T
   have lipfφ {x : E} (nx : ‖x‖ = 1) : LipschitzWith 1 ((f x) ∘ φ) := by
     convert (f x).lipschitz.comp hφ.lipschitz
@@ -315,7 +294,7 @@ theorem exists_inverse'' [CompleteSpace E] [Nontrivial E]
         simp [Submodule.coe_sum]
       apply LinearMap.ext_on_range this
       intro x
-      simp only [LinearMap.coe_comp, coeSubtype, ContinuousLinearMap.coe_coe, Function.comp_apply]
+      simp only [LinearMap.coe_comp, coe_subtype, ContinuousLinearMap.coe_coe, Function.comp_apply]
       have : Submodule.inclusion (mA hpq) (ψ p x) = ψ q (Submodule.inclusion hpq x) := rfl
       rw [hT p hp, this, hT q hq]
       rfl
@@ -493,10 +472,3 @@ theorem exists_inverse'' [CompleteSpace E] [Nontrivial E]
       exact H.le_opNorm _
   · ext x
     exact this x
-
--- theorem test {α β : Type*} [TopologicalSpace α] [ConditionallyCompleteLinearOrder β]
---     {f : α → β} {ℱ : Filter α} (hf : LowerSemicontinuous f) {b : β} {a : α}
---     (hℱ : @MapClusterPt _ (Preorder.topology β) _ b (𝓝 a) f) :
---     b ≤ limsup f (𝓝 a) := by
---   let _ := Preorder.topology β
---   refine (le_limsup_iff).2 ?_
