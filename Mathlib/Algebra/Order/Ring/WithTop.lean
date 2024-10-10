@@ -295,7 +295,7 @@ instance [MulZeroClass α] [Preorder α] [PosMulMono α] : PosMulMono (WithBot �
     · exact absurd h (bot_lt_coe _).not_le
     simp only [← coe_mul, coe_le_coe] at *
     norm_cast at x0
-    exact mul_le_mul_of_nonneg_left h x0 ⟩
+    gcongr; assumption⟩
 
 instance [MulZeroClass α] [Preorder α] [MulPosMono α] : MulPosMono (WithBot α) :=
   ⟨by
@@ -312,7 +312,7 @@ instance [MulZeroClass α] [Preorder α] [MulPosMono α] : MulPosMono (WithBot �
     · exact absurd h (bot_lt_coe _).not_le
     simp only [← coe_mul, coe_le_coe] at *
     norm_cast at x0
-    exact mul_le_mul_of_nonneg_right h x0 ⟩
+    gcongr; assumption⟩
 
 instance [MulZeroClass α] [Preorder α] [PosMulStrictMono α] : PosMulStrictMono (WithBot α) :=
   ⟨by
@@ -325,7 +325,7 @@ instance [MulZeroClass α] [Preorder α] [PosMulStrictMono α] : PosMulStrictMon
     · simp_rw [mul_bot x0.ne.symm, ← coe_mul, bot_lt_coe]
     simp only [← coe_mul, coe_lt_coe] at *
     norm_cast at x0
-    exact mul_lt_mul_of_pos_left h x0 ⟩
+    gcongr; assumption⟩
 
 instance [MulZeroClass α] [Preorder α] [MulPosStrictMono α] : MulPosStrictMono (WithBot α) :=
   ⟨by
@@ -338,7 +338,7 @@ instance [MulZeroClass α] [Preorder α] [MulPosStrictMono α] : MulPosStrictMon
     · simp_rw [bot_mul x0.ne.symm, ← coe_mul, bot_lt_coe]
     simp only [← coe_mul, coe_lt_coe] at *
     norm_cast at x0
-    exact mul_lt_mul_of_pos_right h x0 ⟩
+    gcongr; assumption⟩
 
 instance [MulZeroClass α] [Preorder α] [PosMulReflectLT α] : PosMulReflectLT (WithBot α) :=
   ⟨by

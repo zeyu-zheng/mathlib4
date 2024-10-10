@@ -460,7 +460,8 @@ variable {𝕜' : Type*} [NormedField 𝕜'] [NormedSpace 𝕜' G] [SMulCommClas
 theorem opNorm_smul_le (c : 𝕜') : ‖c • f‖ ≤ ‖c‖ * ‖f‖ :=
   (c • f).opNorm_le_bound (mul_nonneg (norm_nonneg _) (opNorm_nonneg _)) fun m ↦ by
     rw [smul_apply, norm_smul, mul_assoc]
-    exact mul_le_mul_of_nonneg_left (le_opNorm _ _) (norm_nonneg _)
+    gcongr
+    exact le_opNorm _ _
 
 @[deprecated (since := "2024-02-02")] alias op_norm_smul_le := opNorm_smul_le
 
@@ -718,9 +719,9 @@ theorem MultilinearMap.mkContinuous_norm_le (f : MultilinearMap 𝕜 E G) {C : �
 `mkContinuous`, then its norm is bounded by the bound given to the constructor if it is
 nonnegative. -/
 theorem MultilinearMap.mkContinuous_norm_le' (f : MultilinearMap 𝕜 E G) {C : ℝ}
-    (H : ∀ m, ‖f m‖ ≤ C * ∏ i, ‖m i‖) : ‖f.mkContinuous C H‖ ≤ max C 0 :=
-  ContinuousMultilinearMap.opNorm_le_bound _ (le_max_right _ _) fun m ↦ (H m).trans <|
-    mul_le_mul_of_nonneg_right (le_max_left _ _) <| by positivity
+    (H : ∀ m, ‖f m‖ ≤ C * ∏ i, ‖m i‖) : ‖f.mkContinuous C H‖ ≤ max C 0 := by
+  refine ContinuousMultilinearMap.opNorm_le_bound _ (le_max_right _ _) fun m ↦ (H m).trans ?_
+  gcongr; exact le_max_left _ _
 
 namespace ContinuousMultilinearMap
 
@@ -1065,10 +1066,8 @@ theorem norm_compContinuousLinearMap_le (g : ContinuousMultilinearMap 𝕜 E₁ 
   opNorm_le_bound _ (by positivity) fun m =>
     calc
       ‖g fun i => f i (m i)‖ ≤ ‖g‖ * ∏ i, ‖f i (m i)‖ := g.le_opNorm _
-      _ ≤ ‖g‖ * ∏ i, ‖f i‖ * ‖m i‖ :=
-        (mul_le_mul_of_nonneg_left
-          (prod_le_prod (fun _ _ => norm_nonneg _) fun i _ => (f i).le_opNorm (m i))
-          (norm_nonneg g))
+      _ ≤ ‖g‖ * ∏ i, ‖f i‖ * ‖m i‖ := by
+        gcongr; exact (f _).le_opNorm (m _)
       _ = (‖g‖ * ∏ i, ‖f i‖) * ∏ i, ‖m i‖ := by rw [prod_mul_distrib, mul_assoc]
 
 theorem norm_compContinuous_linearIsometry_le (g : ContinuousMultilinearMap 𝕜 E₁ G)

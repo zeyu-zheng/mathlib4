@@ -176,7 +176,7 @@ theorem decay_add_le_aux (k n : ℕ) (f g : 𝓢(E, F)) (x : E) :
     ‖x‖ ^ k * ‖iteratedFDeriv ℝ n ((f : E → F) + (g : E → F)) x‖ ≤
       ‖x‖ ^ k * ‖iteratedFDeriv ℝ n f x‖ + ‖x‖ ^ k * ‖iteratedFDeriv ℝ n g x‖ := by
   rw [← mul_add]
-  refine mul_le_mul_of_nonneg_left ?_ (by positivity)
+  gcongr
   rw [iteratedFDeriv_add_apply (f.smooth _) (g.smooth _)]
   exact norm_add_le _ _
 
@@ -232,8 +232,9 @@ instance instSMul : SMul 𝕜 𝓢(E, F) :=
         · apply Eq.le
           rw [mul_comm _ ‖c‖, ← mul_assoc]
           exact decay_smul_aux k n f c x
-        · apply mul_le_mul_of_nonneg_left _ (f.seminormAux_nonneg k n)
-          linarith }⟩
+        · gcongr
+          · exact f.seminormAux_nonneg k n
+          · linarith }⟩
 
 @[simp]
 theorem smul_apply {f : 𝓢(E, F)} {c : 𝕜} {x : E} : (c • f) x = c • f x :=
@@ -251,7 +252,8 @@ theorem seminormAux_smul_le (k n : ℕ) (c : 𝕜) (f : 𝓢(E, F)) :
     (c • f).seminormAux_le_bound k n (mul_nonneg (norm_nonneg _) (seminormAux_nonneg _ _ _))
       fun x => (decay_smul_aux k n f c x).le.trans ?_
   rw [mul_assoc]
-  exact mul_le_mul_of_nonneg_left (f.le_seminormAux k n x) (norm_nonneg _)
+  gcongr
+  exact f.le_seminormAux k n x
 
 instance instNSMul : SMul ℕ 𝓢(E, F) :=
   ⟨fun c f =>
@@ -890,8 +892,7 @@ def compCLM {g : D → E} (hg : g.HasTemperateGrowth)
       have hpos : (0 : ℝ) ≤ (C + 1) ^ n * n ! * 2 ^ k' * seminorm_f := by
         have : 0 ≤ seminorm_f := apply_nonneg _ _
         positivity
-      refine le_trans (mul_le_mul_of_nonneg_right hg_upper'' hpos) ?_
-      rw [← mul_assoc])
+      exact le_trans (mul_le_mul_of_nonneg_right hg_upper'' hpos) (by rw [← mul_assoc]))
 
 @[simp] lemma compCLM_apply {g : D → E} (hg : g.HasTemperateGrowth)
     (hg_upper : ∃ (k : ℕ) (C : ℝ), ∀ x, ‖x‖ ≤ C * (1 + ‖g x‖) ^ k) (f : 𝓢(E, F)) :

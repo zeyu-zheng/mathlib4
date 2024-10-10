@@ -147,8 +147,7 @@ private theorem one_sub_eps_mul_card_nonuniformWitness_le_card_star (hV : V ∈ 
       _ = ↑2 ^ P.parts.card * (ε * (ε / 10)) := by rw [mul_div_assoc, sq, mul_div_assoc]
   calc
     (↑1 - ε / 10) * (G.nonuniformWitness ε U V).card ≤
-        (↑1 - ↑2 ^ P.parts.card * m / (U.card * ε)) * (G.nonuniformWitness ε U V).card :=
-      mul_le_mul_of_nonneg_right (sub_le_sub_left this _) (cast_nonneg _)
+        (↑1 - ↑2 ^ P.parts.card * m / (U.card * ε)) * (G.nonuniformWitness ε U V).card := by gcongr
     _ = (G.nonuniformWitness ε U V).card -
         ↑2 ^ P.parts.card * m / (U.card * ε) * (G.nonuniformWitness ε U V).card := by
       rw [sub_mul, one_mul]
@@ -239,7 +238,7 @@ private theorem m_add_one_div_m_le_one_add [Nonempty α]
   rw [add_sq, one_pow, add_assoc, add_le_add_iff_left, mul_one, ← le_sub_iff_add_le',
     div_eq_mul_one_div _ (49 : ℝ), mul_div_left_comm (2 : ℝ), ← mul_sub_left_distrib, div_pow,
     div_le_iff₀ (show (0 : ℝ) < ↑100 ^ 2 by norm_num), mul_assoc, sq]
-  refine mul_le_mul_of_nonneg_left ?_ (by sz_positivity)
+  gcongr; sz_positivity
   exact (pow_le_one₀ (by sz_positivity) hε₁).trans (by norm_num)
 
 private theorem density_sub_eps_le_sum_density_div_card [Nonempty α]
@@ -392,14 +391,15 @@ private theorem eps_le_card_star_div [Nonempty α] (hPα : P.parts.card * 16 ^ P
            G.le_card_nonuniformWitness hunif]
     _ = (1 - ε / 10) * (G.nonuniformWitness ε U V).card * ((1 - (↑m)⁻¹) / U.card) := by
       rw [mul_assoc, mul_assoc, mul_div_left_comm]
-    _ ≤ ((star hP G ε hU V).biUnion id).card * ((1 - (↑m)⁻¹) / U.card) :=
-      (mul_le_mul_of_nonneg_right
-        (one_sub_eps_mul_card_nonuniformWitness_le_card_star hV hUV hunif hPε hε₁) (by positivity))
-    _ ≤ (star hP G ε hU V).card * (m + 1) * ((1 - (↑m)⁻¹) / U.card) :=
-      (mul_le_mul_of_nonneg_right card_biUnion_star_le_m_add_one_card_star_mul (by positivity))
-    _ ≤ (star hP G ε hU V).card * (m + ↑1) * ((↑1 - (↑m)⁻¹) / (↑4 ^ P.parts.card * m)) :=
-      (mul_le_mul_of_nonneg_left (div_le_div_of_nonneg_left hm (by sz_positivity) <|
-        pow_mul_m_le_card_part hP hU) (by positivity))
+    _ ≤ ((star hP G ε hU V).biUnion id).card * ((1 - (↑m)⁻¹) / U.card) := by
+      gcongr
+      exact one_sub_eps_mul_card_nonuniformWitness_le_card_star hV hUV hunif hPε hε₁
+    _ ≤ (star hP G ε hU V).card * (m + 1) * ((1 - (↑m)⁻¹) / U.card) := by
+      gcongr
+      exact card_biUnion_star_le_m_add_one_card_star_mul
+    _ ≤ (star hP G ε hU V).card * (m + ↑1) * ((↑1 - (↑m)⁻¹) / (↑4 ^ P.parts.card * m)) := by
+      gcongr; sz_positivity
+      exact pow_mul_m_le_card_part hP hU
     _ ≤ (star hP G ε hU V).card / ↑4 ^ P.parts.card := by
       rw [mul_assoc, mul_comm ((4 : ℝ) ^ P.parts.card), ← div_div, ← mul_div_assoc, ← mul_comm_div]
       refine mul_le_of_le_one_right (by positivity) ?_
