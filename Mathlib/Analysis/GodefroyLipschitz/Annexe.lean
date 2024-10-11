@@ -26,6 +26,22 @@ end Basis
 
 end OfTopLeSpan
 
+section spancoe
+
+variable {R M : Type*} [Semiring R] [AddCommMonoid M] [Module R M]
+
+theorem span_coe {s : Set M} {t : Set (span R s)} (hst : ((↑) : _ → M) ⁻¹' s ⊆ t) :
+    span R t = ⊤ := by
+  refine eq_top_iff'.2 fun ⟨x, hx⟩ ↦ ?_
+  obtain ⟨n, f, g, hx⟩ := mem_span_set'.1 hx
+  rw [mem_span_set']
+  let h i : t := ⟨⟨g i, subset_span (g i).2⟩, hst (g i).2⟩
+  refine ⟨n, f, h, ?_⟩
+  rw [← Subtype.val_inj, AddSubmonoid.coe_finset_sum]
+  simp [hx]
+
+end spancoe
+
 variable [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 theorem span_eq_top_of_ne_zero {R M : Type*} [CommRing R] [AddCommGroup M]
