@@ -24,28 +24,31 @@ open CategoryTheory CategoryTheory.Limits Opposite TopologicalSpace
 
 universe u
 
-namespace AlgebraicGeometry
+namespace AlgebraicGeometry.IsOpenImmersion
 
 variable {X Y Z : Scheme.{u}} (f : X ⟶ Y) (g : Y ⟶ Z)
 
-theorem isOpenImmersion_iff_stalk {f : X ⟶ Y} : IsOpenImmersion f ↔
+theorem iff_stalk {f : X ⟶ Y} : IsOpenImmersion f ↔
     OpenEmbedding f.1.base ∧ ∀ x, IsIso (f.stalkMap x) := by
   constructor
   · intro h; exact ⟨h.1, inferInstance⟩
   · rintro ⟨h₁, h₂⟩; exact IsOpenImmersion.of_stalk_iso f h₁
 
-theorem isOpenImmersion_eq_inf :
-    @IsOpenImmersion = (topologically OpenEmbedding) ⊓
+theorem eq_inf :
+    IsOpenImmersion = (topologically OpenEmbedding) ⊓
       stalkwise (fun f ↦ Function.Bijective f) := by
   ext
-  exact isOpenImmersion_iff_stalk.trans
+  exact iff_stalk.trans
     (and_congr Iff.rfl (forall_congr' fun x ↦ ConcreteCategory.isIso_iff_bijective _))
 
-instance isOpenImmersion_isStableUnderComposition :
-    MorphismProperty.IsStableUnderComposition @IsOpenImmersion where
-  comp_mem f g _ _ := LocallyRingedSpace.IsOpenImmersion.comp f g
+lemma le_monomorphisms :
+    IsOpenImmersion ≤ MorphismProperty.monomorphisms Scheme.{u} := fun _ _ _ _ ↦
+  MorphismProperty.monomorphisms.infer_property _
 
-instance isOpenImmersion_respectsIso : MorphismProperty.RespectsIso @IsOpenImmersion := by
+instance stableUnderComposition : IsOpenImmersion.IsStableUnderComposition where
+  comp_mem f g := fun _ _ ↦ LocallyRingedSpace.IsOpenImmersion.comp f g
+
+instance respectsIso : IsOpenImmersion.RespectsIso := by
   apply MorphismProperty.respectsIso_of_isStableUnderComposition
   intro _ _ f (hf : IsIso f)
   have : IsIso f := hf
@@ -59,12 +62,11 @@ instance : IsLocalAtTarget (stalkwise (fun f ↦ Function.Bijective f)) := by
   -- Regression in #17583: have to specify C explicitly below.
   exact (ConcreteCategory.isIso_iff_bijective (C := CommRingCat) _).symm
 
-instance isOpenImmersion_isLocalAtTarget : IsLocalAtTarget @IsOpenImmersion :=
-  isOpenImmersion_eq_inf ▸ inferInstance
+instance isLocalAtTarget : IsLocalAtTarget IsOpenImmersion :=
+  eq_inf ▸ inferInstance
 
-theorem isOpenImmersion_stableUnderBaseChange :
-    MorphismProperty.StableUnderBaseChange @IsOpenImmersion :=
-  MorphismProperty.StableUnderBaseChange.mk <| by
-    intro X Y Z f g H; infer_instance
+theorem stableUnderBaseChange : IsOpenImmersion.StableUnderBaseChange :=
+  MorphismProperty.StableUnderBaseChange.mk <| fun _ _ _ f g _ ↦
+    IsOpenImmersion.pullback_fst_of_right g f
 
-end AlgebraicGeometry
+end AlgebraicGeometry.IsOpenImmersion

@@ -30,12 +30,12 @@ variable {C : Type u} [Category.{v} C]
 /-- A morphism of Schemes is an open immersion if it is an open immersion as a morphism
 of LocallyRingedSpaces
 -/
-abbrev IsOpenImmersion {X Y : Scheme.{u}} (f : X ⟶ Y) : Prop :=
-  LocallyRingedSpace.IsOpenImmersion f
+abbrev IsOpenImmersion : MorphismProperty (Scheme.{u}) :=
+  fun _ _ f ↦ LocallyRingedSpace.IsOpenImmersion f
 
 instance IsOpenImmersion.comp {X Y Z : Scheme.{u}} (f : X ⟶ Y) (g : Y ⟶ Z)
-  [IsOpenImmersion f] [IsOpenImmersion g] : IsOpenImmersion (f ≫ g) :=
-LocallyRingedSpace.IsOpenImmersion.comp f g
+    [IsOpenImmersion f] [IsOpenImmersion g] : IsOpenImmersion (f ≫ g) :=
+  LocallyRingedSpace.IsOpenImmersion.comp f g
 
 namespace LocallyRingedSpace.IsOpenImmersion
 
