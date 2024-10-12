@@ -17,7 +17,7 @@ open CategoryTheory MorphismProperty
 namespace AlgebraicGeometry
 
 lemma isomorphisms_eq_isOpenImmersion_inf_surjective :
-    isomorphisms Scheme = (@IsOpenImmersion ⊓ @Surjective : MorphismProperty Scheme) := by
+    isomorphisms Scheme = (IsOpenImmersion ⊓ @Surjective : MorphismProperty Scheme) := by
   ext
   exact (isIso_iff_isOpenImmersion _).trans
     (and_congr Iff.rfl ((TopCat.epi_iff_surjective _).trans (surjective_iff _).symm))
@@ -25,7 +25,7 @@ lemma isomorphisms_eq_isOpenImmersion_inf_surjective :
 lemma isomorphisms_eq_stalkwise :
     isomorphisms Scheme = (isomorphisms TopCat).inverseImage Scheme.forgetToTop ⊓
       stalkwise (fun f ↦ Function.Bijective f) := by
-  rw [isomorphisms_eq_isOpenImmersion_inf_surjective, isOpenImmersion_eq_inf,
+  rw [isomorphisms_eq_isOpenImmersion_inf_surjective, IsOpenImmersion.eq_inf,
     surjective_eq_topologically, inf_right_comm]
   congr 1
   ext X Y f
