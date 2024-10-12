@@ -237,8 +237,88 @@ theorem isup_fin :
 theorem Dense.isDenseInducing_val {X : Type*} [TopologicalSpace X] {s : Set X} (hs : Dense s) :
     IsDenseInducing (@Subtype.val X s) := ⟨inducing_subtype_val, hs.denseRange_val⟩
 
-theorem uniformInducing_val {X : Type*} [UniformSpace X] (s : Set X) :
+theorem isUniformInducing_val {X : Type*} [UniformSpace X] (s : Set X) :
     IsUniformInducing (@Subtype.val X s) := ⟨uniformity_setCoe⟩
+
+section extendLinearPMap
+
+variable {𝕜 E F : Type*} [NontriviallyNormedField 𝕜] [NormedAddCommGroup E]
+  [NormedAddCommGroup F] [NormedSpace 𝕜 E] [NormedSpace 𝕜 F] [CompleteSpace F]
+  {f : E →ₗ.[𝕜] F} (hdf : Dense (f.domain : Set E)) (hf : UniformContinuous f)
+
+theorem continuous_extend' {α β : Type*} [UniformSpace α] [UniformSpace β]
+    [T3Space β] [CompleteSpace β] {s : Set α} (ds : Dense s) {f : s → β}
+    (hf : UniformContinuous f) :
+    Continuous (ds.isDenseInducing_val.extend f) := by
+  apply ds.isDenseInducing_val.continuous_extend
+  exact uniformly_extend_exists (isUniformInducing_val s) ds.denseRange_val hf
+
+-- have dQ := dQ.denseRange_val
+--   have ui := uniformInducing_val (span ℝ Q : Set F)
+--   have cg : UniformContinuous g := by
+--     apply LipschitzWith.uniformContinuous (K := 1)
+--     apply LipschitzWith.of_dist_le_mul
+--     intro x y
+--     rw [dist_eq_norm, sub_eq_add_neg, ← neg_one_smul ℝ, ← gsmul, ← gadd, dist_eq_norm,
+--       neg_one_smul ℝ, ← sub_eq_add_neg]
+--     exact ng _
+--   let h := (ui.isDenseInducing dQ).extend g
+--   have ch : Continuous h :=
+--     (ui.isDenseInducing dQ).continuous_extend (uniformly_extend_exists ui dQ cg)
+
+noncomputable def dense_extend : E →L[𝕜] F :=
+  letI g := hdf.isDenseInducing_val.extend f
+  haveI cg : Continuous g := continuous_extend' hdf hf
+  { toFun := hdf.isDenseInducing_val.extend f
+    map_add' := by
+      intro x y
+      obtain ⟨ux, hux, tux⟩ := dense_seq hdf x
+      obtain ⟨uy, huy, tuy⟩ := dense_seq hdf y
+      have ptn1 : Tendsto (fun n ↦ f ⟨ux n, hux n⟩ + f ⟨uy n, huy n⟩) atTop (𝓝 (g x + g y)) := by
+        apply Tendsto.add
+        · apply ((cg.tendsto x).comp tux).congr
+          exact fun n ↦ hdf.isDenseInducing_val.extend_eq hf.continuous ⟨ux n, hux n⟩
+        · apply ((cg.tendsto y).comp tuy).congr
+          exact fun n ↦ hdf.isDenseInducing_val.extend_eq hf.continuous ⟨uy n, huy n⟩
+      have ptn2 : Tendsto (fun n ↦ f ⟨ux n, hux n⟩ + f ⟨uy n, huy n⟩) atTop (𝓝 (g (x + y))) := by
+        apply ((cg.tendsto _).comp (tux.add tuy)).congr
+        simp_rw [← LinearPMap.map_add]
+        exact fun n ↦ hdf.isDenseInducing_val.extend_eq hf.continuous
+          (⟨ux n + uy n, add_mem (hux n) (huy n)⟩)
+      exact tendsto_nhds_unique ptn2 ptn1
+    map_smul' := by
+      simp only [RingHom.id_apply]
+      intro m x
+      obtain ⟨ux, hux, tux⟩ := dense_seq hdf x
+      have ptn1 : Tendsto (fun n ↦ m • (f ⟨ux n, hux n⟩)) atTop (𝓝 (g (m • x))) := by
+        apply ((cg.tendsto _).comp (tux.const_smul m)).congr
+        simp_rw [← LinearPMap.map_smul]
+        exact fun n ↦ hdf.isDenseInducing_val.extend_eq hf.continuous
+          (⟨m • ux n, smul_mem _ m (hux n)⟩)
+      have ptn2 : Tendsto (fun n ↦ m • (f ⟨ux n, hux n⟩)) atTop (𝓝 (m • (g x))) := by
+        apply Tendsto.const_smul
+        apply ((cg.tendsto x).comp tux).congr
+        exact fun n ↦ hdf.isDenseInducing_val.extend_eq hf.continuous ⟨ux n, hux n⟩
+      exact tendsto_nhds_unique ptn1 ptn2
+    cont := cg }
+
+theorem dense_extend_eq (x : f.domain) : dense_extend hdf hf x = f x :=
+  hdf.isDenseInducing_val.extend_eq hf.continuous x
+
+theorem norm_dense_extend {C : ℝ} (hC : 0 ≤ C) (hfC : ∀ x, ‖f x‖ ≤ C * ‖x‖) :
+    ‖dense_extend hdf hf‖ ≤ C := by
+  rw [ContinuousLinearMap.opNorm_le_iff hC]
+  intro x
+  obtain ⟨u, hu, tu⟩ := dense_seq hdf x
+  have h1 : Tendsto (fun n ↦ ‖f ⟨u n, hu n⟩‖) atTop (𝓝 (‖dense_extend hdf hf x‖)) := by
+    apply (continuous_norm.tendsto _).comp
+    apply (((dense_extend hdf hf).continuous.tendsto x).comp tu).congr
+    exact fun n ↦ dense_extend_eq hdf hf ⟨u n, hu n⟩
+  have h2 : Tendsto (fun n ↦ C * ‖u n‖) atTop (𝓝 (C * ‖x‖)) :=
+    ((continuous_norm.tendsto _).comp tu).const_mul _
+  exact le_of_tendsto_of_tendsto' h1 h2 fun n ↦ hfC _
+
+end extendLinearPMap
 
 theorem exists_inverse'' [CompleteSpace E] [Nontrivial E]
     (φ : E → F) (hφ : Isometry φ) (φz : φ 0 = 0)
@@ -254,198 +334,115 @@ theorem exists_inverse'' [CompleteSpace E] [Nontrivial E]
   have hψ p : Isometry (ψ p) := Isometry.of_dist_eq fun x y ↦ hφ.dist_eq _ _
   have ψz p : ψ p 0 = 0 := by simp [ψ, φz]
   have fini (p : Submodule ℝ E) (hp : FiniteDimensional ℝ p) :
-      ∃ T : A p →L[ℝ] p, (∀ y, ‖T y‖ ≤ 1 * ‖y‖) ∧ ∀ y : p, T (ψ p y) = y := by
-    by_cases np : Nontrivial p
-    · have : Dense (X := A p) (span ℝ (range (ψ p))) := by
-        convert dense_univ
-        rw [← top_coe (R := ℝ)]
-        exact congrArg _ (span_ψ p)
-      obtain ⟨T, nT, hT⟩ := exists_inverse' (hψ p) (ψz p) this
-      exact ⟨T, fun y ↦ nT ▸ T.le_opNorm y, fun y ↦ congrFun hT y⟩
-    · refine ⟨0, by simp, ?_⟩
-      rw [not_nontrivial_iff_subsingleton] at np
-      exact fun _ ↦ Subsingleton.allEq _ _
-  choose! T nT hT using fini
-  have eq {p q : Submodule ℝ E} (hp : FiniteDimensional ℝ p) (hq : FiniteDimensional ℝ q)
-      (hpq : p ≤ q) (y : A p) :
-      (T p y).1 = (T q (Submodule.inclusion (mA hpq) y)).1 := by
-    have : p.subtype ∘ₗ (T p) = q.subtype ∘ₗ (T q) ∘ₗ (Submodule.inclusion (mA hpq)) := by
-      refine LinearMap.ext_on_range (span_ψ p) fun x ↦ ?_
-      simp only [LinearMap.coe_comp, coe_subtype, ContinuousLinearMap.coe_coe, Function.comp_apply]
-      have : Submodule.inclusion (mA hpq) (ψ p x) = ψ q (Submodule.inclusion hpq x) := rfl
-      rw [hT p hp, this, hT q hq]
+      ∃ T : A p →ₗ[ℝ] E, (∀ y, ‖T y‖ ≤ 1 * ‖y‖) ∧ ∀ y : p, T (ψ p y) = y := by
+    obtain ⟨T, nT, hT⟩ : ∃ T : A p →ₗ[ℝ] p, (∀ y, ‖T y‖ ≤ 1 * ‖y‖) ∧ ∀ y : p, T (ψ p y) = y := by
+      by_cases np : Nontrivial p
+      · have : Dense (X := A p) (span ℝ (range (ψ p))) := by
+          convert dense_univ
+          rw [← top_coe (R := ℝ)]
+          exact congrArg _ (span_ψ p)
+        obtain ⟨T, nT, hT⟩ := exists_inverse' (hψ p) (ψz p) this
+        exact ⟨T, fun y ↦ nT ▸ T.le_opNorm y, fun y ↦ congrFun hT y⟩
+      · refine ⟨0, by simp, ?_⟩
+        rw [not_nontrivial_iff_subsingleton] at np
+        exact fun _ ↦ Subsingleton.allEq _ _
+    refine ⟨p.subtype ∘ₗ T, fun y ↦ ?_, fun y ↦ ?_⟩
+    · simpa using nT y
+    · simpa using hT y
+  choose! T' nT' hT' using fini
+  let T {p : Submodule ℝ E} (hp : FiniteDimensional ℝ p) : F →ₗ.[ℝ] E :=
+    { domain := A p
+      toFun := T' p }
+  have nT {p : Submodule ℝ E} (hp : FiniteDimensional ℝ p) (y : A p) : ‖T hp y‖ ≤ 1 * ‖y‖ :=
+    nT' p hp y
+  have hT {p : Submodule ℝ E} (hp : FiniteDimensional ℝ p) (y : p) : T hp (ψ p y) = y :=
+    hT' p hp y
+  let c : Set (F →ₗ.[ℝ] E) := {f | ∃ (p : Submodule ℝ E) (hp : FiniteDimensional ℝ p), f = T hp}
+  have Dc : DirectedOn (· ≤ ·) c := by
+    rintro - ⟨p, hp, rfl⟩ - ⟨q, hq, rfl⟩
+    have hpq : FiniteDimensional ℝ (p ⊔ q : Submodule ℝ E) := inferInstance
+    refine ⟨T hpq, ⟨_, hpq, rfl⟩, ?_, ?_⟩
+    · have hApq : A p ≤ A (p ⊔ q) := mA le_sup_left
+      refine LinearPMap.le_of_eqLocus_ge fun y hy ↦ ?_
+      simp only [LinearPMap.eqLocus, mem_mk, AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk,
+      mem_setOf_eq]
+      refine ⟨hy, hApq hy, ?_⟩
+      have : (T hp).toFun = (T hpq).toFun ∘ₗ (Submodule.inclusion hApq) := by
+        refine LinearMap.ext_on_range (span_ψ p) fun x ↦ ?_
+        simp only [LinearMap.coe_comp, Function.comp_apply]
+        have : Submodule.inclusion hApq (ψ p x) = ψ (p ⊔ q) (Submodule.inclusion le_sup_left x) :=
+          rfl
+        rw [hT' p hp, this, hT' (p ⊔ q) hpq]
+        rfl
+      rw [← LinearPMap.toFun_eq_coe, this]
       rfl
-    exact congrFun (congrArg DFunLike.coe this) y
-  let Q : Set F := ⋃ (p : Submodule ℝ E) (_ : FiniteDimensional ℝ p), A p
-  let g : span ℝ Q → E := fun y ↦
-    let n := (mem_span_set'.1 y.2).choose
-    let c : Fin n → ℝ := (mem_span_set'.1 y.2).choose_spec.choose
-    let x : Fin n → Q := (mem_span_set'.1 y.2).choose_spec.choose_spec.choose
-    let p := fun i ↦ (mem_iUnion₂.1 (x i).2).choose
-    have hx := fun i ↦ (mem_iUnion₂.1 (x i).2).choose_spec.choose_spec
-    ∑ i : Fin n, c i • (T (p i) ⟨(x i).1, hx i⟩)
-  have Teg (p : Submodule ℝ E) (hp : FiniteDimensional ℝ p) (x : span ℝ Q)
-      (hx : x.1 ∈ A p) : (T p ⟨x, hx⟩).1 = g x := by
-    let nx := (mem_span_set'.1 x.2).choose
-    let cx : Fin nx → ℝ := (mem_span_set'.1 x.2).choose_spec.choose
-    let xx : Fin nx → Q := (mem_span_set'.1 x.2).choose_spec.choose_spec.choose
-    have xe : ∑ i, cx i • (xx i).1 = x :=
-      (mem_span_set'.1 x.2).choose_spec.choose_spec.choose_spec
-    let px := fun i ↦ (mem_iUnion₂.1 (xx i).2).choose
-    have hpx i : FiniteDimensional ℝ (px i) := (mem_iUnion₂.1 (xx i).2).choose_spec.choose
-    have hxx : ∀ i, (xx i).1 ∈ A (px i) :=
-      fun i ↦ (mem_iUnion₂.1 (xx i).2).choose_spec.choose_spec
-    change (T p ⟨x, hx⟩).1 = ∑ i, cx i • (T (px i) ⟨(xx i).1, hxx i⟩).1
-    have this i : px i ≤ p ⊔ ⨆ j, px j := by
-      apply le_sup_of_le_right
-      apply le_iSup _ i
-    simp_rw [fun i ↦ eq (hpx i) _ (this i) ⟨(xx i), hxx i⟩]
-    rw [eq hp inferInstance (le_sup_left (b := ⨆ j, px j)) ⟨x, hx⟩]
-    simp_rw [← coe_smul, ← Submodule.coe_sum, ← _root_.map_smul, ← map_sum]
-    congr
-    rw [← Subtype.val_inj]
-    simp_rw [Submodule.coe_sum, Submodule.coe_inclusion, coe_smul]
-    rw [xe]
-  have imp {n : ℕ} {p : Fin n → Submodule ℝ E} {x : Fin n → Q} (hx : ∀ i, (x i).1 ∈ A (p i)) i :
-      (x i).1 ∈ A (⨆ i, p i) := by
-    have : ⨆ i, A (p i) ≤ A (⨆ i, p i) := by
+    · have hApq : A q ≤ A (p ⊔ q) := mA le_sup_right
+      refine LinearPMap.le_of_eqLocus_ge fun y hy ↦ ?_
+      simp only [LinearPMap.eqLocus, mem_mk, AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk,
+      mem_setOf_eq]
+      refine ⟨hy, hApq hy, ?_⟩
+      have : (T hq).toFun = (T hpq).toFun ∘ₗ (Submodule.inclusion hApq) := by
+        refine LinearMap.ext_on_range (span_ψ q) fun x ↦ ?_
+        simp only [LinearMap.coe_comp, Function.comp_apply]
+        have : Submodule.inclusion hApq (ψ q x) = ψ (p ⊔ q) (Submodule.inclusion le_sup_right x) :=
+          rfl
+        rw [hT' q hq, this, hT' (p ⊔ q) hpq]
+        rfl
+      rw [← LinearPMap.toFun_eq_coe, this]
+      rfl
+  let S := LinearPMap.sSup c Dc
+  have dense_domS : Dense (S.domain : Set F) := by
+    simp only [S, LinearPMap.sSup]
+    convert hdφ
+    apply le_antisymm
+    · intro y hy
+      rw [Submodule.mem_sSup] at hy
+      apply hy
+      rintro - ⟨-, ⟨p, hp, rfl⟩, rfl⟩
       simp only [A]
-      rw [iSup_span, ← image_iUnion]
       apply span_mono
-      apply image_mono
-      simp only [iUnion_subset_iff, SetLike.coe_subset_coe]
-      exact fun i ↦ le_iSup p i
-    apply this
-    apply le_iSup (A ∘ p) i
-    exact hx i
-  have imp (x : span ℝ Q) : ∃ (p : Submodule ℝ E), FiniteDimensional ℝ p ∧ x.1 ∈ A p := by
-    let nx := (mem_span_set'.1 x.2).choose
-    let cx : Fin nx → ℝ := (mem_span_set'.1 x.2).choose_spec.choose
-    let xx : Fin nx → Q := (mem_span_set'.1 x.2).choose_spec.choose_spec.choose
-    have xe : ∑ i, cx i • (xx i).1 = x :=
-      (mem_span_set'.1 x.2).choose_spec.choose_spec.choose_spec
-    let px := fun i ↦ (mem_iUnion₂.1 (xx i).2).choose
-    have hpx i : FiniteDimensional ℝ (px i) := (mem_iUnion₂.1 (xx i).2).choose_spec.choose
-    have hxx : ∀ i, (xx i).1 ∈ A (px i) :=
-      fun i ↦ (mem_iUnion₂.1 (xx i).2).choose_spec.choose_spec
-    use ⨆ i, px i, inferInstance
-    rw [← xe]
-    convert (∑ i, cx i • (⟨(xx i).1, imp hxx i⟩ : ( A (⨆ i, (px i)) : Submodule ℝ F))).2
-    simp_rw [Submodule.coe_sum, coe_smul]
-  have gadd x y : g (x + y) = g x + g y := by
-    obtain ⟨p, hp, hx⟩ := imp x
-    obtain ⟨q, hq, hy⟩ := imp y
-    have : (A p) ⊔ (A q) ≤ A (p ⊔ q) := by
-      apply sup_le
-      · exact mA le_sup_left
-      · exact mA le_sup_right
-    have hx : x.1 ∈ A (p ⊔ q) := this <| le_sup_left (b := A q) hx
-    have hy : y.1 ∈ A (p ⊔ q) := this <| le_sup_right (a := A p) hy
-    have hxy : x.1 + y.1 ∈ A (p ⊔ q) := by
-      exact ((⟨x.1, hx⟩ : A (p ⊔ q)) + ⟨y.1, hy⟩).2
-    rw [← Teg (p ⊔ q) inferInstance x hx, ← Teg (p ⊔ q) inferInstance y hy,
-      ← Teg (p ⊔ q) inferInstance (x + y) hxy, ← coe_add, ← map_add]
-    rfl
-  have gsmul (c : ℝ) x : g (c • x) = c • (g x) := by
-    obtain ⟨p, hp, hx⟩ := imp x
-    have hcx : c • x.1 ∈ A p := (c • ⟨x.1, hx⟩ : A p).2
-    rw [← Teg p hp x hx, ← Teg p hp (c • x) hcx, ← coe_smul, ← _root_.map_smul]
-    rfl
-  have ng x : ‖g x‖ ≤ 1 * ‖x‖ := by
-    obtain ⟨p, hp, hx⟩ := imp x
-    rw [← Teg p hp x hx]
-    exact nT p hp _
-
-  have dQ : Dense (span ℝ Q : Set F) := by
-    simp only [Q, A]
-    rw [span_iUnion₂]
-    simp_rw [span_span]
-    rw [← span_iUnion₂, ← image_iUnion₂, ← isup_fin, image_univ]
-    exact hdφ
-  have dQ := dQ.denseRange_val
-  have ui := uniformInducing_val (span ℝ Q : Set F)
-  have cg : UniformContinuous g := by
-    apply LipschitzWith.uniformContinuous (K := 1)
-    apply LipschitzWith.of_dist_le_mul
-    intro x y
-    rw [dist_eq_norm, sub_eq_add_neg, ← neg_one_smul ℝ, ← gsmul, ← gadd, dist_eq_norm,
-      neg_one_smul ℝ, ← sub_eq_add_neg]
-    exact ng _
-  let h := (ui.isDenseInducing dQ).extend g
-  have ch : Continuous h :=
-    (ui.isDenseInducing dQ).continuous_extend (uniformly_extend_exists ui dQ cg)
-  have merde : ∀ x : F, ∃ u : ℕ → span ℝ Q, Tendsto (Subtype.val ∘ u) atTop (𝓝 x) := by
-    intro x
-    obtain ⟨u, hu1, hu2⟩ := dense_seq dQ x
-    let v : ℕ → span ℝ Q := fun n ↦ (hu1 n).choose
-    have : u = Subtype.val ∘ v := by
-      ext n
-      simp only [SetLike.coe_sort_coe, Function.comp_apply, v]
-      exact (hu1 n).choose_spec.symm
-    use v
-    rwa [← this]
-  have hadd x y : h (x + y) = h x + h y := by
-    obtain ⟨ux, hux⟩ := merde x
-    obtain ⟨uy, huy⟩ := merde y
-    have ptn1 : Tendsto (fun n ↦ g (ux n) + g (uy n)) atTop (𝓝 (h x + h y)) := by
-      apply Tendsto.add
-      · apply ((ch.tendsto x).comp hux).congr
-        exact fun n ↦ (ui.isDenseInducing dQ).extend_eq cg.continuous (ux n)
-      · apply ((ch.tendsto y).comp huy).congr
-        exact fun n ↦ (ui.isDenseInducing dQ).extend_eq cg.continuous (uy n)
-    have ptn2 : Tendsto (fun n ↦ g (ux n) + g (uy n)) atTop (𝓝 (h (x + y))) := by
-      simp_rw [← gadd]
-      apply ((ch.tendsto _).comp (hux.add huy)).congr
-      exact fun n ↦ (ui.isDenseInducing dQ).extend_eq cg.continuous (ux n + uy n)
-    exact tendsto_nhds_unique ptn2 ptn1
-  have hsmul (c : ℝ) x : h (c • x) = c • (h x) := by
-    obtain ⟨ux, hux⟩ := merde x
-    have ptn1 : Tendsto (fun n ↦ c • (g (ux n))) atTop (𝓝 (h (c • x))) := by
-      simp_rw [← gsmul]
-      apply ((ch.tendsto _).comp (hux.const_smul c)).congr
-      exact fun n ↦ (ui.isDenseInducing dQ).extend_eq cg.continuous (c • (ux n))
-    have ptn2 : Tendsto (fun n ↦ c • (g (ux n))) atTop (𝓝 (c • (h x))) := by
-      apply Tendsto.const_smul
-      apply ((ch.tendsto x).comp hux).congr
-      exact fun n ↦ (ui.isDenseInducing dQ).extend_eq cg.continuous (ux n)
-    exact tendsto_nhds_unique ptn1 ptn2
-  have hnorm x : ‖h x‖ ≤ 1 * ‖x‖ := by
-    obtain ⟨ux, hux⟩ := merde x
-    have ptn1 : Tendsto (fun n ↦ ‖g (ux n)‖) atTop (𝓝 (‖h x‖)) := by
-      apply ((continuous_norm.tendsto _).comp <| (ch.tendsto x).comp hux).congr
-      intro n
-      simp only [Function.comp_apply]
-      congr
-      exact (ui.isDenseInducing dQ).extend_eq cg.continuous (ux n)
-    apply le_of_tendsto_of_tendsto' ptn1 (((continuous_norm.tendsto _).comp hux).const_mul 1)
-    exact fun _ ↦ ng _
-  let h' : F →ₗ[ℝ] E :=
-    { toFun := h
-      map_add' := hadd
-      map_smul' := hsmul }
-  let H := h'.mkContinuous 1 hnorm
-  use H
-  have this x : H (φ x) = x := by
-    have : x ∈ ⋃ (F : Submodule ℝ E) (_ : FiniteDimensional ℝ F), (F : Set E) := by
-      rw [← isup_fin]; trivial
-    obtain ⟨p, hp, hx⟩ := mem_iUnion₂.1 this
-    have ptn : φ x ∈ A p := by
-      exact subset_span ⟨x, hx, rfl⟩
-    have ptn' : φ x ∈ span ℝ Q := subset_span <| mem_iUnion₂.2 ⟨p, hp, ptn⟩
-    have ob : (T p ⟨φ x, ptn⟩).1 = g ⟨φ x, ptn'⟩ := by
-      exact Teg p hp ⟨φ x, ptn'⟩ ptn
-    have merde : H (φ x) = g ⟨φ x, ptn'⟩ := by
-      change h (⟨φ x, ptn'⟩ : span ℝ Q) = g ⟨φ x, ptn'⟩
-      exact (ui.isDenseInducing dQ).extend_eq cg.continuous _
-    rw [merde, ← ob]
-    exact Subtype.val_inj.2 <| hT p hp ⟨x, hx⟩
+      exact image_subset_range ..
+    · rw [span_le]
+      rintro - ⟨x, rfl⟩
+      apply Submodule.mem_sSup_of_mem (s := A (ℝ ∙ x))
+      have hx : FiniteDimensional ℝ (ℝ ∙ x) := inferInstance
+      · exact ⟨T hx, ⟨_, hx, rfl⟩, rfl⟩
+      · exact subset_span ⟨x, mem_span_singleton_self x, rfl⟩
+  have hS : ∀ x, ‖S x‖ ≤ 1 * ‖x‖ := by
+    rintro ⟨y, hy⟩
+    simp only [LinearPMap.sSup, S] at hy
+    rw [Submodule.mem_sSup_of_directed] at hy
+    · obtain ⟨-, ⟨f, hf, rfl⟩, hy⟩ := hy
+      simp_rw [S]
+      rw [LinearPMap.sSup_apply Dc hf ⟨y, hy⟩]
+      obtain ⟨p, hp, rfl⟩ := hf
+      exact nT hp _
+    · exact ⟨A ⊥, ⟨T (finiteDimensional_bot ℝ E), ⟨⊥, finiteDimensional_bot ℝ E, rfl⟩, rfl⟩⟩
+    · rintro - ⟨-, ⟨p, hp, rfl⟩, rfl⟩ - ⟨-, ⟨q, hq, rfl⟩, rfl⟩
+      refine ⟨A (p ⊔ q), ⟨T inferInstance, ⟨p ⊔ q, inferInstance, rfl⟩, rfl⟩,
+        mA le_sup_left, mA le_sup_right⟩
+  have cS : UniformContinuous S := AddMonoidHomClass.uniformContinuous_of_bound _ _ hS
+  let U := dense_extend dense_domS cS
+  use U
+  have main x : U (φ x) = x := by
+    have h1 : φ x ∈ A (ℝ ∙ x) := subset_span ⟨x, mem_span_singleton_self x, rfl⟩
+    have h2 : φ x ∈ S.domain := by
+      simp_rw [S, LinearPMap.sSup, Submodule.mem_sSup]
+      rintro N hN
+      refine hN _ ?_ h1
+      exact ⟨T inferInstance, ⟨ℝ ∙ x, inferInstance, rfl⟩, rfl⟩
+    change U (⟨φ x, h2⟩ : S.domain) = x
+    rw [dense_extend_eq]
+    change S ⟨(⟨φ x, h1⟩ : A (ℝ ∙ x)), h2⟩ = x
+    simp_rw [S]
+    rw [LinearPMap.sSup_apply Dc ⟨ℝ ∙ x, inferInstance, rfl⟩ ⟨φ x, h1⟩]
+    change T inferInstance (ψ (ℝ ∙ x) ⟨x, mem_span_singleton_self x⟩) = _
+    exact hT inferInstance _
   constructor
   · apply le_antisymm
-    · exact H.opNorm_le_bound (by norm_num) hnorm
-    · obtain ⟨x, hx⟩ := NormedSpace.exists_lt_norm ℝ E 0
-      rw [← _root_.mul_le_mul_right hx, one_mul]
-      nth_rw 1 [← this x]
-      rw [← hφ.norm_map_of_map_zero φz x]
-      exact H.le_opNorm _
-  · ext x
-    exact this x
+    · exact norm_dense_extend _ _ (by norm_num) hS
+    · obtain ⟨x, hx⟩ := exists_norm_eq E zero_le_one
+      apply le_opNorm_of' (x := φ x)
+      · exact hx ▸ hφ.norm_map_of_map_zero φz x
+      · rw [main, hx]
+  · exact funext main
