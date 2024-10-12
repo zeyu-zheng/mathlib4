@@ -240,39 +240,6 @@ theorem Dense.isDenseInducing_val {X : Type*} [TopologicalSpace X] {s : Set X} (
 theorem uniformInducing_val {X : Type*} [UniformSpace X] (s : Set X) :
     IsUniformInducing (@Subtype.val X s) := ⟨uniformity_setCoe⟩
 
-section liftCover
-
-namespace LinearMap
-
-variable {ι R S M N : Type*} [Semiring R] [Semiring S] (σ : R →+* S)
-  [AddCommMonoid M] [AddCommMonoid N] [Module R M] [Module S N]
-  {s : ι → Submodule R M} (f : (i : ι) → s i →ₛₗ[σ] N)
-  (hf : ∀ (i j) (x : M) (hxi : x ∈ s i) (hxj : x ∈ s j), f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩)
-  (hs : ∀ x y, ∃ i, x ∈ s i ∧ y ∈ s i)
-
-noncomputable def liftCover : M →ₛₗ[σ] N :=
-  haveI h : ⋃ i, s i = univ :=
-    Set.iUnion_eq_univ_iff.2 fun x ↦ ⟨(hs x x).choose, (hs x x).choose_spec.1⟩
-  { toFun := Set.liftCover (fun i ↦ s i) (fun i ↦ f i) hf h
-    map_add' := by
-      intro x y
-      obtain ⟨i, hx, hy⟩ := hs x y
-      rw [Set.liftCover_of_mem hx] }
-
-def Compatible : Prop :=
-  ∀ {i j x} (hx : x ∈ s i ∩ s j),
-      f i ⟨x, mem_of_mem_inter_left hx⟩ = f j ⟨x, mem_of_mem_inter_right hx⟩
-
-variable {f}
-
-theorem merge_eq (hs : ⋃ i, s i = univ) (hf : Compatible f) {i : ι} {a : α} (ha : a ∈ s i) :
-    merge f hs a = f i ⟨a, ha⟩ :=
-  hf ⟨(mem_iUnion.1 (mem_iUnion.2 ⟨i, ha⟩)).choose_spec, ha⟩
-
-end LinearMap
-
-end liftCover
-
 theorem exists_inverse'' [CompleteSpace E] [Nontrivial E]
     (φ : E → F) (hφ : Isometry φ) (φz : φ 0 = 0)
     (hdφ : Dense (Submodule.span ℝ (range φ) : Set F)) :
