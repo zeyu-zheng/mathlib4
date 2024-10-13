@@ -128,10 +128,18 @@ theorem pairwise_eq_iff_exists_eq [Nonempty ι] (s : Set α) (f : α → ι) :
 theorem pairwise_union :
     (s ∪ t).Pairwise r ↔
     s.Pairwise r ∧ t.Pairwise r ∧ ∀ a ∈ s, ∀ b ∈ t, a ≠ b → r a b ∧ r b a := by
-  simp only [Set.Pairwise, mem_union, or_imp, forall_and]
-  exact
-    ⟨fun H => ⟨H.1.1, H.2.2, H.1.2, fun x hx y hy hne => H.2.1 y hy x hx hne.symm⟩,
-     fun H => ⟨⟨H.1, H.2.2.1⟩, fun x hx y hy hne => H.2.2.2 y hy x hx hne.symm, H.2.1⟩⟩
+  simp only [Set.Pairwise, mem_union, or_imp, forall_and, and_assoc]
+  constructor
+  · intro h
+    obtain ⟨h1, h2, h3, h4⟩ := h
+    repeat' apply And.intro <;> try assumption
+    intro x hx y hy hne
+    apply h2 y hy x hx hne.symm
+  · intro h
+    obtain ⟨h1, h2, h3, h4⟩ := h
+    repeat' apply And.intro <;> try assumption
+    intro x hx y hy hne
+    apply h4 y hy x hx hne.symm
 
 theorem pairwise_union_of_symmetric (hr : Symmetric r) :
     (s ∪ t).Pairwise r ↔ s.Pairwise r ∧ t.Pairwise r ∧ ∀ a ∈ s, ∀ b ∈ t, a ≠ b → r a b :=
