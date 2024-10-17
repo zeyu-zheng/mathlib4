@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Yury Kudryashov
 -/
 import Mathlib.Algebra.Group.Action.Basic
-import Mathlib.Algebra.Group.Pointwise.Set
+import Mathlib.Algebra.Group.Pointwise.Set.Basic
 
 /-!
 # Torsors of additive group actions
@@ -53,9 +53,6 @@ class AddTorsor (G : outParam Type*) (P : Type*) [AddGroup G] extends AddAction 
 
  -- Porting note(#12096): removed `nolint instance_priority`; lint not ported yet
 attribute [instance 100] AddTorsor.nonempty
-
--- Porting note(#12094): removed nolint; dangerous_instance linter not ported yet
---attribute [nolint dangerous_instance] AddTorsor.toVSub
 
 /-- An `AddGroup G` is a torsor for itself. -/
 -- Porting note(#12096): linter not ported yet

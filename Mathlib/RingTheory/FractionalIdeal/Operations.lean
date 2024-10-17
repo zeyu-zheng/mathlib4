@@ -5,6 +5,7 @@ Authors: Anne Baanen, Filippo A. E. Nuccio
 -/
 import Mathlib.RingTheory.FractionalIdeal.Basic
 import Mathlib.RingTheory.IntegralClosure.IsIntegral.Basic
+import Mathlib.RingTheory.LocalRing.Basic
 
 /-!
 # More operations on fractional ideals
@@ -158,10 +159,10 @@ theorem isFractional_span_iff {s : Set P} :
         (by
           rw [smul_zero]
           exact isInteger_zero)
-        (fun x y hx hy => by
+        (fun x y _ _ hx hy => by
           rw [smul_add]
           exact isInteger_add hx hy)
-        fun s x hx => by
+        fun s x _ hx => by
         rw [smul_comm]
         exact isInteger_smul hx⟩⟩
 
@@ -515,15 +516,15 @@ variable (R₁)
 def spanFinset {ι : Type*} (s : Finset ι) (f : ι → K) : FractionalIdeal R₁⁰ K :=
   ⟨Submodule.span R₁ (f '' s), by
     obtain ⟨a', ha'⟩ := IsLocalization.exist_integer_multiples R₁⁰ s f
-    refine ⟨a', a'.2, fun x hx => Submodule.span_induction hx ?_ ?_ ?_ ?_⟩
+    refine ⟨a', a'.2, fun x hx => Submodule.span_induction ?_ ?_ ?_ ?_ hx⟩
     · rintro _ ⟨i, hi, rfl⟩
       exact ha' i hi
     · rw [smul_zero]
       exact IsLocalization.isInteger_zero
-    · intro x y hx hy
+    · intro x y _ _ hx hy
       rw [smul_add]
       exact IsLocalization.isInteger_add hx hy
-    · intro c x hx
+    · intro c x _ hx
       rw [smul_comm]
       exact IsLocalization.isInteger_smul hx⟩
 

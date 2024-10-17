@@ -234,6 +234,11 @@ lemma comp {UX : Scheme.{u}} (H : P f) (i : UX ⟶ X) [IsOpenImmersion i] :
     P (i ≫ f) :=
   (iff_of_openCover' f (X.affineCover.add i)).mp H .none
 
+/-- If `P` is local at the source, then it respects composition on the left with open immersions. -/
+instance respectsLeft_isOpenImmersion {P : MorphismProperty Scheme}
+    [IsLocalAtSource P] : P.RespectsLeft @IsOpenImmersion where
+  precomp i _ _ hf := IsLocalAtSource.comp hf i
+
 lemma of_iSup_eq_top {ι} (U : ι → X.Opens) (hU : iSup U = ⊤)
     (H : ∀ i, P ((U i).ι ≫ f)) : P f := by
   refine (iff_of_openCover' f
@@ -269,6 +274,32 @@ lemma isLocalAtTarget [P.IsMultiplicative]
     constructor
     · exact hP _ _
     · exact fun H ↦ P.comp_mem _ _ H (of_isOpenImmersion _)
+
+section IsLocalAtSourceAndTarget
+
+/-- If `P` is local at the source and the target, then restriction on both source and target
+preserves `P`. -/
+lemma resLE [IsLocalAtTarget P] {U : Y.Opens} {V : X.Opens} (e : V ≤ f ⁻¹ᵁ U)
+    (hf : P f) : P (f.resLE U V e) :=
+  IsLocalAtSource.comp (IsLocalAtTarget.restrict hf U) _
+
+/-- If `P` is local at the source, local at the target and is stable under post-composition with
+open immersions, then `P` can be checked locally around points. -/
+lemma iff_exists_resLE [IsLocalAtTarget P] [P.RespectsRight @IsOpenImmersion] :
+    P f ↔ ∀ x : X, ∃ (U : Y.Opens) (V : X.Opens) (_ : x ∈ V.1) (e : V ≤ f ⁻¹ᵁ U),
+      P (f.resLE U V e) := by
+  refine ⟨fun hf x ↦ ⟨⊤, ⊤, trivial, by simp, resLE _ hf⟩, fun hf ↦ ?_⟩
+  choose U V hxU e hf using hf
+  rw [IsLocalAtSource.iff_of_iSup_eq_top (fun x : X ↦ V x) (P := P)]
+  · intro x
+    rw [← Scheme.Hom.resLE_comp_ι _ (e x)]
+    exact MorphismProperty.RespectsRight.postcomp (Q := @IsOpenImmersion) _ inferInstance _ (hf x)
+  · rw [eq_top_iff]
+    rintro x -
+    simp only [Opens.coe_iSup, Set.mem_iUnion, SetLike.mem_coe]
+    use x, hxU x
+
+end IsLocalAtSourceAndTarget
 
 end IsLocalAtSource
 
@@ -326,7 +357,7 @@ theorem respectsIso_mk {P : AffineTargetMorphismProperty}
     (h₂ : ∀ {X Y Z} (e : Y ≅ Z) (f : X ⟶ Y) [IsAffine Y],
       P f → @P _ _ (f ≫ e.hom) (isAffine_of_isIso e.inv)) :
     P.toProperty.RespectsIso := by
-  constructor
+  apply MorphismProperty.RespectsIso.mk
   · rintro X Y Z e f ⟨a, h⟩; exact ⟨a, h₁ e f h⟩
   · rintro X Y Z e f ⟨a, h⟩; exact ⟨isAffine_of_isIso e.inv, h₂ e f h⟩
 
@@ -398,7 +429,7 @@ theorem of_targetAffineLocally_of_isPullback
 
 instance (P : AffineTargetMorphismProperty) [P.toProperty.RespectsIso] :
     (targetAffineLocally P).RespectsIso := by
-  constructor
+  apply MorphismProperty.RespectsIso.mk
   · introv H U
     rw [morphismRestrict_comp, P.cancel_left_of_respectsIso]
     exact H U
@@ -406,7 +437,7 @@ instance (P : AffineTargetMorphismProperty) [P.toProperty.RespectsIso] :
     rintro ⟨U, hU : IsAffineOpen U⟩; dsimp
     haveI : IsAffine _ := hU.preimage_of_isIso e.hom
     rw [morphismRestrict_comp, P.cancel_right_of_respectsIso]
-    exact H ⟨(Opens.map e.hom.val.base).obj U, hU.preimage_of_isIso e.hom⟩
+    exact H ⟨(Opens.map e.hom.base).obj U, hU.preimage_of_isIso e.hom⟩
 
 /--
 `HasAffineProperty P Q` is a type class asserting that `P` is local at the target, and over affine

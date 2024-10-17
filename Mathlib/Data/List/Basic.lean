@@ -3,6 +3,7 @@ Copyright (c) 2014 Parikshit Khanna. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Parikshit Khanna, Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Mario Carneiro
 -/
+import Mathlib.Control.Basic
 import Mathlib.Data.Nat.Defs
 import Mathlib.Data.Option.Basic
 import Mathlib.Data.List.Defs
@@ -286,10 +287,6 @@ theorem map_reverseAux (f : α → β) (l₁ l₂ : List α) :
     map f (reverseAux l₁ l₂) = reverseAux (map f l₁) (map f l₂) := by
   simp only [reverseAux_eq, map_append, map_reverse]
 
-/-! ### empty -/
-
-@[deprecated (since := "2024-08-15")] alias isEmpty_iff_eq_nil := isEmpty_iff
-
 /-! ### getLast -/
 
 attribute [simp] getLast_cons
@@ -507,9 +504,6 @@ theorem get_cons {l : List α} {a : α} {n} (hl) :
     (a :: l).get ⟨n, hl⟩ = if hn : n = 0 then a else
       l.get ⟨n - 1, by contrapose! hl; rw [length_cons]; omega⟩ :=
   getElem_cons hl
-
-theorem modifyHead_modifyHead (l : List α) (f g : α → α) :
-    (l.modifyHead f).modifyHead g = l.modifyHead (g ∘ f) := by cases l <;> simp
 
 /-! ### Induction from the right -/
 
@@ -851,8 +845,11 @@ theorem get_reverse_aux₂ (l r : List α) (i : Nat) (h1) (h2) :
 
 @[deprecated getElem_reverse (since := "2024-06-12")]
 theorem get_reverse (l : List α) (i : Nat) (h1 h2) :
-    get (reverse l) ⟨length l - 1 - i, h1⟩ = get l ⟨i, h2⟩ :=
-  get_reverse_aux₂ _ _ _ _ _
+    get (reverse l) ⟨length l - 1 - i, h1⟩ = get l ⟨i, h2⟩ := by
+  rw [get_eq_getElem, get_eq_getElem, getElem_reverse]
+  congr
+  dsimp
+  omega
 
 theorem get_reverse' (l : List α) (n) (hn') :
     l.reverse.get n = l.get ⟨l.length - 1 - n, hn'⟩ := by
@@ -911,6 +908,11 @@ theorem get_set_of_ne {l : List α} {i j : ℕ} (h : i ≠ j) (a : α)
 
 /-! ### map -/
 
+-- `List.map_const` (the version with `Function.const` instead of a lambda) is already tagged
+-- `simp` in Core
+-- TODO: Upstream the tagging to Core?
+attribute [simp] map_const'
+
 @[deprecated (since := "2024-06-21")] alias map_congr := map_congr_left
 
 theorem bind_pure_eq_map (f : α → β) (l : List α) : l.bind (pure ∘ f) = map f l :=
@@ -923,11 +925,11 @@ theorem bind_ret_eq_map (f : α → β) (l : List α) : l.bind (List.ret ∘ f) 
 
 theorem bind_congr {l : List α} {f g : α → List β} (h : ∀ x ∈ l, f x = g x) :
     List.bind l f = List.bind l g :=
-  (congr_arg List.join <| map_congr_left h : _)
+  (congr_arg List.flatten <| map_congr_left h : _)
 
 theorem infix_bind_of_mem {a : α} {as : List α} (h : a ∈ as) (f : α → List α) :
     f a <:+: as.bind f :=
-  List.infix_of_mem_join (List.mem_map_of_mem f h)
+  List.infix_of_mem_flatten (List.mem_map_of_mem f h)
 
 @[simp]
 theorem map_eq_map {α β} (f : α → β) (l : List α) : f <$> l = map f l :=
@@ -1389,7 +1391,7 @@ theorem intersperse_cons_cons (a b c : α) (tl : List α) :
 
 section SplitAtOn
 
-variable (p : α → Bool) (xs ys : List α) (ls : List (List α)) (f : List α → List α)
+variable (p : α → Bool) (xs : List α) (ls : List (List α))
 
 attribute [simp] splitAt_eq
 
@@ -1424,24 +1426,24 @@ theorem splitOnP_cons (x : α) (xs : List α) :
       if p x then [] :: xs.splitOnP p else (xs.splitOnP p).modifyHead (cons x) := by
   rw [splitOnP, splitOnP.go]; split <;> [rfl; simp [splitOnP.go_acc]]
 
-/-- The original list `L` can be recovered by joining the lists produced by `splitOnP p L`,
+/-- The original list `L` can be recovered by flattening the lists produced by `splitOnP p L`,
 interspersed with the elements `L.filter p`. -/
 theorem splitOnP_spec (as : List α) :
-    join (zipWith (· ++ ·) (splitOnP p as) (((as.filter p).map fun x => [x]) ++ [[]])) = as := by
+    flatten (zipWith (· ++ ·) (splitOnP p as) (((as.filter p).map fun x => [x]) ++ [[]])) = as := by
   induction as with
   | nil => rfl
   | cons a as' ih =>
     rw [splitOnP_cons, filter]
     by_cases h : p a
-    · rw [if_pos h, h, map, cons_append, zipWith, nil_append, join, cons_append, cons_inj_right]
+    · rw [if_pos h, h, map, cons_append, zipWith, nil_append, flatten, cons_append, cons_inj_right]
       exact ih
-    · rw [if_neg h, eq_false_of_ne_true h, join_zipWith (splitOnP_ne_nil _ _)
+    · rw [if_neg h, eq_false_of_ne_true h, flatten_zipWith (splitOnP_ne_nil _ _)
         (append_ne_nil_of_right_ne_nil _ (cons_ne_nil [] [])), cons_inj_right]
       exact ih
 where
-  join_zipWith {xs ys : List (List α)} {a : α} (hxs : xs ≠ []) (hys : ys ≠ []) :
-      join (zipWith (fun x x_1 ↦ x ++ x_1) (modifyHead (cons a) xs) ys) =
-        a :: join (zipWith (fun x x_1 ↦ x ++ x_1) xs ys) := by
+  flatten_zipWith {xs ys : List (List α)} {a : α} (hxs : xs ≠ []) (hys : ys ≠ []) :
+      flatten (zipWith (fun x x_1 ↦ x ++ x_1) (modifyHead (cons a) xs) ys) =
+        a :: flatten (zipWith (fun x x_1 ↦ x ++ x_1) xs ys) := by
     cases xs with | nil => contradiction | cons =>
       cases ys with | nil => contradiction | cons => rfl
 
@@ -1465,15 +1467,15 @@ theorem splitOnP_first (h : ∀ x ∈ xs, ¬p x) (sep : α) (hsep : p sep) (as :
 /-- `intercalate [x]` is the left inverse of `splitOn x`  -/
 theorem intercalate_splitOn (x : α) [DecidableEq α] : [x].intercalate (xs.splitOn x) = xs := by
   simp only [intercalate, splitOn]
-  induction' xs with hd tl ih; · simp [join]
+  induction' xs with hd tl ih; · simp [flatten]
   cases' h' : splitOnP (· == x) tl with hd' tl'; · exact (splitOnP_ne_nil _ tl h').elim
   rw [h'] at ih
   rw [splitOnP_cons]
   split_ifs with h
   · rw [beq_iff_eq] at h
     subst h
-    simp [ih, join, h']
-  cases tl' <;> simpa [join, h'] using ih
+    simp [ih, flatten, h']
+  cases tl' <;> simpa [flatten, h'] using ih
 
 /-- `splitOn x` is the left inverse of `intercalate [x]`, on the domain
   consisting of each nonempty list of lists `ls` whose elements do not contain `x`  -/
@@ -1482,13 +1484,13 @@ theorem splitOn_intercalate [DecidableEq α] (x : α) (hx : ∀ l ∈ ls, x ∉ 
   simp only [intercalate]
   induction' ls with hd tl ih; · contradiction
   cases tl
-  · suffices hd.splitOn x = [hd] by simpa [join]
+  · suffices hd.splitOn x = [hd] by simpa [flatten]
     refine splitOnP_eq_single _ _ ?_
     intro y hy H
     rw [eq_of_beq H] at hy
     refine hx hd ?_ hy
     simp
-  · simp only [intersperse_cons_cons, singleton_append, join]
+  · simp only [intersperse_cons_cons, singleton_append, flatten]
     specialize ih _ _
     · intro l hl
       apply hx l
@@ -1565,8 +1567,6 @@ theorem sizeOf_lt_sizeOf_of_mem [SizeOf α] {x : α} {l : List α} (hx : x ∈ l
 /-! ### find -/
 
 section find?
-
-variable {p : α → Bool} {l : List α} {a : α}
 
 @[deprecated (since := "2024-05-05")] alias find?_mem := mem_of_find?_eq_some
 
@@ -2210,18 +2210,13 @@ end Forall
 theorem get_attach (L : List α) (i) :
     (L.attach.get i).1 = L.get ⟨i, length_attach (L := L) ▸ i.2⟩ := by simp
 
-#adaptation_note
-/--
-After nightly-2024-09-06 we can remove the `_root_` prefix below.
--/
 @[simp 1100]
 theorem mem_map_swap (x : α) (y : β) (xs : List (α × β)) :
     (y, x) ∈ map Prod.swap xs ↔ (x, y) ∈ xs := by
   induction' xs with x xs xs_ih
   · simp only [not_mem_nil, map_nil]
   · cases' x with a b
-    simp only [mem_cons, Prod.mk.inj_iff, map, Prod.swap_prod_mk, Prod.exists, xs_ih,
-      _root_.and_comm]
+    simp only [mem_cons, Prod.mk.inj_iff, map, Prod.swap_prod_mk, Prod.exists, xs_ih, and_comm]
 
 theorem dropSlice_eq (xs : List α) (n m : ℕ) : dropSlice n m xs = xs.take n ++ xs.drop (n + m) := by
   induction n generalizing xs
@@ -2309,8 +2304,7 @@ theorem disjoint_reverse_right {l₁ l₂ : List α} : Disjoint l₁ l₂.revers
 end Disjoint
 
 section lookup
-
-variable {α β : Type*} [BEq α] [LawfulBEq α]
+variable [BEq α] [LawfulBEq α]
 
 lemma lookup_graph (f : α → β) {a : α} {as : List α} (h : a ∈ as) :
     lookup a (as.map fun x => (x, f x)) = some (f a) := by
@@ -2324,4 +2318,4 @@ end lookup
 
 end List
 
-set_option linter.style.longFile 2700
+set_option linter.style.longFile 2400

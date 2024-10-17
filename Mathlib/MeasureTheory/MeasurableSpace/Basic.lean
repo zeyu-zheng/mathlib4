@@ -231,7 +231,7 @@ theorem Subsingleton.measurable [Subsingleton α] : Measurable f := fun _ _ =>
 theorem measurable_of_subsingleton_codomain [Subsingleton β] (f : α → β) : Measurable f :=
   fun s _ => Subsingleton.set_cases MeasurableSet.empty MeasurableSet.univ s
 
-@[to_additive (attr := measurability)]
+@[to_additive (attr := measurability, fun_prop)]
 theorem measurable_one [One α] : Measurable (1 : β → α) :=
   @measurable_const _ _ _ _ 1
 
@@ -471,6 +471,15 @@ theorem QuotientGroup.measurable_coe {G} [Group G] [MeasurableSpace G] {S : Subg
 nonrec theorem QuotientGroup.measurable_from_quotient {G} [Group G] [MeasurableSpace G]
     {S : Subgroup G} {f : G ⧸ S → α} : Measurable f ↔ Measurable (f ∘ ((↑) : G → G ⧸ S)) :=
   measurable_from_quotient
+
+instance Quotient.instDiscreteMeasurableSpace {α} {s : Setoid α} [MeasurableSpace α]
+    [DiscreteMeasurableSpace α] : DiscreteMeasurableSpace (Quotient s) where
+  forall_measurableSet _ := measurableSet_quotient.2 .of_discrete
+
+@[to_additive]
+instance QuotientGroup.instDiscreteMeasurableSpace {G} [Group G] [MeasurableSpace G]
+    [DiscreteMeasurableSpace G] (S : Subgroup G) : DiscreteMeasurableSpace (G ⧸ S) :=
+  Quotient.instDiscreteMeasurableSpace
 
 end Quotient
 

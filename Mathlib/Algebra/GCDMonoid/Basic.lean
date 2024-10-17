@@ -89,7 +89,6 @@ variable [CancelCommMonoidWithZero α] [NormalizationMonoid α]
 theorem normUnit_one : normUnit (1 : α) = 1 :=
   normUnit_coe_units 1
 
--- Porting note (#11083): quite slow. Improve performance?
 /-- Chooses an element of each associate class, by multiplying by `normUnit` -/
 def normalize : α →*₀ α where
   toFun x := x * normUnit x
@@ -589,8 +588,8 @@ theorem exists_associated_pow_of_mul_eq_pow [GCDMonoid α] {a b c : α} (hab : I
   use Units.mkOfMulEqOne _ _ h'
   rw [Units.val_mkOfMulEqOne, ha']
 
-theorem exists_eq_pow_of_mul_eq_pow [GCDMonoid α] [Unique αˣ] {a b c : α} (hab : IsUnit (gcd a b))
-    {k : ℕ} (h : a * b = c ^ k) : ∃ d : α, a = d ^ k :=
+theorem exists_eq_pow_of_mul_eq_pow [GCDMonoid α] [Subsingleton αˣ]
+    {a b c : α} (hab : IsUnit (gcd a b)) {k : ℕ} (h : a * b = c ^ k) : ∃ d : α, a = d ^ k :=
   let ⟨d, hd⟩ := exists_associated_pow_of_mul_eq_pow hab h
   ⟨d, (associated_iff_eq.mp hd).symm⟩
 
@@ -820,7 +819,7 @@ end GCDMonoid
 
 section UniqueUnit
 
-variable [CancelCommMonoidWithZero α] [Unique αˣ]
+variable [CancelCommMonoidWithZero α] [Subsingleton αˣ]
 
 -- see Note [lower instance priority]
 instance (priority := 100) normalizationMonoidOfUniqueUnits : NormalizationMonoid α where
@@ -1112,7 +1111,6 @@ noncomputable def gcdMonoidOfLCM [DecidableEq α] (lcm : α → α → α)
       rw [mul_comm, mul_dvd_mul_iff_right h_1.2]
       apply ac }
 
--- Porting note (#11083): very slow; improve performance?
 /-- Define `NormalizedGCDMonoid` on a structure just from the `lcm` and its properties. -/
 noncomputable def normalizedGCDMonoidOfLCM [NormalizationMonoid α] [DecidableEq α] (lcm : α → α → α)
     (dvd_lcm_left : ∀ a b, a ∣ lcm a b) (dvd_lcm_right : ∀ a b, b ∣ lcm a b)
@@ -1252,7 +1250,6 @@ namespace CommGroupWithZero
 
 variable (G₀ : Type*) [CommGroupWithZero G₀] [DecidableEq G₀]
 
--- Porting note (#11083): very slow; improve performance?
 -- see Note [lower instance priority]
 instance (priority := 100) : NormalizedGCDMonoid G₀ where
   normUnit x := if h : x = 0 then 1 else (Units.mk0 x h)⁻¹

@@ -20,9 +20,9 @@ group of `x`.
 
 open CategoryTheory
 
-universe u v
+universe u
 
-variable {X : Type u} {Y : Type v} [TopologicalSpace X] [TopologicalSpace Y]
+variable {X : Type u} [TopologicalSpace X]
 variable {x₀ x₁ : X}
 
 noncomputable section
@@ -59,7 +59,7 @@ theorem reflTransSymmAux_mem_I (x : I × I) : reflTransSymmAux x ∈ I := by
         · norm_num
       · unit_interval
     · rw [mul_assoc]
-      apply mul_le_one
+      apply mul_le_one₀
       · unit_interval
       · apply mul_nonneg
         · norm_num
@@ -69,7 +69,7 @@ theorem reflTransSymmAux_mem_I (x : I × I) : reflTransSymmAux x ∈ I := by
     · apply mul_nonneg
       · unit_interval
       linarith [unitInterval.nonneg x.2, unitInterval.le_one x.2]
-    · apply mul_le_one
+    · apply mul_le_one₀
       · unit_interval
       · linarith [unitInterval.nonneg x.2, unitInterval.le_one x.2]
       · linarith [unitInterval.nonneg x.2, unitInterval.le_one x.2]

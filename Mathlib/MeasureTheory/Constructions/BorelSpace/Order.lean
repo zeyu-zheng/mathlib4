@@ -94,8 +94,8 @@ end OrderTopology
 
 section Orders
 
-variable [TopologicalSpace α] [MeasurableSpace α] [OpensMeasurableSpace α]
-variable [MeasurableSpace δ]
+variable [TopologicalSpace α] {mα : MeasurableSpace α} [OpensMeasurableSpace α]
+variable {mδ : MeasurableSpace δ}
 
 section Preorder
 
@@ -473,7 +473,7 @@ end LinearOrder
 
 section Lattice
 
-variable [TopologicalSpace γ] [MeasurableSpace γ] [BorelSpace γ]
+variable [TopologicalSpace γ] {mγ : MeasurableSpace γ} [BorelSpace γ]
 
 instance (priority := 100) ContinuousSup.measurableSup [Sup γ] [ContinuousSup γ] :
     MeasurableSup γ where
@@ -499,9 +499,9 @@ end Orders
 
 section BorelSpace
 
-variable [TopologicalSpace α] [MeasurableSpace α] [BorelSpace α]
-variable [TopologicalSpace β] [MeasurableSpace β] [BorelSpace β]
-variable [MeasurableSpace δ]
+variable [TopologicalSpace α] {mα : MeasurableSpace α} [BorelSpace α]
+variable [TopologicalSpace β] {mβ : MeasurableSpace β} [BorelSpace β]
+variable {mδ : MeasurableSpace δ}
 
 section LinearOrder
 
@@ -568,7 +568,8 @@ theorem Measurable.isLUB_of_mem {ι} [Countable ι] {f : ι → δ → α} {g g'
         · simp [hb, hg' hb]
       rw [this]
       exact Measurable.piecewise hs measurable_const g'_meas
-  · let f' : ι → δ → α := fun i ↦ s.piecewise (f i) g'
+  · have : Nonempty ι := ⟨i⟩
+    let f' : ι → δ → α := fun i ↦ s.piecewise (f i) g'
     suffices ∀ b, IsLUB { a | ∃ i, f' i b = a } (g b) from
       Measurable.isLUB (fun i ↦ Measurable.piecewise hs (hf i) g'_meas) this
     intro b
@@ -576,14 +577,7 @@ theorem Measurable.isLUB_of_mem {ι} [Countable ι] {f : ι → δ → α} {g g'
     · have A : ∀ i, f' i b = f i b := fun i ↦ by simp [f', hb]
       simpa [A] using hg b hb
     · have A : ∀ i, f' i b = g' b := fun i ↦ by simp [f', hb]
-      have : {a | ∃ (_i : ι), g' b = a} = {g' b} := by
-        apply Subset.antisymm
-        · rintro - ⟨_j, rfl⟩
-          simp only [mem_singleton_iff]
-        · rintro - rfl
-          exact ⟨i, rfl⟩
-      simp only [exists_prop'] at this
-      simp [A, this, hg' hb, isLUB_singleton]
+      simp [A, hg' hb, isLUB_singleton]
 
 theorem AEMeasurable.isLUB {ι} {μ : Measure δ} [Countable ι] {f : ι → δ → α} {g : δ → α}
     (hf : ∀ i, AEMeasurable (f i) μ) (hg : ∀ᵐ b ∂μ, IsLUB { a | ∃ i, f i b = a } (g b)) :
@@ -727,7 +721,7 @@ end LinearOrder
 section ConditionallyCompleteLattice
 
 @[measurability]
-theorem Measurable.iSup_Prop {α} [MeasurableSpace α] [ConditionallyCompleteLattice α]
+theorem Measurable.iSup_Prop {α} {mα : MeasurableSpace α} [ConditionallyCompleteLattice α]
     (p : Prop) {f : δ → α} (hf : Measurable f) : Measurable fun b => ⨆ _ : p, f b := by
   classical
   simp_rw [ciSup_eq_ite]
@@ -736,7 +730,7 @@ theorem Measurable.iSup_Prop {α} [MeasurableSpace α] [ConditionallyCompleteLat
   · exact measurable_const
 
 @[measurability]
-theorem Measurable.iInf_Prop {α} [MeasurableSpace α] [ConditionallyCompleteLattice α]
+theorem Measurable.iInf_Prop {α} {mα : MeasurableSpace α} [ConditionallyCompleteLattice α]
     (p : Prop) {f : δ → α} (hf : Measurable f) : Measurable fun b => ⨅ _ : p, f b := by
   classical
   simp_rw [ciInf_eq_ite]
@@ -929,7 +923,7 @@ section ENNReal
 /-- One can cut out `ℝ≥0∞` into the sets `{0}`, `Ico (t^n) (t^(n+1))` for `n : ℤ` and `{∞}`. This
 gives a way to compute the measure of a set in terms of sets on which a given function `f` does not
 fluctuate by more than `t`. -/
-theorem measure_eq_measure_preimage_add_measure_tsum_Ico_zpow {α : Type*} [MeasurableSpace α]
+theorem measure_eq_measure_preimage_add_measure_tsum_Ico_zpow {α : Type*} {mα : MeasurableSpace α}
     (μ : Measure α) {f : α → ℝ≥0∞} (hf : Measurable f) {s : Set α} (hs : MeasurableSet s)
     {t : ℝ≥0} (ht : 1 < t) :
     μ s =

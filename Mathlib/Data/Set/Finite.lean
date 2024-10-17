@@ -3,10 +3,15 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kyle Miller
 -/
-import Mathlib.Data.Finset.Basic
-import Mathlib.Data.Finite.Basic
+import Mathlib.Data.Finset.Max
 import Mathlib.Data.Set.Functor
 import Mathlib.Data.Set.Lattice
+import Mathlib.Data.Finite.Powerset
+import Mathlib.Data.Finite.Prod
+import Mathlib.Data.Finite.Sigma
+import Mathlib.Data.Finite.Vector
+import Mathlib.Data.Finite.Basic
+import Mathlib.Logic.Embedding.Set
 
 /-!
 # Finite sets
@@ -897,7 +902,7 @@ theorem exists_subset_image_finite_and {f : α → β} {s : Set α} {p : Set β 
     (∃ t ⊆ f '' s, t.Finite ∧ p t) ↔ ∃ t ⊆ s, t.Finite ∧ p (f '' t) := by
   classical
   simp_rw [@and_comm (_ ⊆ _), and_assoc, exists_finite_iff_finset, @and_comm (p _),
-    Finset.subset_image_iff]
+    Finset.subset_set_image_iff]
   aesop
 
 section Pi
@@ -1528,6 +1533,7 @@ protected theorem bddBelow [SemilatticeInf α] [Nonempty α] (s : Finset α) : B
 
 end Finset
 
+section LinearOrder
 variable [LinearOrder α] {s : Set α}
 
 /-- If a linear order does not contain any triple of elements `x < y < z`, then this type
@@ -1567,5 +1573,20 @@ theorem DirectedOn.exists_mem_subset_of_finset_subset_biUnion {α ι : Type*} {f
   rw [Set.biUnion_eq_iUnion] at hs
   haveI := hn.coe_sort
   simpa using (directed_comp.2 hc.directed_val).exists_mem_subset_of_finset_subset_biUnion hs
+
+end LinearOrder
+
+namespace List
+variable (α) [Finite α] (n : ℕ)
+
+lemma finite_length_eq : {l : List α | l.length = n}.Finite := Mathlib.Vector.finite
+
+lemma finite_length_lt : {l : List α | l.length < n}.Finite := by
+  convert (Finset.range n).finite_toSet.biUnion fun i _ ↦ finite_length_eq α i; ext; simp
+
+lemma finite_length_le : {l : List α | l.length ≤ n}.Finite := by
+  simpa [Nat.lt_succ_iff] using finite_length_lt α (n + 1)
+
+end List
 
 set_option linter.style.longFile 1700

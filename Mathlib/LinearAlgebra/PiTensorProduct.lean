@@ -3,7 +3,6 @@ Copyright (c) 2020 Frédéric Dupuis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis, Eric Wieser
 -/
-import Mathlib.GroupTheory.Congruence.Basic
 import Mathlib.LinearAlgebra.Multilinear.TensorProduct
 import Mathlib.Tactic.AdaptationNote
 
@@ -411,7 +410,7 @@ theorem liftAux_tprod (φ : MultilinearMap R s E) (f : Π i, s i) : liftAux φ (
   -- show _ • _ = _
   -- rw [one_smul]
   erw [AddCon.lift_coe]
-  erw [FreeAddMonoid.of]
+  rw [FreeAddMonoid.of]
   dsimp [FreeAddMonoid.ofList]
   rw [← one_smul R (φ f)]
   erw [Equiv.refl_apply]

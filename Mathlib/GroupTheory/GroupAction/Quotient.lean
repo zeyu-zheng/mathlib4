@@ -10,6 +10,7 @@ import Mathlib.GroupTheory.GroupAction.Hom
 import Mathlib.GroupTheory.Coset.Basic
 import Mathlib.GroupTheory.Commutator.Basic
 import Mathlib.Algebra.Group.Subgroup.Actions
+import Mathlib.Data.Finite.Basic
 
 /-!
 # Properties of group actions involving quotient groups
@@ -402,9 +403,8 @@ noncomputable def equivSubgroupOrbitsQuotientGroup [IsPretransitive α β]
     rw [Quotient.eq'', leftRel_eq]
     simp only
     convert one_mem H
-    rw [inv_mul_eq_one, eq_comm, ← inv_mul_eq_one, ← Subgroup.mem_bot, ← free (g⁻¹ • x),
+    · rw [inv_mul_eq_one, eq_comm, ← inv_mul_eq_one, ← Subgroup.mem_bot, ← free (g⁻¹ • x),
         mem_stabilizer_iff, mul_smul, (exists_smul_eq α (g⁻¹ • x) x).choose_spec]
-    infer_instance
 
 end MulAction
 

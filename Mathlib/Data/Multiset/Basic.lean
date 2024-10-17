@@ -528,6 +528,11 @@ theorem le_cons_of_not_mem (m : a ∉ s) : s ≤ a ::ₘ t ↔ s ≤ t := by
     perm_middle.subperm_left.2
       ((subperm_cons _).2 <| ((sublist_or_mem_of_sublist s).resolve_right m₁).subperm)
 
+theorem cons_le_of_not_mem (hs : a ∉ s) : a ::ₘ s ≤ t ↔ a ∈ t ∧ s ≤ t := by
+  apply Iff.intro (fun h ↦ ⟨subset_of_le h (mem_cons_self a s), le_trans (le_cons_self s a) h⟩)
+  rintro ⟨h₁, h₂⟩; rcases exists_cons_of_mem h₁ with ⟨_, rfl⟩
+  exact cons_le_cons _ ((le_cons_of_not_mem hs).mp h₂)
+
 @[simp]
 theorem singleton_ne_zero (a : α) : ({a} : Multiset α) ≠ 0 :=
   ne_of_gt (lt_cons_self _ _)
@@ -600,6 +605,10 @@ instance instAddCommMonoid : AddCancelCommMonoid (Multiset α) where
 theorem le_add_right (s t : Multiset α) : s ≤ s + t := by simpa using add_le_add_left (zero_le t) s
 
 theorem le_add_left (s t : Multiset α) : s ≤ t + s := by simpa using add_le_add_right (zero_le t) s
+
+lemma subset_add_left {s t : Multiset α} : s ⊆ s + t := subset_of_le <| le_add_right s t
+
+lemma subset_add_right {s t : Multiset α} : s ⊆ t + s := subset_of_le <| le_add_left s t
 
 theorem le_iff_exists_add {s t : Multiset α} : s ≤ t ↔ ∃ u, t = s + u :=
   ⟨fun h =>
@@ -855,6 +864,10 @@ theorem nsmul_singleton (a : α) (n) : n • ({a} : Multiset α) = replicate n a
 theorem replicate_le_replicate (a : α) {k n : ℕ} : replicate k a ≤ replicate n a ↔ k ≤ n :=
   _root_.trans (by rw [← replicate_le_coe, coe_replicate]) (List.replicate_sublist_replicate a)
 
+@[gcongr]
+theorem replicate_mono (a : α) {k n : ℕ} (h : k ≤ n) : replicate k a ≤ replicate n a :=
+  (replicate_le_replicate a).2 h
+
 theorem le_replicate_iff {m : Multiset α} {a : α} {n : ℕ} :
     m ≤ replicate n a ↔ ∃ k ≤ n, m = replicate k a :=
   ⟨fun h => ⟨card m, (card_mono h).trans_eq (card_replicate _ _),
@@ -963,6 +976,7 @@ theorem erase_comm (s : Multiset α) (a b : α) : (s.erase a).erase b = (s.erase
 
 instance : RightCommutative erase (α := α) := ⟨erase_comm⟩
 
+@[gcongr]
 theorem erase_le_erase {s t : Multiset α} (a : α) (h : s ≤ t) : s.erase a ≤ t.erase a :=
   leInductionOn h fun h => (h.erase _).subperm
 
@@ -1142,11 +1156,11 @@ theorem eq_of_mem_map_const {b₁ b₂ : β} {l : List α} (h : b₁ ∈ map (Fu
     b₁ = b₂ :=
   eq_of_mem_replicate (n := card (l : Multiset α)) <| by rwa [map_const] at h
 
-@[simp]
+@[simp, gcongr]
 theorem map_le_map {f : α → β} {s t : Multiset α} (h : s ≤ t) : map f s ≤ map f t :=
   leInductionOn h fun h => (h.map f).subperm
 
-@[simp]
+@[simp, gcongr]
 theorem map_lt_map {f : α → β} {s t : Multiset α} (h : s < t) : s.map f < t.map f := by
   refine (map_le_map h.le).lt_of_not_le fun H => h.ne <| eq_of_le_of_card_le h.le ?_
   rw [← s.card_map f, ← t.card_map f]
@@ -1156,7 +1170,7 @@ theorem map_mono (f : α → β) : Monotone (map f) := fun _ _ => map_le_map
 
 theorem map_strictMono (f : α → β) : StrictMono (map f) := fun _ _ => map_lt_map
 
-@[simp]
+@[simp, gcongr]
 theorem map_subset_map {f : α → β} {s t : Multiset α} (H : s ⊆ t) : map f s ⊆ map f t := fun _b m =>
   let ⟨a, h, e⟩ := mem_map.1 m
   mem_map.2 ⟨a, H h, e⟩
@@ -1512,6 +1526,7 @@ theorem le_union_right (s t : Multiset α) : t ≤ s ∪ t :=
 theorem eq_union_left : t ≤ s → s ∪ t = s :=
   tsub_add_cancel_of_le
 
+@[gcongr]
 theorem union_le_union_right (h : s ≤ t) (u) : s ∪ u ≤ t ∪ u :=
   add_le_add_right (tsub_le_tsub_right h _) u
 
@@ -1617,6 +1632,7 @@ theorem inter_comm (s t : Multiset α) : s ∩ t = t ∩ s := inf_comm _ _
 
 theorem eq_union_right (h : s ≤ t) : s ∪ t = t := by rw [union_comm, eq_union_left h]
 
+@[gcongr]
 theorem union_le_union_left (h : s ≤ t) (u) : u ∪ s ≤ u ∪ t :=
   sup_le_sup_left h _
 
@@ -1701,6 +1717,7 @@ theorem filter_zero : filter p 0 = 0 :=
 Please re-enable the linter once we moved to `nightly-2024-06-22` or later.
 -/
 set_option linter.deprecated false in
+@[congr]
 theorem filter_congr {p q : α → Prop} [DecidablePred p] [DecidablePred q] {s : Multiset α} :
     (∀ x ∈ s, p x ↔ q x) → filter p s = filter q s :=
   Quot.inductionOn s fun _l h => congr_arg ofList <| filter_congr' <| by simpa using h
@@ -1717,6 +1734,7 @@ theorem filter_le (s : Multiset α) : filter p s ≤ s :=
 theorem filter_subset (s : Multiset α) : filter p s ⊆ s :=
   subset_of_le <| filter_le _ _
 
+@[gcongr]
 theorem filter_le_filter {s t} (h : s ≤ t) : filter p s ≤ filter p t :=
   leInductionOn h fun h => (h.filter (p ·)).subperm
 
@@ -1823,25 +1841,17 @@ theorem filter_filter (q) [DecidablePred q] (s : Multiset α) :
     filter p (filter q s) = filter (fun a => p a ∧ q a) s :=
   Quot.inductionOn s fun l => by simp
 
-#adaptation_note
-/--
-After nightly-2024-09-06 we can remove the `_root_` prefix below.
--/
 lemma filter_comm (q) [DecidablePred q] (s : Multiset α) :
-    filter p (filter q s) = filter q (filter p s) := by simp [_root_.and_comm]
+    filter p (filter q s) = filter q (filter p s) := by simp [and_comm]
 
 theorem filter_add_filter (q) [DecidablePred q] (s : Multiset α) :
     filter p s + filter q s = filter (fun a => p a ∨ q a) s + filter (fun a => p a ∧ q a) s :=
   Multiset.induction_on s rfl fun a s IH => by by_cases p a <;> by_cases q a <;> simp [*]
 
-#adaptation_note
-/--
-After nightly-2024-09-06 we can remove the `_root_` prefix below.
--/
 theorem filter_add_not (s : Multiset α) : filter p s + filter (fun a => ¬p a) s = s := by
   rw [filter_add_filter, filter_eq_self.2, filter_eq_nil.2]
   · simp only [add_zero]
-  · simp [Decidable.em, -Bool.not_eq_true, -not_and, not_and_or, _root_.or_comm]
+  · simp [Decidable.em, -Bool.not_eq_true, -not_and, not_and_or, or_comm]
   · simp only [Bool.not_eq_true, decide_eq_true_eq, Bool.eq_false_or_eq_true,
       decide_True, implies_true, Decidable.em]
 
@@ -1937,6 +1947,7 @@ theorem map_filterMap_of_inv (f : α → Option β) (g : β → α) (H : ∀ x :
     (s : Multiset α) : map g (filterMap f s) = s :=
   Quot.inductionOn s fun l => congr_arg ofList <| List.map_filterMap_of_inv f g H l
 
+@[gcongr]
 theorem filterMap_le_filterMap (f : α → Option β) {s t : Multiset α} (h : s ≤ t) :
     filterMap f s ≤ filterMap f t :=
   leInductionOn h fun h => (h.filterMap _).subperm
@@ -2005,6 +2016,7 @@ theorem countP_sub [DecidableEq α] {s t : Multiset α} (h : t ≤ s) :
     countP p (s - t) = countP p s - countP p t := by
   simp [countP_eq_card_filter, h, filter_le_filter]
 
+@[gcongr]
 theorem countP_le_of_le {s t} (h : s ≤ t) : countP p s ≤ countP p t := by
   simpa [countP_eq_card_filter] using card_le_card (filter_le_filter p h)
 
@@ -2064,6 +2076,7 @@ theorem countP_eq_card {s} : countP p s = card s ↔ ∀ a ∈ s, p a :=
 theorem countP_pos_of_mem {s a} (h : a ∈ s) (pa : p a) : 0 < countP p s :=
   countP_pos.2 ⟨_, h, pa⟩
 
+@[congr]
 theorem countP_congr {s s' : Multiset α} (hs : s = s')
     {p p' : α → Prop} [DecidablePred p] [DecidablePred p']
     (hp : ∀ x ∈ s, p x = p' x) : s.countP p = s'.countP p' := by
@@ -2107,6 +2120,7 @@ theorem count_cons_of_ne {a b : α} (h : a ≠ b) (s : Multiset α) : count a (b
 theorem count_le_card (a : α) (s) : count a s ≤ card s :=
   countP_le_card _ _
 
+@[gcongr]
 theorem count_le_of_le (a : α) {s t} : s ≤ t → count a s ≤ count a t :=
   countP_le_of_le _
 
@@ -2681,13 +2695,9 @@ lemma add_eq_union_left_of_le [DecidableEq α] {s t u : Multiset α} (h : t ≤ 
   · rintro ⟨h0, rfl⟩
     exact h0
 
-#adaptation_note
-/--
-After nightly-2024-09-06 we can remove the `_root_` prefix below.
--/
 lemma add_eq_union_right_of_le [DecidableEq α] {x y z : Multiset α} (h : z ≤ y) :
     x + y = x ∪ z ↔ y = z ∧ x.Disjoint y := by
-  simpa only [_root_.and_comm] using add_eq_union_left_of_le h
+  simpa only [and_comm] using add_eq_union_left_of_le h
 
 theorem disjoint_map_map {f : α → γ} {g : β → γ} {s : Multiset α} {t : Multiset β} :
     Disjoint (s.map f) (t.map g) ↔ ∀ a ∈ s, ∀ b ∈ t, f a ≠ g b := by
@@ -2774,9 +2784,6 @@ variable {α}
 theorem coe_subsingletonEquiv [Subsingleton α] :
     (subsingletonEquiv α : List α → Multiset α) = ofList :=
   rfl
-
-@[deprecated (since := "2023-12-27")] alias card_le_of_le := card_le_card
-@[deprecated (since := "2023-12-27")] alias card_lt_of_lt := card_lt_card
 
 end Multiset
 

@@ -35,9 +35,6 @@ with a normalization function, and then deduplicated.  The basics of this have b
 
 -/
 
--- Workaround for lean4#2038
-attribute [-instance] instBEqNat
-
 open Nat Finset List Finsupp
 
 namespace Nat
@@ -172,7 +169,7 @@ theorem factorization_prod {α : Type*} {S : Finset α} {g : α → ℕ} (hS : �
     · simp
     · intro x T hxS hTS hxT IH
       have hT : T.prod g ≠ 0 := prod_ne_zero_iff.mpr fun x hx => hS x (hTS hx)
-      simp [prod_insert hxT, sum_insert hxT, ← IH, factorization_mul (hS x hxS) hT]
+      simp [prod_insert hxT, sum_insert hxT, IH, factorization_mul (hS x hxS) hT]
 
 /-- For any `p`, the power of `p` in `n^k` is `k` times the power in `n` -/
 @[simp]

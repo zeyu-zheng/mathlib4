@@ -58,7 +58,7 @@ open Function OrderDual
 
 universe u v
 
-variable {α : Type u} {β : Type*} {w x y z : α}
+variable {α : Type u} {β : Type*} {x y z : α}
 
 /-!
 ### Generalized Boolean algebras
@@ -745,8 +745,8 @@ protected abbrev Function.Injective.generalizedBooleanAlgebra [Sup α] [Inf α] 
     GeneralizedBooleanAlgebra α where
   __ := hf.generalizedCoheytingAlgebra f map_sup map_inf map_bot map_sdiff
   __ := hf.distribLattice f map_sup map_inf
-  sup_inf_sdiff a b := hf <| by erw [map_sup, map_sdiff, map_inf, sup_inf_sdiff]
-  inf_inf_sdiff a b := hf <| by erw [map_inf, map_sdiff, map_inf, inf_inf_sdiff, map_bot]
+  sup_inf_sdiff a b := hf <| by rw [map_sup, map_sdiff, map_inf, sup_inf_sdiff]
+  inf_inf_sdiff a b := hf <| by rw [map_inf, map_sdiff, map_inf, inf_inf_sdiff, map_bot]
 
 -- See note [reducible non-instances]
 /-- Pullback a `BooleanAlgebra` along an injection. -/
@@ -779,7 +779,7 @@ instance PUnit.instBooleanAlgebra : BooleanAlgebra PUnit where
 
 namespace DistribLattice
 
-variable (α : Type*) [DistribLattice α]
+variable (α) [DistribLattice α]
 
 /--
 An alternative constructor for boolean algebras:

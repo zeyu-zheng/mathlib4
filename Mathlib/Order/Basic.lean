@@ -11,7 +11,6 @@ import Mathlib.Tactic.Spread
 import Mathlib.Tactic.Convert
 import Mathlib.Tactic.SimpRw
 import Batteries.Data.Sum.Lemmas
-import Batteries.Tactic.Classical
 
 /-!
 # Basic definitions about `≤` and `<`
@@ -186,7 +185,7 @@ end
 
 namespace Eq
 
-variable [Preorder α] {x y z : α}
+variable [Preorder α] {x y : α}
 
 /-- If `x = y` then `y ≤ x`. Note: this lemma uses `y ≤ x` instead of `x ≥ y`, because `le` is used
 almost exclusively in mathlib. -/

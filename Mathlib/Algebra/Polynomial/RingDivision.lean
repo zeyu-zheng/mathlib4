@@ -450,9 +450,9 @@ theorem rootMultiplicity_eq_rootMultiplicity {p : R[X]} {t : R} :
     p.rootMultiplicity t = (p.comp (X + C t)).rootMultiplicity 0 := by
   classical
   simp_rw [rootMultiplicity_eq_multiplicity, comp_X_add_C_eq_zero_iff]
-  congr; ext; congr 1
+  congr 1
   rw [C_0, sub_zero]
-  convert (multiplicity.multiplicity_map_eq <| algEquivAevalXAddC t).symm using 2
+  convert (multiplicity_map_eq <| algEquivAevalXAddC t).symm using 2
   simp [C_eq_algebraMap]
 
 theorem rootMultiplicity_eq_natTrailingDegree' {p : R[X]} :
@@ -547,6 +547,26 @@ theorem rootMultiplicity_mul' {p q : R[X]} {x : R}
 
 theorem Monic.comp_X_sub_C {p : R[X]} (hp : p.Monic) (r : R) : (p.comp (X - C r)).Monic := by
   simpa using hp.comp_X_add_C (-r)
+
+@[simp]
+theorem comp_neg_X_leadingCoeff_eq (p : R[X]) :
+    (p.comp (-X)).leadingCoeff = (-1) ^ p.natDegree * p.leadingCoeff := by
+  nontriviality R
+  by_cases h : p = 0
+  · simp [h]
+  rw [Polynomial.leadingCoeff, natDegree_comp_eq_of_mul_ne_zero, coeff_comp_degree_mul_degree] <;>
+  simp [mul_comm, h]
+
+theorem Monic.neg_one_pow_natDegree_mul_comp_neg_X {p : R[X]} (hp : p.Monic) :
+    ((-1) ^ p.natDegree * p.comp (-X)).Monic := by
+  simp only [Monic]
+  calc
+    ((-1) ^ p.natDegree * p.comp (-X)).leadingCoeff =
+        (p.comp (-X) * C ((-1) ^ p.natDegree)).leadingCoeff := by
+      simp [mul_comm]
+    _ = 1 := by
+      apply monic_mul_C_of_leadingCoeff_mul_eq_one
+      simp [← pow_add, hp]
 
 variable [IsDomain R] {p q : R[X]}
 
@@ -716,9 +736,9 @@ theorem rootMultiplicity_mul {p q : R[X]} {x : R} (hpq : p * q ≠ 0) :
   classical
   have hp : p ≠ 0 := left_ne_zero_of_mul hpq
   have hq : q ≠ 0 := right_ne_zero_of_mul hpq
-  rw [rootMultiplicity_eq_multiplicity (p * q), dif_neg hpq, rootMultiplicity_eq_multiplicity p,
-    dif_neg hp, rootMultiplicity_eq_multiplicity q, dif_neg hq,
-    multiplicity.mul' (prime_X_sub_C x)]
+  rw [rootMultiplicity_eq_multiplicity (p * q), if_neg hpq, rootMultiplicity_eq_multiplicity p,
+    if_neg hp, rootMultiplicity_eq_multiplicity q, if_neg hq,
+    multiplicity_mul (prime_X_sub_C x) (multiplicity_X_sub_C_finite _ hpq)]
 
 open Multiset in
 set_option linter.unusedVariables false in

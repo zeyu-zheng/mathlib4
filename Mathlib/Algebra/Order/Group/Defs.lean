@@ -109,7 +109,7 @@ class LinearOrderedCommGroup (α : Type u) extends OrderedCommGroup α, LinearOr
 
 section LinearOrderedCommGroup
 
-variable [LinearOrderedCommGroup α] {a b c : α}
+variable [LinearOrderedCommGroup α] {a : α}
 
 @[to_additive LinearOrderedAddCommGroup.add_lt_add_left]
 theorem LinearOrderedCommGroup.mul_lt_mul_left' (a b : α) (h : a < b) (c : α) : c * a < c * b :=
@@ -175,13 +175,11 @@ variable [OrderedCommGroup α] {a b : α}
 
 @[to_additive (attr := gcongr) neg_le_neg]
 theorem inv_le_inv' : a ≤ b → b⁻¹ ≤ a⁻¹ :=
-  -- Porting note: explicit type annotation was not needed before.
-  (@inv_le_inv_iff α ..).mpr
+  inv_le_inv_iff.mpr
 
 @[to_additive (attr := gcongr) neg_lt_neg]
 theorem inv_lt_inv' : a < b → b⁻¹ < a⁻¹ :=
-  -- Porting note: explicit type annotation was not needed before.
-  (@inv_lt_inv_iff α ..).mpr
+  inv_lt_inv_iff.mpr
 
 --  The additive version is also a `linarith` lemma.
 @[to_additive]

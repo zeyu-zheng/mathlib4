@@ -241,7 +241,7 @@ def φ (f : X ⟶ Y) (n : ℕ) : s.N n ⟶ Y _[n] :=
 theorem cofan_inj_comp_app (f : X ⟶ Y) {Δ : SimplexCategoryᵒᵖ} (A : IndexSet Δ) :
     (s.cofan Δ).inj A ≫ f.app Δ = s.φ f A.1.unop.len ≫ Y.map A.e.op := by
   simp only [cofan_inj_eq_assoc, φ, assoc]
-  erw [NatTrans.naturality]
+  rw [NatTrans.naturality]
 
 theorem hom_ext' {Z : C} {Δ : SimplexCategoryᵒᵖ} (f g : X.obj Δ ⟶ Z)
     (h : ∀ A : IndexSet Δ, (s.cofan Δ).inj A ≫ f = (s.cofan Δ).inj A ≫ g) : f = g :=
@@ -351,7 +351,7 @@ variable {C}
 
 namespace Split
 
--- Porting note: added as `Hom.ext` is not triggered automatically
+-- Porting note (#5229): added as `Hom.ext` is not triggered automatically
 @[ext]
 theorem hom_ext {S₁ S₂ : Split C} (Φ₁ Φ₂ : S₁ ⟶ S₂) (h : ∀ n : ℕ, Φ₁.f n = Φ₂.f n) : Φ₁ = Φ₂ :=
   Hom.ext _ _ h
@@ -383,7 +383,7 @@ theorem comp_f {S₁ S₂ S₃ : Split C} (Φ₁₂ : S₁ ⟶ S₂) (Φ₂₃ :
 theorem cofan_inj_naturality_symm {S₁ S₂ : Split C} (Φ : S₁ ⟶ S₂) {Δ : SimplexCategoryᵒᵖ}
     (A : Splitting.IndexSet Δ) :
     (S₁.s.cofan Δ).inj A ≫ Φ.F.app Δ = Φ.f A.1.unop.len ≫ (S₂.s.cofan Δ).inj A := by
-  erw [S₁.s.cofan_inj_eq, S₂.s.cofan_inj_eq, assoc, Φ.F.naturality, ← Φ.comm_assoc]
+  rw [S₁.s.cofan_inj_eq, S₂.s.cofan_inj_eq, assoc, Φ.F.naturality, ← Φ.comm_assoc]
 
 variable (C)
 

@@ -275,7 +275,7 @@ end Primcodable
 
 namespace Primrec
 
-variable {α : Type*} {σ : Type*} [Primcodable α] [Primcodable σ]
+variable {α : Type*} [Primcodable α]
 
 open Nat.Primrec
 
@@ -457,8 +457,8 @@ end Primrec₂
 
 namespace Primrec
 
-variable {α : Type*} {β : Type*} {γ : Type*} {δ : Type*} {σ : Type*}
-variable [Primcodable α] [Primcodable β] [Primcodable γ] [Primcodable δ] [Primcodable σ]
+variable {α : Type*} {β : Type*} {σ : Type*}
+variable [Primcodable α] [Primcodable β] [Primcodable σ]
 
 theorem to₂ {f : α × β → σ} (hf : Primrec f) : Primrec₂ fun a b => f (a, b) :=
   hf.of_eq fun _ => rfl
@@ -706,19 +706,11 @@ theorem nat_bodd : Primrec Nat.bodd :=
 theorem nat_div2 : Primrec Nat.div2 :=
   (nat_div.comp .id (const 2)).of_eq fun n => n.div2_val.symm
 
--- Porting note: this is no longer used
--- theorem nat_boddDiv2 : Primrec Nat.boddDiv2 := pair nat_bodd nat_div2
-
--- Porting note: bit0 is deprecated
 theorem nat_double : Primrec (fun n : ℕ => 2 * n) :=
   nat_mul.comp (const _) Primrec.id
 
--- Porting note: bit1 is deprecated
 theorem nat_double_succ : Primrec (fun n : ℕ => 2 * n + 1) :=
   nat_double |> Primrec.succ.comp
-
--- Porting note: this is no longer used
--- theorem nat_div_mod : Primrec₂ fun n k : ℕ => (n / k, n % k) := pair nat_div nat_mod
 
 end Primrec
 
@@ -953,12 +945,14 @@ theorem list_range : Primrec List.range :=
   (nat_rec' .id (const []) ((list_concat.comp snd fst).comp snd).to₂).of_eq fun n => by
     simp; induction n <;> simp [*, List.range_succ]
 
-theorem list_join : Primrec (@List.join α) :=
+theorem list_flatten : Primrec (@List.flatten α) :=
   (list_foldr .id (const []) <| to₂ <| comp (@list_append α _) snd).of_eq fun l => by
     dsimp; induction l <;> simp [*]
 
+@[deprecated (since := "2024-10-15")] alias list_join := list_flatten
+
 theorem list_bind {f : α → List β} {g : α → β → List σ} (hf : Primrec f) (hg : Primrec₂ g) :
-    Primrec (fun a => (f a).bind (g a)) := list_join.comp (list_map hf hg)
+    Primrec (fun a => (f a).bind (g a)) := list_flatten.comp (list_map hf hg)
 
 theorem optionToList : Primrec (Option.toList : Option α → List α) :=
   (option_casesOn Primrec.id (const [])
@@ -1088,8 +1082,7 @@ end Primrec
 
 namespace Primcodable
 
-variable {α : Type*} {β : Type*}
-variable [Primcodable α] [Primcodable β]
+variable {α : Type*} [Primcodable α]
 
 open Primrec
 
@@ -1139,8 +1132,8 @@ end Primcodable
 
 namespace Primrec
 
-variable {α : Type*} {β : Type*} {γ : Type*} {σ : Type*}
-variable [Primcodable α] [Primcodable β] [Primcodable γ] [Primcodable σ]
+variable {α : Type*} {β : Type*} {σ : Type*}
+variable [Primcodable α] [Primcodable β] [Primcodable σ]
 
 theorem subtype_val {p : α → Prop} [DecidablePred p] {hp : PrimrecPred p} :
     haveI := Primcodable.subtype hp
