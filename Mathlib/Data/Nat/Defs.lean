@@ -8,6 +8,7 @@ import Mathlib.Logic.Nontrivial.Defs
 import Mathlib.Tactic.GCongr.CoreAttrs
 import Mathlib.Tactic.PushNeg
 import Mathlib.Util.AssertExists
+import Mathlib.Order.Nat
 
 /-!
 # Basic operations on the natural numbers
@@ -59,18 +60,6 @@ open Function
 namespace Nat
 variable {a b c d m n k : ℕ} {p : ℕ → Prop}
 
--- TODO: Move the `LinearOrder ℕ` instance to `Order.Nat` (#13092).
-instance instLinearOrder : LinearOrder ℕ where
-  le := Nat.le
-  le_refl := @Nat.le_refl
-  le_trans := @Nat.le_trans
-  le_antisymm := @Nat.le_antisymm
-  le_total := @Nat.le_total
-  lt := Nat.lt
-  lt_iff_le_not_le := @Nat.lt_iff_le_not_le
-  decidableLT := inferInstance
-  decidableLE := inferInstance
-  decidableEq := inferInstance
 
 instance instNontrivial : Nontrivial ℕ := ⟨⟨0, 1, Nat.zero_ne_one⟩⟩
 

@@ -11,13 +11,21 @@ import Mathlib.Order.BoundedOrder
 This file contains the linear order instance on the natural numbers.
 
 See note [foundational algebra order theory].
-
-## TODO
-
-Move the `LinearOrder ℕ` instance here (#13092).
 -/
 
 namespace Nat
+
+instance instLinearOrder : LinearOrder ℕ where
+  le := Nat.le
+  le_refl := @Nat.le_refl
+  le_trans := @Nat.le_trans
+  le_antisymm := @Nat.le_antisymm
+  le_total := @Nat.le_total
+  lt := Nat.lt
+  lt_iff_le_not_le := @Nat.lt_iff_le_not_le
+  decidableLT := inferInstance
+  decidableLE := inferInstance
+  decidableEq := inferInstance
 
 instance instOrderBot : OrderBot ℕ where
   bot := 0
