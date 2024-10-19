@@ -4,9 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Calle Sönne
 -/
 
-import Mathlib.CategoryTheory.Bicategory.Functor.Pseudofunctor
 import Mathlib.CategoryTheory.Bicategory.LocallyDiscrete
-import Mathlib.CategoryTheory.Category.Cat
 
 /-!
 # The Grothendieck construction
@@ -24,14 +22,9 @@ The projection functor `∫ F ⥤ 𝒮` is then given by projecting to the first
 * On objects, it sends `(S, a)` to `S`
 * On morphisms, it sends `(f, h)` to `f`
 
-## TODO
-1. Implement functoriality for the Grothendieck construction.
-2. Obtain the results in `CategoryTheory.Grothendieck` as a specialization of these results.
-
 ## References
 [Vistoli2008] "Notes on Grothendieck Topologies, Fibered Categories and Descent Theory" by
 Angelo Vistoli
-
 -/
 
 namespace CategoryTheory
@@ -55,81 +48,74 @@ namespace Pseudofunctor.Grothendieck
 /-- Notation for the Grothendieck category associated to a pseudofunctor `F`. -/
 scoped prefix:75 "∫ " => Pseudofunctor.Grothendieck
 
-@[simps]
+/-- A morphism in the Grothendieck category `F : C ⥤ Cat` consists of
+`base : X.base ⟶ Y.base` and `f.fiber : (F.map base).obj X.fiber ⟶ Y.fiber`.
+-/
+structure Hom (X Y : ∫ F) where
+  /-- The morphism between base objects. -/
+  base : X.base ⟶ Y.base
+  /-- The morphism in the fiber over the domain. -/
+  fiber : X.fiber ⟶ (F.map base.op.toLoc).obj Y.fiber
+
+@[simps!]
 instance categoryStruct : CategoryStruct (∫ F) where
-  Hom X Y := (f : X.1 ⟶ Y.1) × (X.2 ⟶ (F.map f.op.toLoc).obj Y.2)
-  id X := ⟨𝟙 X.1, (F.mapId ⟨op X.1⟩).inv.app X.2⟩
-  comp {_ _ Z} f g := ⟨f.1 ≫ g.1, f.2 ≫ (F.map f.1.op.toLoc).map g.2 ≫
-    (F.mapComp g.1.op.toLoc f.1.op.toLoc).inv.app Z.2⟩
+  Hom X Y := Hom X Y
+  id X := {
+    base := 𝟙 X.base
+    fiber := (F.mapId ⟨op X.base⟩).inv.app X.fiber }
+  comp {_ _ Z} f g := {
+    base := f.base ≫ g.base
+    fiber := f.fiber ≫ (F.map f.base.op.toLoc).map g.fiber ≫
+      (F.mapComp g.base.op.toLoc f.base.op.toLoc).inv.app Z.fiber }
 
 section
 
-variable {a b : ∫ F} (f : a ⟶ b)
+variable {a b : ∫ F}
 
-@[ext]
-lemma hom_ext (g : a ⟶ b) (hfg₁ : f.1 = g.1) (hfg₂ : f.2 = g.2 ≫ eqToHom (hfg₁ ▸ rfl)) :
-    f = g := by
-  apply Sigma.ext hfg₁
+@[ext (iff := false)]
+lemma Hom.ext (f g : a ⟶ b) (hfg₁ : f.base = g.base)
+    (hfg₂ : f.fiber = g.fiber ≫ eqToHom (hfg₁ ▸ rfl)) : f = g := by
+  cases f; cases g
+  congr
+  dsimp at hfg₁
   rw [← conj_eqToHom_iff_heq _ _ rfl (hfg₁ ▸ rfl)]
-  simp only [hfg₂, eqToHom_refl, id_comp]
+  simpa only [eqToHom_refl, id_comp] using hfg₂
 
-lemma hom_ext_iff (g : a ⟶ b) : f = g ↔ ∃ (hfg : f.1 = g.1), f.2 = g.2 ≫ eqToHom (hfg ▸ rfl) where
+lemma Hom.ext_iff (f g : a ⟶ b) :
+    f = g ↔ ∃ (hfg : f.base = g.base), f.fiber = g.fiber ≫ eqToHom (hfg ▸ rfl) where
   mp hfg := ⟨by rw [hfg], by simp [hfg]⟩
-  mpr := fun ⟨hfg₁, hfg₂⟩ => hom_ext f g hfg₁ hfg₂
+  mpr := fun ⟨hfg₁, hfg₂⟩ => Hom.ext f g hfg₁ hfg₂
 
-protected lemma id_comp : 𝟙 a ≫ f = f := by
-  ext
-  · simp
-  dsimp
-  rw [F.mapComp_id_right_inv f.1.op.toLoc]
-  rw [← (F.mapId ⟨op a.1⟩).inv.naturality_assoc f.2]
-  slice_lhs 2 4 =>
-    rw [← Cat.whiskerLeft_app, ← NatTrans.comp_app, ← assoc]
-    rw [← Bicategory.whiskerLeft_comp, Iso.inv_hom_id]
-  simp
-
-protected lemma comp_id : f ≫ 𝟙 b = f := by
-  ext
-  · simp
-  dsimp
-  rw [← Cat.whiskerRight_app, ← NatTrans.comp_app]
-  rw [F.mapComp_id_left_inv]
-  nth_rw 1 [← assoc]
-  rw [← Bicategory.comp_whiskerRight, Iso.inv_hom_id]
-  simp
+lemma Hom.congr {a b : ∫ F} {f g : a ⟶ b} (h : f = g) :
+    f.fiber = g.fiber ≫ eqToHom (h ▸ rfl) := by
+  simp [h]
 
 end
-
-protected lemma assoc {a b c d : ∫ F} (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d) :
-    (f ≫ g) ≫ h = f ≫ g ≫ h := by
-  ext
-  · simp
-  dsimp
-  slice_lhs 3 5 =>
-    rw [← (F.mapComp g.1.op.toLoc f.1.op.toLoc).inv.naturality_assoc h.2]
-    rw [← Cat.whiskerLeft_app, ← NatTrans.comp_app]
-    rw [F.mapComp_assoc_right_inv h.1.op.toLoc g.1.op.toLoc f.1.op.toLoc]
-    simp only [Strict.associator_eqToIso, eqToIso_refl, Iso.refl_inv, eqToIso.hom]
-    repeat rw [NatTrans.comp_app]
-    rw [F.map₂_eqToHom, NatTrans.id_app]
-  simp only [Cat.comp_obj, Cat.comp_map, map_comp, assoc]
-  congr 3
-  rw [← Cat.whiskerRight_app, eqToHom_app]
-  simp only [Cat.whiskerRight_app, Cat.comp_obj, id_comp]
 
 /-- The category structure on `∫ F`. -/
 instance category : Category (∫ F) where
   toCategoryStruct := Pseudofunctor.Grothendieck.categoryStruct
-  id_comp := Pseudofunctor.Grothendieck.id_comp
-  comp_id := Pseudofunctor.Grothendieck.comp_id
-  assoc := Pseudofunctor.Grothendieck.assoc
+  id_comp {a b} f := by
+    ext
+    · simp
+    · simp [F.mapComp_id_right_inv_app, Strict.rightUnitor_eqToIso, ← NatTrans.naturality_assoc]
+  comp_id {a b} f := by
+    ext
+    · simp
+    · simp [F.mapComp_id_left_inv_app, ← Functor.map_comp_assoc, Strict.leftUnitor_eqToIso]
+  assoc f g h := by
+    ext
+    · simp
+    · simp [← NatTrans.naturality_assoc, F.mapComp_assoc_right_inv_app, Strict.associator_eqToIso]
+
+variable (F)
 
 /-- The projection `∫ F ⥤ 𝒮` given by projecting both objects and homs to the first
 factor. -/
 @[simps]
-def forget (F : Pseudofunctor (LocallyDiscrete 𝒮ᵒᵖ) Cat.{v₂, u₂}) : ∫ F ⥤ 𝒮 where
-  obj := fun X => X.1
-  map := fun f => f.1
+def forget : ∫ F ⥤ 𝒮 where
+  obj X := X.base
+  map f := f.base
 
 end Pseudofunctor.Grothendieck
 
