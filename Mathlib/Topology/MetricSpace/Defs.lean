@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Robert Y. Lewis, Johannes Hölzl, Mario Carneiro, Sébastien Gouëzel
 -/
 import Mathlib.Topology.MetricSpace.Pseudo.Defs
+import LeanReducer.Command
 
 /-!
 # Metric spaces
@@ -33,6 +34,7 @@ universe u v w
 variable {α : Type u} {β : Type v} {X ι : Type*}
 variable [PseudoMetricSpace α]
 
+#preserve_this in
 /-- We now define `MetricSpace`, extending `PseudoMetricSpace`. -/
 class MetricSpace (α : Type u) extends PseudoMetricSpace α : Type u where
   eq_of_dist_eq_zero : ∀ {x y : α}, dist x y = 0 → x = y

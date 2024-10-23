@@ -14,6 +14,8 @@ require "leanprover-community" / "proofwidgets" @ git "v0.0.43"
 require "leanprover-community" / "importGraph" @ git "main"
 require "leanprover-community" / "LeanSearchClient" @ git "main"
   from git "https://github.com/leanprover-community/LeanSearchClient" @ "main"
+require "leanprover-community" / "lean-reducer" @ git "main"
+  from git "git@github.com:leanprover-community/lean-test-reducer.git" @ "main"
 
 /-!
 ## Options for building mathlib
