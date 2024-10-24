@@ -79,11 +79,15 @@ theorem wellFounded_iff_has_min {r : α → α → Prop} :
 
 open Set
 
-/-- The supremum of a bounded, well-founded order -/
+/-- The supremum of a bounded, well-founded order.
+
+Deprecated. Use `WellFoundedLT.conditionallyCompleteLinearOrderBot` and `sSup` instead. -/
+@[deprecated (since := "2024-10-24")]
 protected noncomputable def sup {r : α → α → Prop} (wf : WellFounded r) (s : Set α)
     (h : Bounded r s) : α :=
   wf.min { x | ∀ a ∈ s, r a x } h
 
+@[deprecated (since := "2024-10-24")]
 protected theorem lt_sup {r : α → α → Prop} (wf : WellFounded r) {s : Set α} (h : Bounded r s) {x}
     (hx : x ∈ s) : r x (wf.sup s h) :=
   min_mem wf { x | ∀ a ∈ s, r a x } h x hx
