@@ -120,7 +120,7 @@
     "free_form": ""
   },
   {
-    "github_handle": "floris-van-doorn",
+    "github_handle": "fpvandoorn",
     "zulip_handle": "@**Floris van Doorn**",
     "top_level": ["t-analysis", "t-topology", "t-differential-geometry", "t-logic"],
     "free_form": "maybe metaprogramming"
