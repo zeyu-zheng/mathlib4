@@ -114,10 +114,10 @@
     "free_form": "algebraic and analytic"
   },
   {
-    "github_handle": "oliver-nash",
+    "github_handle": "ocfnash",
     "zulip_handle": "@**Oliver Nash**",
-    "top_level": ["t-algebra", "t-topology", "t-geometry"],
-    "free_form": "though I don't expect to resume regular reviewing till mid September"
+    "top_level": ["t-algebra", "t-topology", "t-differential-geometry"],
+    "free_form": ""
   },
   {
     "github_handle": "floris-van-doorn",
