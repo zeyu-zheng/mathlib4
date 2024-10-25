@@ -138,10 +138,10 @@
     "free_form": "hierarchies, generic maintenance"
   },
   {
-    "github_handle": "kexing-ying",
+    "github_handle": "kex-y",
     "zulip_handle": "@**Kexing Ying**",
-    "top_level": ["t-probability", "t-stochastic-process", "t-measure-theory"],
-    "free_form": ""
+    "top_level": ["t-probability", "t-measure-theory"],
+    "free_form": "Stochastic processes"
   },
   {
     "github_handle": "Vierkantor",
