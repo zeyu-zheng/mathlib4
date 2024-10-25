@@ -198,10 +198,10 @@
     "free_form": ""
   },
   {
-    "github_handle": "joseph-myers",
+    "github_handle": "jsm28",
     "zulip_handle": "@**Joseph Myers**",
-    "top_level": ["t-geometry", "t-euclidean", "t-archive", "t-imo"],
-    "free_form": "where I have things to say on those PRs (which definitely does not mean I have things to say on all PRs in those areas)"
+    "top_level": ["IMO", "t-euclidean-geometry"],
+    "free_form": ""
   },
   {
     "github_handle": "kim-morrison",
