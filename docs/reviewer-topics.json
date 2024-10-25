@@ -174,10 +174,10 @@
     "free_form": "Functional Analysis, General Topology (because I like them a lot without being an expert)"
   },
   {
-    "github_handle": "dagur-asgeirsson",
+    "github_handle": "dagurtomas",
     "zulip_handle": "@**Dagur Asgeirsson**",
-    "top_level": ["t-condensed-mathematics", "t-category-theory", "t-homological-algebra", "t-algebraic-geometry", "t-algebraic-topology"],
-    "free_form": "the first two being the ones I’m most competent in"
+    "top_level": ["t-condensed", "t-category-theory", "t-algebra", "t-algebraic-geometry", "t-topology"],
+    "free_form": "I’m most competent in t-condensed and t-category-theory. I know the Topology/Category subfolder quite well, and I can review some algebraic geometry, homological algebra and algebraic topology PRs"
   },
   {
     "github_handle": "alex-j-best",
