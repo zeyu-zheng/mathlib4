@@ -1,0 +1,224 @@
+[
+  {
+    "github_handle": "jireh-loreaux",
+    "zulip_handle": "@**Jireh Loreaux**",
+    "top_level": ["t-analysis", "t-topology", "t-functional-analysis", "t-matrix-theory", "t-operator-theory", "t-operator-algebras"],
+    "free_form": ""
+  },
+  {
+    "github_handle": "buzzard",
+    "zulip_handle": "@**Kevin Buzzard**",
+    "top_level": ["t-algebraic-number-theory", "t-commutative-algebra"],
+    "free_form": ""
+  },
+  {
+    "github_handle": "tbrowning",
+    "zulip_handle": "@**Thomas Browning**",
+    "top_level": ["t-group-theory", "t-field-theory", "t-number-theory"],
+    "free_form": ""
+  },
+  {
+    "github_handle": "stoll",
+    "zulip_handle": "@**Michael Stoll**",
+    "top_level": ["t-number-theory", "t-arithmetic-geometry"],
+    "free_form": "more algebraic than analytic"
+  },
+  {
+    "github_handle": "joelriou",
+    "zulip_handle": "@**Joël Riou**",
+    "top_level": ["t-category-theory", "t-homological-algebra", "t-homotopy-theory", "t-algebraic-geometry"],
+    "free_form": ""
+  },
+  {
+    "github_handle": "andrew-yang",
+    "zulip_handle": "@**Andrew Yang**",
+    "top_level": ["t-algebraic-geometry", "t-commutative-algebra", "t-category-theory"],
+    "free_form": ""
+  },
+  {
+    "github_handle": "aaron-anderson",
+    "zulip_handle": "@**Aaron Anderson**",
+    "top_level": ["t-model-theory", "t-combinatorics"],
+    "free_form": ""
+  },
+  {
+    "github_handle": "sebastien-gouezel",
+    "zulip_handle": "@**Sébastien Gouëzel**",
+    "top_level": ["t-probability", "t-analysis", "t-geometry", "t-dynamics"],
+    "free_form": ""
+  },
+  {
+    "github_handle": "patrick-massot",
+    "zulip_handle": "@**Patrick Massot**",
+    "top_level": ["t-topology", "t-geometry"],
+    "free_form": ""
+  },
+  {
+    "github_handle": "yael-dillies",
+    "zulip_handle": "@**Yaël Dillies**",
+    "top_level": ["t-combinatorics", "t-order-theory", "t-basic-algebra", "t-convex-analysis"],
+    "free_form": "naming, type hierarchies"
+  },
+  {
+    "github_handle": "michael-rothgang",
+    "zulip_handle": "@**Michael Rothgang**",
+    "top_level": ["t-differential-geometry", "t-algebra", "t-topology"],
+    "free_form": "linters"
+  },
+  {
+    "github_handle": "remy-degenne",
+    "zulip_handle": "@**Rémy Degenne**",
+    "top_level": ["t-probability", "t-statistics", "t-information-theory"],
+    "free_form": ""
+  },
+  {
+    "github_handle": "frederic-dupuis",
+    "zulip_handle": "@**Frédéric Dupuis**",
+    "top_level": ["t-matrix-theory", "t-operator-algebras", "t-theoretical-computer-science", "t-quantum-information-theory"],
+    "free_form": ""
+  },
+  {
+    "github_handle": "yury-g-kudryashov",
+    "zulip_handle": "@**Yury G. Kudryashov**",
+    "top_level": ["t-dynamics", "t-analysis", "t-topology", "t-measure-theory"],
+    "free_form": ""
+  },
+  {
+    "github_handle": "damiano-testa",
+    "zulip_handle": "@**Damiano Testa**",
+    "top_level": ["t-algebra"],
+    "free_form": "metaprogramming (because I like it, not because I feel that I am very skilled in it!)"
+  },
+  {
+    "github_handle": "adam-topaz",
+    "zulip_handle": "@**Adam Topaz**",
+    "top_level": ["t-category-theory", "t-algebraic-geometry", "t-arithmetic-geometry", "t-galois-theory", "t-metaprogramming"],
+    "free_form": ""
+  },
+  {
+    "github_handle": "riccardo-brasca",
+    "zulip_handle": "@**Riccardo Brasca**",
+    "top_level": ["t-number-theory", "t-algebra", "t-category-theory", "t-algebraic-geometry", "t-arithmetic-geometry"],
+    "free_form": ""
+  },
+  {
+    "github_handle": "jon-eugster",
+    "zulip_handle": "@**Jon Eugster**",
+    "top_level": ["t-category-theory", "t-algebra", "t-algebraic-geometry", "t-arithmetic-geometry"],
+    "free_form": "Meta-programming & technical aspects (also because I'm interested in it, not necessarily because I'm that skilled)"
+  },
+  {
+    "github_handle": "david-loeffler",
+    "zulip_handle": "@**David Loeffler**",
+    "top_level": ["t-number-theory", "t-real-analysis", "t-fourier-theory"],
+    "free_form": "algebraic and analytic"
+  },
+  {
+    "github_handle": "oliver-nash",
+    "zulip_handle": "@**Oliver Nash**",
+    "top_level": ["t-algebra", "t-topology", "t-geometry"],
+    "free_form": "though I don't expect to resume regular reviewing till mid September"
+  },
+  {
+    "github_handle": "floris-van-doorn",
+    "zulip_handle": "@**Floris van Doorn**",
+    "top_level": ["t-analysis", "t-topology", "t-differential-geometry", "t-logic"],
+    "free_form": "maybe metaprogramming"
+  },
+  {
+    "github_handle": "bryan-gin-ge-chen",
+    "zulip_handle": "@**Bryan Gin-ge Chen**",
+    "top_level": ["t-order-theory"],
+    "free_form": "ci workflows"
+  },
+  {
+    "github_handle": "jcommelin",
+    "zulip_handle": "@**Johan Commelin**",
+    "top_level": ["t-algebra", "t-number-theory", "t-algebraic-geometry", "t-category-theory", "t-topology"],
+    "free_form": "hierarchies, generic maintenance"
+  },
+  {
+    "github_handle": "kexing-ying",
+    "zulip_handle": "@**Kexing Ying**",
+    "top_level": ["t-probability", "t-stochastic-process", "t-measure-theory"],
+    "free_form": ""
+  },
+  {
+    "github_handle": "anne-baanen",
+    "zulip_handle": "@**Anne Baanen**",
+    "top_level": ["t-algebra", "t-number-theory", "t-algorithms", "t-orders", "t-lattices"],
+    "free_form": "Typeclasses, hierarchies, optimization and refactoring, metaprogramming"
+  },
+  {
+    "github_handle": "maria-ines-de-frutos-fernandez",
+    "zulip_handle": "@**María Inés de Frutos Fernández**",
+    "top_level": ["t-number-theory", "t-algebra"],
+    "free_form": ""
+  },
+  {
+    "github_handle": "markus-himmel",
+    "zulip_handle": "@**Markus Himmel**",
+    "top_level": ["t-category-theory", "t-linear-algebra", "t-combinatorial-game-theory"],
+    "free_form": ""
+  },
+  {
+    "github_handle": "matthew-ballard",
+    "zulip_handle": "@**Matthew Ballard**",
+    "top_level": ["t-category-theory", "t-commutative-algebra", "t-noncommutative-algebra", "t-algebraic-geometry", "t-stability", "t-group-actions", "t-mirror-symmetry"],
+    "free_form": "Folders in mathlib: Algebra, AlgebraicGeometry, AlgebraicTopology, CategoryTheory, Data, FieldTheory, Geometry, GroupTheory, Init :), Lean, LinearAlgebra, NumberTheory, RepresentationTheory, RingTheory, Tactic, Topology, Util"
+  },
+  {
+    "github_handle": "filippo-a-e-nuccio",
+    "zulip_handle": "@**Filippo A. E. Nuccio**",
+    "top_level": ["t-algebraic-number-theory", "t-commutative-algebra", "t-homological-algebra"],
+    "free_form": "Functional Analysis, General Topology (because I like them a lot without being an expert)"
+  },
+  {
+    "github_handle": "dagur-asgeirsson",
+    "zulip_handle": "@**Dagur Asgeirsson**",
+    "top_level": ["t-condensed-mathematics", "t-category-theory", "t-homological-algebra", "t-algebraic-geometry", "t-algebraic-topology"],
+    "free_form": "the first two being the ones I’m most competent in"
+  },
+  {
+    "github_handle": "alex-j-best",
+    "zulip_handle": "@**Alex J. Best**",
+    "top_level": ["t-number-theory", "t-algebraic-geometry", "t-metaprogramming"],
+    "free_form": "Not super active reviewing right now but I can be tempted occasionally going forward"
+  },
+  {
+    "github_handle": "ruben-van-de-velde",
+    "zulip_handle": "@**Ruben Van de Velde**",
+    "top_level": [],
+    "free_form": "Interest- probably anything related to flt\nCompetence- mostly undergrad stuff / refactoring"
+  },
+  {
+    "github_handle": "junyan-xu",
+    "zulip_handle": "@**Junyan Xu**",
+    "top_level": ["t-algebra", "t-algebraic-geometry", "t-number-theory", "t-topology", "t-set-theory"],
+    "free_form": ""
+  },
+  {
+    "github_handle": "joseph-myers",
+    "zulip_handle": "@**Joseph Myers**",
+    "top_level": ["t-geometry", "t-euclidean", "t-archive", "t-imo"],
+    "free_form": "where I have things to say on those PRs (which definitely does not mean I have things to say on all PRs in those areas)"
+  },
+  {
+    "github_handle": "kim-morrison",
+    "zulip_handle": "@**Kim Morrison**",
+    "top_level": ["t-metaprogramming", "t-user-tools", "t-refactoring", "t-import-reduction", "t-category-theory", "t-algebra", "t-homological-algebra", "t-operator-algebra", "t-algebraic-geometry", "t-representation-theory"],
+    "free_form": ""
+  },
+  {
+    "github_handle": "david-renshaw",
+    "zulip_handle": "@**David Renshaw**",
+    "top_level": ["t-metaprogramming", "t-olympiad-problems"],
+    "free_form": ""
+  },
+  {
+    "github_handle": "eric-rodriguez",
+    "zulip_handle": "@**Eric Rodriguez**",
+    "top_level": ["t-algebra", "t-computability", "t-data", "t-logic", "t-number-theory", "t-set-theory"],
+    "free_form": "sorry for the late reply - happy to review every so often. will try and get back into reviewing a little more!"
+  }
+]
