@@ -367,7 +367,7 @@ theorem Perm.kreplace {a : α} {b : β a} {l₁ l₂ : List (Sigma β)} (nd : l�
 def kerase (a : α) : List (Sigma β) → List (Sigma β) :=
   eraseP fun s => a = s.1
 
--- Porting note (#10618): removing @[simp], `simp` can prove it
+@[simp]
 theorem kerase_nil {a} : @kerase _ β _ a [] = [] :=
   rfl
 
@@ -422,10 +422,7 @@ theorem mem_keys_kerase_of_ne {a₁ a₂} {l : List (Sigma β)} (h : a₁ ≠ a�
 
 theorem keys_kerase {a} {l : List (Sigma β)} : (kerase a l).keys = l.keys.erase a := by
   rw [keys, kerase, erase_eq_eraseP, eraseP_map, Function.comp_def]
-  simp only [beq_eq_decide]
   congr
-  funext
-  simp
 
 theorem kerase_kerase {a a'} {l : List (Sigma β)} :
     (kerase a' l).kerase a = (kerase a l).kerase a' := by
