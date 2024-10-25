@@ -126,10 +126,10 @@
     "free_form": "maybe metaprogramming"
   },
   {
-    "github_handle": "bryan-gin-ge-chen",
+    "github_handle": "bryangingechen",
     "zulip_handle": "@**Bryan Gin-ge Chen**",
-    "top_level": ["t-order-theory"],
-    "free_form": "ci workflows"
+    "top_level": ["t-order-theory", "CI"],
+    "free_form": ""
   },
   {
     "github_handle": "jcommelin",
