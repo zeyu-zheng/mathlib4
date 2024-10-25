@@ -60,10 +60,10 @@
     "free_form": "naming, type hierarchies"
   },
   {
-    "github_handle": "michael-rothgang",
+    "github_handle": "grunweg",
     "zulip_handle": "@**Michael Rothgang**",
-    "top_level": ["t-differential-geometry", "t-algebra", "t-topology"],
-    "free_form": "linters"
+    "top_level": ["t-differential-geometry", "t-analysis", "t-topology", "t-linters"],
+    "free_form": "technical debt"
   },
   {
     "github_handle": "remy-degenne",
