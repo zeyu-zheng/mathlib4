@@ -220,5 +220,11 @@
     "zulip_handle": "@**Eric Rodriguez**",
     "top_level": ["t-algebra", "t-computability", "t-data", "t-logic", "t-number-theory", "t-set-theory"],
     "free_form": "sorry for the late reply - happy to review every so often. will try and get back into reviewing a little more!"
+  },
+  {
+   "github_handle": "chrisflav",
+   "zulip_handle": "@**Christian Merten**",
+   "top_level": ["t-algebra", "t-algebraic-geometry"],
+   "free_form": ""
   }
 ]
