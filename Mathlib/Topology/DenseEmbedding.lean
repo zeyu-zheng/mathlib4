@@ -3,8 +3,8 @@ Copyright (c) 2019 Reid Barton. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
 -/
-import Mathlib.Topology.Separation
 import Mathlib.Topology.Bases
+import Mathlib.Topology.Separation.Basic
 
 /-!
 # Dense embeddings
@@ -81,11 +81,14 @@ theorem interior_compact_eq_empty [T2Space β] (di : IsDenseInducing i) (hd : De
   exact hyi (image_subset_range _ _ hys)
 
 /-- The product of two dense inducings is a dense inducing -/
-protected theorem prod [TopologicalSpace γ] [TopologicalSpace δ] {e₁ : α → β} {e₂ : γ → δ}
+protected theorem prodMap [TopologicalSpace γ] [TopologicalSpace δ] {e₁ : α → β} {e₂ : γ → δ}
     (de₁ : IsDenseInducing e₁) (de₂ : IsDenseInducing e₂) :
-    IsDenseInducing fun p : α × γ => (e₁ p.1, e₂ p.2) where
-  toInducing := de₁.toInducing.prod_map de₂.toInducing
-  dense := de₁.dense.prod_map de₂.dense
+    IsDenseInducing (Prod.map e₁ e₂) where
+  toInducing := de₁.toInducing.prodMap de₂.toInducing
+  dense := de₁.dense.prodMap de₂.dense
+
+@[deprecated (since := "2024-10-06")]
+protected alias prod := IsDenseInducing.prodMap
 
 open TopologicalSpace
 
@@ -225,19 +228,22 @@ variable {e : α → β}
 theorem inj_iff (de : IsDenseEmbedding e) {x y} : e x = e y ↔ x = y :=
   de.inj.eq_iff
 
-theorem to_embedding (de : IsDenseEmbedding e) : Embedding e :=
-  { induced := de.induced
-    inj := de.inj }
+theorem isEmbedding (de : IsDenseEmbedding e) : IsEmbedding e where __ := de
+
+@[deprecated (since := "2024-10-26")]
+alias to_embedding := isEmbedding
 
 /-- If the domain of a `IsDenseEmbedding` is a separable space, then so is its codomain. -/
 protected theorem separableSpace [SeparableSpace α] (de : IsDenseEmbedding e) : SeparableSpace β :=
   de.toIsDenseInducing.separableSpace
 
 /-- The product of two dense embeddings is a dense embedding. -/
-protected theorem prod {e₁ : α → β} {e₂ : γ → δ} (de₁ : IsDenseEmbedding e₁)
+protected theorem prodMap {e₁ : α → β} {e₂ : γ → δ} (de₁ : IsDenseEmbedding e₁)
     (de₂ : IsDenseEmbedding e₂) : IsDenseEmbedding fun p : α × γ => (e₁ p.1, e₂ p.2) :=
-  { de₁.toIsDenseInducing.prod de₂.toIsDenseInducing with
+  { de₁.toIsDenseInducing.prodMap de₂.toIsDenseInducing with
     inj := de₁.inj.prodMap de₂.inj }
+
+@[deprecated (since := "2024-10-06")] protected alias prod := IsDenseEmbedding.prodMap
 
 /-- The dense embedding of a subtype inside its closure. -/
 @[simps]
@@ -262,7 +268,7 @@ theorem dense_image (de : IsDenseEmbedding e) {s : Set α} : Dense (e '' s) ↔ 
   de.toIsDenseInducing.dense_image
 
 protected lemma id {α : Type*} [TopologicalSpace α] : IsDenseEmbedding (id : α → α) :=
-  { embedding_id with dense := denseRange_id }
+  { IsEmbedding.id with dense := denseRange_id }
 
 end IsDenseEmbedding
 
@@ -271,7 +277,7 @@ alias denseEmbedding_id := IsDenseEmbedding.id
 
 theorem Dense.isDenseEmbedding_val [TopologicalSpace α] {s : Set α} (hs : Dense s) :
     IsDenseEmbedding ((↑) : s → α) :=
-  { embedding_subtype_val with dense := hs.denseRange_val }
+  { IsEmbedding.subtypeVal with dense := hs.denseRange_val }
 
 @[deprecated (since := "2024-09-30")]
 alias Dense.denseEmbedding_val := Dense.isDenseEmbedding_val
@@ -288,14 +294,14 @@ theorem isClosed_property [TopologicalSpace β] {e : α → β} {p : β → Prop
 
 theorem isClosed_property2 [TopologicalSpace β] {e : α → β} {p : β → β → Prop} (he : DenseRange e)
     (hp : IsClosed { q : β × β | p q.1 q.2 }) (h : ∀ a₁ a₂, p (e a₁) (e a₂)) : ∀ b₁ b₂, p b₁ b₂ :=
-  have : ∀ q : β × β, p q.1 q.2 := isClosed_property (he.prod_map he) hp fun _ => h _ _
+  have : ∀ q : β × β, p q.1 q.2 := isClosed_property (he.prodMap he) hp fun _ => h _ _
   fun b₁ b₂ => this ⟨b₁, b₂⟩
 
 theorem isClosed_property3 [TopologicalSpace β] {e : α → β} {p : β → β → β → Prop}
     (he : DenseRange e) (hp : IsClosed { q : β × β × β | p q.1 q.2.1 q.2.2 })
     (h : ∀ a₁ a₂ a₃, p (e a₁) (e a₂) (e a₃)) : ∀ b₁ b₂ b₃, p b₁ b₂ b₃ :=
   have : ∀ q : β × β × β, p q.1 q.2.1 q.2.2 :=
-    isClosed_property (he.prod_map <| he.prod_map he) hp fun _ => h _ _ _
+    isClosed_property (he.prodMap <| he.prodMap he) hp fun _ => h _ _ _
   fun b₁ b₂ b₃ => this ⟨b₁, b₂, b₃⟩
 
 @[elab_as_elim]
