@@ -49,13 +49,19 @@ lemma braiding_naturality_right [HasTensor X Y] [HasTensor Y X] [HasTensor X Z] 
   dsimp [braiding]
   aesop_cat
 
+set_option aesop.dev.statefulForward true in
 variable {X Y} in
 lemma braiding_naturality_left [HasTensor Y Z] [HasTensor Z Y] [HasTensor X Z] [HasTensor Z X]
     (f : X ⟶ Y) :
     whiskerRight f Z ≫ (braiding Y Z).hom = (braiding X Z).hom ≫ whiskerLeft Z f  := by
   dsimp [braiding]
-  aesop_cat
+  ext x i₁ i₂ hi : 2
+  simp_all only [categoryOfGradedObjects_comp, ι_tensorHom_assoc, categoryOfGradedObjects_id,
+    MonoidalCategory.tensorHom_id, ι_tensorObjDesc, BraidedCategory.braiding_naturality_left_assoc,
+    ι_tensorObjDesc_assoc, assoc, ι_tensorHom, MonoidalCategory.id_tensorHom]
 
+
+set_option aesop.dev.statefulForward true in
 lemma hexagon_forward [HasTensor X Y] [HasTensor Y X] [HasTensor Y Z]
     [HasTensor Z X] [HasTensor X Z]
     [HasTensor (tensorObj X Y) Z] [HasTensor X (tensorObj Y Z)]
@@ -69,6 +75,12 @@ lemma hexagon_forward [HasTensor X Y] [HasTensor Y X] [HasTensor Y Z]
         whiskerLeft Y (braiding X Z).hom := by
   ext k i₁ i₂ i₃ h
   dsimp [braiding]
+  saturate [braiding, ιTensorObj₃'_associator_hom_assoc, ιTensorObj₃_eq,
+    assoc, ι_tensorObjDesc_assoc, assoc, MonoidalCategory.id_tensorHom,
+    BraidedCategory.braiding_naturality_assoc,
+    BraidedCategory.braiding_tensor_right, assoc, assoc, assoc, assoc, Iso.hom_inv_id_assoc,
+    MonoidalCategory.tensorHom_id,
+    ιTensorObj₃'_associator_hom, Iso.inv_hom_id_assoc]
   conv_lhs => rw [ιTensorObj₃'_associator_hom_assoc, ιTensorObj₃_eq X Y Z i₁ i₂ i₃ k h _ rfl,
     assoc, ι_tensorObjDesc_assoc, assoc, ← MonoidalCategory.id_tensorHom,
     BraidedCategory.braiding_naturality_assoc,
@@ -94,6 +106,8 @@ lemma hexagon_forward [HasTensor X Y] [HasTensor Y X] [HasTensor Y Z]
     ← ιTensorObj₃_eq Y Z X i₂ i₃ i₁ k (by rw [add_comm _ i₁, ← add_assoc, h])
       (i₁ + i₃) (add_comm _ _ )]
 
+set_option trace.profiler true in
+set_option aesop.dev.statefulForward true in
 lemma hexagon_reverse [HasTensor X Y] [HasTensor Y Z] [HasTensor Z X]
     [HasTensor Z Y] [HasTensor X Z]
     [HasTensor (tensorObj X Y) Z] [HasTensor X (tensorObj Y Z)]
@@ -114,7 +128,8 @@ lemma hexagon_reverse [HasTensor X Y] [HasTensor Y Z] [HasTensor Z X]
     MonoidalCategory.id_tensorHom,
     ← ιTensorObj₃_eq_assoc Z X Y i₃ i₁ i₂ k (by rw [add_assoc, add_comm i₃, h]) _ rfl,
     ιTensorObj₃_associator_inv, Iso.hom_inv_id_assoc]
-  conv_rhs => rw [ιTensorObj₃_eq X Y Z i₁ i₂ i₃ k h _ rfl, assoc, ι_tensorHom_assoc,
+  conv_rhs =>
+    rw [ιTensorObj₃_eq X Y Z i₁ i₂ i₃ k h _ rfl, assoc, ι_tensorHom_assoc,
     ← MonoidalCategory.id_tensorHom,
     ← MonoidalCategory.tensor_comp_assoc, id_comp, ι_tensorObjDesc,
     categoryOfGradedObjects_id, MonoidalCategory.id_tensor_comp, assoc,
@@ -127,16 +142,22 @@ lemma hexagon_reverse [HasTensor X Y] [HasTensor Y Z] [HasTensor Z X]
     ← MonoidalCategory.comp_tensor_id_assoc,
     ι_tensorObjDesc, MonoidalCategory.comp_tensor_id, assoc,
     MonoidalCategory.tensorHom_id, MonoidalCategory.tensorHom_id,
-    ← ιTensorObj₃'_eq Z X Y i₃ i₁ i₂ k (by rw [add_assoc, add_comm i₃, h])
+    ← ιTensorObj₃'_eq Z X Y i₃ i₁ i₂ k (by
+      rw [add_assoc, add_comm i₃, h])
       (i₁ + i₃) (add_comm _ _)]
 
 end Braided
 
+/- Does not work with true -/
+set_option aesop.dev.statefulForward false in
 @[reassoc (attr := simp)]
 lemma symmetry [SymmetricCategory C] [HasTensor X Y] [HasTensor Y X] :
     (braiding X Y).hom ≫ (braiding Y X).hom = 𝟙 _ := by
   dsimp [braiding]
-  aesop_cat
+  ext x i₁ i₂ hi' : 2
+  saturate [categoryOfGradedObjects_id]
+  simp_all only [categoryOfGradedObjects_comp, ι_tensorObjDesc_assoc, assoc, ι_tensorObjDesc,
+    SymmetricCategory.symmetry_assoc, categoryOfGradedObjects_id, comp_id]
 
 end Monoidal
 

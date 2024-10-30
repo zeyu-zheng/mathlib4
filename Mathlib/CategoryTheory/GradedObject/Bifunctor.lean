@@ -69,6 +69,8 @@ noncomputable def mapBifunctorMapMap {X₁ X₂ : GradedObject I C₁} (f : X₁
   GradedObject.mapMap (((mapBifunctor F I J).map f).app Y₁ ≫
     ((mapBifunctor F I J).obj X₂).map g) p
 
+/- Saturate does nothing when this is false.-/
+set_option aesop.dev.statefulForward true in
 @[reassoc (attr := simp)]
 lemma ι_mapBifunctorMapMap {X₁ X₂ : GradedObject I C₁} (f : X₁ ⟶ X₂)
     {Y₁ Y₂ : GradedObject J C₂} (g : Y₁ ⟶ Y₂)
@@ -78,7 +80,31 @@ lemma ι_mapBifunctorMapMap {X₁ X₂ : GradedObject I C₁} (f : X₁ ⟶ X₂
     ιMapBifunctorMapObj F p X₁ Y₁ i j k h ≫ mapBifunctorMapMap F p f g k =
       (F.map (f i)).app (Y₁ j) ≫ (F.obj (X₂ i)).map (g j) ≫
         ιMapBifunctorMapObj F p X₂ Y₂ i j k h := by
-  simp [ιMapBifunctorMapObj, mapBifunctorMapMap]
+  simp only [ιMapBifunctorMapObj, mapBifunctorMapMap, ι_mapMap, mapBifunctor_obj_obj,
+    categoryOfGradedObjects_comp, mapBifunctor_map_app, mapBifunctor_obj_map]
+  saturate [mapBifunctorMapMap]
+  rw [@assoc C₃ _ _ _ _ _ _ _ _]
+
+set_option aesop.dev.statefulForward true in
+example {X₁ X₂ : GradedObject I C₁} (f : X₁ ⟶ X₂)
+    {Y₁ Y₂ : GradedObject J C₂} (g : Y₁ ⟶ Y₂)
+    [HasMap (((mapBifunctor F I J).obj X₁).obj Y₁) p]
+    [HasMap (((mapBifunctor F I J).obj X₂).obj Y₂) p]
+    (i : I) (j : J) (k : K) (h : p ⟨i, j⟩ = k) : True := by
+  saturate [ιMapBifunctorMapObj, mapBifunctorMapMap, ι_mapMap, mapBifunctor_obj_obj,
+    categoryOfGradedObjects_comp, mapBifunctor_map_app, mapBifunctor_obj_map,
+    @assoc]
+  trivial
+
+set_option aesop.dev.statefulForward true in
+example (F : C₁ ⥤ C₂ ⥤ C₃) {I : Type u_4} {J : Type u_5} {K : Type u_6}
+    (p : I × J → K) {X₁ X₂ : GradedObject I C₁}
+    (f : X₁ ⟶ X₂) {Y₁ Y₂ : GradedObject J C₂} (g : Y₁ ⟶ Y₂)
+    [(((mapBifunctor F I J).obj X₁).obj Y₁).HasMap p]
+    [(((mapBifunctor F I J).obj X₂).obj Y₂).HasMap p] : True := by
+  saturate [mapBifunctorMapMap]
+  trivial
+
 
 @[ext]
 lemma mapBifunctorMapObj_ext {X : GradedObject I C₁} {Y : GradedObject J C₂} {A : C₃} {k : K}
@@ -148,6 +174,36 @@ noncomputable def mapBifunctorMap [∀ X Y, HasMap (((mapBifunctor F I J).obj X)
         dsimp
         simp only [Functor.map_id, NatTrans.id_app, id_comp, comp_id,
           ← mapMap_comp, NatTrans.naturality] }
+
+variable {C₁ C₂ C₃ : Type*} [Category C₁] [Category C₂] [Category C₃]
+  (F : C₁ ⥤ C₂ ⥤ C₃)
+
+/- Saturate does nothing when this is false.-/
+set_option aesop.dev.statefulForward true in
+example  (F : CategoryTheory.Functor C₁ (CategoryTheory.Functor C₂ C₃))
+    {I : Type u_4} {J : Type u_5} {K : Type u_6} (p : I × J → K)
+    [∀ (X : CategoryTheory.GradedObject I C₁) (Y : CategoryTheory.GradedObject J C₂),
+  (((CategoryTheory.GradedObject.mapBifunctor F I J).obj X).obj Y).HasMap p]
+  (X : CategoryTheory.GradedObject I C₁) (Y : CategoryTheory.GradedObject J C₂) :
+  ((CategoryTheory.GradedObject.mapBifunctorMap F p).obj X).obj Y =
+    CategoryTheory.GradedObject.mapBifunctorMapObj F p X Y := by
+  saturate [CategoryTheory.GradedObject.mapBifunctorMap_obj_obj]
+  rfl
+
+/- Saturate does nothing when this is false.-/
+set_option aesop.dev.statefulForward true in
+example  (F : CategoryTheory.Functor C₁ (CategoryTheory.Functor C₂ C₃))
+    {I : Type u_4} {J : Type u_5} {K : Type u_6} (p : I × J → K)
+    [∀ (X : CategoryTheory.GradedObject I C₁) (Y : CategoryTheory.GradedObject J C₂),
+    (((CategoryTheory.GradedObject.mapBifunctor F I J).obj X).obj Y).HasMap p]
+    {X₁ : CategoryTheory.GradedObject I C₁} {X₂ : CategoryTheory.GradedObject I C₁}
+    (φ : X₁ ⟶ X₂) (Y : CategoryTheory.GradedObject J C₂) (i : K) : True := by
+  saturate [CategoryTheory.GradedObject.mapBifunctorMap_map_app]
+  trivial
+
+
+
+
 
 end
 
