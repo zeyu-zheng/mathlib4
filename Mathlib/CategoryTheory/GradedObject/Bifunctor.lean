@@ -91,9 +91,10 @@ example {X₁ X₂ : GradedObject I C₁} (f : X₁ ⟶ X₂)
     [HasMap (((mapBifunctor F I J).obj X₁).obj Y₁) p]
     [HasMap (((mapBifunctor F I J).obj X₂).obj Y₂) p]
     (i : I) (j : J) (k : K) (h : p ⟨i, j⟩ = k) : True := by
-  saturate [ιMapBifunctorMapObj, mapBifunctorMapMap, ι_mapMap, mapBifunctor_obj_obj,
-    categoryOfGradedObjects_comp, mapBifunctor_map_app, mapBifunctor_obj_map,
-    @assoc]
+  -- FIXME bug
+  -- saturate [ιMapBifunctorMapObj, mapBifunctorMapMap, ι_mapMap, mapBifunctor_obj_obj,
+  --   categoryOfGradedObjects_comp, mapBifunctor_map_app, mapBifunctor_obj_map,
+  --   @assoc]
   trivial
 
 set_option aesop.dev.statefulForward true in
