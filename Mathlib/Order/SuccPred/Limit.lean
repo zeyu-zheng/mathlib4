@@ -217,6 +217,11 @@ theorem mem_range_succ_or_isSuccPrelimit (a) : a ∈ range (succ : α → α) �
 @[deprecated mem_range_succ_or_isSuccPrelimit (since := "2024-09-05")]
 alias mem_range_succ_or_isSuccLimit := mem_range_succ_or_isSuccPrelimit
 
+theorem isMin_or_mem_range_succ_or_isSuccLimit (a) :
+    IsMin a ∨ a ∈ range (succ : α → α) ∨ IsSuccLimit a := by
+  have := mem_range_succ_or_isSuccPrelimit a
+  tauto
+
 theorem isSuccPrelimit_of_succ_lt (H : ∀ a < b, succ a < b) : IsSuccPrelimit b := fun a hab =>
   (H a hab.lt).ne (CovBy.succ_eq hab)
 
@@ -302,6 +307,20 @@ theorem IsSuccPrelimit.le_iff_forall_le (h : IsSuccPrelimit a) : a ≤ b ↔ ∀
 theorem IsSuccPrelimit.lt_iff_exists_lt (h : IsSuccPrelimit b) : a < b ↔ ∃ c < b, a < c := by
   rw [← not_iff_not]
   simp [h.le_iff_forall_le]
+
+theorem IsSuccLimit.le_iff_forall_le (h : IsSuccLimit a) : a ≤ b ↔ ∀ c < a, c ≤ b :=
+  h.isSuccPrelimit.le_iff_forall_le
+
+theorem IsSuccLimit.lt_iff_exists_lt (h : IsSuccLimit b) : a < b ↔ ∃ c < b, a < c :=
+  h.isSuccPrelimit.lt_iff_exists_lt
+
+variable [SuccOrder α]
+
+theorem IsSuccPrelimit.le_succ_iff (hb : IsSuccPrelimit b) : b ≤ succ a ↔ b ≤ a :=
+  le_iff_le_iff_lt_iff_lt.2 hb.succ_lt_iff
+
+theorem IsSuccLimit.le_succ_iff (hb : IsSuccLimit b) : b ≤ succ a ↔ b ≤ a :=
+  le_iff_le_iff_lt_iff_lt.2 hb.succ_lt_iff
 
 end LinearOrder
 
@@ -511,6 +530,11 @@ theorem mem_range_pred_or_isPredPrelimit (a) : a ∈ range (pred : α → α) �
 @[deprecated mem_range_pred_or_isPredPrelimit (since := "2024-09-05")]
 alias mem_range_pred_or_isPredLimit := mem_range_pred_or_isPredPrelimit
 
+theorem isMax_or_mem_range_pred_or_isPredLimit (a) :
+    IsMax a ∨ a ∈ range (pred : α → α) ∨ IsPredLimit a := by
+  have := mem_range_pred_or_isPredPrelimit a
+  tauto
+
 theorem isPredPrelimit_of_pred_lt (H : ∀ b > a, a < pred b) : IsPredPrelimit a := fun a hab =>
   (H a hab.lt).ne (CovBy.pred_eq hab).symm
 
@@ -580,6 +604,20 @@ theorem IsPredPrelimit.le_iff_forall_le (h : IsPredPrelimit a) : b ≤ a ↔ ∀
 
 theorem IsPredPrelimit.lt_iff_exists_lt (h : IsPredPrelimit b) : b < a ↔ ∃ c, b < c ∧ c < a :=
   h.dual.lt_iff_exists_lt
+
+theorem IsPredLimit.le_iff_forall_le (h : IsPredLimit a) : b ≤ a ↔ ∀ ⦃c⦄, a < c → b ≤ c :=
+  h.dual.le_iff_forall_le
+
+theorem IsPredimit.lt_iff_exists_lt (h : IsPredLimit b) : b < a ↔ ∃ c, b < c ∧ c < a :=
+  h.dual.lt_iff_exists_lt
+
+variable [PredOrder α]
+
+theorem IsPredPrelimit.pred_le_iff (hb : IsPredPrelimit b) : pred a ≤ b ↔ a ≤ b :=
+  le_iff_le_iff_lt_iff_lt.2 hb.lt_pred_iff
+
+theorem IsPredLimit.pred_le_iff (hb : IsPredLimit b) : pred a ≤ b ↔ a ≤ b :=
+  le_iff_le_iff_lt_iff_lt.2 hb.lt_pred_iff
 
 end LinearOrder
 

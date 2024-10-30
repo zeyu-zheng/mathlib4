@@ -685,6 +685,14 @@ theorem lift_one : lift 1 = 1 :=
   type_eq_one_of_unique _
 
 @[simp]
+theorem lift_eq_zero_iff {o : Ordinal.{u}} : lift.{v} o = 0 ↔ o = 0 := by
+  simpa using lift_inj (b := 0)
+
+@[simp]
+theorem lift_eq_one_iff {o : Ordinal.{u}} : lift.{v} o = 1 ↔ o = 1 := by
+  simpa using lift_inj (b := 1)
+
+@[simp]
 theorem lift_card (a) : Cardinal.lift.{u, v} (card a) = card (lift.{u} a) :=
   inductionOn a fun _ _ _ => rfl
 
@@ -733,6 +741,10 @@ theorem lift_omega0 : lift ω = ω :=
 
 @[deprecated (since := "2024-09-30")]
 alias lift_omega := lift_omega0
+
+@[simp]
+theorem lift_eq_omega0_iff {o : Ordinal.{u}} : lift.{v} o = ω ↔ o = ω := by
+  simpa using lift_inj (b := ω)
 
 /-!
 ### Definition and first properties of addition on ordinals
