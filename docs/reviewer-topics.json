@@ -30,13 +30,13 @@
     "free_form": ""
   },
   {
-    "github_handle": "andrew-yang",
+    "github_handle": "erdOne",
     "zulip_handle": "@**Andrew Yang**",
     "top_level": ["t-algebraic-geometry", "t-commutative-algebra", "t-category-theory"],
     "free_form": ""
   },
   {
-    "github_handle": "aaron-anderson",
+    "github_handle": "awainverse",
     "zulip_handle": "@**Aaron Anderson**",
     "top_level": ["t-model-theory", "t-combinatorics"],
     "free_form": ""
@@ -54,10 +54,10 @@
     "free_form": ""
   },
   {
-    "github_handle": "yael-dillies",
+    "github_handle": "YaelDillies",
     "zulip_handle": "@**Yaël Dillies**",
-    "top_level": ["t-combinatorics", "t-order-theory", "t-basic-algebra", "t-convex-analysis"],
-    "free_form": "naming, type hierarchies"
+    "top_level": ["t-combinatorics", "t-order-theory", "t-measure-probability", "t-analysis", "t-algebra"],
+    "free_form": "I am competent for all of combinatorics, all of (algebraic) order theory, all of basic algebra (in particular pointwise actions), most of probability/measure theory, most of convex analysis. For non-mathematical subjects, I have strong opinions on naming and can give advice on type hierarchies and `positivity` extensions."
   },
   {
     "github_handle": "grunweg",
@@ -66,19 +66,19 @@
     "free_form": "technical debt"
   },
   {
-    "github_handle": "remy-degenne",
+    "github_handle": "RemyDegenne",
     "zulip_handle": "@**Rémy Degenne**",
-    "top_level": ["t-probability", "t-statistics", "t-information-theory"],
+    "top_level": ["t-measure-probability", "t-statistics", "t-information-theory"],
     "free_form": ""
   },
   {
-    "github_handle": "frederic-dupuis",
+    "github_handle": "dupuisf",
     "zulip_handle": "@**Frédéric Dupuis**",
     "top_level": ["t-matrix-theory", "t-operator-algebras", "t-theoretical-computer-science", "t-quantum-information-theory"],
     "free_form": ""
   },
   {
-    "github_handle": "yury-g-kudryashov",
+    "github_handle": "urkud",
     "zulip_handle": "@**Yury G. Kudryashov**",
     "top_level": ["t-dynamics", "t-analysis", "t-topology", "t-measure-theory"],
     "free_form": ""
@@ -90,25 +90,25 @@
     "free_form": "metaprogramming (because I like it, not because I feel that I am very skilled in it!)"
   },
   {
-    "github_handle": "adam-topaz",
+    "github_handle": "adamtopaz",
     "zulip_handle": "@**Adam Topaz**",
     "top_level": ["t-category-theory", "t-algebraic-geometry", "t-arithmetic-geometry", "t-galois-theory", "t-metaprogramming"],
     "free_form": ""
   },
   {
-    "github_handle": "riccardo-brasca",
+    "github_handle": "riccardobrasca",
     "zulip_handle": "@**Riccardo Brasca**",
     "top_level": ["t-number-theory", "t-algebra", "t-category-theory", "t-algebraic-geometry", "t-arithmetic-geometry"],
     "free_form": ""
   },
   {
-    "github_handle": "jon-eugster",
+    "github_handle": "joneugster",
     "zulip_handle": "@**Jon Eugster**",
     "top_level": ["t-category-theory", "t-algebra", "t-algebraic-geometry", "t-arithmetic-geometry"],
     "free_form": "Meta-programming & technical aspects (also because I'm interested in it, not necessarily because I'm that skilled)"
   },
   {
-    "github_handle": "david-loeffler",
+    "github_handle": "loefflerd",
     "zulip_handle": "@**David Loeffler**",
     "top_level": ["t-number-theory", "t-analysis"],
     "free_form": "Algebraic and analytic number theory; also topology, real analysis, Fourier theory"
@@ -150,25 +150,25 @@
     "free_form": "Typeclasses, hierarchies, optimization and refactoring, metaprogramming"
   },
   {
-    "github_handle": "maria-ines-de-frutos-fernandez",
+    "github_handle": "mariainesdff",
     "zulip_handle": "@**María Inés de Frutos Fernández**",
     "top_level": ["t-number-theory", "t-algebra"],
     "free_form": ""
   },
   {
-    "github_handle": "markus-himmel",
+    "github_handle": "TwoFX",
     "zulip_handle": "@**Markus Himmel**",
     "top_level": ["t-category-theory", "t-linear-algebra", "t-combinatorial-game-theory"],
     "free_form": ""
   },
   {
-    "github_handle": "matthew-ballard",
+    "github_handle": "mattrobball",
     "zulip_handle": "@**Matthew Ballard**",
     "top_level": ["t-category-theory", "t-commutative-algebra", "t-noncommutative-algebra", "t-algebraic-geometry", "t-stability", "t-group-actions", "t-mirror-symmetry"],
     "free_form": "Folders in mathlib: Algebra, AlgebraicGeometry, AlgebraicTopology, CategoryTheory, Data, FieldTheory, Geometry, GroupTheory, Init :), Lean, LinearAlgebra, NumberTheory, RepresentationTheory, RingTheory, Tactic, Topology, Util"
   },
   {
-    "github_handle": "filippo-a-e-nuccio",
+    "github_handle": "faenuccio",
     "zulip_handle": "@**Filippo A. E. Nuccio**",
     "top_level": ["t-algebraic-number-theory", "t-commutative-algebra", "t-homological-algebra"],
     "free_form": "Functional Analysis, General Topology (because I like them a lot without being an expert)"
@@ -204,13 +204,13 @@
     "free_form": ""
   },
   {
-    "github_handle": "kim-morrison",
+    "github_handle": "kim-em",
     "zulip_handle": "@**Kim Morrison**",
     "top_level": ["t-metaprogramming", "t-user-tools", "t-refactoring", "t-import-reduction", "t-category-theory", "t-algebra", "t-homological-algebra", "t-operator-algebra", "t-algebraic-geometry", "t-representation-theory"],
     "free_form": ""
   },
   {
-    "github_handle": "david-renshaw",
+    "github_handle": "dwrensha",
     "zulip_handle": "@**David Renshaw**",
     "top_level": ["t-metaprogramming", "t-olympiad-problems"],
     "free_form": ""
