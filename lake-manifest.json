@@ -5,7 +5,7 @@
    "type": "git",
    "subDir": null,
    "scope": "leanprover-community",
-   "rev": "e16afca8c6c891c523ca9e644da6695bab1d2463",
+   "rev": "6bca5f0474a58ec507577a52b41d5096e82d90a6",
    "name": "batteries",
    "manifestFile": "lake-manifest.json",
    "inputRev": "mersenne-twister",
