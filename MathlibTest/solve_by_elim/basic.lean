@@ -6,7 +6,8 @@ Authors: Kim Morrison
 import Lean.Meta.Tactic.SolveByElim
 import Mathlib.Tactic.Constructor
 import Batteries.Tactic.PermuteGoals
-import Batteries.Test.Internal.DummyLabelAttr
+import MathlibTest.solve_by_elim.defs
+
 
 set_option autoImplicit true
 
