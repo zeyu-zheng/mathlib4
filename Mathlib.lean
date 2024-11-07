@@ -2981,6 +2981,7 @@ import Mathlib.GroupTheory.DoubleCoset
 import Mathlib.GroupTheory.EckmannHilton
 import Mathlib.GroupTheory.Exponent
 import Mathlib.GroupTheory.FiniteAbelian.Basic
+import Mathlib.GroupTheory.FiniteAbelian.Duality
 import Mathlib.GroupTheory.Finiteness
 import Mathlib.GroupTheory.FixedPointFree
 import Mathlib.GroupTheory.Frattini
@@ -4276,6 +4277,7 @@ import Mathlib.RingTheory.Presentation
 import Mathlib.RingTheory.Prime
 import Mathlib.RingTheory.PrimeSpectrum
 import Mathlib.RingTheory.PrincipalIdealDomain
+import Mathlib.RingTheory.PrincipalIdealDomainOfPrime
 import Mathlib.RingTheory.QuotSMulTop
 import Mathlib.RingTheory.Radical
 import Mathlib.RingTheory.ReesAlgebra
