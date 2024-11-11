@@ -130,7 +130,6 @@ theorem mk_coe (e : A₁ ≃ₐ[R] A₂) (e' h₁ h₂ h₃ h₄ h₅) :
 theorem toEquiv_eq_coe : e.toEquiv = e :=
   rfl
 
--- Porting note: `protected` used to be an attribute below
 @[simp]
 protected theorem coe_coe {F : Type*} [EquivLike F A₁ A₂] [AlgEquivClass F R A₁ A₂] (f : F) :
     ⇑(f : A₁ ≃ₐ[R] A₂) = f :=
@@ -740,6 +739,10 @@ def algHomUnitsEquiv (R S : Type*) [CommSemiring R] [Semiring S] [Algebra R S] :
   left_inv := fun _ ↦ rfl
   right_inv := fun _ ↦ rfl
   map_mul' := fun _ _ ↦ rfl
+
+/-- See also `Finite.algHom` -/
+instance _root_.Finite.algEquiv [Finite (A₁ →ₐ[R] A₂)] : Finite (A₁ ≃ₐ[R] A₂) :=
+  Finite.of_injective _ AlgEquiv.coe_algHom_injective
 
 end Semiring
 
