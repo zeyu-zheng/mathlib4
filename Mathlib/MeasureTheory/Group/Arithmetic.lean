@@ -166,7 +166,7 @@ export MeasurablePow (measurable_pow)
 /-- `Monoid.Pow` is measurable. -/
 instance Monoid.measurablePow (M : Type*) [Monoid M] [MeasurableSpace M] [MeasurableMul₂ M] :
     MeasurablePow M ℕ :=
-  ⟨measurable_from_prod_countable fun n => by
+  ⟨measurable_from_prod_countable_left fun n => by
       induction' n with n ih
       · simp only [pow_zero, ← Pi.one_def, measurable_one]
       · simp only [pow_succ]
@@ -452,7 +452,7 @@ theorem AEMeasurable.mul_iff_left {G : Type*} [MeasurableSpace G] [MeasurableSpa
 /-- `DivInvMonoid.Pow` is measurable. -/
 instance DivInvMonoid.measurableZPow (G : Type u) [DivInvMonoid G] [MeasurableSpace G]
     [MeasurableMul₂ G] [MeasurableInv G] : MeasurablePow G ℤ :=
-  ⟨measurable_from_prod_countable fun n => by
+  ⟨measurable_from_prod_countable_left fun n => by
       cases' n with n n
       · simp_rw [Int.ofNat_eq_coe, zpow_natCast]
         exact measurable_id.pow_const _
@@ -598,7 +598,7 @@ instance AddMonoid.measurableSMul_nat₂ (M : Type*) [AddMonoid M] [MeasurableSp
     [MeasurableAdd₂ M] : MeasurableSMul₂ ℕ M :=
   ⟨by
     suffices Measurable fun p : M × ℕ => p.2 • p.1 by apply this.comp measurable_swap
-    refine measurable_from_prod_countable fun n => ?_
+    refine measurable_from_prod_countable_left fun n => ?_
     induction' n with n ih
     · simp only [zero_smul, ← Pi.zero_def, measurable_zero]
     · simp only [succ_nsmul]
@@ -609,7 +609,7 @@ instance SubNegMonoid.measurableSMul_int₂ (M : Type*) [SubNegMonoid M] [Measur
     [MeasurableAdd₂ M] [MeasurableNeg M] : MeasurableSMul₂ ℤ M :=
   ⟨by
     suffices Measurable fun p : M × ℤ => p.2 • p.1 by apply this.comp measurable_swap
-    refine measurable_from_prod_countable fun n => ?_
+    refine measurable_from_prod_countable_left fun n => ?_
     induction' n with n n ih
     · simp only [Int.ofNat_eq_coe, natCast_zsmul]
       exact measurable_const_smul _
@@ -627,7 +627,7 @@ theorem Measurable.measurableSMul₂_iterateMulAct (h : Measurable f) :
     MeasurableSMul₂ (IterateMulAct f) α where
   measurable_smul :=
     suffices Measurable fun p : α × IterateMulAct f ↦ f^[p.2.val] p.1 from this.comp measurable_swap
-    measurable_from_prod_countable fun n ↦ h.iterate n.val
+    measurable_from_prod_countable_left fun n ↦ h.iterate n.val
 
 @[to_additive (attr := simp)]
 theorem measurableSMul_iterateMulAct : MeasurableSMul (IterateMulAct f) α ↔ Measurable f :=
