@@ -658,6 +658,11 @@ instance decidableSublist [DecidableEq α] : ∀ l₁ l₂ : List α, Decidable 
           | _, _, Sublist.cons _ s', h => s'
           | _, _, Sublist.cons₂ t _, h => absurd rfl h⟩
 
+/-- If the first element of two lists are different, then a sublist relation can be reduced. -/
+theorem Sublist.of_cons_of_ne {a b} (h₁ : a ≠ b) (h₂ : a :: l₁ <+ b :: l₂) : a :: l₁ <+ l₂ :=
+  match h₁, h₂ with
+  | _, .cons _ h =>  h
+
 /-! ### indexOf -/
 
 section IndexOf
@@ -786,6 +791,12 @@ theorem ext_get?_iff' {l₁ l₂ : List α} : l₁ = l₂ ↔
     ∀ n < max l₁.length l₂.length, l₁.get? n = l₂.get? n :=
   ⟨by rintro rfl _ _; rfl, ext_get?'⟩
 
+/-- If two lists `l₁` and `l₂` are the same length and `l₁[n]! = l₂[n]!` for all `n`,
+then the lists are equal. -/
+theorem ext_getElem! [Inhabited α] (hl : length l₁ = length l₂) (h : ∀ n : ℕ, l₁[n]! = l₂[n]!) :
+    l₁ = l₂ :=
+  ext_getElem hl fun n h₁ h₂ ↦ by simpa only [← getElem!_pos] using h n
+
 @[simp]
 theorem getElem_indexOf [DecidableEq α] {a : α} : ∀ {l : List α} (h : indexOf a l < l.length),
     l[indexOf a l] = a
@@ -838,33 +849,11 @@ theorem eq_cons_of_length_one {l : List α} (h : l.length = 1) : l = [l.get ⟨0
 
 end deprecated
 
-theorem modifyTailIdx_modifyTailIdx {f g : List α → List α} (m : ℕ) :
-    ∀ (n) (l : List α),
-      (l.modifyTailIdx f n).modifyTailIdx g (m + n) =
-        l.modifyTailIdx (fun l => (f l).modifyTailIdx g m) n
-  | 0, _ => rfl
-  | _ + 1, [] => rfl
-  | n + 1, a :: l => congr_arg (List.cons a) (modifyTailIdx_modifyTailIdx m n l)
-
-@[deprecated (since := "2024-10-21")]
-alias modifyNthTail_modifyNthTail := modifyTailIdx_modifyTailIdx
-
-theorem modifyTailIdx_modifyTailIdx_le {f g : List α → List α} (m n : ℕ) (l : List α)
-    (h : n ≤ m) :
-    (l.modifyTailIdx f n).modifyTailIdx g m =
-      l.modifyTailIdx (fun l => (f l).modifyTailIdx g (m - n)) n := by
-  rcases Nat.exists_eq_add_of_le h with ⟨m, rfl⟩
-  rw [Nat.add_comm, modifyTailIdx_modifyTailIdx, Nat.add_sub_cancel]
-
 @[deprecated (since := "2024-10-21")]
 alias modifyNthTail_modifyNthTail_le := modifyTailIdx_modifyTailIdx_le
 
-theorem modifyTailIdx_modifyTailIdx_same {f g : List α → List α} (n : ℕ) (l : List α) :
-    (l.modifyTailIdx f n).modifyTailIdx g n = l.modifyTailIdx (g ∘ f) n := by
-  rw [modifyTailIdx_modifyTailIdx_le n n l (le_refl n), Nat.sub_self]; rfl
-
 @[deprecated (since := "2024-10-21")]
-alias modifyNthTail_modifyNthTail_same := modifyTailIdx_modifyTailIdx_same
+alias modifyNthTail_modifyNthTail_same := modifyTailIdx_modifyTailIdx_self
 @[deprecated (since := "2024-05-04")] alias removeNth_eq_nthTail := eraseIdx_eq_modifyTailIdx
 
 @[deprecated (since := "2024-10-21")] alias modifyNth_eq_set := modify_eq_set
@@ -1011,6 +1000,35 @@ theorem zipWith_flip (f : α → β → γ) : ∀ as bs, zipWith (flip f) bs as 
     rfl
 
 /-! ### take, drop -/
+
+@[simp] lemma take_eq_self_iff (x : List α) {n : ℕ} : x.take n = x ↔ x.length ≤ n :=
+  ⟨fun h ↦ by rw [← h]; simp; omega, take_of_length_le⟩
+
+@[simp] lemma take_self_eq_iff (x : List α) {n : ℕ} : x = x.take n ↔ x.length ≤ n := by
+  rw [Eq.comm, take_eq_self_iff]
+
+@[simp] lemma take_eq_left_iff {x y : List α} {n : ℕ} :
+    (x ++ y).take n = x.take n ↔ y = [] ∨ n ≤ x.length := by
+  simp [take_append_eq_append_take, Nat.sub_eq_zero_iff_le, Or.comm]
+
+@[simp] lemma left_eq_take_iff {x y : List α} {n : ℕ} :
+    x.take n = (x ++ y).take n ↔ y = [] ∨ n ≤ x.length := by
+  rw [Eq.comm]; apply take_eq_left_iff
+
+@[simp] lemma drop_take_append_drop (x : List α) (m n : ℕ) :
+    (x.drop m).take n ++ x.drop (m + n) = x.drop m := by rw [← drop_drop, take_append_drop]
+
+/-- Compared to `drop_take_append_drop`, the order of summands is swapped. -/
+@[simp] lemma drop_take_append_drop' (x : List α) (m n : ℕ) :
+    (x.drop m).take n ++ x.drop (n + m) = x.drop m := by rw [Nat.add_comm, drop_take_append_drop]
+
+/-- `take_concat_get` in simp normal form -/
+@[simp] lemma take_concat_get' (l : List α) (i : ℕ) (h : i < l.length) :
+  l.take i ++ [l[i]] = l.take (i + 1) := by simpa using take_concat_get l i h
+
+/-- `eq_nil_or_concat` in simp normal form -/
+lemma eq_nil_or_concat' (l : List α) : l = [] ∨ ∃ L b, l = L ++ [b] := by
+  simpa using l.eq_nil_or_concat
 
 theorem cons_getElem_drop_succ {l : List α} {n : Nat} {h : n < l.length} :
     l[n] :: l.drop (n + 1) = l.drop n :=
