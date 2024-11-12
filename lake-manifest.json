@@ -1,11 +1,11 @@
 {"version": "1.1.0",
  "packagesDir": ".lake/packages",
  "packages":
- [{"url": "https://github.com/leanprover-community/batteries",
+ [{"url": "https://github.com/jcommelin/batteries",
    "type": "git",
    "subDir": null,
    "scope": "leanprover-community",
-   "rev": "1bfaec42a7481a81e7e12565442bd1f8dc202ae2",
+   "rev": "f172e1c4c979c7ae17b948348ce103042eabace3",
    "name": "batteries",
    "manifestFile": "lake-manifest.json",
    "inputRev": "main",
