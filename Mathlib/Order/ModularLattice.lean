@@ -373,7 +373,10 @@ lemma Set.Iic.isCompl_inf_inf_of_isCompl_of_le [Lattice α] [BoundedOrder α] [I
     {a b c : α} (h₁ : IsCompl b c) (h₂ : b ≤ a) :
     IsCompl (⟨a ⊓ b, inf_le_left⟩ : Iic a) (⟨a ⊓ c, inf_le_left⟩ : Iic a) := by
   constructor
-  · simp [disjoint_iff, Subtype.ext_iff, inf_comm a c, inf_assoc a, ← inf_assoc b, h₁.inf_eq_bot]
+  #adaptation_note /-- lean4#3973: Changed from simp [disjoint_iff, Subtype.ext_iff, inf_comm a c,
+    inf_assoc a, ← inf_assoc b, h₁.inf_eq_bot] -/
+  · simp only [inf_comm a c, disjoint_iff, Subtype.ext_iff, Iic.coe_inf, inf_assoc a, ←
+      inf_assoc b, h₁.inf_eq_bot, bot_le, inf_of_le_left, inf_of_le_right, coe_bot]
   · simp only [Iic.codisjoint_iff, inf_comm a, IsModularLattice.inf_sup_inf_assoc]
     simp [inf_of_le_left h₂, h₁.sup_eq_top]
 
