@@ -677,7 +677,7 @@ def subobjectOrderIso {X : C} (Y : Subobject X) : Subobject (Y : C) ≃o Set.Iic
           dsimp
           simp [← Iso.eq_inv_comp]))
   map_rel_iff' {W Z} := by
-    dsimp
+    #adaptation_note /-- lean4#3973: Had to remove `dsimp` here. -/
     constructor
     · intro h
       exact le_of_comm (((underlyingIso _).inv ≫ ofLE _ _ (Subtype.mk_le_mk.mp h) ≫

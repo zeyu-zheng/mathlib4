@@ -130,7 +130,8 @@ instance : Fintype Language.ring.Symbols :=
        Sum.inl ⟨0, .one⟩], by
     dsimp [Language.Symbols]; decide⟩, by
     intro x
-    dsimp [Language.Symbols]
+    #adaptation_note /-- lean4#3973: Changed from `dsimp [Language.Symbols]` -/
+    dsimp only [Language.Symbols]
     rcases x with ⟨_, f⟩ | ⟨_, f⟩
     · cases f <;> decide
     · cases f ⟩

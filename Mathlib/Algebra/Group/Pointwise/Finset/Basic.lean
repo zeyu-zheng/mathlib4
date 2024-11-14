@@ -982,7 +982,8 @@ theorem mem_prod_list_ofFn {a : α} {s : Fin n → Finset α} :
 @[to_additive]
 theorem mem_pow {a : α} {n : ℕ} :
     a ∈ s ^ n ↔ ∃ f : Fin n → s, (List.ofFn fun i => ↑(f i)).prod = a := by
-  simp [← mem_coe, coe_pow, Set.mem_pow]
+  #adaptation_note /-- lean4#3793: Changed `simp ...` to `simp_rw ...` to avoid max recursion. -/
+  simp_rw [← mem_coe, coe_pow, Set.mem_pow]
 
 @[to_additive (attr := simp) nsmul_empty]
 theorem empty_pow (hn : n ≠ 0) : (∅ : Finset α) ^ n = ∅ := by

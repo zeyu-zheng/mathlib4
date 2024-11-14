@@ -290,7 +290,9 @@ theorem measurableEquiv_nat_bool_of_countablyGenerated [MeasurableSpace α]
   rw [← Equiv.image_eq_preimage _ _]
   refine ⟨{y | y n}, by measurability, ?_⟩
   rw [← Equiv.preimage_eq_iff_eq_image]
-  simp [mapNatBool]
+  #adaptation_note /-- lean4#3973: Changed from `simp [mapNatBool]` -/
+  simp only [preimage_setOf_eq, Equiv.ofInjective_apply, mapNatBool, decide_eq_true_eq,
+    setOf_mem_eq]
 
 /-- If a measurable space admits a countable sequence of measurable sets separating points,
 it admits a measurable injection into the Cantor space `ℕ → Bool`

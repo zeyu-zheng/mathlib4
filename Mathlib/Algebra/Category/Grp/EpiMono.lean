@@ -34,7 +34,11 @@ variable [Group A] [Group B]
 
 @[to_additive]
 theorem ker_eq_bot_of_cancel {f : A →* B} (h : ∀ u v : f.ker →* A, f.comp u = f.comp v → u = v) :
-    f.ker = ⊥ := by simpa using congr_arg range (h f.ker.subtype 1 (by aesop_cat))
+    f.ker = ⊥ := by
+      #adaptation_note /-- lean4#3973: Changed from
+        `simpa using congr_arg range (h f.ker.subtype 1 (by aesop_cat))`. -/
+      simpa -dsimp using congr_arg range (h f.ker.subtype 1 (by
+        aesop_cat (simp_config := { dsimp := false })))
 
 end
 

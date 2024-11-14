@@ -45,8 +45,9 @@ theorem _root_.Set.Infinite.Nat.sSup_eq_zero {s : Set ℕ} (h : s.Infinite) : sS
 theorem sInf_eq_zero {s : Set ℕ} : sInf s = 0 ↔ 0 ∈ s ∨ s = ∅ := by
   cases eq_empty_or_nonempty s with
   | inl h => subst h
-             simp only [or_true, eq_self_iff_true, iInf, InfSet.sInf,
-                        mem_empty_iff_false, exists_false, dif_neg, not_false_iff]
+             #adaptation_note /-- lean4#3973: Changed from simp only [or_true, eq_self_iff_true,
+              iInf, InfSet.sInf, mem_empty_iff_false, exists_false, dif_neg, not_false_iff] -/
+             simp only [sInf, mem_empty_iff_false, exists_const, ↓reduceDIte, or_true]
   | inr h => simp only [h.ne_empty, or_false, Nat.sInf_def, h, Nat.find_eq_zero]
 
 @[simp]

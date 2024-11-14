@@ -395,7 +395,9 @@ section rangeRestrict
 
 variable [RingHomSurjective τ₁₂] (f : M →ₛₗ[τ₁₂] M₂)
 
-@[simp] theorem range_rangeRestrict : range f.rangeRestrict = ⊤ := by simp [f.range_codRestrict _]
+@[simp] theorem range_rangeRestrict : range f.rangeRestrict = ⊤ := by
+  #adaptation_note /-- lean4#3973: Changed from terminal `simp [f.range_codRestrict _]`. -/
+  simp only [f.range_codRestrict _, Submodule.comap_subtype_self]
 
 theorem surjective_rangeRestrict : Surjective f.rangeRestrict := by
   rw [← range_eq_top, range_rangeRestrict]
