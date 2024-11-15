@@ -240,8 +240,12 @@ noncomputable def comap_equiv_self_of_inj_of_le {f : M →ₗ[R] N} {p : Submodu
     p.comap f ≃ₗ[R] p :=
   LinearEquiv.ofBijective
   ((f ∘ₗ (p.comap f).subtype).codRestrict p <| fun ⟨_, hx⟩ ↦ mem_comap.mp hx)
-  (⟨fun x y hxy ↦ by simpa using hf (Subtype.ext_iff.mp hxy),
-    fun ⟨x, hx⟩ ↦ by obtain ⟨y, rfl⟩ := h hx; exact ⟨⟨y, hx⟩, by simp [Subtype.ext_iff]⟩⟩)
+  (⟨fun x y hxy ↦ by
+      #adaptation_note /-- lean4#3973: Added `-dsimp`. -/
+      simpa -dsimp using hf (Subtype.ext_iff.mp hxy),
+    fun ⟨x, hx⟩ ↦ by obtain ⟨y, rfl⟩ := h hx; exact ⟨⟨y, hx⟩, by
+      #adaptation_note /-- lean4#3973: Added `-dsimp`. -/
+      simp -dsimp [Subtype.ext_iff]⟩⟩)
 
 end Module
 
@@ -265,7 +269,8 @@ noncomputable def codRestrictOfInjective : M₁ →ₗ[R] M₃ :=
 @[simp]
 lemma codRestrictOfInjective_comp_apply (x : M₁) :
     i (LinearMap.codRestrictOfInjective f i hi hf x) = f x := by
-  simp [LinearMap.codRestrictOfInjective]
+  #adaptation_note /-- lean4#3973: Added `-dsimp`. -/
+  simp -dsimp [LinearMap.codRestrictOfInjective]
 
 @[simp]
 lemma codRestrictOfInjective_comp :
@@ -283,12 +288,19 @@ noncomputable def codRestrict₂ :
     M₁ →ₗ[R] M₂ →ₗ[R] M₃ :=
   let e : LinearMap.range i ≃ₗ[R] M₃ := (LinearEquiv.ofInjective i hi).symm
   { toFun := fun x ↦ e.comp <| (f x).codRestrict (p := LinearMap.range i) (hf x)
-    map_add' := by intro x₁ x₂; ext y; simp [f.map_add, ← e.map_add, codRestrict]
-    map_smul' := by intro t x; ext y; simp [f.map_smul, ← e.map_smul, codRestrict] }
+    map_add' := by
+      intro x₁ x₂; ext y
+      #adaptation_note /-- lean4#3973: Added `-dsimp`. -/
+      simp -dsimp [f.map_add, ← e.map_add, codRestrict]
+    map_smul' := by
+      intro t x; ext y
+      #adaptation_note /-- lean4#3973: Added `-dsimp`. -/
+      simp -dsimp [f.map_smul, ← e.map_smul, codRestrict] }
 
 @[simp]
 lemma codRestrict₂_apply (x : M₁) (y : M₂) :
     i (codRestrict₂ f i hi hf x y) = f x y := by
-  simp [codRestrict₂]
+  #adaptation_note /-- lean4#3973: Added `-dsimp`. -/
+  simp -dsimp [codRestrict₂]
 
 end LinearMap

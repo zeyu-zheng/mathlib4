@@ -201,9 +201,11 @@ theorem Set.Iic.isCoatom_iff {a : Set.Iic b} : IsCoatom a ↔ ↑a ⋖ b := by
   refine (Set.OrdConnected.apply_covBy_apply_iff (OrderEmbedding.subtype fun c => c ≤ b) ?_).symm
   simpa only [OrderEmbedding.subtype_apply, Subtype.range_coe_subtype] using Set.ordConnected_Iic
 
-theorem covBy_iff_atom_Ici (h : a ≤ b) : a ⋖ b ↔ IsAtom (⟨b, h⟩ : Set.Ici a) := by simp
+#adaptation_note /-- lean4#3973: Added `-dsimp`. -/
+theorem covBy_iff_atom_Ici (h : a ≤ b) : a ⋖ b ↔ IsAtom (⟨b, h⟩ : Set.Ici a) := by simp -dsimp
 
-theorem covBy_iff_coatom_Iic (h : a ≤ b) : a ⋖ b ↔ IsCoatom (⟨a, h⟩ : Set.Iic b) := by simp
+#adaptation_note /-- lean4#3973: Added `-dsimp`. -/
+theorem covBy_iff_coatom_Iic (h : a ≤ b) : a ⋖ b ↔ IsCoatom (⟨a, h⟩ : Set.Iic b) := by simp -dsimp
 
 end PartialOrder
 
@@ -1013,7 +1015,9 @@ theorem ComplementedLattice.isStronglyAtomic [IsAtomic α] : IsStronglyAtomic α
   exists_covBy_le_of_lt a b hab := by
     obtain ⟨⟨a', ha'b : a' ≤ b⟩, ha'⟩ := exists_isCompl (α := Set.Iic b) ⟨a, hab.le⟩
     obtain (rfl | ⟨d, hd⟩) := eq_bot_or_exists_atom_le a'
-    · obtain rfl : a = b := by simpa [codisjoint_bot, ← Subtype.coe_inj] using ha'.codisjoint
+    · obtain rfl : a = b := by
+        #adaptation_note /-- lean4#3973: Added `-dsimp`. -/
+        simpa -dsimp [codisjoint_bot, ← Subtype.coe_inj] using ha'.codisjoint
       exact False.elim <| hab.ne rfl
     refine ⟨d ⊔ a, IsUpperModularLattice.covBy_sup_of_inf_covBy ?_, sup_le (hd.2.trans ha'b) hab.le⟩
     convert hd.1.bot_covBy
