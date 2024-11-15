@@ -296,12 +296,12 @@ theorem abs_log_mul_self_lt (x : ℝ) (h1 : 0 < x) (h2 : x ≤ 1) : |log x * x| 
   have : 0 < 1 / x := by simpa only [one_div, inv_pos] using h1
   replace := log_le_sub_one_of_pos this
   replace : log (1 / x) < 1 / x := by linarith
-  rw [log_div one_ne_zero h1.ne', log_one, zero_sub, lt_div_iff h1] at this
+  rw [log_div one_ne_zero h1.ne', log_one, zero_sub, lt_div_iff₀ h1] at this
   have aux : 0 ≤ -log x * x := by
     refine mul_nonneg ?_ h1.le
     rw [← log_inv]
     apply log_nonneg
-    rw [← le_inv h1 zero_lt_one, inv_one]
+    rw [← le_inv_comm₀ h1 zero_lt_one, inv_one]
     exact h2
   rw [← abs_of_nonneg aux, neg_mul, abs_neg] at this
   exact this
@@ -324,11 +324,13 @@ theorem continuousOn_log : ContinuousOn log {0}ᶜ := by
   conv in log _ => rw [log_of_ne_zero (show (x : ℝ) ≠ 0 from x.2)]
   exact expOrderIso.symm.continuous.comp (continuous_subtype_val.norm.subtype_mk _)
 
-@[continuity]
+/-- The real logarithm is continuous as a function from nonzero reals. -/
+@[fun_prop]
 theorem continuous_log : Continuous fun x : { x : ℝ // x ≠ 0 } => log x :=
   continuousOn_iff_continuous_restrict.1 <| continuousOn_log.mono fun _ => id
 
-@[continuity]
+/-- The real logarithm is continuous as a function from positive reals. -/
+@[fun_prop]
 theorem continuous_log' : Continuous fun x : { x : ℝ // 0 < x } => log x :=
   continuousOn_iff_continuous_restrict.1 <| continuousOn_log.mono fun _ hx => ne_of_gt hx
 

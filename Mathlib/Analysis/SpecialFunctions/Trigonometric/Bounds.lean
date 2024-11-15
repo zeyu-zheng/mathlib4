@@ -98,10 +98,10 @@ lemma sin_sq_lt_sq (hx : x ≠ 0) : sin x ^ 2 < x ^ 2 := by
     simpa using this (neg_ne_zero.2 hx) <| neg_pos_of_neg <| hx.lt_of_le <| le_of_not_lt hx₀
   rcases le_or_lt x 1 with hxπ | hxπ
   case inl =>
-    exact pow_lt_pow_left (sin_lt hx₀)
+    exact pow_lt_pow_left₀ (sin_lt hx₀)
       (sin_nonneg_of_nonneg_of_le_pi hx₀.le (by linarith [two_le_pi])) (by simp)
   case inr =>
-    exact (sin_sq_le_one _).trans_lt (by rwa [one_lt_sq_iff hx₀.le])
+    exact (sin_sq_le_one _).trans_lt (by rwa [one_lt_sq_iff₀ hx₀.le])
 
 lemma sin_sq_le_sq : sin x ^ 2 ≤ x ^ 2 := by
   rcases eq_or_ne x 0 with rfl | hx
@@ -192,7 +192,7 @@ theorem lt_tan {x : ℝ} (h1 : 0 < x) (h2 : x < π / 2) : x < tan x := by
       apply lt_of_le_of_ne y.cos_sq_le_one
       rw [cos_sq']
       simpa only [Ne, sub_eq_self, sq_eq_zero_iff] using (sin_pos hy).ne'
-    rwa [lt_inv, inv_one]
+    rwa [lt_inv_comm₀, inv_one]
     · exact zero_lt_one
     simpa only [sq, mul_self_pos] using this.ne'
   have mono := strictMonoOn_of_deriv_pos (convex_Ico 0 (π / 2)) tan_minus_id_cts deriv_pos
