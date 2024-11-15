@@ -889,7 +889,9 @@ noncomputable def substructureEquivMap (f : M ↪[L] N) (s : L.Substructure M) :
             (codRestrict (s.map f.toHom) (f.domRestrict s) (fun ⟨m, hm⟩ => ⟨m, hm, rfl⟩)
                 ⟨m, hm⟩).2).2)
   right_inv := fun ⟨_, hn⟩ => Subtype.mk_eq_mk.2 (Classical.choose_spec hn).2
-  map_fun' {n} f x := by aesop
+  map_fun' {n} f x := by
+    #adaptation_note /-- lean4#3973: Added `-dsimp`. -/
+    aesop (simp_config := { dsimp := false})
   map_rel' {n} R x := by aesop
 
 @[simp]
@@ -909,7 +911,9 @@ theorem subtype_substructureEquivMap (f : M ↪[L] N) (s : L.Substructure M) :
   left_inv m :=
     f.injective (Classical.choose_spec (codRestrict f.toHom.range f f.toHom.mem_range_self m).2)
   right_inv := fun ⟨_, hn⟩ => Subtype.mk_eq_mk.2 (Classical.choose_spec hn)
-  map_fun' {n} f x := by aesop
+  map_fun' {n} f x := by
+    #adaptation_note /-- lean4#3973: Added `-dsimp`. -/
+    aesop (simp_config := { dsimp := false})
   map_rel' {n} R x := by aesop
 
 @[simp]
