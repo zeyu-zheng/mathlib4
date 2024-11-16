@@ -54,12 +54,13 @@ noncomputable def supportedEquivMvPolynomial (s : Set σ) : supported R s ≃ₐ
 theorem supportedEquivMvPolynomial_symm_C (s : Set σ) (x : R) :
     (supportedEquivMvPolynomial s).symm (C x) = algebraMap R (supported R s) x := by
   ext1
-  simp [supportedEquivMvPolynomial, MvPolynomial.algebraMap_eq]
+  #adaptation_note /-- lean4#3973: Added `-dsimp`. -/
+  simp -dsimp [supportedEquivMvPolynomial, MvPolynomial.algebraMap_eq]
 
 @[simp]
 theorem supportedEquivMvPolynomial_symm_X (s : Set σ) (i : s) :
     (↑((supportedEquivMvPolynomial s).symm (X i : MvPolynomial s R)) : MvPolynomial σ R) = X ↑i :=
-  by simp [supportedEquivMvPolynomial]
+  by #adaptation_note /-- lean4#3973: Added `-dsimp`. -/; simp -dsimp [supportedEquivMvPolynomial]
 
 variable {s t : Set σ}
 

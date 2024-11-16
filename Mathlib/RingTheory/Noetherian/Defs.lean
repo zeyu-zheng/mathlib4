@@ -344,7 +344,9 @@ theorem isNoetherian_of_range_eq_ker [IsNoetherian R P]
       (Submodule.gciMapComap <| LinearMap.ker_eq_bot.mp <| Submodule.ker_liftQ_eq_bot _ _ _ le_rfl)
       (Submodule.giMapComap g.surjective_rangeRestrict)
       (by simp [Submodule.map_comap_eq, inf_comm, Submodule.range_liftQ])
-      (by simp [Submodule.comap_map_eq, h])
+      (by
+        #adaptation_note /-- lean4#3973: Added `-dsimp`. -/
+        simp -dsimp [Submodule.comap_map_eq, h])
 
 theorem isNoetherian_iff_submodule_quotient (S : Submodule R P) :
     IsNoetherian R P ↔ IsNoetherian R S ∧ IsNoetherian R (P ⧸ S) := by

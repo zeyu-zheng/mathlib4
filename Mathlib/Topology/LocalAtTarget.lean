@@ -80,7 +80,9 @@ theorem IsClosedMap.restrictPreimage (H : IsClosedMap f) (s : Set β) :
   suffices ∀ u, IsClosed u → Subtype.val ⁻¹' u = t →
     ∃ v, IsClosed v ∧ Subtype.val ⁻¹' v = s.restrictPreimage f '' t by
       simpa [isClosed_induced_iff]
-  exact fun u hu e => ⟨f '' u, H u hu, by simp [← e, image_restrictPreimage]⟩
+  exact fun u hu e => ⟨f '' u, H u hu, by
+    #adaptation_note /-- lean4#3973: Added `-dsimp`. -/
+    simp -dsimp [← e, image_restrictPreimage]⟩
 
 @[deprecated (since := "2024-04-02")]
 theorem Set.restrictPreimage_isClosedMap (s : Set β) (H : IsClosedMap f) :
@@ -92,7 +94,9 @@ theorem IsOpenMap.restrictPreimage (H : IsOpenMap f) (s : Set β) :
   suffices ∀ u, IsOpen u → Subtype.val ⁻¹' u = t →
     ∃ v, IsOpen v ∧ Subtype.val ⁻¹' v = s.restrictPreimage f '' t by
       simpa [isOpen_induced_iff]
-  exact fun u hu e => ⟨f '' u, H u hu, by simp [← e, image_restrictPreimage]⟩
+  exact fun u hu e => ⟨f '' u, H u hu, by
+    #adaptation_note /-- lean4#3973: Added `-dsimp`. -/
+    simp -dsimp [← e, image_restrictPreimage]⟩
 
 @[deprecated (since := "2024-04-02")]
 theorem Set.restrictPreimage_isOpenMap (s : Set β) (H : IsOpenMap f) :

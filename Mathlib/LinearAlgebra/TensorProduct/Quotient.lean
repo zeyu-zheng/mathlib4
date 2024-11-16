@@ -107,7 +107,8 @@ noncomputable def quotientTensorEquiv (m : Submodule R M) :
     erw [Submodule.map_id, Submodule.map_id]
     simp only [sup_eq_left]
     rw [map_range_eq_span_tmul, map_range_eq_span_tmul]
-    aesop)
+    #adaptation_note /-- lean4#3973: Added `-dsimp`. -/
+    aesop (simp_config := { dsimp := false }))
 
 @[simp]
 lemma quotientTensorEquiv_apply_tmul_mk (m : Submodule R M) (x : M) (y : N) :
@@ -137,7 +138,8 @@ noncomputable def tensorQuotientEquiv (n : Submodule R N) :
     erw [Submodule.map_id, Submodule.map_id]
     simp only [sup_eq_right]
     rw [map_range_eq_span_tmul, map_range_eq_span_tmul]
-    aesop)
+    #adaptation_note /-- lean4#3973: Added `-dsimp`. -/
+    aesop (simp_config := { dsimp := false }))
 
 @[simp]
 lemma tensorQuotientEquiv_apply_mk_tmul (n : Submodule R N) (x : M) (y : N) :

@@ -168,7 +168,9 @@ def unitsFstOne_mulEquiv_quasiregular : unitsFstOne R A ≃* (PreQuasiregular A)
       property := by simp }
   left_inv x := Subtype.ext <| Units.ext <| by simpa using x.val.val.inl_fst_add_inr_snd_eq
   right_inv x := Units.ext <| by simp [-equiv_symm_apply]
-  map_mul' x y := Units.ext <| equiv.symm.injective <| by simp
+  map_mul' x y := Units.ext <| equiv.symm.injective <| by
+    #adaptation_note /-- lean4#3973: Added `-dsimp`. -/
+    simp -dsimp
 
 end Unitization
 
@@ -233,7 +235,9 @@ lemma isQuasiregular_iff_isUnit' (R : Type*) {A : Type*} [CommSemiring R] [NonUn
   refine ⟨?_, fun hx ↦ ?_⟩
   · rintro ⟨u, rfl⟩
     exact (Unitization.unitsFstOne_mulEquiv_quasiregular R).symm u |>.val.isUnit
-  · exact ⟨(Unitization.unitsFstOne_mulEquiv_quasiregular R) ⟨hx.unit, by simp⟩, by simp⟩
+  · exact ⟨(Unitization.unitsFstOne_mulEquiv_quasiregular R) ⟨hx.unit, by simp⟩, by
+      #adaptation_note /-- lean4#3973: Added `-dsimp`. -/
+      simp -dsimp⟩
 
 variable (R : Type*) {A : Type*} [CommSemiring R] [NonUnitalRing A]
   [Module R A]

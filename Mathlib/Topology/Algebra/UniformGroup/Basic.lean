@@ -204,7 +204,9 @@ lemma Subgroup.tendsto_coe_cofinite_of_discrete [T2Space G] (H : Subgroup G) [Di
 lemma MonoidHom.tendsto_coe_cofinite_of_discrete [T2Space G] {H : Type*} [Group H] {f : H →* G}
     (hf : Function.Injective f) (hf' : DiscreteTopology f.range) :
     Tendsto f cofinite (cocompact _) := by
-  replace hf : Function.Injective f.rangeRestrict := by simpa
+  replace hf : Function.Injective f.rangeRestrict := by
+    #adaptation_note /-- lean4#3973: Added `-dsimp`. -/
+    simpa -dsimp
   exact f.range.tendsto_coe_cofinite_of_discrete.comp hf.tendsto_cofinite
 
 @[to_additive]

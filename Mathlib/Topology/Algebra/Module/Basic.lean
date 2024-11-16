@@ -1341,13 +1341,14 @@ theorem projKerOfRightInverse_apply_idem [TopologicalAddGroup M] (f₁ : M →SL
     (f₂ : M₂ →SL[σ₂₁] M) (h : Function.RightInverse f₂ f₁) (x : LinearMap.ker f₁) :
     f₁.projKerOfRightInverse f₂ h x = x := by
   ext1
-  simp
+  #adaptation_note /-- lean4#3973: Added `-dsimp`. -/
+  simp -dsimp
 
 @[simp]
 theorem projKerOfRightInverse_comp_inv [TopologicalAddGroup M] (f₁ : M →SL[σ₁₂] M₂)
     (f₂ : M₂ →SL[σ₂₁] M) (h : Function.RightInverse f₂ f₁) (y : M₂) :
     f₁.projKerOfRightInverse f₂ h (f₂ y) = 0 :=
-  Subtype.ext_iff_val.2 <| by simp [h y]
+  Subtype.ext_iff_val.2 <| by #adaptation_note /-- lean4#3973: Added `-dsimp`. -/; simp -dsimp [h y]
 
 end
 
@@ -2224,7 +2225,7 @@ linear equivalence `e` between `M` and `M₂ × f₁.ker` such that `(e x).2 = x
 def equivOfRightInverse (f₁ : M →L[R] M₂) (f₂ : M₂ →L[R] M) (h : Function.RightInverse f₂ f₁) :
     M ≃L[R] M₂ × ker f₁ :=
   equivOfInverse (f₁.prod (f₁.projKerOfRightInverse f₂ h)) (f₂.coprod (ker f₁).subtypeL)
-    (fun x => by simp) fun ⟨x, y⟩ => by
+    (fun x => by #adaptation_note /-- lean4#3973: Added `-dsimp`. -/; simp -dsimp) fun ⟨x, y⟩ => by
       -- Porting note: `simp` timeouts.
       rw [ContinuousLinearMap.coprod_apply,
         Submodule.subtypeL_apply, _root_.map_add, ContinuousLinearMap.prod_apply, h x,
@@ -2503,7 +2504,9 @@ lemma ClosedComplemented.exists_submodule_equiv_prod [TopologicalAddGroup M]
       (∀ x : p, e x = (x, 0)) ∧ (∀ y : q, e y = (0, y)) ∧ (∀ x, e.symm x = x.1 + x.2) :=
   let ⟨f, hf⟩ := hp
   ⟨LinearMap.ker f, .equivOfRightInverse _ p.subtypeL hf,
-    fun _ ↦ by ext <;> simp [hf], fun _ ↦ by ext <;> simp [hf], fun _ ↦ rfl⟩
+    fun _ ↦ by ext <;> (#adaptation_note /-- lean4#3973: Added `-dsimp`. -/; simp -dsimp [hf]),
+    fun _ ↦ by ext <;> (#adaptation_note /-- lean4#3973: Added `-dsimp`. -/; simp -dsimp [hf]),
+    fun _ ↦ rfl⟩
 
 end Submodule
 

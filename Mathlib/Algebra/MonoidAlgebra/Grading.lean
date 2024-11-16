@@ -157,7 +157,8 @@ theorem decomposeAux_coe {i : ι} (x : gradeBy R f i) :
     subst this
     simp only [map_add, Submodule.coe_mk, decomposeAux_single f m]
     let ih' := ih h2
-    dsimp at ih'
+    #adaptation_note /-- lean4#3973: Changed from `dsimp at ih'`. -/
+    dsimp [-Submodule.mem_mk] at ih'
     rw [ih', ← AddMonoidHom.map_add]
     apply DirectSum.of_eq_of_gradedMonoid_eq
     congr 2

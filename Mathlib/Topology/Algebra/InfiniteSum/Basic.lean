@@ -524,7 +524,8 @@ theorem tprod_eq_tprod_of_ne_one_bij {g : γ → α} (i : mulSupport g → β) (
 theorem Equiv.tprod_eq_tprod_of_mulSupport {f : β → α} {g : γ → α}
     (e : mulSupport f ≃ mulSupport g) (he : ∀ x, g (e x) = f x) :
     ∏' x, f x = ∏' y, g y :=
-  .symm <| tprod_eq_tprod_of_ne_one_bij _ (Subtype.val_injective.comp e.injective) (by simp) he
+  .symm <| tprod_eq_tprod_of_ne_one_bij _ (Subtype.val_injective.comp e.injective)
+    (by #adaptation_note /-- lean4#3973: Added `-dsimp`. -/; simp -dsimp) he
 
 @[to_additive]
 theorem tprod_dite_right (P : Prop) [Decidable P] (x : β → ¬P → α) :

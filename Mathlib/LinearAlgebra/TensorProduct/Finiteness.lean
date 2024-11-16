@@ -146,8 +146,14 @@ theorem exists_finite_submodule_of_finite' (s : Set (M₁ ⊗[R] N₁)) (hs : s.
   have hN := map_subtype_le N₁ N'
   refine ⟨_, _, hM, hN, .map _ _, .map _ _, ?_⟩
   rw [mapIncl,
-    show M'.subtype = inclusion hM ∘ₗ M₁.subtype.submoduleMap M' by ext; simp,
-    show N'.subtype = inclusion hN ∘ₗ N₁.subtype.submoduleMap N' by ext; simp,
+    show M'.subtype = inclusion hM ∘ₗ M₁.subtype.submoduleMap M' by
+      ext
+      #adaptation_note /-- lean4#3973: Added `-dsimp`. -/
+      simp -dsimp,
+    show N'.subtype = inclusion hN ∘ₗ N₁.subtype.submoduleMap N' by
+      ext
+      #adaptation_note /-- lean4#3973: Added `-dsimp`. -/
+      simp -dsimp,
     map_comp] at h
   exact h.trans (LinearMap.range_comp_le_range _ _)
 

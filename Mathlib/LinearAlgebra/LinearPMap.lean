@@ -666,7 +666,8 @@ theorem domRestrict_apply {f : E →ₗ.[R] F} {S : Submodule R E} ⦃x : ↥(S 
     (h : (x : E) = y) : f.domRestrict S x = f y := by
   have : Submodule.inclusion (by simp) x = y := by
     ext
-    simp [h]
+    #adaptation_note /-- lean4#3973: Added `-dsimp`. -/
+    simp -dsimp [h]
   rw [← this]
   exact LinearPMap.mk_apply _ _ _
 

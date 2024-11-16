@@ -64,9 +64,23 @@ theorem TensorProduct.isTensorProduct : IsTensorProduct (TensorProduct.mk R M N)
 variable {R M N}
 
 /-- If `M` is the tensor product of `M₁` and `M₂`, it is linearly equivalent to `M₁ ⊗[R] M₂`. -/
-@[simps! apply]
 noncomputable def IsTensorProduct.equiv (h : IsTensorProduct f) : M₁ ⊗[R] M₂ ≃ₗ[R] M :=
   LinearEquiv.ofBijective _ h
+
+#adaptation_note /-- lean4#3973: `IsTensorProduct.equiv_apply` used to come from `@[simps! apply]`
+on `IsTensorproduct.equiv`. However, it produced a lemma with type signature
+```
+IsTensorProduct.equiv_apply.{u_1, u_2, u_3, u_4} {R : Type u_1} [CommSemiring R] {M₁ : Type u_2}
+    {M₂ : Type u_3} {M : Type u_4} [AddCommMonoid M₁] [AddCommMonoid M₂] [AddCommMonoid M]
+    [Module R M₁] [Module R M₂] [Module R M] {f : M₁ →ₗ[R] M₂ →ₗ[R] M} (h : IsTensorProduct f)
+    (a✝ : M₁ ⊗[R] M₂) : h.equiv a✝ =
+      (LinearEquiv.ofTop (LinearMap.range (lift f)) ⋯) ((LinearEquiv.ofInjective (lift f) ⋯) a✝)
+```
+instead of the type signature below.
+-/
+@[simp]
+theorem IsTensorProduct.equiv_apply (h : IsTensorProduct f) (a : M₁ ⊗[R] M₂) :
+    h.equiv a = (TensorProduct.lift f) a := rfl
 
 @[simp]
 theorem IsTensorProduct.equiv_toLinearMap (h : IsTensorProduct f) :

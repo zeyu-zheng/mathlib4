@@ -167,8 +167,12 @@ def renameSymmetricSubalgebra [CommSemiring R] (e : σ ≃ τ) :
   AlgEquiv.ofAlgHom
     (((rename e).comp (symmetricSubalgebra σ R).val).codRestrict _ <| fun x => x.2.rename e)
     (((rename e.symm).comp <| Subalgebra.val _).codRestrict _ <| fun x => x.2.rename e.symm)
-    (AlgHom.ext <| fun p => Subtype.ext <| by simp)
-    (AlgHom.ext <| fun p => Subtype.ext <| by simp)
+    (AlgHom.ext <| fun p => Subtype.ext <| by
+      #adaptation_note /-- lean4#3973: Added `-dsimp`. -/
+      simp -dsimp)
+    (AlgHom.ext <| fun p => Subtype.ext <| by
+      #adaptation_note /-- lean4#3973: Added `-dsimp`. -/
+      simp -dsimp)
 
 variable (σ R : Type*) [CommSemiring R] [CommSemiring S] [Fintype σ] [Fintype τ]
 

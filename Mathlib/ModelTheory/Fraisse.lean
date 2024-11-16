@@ -387,7 +387,9 @@ protected theorem isExtensionPair : L.IsExtensionPair M N := by
   refine ⟨⟨⟨S, g.toHom.range, g.equivRange⟩, S_FG⟩,
     subset_closure.trans (le_sup_right : _ ≤ S) (mem_singleton m), ⟨le_sup_left, ?_⟩⟩
   ext
-  simp [Subtype.mk_le_mk, PartialEquiv.le_def, g_eq]
+  #adaptation_note /-- lean4#3973: Changed from
+    `simp [Subtype.mk_le_mk, PartialEquiv.le_def, g_eq]`. -/
+  simp [-Hom.mem_range, g_eq]
 
 /-- The Fraïssé limit of a class is unique, in that any two Fraïssé limits are isomorphic. -/
 theorem nonempty_equiv : Nonempty (M ≃[L] N) := by
@@ -427,7 +429,8 @@ theorem isFraisseLimit_of_countable_infinite
     have : Infinite { x // x ∉ f.toHom.range } := ((Set.toFinite _).infinite_compl ).to_subtype
     refine ⟨StrongHomClass.toEquiv (f.equivRange.subtypeCongr nonempty_equiv_of_countable.some), ?_⟩
     ext x
-    simp [Equiv.subtypeCongr]
+    #adaptation_note /-- lean4#3973: Added `-dsimp`. -/
+    simp -dsimp [Equiv.subtypeCongr]
 
 /-- The class of finite structures in the empty language is Fraïssé. -/
 theorem isFraisse_finite : IsFraisse { S : Bundled.{w} Language.empty.Structure | Finite S } := by
