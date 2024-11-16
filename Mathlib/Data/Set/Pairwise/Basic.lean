@@ -194,7 +194,7 @@ protected theorem Pairwise.image {s : Set ι} (h : s.Pairwise (r on f)) : (f '' 
 /-- See also `Set.Pairwise.image`. -/
 theorem InjOn.pairwise_image {s : Set ι} (h : s.InjOn f) :
     (f '' s).Pairwise r ↔ s.Pairwise (r on f) := by
-  simp (config := { contextual := true }) [h.eq_iff, Set.Pairwise]
+  simp +contextual [h.eq_iff, Set.Pairwise]
 
 lemma _root_.Pairwise.range_pairwise (hr : Pairwise (r on f)) : (Set.range f).Pairwise r :=
   image_univ ▸ (pairwise_univ.mpr hr).image
@@ -294,12 +294,8 @@ lemma PairwiseDisjoint.eq_or_disjoint
   exact h.elim hi hj
 
 lemma pairwiseDisjoint_range_iff {α β : Type*} {f : α → (Set β)} :
-    (Set.range f).PairwiseDisjoint id ↔ ∀ x y, f x = f y ∨ Disjoint (f x) (f y) := by
-  constructor
-  · intro h x y
-    apply h.eq_or_disjoint (Set.mem_range_self x) (Set.mem_range_self y)
-  · rintro h _ ⟨x, rfl⟩ _ ⟨y, rfl⟩ hxy
-    exact (h x y).resolve_left hxy
+    (range f).PairwiseDisjoint id ↔ ∀ x y, f x ≠ f y → Disjoint (f x) (f y) := by
+  aesop (add simp [PairwiseDisjoint, Set.Pairwise])
 
 /-- If the range of `f` is pairwise disjoint, then the image of any set `s` under `f` is as well. -/
 lemma _root_.Pairwise.pairwiseDisjoint (h : Pairwise (Disjoint on f)) (s : Set ι) :

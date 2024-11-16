@@ -6,7 +6,6 @@ Authors: Sébastien Gouëzel
 import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.Algebra.Order.BigOperators.Group.Finset
 import Mathlib.Data.Finset.Sort
-import Mathlib.Data.Set.Subsingleton
 
 /-!
 # Compositions
@@ -465,7 +464,7 @@ theorem eq_ones_iff {c : Composition n} : c = ones n ↔ ∀ i ∈ c.blocks, i =
 theorem ne_ones_iff {c : Composition n} : c ≠ ones n ↔ ∃ i ∈ c.blocks, 1 < i := by
   refine (not_congr eq_ones_iff).trans ?_
   have : ∀ j ∈ c.blocks, j = 1 ↔ j ≤ 1 := fun j hj => by simp [le_antisymm_iff, c.one_le_blocks hj]
-  simp (config := { contextual := true }) [this]
+  simp +contextual [this]
 
 theorem eq_ones_iff_length {c : Composition n} : c = ones n ↔ c.length = n := by
   constructor
@@ -815,7 +814,7 @@ theorem card_boundaries_eq_succ_length : c.boundaries.card = c.length + 1 :=
 
 theorem length_lt_card_boundaries : c.length < c.boundaries.card := by
   rw [c.card_boundaries_eq_succ_length]
-  exact lt_add_one _
+  exact Nat.lt_add_one _
 
 theorem lt_length (i : Fin c.length) : (i : ℕ) + 1 < c.boundaries.card :=
   lt_tsub_iff_right.mp i.2

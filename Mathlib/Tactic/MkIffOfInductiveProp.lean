@@ -3,7 +3,8 @@ Copyright (c) 2018 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, David Renshaw
 -/
-import Lean
+import Lean.Elab.DeclarationRange
+import Lean.Meta.Tactic.Cases
 import Mathlib.Lean.Meta
 import Mathlib.Lean.Name
 import Mathlib.Tactic.TypeStar
@@ -327,10 +328,7 @@ def mkIffOfInductivePropImpl (ind : Name) (rel : Name) (relStx : Syntax) : MetaM
     type := thmTy
     value := ← instantiateMVars mvar
   }
-  addDeclarationRanges rel {
-    range := (← getDeclarationRange? (← getRef)).get!
-    selectionRange := (← getDeclarationRange? relStx).get!
-  }
+  addDeclarationRangesFromSyntax rel (← getRef) relStx
   addConstInfo relStx rel
 
 /--
@@ -406,7 +404,7 @@ initialize Lean.registerBuiltinAttribute {
   add := fun decl stx _ => Lean.Meta.MetaM.run' do
     let (tgt, idStx) ← match stx with
       | `(attr| mk_iff $tgt:ident) =>
-        pure ((← mkDeclName (← getCurrNamespace) { stx := ⟨.missing⟩ } tgt.getId).1, tgt.raw)
+        pure ((← mkDeclName (← getCurrNamespace) {} tgt.getId).1, tgt.raw)
       | `(attr| mk_iff) => pure (decl.decapitalize.appendAfter "_iff", stx)
       | _ => throwError "unrecognized syntax"
     mkIffOfInductivePropImpl decl tgt idStx

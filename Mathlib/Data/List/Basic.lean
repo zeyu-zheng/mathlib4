@@ -196,10 +196,6 @@ theorem map_subset_iff {l₁ l₂ : List α} (f : α → β) (h : Injective f) :
 theorem append_eq_has_append {L₁ L₂ : List α} : List.append L₁ L₂ = L₁ ++ L₂ :=
   rfl
 
-@[deprecated (since := "2024-01-18")] alias append_left_cancel := append_cancel_left
-
-@[deprecated (since := "2024-01-18")] alias append_right_cancel := append_cancel_right
-
 theorem append_right_injective (s : List α) : Injective fun t ↦ s ++ t :=
   fun _ _ ↦ append_cancel_left
 
@@ -264,8 +260,7 @@ theorem reverse_cons' (a : α) (l : List α) : reverse (a :: l) = concat (revers
 theorem reverse_concat' (l : List α) (a : α) : (l ++ [a]).reverse = a :: l.reverse := by
   rw [reverse_append]; rfl
 
--- Porting note (#10618): simp can prove this
--- @[simp]
+@[simp]
 theorem reverse_singleton (a : α) : reverse [a] = [a] :=
   rfl
 
@@ -311,8 +306,7 @@ theorem getLast_concat' {a : α} (l : List α) : getLast (concat l a) (concat_ne
 @[simp]
 theorem getLast_singleton' (a : α) : getLast [a] (cons_ne_nil a []) = a := rfl
 
--- Porting note (#10618): simp can prove this
--- @[simp]
+@[simp]
 theorem getLast_cons_cons (a₁ a₂ : α) (l : List α) :
     getLast (a₁ :: a₂ :: l) (cons_ne_nil _ _) = getLast (a₂ :: l) (cons_ne_nil a₂ l) :=
   rfl
@@ -335,7 +329,7 @@ theorem getLast_replicate_succ (m : ℕ) (a : α) :
 
 /-- If the last element of `l` does not satisfy `p`, then it is also the last element of
 `l.filter p`. -/
-lemma getLast_filter {p : α → Bool} :
+lemma getLast_filter' {p : α → Bool} :
     ∀ (l : List α) (hlp : l.filter p ≠ []), p (l.getLast (hlp <| ·.symm ▸ rfl)) = true →
       (l.filter p).getLast hlp = l.getLast (hlp <| ·.symm ▸ rfl)
   | [a], h, h' => by rw [List.getLast_singleton'] at h'; simp [List.filter_cons, h']
@@ -344,10 +338,10 @@ lemma getLast_filter {p : α → Bool} :
     simp only [List.filter_cons (x := a)] at h ⊢
     obtain ha | ha := Bool.eq_false_or_eq_true (p a)
     · simp only [ha, ite_true]
-      rw [getLast_cons, getLast_filter (b :: as) _ h']
+      rw [getLast_cons, getLast_filter' (b :: as) _ h']
       exact ne_nil_of_mem <| mem_filter.2 ⟨getLast_mem _, h'⟩
     · simp only [ha, cond_false] at h ⊢
-      exact getLast_filter (b :: as) h h'
+      exact getLast_filter' (b :: as) h h'
 
 /-! ### getLast? -/
 
@@ -660,6 +654,11 @@ instance decidableSublist [DecidableEq α] : ∀ l₁ l₂ : List α, Decidable 
           | _, _, Sublist.cons _ s', h => s'
           | _, _, Sublist.cons₂ t _, h => absurd rfl h⟩
 
+/-- If the first element of two lists are different, then a sublist relation can be reduced. -/
+theorem Sublist.of_cons_of_ne {a b} (h₁ : a ≠ b) (h₂ : a :: l₁ <+ b :: l₂) : a :: l₁ <+ l₂ :=
+  match h₁, h₂ with
+  | _, .cons _ h =>  h
+
 /-! ### indexOf -/
 
 section IndexOf
@@ -788,6 +787,12 @@ theorem ext_get?_iff' {l₁ l₂ : List α} : l₁ = l₂ ↔
     ∀ n < max l₁.length l₂.length, l₁.get? n = l₂.get? n :=
   ⟨by rintro rfl _ _; rfl, ext_get?'⟩
 
+/-- If two lists `l₁` and `l₂` are the same length and `l₁[n]! = l₂[n]!` for all `n`,
+then the lists are equal. -/
+theorem ext_getElem! [Inhabited α] (hl : length l₁ = length l₂) (h : ∀ n : ℕ, l₁[n]! = l₂[n]!) :
+    l₁ = l₂ :=
+  ext_getElem hl fun n h₁ h₂ ↦ by simpa only [← getElem!_pos] using h n
+
 @[simp]
 theorem getElem_indexOf [DecidableEq α] {a : α} : ∀ {l : List α} (h : indexOf a l < l.length),
     l[indexOf a l] = a
@@ -840,33 +845,14 @@ theorem eq_cons_of_length_one {l : List α} (h : l.length = 1) : l = [l.get ⟨0
 
 end deprecated
 
-theorem modifyNthTail_modifyNthTail {f g : List α → List α} (m : ℕ) :
-    ∀ (n) (l : List α),
-      (l.modifyNthTail f n).modifyNthTail g (m + n) =
-        l.modifyNthTail (fun l => (f l).modifyNthTail g m) n
-  | 0, _ => rfl
-  | _ + 1, [] => rfl
-  | n + 1, a :: l => congr_arg (List.cons a) (modifyNthTail_modifyNthTail m n l)
+@[deprecated (since := "2024-10-21")]
+alias modifyNthTail_modifyNthTail_le := modifyTailIdx_modifyTailIdx_le
 
-theorem modifyNthTail_modifyNthTail_le {f g : List α → List α} (m n : ℕ) (l : List α)
-    (h : n ≤ m) :
-    (l.modifyNthTail f n).modifyNthTail g m =
-      l.modifyNthTail (fun l => (f l).modifyNthTail g (m - n)) n := by
-  rcases Nat.exists_eq_add_of_le h with ⟨m, rfl⟩
-  rw [Nat.add_comm, modifyNthTail_modifyNthTail, Nat.add_sub_cancel]
+@[deprecated (since := "2024-10-21")]
+alias modifyNthTail_modifyNthTail_same := modifyTailIdx_modifyTailIdx_self
+@[deprecated (since := "2024-05-04")] alias removeNth_eq_nthTail := eraseIdx_eq_modifyTailIdx
 
-theorem modifyNthTail_modifyNthTail_same {f g : List α → List α} (n : ℕ) (l : List α) :
-    (l.modifyNthTail f n).modifyNthTail g n = l.modifyNthTail (g ∘ f) n := by
-  rw [modifyNthTail_modifyNthTail_le n n l (le_refl n), Nat.sub_self]; rfl
-
-@[deprecated (since := "2024-05-04")] alias removeNth_eq_nthTail := eraseIdx_eq_modifyNthTail
-
-theorem modifyNth_eq_set (f : α → α) :
-    ∀ (n) (l : List α), modifyNth f n l = ((fun a => set l n (f a)) <$> l[n]?).getD l
-  | 0, l => by cases l <;> simp
-  | _ + 1, [] => rfl
-  | n + 1, b :: l =>
-    (congr_arg (cons b) (modifyNth_eq_set f n l)).trans <| by cases h : l[n]? <;> simp [h]
+@[deprecated (since := "2024-10-21")] alias modifyNth_eq_set := modify_eq_set
 
 @[simp]
 theorem getElem_set_of_ne {l : List α} {i j : ℕ} (h : i ≠ j) (a : α)
@@ -1011,6 +997,35 @@ theorem zipWith_flip (f : α → β → γ) : ∀ as bs, zipWith (flip f) bs as 
 
 /-! ### take, drop -/
 
+@[simp] lemma take_eq_self_iff (x : List α) {n : ℕ} : x.take n = x ↔ x.length ≤ n :=
+  ⟨fun h ↦ by rw [← h]; simp; omega, take_of_length_le⟩
+
+@[simp] lemma take_self_eq_iff (x : List α) {n : ℕ} : x = x.take n ↔ x.length ≤ n := by
+  rw [Eq.comm, take_eq_self_iff]
+
+@[simp] lemma take_eq_left_iff {x y : List α} {n : ℕ} :
+    (x ++ y).take n = x.take n ↔ y = [] ∨ n ≤ x.length := by
+  simp [take_append_eq_append_take, Nat.sub_eq_zero_iff_le, Or.comm]
+
+@[simp] lemma left_eq_take_iff {x y : List α} {n : ℕ} :
+    x.take n = (x ++ y).take n ↔ y = [] ∨ n ≤ x.length := by
+  rw [Eq.comm]; apply take_eq_left_iff
+
+@[simp] lemma drop_take_append_drop (x : List α) (m n : ℕ) :
+    (x.drop m).take n ++ x.drop (m + n) = x.drop m := by rw [← drop_drop, take_append_drop]
+
+/-- Compared to `drop_take_append_drop`, the order of summands is swapped. -/
+@[simp] lemma drop_take_append_drop' (x : List α) (m n : ℕ) :
+    (x.drop m).take n ++ x.drop (n + m) = x.drop m := by rw [Nat.add_comm, drop_take_append_drop]
+
+/-- `take_concat_get` in simp normal form -/
+@[simp] lemma take_concat_get' (l : List α) (i : ℕ) (h : i < l.length) :
+  l.take i ++ [l[i]] = l.take (i + 1) := by simpa using take_concat_get l i h
+
+/-- `eq_nil_or_concat` in simp normal form -/
+lemma eq_nil_or_concat' (l : List α) : l = [] ∨ ∃ L b, l = L ++ [b] := by
+  simpa using l.eq_nil_or_concat
+
 theorem cons_getElem_drop_succ {l : List α} {n : Nat} {h : n < l.length} :
     l[n] :: l.drop (n + 1) = l.drop n :=
   (drop_eq_getElem_cons h).symm
@@ -1112,8 +1127,6 @@ theorem foldl_fixed {a : α} : ∀ l : List β, foldl (fun a _ => a) a l = a :=
 theorem foldr_fixed {b : β} : ∀ l : List α, foldr (fun _ b => b) b l = b :=
   foldr_fixed' fun _ => rfl
 
--- Porting note (#10618): simp can prove this
--- @[simp]
 theorem foldr_eta : ∀ l : List α, foldr cons [] l = l := by
   simp only [foldr_cons_eq_append, append_nil, forall_const]
 
@@ -1817,6 +1830,40 @@ theorem takeWhile_takeWhile (p q : α → Bool) (l : List α) :
 theorem takeWhile_idem : takeWhile p (takeWhile p l) = takeWhile p l := by
   simp_rw [takeWhile_takeWhile, and_self_iff, Bool.decide_coe]
 
+variable (p) (l)
+
+lemma find?_eq_head?_dropWhile_not :
+    l.find? p = (l.dropWhile (fun x ↦ ! (p x))).head? := by
+  induction l
+  case nil => simp
+  case cons head tail hi =>
+    set ph := p head with phh
+    rcases ph with rfl | rfl
+    · have phh' : ¬(p head = true) := by simp [phh.symm]
+      rw [find?_cons_of_neg _ phh', dropWhile_cons_of_pos]
+      · exact hi
+      · simpa using phh
+    · rw [find?_cons_of_pos _ phh.symm, dropWhile_cons_of_neg]
+      · simp
+      · simpa using phh
+
+lemma find?_not_eq_head?_dropWhile :
+    l.find? (fun x ↦ ! (p x)) = (l.dropWhile p).head? := by
+  convert l.find?_eq_head?_dropWhile_not ?_
+  simp
+
+variable {p} {l}
+
+lemma find?_eq_head_dropWhile_not (h : ∃ x ∈ l, p x) :
+    l.find? p = some ((l.dropWhile (fun x ↦ ! (p x))).head (by simpa using h)) := by
+  rw [l.find?_eq_head?_dropWhile_not p, ← head_eq_iff_head?_eq_some]
+
+lemma find?_not_eq_head_dropWhile (h : ∃ x ∈ l, ¬p x) :
+    l.find? (fun x ↦ ! (p x)) = some ((l.dropWhile p).head (by simpa using h)) := by
+  convert l.find?_eq_head_dropWhile_not ?_
+  · simp
+  · simpa using h
+
 end Filter
 
 /-! ### erasep -/
@@ -1950,8 +1997,7 @@ theorem map₂Right'_nil_left : map₂Right' f [] bs = (bs.map (f none), []) := 
 theorem map₂Right'_nil_right : map₂Right' f as [] = ([], as) :=
   rfl
 
--- Porting note (#10618): simp can prove this
--- @[simp]
+@[simp]
 theorem map₂Right'_nil_cons : map₂Right' f [] (b :: bs) = (f none b :: bs.map (f none), []) :=
   rfl
 
@@ -1978,8 +2024,7 @@ theorem zipLeft'_nil_right : zipLeft' as ([] : List β) = (as.map fun a => (a, n
 theorem zipLeft'_nil_left : zipLeft' ([] : List α) bs = ([], bs) :=
   rfl
 
--- Porting note (#10618): simp can prove this
--- @[simp]
+@[simp]
 theorem zipLeft'_cons_nil :
     zipLeft' (a :: as) ([] : List β) = ((a, none) :: as.map fun a => (a, none), []) :=
   rfl
@@ -2007,8 +2052,7 @@ theorem zipRight'_nil_left : zipRight' ([] : List α) bs = (bs.map fun b => (non
 theorem zipRight'_nil_right : zipRight' as ([] : List β) = ([], as) :=
   rfl
 
--- Porting note (#10618): simp can prove this
--- @[simp]
+@[simp]
 theorem zipRight'_nil_cons :
     zipRight' ([] : List α) (b :: bs) = ((none, b) :: bs.map fun b => (none, b), []) :=
   rfl
@@ -2063,8 +2107,7 @@ theorem map₂Right_nil_left : map₂Right f [] bs = bs.map (f none) := by cases
 theorem map₂Right_nil_right : map₂Right f as [] = [] :=
   rfl
 
--- Porting note (#10618): simp can prove this
--- @[simp]
+@[simp]
 theorem map₂Right_nil_cons : map₂Right f [] (b :: bs) = f none b :: bs.map (f none) :=
   rfl
 
@@ -2097,8 +2140,7 @@ theorem zipLeft_nil_right : zipLeft as ([] : List β) = as.map fun a => (a, none
 theorem zipLeft_nil_left : zipLeft ([] : List α) bs = [] :=
   rfl
 
--- Porting note (#10618): simp can prove this
--- @[simp]
+@[simp]
 theorem zipLeft_cons_nil :
     zipLeft (a :: as) ([] : List β) = (a, none) :: as.map fun a => (a, none) :=
   rfl
@@ -2135,8 +2177,7 @@ theorem zipRight_nil_left : zipRight ([] : List α) bs = bs.map fun b => (none, 
 theorem zipRight_nil_right : zipRight as ([] : List β) = [] :=
   rfl
 
--- Porting note (#10618): simp can prove this
--- @[simp]
+@[simp]
 theorem zipRight_nil_cons :
     zipRight ([] : List α) (b :: bs) = (none, b) :: bs.map fun b => (none, b) :=
   rfl

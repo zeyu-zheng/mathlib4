@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
 import Mathlib.Data.Matrix.Notation
-import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Fin.Tuple.Reflection
 
 /-!
@@ -36,7 +35,7 @@ open Matrix
 
 namespace Matrix
 
-variable {l m n : ℕ} {α β : Type*}
+variable {l m n : ℕ} {α : Type*}
 
 /-- `∀` with better defeq for `∀ x : Matrix (Fin m) (Fin n) α, P x`. -/
 def Forall : ∀ {m n} (_ : Matrix (Fin m) (Fin n) α → Prop), Prop

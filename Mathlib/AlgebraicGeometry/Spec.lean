@@ -8,7 +8,7 @@ import Mathlib.AlgebraicGeometry.StructureSheaf
 import Mathlib.RingTheory.Localization.LocalizationLocalization
 import Mathlib.Topology.Sheaves.SheafCondition.Sites
 import Mathlib.Topology.Sheaves.Functors
-import Mathlib.Algebra.Module.LocalizedModule
+import Mathlib.Algebra.Module.LocalizedModule.Basic
 
 /-!
 # $Spec$ as a functor to locally ringed spaces.
@@ -171,8 +171,8 @@ theorem Spec.basicOpen_hom_ext {X : RingedSpace.{u}} {R : CommRingCat.{u}}
 @[simps! toSheafedSpace presheaf]
 def Spec.locallyRingedSpaceObj (R : CommRingCat.{u}) : LocallyRingedSpace :=
   { Spec.sheafedSpaceObj R with
-    localRing := fun x =>
-      RingEquiv.localRing (A := Localization.AtPrime x.asIdeal)
+    isLocalRing := fun x =>
+      RingEquiv.isLocalRing (A := Localization.AtPrime x.asIdeal)
         (Iso.commRingCatIsoToRingEquiv <| stalkIso R x).symm }
 
 lemma Spec.locallyRingedSpaceObj_sheaf (R : CommRingCat.{u}) :
@@ -241,10 +241,10 @@ def Spec.locallyRingedSpaceMap {R S : CommRingCat.{u}} (f : R ⟶ S) :
       replace ha := (isUnit_map_iff (stalkIso S p).inv _).mp ha
       -- Porting note: `f` had to be made explicit
       replace ha := IsLocalHom.map_nonunit
-        (f := (Localization.localRingHom (PrimeSpectrum.comap f p).asIdeal p.asIdeal f _)) _ ha
+        (f := (Localization.localRingHom (PrimeSpectrum.comap f p).asIdeal p.asIdeal f _))
+        ((stalkIso R ((PrimeSpectrum.comap f) p)).hom a) ha
       convert RingHom.isUnit_map (stalkIso R (PrimeSpectrum.comap f p)).inv ha
-      erw [← comp_apply, show stalkToFiberRingHom R _ = (stalkIso _ _).hom from rfl,
-        Iso.hom_inv_id, id_apply]
+      erw [← comp_apply, Iso.hom_inv_id, id_apply]
 
 @[simp]
 theorem Spec.locallyRingedSpaceMap_id (R : CommRingCat.{u}) :
