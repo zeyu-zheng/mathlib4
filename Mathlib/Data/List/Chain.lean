@@ -25,13 +25,18 @@ open Nat
 
 namespace List
 
-variable {α : Type u} {β : Type v} {R r : α → α → Prop} {l l₁ l₂ : List α} {a b : α}
+variable {α : Type u} {β : Type v} {R r : α → α → Prop} {l l₁ l₂ : List α} {a b c : α}
 
-mk_iff_of_inductive_prop List.Chain List.chain_iff
+-- TODO mk_iff_of_inductive_prop List.Chain List.chain_iff
 
+theorem isChain_congr {S} (h : ∀ a b, R a b ↔ S a b) : IsChain R l ↔ IsChain S l :=
+  ⟨.imp fun a b ↦ (h a b).mp, .imp fun a b ↦ (h a b).mpr⟩
+
+set_option linter.deprecated false in
+@[deprecated isChain_congr (since := "2024-11-16")]
 theorem Chain.iff {S : α → α → Prop} (H : ∀ a b, R a b ↔ S a b) {a : α} {l : List α} :
     Chain R a l ↔ Chain S a l :=
-  ⟨Chain.imp fun a b => (H a b).1, Chain.imp fun a b => (H a b).2⟩
+  isChain_congr H
 
 theorem Chain.iff_mem {a : α} {l : List α} :
     Chain R a l ↔ Chain (fun x y => x ∈ a :: l ∧ y ∈ l ∧ R x y) a l :=
@@ -44,25 +49,49 @@ theorem Chain.iff_mem {a : α} {l : List α} :
       · exact IH.imp fun a b ⟨am, bm, h⟩ => ⟨mem_cons_of_mem _ am, mem_cons_of_mem _ bm, h⟩,
     Chain.imp fun _ _ h => h.2.2⟩
 
-theorem chain_singleton {a b : α} : Chain R a [b] ↔ R a b := by
-  simp only [chain_cons, Chain.nil, and_true]
+theorem isChain_pair : IsChain R [a, b] ↔ R a b := by simp
 
-theorem chain_split {a b : α} {l₁ l₂ : List α} :
-    Chain R a (l₁ ++ b :: l₂) ↔ Chain R a (l₁ ++ [b]) ∧ Chain R b l₂ := by
-  induction' l₁ with x l₁ IH generalizing a <;>
-    simp only [*, nil_append, cons_append, Chain.nil, chain_cons, and_true, and_assoc]
+set_option linter.deprecated false in
+@[deprecated isChain_pair (since := "2024-11-16")]
+theorem chain_singleton {a b : α} : Chain R a [b] ↔ R a b := isChain_pair
+
+theorem isChain_append_cons :
+    IsChain R (l₁ ++ a :: l₂) ↔ IsChain R (l₁ ++ [a]) ∧ IsChain R (a :: l₂) := by
+  induction l₁ with
+  | nil => simp
+  | cons b tl ih =>
+    cases tl with
+    | nil => simp
+    | cons c l => simp_all [and_assoc]
+
+set_option linter.deprecated false in
+@[deprecated isChain_append_cons (since := "2024-11-16")]
+theorem chain_split : Chain R a (l₁ ++ b :: l₂) ↔ Chain R a (l₁ ++ [b]) ∧ Chain R b l₂ := by
+  simp only [Chain, ← cons_append, ← isChain_append_cons]
 
 @[simp]
+theorem isChain_append_cons_cons :
+    IsChain R (l₁ ++ a :: b :: l₂) ↔ IsChain R (l₁ ++ [a]) ∧ R a b ∧ IsChain R (b :: l₂) := by
+  rw [isChain_append_cons, isChain_cons_cons]
+
+set_option linter.deprecated false in
+@[simp, deprecated isChain_append_cons_cons (since := "2024-11-16")]
 theorem chain_append_cons_cons {a b c : α} {l₁ l₂ : List α} :
     Chain R a (l₁ ++ b :: c :: l₂) ↔ Chain R a (l₁ ++ [b]) ∧ R b c ∧ Chain R c l₂ := by
   rw [chain_split, chain_cons]
 
-theorem chain_iff_forall₂ :
-    ∀ {a : α} {l : List α}, Chain R a l ↔ l = [] ∨ Forall₂ R (a :: dropLast l) l
-  | a, [] => by simp
-  | a, b :: l => by
-    by_cases h : l = [] <;>
-    simp [@chain_iff_forall₂ b l, dropLast, *]
+theorem isChain_iff_forall₂ : ∀ {l}, IsChain R l ↔ Forall₂ R (dropLast l) l.tail
+  | [] => by simp
+  | [_] => by simp
+  | a :: b :: l => by simp [isChain_iff_forall₂ (l := b :: l)]
+
+theorem isChain_cons_iff_forall₂ : IsChain R (a :: l) ↔ l = [] ∨ Forall₂ R (a :: dropLast l) l := by
+  cases l <;> simp [isChain_iff_forall₂]
+
+set_option linter.deprecated false in
+@[deprecated isChain_cons_iff_forall₂ (since := "2024-11-16")]
+theorem chain_iff_forall₂ : Chain R a l ↔ l = [] ∨ Forall₂ R (a :: dropLast l) l :=
+  isChain_cons_iff_forall₂
 
 theorem chain_append_singleton_iff_forall₂ :
     Chain R a (l ++ [b]) ↔ Forall₂ R (a :: l) (l ++ [b]) := by simp [chain_iff_forall₂]
@@ -473,7 +502,7 @@ end List
 variable {α : Type*} (r : α → α → Prop)
 
 /-- The type of `r`-decreasing chains -/
-abbrev List.chains := { l : List α // l.Chain' (flip r) }
+abbrev List.chains := { l : List α // l.IsChain (flip r) }
 
 /-- The lexicographic order on the `r`-decreasing chains -/
 abbrev List.lex_chains (l m : List.chains r) : Prop := List.Lex r l.val m.val

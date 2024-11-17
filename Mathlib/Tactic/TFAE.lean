@@ -186,16 +186,16 @@ def proveImpl (i j : ℕ) (P P' : Q(Prop)) : MetaM Q($P → $P') := do
 
 /-- Generate a proof of `Chain (· → ·) P l`. We assume `P : Prop` and `l : List Prop`, and that `l`
 is an explicit list. -/
-partial def proveChain (i : ℕ) (is : List ℕ) (P : Q(Prop)) (l : Q(List Prop)) :
-    MetaM Q(Chain (· → ·) $P $l) := do
+partial def proveIsChain (i : ℕ) (is : List ℕ) (P : Q(Prop)) (l : Q(List Prop)) :
+    MetaM Q(IsChain (· → ·) (cons $P $l)) := do
   match l with
-  | ~q([]) => return q(Chain.nil)
+  | ~q([]) => return q(IsChain.singleton)
   | ~q($P' :: $l') =>
     -- `id` is a workaround for https://github.com/leanprover-community/quote4/issues/30
     let i' :: is' := id is | unreachable!
-    have cl' : Q(Chain (· → ·) $P' $l') := ← proveChain i' is' q($P') q($l')
+    have cl' : Q(IsChain (· → ·) (cons $P' $l')) := ← proveIsChain i' is' q($P') q($l')
     let p ← proveImpl hyps atoms i i' P P'
-    return q(Chain.cons $p $cl')
+    return q(IsChain.cons $p $cl')
 
 /-- Attempt to prove `getLastD l P' → P` given an explicit list `l`. -/
 partial def proveGetLastDImpl (i i' : ℕ) (is : List ℕ) (P P' : Q(Prop)) (l : Q(List Prop)) :
@@ -215,7 +215,7 @@ def proveTFAE (is : List ℕ) (l : Q(List Prop)) : MetaM Q(TFAE $l) := do
   | ~q($P :: $P' :: $l') =>
     -- `id` is a workaround for https://github.com/leanprover-community/quote4/issues/30
     let i :: i' :: is' := id is | unreachable!
-    let c ← proveChain hyps atoms i (i'::is') P q($P' :: $l')
+    let c ← proveIsChain hyps atoms i (i'::is') P q($P' :: $l')
     let il ← proveGetLastDImpl hyps atoms i i' is' P P' l'
     return q(tfae_of_cycle $c $il)
 

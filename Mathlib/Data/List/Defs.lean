@@ -232,15 +232,17 @@ instance instSProd : SProd (List α) (List β) (List (α × β)) where
 
 section Chain
 
-instance decidableChain {R : α → α → Prop} [DecidableRel R] (a : α) (l : List α) :
-    Decidable (Chain R a l) := by
-  induction l generalizing a with
-  | nil => simp only [List.Chain.nil]; infer_instance
-  | cons a as ih => haveI := ih; simp only [List.chain_cons]; infer_instance
+set_option linter.deprecated false
 
+@[deprecated (since := "2024-11-16")]
+instance decidableChain {R : α → α → Prop} [DecidableRel R] (a : α) (l : List α) :
+    Decidable (Chain R a l) :=
+  inferInstanceAs <| Decidable <| IsChain R (a :: l)
+
+@[deprecated (since := "2024-11-16")]
 instance decidableChain' {R : α → α → Prop} [DecidableRel R] (l : List α) :
-    Decidable (Chain' R l) := by
-  cases l <;> dsimp only [List.Chain'] <;> infer_instance
+    Decidable (Chain' R l) :=
+  inferInstanceAs <| Decidable <| IsChain R l
 
 end Chain
 

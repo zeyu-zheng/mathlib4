@@ -5,7 +5,7 @@ Authors: David Wärn, Kim Morrison
 -/
 import Mathlib.Combinatorics.Quiver.Basic
 import Mathlib.Logic.Lemmas
-import Batteries.Data.List.Basic
+import Batteries.Data.List.Lemmas
 
 /-!
 # Paths in quivers
@@ -173,10 +173,14 @@ theorem toList_comp (p : Path a b) : ∀ {c} (q : Path b c), (p.comp q).toList =
   | _, nil => by simp
   | _, @cons _ _ _ d _ q _ => by simp [toList_comp]
 
-theorem toList_chain_nonempty :
-    ∀ {b} (p : Path a b), p.toList.Chain (fun x y => Nonempty (y ⟶ x)) b
-  | _, nil => List.Chain.nil
-  | _, cons p f => p.toList_chain_nonempty.cons ⟨f⟩
+theorem toList_isChain_nonempty :
+    ∀ {b} (p : Path a b), (b::p.toList).IsChain (fun x y => Nonempty (y ⟶ x))
+  | _, nil => .singleton
+  | _, cons p f => p.toList_isChain_nonempty.cons ⟨f⟩
+
+set_option linter.deprecated false in
+theorem toList_chain_nonempty {b} (p : Path a b) : p.toList.Chain (fun x y => Nonempty (y ⟶ x)) b :=
+  toList_isChain_nonempty p
 
 variable [∀ a b : V, Subsingleton (a ⟶ b)]
 
