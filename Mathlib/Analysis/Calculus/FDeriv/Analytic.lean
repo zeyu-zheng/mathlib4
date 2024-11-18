@@ -670,9 +670,12 @@ private lemma _root_.Equiv.succ_embeddingFinSucc_fst_symm_apply {ι : Type*} [De
   rcases hk with ⟨j, rfl⟩
   have hj : j ≠ 0 := by
     rintro rfl
-    simp at h'k
+    #adaptation_note /-- lean4#3973: Added `-dsimp`. -/
+    simp -dsimp at h'k
   simp only [Function.Embedding.toEquivRange_symm_apply_self]
-  have : e j = (Equiv.embeddingFinSucc n ι e).1 (Fin.pred j hj) := by simp
+  have : e j = (Equiv.embeddingFinSucc n ι e).1 (Fin.pred j hj) := by
+    #adaptation_note /-- lean4#3973: Added `-dsimp`. -/
+    simp -dsimp
   simp_rw [this]
   simp [-Equiv.embeddingFinSucc_fst]
 
@@ -682,7 +685,8 @@ theorem hasFTaylorSeriesUpTo_iteratedFDeriv :
     HasFTaylorSeriesUpTo ⊤ f (fun v n ↦ f.iteratedFDeriv n v) := by
   classical
   constructor
-  · simp [ContinuousMultilinearMap.iteratedFDeriv]
+  · #adaptation_note /-- lean4#3973: Added `-dsimp`. -/
+    simp -dsimp [ContinuousMultilinearMap.iteratedFDeriv]
   · rintro n - x
     suffices H : curryLeft (f.iteratedFDeriv (Nat.succ n) x) = (∑ e : Fin n ↪ ι,
           ((iteratedFDerivComponent f e.toEquivRange).linearDeriv
@@ -707,7 +711,8 @@ theorem hasFTaylorSeriesUpTo_iteratedFDeriv :
       · simp only [← Equiv.succ_embeddingFinSucc_fst_symm_apply e hkf hke, Fin.cons_succ]
       · obtain rfl : k = e 0 := by
           rcases hke with ⟨j, rfl⟩
-          simpa using hkf
+          #adaptation_note /-- lean4#3973: Added `-dsimp`. -/
+          simpa -dsimp using hkf
         simp only [Function.Embedding.toEquivRange_symm_apply_self, Fin.cons_zero, Function.update,
           Pi.compRightL_apply]
         split_ifs with h

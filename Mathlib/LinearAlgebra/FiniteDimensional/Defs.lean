@@ -343,7 +343,7 @@ alias finiteDimensional_of_rank_eq_one := FiniteDimensional.of_rank_eq_one
 variable (K V)
 
 instance finiteDimensional_bot : FiniteDimensional K (⊥ : Submodule K V) :=
-  .of_rank_eq_zero <| by simp
+  .of_rank_eq_zero <| by #adaptation_note /-- lean4#3973: Added `-dsimp`. -/; simp -dsimp
 
 variable {K V}
 

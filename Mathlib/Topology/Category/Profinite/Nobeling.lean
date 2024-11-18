@@ -133,7 +133,8 @@ theorem proj_eq_of_subset (h : ∀ i, J i → K i) : π (π C K) J = π C J := b
     refine ⟨z, hz, (?_ : _ = (Proj J ∘ Proj K) z)⟩
     rw [proj_comp_of_subset J K h]
   · obtain ⟨y, hy, rfl⟩ := h
-    dsimp [π]
+    #adaptation_note /-- lean4#3973: Added `only`. -/
+    dsimp only [π]
     rw [← Set.image_comp]
     refine ⟨y, hy, ?_⟩
     rw [proj_comp_of_subset J K h]

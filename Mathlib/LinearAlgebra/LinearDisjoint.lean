@@ -474,7 +474,9 @@ theorem not_linearIndependent_pair_of_commute_of_flat_left [Module.Flat R M]
   -- need this instance otherwise it only has semigroup structure
   letI : AddCommGroup (Fin 2 →₀ M) := Finsupp.instAddCommGroup
   let m : Fin 2 →₀ M := .single 0 ⟨b.1, b.2.1⟩ - .single 1 ⟨a.1, a.2.1⟩
-  have hm : mulRightMap M n m = 0 := by simp [m, n, show _ * _ = _ * _ from hc]
+  have hm : mulRightMap M n m = 0 := by
+    #adaptation_note /-- lean4#3973: Added `-dsimp`. -/
+    simp -dsimp [m, n, show _ * _ = _ * _ from hc]
   rw [← LinearMap.mem_ker, H.linearIndependent_right_of_flat hn, mem_bot] at hm
   simp only [Fin.isValue, sub_eq_zero, Finsupp.single_eq_single_iff, zero_ne_one, Subtype.mk.injEq,
     SetLike.coe_eq_coe, false_and, false_or, m] at hm
@@ -490,7 +492,9 @@ theorem not_linearIndependent_pair_of_commute_of_flat_right [Module.Flat R N]
   -- need this instance otherwise it only has semigroup structure
   letI : AddCommGroup (Fin 2 →₀ N) := Finsupp.instAddCommGroup
   let n : Fin 2 →₀ N := .single 0 ⟨b.1, b.2.2⟩ - .single 1 ⟨a.1, a.2.2⟩
-  have hn : mulLeftMap N m n = 0 := by simp [m, n, show _ * _ = _ * _ from hc]
+  have hn : mulLeftMap N m n = 0 := by
+    #adaptation_note /-- lean4#3973: Added `-dsimp`. -/
+    simp -dsimp [m, n, show _ * _ = _ * _ from hc]
   rw [← LinearMap.mem_ker, H.linearIndependent_left_of_flat hm, mem_bot] at hn
   simp only [Fin.isValue, sub_eq_zero, Finsupp.single_eq_single_iff, zero_ne_one, Subtype.mk.injEq,
     SetLike.coe_eq_coe, false_and, false_or, n] at hn
@@ -511,7 +515,8 @@ end
 if any two elements of `↥(M ⊓ N)` are commutative, then the rank of `↥(M ⊓ N)` is at most one. -/
 theorem rank_inf_le_one_of_commute_of_flat (hf : Module.Flat R M ∨ Module.Flat R N)
     (hc : ∀ (m n : ↥(M ⊓ N)), Commute m.1 n.1) : Module.rank R ↥(M ⊓ N) ≤ 1 := by
-  nontriviality R
+  #adaptation_note /-- lean4#3973: Added `using -Submodule.mem_inf`. -/
+  nontriviality R using -Submodule.mem_inf
   refine _root_.rank_le fun s h ↦ ?_
   by_contra hs
   rw [not_le, ← Fintype.card_coe, Fintype.one_lt_card_iff_nontrivial] at hs

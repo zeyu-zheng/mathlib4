@@ -160,8 +160,8 @@ end CommRing
 
 end IsSymmetric
 
+#adaptation_note /-- lean4#3973: Corrected `@[simps!] renameSymmetricSubalgebra`. -/
 /-- `MvPolynomial.rename` induces an isomorphism between the symmetric subalgebras. -/
-@[simps!]
 def renameSymmetricSubalgebra [CommSemiring R] (e : σ ≃ τ) :
     symmetricSubalgebra σ R ≃ₐ[R] symmetricSubalgebra τ R :=
   AlgEquiv.ofAlgHom
@@ -173,6 +173,19 @@ def renameSymmetricSubalgebra [CommSemiring R] (e : σ ≃ τ) :
     (AlgHom.ext <| fun p => Subtype.ext <| by
       #adaptation_note /-- lean4#3973: Added `-dsimp`. -/
       simp -dsimp)
+
+#adaptation_note /-- lean4#3973: Corrected `@[simps!] renameSymmetricSubalgebra`. -/
+@[simp]
+theorem renameSymmetricSubalgebra_apply_coe [CommSemiring R] (e : σ ≃ τ)
+    (a : symmetricSubalgebra σ R) :
+    ((renameSymmetricSubalgebra e) a : MvPolynomial τ R) = (rename e) a := rfl
+
+#adaptation_note /-- lean4#3973: Corrected `@[simps!] renameSymmetricSubalgebra`. -/
+@[simp]
+theorem renameSymmetricSubalgebra_symm_apply_coe [CommSemiring R] (e : σ ≃ τ)
+    (a : symmetricSubalgebra τ R) :
+    ((renameSymmetricSubalgebra e).symm a : MvPolynomial σ R) =
+      (rename e.symm) a := rfl
 
 variable (σ R : Type*) [CommSemiring R] [CommSemiring S] [Fintype σ] [Fintype τ]
 

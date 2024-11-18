@@ -219,18 +219,21 @@ theorem sum_hom_units_eq_zero (f : G →* R) (hf : f ≠ 1) : ∑ g : G, f g = 0
         = ∑ n ∈ range (orderOf x), ((x : Rˣ) : R) ^ n :=
         Eq.symm <|
           sum_nbij (x ^ ·) (by simp only [mem_univ, forall_true_iff])
-            (by simpa using pow_injOn_Iio_orderOf)
+            (by #adaptation_note /-- lean4#3973: Added `-dsimp`. -/
+                simpa -dsimp using pow_injOn_Iio_orderOf)
             (fun b _ => let ⟨n, hn⟩ := hx b
               ⟨n % orderOf x, mem_range.2 (Nat.mod_lt _ (orderOf_pos _)),
                -- Porting note: have to use `dsimp` to apply the function
-               by dsimp at hn ⊢; rw [pow_mod_orderOf, hn]⟩)
+               #adaptation_note /-- lean4#3973: Added `only`. -/
+               by dsimp only at hn ⊢; rw [pow_mod_orderOf, hn]⟩)
             (by simp only [imp_true_iff, eq_self_iff_true, Subgroup.coe_pow,
                 Units.val_pow_eq_pow_val])
       _ = 0 := ?_
 
     rw [← mul_left_inj' hx1, zero_mul, geom_sum_mul]
     norm_cast
-    simp [pow_orderOf_eq_one]
+    #adaptation_note /-- lean4#3973: Added `-dsimp`. -/
+    simp -dsimp [pow_orderOf_eq_one]
 
 /-- In an integral domain, a sum indexed by a homomorphism from a finite group is zero,
 unless the homomorphism is trivial, in which case the sum is equal to the cardinality of the group.

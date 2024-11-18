@@ -62,7 +62,8 @@ variable (R) in
 theorem nontrivial_of_hasRankNullity : Nontrivial R := by
   refine (subsingleton_or_nontrivial R).resolve_left fun H ↦ ?_
   have := rank_quotient_add_rank (R := R) (M := PUnit) ⊥
-  simp [one_add_one_eq_two] at this
+  #adaptation_note /-- lean4#3973: Added `-dsimp`. -/
+  simp -dsimp [one_add_one_eq_two] at this
 
 attribute [local instance] nontrivial_of_hasRankNullity
 

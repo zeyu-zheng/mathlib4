@@ -84,7 +84,8 @@ private lemma auxLTensor_eq [Module.Flat R S] {I : Ideal R} :
   apply TensorProduct.ext'
   intro m x
   erw [TensorProduct.rid_tmul]
-  simp
+  #adaptation_note /-- lean4#3973: Added `-dsimp`. -/
+  simp -dsimp
 
 /-- If `S` is a flat `R`-algebra, then any flat `S`-Module is also `R`-flat. -/
 theorem comp [Module.Flat R S] [Module.Flat S M] : Module.Flat R M := by

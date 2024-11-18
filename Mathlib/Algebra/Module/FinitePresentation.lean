@@ -277,7 +277,8 @@ lemma Module.FinitePresentation.exists_lift_of_isLocalizedModule
   convert Submodule.liftQ_mkQ _ _ this using 2
   ext x
   apply (LinearMap.quotKerEquivOfSurjective _ hπ).injective
-  simp [LinearMap.quotKerEquivOfSurjective]
+  #adaptation_note /-- lean4#3973: Added `-dsimp`. -/
+  simp -dsimp [LinearMap.quotKerEquivOfSurjective]
 
 lemma Module.Finite.exists_smul_of_comp_eq_of_isLocalizedModule
     [hM : Module.Finite R M] (g₁ g₂ : M →ₗ[R] N) (h : f.comp g₁ = f.comp g₂) :

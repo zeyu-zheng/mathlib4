@@ -47,24 +47,43 @@ def LinearMap.tensorEqLocusBil :
         (AlgebraTensorModule.lTensor S M g) where
   toFun m :=
     { toFun := fun a ↦ ⟨m ⊗ₜ a, by simp [show f a = g a from a.property]⟩
-      map_add' := fun x y ↦ by simp [tmul_add]
-      map_smul' := fun r x ↦ by simp }
+      map_add' := fun x y ↦ by
+        #adaptation_note /-- lean4#3973: Added `-dsimp` and `rfl`. -/
+        simp -dsimp [tmul_add]; rfl
+      map_smul' := fun r x ↦ by
+        #adaptation_note /-- lean4#3973: Added `-dsimp` and `rfl`. -/
+        simp -dsimp; rfl }
   map_add' x y := by
     ext
-    simp [add_tmul]
+    #adaptation_note /-- lean4#3973: Added `-dsimp`. -/
+    simp -dsimp [add_tmul]
   map_smul' r x := by
     ext
-    simp [smul_tmul']
+    #adaptation_note /-- lean4#3973: Added `-dsimp`. -/
+    simp -dsimp [smul_tmul']
 
 /-- The bilinear map corresponding to `LinearMap.tensorKer`. -/
 def LinearMap.tensorKerBil :
     M →ₗ[S] LinearMap.ker f →ₗ[R] LinearMap.ker (AlgebraTensorModule.lTensor S M f) where
   toFun m :=
     { toFun := fun a ↦ ⟨m ⊗ₜ a, by simp⟩
-      map_add' := fun x y ↦ by simp [tmul_add]
-      map_smul' := fun r x ↦ by simp }
-  map_add' x y := by ext; simp [add_tmul]
-  map_smul' r x := by ext y; simp [smul_tmul']
+      map_add' := fun x y ↦ by
+        #adaptation_note /-- lean4#3973: Added `-dsimp` and `rfl`. -/
+        simp -dsimp [tmul_add]; rfl
+      map_smul' := fun r x ↦ by
+        #adaptation_note /-- lean4#3973: Added `-dsimp` and `rfl`. -/
+        simp -dsimp; rfl }
+  map_add' x y := by
+    ext
+    #adaptation_note /-- lean4#3973: Added `-dsimp`. -/
+    simp -dsimp [add_tmul]
+  map_smul' r x := by
+    ext y
+    #adaptation_note /-- lean4#3973: Added `-dsimp`. -/
+    simp -dsimp [smul_tmul']
+
+#adaptation_note /-- lean4#3973: Removed `simp` attribute from problematic `dsimp` lemmas. -/
+attribute [-simp] LinearMap.mem_ker LinearMap.mem_eqLocus
 
 /-- The canonical map `M ⊗[R] eq(f, g) →ₗ[R] eq(𝟙 ⊗ f, 𝟙 ⊗ g)`. -/
 def LinearMap.tensorEqLocus : M ⊗[R] (LinearMap.eqLocus f g) →ₗ[S]
@@ -177,6 +196,9 @@ lemma LinearMap.lTensor_eqLocus_subtype_tensoreqLocusEquiv_symm [Module.Flat R M
 end Module
 
 section Algebra
+
+#adaptation_note /-- lean4#3973: Removed `simp` attribute from problematic `dsimp` lemmas. -/
+attribute [-simp] AlgHom.mem_equalizer
 
 variable (T : Type*) [CommRing T] [Algebra R T] [Algebra S T] [IsScalarTower R S T]
 variable {A B : Type*} [CommRing A] [CommRing B] [Algebra R A] [Algebra R B]
