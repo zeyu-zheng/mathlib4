@@ -83,8 +83,7 @@ theorem toOrdinal_toNimber (a : Nimber) : ∗(Nimber.toOrdinal a) = a :=
 theorem lt_wf : @WellFounded Nimber (· < ·) :=
   Ordinal.lt_wf
 
-instance : WellFoundedLT Nimber :=
-  Ordinal.wellFoundedLT
+instance : WellFoundedLT Nimber := Ordinal.instWellFoundedLT
 
 instance : ConditionallyCompleteLinearOrderBot Nimber :=
   WellFoundedLT.conditionallyCompleteLinearOrderBot _

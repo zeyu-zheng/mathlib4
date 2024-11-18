@@ -26,6 +26,8 @@ instance instOrderBot : OrderBot ℕ where
 instance instNoMaxOrder : NoMaxOrder ℕ where
   exists_gt n := ⟨n + 1, n.lt_succ_self⟩
 
+instance Nat.instIsWellOrder : IsWellOrder ℕ (· < ·) where
+
 /-! ### Miscellaneous lemmas -/
 
 -- We want to use this lemma earlier than the lemma simp can prove it with

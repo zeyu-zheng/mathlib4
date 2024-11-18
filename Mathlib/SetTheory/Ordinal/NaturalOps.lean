@@ -84,8 +84,7 @@ theorem toOrdinal_toNatOrdinal (a : NatOrdinal) :
 theorem lt_wf : @WellFounded NatOrdinal (· < ·) :=
   Ordinal.lt_wf
 
-instance : WellFoundedLT NatOrdinal :=
-  Ordinal.wellFoundedLT
+instance : WellFoundedLT NatOrdinal := Ordinal.instWellFoundedLT
 
 instance : ConditionallyCompleteLinearOrderBot NatOrdinal :=
   WellFoundedLT.conditionallyCompleteLinearOrderBot _

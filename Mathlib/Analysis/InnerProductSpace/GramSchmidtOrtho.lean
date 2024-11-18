@@ -40,7 +40,7 @@ open Finset Submodule Module
 variable (𝕜 : Type*) {E : Type*} [RCLike 𝕜] [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
 variable {ι : Type*} [LinearOrder ι] [LocallyFiniteOrderBot ι] [WellFoundedLT ι]
 
-attribute [local instance] IsWellOrder.toHasWellFounded
+attribute [local instance] WellFoundedLT.toWellFoundedRelation
 
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
 

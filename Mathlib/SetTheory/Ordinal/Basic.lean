@@ -119,8 +119,8 @@ instance hasWellFounded_toType (o : Ordinal) : WellFoundedRelation o.toType :=
 instance linearOrder_toType (o : Ordinal) : LinearOrder o.toType :=
   @IsWellOrder.linearOrder _ o.out.r o.out.wo
 
-instance wellFoundedLT_toType_lt (o : Ordinal) : WellFoundedLT o.toType :=
-  o.out.wo.toIsWellFounded
+instance wellFoundedLT_toType (o : Ordinal) : WellFoundedLT o.toType := o.out.wo.toIsWellFounded
+instance isWellOrder_toType_lt (o : Ordinal) : IsWellOrder o.toType (· < ·) where
 
 namespace Ordinal
 
@@ -548,8 +548,8 @@ theorem lt_wf : @WellFounded Ordinal (· < ·) :=
 instance wellFoundedRelation : WellFoundedRelation Ordinal :=
   ⟨(· < ·), lt_wf⟩
 
-instance wellFoundedLT : WellFoundedLT Ordinal :=
-  ⟨lt_wf⟩
+instance instWellFoundedLT : WellFoundedLT Ordinal := ⟨lt_wf⟩
+instance instIsWellOrder : IsWellOrder Ordinal (· < ·) where
 
 instance : ConditionallyCompleteLinearOrderBot Ordinal :=
   WellFoundedLT.conditionallyCompleteLinearOrderBot _
@@ -1434,7 +1434,7 @@ end Ordinal
 
 /-! ### Sorted lists -/
 
-theorem List.Sorted.lt_ord_of_lt [LinearOrder α] [WellFoundedLT α] {l m : List α}
+theorem List.Sorted.lt_ord_of_lt [LinearOrder α] [IsWellOrder α (· < ·)] {l m : List α}
     {o : Ordinal} (hl : l.Sorted (· > ·)) (hm : m.Sorted (· > ·)) (hmltl : m < l)
     (hlt : ∀ i ∈ l, Ordinal.typein (α := α) (· < ·) i < o) :
       ∀ i ∈ m, Ordinal.typein (α := α) (· < ·) i < o := by

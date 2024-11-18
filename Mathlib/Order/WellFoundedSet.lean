@@ -831,8 +831,8 @@ This includes the classical case of Dickson's lemma that `ℕ ^ n` is a well par
 Some generalizations would be possible based on this proof, to include cases where the target is
 partially well ordered, and also to consider the case of `Set.PartiallyWellOrderedOn` instead of
 `Set.IsPWO`. -/
-theorem Pi.isPWO {α : ι → Type*} [∀ i, LinearOrder (α i)] [∀ i, IsWellOrder (α i) (· < ·)]
-    [Finite ι] (s : Set (∀ i, α i)) : s.IsPWO := by
+theorem Pi.isPWO {α : ι → Type*} [∀ i, LinearOrder (α i)] [∀ i, WellFoundedLT (α i)] [Finite ι]
+    (s : Set (∀ i, α i)) : s.IsPWO := by
   cases nonempty_fintype ι
   suffices ∀ (s : Finset ι) (f : ℕ → ∀ s, α s),
     ∃ g : ℕ ↪o ℕ, ∀ ⦃a b : ℕ⦄, a ≤ b → ∀ x, x ∈ s → (f ∘ g) a x ≤ (f ∘ g) b x by

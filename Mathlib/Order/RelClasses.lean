@@ -802,9 +802,3 @@ instance OrderDual.isTotal_le [LE α] [h : IsTotal α (· ≤ ·)] : IsTotal α�
 
 instance : WellFoundedLT ℕ :=
   ⟨Nat.lt_wfRel.wf⟩
-
-instance (priority := 100) isWellOrder_lt [LinearOrder α] [WellFoundedLT α] :
-    IsWellOrder α (· < ·) where
-
-instance (priority := 100) isWellOrder_gt [LinearOrder α] [WellFoundedGT α] :
-    IsWellOrder α (· > ·) where
