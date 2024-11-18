@@ -56,7 +56,7 @@ We also provide the instances `P.IsMultiplicative`, `P.IsStableUnderComposition`
 
 -/
 
--- Explicit universe annotations were used in this file to improve performance #12737
+-- Explicit universe annotations were used in this file to improve performance https://github.com/leanprover-community/mathlib4/issues/12737
 
 universe u
 
@@ -70,7 +70,7 @@ theorem IsStableUnderBaseChange.pullback_fst_app_top
     (hP : IsStableUnderBaseChange P) (hP' : RespectsIso P)
     {X Y S : Scheme} [IsAffine X] [IsAffine Y] [IsAffine S] (f : X ⟶ S) (g : Y ⟶ S)
     (H : P (g.app ⊤)) : P ((pullback.fst f g).app ⊤) := by
-  -- Porting note (#11224): change `rw` to `erw`
+  -- Porting note (https://github.com/leanprover-community/mathlib4/issues/11224): change `rw` to `erw`
   erw [← PreservesPullback.iso_inv_fst AffineScheme.forgetToScheme (AffineScheme.ofHom f)
       (AffineScheme.ofHom g)]
   rw [Scheme.comp_app, hP'.cancel_right_isIso, AffineScheme.forgetToScheme_map]
@@ -106,10 +106,10 @@ theorem sourceAffineLocally_respectsIso (h₁ : RingHom.RespectsIso P) :
     (sourceAffineLocally P).toProperty.RespectsIso := by
   apply AffineTargetMorphismProperty.respectsIso_mk
   · introv H U
-    have : IsIso (e.hom.appLE (e.hom ''ᵁ U) U.1 (e.hom.preimage_image_eq _).ge) :=
+    have : IsIso (e.hom.appLE (e.hom ~~ᵁ U) U.1 (e.hom.preimage_image_eq _).ge) :=
       inferInstanceAs (IsIso (e.hom.app _ ≫
         X.presheaf.map (eqToHom (e.hom.preimage_image_eq _).symm).op))
-    rw [← Scheme.appLE_comp_appLE _ _ ⊤ (e.hom ''ᵁ U) U.1 le_top (e.hom.preimage_image_eq _).ge,
+    rw [← Scheme.appLE_comp_appLE _ _ ⊤ (e.hom ~~ᵁ U) U.1 le_top (e.hom.preimage_image_eq _).ge,
       h₁.cancel_right_isIso]
     exact H ⟨_, U.prop.image_of_isOpenImmersion e.hom⟩
   · introv H U
@@ -277,10 +277,10 @@ theorem comp_of_isOpenImmersion [IsOpenImmersion f] (H : P g) :
     P (f ≫ g) := by
   rw [eq_affineLocally P, affineLocally_iff_affineOpens_le] at H ⊢
   intro U V e
-  have : IsIso (f.appLE (f ''ᵁ V) V.1 (f.preimage_image_eq _).ge) :=
+  have : IsIso (f.appLE (f ~~ᵁ V) V.1 (f.preimage_image_eq _).ge) :=
     inferInstanceAs (IsIso (f.app _ ≫
       X.presheaf.map (eqToHom (f.preimage_image_eq _).symm).op))
-  rw [← Scheme.appLE_comp_appLE _ _ _ (f ''ᵁ V) V.1
+  rw [← Scheme.appLE_comp_appLE _ _ _ (f ~~ᵁ V) V.1
     (Set.image_subset_iff.mpr e) (f.preimage_image_eq _).ge,
     (isLocal_ringHomProperty P).respectsIso.cancel_right_isIso]
   exact H _ ⟨_, V.2.image_of_isOpenImmersion _⟩ _
