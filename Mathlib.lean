@@ -2449,6 +2449,7 @@ import Mathlib.Data.Finsupp.Fintype
 import Mathlib.Data.Finsupp.Indicator
 import Mathlib.Data.Finsupp.Interval
 import Mathlib.Data.Finsupp.Lex
+import Mathlib.Data.Finsupp.MonomialOrder
 import Mathlib.Data.Finsupp.Multiset
 import Mathlib.Data.Finsupp.NeLocus
 import Mathlib.Data.Finsupp.Notation
@@ -3918,6 +3919,7 @@ import Mathlib.Order.CompletePartialOrder
 import Mathlib.Order.CompleteSublattice
 import Mathlib.Order.Concept
 import Mathlib.Order.ConditionallyCompleteLattice.Basic
+import Mathlib.Order.ConditionallyCompleteLattice.Defs
 import Mathlib.Order.ConditionallyCompleteLattice.Finset
 import Mathlib.Order.ConditionallyCompleteLattice.Group
 import Mathlib.Order.ConditionallyCompleteLattice.Indexed
@@ -4322,6 +4324,7 @@ import Mathlib.RingTheory.LaurentSeries
 import Mathlib.RingTheory.LinearDisjoint
 import Mathlib.RingTheory.LittleWedderburn
 import Mathlib.RingTheory.LocalProperties.Basic
+import Mathlib.RingTheory.LocalProperties.Exactness
 import Mathlib.RingTheory.LocalProperties.IntegrallyClosed
 import Mathlib.RingTheory.LocalProperties.Projective
 import Mathlib.RingTheory.LocalProperties.Reduced
