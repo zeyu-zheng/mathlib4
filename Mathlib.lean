@@ -152,6 +152,7 @@ import Mathlib.Algebra.Category.Ring.FilteredColimits
 import Mathlib.Algebra.Category.Ring.Instances
 import Mathlib.Algebra.Category.Ring.Limits
 import Mathlib.Algebra.Category.Ring.LinearAlgebra
+import Mathlib.Algebra.Category.Ring.Under.Basic
 import Mathlib.Algebra.Category.Semigrp.Basic
 import Mathlib.Algebra.Central.Basic
 import Mathlib.Algebra.Central.Defs
@@ -1681,6 +1682,7 @@ import Mathlib.CategoryTheory.Endofunctor.Algebra
 import Mathlib.CategoryTheory.Endomorphism
 import Mathlib.CategoryTheory.Enriched.Basic
 import Mathlib.CategoryTheory.Enriched.FunctorCategory
+import Mathlib.CategoryTheory.Enriched.Opposite
 import Mathlib.CategoryTheory.Enriched.Ordinary
 import Mathlib.CategoryTheory.EpiMono
 import Mathlib.CategoryTheory.EqToHom
@@ -1861,6 +1863,7 @@ import Mathlib.CategoryTheory.Limits.Shapes.Kernels
 import Mathlib.CategoryTheory.Limits.Shapes.Multiequalizer
 import Mathlib.CategoryTheory.Limits.Shapes.NormalMono.Basic
 import Mathlib.CategoryTheory.Limits.Shapes.NormalMono.Equalizers
+import Mathlib.CategoryTheory.Limits.Shapes.PiProd
 import Mathlib.CategoryTheory.Limits.Shapes.Products
 import Mathlib.CategoryTheory.Limits.Shapes.Pullback.Assoc
 import Mathlib.CategoryTheory.Limits.Shapes.Pullback.CommSq
@@ -3935,7 +3938,9 @@ import Mathlib.Order.ConditionallyCompleteLattice.Indexed
 import Mathlib.Order.Copy
 import Mathlib.Order.CountableDenseLinearOrder
 import Mathlib.Order.Cover
-import Mathlib.Order.Defs
+import Mathlib.Order.Defs.LinearOrder
+import Mathlib.Order.Defs.PartialOrder
+import Mathlib.Order.Defs.Unbundled
 import Mathlib.Order.Directed
 import Mathlib.Order.DirectedInverseSystem
 import Mathlib.Order.Disjoint
@@ -5028,6 +5033,7 @@ import Mathlib.Topology.Compactification.OnePoint
 import Mathlib.Topology.Compactification.OnePointEquiv
 import Mathlib.Topology.Compactness.Compact
 import Mathlib.Topology.Compactness.CompactlyGeneratedSpace
+import Mathlib.Topology.Compactness.DeltaGeneratedSpace
 import Mathlib.Topology.Compactness.Exterior
 import Mathlib.Topology.Compactness.Lindelof
 import Mathlib.Topology.Compactness.LocallyCompact
