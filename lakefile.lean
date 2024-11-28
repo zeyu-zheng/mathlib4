@@ -10,7 +10,7 @@ open Lake DSL
 require "leanprover-community" / "batteries" @ git "lean-pr-testing-6205"
 require "leanprover-community" / "Qq" @ git "nightly-testing"
 require "leanprover-community" / "aesop" @ git "nightly-testing"
-require "leanprover-community" / "proofwidgets" @ git "v0.0.46"
+require "leanprover-community" / "proofwidgets" @ git "v0.0.47-pre"
 require "leanprover-community" / "importGraph" @ git "nightly-testing"
 require "leanprover-community" / "LeanSearchClient" @ git "main"
   from git "https://github.com/leanprover-community/LeanSearchClient" @ "main"
@@ -23,8 +23,7 @@ require "leanprover-community" / "plausible" @ git "nightly-testing"
 /-- These options are used
 * as `leanOptions`, prefixed by `` `weak``, so that `lake build` uses them;
 * as `moreServerArgs`, to set their default value in mathlib
-  (as well as `Archive`, `Counterexamples` and `test`).
--/
+  (as well as `Archive`, `Counterexamples` and `test`). -/
 abbrev mathlibOnlyLinters : Array LeanOption := #[
   ⟨`linter.docPrime, true⟩,
   ⟨`linter.hashCommand, true⟩,
