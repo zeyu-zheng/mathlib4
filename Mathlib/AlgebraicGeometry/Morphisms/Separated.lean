@@ -166,7 +166,7 @@ lemma isClosedImmersion_diagonal_restrict_diagonalCoverDiagonalRange
     IsClosedImmersion (pullback.diagonal f ∣_ diagonalCoverDiagonalRange f 𝒰 𝒱) := by
   let U : (Σ i, (𝒱 i).J) → (diagonalCoverDiagonalRange f 𝒰 𝒱).toScheme.Opens := fun i ↦
     (diagonalCoverDiagonalRange f 𝒰 𝒱).ι ⁻¹ᵁ ((diagonalCover f 𝒰 𝒱).map ⟨i.1, i.2, i.2⟩).opensRange
-  have hU (i) : (diagonalCoverDiagonalRange f 𝒰 𝒱).ι ~~ᵁ U i =
+  have hU (i) : (diagonalCoverDiagonalRange f 𝒰 𝒱).ι ''ᵁ U i =
       ((diagonalCover f 𝒰 𝒱).map ⟨i.1, i.2, i.2⟩).opensRange := by
     rw [TopologicalSpace.Opens.functor_obj_map_obj, inf_eq_right, Hom.image_top_eq_opensRange,
       Opens.opensRange_ι]
@@ -239,6 +239,16 @@ lemma ext_of_isDominant_of_isSeparated [IsReduced X] {f g : X ⟶ Y}
   have := isIso_of_isClosedImmersion_of_surjective (Y := X) (equalizer.ι f' g').left
   rw [← cancel_epi (equalizer.ι f' g').left]
   exact congr($(equalizer.condition f' g').left)
+
+variable (S) in
+/--
+Suppose `X` is a reduced `S`-scheme and `Y` is a separated `S`-scheme.
+For any `S`-morphisms `f g : X ⟶ Y`, `f = g` if `ι ≫ f = ι ≫ g` for some dominant `ι`.
+-/
+lemma ext_of_isDominant_of_isSeparated' [X.Over S] [Y.Over S] [IsReduced X] [IsSeparated (Y ↘ S)]
+    {f g : X ⟶ Y} [f.IsOver S] [g.IsOver S] {W} (ι : W ⟶ X) [IsDominant ι]
+    (hU : ι ≫ f = ι ≫ g) : f = g :=
+  ext_of_isDominant_of_isSeparated (Y ↘ S) (by simp) ι hU
 
 namespace Scheme
 
