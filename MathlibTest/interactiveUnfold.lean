@@ -5,6 +5,8 @@ Authors: Jovan Gerbscheid
 -/
 import Mathlib
 
+set_option pp.unicode.fun true
+
 /-!
 The `unfold?` tactic is used interactively, so it is tricky to test directly.
 In order to test it, we use the `#unfold?` command.
@@ -75,8 +77,8 @@ info: Unfolds for 3 ∈ {1, 2, 3}:
 #unfold? 3 ∈ ({1, 2, 3} : Set ℕ)
 
 /--
-info: Unfolds for Function.Injective fun x => x:
-· ∀ ⦃a₁ a₂ : ℕ⦄, (fun x => x) a₁ = (fun x => x) a₂ → a₁ = a₂
+info: Unfolds for Function.Injective fun x ↦ x:
+· ∀ ⦃a₁ a₂ : ℕ⦄, (fun x ↦ x) a₁ = (fun x ↦ x) a₂ → a₁ = a₂
 -/
 #guard_msgs in
 #unfold? Function.Injective (fun x : Nat => x)
@@ -96,18 +98,18 @@ info: Unfolds for 1 ∈ A ∪ B:
 #unfold? 1 ∈ A ∪ B
 
 /--
-info: Unfolds for (fun x => x) (1 + 1):
+info: Unfolds for (fun x ↦ x) (1 + 1):
 · 1 + 1
 · Nat.add 1 1
 · 2
 -/
 #guard_msgs in
-#unfold? (fun x => x) (1 + 1)
+#unfold? (fun x ↦ x) (1 + 1)
 
 /--
-info: Unfolds for fun x => id x:
+info: Unfolds for fun x ↦ id x:
 · id
-· fun a => a
+· fun a ↦ a
 -/
 #guard_msgs in
-#unfold? fun x => id x
+#unfold? fun x ↦ id x
