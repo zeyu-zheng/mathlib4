@@ -11,7 +11,7 @@ def foo (x : ℝ) := x * (Real.log x) ^ 2 - Real.exp x / x
 example : ContinuousOn foo {0}ᶜ := by
   unfold foo; fun_prop (disch:=aesop)
 
-example (y : ℝ) (hy : y≠0) : ContinuousAt (fun x => x * (Real.log x) ^ 2 - Real.exp x / x) y := by
+example (y : ℝ) (hy : y≠0) : ContinuousAt (fun x ↦ x * (Real.log x) ^ 2 - Real.exp x / x) y := by
   fun_prop (disch:=aesop)
 
 
@@ -39,11 +39,11 @@ example : Continuous fun ((_, _, z) : ℝ × ℝ × ℝ) ↦ z := by fun_prop
 theorem ContinuousOn.log' : ContinuousOn Real.log {0}ᶜ := ContinuousOn.log (by fun_prop) (by aesop)
 
 -- Notice that no theorems about measuability of log are used. It is inferred from continuity.
-example : Measurable (fun x => x * (Real.log x) ^ 2 - Real.exp x / x) := by
+example : Measurable (fun x ↦ x * (Real.log x) ^ 2 - Real.exp x / x) := by
   fun_prop
 
 -- Notice that no theorems about measuability of log are used. It is inferred from continuity.
-example : AEMeasurable (fun x => x * (Real.log x) ^ 2 - Real.exp x / x) := by
+example : AEMeasurable (fun x ↦ x * (Real.log x) ^ 2 - Real.exp x / x) := by
   fun_prop (config:={maxTransitionDepth:=2})
 
 
@@ -79,5 +79,5 @@ example : AEMeasurable T := by
 private theorem t1 : (5: ℕ) + (1 : ℕ∞) ≤ (12 : WithTop ℕ∞) := by norm_cast
 
 example {f : ℝ → ℝ} (hf : ContDiff ℝ 12 f) :
-    Differentiable ℝ (iteratedDeriv 5 (fun x => f (2*(f (x + x))) + x)) := by
+    Differentiable ℝ (iteratedDeriv 5 (fun x ↦ f (2*(f (x + x))) + x)) := by
   fun_prop (disch:=(exact t1))
