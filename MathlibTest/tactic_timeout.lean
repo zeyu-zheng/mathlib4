@@ -26,13 +26,13 @@ section test_infra
 
 def Tactic.withTimeout (ms : UInt32) (t : TacticM α) : TacticM (α ⊕ Nat) := do
   let tk ← IO.CancelToken.new
-  withTheReader Core.Context (fun s => { s with cancelTk? := some tk }) do
+  withTheReader Core.Context (fun s ↦ { s with cancelTk? := some tk }) do
     let t0 ← IO.monoMsNow
     let watchdog ← IO.asTask do
       IO.sleep ms
       tk.set
     let r ← Tactic.tryCatchAll (.inl <$> t)
-      (fun e => do
+      (fun e ↦ do
         IO.cancel watchdog
         if !e.isInterrupt || !(← tk.isSet) then
           throw e

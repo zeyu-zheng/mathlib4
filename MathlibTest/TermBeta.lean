@@ -4,10 +4,10 @@ set_option linter.style.setOption false
 set_option pp.unicode.fun true
 
 /-- info: (fun x ↦ x) true : Bool -/
-#guard_msgs in #check (fun x => x) true
+#guard_msgs in #check (fun x ↦ x) true
 
 /-- info: true : Bool -/
-#guard_msgs in #check beta% (fun x => x) true
+#guard_msgs in #check beta% (fun x ↦ x) true
 
 /-- info: (fun x y ↦ (x, y)) true : Bool → Bool × Bool -/
 #guard_msgs in #check (fun (x y : Bool) => (x, y)) true
@@ -22,7 +22,7 @@ set_option pp.unicode.fun true
 #guard_msgs in #check beta% (fun (x : Bool) => cond x) true 1
 
 /-- info: ∀ (i : Nat), 0 ≤ i : Prop -/
-#guard_msgs in #check ∀ i : Nat, beta% (fun j => 0 ≤ j) i
+#guard_msgs in #check ∀ i : Nat, beta% (fun j ↦ 0 ≤ j) i
 
 /-- info: (fun x1 x2 ↦ x1 && x2) true false : Bool -/
 #guard_msgs in #check (· && ·) true false
@@ -30,7 +30,7 @@ set_option pp.unicode.fun true
 /-- info: true && false : Bool -/
 #guard_msgs in #check beta% (· && ·) true false
 
-abbrev reducibleId : Bool → Bool := fun x => x
+abbrev reducibleId : Bool → Bool := fun x ↦ x
 
 /-- info: reducibleId true : Bool -/
 #guard_msgs in #check reducibleId true

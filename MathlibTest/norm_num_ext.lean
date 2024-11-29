@@ -333,17 +333,17 @@ example : ([1, 2, 1, 3]).sum = 7 := by norm_num (config := {decide := true}) onl
 example : (List.range 10).sum = 45 := by norm_num (config := {decide := true}) only
 example : (List.finRange 10).sum = 45 := by norm_num (config := {decide := true}) only
 
-example : (([1, 2, 1, 3] : List ℚ).map (fun i => i^2)).sum = 15 := by norm_num
+example : (([1, 2, 1, 3] : List ℚ).map (fun i ↦ i^2)).sum = 15 := by norm_num
 
 -- Multisets:
 -- `by decide` closes the three goals below.
 example : (1 ::ₘ 2 ::ₘ 1 ::ₘ 3 ::ₘ {}).sum = 7 := by norm_num (config := {decide := true}) only
-example : ((1 ::ₘ 2 ::ₘ 1 ::ₘ 3 ::ₘ {}).map (fun i => i^2)).sum = 15 := by
+example : ((1 ::ₘ 2 ::ₘ 1 ::ₘ 3 ::ₘ {}).map (fun i ↦ i^2)).sum = 15 := by
   norm_num (config := {decide := true}) only
 example : (Multiset.range 10).sum = 45 := by norm_num (config := {decide := true}) only
 example : (↑[1, 2, 1, 3] : Multiset ℕ).sum = 7 := by norm_num (config := {decide := true}) only
 
-example : (({1, 2, 1, 3} : Multiset ℚ).map (fun i => i^2)).sum = 15 := by
+example : (({1, 2, 1, 3} : Multiset ℚ).map (fun i ↦ i^2)).sum = 15 := by
   norm_num
 
 -- Finsets:

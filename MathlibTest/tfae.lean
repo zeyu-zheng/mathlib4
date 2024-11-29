@@ -129,7 +129,7 @@ example : TFAE [P, Q] := by
 
 example : TFAE [P, Q] := by
   have n : ℕ := 3
-  tfae_have 2 ← 1 := fun p => ?Qgoal
+  tfae_have 2 ← 1 := fun p ↦ ?Qgoal
   case Qgoal => exact pq p
   refine ?a
   fail_if_success (tfae_have 1 ← 2 := ((?a).out 1 2 sorry sorry).mpr)

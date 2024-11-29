@@ -205,7 +205,7 @@ example {α β γ : Type*} {f : α → β} {g : β → γ} (h : Function.Surject
 
 def toInf (f : ℕ → ℕ) : Prop := ∀ m, ∃ n, ∀ n' ≥ n, m ≤ f n'
 
-example (f : ℕ → ℕ) (h : toInf f) : toInf (fun n => 2 * f n) := by
+example (f : ℕ → ℕ) (h : toInf f) : toInf (fun n ↦ 2 * f n) := by
   peel h with this m n n' h
   dsimp
   linarith

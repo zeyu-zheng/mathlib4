@@ -10,7 +10,7 @@ import Batteries.Data.List.Lemmas
 set_option autoImplicit true
 set_option linter.unusedVariables false
 
-theorem foo (L M : List α) (w : L.Disjoint M) (m : a ∈ L) : a ∉ M := fun h => w m h
+theorem foo (L M : List α) (w : L.Disjoint M) (m : a ∈ L) : a ∉ M := fun h ↦ w m h
 
 /--
 info: Try this: have : M.Disjoint L := List.disjoint_symm w

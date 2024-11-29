@@ -60,7 +60,7 @@ commutative semiring `R`, we get two mathematically different scalar actions of 
 itself. -/
 noncomputable def f : ℂ ⊗[ℝ] ℂ →ₗ[ℝ] ℝ :=
   TensorProduct.lift
-    { toFun := fun z => z.re • reLm
+    { toFun := fun z ↦ z.re • reLm
       map_add' := fun z w => by simp [add_smul]
       map_smul' := fun r z => by simp [mul_smul] }
 
@@ -75,7 +75,7 @@ itself. -/
 example :
     Mul.toSMul (ℂ ⊗[ℝ] ℂ) ≠
       (@TensorProduct.Algebra.module ℝ ℂ ℂ (ℂ ⊗[ℝ] ℂ) _ _ _ _ _ _ _ _ _ _ _ _).toSMul := by
-  have contra : I ⊗ₜ[ℝ] I ≠ (-1) ⊗ₜ[ℝ] 1 := fun c => by simpa using congr_arg f c
+  have contra : I ⊗ₜ[ℝ] I ≠ (-1) ⊗ₜ[ℝ] 1 := fun c ↦ by simpa using congr_arg f c
   contrapose! contra
   rw [SMul.ext_iff, SMul.smul_eq_hSMul, @SMul.smul_eq_hSMul _ _ (_)] at contra
   replace contra := congr_fun (congr_fun contra (1 ⊗ₜ I)) (I ⊗ₜ 1)

@@ -34,7 +34,7 @@ run_cmd Elab.Command.liftTermElabM do
 
 /-! These tests are testing delaborators -/
 
-/-- info: fun x => ![0, 1] x : Fin 2 → ℕ -/
+/-- info: fun x ↦ ![0, 1] x : Fin 2 → ℕ -/
 #guard_msgs in #check fun x : Fin 2 => (![0, 1] : Fin 2 → ℕ) x
-/-- info: fun x => ![] x : Fin 0 → ℕ -/
+/-- info: fun x ↦ ![] x : Fin 0 → ℕ -/
 #guard_msgs in #check fun x : Fin 0 => (![] : Fin 0 → ℕ) x

@@ -298,7 +298,7 @@ def IsUnit [Mul M] (a : M) : Prop := a ≠ a
 
 @[to_additive]
 theorem isUnit_iff_exists_inv [Mul M] {a : M} : IsUnit a ↔ ∃ _ : α, a ≠ a :=
-  ⟨fun h => absurd rfl h, fun ⟨_, hab⟩ => hab⟩
+  ⟨fun h ↦ absurd rfl h, fun ⟨_, hab⟩ => hab⟩
 
 /-! Test that `@[to_additive]` correctly translates auxiliary declarations that do not have the
 original declaration name as prefix.-/
@@ -334,7 +334,7 @@ run_cmd do
 run_cmd do
   unless !(q((fun _ y => y) 3 4) : Q(Nat)).isConstantApplication do throwError "1"
   unless (q((fun x _ => x) 3 4) : Q(Nat)).isConstantApplication do throwError "2"
-  unless !(q((fun x => x) 3) : Q(Nat)).isConstantApplication do throwError "3"
+  unless !(q((fun x ↦ x) 3) : Q(Nat)).isConstantApplication do throwError "3"
   unless (q((fun _ => 5) 3) : Q(Nat)).isConstantApplication do throwError "4"
 
 /-!

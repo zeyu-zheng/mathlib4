@@ -11,7 +11,7 @@ variable (foo : Nat)
 example : 2² = 4 := rfl
 example : 2¹⁶ = 65536 := rfl
 example (n : Nat) : n⁽²⁻¹⁾ ⁺ ⁶ /- not done yet... -/ ⁺ ᶠᵒᵒ = n ^ (7 + foo) := rfl
-example : (fun n => 2ⁿ⁺¹) 15 = 2¹⁶ := rfl
+example : (fun n ↦ 2ⁿ⁺¹) 15 = 2¹⁶ := rfl
 
 /--
 info: aⁱ

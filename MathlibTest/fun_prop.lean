@@ -26,10 +26,10 @@ attribute [fun_prop] Measurable
 Now we can start marking theorems about `Measurable` with the attribute `@[fun_prop]`.
 It is best to start with the basic lambda calculus rules. There are five of these rules in total
 
-  - identity rule    `Measurable fun x => x`
-  - constant rule    `Measurable fun x => y`
-  - composition rule `Measurable f → Measurable g → Measurable fun x => f (g x)`
-  - apply rule       `Measurable fun f => f x`
+  - identity rule    `Measurable fun x ↦ x`
+  - constant rule    `Measurable fun x ↦ y`
+  - composition rule `Measurable f → Measurable g → Measurable fun x ↦ f (g x)`
+  - apply rule       `Measurable fun f ↦ f x`
   - pi rule          `∀ i, Measurable (f · i) → Measurable fun x i => f x i`
 
 You do not have to provide them all. For example `IsLinearMap` does not have the constant rule.
@@ -50,16 +50,16 @@ Let's mark the product constructor.
 -/
 
 attribute [fun_prop]
-  Measurable.prod_mk -- Measurable f → Measurable g → Measurable fun x => (f x, g x)
+  Measurable.prod_mk -- Measurable f → Measurable g → Measurable fun x ↦ (f x, g x)
 
 /-!
 When it comes to product projection, their properties are usually stated in two different ways
 ```
-measurable_fst : Measurable fun x => Prod.fst x
+measurable_fst : Measurable fun x ↦ Prod.fst x
 ```
 or
 ```
-Measurable.fst : Measurable f → Measurable fun x => Prod.fst (f x)
+Measurable.fst : Measurable f → Measurable fun x ↦ Prod.fst (f x)
 ```
 The tactic `fun_prop` can work with both versions;
 it should be sufficient to provide just one of them.
@@ -78,7 +78,7 @@ to see what is going on
 set_option trace.Meta.Tactic.fun_prop true in
 -/
 example {α} [MeasurableSpace α] (f : α → α → α) (hf : Measurable fun (x,y) => f x y) (a : α) :
-    Measurable (fun x => (f x a, f (f x x) (f (f x x) x))) := by
+    Measurable (fun x ↦ (f x a, f (f x x) (f (f x x) x))) := by
   -- This now takes longer than 200,000 heartbeats to fail, so I've commented it out.
   -- fail_if_success measurability
   fun_prop
@@ -163,7 +163,7 @@ measurable.
 -/
 
 example (f : ℝ → ℝ → ℝ) (hf : Continuous fun (x,y) => f x y) (a : ℝ) :
-    Measurable (fun x => (f x a, f (f x x) (f (f x x) x))) := by fun_prop
+    Measurable (fun x ↦ (f x a, f (f x x) (f (f x x) x))) := by fun_prop
 
 
 /-!
@@ -201,7 +201,7 @@ A silly example that everything together works as expected
 -/
 
 example (f : ℝ → ℝ → (ℝ →L[ℝ] ℝ)) (hf : Continuous (fun (x,y) => f x y)) :
-    Measurable fun x => (f (x / x) (x * x) 1 + x) := by fun_prop
+    Measurable fun x ↦ (f (x / x) (x * x) 1 + x) := by fun_prop
 
 set_option linter.style.longLine false in
 /-!
@@ -213,7 +213,7 @@ In other cases the function property of `DFunLike.coe` can be stated jointly in 
 This is the case of `ContDiff n` and continuous linear maps. The theorem is `ContDiff.clm_apply`.
 
 
-#check ContDiff.clm_apply -- {f : E → F →L[K] G} → {g : E → F} →  ContDiff K n f → ContDiff K n g → ContDiff K n fun x => DFunLike.coe (f x) (g x)
+#check ContDiff.clm_apply -- {f : E → F →L[K] G} → {g : E → F} →  ContDiff K n f → ContDiff K n g → ContDiff K n fun x ↦ DFunLike.coe (f x) (g x)
 
 If possible, `fun_prop` theorem about `DFunLike.coe` should be state in this way.
 

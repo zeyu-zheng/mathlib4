@@ -80,7 +80,7 @@ example (α : Type _) (f : α → ℤ) (hf : ∀ a, 0 ≤ f a) (_ : ∀ a, f a <
     0 ≤ 2 * f a := by
   lift f to α → ℕ using hf with g hg
   guard_target =ₛ 0 ≤ 2 * (g a : Int)
-  guard_hyp hg : (fun i => (g i : Int)) = f
+  guard_hyp hg : (fun i ↦ (g i : Int)) = f
   constructor
 
 example (n m k x : ℤ) (hn : 0 < n) (hk : 0 ≤ k + n) (h : k + n = 2 + x)
@@ -113,7 +113,7 @@ example (n : ℤ) : ℕ := by
   exact 0
 
 instance canLift_subtype (R : Type _) (s : Set R) :
-    CanLift R {x // x ∈ s} ((↑) : {x // x ∈ s} → R) (fun x => x ∈ s) :=
+    CanLift R {x // x ∈ s} ((↑) : {x // x ∈ s} → R) (fun x ↦ x ∈ s) :=
   { prf := fun x hx => ⟨⟨x, hx⟩, rfl⟩ }
 
 example {R : Type _} {P : R → Prop} (x : R) (hx : P x) : P x := by

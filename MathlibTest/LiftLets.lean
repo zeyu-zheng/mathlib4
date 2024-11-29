@@ -27,7 +27,7 @@ example : (let x := (let y := 1; y + 1); x + 1) = 3 := by
   intros _y _x
   rfl
 
-example : (fun x => let a := x; let y := 1; a + y) 2 = 2 + 1 := by
+example : (fun x ↦ let a := x; let y := 1; a + y) 2 = 2 + 1 := by
   lift_lets
   guard_target =ₛ let y := 1; (fun x ↦ let a := x; a + y) 2 = 2 + 1
   intro _y

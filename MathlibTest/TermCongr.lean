@@ -86,12 +86,12 @@ example (a b c d e f : Nat) (hab : a = b) (hcd : c = d) (hef : e = f) : True := 
   trivial
 
 example (f g : Nat → Nat) (h : ∀ n, f n = g n) :
-    (fun n => 1 + f n) = (fun n => 1 + g n) :=
-  congr(fun n => 1 + $(h n))
+    (fun n ↦ 1 + f n) = (fun n ↦ 1 + g n) :=
+  congr(fun n ↦ 1 + $(h n))
 
 example (f g : Nat → Nat) (h : ∀ n, f n = g n) :
-    (fun n => 1 + f n) = (fun n => 1 + g n) := by
-  refine congr(fun n => 1 + $(?_))
+    (fun n ↦ 1 + f n) = (fun n ↦ 1 + g n) := by
+  refine congr(fun n ↦ 1 + $(?_))
   guard_target = f n = g n
   apply h
 
