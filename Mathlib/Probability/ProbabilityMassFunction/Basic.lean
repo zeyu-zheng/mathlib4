@@ -96,7 +96,7 @@ theorem apply_pos_iff (p : PMF α) (a : α) : 0 < p a ↔ a ∈ p.support :=
 theorem apply_eq_one_iff (p : PMF α) (a : α) : p a = 1 ↔ p.support = {a} := by
   refine ⟨fun h => Set.Subset.antisymm (fun a' ha' => by_contra fun ha => ?_)
     fun a' ha' => ha'.symm ▸ (p.mem_support_iff a).2 fun ha => zero_ne_one <| ha.symm.trans h,
-    fun h => _root_.trans (symm <| tsum_eq_single a
+    fun h => _undupe_.trans (symm <| tsum_eq_single a
       fun a' ha' => (p.apply_eq_zero_iff a').2 (h.symm ▸ ha')) p.tsum_coe⟩
   suffices 1 < ∑' a, p a from ne_of_lt this p.tsum_coe.symm
   have : 0 < ∑' b, ite (b = a) 0 (p b) := lt_of_le_of_ne' zero_le'
@@ -175,7 +175,7 @@ theorem toOuterMeasure_apply_eq_one_iff : p.toOuterMeasure s = 1 ↔ p.support �
     exact ENNReal.tsum_lt_tsum (p.tsum_coe_indicator_ne_top s)
       (fun x => Set.indicator_apply_le fun _ => le_rfl) hsa
   · suffices ∀ (x) (_ : x ∉ s), p x = 0 from
-      _root_.trans (tsum_congr
+      _undupe_.trans (tsum_congr
         fun a => (Set.indicator_apply s p a).trans
           (ite_eq_left_iff.2 <| symm ∘ this a)) p.tsum_coe
     exact fun a ha => (p.apply_eq_zero_iff a).2 <| Set.not_mem_subset h ha
@@ -301,7 +301,7 @@ def toPMF [Countable α] [MeasurableSpace α] [MeasurableSingletonClass α] (μ 
     [h : IsProbabilityMeasure μ] : PMF α :=
   ⟨fun x => μ ({x} : Set α),
     ENNReal.summable.hasSum_iff.2
-      (_root_.trans
+      (_undupe_.trans
         (symm <|
           (tsum_indicator_apply_singleton μ Set.univ MeasurableSet.univ).symm.trans
             (tsum_congr fun x => congr_fun (Set.indicator_univ _) x))

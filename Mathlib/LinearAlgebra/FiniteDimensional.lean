@@ -238,7 +238,7 @@ theorem coe_basisOfLinearIndependentOfCardEqFinrank {ι : Type*} [Nonempty ι] [
 noncomputable def finsetBasisOfLinearIndependentOfCardEqFinrank {s : Finset V} (hs : s.Nonempty)
     (lin_ind : LinearIndependent K ((↑) : s → V)) (card_eq : s.card = finrank K V) : Basis s K V :=
   @basisOfLinearIndependentOfCardEqFinrank _ _ _ _ _ _
-    ⟨(⟨hs.choose, hs.choose_spec⟩ : s)⟩ _ _ lin_ind (_root_.trans (Fintype.card_coe _) card_eq)
+    ⟨(⟨hs.choose, hs.choose_spec⟩ : s)⟩ _ _ lin_ind (_undupe_.trans (Fintype.card_coe _) card_eq)
 
 @[simp]
 theorem coe_finsetBasisOfLinearIndependentOfCardEqFinrank {s : Finset V} (hs : s.Nonempty)
@@ -253,7 +253,7 @@ theorem coe_finsetBasisOfLinearIndependentOfCardEqFinrank {s : Finset V} (hs : s
 noncomputable def setBasisOfLinearIndependentOfCardEqFinrank {s : Set V} [Nonempty s] [Fintype s]
     (lin_ind : LinearIndependent K ((↑) : s → V)) (card_eq : s.toFinset.card = finrank K V) :
     Basis s K V :=
-  basisOfLinearIndependentOfCardEqFinrank lin_ind (_root_.trans s.toFinset_card.symm card_eq)
+  basisOfLinearIndependentOfCardEqFinrank lin_ind (_undupe_.trans s.toFinset_card.symm card_eq)
 
 @[simp]
 theorem coe_setBasisOfLinearIndependentOfCardEqFinrank {s : Set V} [Nonempty s] [Fintype s]

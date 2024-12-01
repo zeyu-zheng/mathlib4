@@ -65,7 +65,7 @@ theorem card_functions_sum_skolem₁_le : #(Σ n, (L.sum L.skolem₁).Functions 
   · exact
       ⟨⟨Sigma.map Nat.succ fun _ => id,
           Nat.succ_injective.sigma_map fun _ => Function.injective_id⟩⟩
-  · refine _root_.trans BoundedFormula.card_le (lift_le.{max u v}.1 ?_)
+  · refine _undupe_.trans BoundedFormula.card_le (lift_le.{max u v}.1 ?_)
     simp only [mk_empty, lift_zero, lift_uzero, zero_add]
     rfl
 
@@ -142,9 +142,9 @@ theorem exists_elementarySubstructure_card_eq (s : Set M) (κ : Cardinal.{w'}) (
         lift_lift, lift_lift, ← aleph0_le_lift, h]
       refine ⟨?_, h1⟩
       rw [← lift_lift.{w', w}]
-      refine _root_.trans (lift_le.{w}.2 h3) ?_
+      refine _undupe_.trans (lift_le.{w}.2 h3) ?_
       rw [lift_lift, ← lift_lift.{w, max u v}, ← hs', ← h, lift_lift]
-  · refine _root_.trans ?_ (lift_le.2 (mk_le_mk_of_subset Set.subset_union_right))
+  · refine _undupe_.trans ?_ (lift_le.2 (mk_le_mk_of_subset Set.subset_union_right))
     rw [aleph0_le_lift, ← aleph0_le_lift, h]
     exact h1
 

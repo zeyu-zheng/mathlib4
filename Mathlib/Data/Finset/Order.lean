@@ -22,7 +22,7 @@ theorem Directed.finset_le {r : α → α → Prop} [IsTrans α r] {ι} [hι : N
       fun i _ ⟨j, H⟩ ↦
       let ⟨k, h₁, h₂⟩ := D i j
       ⟨k, fun _ h ↦ (Multiset.mem_cons.1 h).casesOn (fun h ↦ h.symm ▸ h₁)
-        fun h ↦ _root_.trans (H _ h) h₂⟩
+        fun h ↦ _undupe_.trans (H _ h) h₂⟩
 
 theorem Finset.exists_le [Nonempty α] [Preorder α] [IsDirected α (· ≤ ·)] (s : Finset α) :
     ∃ M, ∀ i ∈ s, i ≤ M :=

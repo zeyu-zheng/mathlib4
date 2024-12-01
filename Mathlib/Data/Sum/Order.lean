@@ -50,8 +50,8 @@ instance [IsIrrefl α r] [IsIrrefl β s] : IsIrrefl (α ⊕ β) (LiftRel r s) :=
 @[trans]
 theorem LiftRel.trans [IsTrans α r] [IsTrans β s] :
     ∀ {a b c}, LiftRel r s a b → LiftRel r s b c → LiftRel r s a c
-  | _, _, _, LiftRel.inl hab, LiftRel.inl hbc => LiftRel.inl <| _root_.trans hab hbc
-  | _, _, _, LiftRel.inr hab, LiftRel.inr hbc => LiftRel.inr <| _root_.trans hab hbc
+  | _, _, _, LiftRel.inl hab, LiftRel.inl hbc => LiftRel.inl <| _undupe_.trans hab hbc
+  | _, _, _, LiftRel.inr hab, LiftRel.inr hbc => LiftRel.inr <| _undupe_.trans hab hbc
 
 instance [IsTrans α r] [IsTrans β s] : IsTrans (α ⊕ β) (LiftRel r s) :=
   ⟨fun _ _ _ => LiftRel.trans _ _⟩
@@ -76,7 +76,7 @@ instance [IsIrrefl α r] [IsIrrefl β s] : IsIrrefl (α ⊕ β) (Lex r s) :=
 instance [IsTrans α r] [IsTrans β s] : IsTrans (α ⊕ β) (Lex r s) :=
   ⟨by
     rintro _ _ _ (⟨hab⟩ | ⟨hab⟩) (⟨hbc⟩ | ⟨hbc⟩)
-    exacts [.inl (_root_.trans hab hbc), .sep _ _, .inr (_root_.trans hab hbc), .sep _ _]⟩
+    exacts [.inl (_undupe_.trans hab hbc), .sep _ _, .inr (_undupe_.trans hab hbc), .sep _ _]⟩
 
 instance [IsAntisymm α r] [IsAntisymm β s] : IsAntisymm (α ⊕ β) (Lex r s) :=
   ⟨by rintro _ _ (⟨hab⟩ | ⟨hab⟩) (⟨hba⟩ | ⟨hba⟩) <;> rw [antisymm hab hba]⟩

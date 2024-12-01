@@ -1448,7 +1448,7 @@ theorem liftFun_iff_succ {α : Type*} (r : α → α → Prop) [IsTrans α r] {f
       obtain hij | hij := (le_def.1 hij).eq_or_lt
       · obtain rfl := Fin.ext hij
         exact H _
-      · exact _root_.trans (ihj hij) (H j)
+      · exact _undupe_.trans (ihj hij) (H j)
 
 section AddGroup
 

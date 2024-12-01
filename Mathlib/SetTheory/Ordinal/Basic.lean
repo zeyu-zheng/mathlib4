@@ -373,7 +373,7 @@ def typein (r : α → α → Prop) [IsWellOrder α r] : @PrincipalSeg α Ordina
   refine ⟨RelEmbedding.ofMonotone _ fun a b ha ↦
     ((PrincipalSeg.ofElement r a).codRestrict _ ?_ ?_).ordinal_type_lt, type r, fun a ↦ ⟨?_, ?_⟩⟩
   · rintro ⟨c, hc⟩
-    exact trans hc ha
+    exact _undupe_.trans hc ha
   · exact ha
   · rintro ⟨b, rfl⟩
     exact (PrincipalSeg.ofElement _ _).ordinal_type_lt

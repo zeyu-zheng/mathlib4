@@ -480,7 +480,7 @@ theorem filter_eq [DecidableEq β] (s : Finset β) (b : β) :
 -/
 theorem filter_eq' [DecidableEq β] (s : Finset β) (b : β) :
     (s.filter fun a => a = b) = ite (b ∈ s) {b} ∅ :=
-  _root_.trans (filter_congr fun _ _ => by simp_rw [@eq_comm _ b]) (filter_eq s b)
+  _undupe_.trans (filter_congr fun _ _ => by simp_rw [@eq_comm _ b]) (filter_eq s b)
 
 theorem filter_ne [DecidableEq β] (s : Finset β) (b : β) :
     (s.filter fun a => b ≠ a) = s.erase b := by
@@ -489,7 +489,7 @@ theorem filter_ne [DecidableEq β] (s : Finset β) (b : β) :
   tauto
 
 theorem filter_ne' [DecidableEq β] (s : Finset β) (b : β) : (s.filter fun a => a ≠ b) = s.erase b :=
-  _root_.trans (filter_congr fun _ _ => by simp_rw [@ne_comm _ b]) (filter_ne s b)
+  _undupe_.trans (filter_congr fun _ _ => by simp_rw [@ne_comm _ b]) (filter_ne s b)
 
 theorem filter_union_filter_of_codisjoint (s : Finset α) (h : Codisjoint p q) :
     s.filter p ∪ s.filter q = s :=

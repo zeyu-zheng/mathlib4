@@ -66,7 +66,7 @@ theorem log_div_self_rpow_antitoneOn {a : ℝ} (ha : 0 < a) :
       field_simp
     positivity
   · simp only [Set.mem_setOf_eq]
-    convert rpow_le_rpow _ (_root_.trans hex hxy) (le_of_lt ha) using 1
+    convert rpow_le_rpow _ (_undupe_.trans hex hxy) (le_of_lt ha) using 1
     · rw [← exp_mul]
       simp only [Real.exp_eq_exp]
       field_simp

@@ -71,7 +71,7 @@ theorem rel_of_sorted_cons {a : α} {l : List α} : Sorted r (a :: l) → ∀ b 
 
 nonrec theorem Sorted.cons {r : α → α → Prop} [IsTrans α r] {l : List α} {a b : α}
     (hab : r a b) (h : Sorted r (b :: l)) : Sorted r (a :: b :: l) :=
-  h.cons <| forall_mem_cons.2 ⟨hab, fun _ hx => _root_.trans hab <| rel_of_sorted_cons h _ hx⟩
+  h.cons <| forall_mem_cons.2 ⟨hab, fun _ hx => _undupe_.trans hab <| rel_of_sorted_cons h _ hx⟩
 
 theorem sorted_cons_cons {r : α → α → Prop} [IsTrans α r] {l : List α} {a b : α} :
     Sorted r (b :: a :: l) ↔ r b a ∧ Sorted r (a :: l) := by
@@ -422,7 +422,7 @@ theorem Sorted.orderedInsert (a : α) : ∀ l, Sorted r l → Sorted r (orderedI
     · -- Porting note: was
       -- `simpa [orderedInsert, h', h] using fun b' bm => trans h' (rel_of_sorted_cons h _ bm)`
       rw [List.orderedInsert, if_pos h', sorted_cons]
-      exact ⟨forall_mem_cons.2 ⟨h', fun c hc => _root_.trans h' (rel_of_sorted_cons h _ hc)⟩, h⟩
+      exact ⟨forall_mem_cons.2 ⟨h', fun c hc => _undupe_.trans h' (rel_of_sorted_cons h _ hc)⟩, h⟩
     · suffices ∀ b' : α, b' ∈ List.orderedInsert r a l → r b b' by
         simpa [orderedInsert, h', h.of_cons.orderedInsert a l]
       intro b' bm
@@ -520,7 +520,7 @@ variable {r} [IsTotal α r] [IsTrans α r]
 theorem Sorted.merge {l l' : List α} (h : Sorted r l) (h' : Sorted r l') :
     Sorted r (merge l l' (r · ·)) := by
   simpa using sorted_merge (le := (r · ·))
-    (fun a b c h₁ h₂ => by simpa using _root_.trans (by simpa using h₁) (by simpa using h₂))
+    (fun a b c h₁ h₂ => by simpa using _undupe_.trans (by simpa using h₁) (by simpa using h₂))
     (fun a b => by simpa using IsTotal.total a b)
     l l' (by simpa using h) (by simpa using h')
 
@@ -541,7 +541,7 @@ theorem mergeSort_eq_insertionSort [IsAntisymm α r] (l : List α) :
     mergeSort l (r · ·) = insertionSort r l :=
   eq_of_perm_of_sorted ((mergeSort_perm l _).trans (perm_insertionSort r l).symm)
     (sorted_mergeSort (le := (r · ·))
-      (fun a b c h₁ h₂ => by simpa using _root_.trans (by simpa using h₁) (by simpa using h₂))
+      (fun a b c h₁ h₂ => by simpa using _undupe_.trans (by simpa using h₁) (by simpa using h₂))
       (fun a b => by simpa using IsTotal.total a b)
       l)
     (sorted_insertionSort r l).decide

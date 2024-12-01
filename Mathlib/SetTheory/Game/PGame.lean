@@ -848,7 +848,7 @@ protected theorem Equiv.symm {x y : PGame} : (x ≈ y) → (y ≈ x) :=
 
 @[trans]
 protected theorem Equiv.trans {x y z : PGame} : (x ≈ y) → (y ≈ z) → (x ≈ z) :=
-  _root_.trans
+  _undupe_.trans
 
 protected theorem equiv_comm {x y : PGame} : (x ≈ y) ↔ (y ≈ x) :=
   comm

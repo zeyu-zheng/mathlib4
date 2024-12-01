@@ -38,8 +38,8 @@ variable [Semiring S] (f : R →+* S) (x : S)
 
 theorem eval₂_eq_sum_range :
     p.eval₂ f x = ∑ i ∈ Finset.range (p.natDegree + 1), f (p.coeff i) * x ^ i :=
-  _root_.trans (congr_arg _ p.as_sum_range)
-    (_root_.trans (eval₂_finset_sum f _ _ x) (congr_arg _ (by simp)))
+  _undupe_.trans (congr_arg _ p.as_sum_range)
+    (_undupe_.trans (eval₂_finset_sum f _ _ x) (congr_arg _ (by simp)))
 
 theorem eval₂_eq_sum_range' (f : R →+* S) {p : R[X]} {n : ℕ} (hn : p.natDegree < n) (x : S) :
     eval₂ f x p = ∑ i ∈ Finset.range n, f (p.coeff i) * x ^ i := by
@@ -146,7 +146,7 @@ theorem degree_map_eq_of_leadingCoeff_ne_zero (f : R →+* S) (hf : f (leadingCo
     degree (p.map f) = degree p :=
   le_antisymm (degree_map_le f _) <| by
     have hp0 : p ≠ 0 :=
-      leadingCoeff_ne_zero.mp fun hp0 => hf (_root_.trans (congr_arg _ hp0) f.map_zero)
+      leadingCoeff_ne_zero.mp fun hp0 => hf (_undupe_.trans (congr_arg _ hp0) f.map_zero)
     rw [degree_eq_natDegree hp0]
     refine le_degree_of_ne_zero ?_
     rw [coeff_map]

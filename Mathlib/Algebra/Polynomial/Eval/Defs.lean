@@ -145,7 +145,7 @@ theorem eval₂_mul_noncomm (hf : ∀ k, Commute (f <| q.coeff k) x) :
 
 @[simp]
 theorem eval₂_mul_X : eval₂ f x (p * X) = eval₂ f x p * x := by
-  refine _root_.trans (eval₂_mul_noncomm _ _ fun k => ?_) (by rw [eval₂_X])
+  refine _undupe_.trans (eval₂_mul_noncomm _ _ fun k => ?_) (by rw [eval₂_X])
   rcases em (k = 1) with (rfl | hk)
   · simp
   · simp [coeff_X_of_ne_one hk]

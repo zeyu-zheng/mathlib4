@@ -122,7 +122,7 @@ theorem pure_bind (a : α) (f : α → PMF β) : (pure a).bind f = f a := by
 
 @[simp]
 theorem bind_pure : p.bind pure = p :=
-  PMF.ext fun x => (bind_apply _ _ _).trans (_root_.trans
+  PMF.ext fun x => (bind_apply _ _ _).trans (_undupe_.trans
     (tsum_eq_single x fun y hy => by rw [pure_apply_of_ne _ _ hy.symm, mul_zero]) <|
     by rw [pure_apply_self, mul_one])
 
@@ -185,7 +185,7 @@ section BindOnSupport
   `p.bind f` is equivalent to `p.bindOnSupport (fun a _ ↦ f a)`, see `bindOnSupport_eq_bind`. -/
 def bindOnSupport (p : PMF α) (f : ∀ a ∈ p.support, PMF β) : PMF β :=
   ⟨fun b => ∑' a, p a * if h : p a = 0 then 0 else f a h b, ENNReal.summable.hasSum_iff.2 (by
-    refine ENNReal.tsum_comm.trans (_root_.trans (tsum_congr fun a => ?_) p.tsum_coe)
+    refine ENNReal.tsum_comm.trans (_undupe_.trans (tsum_congr fun a => ?_) p.tsum_coe)
     simp_rw [ENNReal.tsum_mul_left]
     split_ifs with h
     · simp only [h, zero_mul]
@@ -236,7 +236,7 @@ theorem pure_bindOnSupport (a : α) (f : ∀ (a' : α) (_ : a' ∈ (pure a).supp
     (pure a).bindOnSupport f = f a ((mem_support_pure_iff a a).mpr rfl) := by
   refine PMF.ext fun b => ?_
   simp only [bindOnSupport_apply, pure_apply]
-  refine _root_.trans (tsum_congr fun a' => ?_) (tsum_ite_eq a _)
+  refine _undupe_.trans (tsum_congr fun a' => ?_) (tsum_ite_eq a _)
   by_cases h : a' = a <;> simp [h]
 
 theorem bindOnSupport_pure (p : PMF α) : (p.bindOnSupport fun a _ => pure a) = p := by
@@ -267,7 +267,7 @@ theorem bindOnSupport_comm (p : PMF α) (q : PMF β) (f : ∀ a ∈ p.support, �
   apply PMF.ext; rintro c
   simp only [ENNReal.coe_inj.symm, bindOnSupport_apply, ← tsum_dite_right,
     ENNReal.tsum_mul_left.symm, ENNReal.tsum_mul_right.symm]
-  refine _root_.trans ENNReal.tsum_comm (tsum_congr fun b => tsum_congr fun a => ?_)
+  refine _undupe_.trans ENNReal.tsum_comm (tsum_congr fun b => tsum_congr fun a => ?_)
   split_ifs with h1 h2 h2 <;> ring
 
 section Measure

@@ -478,7 +478,7 @@ theorem isMaximal_comap_C_of_isMaximal [IsJacobsonRing R] [Nontrivial R]
       (by rwa [Ideal.map_bot])).1
   let M' : Submonoid (R[X] ⧸ P) := M.map φ
   have hM' : (0 : R[X] ⧸ P) ∉ M' := fun ⟨z, hz⟩ =>
-    hM (quotientMap_injective (_root_.trans hz.2 φ.map_zero.symm) ▸ hz.1)
+    hM (quotientMap_injective (_undupe_.trans hz.2 φ.map_zero.symm) ▸ hz.1)
   haveI : IsDomain (Localization M') :=
     IsLocalization.isDomain_localization (le_nonZeroDivisors_of_noZeroDivisors hM')
   suffices (⊥ : Ideal (Localization M')).IsMaximal by
@@ -515,7 +515,7 @@ private theorem quotient_mk_comp_C_isIntegral_of_jacobson' [Nontrivial R] (hR : 
       (show M' ≤ _ from le_nonZeroDivisors_of_noZeroDivisors fun hM' => hM ?_)
     exact
       let ⟨z, zM, z0⟩ := hM'
-      quotientMap_injective (_root_.trans z0 φ.map_zero.symm) ▸ zM
+      quotientMap_injective (_undupe_.trans z0 φ.map_zero.symm) ▸ zM
   · suffices RingHom.comp (algebraMap (R[X] ⧸ P) (Localization M')) φ =
       (IsLocalization.map (Localization M') φ M.le_comap_map).comp
         (algebraMap (R ⧸ P') (Localization M)) by
@@ -553,7 +553,7 @@ theorem quotient_mk_comp_C_isIntegral_of_isJacobsonRing :
   refine ((Ideal.Quotient.mk P').isIntegral_of_surjective Quotient.mk_surjective).trans _ _ ?_
   have : IsMaximal (Ideal.map (mapRingHom (Ideal.Quotient.mk (comap C P))) P) :=
     Or.recOn (map_eq_top_or_isMaximal_of_surjective f hf hP)
-      (fun h => absurd (_root_.trans (h ▸ hPJ : P = comap f ⊤) comap_top : P = ⊤) hP.ne_top) id
+      (fun h => absurd (_undupe_.trans (h ▸ hPJ : P = comap f ⊤) comap_top : P = ⊤) hP.ne_top) id
   apply quotient_mk_comp_C_isIntegral_of_jacobson' _ ?_ (fun x hx => ?_)
   any_goals exact isJacobsonRing_quotient
   obtain ⟨z, rfl⟩ := Ideal.Quotient.mk_surjective x

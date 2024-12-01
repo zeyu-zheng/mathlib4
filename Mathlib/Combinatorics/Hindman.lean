@@ -209,7 +209,7 @@ theorem FP_drop_subset_FP {M} [Semigroup M] (a : Stream' M) (n : ℕ) : FP (a.dr
   | zero => rfl
   | succ n ih =>
     rw [Nat.add_comm, ← Stream'.drop_drop]
-    exact _root_.trans (FP.tail _) ih
+    exact _undupe_.trans (FP.tail _) ih
 
 @[to_additive]
 theorem FP.singleton {M} [Semigroup M] (a : Stream' M) (i : ℕ) : a.get i ∈ FP a := by

@@ -827,7 +827,7 @@ theorem wellFounded_of_trans_of_irrefl (r : α → α → Prop) [IsTrans α r] [
       simp only [Finset.lt_iff_ssubset.symm, lt_iff_le_not_le, Finset.le_iff_subset,
           Finset.subset_iff, mem_filter, true_and, mem_univ, hxy]
       exact
-        ⟨fun z hzx => _root_.trans hzx hxy,
+        ⟨fun z hzx => _undupe_.trans hzx hxy,
           not_forall_of_exists_not ⟨x, Classical.not_imp.2 ⟨hxy, irrefl x⟩⟩⟩
   exact Subrelation.wf (this _ _) (measure _).wf
 

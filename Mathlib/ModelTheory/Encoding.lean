@@ -103,7 +103,7 @@ theorem listEncode_injective :
   Term.encoding.encode_injective
 
 theorem card_le : #(L.Term α) ≤ max ℵ₀ #(α ⊕ (Σi, L.Functions i)) :=
-  lift_le.1 (_root_.trans Term.encoding.card_le_card_list (lift_le.2 (mk_list_le_max _)))
+  lift_le.1 (_undupe_.trans Term.encoding.card_le_card_list (lift_le.2 (mk_list_le_max _)))
 
 theorem card_sigma : #(Σn, L.Term (α ⊕ (Fin n))) = max ℵ₀ #(α ⊕ (Σi, L.Functions i)) := by
   refine le_antisymm ?_ ?_
@@ -117,7 +117,7 @@ theorem card_sigma : #(Σn, L.Term (α ⊕ (Fin n))) = max ℵ₀ #(α ⊕ (Σi,
         add_assoc, lift_lift, lift_lift, mk_fin, lift_natCast]
       exact add_le_add_right (nat_lt_aleph0 _).le _
     · rw [← one_le_iff_ne_zero]
-      refine _root_.trans ?_ (le_ciSup (bddAbove_range _) 1)
+      refine _undupe_.trans ?_ (le_ciSup (bddAbove_range _) 1)
       rw [one_le_iff_ne_zero, mk_ne_zero_iff]
       exact ⟨var (Sum.inr 0)⟩
   · rw [max_le_iff, ← infinite_iff]

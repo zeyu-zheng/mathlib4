@@ -128,12 +128,12 @@ instance : IsIrrefl α EmptyRelation :=
 theorem trans_trichotomous_left [IsTrans α r] [IsTrichotomous α r] {a b c : α}
     (h₁ : ¬r b a) (h₂ : r b c) : r a c := by
   rcases trichotomous_of r a b with (h₃ | rfl | h₃)
-  exacts [_root_.trans h₃ h₂, h₂, absurd h₃ h₁]
+  exacts [_undupe_.trans h₃ h₂, h₂, absurd h₃ h₁]
 
 theorem trans_trichotomous_right [IsTrans α r] [IsTrichotomous α r] {a b c : α}
     (h₁ : r a b) (h₂ : ¬r c b) : r a c := by
   rcases trichotomous_of r b c with (h₃ | rfl | h₃)
-  exacts [_root_.trans h₁ h₃, h₁, absurd h₃ h₂]
+  exacts [_undupe_.trans h₁ h₃, h₁, absurd h₃ h₂]
 
 theorem transitive_of_trans (r : α → α → Prop) [IsTrans α r] : Transitive r := IsTrans.trans
 
@@ -154,7 +154,7 @@ abbrev partialOrderOfSO (r) [IsStrictOrder α r] : PartialOrder α where
     match y, z, h₁, h₂ with
     | _, _, Or.inl rfl, h₂ => h₂
     | _, _, h₁, Or.inl rfl => h₁
-    | _, _, Or.inr h₁, Or.inr h₂ => Or.inr (_root_.trans h₁ h₂)
+    | _, _, Or.inr h₁, Or.inr h₂ => Or.inr (_undupe_.trans h₁ h₂)
   le_antisymm x y h₁ h₂ :=
     match y, h₁, h₂ with
     | _, Or.inl rfl, _ => rfl
@@ -209,7 +209,7 @@ theorem isStrictWeakOrder_of_isOrderConnected [IsAsymm α r] [IsOrderConnected �
 instance (priority := 100) isStrictOrderConnected_of_isStrictTotalOrder [IsStrictTotalOrder α r] :
     IsOrderConnected α r :=
   ⟨fun _ _ _ h ↦ (trichotomous _ _).imp_right
-    fun o ↦ o.elim (fun e ↦ e ▸ h) fun h' ↦ _root_.trans h' h⟩
+    fun o ↦ o.elim (fun e ↦ e ▸ h) fun h' ↦ _undupe_.trans h' h⟩
 
 -- see Note [lower instance priority]
 @[deprecated "No deprecation message was provided." (since := "2024-07-30")]
@@ -452,8 +452,8 @@ instance [IsWellOrder α r] [IsWellOrder β s] : IsWellOrder (α × β) (Prod.Le
         | Or.inr (Or.inl (.refl _)) => Or.inr <| Or.inl rfl
   trans a b c h₁ h₂ := by
     rcases h₁ with ⟨a₂, b₂, ab⟩ | ⟨a₁, ab⟩ <;> rcases h₂ with ⟨c₁, c₂, bc⟩ | ⟨c₂, bc⟩
-    exacts [.left _ _ (_root_.trans ab bc), .left _ _ ab, .left _ _ bc,
-      .right _ (_root_.trans ab bc)]
+    exacts [.left _ _ (_undupe_.trans ab bc), .left _ _ ab, .left _ _ bc,
+      .right _ (_undupe_.trans ab bc)]
 
 instance (r : α → α → Prop) [IsWellFounded α r] (f : β → α) : IsWellFounded _ (InvImage r f) :=
   ⟨InvImage.wf f IsWellFounded.wf⟩
@@ -556,7 +556,7 @@ lemma ne_of_not_subset [IsRefl α (· ⊆ ·)] : ¬a ⊆ b → a ≠ b := mt sub
 lemma ne_of_not_superset [IsRefl α (· ⊆ ·)] : ¬a ⊆ b → b ≠ a := mt superset_of_eq
 
 @[trans]
-lemma subset_trans [IsTrans α (· ⊆ ·)] {a b c : α} : a ⊆ b → b ⊆ c → a ⊆ c := _root_.trans
+lemma subset_trans [IsTrans α (· ⊆ ·)] {a b c : α} : a ⊆ b → b ⊆ c → a ⊆ c := _undupe_.trans
 
 lemma subset_antisymm [IsAntisymm α (· ⊆ ·)] : a ⊆ b → b ⊆ a → a = b := antisymm
 
@@ -600,7 +600,7 @@ lemma ne_of_ssubset [IsIrrefl α (· ⊂ ·)] {a b : α} : a ⊂ b → a ≠ b :
 lemma ne_of_ssuperset [IsIrrefl α (· ⊂ ·)] {a b : α} : a ⊂ b → b ≠ a := ne_of_irrefl'
 
 @[trans]
-lemma ssubset_trans [IsTrans α (· ⊂ ·)] {a b c : α} : a ⊂ b → b ⊂ c → a ⊂ c := _root_.trans
+lemma ssubset_trans [IsTrans α (· ⊂ ·)] {a b c : α} : a ⊂ b → b ⊂ c → a ⊂ c := _undupe_.trans
 
 lemma ssubset_asymm [IsAsymm α (· ⊂ ·)] {a b : α} : a ⊂ b → ¬b ⊂ a := asymm
 

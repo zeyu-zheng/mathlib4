@@ -106,7 +106,7 @@ variable [DirectedSystem G fun i j h => f i j h]
 @[simp]
 theorem unify_sigma_mk_self {α : Type*} {i : ι} {x : α → G i} :
     (unify f (fun a => .mk f i (x a)) i fun _ ⟨_, hj⟩ =>
-      _root_.trans (le_of_eq hj.symm) (refl _)) = x := by
+      _undupe_.trans (le_of_eq hj.symm) (refl _)) = x := by
   ext a
   rw [unify]
   apply DirectedSystem.map_self
@@ -114,7 +114,7 @@ theorem unify_sigma_mk_self {α : Type*} {i : ι} {x : α → G i} :
 theorem comp_unify {α : Type*} {x : α → Σˣ f} {i j : ι} (ij : i ≤ j)
     (h : i ∈ upperBounds (range (Sigma.fst ∘ x))) :
     f i j ij ∘ unify f x i h = unify f x j
-      fun k hk => _root_.trans (mem_upperBounds.1 h k hk) ij := by
+      fun k hk => _undupe_.trans (mem_upperBounds.1 h k hk) ij := by
   ext a
   simp [unify, DirectedSystem.map_map]
 
@@ -229,8 +229,8 @@ noncomputable instance prestructure : L.Prestructure (DirectLimit.setoid G f) wh
     rw [h]
   rel_equiv {n} {R} x y xy := by
     obtain ⟨i, hx, hy, h⟩ := exists_unify_eq G f xy
-    refine _root_.trans (relMap_equiv_unify G f R x i hx)
-      (_root_.trans ?_ (symm (relMap_equiv_unify G f R y i hy)))
+    refine _undupe_.trans (relMap_equiv_unify G f R x i hx)
+      (_undupe_.trans ?_ (symm (relMap_equiv_unify G f R y i hy)))
     rw [h]
 
 /-- The `L.Structure` on a direct limit of `L.Structure`s. -/

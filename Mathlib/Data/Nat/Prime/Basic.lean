@@ -87,7 +87,7 @@ theorem dvd_of_forall_prime_mul_dvd {a b : ℕ}
   obtain rfl | ha := eq_or_ne a 1
   · apply one_dvd
   obtain ⟨p, hp⟩ := exists_prime_and_dvd ha
-  exact _root_.trans (dvd_mul_left a p) (hdvd p hp.1 hp.2)
+  exact _undupe_.trans (dvd_mul_left a p) (hdvd p hp.1 hp.2)
 
 theorem Prime.even_iff {p : ℕ} (hp : Prime p) : Even p ↔ p = 2 := by
   rw [even_iff_two_dvd, prime_dvd_prime_iff_eq prime_two hp, eq_comm]

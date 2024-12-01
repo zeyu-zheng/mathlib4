@@ -71,7 +71,7 @@ theorem le_inv_mul_iff_le : 1 ≤ b⁻¹ * a ↔ b ≤ a := by
 @[to_additive]
 theorem inv_mul_le_one_iff : a⁻¹ * b ≤ 1 ↔ b ≤ a :=
   -- Porting note: why is the `_root_` needed?
-  _root_.trans inv_mul_le_iff_le_mul <| by rw [mul_one]
+  _undupe_.trans inv_mul_le_iff_le_mul <| by rw [mul_one]
 
 end MulLeftMono
 
@@ -112,7 +112,7 @@ theorem lt_inv_mul_iff_lt : 1 < b⁻¹ * a ↔ b < a := by
 
 @[to_additive]
 theorem inv_mul_lt_one_iff : a⁻¹ * b < 1 ↔ b < a :=
-  _root_.trans inv_mul_lt_iff_lt_mul <| by rw [mul_one]
+  _undupe_.trans inv_mul_lt_iff_lt_mul <| by rw [mul_one]
 
 end MulLeftStrictMono
 
@@ -158,7 +158,7 @@ theorem le_mul_inv_iff_le : 1 ≤ a * b⁻¹ ↔ b ≤ a := by
 
 @[to_additive]
 theorem mul_inv_le_one_iff : b * a⁻¹ ≤ 1 ↔ b ≤ a :=
-  _root_.trans mul_inv_le_iff_le_mul <| by rw [one_mul]
+  _undupe_.trans mul_inv_le_iff_le_mul <| by rw [one_mul]
 
 end MulRightMono
 
@@ -202,7 +202,7 @@ theorem lt_mul_inv_iff_lt : 1 < a * b⁻¹ ↔ b < a := by
 
 @[to_additive]
 theorem mul_inv_lt_one_iff : b * a⁻¹ < 1 ↔ b < a :=
-  _root_.trans mul_inv_lt_iff_lt_mul <| by rw [one_mul]
+  _undupe_.trans mul_inv_lt_iff_lt_mul <| by rw [one_mul]
 
 end MulRightStrictMono
 

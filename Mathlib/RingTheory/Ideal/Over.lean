@@ -194,7 +194,7 @@ theorem exists_coeff_mem_comap_sdiff_comap_of_root_mem_sdiff [IsPrime I] (hIJ : 
         (Ideal.Quotient.mk I r) =
       0 := by
     convert Quotient.eq_zero_iff_mem.mpr hpI
-    exact _root_.trans (eval₂_map _ _ _) (hom_eval₂ p f (Ideal.Quotient.mk I) r).symm
+    exact _undupe_.trans (eval₂_map _ _ _) (hom_eval₂ p f (Ideal.Quotient.mk I) r).symm
   obtain ⟨i, ne_zero, mem⟩ :=
     exists_coeff_ne_zero_mem_comap_of_root_mem rbar_ne_zero rbar_mem_J p_ne_zero rbar_root
   rw [coeff_map] at ne_zero mem
@@ -362,11 +362,11 @@ theorem exists_ideal_over_prime_of_isIntegral_of_isPrime
         bot_le)
   refine ⟨Q'.comap _, le_trans (le_of_eq mk_ker.symm) (ker_le_comap _), ⟨comap_isPrime _ Q', ?_⟩⟩
   rw [comap_comap]
-  refine _root_.trans ?_ (_root_.trans (congr_arg (comap (Ideal.Quotient.mk
+  refine _undupe_.trans ?_ (_undupe_.trans (congr_arg (comap (Ideal.Quotient.mk
     (comap (algebraMap R S) I))) hQ') ?_)
   · rw [comap_comap]
     exact congr_arg (comap · Q') (RingHom.ext fun r => rfl)
-  · refine _root_.trans (comap_map_of_surjective _ Quotient.mk_surjective _) (sup_eq_left.2 ?_)
+  · refine _undupe_.trans (comap_map_of_surjective _ Quotient.mk_surjective _) (sup_eq_left.2 ?_)
     simpa [← RingHom.ker_eq_comap_bot] using hIP
 
 lemma exists_ideal_comap_le_prime (P : Ideal R) [P.IsPrime]

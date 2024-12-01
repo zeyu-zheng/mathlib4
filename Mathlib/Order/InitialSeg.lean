@@ -316,7 +316,7 @@ theorem mem_range_of_rel_top (f : r ≺i s) {b : β} (h : s b f.top) : b ∈ Set
 
 theorem mem_range_of_rel [IsTrans β s] (f : r ≺i s) {a : α} {b : β} (h : s b (f a)) :
     b ∈ Set.range f :=
-  f.mem_range_of_rel_top <| _root_.trans h <| f.lt_top _
+  f.mem_range_of_rel_top <| _undupe_.trans h <| f.lt_top _
 
 @[deprecated mem_range_of_rel (since := "2024-09-21")]
 alias init := mem_range_of_rel
@@ -615,12 +615,12 @@ noncomputable def InitialSeg.total (r s) [IsWellOrder α r] [IsWellOrder β s] :
   | Sum.inl f, Sum.inl g => Classical.choice <| by
       obtain h | h | h := trichotomous_of (Sum.Lex r s) f.top g.top
       · exact ⟨Sum.inl <| (f.codRestrict {x | Sum.Lex r s x g.top}
-          (fun a => _root_.trans (f.lt_top a) h) h).transRelIso g.subrelIso⟩
+          (fun a => _undupe_.trans (f.lt_top a) h) h).transRelIso g.subrelIso⟩
       · let f := f.subrelIso
         rw [h] at f
         exact ⟨Sum.inl <| (f.symm.trans g.subrelIso).toInitialSeg⟩
       · exact ⟨Sum.inr <| (g.codRestrict {x | Sum.Lex r s x f.top}
-          (fun a => _root_.trans (g.lt_top a) h) h).transRelIso f.subrelIso⟩
+          (fun a => _undupe_.trans (g.lt_top a) h) h).transRelIso f.subrelIso⟩
 
 /-! ### Initial or principal segments with `<` -/
 

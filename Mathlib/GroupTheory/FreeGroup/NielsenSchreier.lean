@@ -94,7 +94,7 @@ theorem ext_functor {G} [Groupoid.{v} G] [IsFreeGroupoid G] {X : Type v} [Group 
     (f g : G ⥤ CategoryTheory.SingleObj X) (h : ∀ (a b) (e : a ⟶ b), f.map (of e) = g.map (of e)) :
     f = g :=
   let ⟨_, _, u⟩ := @unique_lift G _ _ X _ fun (a b : Generators G) (e : a ⟶ b) => g.map (of e)
-  _root_.trans (u _ h) (u _ fun _ _ _ => rfl).symm
+  _undupe_.trans (u _ h) (u _ fun _ _ _ => rfl).symm
 
 #adaptation_note
 /--
@@ -178,7 +178,7 @@ theorem treeHom_eq {a : G} (p : Path (root T) a) : treeHom T a = homOfPath T p :
 @[simp]
 theorem treeHom_root : treeHom T (root' T) = 𝟙 _ :=
   -- this should just be `treeHom_eq T Path.nil`, but Lean treats `homOfPath` with suspicion.
-    _root_.trans
+    _undupe_.trans
     (treeHom_eq T Path.nil) rfl
 
 /-- Any hom in `G` can be made into a loop, by conjugating with `treeHom`s. -/

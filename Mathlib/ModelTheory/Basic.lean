@@ -784,13 +784,13 @@ instance (priority := 100) strongHomClassEmpty {F} [FunLike F M N] :
 @[simp]
 theorem empty.nonempty_embedding_iff :
     Nonempty (M ↪[Language.empty] N) ↔ Cardinal.lift.{w'} #M ≤ Cardinal.lift.{w} #N :=
-  _root_.trans ⟨Nonempty.map fun f => f.toEmbedding, Nonempty.map StrongHomClass.toEmbedding⟩
+  _undupe_.trans ⟨Nonempty.map fun f => f.toEmbedding, Nonempty.map StrongHomClass.toEmbedding⟩
     Cardinal.lift_mk_le'.symm
 
 @[simp]
 theorem empty.nonempty_equiv_iff :
     Nonempty (M ≃[Language.empty] N) ↔ Cardinal.lift.{w'} #M = Cardinal.lift.{w} #N :=
-  _root_.trans ⟨Nonempty.map fun f => f.toEquiv, Nonempty.map fun f => { toEquiv := f }⟩
+  _undupe_.trans ⟨Nonempty.map fun f => f.toEquiv, Nonempty.map fun f => { toEquiv := f }⟩
     Cardinal.lift_mk_eq'.symm
 
 /-- Makes a `Language.empty.Hom` out of any function.

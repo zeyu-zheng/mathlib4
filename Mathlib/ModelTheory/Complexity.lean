@@ -220,13 +220,13 @@ theorem realize_toPrenexImpRight {φ ψ : L.BoundedFormula α n} (hφ : IsQF φ)
   induction hψ with
   | of_isQF hψ => rw [hψ.toPrenexImpRight]
   | all _ ih =>
-    refine _root_.trans (forall_congr' fun _ => ih hφ.liftAt) ?_
+    refine _undupe_.trans (forall_congr' fun _ => ih hφ.liftAt) ?_
     simp only [realize_imp, realize_liftAt_one_self, snoc_comp_castSucc, realize_all]
     exact ⟨fun h1 a h2 => h1 h2 a, fun h1 h2 a => h1 a h2⟩
   | ex _ ih =>
     unfold toPrenexImpRight
     rw [realize_ex]
-    refine _root_.trans (exists_congr fun _ => ih hφ.liftAt) ?_
+    refine _undupe_.trans (exists_congr fun _ => ih hφ.liftAt) ?_
     simp only [realize_imp, realize_liftAt_one_self, snoc_comp_castSucc, realize_ex]
     refine ⟨?_, fun h' => ?_⟩
     · rintro ⟨a, ha⟩ h
@@ -249,7 +249,7 @@ theorem realize_toPrenexImp {φ ψ : L.BoundedFormula α n} (hφ : IsPrenex φ) 
     intro ψ hψ
     unfold toPrenexImp
     rw [realize_ex]
-    refine _root_.trans (exists_congr fun _ => ih hψ.liftAt) ?_
+    refine _undupe_.trans (exists_congr fun _ => ih hψ.liftAt) ?_
     simp only [realize_imp, realize_liftAt_one_self, snoc_comp_castSucc, realize_all]
     refine ⟨?_, fun h' => ?_⟩
     · rintro ⟨a, ha⟩ h
@@ -261,7 +261,7 @@ theorem realize_toPrenexImp {φ ψ : L.BoundedFormula α n} (hφ : IsPrenex φ) 
         exact ⟨a, fun h => (ha h).elim⟩
   | ex _ ih =>
     intro ψ hψ
-    refine _root_.trans (forall_congr' fun _ => ih hψ.liftAt) ?_
+    refine _undupe_.trans (forall_congr' fun _ => ih hψ.liftAt) ?_
     simp
 
 @[simp]

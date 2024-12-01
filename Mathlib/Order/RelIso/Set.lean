@@ -109,7 +109,7 @@ end image
 
 theorem Acc.of_subrel {r : α → α → Prop} [IsTrans α r] {b : α} (a : { a // r a b })
     (h : Acc (Subrel r { a | r a b }) a) : Acc r a.1 :=
-  h.recOn fun a _ IH ↦ ⟨_, fun _ hb ↦ IH ⟨_, _root_.trans hb a.2⟩ hb⟩
+  h.recOn fun a _ IH ↦ ⟨_, fun _ hb ↦ IH ⟨_, _undupe_.trans hb a.2⟩ hb⟩
 
 /-- A relation `r` is well-founded iff every downward-interval `{ a | r a b }` of it is
 well-founded. -/

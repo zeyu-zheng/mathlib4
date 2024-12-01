@@ -185,7 +185,7 @@ theorem realize_constantsVarsEquivLeft [L[[α]].Structure M]
       t.realize (Sum.elim v xs) := by
   simp only [constantsVarsEquivLeft, realize_relabel, Equiv.coe_trans, Function.comp_apply,
     constantsVarsEquiv_apply, relabelEquiv_symm_apply]
-  refine _root_.trans ?_ realize_constantsToVars
+  refine _undupe_.trans ?_ realize_constantsToVars
   rcongr x
   rcases x with (a | (b | i)) <;> simp
 
@@ -603,7 +603,7 @@ theorem realize_equivSentence_symm_con [L[[α]].Structure M]
     ((equivSentence.symm φ).Realize fun a => (L.con a : M)) ↔ φ.Realize M := by
   simp only [equivSentence, _root_.Equiv.symm_symm, Equiv.coe_trans, Realize,
     BoundedFormula.realize_relabelEquiv, Function.comp]
-  refine _root_.trans ?_ BoundedFormula.realize_constantsVarsEquiv
+  refine _undupe_.trans ?_ BoundedFormula.realize_constantsVarsEquiv
   rw [iff_iff_eq]
   congr with (_ | a)
   · simp

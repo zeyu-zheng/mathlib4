@@ -52,7 +52,7 @@ theorem as_sum_support (p : R[X]) : p = ∑ i ∈ p.support, monomial i (p.coeff
   (sum_monomial_eq p).symm
 
 theorem as_sum_support_C_mul_X_pow (p : R[X]) : p = ∑ i ∈ p.support, C (p.coeff i) * X ^ i :=
-  _root_.trans p.as_sum_support <| by simp only [C_mul_X_pow_eq_monomial]
+  _undupe_.trans p.as_sum_support <| by simp only [C_mul_X_pow_eq_monomial]
 
 /-- We can reexpress a sum over `p.support` as a sum over `range n`,
 for any `n` satisfying `p.natDegree < n`.

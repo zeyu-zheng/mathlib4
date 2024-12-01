@@ -118,7 +118,7 @@ local infixl:50 " ≺ " => r
 
 lemma irrefl [IsIrrefl α r] (a : α) : ¬a ≺ a := IsIrrefl.irrefl a
 lemma refl [IsRefl α r] (a : α) : a ≺ a := IsRefl.refl a
-lemma trans [IsTrans α r] : a ≺ b → b ≺ c → a ≺ c := IsTrans.trans _ _ _
+lemma _undupe_.trans [IsTrans α r] : a ≺ b → b ≺ c → a ≺ c := IsTrans.trans _ _ _
 lemma symm [IsSymm α r] : a ≺ b → b ≺ a := IsSymm.symm _ _
 lemma antisymm [IsAntisymm α r] : a ≺ b → b ≺ a → a = b := IsAntisymm.antisymm _ _
 lemma asymm [IsAsymm α r] : a ≺ b → ¬b ≺ a := IsAsymm.asymm _ _
@@ -128,7 +128,7 @@ lemma trichotomous [IsTrichotomous α r] : ∀ a b : α, a ≺ b ∨ a = b ∨ b
 
 instance (priority := 90) isAsymm_of_isTrans_of_isIrrefl [IsTrans α r] [IsIrrefl α r] :
     IsAsymm α r :=
-  ⟨fun a _b h₁ h₂ => absurd (_root_.trans h₁ h₂) (irrefl a)⟩
+  ⟨fun a _b h₁ h₂ => absurd (_undupe_.trans h₁ h₂) (irrefl a)⟩
 
 instance IsIrrefl.decide [DecidableRel r] [IsIrrefl α r] :
     IsIrrefl α (fun a b => decide (r a b) = true) where
@@ -166,7 +166,7 @@ variable (r)
 
 @[elab_without_expected_type] lemma irrefl_of [IsIrrefl α r] (a : α) : ¬a ≺ a := irrefl a
 @[elab_without_expected_type] lemma refl_of [IsRefl α r] (a : α) : a ≺ a := refl a
-@[elab_without_expected_type] lemma trans_of [IsTrans α r] : a ≺ b → b ≺ c → a ≺ c := _root_.trans
+@[elab_without_expected_type] lemma trans_of [IsTrans α r] : a ≺ b → b ≺ c → a ≺ c := _undupe_.trans
 @[elab_without_expected_type] lemma symm_of [IsSymm α r] : a ≺ b → b ≺ a := symm
 @[elab_without_expected_type] lemma asymm_of [IsAsymm α r] : a ≺ b → ¬b ≺ a := asymm
 

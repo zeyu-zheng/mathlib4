@@ -1287,7 +1287,7 @@ noncomputable def IsDedekindDomain.quotientEquivPiOfFinsetProdEq {ι : Type*} {s
     (prod_eq : ∏ i ∈ s, P i ^ e i = I) : R ⧸ I ≃+* ∀ i : s, R ⧸ P i ^ e i :=
   IsDedekindDomain.quotientEquivPiOfProdEq I (fun i : s => P i) (fun i : s => e i)
     (fun i => prime i i.2) (fun i j h => coprime i i.2 j j.2 (Subtype.coe_injective.ne h))
-    (_root_.trans (Finset.prod_coe_sort s fun i => P i ^ e i) prod_eq)
+    (_undupe_.trans (Finset.prod_coe_sort s fun i => P i ^ e i) prod_eq)
 
 /-- Corollary of the Chinese remainder theorem: given elements `x i : R / P i ^ e i`,
 we can choose a representative `y : R` such that `y ≡ x i (mod P i ^ e i)`. -/

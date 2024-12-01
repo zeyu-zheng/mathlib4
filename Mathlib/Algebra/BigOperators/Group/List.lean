@@ -318,7 +318,7 @@ lemma prod_map_eq_pow_single [DecidableEq α] {l : List α} (a : α) (f : α →
 @[to_additive]
 lemma prod_eq_pow_single [DecidableEq M] (a : M) (h : ∀ a', a' ≠ a → a' ∈ l → a' = 1) :
     l.prod = a ^ l.count a :=
-  _root_.trans (by rw [map_id]) (prod_map_eq_pow_single a id h)
+  _undupe_.trans (by rw [map_id]) (prod_map_eq_pow_single a id h)
 
 /-- If elements of a list commute with each other, then their product does not
 depend on the order of elements. -/
@@ -589,7 +589,7 @@ theorem sum_map_count_dedup_filter_eq_countP (p : α → Bool) (l : List α) :
   | cons a as h =>
     simp_rw [List.countP_cons, List.count_cons, List.sum_map_add]
     congr 1
-    · refine _root_.trans ?_ h
+    · refine _undupe_.trans ?_ h
       by_cases ha : a ∈ as
       · simp [dedup_cons_of_mem ha]
       · simp only [dedup_cons_of_not_mem ha, List.filter]
@@ -598,9 +598,9 @@ theorem sum_map_count_dedup_filter_eq_countP (p : α → Bool) (l : List α) :
         | false => simp only
     · simp only [beq_iff_eq]
       by_cases hp : p a
-      · refine _root_.trans (sum_map_eq_nsmul_single a _ fun _ h _ => by simp [h.symm]) ?_
+      · refine _undupe_.trans (sum_map_eq_nsmul_single a _ fun _ h _ => by simp [h.symm]) ?_
         simp [hp, count_dedup]
-      · refine _root_.trans (List.sum_eq_zero fun n hn => ?_) (by simp [hp])
+      · refine _undupe_.trans (List.sum_eq_zero fun n hn => ?_) (by simp [hp])
         obtain ⟨a', ha'⟩ := List.mem_map.1 hn
         split_ifs at ha' with ha
         · simp only [ha.symm, mem_filter, mem_dedup, find?, mem_cons, true_or, hp,

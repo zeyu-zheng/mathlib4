@@ -201,7 +201,7 @@ theorem surjective_quotientMap_of_maximal_of_localization {I : Ideal S} [I.IsPri
             hM
               (Ideal.Quotient.eq_zero_iff_mem.2
                 (Ideal.mem_comap.2 (Ideal.Quotient.eq_zero_iff_mem.1 hn))))
-          (_root_.trans hn ?_))
+          (_undupe_.trans hn ?_))
     rw [← map_mul, ← mk'_eq_mul_mk'_one, mk'_self, RingHom.map_one]
 
 open nonZeroDivisors

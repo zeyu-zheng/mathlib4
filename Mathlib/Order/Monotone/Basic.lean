@@ -898,7 +898,7 @@ theorem Nat.rel_of_forall_rel_succ_of_le_of_lt (r : β → β → Prop) [IsTrans
     r (f b) (f c) := by
   induction hbc with
   | refl => exact h _ hab
-  | step b_lt_k r_b_k => exact _root_.trans r_b_k (h _ (hab.trans_lt b_lt_k).le)
+  | step b_lt_k r_b_k => exact _undupe_.trans r_b_k (h _ (hab.trans_lt b_lt_k).le)
 
 theorem Nat.rel_of_forall_rel_succ_of_le_of_le (r : β → β → Prop) [IsRefl β r] [IsTrans β r]
     {f : ℕ → β} {a : ℕ} (h : ∀ n, a ≤ n → r (f n) (f (n + 1)))
@@ -960,7 +960,7 @@ theorem Int.rel_of_forall_rel_succ_of_lt (r : β → β → Prop) [IsTrans β r]
   clear hab
   induction n with
   | zero => rw [Int.ofNat_one]; apply h
-  | succ n ihn => rw [Int.ofNat_succ, ← Int.add_assoc]; exact _root_.trans ihn (h _)
+  | succ n ihn => rw [Int.ofNat_succ, ← Int.add_assoc]; exact _undupe_.trans ihn (h _)
 
 theorem Int.rel_of_forall_rel_succ_of_le (r : β → β → Prop) [IsRefl β r] [IsTrans β r] {f : ℤ → β}
     (h : ∀ n, r (f n) (f (n + 1))) ⦃a b : ℤ⦄ (hab : a ≤ b) : r (f a) (f b) :=

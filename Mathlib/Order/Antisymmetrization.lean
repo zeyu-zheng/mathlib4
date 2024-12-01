@@ -53,7 +53,7 @@ theorem AntisymmRel.symm {a b : α} : AntisymmRel r a b → AntisymmRel r b a :=
 @[trans]
 theorem AntisymmRel.trans [IsTrans α r] {a b c : α} (hab : AntisymmRel r a b)
     (hbc : AntisymmRel r b c) : AntisymmRel r a c :=
-  ⟨_root_.trans hab.1 hbc.1, _root_.trans hbc.2 hab.2⟩
+  ⟨_undupe_.trans hab.1 hbc.1, _undupe_.trans hbc.2 hab.2⟩
 
 instance AntisymmRel.decidableRel [DecidableRel r] : DecidableRel (AntisymmRel r) := fun _ _ =>
   instDecidableAnd

@@ -212,7 +212,7 @@ theorem comap_sInf (s : Set (Ideal S)) : (sInf s).comap f = ⨅ I ∈ s, (I : Id
   (gc_map_comap f : GaloisConnection (map f) (comap f)).u_sInf
 
 theorem comap_sInf' (s : Set (Ideal S)) : (sInf s).comap f = ⨅ I ∈ comap f '' s, I :=
-  _root_.trans (comap_sInf f s) (by rw [iInf_image])
+  _undupe_.trans (comap_sInf f s) (by rw [iInf_image])
 
 /-- Variant of `Ideal.IsPrime.comap` where ideal is explicit rather than implicit.  -/
 theorem comap_isPrime [H : IsPrime K] : IsPrime (comap f K) :=
@@ -442,7 +442,7 @@ theorem comap_isMaximal_of_surjective (hf : Function.Surjective f) {K : Ideal S}
   refine
     H.1.2 (map f J)
       (lt_of_le_of_ne (le_map_of_comap_le_of_surjective _ hf (le_of_lt hJ)) fun h =>
-        ne_of_lt hJ (_root_.trans (congr_arg (comap f) h) ?_))
+        ne_of_lt hJ (_undupe_.trans (congr_arg (comap f) h) ?_))
   rw [comap_map_of_surjective _ hf, sup_eq_left]
   exact le_trans (comap_mono bot_le) (le_of_lt hJ)
 

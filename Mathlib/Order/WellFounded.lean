@@ -122,7 +122,7 @@ protected theorem lt_succ_iff {r : α → α → Prop} [wo : IsWellOrder α r] {
       exact hy.symm
     left
     exact hy
-  rintro (hy | rfl); (· exact _root_.trans hy (wo.wf.lt_succ h)); exact wo.wf.lt_succ h
+  rintro (hy | rfl); (· exact _undupe_.trans hy (wo.wf.lt_succ h)); exact wo.wf.lt_succ h
 
 end deprecated
 

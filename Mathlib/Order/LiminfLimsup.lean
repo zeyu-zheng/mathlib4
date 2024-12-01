@@ -70,7 +70,7 @@ theorem isBounded_sup [IsTrans α r] [IsDirected α r] :
   | ⟨b₁, h₁⟩, ⟨b₂, h₂⟩ =>
     let ⟨b, rb₁b, rb₂b⟩ := directed_of r b₁ b₂
     ⟨b, eventually_sup.mpr
-      ⟨h₁.mono fun _ h => _root_.trans h rb₁b, h₂.mono fun _ h => _root_.trans h rb₂b⟩⟩
+      ⟨h₁.mono fun _ h => _undupe_.trans h rb₁b, h₂.mono fun _ h => _undupe_.trans h rb₂b⟩⟩
 
 theorem IsBounded.mono (h : f ≤ g) : IsBounded r g → IsBounded r f
   | ⟨b, hb⟩ => ⟨b, h hb⟩
@@ -214,7 +214,7 @@ This is only an implication, as the other direction is wrong for the trivial fil
 theorem IsCobounded.mk [IsTrans α r] (a : α) (h : ∀ s ∈ f, ∃ x ∈ s, r a x) : f.IsCobounded r :=
   ⟨a, fun _ s =>
     let ⟨_, h₁, h₂⟩ := h _ s
-    _root_.trans h₂ h₁⟩
+    _undupe_.trans h₂ h₁⟩
 
 /-- A filter which is eventually bounded is in particular frequently bounded (in the opposite
 direction). At least if the filter is not trivial. -/
@@ -222,7 +222,7 @@ theorem IsBounded.isCobounded_flip [IsTrans α r] [NeBot f] : f.IsBounded r → 
   | ⟨a, ha⟩ =>
     ⟨a, fun b hb =>
       let ⟨_, rxa, rbx⟩ := (ha.and hb).exists
-      show r b a from _root_.trans rbx rxa⟩
+      show r b a from _undupe_.trans rbx rxa⟩
 
 theorem IsBounded.isCobounded_ge [Preorder α] [NeBot f] (h : f.IsBounded (· ≤ ·)) :
     f.IsCobounded (· ≥ ·) :=
