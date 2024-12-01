@@ -135,10 +135,10 @@ section Propositional
 alias Iff.imp := imp_congr
 
 -- This is a duplicate of `Classical.imp_iff_right_iff`. Deprecate?
-theorem imp_iff_right_iff {a b : Prop} : (a → b ↔ b) ↔ a ∨ b := Decidable.imp_iff_right_iff
+theorem _undupe_.imp_iff_right_iff {a b : Prop} : (a → b ↔ b) ↔ a ∨ b := Decidable.imp_iff_right_iff
 
 -- This is a duplicate of `Classical.and_or_imp`. Deprecate?
-theorem and_or_imp {a b c : Prop} : a ∧ b ∨ (a → c) ↔ a → b ∨ c := Decidable.and_or_imp
+theorem _undupe_.and_or_imp {a b c : Prop} : a ∧ b ∨ (a → c) ↔ a → b ∨ c := Decidable.and_or_imp
 
 /-- Provide modus tollens (`mt`) as dot notation for implications. -/
 protected theorem Function.mt {a b : Prop} : (a → b) → ¬b → ¬a := mt
@@ -209,7 +209,7 @@ theorem Not.imp_symm : (¬a → b) → ¬b → a := Not.decidable_imp_symm
 
 theorem not_imp_comm : ¬a → b ↔ ¬b → a := Decidable.not_imp_comm
 
-@[simp] theorem not_imp_self : ¬a → a ↔ a := Decidable.not_imp_self
+@[simp] theorem _undupe_.not_imp_self : ¬a → a ↔ a := Decidable.not_imp_self
 
 theorem Imp.swap {a b : Sort*} {c : Prop} : a → b → c ↔ b → a → c :=
   ⟨fun h x y ↦ h y x, fun h x y ↦ h y x⟩
@@ -291,7 +291,7 @@ theorem imp_iff_or_not {b a : Prop} : b → a ↔ a ∨ ¬b := Decidable.imp_iff
 
 theorem not_imp_not : ¬a → ¬b ↔ b → a := Decidable.not_imp_not
 
-theorem imp_and_neg_imp_iff (p q : Prop) : (p → q) ∧ (¬p → q) ↔ q := by simp
+theorem _undupe_.imp_and_neg_imp_iff (p q : Prop) : (p → q) ∧ (¬p → q) ↔ q := by simp
 
 /-- Provide the reverse of modus tollens (`mt`) as dot notation for implications. -/
 protected theorem Function.mtr : (¬a → ¬b) → b → a := not_imp_not.mp
@@ -314,7 +314,7 @@ theorem imp_or {a b c : Prop} : a → b ∨ c ↔ (a → b) ∨ (a → c) := Dec
 
 theorem imp_or' {a : Sort*} {b c : Prop} : a → b ∨ c ↔ (a → b) ∨ (a → c) := Decidable.imp_or'
 
-theorem not_imp : ¬(a → b) ↔ a ∧ ¬b := Decidable.not_imp_iff_and_not
+theorem _undupe_.not_imp : ¬(a → b) ↔ a ∧ ¬b := Decidable.not_imp_iff_and_not
 
 theorem peirce (a b : Prop) : ((a → b) → a) → a := Decidable.peirce _ _
 
@@ -500,7 +500,7 @@ theorem forall_imp_iff_exists_imp {α : Sort*} {p : α → Prop} {b : Prop} [ha 
     (∀ x, p x) → b ↔ ∃ x, p x → b := by
   let ⟨a⟩ := ha
   refine ⟨fun h ↦ not_forall_not.1 fun h' ↦ ?_, fun ⟨x, hx⟩ h ↦ hx (h x)⟩
-  exact if hb : b then h' a fun _ ↦ hb else hb <| h fun x ↦ (_root_.not_imp.1 (h' x)).1
+  exact if hb : b then h' a fun _ ↦ hb else hb <| h fun x ↦ (_undupe_.not_imp.1 (h' x)).1
 
 @[mfld_simps]
 theorem forall_true_iff : (α → True) ↔ True := imp_true_iff _
