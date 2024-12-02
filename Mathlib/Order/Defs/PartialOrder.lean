@@ -87,6 +87,9 @@ alias not_lt_of_lt := lt_asymm
 lemma le_of_lt_or_eq (h : a < b ∨ a = b) : a ≤ b := h.elim le_of_lt le_of_eq
 lemma le_of_eq_or_lt (h : a = b ∨ a < b) : a ≤ b := h.elim le_of_eq le_of_lt
 
+lemma not_le_of_not_le_of_le (h₁ : ¬ b ≤ a) (h₂ : b ≤ c) : ¬ c ≤ a := fun h ↦ h₁ (le_trans h₂ h)
+lemma not_le_of_le_of_not_le (h₁ : a ≤ b) (h₂ : ¬ c ≤ b) : ¬ c ≤ a := fun h ↦ h₂ (le_trans h h₁)
+
 instance (priority := 900) : @Trans α α α LE.le LE.le LE.le := ⟨le_trans⟩
 instance (priority := 900) : @Trans α α α LT.lt LT.lt LT.lt := ⟨lt_trans⟩
 instance (priority := 900) : @Trans α α α LT.lt LE.le LT.lt := ⟨lt_of_lt_of_le⟩
