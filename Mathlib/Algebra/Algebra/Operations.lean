@@ -227,7 +227,7 @@ theorem le_pow_toAddSubmonoid {n : ℕ} : M.toAddSubmonoid ^ n ≤ (M ^ n).toAdd
   · exact (pow_toAddSubmonoid M hn).ge
 
 theorem pow_subset_pow {n : ℕ} : (↑M : Set A) ^ n ⊆ ↑(M ^ n : Submodule R A) :=
-  trans AddSubmonoid.pow_subset_pow (le_pow_toAddSubmonoid M)
+  _undupe_.trans AddSubmonoid.pow_subset_pow (le_pow_toAddSubmonoid M)
 
 theorem pow_mem_pow {x : A} (hx : x ∈ M) (n : ℕ) : x ^ n ∈ M ^ n :=
   pow_subset_pow _ <| Set.pow_mem_pow hx

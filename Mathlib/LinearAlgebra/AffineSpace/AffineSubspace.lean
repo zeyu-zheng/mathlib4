@@ -824,8 +824,8 @@ theorem direction_inf (s1 s2 : AffineSubspace k P) :
     (s1 ⊓ s2).direction ≤ s1.direction ⊓ s2.direction := by
   simp only [direction_eq_vectorSpan, vectorSpan_def]
   exact
-    le_inf (sInf_le_sInf fun p hp => trans (vsub_self_mono inter_subset_left) hp)
-      (sInf_le_sInf fun p hp => trans (vsub_self_mono inter_subset_right) hp)
+    le_inf (sInf_le_sInf fun p hp => _undupe_.trans (vsub_self_mono inter_subset_left) hp)
+      (sInf_le_sInf fun p hp => _undupe_.trans (vsub_self_mono inter_subset_right) hp)
 
 /-- If two affine subspaces have a point in common, the direction of their inf equals the inf of
 their directions. -/
