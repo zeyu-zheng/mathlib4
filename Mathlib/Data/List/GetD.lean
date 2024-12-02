@@ -86,7 +86,7 @@ theorem getD_append_right (l l' : List α) (d : α) (n : ℕ) (h : l.length ≤ 
 theorem getD_eq_getD_get? (n : ℕ) : l.getD n d = (l.get? n).getD d := by
   cases Nat.lt_or_ge n l.length with
   | inl h => rw [getD_eq_getElem _ _ h, get?_eq_get h, get_eq_getElem, Option.getD_some]
-  | inr h => rw [getD_eq_default _ _ h, get?_eq_none.mpr h, Option.getD_none]
+  | inr h => rw [getD_eq_default _ _ h, get?_eq_none_iff.mpr h, Option.getD_none]
 
 end getD
 
@@ -128,6 +128,9 @@ theorem getI_append_right (l l' : List α) (n : ℕ) (h : l.length ≤ n) :
 
 theorem getI_eq_iget_get? (n : ℕ) : l.getI n = (l.get? n).iget := by
   rw [← getD_default_eq_getI, getD_eq_getD_get?, Option.getD_default_eq_iget]
+
+theorem getI_eq_iget_getElem? (n : ℕ) : l.getI n = l[n]?.iget := by
+  rw [← getD_default_eq_getI, getD_eq_getElem?_getD, Option.getD_default_eq_iget]
 
 theorem getI_zero_eq_headI : l.getI 0 = l.headI := by cases l <;> rfl
 
