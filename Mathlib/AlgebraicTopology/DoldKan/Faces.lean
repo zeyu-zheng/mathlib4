@@ -150,8 +150,7 @@ theorem comp_Hσ_eq_zero {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : Higher
     · intro j
       dsimp [Fin.cast, Fin.castLE, Fin.castLT]
       rw [comp_zsmul, comp_zsmul, δ_comp_σ_of_gt', v.comp_δ_eq_zero_assoc, zero_comp, zsmul_zero]
-      · simp only [Fin.lt_iff_val_lt_val]
-        dsimp [Fin.succ]
+      · simp [Fin.lt_iff_val_lt_val]
         omega
       · intro h
         simp only [Fin.pred, Fin.subNat, Fin.ext_iff, Nat.succ_add_sub_one,

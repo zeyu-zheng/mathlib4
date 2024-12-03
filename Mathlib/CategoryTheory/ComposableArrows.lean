@@ -526,7 +526,7 @@ def isoMkSucc {F G : ComposableArrows C (n + 1)} (α : F.obj' 0 ≅ G.obj' 0)
   hom := homMkSucc α.hom β.hom w
   inv := homMkSucc α.inv β.inv (by
     rw [← cancel_epi α.hom, ← reassoc_of% w, α.hom_inv_id_assoc, β.hom_inv_id_app]
-    dsimp
+    dsimp [Fin.succ_zero_eq_one]
     rw [comp_id])
   hom_inv_id := by
     apply hom_ext_succ
