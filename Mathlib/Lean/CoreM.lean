@@ -19,7 +19,7 @@ def CoreM.withImportModules {α : Type} (modules : Array Name) (run : CoreM α)
     (trustLevel : UInt32 := 0) (fileName := "") :
     IO α := unsafe do
   if let some sp := searchPath then searchPathRef.set sp
-  Lean.withImportModules (modules.map (Import.mk · false)) options trustLevel fun env =>
+  Lean.withImportModules (trustLevel := trustLevel) (modules.map (Import.mk · false)) options fun env =>
     let ctx := {fileName, options, fileMap := default}
     let state := {env}
     Prod.fst <$> (CoreM.toIO · ctx state) do
