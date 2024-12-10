@@ -4,14 +4,15 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
 import Mathlib.Data.Finset.Option
-import Mathlib.Order.Minimal
+import Mathlib.Data.Set.Lattice
 
 /-!
 # Lattice operations on finsets
 
 This file is concerned with how big lattice or set operations behave when indexed by a finset.
 
-See also Lattice.lean, which is concerned with folding binary lattice operations over a finset.
+See also `Mathlib/Data/Finset/Lattice.lean`, which is concerned with folding binary lattice
+operations over a finset.
 -/
 
 assert_not_exists OrderedCommMonoid
