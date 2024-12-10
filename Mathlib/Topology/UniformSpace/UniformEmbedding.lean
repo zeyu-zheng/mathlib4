@@ -606,6 +606,13 @@ theorem uniformly_extend_spec [CompleteSpace γ] (a : α) : Tendsto f (comap e (
   simpa only [IsDenseInducing.extend] using
     tendsto_nhds_limUnder (uniformly_extend_exists h_e ‹_› h_f _)
 
+include h_e h_f in
+theorem uniformly_extend_tendsto {δ : Type*} [CompleteSpace γ] {a : α} {x : δ → β} {ℱ : Filter δ}
+    (hx : Tendsto (e ∘ x) ℱ (𝓝 a)) : Tendsto (f ∘ x) ℱ (𝓝 (ψ a)) := by
+  rw [← Filter.tendsto_map'_iff]
+  rw [← Filter.tendsto_comap_iff] at hx
+  exact (uniformly_extend_spec h_e h_dense h_f a).mono_left hx
+
 include h_f in
 theorem uniformContinuous_uniformly_extend [CompleteSpace γ] : UniformContinuous ψ := fun d hd =>
   let ⟨s, hs, hs_comp⟩ := comp3_mem_uniformity hd

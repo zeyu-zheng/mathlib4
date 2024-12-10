@@ -141,11 +141,6 @@ theorem exists_inverse {φ : ℝ → F} (hφ : Isometry φ) (φz : φ 0 = 0) :
 theorem norm_normalize {x : E} (hx : x ≠ 0) : ‖(1 / ‖x‖) • x‖ = 1 := by
   rw [norm_smul, norm_div, norm_one, norm_norm, one_div_mul_cancel (norm_ne_zero_iff.2 hx)]
 
-theorem dense_seq {X : Type*} [TopologicalSpace X] [FrechetUrysohnSpace X]
-    {s : Set X} (hs : Dense s) (x : X) :
-    ∃ u : ℕ → X, (∀ n, u n ∈ s) ∧ Tendsto u atTop (𝓝 x) := by
-  rw [← mem_closure_iff_seq_limit, dense_iff_closure_eq.1 hs]; trivial
-
 theorem ne_zero_of_differentiableAt_norm [Nontrivial E]
     {x : E} (h : DifferentiableAt ℝ (‖·‖) x) : x ≠ 0 :=
   fun hx ↦ (not_differentiableAt_norm_zero E (hx ▸ h)).elim
@@ -253,6 +248,14 @@ theorem continuous_extend' {α β : Type*} [UniformSpace α] [UniformSpace β]
   apply ds.isDenseInducing_val.continuous_extend
   exact uniformly_extend_exists (isUniformInducing_val s) ds.denseRange_val hf
 
+theorem tendsto_extend {α β γ : Type*} [UniformSpace α] [UniformSpace β]
+    [T3Space β] [CompleteSpace β] {s : Set α} (ds : Dense s) {f : s → β}
+    (hf : UniformContinuous f) {x : γ → s} {ℱ : Filter γ} {y : α}
+    (lx : Tendsto (fun c ↦ (x c : α)) ℱ (𝓝 y)) :
+    Tendsto (f ∘ x) ℱ (𝓝 (ds.isDenseInducing_val.extend f y)) := by
+  apply (((continuous_extend' ds hf).tendsto y).comp lx).congr
+  exact fun c ↦ ds.isDenseInducing_val.extend_eq hf.continuous (x c)
+
 -- have dQ := dQ.denseRange_val
 --   have ui := uniformInducing_val (span ℝ Q : Set F)
 --   have cg : UniformContinuous g := by
@@ -270,35 +273,23 @@ noncomputable def dense_extend : E →L[𝕜] F :=
   letI g := hdf.isDenseInducing_val.extend f
   haveI cg : Continuous g := continuous_extend' hdf hf
   { toFun := hdf.isDenseInducing_val.extend f
-    map_add' := by
-      intro x y
+    map_add' := fun x y ↦ by
       obtain ⟨ux, hux, tux⟩ := dense_seq hdf x
       obtain ⟨uy, huy, tuy⟩ := dense_seq hdf y
-      have ptn1 : Tendsto (fun n ↦ f ⟨ux n, hux n⟩ + f ⟨uy n, huy n⟩) atTop (𝓝 (g x + g y)) := by
-        apply Tendsto.add
-        · apply ((cg.tendsto x).comp tux).congr
-          exact fun n ↦ hdf.isDenseInducing_val.extend_eq hf.continuous ⟨ux n, hux n⟩
-        · apply ((cg.tendsto y).comp tuy).congr
-          exact fun n ↦ hdf.isDenseInducing_val.extend_eq hf.continuous ⟨uy n, huy n⟩
+      have ptn1 : Tendsto (fun n ↦ f ⟨ux n, hux n⟩ + f ⟨uy n, huy n⟩) atTop (𝓝 (g x + g y)) :=
+        (tendsto_extend hdf hf tux).add <| tendsto_extend hdf hf tuy
       have ptn2 : Tendsto (fun n ↦ f ⟨ux n, hux n⟩ + f ⟨uy n, huy n⟩) atTop (𝓝 (g (x + y))) := by
-        apply ((cg.tendsto _).comp (tux.add tuy)).congr
         simp_rw [← LinearPMap.map_add]
-        exact fun n ↦ hdf.isDenseInducing_val.extend_eq hf.continuous
-          (⟨ux n + uy n, add_mem (hux n) (huy n)⟩)
+        exact tendsto_extend hdf hf (tux.add tuy)
       exact tendsto_nhds_unique ptn2 ptn1
-    map_smul' := by
+    map_smul' := fun m x ↦ by
       simp only [RingHom.id_apply]
-      intro m x
       obtain ⟨ux, hux, tux⟩ := dense_seq hdf x
       have ptn1 : Tendsto (fun n ↦ m • (f ⟨ux n, hux n⟩)) atTop (𝓝 (g (m • x))) := by
-        apply ((cg.tendsto _).comp (tux.const_smul m)).congr
         simp_rw [← LinearPMap.map_smul]
-        exact fun n ↦ hdf.isDenseInducing_val.extend_eq hf.continuous
-          (⟨m • ux n, smul_mem _ m (hux n)⟩)
-      have ptn2 : Tendsto (fun n ↦ m • (f ⟨ux n, hux n⟩)) atTop (𝓝 (m • (g x))) := by
-        apply Tendsto.const_smul
-        apply ((cg.tendsto x).comp tux).congr
-        exact fun n ↦ hdf.isDenseInducing_val.extend_eq hf.continuous ⟨ux n, hux n⟩
+        exact tendsto_extend hdf hf (tux.const_smul m)
+      have ptn2 : Tendsto (fun n ↦ m • (f ⟨ux n, hux n⟩)) atTop (𝓝 (m • (g x))) :=
+        (tendsto_extend hdf hf tux).const_smul m
       exact tendsto_nhds_unique ptn1 ptn2
     cont := cg }
 
