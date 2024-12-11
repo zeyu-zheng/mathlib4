@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Normed.Module.Basic
+import Mathlib.Analysis.NormedSpace.OperatorNorm.Basic
 import Mathlib.LinearAlgebra.LinearPMap
 import Mathlib.Topology.Algebra.Module.Basic
 import Mathlib.Topology.DenseEmbedding
@@ -8,7 +9,7 @@ import Mathlib.Topology.UniformSpace.UniformEmbedding
 open Filter Topology
 
 theorem Dense.isDenseInducing_val {X : Type*} [TopologicalSpace X] {s : Set X} (hs : Dense s) :
-    IsDenseInducing (@Subtype.val X s) := ⟨inducing_subtype_val, hs.denseRange_val⟩
+    IsDenseInducing (@Subtype.val X s) := ⟨IsInducing.subtypeVal, hs.denseRange_val⟩
 
 theorem isUniformInducing_val {X : Type*} [UniformSpace X] (s : Set X) :
     IsUniformInducing (@Subtype.val X s) := ⟨uniformity_setCoe⟩
@@ -17,42 +18,6 @@ variable {𝕜 E F : Type*} [Ring 𝕜] [AddCommGroup E] [AddCommGroup F] [Modul
   [UniformSpace E] [UniformSpace F] [CompleteSpace F] [ContinuousAdd E] [ContinuousAdd F]
   [ContinuousConstSMul 𝕜 E] [ContinuousConstSMul 𝕜 F] [T2Space F]
   {f : E →ₗ.[𝕜] F} (hdf : Dense (f.domain : Set E)) (hf : UniformContinuous f)
-
-theorem continuous_extend' {α β : Type*} [UniformSpace α] [UniformSpace β]
-    [T3Space β] [CompleteSpace β] {s : Set α} (ds : Dense s) {f : s → β}
-    (hf : UniformContinuous f) :
-    Continuous (ds.isDenseInducing_val.extend f) := by
-  apply ds.isDenseInducing_val.continuous_extend
-  exact uniformly_extend_exists (isUniformInducing_val s) ds.denseRange_val hf
-
-theorem tendsto_extend {α β γ : Type*} [UniformSpace α] [UniformSpace β]
-    [T3Space β] [CompleteSpace β] {s : Set α} (ds : Dense s) {f : s → β}
-    (hf : UniformContinuous f) {x : γ → s} {ℱ : Filter γ} {y : α}
-    (lx : Tendsto (fun c ↦ (x c : α)) ℱ (𝓝 y)) :
-    Tendsto (f ∘ x) ℱ (𝓝 (ds.isDenseInducing_val.extend f y)) := by
-  rw [← Filter.tendsto_map'_iff]
-  change Tendsto (((↑) : s → α) ∘ _) _ _ at lx
-  rw [← Filter.tendsto_comap_iff] at lx
-  refine Tendsto.mono_left ?_ lx
-  exact uniformly_extend_spec (isUniformInducing_val _) ds.denseRange_val hf y
-
-theorem dense_seq {X : Type*} [TopologicalSpace X] [FrechetUrysohnSpace X]
-    {s : Set X} (hs : Dense s) (x : X) :
-    ∃ u : ℕ → X, (∀ n, u n ∈ s) ∧ Tendsto u atTop (𝓝 x) := by
-  rw [← mem_closure_iff_seq_limit, dense_iff_closure_eq.1 hs]; trivial
-
--- have dQ := dQ.denseRange_val
---   have ui := uniformInducing_val (span ℝ Q : Set F)
---   have cg : UniformContinuous g := by
---     apply LipschitzWith.uniformContinuous (K := 1)
---     apply LipschitzWith.of_dist_le_mul
---     intro x y
---     rw [dist_eq_norm, sub_eq_add_neg, ← neg_one_smul ℝ, ← gsmul, ← gadd, dist_eq_norm,
---       neg_one_smul ℝ, ← sub_eq_add_neg]
---     exact ng _
---   let h := (ui.isDenseInducing dQ).extend g
---   have ch : Continuous h :=
---     (ui.isDenseInducing dQ).continuous_extend (uniformly_extend_exists ui dQ cg)
 
 noncomputable def dense_extend : E →L[𝕜] F :=
   letI g := hdf.isDenseInducing_val.extend f
@@ -106,15 +71,18 @@ noncomputable def dense_extend : E →L[𝕜] F :=
 theorem dense_extend_eq (x : f.domain) : dense_extend hdf hf x = f x :=
   hdf.isDenseInducing_val.extend_eq hf.continuous x
 
+variable {𝕜 E F : Type*} [NontriviallyNormedField 𝕜] [NormedAddCommGroup E] [NormedAddCommGroup F]
+  [NormedSpace 𝕜 E] [NormedSpace 𝕜 F] [CompleteSpace F]
+  {f : E →ₗ.[𝕜] F} (hdf : Dense (f.domain : Set E)) (hf : UniformContinuous f)
+
 theorem norm_dense_extend {C : ℝ} (hC : 0 ≤ C) (hfC : ∀ x, ‖f x‖ ≤ C * ‖x‖) :
     ‖dense_extend hdf hf‖ ≤ C := by
   rw [ContinuousLinearMap.opNorm_le_iff hC]
   intro x
-  obtain ⟨u, hu, tu⟩ := dense_seq hdf x
-  have h1 : Tendsto (fun n ↦ ‖f ⟨u n, hu n⟩‖) atTop (𝓝 (‖dense_extend hdf hf x‖)) := by
-    apply (continuous_norm.tendsto _).comp
-    apply (((dense_extend hdf hf).continuous.tendsto x).comp tu).congr
-    exact fun n ↦ dense_extend_eq hdf hf ⟨u n, hu n⟩
+  obtain ⟨u, hu, lu⟩ := mem_closure_iff_seq_limit.1 (hdf x)
+  have h1 : Tendsto (fun n ↦ ‖f ⟨u n, hu n⟩‖) atTop (𝓝 (‖dense_extend hdf hf x‖)) :=
+    (continuous_norm.tendsto _).comp <|
+      uniformly_extend_tendsto (isUniformInducing_val _) hdf.denseRange_val hf lu
   have h2 : Tendsto (fun n ↦ C * ‖u n‖) atTop (𝓝 (C * ‖x‖)) :=
-    ((continuous_norm.tendsto _).comp tu).const_mul _
+    ((continuous_norm.tendsto _).comp lu).const_mul _
   exact le_of_tendsto_of_tendsto' h1 h2 fun n ↦ hfC _

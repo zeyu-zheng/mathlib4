@@ -1,4 +1,5 @@
 import Mathlib.Analysis.GodefroyLipschitz.Annexe
+import Mathlib.Analysis.GodefroyLipschitz.Extension
 import Mathlib.MeasureTheory.Measure.OpenPos
 
 open Real NNReal Set Filter Topology FiniteDimensional Metric Module Submodule
@@ -30,7 +31,7 @@ theorem unique1 [FiniteDimensional ℝ E] {x : E} (nx : ‖x‖ = 1) (hx : Diffe
     simp [IsLocalMin, IsMinFilter, nx, this]
   have : deriv (fun t : ℝ ↦ ‖x - t • (y - (φ y) • x)‖) 0 = - fderiv ℝ (‖·‖) x (y - (φ y) • x) := by
     conv_lhs => enter [1]; change ((‖·‖) ∘ (fun t : ℝ ↦ x - t • (y - (φ y) • x)))
-    rw [fderiv.comp_deriv]
+    rw [fderiv_comp_deriv]
     · rw [deriv_const_sub, deriv_smul_const] <;> simp
     · simpa
     · simp
@@ -160,7 +161,7 @@ theorem exists_inverse' [FiniteDimensional ℝ E] [Nontrivial E]
   let s : Set (E →ₗ[ℝ] ℝ) :=
     {f : E →ₗ[ℝ] ℝ | ∃ x : E, ‖x‖ = 1 ∧ DifferentiableAt ℝ (‖·‖) x ∧ f = fderiv ℝ (‖·‖) x}
   have aux3 (z : E) (hz : z ≠ 0) : ∃ f ∈ s, f z ≠ 0 := by
-    obtain ⟨u, hu, htu⟩ := dense_seq dense_diff z
+    obtain ⟨u, hu, htu⟩ := mem_closure_iff_seq_limit.1 (dense_diff z)
     have := (htu.fderiv_norm_tendsto_norm hu).eventually_ne (norm_ne_zero_iff.2 hz)
     obtain ⟨N, hN⟩ := eventually_atTop.1 this
     have h : u N ≠ 0 := ne_zero_of_differentiableAt_norm (hu N)
@@ -203,7 +204,7 @@ theorem exists_inverse' [FiniteDimensional ℝ E] [Nontrivial E]
       rintro - ⟨y, rfl⟩
       simp only [ContinuousLinearMap.coe_comp', Function.comp_apply, Tφ]
       exact congrFun (fφ_eq nx hx) y
-    obtain ⟨u, hu, htu⟩ := dense_seq dense_diff (T y)
+    obtain ⟨u, hu, htu⟩ := mem_closure_iff_seq_limit.1 <| dense_diff (T y)
     have := htu.fderiv_norm_tendsto_norm hu
     have unez n : u n ≠ 0 := fun h ↦ not_differentiableAt_norm_zero E (h ▸ hu n)
     have obv n : 1 / ‖u n‖ > 0 := one_div_pos.2 <| norm_pos_iff.2 <| unez n
@@ -228,88 +229,6 @@ theorem isup_fin :
   ext x
   simp only [mem_univ, mem_iUnion, SetLike.mem_coe, exists_prop, true_iff]
   exact ⟨span ℝ {x}, Finite.span_singleton ℝ x, subset_span <| mem_singleton _⟩
-
-theorem Dense.isDenseInducing_val {X : Type*} [TopologicalSpace X] {s : Set X} (hs : Dense s) :
-    IsDenseInducing (@Subtype.val X s) := ⟨inducing_subtype_val, hs.denseRange_val⟩
-
-theorem isUniformInducing_val {X : Type*} [UniformSpace X] (s : Set X) :
-    IsUniformInducing (@Subtype.val X s) := ⟨uniformity_setCoe⟩
-
-section extendLinearPMap
-
-variable {𝕜 E F : Type*} [NontriviallyNormedField 𝕜] [NormedAddCommGroup E]
-  [NormedAddCommGroup F] [NormedSpace 𝕜 E] [NormedSpace 𝕜 F] [CompleteSpace F]
-  {f : E →ₗ.[𝕜] F} (hdf : Dense (f.domain : Set E)) (hf : UniformContinuous f)
-
-theorem continuous_extend' {α β : Type*} [UniformSpace α] [UniformSpace β]
-    [T3Space β] [CompleteSpace β] {s : Set α} (ds : Dense s) {f : s → β}
-    (hf : UniformContinuous f) :
-    Continuous (ds.isDenseInducing_val.extend f) := by
-  apply ds.isDenseInducing_val.continuous_extend
-  exact uniformly_extend_exists (isUniformInducing_val s) ds.denseRange_val hf
-
-theorem tendsto_extend {α β γ : Type*} [UniformSpace α] [UniformSpace β]
-    [T3Space β] [CompleteSpace β] {s : Set α} (ds : Dense s) {f : s → β}
-    (hf : UniformContinuous f) {x : γ → s} {ℱ : Filter γ} {y : α}
-    (lx : Tendsto (fun c ↦ (x c : α)) ℱ (𝓝 y)) :
-    Tendsto (f ∘ x) ℱ (𝓝 (ds.isDenseInducing_val.extend f y)) := by
-  apply (((continuous_extend' ds hf).tendsto y).comp lx).congr
-  exact fun c ↦ ds.isDenseInducing_val.extend_eq hf.continuous (x c)
-
--- have dQ := dQ.denseRange_val
---   have ui := uniformInducing_val (span ℝ Q : Set F)
---   have cg : UniformContinuous g := by
---     apply LipschitzWith.uniformContinuous (K := 1)
---     apply LipschitzWith.of_dist_le_mul
---     intro x y
---     rw [dist_eq_norm, sub_eq_add_neg, ← neg_one_smul ℝ, ← gsmul, ← gadd, dist_eq_norm,
---       neg_one_smul ℝ, ← sub_eq_add_neg]
---     exact ng _
---   let h := (ui.isDenseInducing dQ).extend g
---   have ch : Continuous h :=
---     (ui.isDenseInducing dQ).continuous_extend (uniformly_extend_exists ui dQ cg)
-
-noncomputable def dense_extend : E →L[𝕜] F :=
-  letI g := hdf.isDenseInducing_val.extend f
-  haveI cg : Continuous g := continuous_extend' hdf hf
-  { toFun := hdf.isDenseInducing_val.extend f
-    map_add' := fun x y ↦ by
-      obtain ⟨ux, hux, tux⟩ := dense_seq hdf x
-      obtain ⟨uy, huy, tuy⟩ := dense_seq hdf y
-      have ptn1 : Tendsto (fun n ↦ f ⟨ux n, hux n⟩ + f ⟨uy n, huy n⟩) atTop (𝓝 (g x + g y)) :=
-        (tendsto_extend hdf hf tux).add <| tendsto_extend hdf hf tuy
-      have ptn2 : Tendsto (fun n ↦ f ⟨ux n, hux n⟩ + f ⟨uy n, huy n⟩) atTop (𝓝 (g (x + y))) := by
-        simp_rw [← LinearPMap.map_add]
-        exact tendsto_extend hdf hf (tux.add tuy)
-      exact tendsto_nhds_unique ptn2 ptn1
-    map_smul' := fun m x ↦ by
-      simp only [RingHom.id_apply]
-      obtain ⟨ux, hux, tux⟩ := dense_seq hdf x
-      have ptn1 : Tendsto (fun n ↦ m • (f ⟨ux n, hux n⟩)) atTop (𝓝 (g (m • x))) := by
-        simp_rw [← LinearPMap.map_smul]
-        exact tendsto_extend hdf hf (tux.const_smul m)
-      have ptn2 : Tendsto (fun n ↦ m • (f ⟨ux n, hux n⟩)) atTop (𝓝 (m • (g x))) :=
-        (tendsto_extend hdf hf tux).const_smul m
-      exact tendsto_nhds_unique ptn1 ptn2
-    cont := cg }
-
-theorem dense_extend_eq (x : f.domain) : dense_extend hdf hf x = f x :=
-  hdf.isDenseInducing_val.extend_eq hf.continuous x
-
-theorem norm_dense_extend {C : ℝ} (hC : 0 ≤ C) (hfC : ∀ x, ‖f x‖ ≤ C * ‖x‖) :
-    ‖dense_extend hdf hf‖ ≤ C := by
-  rw [ContinuousLinearMap.opNorm_le_iff hC]
-  intro x
-  obtain ⟨u, hu, tu⟩ := dense_seq hdf x
-  have h1 : Tendsto (fun n ↦ ‖f ⟨u n, hu n⟩‖) atTop (𝓝 (‖dense_extend hdf hf x‖)) := by
-    apply (continuous_norm.tendsto _).comp
-    apply (((dense_extend hdf hf).continuous.tendsto x).comp tu).congr
-    exact fun n ↦ dense_extend_eq hdf hf ⟨u n, hu n⟩
-  have h2 : Tendsto (fun n ↦ C * ‖u n‖) atTop (𝓝 (C * ‖x‖)) :=
-    ((continuous_norm.tendsto _).comp tu).const_mul _
-  exact le_of_tendsto_of_tendsto' h1 h2 fun n ↦ hfC _
-
-end extendLinearPMap
 
 theorem exists_inverse'' [CompleteSpace E] [Nontrivial E]
     (φ : E → F) (hφ : Isometry φ) (φz : φ 0 = 0)
