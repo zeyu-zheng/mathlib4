@@ -487,10 +487,6 @@ theorem forall_mem_iff_getElem {l : List α} {p : α → Prop} :
     (∀ x ∈ l, p x) ↔ ∀ (i : ℕ) (_ : i < l.length), p l[i] := by
   simp [mem_iff_getElem, @forall_swap α]
 
-theorem getElem_cons {l : List α} {a : α} {n : ℕ} (h : n < (a :: l).length) :
-    (a :: l)[n] = if hn : n = 0 then a else l[n - 1]'(by rw [length_cons] at h; omega) := by
-  cases n <;> simp
-
 theorem get_tail (l : List α) (i) (h : i < l.tail.length)
     (h' : i + 1 < l.length := (by simp only [length_tail] at h; omega)) :
     l.tail.get ⟨i, h⟩ = l.get ⟨i + 1, h'⟩ := by
@@ -831,17 +827,13 @@ theorem get_reverse (l : List α) (i : Nat) (h1 h2) :
   dsimp
   omega
 
-set_option linter.deprecated false
-
 theorem get_reverse' (l : List α) (n) (hn') :
     l.reverse.get n = l.get ⟨l.length - 1 - n, hn'⟩ := by
-  rw [eq_comm]
-  convert get_reverse l.reverse n (by simpa) n.2 using 1
   simp
 
 theorem eq_cons_of_length_one {l : List α} (h : l.length = 1) : l = [l.get ⟨0, by omega⟩] := by
   refine ext_get (by convert h) fun n h₁ h₂ => ?_
-  simp only [get_singleton]
+  simp
   congr
   omega
 
