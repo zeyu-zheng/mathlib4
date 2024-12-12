@@ -7,12 +7,13 @@ open Lake DSL
 ## Mathlib dependencies on upstream projects
 -/
 
-require "leanprover-community" / "batteries" @ git "nightly-testing"
+require "leanprover-community" / "batteries" @ git "lean-pr-testing-6123"
 require "leanprover-community" / "Qq" @ git "v4.14.0"
-require "leanprover-community" / "aesop" @ git "master"
+require "leanprover-community" / "aesop" @ git "lean-pr-testing-6123"
 require "leanprover-community" / "proofwidgets" @ git "v0.0.48"
 require "leanprover-community" / "importGraph" @ git "v4.15.0-rc1"
 require "leanprover-community" / "LeanSearchClient" @ git "main"
+  from git "https://github.com/leanprover-community/LeanSearchClient" @ "main"
 require "leanprover-community" / "plausible" @ git "v4.15.0-rc1"
 
 /-!
