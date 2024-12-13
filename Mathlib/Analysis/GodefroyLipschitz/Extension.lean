@@ -8,6 +8,16 @@ import Mathlib.Topology.UniformSpace.UniformEmbedding
 
 open Filter Topology
 
+theorem RelHom.directedOn {α β : Type*} {r : α → α → Prop} {s : β → β → Prop} (f : RelHom r s)
+    {t : Set α} (hs : DirectedOn r t) : DirectedOn s (f '' t) := by
+  rintro - ⟨a, ha, rfl⟩ - ⟨a', ha', rfl⟩
+  obtain ⟨x, x_in, hx1, hx2⟩ := hs a ha a' ha'
+  exact ⟨f x, ⟨x, x_in, rfl⟩, f.map_rel hx1, f.map_rel hx2⟩
+
+theorem Monotone.directedOn {α β : Type*} [Preorder α] [Preorder β] {f : α → β} (hf : Monotone f)
+    {t : Set α} (hs : DirectedOn (· ≤ ·) t) : DirectedOn (· ≤ ·) (f '' t) :=
+  RelHom.directedOn ⟨f, @hf⟩ hs
+
 theorem Dense.isDenseInducing_val {X : Type*} [TopologicalSpace X] {s : Set X} (hs : Dense s) :
     IsDenseInducing (@Subtype.val X s) := ⟨IsInducing.subtypeVal, hs.denseRange_val⟩
 

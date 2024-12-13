@@ -30,7 +30,7 @@ theorem unique1 [FiniteDimensional ℝ E] {x : E} (nx : ‖x‖ = 1) (hx : Diffe
   have min : IsLocalMin (fun t : ℝ ↦ ‖x - t • (y - (φ y) • x)‖) 0 := by
     simp [IsLocalMin, IsMinFilter, nx, this]
   have : deriv (fun t : ℝ ↦ ‖x - t • (y - (φ y) • x)‖) 0 = - fderiv ℝ (‖·‖) x (y - (φ y) • x) := by
-    conv_lhs => enter [1]; change ((‖·‖) ∘ (fun t : ℝ ↦ x - t • (y - (φ y) • x)))
+    change deriv ((‖·‖) ∘ _) _ = _
     rw [fderiv_comp_deriv]
     · rw [deriv_const_sub, deriv_smul_const] <;> simp
     · simpa
@@ -224,12 +224,6 @@ theorem exists_inverse' [FiniteDimensional ℝ E] [Nontrivial E]
     rw [← hφ.norm_map_of_map_zero φz x, one_mul]
     exact T.le_opNorm _
 
-theorem isup_fin :
-    univ = ⋃ (F : Submodule ℝ E) (_ : FiniteDimensional ℝ F), (F : Set E) := by
-  ext x
-  simp only [mem_univ, mem_iUnion, SetLike.mem_coe, exists_prop, true_iff]
-  exact ⟨span ℝ {x}, Finite.span_singleton ℝ x, subset_span <| mem_singleton _⟩
-
 theorem exists_inverse'' [CompleteSpace E] [Nontrivial E]
     (φ : E → F) (hφ : Isometry φ) (φz : φ 0 = 0)
     (hdφ : Dense (Submodule.span ℝ (range φ) : Set F)) :
@@ -243,7 +237,7 @@ theorem exists_inverse'' [CompleteSpace E] [Nontrivial E]
     use ⟨y, hy⟩
   have hψ p : Isometry (ψ p) := Isometry.of_dist_eq fun x y ↦ hφ.dist_eq _ _
   have ψz p : ψ p 0 = 0 := by simp [ψ, φz]
-  have fini (p : Submodule ℝ E) (hp : FiniteDimensional ℝ p) :
+  have fini (p : Submodule ℝ E) [hp : FiniteDimensional ℝ p] :
       ∃ T : A p →ₗ[ℝ] E, (∀ y, ‖T y‖ ≤ 1 * ‖y‖) ∧ ∀ y : p, T (ψ p y) = y := by
     obtain ⟨T, nT, hT⟩ : ∃ T : A p →ₗ[ℝ] p, (∀ y, ‖T y‖ ≤ 1 * ‖y‖) ∧ ∀ y : p, T (ψ p y) = y := by
       by_cases np : Nontrivial p
@@ -260,94 +254,63 @@ theorem exists_inverse'' [CompleteSpace E] [Nontrivial E]
     · simpa using nT y
     · simpa using hT y
   choose! T' nT' hT' using fini
-  let T {p : Submodule ℝ E} (hp : FiniteDimensional ℝ p) : F →ₗ.[ℝ] E :=
-    { domain := A p
-      toFun := T' p }
-  have nT {p : Submodule ℝ E} (hp : FiniteDimensional ℝ p) (y : A p) : ‖T hp y‖ ≤ 1 * ‖y‖ :=
-    nT' p hp y
-  have hT {p : Submodule ℝ E} (hp : FiniteDimensional ℝ p) (y : p) : T hp (ψ p y) = y :=
-    hT' p hp y
-  let c : Set (F →ₗ.[ℝ] E) := {f | ∃ (p : Submodule ℝ E) (hp : FiniteDimensional ℝ p), f = T hp}
+  let T (p : Submodule ℝ E) [hp : FiniteDimensional ℝ p] : F →ₗ.[ℝ] E := ⟨A p, T' p⟩
+  have nT {p : Submodule ℝ E} [hp : FiniteDimensional ℝ p] (y : A p) : ‖T p y‖ ≤ 1 * ‖y‖ := nT' p y
+  have hT {p : Submodule ℝ E} [hp : FiniteDimensional ℝ p] (y : p) : T p (ψ p y) = y := hT' p y
+  have monoT {p q : Submodule ℝ E} [FiniteDimensional ℝ p] [FiniteDimensional ℝ q] (hpq : p ≤ q) :
+      T p ≤ T q := by
+    refine ⟨mA hpq, fun x y hxy ↦ ?_⟩
+    have : (T p).toFun = (T q).toFun ∘ₗ (Submodule.inclusion (mA hpq)) := by
+      refine LinearMap.ext_on_range (span_ψ p) fun x ↦ ?_
+      simp only [LinearMap.coe_comp, Function.comp_apply]
+      have : Submodule.inclusion (mA hpq) (ψ p x) = ψ q (Submodule.inclusion hpq x) := rfl
+      rw [hT' p, this, hT' q]
+      rfl
+    change (T p).toFun _ = _
+    rw [this]
+    simp only [LinearMap.coe_comp, Function.comp_apply, LinearPMap.mk_apply, T]
+    congr
+    rw [← Subtype.val_inj, ← hxy, Submodule.coe_inclusion]
+  let c : Set (F →ₗ.[ℝ] E) := {f | ∃ (p : Submodule ℝ E) (hp : FiniteDimensional ℝ p), f = T p}
+  have mem_c (p : Submodule ℝ E) [FiniteDimensional ℝ p] : T p ∈ c := ⟨p, inferInstance, rfl⟩
+  have mem_c' {f : F →ₗ.[ℝ] E} (hf : f ∈ c) : ∃ (p : Submodule ℝ E) (_ : FiniteDimensional ℝ p),
+      f = T p := hf
   have Dc : DirectedOn (· ≤ ·) c := by
     rintro - ⟨p, hp, rfl⟩ - ⟨q, hq, rfl⟩
-    have hpq : FiniteDimensional ℝ (p ⊔ q : Submodule ℝ E) := inferInstance
-    refine ⟨T hpq, ⟨_, hpq, rfl⟩, ?_, ?_⟩
-    · have hApq : A p ≤ A (p ⊔ q) := mA le_sup_left
-      refine LinearPMap.le_of_eqLocus_ge fun y hy ↦ ?_
-      simp only [LinearPMap.eqLocus, mem_mk, AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk,
-      mem_setOf_eq]
-      refine ⟨hy, hApq hy, ?_⟩
-      have : (T hp).toFun = (T hpq).toFun ∘ₗ (Submodule.inclusion hApq) := by
-        refine LinearMap.ext_on_range (span_ψ p) fun x ↦ ?_
-        simp only [LinearMap.coe_comp, Function.comp_apply]
-        have : Submodule.inclusion hApq (ψ p x) = ψ (p ⊔ q) (Submodule.inclusion le_sup_left x) :=
-          rfl
-        rw [hT' p hp, this, hT' (p ⊔ q) hpq]
-        rfl
-      rw [← LinearPMap.toFun_eq_coe, this]
-      rfl
-    · have hApq : A q ≤ A (p ⊔ q) := mA le_sup_right
-      refine LinearPMap.le_of_eqLocus_ge fun y hy ↦ ?_
-      simp only [LinearPMap.eqLocus, mem_mk, AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk,
-      mem_setOf_eq]
-      refine ⟨hy, hApq hy, ?_⟩
-      have : (T hq).toFun = (T hpq).toFun ∘ₗ (Submodule.inclusion hApq) := by
-        refine LinearMap.ext_on_range (span_ψ q) fun x ↦ ?_
-        simp only [LinearMap.coe_comp, Function.comp_apply]
-        have : Submodule.inclusion hApq (ψ q x) = ψ (p ⊔ q) (Submodule.inclusion le_sup_right x) :=
-          rfl
-        rw [hT' q hq, this, hT' (p ⊔ q) hpq]
-        rfl
-      rw [← LinearPMap.toFun_eq_coe, this]
-      rfl
+    exact ⟨T (p ⊔ q), mem_c _, monoT le_sup_left, monoT le_sup_right⟩
   let S := LinearPMap.sSup c Dc
-  have dense_domS : Dense (S.domain : Set F) := by
-    simp only [S, LinearPMap.sSup]
-    convert hdφ
-    apply le_antisymm
-    · intro y hy
-      rw [Submodule.mem_sSup] at hy
-      apply hy
-      rintro - ⟨-, ⟨p, hp, rfl⟩, rfl⟩
-      simp only [A]
-      apply span_mono
-      exact image_subset_range ..
-    · rw [span_le]
-      rintro - ⟨x, rfl⟩
-      apply Submodule.mem_sSup_of_mem (s := A (ℝ ∙ x))
-      have hx : FiniteDimensional ℝ (ℝ ∙ x) := inferInstance
-      · exact ⟨T hx, ⟨_, hx, rfl⟩, rfl⟩
-      · exact subset_span ⟨x, mem_span_singleton_self x, rfl⟩
-  have hS : ∀ x, ‖S x‖ ≤ 1 * ‖x‖ := by
-    rintro ⟨y, hy⟩
+  have mem_domS (x : S.domain) : ∃ (y : F) (p : Submodule ℝ E) (_ : FiniteDimensional ℝ p),
+      y ∈ A p ∧ x = y := by
+    obtain ⟨y, hy⟩ := x
     simp only [LinearPMap.sSup, S] at hy
     rw [Submodule.mem_sSup_of_directed] at hy
-    · obtain ⟨-, ⟨f, hf, rfl⟩, hy⟩ := hy
-      simp_rw [S]
-      rw [LinearPMap.sSup_apply Dc hf ⟨y, hy⟩]
-      obtain ⟨p, hp, rfl⟩ := hf
-      exact nT hp _
-    · exact ⟨A ⊥, ⟨T (finiteDimensional_bot ℝ E), ⟨⊥, finiteDimensional_bot ℝ E, rfl⟩, rfl⟩⟩
-    · rintro - ⟨-, ⟨p, hp, rfl⟩, rfl⟩ - ⟨-, ⟨q, hq, rfl⟩, rfl⟩
-      refine ⟨A (p ⊔ q), ⟨T inferInstance, ⟨p ⊔ q, inferInstance, rfl⟩, rfl⟩,
-        mA le_sup_left, mA le_sup_right⟩
+    · obtain ⟨-, ⟨-, ⟨p, hp, rfl⟩, rfl⟩, hy⟩ := hy
+      exact ⟨y, p, inferInstance, hy, rfl⟩
+    · exact ⟨A ⊥, T ⊥, mem_c ⊥, rfl⟩
+    · exact Monotone.directedOn LinearPMap.domain_mono.monotone Dc
+  have S_eq {x : S.domain} {p : Submodule ℝ E} [FiniteDimensional ℝ p] (hx : x.1 ∈ A p) :
+      S x = T p ⟨x, hx⟩ := LinearPMap.sSup_apply Dc (mem_c p) ⟨x, hx⟩
+  have dense_domS : Dense (S.domain : Set F) := by
+    simp only [S, LinearPMap.sSup]
+    apply hdφ.mono
+    norm_cast
+    rw [span_le]
+    rintro - ⟨x, rfl⟩
+    apply Submodule.mem_sSup_of_mem (s := A (ℝ ∙ x))
+    · exact ⟨T (ℝ ∙ x), mem_c _, rfl⟩
+    · exact subset_span ⟨x, mem_span_singleton_self x, rfl⟩
+  have hS x : ‖S x‖ ≤ 1 * ‖x‖ := by
+    obtain ⟨y, p, _, hy, rfl⟩ := mem_domS x
+    rw [S_eq hy]
+    exact nT _
   have cS : UniformContinuous S := AddMonoidHomClass.uniformContinuous_of_bound _ _ hS
   let U := dense_extend dense_domS cS
   use U
   have main x : U (φ x) = x := by
     have h1 : φ x ∈ A (ℝ ∙ x) := subset_span ⟨x, mem_span_singleton_self x, rfl⟩
-    have h2 : φ x ∈ S.domain := by
-      simp_rw [S, LinearPMap.sSup, Submodule.mem_sSup]
-      rintro N hN
-      refine hN _ ?_ h1
-      exact ⟨T inferInstance, ⟨ℝ ∙ x, inferInstance, rfl⟩, rfl⟩
+    have h2 : φ x ∈ S.domain := (LinearPMap.le_sSup Dc (mem_c (ℝ ∙ x))).1 h1
     change U (⟨φ x, h2⟩ : S.domain) = x
-    rw [dense_extend_eq]
-    change S ⟨(⟨φ x, h1⟩ : A (ℝ ∙ x)), h2⟩ = x
-    simp_rw [S]
-    rw [LinearPMap.sSup_apply Dc ⟨ℝ ∙ x, inferInstance, rfl⟩ ⟨φ x, h1⟩]
-    change T inferInstance (ψ (ℝ ∙ x) ⟨x, mem_span_singleton_self x⟩) = _
-    exact hT inferInstance _
+    rw [dense_extend_eq, S_eq h1, hT ⟨x, mem_span_singleton_self x⟩]
   constructor
   · apply le_antisymm
     · exact norm_dense_extend _ _ (by norm_num) hS
