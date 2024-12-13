@@ -527,7 +527,7 @@ def mk : PSet → ZFSet :=
   Quotient.mk''
 
 @[simp]
-theorem mk_eq (x : PSet) : @Eq ZFSet ⟦x⟧ (mk x) :=
+theorem mk_eq (x : PSet) : (⟦x⟧ : ZFSet) = mk x :=
   rfl
 
 @[simp]
@@ -550,7 +550,7 @@ abbrev Definable₁ (f : ZFSet.{u} → ZFSet.{u}) := Definable 1 (fun s ↦ f (s
 
 /-- A simpler constructor for `ZFSet.Definable₁`. -/
 abbrev Definable₁.mk {f : ZFSet.{u} → ZFSet.{u}}
-    (out : PSet.{u} → PSet.{u}) (mk_out : ∀ x, ⟦out x⟧ = f ⟦x⟧) :
+    (out : PSet.{u} → PSet.{u}) (mk_out : ∀ x, mk (out x) = f (mk x)) :
     Definable₁ f where
   out xs := out (xs 0)
   mk_out xs := mk_out (xs 0)
@@ -570,7 +570,7 @@ abbrev Definable₂ (f : ZFSet.{u} → ZFSet.{u} → ZFSet.{u}) := Definable 2 (
 
 /-- A simpler constructor for `ZFSet.Definable₂`. -/
 abbrev Definable₂.mk {f : ZFSet.{u} → ZFSet.{u} → ZFSet.{u}}
-    (out : PSet.{u} → PSet.{u} → PSet.{u}) (mk_out : ∀ x y, ⟦out x y⟧ = f ⟦x⟧ ⟦y⟧) :
+    (out : PSet.{u} → PSet.{u} → PSet.{u}) (mk_out : ∀ x y, mk (out x y) = f (mk x) (mk y)) :
     Definable₂ f where
   out xs := out (xs 0) (xs 1)
   mk_out xs := mk_out (xs 0) (xs 1)
@@ -789,7 +789,7 @@ instance : IsTrans ZFSet (· ⊆ ·) :=
 @[simp]
 theorem subset_iff : ∀ {x y : PSet}, mk x ⊆ mk y ↔ x ⊆ y
   | ⟨_, A⟩, ⟨_, _⟩ =>
-    ⟨fun h a => @h ⟦A a⟧ (Mem.mk A a), fun h z =>
+    ⟨fun h a => @h (mk <| A a) (Mem.mk A a), fun h z =>
       Quotient.inductionOn z fun _ ⟨a, za⟩ =>
         let ⟨b, ab⟩ := h a
         ⟨b, za.trans ab⟩⟩
@@ -800,7 +800,7 @@ theorem toSet_subset_iff {x y : ZFSet} : x.toSet ⊆ y.toSet ↔ x ⊆ y := by
 
 @[ext]
 theorem ext {x y : ZFSet.{u}} : (∀ z : ZFSet.{u}, z ∈ x ↔ z ∈ y) → x = y :=
-  Quotient.inductionOn₂ x y fun _ _ h => Quotient.sound (Mem.ext fun w => h ⟦w⟧)
+  Quotient.inductionOn₂ x y fun _ _ h => Quotient.sound (Mem.ext fun w => h (mk w))
 
 theorem toSet_injective : Function.Injective toSet := fun _ _ h => ext <| Set.ext_iff.1 h
 
@@ -1029,7 +1029,7 @@ prefix:110 "⋂₀ " => ZFSet.sInter
 @[simp]
 theorem mem_sUnion {x y : ZFSet.{u}} : y ∈ ⋃₀ x ↔ ∃ z ∈ x, y ∈ z :=
   Quotient.inductionOn₂ x y fun _ _ => PSet.mem_sUnion.trans
-    ⟨fun ⟨z, h⟩ => ⟨⟦z⟧, h⟩, fun ⟨z, h⟩ => Quotient.inductionOn z (fun z h => ⟨z, h⟩) h⟩
+    ⟨fun ⟨z, h⟩ => ⟨mk z, h⟩, fun ⟨z, h⟩ => Quotient.inductionOn z (fun z h => ⟨z, h⟩) h⟩
 
 theorem mem_sInter {x y : ZFSet} (h : x.Nonempty) : y ∈ ⋂₀ x ↔ ∀ z ∈ x, y ∈ z := by
   unfold sInter
@@ -1188,7 +1188,7 @@ theorem image.mk (f : ZFSet.{u} → ZFSet.{u}) [Definable₁ f] (x) {y} : y ∈ 
 theorem mem_image {f : ZFSet.{u} → ZFSet.{u}} [Definable₁ f] {x y : ZFSet.{u}} :
     y ∈ image f x ↔ ∃ z ∈ x, f z = y :=
   Quotient.inductionOn₂ x y fun ⟨_, A⟩ _ =>
-    ⟨fun ⟨a, ya⟩ => ⟨⟦A a⟧, Mem.mk A a, ((Quotient.sound ya).trans Definable₁.mk_out).symm⟩,
+    ⟨fun ⟨a, ya⟩ => ⟨mk <| A a, Mem.mk A a, ((Quotient.sound ya).trans Definable₁.mk_out).symm⟩,
       fun ⟨_, hz, e⟩ => e ▸ image.mk _ _ hz⟩
 
 @[simp]
@@ -1200,7 +1200,7 @@ theorem toSet_image (f : ZFSet → ZFSet) [Definable₁ f] (x : ZFSet) :
 /-- The range of an indexed family of sets. The universes allow for a more general index type
   without manual use of `ULift`. -/
 noncomputable def range {α : Type u} (f : α → ZFSet.{max u v}) : ZFSet.{max u v} :=
-  ⟦⟨ULift.{v} α, Quotient.out ∘ f ∘ ULift.down⟩⟧
+  mk ⟨ULift.{v} α, Quotient.out ∘ f ∘ ULift.down⟩
 
 @[simp]
 theorem mem_range {α : Type u} {f : α → ZFSet.{max u v}} {x : ZFSet.{max u v}} :
