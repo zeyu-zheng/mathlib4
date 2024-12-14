@@ -153,6 +153,9 @@ lean_exe unused where
   -- Executables which import `Lake` must set `-lLake`.
   weakLinkArgs := #["-lLake"]
 
+lean_exe mathlib_test_executable where
+  root := `MathlibTest.MathlibTestExecutable
+
 /-!
 ## Other configuration
 -/
