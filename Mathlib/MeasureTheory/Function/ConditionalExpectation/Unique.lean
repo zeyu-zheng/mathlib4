@@ -37,7 +37,7 @@ variable {α E' F' 𝕜 : Type*} {p : ℝ≥0∞} {m m0 : MeasurableSpace α} {�
   [InnerProductSpace 𝕜 E'] [CompleteSpace E'] [NormedSpace ℝ E']
   -- F' for integrals on a Lp submodule
   [NormedAddCommGroup F']
-  [NormedSpace 𝕜 F'] [NormedSpace ℝ F'] [CompleteSpace F']
+  [NormedSpace ℝ F'] [CompleteSpace F']
 
 section UniquenessOfConditionalExpectation
 
@@ -69,6 +69,7 @@ alias lpMeas.ae_eq_zero_of_forall_set_integral_eq_zero :=
 
 variable (𝕜)
 
+include 𝕜 in
 theorem Lp.ae_eq_zero_of_forall_setIntegral_eq_zero' (hm : m ≤ m0) (f : Lp E' p μ)
     (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞)
     (hf_int_finite : ∀ s, MeasurableSet[m] s → μ s < ∞ → IntegrableOn f s μ)
@@ -76,7 +77,7 @@ theorem Lp.ae_eq_zero_of_forall_setIntegral_eq_zero' (hm : m ≤ m0) (f : Lp E' 
     (hf_meas : AEStronglyMeasurable' m f μ) : f =ᵐ[μ] 0 := by
   let f_meas : lpMeas E' 𝕜 m p μ := ⟨f, hf_meas⟩
   -- Porting note: `simp only` does not call `rfl` to try to close the goal. See https://github.com/leanprover-community/mathlib4/issues/5025
-  have hf_f_meas : f =ᵐ[μ] f_meas := by simp only [Subtype.coe_mk]; rfl
+  have hf_f_meas : f =ᵐ[μ] f_meas := by simp only [f_meas, Subtype.coe_mk]; rfl
   refine hf_f_meas.trans ?_
   refine lpMeas.ae_eq_zero_of_forall_setIntegral_eq_zero hm f_meas hp_ne_zero hp_ne_top ?_ ?_
   · intro s hs hμs
@@ -92,6 +93,7 @@ theorem Lp.ae_eq_zero_of_forall_setIntegral_eq_zero' (hm : m ≤ m0) (f : Lp E' 
 alias Lp.ae_eq_zero_of_forall_set_integral_eq_zero' :=
   Lp.ae_eq_zero_of_forall_setIntegral_eq_zero'
 
+include 𝕜 in
 /-- **Uniqueness of the conditional expectation** -/
 theorem Lp.ae_eq_of_forall_setIntegral_eq' (hm : m ≤ m0) (f g : Lp E' p μ) (hp_ne_zero : p ≠ 0)
     (hp_ne_top : p ≠ ∞) (hf_int_finite : ∀ s, MeasurableSet[m] s → μ s < ∞ → IntegrableOn f s μ)
