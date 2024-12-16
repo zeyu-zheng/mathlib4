@@ -61,8 +61,8 @@ theorem borel_eq_generateFrom_Iio : borel α = .generateFrom (range Iio) := by
         exact (H _).compl
       · rcases isOpen_biUnion_countable (Ioi a) Ioi fun _ _ ↦ isOpen_Ioi with ⟨t, hat, htc, htU⟩
         have : Ioi a = ⋃ b ∈ t, Ici b := by
-          refine Subset.antisymm ?_ <| iUnion₂_subset fun b hb ↦ Ici_subset_Ioi.2 (hat hb)
-          refine Subset.trans ?_ <| iUnion₂_mono fun _ _ ↦ Ioi_subset_Ici_self
+          refine subset_antisymm ?_ <| iUnion₂_subset fun b hb ↦ Ici_subset_Ioi.2 (hat hb)
+          refine subset_trans ?_ <| iUnion₂_mono fun _ _ ↦ Ioi_subset_Ici_self
           simpa [CovBy, htU, subset_def] using hcovBy
         simp only [this, ← compl_Iio]
         exact .biUnion htc <| fun _ _ ↦ (H _).compl
@@ -701,7 +701,7 @@ lemma measurableSet_bddAbove_range {ι} [Countable ι] {f : ι → δ → α} (h
     exact MeasurableSet.iInter (fun i ↦ A i c)
   obtain ⟨u, hu⟩ : ∃ (u : ℕ → α), Tendsto u atTop atTop := exists_seq_tendsto (atTop : Filter α)
   have : {b | BddAbove (range (fun i ↦ f i b))} = {x | ∃ n, ∀ i, f i x ≤ u n} := by
-    apply Subset.antisymm
+    apply subset_antisymm
     · rintro x ⟨c, hc⟩
       obtain ⟨n, hn⟩ : ∃ n, c ≤ u n := (tendsto_atTop.1 hu c).exists
       exact ⟨n, fun i ↦ (hc ((mem_range_self i))).trans hn⟩

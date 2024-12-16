@@ -715,7 +715,7 @@ theorem aemeasurable_fderivWithin (hs : MeasurableSet s)
     have : μ.restrict s ≤ sum fun n => μ.restrict (s ∩ t n) := by
       have : s = ⋃ n, s ∩ t n := by
         rw [← inter_iUnion]
-        exact Subset.antisymm (subset_inter Subset.rfl t_cover) inter_subset_left
+        exact subset_antisymm (subset_inter Subset.rfl t_cover) inter_subset_left
       conv_lhs => rw [this]
       exact restrict_iUnion_le
     exact ae_mono this H
@@ -960,7 +960,7 @@ theorem lintegral_abs_det_fderiv_le_addHaar_image_aux1 (hs : MeasurableSet s)
     exists_partition_approximatesLinearOn_of_hasFDerivWithinAt f s f' hf' δ fun A => (hδ A).1.ne'
   have s_eq : s = ⋃ n, s ∩ t n := by
     rw [← inter_iUnion]
-    exact Subset.antisymm (subset_inter Subset.rfl t_cover) inter_subset_left
+    exact subset_antisymm (subset_inter Subset.rfl t_cover) inter_subset_left
   calc
     (∫⁻ x in s, ENNReal.ofReal |(f' x).det| ∂μ) =
         ∑' n, ∫⁻ x in s ∩ t n, ENNReal.ofReal |(f' x).det| ∂μ := by

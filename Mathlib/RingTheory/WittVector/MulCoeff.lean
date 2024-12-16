@@ -52,9 +52,9 @@ def wittPolyProd (n : ℕ) : 𝕄 :=
 
 theorem wittPolyProd_vars (n : ℕ) : (wittPolyProd p n).vars ⊆ univ ×ˢ range (n + 1) := by
   rw [wittPolyProd]
-  apply Subset.trans (vars_mul _ _)
+  apply (vars_mul _ _).trans
   refine union_subset ?_ ?_ <;>
-  · refine Subset.trans (vars_rename _ _) ?_
+  · refine (vars_rename _ _).trans ?_
     simp [wittPolynomial_vars, image_subset_iff]
 
 /-- The "remainder term" of `WittVector.wittPolyProd`. See `mul_polyOfInterest_aux2`. -/
@@ -64,17 +64,17 @@ def wittPolyProdRemainder (n : ℕ) : 𝕄 :=
 theorem wittPolyProdRemainder_vars (n : ℕ) :
     (wittPolyProdRemainder p n).vars ⊆ univ ×ˢ range n := by
   rw [wittPolyProdRemainder]
-  refine Subset.trans (vars_sum_subset _ _) ?_
+  refine (vars_sum_subset _ _).trans ?_
   rw [biUnion_subset]
   intro x hx
-  apply Subset.trans (vars_mul _ _)
+  apply (vars_mul _ _).trans
   refine union_subset ?_ ?_
-  · apply Subset.trans (vars_pow _ _)
+  · apply (vars_pow _ _).trans
     have : (p : 𝕄) = C (p : ℤ) := by simp only [Int.cast_natCast, eq_intCast]
     rw [this, vars_C]
     apply empty_subset
-  · apply Subset.trans (vars_pow _ _)
-    apply Subset.trans (wittMul_vars _ _)
+  · apply (vars_pow _ _).trans
+    apply (wittMul_vars _ _).trans
     apply product_subset_product (Subset.refl _)
     simp only [mem_range, range_subset] at hx ⊢
     exact hx
@@ -91,13 +91,13 @@ def remainder (n : ℕ) : 𝕄 :=
 
 theorem remainder_vars (n : ℕ) : (remainder p n).vars ⊆ univ ×ˢ range (n + 1) := by
   rw [remainder]
-  apply Subset.trans (vars_mul _ _)
+  apply (vars_mul _ _).trans
   refine union_subset ?_ ?_ <;>
-  · refine Subset.trans (vars_sum_subset _ _) ?_
+  · refine (vars_sum_subset _ _).trans ?_
     rw [biUnion_subset]
     intro x hx
     rw [rename_monomial, vars_monomial, Finsupp.mapDomain_single]
-    · apply Subset.trans Finsupp.support_single_subset
+    · apply Finsupp.support_single_subset.trans
       simpa using mem_range.mp hx
     · apply pow_ne_zero
       exact mod_cast hp.out.ne_zero
@@ -182,7 +182,7 @@ theorem mul_polyOfInterest_aux5 (n : ℕ) :
 theorem mul_polyOfInterest_vars (n : ℕ) :
     ((p : 𝕄) ^ (n + 1) * polyOfInterest p n).vars ⊆ univ ×ˢ range (n + 1) := by
   rw [mul_polyOfInterest_aux5]
-  apply Subset.trans (vars_sub_subset _)
+  apply (vars_sub_subset _).trans
   refine union_subset ?_ ?_
   · apply remainder_vars
   · apply wittPolyProdRemainder_vars

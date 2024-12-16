@@ -1235,7 +1235,7 @@ lemma IsCompact.mul_closure_one_eq_closure {K : Set G} (hK : IsCompact K) :
 @[to_additive]
 lemma IsClosed.mul_closure_one_eq {F : Set G} (hF : IsClosed F) :
     F * (closure {1} : Set G) = F := by
-  refine Subset.antisymm ?_ (subset_mul_closure_one F)
+  refine subset_antisymm ?_ (subset_mul_closure_one F)
   calc
   F * (closure {1} : Set G) = closure F * closure ({1} : Set G) := by rw [hF.closure_eq]
   _ ⊆ closure (F * ({1} : Set G)) := smul_set_closure_subset _ _
@@ -1244,7 +1244,7 @@ lemma IsClosed.mul_closure_one_eq {F : Set G} (hF : IsClosed F) :
 @[to_additive]
 lemma compl_mul_closure_one_eq {t : Set G} (ht : t * (closure {1} : Set G) = t) :
     tᶜ * (closure {1} : Set G) = tᶜ := by
-  refine Subset.antisymm ?_ (subset_mul_closure_one tᶜ)
+  refine subset_antisymm ?_ (subset_mul_closure_one tᶜ)
   rintro - ⟨x, hx, g, hg, rfl⟩
   by_contra H
   have : x ∈ t * (closure {1} : Set G) := by
@@ -1453,7 +1453,7 @@ theorem compact_covered_by_mul_left_translates {K V : Set G} (hK : IsCompact K)
     refine fun g _ => mem_iUnion.2 ⟨g₀ * g⁻¹, ?_⟩
     refine preimage_interior_subset_interior_preimage (continuous_const.mul continuous_id) ?_
     rwa [mem_preimage, Function.id_def, inv_mul_cancel_right]
-  exact ⟨t, Subset.trans ht <| iUnion₂_mono fun g _ => interior_subset⟩
+  exact ⟨t, ht.trans <| iUnion₂_mono fun g _ => interior_subset⟩
 
 /-- Every weakly locally compact separable topological group is σ-compact.
   Note: this is not true if we drop the topological group hypothesis. -/

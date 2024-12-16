@@ -132,7 +132,7 @@ theorem IsLindelof.elim_countable_subcover {ι : Type v} (hs : IsLindelof s) (U 
   have hmono : ∀ ⦃s t : Set X⦄, s ⊆ t → (∃ r : Set ι, r.Countable ∧ t ⊆ ⋃ i ∈ r, U i)
       → (∃ r : Set ι, r.Countable ∧ s ⊆ ⋃ i ∈ r, U i) := by
     intro _ _ hst ⟨r, ⟨hrcountable, hsub⟩⟩
-    exact ⟨r, hrcountable, Subset.trans hst hsub⟩
+    exact ⟨r, hrcountable, hst.trans hsub⟩
   have hcountable_union : ∀ (S : Set (Set X)), S.Countable
       → (∀ s ∈ S, ∃ r : Set ι, r.Countable ∧ (s ⊆ ⋃ i ∈ r, U i))
       → ∃ r : Set ι, r.Countable ∧ (⋃₀ S ⊆ ⋃ i ∈ r, U i) := by
@@ -158,10 +158,10 @@ theorem IsLindelof.elim_nhds_subcover' (hs : IsLindelof s) (U : ∀ x ∈ s, Set
       mem_iUnion.2 ⟨⟨x, hx⟩, mem_interior_iff_mem_nhds.2 <| hU _ _⟩
   rcases this with ⟨r, ⟨hr, hs⟩⟩
   use r, hr
-  apply Subset.trans hs
+  apply hs.trans
   apply iUnion₂_subset
   intro i hi
-  apply Subset.trans interior_subset
+  apply interior_subset.trans
   exact subset_iUnion_of_subset i (subset_iUnion_of_subset hi (Subset.refl _))
 
 theorem IsLindelof.elim_nhds_subcover (hs : IsLindelof s) (U : X → Set X)

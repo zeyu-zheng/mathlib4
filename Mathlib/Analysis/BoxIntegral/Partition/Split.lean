@@ -287,7 +287,7 @@ theorem eventually_splitMany_inf_eq_filter (π : Prepartition I) :
   · refine ofWithBot_mono ?_
     simp only [Finset.mem_image, exists_prop, mem_boxes, mem_filter]
     rintro _ ⟨J₁, h₁, rfl⟩ hne
-    refine ⟨_, ⟨J₁, ⟨h₁, Subset.trans ?_ (π.subset_iUnion hJ)⟩, rfl⟩, le_rfl⟩
+    refine ⟨_, ⟨J₁, ⟨h₁, subset_trans ?_ (π.subset_iUnion hJ)⟩, rfl⟩, le_rfl⟩
     exact ht I J hJ J₁ h₁ (mt disjoint_iff.1 hne)
   · rw [mem_filter] at hJ
     rcases Set.mem_iUnion₂.1 (hJ.2 J.upper_mem) with ⟨J', hJ', hmem⟩

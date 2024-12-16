@@ -72,12 +72,12 @@ protected theorem IsExtreme.rfl : IsExtreme 𝕜 A A :=
 @[trans]
 protected theorem IsExtreme.trans (hAB : IsExtreme 𝕜 A B) (hBC : IsExtreme 𝕜 B C) :
     IsExtreme 𝕜 A C := by
-  refine ⟨Subset.trans hBC.1 hAB.1, fun x₁ hx₁A x₂ hx₂A x hxC hx ↦ ?_⟩
+  refine ⟨hBC.1.trans hAB.1, fun x₁ hx₁A x₂ hx₂A x hxC hx ↦ ?_⟩
   obtain ⟨hx₁B, hx₂B⟩ := hAB.2 hx₁A hx₂A (hBC.1 hxC) hx
   exact hBC.2 hx₁B hx₂B hxC hx
 
 protected theorem IsExtreme.antisymm : AntiSymmetric (IsExtreme 𝕜 : Set E → Set E → Prop) :=
-  fun _ _ hAB hBA ↦ Subset.antisymm hBA.1 hAB.1
+  fun _ _ hAB hBA ↦ subset_antisymm hBA.1 hAB.1
 
 instance : IsPartialOrder (Set E) (IsExtreme 𝕜) where
   refl := IsExtreme.refl 𝕜
@@ -86,7 +86,7 @@ instance : IsPartialOrder (Set E) (IsExtreme 𝕜) where
 
 theorem IsExtreme.inter (hAB : IsExtreme 𝕜 A B) (hAC : IsExtreme 𝕜 A C) :
     IsExtreme 𝕜 A (B ∩ C) := by
-  use Subset.trans inter_subset_left hAB.1
+  use inter_subset_left.trans hAB.1
   rintro x₁ hx₁A x₂ hx₂A x ⟨hxB, hxC⟩ hx
   obtain ⟨hx₁B, hx₂B⟩ := hAB.2 hx₁A hx₂A hxB hx
   obtain ⟨hx₁C, hx₂C⟩ := hAC.2 hx₁A hx₂A hxC hx
@@ -148,7 +148,7 @@ theorem IsExtreme.extremePoints_subset_extremePoints (hAB : IsExtreme 𝕜 A B) 
 
 theorem IsExtreme.extremePoints_eq (hAB : IsExtreme 𝕜 A B) :
     B.extremePoints 𝕜 = B ∩ A.extremePoints 𝕜 :=
-  Subset.antisymm (fun _ hx ↦ ⟨hx.1, hAB.extremePoints_subset_extremePoints hx⟩)
+  subset_antisymm (fun _ hx ↦ ⟨hx.1, hAB.extremePoints_subset_extremePoints hx⟩)
     (inter_extremePoints_subset_extremePoints_of_subset hAB.1)
 
 end SMul

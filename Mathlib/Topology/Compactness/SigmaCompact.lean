@@ -374,7 +374,7 @@ protected theorem subset ⦃m n : ℕ⦄ (h : m ≤ n) : K m ⊆ K n :=
 theorem subset_succ (n : ℕ) : K n ⊆ K (n + 1) := K.subset n.le_succ
 
 theorem subset_interior ⦃m n : ℕ⦄ (h : m < n) : K m ⊆ interior (K n) :=
-  Subset.trans (K.subset_interior_succ m) <| interior_mono <| K.subset h
+  (K.subset_interior_succ m).trans <| interior_mono <| K.subset h
 
 theorem iUnion_eq : ⋃ n, K n = univ :=
   K.iUnion_eq'
@@ -388,7 +388,7 @@ theorem exists_mem_nhds (x : X) : ∃ n, K n ∈ 𝓝 x := by
 
 /-- A compact exhaustion eventually covers any compact set. -/
 theorem exists_superset_of_isCompact {s : Set X} (hs : IsCompact s) : ∃ n, s ⊆ K n := by
-  suffices ∃ n, s ⊆ interior (K n) from this.imp fun _ ↦ (Subset.trans · interior_subset)
+  suffices ∃ n, s ⊆ interior (K n) from this.imp fun _ ↦ (subset_trans · interior_subset)
   refine hs.elim_directed_cover (interior ∘ K) (fun _ ↦ isOpen_interior) ?_ ?_
   · intro x _
     rcases K.exists_mem x with ⟨k, hk⟩
@@ -435,7 +435,7 @@ noncomputable def choice (X : Type*) [TopologicalSpace X] [WeaklyLocallyCompactS
       ⟨(exists_compact_superset s.2).choose ∪ compactCovering X n,
         (exists_compact_superset s.2).choose_spec.1.union (isCompact_compactCovering _ _)⟩
   refine ⟨⟨fun n ↦ (K n).1, fun n => (K n).2, fun n ↦ ?_, ?_⟩⟩
-  · exact Subset.trans (exists_compact_superset (K n).2).choose_spec.2
+  · exact (exists_compact_superset (K n).2).choose_spec.2.trans
       (interior_mono subset_union_left)
   · refine univ_subset_iff.1 (iUnion_compactCovering X ▸ ?_)
     exact iUnion_mono' fun n => ⟨n + 1, subset_union_right⟩

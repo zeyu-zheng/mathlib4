@@ -78,9 +78,9 @@ instance : PartialOrder (PartialRefinement u s p) where
   le v₁ v₂ := v₁.carrier ⊆ v₂.carrier ∧ ∀ i ∈ v₁.carrier, v₁ i = v₂ i
   le_refl _ := ⟨Subset.refl _, fun _ _ => rfl⟩
   le_trans _ _ _ h₁₂ h₂₃ :=
-    ⟨Subset.trans h₁₂.1 h₂₃.1, fun i hi => (h₁₂.2 i hi).trans (h₂₃.2 i <| h₁₂.1 hi)⟩
+    ⟨h₁₂.1.trans h₂₃.1, fun i hi => (h₁₂.2 i hi).trans (h₂₃.2 i <| h₁₂.1 hi)⟩
   le_antisymm v₁ v₂ h₁₂ h₂₁ :=
-    have hc : v₁.carrier = v₂.carrier := Subset.antisymm h₁₂.1 h₂₁.1
+    have hc : v₁.carrier = v₂.carrier := subset_antisymm h₁₂.1 h₂₁.1
     PartialRefinement.ext
       (funext fun x =>
         if hx : x ∈ v₁.carrier then h₁₂.2 _ hx
@@ -233,7 +233,7 @@ theorem exists_subset_iUnion_closed_subset (hs : IsClosed s) (uo : ∀ i, IsOpen
     (uf : ∀ x ∈ s, { i | x ∈ u i }.Finite) (us : s ⊆ ⋃ i, u i) :
     ∃ v : ι → Set X, s ⊆ iUnion v ∧ (∀ i, IsClosed (v i)) ∧ ∀ i, v i ⊆ u i :=
   let ⟨v, hsv, _, hv⟩ := exists_subset_iUnion_closure_subset hs uo uf us
-  ⟨fun i => closure (v i), Subset.trans hsv (iUnion_mono fun _ => subset_closure),
+  ⟨fun i => closure (v i), hsv.trans (iUnion_mono fun _ => subset_closure),
     fun _ => isClosed_closure, hv⟩
 
 /-- Shrinking lemma. A point-finite open cover of a closed subset of a normal space can be "shrunk"
@@ -368,7 +368,7 @@ theorem exists_subset_iUnion_compact_subset_t2space (hs : IsCompact s) (uo : ∀
   let ⟨v, hsv, _, hv⟩ := exists_subset_iUnion_closure_subset_t2space hs uo uf us
   use fun i => closure (v i)
   refine ⟨?_, ?_, ?_⟩
-  · exact Subset.trans hsv (iUnion_mono fun _ => subset_closure)
+  · exact hsv.trans (iUnion_mono fun _ => subset_closure)
   · simp only [isClosed_closure, implies_true]
   · simp only
     exact And.intro (fun i => hv.1 i) (fun i => hv.2 i)

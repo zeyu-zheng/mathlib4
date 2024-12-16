@@ -213,7 +213,7 @@ instance : CompleteSpace (CauchyFilter α) :=
         let ⟨t', ht', (h : t' ×ˢ t' ⊆ t)⟩ := mem_prod_same_iff.mp (hf.right ht₁)
         have : t' ⊆ { y : α | (f', pureCauchy y) ∈ gen t } := fun x hx =>
           (f ×ˢ pure x).sets_of_superset (prod_mem_prod ht' hx) h
-        f.sets_of_superset ht' <| Subset.trans this (preimage_mono ht₂)
+        f.sets_of_superset ht' <| this.trans (preimage_mono ht₂)
     ⟨f', by simpa [nhds_eq_uniformity]⟩
 
 end

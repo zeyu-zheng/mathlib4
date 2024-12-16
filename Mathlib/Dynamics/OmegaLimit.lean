@@ -156,8 +156,8 @@ theorem omegaLimit_union : ω f ϕ (s₁ ∪ s₂) = ω f ϕ s₁ ∪ ω f ϕ s�
     simp only [not_frequently, not_nonempty_iff_eq_empty, ← subset_empty_iff]
     rintro ⟨⟨n₁, hn₁, h₁⟩, ⟨n₂, hn₂, h₂⟩⟩
     refine ⟨n₁ ∩ n₂, inter_mem hn₁ hn₂, h₁.mono fun t ↦ ?_, h₂.mono fun t ↦ ?_⟩
-    exacts [Subset.trans <| inter_subset_inter_right _ <| preimage_mono inter_subset_left,
-      Subset.trans <| inter_subset_inter_right _ <| preimage_mono inter_subset_right]
+    exacts [subset_trans <| inter_subset_inter_right _ <| preimage_mono inter_subset_left,
+      subset_trans <| inter_subset_inter_right _ <| preimage_mono inter_subset_right]
   · rintro (hy | hy)
     exacts [omegaLimit_mono_right _ _ subset_union_left hy,
       omegaLimit_mono_right _ _ subset_union_right hy]
@@ -177,7 +177,7 @@ theorem omegaLimit_eq_iInter : ω f ϕ s = ⋂ u : ↥f.sets, closure (image2 ϕ
 
 theorem omegaLimit_eq_biInter_inter {v : Set τ} (hv : v ∈ f) :
     ω f ϕ s = ⋂ u ∈ f, closure (image2 ϕ (u ∩ v) s) :=
-  Subset.antisymm (iInter₂_mono' fun u hu ↦ ⟨u ∩ v, inter_mem hu hv, Subset.rfl⟩)
+  subset_antisymm (iInter₂_mono' fun u hu ↦ ⟨u ∩ v, inter_mem hu hv, Subset.rfl⟩)
     (iInter₂_mono fun _u _hu ↦ closure_mono <| image2_subset inter_subset_left Subset.rfl)
 
 theorem omegaLimit_eq_iInter_inter {v : Set τ} (hv : v ∈ f) :
@@ -218,12 +218,12 @@ theorem eventually_closure_subset_of_isCompact_absorbing_of_isOpen_of_omegaLimit
     rw [omegaLimit_eq_iInter_inter _ _ _ hv₁] at hn₂
     simp_rw [j, diff_compl]
     rw [← inter_iInter]
-    exact Subset.trans inter_subset_right hn₂
+    exact inter_subset_right.trans hn₂
   rcases hk.elim_finite_subcover_image hj₁ hj₂ with ⟨g, hg₁ : ∀ u ∈ g, u ∈ f, hg₂, hg₃⟩
   let w := (⋂ u ∈ g, u) ∩ v
   have hw₂ : w ∈ f := by simpa [w, *]
   have hw₃ : k \ n ⊆ (closure (image2 ϕ w s))ᶜ := by
-    apply Subset.trans hg₃
+    apply hg₃.trans
     simp only [j, iUnion_subset_iff, compl_subset_compl]
     intros u hu
     mono
@@ -234,7 +234,7 @@ theorem eventually_closure_subset_of_isCompact_absorbing_of_isOpen_of_omegaLimit
     exact closure_mono (image2_subset inter_subset_right Subset.rfl)
   have hnc : nᶜ ⊆ k \ n ∪ kᶜ := by rw [union_comm, ← inter_subset, diff_eq, inter_comm]
   have hw : closure (image2 ϕ w s) ⊆ n :=
-    compl_subset_compl.mp (Subset.trans hnc (union_subset hw₃ hw₄))
+    compl_subset_compl.mp (hnc.trans (union_subset hw₃ hw₄))
   exact ⟨_, hw₂, hw⟩
 
 /-- A set is eventually carried into any open neighbourhood of its ω-limit:
@@ -329,7 +329,7 @@ open omegaLimit
 /-- the ω-limit of a forward image of `s` is the same as the ω-limit of `s`. -/
 @[simp]
 theorem omegaLimit_image_eq (hf : ∀ t, Tendsto (· + t) f f) (t : τ) : ω f ϕ (ϕ t '' s) = ω f ϕ s :=
-  Subset.antisymm (omegaLimit_image_subset _ _ _ _ (hf t)) <|
+  subset_antisymm (omegaLimit_image_subset _ _ _ _ (hf t)) <|
     calc
       ω f ϕ s = ω f ϕ (ϕ (-t) '' (ϕ t '' s)) := by simp [image_image, ← map_add]
       _ ⊆ ω f ϕ (ϕ t '' s) := omegaLimit_image_subset _ _ _ _ (hf _)

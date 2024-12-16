@@ -340,7 +340,7 @@ theorem isComplete_iUnion_separated {ι : Sort*} {s : ι → Set α} (hs : ∀ i
   cases' cauchy_iff.1 hl with hl_ne hl'
   obtain ⟨t, htS, htl, htU⟩ : ∃ t, t ⊆ S ∧ t ∈ l ∧ t ×ˢ t ⊆ U := by
     rcases hl' U hU with ⟨t, htl, htU⟩
-    refine ⟨t ∩ S, inter_subset_right, inter_mem htl hls, Subset.trans ?_ htU⟩
+    refine ⟨t ∩ S, inter_subset_right, inter_mem htl hls, subset_trans ?_ htU⟩
     gcongr <;> apply inter_subset_left
   obtain ⟨i, hi⟩ : ∃ i, t ⊆ s i := by
     rcases Filter.nonempty_of_mem htl with ⟨x, hx⟩
@@ -478,7 +478,7 @@ theorem totallyBounded_of_forall_symm {s : Set α}
 theorem TotallyBounded.subset {s₁ s₂ : Set α} (hs : s₁ ⊆ s₂) (h : TotallyBounded s₂) :
     TotallyBounded s₁ := fun d hd =>
   let ⟨t, ht₁, ht₂⟩ := h d hd
-  ⟨t, ht₁, Subset.trans hs ht₂⟩
+  ⟨t, ht₁, hs.trans ht₂⟩
 
 @[deprecated (since := "2024-06-01")]
 alias totallyBounded_subset := TotallyBounded.subset
@@ -577,7 +577,7 @@ theorem Ultrafilter.cauchy_of_totallyBounded {s : Set α} (f : Ultrafilter α) (
     let ⟨y, _, hif⟩ := this
     have : { x | (x, y) ∈ t' } ×ˢ { x | (x, y) ∈ t' } ⊆ compRel t' t' :=
       fun ⟨_, _⟩ ⟨(h₁ : (_, y) ∈ t'), (h₂ : (_, y) ∈ t')⟩ => ⟨y, h₁, ht'_symm h₂⟩
-    mem_of_superset (prod_mem_prod hif hif) (Subset.trans this ht'_t)⟩
+    mem_of_superset (prod_mem_prod hif hif) (this.trans ht'_t)⟩
 
 theorem totallyBounded_iff_filter {s : Set α} :
     TotallyBounded s ↔ ∀ f, NeBot f → f ≤ 𝓟 s → ∃ c ≤ f, Cauchy c := by
@@ -743,7 +743,7 @@ theorem complete_of_convergent_controlled_sequences (U : ℕ → Set (α × α))
     le_nhds_of_seq_tendsto_nhds _ _ fun s hs => ?_⟩
   · exact inter_subset_left (seq_pair_mem hf Hmem hm hn)
   · rcases hU'.1 hs with ⟨N, hN⟩
-    exact ⟨N, Subset.trans inter_subset_right hN⟩
+    exact ⟨N, inter_subset_right.trans hN⟩
 
 /-- A sequentially complete uniform space with a countable basis of the uniformity filter is
 complete. -/

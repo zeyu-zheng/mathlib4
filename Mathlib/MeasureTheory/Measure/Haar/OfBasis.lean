@@ -101,7 +101,7 @@ theorem parallelepiped_orthonormalBasis_one_dim (b : OrthonormalBasis ι ℝ ℝ
   rw [← B]
   let F : ℝ → Fin 1 → ℝ := fun t => fun _i => t
   have A : Icc (0 : Fin 1 → ℝ) 1 = F '' Icc (0 : ℝ) 1 := by
-    apply Subset.antisymm
+    apply subset_antisymm
     · intro x hx
       refine ⟨x 0, ⟨hx.1 0, hx.2 0⟩, ?_⟩
       ext j

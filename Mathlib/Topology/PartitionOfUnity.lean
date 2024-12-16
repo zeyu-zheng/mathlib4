@@ -362,7 +362,7 @@ def IsSubordinate (f : BumpCovering ι X s) (U : ι → Set X) : Prop :=
 
 theorem IsSubordinate.mono {f : BumpCovering ι X s} {U V : ι → Set X} (hU : f.IsSubordinate U)
     (hV : ∀ i, U i ⊆ V i) : f.IsSubordinate V :=
-  fun i => Subset.trans (hU i) (hV i)
+  fun i => (hU i).trans (hV i)
 
 /-- If `X` is a normal topological space and `U i`, `i : ι`, is a locally finite open covering of a
 closed set `s`, then there exists a `BumpCovering ι X s` that is subordinate to `U`. If `X` is a
@@ -377,7 +377,7 @@ theorem exists_isSubordinate_of_locallyFinite_of_prop [NormalSpace X] (p : (X �
     (hU : s ⊆ ⋃ i, U i) : ∃ f : BumpCovering ι X s, (∀ i, p (f i)) ∧ f.IsSubordinate U := by
   rcases exists_subset_iUnion_closure_subset hs ho (fun x _ => hf.point_finite x) hU with
     ⟨V, hsV, hVo, hVU⟩
-  have hVU' : ∀ i, V i ⊆ U i := fun i => Subset.trans subset_closure (hVU i)
+  have hVU' : ∀ i, V i ⊆ U i := fun i => subset_closure.trans (hVU i)
   rcases exists_subset_iUnion_closure_subset hs hVo (fun x _ => (hf.subset hVU').point_finite x)
       hsV with
     ⟨W, hsW, hWo, hWV⟩
@@ -385,9 +385,9 @@ theorem exists_isSubordinate_of_locallyFinite_of_prop [NormalSpace X] (p : (X �
     h01 _ _ (isClosed_compl_iff.2 <| hVo i) isClosed_closure
       (disjoint_right.2 fun x hx => Classical.not_not.2 (hWV i hx))
   have hsupp : ∀ i, support (f i) ⊆ V i := fun i => support_subset_iff'.2 (hf0 i)
-  refine ⟨⟨f, hf.subset fun i => Subset.trans (hsupp i) (hVU' i), fun i x => (hf01 i x).1,
+  refine ⟨⟨f, hf.subset fun i => (hsupp i).trans (hVU' i), fun i x => (hf01 i x).1,
       fun i x => (hf01 i x).2, fun x hx => ?_⟩,
-    hfp, fun i => Subset.trans (closure_mono (hsupp i)) (hVU i)⟩
+    hfp, fun i => (closure_mono (hsupp i)).trans (hVU i)⟩
   rcases mem_iUnion.1 (hsW hx) with ⟨i, hi⟩
   exact ⟨i, ((hf1 i).mono subset_closure).eventuallyEq_of_mem ((hWo i).mem_nhds hi)⟩
 
@@ -448,9 +448,9 @@ theorem exists_isSubordinate_of_locallyFinite_of_prop_t2space [LocallyCompactSpa
     h01 _ _ (isClosed_compl_iff.2 <| hVo i) (hWc i)
       (disjoint_right.2 fun x hx => Classical.not_not.2 (hWV i hx))
   have hsupp i : support (f i) ⊆ V i := support_subset_iff'.2 (hf0 i)
-  refine ⟨⟨f, hf.subset fun i => Subset.trans (hsupp i) (hVU' i), fun i x => (hf01 i x).1,
+  refine ⟨⟨f, hf.subset fun i => (hsupp i).trans (hVU' i), fun i x => (hf01 i x).1,
       fun i x => (hf01 i x).2, fun x hx => ?_⟩,
-    hfp, fun i => Subset.trans (closure_mono (hsupp i)) (hVU i),
+    hfp, fun i => (closure_mono (hsupp i)).trans (hVU i),
     fun i => IsCompact.of_isClosed_subset (hcp i) isClosed_closure <| closure_mono (hsupp i)⟩
   rcases mem_iUnion.1 (hsW hx) with ⟨i, hi⟩
   exact ⟨i, ((hf1 i).mono subset_closure).eventuallyEq_of_mem ((hWo i).mem_nhds hi)⟩
@@ -594,7 +594,7 @@ theorem sum_toPartitionOfUnity_eq (x : X) :
 
 theorem IsSubordinate.toPartitionOfUnity {f : BumpCovering ι X s} {U : ι → Set X}
     (h : f.IsSubordinate U) : f.toPartitionOfUnity.IsSubordinate U :=
-  fun i => Subset.trans (closure_mono <| f.support_toPartitionOfUnity_subset i) (h i)
+  fun i => (closure_mono <| f.support_toPartitionOfUnity_subset i).trans (h i)
 
 end BumpCovering
 

@@ -51,7 +51,7 @@ protected theorem Filter.HasBasis.lebesgue_number_lemma {ι' ι : Sort*} {p : ι
     (hopen : ∀ j, IsOpen (U j)) (hcover : K ⊆ ⋃ j, U j) :
     ∃ i, p i ∧ ∀ x ∈ K, ∃ j, ball x (V i) ⊆ U j := by
   refine (hbasis.exists_iff ?_).1 (lebesgue_number_lemma hK hopen hcover)
-  exact fun s t hst ht x hx ↦ (ht x hx).imp fun i hi ↦ Subset.trans (ball_mono hst _) hi
+  exact fun s t hst ht x hx ↦ (ht x hx).imp fun i hi ↦ (ball_mono hst _).trans hi
 
 /-- Let `c : Set (Set α)` be an open cover of a compact set `s`. Then there exists an entourage
 `n` such that for each `x ∈ s` its `n`-neighborhood is contained in some `t ∈ c`. -/

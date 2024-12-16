@@ -89,7 +89,7 @@ theorem rOut_pos : 0 < f.rOut :=
   f.toContDiffBump.rOut_pos
 
 theorem ball_subset : ball (extChartAt I c c) f.rOut ∩ range I ⊆ (extChartAt I c).target :=
-  Subset.trans (inter_subset_inter_left _ ball_subset_closedBall) f.closedBall_subset
+  (inter_subset_inter_left _ ball_subset_closedBall).trans f.closedBall_subset
 
 theorem ball_inter_range_eq_ball_inter_target :
     ball (extChartAt I c c) f.rOut ∩ range I =
@@ -136,12 +136,12 @@ theorem image_eq_inter_preimage_of_subset_support {s : Set M} (hs : s ⊆ suppor
       closedBall (extChartAt I c c) f.rOut ∩ range I ∩ (extChartAt I c).symm ⁻¹' s := by
   rw [support_eq_inter_preimage, subset_inter_iff, ← extChartAt_source I, ← image_subset_iff] at hs
   cases' hs with hse hsf
-  apply Subset.antisymm
+  apply subset_antisymm
   · refine subset_inter (subset_inter (hsf.trans ball_subset_closedBall) ?_) ?_
     · rintro _ ⟨x, -, rfl⟩; exact mem_range_self _
     · rw [(extChartAt I c).image_eq_target_inter_inv_preimage hse]
       exact inter_subset_right
-  · refine Subset.trans (inter_subset_inter_left _ f.closedBall_subset) ?_
+  · refine (inter_subset_inter_left _ f.closedBall_subset).trans ?_
     rw [(extChartAt I c).image_eq_target_inter_inv_preimage hse]
 
 theorem mem_Icc : f x ∈ Icc (0 : ℝ) 1 := by

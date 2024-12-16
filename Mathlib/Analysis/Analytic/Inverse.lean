@@ -111,7 +111,7 @@ theorem leftInv_comp (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[𝕜] F)
     have A :
       (Finset.univ : Finset (Composition (n + 2))) =
         {c | Composition.length c < n + 2}.toFinset ∪ {Composition.ones (n + 2)} := by
-      refine Subset.antisymm (fun c _ => ?_) (subset_univ _)
+      refine subset_antisymm (fun c _ => ?_) (subset_univ _)
       by_cases h : c.length < n + 2
       · simp [h, Set.mem_toFinset (s := {c | Composition.length c < n + 2})]
       · simp [Composition.eq_ones_iff_le_length.2 (not_lt.1 h)]
@@ -206,7 +206,7 @@ theorem comp_rightInv_aux1 {n : ℕ} (hn : 0 < n) (p : FormalMultilinearSeries �
   have A :
     (Finset.univ : Finset (Composition n)) =
       {c | 1 < Composition.length c}.toFinset ∪ {Composition.single n hn} := by
-    refine Subset.antisymm (fun c _ => ?_) (subset_univ _)
+    refine subset_antisymm (fun c _ => ?_) (subset_univ _)
     by_cases h : 1 < c.length
     · simp [h, Set.mem_toFinset (s := {c | 1 < Composition.length c})]
     · have : c.length = 1 := by

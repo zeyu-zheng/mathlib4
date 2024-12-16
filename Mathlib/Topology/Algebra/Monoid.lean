@@ -573,7 +573,7 @@ theorem Submonoid.top_closure_mul_self_subset (s : Submonoid M) :
 @[to_additive]
 theorem Submonoid.top_closure_mul_self_eq (s : Submonoid M) :
     _root_.closure (s : Set M) * _root_.closure s = _root_.closure s :=
-  Subset.antisymm s.top_closure_mul_self_subset fun x hx =>
+  subset_antisymm s.top_closure_mul_self_subset fun x hx =>
     ⟨x, hx, 1, _root_.subset_closure s.one_mem, mul_one _⟩
 
 /-- The (topological-space) closure of a submonoid of a space `M` with `ContinuousMul` is

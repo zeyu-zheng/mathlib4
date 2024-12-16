@@ -232,7 +232,7 @@ theorem volume_pi_le_prod_diam (s : Set (ι → ℝ)) :
   calc
     volume s ≤ volume (pi univ fun i => closure (Function.eval i '' s)) :=
       volume.mono <|
-        Subset.trans (subset_pi_eval_image univ s) <| pi_mono fun _ _ => subset_closure
+        (subset_pi_eval_image univ s).trans <| pi_mono fun _ _ => subset_closure
     _ = ∏ i, volume (closure <| Function.eval i '' s) := volume_pi_pi _
     _ ≤ ∏ i : ι, EMetric.diam (Function.eval i '' s) :=
       Finset.prod_le_prod' fun _ _ => (volume_le_diam _).trans_eq (EMetric.diam_closure _)

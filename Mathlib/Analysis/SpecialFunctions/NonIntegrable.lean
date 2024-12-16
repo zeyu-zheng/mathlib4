@@ -76,7 +76,7 @@ theorem not_integrableOn_of_tendsto_norm_atTop_of_deriv_isBigO_filter_aux
     fun z hz => hg c hc d hd z ⟨hz.1.le, hz.2⟩
   have hg_ae : ∀ᵐ x ∂volume.restrict (Ι c d), ‖deriv f x‖ ≤ C * ‖g x‖ :=
     (ae_restrict_mem measurableSet_uIoc).mono hg
-  have hsub' : Ι c d ⊆ k := Subset.trans Ioc_subset_Icc_self hsub
+  have hsub' : Ι c d ⊆ k := Ioc_subset_Icc_self.trans hsub
   have hfi : IntervalIntegrable (deriv f) volume c d := by
     rw [intervalIntegrable_iff]
     have : IntegrableOn (fun x ↦ C * ‖g x‖) (Ι c d) := IntegrableOn.mono hgi hsub' le_rfl

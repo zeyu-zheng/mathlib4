@@ -327,7 +327,7 @@ protected theorem surjective [CompleteSpace E] (hf : ApproximatesLinearOn f (f' 
     let p : ℝ → Prop := fun R => closedBall (f 0) R ⊆ Set.range f
     have hp : ∀ᶠ r : ℝ in atTop, p ((N⁻¹ - c) * r) := by
       have hr : ∀ᶠ r : ℝ in atTop, 0 ≤ r := eventually_ge_atTop 0
-      refine hr.mono fun r hr => Subset.trans ?_ (image_subset_range f (closedBall 0 r))
+      refine hr.mono fun r hr => subset_trans ?_ (image_subset_range f (closedBall 0 r))
       refine hf.surjOn_closedBall_of_nonlinearRightInverse f'.toNonlinearRightInverse hr ?_
       exact subset_univ _
     refine ((tendsto_id.const_mul_atTop hc').frequently hp.frequently).mono ?_

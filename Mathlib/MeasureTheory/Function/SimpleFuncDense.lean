@@ -146,9 +146,7 @@ theorem tendsto_approxOn {f : β → α} (hf : Measurable f) {s : Set α} {y₀ 
   simp (config := { iota := false }) only [approxOn, coe_comp]
   refine tendsto_nearestPt (closure_minimal ?_ isClosed_closure hx)
   simp (config := { iota := false }) only [Nat.range_casesOn, closure_union, range_comp]
-  exact
-    Subset.trans (image_closure_subset_closure_image continuous_subtype_val)
-      subset_union_right
+  exact (image_closure_subset_closure_image continuous_subtype_val).trans subset_union_right
 
 theorem edist_approxOn_mono {f : β → α} (hf : Measurable f) {s : Set α} {y₀ : α} (h₀ : y₀ ∈ s)
     [SeparableSpace s] (x : β) {m n : ℕ} (h : m ≤ n) :

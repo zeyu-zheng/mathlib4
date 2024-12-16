@@ -82,13 +82,13 @@ def IsDynCoverOf (T : X → X) (F : Set X) (U : Set (X × X)) (n : ℕ) (s : Set
 lemma IsDynCoverOf.of_le {T : X → X} {F : Set X} {U : Set (X × X)} {m n : ℕ} (m_n : m ≤ n)
     {s : Set X} (h : IsDynCoverOf T F U n s) :
     IsDynCoverOf T F U m s := by
-  exact Subset.trans (c := ⋃ x ∈ s, ball x (dynEntourage T U m)) h
+  exact subset_trans (c := ⋃ x ∈ s, ball x (dynEntourage T U m)) h
     (iUnion₂_mono fun x _ ↦ ball_mono (dynEntourage_antitone T U m_n) x)
 
 lemma IsDynCoverOf.of_entourage_subset {T : X → X} {F : Set X} {U V : Set (X × X)} (U_V : U ⊆ V)
     {n : ℕ} {s : Set X} (h : IsDynCoverOf T F U n s) :
     IsDynCoverOf T F V n s := by
-  exact Subset.trans (c := ⋃ x ∈ s, ball x (dynEntourage T V n)) h
+  exact subset_trans (c := ⋃ x ∈ s, ball x (dynEntourage T V n)) h
     (iUnion₂_mono fun x _ ↦ ball_mono (dynEntourage_monotone T n U_V) x)
 
 @[simp]

@@ -231,7 +231,7 @@ lemma IsEverywherePos.IsGdelta_of_isMulLeftInvariant
   let V n := ⋂ i ∈ Finset.range n, W i
   suffices ⋂ n, V n * k ⊆ k by
     replace : k = ⋂ n, V n * k := by
-      apply Subset.antisymm (subset_iInter_iff.2 (fun n ↦ ?_)) this
+      apply subset_antisymm (subset_iInter_iff.2 (fun n ↦ ?_)) this
       exact subset_mul_right k (by simp [V, mem_W])
     rw [this]
     refine .iInter_of_isOpen fun n ↦ ?_

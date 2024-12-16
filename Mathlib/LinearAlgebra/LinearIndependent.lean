@@ -481,7 +481,7 @@ theorem linearIndependent_iUnion_of_directed {η : Type*} {s : η → Set M} (hs
   · refine linearIndependent_of_finite (⋃ i, s i) fun t ht ft => ?_
     rcases finite_subset_iUnion ft ht with ⟨I, fi, hI⟩
     rcases hs.finset_le fi.toFinset with ⟨i, hi⟩
-    exact (h i).mono (Subset.trans hI <| iUnion₂_subset fun j hj => hi j (fi.mem_toFinset.2 hj))
+    exact (h i).mono (hI.trans <| iUnion₂_subset fun j hj => hi j (fi.mem_toFinset.2 hj))
   · refine (linearIndependent_empty R M).mono (t := iUnion (s ·)) ?_
     rintro _ ⟨_, ⟨i, _⟩, _⟩
     exact hη ⟨i⟩
@@ -1008,7 +1008,7 @@ theorem eq_of_linearIndependent_of_span_subtype [Nontrivial R] {s t : Set M}
     apply surjective_of_linearIndependent_of_span hs f _
     convert hst <;> simp [f, comp_def]
   show s = t
-  apply Subset.antisymm _ h
+  apply subset_antisymm _ h
   intro x hx
   rcases h_surj ⟨x, hx⟩ with ⟨y, hy⟩
   convert y.mem
@@ -1414,14 +1414,14 @@ theorem exists_of_linearIndependent_of_finite_span {t : Finset V}
       have hst : s ∩ ↑t = ∅ :=
         eq_empty_of_subset_empty <|
           -- Porting note: `-inter_subset_left, -subset_inter_iff` required.
-          Subset.trans
+          subset_trans
             (by simp [inter_subset_inter, Subset.refl, -inter_subset_left, -subset_inter_iff])
             (le_of_eq hst)
       Classical.by_cases (p := s ⊆ (span K ↑(s' ∪ t) : Submodule K V))
         (fun this =>
           let ⟨u, hust, hsu, Eq⟩ := ih _ hs' hst this
           have hb₁u : b₁ ∉ u := fun h => (hust h).elim hb₁s hb₁t
-          ⟨insert b₁ u, by simp [insert_subset_insert hust], Subset.trans hsu (by simp), by
+          ⟨insert b₁ u, by simp [insert_subset_insert hust], hsu.trans (by simp), by
             simp [Eq, hb₁t, hb₁s', hb₁u]⟩)
         fun this =>
         let ⟨b₂, hb₂s, hb₂t⟩ := not_subset.mp this
@@ -1442,7 +1442,7 @@ theorem exists_of_linearIndependent_of_finite_span {t : Finset V}
           rw [span_insert_eq_span hb₁] at hb₃; simpa using hb₃
         let ⟨u, hust, hsu, eq⟩ := ih _ (by simp [insert_subset_iff, hb₂s, hs']) hst this
         -- Porting note: `hb₂t'` → `Finset.card_insert_of_not_mem hb₂t'`
-        ⟨u, Subset.trans hust <| union_subset_union (Subset.refl _) (by simp [subset_insert]), hsu,
+        ⟨u, hust.trans <| union_subset_union (Subset.refl _) (by simp [subset_insert]), hsu,
           by simp [eq, Finset.card_insert_of_not_mem hb₂t', hb₁t, hb₁s']⟩
   have eq : ((t.filter fun x => x ∈ s) ∪ t.filter fun x => x ∉ s) = t := by
     ext1 x
@@ -1453,7 +1453,7 @@ theorem exists_of_linearIndependent_of_finite_span {t : Finset V}
         (by simp +contextual [Set.ext_iff]) (by rwa [eq]))
   intro u h
   exact
-    ⟨u, Subset.trans h.1 (by simp +contextual [subset_def, and_imp, or_imp]),
+    ⟨u, h.1.trans (by simp +contextual [subset_def, and_imp, or_imp]),
       h.2.1, by simp only [h.2.2, eq]⟩
 
 theorem exists_finite_card_le_of_finite_of_linearIndependent_of_span (ht : t.Finite)

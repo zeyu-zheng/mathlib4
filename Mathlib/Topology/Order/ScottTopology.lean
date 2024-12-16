@@ -250,7 +250,7 @@ lemma isOpen_iff_isUpperSet_and_dirSupInaccOn [IsScott α D] :
     ⟨@IsScottHausdorff.dirSupInaccOn_of_isOpen _ _ _ (scottHausdorff α D) _ _,
       fun h' d d₀ d₁ d₂ _ d₃ ha ↦ ?_⟩
   obtain ⟨b, hbd, hbu⟩ := h' d₀ d₁ d₂ d₃ ha
-  exact ⟨b, hbd, Subset.trans inter_subset_left (h.Ici_subset hbu)⟩
+  exact ⟨b, hbd, inter_subset_left.trans (h.Ici_subset hbu)⟩
 
 lemma isClosed_iff_isLowerSet_and_dirSupClosed [IsScott α univ] :
     IsClosed s ↔ IsLowerSet s ∧ DirSupClosed s := by

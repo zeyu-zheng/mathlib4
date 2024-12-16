@@ -192,7 +192,7 @@ linear span of these functions. -/
 theorem fourierSubalgebra_coe :
     Subalgebra.toSubmodule (@fourierSubalgebra T).toSubalgebra = span ℂ (range (@fourier T)) := by
   apply adjoin_eq_span_of_subset
-  refine Subset.trans ?_ Submodule.subset_span
+  refine subset_trans ?_ Submodule.subset_span
   intro x hx
   refine Submonoid.closure_induction (fun _ => id) ⟨0, ?_⟩ ?_ hx
   · ext1 z; exact fourier_zero

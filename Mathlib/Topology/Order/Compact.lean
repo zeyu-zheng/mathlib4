@@ -101,9 +101,9 @@ instance (priority := 100) ConditionallyCompleteLinearOrder.toCompactIccSpace (�
       with ⟨x, hxc, hxU⟩
     rcases ((hsc.frequently_mem ⟨a, ha⟩).and_eventually
       (Ioc_mem_nhdsWithin_Iic ⟨hxc, le_rfl⟩)).exists with ⟨y, ⟨_hyab, hyf⟩, hy⟩
-    refine mem_of_superset (f.diff_mem_iff.2 ⟨hcf, hyf⟩) (Subset.trans ?_ hxU)
+    refine mem_of_superset (f.diff_mem_iff.2 ⟨hcf, hyf⟩) (subset_trans ?_ hxU)
     rw [diff_subset_iff]
-    exact Subset.trans Icc_subset_Icc_union_Ioc <| union_subset_union Subset.rfl <|
+    exact Icc_subset_Icc_union_Ioc.trans <| union_subset_union Subset.rfl <|
       Ioc_subset_Ioc_left hy.1.le
   rcases hc.2.eq_or_lt with (rfl | hlt)
   · exact hcs.2

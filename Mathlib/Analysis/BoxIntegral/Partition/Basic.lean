@@ -120,7 +120,7 @@ instance partialOrder : PartialOrder (Prepartition I) where
     ⟨I₃, hI₃, hI₁₂.trans hI₂₃⟩
   le_antisymm := by
     suffices ∀ {π₁ π₂ : Prepartition I}, π₁ ≤ π₂ → π₂ ≤ π₁ → π₁.boxes ⊆ π₂.boxes from
-      fun π₁ π₂ h₁ h₂ => injective_boxes (Subset.antisymm (this h₁ h₂) (this h₂ h₁))
+      fun π₁ π₂ h₁ h₂ => injective_boxes (subset_antisymm (this h₁ h₂) (this h₂ h₁))
     intro π₁ π₂ h₁ h₂ J hJ
     rcases h₁ hJ with ⟨J', hJ', hle⟩; rcases h₂ hJ' with ⟨J'', hJ'', hle'⟩
     obtain rfl : J = J'' := π₁.eq_of_le hJ hJ'' (hle.trans hle')

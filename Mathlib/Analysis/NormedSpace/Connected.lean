@@ -140,7 +140,7 @@ theorem isPathConnected_sphere (h : 1 < Module.rank ℝ E) (x : E) {r : ℝ} (hr
   have B : IsPathConnected ({0}ᶜ : Set E) := isPathConnected_compl_singleton_of_one_lt_rank h 0
   have C : IsPathConnected (f '' {0}ᶜ) := B.image' A
   have : f '' {0}ᶜ = sphere x r := by
-    apply Subset.antisymm
+    apply subset_antisymm
     · rintro - ⟨y, hy, rfl⟩
       have : ‖y‖ ≠ 0 := by simpa using hy
       simp [f, norm_smul, abs_of_nonneg hr, mul_assoc, inv_mul_cancel₀ this]

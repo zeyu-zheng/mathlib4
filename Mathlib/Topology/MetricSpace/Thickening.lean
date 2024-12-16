@@ -146,7 +146,7 @@ theorem thickening_singleton (δ : ℝ) (x : X) : thickening δ ({x} : Set X) = 
 
 theorem ball_subset_thickening {x : X} {E : Set X} (hx : x ∈ E) (δ : ℝ) :
     ball x δ ⊆ thickening δ E :=
-  Subset.trans (by simp [Subset.rfl]) (thickening_subset_of_subset δ <| singleton_subset_iff.mpr hx)
+  subset_trans (by simp [Subset.rfl]) (thickening_subset_of_subset δ <| singleton_subset_iff.mpr hx)
 
 /-- The (open) `δ`-thickening `Metric.thickening δ E` of a subset `E` in a metric space equals the
 union of balls of radius `δ` centered at points of `E`. -/
@@ -434,7 +434,7 @@ theorem hasBasis_nhdsSet_cthickening {K : Set α} (hK : IsCompact K) :
 theorem cthickening_eq_iInter_cthickening' {δ : ℝ} (s : Set ℝ) (hsδ : s ⊆ Ioi δ)
     (hs : ∀ ε, δ < ε → (s ∩ Ioc δ ε).Nonempty) (E : Set α) :
     cthickening δ E = ⋂ ε ∈ s, cthickening ε E := by
-  apply Subset.antisymm
+  apply subset_antisymm
   · exact subset_iInter₂ fun _ hε => cthickening_mono (le_of_lt (hsδ hε)) E
   · unfold cthickening
     intro x hx
@@ -482,7 +482,7 @@ theorem closure_eq_iInter_cthickening' (E : Set α) (s : Set ℝ)
     apply cthickening_eq_iInter_cthickening' _ hs₀ hs
   obtain ⟨δ, hδs, δ_nonpos⟩ := not_subset.mp hs₀
   rw [Set.mem_Ioi, not_lt] at δ_nonpos
-  apply Subset.antisymm
+  apply subset_antisymm
   · exact subset_iInter₂ fun ε _ => closure_subset_cthickening ε E
   · rw [← cthickening_of_nonpos δ_nonpos E]
     exact biInter_subset_of_mem hδs
@@ -534,7 +534,7 @@ theorem _root_.IsCompact.cthickening_eq_biUnion_closedBall {α : Type*} [PseudoM
     cthickening δ E = ⋃ x ∈ E, closedBall x δ := by
   rcases eq_empty_or_nonempty E with (rfl | hne)
   · simp only [cthickening_empty, biUnion_empty]
-  refine Subset.antisymm (fun x hx ↦ ?_)
+  refine subset_antisymm (fun x hx ↦ ?_)
     (iUnion₂_subset fun x hx ↦ closedBall_subset_cthickening hx _)
   obtain ⟨y, yE, hy⟩ : ∃ y ∈ E, infEdist x E = edist x y := hE.exists_infEdist_eq_edist hne _
   have D1 : edist x y ≤ ENNReal.ofReal δ := (le_of_eq hy.symm).trans hx
@@ -548,7 +548,7 @@ theorem cthickening_eq_biUnion_closedBall {α : Type*} [PseudoMetricSpace α] [P
   rcases eq_empty_or_nonempty E with (rfl | hne)
   · simp only [cthickening_empty, biUnion_empty, closure_empty]
   rw [← cthickening_closure]
-  refine Subset.antisymm (fun x hx ↦ ?_)
+  refine subset_antisymm (fun x hx ↦ ?_)
     (iUnion₂_subset fun x hx ↦ closedBall_subset_cthickening hx _)
   obtain ⟨y, yE, hy⟩ : ∃ y ∈ closure E, infDist x (closure E) = dist x y :=
     isClosed_closure.exists_infDist_eq_dist (closure_nonempty_iff.mpr hne) x

@@ -357,7 +357,7 @@ theorem connectedComponent_subset_iInter_isClopen {x : α} :
 /-- A clopen set is the union of its connected components. -/
 theorem IsClopen.biUnion_connectedComponent_eq {Z : Set α} (h : IsClopen Z) :
     ⋃ x ∈ Z, connectedComponent x = Z :=
-  Subset.antisymm (iUnion₂_subset fun _ => h.connectedComponent_subset) fun _ h =>
+  subset_antisymm (iUnion₂_subset fun _ => h.connectedComponent_subset) fun _ h =>
     mem_iUnion₂_of_mem h mem_connectedComponent
 
 open Set.Notation in
@@ -401,7 +401,7 @@ theorem preimage_connectedComponent_connected
   have fiber_decomp : ∀ t' ∈ connectedComponent t, f ⁻¹' {t'} ⊆ u ∨ f ⁻¹' {t'} ⊆ v := by
     intro t' ht'
     apply isPreconnected_iff_subset_of_disjoint_closed.1 (connected_fibers t').2 u v hu hv
-    · exact Subset.trans (preimage_mono (singleton_subset_iff.2 ht')) huv
+    · exact (preimage_mono (singleton_subset_iff.2 ht')).trans huv
     rw [uv_disj.inter_eq, inter_empty]
   have T₁_u : f ⁻¹' T₁ = f ⁻¹' connectedComponent t ∩ u := by
     apply eq_of_subset_of_subset

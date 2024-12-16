@@ -230,7 +230,7 @@ theorem closedBall_inv_subset_polar_closedBall {r : ℝ} :
 inverse radius. -/
 theorem polar_closedBall {𝕜 E : Type*} [RCLike 𝕜] [NormedAddCommGroup E] [NormedSpace 𝕜 E] {r : ℝ}
     (hr : 0 < r) : polar 𝕜 (closedBall (0 : E) r) = closedBall (0 : Dual 𝕜 E) r⁻¹ := by
-  refine Subset.antisymm ?_ (closedBall_inv_subset_polar_closedBall 𝕜)
+  refine subset_antisymm ?_ (closedBall_inv_subset_polar_closedBall 𝕜)
   intro x' h
   simp only [mem_closedBall_zero_iff]
   refine ContinuousLinearMap.opNorm_le_of_ball hr (inv_nonneg.mpr hr.le) fun z _ => ?_

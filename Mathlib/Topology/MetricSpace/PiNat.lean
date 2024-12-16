@@ -121,7 +121,7 @@ theorem mem_cylinder_iff_eq {x y : ∀ n, E n} {n : ℕ} :
     y ∈ cylinder x n ↔ cylinder y n = cylinder x n := by
   constructor
   · intro hy
-    apply Subset.antisymm
+    apply subset_antisymm
     · intro z hz i hi
       rw [← hy i hi]
       exact hz i hi
@@ -337,7 +337,7 @@ theorem isTopologicalBasis_cylinders :
       (isTopologicalBasis_pi fun n : ℕ => isTopologicalBasis_opens).exists_subset_of_mem_open hx
         u_open
     rcases Finset.bddAbove F with ⟨n, hn⟩
-    refine ⟨cylinder x (n + 1), ⟨x, n + 1, rfl⟩, self_mem_cylinder _ _, Subset.trans ?_ Uu⟩
+    refine ⟨cylinder x (n + 1), ⟨x, n + 1, rfl⟩, self_mem_cylinder _ _, subset_trans ?_ Uu⟩
     intro y hy
     suffices ∀ i : ℕ, i ∈ F → y i ∈ U i by simpa
     intro i hi
@@ -561,7 +561,7 @@ theorem exists_lipschitz_retraction_of_isClosed {s : Set (∀ n, E n)} (hs : IsC
   have fs : ∀ x ∈ s, f x = x := fun x xs => by simp [f, xs]
   refine ⟨f, fs, ?_, ?_⟩
   -- check that the range of `f` is `s`.
-  · apply Subset.antisymm
+  · apply subset_antisymm
     · rintro x ⟨y, rfl⟩
       by_cases hy : y ∈ s
       · rwa [fs y hy]

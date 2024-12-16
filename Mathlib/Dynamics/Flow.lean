@@ -141,7 +141,7 @@ variable {τ : Type*} [AddCommGroup τ] [TopologicalSpace τ] [TopologicalAddGro
 theorem isInvariant_iff_image_eq (s : Set α) : IsInvariant ϕ s ↔ ∀ t, ϕ t '' s = s :=
   (isInvariant_iff_image _ _).trans
     (Iff.intro
-      (fun h t => Subset.antisymm (h t) fun _ hx => ⟨_, h (-t) ⟨_, hx, rfl⟩, by simp [← map_add]⟩)
+      (fun h t => subset_antisymm (h t) fun _ hx => ⟨_, h (-t) ⟨_, hx, rfl⟩, by simp [← map_add]⟩)
       fun h t => by rw [h t])
 
 /-- The time-reversal of a flow `ϕ` by a (commutative, additive) group

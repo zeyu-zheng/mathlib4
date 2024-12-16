@@ -562,7 +562,7 @@ theorem exist_finset_disjoint_balls_large_measure (μ : Measure α) [IsFiniteMea
     exact this.mono ball_subset_interior_closedBall
   let v : Fin N → Set α := fun i => ⋃ (x : s) (_ : x ∈ u i), closedBall x (r x)
   have A : s = ⋃ i : Fin N, s ∩ v i := by
-    refine Subset.antisymm ?_ (iUnion_subset fun i => inter_subset_left)
+    refine subset_antisymm ?_ (iUnion_subset fun i => inter_subset_left)
     intro x hx
     obtain ⟨i, y, hxy, h'⟩ :
         ∃ (i : Fin N) (i_1 : ↥s), i_1 ∈ u i ∧ x ∈ ball (↑i_1) (r ↑i_1) := by
@@ -885,7 +885,7 @@ theorem exists_closedBall_covering_tsum_measure_le (μ : Measure α) [SFinite μ
     rcases hf x (s's hx) (min r 1) (lt_min rpos zero_lt_one) with ⟨R', hR'⟩
     exact
       ⟨R', ⟨hR'.1, hR'.2.1, hR'.2.2.trans_le (min_le_right _ _)⟩,
-        Subset.trans (closedBall_subset_ball (hR'.2.2.trans_le (min_le_left _ _))) hr⟩
+        (closedBall_subset_ball (hR'.2.2.trans_le (min_le_left _ _))).trans hr⟩
   choose! r1 hr1 using this
   let q : BallPackage s' α :=
     { c := fun x => x
@@ -967,7 +967,7 @@ theorem exists_closedBall_covering_tsum_measure_le (μ : Measure α) [SFinite μ
           apply measure_mono
           simp only [SetCoe.forall, Subtype.coe_mk, iUnion_subset_iff]
           intro x hx
-          apply Subset.trans (closedBall_subset_ball (hr0 x hx).2.2) (hR x (t0s hx)).2
+          exact (closedBall_subset_ball (hr0 x hx).2.2).trans (hR x (t0s hx)).2
         _ ≤ μ s + ε / 2 := μu
     -- each subfamily in the second step has measure at most `ε / (2 N)`.
     have B : ∀ i : Fin N, (∑' x : ((↑) : s' → α) '' S i, μ (closedBall x (r x))) ≤ ε / 2 / N :=
@@ -1030,7 +1030,7 @@ protected def vitaliFamily (μ : Measure α) [SFinite μ] : VitaliFamily μ wher
       rcases le_total r (δ / 2) with (H | H)
       · exact ⟨r, ⟨rpos, tf⟩, ⟨rpos, H.trans_lt (half_lt_self δpos)⟩⟩
       · have : closedBall x r = closedBall x (δ / 2) :=
-          Subset.antisymm ht (closedBall_subset_closedBall H)
+          subset_antisymm ht (closedBall_subset_closedBall H)
         rw [this] at tf
         exact ⟨δ / 2, ⟨half_pos δpos, tf⟩, ⟨half_pos δpos, half_lt_self δpos⟩⟩
     obtain ⟨t, r, _, ts, tg, μt, tdisj⟩ :

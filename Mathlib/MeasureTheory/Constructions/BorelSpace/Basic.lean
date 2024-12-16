@@ -389,7 +389,7 @@ instance Prod.opensMeasurableSpace [h : SecondCountableTopologyEither α β] :
       rintro y ⟨b, b_open, yb, hb⟩
       exact ⟨b, fun z zb ↦ ⟨b, b_open, zb, hb⟩, b_open, yb⟩
     have : s = ⋃ a ∈ countableBasis α, a ×ˢ F a := by
-      apply Subset.antisymm
+      apply subset_antisymm
       · rintro ⟨y1, y2⟩ hy
         rcases isOpen_prod_iff.1 hs y1 y2 hy with ⟨u, v, u_open, v_open, yu, yv, huv⟩
         obtain ⟨a, ha, ya, au⟩ : ∃ a ∈ countableBasis α, y1 ∈ a ∧ a ⊆ u :=
@@ -410,7 +410,7 @@ instance Prod.opensMeasurableSpace [h : SecondCountableTopologyEither α β] :
       rintro y ⟨b, b_open, yb, hb⟩
       exact ⟨b, fun z zb ↦ ⟨b, b_open, zb, hb⟩, b_open, yb⟩
     have : s = ⋃ a ∈ countableBasis β, F a ×ˢ a := by
-      apply Subset.antisymm
+      apply subset_antisymm
       · rintro ⟨y1, y2⟩ hy
         rcases isOpen_prod_iff.1 hs y1 y2 hy with ⟨u, v, u_open, v_open, yu, yv, huv⟩
         obtain ⟨a, ha, ya, au⟩ : ∃ a ∈ countableBasis β, y2 ∈ a ∧ a ⊆ v :=

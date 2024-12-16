@@ -248,7 +248,7 @@ theorem AnalyticSet.iInter [hι : Nonempty ι] [Countable ι] [T2Space α] {s : 
   let F : t → α := fun x => f i₀ ((x : γ) i₀)
   have F_cont : Continuous F := (f_cont i₀).comp ((continuous_apply i₀).comp continuous_subtype_val)
   have F_range : range F = ⋂ n : ι, s n := by
-    apply Subset.antisymm
+    apply subset_antisymm
     · rintro y ⟨x, rfl⟩
       refine mem_iInter.2 fun n => ?_
       have : f n ((x : γ) n) = F x := (mem_iInter.1 x.2 n : _)
@@ -481,14 +481,14 @@ theorem measurablySeparable_range_of_disjoint [T2Space α] [MeasurableSpace α]
   have B : MeasurablySeparable (f '' cylinder x n) (g '' cylinder y n) := by
     refine ⟨u, ?_, ?_, u_open.measurableSet⟩
     · rw [image_subset_iff]
-      apply Subset.trans _ hεx
+      refine subset_trans ?_ hεx
       intro z hz
       rw [mem_cylinder_iff_dist_le] at hz
       exact hz.trans_lt (hn.trans_le (min_le_left _ _))
     · refine Disjoint.mono_left ?_ huv.symm
       change g '' cylinder y n ⊆ v
       rw [image_subset_iff]
-      apply Subset.trans _ hεy
+      refine subset_trans ?_ hεy
       intro z hz
       rw [mem_cylinder_iff_dist_le] at hz
       exact hz.trans_lt (hn.trans_le (min_le_right _ _))
@@ -700,7 +700,7 @@ theorem measurableSet_range_of_continuous_injective {β : Type*} [TopologicalSpa
     rw [this]
     exact MeasurableSet.iInter fun n => F_meas n
   -- we check both inclusions.
-  apply Subset.antisymm
+  apply subset_antisymm
   -- we start with the easy inclusion `range f ⊆ ⋂ F n`. One just needs to unfold the definitions.
   · rintro x ⟨y, rfl⟩
     refine mem_iInter.2 fun n => ?_
@@ -778,7 +778,7 @@ theorem measurableSet_range_of_continuous_injective {β : Type*} [TopologicalSpa
     -- for large enough `n`, the image of `s n` is contained in `v`, by continuity of `f`.
     have fsnv : f '' s n ⊆ v := by
       rw [image_subset_iff]
-      apply Subset.trans _ hδ
+      refine subset_trans ?_ hδ
       intro a ha
       calc
         dist a z ≤ dist a (y n) + dist (y n) z := dist_triangle _ _ _

@@ -23,7 +23,7 @@ variable [TopologicalSpace α] [LinearOrder α] [OrderTopology α] [DenselyOrder
 /-- The closure of the interval `(a, +∞)` is the closed interval `[a, +∞)`, unless `a` is a top
 element. -/
 theorem closure_Ioi' {a : α} (h : (Ioi a).Nonempty) : closure (Ioi a) = Ici a := by
-  apply Subset.antisymm
+  apply subset_antisymm
   · exact closure_minimal Ioi_subset_Ici_self isClosed_Ici
   · rw [← diff_subset_closure_iff, Ici_diff_Ioi_same, singleton_subset_iff]
     exact isGLB_Ioi.mem_closure h
@@ -46,7 +46,7 @@ theorem closure_Iio (a : α) [NoMinOrder α] : closure (Iio a) = Iic a :=
 /-- The closure of the open interval `(a, b)` is the closed interval `[a, b]`. -/
 @[simp]
 theorem closure_Ioo {a b : α} (hab : a ≠ b) : closure (Ioo a b) = Icc a b := by
-  apply Subset.antisymm
+  apply subset_antisymm
   · exact closure_minimal Ioo_subset_Icc_self isClosed_Icc
   · cases' hab.lt_or_lt with hab hab
     · rw [← diff_subset_closure_iff, Icc_diff_Ioo_same hab.le]
@@ -59,17 +59,17 @@ theorem closure_Ioo {a b : α} (hab : a ≠ b) : closure (Ioo a b) = Icc a b := 
 /-- The closure of the interval `(a, b]` is the closed interval `[a, b]`. -/
 @[simp]
 theorem closure_Ioc {a b : α} (hab : a ≠ b) : closure (Ioc a b) = Icc a b := by
-  apply Subset.antisymm
+  apply subset_antisymm
   · exact closure_minimal Ioc_subset_Icc_self isClosed_Icc
-  · apply Subset.trans _ (closure_mono Ioo_subset_Ioc_self)
+  · apply subset_trans _ (closure_mono Ioo_subset_Ioc_self)
     rw [closure_Ioo hab]
 
 /-- The closure of the interval `[a, b)` is the closed interval `[a, b]`. -/
 @[simp]
 theorem closure_Ico {a b : α} (hab : a ≠ b) : closure (Ico a b) = Icc a b := by
-  apply Subset.antisymm
+  apply subset_antisymm
   · exact closure_minimal Ico_subset_Icc_self isClosed_Icc
-  · apply Subset.trans _ (closure_mono Ioo_subset_Ico_self)
+  · apply subset_trans _ (closure_mono Ioo_subset_Ico_self)
     rw [closure_Ioo hab]
 
 @[simp]

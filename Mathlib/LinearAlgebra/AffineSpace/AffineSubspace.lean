@@ -784,7 +784,7 @@ theorem eq_bot_or_nonempty (Q : AffineSubspace k P) : Q = ⊥ ∨ (Q : Set P).No
 theorem subsingleton_of_subsingleton_span_eq_top {s : Set P} (h₁ : s.Subsingleton)
     (h₂ : affineSpan k s = ⊤) : Subsingleton P := by
   obtain ⟨p, hp⟩ := AffineSubspace.nonempty_of_affineSpan_eq_top k V P h₂
-  have : s = {p} := Subset.antisymm (fun q hq => h₁ hq hp) (by simp [hp])
+  have : s = {p} := subset_antisymm (fun q hq => h₁ hq hp) (by simp [hp])
   rw [this, AffineSubspace.ext_iff, AffineSubspace.coe_affineSpan_singleton,
     AffineSubspace.top_coe, eq_comm, ← subsingleton_iff_singleton (mem_univ _)] at h₂
   exact subsingleton_of_univ_subsingleton h₂
@@ -792,7 +792,7 @@ theorem subsingleton_of_subsingleton_span_eq_top {s : Set P} (h₁ : s.Subsingle
 theorem eq_univ_of_subsingleton_span_eq_top {s : Set P} (h₁ : s.Subsingleton)
     (h₂ : affineSpan k s = ⊤) : s = (univ : Set P) := by
   obtain ⟨p, hp⟩ := AffineSubspace.nonempty_of_affineSpan_eq_top k V P h₂
-  have : s = {p} := Subset.antisymm (fun q hq => h₁ hq hp) (by simp [hp])
+  have : s = {p} := subset_antisymm (fun q hq => h₁ hq hp) (by simp [hp])
   rw [this, eq_comm, ← subsingleton_iff_singleton (mem_univ p), subsingleton_univ_iff]
   exact subsingleton_of_subsingleton_span_eq_top h₁ h₂
 
@@ -1299,7 +1299,7 @@ lemma affineSpan_insert_zero (s : Set V) :
   rw [← Submodule.span_insert_zero]
   refine affineSpan_subset_span.antisymm ?_
   rw [← vectorSpan_add_self, vectorSpan_def]
-  refine Subset.trans ?_ <| subset_add_left _ <| mem_insert ..
+  refine subset_trans ?_ <| subset_add_left _ <| mem_insert ..
   gcongr
   exact subset_sub_left <| mem_insert ..
 

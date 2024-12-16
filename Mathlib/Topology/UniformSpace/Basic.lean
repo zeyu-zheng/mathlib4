@@ -481,7 +481,7 @@ theorem comp_symm_of_uniformity {s : Set (α × α)} (hs : s ∈ 𝓤 α) :
     ∃ t ∈ 𝓤 α, (∀ {a b}, (a, b) ∈ t → (b, a) ∈ t) ∧ t ○ t ⊆ s :=
   let ⟨_t, ht₁, ht₂⟩ := comp_mem_uniformity_sets hs
   let ⟨t', ht', ht'₁, ht'₂⟩ := symm_of_uniformity ht₁
-  ⟨t', ht', ht'₁ _ _, Subset.trans (monotone_id.compRel monotone_id ht'₂) ht₂⟩
+  ⟨t', ht', ht'₁ _ _, (monotone_id.compRel monotone_id ht'₂).trans ht₂⟩
 
 theorem uniformity_le_symm : 𝓤 α ≤ @Prod.swap α α <$> 𝓤 α := by
   rw [map_swap_eq_comap_swap]; exact tendsto_swap_uniformity.le_comap
@@ -689,7 +689,7 @@ theorem UniformSpace.mem_nhds_iff_symm {x : α} {s : Set α} :
   constructor
   · rintro ⟨V, V_in, V_sub⟩
     use symmetrizeRel V, symmetrize_mem_uniformity V_in, symmetric_symmetrizeRel V
-    exact Subset.trans (ball_mono (symmetrizeRel_subset_self V) x) V_sub
+    exact (ball_mono (symmetrizeRel_subset_self V) x).trans V_sub
   · rintro ⟨V, V_in, _, V_sub⟩
     exact ⟨V, V_in, V_sub⟩
 
@@ -815,7 +815,7 @@ theorem uniformity_hasBasis_closed :
   refine Filter.hasBasis_self.2 fun t h => ?_
   rcases comp_comp_symm_mem_uniformity_sets h with ⟨w, w_in, w_symm, r⟩
   refine ⟨closure w, mem_of_superset w_in subset_closure, isClosed_closure, ?_⟩
-  refine Subset.trans ?_ r
+  refine subset_trans ?_ r
   rw [closure_eq_uniformity]
   apply iInter_subset_of_subset
   apply iInter_subset

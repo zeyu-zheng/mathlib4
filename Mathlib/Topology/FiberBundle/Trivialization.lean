@@ -381,7 +381,7 @@ theorem preimage_subset_source {s : Set B} (hb : s ⊆ e.baseSet) : proj ⁻¹' 
 
 theorem image_preimage_eq_prod_univ {s : Set B} (hb : s ⊆ e.baseSet) :
     e '' (proj ⁻¹' s) = s ×ˢ univ :=
-  Subset.antisymm
+  subset_antisymm
     (image_subset_iff.mpr fun p hp =>
       ⟨(e.proj_toFun p (e.preimage_subset_source hb hp)).symm ▸ hp, trivial⟩)
     fun p hp =>

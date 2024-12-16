@@ -114,7 +114,7 @@ theorem hasDerivWithinAt_Ici_of_tendsto_deriv {s : Set ℝ} {e : E} {a : ℝ} {f
     we apply it. -/
   obtain ⟨b, ab : a < b, sab : Ioc a b ⊆ s⟩ := mem_nhdsWithin_Ioi_iff_exists_Ioc_subset.1 hs
   let t := Ioo a b
-  have ts : t ⊆ s := Subset.trans Ioo_subset_Ioc_self sab
+  have ts : t ⊆ s := Ioo_subset_Ioc_self.trans sab
   have t_diff : DifferentiableOn ℝ f t := f_diff.mono ts
   have t_conv : Convex ℝ t := convex_Ioo a b
   have t_open : IsOpen t := isOpen_Ioo
@@ -152,7 +152,7 @@ theorem hasDerivWithinAt_Iic_of_tendsto_deriv {s : Set ℝ} {e : E} {a : ℝ}
     apply it. -/
   obtain ⟨b, ba, sab⟩ : ∃ b ∈ Iio a, Ico b a ⊆ s := mem_nhdsWithin_Iio_iff_exists_Ico_subset.1 hs
   let t := Ioo b a
-  have ts : t ⊆ s := Subset.trans Ioo_subset_Ico_self sab
+  have ts : t ⊆ s := Ioo_subset_Ico_self.trans sab
   have t_diff : DifferentiableOn ℝ f t := f_diff.mono ts
   have t_conv : Convex ℝ t := convex_Ioo b a
   have t_open : IsOpen t := isOpen_Ioo

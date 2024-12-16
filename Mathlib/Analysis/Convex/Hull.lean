@@ -130,7 +130,7 @@ theorem Convex.convex_remove_iff_not_mem_convexHull_remove {s : Set E} (hs : Con
     rw [h]
     exact convex_convexHull 𝕜 _
   exact
-    Subset.antisymm (subset_convexHull 𝕜 _) fun y hy =>
+    subset_antisymm (subset_convexHull 𝕜 _) fun y hy =>
       ⟨convexHull_min diff_subset hs hy, by
         rintro (rfl : y = x)
         exact hx hy⟩

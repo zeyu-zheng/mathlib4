@@ -80,7 +80,7 @@ theorem smul_singleton_mem_nhds_of_sigmaCompact
     rwa [smul_assoc, interior_smul, mem_inv_smul_set_iff]
   have : (g'⁻¹ • V) • {x} ⊆ U • ({x} : Set X) := by
     apply smul_subset_smul_right
-    apply Subset.trans (smul_set_subset_smul (inv_mem_inv.2 hg')) ?_
+    refine (smul_set_subset_smul (inv_mem_inv.2 hg')).trans ?_
     rw [V_symm]
     exact VU
   exact Filter.mem_of_superset J this

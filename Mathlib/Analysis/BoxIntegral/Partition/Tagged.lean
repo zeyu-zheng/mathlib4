@@ -225,7 +225,7 @@ theorem isSubordinate_biUnionTagged [Fintype ι] {π : Prepartition I}
 
 theorem IsSubordinate.biUnionPrepartition [Fintype ι] (h : IsSubordinate π r)
     (πi : ∀ J, Prepartition J) : IsSubordinate (π.biUnionPrepartition πi) r :=
-  fun _ hJ => Subset.trans (Box.le_iff_Icc.1 <| π.toPrepartition.le_biUnionIndex hJ) <|
+  fun _ hJ => (Box.le_iff_Icc.1 <| π.toPrepartition.le_biUnionIndex hJ).trans <|
     h _ <| π.toPrepartition.biUnionIndex_mem hJ
 
 theorem IsSubordinate.infPrepartition [Fintype ι] (h : IsSubordinate π r) (π' : Prepartition I) :

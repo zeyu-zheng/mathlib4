@@ -55,7 +55,7 @@ theorem dist_smul_add_one_sub_smul_le {r : ℝ} {x y : E} (h : r ∈ Icc 0 1) :
     _ = dist y x := by rw [sub_zero, one_mul]
 
 theorem closure_ball (x : E) {r : ℝ} (hr : r ≠ 0) : closure (ball x r) = closedBall x r := by
-  refine Subset.antisymm closure_ball_subset_closedBall fun y hy => ?_
+  refine subset_antisymm closure_ball_subset_closedBall fun y hy => ?_
   have : ContinuousWithinAt (fun c : ℝ => c • (y - x) + x) (Ico 0 1) 1 :=
     ((continuous_id.smul continuous_const).add continuous_const).continuousWithinAt
   convert this.mem_closure _ _
@@ -76,7 +76,7 @@ theorem interior_closedBall (x : E) {r : ℝ} (hr : r ≠ 0) :
     interior (closedBall x r) = ball x r := by
   cases' hr.lt_or_lt with hr hr
   · rw [closedBall_eq_empty.2 hr, ball_eq_empty.2 hr.le, interior_empty]
-  refine Subset.antisymm ?_ ball_subset_interior_closedBall
+  refine subset_antisymm ?_ ball_subset_interior_closedBall
   intro y hy
   rcases (mem_closedBall.1 <| interior_subset hy).lt_or_eq with (hr | rfl)
   · exact hr
@@ -119,7 +119,7 @@ theorem exists_norm_eq {c : ℝ} (hc : 0 ≤ c) : ∃ x : E, ‖x‖ = c := by
 
 @[simp]
 theorem range_norm : range (norm : E → ℝ) = Ici 0 :=
-  Subset.antisymm (range_subset_iff.2 norm_nonneg) fun _ => exists_norm_eq E
+  subset_antisymm (range_subset_iff.2 norm_nonneg) fun _ => exists_norm_eq E
 
 theorem nnnorm_surjective : Surjective (nnnorm : E → ℝ≥0) := fun c =>
   (exists_norm_eq E c.coe_nonneg).imp fun _ h => NNReal.eq h

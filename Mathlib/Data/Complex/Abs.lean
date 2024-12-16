@@ -109,7 +109,7 @@ theorem abs_two : Complex.abs 2 = 2 := abs_ofNat 2
 
 @[simp]
 theorem range_abs : range Complex.abs = Ici 0 :=
-  Subset.antisymm
+  subset_antisymm
     (by simp only [range_subset_iff, Ici, mem_setOf_eq, apply_nonneg, forall_const])
     (fun x hx => ⟨x, Complex.abs_of_nonneg hx⟩)
 
@@ -207,7 +207,7 @@ theorem normSq_eq_abs (x : ℂ) : normSq x = (Complex.abs x) ^ 2 := by
 
 @[simp]
 theorem range_normSq : range normSq = Ici 0 :=
-  Subset.antisymm (range_subset_iff.2 normSq_nonneg) fun x hx =>
+  subset_antisymm (range_subset_iff.2 normSq_nonneg) fun x hx =>
     ⟨Real.sqrt x, by rw [normSq_ofReal, Real.mul_self_sqrt hx]⟩
 
 /-! ### Cauchy sequences -/

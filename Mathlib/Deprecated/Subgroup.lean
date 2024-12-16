@@ -539,7 +539,7 @@ variable [Group G]
 
 @[to_additive]
 theorem trivial_eq_closure : trivial G = Group.closure ∅ :=
-  Subset.antisymm (by simp [Set.subset_def, (Group.closure.isSubgroup _).one_mem])
+  subset_antisymm (by simp [Set.subset_def, (Group.closure.isSubgroup _).one_mem])
     (Group.closure_subset trivial_normal.toIsSubgroup <| by simp)
 
 end IsSubgroup

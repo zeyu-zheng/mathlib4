@@ -270,7 +270,7 @@ theorem Finset.centroid_mem_convexHull (s : Finset E) (hs : s.Nonempty) :
 theorem convexHull_range_eq_exists_affineCombination (v : ι → E) : convexHull R (range v) =
     { x | ∃ (s : Finset ι) (w : ι → R), (∀ i ∈ s, 0 ≤ w i) ∧ s.sum w = 1 ∧
       s.affineCombination R v w = x } := by
-  refine Subset.antisymm (convexHull_min ?_ ?_) ?_
+  refine subset_antisymm (convexHull_min ?_ ?_) ?_
   · intro x hx
     obtain ⟨i, hi⟩ := Set.mem_range.mp hx
     exact ⟨{i}, Function.const ι (1 : R), by simp, by simp, by simp [hi]⟩
@@ -305,7 +305,7 @@ to the convex hull. Use convexity of the convex hull instead.
 theorem convexHull_eq (s : Set E) : convexHull R s =
     { x : E | ∃ (ι : Type) (t : Finset ι) (w : ι → R) (z : ι → E), (∀ i ∈ t, 0 ≤ w i) ∧
       ∑ i ∈ t, w i = 1 ∧ (∀ i ∈ t, z i ∈ s) ∧ t.centerMass w z = x } := by
-  refine Subset.antisymm (convexHull_min ?_ ?_) ?_
+  refine subset_antisymm (convexHull_min ?_ ?_) ?_
   · intro x hx
     use PUnit, {PUnit.unit}, fun _ => 1, fun _ => x, fun _ _ => zero_le_one, sum_singleton _ _,
       fun _ _ => hx
@@ -390,7 +390,7 @@ theorem Set.Finite.convexHull_eq {s : Set E} (hs : s.Finite) : convexHull R s =
 /-- A weak version of Carathéodory's theorem. -/
 theorem convexHull_eq_union_convexHull_finite_subsets (s : Set E) :
     convexHull R s = ⋃ (t : Finset E) (_ : ↑t ⊆ s), convexHull R ↑t := by
-  refine Subset.antisymm ?_ ?_
+  refine subset_antisymm ?_ ?_
   · rw [_root_.convexHull_eq]
     rintro x ⟨ι, t, w, z, hw₀, hw₁, hz, rfl⟩
     simp only [mem_iUnion]
@@ -420,7 +420,7 @@ theorem mk_mem_convexHull_prod {t : Set F} {x : E} {y : F} (hx : x ∈ convexHul
 @[simp]
 theorem convexHull_prod (s : Set E) (t : Set F) :
     convexHull R (s ×ˢ t) = convexHull R s ×ˢ convexHull R t :=
-  Subset.antisymm
+  subset_antisymm
       (convexHull_min (prod_mono (subset_convexHull _ _) <| subset_convexHull _ _) <|
         (convex_convexHull _ _).prod <| convex_convexHull _ _) <|
     prod_subset_iff.2 fun _ hx _ => mk_mem_convexHull_prod hx
@@ -461,7 +461,7 @@ variable (ι) [Fintype ι] {f : ι → R}
 /-- `stdSimplex 𝕜 ι` is the convex hull of the canonical basis in `ι → 𝕜`. -/
 theorem convexHull_basis_eq_stdSimplex :
     convexHull R (range fun i j : ι => if i = j then (1 : R) else 0) = stdSimplex R ι := by
-  refine Subset.antisymm (convexHull_min ?_ (convex_stdSimplex R ι)) ?_
+  refine subset_antisymm (convexHull_min ?_ (convex_stdSimplex R ι)) ?_
   · rintro _ ⟨i, rfl⟩
     exact ite_eq_mem_stdSimplex R i
   · rintro w ⟨hw₀, hw₁⟩

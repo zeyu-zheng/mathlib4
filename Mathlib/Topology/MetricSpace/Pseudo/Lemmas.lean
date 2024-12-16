@@ -40,7 +40,7 @@ lemma eventually_closedBall_subset {x : α} {u : Set α} (hu : u ∈ 𝓝 x) :
     ∀ᶠ r in 𝓝 (0 : ℝ), closedBall x r ⊆ u := by
   obtain ⟨ε, εpos, hε⟩ : ∃ ε, 0 < ε ∧ closedBall x ε ⊆ u := nhds_basis_closedBall.mem_iff.1 hu
   have : Iic ε ∈ 𝓝 (0 : ℝ) := Iic_mem_nhds εpos
-  filter_upwards [this] with _ hr using Subset.trans (closedBall_subset_closedBall hr) hε
+  filter_upwards [this] with _ hr using (closedBall_subset_closedBall hr).trans hε
 
 lemma tendsto_closedBall_smallSets (x : α) : Tendsto (closedBall x) (𝓝 0) (𝓝 x).smallSets :=
   tendsto_smallSets_iff.2 fun _ ↦ eventually_closedBall_subset
@@ -72,7 +72,7 @@ lemma frontier_closedBall_subset_sphere : frontier (closedBall x ε) ⊆ sphere 
   frontier_le_subset_eq (continuous_id.dist continuous_const) continuous_const
 
 lemma closedBall_zero' (x : α) : closedBall x 0 = closure {x} :=
-  Subset.antisymm
+  subset_antisymm
     (fun _y hy =>
       mem_closure_iff.2 fun _ε ε0 => ⟨x, mem_singleton x, (mem_closedBall.1 hy).trans_lt ε0⟩)
     (closure_minimal (singleton_subset_iff.2 (dist_self x).le) isClosed_ball)

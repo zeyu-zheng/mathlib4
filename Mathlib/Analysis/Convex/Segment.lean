@@ -254,7 +254,7 @@ theorem openSegment_translate_image (a b c : E) :
 lemma segment_inter_eq_endpoint_of_linearIndependent_sub
     {c x y : E} (h : LinearIndependent 𝕜 ![x - c, y - c]) :
     [c -[𝕜] x] ∩ [c -[𝕜] y] = {c} := by
-  apply Subset.antisymm; swap
+  apply subset_antisymm; swap
   · simp [singleton_subset_iff, left_mem_segment]
   intro z ⟨hzt, hzs⟩
   rw [segment_eq_image, mem_image] at hzt hzs

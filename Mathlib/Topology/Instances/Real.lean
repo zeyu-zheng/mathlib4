@@ -139,7 +139,7 @@ section
 
 theorem closure_of_rat_image_lt {q : ℚ} :
     closure (((↑) : ℚ → ℝ) '' { x | q < x }) = { r | ↑q ≤ r } :=
-  Subset.antisymm
+  subset_antisymm
     (isClosed_Ici.closure_subset_iff.2
       (image_subset_iff.2 fun p (h : q < p) => by simpa using h.le))
     fun x hx => mem_closure_iff_nhds.2 fun _ ht =>

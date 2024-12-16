@@ -164,7 +164,7 @@ theorem le_index_mul (K₀ : PositiveCompacts G) (K : Compacts G) {V : Set G}
   obtain ⟨t, h1t, h2t⟩ := index_elim K₀.isCompact hV
   rw [← h2s, ← h2t, mul_comm]
   refine le_trans ?_ Finset.card_mul_le
-  apply Nat.sInf_le; refine ⟨_, ?_, rfl⟩; rw [mem_setOf_eq]; refine Subset.trans h1s ?_
+  apply Nat.sInf_le; refine ⟨_, ?_, rfl⟩; rw [mem_setOf_eq]; refine h1s.trans ?_
   apply iUnion₂_subset; intro g₁ hg₁; rw [preimage_subset_iff]; intro g₂ hg₂
   have := h1t hg₂
   rcases this with ⟨_, ⟨g₃, rfl⟩, A, ⟨hg₃, rfl⟩, h2V⟩; rw [mem_preimage, ← mul_assoc] at h2V
@@ -186,7 +186,7 @@ theorem index_pos (K : PositiveCompacts G) {V : Set G} (hV : (interior V).Nonemp
 theorem index_mono {K K' V : Set G} (hK' : IsCompact K') (h : K ⊆ K') (hV : (interior V).Nonempty) :
     index K V ≤ index K' V := by
   rcases index_elim hK' hV with ⟨s, h1s, h2s⟩
-  apply Nat.sInf_le; rw [mem_image]; exact ⟨s, Subset.trans h h1s, h2s⟩
+  apply Nat.sInf_le; rw [mem_image]; exact ⟨s, h.trans h1s, h2s⟩
 
 @[to_additive addIndex_union_le]
 theorem index_union_le (K₁ K₂ : Compacts G) {V : Set G} (hV : (interior V).Nonempty) :
@@ -197,7 +197,7 @@ theorem index_union_le (K₁ K₂ : Compacts G) {V : Set G} (hV : (interior V).N
   rw [← h2s, ← h2t]
   refine le_trans ?_ (Finset.card_union_le _ _)
   apply Nat.sInf_le; refine ⟨_, ?_, rfl⟩; rw [mem_setOf_eq]
-  apply union_subset <;> refine Subset.trans (by assumption) ?_ <;>
+  apply union_subset <;> refine subset_trans (by assumption) ?_ <;>
     apply biUnion_subset_biUnion_left <;> intro g hg <;> simp only [mem_def] at hg <;>
     simp only [mem_def, Multiset.mem_union, Finset.union_val, hg, or_true, true_or]
 
@@ -221,8 +221,8 @@ theorem index_union_eq (K₁ K₂ : Compacts G) {V : Set G} (hV : (interior V).N
     exact h2g₀
   refine
     le_trans
-      (add_le_add (this K₁.1 <| Subset.trans subset_union_left h1s)
-        (this K₂.1 <| Subset.trans subset_union_right h1s)) ?_
+      (add_le_add (this K₁.1 <| subset_union_left.trans h1s)
+        (this K₂.1 <| subset_union_right.trans h1s)) ?_
   rw [← Finset.card_union_of_disjoint, Finset.filter_union_right]
   · exact s.card_filter_le _
   apply Finset.disjoint_filter.mpr
@@ -243,7 +243,7 @@ theorem mul_left_index_le {K : Set G} (hK : IsCompact K) {V : Set G} (hV : (inte
   rcases index_elim hK hV with ⟨s, h1s, h2s⟩; rw [← h2s]
   apply Nat.sInf_le; rw [mem_image]
   refine ⟨s.map (Equiv.mulRight g⁻¹).toEmbedding, ?_, Finset.card_map _⟩
-  simp only [mem_setOf_eq]; refine Subset.trans (image_subset _ h1s) ?_
+  simp only [mem_setOf_eq]; refine (image_subset _ h1s).trans ?_
   rintro _ ⟨g₁, ⟨_, ⟨g₂, rfl⟩, ⟨_, ⟨hg₂, rfl⟩, hg₁⟩⟩, rfl⟩
   simp only [mem_preimage] at hg₁
   simp only [exists_prop, mem_iUnion, Finset.mem_map, Equiv.coe_mulRight,
@@ -335,7 +335,7 @@ theorem nonempty_iInter_clPrehaar (K₀ : PositiveCompacts G) :
   · apply prehaar_mem_haarProduct K₀; use 1; rwa [h1V₀.interior_eq]
   · simp only [mem_iInter]; rintro ⟨V, hV⟩ h2V; apply subset_closure
     apply mem_image_of_mem; rw [mem_setOf_eq]
-    exact ⟨Subset.trans (iInter_subset _ ⟨V, hV⟩) (iInter_subset _ h2V), h1V₀, h2V₀⟩
+    exact ⟨(iInter_subset _ ⟨V, hV⟩).trans (iInter_subset _ h2V), h1V₀, h2V₀⟩
 
 /-!
 ### Lemmas about `chaar`
@@ -419,10 +419,10 @@ theorem chaar_sup_eq {K₀ : PositiveCompacts G}
     with ⟨U₁, U₂, h1U₁, h1U₂, h2U₁, h2U₂, hU⟩
   rcases compact_open_separated_mul_right K₁.2 h1U₁ h2U₁ with ⟨L₁, h1L₁, h2L₁⟩
   rcases mem_nhds_iff.mp h1L₁ with ⟨V₁, h1V₁, h2V₁, h3V₁⟩
-  replace h2L₁ := Subset.trans (mul_subset_mul_left h1V₁) h2L₁
+  replace h2L₁ := (mul_subset_mul_left h1V₁).trans h2L₁
   rcases compact_open_separated_mul_right K₂.2 h1U₂ h2U₂ with ⟨L₂, h1L₂, h2L₂⟩
   rcases mem_nhds_iff.mp h1L₂ with ⟨V₂, h1V₂, h2V₂, h3V₂⟩
-  replace h2L₂ := Subset.trans (mul_subset_mul_left h1V₂) h2L₂
+  replace h2L₂ := (mul_subset_mul_left h1V₂).trans h2L₂
   let eval : (Compacts G → ℝ) → ℝ := fun f => f K₁ + f K₂ - f (K₁ ⊔ K₂)
   have : Continuous eval :=
     ((continuous_apply K₁).add (continuous_apply K₂)).sub (continuous_apply (K₁ ⊔ K₂))
@@ -439,10 +439,10 @@ theorem chaar_sup_eq {K₀ : PositiveCompacts G}
     apply prehaar_sup_eq
     · rw [h2U.interior_eq]; exact ⟨1, h3U⟩
     · refine disjoint_of_subset ?_ ?_ hU
-      · refine Subset.trans (mul_subset_mul Subset.rfl ?_) h2L₁
-        exact Subset.trans (inv_subset.mpr h1U) inter_subset_left
-      · refine Subset.trans (mul_subset_mul Subset.rfl ?_) h2L₂
-        exact Subset.trans (inv_subset.mpr h1U) inter_subset_right
+      · refine (mul_subset_mul Subset.rfl ?_).trans h2L₁
+        exact (inv_subset.mpr h1U).trans inter_subset_left
+      · refine (mul_subset_mul Subset.rfl ?_).trans h2L₂
+        exact (inv_subset.mpr h1U).trans inter_subset_right
   · apply continuous_iff_isClosed.mp this; exact isClosed_singleton
 
 @[to_additive is_left_invariant_addCHaar]

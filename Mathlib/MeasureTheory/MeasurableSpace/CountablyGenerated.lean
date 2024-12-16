@@ -112,7 +112,7 @@ instance (priority := 100) [MeasurableSpace α] [Countable α] : CountablyGenera
     refine le_antisymm ?_ (generateFrom_le (by simp [MeasurableSet.measurableAtom_of_countable]))
     intro s hs
     have : s = ⋃ y ∈ s, measurableAtom y := by
-      apply Subset.antisymm
+      apply subset_antisymm
       · intro x hx
         simpa using ⟨x, hx, by simp⟩
       · simp only [iUnion_subset_iff]

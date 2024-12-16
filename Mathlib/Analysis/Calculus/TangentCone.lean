@@ -123,7 +123,7 @@ theorem tangentCone_mono_nhds (h : 𝓝[s] x ≤ 𝓝[t] x) :
 
 /-- Tangent cone of `s` at `x` depends only on `𝓝[s] x`. -/
 theorem tangentCone_congr (h : 𝓝[s] x = 𝓝[t] x) : tangentConeAt 𝕜 s x = tangentConeAt 𝕜 t x :=
-  Subset.antisymm (tangentCone_mono_nhds <| le_of_eq h) (tangentCone_mono_nhds <| le_of_eq h.symm)
+  subset_antisymm (tangentCone_mono_nhds <| le_of_eq h) (tangentCone_mono_nhds <| le_of_eq h.symm)
 
 /-- Intersecting with a neighborhood of the point does not change the tangent cone. -/
 theorem tangentCone_inter_nhds (ht : t ∈ 𝓝 x) : tangentConeAt 𝕜 (s ∩ t) x = tangentConeAt 𝕜 s x :=
@@ -340,7 +340,7 @@ theorem uniqueDiffWithinAt_convex {s : Set G} (conv : Convex ℝ s) (hs : (inter
   replace hy : interior s ∈ 𝓝 y := IsOpen.mem_nhds isOpen_interior hy
   apply mem_of_superset ((isOpenMap_sub_right x).image_mem_nhds hy)
   rintro _ ⟨z, zs, rfl⟩
-  refine mem_tangentCone_of_openSegment_subset (Subset.trans ?_ interior_subset)
+  refine mem_tangentCone_of_openSegment_subset (subset_trans ?_ interior_subset)
   exact conv.openSegment_closure_interior_subset_interior hx zs
 
 /-- In a real vector space, a convex set with nonempty interior is a set of unique

@@ -363,7 +363,7 @@ def IsSubordinate {s : Set M} (f : SmoothBumpCovering ι I M s) (U : M → Set M
 
 theorem IsSubordinate.support_subset {fs : SmoothBumpCovering ι I M s} {U : M → Set M}
     (h : fs.IsSubordinate U) (i : ι) : support (fs i) ⊆ U (fs.c i) :=
-  Subset.trans subset_closure (h i)
+  subset_closure.trans (h i)
 
 variable (I) in
 /-- Let `M` be a smooth manifold with corners modelled on a finite dimensional real vector space.
@@ -667,7 +667,7 @@ lemma IsOpen.exists_msmooth_support_eq_aux {s : Set H} (hs : IsOpen s) :
   · rw [support_comp_eq_preimage, f_supp, ← preimage_comp]
     simp only [ModelWithCorners.symm_comp_self, preimage_id_eq, id_eq]
   · exact f_diff.comp_contMDiff contMDiff_model
-  · exact Subset.trans (range_comp_subset_range _ _) f_range
+  · exact (range_comp_subset_range _ _).trans f_range
 
 /-- Given an open set in a finite-dimensional real manifold, there exists a nonnegative smooth
 function with support equal to `s`. -/

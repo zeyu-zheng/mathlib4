@@ -67,10 +67,10 @@ theorem mem_span : x ∈ span R s ↔ ∀ p : Submodule R M, s ⊆ p → x ∈ p
 theorem subset_span : s ⊆ span R s := fun _ h => mem_span.2 fun _ hp => hp h
 
 theorem span_le {p} : span R s ≤ p ↔ s ⊆ p :=
-  ⟨Subset.trans subset_span, fun ss _ h => mem_span.1 h _ ss⟩
+  ⟨subset_trans subset_span, fun ss _ h => mem_span.1 h _ ss⟩
 
 @[gcongr] theorem span_mono (h : s ⊆ t) : span R s ≤ span R t :=
-  span_le.2 <| Subset.trans h subset_span
+  span_le.2 <| h.trans subset_span
 
 theorem span_monotone : Monotone (span R : Set M → Submodule R M) := fun _ _ => span_mono
 

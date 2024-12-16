@@ -345,7 +345,7 @@ theorem D_subset_differentiable_set {K : Set (E →L[𝕜] F)} (hK : IsComplete 
 
 theorem differentiable_set_eq_D (hK : IsComplete K) :
     { x | DifferentiableAt 𝕜 f x ∧ fderiv 𝕜 f x ∈ K } = D f K :=
-  Subset.antisymm (differentiable_set_subset_D _) (D_subset_differentiable_set hK)
+  subset_antisymm (differentiable_set_subset_D _) (D_subset_differentiable_set hK)
 
 end FDerivMeasurableAux
 
@@ -679,7 +679,7 @@ theorem D_subset_differentiable_set {K : Set F} (hK : IsComplete K) :
 
 theorem differentiable_set_eq_D (hK : IsComplete K) :
     { x | DifferentiableWithinAt ℝ f (Ici x) x ∧ derivWithin f (Ici x) x ∈ K } = D f K :=
-  Subset.antisymm (differentiable_set_subset_D _) (D_subset_differentiable_set hK)
+  subset_antisymm (differentiable_set_subset_D _) (D_subset_differentiable_set hK)
 
 end RightDerivMeasurableAux
 

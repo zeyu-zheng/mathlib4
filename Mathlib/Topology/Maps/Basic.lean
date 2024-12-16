@@ -398,7 +398,7 @@ theorem interior_preimage_subset_preimage_interior (hf : IsOpenMap f) {s : Set Y
 
 theorem preimage_interior_eq_interior_preimage (hf₁ : IsOpenMap f) (hf₂ : Continuous f)
     (s : Set Y) : f ⁻¹' interior s = interior (f ⁻¹' s) :=
-  Subset.antisymm (preimage_interior_subset_interior_preimage hf₂)
+  subset_antisymm (preimage_interior_subset_interior_preimage hf₂)
     (interior_preimage_subset_preimage_interior hf₁)
 
 theorem preimage_closure_subset_closure_preimage (hf : IsOpenMap f) {s : Set Y} :

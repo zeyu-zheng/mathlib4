@@ -84,7 +84,7 @@ is within distance `‖y‖/2` of `y`, to apply an iterative process. -/
 theorem exists_approx_preimage_norm_le (surj : Surjective f) :
     ∃ C ≥ 0, ∀ y, ∃ x, dist (f x) y ≤ 1 / 2 * ‖y‖ ∧ ‖x‖ ≤ C * ‖y‖ := by
   have A : ⋃ n : ℕ, closure (f '' ball 0 n) = Set.univ := by
-    refine Subset.antisymm (subset_univ _) fun y _ => ?_
+    refine subset_antisymm (subset_univ _) fun y _ => ?_
     rcases surj y with ⟨x, hx⟩
     rcases exists_nat_gt ‖x‖ with ⟨n, hn⟩
     refine mem_iUnion.2 ⟨n, subset_closure ?_⟩

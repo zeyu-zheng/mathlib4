@@ -111,7 +111,7 @@ theorem mem_nhdsWithin_Ioi_iff_exists_Ioc_subset [NoMaxOrder α] [DenselyOrdered
     rcases exists_between au with ⟨v, hv⟩
     exact ⟨v, hv.1, fun x hx => as ⟨hx.1, lt_of_le_of_lt hx.2 hv.2⟩⟩
   · rintro ⟨u, au, as⟩
-    exact ⟨u, au, Subset.trans Ioo_subset_Ioc_self as⟩
+    exact ⟨u, au, Ioo_subset_Ioc_self.trans as⟩
 
 open List in
 /-- The following statements are equivalent:

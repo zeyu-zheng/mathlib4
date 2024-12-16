@@ -351,7 +351,7 @@ theorem Filter.HasBasis.hasBasis_of_isDenseInducing [TopologicalSpace α] [Topol
     exact
       ⟨i, hi,
         (closure_mono (image_subset f hi')).trans
-          (Subset.trans (closure_minimal (image_preimage_subset _ _) hT₂) hT₃)⟩
+          ((closure_minimal (image_preimage_subset _ _) hT₂).trans hT₃)⟩
   · obtain ⟨i, hi, hi'⟩ := hT
     suffices closure (f '' s i) ∈ 𝓝 (f x) by filter_upwards [this] using hi'
     replace h := (h (s i)).mpr ⟨i, hi, Subset.rfl⟩

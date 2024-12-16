@@ -306,7 +306,7 @@ theorem isClosed_range : IsClosed (range I) :=
 @[deprecated (since := "2024-03-17")] alias closed_range := isClosed_range
 
 theorem range_eq_closure_interior : range I = closure (interior (range I)) :=
-  Subset.antisymm I.range_subset_closure_interior I.isClosed_range.closure_interior_subset
+  subset_antisymm I.range_subset_closure_interior I.isClosed_range.closure_interior_subset
 
 theorem map_nhds_eq (x : H) : map I (𝓝 x) = 𝓝[range I] I x :=
   I.isClosedEmbedding.isEmbedding.map_nhds_eq x

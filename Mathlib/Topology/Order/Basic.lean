@@ -530,7 +530,7 @@ theorem countable_setOf_covBy_right [OrderTopology α] [SecondCountableTopology 
   suffices H : Ioc (z x) x = Ioo (z x) (y x) by
     rw [H]
     exact isOpen_Ioo
-  exact Subset.antisymm (Ioc_subset_Ioo_right (hy x hx.1).lt) fun u hu => ⟨hu.1, Hy _ _ hx.1 hu.2⟩
+  exact subset_antisymm (Ioc_subset_Ioo_right (hy x hx.1).lt) fun u hu => ⟨hu.1, Hy _ _ hx.1 hu.2⟩
 
 /-- The set of points which are isolated on the left is countable when the space is
 second-countable. -/

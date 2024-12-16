@@ -132,7 +132,7 @@ theorem image_gaugeRescaleHomeomorph_interior {s t : Set E}
     (hsc : Convex ℝ s) (hs₀ : s ∈ 𝓝 0) (hsb : IsVonNBounded ℝ s)
     (htc : Convex ℝ t) (ht₀ : t ∈ 𝓝 0) (htb : IsVonNBounded ℝ t) :
     gaugeRescaleHomeomorph s t hsc hs₀ hsb htc ht₀ htb '' interior s = interior t :=
-  Subset.antisymm (mapsTo_gaugeRescale_interior ht₀ htc).image_subset <| by
+  subset_antisymm (mapsTo_gaugeRescale_interior ht₀ htc).image_subset <| by
     rw [← Homeomorph.preimage_symm, ← image_subset_iff]
     exact (mapsTo_gaugeRescale_interior hs₀ hsc).image_subset
 
@@ -140,7 +140,7 @@ theorem image_gaugeRescaleHomeomorph_closure {s t : Set E}
     (hsc : Convex ℝ s) (hs₀ : s ∈ 𝓝 0) (hsb : IsVonNBounded ℝ s)
     (htc : Convex ℝ t) (ht₀ : t ∈ 𝓝 0) (htb : IsVonNBounded ℝ t) :
     gaugeRescaleHomeomorph s t hsc hs₀ hsb htc ht₀ htb '' closure s = closure t := by
-  refine Subset.antisymm (mapsTo_gaugeRescale_closure hsc hs₀ htc
+  refine subset_antisymm (mapsTo_gaugeRescale_closure hsc hs₀ htc
     (mem_of_mem_nhds ht₀) (absorbent_nhds_zero ht₀)).image_subset ?_
   rw [← Homeomorph.preimage_symm, ← image_subset_iff]
   exact (mapsTo_gaugeRescale_closure htc ht₀ hsc

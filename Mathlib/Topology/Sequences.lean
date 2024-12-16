@@ -82,7 +82,7 @@ theorem seqClosure_subset_closure {s : Set X} : seqClosure s ⊆ closure s := fu
 
 /-- The sequential closure of a sequentially closed set is the set itself. -/
 theorem IsSeqClosed.seqClosure_eq {s : Set X} (hs : IsSeqClosed s) : seqClosure s = s :=
-  Subset.antisymm (fun _p ⟨_x, hx, hp⟩ => hs hx hp) subset_seqClosure
+  subset_antisymm (fun _p ⟨_x, hx, hp⟩ => hs hx hp) subset_seqClosure
 
 /-- If a set is equal to its sequential closure, then it is sequentially closed. -/
 theorem isSeqClosed_of_seqClosure_eq {s : Set X} (hs : seqClosure s = s) : IsSeqClosed s :=

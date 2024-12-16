@@ -121,7 +121,7 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
     have hd : Tendsto (fun m => d (⋂ n, f m n)) atTop (𝓝 (d (⋃ m, ⋂ n, f m n))) := by
       refine d_Union _ ?_
       exact fun n m hnm =>
-        subset_iInter fun i => Subset.trans (iInter_subset (f n) i) <| f_subset_f hnm <| le_rfl
+        subset_iInter fun i => (iInter_subset (f n) i).trans <| f_subset_f hnm <| le_rfl
     refine le_of_tendsto_of_tendsto' hγ hd fun m => ?_
     have : Tendsto (fun n => d (f m n)) atTop (𝓝 (d (⋂ n, f m n))) := by
       refine d_Inter _ ?_ ?_

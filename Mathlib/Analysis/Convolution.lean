@@ -728,9 +728,9 @@ theorem dist_convolution_le' {x₀ : G} {R ε : ℝ} {z₀ : E'} (hε : 0 ≤ ε
     (hg : ∀ x ∈ ball x₀ R, dist (g x) z₀ ≤ ε) :
     dist ((f ⋆[L, μ] g : G → F) x₀) (∫ t, L (f t) z₀ ∂μ) ≤ (‖L‖ * ∫ x, ‖f x‖ ∂μ) * ε := by
   have hfg : ConvolutionExistsAt f g x₀ L μ := by
-    refine BddAbove.convolutionExistsAt L ?_ Metric.isOpen_ball.measurableSet (Subset.trans ?_ hf)
+    refine BddAbove.convolutionExistsAt L ?_ Metric.isOpen_ball.measurableSet (subset_trans ?spp hf)
       hif.integrableOn hmg
-    swap; · refine fun t => mt fun ht : f t = 0 => ?_; simp_rw [ht, L.map_zero₂]
+    case spp => refine fun t => mt fun ht : f t = 0 => ?_; simp_rw [ht, L.map_zero₂]
     rw [bddAbove_def]
     refine ⟨‖z₀‖ + ε, ?_⟩
     rintro _ ⟨x, hx, rfl⟩
@@ -1061,8 +1061,8 @@ theorem hasFDerivAt_convolution_right_with_param {g : P → G → E'} {s : Set P
         A.exists_thickening_subset_open t_open kt
       obtain ⟨δ, δpos, hδ⟩ : ∃ δ : ℝ, 0 < δ ∧ ball q₀.1 δ ⊆ s := Metric.isOpen_iff.1 hs _ hq₀
       refine ⟨min ε δ, lt_min εpos δpos, ?_, ?_⟩
-      · exact Subset.trans (thickening_mono (min_le_left _ _) _) hε
-      · exact Subset.trans (ball_subset_ball (min_le_right _ _)) hδ
+      · exact (thickening_mono (min_le_left _ _) _).trans hε
+      · exact (ball_subset_ball (min_le_right _ _)).trans hδ
     obtain ⟨C, Cpos, hC⟩ : ∃ C, 0 < C ∧ g' '' t ⊆ closedBall 0 C := ht.subset_closedBall_lt 0 0
     refine ⟨ε, C, εpos, h'ε, fun p x hp => ?_⟩
     have hps : p ∈ s := h'ε (mem_ball_iff_norm.2 hp)
@@ -1121,7 +1121,7 @@ theorem hasFDerivAt_convolution_right_with_param {g : P → G → E'} {s : Set P
     filter_upwards with a x hx
     rw [Prod.dist_eq, dist_eq_norm, dist_eq_norm] at hx
     have : (-tsupport fun a => g' (x.1, a)) + ball q₀.2 δ ⊆ U := by
-      apply Subset.trans _ hδ
+      refine subset_trans ?_ hδ
       rw [K'_def, add_assoc]
       apply add_subset_add
       · rw [neg_subset_neg]

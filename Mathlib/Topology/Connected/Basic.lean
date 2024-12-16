@@ -254,7 +254,7 @@ protected theorem IsPreconnected.subset_closure {s : Set α} {t : Set α} (H : I
   fun u v hu hv htuv ⟨_y, hyt, hyu⟩ ⟨_z, hzt, hzv⟩ =>
   let ⟨p, hpu, hps⟩ := mem_closure_iff.1 (Ktcs hyt) u hu hyu
   let ⟨q, hqv, hqs⟩ := mem_closure_iff.1 (Ktcs hzt) v hv hzv
-  let ⟨r, hrs, hruv⟩ := H u v hu hv (Subset.trans Kst htuv) ⟨p, hps, hpu⟩ ⟨q, hqs, hqv⟩
+  let ⟨r, hrs, hruv⟩ := H u v hu hv (Kst.trans htuv) ⟨p, hps, hpu⟩ ⟨q, hqs, hqv⟩
   ⟨r, Kst hrs, hruv⟩
 
 /-- Theorem of bark and tree: if a set is within a connected set and its closure, then it is
@@ -524,7 +524,7 @@ theorem IsPreconnected.subset_connectedComponentIn {x : α} {F : Set α} (hs : I
     exact hxs
   have := this.subset_connectedComponent h2xs
   rw [connectedComponentIn_eq_image (hsF hxs)]
-  refine Subset.trans ?_ (image_subset _ this)
+  refine subset_trans ?_ (image_subset _ this)
   rw [Subtype.image_preimage_coe, inter_eq_right.mpr hsF]
 
 theorem IsConnected.subset_connectedComponent {x : α} {s : Set α} (H1 : IsConnected s)

@@ -615,7 +615,7 @@ lemma measurableAtom_subset {s : Set β} {x : β} (hs : MeasurableSet s) (hx : x
 
 @[simp] lemma measurableAtom_of_measurableSingletonClass [MeasurableSingletonClass β] (x : β) :
     measurableAtom x = {x} :=
-  Subset.antisymm (measurableAtom_subset (measurableSet_singleton x) rfl) (by simp)
+  subset_antisymm (measurableAtom_subset (measurableSet_singleton x) rfl) (by simp)
 
 lemma MeasurableSet.measurableAtom_of_countable [Countable β] (x : β) :
     MeasurableSet (measurableAtom x) := by
@@ -623,7 +623,7 @@ lemma MeasurableSet.measurableAtom_of_countable [Countable β] (x : β) :
     fun y hy ↦ by simpa [measurableAtom] using hy
   choose! s hs using this
   have : measurableAtom x = ⋂ (y ∈ (measurableAtom x)ᶜ), s y := by
-    apply Subset.antisymm
+    apply subset_antisymm
     · intro z hz
       simp only [mem_iInter, mem_compl_iff]
       intro i hi

@@ -591,11 +591,11 @@ theorem bijOn_cos : BijOn cos (Icc 0 π) (Icc (-1) 1) :=
 
 @[simp]
 theorem range_cos : range cos = (Icc (-1) 1 : Set ℝ) :=
-  Subset.antisymm (range_subset_iff.2 cos_mem_Icc) surjOn_cos.subset_range
+  subset_antisymm (range_subset_iff.2 cos_mem_Icc) surjOn_cos.subset_range
 
 @[simp]
 theorem range_sin : range sin = (Icc (-1) 1 : Set ℝ) :=
-  Subset.antisymm (range_subset_iff.2 sin_mem_Icc) surjOn_sin.subset_range
+  subset_antisymm (range_subset_iff.2 sin_mem_Icc) surjOn_sin.subset_range
 
 theorem range_cos_infinite : (range Real.cos).Infinite := by
   rw [Real.range_cos]

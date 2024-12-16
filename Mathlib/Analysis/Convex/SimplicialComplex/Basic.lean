@@ -185,7 +185,7 @@ theorem not_facet_iff_subface (hs : s ∈ K.faces) : s ∉ K.facets ↔ ∃ t, t
   refine ⟨fun hs' : ¬(_ ∧ _) => ?_, ?_⟩
   · push_neg at hs'
     obtain ⟨t, ht⟩ := hs' hs
-    exact ⟨t, ht.1, ⟨ht.2.1, fun hts => ht.2.2 (Subset.antisymm ht.2.1 hts)⟩⟩
+    exact ⟨t, ht.1, ⟨ht.2.1, fun hts => ht.2.2 (subset_antisymm ht.2.1 hts)⟩⟩
   · rintro ⟨t, ht⟩ ⟨hs, hs'⟩
     have := hs' ht.1 ht.2.1
     rw [this] at ht

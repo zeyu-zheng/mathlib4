@@ -122,7 +122,7 @@ theorem Measure.MeasureDense.indicatorConstLp_subset_closure (h𝒜 : μ.Measure
     closure {indicatorConstLp p (h𝒜.measurable s hs) hμs c |
       (s : Set X) (hs : s ∈ 𝒜) (hμs : μ s ≠ ∞)} := by
   obtain rfl | hc := eq_or_ne c 0
-  · refine Subset.trans ?_ subset_closure
+  · refine subset_trans ?_ subset_closure
     rintro - ⟨s, ms, hμs, rfl⟩
     obtain ⟨t, ht, hμt⟩ := h𝒜.nonempty'
     refine ⟨t, ht, hμt, ?_⟩

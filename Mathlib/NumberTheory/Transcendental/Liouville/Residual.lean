@@ -40,7 +40,7 @@ theorem setOf_liouville_eq_irrational_inter_iInter_iUnion :
     { x | Liouville x } =
       { x | Irrational x } ∩ ⋂ n : ℕ, ⋃ (a : ℤ) (b : ℤ) (_ : 1 < b),
       ball (a / b) (1 / (b : ℝ) ^ n) := by
-  refine Subset.antisymm ?_ ?_
+  refine subset_antisymm ?_ ?_
   · refine subset_inter (fun x hx => hx.irrational) ?_
     rw [setOf_liouville_eq_iInter_iUnion]
     exact iInter_mono fun n => iUnion₂_mono fun a b => iUnion_mono fun _hb => diff_subset

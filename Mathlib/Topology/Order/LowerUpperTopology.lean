@@ -238,7 +238,7 @@ The closure of a singleton `{a}` in the lower topology is the left-closed right-
 -/
 @[simp]
 theorem closure_singleton (a : α) : closure {a} = Ici a :=
-  Subset.antisymm ((closure_minimal fun _ h => h.ge) <| isClosed_Ici) <|
+  subset_antisymm ((closure_minimal fun _ h => h.ge) <| isClosed_Ici) <|
     (isUpperSet_of_isClosed isClosed_closure).Ici_subset <| subset_closure rfl
 
 protected theorem isTopologicalBasis : IsTopologicalBasis (lowerBasis α) := by
@@ -464,9 +464,9 @@ variable [CompleteLattice α] [CompleteLattice β] [TopologicalSpace α] [IsLowe
 protected lemma _root_.sInfHom.continuous (f : sInfHom α β) : Continuous f := by
   refine IsLower.continuous_iff_Ici.2 fun b => ?_
   convert isClosed_Ici (a := sInf <| f ⁻¹' Ici b)
-  refine Subset.antisymm (fun a => sInf_le) fun a ha => le_trans ?_ <|
+  refine subset_antisymm (fun a => sInf_le) fun a ha => le_trans ?_ <|
     OrderHomClass.mono (f : α →o β) ha
-  refine LE.le.trans ?_ (map_sInf f _).ge
+  refine le_trans ?_ (map_sInf f _).ge
   simp
 
 -- see Note [lower instance priority]

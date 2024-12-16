@@ -79,7 +79,7 @@ protected def ofFunction (m : Set α → ℝ≥0∞) (m_empty : m ∅ = 0) : Out
         refine iInf_le_of_le _ (iInf_le _ ?_)
         apply iUnion_subset
         intro i
-        apply Subset.trans (hf i).1
+        apply (hf i).1.trans
         apply iUnion_subset
         simp only [Nat.pairEquiv_symm_apply]
         rw [iUnion_unpair]

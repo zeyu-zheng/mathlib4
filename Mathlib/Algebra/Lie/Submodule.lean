@@ -447,7 +447,7 @@ instance : SupSet (LieSubmodule R L M) where
           rw [Finset.iSup_insert] at hsm
           obtain ⟨m', hm', u, hu, rfl⟩ := Submodule.mem_sup.mp hsm
           rw [lie_add]
-          refine add_mem ?_ (ih (Subset.trans (by simp) hs) hu)
+          refine add_mem ?_ (ih (subset_trans (by simp) hs) hu)
           obtain ⟨p, hp, rfl⟩ : ∃ p ∈ S, ↑p = q := hs (Finset.mem_insert_self q t)
           suffices p ≤ sSup {(p : Submodule R M) | p ∈ S} by exact this (p.lie_mem hm')
           exact le_sSup ⟨p, hp, rfl⟩ }
@@ -671,12 +671,12 @@ theorem submodule_span_le_lieSpan : Submodule.span R s ≤ lieSpan R L s := by
 @[simp]
 theorem lieSpan_le {N} : lieSpan R L s ≤ N ↔ s ⊆ N := by
   constructor
-  · exact Subset.trans subset_lieSpan
+  · exact subset_trans subset_lieSpan
   · intro hs m hm; rw [mem_lieSpan] at hm; exact hm _ hs
 
 theorem lieSpan_mono {t : Set M} (h : s ⊆ t) : lieSpan R L s ≤ lieSpan R L t := by
   rw [lieSpan_le]
-  exact Subset.trans h subset_lieSpan
+  exact subset_trans h subset_lieSpan
 
 theorem lieSpan_eq : lieSpan R L (N : Set M) = N :=
   le_antisymm (lieSpan_le.mpr rfl.subset) subset_lieSpan

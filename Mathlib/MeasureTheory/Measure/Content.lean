@@ -123,7 +123,7 @@ theorem le_innerContent (K : Compacts G) (U : Opens G) (h2 : (K : Set G) ⊆ U) 
 
 theorem innerContent_le (U : Opens G) (K : Compacts G) (h2 : (U : Set G) ⊆ K) :
     μ.innerContent U ≤ μ K :=
-  iSup₂_le fun _ hK' => μ.mono _ _ (Subset.trans hK' h2)
+  iSup₂_le fun _ hK' => μ.mono _ _ (hK'.trans h2)
 
 theorem innerContent_of_isCompact {K : Set G} (h1K : IsCompact K) (h2K : IsOpen K) :
     μ.innerContent ⟨K, h2K⟩ = μ ⟨K, h1K⟩ :=

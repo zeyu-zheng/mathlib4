@@ -137,10 +137,10 @@ theorem left_U_subset_right_C (c : CU P) : c.left.U ⊆ c.right.C :=
   subset_closure
 
 theorem left_U_subset (c : CU P) : c.left.U ⊆ c.U :=
-  Subset.trans c.left_U_subset_right_C c.right.subset
+  c.left_U_subset_right_C.trans c.right.subset
 
 theorem subset_right_C (c : CU P) : c.C ⊆ c.right.C :=
-  Subset.trans c.left.subset c.left_U_subset_right_C
+  c.left.subset.trans c.left_U_subset_right_C
 
 /-- `n`-th approximation to a continuous function `f : X → ℝ` such that `f = 0` on `c.C` and `f = 1`
 outside of `c.U`. -/
@@ -443,7 +443,7 @@ theorem exists_continuous_one_zero_of_isCompact_of_isGδ [RegularSpace X] [Local
   refine ⟨⟨g, ?_⟩, ?_, hgmc.mono (subset_compl_comm.mp mt), ?_, fun x ↦ ⟨?_, ?_⟩⟩
   · apply continuous_tsum (fun n ↦ continuous_const.mul (f n).continuous) u_sum (fun n x ↦ ?_)
     simpa [abs_of_nonneg, (u_pos n).le, (f_range n x).1] using I n x
-  · apply Subset.antisymm (fun x hx ↦ by simp [g, fs _ hx, hu]) ?_
+  · refine subset_antisymm (fun x hx ↦ by simp [g, fs _ hx, hu]) ?_
     apply compl_subset_compl.1
     intro x hx
     obtain ⟨n, hn⟩ : ∃ n, x ∉ U n := by simpa [hU] using hx
@@ -482,7 +482,7 @@ lemma exists_tsupport_one_of_isOpen_isClosed [T2Space X] {s t : Set X}
     closed_C := isClosed_closure
     open_U := ht.isOpen_compl
     subset := subset_compl_comm.mp
-      (Subset.trans ht_subset_v (subset_compl_comm.mp huvc))
+      (ht_subset_v.trans (subset_compl_comm.mp huvc))
     hP := by
       intro c u0 cIsClosed Pc u0IsOpen csubu0
       obtain ⟨u1, hu1⟩ := SeparatedNhds.of_isClosed_isCompact_closure_compl_isClosed cIsClosed
@@ -497,7 +497,7 @@ lemma exists_tsupport_one_of_isOpen_isClosed [T2Space X] {s t : Set X}
   use ⟨c.lim, c.continuous_lim⟩
   simp only [ContinuousMap.coe_mk]
   refine ⟨?_, ?_, Urysohns.CU.lim_mem_Icc c⟩
-  · apply Subset.trans _ (compl_subset_comm.mp hscompl_subset_u)
+  · apply subset_trans _ (compl_subset_comm.mp hscompl_subset_u)
     rw [← IsClosed.closure_eq (isClosed_compl_iff.mpr huIsOpen)]
     apply closure_mono
     exact Disjoint.subset_compl_right (disjoint_of_subset_right subset_closure
