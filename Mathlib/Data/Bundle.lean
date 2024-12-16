@@ -84,7 +84,7 @@ theorem TotalSpace.exists {p : TotalSpace F E → Prop} : (∃ x, p x) ↔ ∃ b
 
 @[simp]
 theorem TotalSpace.range_mk (b : B) : range ((↑) : E b → TotalSpace F E) = π F E ⁻¹' {b} := by
-  apply Subset.antisymm
+  apply subset_antisymm
   · rintro _ ⟨x, rfl⟩
     rfl
   · rintro ⟨_, x⟩ rfl

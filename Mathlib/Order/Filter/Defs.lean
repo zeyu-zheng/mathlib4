@@ -139,7 +139,7 @@ lemma mem_comk {p : Set α → Prop} {he hmono hunion s} :
 def principal (s : Set α) : Filter α where
   sets := { t | s ⊆ t }
   univ_sets := subset_univ s
-  sets_of_superset hx := Subset.trans hx
+  sets_of_superset hx := subset_trans hx
   inter_sets := subset_inter
 
 @[inherit_doc]
@@ -172,7 +172,7 @@ theorem mem_join {s : Set α} {f : Filter (Filter α)} : s ∈ join f ↔ { t | 
 
 instance : PartialOrder (Filter α) where
   le f g := ∀ ⦃U : Set α⦄, U ∈ g → U ∈ f
-  le_antisymm a b h₁ h₂ := filter_eq <| Subset.antisymm h₂ h₁
+  le_antisymm a b h₁ h₂ := filter_eq <| subset_antisymm h₂ h₁
   le_refl a := Subset.rfl
   le_trans a b c h₁ h₂ := Subset.trans h₂ h₁
 

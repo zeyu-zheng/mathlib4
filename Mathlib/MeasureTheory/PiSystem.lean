@@ -447,7 +447,7 @@ theorem subset_piiUnionInter {π : ι → Set (Set α)} {S : Set ι} {i : ι} (h
     intro j hj
     rw [mem_singleton_iff] at hj
     rwa [hj]
-  refine Subset.trans ?_ (piiUnionInter_mono_right h_ss)
+  refine subset_trans ?_ (piiUnionInter_mono_right h_ss)
   rw [piiUnionInter_singleton]
   exact subset_union_left
 

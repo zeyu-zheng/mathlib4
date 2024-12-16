@@ -1427,7 +1427,7 @@ theorem HasBasis.liminf_eq_ciSup_ciInf {v : Filter ι}
   have : ∀ (j : Subtype p), Nonempty (s j) := fun j ↦ Nonempty.coe_sort (hs j)
   have A : ⋃ (j : Subtype p), ⋂ (i : s j), Iic (f i) =
          ⋃ (j : Subtype p), ⋂ (i : s (liminf_reparam f s p j)), Iic (f i) := by
-    apply Subset.antisymm
+    apply subset_antisymm
     · apply iUnion_subset (fun j ↦ ?_)
       by_cases hj : j ∈ m
       · have : j = liminf_reparam f s p j := by simp only [m, liminf_reparam, hj, ite_true]

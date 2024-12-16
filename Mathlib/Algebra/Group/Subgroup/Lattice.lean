@@ -327,7 +327,7 @@ open Set
 @[to_additive (attr := simp)
   "An additive subgroup `K` includes `closure k` if and only if it includes `k`"]
 theorem closure_le : closure k ≤ K ↔ k ⊆ K :=
-  ⟨Subset.trans subset_closure, fun h => sInf_le h⟩
+  ⟨subset_trans subset_closure, fun h => sInf_le h⟩
 
 @[to_additive]
 theorem closure_eq_of_le (h₁ : k ⊆ K) (h₂ : K ≤ closure k) : closure k = K :=

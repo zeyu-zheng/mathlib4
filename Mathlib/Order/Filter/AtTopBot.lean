@@ -566,7 +566,7 @@ to the case of a family indexed by natural numbers. -/
 theorem _root_.Monotone.upperBounds_range_comp_tendsto_atTop [Preorder β] [Preorder γ]
     {l : Filter α} [l.NeBot] {f : β → γ} (hf : Monotone f) {g : α → β} (hg : Tendsto g l atTop) :
     upperBounds (range (f ∘ g)) = upperBounds (range f) := by
-  refine Subset.antisymm ?_ (upperBounds_mono_set <| range_comp_subset_range _ _)
+  refine subset_antisymm ?_ (upperBounds_mono_set <| range_comp_subset_range _ _)
   rintro c hc _ ⟨b, rfl⟩
   obtain ⟨a, ha⟩ : ∃ a, b ≤ g a := (hg.eventually_ge_atTop b).exists
   exact (hf ha).trans <| hc <| mem_range_self _

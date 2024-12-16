@@ -244,7 +244,7 @@ theorem subset_interior_iff_isOpen : s ⊆ interior s ↔ IsOpen s := by
   simp only [interior_eq_iff_isOpen.symm, Subset.antisymm_iff, interior_subset, true_and]
 
 theorem IsOpen.subset_interior_iff (h₁ : IsOpen s) : s ⊆ interior t ↔ s ⊆ t :=
-  ⟨fun h => Subset.trans h interior_subset, fun h₂ => interior_maximal h₂ h₁⟩
+  ⟨fun h => h.trans interior_subset, fun h₂ => interior_maximal h₂ h₁⟩
 
 theorem subset_interior_iff : t ⊆ interior s ↔ ∃ U, IsOpen U ∧ t ⊆ U ∧ U ⊆ s :=
   ⟨fun h => ⟨interior s, isOpen_interior, h, interior_subset⟩, fun ⟨_U, hU, htU, hUs⟩ =>
@@ -255,7 +255,7 @@ lemma interior_subset_iff : interior s ⊆ t ↔ ∀ U, IsOpen U → U ⊆ s →
 
 @[mono, gcongr]
 theorem interior_mono (h : s ⊆ t) : interior s ⊆ interior t :=
-  interior_maximal (Subset.trans interior_subset h) isOpen_interior
+  interior_maximal (interior_subset.trans h) isOpen_interior
 
 @[simp]
 theorem interior_empty : interior (∅ : Set X) = ∅ :=
@@ -315,7 +315,7 @@ theorem interior_union_isClosed_of_interior_empty (h₁ : IsClosed s)
       have : u \ s ⊆ interior t := by rwa [(IsOpen.sdiff hu₁ h₁).subset_interior_iff]
       have : u \ s ⊆ ∅ := by rwa [h₂] at this
       this ⟨hx₁, hx₂⟩
-  Subset.antisymm (interior_maximal this isOpen_interior) (interior_mono subset_union_left)
+  subset_antisymm (interior_maximal this isOpen_interior) (interior_mono subset_union_left)
 
 theorem isOpen_iff_forall_mem_open : IsOpen s ↔ ∀ x ∈ s, ∃ t, t ⊆ s ∧ IsOpen t ∧ x ∈ t := by
   rw [← subset_interior_iff_isOpen]
@@ -371,13 +371,13 @@ theorem Disjoint.closure_right (hd : Disjoint s t) (hs : IsOpen s) :
   (hd.symm.closure_left hs).symm
 
 theorem IsClosed.closure_eq (h : IsClosed s) : closure s = s :=
-  Subset.antisymm (closure_minimal (Subset.refl s) h) subset_closure
+  subset_antisymm (closure_minimal (Subset.refl s) h) subset_closure
 
 theorem IsClosed.closure_subset (hs : IsClosed s) : closure s ⊆ s :=
   closure_minimal (Subset.refl _) hs
 
 theorem IsClosed.closure_subset_iff (h₁ : IsClosed t) : closure s ⊆ t ↔ s ⊆ t :=
-  ⟨Subset.trans subset_closure, fun h => closure_minimal h h₁⟩
+  ⟨subset_trans subset_closure, fun h => closure_minimal h h₁⟩
 
 theorem IsClosed.mem_iff_closure_subset (hs : IsClosed s) :
     x ∈ s ↔ closure ({x} : Set X) ⊆ s :=
@@ -385,7 +385,7 @@ theorem IsClosed.mem_iff_closure_subset (hs : IsClosed s) :
 
 @[mono, gcongr]
 theorem closure_mono (h : s ⊆ t) : closure s ⊆ closure t :=
-  closure_minimal (Subset.trans h subset_closure) isClosed_closure
+  closure_minimal (subset_trans h subset_closure) isClosed_closure
 
 theorem monotone_closure (X : Type*) [TopologicalSpace X] : Monotone (@closure X _) := fun _ _ =>
   closure_mono
@@ -465,7 +465,7 @@ theorem closure_iUnion₂_le_nat {n : ℕ} (f : ℕ → Set X) :
   (finite_le_nat n).closure_biUnion f
 
 theorem interior_subset_closure : interior s ⊆ closure s :=
-  Subset.trans interior_subset subset_closure
+  interior_subset.trans subset_closure
 
 @[simp]
 theorem interior_compl : interior sᶜ = (closure s)ᶜ := by
@@ -1520,7 +1520,7 @@ theorem image_closure_subset_closure_image (h : Continuous f) :
 
 theorem closure_image_closure (h : Continuous f) :
     closure (f '' closure s) = closure (f '' s) :=
-  Subset.antisymm
+  subset_antisymm
     (closure_minimal (image_closure_subset_closure_image h) isClosed_closure)
     (closure_mono <| image_subset _ subset_closure)
 

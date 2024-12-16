@@ -205,7 +205,7 @@ theorem cbiSup_eq_of_forall {p : ι → Prop} {f : Subtype p → α} (hp : ∀ i
   simp only [hp, ciSup_unique]
   simp only [iSup]
   congr
-  apply Subset.antisymm
+  apply subset_antisymm
   · rintro - ⟨i, rfl⟩
     simp [hp i]
   · rintro - ⟨i, rfl⟩

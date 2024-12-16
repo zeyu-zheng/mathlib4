@@ -89,20 +89,20 @@ theorem image_coe_Iic : (some : α → WithTop α) '' Iic a = Iic (a : WithTop �
 theorem image_coe_Icc : (some : α → WithTop α) '' Icc a b = Icc (a : WithTop α) b := by
   rw [← preimage_coe_Icc, image_preimage_eq_inter_range, range_coe,
     inter_eq_self_of_subset_left
-      (Subset.trans Icc_subset_Iic_self <| Iic_subset_Iio.2 <| coe_lt_top b)]
+      (subset_trans Icc_subset_Iic_self <| Iic_subset_Iio.2 <| coe_lt_top b)]
 
 theorem image_coe_Ico : (some : α → WithTop α) '' Ico a b = Ico (a : WithTop α) b := by
   rw [← preimage_coe_Ico, image_preimage_eq_inter_range, range_coe,
-    inter_eq_self_of_subset_left (Subset.trans Ico_subset_Iio_self <| Iio_subset_Iio le_top)]
+    inter_eq_self_of_subset_left (subset_trans Ico_subset_Iio_self <| Iio_subset_Iio le_top)]
 
 theorem image_coe_Ioc : (some : α → WithTop α) '' Ioc a b = Ioc (a : WithTop α) b := by
   rw [← preimage_coe_Ioc, image_preimage_eq_inter_range, range_coe,
     inter_eq_self_of_subset_left
-      (Subset.trans Ioc_subset_Iic_self <| Iic_subset_Iio.2 <| coe_lt_top b)]
+      (subset_trans Ioc_subset_Iic_self <| Iic_subset_Iio.2 <| coe_lt_top b)]
 
 theorem image_coe_Ioo : (some : α → WithTop α) '' Ioo a b = Ioo (a : WithTop α) b := by
   rw [← preimage_coe_Ioo, image_preimage_eq_inter_range, range_coe,
-    inter_eq_self_of_subset_left (Subset.trans Ioo_subset_Iio_self <| Iio_subset_Iio le_top)]
+    inter_eq_self_of_subset_left (subset_trans Ioo_subset_Iio_self <| Iio_subset_Iio le_top)]
 
 end WithTop
 
@@ -176,19 +176,19 @@ theorem image_coe_Ici : (some : α → WithBot α) '' Ici a = Ici (a : WithBot �
 theorem image_coe_Icc : (some : α → WithBot α) '' Icc a b = Icc (a : WithBot α) b := by
   rw [← preimage_coe_Icc, image_preimage_eq_inter_range, range_coe,
     inter_eq_self_of_subset_left
-      (Subset.trans Icc_subset_Ici_self <| Ici_subset_Ioi.2 <| bot_lt_coe a)]
+      (subset_trans Icc_subset_Ici_self <| Ici_subset_Ioi.2 <| bot_lt_coe a)]
 
 theorem image_coe_Ioc : (some : α → WithBot α) '' Ioc a b = Ioc (a : WithBot α) b := by
   rw [← preimage_coe_Ioc, image_preimage_eq_inter_range, range_coe,
-    inter_eq_self_of_subset_left (Subset.trans Ioc_subset_Ioi_self <| Ioi_subset_Ioi bot_le)]
+    inter_eq_self_of_subset_left (subset_trans Ioc_subset_Ioi_self <| Ioi_subset_Ioi bot_le)]
 
 theorem image_coe_Ico : (some : α → WithBot α) '' Ico a b = Ico (a : WithBot α) b := by
   rw [← preimage_coe_Ico, image_preimage_eq_inter_range, range_coe,
     inter_eq_self_of_subset_left
-      (Subset.trans Ico_subset_Ici_self <| Ici_subset_Ioi.2 <| bot_lt_coe a)]
+      (subset_trans Ico_subset_Ici_self <| Ici_subset_Ioi.2 <| bot_lt_coe a)]
 
 theorem image_coe_Ioo : (some : α → WithBot α) '' Ioo a b = Ioo (a : WithBot α) b := by
   rw [← preimage_coe_Ioo, image_preimage_eq_inter_range, range_coe,
-    inter_eq_self_of_subset_left (Subset.trans Ioo_subset_Ioi_self <| Ioi_subset_Ioi bot_le)]
+    inter_eq_self_of_subset_left (subset_trans Ioo_subset_Ioi_self <| Ioi_subset_Ioi bot_le)]
 
 end WithBot

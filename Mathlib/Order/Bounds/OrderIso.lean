@@ -17,7 +17,7 @@ namespace OrderIso
 variable {α β : Type*} [Preorder α] [Preorder β] (f : α ≃o β)
 
 theorem upperBounds_image {s : Set α} : upperBounds (f '' s) = f '' upperBounds s :=
-  Subset.antisymm
+  subset_antisymm
     (fun x hx =>
       ⟨f.symm x, fun _ hy => f.le_symm_apply.2 (hx <| mem_image_of_mem _ hy), f.apply_symm_apply x⟩)
     f.monotone.image_upperBounds_subset_upperBounds_image

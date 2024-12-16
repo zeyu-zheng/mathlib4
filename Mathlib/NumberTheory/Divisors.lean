@@ -352,7 +352,7 @@ theorem eq_properDivisors_of_subset_of_sum_eq_sum {s : Finset ℕ} (hsub : s ⊆
   classical
     rw [← sum_sdiff hsub]
     intro h
-    apply Subset.antisymm hsub
+    apply hsub.antisymm
     rw [← sdiff_eq_empty_iff_subset]
     contrapose h
     rw [← Ne, ← nonempty_iff_ne_empty] at h

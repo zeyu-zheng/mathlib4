@@ -259,7 +259,7 @@ theorem IsGreatest.nonempty (h : IsGreatest s a) : s.Nonempty :=
 
 @[simp]
 theorem upperBounds_union : upperBounds (s ∪ t) = upperBounds s ∩ upperBounds t :=
-  Subset.antisymm (fun _ hb => ⟨fun _ hx => hb (Or.inl hx), fun _ hx => hb (Or.inr hx)⟩)
+  subset_antisymm (fun _ hb => ⟨fun _ hx => hb (Or.inl hx), fun _ hx => hb (Or.inr hx)⟩)
     fun _ hb _ hx => hx.elim (fun hs => hb.1 hs) fun ht => hb.2 ht
 
 @[simp]

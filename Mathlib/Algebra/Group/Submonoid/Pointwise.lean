@@ -81,7 +81,7 @@ theorem mul_subset {S : Submonoid M} (hs : s ⊆ S) (ht : t ⊆ S) : s * t ⊆ S
 
 @[to_additive]
 theorem mul_subset_closure (hs : s ⊆ u) (ht : t ⊆ u) : s * t ⊆ Submonoid.closure u :=
-  mul_subset (Subset.trans hs Submonoid.subset_closure) (Subset.trans ht Submonoid.subset_closure)
+  mul_subset (hs.trans Submonoid.subset_closure) (ht.trans Submonoid.subset_closure)
 
 @[to_additive]
 theorem coe_mul_self_eq (s : Submonoid M) : (s : Set M) * s = s := by

@@ -134,7 +134,7 @@ open Set
 @[to_additive (attr := simp)
 "An additive submonoid `S` includes `closure s` if and only if it includes `s`"]
 theorem closure_le : closure s ≤ S ↔ s ⊆ S :=
-  ⟨Subset.trans subset_closure, fun h => sInf_le h⟩
+  ⟨subset_trans subset_closure, fun h => sInf_le h⟩
 
 /-- Submonoid closure of a set is monotone in its argument: if `s ⊆ t`,
 then `closure s ≤ closure t`. -/
@@ -142,7 +142,7 @@ then `closure s ≤ closure t`. -/
       "Additive submonoid closure of a set is monotone in its argument: if `s ⊆ t`,
       then `closure s ≤ closure t`"]
 theorem closure_mono ⦃s t : Set M⦄ (h : s ⊆ t) : closure s ≤ closure t :=
-  closure_le.2 <| Subset.trans h subset_closure
+  closure_le.2 <| h.trans subset_closure
 
 @[to_additive]
 theorem closure_eq_of_le (h₁ : s ⊆ S) (h₂ : S ≤ closure s) : closure s = S :=

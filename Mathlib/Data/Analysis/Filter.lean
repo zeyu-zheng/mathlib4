@@ -76,9 +76,9 @@ end
 def toFilter (F : CFilter (Set α) σ) : Filter α where
   sets := { a | ∃ b, F b ⊆ a }
   univ_sets := ⟨F.pt, subset_univ _⟩
-  sets_of_superset := fun ⟨b, h⟩ s ↦ ⟨b, Subset.trans h s⟩
+  sets_of_superset := fun ⟨b, h⟩ s ↦ ⟨b, h.trans s⟩
   inter_sets := fun ⟨a, h₁⟩ ⟨b, h₂⟩ ↦ ⟨F.inf a b,
-    subset_inter (Subset.trans (F.inf_le_left _ _) h₁) (Subset.trans (F.inf_le_right _ _) h₂)⟩
+    subset_inter ((F.inf_le_left _ _).trans h₁) ((F.inf_le_right _ _).trans h₂)⟩
 
 @[simp]
 theorem mem_toFilter_sets (F : CFilter (Set α) σ) {a : Set α} : a ∈ F.toFilter ↔ ∃ b, F b ⊆ a :=
@@ -208,7 +208,7 @@ protected def comap (m : α → β) {f : Filter β} (F : f.Realizer) : (comap m 
     filter_eq <| Set.ext fun _ ↦ by
       cases F; subst f
       exact ⟨fun ⟨s, h⟩ ↦ ⟨_, ⟨s, Subset.refl _⟩, h⟩,
-        fun ⟨_, ⟨s, h⟩, h₂⟩ ↦ ⟨s, Subset.trans (preimage_mono h) h₂⟩⟩⟩
+        fun ⟨_, ⟨s, h⟩, h₂⟩ ↦ ⟨s, (preimage_mono h).trans h₂⟩⟩⟩
 
 /-- Construct a realizer for the sup of two filters -/
 protected def sup {f g : Filter α} (F : f.Realizer) (G : g.Realizer) : (f ⊔ g).Realizer :=
@@ -295,7 +295,7 @@ theorem le_iff {f g : Filter α} (F : f.Realizer) (G : g.Realizer) :
     F.mem_sets.2 <|
       let ⟨s, h₁⟩ := G.mem_sets.1 h
       let ⟨t, h₂⟩ := H s
-      ⟨t, Subset.trans h₂ h₁⟩⟩
+      ⟨t, h₂.trans h₁⟩⟩
 
 theorem tendsto_iff (f : α → β) {l₁ : Filter α} {l₂ : Filter β} (L₁ : l₁.Realizer)
     (L₂ : l₂.Realizer) : Tendsto f l₁ l₂ ↔ ∀ b, ∃ a, ∀ x ∈ L₁.F a, f x ∈ L₂.F b :=
