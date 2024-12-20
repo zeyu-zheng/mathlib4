@@ -8,47 +8,31 @@ import Mathlib.Topology.UniformSpace.UniformEmbedding
 
 open Filter Topology
 
-theorem RelHom.directedOn {α β : Type*} {r : α → α → Prop} {s : β → β → Prop} (f : RelHom r s)
-    {t : Set α} (hs : DirectedOn r t) : DirectedOn s (f '' t) := by
-  rintro - ⟨a, ha, rfl⟩ - ⟨a', ha', rfl⟩
-  obtain ⟨x, x_in, hx1, hx2⟩ := hs a ha a' ha'
-  exact ⟨f x, ⟨x, x_in, rfl⟩, f.map_rel hx1, f.map_rel hx2⟩
-
-theorem Monotone.directedOn {α β : Type*} [Preorder α] [Preorder β] {f : α → β} (hf : Monotone f)
-    {t : Set α} (hs : DirectedOn (· ≤ ·) t) : DirectedOn (· ≤ ·) (f '' t) :=
-  RelHom.directedOn ⟨f, @hf⟩ hs
-
-theorem Dense.isDenseInducing_val {X : Type*} [TopologicalSpace X] {s : Set X} (hs : Dense s) :
-    IsDenseInducing (@Subtype.val X s) := ⟨IsInducing.subtypeVal, hs.denseRange_val⟩
-
-theorem isUniformInducing_val {X : Type*} [UniformSpace X] (s : Set X) :
-    IsUniformInducing (@Subtype.val X s) := ⟨uniformity_setCoe⟩
-
 variable {𝕜 E F : Type*} [Ring 𝕜] [AddCommGroup E] [AddCommGroup F] [Module 𝕜 E] [Module 𝕜 F]
   [UniformSpace E] [UniformSpace F] [CompleteSpace F] [ContinuousAdd E] [ContinuousAdd F]
   [ContinuousConstSMul 𝕜 E] [ContinuousConstSMul 𝕜 F] [T2Space F]
   {f : E →ₗ.[𝕜] F} (hdf : Dense (f.domain : Set E)) (hf : UniformContinuous f)
 
-noncomputable def dense_extend : E →L[𝕜] F :=
-  letI g := hdf.isDenseInducing_val.extend f
-  haveI cg : Continuous g := uniformContinuous_uniformly_extend (isUniformInducing_val _)
-    hdf.denseRange_val hf |>.continuous
-  { toFun := hdf.isDenseInducing_val.extend f
+noncomputable def LinearPMap.extend : E →L[𝕜] F :=
+  letI g := hdf.extend f
+  haveI cg : Continuous g := hdf.uniformContinuous_extend hf |>.continuous
+  { toFun := hdf.extend f
     map_add' := fun x y ↦ by
       let e : f.domain → E := Subtype.val
       have h1 : Tendsto (fun x ↦ f x.1 + f x.2)
           (comap (Prod.map e e) (𝓝 (x, y))) (𝓝 (g (x + y))) := by
         simp_rw [← LinearPMap.map_add]
-        apply uniformly_extend_tendsto (e := e) (isUniformInducing_val _) hdf.denseRange_val hf
+        apply hdf.extend_tendsto hf
         have : e ∘ (fun x ↦ x.1 + x.2) = (fun x ↦ x.1 + x.2) ∘ (Prod.map e e) := by
           ext x; simp [e]
+        change Tendsto (e ∘ _) _ _
         rw [this, ← tendsto_map'_iff]
         exact (continuous_add.tendsto (x, y)).mono_left map_comap_le
       have h2 : Tendsto (fun x ↦ f x.1 + f x.2)
           (comap (Prod.map e e) (𝓝 (x, y))) (𝓝 (g x + g y)) := by
         apply Tendsto.add <;>
-        change Tendsto (f ∘ _) _ _ <;>
-        apply uniformly_extend_tendsto (e := e) (isUniformInducing_val _) hdf.denseRange_val hf
+        apply hdf.extend_tendsto hf <;>
+        change Tendsto (e ∘ _) _ _
         · have : e ∘ (Prod.fst : f.domain × f.domain → _) = Prod.fst ∘ (Prod.map e e) := by
             ext x; simp
           rw [this, ← tendsto_map'_iff]
@@ -67,18 +51,19 @@ noncomputable def dense_extend : E →L[𝕜] F :=
       have h1 : Tendsto (fun x ↦ m • f x) (comap e (𝓝 x)) (𝓝 (g (m • x))) := by
         simp_rw [← LinearPMap.map_smul]
         change Tendsto (f ∘ _) _ _
-        apply uniformly_extend_tendsto (e := e) (isUniformInducing_val _) hdf.denseRange_val hf
+        apply hdf.extend_tendsto hf
         have : e ∘ (fun x ↦ m • x) = (fun x ↦ m • x) ∘ e := by
           ext x; simp [e]
+        change Tendsto (e ∘ _) _ _
         rw [this, ← tendsto_map'_iff]
         exact ((continuous_const_smul m).tendsto x).mono_left map_comap_le
       have h2 : Tendsto (fun x ↦ m • (f x)) (comap e (𝓝 x)) (𝓝 (m • (g x))) :=
-        (uniformly_extend_spec (isUniformInducing_val _) hdf.denseRange_val hf x).const_smul m
+        (hdf.extend_spec hf x).const_smul m
       have : (comap e (𝓝 x)).NeBot := mem_closure_iff_comap_neBot.1 (hdf x)
       exact tendsto_nhds_unique h1 h2
     cont := cg }
 
-theorem dense_extend_eq (x : f.domain) : dense_extend hdf hf x = f x :=
+theorem dense_extend_eq (x : f.domain) : f.extend hdf hf x = f x :=
   hdf.isDenseInducing_val.extend_eq hf.continuous x
 
 variable {𝕜 E F : Type*} [NontriviallyNormedField 𝕜] [NormedAddCommGroup E] [NormedAddCommGroup F]
