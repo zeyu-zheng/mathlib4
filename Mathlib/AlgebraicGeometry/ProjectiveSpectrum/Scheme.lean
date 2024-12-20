@@ -701,9 +701,8 @@ lemma toStalk_stalkMap_toSpec (f) (x) :
       awayToΓ 𝒜 f ≫ (Proj| pbo f).presheaf.Γgerm x := by
   rw [StructureSheaf.toStalk, Category.assoc]
   simp_rw [← Spec.locallyRingedSpaceObj_presheaf']
-  rw [LocallyRingedSpace.stalkMap_germ (toSpec 𝒜 f),
-    toOpen_toSpec_val_c_app_assoc, Presheaf.germ_res]
-  rfl
+  rw [LocallyRingedSpace.stalkMap_germ (toSpec 𝒜 f)]
+  exact toOpen_toSpec_val_c_app_assoc ..
 
 /--
 If `x` is a point in the basic open set `D(f)` where `f` is a homogeneous element of positive
