@@ -75,18 +75,25 @@ theorem prod_filter_prod_filter {R ι ι' : Type*} [CommMonoid R] {p : ι → Pr
     ∏ x ∈ s with p x, ∏ y ∈ t x with q x y, f x y = ∏ x ∈ s, ∏ y ∈ t x with q x y ∧ p x, f x y := by
   simp_rw [prod_filter_prod, Finset.filter_filter]
 
+@[to_additive]
+theorem prod_comm_filter {R ι ι' : Type*} [CommMonoid R] {p : ι → ι' → Prop}
+    [∀ i, DecidablePred (p i)] (s : Finset ι) (t : Finset ι')
+    (f : ι → ι' → R) :
+    ∏ x ∈ s, ∏ y ∈ t with p x y, f x y = ∏ y ∈ t, ∏ x ∈ s with p x y, f x y := by
+  simp_rw [prod_filter]
+  rw [prod_comm]
 
 --basic
 theorem conv_lambda_sq_larger_sum (f : ℕ → ℕ → ℕ → ℝ) (n : ℕ) :
-    (∑ d in n.divisors,
-        ∑ d1 in d.divisors,
-          ∑ d2 in d.divisors, if d = Nat.lcm d1 d2 then f d1 d2 d else 0) =
-      ∑ d in n.divisors,
-        ∑ d1 in n.divisors,
-          ∑ d2 in n.divisors, if d = Nat.lcm d1 d2 then f d1 d2 d else 0 := by
+    (∑ d ∈ n.divisors,
+        ∑ d1 ∈ d.divisors,
+          ∑ d2 ∈ d.divisors with d = Nat.lcm d1 d2, f d1 d2 d) =
+      ∑ d ∈ n.divisors,
+        ∑ d1 ∈ n.divisors,
+          ∑ d2 ∈ n.divisors with d = Nat.lcm d1 d2, f d1 d2 d := by
   apply sum_congr rfl; intro d hd
   rw [mem_divisors] at hd
-  simp_rw [←Nat.divisors_filter_dvd_of_dvd hd.2 hd.1, ← sum_filter, Finset.filter_filter,
+  simp_rw [←Nat.divisors_filter_dvd_of_dvd hd.2 hd.1, Finset.filter_filter,
     sum_filter_sum_filter]
   congr with d1
   congr with d2

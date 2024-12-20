@@ -113,7 +113,7 @@ def rem (d : ℕ) : ℝ :=
 scoped notation3 "R" => rem
 
 def siftedSum : ℝ :=
-  ∑ d ∈ A, if Coprime P d then a d else 0
+  ∑ d ∈ A with Coprime P d, a d
 
 /--
 These are the terms that appear in the sum `S` in the main term of the fundamental theorem.
@@ -197,7 +197,7 @@ theorem multSum_eq_main_err (d : ℕ) : multSum d = ν d * X + R d := by
 theorem siftedSum_as_delta : siftedSum = ∑ d ∈ support, a d * if Nat.gcd P d = 1 then 1 else 0 :=
   by
   dsimp only [siftedSum]
-  simp_rw [mul_ite, mul_one, mul_zero]
+  simp_rw [mul_ite, mul_one, mul_zero, sum_filter]
 
 theorem nu_lt_self_of_dvd_prodPrimes (d : ℕ) (hdP : d ∣ P) (hd_ne_one : d ≠ 1) : ν d < 1 := by
   have hd_sq : Squarefree d := Squarefree.squarefree_of_dvd hdP prodPrimes_squarefree
@@ -253,9 +253,9 @@ theorem one_div_selbergTerms_eq_conv_moebius_nu (l : ℕ) (hl : Squarefree l)
   ring
 
 theorem nu_eq_conv_one_div_selbergTerms (d : ℕ) (hdP : d ∣ P) :
-    (ν d)⁻¹ = ∑ l ∈ divisors P, if l ∣ d then 1 / g l else 0 := by
+    (ν d)⁻¹ = ∑ l ∈ divisors P with l ∣ d, 1 / g l := by
   apply symm
-  rw [←sum_filter, Nat.divisors_filter_dvd_of_dvd prodPrimes_ne_zero hdP]
+  rw [Nat.divisors_filter_dvd_of_dvd prodPrimes_ne_zero hdP]
   have hd_pos : 0 < d := Nat.pos_of_ne_zero <| ne_zero_of_dvd_ne_zero prodPrimes_ne_zero hdP
   revert hdP; revert d
   apply (ArithmeticFunction.sum_eq_iff_sum_mul_moebius_eq_on _ (fun _ _ => Nat.dvd_trans)).mpr
@@ -266,15 +266,15 @@ theorem nu_eq_conv_one_div_selbergTerms (d : ℕ) (hdP : d ∣ P) :
     (ne_of_gt <| nu_pos_of_dvd_prodPrimes hlP)
 
 theorem conv_selbergTerms_eq_selbergTerms_mul_nu {d : ℕ} (hd : d ∣ P) :
-    (∑ l ∈ divisors P, if l ∣ d then g l else 0) = g d * (ν d)⁻¹ := by
+    (∑ l ∈ divisors P with l ∣ d, g l) = g d * (ν d)⁻¹ := by
   calc
-    (∑ l ∈ divisors P, if l ∣ d then g l else 0) =
-        ∑ l ∈ divisors P, if l ∣ d then g (d / l) else 0 := by
-      rw [← sum_over_dvd_ite prodPrimes_ne_zero hd,
+    (∑ l ∈ divisors P with l ∣ d, g l) =
+        ∑ l ∈ divisors P with l ∣ d, g (d / l) := by
+      rw [divisors_filter_dvd_of_dvd prodPrimes_ne_zero hd,
         ← Nat.sum_divisorsAntidiagonal fun x _ => g x, Nat.sum_divisorsAntidiagonal' fun x _ => g x,
         sum_over_dvd_ite prodPrimes_ne_zero hd]
-    _ = g d * ∑ l ∈ divisors P, if l ∣ d then 1 / g l else 0 := by
-      simp_rw [← sum_filter, mul_sum]; apply sum_congr rfl; intro l hl
+    _ = g d * ∑ l ∈ divisors P with l ∣ d, 1 / g l := by
+      simp_rw [mul_sum]; apply sum_congr rfl; intro l hl
       simp only [mem_filter, mem_divisors, ne_eq] at hl
       rw [selbergTerms_mult.map_div_of_coprime hl.2]
       · ring
@@ -290,20 +290,20 @@ theorem upper_bound_of_UpperBoundSieve (μPlus : UpperBoundSieve) :
   have hμ : ∀ n, (if n = 1 then 1 else 0) ≤ ∑ d ∈ n.divisors, μPlus d := μPlus.hμPlus
   calc siftedSum ≤
     ∑ n ∈ support, a n * ∑ d ∈ (Nat.gcd P n).divisors, μPlus d := ?caseA
-    _ = ∑ n ∈ support, ∑ d ∈ divisors P, if d ∣ n then a n * μPlus d else 0 := ?caseB
+    _ = ∑ n ∈ support, ∑ d ∈ divisors P with d ∣ n, a n * μPlus d := ?caseB
     _ = ∑ d ∈ divisors P, μPlus d * multSum d := ?caseC
   case caseA =>
     rw [siftedSum_as_delta]
     apply Finset.sum_le_sum; intro n _
     exact mul_le_mul_of_nonneg_left (hμ (Nat.gcd P n)) (weights_nonneg n)
   case caseB =>
-    simp_rw [mul_sum, ← sum_filter]
+    simp_rw [mul_sum]
     congr with n
     congr
     · rw [← divisors_filter_dvd_of_dvd prodPrimes_ne_zero (Nat.gcd_dvd_left _ _)]
       ext x; simp +contextual [dvd_gcd_iff]
   case caseC =>
-    rw [sum_comm]
+    rw [sum_comm_filter]
     simp_rw [multSum, ← sum_filter, mul_sum, mul_comm]
 
 theorem siftedSum_le_mainSum_errSum_of_UpperBoundSieve (μPlus : UpperBoundSieve) :
@@ -327,7 +327,7 @@ end SieveLemmas
 section LambdaSquared
 
 def lambdaSquared (weights : ℕ → ℝ) : ℕ → ℝ := fun d =>
-  ∑ d1 ∈ d.divisors, ∑ d2 ∈ d.divisors, if d = Nat.lcm d1 d2 then weights d1 * weights d2 else 0
+  ∑ d1 ∈ d.divisors, ∑ d2 ∈ d.divisors with d = Nat.lcm d1 d2, weights d1 * weights d2
 
 private theorem lambdaSquared_eq_zero_of_support_wlog {w : ℕ → ℝ} {height : ℝ}
   (hw : ∀ (d : ℕ), ¬d ^ 2 ≤ height → w d = 0) {d : ℕ} (hd : ¬↑d ≤ height) (d1 : ℕ) (d2 : ℕ)
@@ -358,28 +358,26 @@ theorem lambdaSquared_eq_zero_of_not_le_height (w : ℕ → ℝ) (height : ℝ)
     apply sum_eq_zero; intro d2 _
     rw [this d1, this d2]
     simp only [ite_self, eq_self_iff_true, MulZeroClass.mul_zero]
-  apply sum_eq_zero; intro d1 _; apply sum_eq_zero; intro d2 _
-  split_ifs with h
-  swap
-  · rfl
-  rcases Nat.le_or_le d1 d2 with hle | hle
-  · apply lambdaSquared_eq_zero_of_support_wlog hw hd d1 d2 h hle
+  apply sum_eq_zero; intro d1 _; apply sum_eq_zero; intro d2 h
+  simp only [mem_filter, mem_divisors, ne_eq] at h
+  obtain (hle | hle) :=  Nat.le_or_le d1 d2
+  · apply lambdaSquared_eq_zero_of_support_wlog hw hd d1 d2 h.2 hle
   · rw[mul_comm]
-    apply lambdaSquared_eq_zero_of_support_wlog hw hd d2 d1 (Nat.lcm_comm d1 d2 ▸ h) hle
+    apply lambdaSquared_eq_zero_of_support_wlog hw hd d2 d1 (Nat.lcm_comm d1 d2 ▸ h.2) hle
 
 theorem upperMoebius_lambdaSquared (weights : ℕ → ℝ) (hw : weights 1 = 1) :
     UpperMoebius <| lambdaSquared weights := by
   dsimp [UpperMoebius, lambdaSquared]
   intro n
   have h_sq :
-    (∑ d ∈ n.divisors, ∑ d1 ∈ d.divisors, ∑ d2 ∈ d.divisors,
-      if d = Nat.lcm d1 d2 then weights d1 * weights d2 else 0) =
+    (∑ d ∈ n.divisors, ∑ d1 ∈ d.divisors, ∑ d2 ∈ d.divisors with
+      d = Nat.lcm d1 d2, weights d1 * weights d2) =
       (∑ d ∈ n.divisors, weights d) ^ 2 := by
     rw [sq, mul_sum, conv_lambda_sq_larger_sum _ n, sum_comm]
     apply sum_congr rfl; intro d1 hd1
-    rw [sum_mul, sum_comm]
+    rw [sum_mul, sum_comm_filter]
     apply sum_congr rfl; intro d2 hd2
-    rw [sum_ite_eq_of_mem']
+    rw [sum_filter, sum_ite_eq_of_mem']
     ring
     rw [mem_divisors, Nat.lcm_dvd_iff]
     exact ⟨⟨dvd_of_mem_divisors hd1, dvd_of_mem_divisors hd2⟩, (mem_divisors.mp hd1).2⟩
@@ -395,24 +393,21 @@ theorem lambdaSquared_mainSum_eq_quad_form (w : ℕ → ℝ) :
       ∑ d1 ∈ divisors P, ∑ d2 ∈ divisors P,
         ν d1 * w d1 * ν d2 * w d2 * (ν (d1.gcd d2))⁻¹ := by
   calc mainSum (lambdaSquared w)
-      = ∑ d ∈ divisors P, ∑ d1 ∈ divisors d, ∑ d2 ∈ divisors d,
-          if d = d1.lcm d2 then w d1 * w d2 * ν d else 0 := ?caseA
-    _ = ∑ d ∈ divisors P, ∑ d1 ∈ divisors P, ∑ d2 ∈ divisors P,
-          if d = d1.lcm d2 then w d1 * w d2 * ν d else 0 := by apply conv_lambda_sq_larger_sum
+      = ∑ d ∈ divisors P, ∑ d1 ∈ divisors d, ∑ d2 ∈ divisors d with d = d1.lcm d2,
+          w d1 * w d2 * ν d := ?caseA
+    _ = ∑ d ∈ divisors P, ∑ d1 ∈ divisors P, ∑ d2 ∈ divisors P with d = d1.lcm d2,
+          w d1 * w d2 * ν d := by apply conv_lambda_sq_larger_sum
     _ = ∑ d1 ∈ divisors P, ∑ d2 ∈ divisors P,
           ν d1 * w d1 * ν d2 * w d2 * (ν (d1.gcd d2))⁻¹ := ?caseB
   case caseA =>
     dsimp only [mainSum, lambdaSquared]
-    rw [sum_congr rfl]; intro d _
-    rw [sum_mul, sum_congr rfl]; intro d1 _
-    rw [sum_mul, sum_congr rfl]; intro d2 _
-    rw [ite_zero_mul]
+    simp_rw [sum_mul]
   case caseB =>
     rw [sum_comm, sum_congr rfl]; intro d1 hd1
-    rw [sum_comm, sum_congr rfl]; intro d2 hd2
+    rw [sum_comm_filter, sum_congr rfl]; intro d2 hd2
     have h : d1.lcm d2 ∣ P := Nat.lcm_dvd_iff.mpr ⟨dvd_of_mem_divisors hd1, dvd_of_mem_divisors hd2⟩
-    rw [sum_ite_eq_of_mem' (divisors P) (d1.lcm d2) _ (mem_divisors.mpr ⟨h, prodPrimes_ne_zero⟩ ),
-      nu_mult.map_lcm]
+    rw [sum_filter, sum_ite_eq_of_mem' (divisors P) (d1.lcm d2) _
+      (mem_divisors.mpr ⟨h, prodPrimes_ne_zero⟩ ), nu_mult.map_lcm]
     · ring
     refine _root_.ne_of_gt (nu_pos_of_dvd_prodPrimes ?_)
     trans d1
@@ -422,26 +417,26 @@ theorem lambdaSquared_mainSum_eq_quad_form (w : ℕ → ℝ) :
 theorem lambdaSquared_mainSum_eq_diag_quad_form  (w : ℕ → ℝ) :
     mainSum (lambdaSquared w) =
       ∑ l ∈ divisors P,
-        1 / g l * (∑ d ∈ divisors P, if l ∣ d then ν d * w d else 0) ^ 2 := by
+        1 / g l * (∑ d ∈ divisors P with l ∣ d, ν d * w d) ^ 2 := by
   calc mainSum (lambdaSquared w) =
-    ∑ d1 ∈ divisors P, ∑ d2 ∈ divisors P, (∑ l ∈ divisors P,
-          if l ∣ d1.gcd d2 then 1 / g l * (ν d1 * w d1) * (ν d2 * w d2) else 0) := ?caseA
-    _ = ∑ l ∈ divisors P, ∑ d1 ∈ divisors P, ∑ d2 ∈ divisors P,
-        if l ∣ Nat.gcd d1 d2 then 1 / g l * (ν d1 * w d1) * (ν d2 * w d2) else 0 := ?caseB
+    ∑ d1 ∈ divisors P, ∑ d2 ∈ divisors P, (∑ l ∈ divisors P with l ∣ d1.gcd d2,
+          1 / g l * (ν d1 * w d1) * (ν d2 * w d2)) := ?caseA
+    _ = ∑ l ∈ divisors P, ∑ d1 ∈ divisors P, ∑ d2 ∈ divisors P with
+        l ∣ Nat.gcd d1 d2, 1 / g l * (ν d1 * w d1) * (ν d2 * w d2) := ?caseB
     _ = ∑ l ∈ divisors P,
-        1 / g l * (∑ d ∈ divisors P, if l ∣ d then ν d * w d else 0) ^ 2 := ?caseC
+        1 / g l * (∑ d ∈ divisors P with l ∣ d, ν d * w d) ^ 2 := ?caseC
   case caseA =>
     rw [lambdaSquared_mainSum_eq_quad_form w]
     apply sum_congr rfl; intro d1 hd1; apply sum_congr rfl; intro d2 _
     have hgcd_dvd: d1.gcd d2 ∣ P := (Nat.gcd_dvd_left d1 d2).trans (dvd_of_mem_divisors hd1)
-    simp_rw [nu_eq_conv_one_div_selbergTerms _ hgcd_dvd, ← sum_filter, mul_sum]
+    simp_rw [nu_eq_conv_one_div_selbergTerms _ hgcd_dvd, mul_sum]
     congr with l
     ring
   case caseB =>
-    apply symm; rw [sum_comm, sum_congr rfl]; intro d1 _; rw[sum_comm];
+    apply symm; rw [sum_comm, sum_congr rfl]; intro d1 _; rw[sum_comm_filter];
   case caseC =>
     congr with l
-    simp_rw [← sum_filter, sq, sum_mul, mul_sum, sum_filter_sum, filter_filter]
+    simp_rw [sq, sum_mul, mul_sum, sum_filter_sum, filter_filter]
     congr with d1
     congr with d2
     · rw [dvd_gcd_iff, and_comm]
