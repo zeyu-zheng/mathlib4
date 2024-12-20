@@ -304,11 +304,10 @@ theorem trunc_C_mul_T (n : ℤ) (r : R) : trunc (C r * T n) = ite (0 ≤ n) (mon
     erw [comapDomain_single]
     simp only [Nat.cast_nonneg, Int.toNat_ofNat, ite_true, toFinsupp_monomial]
   · lift -n to ℕ using (neg_pos.mpr (not_le.mp n0)).le with m
-    rw [toFinsupp_inj, if_neg n0]
+    rw [if_neg n0, toFinsupp_zero]
     ext a
     have := ((not_le.mp n0).trans_le (Int.ofNat_zero_le a)).ne
-    simp only [coeff_ofFinsupp, comapDomain_apply, Int.ofNat_eq_coe, coeff_zero,
-      single_eq_of_ne this]
+    simp only [comapDomain_apply, Int.ofNat_eq_coe, single_eq_of_ne this, coe_zero, Pi.zero_apply]
 
 @[simp]
 theorem leftInverse_trunc_toLaurent :
