@@ -3,7 +3,7 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov
 -/
-import Mathlib.Topology.Separation.Basic
+import Mathlib.Topology.Separation.Hausdorff
 
 /-!
 # Order-closed topologies
@@ -368,7 +368,7 @@ variable [TopologicalSpace α] [Preorder α] [ClosedIciTopology α] {f : β → 
 theorem isClosed_Ici {a : α} : IsClosed (Ici a) :=
   ClosedIciTopology.isClosed_Ici a
 
-@[deprecated (since := "2024-02-15")]
+@[deprecated "No deprecation message was provided." (since := "2024-02-15")]
 lemma ClosedIciTopology.isClosed_ge' (a : α) : IsClosed {x | a ≤ x} := isClosed_Ici a
 export ClosedIciTopology (isClosed_ge')
 
