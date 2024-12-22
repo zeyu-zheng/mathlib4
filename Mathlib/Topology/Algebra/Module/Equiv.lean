@@ -567,6 +567,16 @@ def arrowCongrEquiv (e₁₂ : M₁ ≃SL[σ₁₂] M₂) (e₄₃ : M₄ ≃SL[
     ContinuousLinearMap.ext fun x => by
       simp only [ContinuousLinearMap.comp_apply, apply_symm_apply, coe_coe]
 
+/-- Combine a family of linear equivalences into a linear equivalence of `pi`-types.
+
+This is `Equiv.piCongrLeft` as a `ContinuousLinearEquiv` -/
+def ContinuousLinearEquiv.piCongrLeft (R : Type*) [Semiring R] {ι ι' : Type*}
+    (φ : ι → Type*) [∀ i, AddCommMonoid (φ i)] [∀ i, Module R (φ i)]
+    [∀ i, TopologicalSpace (φ i)]
+    (e : ι' ≃ ι) : ((i' : ι') → φ (e i')) ≃L[R] (i : ι) → φ i where
+  __ := Homeomorph.piCongrLeft e
+  __ := LinearEquiv.piCongrLeft R φ e
+
 section piCongrRight
 
 variable {ι : Type*} {M : ι → Type*} [∀ i, TopologicalSpace (M i)] [∀ i, AddCommMonoid (M i)]
