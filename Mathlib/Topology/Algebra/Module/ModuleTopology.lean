@@ -413,4 +413,72 @@ lemma _root_.ModuleTopology.eq_coinduced_of_surjective
 
 end surjection
 
+section prod
+
+variable {R : Type*} [TopologicalSpace R] [Semiring R] [TopologicalSemiring R]
+variable {M : Type*} [AddCommMonoid M] [Module R M] [TopologicalSpace M] [IsModuleTopology R M]
+variable {N : Type*} [AddCommMonoid N] [Module R N] [TopologicalSpace N] [IsModuleTopology R N]
+
+/-- The product of the module topologies for two modules over a topological ring
+is the module topology. -/
+instance prod : IsModuleTopology R (M × N) := by
+  constructor
+  haveI : ContinuousAdd M := toContinuousAdd R M
+  haveI : ContinuousAdd N := toContinuousAdd R N
+  -- In this proof, `M × N` always denotes the product with its product topology.
+  -- Addition `(M × N)² → M × N` and scalar multiplication `R × (M × N) → M × N`
+  -- are continuous for the product topology (by results in the library), so the module topology
+  -- on `M × N` is finer than the product topology (as it's the Inf of such topologies).
+  -- It thus remains to show that the product topology is finer than the module topology.
+  refine le_antisymm ?_ <| sInf_le ⟨Prod.continuousSMul, Prod.continuousAdd⟩
+  -- Or equivalently, if `P` denotes `M × N` with the module topology,
+  -- that the identity map from `M × N` to `P` is continuous.
+  rw [← continuous_id_iff_le]
+  -- Now let P denote M × N with the module topology.
+  let P := M × N
+  letI τP : TopologicalSpace P := moduleTopology R P
+  haveI : IsModuleTopology R P := ⟨rfl⟩
+  haveI : ContinuousAdd P := ModuleTopology.continuousAdd R P
+  -- We want to show that the identity map `i` from M × N to P is continuous.
+  let i : M × N → P := id
+  change @Continuous (M × N) P (_) τP i
+  -- But the identity map can be written as (m,n) ↦ (m,0)+(0,n)
+  -- or equivalently as i₁ ∘ pr₁ + i₂ ∘ pr₂, where prᵢ are the projections,
+  -- the i's are linear inclusions M → P and N → P, and the addition is P × P → P.
+  let i₁ : M →ₗ[R] P := LinearMap.inl R M N
+  let i₂ : N →ₗ[R] P := LinearMap.inr R M N
+  rw [show (i : M × N → P) =
+       (fun abcd ↦ abcd.1 + abcd.2 : P × P → P) ∘
+       (fun ab ↦ (i₁ ab.1,i₂ ab.2)) by
+       ext ⟨a, b⟩ <;> aesop]
+  -- and these maps are all continuous, hence `i` is too
+  fun_prop
+
+end prod
+
+section Pi
+
+variable {R : Type*} [τR : TopologicalSpace R] [Semiring R] [TopologicalSemiring R]
+
+variable {ι : Type*} [Finite ι] {A : ι → Type*} [∀ i, AddCommMonoid (A i)]
+  [∀ i, Module R (A i)] [∀ i, TopologicalSpace (A i)]
+  [∀ i, IsModuleTopology R (A i)]
+
+instance pi : IsModuleTopology R (∀ i, A i) := by
+  induction ι using Finite.induction_empty_option
+  · case of_equiv X Y e _ _ _ _ _ =>
+    exact iso (ContinuousLinearEquiv.piCongrLeft R A e)
+  · infer_instance
+  · case h_option X _ hind _ _ _ _ =>
+    let e : Option X ≃ X ⊕ Unit := Equiv.optionEquivSumPUnit X
+    -- @ hack to avoid typeclass synthesis kicking in
+    apply @iso (e := ContinuousLinearEquiv.piCongrLeft R A e.symm)
+    -- @ hack to avoid typeclass synthesis kicking in
+    apply @iso (e := (ContinuousLinearEquiv.sumPiEquivProdPi R X Unit _).symm)
+    refine @prod _ _ _ _ _ _ (_) (hind) _ _ _ (_) (?_)
+    let φ : Unit → Option X := fun t ↦ e.symm (Sum.inr t)
+    exact iso (ContinuousLinearEquiv.pUnitPiEquiv R (fun t ↦ A (φ t))).symm
+
+end Pi
+
 end IsModuleTopology
