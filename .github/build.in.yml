@@ -80,8 +80,12 @@ jobs:
     if: github.repository MAIN_OR_FORK 'leanprover-community/mathlib4'
     name: BuildJOB_NAME
     runs-on: RUNS_ON
+    defaults:
+      run:
+        shell: bwrap --ro-bind $(pwd)/pr-branch $(pwd)/pr-branch --tmpfs $(pwd)/pr-branch/.lake --dev-bind / / bash -euxo pipefail {0}
     env:
-      BWRAP: bwrap --ro-bind $(pwd)/pr-branch $(pwd)/pr-branch --tmpfs $(pwd)/pr-branch/.lake --dev-bind / /
+      # Command to execute `cache` from the master branch
+      CACHE_CMD: ../master-branch/.lake/build/bin/cache
 
     steps:
       - name: cleanup
@@ -101,6 +105,8 @@ jobs:
         uses: dcarbone/install-jq-action@v2.1.0
 
       - name: install elan
+        # This step needs network access, so we reset the shell
+        shell: bash -euxo pipefail {0}
         run: |
           set -o pipefail
           curl -sSfL https://github.com/leanprover/elan/releases/download/v3.1.1/elan-x86_64-unknown-linux-gnu.tar.gz | tar xz
@@ -108,6 +114,8 @@ jobs:
           echo "$HOME/.elan/bin" >> "${GITHUB_PATH}"
 
       - name: Install bubblewrap
+        # This step needs network access, so we reset the shell
+        shell: bash -euxo pipefail {0}
         run: |
           sudo apt-get update
           sudo apt-get install -y bubblewrap
@@ -126,6 +134,7 @@ jobs:
           lake --version
 
       - name: build cache
+        shell: bash -euxo pipefail {0}
         run: |
           cd master-branch
           lake build cache
@@ -137,6 +146,8 @@ jobs:
           path: pr-branch
 
       - name: If using a lean-pr-release toolchain, reinstall
+        # This step needs network access, so we reset the shell
+        shell: bash -euxo pipefail {0}
         run: |
           cd pr-branch
           if [[ $(cat lean-toolchain) =~ ^leanprover/lean4-pr-releases:pr-release-[0-9]+$ ]]; then
@@ -146,27 +157,29 @@ jobs:
           fi
 
       - name: get cache
+        # This step needs network access, so we reset the shell
+        shell: bash -euxo pipefail {0}
         id: get
         run: |
           cd pr-branch
           rm -rf .lake/build/lib/Mathlib/
           # Define the bwrap command with the necessary options
           # Fail quickly if the cache is completely cold, by checking for Mathlib.Init
-          $BWRAP lake exe cache get Mathlib.Init
-          $BWRAP lake build --no-build Mathlib.Init && $BWRAP lake exe cache get || echo "No cache for 'Mathlib.Init' available"
+          $CACHE_CMD get Mathlib.Init
+          # Here we run `lake` outside the sandbox
+          lake build --no-build Mathlib.Init && $CACHE_CMD get || echo "No cache for 'Mathlib.Init' available"
 
       - name: print lean and lake versions (pr)
         run: |
           cd pr-branch
-          $BWRAP lean --version
-          $BWRAP lake --version
+          lean --version
+          lake --version
 
       - name: update {Mathlib, Tactic, Counterexamples, Archive}.lean
         id: mk_all
         run: |
-
           cd pr-branch
-          if ! $BWRAP lake exe mk_all --check
+          if ! lake exe mk_all --check
           then
             echo "Not all lean files are in the import all files"
             echo "mk_all=false" >> "${GITHUB_OUTPUT}"
@@ -181,7 +194,7 @@ jobs:
           linters: gcc
           run: |
             cd pr-branch
-            $BWRAP bash -o pipefail -c "env LEAN_ABORT_ON_PANIC=1 lake build --wfail -KCI"
+            bash -o pipefail -c "env LEAN_ABORT_ON_PANIC=1 lake build --wfail -KCI"
 
       - name: print the sizes of the oleans
         run: |
@@ -189,6 +202,8 @@ jobs:
           du .lake/build/lib/Mathlib || echo "This code should be unreachable"
 
       - name: upload mathlib cache
+        # This step needs network access, so we reset the shell
+        shell: bash -euxo pipefail {0}
         # We only upload the cache if the build started (whether succeeding, failing, or cancelled)
         # but not if any earlier step failed or was cancelled.
         # See discussion at https://leanprover.zulipchat.com/#narrow/stream/287929-mathlib4/topic/Some.20files.20not.20found.20in.20the.20cache/near/407183836
@@ -196,30 +211,35 @@ jobs:
         run: |
           cd pr-branch
           # TODO: this is not doing anything currently, and needs to be integrated with put-unpacked
-          # lake exe cache commit || true
+          # $CACHE_CMD commit || true
           # run this in CI if it gets an incorrect lake hash for existing cache files somehow
-          # lake exe cache put!
+          # $CACHE_CMD put!
           # do not try to upload files just downloaded
           #
-          # IMPORTANT: use `lake exe cache` from master-branch here.
-          lake exe cache put-unpacked
+          # IMPORTANT: use `lake exe cache` from master-branch here: $CACHE_CMD
+          $CACHE_CMD put-unpacked
         env:
           MATHLIB_CACHE_SAS: ${{ secrets.MATHLIB_CACHE_SAS }}
           MATHLIB_CACHE_S3_TOKEN: ${{ secrets.MATHLIB_CACHE_S3_TOKEN }}
 
       - name: check the cache
+        # This step needs network access, so we reset the shell
+        shell: bash -euxo pipefail {0}
         run: |
           cd pr-branch
           # Because the `lean-pr-testing-NNNN` branches use toolchains that are "updated in place"
           # the cache mechanism is unreliable, so we don't test it if we are on such a branch.
           if [[ ! $(cat lean-toolchain) =~ ^leanprover/lean4-pr-releases:pr-release-[0-9]+$ ]]; then
-            lake exe cache clean!
+            $CACHE_CMD clean!
             rm -rf .lake/build/lib/Mathlib
-            $BWRAP lake exe cache get || (sleep 1; $BWRAP lake exe cache get)
-            $BWRAP lake build --no-build
+            $CACHE_CMD get || (sleep 1; $CACHE_CMD get)
+            # Here we run `lake` outside the sandbox
+            lake build --no-build
           fi
 
-      - name: build archive
+      - name: get archive cache
+        # This step needs network access, so we reset the shell
+        shell: bash -euxo pipefail {0}
         id: archive
         run: |
           cd pr-branch
@@ -230,30 +250,44 @@ jobs:
           # it should be possible to determine whether they need to be built without actually
           # storing and transferring oleans over the network.
           # Hopefully a future re-implementation of `cache` will obviate the present need for this hack.
-          $BWRAP lake exe cache get Archive.lean
-          $BWRAP bash -o pipefail -c "env LEAN_ABORT_ON_PANIC=1 lake build Archive"
+          $CACHE_CMD get Archive.lean
+
+      - name: build archive
+        id: archive
+        run: |
+          cd pr-branch
+          bash -o pipefail -c "env LEAN_ABORT_ON_PANIC=1 lake build Archive"
 
       - name: upload archive cache
+        # This step needs network access, so we reset the shell
+        shell: bash -euxo pipefail {0}
         run:
           cd pr-branch
-          # IMPORTANT: use `lake exe cache` from master-branch here.
-          lake exe cache put Archive.lean
+          # IMPORTANT: use `lake exe cache` from master-branch here: $CACHE_CMD
+          $CACHE_CMD put Archive.lean
         env:
           MATHLIB_CACHE_SAS: ${{ secrets.MATHLIB_CACHE_SAS }}
           MATHLIB_CACHE_S3_TOKEN: ${{ secrets.MATHLIB_CACHE_S3_TOKEN }}
+
+      - name: get counterexamples cache
+        # This step needs network access, so we reset the shell
+        shell: bash -euxo pipefail {0}
+        id: counterexamples
+        run: |
+          cd pr-branch
+          $CACHE_CMD get Counterexamples.lean
 
       - name: build counterexamples
         id: counterexamples
         run: |
           cd pr-branch
-          $BWRAP lake exe cache get Counterexamples.lean
-          $BWRAP bash -o pipefail -c "env LEAN_ABORT_ON_PANIC=1 lake build Counterexamples"
+          bash -o pipefail -c "env LEAN_ABORT_ON_PANIC=1 lake build Counterexamples"
 
       - name: upload counterexamples cache
         run:
           cd pr-branch
-          # IMPORTANT: use `lake exe cache` from master-branch here.
-          lake exe cache put Counterexamples.lean
+          # IMPORTANT: use `lake exe cache` from master-branch here: $CACHE_CMD
+          $CACHE_CMD put Counterexamples.lean
         env:
           MATHLIB_CACHE_SAS: ${{ secrets.MATHLIB_CACHE_SAS }}
           MATHLIB_CACHE_S3_TOKEN: ${{ secrets.MATHLIB_CACHE_S3_TOKEN }}
@@ -289,12 +323,12 @@ jobs:
         run: |
           cd pr-branch
           python3 scripts/yaml_check.py docs/100.yaml docs/1000.yaml docs/overview.yaml docs/undergrad.yaml
-          $BWRAP lake exe check-yaml
+          lake exe check-yaml
 
       - name: generate our import graph
         run: |
           cd pr-branch
-          $BWRAP lake exe graph
+          lake exe graph
 
       - name: upload the import graph
         uses: actions/upload-artifact@v4
@@ -312,7 +346,7 @@ jobs:
         # make sure everything is available for test/import_all.lean
         run: |
           cd pr-branch
-          $BWRAP lake build Batteries Qq Aesop ProofWidgets Plausible
+          lake build Batteries Qq Aesop ProofWidgets Plausible
 
       - name: test mathlib
         id: test
@@ -321,7 +355,7 @@ jobs:
           linters: gcc
           run: |
             cd pr-branch
-            $BWRAP lake --iofail test
+            lake --iofail test
 
       - name: check for unused imports
         id: shake
@@ -330,7 +364,7 @@ jobs:
           linters: gcc
           run: |
             cd pr-branch
-            $BWRAP env LEAN_ABORT_ON_PANIC=1 lake exe shake --gh-style
+            env LEAN_ABORT_ON_PANIC=1 lake exe shake --gh-style
 
       - name: lint mathlib
         if: ${{ always() && steps.build.outcome == 'success' || steps.build.outcome == 'failure' }}
@@ -340,7 +374,7 @@ jobs:
           linters: gcc
           run: |
             cd pr-branch
-            $BWRAP env LEAN_ABORT_ON_PANIC=1 lake exe runLinter Mathlib
+            env LEAN_ABORT_ON_PANIC=1 lake exe runLinter Mathlib
 
       # We no longer run `lean4checker` in regular CI, as it is quite expensive for little benefit.
       # Instead we run it in a cron job on master: see `lean4checker.yml`.
@@ -378,7 +412,7 @@ jobs:
           fi
           # Build lean4checker using the same toolchain
           cp ../lean-toolchain .
-          $BWRAP lake build
+          lake build
 
   final:
     name: Post-CI jobJOB_NAME
