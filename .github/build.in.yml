@@ -166,7 +166,7 @@ jobs:
           # Define the bwrap command with the necessary options
           # Fail quickly if the cache is completely cold, by checking for Mathlib.Init
           $CACHE_CMD get Mathlib.Init
-          # Here we run `lake` outside the sandbox
+          # WARNING: Here we run `lake` outside the sandbox
           lake build --no-build Mathlib.Init && $CACHE_CMD get || echo "No cache for 'Mathlib.Init' available"
 
       - name: print lean and lake versions (pr)
@@ -233,7 +233,7 @@ jobs:
             $CACHE_CMD clean!
             rm -rf .lake/build/lib/Mathlib
             $CACHE_CMD get || (sleep 1; $CACHE_CMD get)
-            # Here we run `lake` outside the sandbox
+            # WARNING: Here we run `lake` outside the sandbox
             lake build --no-build
           fi
 
