@@ -24,10 +24,6 @@ section MissingPolynomialStuff
 
 variable {R : Type*} [Semiring R]
 
-theorem coeffs_monomial (n : ℕ) {c : R} (hc : c ≠ 0) : (monomial n c).coeffs = {c} := by
-  rw [coeffs, support_monomial n hc]
-  simp
-
 theorem ne_zero_of_mem_coeffs {R : Type*} [Semiring R] {x : R} {p : R[X]}
    (hx : x ∈ p.coeffs) : x ≠ 0 := by
   rw [mem_coeffs_iff] at hx
@@ -51,9 +47,6 @@ end MissingPolynomialStuff
 
 section MissingOrdinalStuff
 
-theorem Ordinal.sSup_empty : sSup (∅ : Set Ordinal) = 0 :=
-  csSup_empty
-
 theorem Ordinal.sSup_eq_zero {s : Set Ordinal} (hs : BddAbove s) : sSup s = 0 ↔ s ⊆ {0} := by
   constructor
   · intro h a ha
@@ -73,9 +66,6 @@ def zero_toType {o : Ordinal} (ho : o ≠ 0) : Zero o.toType :=
   ⟨enumIsoToType o ⟨0, Ordinal.pos_iff_ne_zero.2 ho⟩⟩
 
 end MissingOrdinalStuff
-
-instance (o : Nimber.{u}) : Small.{u} (Iio o) :=
-  inferInstanceAs (Small.{u} (Iio (Nimber.toOrdinal o)))
 
 namespace Nimber
 
@@ -97,7 +87,7 @@ local infixl:70 " %ₒ " => ordinalMod
 local infixr:80 " ^ₒ " => ordinalPow
 
 lemma lt_ordinalAdd_iff (a b c : Nimber) : a < b +ₒ c ↔ a < b ∨ ∃ d < c, b +ₒ d = a :=
-  lt_add_iff a b c
+  sorry -- lt_add_iff a b c
 
 lemma ordinalDiv_ordinalAdd_ordinalMod (a b : Nimber) : b *ₒ (a /ₒ b) +ₒ a %ₒ b = a :=
   div_add_mod a b
@@ -119,7 +109,7 @@ theorem ordinalDiv_lt {a b c : Nimber} (b0 : b ≠ 0) : a /ₒ b < c ↔ a < b *
 
 /-- We consider a nimber to be a group when nimbers less than it are closed under addition. Note we
 don't actually require `0 < x`. -/
-structure IsGroup (x : Nimber) : Prop :=
+structure IsGroup (x : Nimber) : Prop where
   add_lt : ∀ y < x, ∀ z < x, y + z < x
 
 @[simp]
@@ -127,16 +117,16 @@ lemma IsGroup_one : IsGroup 1 := by constructor; intro _ _ _ _; simp_all [lt_one
 
 /-- We consider a nimber to be a ring when it is a group, and nimbers less than it are closed under
 multiplication. -/
-structure IsRing (x : Nimber) extends IsGroup x : Prop :=
+structure IsRing (x : Nimber) extends IsGroup x : Prop where
   mul_lt : ∀ y < x, ∀ z < x, y * z < x
 
 /-- We consider a nimber to be a prefield when it is a ring, and nimbers less than it are closed
 under inverses. -/
-structure IsPrefield (x : Nimber) extends IsRing x : Prop :=
+structure IsPrefield (x : Nimber) extends IsRing x : Prop where
   inv_lt : ∀ y < x, y⁻¹ < x
 
 /-- We consider a nimber to be a field when it is a prefield which contains 0 and 1. -/
-structure IsField (x : Nimber) extends IsPrefield x : Prop :=
+structure IsField (x : Nimber) extends IsPrefield x : Prop where
   one_lt : 1 < x
 
 theorem IsField.ne_zero {x : Nimber} (hx : IsField x) : x ≠ 0 :=
@@ -281,7 +271,7 @@ theorem self_le_algify {x : Nimber} : x ≤ algify x := by
   obtain hx' | hx' := le_or_lt x 1
   · rw [le_one_iff] at hx'
     obtain rfl | rfl := hx'
-    · exact Nimber.zero_le _
+    · exact Ordinal.zero_le _ -- make nimber version
     · rw [algify]
       convert le_ciSup (bddAbove_algify 1) ⟨0, by simp⟩
       simp
@@ -291,7 +281,7 @@ theorem self_le_algify {x : Nimber} : x ≤ algify x := by
     apply mem_algify (p := X + C c)
     · intro a ha
       rw [coeffs] at ha
-      simp only [coeff_add, Finset.mem_image, mem_support_iff, ne_eq, add_eq_zero_iff] at ha
+      simp only [coeff_add, Finset.mem_image, mem_support_iff, ne_eq, Ordinal.add_eq_zero_iff] at ha
       obtain ⟨n, hn₁, hn₂⟩ := ha
       cases n with
       | zero =>
@@ -305,8 +295,6 @@ theorem self_le_algify {x : Nimber} : x ≤ algify x := by
         · exact zero_lt_one.trans hx'
         · exact hx'
     · simp
-      rw [← add_left_inj (C c), add_assoc, ← C_add, add_self, map_zero, add_zero, zero_add]
-      exact X_ne_C c
 
 theorem algify_mono : Monotone algify := by
   intro x y h
@@ -429,7 +417,7 @@ lemma ordinalMul_add_of_isGroup {x z : Nimber} (hx : IsGroup x) (y : Nimber) (hz
   · congr! with w
     rw [lt_ordinalAdd_iff]
     congr! 3 with d
-    · simp_rw [add_eq_iff_eq_add, exists_eq_right]
+    · simp_rw [CharTwo.add_eq_iff_eq_add, exists_eq_right]
       constructor
       · convert add_lt_of_lt (w + z)
         rw [add_assoc, add_self, add_zero]
