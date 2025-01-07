@@ -4752,6 +4752,7 @@ import Mathlib.SetTheory.Game.PGame
 import Mathlib.SetTheory.Game.Short
 import Mathlib.SetTheory.Game.State
 import Mathlib.SetTheory.Lists
+import Mathlib.SetTheory.Nimber.Algebraic
 import Mathlib.SetTheory.Nimber.Basic
 import Mathlib.SetTheory.Nimber.Field
 import Mathlib.SetTheory.Ordinal.Arithmetic

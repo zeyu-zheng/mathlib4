@@ -5,9 +5,13 @@ Authors: Violeta Hernández Palacios, Daniel Weber
 -/
 import Mathlib.Data.Finsupp.WellFounded
 import Mathlib.FieldTheory.IsAlgClosed.Basic
-import Mathlib.SetTheory.Ordinal.Nimber.Basic
+import Mathlib.SetTheory.Nimber.Field
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Algebra.CharP.Subring
+
+/-!
+# Algebraic completeness of nimbers
+-/
 
 universe u v
 
@@ -74,15 +78,6 @@ instance (o : Nimber.{u}) : Small.{u} (Iio o) :=
   inferInstanceAs (Small.{u} (Iio (Nimber.toOrdinal o)))
 
 namespace Nimber
-
-instance : CharP Nimber 2 where
-  cast_eq_zero_iff' x := by
-    rcases Nat.even_or_odd x with ⟨r, rfl⟩ | ⟨r, rfl⟩
-    · simp only [Nat.cast_add, add_self, true_iff]
-      omega
-    · simp only [Nat.cast_add, Nat.cast_mul, Nat.cast_ofNat, Nat.cast_one, add_eq_zero_iff,
-      Nat.not_two_dvd_bit1, iff_false]
-      simp only [two_mul, add_self, zero_ne_one, not_false_eq_true]
 
 /-- Add nimbers as ordinals. We introduce the notation `a +ₒ b` for this. -/
 abbrev ordinalAdd (a b : Nimber) : Nimber := toNimber (toOrdinal a + toOrdinal b)

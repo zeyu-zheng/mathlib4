@@ -552,15 +552,6 @@ theorem le_sub_of_le {a b c : Ordinal} (h : b ≤ a) : c ≤ a - b ↔ b + c ≤
 theorem sub_lt_of_le {a b c : Ordinal} (h : b ≤ a) : a - b < c ↔ a < b + c :=
   lt_iff_lt_of_le_iff_le (le_sub_of_le h)
 
-lemma lt_add_iff (a b c : Ordinal) : a < b + c ↔ a < b ∨ ∃ d < c, b + d = a := by
-  constructor
-  · rw [or_iff_not_imp_left, not_lt]
-    intro h nh
-    exact ⟨_, (sub_lt_of_le nh).2 h, Ordinal.add_sub_cancel_of_le nh⟩
-  · rintro (h | ⟨d, hd, rfl⟩)
-    · exact h.trans_le (le_add_right b c)
-    · rwa [add_lt_add_iff_left]
-
 instance existsAddOfLE : ExistsAddOfLE Ordinal :=
   ⟨fun h => ⟨_, (Ordinal.add_sub_cancel_of_le h).symm⟩⟩
 
