@@ -88,6 +88,13 @@ jobs:
       CACHE_CMD: ../master-branch/.lake/build/bin/cache
 
     steps:
+      - name: Install bubblewrap
+        # This step needs network access, so we reset the shell (also, `bwrap` is not yet installed)
+        shell: bash -euxo pipefail {0}
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y bubblewrap
+
       - name: cleanup
         run: |
           find . -name . -o -prune -exec rm -rf -- {} +
@@ -112,13 +119,6 @@ jobs:
           curl -sSfL https://github.com/leanprover/elan/releases/download/v3.1.1/elan-x86_64-unknown-linux-gnu.tar.gz | tar xz
           ./elan-init -y --default-toolchain none
           echo "$HOME/.elan/bin" >> "${GITHUB_PATH}"
-
-      - name: Install bubblewrap
-        # This step needs network access, so we reset the shell
-        shell: bash -euxo pipefail {0}
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y bubblewrap
 
       # Checkout the master branch into a subdirectory
       - name: Checkout master branch
@@ -308,7 +308,7 @@ jobs:
           buildMsgs="$(
             ##  we exploit `lake`s replay feature: since the cache is present, running
             ##  `lake build` will reproduce all the outputs without having to recompute
-            $BWRAP lake build Mathlib Archive Counterexamples |
+            lake build Mathlib Archive Counterexamples |
             ##  we filter out the output lines that begin with `✔ [xx/yy]`, where xx, yy
             ##  are either numbers or ?, and the "Build completed successfully." message.
             ##  We keep the rest, which are actual outputs of the files
