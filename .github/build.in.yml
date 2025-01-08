@@ -398,6 +398,7 @@ jobs:
         run: |
           # IMPORTANT: Run these scripts from the master branch, they use secrets and have network access.
           # They only use the env vars above, not the repo contents
+          # Hence it is safe to do these steps outside the sandbox because they do not execute PR code
           cd master-branch
           scripts/lean-pr-testing-comments.sh lean
           scripts/lean-pr-testing-comments.sh batteries
