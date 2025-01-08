@@ -396,8 +396,9 @@ jobs:
         # This step needs network access, so we reset the shell
         shell: bash -euxo pipefail {0}
         run: |
+          # IMPORTANT: Run these scripts from the master branch, they use secrets and have network access.
+          # They only use the env vars above, not the repo contents
           cd master-branch
-          # Run these scripts from the master branch, the only use the env vars above, not the repo contents
           scripts/lean-pr-testing-comments.sh lean
           scripts/lean-pr-testing-comments.sh batteries
 
