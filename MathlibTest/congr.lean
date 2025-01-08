@@ -177,8 +177,8 @@ inductive walk (α : Type) : α → α → Type
   | nil (n : α) : walk α n n
 
 def walk.map (f : α → β) (w : walk α x y) : walk β (f x) (f y) :=
-  match x, y, w with
-  | _, _, .nil n => .nil (f n)
+  match w with
+  | nil x => nil (f x)
 
 example (w : walk α x y) (w' : walk α x' y') (f : α → β) : HEq (w.map f) (w'.map f) := by
   congr!
