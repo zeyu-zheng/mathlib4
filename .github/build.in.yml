@@ -393,15 +393,26 @@ jobs:
           COUNTEREXAMPLES_OUTCOME: ${{ steps.counterexamples.outcome }}
           LINT_OUTCOME: ${{ steps.lint.outcome }}
           TEST_OUTCOME: ${{ steps.test.outcome }}
+        # This step needs network access, so we reset the shell
+        shell: bash -euxo pipefail {0}
         run: |
+          cd master-branch
+          # Run these scripts from the master branch, the only use the env vars above, not the repo contents
           scripts/lean-pr-testing-comments.sh lean
           scripts/lean-pr-testing-comments.sh batteries
+
+      - name: clone lean4checker, but don't run it
+        if: ${{ (always() && steps.build.outcome == 'success' || steps.build.outcome == 'failure') && contains(github.event.pull_request.changed_files, 'lean-toolchain') }}
+        # This step needs network access, so we reset the shell
+        shell: bash -euxo pipefail {0}
+        run: |
+          cd pr-branch
+          git clone https://github.com/leanprover/lean4checker
 
       - name: build lean4checker, but don't run it
         if: ${{ (always() && steps.build.outcome == 'success' || steps.build.outcome == 'failure') && contains(github.event.pull_request.changed_files, 'lean-toolchain') }}
         run: |
-          git clone https://github.com/leanprover/lean4checker
-          cd lean4checker
+          cd pr-branch/lean4checker
           # Read lean-toolchain file and checkout appropriate branch
           TOOLCHAIN=$(cat ../lean-toolchain)
           if [[ "$TOOLCHAIN" =~ ^leanprover/lean4:v ]]; then
