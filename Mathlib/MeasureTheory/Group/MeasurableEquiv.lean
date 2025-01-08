@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
 import Mathlib.MeasureTheory.Group.Arithmetic
+import Mathlib.MeasureTheory.Group.Pointwise
 
 /-!
 # (Scalar) multiplication and (vector) addition as measurable equivalences
@@ -211,20 +212,22 @@ variable {G A : Type*} [Group G] [AddCommGroup A] [DistribMulAction G A] [Measur
 variable {μ ν : Measure A} {g : G}
 
 noncomputable instance : DistribMulAction Gᵈᵐᵃ (Measure A) where
-  smul g μ := μ.map (DomMulAct.mk.symm g⁻¹ • ·)
-  one_smul μ := show μ.map _ = _ by simp
-  mul_smul g g' μ := show μ.map _ = ((μ.map _).map _) by
-    rw [map_map]
+  smul g μ := μ.comap (DomMulAct.mk.symm g • ·)
+  one_smul μ := show μ.comap _ = _ by simp
+  mul_smul g g' μ := show μ.comap _ = ((μ.comap _).comap _) by
+    rw [comap_comap]
     · simp [Function.comp_def, mul_smul]
-    · exact measurable_const_smul ..
-    · exact measurable_const_smul ..
-  smul_zero g := show (0 : Measure A).map _ = 0 by simp
-  smul_add g μ ν := show (μ + ν).map _ = μ.map _ + ν.map _ by
-    rw [Measure.map_add]; exact measurable_const_smul ..
+    · exact fun s hs ↦ hs.const_smul _
+    · exact MulAction.injective _
+    · exact fun s hs ↦ hs.const_smul _
+  smul_zero g := show (0 : Measure A).comap _ = 0 by simp
+  smul_add g μ ν := show (μ + ν).comap _ = μ.comap _ + ν.comap _ by
+    rw?
+    rw [Measure.comap_add]; exact measurable_const_smul ..
 
 lemma dmaSMul_apply (μ : Measure A) (g : Gᵈᵐᵃ) (s : Set A) :
     (g • μ) s = μ (DomMulAct.mk.symm g • s) := by
-  refine ((MeasurableEquiv.smul ((DomMulAct.mk.symm g : G)⁻¹)).map_apply _).trans ?_
+  refine ((MeasurableEquiv.smul ((DomMulAct.mk.symm g : G)⁻¹)).comap_apply _).trans ?_
   congr 1
   exact Set.preimage_smul_inv (DomMulAct.mk.symm g) s
 

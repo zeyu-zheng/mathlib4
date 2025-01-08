@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Rémy Degenne
 -/
 import Mathlib.MeasureTheory.Measure.Map
+import Mathlib.MeasureTheory.Measure.QuasiMeasurePreserving
 
 /-!
 # Pullback of a measure
@@ -129,6 +130,18 @@ theorem comap_preimage (f : α → β) (μ : Measure β) (hf : Injective f) (hf'
   by_cases hf : Injective f ∧ ∀ s, MeasurableSet s → NullMeasurableSet (f '' s) (0 : Measure β)
   · simp [comap, hf]
   · simp [comap, hf]
+
+lemma comap_add {μ ν : Measure β} (hf : ∀ s, MeasurableSet s → NullMeasurableSet (f '' s) (μ + ν)) :
+    (μ + ν).comap f = μ.comap f + ν.comap f := by
+  by_cases hf' : Injective f
+  · -- TODO: Why don't we have `CanonicallyOrderedAddCommMonoid (Measure α)`?
+    have hfμ s (hs : MeasurableSet s) : NullMeasurableSet (f '' s) μ :=
+      (hf _ hs).mono (Measure.le_add_right le_rfl)
+    have hfν s (hs : MeasurableSet s) : NullMeasurableSet (f '' s) ν :=
+      (hf _ hs).mono (Measure.le_add_left le_rfl)
+    simp [comap, dif_pos (And.intro hf' hf), dif_pos (And.intro hf' hfμ),
+      dif_pos (And.intro hf' hfν), -add_toOuterMeasure]
+  · simp [comap, hf']
 
 @[simp]
 lemma comap_id (μ : Measure β) : comap (fun x ↦ x) μ = μ := by
