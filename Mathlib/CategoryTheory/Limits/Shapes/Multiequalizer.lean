@@ -67,7 +67,7 @@ instance {a : WalkingMulticospan fst snd} : Inhabited (Hom a a) :=
 
 /-- Composition of morphisms for `WalkingMulticospan`. -/
 def Hom.comp : ∀ {A B C : WalkingMulticospan fst snd} (_ : Hom A B) (_ : Hom B C), Hom A C
-  | _, _, _, Hom.id X, f => f
+  | _, _, _, Hom.id _, f => f
   | _, _, _, Hom.fst b, Hom.id _ => Hom.fst b
   | _, _, _, Hom.snd b, Hom.id _ => Hom.snd b
 
@@ -114,7 +114,7 @@ instance {a : WalkingMultispan fst snd} : Inhabited (Hom a a) :=
 
 /-- Composition of morphisms for `WalkingMultispan`. -/
 def Hom.comp : ∀ {A B C : WalkingMultispan fst snd} (_ : Hom A B) (_ : Hom B C), Hom A C
-  | _, _, _, Hom.id X, f => f
+  | _, _, _, Hom.id _, f => f
   | _, _, _, Hom.fst a, Hom.id _ => Hom.fst a
   | _, _, _, Hom.snd a, Hom.id _ => Hom.snd a
 

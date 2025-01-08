@@ -644,8 +644,8 @@ instance decidableSublist [DecidableEq α] : ∀ l₁ l₂ : List α, Decidable 
       @decidable_of_decidable_of_iff _ _ (decidableSublist (a :: l₁) l₂)
         ⟨sublist_cons_of_sublist _, fun s =>
           match a, l₁, s, h with
-          | _, _, Sublist.cons _ s', h => s'
-          | _, _, Sublist.cons₂ t _, h => absurd rfl h⟩
+          | _, _, Sublist.cons _ s', _ => s'
+          | _, _, Sublist.cons₂ _ _, h => absurd rfl h⟩
 
 /-- If the first element of two lists are different, then a sublist relation can be reduced. -/
 theorem Sublist.of_cons_of_ne {a b} (h₁ : a ≠ b) (h₂ : a :: l₁ <+ b :: l₂) : a :: l₁ <+ l₂ :=
