@@ -13,7 +13,9 @@ variable {𝕜 E F : Type*} [Ring 𝕜] [AddCommGroup E] [AddCommGroup F] [Modul
   [ContinuousConstSMul 𝕜 E] [ContinuousConstSMul 𝕜 F] [T2Space F]
   {f : E →ₗ.[𝕜] F} (hdf : Dense (f.domain : Set E)) (hf : UniformContinuous f)
 
-noncomputable def LinearPMap.extend : E →L[𝕜] F :=
+namespace LinearPMap
+
+noncomputable def extend : E →L[𝕜] F :=
   letI g := hdf.extend f
   haveI cg : Continuous g := hdf.uniformContinuous_extend hf |>.continuous
   { toFun := hdf.extend f
@@ -81,3 +83,5 @@ theorem norm_dense_extend {C : ℝ} (hC : 0 ≤ C) (hfC : ∀ x, ‖f x‖ ≤ C
   have h2 : Tendsto (fun n ↦ C * ‖u n‖) atTop (𝓝 (C * ‖x‖)) :=
     ((continuous_norm.tendsto _).comp lu).const_mul _
   exact le_of_tendsto_of_tendsto' h1 h2 fun n ↦ hfC _
+
+end LinearPMap
