@@ -82,7 +82,7 @@ jobs:
     runs-on: RUNS_ON
     defaults:
       run:
-        shell: bwrap --ro-bind $(pwd)/pr-branch $(pwd)/pr-branch --tmpfs $(pwd)/pr-branch/.lake --dev-bind / / bash -euxo pipefail {0}
+        shell: bwrap --unshare-net --ro-bind $(pwd)/pr-branch $(pwd)/pr-branch --bind $(pwd)/pr-branch/.lake $(pwd)/pr-branch/.lake --ro-bind .elan/bin .elan/bin --ro-bind /bin /bin --ro-bind /usr /usr --ro-bind /lib /lib --ro-bind /lib64 /lib64 --setenv PATH "$(pwd)/.elan/bin:$PATH" bash -euxo pipefail {0}
     env:
       # Command to execute `cache` from the master branch
       CACHE_CMD: ../master-branch/.lake/build/bin/cache
@@ -94,18 +94,6 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y bubblewrap
-
-      - name: cleanup
-        run: |
-          find . -name . -o -prune -exec rm -rf -- {} +
-          # Delete all but the 5 most recent toolchains.
-          # Make sure to delete both the `~/.elan/toolchains/X` directory and the `~/.elan/update-hashes/X` file.
-          # Skip symbolic links (`-type d`), the current directory (`! -name .`), and `nightly` and `stable`.
-          if cd ~/.elan/toolchains && find . -maxdepth 1 -type d ! -name . -print0 | xargs -0 ls -1td | grep -v 'nightly$' | grep -v 'stable$' | tail -n +6 | xargs -I {} sh -c 'echo {} && rm -rf "{}" && rm "../update-hashes/{}"'; then
-              : # Do nothing on success
-          else
-              : # Do nothing on failure, but suppress errors
-          fi
 
       # The Hoskinson runners may not have jq installed, so do that now.
       - name: 'Setup jq'
@@ -127,6 +115,27 @@ jobs:
           ref: master
           path: master-branch
 
+      # Checkout the PR branch into a subdirectory
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          path: pr-branch
+
+      - name: cleanup
+        # This step performs generic cleanup, and ensures that all directories bound in the sandbox exist
+        shell: bash -euxo pipefail {0}
+        run: |
+          find . -name . -o -prune -exec rm -rf -- {} +
+          # Delete all but the 5 most recent toolchains.
+          # Make sure to delete both the `~/.elan/toolchains/X` directory and the `~/.elan/update-hashes/X` file.
+          # Skip symbolic links (`-type d`), the current directory (`! -name .`), and `nightly` and `stable`.
+          if cd ~/.elan/toolchains && find . -maxdepth 1 -type d ! -name . -print0 | xargs -0 ls -1td | grep -v 'nightly$' | grep -v 'stable$' | tail -n +6 | xargs -I {} sh -c 'echo {} && rm -rf "{}" && rm "../update-hashes/{}"'; then
+              : # Do nothing on success
+          else
+              : # Do nothing on failure, but suppress errors
+          fi
+          mkdir -p pr-branch/.lake
+
       - name: print lean and lake versions (master)
         run: |
           cd master-branch
@@ -134,16 +143,11 @@ jobs:
           lake --version
 
       - name: build cache
+        # This step needs write access, so we reset the shell
         shell: bash -euxo pipefail {0}
         run: |
           cd master-branch
           lake build cache
-
-      # Checkout the PR branch into a subdirectory
-      - name: Checkout PR branch
-        uses: actions/checkout@v4
-        with:
-          path: pr-branch
 
       - name: If using a lean-pr-release toolchain, reinstall
         # This step needs network access, so we reset the shell
