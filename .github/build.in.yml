@@ -156,24 +156,41 @@ jobs:
             elan toolchain install "$(cat lean-toolchain)"
           fi
 
-      - name: get cache
+      - name: print lean and lake versions (pr)
+        run: |
+          cd pr-branch
+          lean --version
+          lake --version
+
+      # We check if the cache is completely cold, by inspecting the cache for `Init`.
+      # In the next step we fetch the cache
+      # Then we replay the cache inside the sandbox
+      # If this is succesful, we download the full cache
+      - name: get cache (for Mathlib.Init)
         # This step needs network access, so we reset the shell
         shell: bash -euxo pipefail {0}
-        id: get
+        id: get-init-cache
         run: |
           cd pr-branch
           rm -rf .lake/build/lib/Mathlib/
           # Define the bwrap command with the necessary options
           # Fail quickly if the cache is completely cold, by checking for Mathlib.Init
           $CACHE_CMD get Mathlib.Init
-          # WARNING: Here we run `lake` outside the sandbox
-          lake build --no-build Mathlib.Init && $CACHE_CMD get || echo "No cache for 'Mathlib.Init' available"
 
-      - name: print lean and lake versions (pr)
+      - name: get cache (replay Mathlib.Init)
+        id: replay-init
         run: |
           cd pr-branch
-          lean --version
-          lake --version
+          lake build --no-build Mathlib.Init
+
+      - name: get cache (full)
+        if: steps.replay-init.outcome == 'success'
+        # This step needs network access, so we reset the shell
+        shell: bash -euxo pipefail {0}
+        id: get
+        run: |
+          cd pr-branch
+          $CACHE_CMD get
 
       - name: update {Mathlib, Tactic, Counterexamples, Archive}.lean
         id: mk_all
@@ -222,7 +239,7 @@ jobs:
           MATHLIB_CACHE_SAS: ${{ secrets.MATHLIB_CACHE_SAS }}
           MATHLIB_CACHE_S3_TOKEN: ${{ secrets.MATHLIB_CACHE_S3_TOKEN }}
 
-      - name: check the cache
+      - name: check the cache (clean + get)
         # This step needs network access, so we reset the shell
         shell: bash -euxo pipefail {0}
         run: |
@@ -233,7 +250,14 @@ jobs:
             $CACHE_CMD clean!
             rm -rf .lake/build/lib/Mathlib
             $CACHE_CMD get || (sleep 1; $CACHE_CMD get)
-            # WARNING: Here we run `lake` outside the sandbox
+          fi
+
+      - name: check the cache (replay)
+        run: |
+          cd pr-branch
+          # Because the `lean-pr-testing-NNNN` branches use toolchains that are "updated in place"
+          # the cache mechanism is unreliable, so we don't test it if we are on such a branch.
+          if [[ ! $(cat lean-toolchain) =~ ^leanprover/lean4-pr-releases:pr-release-[0-9]+$ ]]; then
             lake build --no-build
           fi
 
