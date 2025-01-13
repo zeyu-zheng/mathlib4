@@ -23,7 +23,7 @@ noncomputable def extend : E →L[𝕜] F :=
       let e : f.domain → E := Subtype.val
       have h1 : Tendsto (fun x ↦ f x.1 + f x.2)
           (comap (Prod.map e e) (𝓝 (x, y))) (𝓝 (g (x + y))) := by
-        simp_rw [← LinearPMap.map_add]
+        simp_rw [← pmap_add]
         apply hdf.extend_tendsto hf
         have : e ∘ (fun x ↦ x.1 + x.2) = (fun x ↦ x.1 + x.2) ∘ (Prod.map e e) := by
           ext x; simp [e]
@@ -51,12 +51,12 @@ noncomputable def extend : E →L[𝕜] F :=
       let e : f.domain → E := Subtype.val
       simp only [RingHom.id_apply]
       have h1 : Tendsto (fun x ↦ m • f x) (comap e (𝓝 x)) (𝓝 (g (m • x))) := by
-        simp_rw [← LinearPMap.map_smul]
+        simp_rw [← pmap_smul]
         change Tendsto (f ∘ _) _ _
         apply hdf.extend_tendsto hf
         have : e ∘ (fun x ↦ m • x) = (fun x ↦ m • x) ∘ e := by
           ext x; simp [e]
-        change Tendsto (e ∘ _) _ _
+        change Tendsto (e ∘ (fun x ↦ m • x)) _ _
         rw [this, ← tendsto_map'_iff]
         exact ((continuous_const_smul m).tendsto x).mono_left map_comap_le
       have h2 : Tendsto (fun x ↦ m • (f x)) (comap e (𝓝 x)) (𝓝 (m • (g x))) :=
