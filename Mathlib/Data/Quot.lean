@@ -455,7 +455,9 @@ def trueSetoid : Setoid α :=
   is related to the propositional truncation in HoTT, and is similar
   in effect to `Nonempty α`, but unlike `Nonempty α`, `Trunc α` is data,
   so the VM representation is the same as `α`, and so this can be used to
-  maintain computability. -/
+  maintain computability.
+
+  This is exactly the same as `Squash α`, which will become the preferred spelling in the future. -/
 def Trunc.{u} (α : Sort u) : Sort u :=
   Squash α
 
