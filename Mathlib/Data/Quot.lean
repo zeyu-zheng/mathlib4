@@ -446,9 +446,8 @@ theorem nonempty_quotient_iff (s : Setoid α) : Nonempty (Quotient s) ↔ Nonemp
 theorem true_equivalence : @Equivalence α fun _ _ ↦ True :=
   ⟨fun _ ↦ trivial, fun _ ↦ trivial, fun _ _ ↦ trivial⟩
 
-/-- Always-true relation as a `Setoid`.
-
-Note that in later files the preferred spelling is `⊤ : Setoid α`. -/
+/-- Always-true relation as a `Setoid`. -/
+@[deprecated "spell this as `⊤ : Setoid α` instead" (since := "2025-01-13")]
 def trueSetoid : Setoid α :=
   ⟨_, true_equivalence⟩
 
@@ -458,7 +457,7 @@ def trueSetoid : Setoid α :=
   so the VM representation is the same as `α`, and so this can be used to
   maintain computability. -/
 def Trunc.{u} (α : Sort u) : Sort u :=
-  @Quotient α trueSetoid
+  Squash α
 
 namespace Trunc
 
