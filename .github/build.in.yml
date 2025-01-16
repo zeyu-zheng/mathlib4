@@ -82,7 +82,7 @@ jobs:
     runs-on: RUNS_ON
     defaults:
       run:
-        shell: bwrap --unshare-net --ro-bind $(pwd)/pr-branch $(pwd)/pr-branch --bind $(pwd)/pr-branch/.lake $(pwd)/pr-branch/.lake --ro-bind .elan/bin .elan/bin --ro-bind /bin /bin --ro-bind /usr /usr --ro-bind /lib /lib --ro-bind /lib64 /lib64 --setenv PATH "$(pwd)/.elan/bin:$PATH" bash -euxo pipefail {0}
+        shell: bwrap --unshare-net --ro-bind $(pwd)/pr-branch $(pwd)/pr-branch --bind $(pwd)/pr-branch/.lake $(pwd)/pr-branch/.lake --ro-bind .elan/bin .elan/bin --ro-bind /bin /bin --ro-bind /usr /usr --ro-bind /lib /lib --ro-bind /lib64 /lib64 --setenv PATH "$(HOME)/.elan/bin:$PATH" bash -euxo pipefail {0}
     env:
       # Command to execute `cache` from the master branch
       CACHE_CMD: ../master-branch/.lake/build/bin/cache
