@@ -13,7 +13,7 @@ require "leanprover-community" / "aesop" @ git "nightly-testing"
 require "leanprover-community" / "proofwidgets" @ git "v0.0.49-pre1"
 require "leanprover-community" / "importGraph" @ git "v4.15.0-rc1"
 require "leanprover-community" / "LeanSearchClient" @ git "main"
-require "leanprover-community" / "plausible" @ git "v4.15.0-rc1"
+require "leanprover-community" / "plausible" @ git "nightly-testing"
 
 /-!
 ## Options for building mathlib
@@ -24,7 +24,8 @@ require "leanprover-community" / "plausible" @ git "v4.15.0-rc1"
 * as `moreServerArgs`, to set their default value in mathlib
   (as well as `Archive`, `Counterexamples` and `test`). -/
 abbrev mathlibOnlyLinters : Array LeanOption := #[
-  ⟨`linter.docPrime, true⟩,
+  -- The `docPrime` linter is disabled: https://github.com/leanprover-community/mathlib4/issues/20560
+  ⟨`linter.docPrime, false⟩,
   ⟨`linter.hashCommand, true⟩,
   ⟨`linter.oldObtain, true,⟩,
   ⟨`linter.refine, true⟩,
