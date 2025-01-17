@@ -92,7 +92,8 @@ structure Section where
 /-- `Splitting` of an additive group extension is a section homomorphism. -/
 structure Splitting extends G →+ E, S.Section
 
-attribute [nolint docBlame] Splitting.toSection
+/-- A splitting of an additive group extension as a (set-theoretic) section. -/
+add_decl_doc Splitting.toSection
 
 end AddGroupExtension
 
@@ -166,8 +167,7 @@ variable (σ : S.Section)
 theorem rightHom_section (g : G) : S.rightHom (σ g) = g := σ.rightInverse_rightHom g
 
 @[to_additive (attr := simp)]
-theorem rightHom_comp_section : S.rightHom ∘ σ = id :=
-  Function.RightInverse.comp_eq_id σ.rightInverse_rightHom
+theorem rightHom_comp_section : S.rightHom ∘ σ = id := σ.rightInverse_rightHom.comp_eq_id
 
 end Section
 
@@ -175,7 +175,8 @@ end Section
 @[to_additive]
 structure Splitting extends G →* E, S.Section
 
-attribute [nolint docBlame] Splitting.toSection
+/-- A splitting of a group extension as a (set-theoretic) section. -/
+add_decl_doc Splitting.toSection
 
 namespace Splitting
 
@@ -238,9 +239,8 @@ theorem toGroupExtension_rightHom : (toGroupExtension φ).rightHom = SemidirectP
   rfl
 
 /-- A canonical splitting of the group extension associated to the semidirect product -/
-def inr_splitting : (toGroupExtension φ).Splitting := {
-  inr with
+def inr_splitting : (toGroupExtension φ).Splitting where
+  __ := inr
   rightInverse_rightHom := rightHom_inr
-}
 
 end SemidirectProduct
