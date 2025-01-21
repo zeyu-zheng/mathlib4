@@ -55,8 +55,8 @@ theorem map_enumFrom_eq_zipWith : ∀ (l : List α) (n : ℕ) (f : ℕ → α �
     rw [this]; rfl
   · cases' l with head tail
     · contradiction
-    · simp only [map, uncurry_apply_pair, range_succ_eq_map, zipWith, Nat.zero_add,
-        zipWith_map_left]
+    · simp only [enumFrom_cons, map_cons, range_succ_eq_map, zipWith_cons_cons,
+        Nat.zero_add, zipWith_map_left, true_and]
       rw [ih]
       · suffices (fun i ↦ f (i + (n + 1))) = ((fun i ↦ f (i + n)) ∘ Nat.succ) by
           rw [this]
@@ -83,7 +83,7 @@ theorem mapIdx_eq_ofFn (l : List α) (f : ℕ → α → β) :
 section deprecated
 
 /-- Lean3 `map_with_index` helper function -/
-@[deprecated (since := "2024-08-15")]
+@[deprecated "No deprecation message was provided." (since := "2024-08-15")]
 protected def oldMapIdxCore (f : ℕ → α → β) : ℕ → List α → List β
   | _, []      => []
   | k, a :: as => f k a :: List.oldMapIdxCore f (k + 1) as
@@ -91,12 +91,12 @@ protected def oldMapIdxCore (f : ℕ → α → β) : ℕ → List α → List �
 set_option linter.deprecated false in
 /-- Given a function `f : ℕ → α → β` and `as : List α`, `as = [a₀, a₁, ...]`, returns the list
 `[f 0 a₀, f 1 a₁, ...]`. -/
-@[deprecated (since := "2024-08-15")]
+@[deprecated "No deprecation message was provided." (since := "2024-08-15")]
 protected def oldMapIdx (f : ℕ → α → β) (as : List α) : List β :=
   List.oldMapIdxCore f 0 as
 
 set_option linter.deprecated false in
-@[deprecated (since := "2024-08-15")]
+@[deprecated "No deprecation message was provided." (since := "2024-08-15")]
 protected theorem oldMapIdxCore_eq (l : List α) (f : ℕ → α → β) (n : ℕ) :
     l.oldMapIdxCore f n = l.oldMapIdx fun i a ↦ f (i + n) a := by
   induction' l with hd tl hl generalizing f n
@@ -105,7 +105,7 @@ protected theorem oldMapIdxCore_eq (l : List α) (f : ℕ → α → β) (n : �
     simp only [List.oldMapIdxCore, hl, Nat.add_left_comm, Nat.add_comm, Nat.add_zero]
 
 set_option linter.deprecated false in
-@[deprecated (since := "2024-08-15")]
+@[deprecated "No deprecation message was provided." (since := "2024-08-15")]
 protected theorem oldMapIdxCore_append : ∀ (f : ℕ → α → β) (n : ℕ) (l₁ l₂ : List α),
     List.oldMapIdxCore f n (l₁ ++ l₂) =
     List.oldMapIdxCore f n l₁ ++ List.oldMapIdxCore f (n + l₁.length) l₂ := by
@@ -133,7 +133,7 @@ protected theorem oldMapIdxCore_append : ∀ (f : ℕ → α → β) (n : ℕ) (
       rw [Nat.add_assoc]; simp only [Nat.add_comm]
 
 set_option linter.deprecated false in
-@[deprecated (since := "2024-08-15")]
+@[deprecated "No deprecation message was provided." (since := "2024-08-15")]
 protected theorem oldMapIdx_append : ∀ (f : ℕ → α → β) (l : List α) (e : α),
     List.oldMapIdx f (l ++ [e]) = List.oldMapIdx f l ++ [f l.length e] := by
   intros f l e
@@ -142,7 +142,7 @@ protected theorem oldMapIdx_append : ∀ (f : ℕ → α → β) (l : List α) (
   simp only [Nat.zero_add]; rfl
 
 set_option linter.deprecated false in
-@[deprecated (since := "2024-08-15")]
+@[deprecated "No deprecation message was provided." (since := "2024-08-15")]
 protected theorem new_def_eq_old_def :
     ∀ (f : ℕ → α → β) (l : List α), l.mapIdx f = List.oldMapIdx f l := by
   intro f
@@ -253,7 +253,7 @@ theorem mapIdxMGo_eq_mapIdxMAuxSpec
       cases as
       · rfl
       · contradiction
-    simp only [this, mapIdxM.go, mapIdxMAuxSpec, List.traverse, map_pure, append_nil]
+    simp only [this, mapIdxM.go, mapIdxMAuxSpec, enumFrom_nil, List.traverse, map_pure, append_nil]
   · match as with
     | nil => contradiction
     | cons head tail =>
@@ -286,9 +286,8 @@ theorem mapIdxMAux'_eq_mapIdxMGo {α} (f : ℕ → α → m PUnit) (as : List α
   · simp only [mapIdxMAux', seqRight_eq, map_eq_pure_bind, seq_eq_bind, bind_pure_unit,
       LawfulMonad.bind_assoc, pure_bind, mapIdxM.go, seq_pure]
     generalize (f (Array.size arr) head) = head
-    let arr_1 := arr.push ⟨⟩
-    have : arr_1.size = arr.size + 1 := Array.size_push arr ⟨⟩
-    rw [← this, ih arr_1]
+    have : (arr.push ⟨⟩).size = arr.size + 1 := Array.size_push arr ⟨⟩
+    rw [← this, ih]
     simp only [seqRight_eq, map_eq_pure_bind, seq_pure, LawfulMonad.bind_assoc, pure_bind]
 
 theorem mapIdxM'_eq_mapIdxM {α} (f : ℕ → α → m PUnit) (as : List α) :

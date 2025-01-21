@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
 import Mathlib.Data.Nat.Choose.Basic
-import Mathlib.Data.List.Range
+import Mathlib.Data.List.FinRange
 import Mathlib.Data.List.Perm.Basic
+import Mathlib.Data.List.Lex
 
 /-! # sublists
 
@@ -182,11 +183,6 @@ theorem map_pure_sublist_sublists (l : List α) : map pure l <+ sublists l := by
   exact ((append_sublist_append_left _).2 <|
               singleton_sublist.2 <| mem_map.2 ⟨[], mem_sublists.2 (nil_sublist _), by rfl⟩).trans
           ((append_sublist_append_right _).2 ih)
-
-set_option linter.deprecated false in
-@[deprecated map_pure_sublist_sublists (since := "2024-03-24")]
-theorem map_ret_sublist_sublists (l : List α) : map List.ret l <+ sublists l :=
-  map_pure_sublist_sublists l
 
 /-! ### sublistsLen -/
 
