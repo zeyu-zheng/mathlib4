@@ -47,8 +47,7 @@ def IsSquare (a : α) : Prop := ∃ r, a = r * r
 @[to_additive]
 lemma isSquare_iff_exists_mul_self (a : α) : IsSquare a ↔ ∃ r, a = r * r := Iff.rfl
 
-alias ⟨IsSquare.exists_mul_self, _⟩ := isSquare_iff_exists_mul_self
-attribute [to_additive] IsSquare.exists_mul_self
+@[to_additive] alias ⟨IsSquare.exists_mul_self, _⟩ := isSquare_iff_exists_mul_self
 
 @[to_additive (attr := simp)] lemma IsSquare.mul_self (r : α) : IsSquare (r * r) := ⟨r, rfl⟩
 
