@@ -122,8 +122,6 @@ section Monoid
 variable [Monoid α] {n : ℕ} {a : α}
 
 @[to_additive even_iff_exists_two_nsmul]
-Change
-1 of 16
 lemma isSquare_iff_exists_sq (a : α) : IsSquare a ↔ ∃ r, a = r ^ 2 := by simp [IsSquare, pow_two]
 
 @[to_additive Even.exists_two_nsmul
