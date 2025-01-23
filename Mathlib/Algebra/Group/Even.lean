@@ -108,13 +108,13 @@ variable [MulOneClass α] [MulOneClass β] [FunLike F α β] [MonoidHomClass F �
 
 @[to_additive]
 lemma IsSquare.map {a : α} (f : F) : IsSquare a → IsSquare (f a) :=
-  fun ⟨r, _⟩ => ⟨f r, by simp_all⟩
+  fun ⟨r, _⟩ => ⟨f r, by simp [*]⟩
 
 @[to_additive]
-lemma exists_apply_eq_and_isSquare {b : β} {f : F} (hf : Function.Surjective f) :
-    IsSquare b → ∃ a, f a = b ∧ IsSquare a := fun ⟨s, _⟩ => by
+lemma isSquare_subset_image_isSquare {f : F} (hf : Function.Surjective f) :
+    {b | IsSquare b} ⊆ Set.image f {a | IsSquare a} := fun b ⟨s, _⟩ => by
   rcases hf s with ⟨r, rfl⟩
-  exact ⟨r * r, by simp [*]⟩
+  exact ⟨r * r, by simp [*]⟩ -- missing simp lemma Set.setOf_mem_eq from `Mathlib.Data.Set.Basic`
 
 end MonoidHom
 
