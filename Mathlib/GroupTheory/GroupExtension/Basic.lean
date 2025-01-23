@@ -23,35 +23,28 @@ namespace GroupExtension
 
 variable {E : Type*} [Group E] (S : GroupExtension N E G)
 
-/-- The isomorphism `E ⧸ S.rightHom.ker ≃* G` induced by `rightHom` -/
-@[to_additive "The isomorphism `E ⧸ S.rightHom.ker ≃+ G` induced by `rightHom`" ]
+/-- The isomorphism `E ⧸ S.rightHom.ker ≃* G` induced by `S.rightHom` -/
+@[to_additive "The isomorphism `E ⧸ S.rightHom.ker ≃+ G` induced by `S.rightHom`" ]
 noncomputable def quotientKerRightHomEquivRight : E ⧸ S.rightHom.ker ≃* G :=
   QuotientGroup.quotientKerEquivOfSurjective S.rightHom S.rightHom_surjective
 
-/-- The isomorphism `E ⧸ S.inl.range ≃* G` induced by `rightHom` -/
-@[to_additive "The isomorphism `E ⧸ S.inl.range ≃+ G` induced by `rightHom`" ]
+/-- The isomorphism `E ⧸ S.inl.range ≃* G` induced by `S.rightHom` -/
+@[to_additive "The isomorphism `E ⧸ S.inl.range ≃+ G` induced by `S.rightHom`" ]
 noncomputable def quotientRangeInlEquivRight : E ⧸ S.inl.range ≃* G :=
   (QuotientGroup.quotientMulEquivOfEq S.range_inl_eq_ker_rightHom).trans
     S.quotientKerRightHomEquivRight
 
-/-- The inverse of the surjective `rightHom` -/
-@[to_additive surjInvRightHom "The inverse of the surjective `rightHom`." ]
-noncomputable def surjInvRightHom : S.Section := {
+/-- The inverse of the surjective `S.rightHom` -/
+@[to_additive surjInvRightHom "The inverse of the surjective `S.rightHom`." ]
+noncomputable def surjInvRightHom : S.Section where
   toFun := Function.surjInv S.rightHom_surjective
   rightInverse_rightHom := Function.surjInv_eq S.rightHom_surjective
-}
 
 namespace Section
 
 variable {S}
-
-section
-
-variable (σ : S.Section)
-
-section
-
-variable (σ' : S.Section) (g : G)
+variable {E' : Type*} [Group E'] {S' : GroupExtension N E' G} (σ σ' : S.Section) (g g₁ g₂ : G)
+  (equiv : S.Equiv S')
 
 @[to_additive]
 theorem section_mul_inv_mem_range : σ g * (σ' g)⁻¹ ∈ S.inl.range := by
@@ -72,12 +65,6 @@ theorem exists_inl_mul_section : ∃ n : N, σ g = S.inl n * σ' g := by
 theorem exists_section_mul_inl : ∃ n : N, σ g = σ' g * S.inl n := by
   obtain ⟨n, hn⟩ := section_inv_mul_mem_range σ' σ g
   exact ⟨n, by rw [hn, mul_inv_cancel_left]⟩
-
-end
-
-section
-
-variable (g₁ g₂ : G)
 
 @[to_additive]
 theorem section_mul_mul_mul_inv_mem_range : σ g₁ * σ g₂ * (σ (g₁ * g₂))⁻¹ ∈ S.inl.range := by
@@ -101,17 +88,10 @@ theorem exists_section_mul_eq_mul_inl : ∃ n : N, σ (g₁ * g₂) = σ g₁ * 
   use n⁻¹
   rw [map_inv, eq_mul_inv_iff_mul_eq, ← eq_inv_mul_iff_mul_eq, ← mul_assoc, hn]
 
-end
-
-end
-
-section
-
-variable {E' : Type*} [Group E'] {S' : GroupExtension N E' G} (σ : S.Section) (equiv : S.Equiv S')
-
 /-- The composition of a homomorphism between equivalent group extensions and a section -/
-@[to_additive "The composition of a homomorphism between equivalent additive group extensions and a
-  section"]
+@[to_additive
+      "The composition of a homomorphism between equivalent additive group extensions and a
+      section"]
 def ofEquiv : S'.Section where
   toFun := equiv.toMonoidHom ∘ σ
   rightInverse_rightHom g := by
@@ -120,20 +100,12 @@ def ofEquiv : S'.Section where
 @[to_additive]
 theorem ofEquiv_def (g : G) : σ.ofEquiv equiv g = equiv.toMonoidHom (σ g) := rfl
 
-end
-
 end Section
 
 namespace Equiv
 
 variable {S}
 variable {E' : Type*} [Group E'] {S' : GroupExtension N E' G} (equiv : S.Equiv S')
-
-include equiv in
-/-- The short exact sequences of equivalent group extensions commute. -/
-@[to_additive "The short exact sequences of equivalent additive group extensions commute."]
-theorem comm : S.rightHom.comp S.inl = S'.rightHom.comp S'.inl := by
-  rw [← equiv.rightHom_comm, MonoidHom.comp_assoc, equiv.inl_comm]
 
 /-- The four lemma (deriving injectivity) specialized for group extensions -/
 @[to_additive "The four lemma (deriving injectivity) specialized for additive group extensions"]
@@ -164,7 +136,8 @@ theorem bijective : Function.Bijective equiv.toMonoidHom := ⟨equiv.injective, 
 
 /-- The homomorphism associated to an equivalence of group extensions is an isomorphism. -/
 @[to_additive
-  "The homomorphism associated to an equivalence of additive group extensions is an isomorphism."]
+      "The homomorphism associated to an equivalence of additive group extensions is an
+      isomorphism."]
 noncomputable def toMulEquiv : E ≃* E' := MulEquiv.ofBijective equiv.toMonoidHom equiv.bijective
 
 @[to_additive]
@@ -188,11 +161,11 @@ noncomputable def symm : S'.Equiv S where
     rw [← equiv.rightHom_comm, MonoidHom.comp_assoc, ← toMulEquiv_eq_toMonoidHom,
       MulEquiv.coe_monoidHom_comp_coe_monoidHom_symm, MonoidHom.comp_id]
 
-/-- The composition of monoid homomorphisms associated to equivalences of group extensions induces
-  another equivalence. -/
+/-- The composition of monoid homomorphisms associated to equivalences of group extensions gives
+    another equivalence. -/
 @[to_additive
-  "The composition of monoid homomorphisms associated to equivalences of group extensions induces
-  another equivalence."]
+      "The composition of monoid homomorphisms associated to equivalences of additive group
+      extensions gives another equivalence."]
 def trans {E'' : Type*} [Group E''] {S'' : GroupExtension N E'' G} (equiv' : S'.Equiv S'') :
     S.Equiv S'' where
   toMonoidHom := equiv'.toMonoidHom.comp equiv.toMonoidHom
@@ -210,7 +183,7 @@ variable (s : S.Splitting)
 noncomputable def conjAct : G →* MulAut N := S.conjAct.comp s
 
 /-- A group homomorphism from the corresponding semidirect product -/
-def monoidHom_semidirectProduct : N ⋊[s.conjAct] G →* E where
+def semidirectProductMonoidHom : N ⋊[s.conjAct] G →* E where
   toFun := fun ⟨n, g⟩ ↦ S.inl n * s g
   map_one' := by simp only [map_one, mul_one]
   map_mul' := fun ⟨n₁, g₁⟩ ⟨n₂, g₂⟩ ↦ by
@@ -218,40 +191,41 @@ def monoidHom_semidirectProduct : N ⋊[s.conjAct] G →* E where
     group
 
 /-- A split group extension is equivalent to the extension associated to a semidirect product. -/
-def equiv_semidirectProduct : (SemidirectProduct.toGroupExtension s.conjAct).Equiv S where
-  toMonoidHom := monoidHom_semidirectProduct s
+def semidirectProductToGroupExtensionEquiv :
+    (SemidirectProduct.toGroupExtension s.conjAct).Equiv S where
+  toMonoidHom := semidirectProductMonoidHom s
   inl_comm := by
     ext n
     simp only [SemidirectProduct.toGroupExtension, MonoidHom.comp_apply,
-      monoidHom_semidirectProduct, MonoidHom.coe_mk, OneHom.coe_mk, SemidirectProduct.left_inl,
+      semidirectProductMonoidHom, MonoidHom.coe_mk, OneHom.coe_mk, SemidirectProduct.left_inl,
       SemidirectProduct.right_inl, map_one, mul_one]
   rightHom_comm := by
     ext ⟨n, g⟩
     simp only [SemidirectProduct.toGroupExtension, MonoidHom.comp_apply,
-      SemidirectProduct.rightHom_eq_right, monoidHom_semidirectProduct, MonoidHom.coe_mk,
+      SemidirectProduct.rightHom_eq_right, semidirectProductMonoidHom, MonoidHom.coe_mk,
       OneHom.coe_mk, map_mul, rightHom_inl, rightHom_splitting, one_mul]
 
 /-- The group associated to a split extension is isomorphic to a semidirect product. -/
-noncomputable def mulEquiv_semidirectProduct : N ⋊[s.conjAct] G ≃* E :=
-  s.equiv_semidirectProduct.toMulEquiv
+noncomputable def semidirectProductMulEquiv : N ⋊[s.conjAct] G ≃* E :=
+  s.semidirectProductToGroupExtensionEquiv.toMulEquiv
 
 end Splitting
 
 namespace IsConj
 
 /-- `N`-conjugacy is reflexive. -/
-@[to_additive]
+@[to_additive "`N`-conjugacy is reflexive."]
 theorem refl (s : S.Splitting) : S.IsConj s s :=
   ⟨1, by simp only [map_one, inv_one, one_mul, mul_one]⟩
 
 /-- `N`-conjugacy is symmetric. -/
-@[to_additive]
+@[to_additive "`N`-conjugacy is symmetric."]
 theorem symm {s₁ s₂ : S.Splitting} (h : S.IsConj s₁ s₂) : S.IsConj s₂ s₁ := by
   obtain ⟨n, hn⟩ := h
   exact ⟨n⁻¹, by simp only [hn, map_inv]; group⟩
 
 /-- `N`-conjugacy is transitive. -/
-@[to_additive]
+@[to_additive "`N`-conjugacy is transitive."]
 theorem trans {s₁ s₂ s₃ : S.Splitting} (h₁ : S.IsConj s₁ s₂) (h₂ : S.IsConj s₂ s₃) :
     S.IsConj s₁ s₃ := by
   obtain ⟨n₁, hn₁⟩ := h₁
@@ -272,7 +246,7 @@ end IsConj
 
 /-- The `N`-conjugacy classes of splittings -/
 @[to_additive "The `N`-conjugacy classes of splittings"]
-def ConjClasses (S : GroupExtension N E G) := Quotient <| IsConj.setoid S
+def ConjClasses := Quotient <| IsConj.setoid S
 
 end GroupExtension
 
