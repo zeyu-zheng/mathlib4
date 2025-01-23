@@ -16,6 +16,11 @@ This file defines square and even elements in a monoid.
 * `IsSquare a` means that there is some `r` such that `a = r * r`
 * `Even a` means that there is some `r` such that `a = r + r`
 
+## Note
+
+* Many lemmas about `Even` / `IsSquare`, including important `simp` lemmas,
+  are in `Mathlib.Algebra.Ring.Parity`.
+
 ## TODO
 
 * Try to generalize `IsSquare/Even` lemmas further. For example, there are still a few lemmas in
@@ -26,7 +31,8 @@ This file defines square and even elements in a monoid.
 
 ## See also
 
-`Mathlib.Algebra.Ring.Parity` for the definition of odd elements.
+`Mathlib.Algebra.Ring.Parity` for the definition of odd elements as well as facts about
+`Even` / `IsSquare` in rings.
 -/
 
 assert_not_exists MonoidWithZero DenselyOrdered
@@ -39,7 +45,7 @@ section Mul
 variable [Mul α]
 
 /-- An element `a` of a type `α` with multiplication satisfies `IsSquare a` if `a = r * r`,
-for some `r : α`. -/
+for some root `r : α`. -/
 @[to_additive "An element `a` of a type `α` with addition satisfies `Even a` if `a = r + r`,
 for some `r : α`."]
 def IsSquare (a : α) : Prop := ∃ r, a = r * r
@@ -51,7 +57,8 @@ lemma isSquare_iff_exists_mul_self (a : α) : IsSquare a ↔ ∃ r, a = r * r :=
 
 @[to_additive (attr := simp)] lemma IsSquare.mul_self (r : α) : IsSquare (r * r) := ⟨r, rfl⟩
 
-@[to_additive, deprecated (since := "2024-08-27")] alias isSquare_mul_self := IsSquare.mul_self
+@[deprecated (since := "2024-08-27")] alias isSquare_mul_self := IsSquare.mul_self
+@[deprecated (since := "2024-08-27")] alias even_add_self := Even.add_self
 
 @[to_additive]
 lemma isSquare_op_iff {a : α} : IsSquare (op a) ↔ IsSquare a :=
@@ -93,7 +100,8 @@ end Add
 @[to_additive (attr := simp)]
 lemma IsSquare.one [MulOneClass α] : IsSquare (1 : α) := ⟨1, (mul_one _).symm⟩
 
-@[to_additive, deprecated (since := "2024-12-27")] alias isSquare_one := IsSquare.one
+@[deprecated (since := "2024-12-27")] alias isSquare_one := IsSquare.one
+@[deprecated (since := "2024-12-27")] alias even_zero := Even.zero
 
 section MonoidHom
 variable [MulOneClass α] [MulOneClass β] [FunLike F α β] [MonoidHomClass F α β]
@@ -113,7 +121,6 @@ end MonoidHom
 section Monoid
 variable [Monoid α] {n : ℕ} {a : α}
 
-@[to_additive even_iff_exists_two_nsmul]
 lemma isSquare_iff_exists_sq (a : α): IsSquare a ↔ ∃ r, a = r ^ 2 := by simp [IsSquare, pow_two]
 
 alias ⟨IsSquare.exists_sq, _⟩ := isSquare_iff_exists_sq
