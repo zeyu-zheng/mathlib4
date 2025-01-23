@@ -114,7 +114,7 @@ lemma IsSquare.map {a : α} (f : F) : IsSquare a → IsSquare (f a) :=
 lemma exists_apply_eq_and_isSquare {b : β} {f : F} (hf : Function.Surjective f) :
     IsSquare b → ∃ a, f a = b ∧ IsSquare a := fun ⟨s, _⟩ => by
   rcases hf s with ⟨r, rfl⟩
-  use r * r; simp_all
+  exact ⟨r * r, by simp [*]⟩
 
 end MonoidHom
 
