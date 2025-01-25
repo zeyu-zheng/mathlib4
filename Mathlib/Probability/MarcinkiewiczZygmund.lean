@@ -40,17 +40,6 @@ local notation:70 A:70 " ^^ " n:71 => Fintype.piFinset fun _ : Fin n ↦ A
 -/
 noncomputable def marcinkiewiczZygmundSymmConst (p : ℝ≥0) : ℝ := (p / 2) ^ (p / 2 : ℝ)
 
-omit [IsFiniteMeasure μ]
-lemma memℒp_prod_range {𝕜} [NormedCommRing 𝕜] {f : ℕ → Ω → 𝕜} {p : ℕ → ℝ≥0∞} (n : ℕ)
-    (hf : ∀ n, Memℒp (f n) (p n) μ) :
-    Memℒp (fun ω ↦ ∏ i in range n, f i ω) (∑ i in range n, 1 / p i)⁻¹ μ := by
-  by_cases hμ : μ = 0; · simp [hμ]
-  induction n with
-  | zero => simp [Memℒp, eLpNormEssSup_const _ hμ, aestronglyMeasurable_const]
-  | succ n IH =>
-      simp_rw [prod_range_succ_comm]
-      exact IH.mul (hf n) (by simp [sum_range_succ_comm])
-
 /-- The **Marcinkiewicz-Zygmund inequality** for symmetric random variables, with a slightly better
 constant than `marcinkiewicz_zygmund`. -/
 theorem marcinkiewicz_zygmund_symmetric
