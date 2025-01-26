@@ -7,7 +7,6 @@ import Mathlib.Order.CompletePartialOrder
 import Mathlib.Topology.Algebra.Indicator
 import Mathlib.Topology.ContinuousMap.Compact
 import Mathlib.Topology.Separation.DisjointCover
-import Mathlib.Data.Fintype.Order
 import Mathlib.Order.Disjointed
 
 /-!
