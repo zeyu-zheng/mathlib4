@@ -22,6 +22,8 @@ open TopologicalSpace (Opens Clopens)
 
 open scoped Uniformity Function
 
+namespace ContinuousMap
+
 variable {ι X V : Type*}
   [TopologicalSpace X] [TotallyDisconnectedSpace X] [T2Space X] [CompactSpace X]
   [UniformSpace V] (f : C(X, V)) {S : Set (V × V)}
@@ -96,32 +98,29 @@ variable
 
 /-- A continuous function on `X × Y` can be uniformly approximated by functions of the form
 `f x • g y`. -/
-lemma exists_sum_prod_approx (f : C(X × Y, V)) (hS : S ∈ 𝓤 V) :
+lemma exists_sum_smul_approx (f : C(X × Y, V)) (hS : S ∈ 𝓤 V) :
     ∃ (n : ℕ) (g : Fin n → C(X, R)) (h : Fin n → C(Y, V)),
     ∀ x y, (f (x, y), ∑ i, g i x • h i y) ∈ S := by
   have hS' : {(f, g) | ∀ y, (f y, g y) ∈ S} ∈ 𝓤 C(Y, V) :=
     (ContinuousMap.mem_compactConvergence_entourage_iff _).mpr
       ⟨_, _, isCompact_univ, hS, by simp only [Set.mem_univ, true_implies, subset_refl]⟩
   obtain ⟨n, U, v, hv⟩ := exists_sum_const_indicator_approx f.curry hS'
-  let c (i : Fin n) : C(X, R) :=
-    ⟨(U i : Set X).indicator fun _ ↦ (1 : R), (U i).isClopen.continuous_indicator continuous_const⟩
-  refine ⟨n, c, v, fun x y ↦ ?_⟩
+  refine ⟨n, fun i ↦ ⟨_, (U i).isClopen.continuous_indicator <| continuous_const (y := 1)⟩,
+    v, fun x y ↦ ?_⟩
   convert hv x y using 2
   simp only [ContinuousMap.sum_apply]
   congr 1 with i
-  by_cases hi : x ∈ (U i : Set X)
-  · simp only [c, ContinuousMap.coe_mk, indicator_of_mem hi, one_smul]
-  · simp only [c, ContinuousMap.coe_mk, indicator_of_not_mem hi, zero_smul,
-      ContinuousMap.zero_apply]
+  by_cases hi : x ∈ U i <;> simp [hi]
 
-lemma exists_sum_prod_approx_normedRing
-    {𝕜 : Type*} [NormedRing 𝕜] (f : C(X × Y, 𝕜)) {ε : ℝ} (hε : 0 < ε) :
+/-- A continuous function on `X × Y` can be uniformly approximated by functions of the form
+`f x * g y`. -/
+lemma exists_sum_mul_approx {𝕜 : Type*} [NormedRing 𝕜] (f : C(X × Y, 𝕜)) {ε : ℝ} (hε : 0 < ε) :
     ∃ (n : ℕ) (g : Fin n → C(X, 𝕜)) (h : Fin n → C(Y, 𝕜)),
     ‖f - ∑ i, (g i).comp .fst * (h i).comp .snd‖ < ε := by
-  obtain ⟨n, g, h, hfg⟩ := exists_sum_prod_approx (R := 𝕜) f (Metric.dist_mem_uniformity hε)
+  obtain ⟨n, g, h, hfg⟩ := exists_sum_smul_approx (R := 𝕜) f (Metric.dist_mem_uniformity hε)
   refine ⟨n, g, h, ?_⟩
   simp only [ContinuousMap.norm_lt_iff _ hε]
   intro (x, y)
-  simpa only [ContinuousMap.sub_apply, ContinuousMap.sum_apply, ContinuousMap.mul_apply,
-    ContinuousMap.comp_apply, ContinuousMap.fst_apply, ContinuousMap.snd_apply, gt_iff_lt,
-    dist_eq_norm_sub, smul_eq_mul, Set.mem_setOf_eq] using hfg x y
+  simpa [dist_eq_norm_sub] using hfg x y
+
+end ContinuousMap
