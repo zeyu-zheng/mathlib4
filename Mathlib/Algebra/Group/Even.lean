@@ -5,6 +5,7 @@ Authors: Damiano Testa
 -/
 import Mathlib.Algebra.Group.Opposite
 import Mathlib.Algebra.Group.TypeTags.Basic
+import Mathlib.Data.Set.Operations
 
 /-!
 # Squares and even elements
@@ -114,7 +115,7 @@ lemma IsSquare.map {a : α} (f : F) : IsSquare a → IsSquare (f a) :=
 lemma isSquare_subset_image_isSquare {f : F} (hf : Function.Surjective f) :
     {b | IsSquare b} ⊆ Set.image f {a | IsSquare a} := fun b ⟨s, _⟩ => by
   rcases hf s with ⟨r, rfl⟩
-  exact ⟨r * r, by simp [*]⟩ -- missing simp lemma Set.setOf_mem_eq from `Mathlib.Data.Set.Basic`
+  exact ⟨r * r, by simp [*]⟩
 
 end MonoidHom
 
