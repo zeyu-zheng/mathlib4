@@ -13,7 +13,7 @@ require "leanprover-community" / "aesop" @ git "v4.15.0-rc1"
 require "leanprover-community" / "proofwidgets" @ git "v0.0.48"
 require "leanprover-community" / "importGraph" @ git "v4.15.0-rc1"
 require "leanprover-community" / "LeanSearchClient" @ git "main"
-require "leanprover-community" / "plausible" @ git "v4.15.0-rc1"
+require "leanprover-community" / "plausible" @ git "nightly-testing"
 
 /-!
 ## Options for building mathlib
@@ -24,7 +24,8 @@ require "leanprover-community" / "plausible" @ git "v4.15.0-rc1"
 * as `moreServerArgs`, to set their default value in mathlib
   (as well as `Archive`, `Counterexamples` and `test`). -/
 abbrev mathlibOnlyLinters : Array LeanOption := #[
-  ⟨`linter.docPrime, true⟩,
+  -- The `docPrime` linter is disabled: https://github.com/leanprover-community/mathlib4/issues/20560
+  ⟨`linter.docPrime, false⟩,
   ⟨`linter.hashCommand, true⟩,
   ⟨`linter.oldObtain, true,⟩,
   ⟨`linter.refine, true⟩,
@@ -151,6 +152,9 @@ lean_exe unused where
   supportInterpreter := true
   -- Executables which import `Lake` must set `-lLake`.
   weakLinkArgs := #["-lLake"]
+
+lean_exe mathlib_test_executable where
+  root := `MathlibTest.MathlibTestExecutable
 
 /-!
 ## Other configuration
