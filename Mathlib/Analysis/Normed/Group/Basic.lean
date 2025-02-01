@@ -85,6 +85,8 @@ instance NNNorm.toENorm : ENorm E where enorm := (‖·‖₊ : E → ℝ≥0∞
 
 lemma enorm_eq_nnnorm (x : E) : ‖x‖ₑ = ‖x‖₊ := rfl
 
+@[simp] lemma toNNReal_enorm (x : E) : ‖x‖ₑ.toNNReal = ‖x‖₊ := rfl
+
 @[simp, norm_cast] lemma coe_le_enorm : r ≤ ‖x‖ₑ ↔ r ≤ ‖x‖₊ := by simp [enorm]
 @[simp, norm_cast] lemma enorm_le_coe : ‖x‖ₑ ≤ r ↔ ‖x‖₊ ≤ r := by simp [enorm]
 @[simp, norm_cast] lemma coe_lt_enorm : r < ‖x‖ₑ ↔ r < ‖x‖₊ := by simp [enorm]
@@ -1297,9 +1299,6 @@ theorem le_norm_self (r : ℝ) : r ≤ ‖r‖ :=
 @[simp 1100] lemma norm_natCast (n : ℕ) : ‖(n : ℝ)‖ = n := abs_of_nonneg n.cast_nonneg
 @[simp 1100] lemma nnnorm_natCast (n : ℕ) : ‖(n : ℝ)‖₊ = n := NNReal.eq <| norm_natCast _
 @[simp 1100] lemma enorm_natCast (n : ℕ) : ‖(n : ℝ)‖ₑ = n := by simp [enorm]
-
-@[deprecated (since := "2024-04-05")] alias norm_coe_nat := norm_natCast
-@[deprecated (since := "2024-04-05")] alias nnnorm_coe_nat := nnnorm_natCast
 
 @[simp 1100] lemma norm_ofNat (n : ℕ) [n.AtLeastTwo] :
     ‖(ofNat(n) : ℝ)‖ = ofNat(n) := norm_natCast n
