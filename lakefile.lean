@@ -13,7 +13,7 @@ require "leanprover-community" / "aesop" @ git "v4.16.0-rc1"
 require "leanprover-community" / "proofwidgets" @ git "v0.0.50"
 require "leanprover-community" / "importGraph" @ git "main"
 require "leanprover-community" / "LeanSearchClient" @ git "main"
-require "leanprover-community" / "plausible" @ git "v4.16.0-rc1"
+require "leanprover-community" / "plausible" @ git "main"
 
 /-!
 ## Options for building mathlib
