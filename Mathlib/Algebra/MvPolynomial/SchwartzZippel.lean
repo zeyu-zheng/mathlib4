@@ -91,7 +91,7 @@ lemma schwartz_zippel_sup_sum :
           + #{x ∈ S ^^ (n + 1) | eval x p = 0 ∧ eval (tail x) pₖ ≠ 0} / ∏ i, (#(S i) : ℚ≥0) := by
         rw [← add_div, ← Nat.cast_add, ← card_union_add_card_inter, filter_union_right,
           ← filter_and]
-        simp [← and_or_left, em, and_and_and_comm]
+        simp [← and_or_left, em, and_assoc, and_left_comm]
       _ ≤ (pₖ.support.sup fun s ↦ ∑ i, (s i / #(S i.succ) : ℚ≥0)) + p.degreeOf 0 / #(S 0) := ?_
       _ ≤ p.support.sup fun s ↦ ∑ i, (s i / #(S i) : ℚ≥0) := ?_
     · gcongr ?_ + ?_
