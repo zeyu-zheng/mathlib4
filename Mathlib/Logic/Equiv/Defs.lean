@@ -60,6 +60,16 @@ universe u v w z
 
 variable {α : Sort u} {β : Sort v} {γ : Sort w}
 
+/-- `α ≃ β` is the type of functions from `α → β` with a two-sided inverse. -/
+structure Equiv (α : Sort*) (β : Sort _) where
+  protected toFun : α → β
+  protected invFun : β → α
+  protected left_inv : LeftInverse invFun toFun
+  protected right_inv : RightInverse invFun toFun
+
+@[inherit_doc]
+infixl:25 " ≃ " => Equiv
+
 /-- Turn an element of a type `F` satisfying `EquivLike F α β` into an actual
 `Equiv`. This is declared as the default coercion from `F` to `α ≃ β`. -/
 @[coe]
@@ -109,6 +119,8 @@ theorem coe_fn_injective : @Function.Injective (α ≃ β) (α → β) (fun e =>
 protected theorem coe_inj {e₁ e₂ : α ≃ β} : (e₁ : α → β) = e₂ ↔ e₁ = e₂ :=
   @DFunLike.coe_fn_eq _ _ _ _ e₁ e₂
 
+@[ext] theorem ext {f g : Equiv α β} (H : ∀ x, f x = g x) : f = g := DFunLike.ext f g H
+
 protected theorem congr_arg {f : Equiv α β} {x x' : α} : x = x' → f x = f x' :=
   DFunLike.congr_arg f
 
@@ -123,7 +135,14 @@ protected theorem Perm.congr_arg {f : Equiv.Perm α} {x x' : α} : x = x' → f 
 protected theorem Perm.congr_fun {f g : Equiv.Perm α} (h : f = g) (x : α) : f x = g x :=
   Equiv.congr_fun h x
 
+/-- Any type is equivalent to itself. -/
+@[refl] protected def refl (α : Sort*) : α ≃ α := ⟨id, id, fun _ => rfl, fun _ => rfl⟩
+
 instance inhabited' : Inhabited (α ≃ α) := ⟨Equiv.refl α⟩
+
+/-- Inverse of an equivalence `e : α ≃ β`. -/
+@[symm]
+protected def symm (e : α ≃ β) : β ≃ α := ⟨e.invFun, e.toFun, e.right_inv, e.left_inv⟩
 
 /-- See Note [custom simps projection] -/
 def Simps.symm_apply (e : α ≃ β) : β → α := e.symm
@@ -136,6 +155,11 @@ initialize_simps_projections Equiv (toFun → apply, invFun → symm_apply)
 -- We might even consider switching the names, and having these as a public API.
 theorem left_inv' (e : α ≃ β) : Function.LeftInverse e.symm e := e.left_inv
 theorem right_inv' (e : α ≃ β) : Function.RightInverse e.symm e := e.right_inv
+
+/-- Composition of equivalences `e₁ : α ≃ β` and `e₂ : β ≃ γ`. -/
+@[trans]
+protected def trans (e₁ : α ≃ β) (e₂ : β ≃ γ) : α ≃ γ :=
+  ⟨e₂ ∘ e₁, e₁.symm ∘ e₂.symm, e₂.left_inv.comp e₁.left_inv, e₂.right_inv.comp e₁.right_inv⟩
 
 @[simps]
 instance : Trans Equiv Equiv Equiv where
@@ -304,8 +328,8 @@ is equivalent to the type of equivalences `β ≃ δ`. -/
 def equivCongr {δ : Sort*} (ab : α ≃ β) (cd : γ ≃ δ) : (α ≃ γ) ≃ (β ≃ δ) where
   toFun ac := (ab.symm.trans ac).trans cd
   invFun bd := ab.trans <| bd.trans <| cd.symm
-  left_inv ac := by ext x; simp only [toFun_as_coe, trans_apply, comp_apply, symm_apply_apply]
-  right_inv ac := by ext x; simp only [toFun_as_coe, trans_apply, comp_apply, apply_symm_apply]
+  left_inv ac := by ext x; simp only [trans_apply, comp_apply, symm_apply_apply]
+  right_inv ac := by ext x; simp only [trans_apply, comp_apply, apply_symm_apply]
 
 @[simp] theorem equivCongr_refl {α β} :
     (Equiv.refl α).equivCongr (Equiv.refl β) = Equiv.refl (α ≃ β) := by ext; rfl
