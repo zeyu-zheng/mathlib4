@@ -290,8 +290,14 @@ theorem injective_of_isPartialInv_right {α β} {f : α → β} {g} (H : IsParti
 theorem LeftInverse.comp_eq_id {f : α → β} {g : β → α} (h : LeftInverse f g) : f ∘ g = id :=
   funext h
 
+theorem leftInverse_iff_comp {f : α → β} {g : β → α} : LeftInverse f g ↔ f ∘ g = id :=
+  ⟨LeftInverse.comp_eq_id, congr_fun⟩
+
 theorem RightInverse.comp_eq_id {f : α → β} {g : β → α} (h : RightInverse f g) : g ∘ f = id :=
   funext h
+
+theorem rightInverse_iff_comp {f : α → β} {g : β → α} : RightInverse f g ↔ g ∘ f = id :=
+  ⟨RightInverse.comp_eq_id, congr_fun⟩
 
 theorem LeftInverse.rightInverse {f : α → β} {g : β → α} (h : LeftInverse g f) : RightInverse f g :=
   h

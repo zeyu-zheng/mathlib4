@@ -130,7 +130,13 @@ end Function
 
 namespace Function
 
-variable {α : Type u₁}
+variable {α : Type u₁} {β : Type u₂}
+
+protected theorem LeftInverse.id {g : β → α} {f : α → β} (h : LeftInverse g f) : g ∘ f = id :=
+  funext h
+
+protected theorem RightInverse.id {g : β → α} {f : α → β} (h : RightInverse g f) : f ∘ g = id :=
+  funext h
 
 /-- A point `x` is a fixed point of `f : α → α` if `f x = x`. -/
 def IsFixedPt (f : α → α) (x : α) := f x = x
