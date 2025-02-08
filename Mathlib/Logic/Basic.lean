@@ -5,7 +5,7 @@ Authors: Jeremy Avigad, Leonardo de Moura
 -/
 import Mathlib.Tactic.Attr.Register
 import Mathlib.Tactic.Basic
-import Batteries.Logic
+import Batteries.Logic.Basic
 import Batteries.Tactic.Trans
 import Batteries.Util.LibraryNote
 import Mathlib.Data.Nat.Notation

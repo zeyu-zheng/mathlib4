@@ -10,7 +10,7 @@ import Mathlib.Algebra.Group.Operations
 import Mathlib.Logic.Function.Defs
 import Mathlib.Tactic.Simps.Basic
 import Mathlib.Tactic.OfNat
-import Batteries.Logic
+import Batteries.Logic.Basic
 
 /-!
 # Typeclasses for (semi)groups and monoids

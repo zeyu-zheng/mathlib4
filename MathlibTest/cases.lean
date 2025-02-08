@@ -1,4 +1,4 @@
-import Batteries.Logic
+import Batteries.Logic.Basic
 import Mathlib.Tactic.Cases
 import Mathlib.Data.Nat.Notation
 

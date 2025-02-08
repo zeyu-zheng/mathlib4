@@ -3,12 +3,13 @@ Copyright (c) 2014 Microsoft Corporation. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Jeremy Avigad, Haitao Zhang
 -/
+import Batteries.Logic.Basic
+import Batteries.Logic.Function
 import Mathlib.Tactic.AdaptationNote
 import Mathlib.Tactic.Attr.Register
 import Mathlib.Tactic.Lemma
 import Mathlib.Tactic.Eqns
 import Mathlib.Tactic.TypeStar
-import Batteries.Logic
 
 /-!
 # General operations on functions
@@ -50,11 +51,7 @@ abbrev swap {φ : α → β → Sort u₃} (f : ∀ x y, φ x y) : ∀ y x, φ x
 
 theorem swap_def {φ : α → β → Sort u₃} (f : ∀ x y, φ x y) : swap f = fun y x => f x y := rfl
 
-@[simp, mfld_simps]
-theorem id_comp (f : α → β) : id ∘ f = f := rfl
-
-@[simp, mfld_simps]
-theorem comp_id (f : α → β) : f ∘ id = f := rfl
+attribute [mfld_simps] id_comp comp_id
 
 theorem comp_assoc (f : φ → δ) (g : β → φ) (h : α → β) : (f ∘ g) ∘ h = f ∘ g ∘ h :=
   rfl
@@ -85,17 +82,9 @@ def Bijective (f : α → β) :=
 theorem Bijective.comp {g : β → φ} {f : α → β} : Bijective g → Bijective f → Bijective (g ∘ f)
   | ⟨h_ginj, h_gsurj⟩, ⟨h_finj, h_fsurj⟩ => ⟨h_ginj.comp h_finj, h_gsurj.comp h_fsurj⟩
 
-/-- `LeftInverse g f` means that `g` is a left inverse to `f`. That is, `g ∘ f = id`. -/
-def LeftInverse (g : β → α) (f : α → β) : Prop :=
-  ∀ x, g (f x) = x
-
 /-- `HasLeftInverse f` means that `f` has an unspecified left inverse. -/
 def HasLeftInverse (f : α → β) : Prop :=
   ∃ finv : β → α, LeftInverse finv f
-
-/-- `RightInverse g f` means that `g` is a right inverse to `f`. That is, `f ∘ g = id`. -/
-def RightInverse (g : β → α) (f : α → β) : Prop :=
-  LeftInverse f g
 
 /-- `HasRightInverse f` means that `f` has an unspecified right inverse. -/
 def HasRightInverse (f : α → β) : Prop :=
@@ -141,13 +130,7 @@ end Function
 
 namespace Function
 
-variable {α : Type u₁} {β : Type u₂}
-
-protected theorem LeftInverse.id {g : β → α} {f : α → β} (h : LeftInverse g f) : g ∘ f = id :=
-  funext h
-
-protected theorem RightInverse.id {g : β → α} {f : α → β} (h : RightInverse g f) : f ∘ g = id :=
-  funext h
+variable {α : Type u₁}
 
 /-- A point `x` is a fixed point of `f : α → α` if `f x = x`. -/
 def IsFixedPt (f : α → α) (x : α) := f x = x
