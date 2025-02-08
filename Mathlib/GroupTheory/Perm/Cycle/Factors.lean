@@ -47,10 +47,10 @@ theorem cycleOf_apply (f : Perm α) [DecidableRel f.SameCycle] (x y : α) :
     exact h
 
 theorem cycleOf_inv (f : Perm α) [DecidableRel f.SameCycle] (x : α) :
-    (cycleOf f x)⁻¹ = cycleOf f⁻¹ x :=
-  Equiv.ext fun y => by
-    rw [inv_eq_iff_eq, cycleOf_apply, cycleOf_apply]
-    split_ifs <;> simp_all [sameCycle_inv, sameCycle_inv_apply_right]
+    (cycleOf f x)⁻¹ = cycleOf f⁻¹ x := by
+  ext
+  rw [inv_eq_iff_eq, cycleOf_apply, cycleOf_apply]
+  split_ifs <;> simp_all [sameCycle_inv, sameCycle_inv_apply_right]
 
 @[simp]
 theorem cycleOf_pow_apply_self (f : Perm α) [DecidableRel f.SameCycle] (x : α) :
@@ -108,12 +108,12 @@ theorem cycleOf_apply_self (f : Perm α) [DecidableRel f.SameCycle] (x : α) : c
   SameCycle.rfl.cycleOf_apply
 
 theorem IsCycle.cycleOf_eq [DecidableRel f.SameCycle]
-    (hf : IsCycle f) (hx : f x ≠ x) : cycleOf f x = f :=
-  Equiv.ext fun y =>
-    if h : SameCycle f x y then by rw [h.cycleOf_apply]
-    else by
-      rw [cycleOf_apply_of_not_sameCycle h,
-        Classical.not_not.1 (mt ((isCycle_iff_sameCycle hx).1 hf).2 h)]
+    (hf : IsCycle f) (hx : f x ≠ x) : cycleOf f x = f := by
+  ext y
+  if h : SameCycle f x y then rw [h.cycleOf_apply]
+  else
+    rw [cycleOf_apply_of_not_sameCycle h,
+      Classical.not_not.1 (mt ((isCycle_iff_sameCycle hx).1 hf).2 h)]
 
 @[simp]
 theorem cycleOf_eq_one_iff (f : Perm α) [DecidableRel f.SameCycle] : cycleOf f x = 1 ↔ f x = x := by

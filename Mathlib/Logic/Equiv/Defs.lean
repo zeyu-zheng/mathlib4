@@ -61,13 +61,6 @@ universe u v w z
 variable {α : Sort u} {β : Sort v} {γ : Sort w}
 
 /-- `α ≃ β` is the type of functions from `α → β` with a two-sided inverse. -/
-structure Equiv (α : Sort*) (β : Sort _) where
-  protected toFun : α → β
-  protected invFun : β → α
-  protected left_inv : LeftInverse invFun toFun
-  protected right_inv : RightInverse invFun toFun
-
-@[inherit_doc]
 infixl:25 " ≃ " => Equiv
 
 /-- Turn an element of a type `F` satisfying `EquivLike F α β` into an actual
@@ -118,8 +111,6 @@ theorem coe_fn_injective : @Function.Injective (α ≃ β) (α → β) (fun e =>
 
 protected theorem coe_inj {e₁ e₂ : α ≃ β} : (e₁ : α → β) = e₂ ↔ e₁ = e₂ :=
   @DFunLike.coe_fn_eq _ _ _ _ e₁ e₂
-
-@[ext] theorem ext {f g : Equiv α β} (H : ∀ x, f x = g x) : f = g := DFunLike.ext f g H
 
 protected theorem congr_arg {f : Equiv α β} {x x' : α} : x = x' → f x = f x' :=
   DFunLike.congr_arg f
@@ -328,8 +319,8 @@ is equivalent to the type of equivalences `β ≃ δ`. -/
 def equivCongr {δ : Sort*} (ab : α ≃ β) (cd : γ ≃ δ) : (α ≃ γ) ≃ (β ≃ δ) where
   toFun ac := (ab.symm.trans ac).trans cd
   invFun bd := ab.trans <| bd.trans <| cd.symm
-  left_inv ac := by ext x; simp only [trans_apply, comp_apply, symm_apply_apply]
-  right_inv ac := by ext x; simp only [trans_apply, comp_apply, apply_symm_apply]
+  left_inv ac := by ext x; simp only [toFun_as_coe, trans_apply, comp_apply, symm_apply_apply]
+  right_inv ac := by ext x; simp only [toFun_as_coe, trans_apply, comp_apply, apply_symm_apply]
 
 @[simp] theorem equivCongr_refl {α β} :
     (Equiv.refl α).equivCongr (Equiv.refl β) = Equiv.refl (α ≃ β) := by ext; rfl

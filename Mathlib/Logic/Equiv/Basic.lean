@@ -750,7 +750,7 @@ theorem sigmaEquivProd_sigmaCongrRight :
     (sigmaEquivProd α₁ β₁).symm.trans (sigmaCongrRight e)
     = (prodCongrRight e).trans (sigmaEquivProd α₁ β₂).symm := by
   ext ⟨a, b⟩ : 1
-  simp only [trans_apply, sigmaCongrRight_apply, prodCongrRight_apply]
+  simp only [toFun_as_coe, trans_apply, sigmaCongrRight_apply, prodCongrRight_apply]
   rfl
 
 -- See also `Equiv.ofPreimageEquiv`.
@@ -1494,7 +1494,7 @@ theorem symm_trans_swap_trans [DecidableEq β] (a b : α) (e : α ≃ β) :
     have : ∀ a, e.symm x = a ↔ x = e a := fun a => by
       rw [@eq_comm _ (e.symm x)]
       constructor <;> intros <;> simp_all
-    simp only [trans_apply, swap_apply_def, this]
+    simp only [toFun_as_coe, trans_apply, swap_apply_def, this]
     split_ifs <;> simp
 
 @[simp]

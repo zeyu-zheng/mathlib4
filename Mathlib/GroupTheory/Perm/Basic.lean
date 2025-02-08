@@ -379,7 +379,7 @@ theorem ofSubtype_subtypePerm {f : Perm α} (h₁ : ∀ x, p x ↔ p (f x)) (h�
     · exact (subtypePerm f h₁).extendDomain_apply_subtype _ hx
     · rw [ofSubtype, MonoidHom.coe_mk]
       -- Porting note: added `dsimp`
-      dsimp only [OneHom.coe_mk]
+      dsimp only [OneHom.coe_mk, toFun_as_coe]
       rw [Equiv.Perm.extendDomain_apply_not_subtype _ _ hx]
       exact not_not.mp fun h => hx (h₂ x (Ne.symm h))
 
@@ -463,7 +463,7 @@ theorem swap_mul_self (i j : α) : swap i j * swap i j = 1 :=
 
 theorem swap_mul_eq_mul_swap (f : Perm α) (x y : α) : swap x y * f = f * swap (f⁻¹ x) (f⁻¹ y) :=
   Equiv.ext fun z => by
-    simp only [Perm.mul_apply, swap_apply_def]
+    simp only [Perm.mul_apply, swap_apply_def, toFun_as_coe]
     split_ifs <;>
       simp_all only [Perm.apply_inv_self, Perm.eq_inv_iff_eq, eq_self_iff_true, not_true]
 

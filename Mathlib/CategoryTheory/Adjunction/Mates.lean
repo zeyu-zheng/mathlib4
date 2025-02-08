@@ -3,6 +3,7 @@ Copyright (c) 2020 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Emily Riehl
 -/
+import Mathlib.Logic.Equiv.Defs
 import Mathlib.CategoryTheory.Adjunction.Basic
 import Mathlib.CategoryTheory.HomCongr
 
@@ -554,8 +555,8 @@ theorem mateEquiv_conjugateEquiv_vcomp
   unfold mateEquiv
   simp only [comp_obj, Equiv.coe_fn_mk, whiskerLeft_comp, whiskerLeft_twice, whiskerRight_comp,
     assoc, comp_app, whiskerLeft_app, whiskerRight_app, id_obj, Functor.comp_map, Iso.homCongr_symm,
-    Equiv.instTrans_trans, Equiv.trans_apply, Iso.homCongr_apply, Iso.symm_inv, Iso.symm_hom,
-    rightUnitor_inv_app, leftUnitor_hom_app, map_id, Functor.id_map, comp_id, id_comp]
+    Equiv.instTrans_mathlib_trans, Equiv.trans_apply, Iso.homCongr_apply, Iso.symm_inv,
+    Iso.symm_hom, rightUnitor_inv_app, leftUnitor_hom_app, map_id, Functor.id_map, comp_id, id_comp]
   exact vcompb
 
 end mateEquivconjugateEquivVComp
@@ -593,8 +594,8 @@ theorem conjugateEquiv_mateEquiv_vcomp
   unfold mateEquiv
   simp only [comp_obj, Equiv.coe_fn_mk, whiskerLeft_comp, whiskerLeft_twice, whiskerRight_comp,
     assoc, comp_app, whiskerLeft_app, whiskerRight_app, id_obj, Functor.comp_map, Iso.homCongr_symm,
-    Equiv.instTrans_trans, Equiv.trans_apply, Iso.homCongr_apply, Iso.symm_inv, Iso.symm_hom,
-    rightUnitor_inv_app, leftUnitor_hom_app, map_id, Functor.id_map, comp_id, id_comp]
+    Equiv.instTrans_mathlib_trans, Equiv.trans_apply, Iso.homCongr_apply, Iso.symm_inv,
+    Iso.symm_hom, rightUnitor_inv_app, leftUnitor_hom_app, map_id, Functor.id_map, comp_id, id_comp]
   exact vcompb
 
 end conjugateEquivmateEquivVComp

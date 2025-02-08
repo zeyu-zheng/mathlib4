@@ -375,15 +375,16 @@ protected def compl {α : Type u} {β : Type v} {s : Set α} {t : Set β} [Decid
   left_inv e := by
     ext x
     by_cases hx : x ∈ s
-    · simp only [Set.sumCompl_symm_apply_of_mem hx, ← e.prop ⟨x, hx⟩, Sum.map_inl, sumCongr_apply,
-        trans_apply, Subtype.coe_mk, Set.sumCompl_apply_inl, Trans.trans]
-    · simp only [Set.sumCompl_symm_apply_of_not_mem hx, Sum.map_inr, subtypeEquiv_apply,
-        Set.sumCompl_apply_inr, trans_apply, sumCongr_apply, Subtype.coe_mk, Trans.trans]
+    · simp only [toFun_as_coe, Set.sumCompl_symm_apply_of_mem hx, ← e.prop ⟨x, hx⟩, Sum.map_inl,
+        sumCongr_apply, trans_apply, Subtype.coe_mk, Set.sumCompl_apply_inl, Trans.trans]
+    · simp only [toFun_as_coe, Set.sumCompl_symm_apply_of_not_mem hx, Sum.map_inr,
+        subtypeEquiv_apply, Set.sumCompl_apply_inr, trans_apply, sumCongr_apply, Subtype.coe_mk,
+        Trans.trans]
   right_inv e :=
     Equiv.ext fun x => by
-      simp only [Sum.map_inr, subtypeEquiv_apply, Set.sumCompl_apply_inr, Function.comp_apply,
-        sumCongr_apply, Equiv.coe_trans, Subtype.coe_eta, Subtype.coe_mk, Trans.trans,
-        Set.sumCompl_symm_apply_compl]
+      simp only [toFun_as_coe, Sum.map_inr, subtypeEquiv_apply, Set.sumCompl_apply_inr,
+        Function.comp_apply, sumCongr_apply, Equiv.coe_trans, Subtype.coe_eta, Subtype.coe_mk,
+        Trans.trans, Set.sumCompl_symm_apply_compl]
 
 /-- The set product of two sets is equivalent to the type product of their coercions to types. -/
 protected def prod {α β} (s : Set α) (t : Set β) : ↥(s ×ˢ t) ≃ s × t :=

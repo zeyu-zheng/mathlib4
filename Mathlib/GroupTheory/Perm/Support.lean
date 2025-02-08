@@ -198,13 +198,15 @@ theorem ofSubtype_swap_eq {p : α → Prop} [DecidablePred p] (x y : Subtype p) 
     ofSubtype (Equiv.swap x y) = Equiv.swap ↑x ↑y :=
   Equiv.ext fun z => by
     by_cases hz : p z
-    · rw [swap_apply_def, ofSubtype_apply_of_mem _ hz]
+    · simp only [toFun_as_coe]
+      rw [swap_apply_def, ofSubtype_apply_of_mem _ hz]
       split_ifs with hzx hzy
       · simp_rw [hzx, Subtype.coe_eta, swap_apply_left]
       · simp_rw [hzy, Subtype.coe_eta, swap_apply_right]
       · rw [swap_apply_of_ne_of_ne] <;>
         simp [Subtype.ext_iff, *]
-    · rw [ofSubtype_apply_of_not_mem _ hz, swap_apply_of_ne_of_ne]
+    · simp only [toFun_as_coe]
+      rw [ofSubtype_apply_of_not_mem _ hz, swap_apply_of_ne_of_ne]
       · intro h
         apply hz
         rw [h]
@@ -357,15 +359,22 @@ lemma ofSubtype_eq_iff {g c : Equiv.Perm α} {s : Finset α}
     constructor
     · intro a ha
       by_contra ha'
-      rw [mem_support, ← h a, ofSubtype_apply_of_not_mem (p := (· ∈ s)) _ ha'] at ha
+      simp only [mem_support, toFun_as_coe] at h ha
+      rw [← h a, ofSubtype_apply_of_not_mem (p := (· ∈ s)) _ ha'] at ha
       exact ha rfl
     · intro _ a ha
+      simp only [subtypePerm_apply, toFun_as_coe] at h ⊢
+      congr 1
       rw [← h a, ofSubtype_apply_of_mem (p := (· ∈ s)) _ ha, subtypePerm_apply]
   · rintro ⟨hc, h⟩ a
     specialize h (isInvariant_of_support_le hc)
     by_cases ha : a ∈ s
-    · rw [h a ha, ofSubtype_apply_of_mem (p := (· ∈ s)) _ ha, subtypePerm_apply]
-    · rw [ofSubtype_apply_of_not_mem (p := (· ∈ s)) _ ha, eq_comm, ← not_mem_support]
+    · simp only [toFun_as_coe, subtypePerm_apply, ofSubtype_subtypePerm_of_mem _ ha] at h ⊢
+      have heq := h a ha
+      injection heq with heq
+      rw [heq]
+    · simp only [toFun_as_coe]
+      rw [ofSubtype_apply_of_not_mem (p := (· ∈ s)) _ ha, eq_comm, ← not_mem_support]
       exact Finset.not_mem_mono hc ha
 
 theorem support_ofSubtype {p : α → Prop} [DecidablePred p] (u : Perm (Subtype p)) :

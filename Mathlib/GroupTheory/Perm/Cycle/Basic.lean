@@ -407,6 +407,7 @@ theorem IsCycle.eq_swap_of_apply_apply_eq_self {α : Type*} [DecidableEq α] {f 
     else
       if hfyx : y = f x then by simp [hfyx, hffx]
       else by
+        simp only [toFun_as_coe]
         rw [swap_apply_of_ne_of_ne hyx hfyx]
         refine by_contradiction fun hy => ?_
         cases' hz.2 hy with j hj

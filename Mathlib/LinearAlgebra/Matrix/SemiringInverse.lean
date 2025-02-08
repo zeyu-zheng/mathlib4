@@ -152,7 +152,7 @@ theorem isAddUnit_detp_mul_detp (hAB : A * B = 1) :
   rw [← hσ, ← hτ, ← sign_inv] at h
   replace h := ne_of_apply_ne sign h
   rw [ne_eq, eq_comm, eq_inv_iff_mul_eq_one, eq_comm] at h
-  simp_rw [Equiv.ext_iff, not_forall, Perm.mul_apply, Perm.one_apply] at h
+  simp only [Equiv.ext_iff, toFun_as_coe, Perm.one_apply, Perm.mul_apply, not_forall] at h
   obtain ⟨k, hk⟩ := h
   rw [mul_comm, ← Equiv.prod_comp σ, mul_comm, ← prod_mul_distrib,
     ← mul_prod_erase univ _ (mem_univ k), ← smul_eq_mul]
