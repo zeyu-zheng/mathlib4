@@ -3,7 +3,6 @@ Copyright (c) 2024 David Loeffler. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 -/
-import Mathlib.Order.CompletePartialOrder
 import Mathlib.Topology.Algebra.Indicator
 import Mathlib.Topology.ContinuousMap.Compact
 import Mathlib.Topology.Separation.DisjointCover
