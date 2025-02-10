@@ -65,7 +65,7 @@
    "type": "git",
    "subDir": null,
    "scope": "leanprover-community",
-   "rev": "47b86e584ad1c17b1a55f0c656f0d1690db9e6c9",
+   "rev": "3ee534994d9643b779df976c62a20b2a2c493882",
    "name": "batteries",
    "manifestFile": "lake-manifest.json",
    "inputRev": "fix-monad-lift",
