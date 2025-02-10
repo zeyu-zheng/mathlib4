@@ -18,7 +18,7 @@ We show that if `X` is a profinite space, and `V` is a uniform space, then any c
 
 open Metric UniformSpace Set
 
-open TopologicalSpace (Opens Clopens)
+open TopologicalSpace (Opens Clopens IsOpenCover)
 
 open scoped Uniformity Function
 
@@ -43,14 +43,11 @@ lemma exists_disjoint_nonempty_clopen_cover_of_mem_uniformity (hS : S ∈ 𝓤 V
       <| UniformSpace.ball_mem_nhds _ hR
     exact ⟨⟨U, hUo⟩, hUx, fun y hy z hz ↦ hRS <| prod_mk_mem_compRel (hR' <| hUB hy) (hUB hz)⟩
   choose U hUx hUS using step1
+  have hUc : IsOpenCover U := by ext x; simpa using ⟨x, hUx x⟩
   -- Now refine it to a disjoint covering.
-  obtain ⟨n, W, hW₁, hW₂, hW₃⟩ :=
-    CompactSpace.exists_finite_nonempty_disjoint_clopen_cover_of_open_cover
-    (fun x _ ↦ mem_iUnion.mpr ⟨x, hUx x⟩)
+  obtain ⟨n, W, hW₁, hW₂, hW₃⟩ := hUc.exists_finite_nonempty_disjoint_clopen_cover
   refine ⟨n, W, fun j ↦ (hW₁ j).1, fun j y hy z hz ↦ ?_, hW₂, hW₃⟩
-  obtain ⟨i, hi⟩ := (hW₁ j).2
-  refine hUS i y ?_ z ?_ <;>
-  simpa using hi ‹_›
+  exact match (hW₁ j).2 with | ⟨i, hi⟩ => hUS i y (hi hy) z (hi hz)
 
 /--
 Any continuous function from a profinite space to a uniform space can be uniformly approximated
