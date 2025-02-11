@@ -4,13 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Kevin Kappelmann
 -/
 import Mathlib.Algebra.CharZero.Lemmas
-import Mathlib.Algebra.Order.Interval.Set.Group
 import Mathlib.Algebra.Group.Int.Even
 import Mathlib.Algebra.Group.Int.Units
 import Mathlib.Data.Int.Lemmas
 import Mathlib.Data.Nat.Cast.Order.Field
 import Mathlib.Data.Set.Subsingleton
-import Mathlib.Order.GaloisConnection
 import Mathlib.Tactic.Abel
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Linarith
@@ -33,7 +31,6 @@ We define the natural- and integer-valued floor and ceil functions on linearly o
 * `Int.floor a`: Greatest integer `z` such that `z ≤ a`.
 * `Int.ceil a`: Least integer `z` such that `a ≤ z`.
 * `Int.fract a`: Fractional part of `a`, defined as `a - floor a`.
-* `round a`: Nearest integer to `a`. It rounds halves towards infinity.
 
 ## Notations
 
@@ -162,8 +159,6 @@ theorem floor_natCast (n : ℕ) : ⌊(n : α)⌋₊ = n :=
   eq_of_forall_le_iff fun a => by
     rw [le_floor_iff, Nat.cast_le]
     exact n.cast_nonneg
-
-@[deprecated (since := "2024-06-08")] alias floor_coe := floor_natCast
 
 @[simp]
 theorem floor_zero : ⌊(0 : α)⌋₊ = 0 := by rw [← Nat.cast_zero, floor_natCast]
@@ -605,7 +600,7 @@ def floor : α → ℤ :=
 def ceil : α → ℤ :=
   FloorRing.ceil
 
-/-- `Int.fract a`, the fractional part of `a`, is `a` minus its floor. -/
+/-- `Int.fract a` the fractional part of `a`, is `a` minus its floor. -/
 def fract (a : α) : α :=
   a - floor a
 
@@ -792,6 +787,9 @@ theorem floor_eq_on_Ico' (n : ℤ) : ∀ a ∈ Set.Ico (n : α) (n + 1), (⌊a�
 @[simp]
 theorem preimage_floor_singleton (m : ℤ) : (floor : α → ℤ) ⁻¹' {m} = Ico (m : α) (m + 1) :=
   ext fun _ => floor_eq_iff
+
+lemma floor_eq_self_iff_mem (a : α) : ⌊a⌋ = a ↔ a ∈ Set.range Int.cast := by
+  aesop
 
 /-! #### Fractional part -/
 
@@ -1014,8 +1012,7 @@ theorem sub_floor_div_mul_nonneg (a : k) (hb : 0 < b) : 0 ≤ a - ⌊a / b⌋ * 
 
 theorem sub_floor_div_mul_lt (a : k) (hb : 0 < b) : a - ⌊a / b⌋ * b < b :=
   sub_lt_iff_lt_add.2 <| by
-    -- Porting note: `← one_add_mul` worked in mathlib3 without the argument
-    rw [← one_add_mul _ b, ← div_lt_iff₀ hb, add_comm]
+    rw [← one_add_mul, ← div_lt_iff₀ hb, add_comm]
     exact lt_floor_add_one _
 
 theorem fract_div_natCast_eq_div_natCast_mod {m n : ℕ} : fract ((m : k) / n) = ↑(m % n) / n := by
@@ -1060,7 +1057,7 @@ theorem fract_div_intCast_eq_div_intCast_mod {m : ℤ} {n : ℕ} :
     -- Porting note: the `simp` was `push_cast`
     simp [m₁]
   · congr 2
-    change (q * ↑n - (↑m₀ : ℤ)) % ↑n = _
+    simp only [m₁]
     rw [sub_eq_add_neg, add_comm (q * ↑n), add_mul_emod_self]
 
 end LinearOrderedField
@@ -1194,6 +1191,9 @@ theorem ceil_eq_on_Ioc (z : ℤ) : ∀ a ∈ Set.Ioc (z - 1 : α) z, ⌈a⌉ = z
 theorem ceil_eq_on_Ioc' (z : ℤ) : ∀ a ∈ Set.Ioc (z - 1 : α) z, (⌈a⌉ : α) = z := fun a ha =>
   mod_cast ceil_eq_on_Ioc z a ha
 
+lemma ceil_eq_self_iff_mem (a : α) : ⌈a⌉ = a ↔ a ∈ Set.range Int.cast := by
+  aesop
+
 @[bound]
 theorem floor_le_ceil (a : α) : ⌊a⌋ ≤ ⌈a⌉ :=
   cast_le.1 <| (floor_le _).trans <| le_ceil _
@@ -1201,6 +1201,14 @@ theorem floor_le_ceil (a : α) : ⌊a⌋ ≤ ⌈a⌉ :=
 @[bound]
 theorem floor_lt_ceil_of_lt {a b : α} (h : a < b) : ⌊a⌋ < ⌈b⌉ :=
   cast_lt.1 <| (floor_le a).trans_lt <| h.trans_le <| le_ceil b
+
+lemma ceil_eq_floor_add_one_iff_not_mem (a : α) : ⌈a⌉ = ⌊a⌋ + 1 ↔ a ∉ Set.range Int.cast := by
+  refine ⟨fun h ht => ?_, fun h => ?_⟩
+  · have := ((floor_eq_self_iff_mem _).mpr ht).trans ((ceil_eq_self_iff_mem _).mpr ht).symm
+    linarith [Int.cast_inj.mp this]
+  · apply le_antisymm (Int.ceil_le_floor_add_one _)
+    rw [Int.add_one_le_ceil_iff]
+    exact lt_of_le_of_ne (Int.floor_le a) ((iff_false_right h).mp (floor_eq_self_iff_mem a))
 
 -- Porting note: in mathlib3 there was no need for the type annotation in `(m : α)`
 @[simp]
@@ -1324,177 +1332,6 @@ end Int
 
 open Int
 
-/-! ### Round -/
-
-
-section round
-
-section LinearOrderedRing
-
-variable [LinearOrderedRing α] [FloorRing α]
-
-/-- `round` rounds a number to the nearest integer. `round (1 / 2) = 1` -/
-def round (x : α) : ℤ :=
-  if 2 * fract x < 1 then ⌊x⌋ else ⌈x⌉
-
-@[simp]
-theorem round_zero : round (0 : α) = 0 := by simp [round]
-
-@[simp]
-theorem round_one : round (1 : α) = 1 := by simp [round]
-
-@[simp]
-theorem round_natCast (n : ℕ) : round (n : α) = n := by simp [round]
-
-@[simp]
-theorem round_ofNat (n : ℕ) [n.AtLeastTwo] : round (ofNat(n) : α) = ofNat(n) :=
-  round_natCast n
-
-@[simp]
-theorem round_intCast (n : ℤ) : round (n : α) = n := by simp [round]
-
-@[simp]
-theorem round_add_int (x : α) (y : ℤ) : round (x + y) = round x + y := by
-  rw [round, round, Int.fract_add_int, Int.floor_add_int, Int.ceil_add_int, ← apply_ite₂, ite_self]
-
-@[simp]
-theorem round_add_one (a : α) : round (a + 1) = round a + 1 := by
-  -- Porting note: broken `convert round_add_int a 1`
-  rw [← round_add_int a 1, cast_one]
-
-@[simp]
-theorem round_sub_int (x : α) (y : ℤ) : round (x - y) = round x - y := by
-  rw [sub_eq_add_neg]
-  norm_cast
-  rw [round_add_int, sub_eq_add_neg]
-
-@[simp]
-theorem round_sub_one (a : α) : round (a - 1) = round a - 1 := by
-  -- Porting note: broken `convert round_sub_int a 1`
-  rw [← round_sub_int a 1, cast_one]
-
-@[simp]
-theorem round_add_nat (x : α) (y : ℕ) : round (x + y) = round x + y :=
-  mod_cast round_add_int x y
-
-@[simp]
-theorem round_add_ofNat (x : α) (n : ℕ) [n.AtLeastTwo] :
-    round (x + ofNat(n)) = round x + ofNat(n) :=
-  round_add_nat x n
-
-@[simp]
-theorem round_sub_nat (x : α) (y : ℕ) : round (x - y) = round x - y :=
-  mod_cast round_sub_int x y
-
-@[simp]
-theorem round_sub_ofNat (x : α) (n : ℕ) [n.AtLeastTwo] :
-    round (x - ofNat(n)) = round x - ofNat(n) :=
-  round_sub_nat x n
-
-@[simp]
-theorem round_int_add (x : α) (y : ℤ) : round ((y : α) + x) = y + round x := by
-  rw [add_comm, round_add_int, add_comm]
-
-@[simp]
-theorem round_nat_add (x : α) (y : ℕ) : round ((y : α) + x) = y + round x := by
-  rw [add_comm, round_add_nat, add_comm]
-
-@[simp]
-theorem round_ofNat_add (n : ℕ) [n.AtLeastTwo] (x : α) :
-    round (ofNat(n) + x) = ofNat(n) + round x :=
-  round_nat_add x n
-
-theorem abs_sub_round_eq_min (x : α) : |x - round x| = min (fract x) (1 - fract x) := by
-  simp_rw [round, min_def_lt, two_mul, ← lt_tsub_iff_left]
-  cases' lt_or_ge (fract x) (1 - fract x) with hx hx
-  · rw [if_pos hx, if_pos hx, self_sub_floor, abs_fract]
-  · have : 0 < fract x := by
-      replace hx : 0 < fract x + fract x := lt_of_lt_of_le zero_lt_one (tsub_le_iff_left.mp hx)
-      simpa only [← two_mul, mul_pos_iff_of_pos_left, zero_lt_two] using hx
-    rw [if_neg (not_lt.mpr hx), if_neg (not_lt.mpr hx), abs_sub_comm, ceil_sub_self_eq this.ne.symm,
-      abs_one_sub_fract]
-
-theorem round_le (x : α) (z : ℤ) : |x - round x| ≤ |x - z| := by
-  rw [abs_sub_round_eq_min, min_le_iff]
-  rcases le_or_lt (z : α) x with (hx | hx) <;> [left; right]
-  · conv_rhs => rw [abs_eq_self.mpr (sub_nonneg.mpr hx), ← fract_add_floor x, add_sub_assoc]
-    simpa only [le_add_iff_nonneg_right, sub_nonneg, cast_le] using le_floor.mpr hx
-  · rw [abs_eq_neg_self.mpr (sub_neg.mpr hx).le]
-    conv_rhs => rw [← fract_add_floor x]
-    rw [add_sub_assoc, add_comm, neg_add, neg_sub, le_add_neg_iff_add_le, sub_add_cancel,
-      le_sub_comm]
-    norm_cast
-    exact floor_le_sub_one_iff.mpr hx
-
-end LinearOrderedRing
-
-section LinearOrderedField
-
-variable [LinearOrderedField α] [FloorRing α]
-
-theorem round_eq (x : α) : round x = ⌊x + 1 / 2⌋ := by
-  simp_rw [round, (by simp only [lt_div_iff₀', two_pos] : 2 * fract x < 1 ↔ fract x < 1 / 2)]
-  cases' lt_or_le (fract x) (1 / 2) with hx hx
-  · conv_rhs => rw [← fract_add_floor x, add_assoc, add_left_comm, floor_int_add]
-    rw [if_pos hx, self_eq_add_right, floor_eq_iff, cast_zero, zero_add]
-    constructor
-    · linarith [fract_nonneg x]
-    · linarith
-  · have : ⌊fract x + 1 / 2⌋ = 1 := by
-      rw [floor_eq_iff]
-      constructor
-      · norm_num
-        linarith
-      · norm_num
-        linarith [fract_lt_one x]
-    rw [if_neg (not_lt.mpr hx), ← fract_add_floor x, add_assoc, add_left_comm, floor_int_add,
-      ceil_add_int, add_comm _ ⌊x⌋, add_right_inj, ceil_eq_iff, this, cast_one, sub_self]
-    constructor
-    · linarith
-    · linarith [fract_lt_one x]
-
-@[simp]
-theorem round_two_inv : round (2⁻¹ : α) = 1 := by
-  simp only [round_eq, ← one_div, add_halves, floor_one]
-
-@[simp]
-theorem round_neg_two_inv : round (-2⁻¹ : α) = 0 := by
-  simp only [round_eq, ← one_div, neg_add_cancel, floor_zero]
-
-@[simp]
-theorem round_eq_zero_iff {x : α} : round x = 0 ↔ x ∈ Ico (-(1 / 2)) ((1 : α) / 2) := by
-  rw [round_eq, floor_eq_zero_iff, add_mem_Ico_iff_left]
-  norm_num
-
-theorem abs_sub_round (x : α) : |x - round x| ≤ 1 / 2 := by
-  rw [round_eq, abs_sub_le_iff]
-  have := floor_le (x + 1 / 2)
-  have := lt_floor_add_one (x + 1 / 2)
-  constructor <;> linarith
-
-theorem abs_sub_round_div_natCast_eq {m n : ℕ} :
-    |(m : α) / n - round ((m : α) / n)| = ↑(min (m % n) (n - m % n)) / n := by
-  rcases n.eq_zero_or_pos with (rfl | hn)
-  · simp
-  have hn' : 0 < (n : α) := by
-    norm_cast
-  rw [abs_sub_round_eq_min, Nat.cast_min, ← min_div_div_right hn'.le,
-    fract_div_natCast_eq_div_natCast_mod, Nat.cast_sub (m.mod_lt hn).le, sub_div, div_self hn'.ne']
-
-@[bound]
-theorem sub_half_lt_round (x : α) : x - 1 / 2 < round x := by
-  rw [round_eq x, show x - 1 / 2 = x + 1 / 2 - 1 by linarith]
-  exact Int.sub_one_lt_floor (x + 1 / 2)
-
-@[bound]
-theorem round_le_add_half (x : α) : round x ≤ x + 1 / 2 := by
-  rw [round_eq x]
-  exact Int.floor_le (x + 1 / 2)
-
-end LinearOrderedField
-
-end round
-
 namespace Nat
 
 variable [LinearOrderedSemiring α] [LinearOrderedSemiring β] [FloorSemiring α] [FloorSemiring β]
@@ -1536,20 +1373,6 @@ theorem map_ceil (f : F) (hf : StrictMono f) (a : α) : ⌈f a⌉ = ⌈a⌉ :=
 
 theorem map_fract (f : F) (hf : StrictMono f) (a : α) : fract (f a) = f (fract a) := by
   simp_rw [fract, map_sub, map_intCast, map_floor _ hf]
-
-end Int
-
-namespace Int
-
-variable [LinearOrderedField α] [LinearOrderedField β] [FloorRing α] [FloorRing β]
-variable [FunLike F α β] [RingHomClass F α β] {a : α} {b : β}
-
-theorem map_round (f : F) (hf : StrictMono f) (a : α) : round (f a) = round a := by
-  have H : f 2 = 2 := map_natCast f 2
-  simp_rw [round_eq, ← map_floor _ hf, map_add, one_div, map_inv₀, H]
-  -- Porting note: was
-  -- simp_rw [round_eq, ← map_floor _ hf, map_add, one_div, map_inv₀, map_bit0, map_one]
-  -- Would have thought that `map_natCast` would replace `map_bit0, map_one` but seems not
 
 end Int
 
@@ -1673,5 +1496,3 @@ def evalIntCeil : PositivityExt where eval {u α} _zα _pα e := do
   | _, _, _ => throwError "failed to match on Int.ceil application"
 
 end Mathlib.Meta.Positivity
-
-set_option linter.style.longFile 1800
