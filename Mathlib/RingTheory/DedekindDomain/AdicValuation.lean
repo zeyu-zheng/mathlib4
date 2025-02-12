@@ -59,7 +59,7 @@ dedekind domain, dedekind ring, adic valuation
 
 noncomputable section
 
-open scoped Multiplicative Topology
+open scoped Multiplicative
 
 open Multiplicative IsDedekindDomain
 
