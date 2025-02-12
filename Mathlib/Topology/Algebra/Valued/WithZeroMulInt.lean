@@ -5,13 +5,14 @@ Authors: Salvatore Mercuri
 -/
 import Mathlib.Algebra.Order.Group.TypeTags
 import Mathlib.Topology.Algebra.Valued.ValuationTopology
+import Mathlib.RingTheory.Ideal.Quotient.Basic
 
 /-! # Topological results for integer-valued rings
 
 This file contains topological results for valuation rings taking values in the
 multiplicative integers with zero adjoined. These are useful for cases where there
 is a `Valued K ℤₘ₀` instance but no canonical base with which to embed this into
-`NNReal` and use topological results on `NNReal`.
+`NNReal`.
 -/
 
 open Multiplicative WithZero
@@ -20,13 +21,12 @@ open scoped Multiplicative Topology
 
 namespace Valued.WithZeroMulInt
 
-open Filter in
-/-- In a `ℤₘ₀`-valued ring, powers of `x` tend to zero if `v x ≤ -1`. -/
+open Set Filter in
+/-- In a `ℤₘ₀`-valued ring, powers of `x` tend to zero if `v x ≤ ofAdd (-1 : ℤ)`. -/
 theorem tendsto_zero_pow_of_le_neg_one {K : Type*} [Ring K] [Valued K ℤₘ₀]
-    {x : K} (hx : Valued.v x ≤ ofAdd (-1 : ℤ)) :
+    {x : K} (hx : v x ≤ ofAdd (-1 : ℤ)) :
     Tendsto (fun (n : ℕ) => x ^ n) atTop (𝓝 0) := by
-  simp only [(Valued.hasBasis_nhds_zero _ _).tendsto_right_iff, Set.mem_setOf_eq, map_pow,
-    eventually_atTop]
+  simp only [(hasBasis_nhds_zero _ _).tendsto_right_iff, mem_setOf_eq, map_pow, eventually_atTop]
   have h_lt : ofAdd (-1 : ℤ) < (1 : ℤₘ₀) := by
     rw [← coe_one, coe_lt_coe, ← ofAdd_zero, ofAdd_lt]; linarith
   intro γ _
@@ -46,7 +46,17 @@ theorem tendsto_zero_pow_of_le_neg_one {K : Type*} [Ring K] [Valued K ℤₘ₀]
   · refine ⟨1, fun b hb => lt_of_le_of_lt
       (pow_le_pow_of_le_one zero_le' (le_trans hx <| le_of_lt h_lt) hb) ?_⟩
     apply lt_trans _ (lt_of_not_le hγ)
-    apply lt_of_le_of_lt (pow_one (Valued.v x) ▸ hx)
+    apply lt_of_le_of_lt (pow_one (v x) ▸ hx)
     exact h_lt
+
+open Filter in
+theorem exists_pow_lt_of_le_neg_one {K : Type*} [Ring K] [Valued K ℤₘ₀]
+    {x : K} (hx : v x ≤ ofAdd (-1 : ℤ)) (γ : ℤₘ₀ˣ) :
+    ∃ n, v x ^ n < γ := by
+  simp_rw [← map_pow]
+  let ⟨n, hn⟩ := eventually_atTop.1 <|
+     ((hasBasis_nhds_zero _ _).tendsto_right_iff ).1 (tendsto_zero_pow_of_le_neg_one hx) γ trivial
+  use n
+  convert Set.mem_setOf_eq ▸ hn n le_rfl
 
 end Valued.WithZeroMulInt

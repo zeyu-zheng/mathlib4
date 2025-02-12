@@ -593,18 +593,15 @@ theorem AdicCompletion.valued_eq_intValuationDef (v : HeightOneSpectrum R) (r : 
     Valued.v (algebraMap _ (v.adicCompletion K) r) = v.intValuationDef r := by
   rw [v.valuedAdicCompletion_eq_valuation, valuation_eq_intValuationDef]
 
-open Valued Filter in
+open Valued.WithZeroMulInt Filter in
 /-- There exists a non-zero integer of value `< γ` for a given `γ`. -/
 theorem AdicCompletion.exists_nonZeroDivisor_valued_lt (v : HeightOneSpectrum R) (γ : ℤₘ₀ˣ) :
     ∃ (r : nonZeroDivisors R), Valued.v (algebraMap _ (v.adicCompletion K) r.1) < γ := by
   let ⟨π, hπ⟩ := v.intValuation_exists_uniformizer
-  have := WithZeroMulInt.tendsto_zero_pow_of_le_neg_one
-    (le_of_eq (valued_eq_intValuationDef K _ π ▸ hπ))
-  let ⟨a, ha⟩ := eventually_atTop.1 <| ((hasBasis_nhds_zero _ _).tendsto_right_iff).1 this γ trivial
+  let ⟨a, ha⟩ := exists_pow_lt_of_le_neg_one (le_of_eq (valued_eq_intValuationDef K _ π ▸ hπ)) γ
   use ⟨algebraMap _ _ π ^ a,
     mem_nonZeroDivisors_of_ne_zero (pow_ne_zero _ <| v.intValuation_uniformizer_ne_zero hπ)⟩
-  convert ha _ le_rfl
-  simp
+  simp [ha]
 
 open scoped Classical in
 /-- Given a collection of values `γ v` at primes `v `, we can find a global
