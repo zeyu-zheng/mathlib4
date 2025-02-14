@@ -1033,14 +1033,13 @@ theorem bddAbove_range_comp {ι : Type u} {f : ι → Cardinal.{v}} (hf : BddAbo
 
 /-! ### Bounds on suprema -/
 
-theorem sum_le_iSup_lift {ι : Type u}
-    (f : ι → Cardinal.{max u v}) : sum f ≤ Cardinal.lift #ι * iSup f := by
-  rw [← (iSup f).lift_id, ← lift_umax, lift_umax.{max u v, u}, ← sum_const]
+theorem sum_le_iSup_lift {ι : Type u} [Small.{v} ι]
+    (f : ι → Cardinal.{v}) : sum f ≤ lift.{v} (#ι) * lift.{u} (iSup f) := by
+  rw [← (iSup f).lift_id, ← sum_const, lift_id]
   exact sum_le_sum _ _ (le_ciSup <| bddAbove_of_small _)
 
 theorem sum_le_iSup {ι : Type u} (f : ι → Cardinal.{u}) : sum f ≤ #ι * iSup f := by
-  rw [← lift_id #ι]
-  exact sum_le_iSup_lift f
+  simpa using sum_le_iSup_lift f
 
 /-- The lift of a supremum is the supremum of the lifts. -/
 theorem lift_sSup {s : Set Cardinal} (hs : BddAbove s) :
