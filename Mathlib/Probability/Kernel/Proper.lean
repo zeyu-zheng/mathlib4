@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Order
 /-
 Copyright (c) 2024 Yaël Dillies, Kalle Kytölä, Kin Yau James Wong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.

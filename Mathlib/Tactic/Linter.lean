@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Order
 /-
 This is the `Linter`s file: it imports files defining linters.
 All syntax linters enabled by default are imported in `Mathlib.Init`;
