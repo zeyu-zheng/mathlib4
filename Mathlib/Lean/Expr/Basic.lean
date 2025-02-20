@@ -66,8 +66,6 @@ def lastComponentAsString : Name → String
   | .num _ n => toString n
   | .anonymous => ""
 
-@[deprecated (since := "2024-05-14")] alias getString := lastComponentAsString
-
 /-- `nm.splitAt n` splits a name `nm` in two parts, such that the *second* part has depth `n`, i.e.
   `(nm.splitAt n).2.getNumParts = n` (assuming `nm.getNumParts ≥ n`).
   Example: ``splitAt `foo.bar.baz.back.bat 1 = (`foo.bar.baz.back, `bat)``. -/
@@ -103,12 +101,12 @@ end Name
 
 namespace ConstantInfo
 
-/-- Checks whether this `ConstantInfo` is a definition, -/
+/-- Checks whether this `ConstantInfo` is a definition. -/
 def isDef : ConstantInfo → Bool
   | defnInfo _ => true
   | _          => false
 
-/-- Checks whether this `ConstantInfo` is a theorem, -/
+/-- Checks whether this `ConstantInfo` is a theorem. -/
 def isThm : ConstantInfo → Bool
   | thmInfo _ => true
   | _          => false
@@ -202,11 +200,6 @@ def eraseProofs (e : Expr) : MetaM Expr :=
         return .continue (← mkSorry (← inferType e) true)
       else
         return .continue)
-
-/-- If an `Expr` has form `.fvar n`, then returns `some n`, otherwise `none`. -/
-def fvarId? : Expr → Option FVarId
-  | .fvar n => n
-  | _ => none
 
 /-- If an `Expr` has the form `Type u`, then return `some u`, otherwise `none`. -/
 def type? : Expr → Option Level

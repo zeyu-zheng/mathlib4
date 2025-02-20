@@ -150,8 +150,8 @@ homomorphisms.
 You should also extend this typeclass when you extend `AddMonoidHom`.
 -/
 class AddMonoidHomClass (F : Type*) (M N : outParam Type*)
-    [AddZeroClass M] [AddZeroClass N] [FunLike F M N]
-    extends AddHomClass F M N, ZeroHomClass F M N : Prop
+    [AddZeroClass M] [AddZeroClass N] [FunLike F M N] : Prop
+    extends AddHomClass F M N, ZeroHomClass F M N
 
 -- Instances and lemmas are defined below through `@[to_additive]`.
 end add_zero
@@ -359,8 +359,8 @@ infixr:25 " →* " => MonoidHom
 You should also extend this typeclass when you extend `MonoidHom`. -/
 @[to_additive]
 class MonoidHomClass (F : Type*) (M N : outParam Type*) [MulOneClass M] [MulOneClass N]
-  [FunLike F M N]
-  extends MulHomClass F M N, OneHomClass F M N : Prop
+  [FunLike F M N] : Prop
+  extends MulHomClass F M N, OneHomClass F M N
 
 @[to_additive]
 instance MonoidHom.instFunLike : FunLike (M →* N) M N where
@@ -706,6 +706,15 @@ def MonoidHom.id (M : Type*) [MulOneClass M] : M →* M where
   map_one' := rfl
   map_mul' _ _ := rfl
 
+@[to_additive (attr := simp)]
+lemma OneHom.coe_id {M : Type*} [One M] : (OneHom.id M : M → M) = _root_.id := rfl
+
+@[to_additive (attr := simp)]
+lemma MulHom.coe_id {M : Type*} [Mul M] : (MulHom.id M : M → M) = _root_.id := rfl
+
+@[to_additive (attr := simp)]
+lemma MonoidHom.coe_id {M : Type*} [MulOneClass M] : (MonoidHom.id M : M → M) = _root_.id := rfl
+
 /-- Composition of `OneHom`s as a `OneHom`. -/
 @[to_additive "Composition of `ZeroHom`s as a `ZeroHom`."]
 def OneHom.comp [One M] [One N] [One P] (hnp : OneHom N P) (hmn : OneHom M N) : OneHom M P where
@@ -868,6 +877,20 @@ def MulHom.inverse [Mul M] [Mul N] (f : M →ₙ* N) (g : N → M)
       g (x * y) = g (f (g x) * f (g y)) := by rw [h₂ x, h₂ y]
       _ = g (f (g x * g y)) := by rw [f.map_mul]
       _ = g x * g y := h₁ _
+
+/-- If `M` and `N` have multiplications, `f : M →ₙ* N` is a surjective multiplicative map,
+and `M` is commutative, then `N` is commutative. -/
+@[to_additive
+"If `M` and `N` have additions, `f : M →ₙ+ N` is a surjective additive map,
+and `M` is commutative, then `N` is commutative."]
+theorem Function.Surjective.mul_comm [Mul M] [Mul N] {f : M →ₙ* N}
+    (is_surj : Function.Surjective f) (is_comm : Std.Commutative (· * · : M → M → M)) :
+    Std.Commutative (· * · : N → N → N) where
+  comm := fun a b ↦ by
+    obtain ⟨a', ha'⟩ := is_surj a
+    obtain ⟨b', hb'⟩ := is_surj b
+    simp only [← ha', ← hb', ← map_mul]
+    rw [is_comm.comm]
 
 /-- The inverse of a bijective `MonoidHom` is a `MonoidHom`. -/
 @[to_additive (attr := simps)

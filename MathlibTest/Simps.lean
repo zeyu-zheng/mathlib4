@@ -429,7 +429,7 @@ class has_hom (obj : Type u) : Type (max u (v+1)) where
 
 infixr:10 " ⟶ " => has_hom.hom -- type as \h
 
-class CategoryStruct (obj : Type u) extends has_hom.{v} obj : Type (max u (v+1)) where
+class CategoryStruct (obj : Type u) : Type (max u (v+1)) extends has_hom.{v} obj where
   (id   : ∀ X : obj, hom X X)
   (comp : ∀ {X Y Z : obj}, (X ⟶ Y) → (Y ⟶ Z) → (X ⟶ Z))
 
@@ -447,6 +447,29 @@ example (X : Type u) {x : Type u} (h : (X → X) = x) : (X ⟶ X) = x := by simp
 example (X : Type u) {f : X → X} (h : ∀ x, f x = x) : 𝟙 X = f := by ext; simp; rw [h]
 example (X Y Z : Type u) (f : X ⟶ Y) (g : Y ⟶ Z) {k : X → Z} (h : ∀ x, g (f x) = k x) :
   f ≫ g = k := by ext; simp; rw [h]
+
+-- Ensure that a universe polymorphic projection like `PLift.down`
+-- doesn't cause `simp` lemmas about proofs.
+
+instance discreteCategory : CategoryStruct Nat where
+  hom X Y := ULift (PLift (X = Y))
+  id _ := ULift.up (PLift.up rfl)
+  comp f g := ⟨⟨f.1.1.trans g.1.1⟩⟩
+
+structure Prefunctor (C : Type u) [CategoryStruct C] (D : Type v) [CategoryStruct D] where
+  /-- The action of a (pre)functor on vertices/objects. -/
+  obj : C → D
+  /-- The action of a (pre)functor on edges/arrows/morphisms. -/
+  map : ∀ {X Y : C}, (X ⟶ Y) → (obj X ⟶ obj Y)
+
+@[simps]
+def IdentityPreunctor : Prefunctor (Type u) Nat where
+  obj _ := 5
+  map _ := ⟨⟨rfl⟩⟩
+
+/-- error: unknown identifier 'IdentityPreunctor_map_down_down' -/
+#guard_msgs in
+#check IdentityPreunctor_map_down_down
 
 namespace coercing
 
@@ -1205,11 +1228,11 @@ def myFoo : Foo := ⟨1, ⟨1, 1⟩, 1⟩
 
 structure Prod (X Y : Type _) extends _root_.Prod X Y
 
-structure Prod2 (X Y : Type _) extends Prod X Y
+structure Prod2 (X Y : Type _) extends toProd_1 : Prod X Y
 
 initialize_simps_projections Prod2 (toProd → myName, toProd_1 → myOtherName)
 
-structure Prod3 (X Y : Type _) extends Prod X Y
+structure Prod3 (X Y : Type _) extends toProd_1 : Prod X Y
 
 @[simps] def foo : Prod3 Nat Nat := { fst := 1, snd := 3 }
 @[simps toProd_1] def foo' : Prod3 Nat Nat := { fst := 1, snd := 3 }
