@@ -694,7 +694,7 @@ theorem card_pair (a b : α) : card {a, b} = 2 := by
   rw [insert_eq_cons, card_cons, card_singleton]
 
 theorem card_eq_one {s : Multiset α} : card s = 1 ↔ ∃ a, s = {a} :=
-  ⟨Quot.inductionOn s fun _l h => (List.length_eq_one.1 h).imp fun _a => congr_arg _,
+  ⟨Quot.inductionOn s fun _l h => (List.length_eq_one_iff.1 h).imp fun _a => congr_arg _,
     fun ⟨_a, e⟩ => e.symm ▸ rfl⟩
 
 theorem card_le_card {s t : Multiset α} (h : s ≤ t) : card s ≤ card t :=
@@ -1345,7 +1345,7 @@ theorem pmap_eq_map_attach {p : α → Prop} (f : ∀ a, p a → β) (s) :
 
 -- @[simp] -- Porting note: Left hand does not simplify
 theorem attach_map_val' (s : Multiset α) (f : α → β) : (s.attach.map fun i => f i.val) = s.map f :=
-  Quot.inductionOn s fun l => congr_arg _ <| List.attach_map_coe l f
+  Quot.inductionOn s fun l => congr_arg _ <| List.attach_map_val l f
 
 @[simp]
 theorem attach_map_val (s : Multiset α) : s.attach.map Subtype.val = s :=
@@ -2512,6 +2512,8 @@ theorem disjoint_left {s t : Multiset α} : Disjoint s t ↔ ∀ {a}, a ∈ s �
   · rw [le_bot_iff, bot_eq_zero, eq_zero_iff_forall_not_mem]
     exact fun a ha ↦ h (subset_of_le hs ha) (subset_of_le ht ha)
 
+alias ⟨_root_.Disjoint.not_mem_of_mem_left_multiset, _⟩ := disjoint_left
+
 @[simp, norm_cast]
 theorem coe_disjoint (l₁ l₂ : List α) : Disjoint (l₁ : Multiset α) l₂ ↔ l₁.Disjoint l₂ :=
   disjoint_left
@@ -2521,6 +2523,8 @@ theorem coe_disjoint (l₁ l₂ : List α) : Disjoint (l₁ : Multiset α) l₂ 
 
 theorem disjoint_right {s t : Multiset α} : Disjoint s t ↔ ∀ {a}, a ∈ t → a ∉ s :=
   disjoint_comm.trans disjoint_left
+
+alias ⟨_root_.Disjoint.not_mem_of_mem_right_multiset, _⟩ := disjoint_right
 
 theorem disjoint_iff_ne {s t : Multiset α} : Disjoint s t ↔ ∀ a ∈ s, ∀ b ∈ t, a ≠ b := by
   simp [disjoint_left, imp_not_comm]

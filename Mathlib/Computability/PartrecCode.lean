@@ -3,12 +3,6 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathlib.Init
-/-
-Broken by https://github.com/leanprover/lean4/pull/7059
-Commenting out until a fix is available.
-See https://leanprover.zulipchat.com/#narrow/channel/428973-nightly-testing/topic/breakages.20from.20leanprover.2Flean4.237059
-
 import Mathlib.Computability.Partrec
 import Mathlib.Data.Option.Basic
 
@@ -150,7 +144,7 @@ def ofNatCode : ℕ → Code
     | true , false => prec (ofNatCode m.unpair.1) (ofNatCode m.unpair.2)
     | true , true  => rfind' (ofNatCode m)
 
-/-- Proof that `Nat.Partrec.Code.ofNatCode` is the inverse of `Nat.Partrec.Code.encodeCode`-/
+/-- Proof that `Nat.Partrec.Code.ofNatCode` is the inverse of `Nat.Partrec.Code.encodeCode` -/
 private theorem encode_ofNatCode : ∀ n, encodeCode (ofNatCode n) = n
   | 0 => by simp [ofNatCode, encodeCode]
   | 1 => by simp [ofNatCode, encodeCode]
@@ -937,7 +931,7 @@ theorem evaln_prim : Primrec fun a : (ℕ × Code) × ℕ => evaln a.1.1 a.1.2 a
             evaln k' c' n := by
         intro k₁ c₁ n₁ hl
         simp [lup, List.getElem?_range hl, evaln_map, Bind.bind, Option.bind_map]
-      cases' c with cf cg cf cg cf cg cf <;>
+      obtain - | - | - | - | ⟨cf, cg⟩ | ⟨cf, cg⟩ | ⟨cf, cg⟩ | cf := c <;>
         simp [evaln, nk, Bind.bind, Functor.map, Seq.seq, pure]
       · obtain ⟨lf, lg⟩ := encode_lt_pair cf cg
         rw [hg (Nat.pair_lt_pair_right _ lf), hg (Nat.pair_lt_pair_right _ lg)]
@@ -1027,4 +1021,3 @@ instance : Countable {f : ℕ → ℕ // Computable f} :=
     (fun _ _ h => Subtype.val_inj.1 (PFun.lift_injective (by simpa using h)))
 
 end Nat.Partrec.Code
--/

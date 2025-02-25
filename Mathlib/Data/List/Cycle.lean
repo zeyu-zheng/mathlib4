@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 -/
 import Mathlib.Data.Fintype.List
+import Mathlib.Data.Fintype.OfMap
 
 /-!
 # Cycles of a list
@@ -532,7 +533,7 @@ theorem Subsingleton.congr {s : Cycle α} (h : Subsingleton s) :
     ∀ ⦃x⦄ (_hx : x ∈ s) ⦃y⦄ (_hy : y ∈ s), x = y := by
   induction' s using Quot.inductionOn with l
   simp only [length_subsingleton_iff, length_coe, mk_eq_coe, le_iff_lt_or_eq, Nat.lt_add_one_iff,
-    length_eq_zero, length_eq_one, Nat.not_lt_zero, false_or] at h
+    length_eq_zero_iff, length_eq_one_iff, Nat.not_lt_zero, false_or] at h
   rcases h with (rfl | ⟨z, rfl⟩) <;> simp
 
 /-- A `s : Cycle α` that is made up of at least two unique elements. -/
@@ -583,9 +584,9 @@ theorem nodup_reverse_iff {s : Cycle α} : s.reverse.Nodup ↔ s.Nodup :=
 
 theorem Subsingleton.nodup {s : Cycle α} (h : Subsingleton s) : Nodup s := by
   induction' s using Quot.inductionOn with l
-  cases' l with hd tl
+  obtain - | ⟨hd, tl⟩ := l
   · simp
-  · have : tl = [] := by simpa [Subsingleton, length_eq_zero, Nat.succ_le_succ_iff] using h
+  · have : tl = [] := by simpa [Subsingleton, length_eq_zero_iff, Nat.succ_le_succ_iff] using h
     simp [this]
 
 theorem Nodup.nontrivial_iff {s : Cycle α} (h : Nodup s) : Nontrivial s ↔ ¬Subsingleton s := by
@@ -797,7 +798,7 @@ nonrec def Chain (r : α → α → Prop) (c : Cycle α) : Prop :=
       · have := isRotated_nil_iff.1 hab
         contradiction
       · dsimp only
-        cases' hab with n hn
+        obtain ⟨n, hn⟩ := hab
         induction' n with d hd generalizing a b l m
         · simp only [rotate_zero, cons.injEq] at hn
           rw [hn.1, hn.2]

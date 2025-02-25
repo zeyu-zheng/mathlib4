@@ -95,11 +95,11 @@ variable {n : ℕ}
 /-- A composition of `n` is a list of positive integers summing to `n`. -/
 @[ext]
 structure Composition (n : ℕ) where
-  /-- List of positive integers summing to `n`-/
+  /-- List of positive integers summing to `n` -/
   blocks : List ℕ
-  /-- Proof of positivity for `blocks`-/
+  /-- Proof of positivity for `blocks` -/
   blocks_pos : ∀ {i}, i ∈ blocks → 0 < i
-  /-- Proof that `blocks` sums to `n`-/
+  /-- Proof that `blocks` sums to `n` -/
   blocks_sum : blocks.sum = n
 
 /-- Combinatorial viewpoint on a composition of `n`, by seeing it as non-empty blocks of
@@ -109,9 +109,9 @@ get a finset of `{0, ..., n}` containing `0` and `n`. This is the data in the st
 `CompositionAsSet n`. -/
 @[ext]
 structure CompositionAsSet (n : ℕ) where
-  /-- Combinatorial viewpoint on a composition of `n` as consecutive integers `{0, ..., n-1}`-/
+  /-- Combinatorial viewpoint on a composition of `n` as consecutive integers `{0, ..., n-1}` -/
   boundaries : Finset (Fin n.succ)
-  /-- Proof that `0` is a member of `boundaries`-/
+  /-- Proof that `0` is a member of `boundaries` -/
   zero_mem : (0 : Fin n.succ) ∈ boundaries
   /-- Last element of the composition -/
   getLast_mem : Fin.last n ∈ boundaries
@@ -655,7 +655,7 @@ theorem getElem_splitWrtComposition (l : List α) (c : Composition n)
 theorem flatten_splitWrtCompositionAux {ns : List ℕ} :
     ∀ {l : List α}, ns.sum = l.length → (l.splitWrtCompositionAux ns).flatten = l := by
   induction ns with
-  | nil => exact fun h ↦ (length_eq_zero.1 h.symm).symm
+  | nil => exact fun h ↦ (length_eq_zero_iff.1 h.symm).symm
   | cons n ns IH =>
     intro l h; rw [sum_cons] at h
     simp only [splitWrtCompositionAux_cons]; dsimp

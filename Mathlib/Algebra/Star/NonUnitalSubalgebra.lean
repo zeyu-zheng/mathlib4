@@ -76,16 +76,19 @@ def subtype (s : S) : s →⋆ₙₐ[R] A :=
     map_star' := fun _ => rfl }
 
 @[simp]
-theorem coeSubtype : (subtype s : s → A) = Subtype.val :=
+theorem coe_subtype : (subtype s : s → A) = Subtype.val :=
   rfl
+
+@[deprecated (since := "2025-02-18")]
+alias coeSubtype := coe_subtype
 
 end NonUnitalStarSubalgebraClass
 
 /-- A non-unital star subalgebra is a non-unital subalgebra which is closed under the `star`
 operation. -/
 structure NonUnitalStarSubalgebra (R : Type u) (A : Type v) [CommSemiring R]
-    [NonUnitalNonAssocSemiring A] [Module R A] [Star A]
-    extends NonUnitalSubalgebra R A : Type v where
+    [NonUnitalNonAssocSemiring A] [Module R A] [Star A] : Type v
+    extends NonUnitalSubalgebra R A where
   /-- The `carrier` of a `NonUnitalStarSubalgebra` is closed under the `star` operation. -/
   star_mem' : ∀ {a : A} (_ha : a ∈ carrier), star a ∈ carrier
 

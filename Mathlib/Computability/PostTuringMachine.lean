@@ -3,16 +3,10 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathlib.Init
-/-
-Broken by https://github.com/leanprover/lean4/pull/7059
-Commenting out until a fix is available.
-See https://leanprover.zulipchat.com/#narrow/channel/428973-nightly-testing/topic/breakages.20from.20leanprover.2Flean4.237059
-
 import Mathlib.Computability.Tape
-import Mathlib.Data.Fintype.Basic
 import Mathlib.Data.Finset.Prod
 import Mathlib.Data.Finset.Option
+import Mathlib.Data.Fintype.Defs
 import Mathlib.Data.PFun
 
 /-!
@@ -785,7 +779,7 @@ theorem tr_supports {S : Finset Λ} (ss : TM1.Supports M S) :
     · apply Finset.mem_univ
   · intro q a q' s h₁ h₂
     rcases q with ⟨_ | q, v⟩; · cases h₁
-    cases' q' with q' v'
+    obtain ⟨q', v'⟩ := q'
     simp only [trStmts, Finset.mem_coe] at h₂ ⊢
     rw [Finset.mem_product] at h₂ ⊢
     simp only [Finset.mem_univ, and_true] at h₂ ⊢
@@ -1012,7 +1006,7 @@ theorem stepAux_write (q : Stmt Bool (Λ' Γ Λ σ) σ) (v : σ) (a b : Γ) (L R
   clear a b L R
   intro L' R' l₁ l₂ l₂' e
   induction' l₂ with a l₂ IH generalizing l₁ l₂'
-  · cases List.length_eq_zero.1 e
+  · cases List.length_eq_zero_iff.1 e
     rfl
   rcases l₂' with - | ⟨b, l₂'⟩ <;>
     simp only [List.length_nil, List.length_cons, Nat.succ_inj', reduceCtorEq] at e
@@ -1221,7 +1215,7 @@ theorem tr_respects : Respects (TM0.step M) (TM1.step (tr M)) fun a b ↦ trCfg 
     have : TM1.step (tr M) ⟨some (Λ'.act s q'), (), T⟩ = some ⟨some (Λ'.normal q'), (), match s with
         | TM0.Stmt.move d => T.move d
         | TM0.Stmt.write a => T.write a⟩ := by
-      cases' s with d a <;> rfl
+      cases s <;> rfl
     intro e
     refine TransGen.head ?_ (TransGen.head' this ?_)
     · simp only [TM1.step, TM1.stepAux, tr]
@@ -1237,4 +1231,3 @@ theorem tr_respects : Respects (TM0.step M) (TM1.step (tr M)) fun a b ↦ trCfg 
 end TM0to1
 
 end Turing
--/

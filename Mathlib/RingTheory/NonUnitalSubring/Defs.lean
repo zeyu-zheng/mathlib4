@@ -35,6 +35,7 @@ Lattice inclusion (e.g. `≤` and `⊓`) is used rather than set notation (`⊆`
 non-unital subring
 -/
 
+assert_not_exists RelIso
 
 universe u v w
 
@@ -46,8 +47,8 @@ section NonUnitalSubringClass
 
 /-- `NonUnitalSubringClass S R` states that `S` is a type of subsets `s ⊆ R` that
 are both a multiplicative submonoid and an additive subgroup. -/
-class NonUnitalSubringClass (S : Type*) (R : Type u) [NonUnitalNonAssocRing R]
-    [SetLike S R] extends NonUnitalSubsemiringClass S R, NegMemClass S R : Prop where
+class NonUnitalSubringClass (S : Type*) (R : Type u) [NonUnitalNonAssocRing R] [SetLike S R] : Prop
+  extends NonUnitalSubsemiringClass S R, NegMemClass S R where
 
 -- See note [lower instance priority]
 instance (priority := 100) NonUnitalSubringClass.addSubgroupClass (S : Type*) (R : Type u)

@@ -3,12 +3,6 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathlib.Init
-/-
-Broken by https://github.com/leanprover/lean4/pull/7059
-Commenting out until a fix is available.
-See https://leanprover.zulipchat.com/#narrow/channel/428973-nightly-testing/topic/breakages.20from.20leanprover.2Flean4.237059
-
 import Mathlib.Computability.Tape
 import Mathlib.Data.Fintype.Option
 import Mathlib.Data.Fintype.Prod
@@ -680,8 +674,7 @@ attribute [local simp] Respects TM2.step TM2.stepAux trNormal
 theorem tr_respects : Respects (TM2.step M) (TM1.step (tr M)) TrCfg := by
   -- Porting note (https://github.com/leanprover-community/mathlib4/issues/12129): additional beta reduction needed
   intro c₁ c₂ h
-  cases' h with l v S L hT
-  rcases l with - | l; · constructor
+  obtain @⟨- | l, v, S, L, hT⟩ := h; · constructor
   rsuffices ⟨b, c, r⟩ : ∃ b, _ ∧ Reaches (TM1.step (tr M)) _ _
   · exact ⟨b, c, TransGen.head' rfl r⟩
   simp only [tr]
@@ -801,4 +794,3 @@ end
 end TM2to1
 
 end Turing
--/
