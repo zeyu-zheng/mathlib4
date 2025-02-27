@@ -1106,6 +1106,7 @@ import Mathlib.AlgebraicGeometry.SpreadingOut
 import Mathlib.AlgebraicGeometry.Stalk
 import Mathlib.AlgebraicGeometry.StructureSheaf
 import Mathlib.AlgebraicGeometry.ValuativeCriterion
+import Mathlib.AlgebraicGeometry.foo
 import Mathlib.AlgebraicTopology.AlternatingFaceMapComplex
 import Mathlib.AlgebraicTopology.CechNerve
 import Mathlib.AlgebraicTopology.DoldKan.Compatibility
@@ -5159,6 +5160,7 @@ import Mathlib.Tactic.CategoryTheory.Slice
 import Mathlib.Tactic.CategoryTheory.ToApp
 import Mathlib.Tactic.Change
 import Mathlib.Tactic.Check
+import Mathlib.Tactic.CheckEqualities
 import Mathlib.Tactic.Choose
 import Mathlib.Tactic.Clean
 import Mathlib.Tactic.ClearExcept
