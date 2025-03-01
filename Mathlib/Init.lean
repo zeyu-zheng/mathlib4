@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Linter.CommandStart
 import Mathlib.Tactic.Linter.DocPrime
 import Mathlib.Tactic.Linter.GlobalAttributeIn
 import Mathlib.Tactic.Linter.HashCommandLinter
