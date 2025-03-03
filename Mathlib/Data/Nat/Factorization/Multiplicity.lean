@@ -1,16 +1,13 @@
 /-
-Copyright (c) 2021 Qi Wen Wei. All rights reserved.
+Copyright (c) 2025 Qi Wen Wei. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Qi Wen Wei
 -/
 import Mathlib.Data.Nat.PrimeFin
 import Mathlib.Data.Nat.Factorization.Defs
-import Mathlib.Order.Interval.Finset.Nat
 import Mathlib.Data.Nat.Log
 import Mathlib.Data.Nat.Digits
-import Mathlib.Algebra.BigOperators.Intervals
 import Mathlib.Algebra.GeomSum
-import Mathlib.Algebra.Order.Ring.Abs
 import Mathlib.Data.Nat.Prime.Defs
 import Mathlib.RingTheory.Multiplicity
 
