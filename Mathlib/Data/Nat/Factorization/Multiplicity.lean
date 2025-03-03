@@ -13,7 +13,7 @@ import Mathlib.RingTheory.Multiplicity
 
 
 /-!
-# Natural number multiplicity
+# Natural number factorization
 
 This file contains lemmas about the factorization function (the maximum prime power dividing a
 number) when applied to naturals, in particular calculating it for factorials and binomial
@@ -23,7 +23,7 @@ This is a port of the lemmas from `Data/Nat/Multiplicity` to here,
 re-written in terms of `factorization`
 
 
-## Multiplicity calculations
+## Factorization calculations
 
 * `Nat.Prime.factorization_factorial`: Legendre's Theorem. The factorization of `p` in `n!` is
   `n / p + ... + n / p ^ b` for any `b` such that `n / p ^ (b + 1) = 0`. See `padicValNat_factorial`
@@ -50,7 +50,7 @@ open Finset List Finsupp
 
 namespace Nat
 
-/-- The multiplicity of prime `p` in `p` is `1` -/
+/-- The Factorization of prime `p` in `p` is `1` -/
 @[simp]
 theorem Prime.factorization_self {p : ℕ} (hp : Prime p) : p.factorization p = 1 := by simp [hp]
 
