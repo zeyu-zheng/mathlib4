@@ -3,8 +3,7 @@ Copyright (c) 2025 Qi Wen Wei. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Qi Wen Wei
 -/
-import Mathlib.Data.Nat.PrimeFin
-import Mathlib.Data.Nat.Factorization.Defs
+import Mathlib.Data.Nat.Factorization.Basic
 import Mathlib.Data.Nat.Log
 import Mathlib.Data.Nat.Digits
 import Mathlib.Algebra.GeomSum
@@ -49,10 +48,6 @@ Legendre, p-adic
 open Finset List Finsupp
 
 namespace Nat
-
-/-- The Factorization of prime `p` in `p` is `1` -/
-@[simp]
-theorem Prime.factorization_self {p : ℕ} (hp : Prime p) : p.factorization p = 1 := by simp [hp]
 
 /-- The factorization of `m` in `n` is the number of positive natural numbers `i` such that `m ^ i`
 divides `n`. Note `m` is prime. This set is expressed by filtering `Ico 1 b` where `b` is any bound
