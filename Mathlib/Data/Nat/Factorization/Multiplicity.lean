@@ -72,11 +72,9 @@ theorem Ico_pow_dvd_eq_Ico_of_lt {n p b : ℕ} (pp : p.Prime) (hn : n ≠ 0) (hb
 /-- The factorization of `m` in `n` is the number of positive natural numbers `i` such that `m ^ i`
 divides `n`. Note `m` is prime. This set is expressed by filtering `Ico 1 b` where `b` is any bound
 greater than `log m n`. -/
-theorem factorization_eq_card_pow_dvd_of_lt {m n b : ℕ} (hm : m ≠ 1)
+theorem factorization_eq_card_pow_dvd_of_lt {m n b : ℕ}
     (hm2: m.Prime) (hn : 0 < n) (hb : log m n < b) :
-    n.factorization m = #{i ∈ Ico 1 b | m ^ i ∣ n} :=
-  have fin := Nat.finiteMultiplicity_iff.2 ⟨hm, hn⟩
-  calc
+    n.factorization m = #{i ∈ Ico 1 b | m ^ i ∣ n} :=  calc
     n.factorization m = #{i ∈ Ico 1 n | m ^ i ∣ n} := by
       exact factorization_eq_card_pow_dvd n hm2
     _ = #{i ∈ Ico 1 b | m ^ i ∣ n} := by
@@ -103,7 +101,7 @@ theorem factorization_factorial {p : ℕ} (hp : p.Prime) :
       _ = #{i ∈ Ico 1 b | p ^ i ∣ n + 1} + (∑ i ∈ Ico 1 b, n / p ^ i : ℕ) := by
         rw [factorization_factorial hp ((log_mono_right <| le_succ _).trans_lt hb)]
         simp only [add_left_inj]
-        apply factorization_eq_card_pow_dvd_of_lt (Prime.ne_one hp) hp (zero_lt_succ n)
+        apply factorization_eq_card_pow_dvd_of_lt hp (zero_lt_succ n)
         exact hb
       _ = (∑ i ∈ Ico 1 b, n / p ^ i : ℕ) + #{i ∈ Ico 1 b | p ^ i ∣ n + 1} := by
         exact
@@ -284,7 +282,7 @@ theorem factorization_choose_prime_pow_add_factorization (hp : p.Prime) (hkn : k
       simp +contextual [Finset.disjoint_right, *, dvd_iff_mod_eq_zero,
         Nat.mod_lt _ (pow_pos hp.pos _)]
     rw [factorization_choose hp hkn (lt_succ_self _),
-        factorization_eq_card_pow_dvd_of_lt (ne_of_gt hp.one_lt) hp hk0.bot_lt
+        factorization_eq_card_pow_dvd_of_lt hp hk0.bot_lt
           (lt_succ_of_le (log_mono_right hkn))]
     rw [log_pow hp.one_lt, ← card_union_of_disjoint hdisj, filter_union_right]
     have filter_le_Ico := (Ico 1 n.succ).card_filter_le
