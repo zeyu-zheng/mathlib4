@@ -77,11 +77,6 @@ theorem factorization_eq_card_pow_dvd₀ {m n b : ℕ} (hm : m ≠ 1)
         exact le_log_of_pow_le (one_lt_iff_ne_zero_and_ne_one.2 ⟨m.succ_ne_zero, hm⟩)
           (le_of_dvd hn h)
 
-theorem factorization_pow₀ {p m n : ℕ} :
-    (m ^ n).factorization p = n * m.factorization p := by
-  rw [factorization_pow]
-  simp
-
 theorem factorization_pow_self {p n : ℕ} (hp : p.Prime) : (p ^ n).factorization p = n := by
   simp only [factorization_pow, coe_smul, Pi.smul_apply, smul_eq_mul]
   have h1: p.factorization p = 1 := by
