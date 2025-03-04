@@ -1,12 +1,12 @@
 /-
-Copyright (c) 2024 David Loeffler. All rights reserved.
+Copyright (c) 2025 David Loeffler. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 -/
 import Mathlib.Topology.Algebra.Indicator
-import Mathlib.Topology.ContinuousMap.Compact
 import Mathlib.Topology.Separation.DisjointCover
 import Mathlib.Order.Disjointed
+import Mathlib.Topology.ContinuousMap.Algebra
 
 /-!
 # Uniform approximation by locally constant functions
@@ -15,7 +15,7 @@ We show that if `X` is a profinite space, and `V` is a uniform space, then any c
 `X → V` can be uniformly approximated by locally constant functions.
 -/
 
-open Metric UniformSpace Set
+open UniformSpace Set
 
 open TopologicalSpace (Opens Clopens IsOpenCover)
 
@@ -23,7 +23,7 @@ open scoped Uniformity Function
 
 namespace ContinuousMap
 
-variable {ι X V : Type*}
+variable {X Y V : Type*}
   [TopologicalSpace X] [TotallyDisconnectedSpace X] [T2Space X] [CompactSpace X]
   [UniformSpace V] (f : C(X, V)) {S : Set (V × V)}
 
@@ -58,16 +58,13 @@ lemma exists_fin_comp_of_mem_uniformity (hS : S ∈ 𝓤 V) :
   obtain ⟨n, E, hEne, hES, hEuniv, hEdis⟩ :=
     exists_disjoint_nonempty_clopen_cover_of_mem_uniformity f hS
   have h_uniq (x) : ∃! i, x ∈ E i := by
-    refine match Set.mem_iUnion.mp (hEuniv <| mem_univ x) with | ⟨i, hi⟩ => ⟨i, hi, fun j hj ↦ ?_⟩
-    refine Set.PairwiseDisjoint.elim (fun u _ v _ huv ↦ hEdis huv)
-      (Set.mem_univ j) (Set.mem_univ i) ?_
-    simp only [Disjoint, not_forall, le_bot_iff, ← SetLike.coe_set_eq, Clopens.coe_bot,
-      ← nonempty_iff_ne_empty]
-    exact ⟨E i ⊓ E j, inf_le_right, inf_le_left, x, by simp_all⟩
-  choose g hg hg' using h_uniq
+    refine match Set.mem_iUnion.mp (hEuniv <| mem_univ x) with
+      | ⟨i, hi⟩ => ⟨i, hi, fun j hj ↦ hEdis.eq ?_⟩
+    simpa [← Clopens.coe_disjoint, not_disjoint_iff] using ⟨x, hj, hi⟩
+  choose g hg hg' using h_uniq -- for each `x`, `g x` is the unique `i` such that `x ∈ E i`
   have h_ex (i) : ∃ x, x ∈ E i := by
     simpa [← SetLike.coe_set_eq, ← nonempty_iff_ne_empty] using hEne i
-  choose r hr using h_ex
+  choose r hr using h_ex -- for each `i`, choose an `r i ∈ E i`
   refine ⟨n, g, f ∘ r, continuous_discrete_rng.mpr fun j ↦ ?_, fun x ↦ (hES _) _ (hg _) _ (hr _)⟩
   convert (E j).isOpen
   exact Set.ext fun x ↦ ⟨fun hj ↦ hj ▸ hg x, fun hx ↦ (hg' _ _ hx).symm⟩
@@ -88,13 +85,13 @@ lemma exists_sum_const_mulIndicator_approx [CommGroup V] (hS : S ∈ 𝓤 V) :
   exact (Fintype.prod_eq_single _ fun i hi ↦ mulIndicator_of_not_mem hi.symm _).trans
     (mulIndicator_of_mem rfl _)
 
-variable
-  {Y : Type*} [TopologicalSpace Y] [CompactSpace Y] [AddCommGroup V] [UniformAddGroup V]
-  {R : Type*} [TopologicalSpace R] [MonoidWithZero R] [MulActionWithZero R V]
+variable {R Y : Type*} [TopologicalSpace Y] [CompactSpace Y]
+  [TopologicalSpace R] [MonoidWithZero R]
 
-/-- A continuous function on `X × Y` can be uniformly approximated by functions of the form
-`f x • g y`. -/
-lemma exists_sum_smul_approx (f : C(X × Y, V)) (hS : S ∈ 𝓤 V) :
+/-- A continuous function on `X × Y` can be uniformly approximated by sums of functions of the
+form `f x • g y`. -/
+lemma exists_sum_smul_approx [AddCommGroup V] [UniformAddGroup V] [MulActionWithZero R V]
+    (f : C(X × Y, V)) (hS : S ∈ 𝓤 V) :
     ∃ (n : ℕ) (g : Fin n → C(X, R)) (h : Fin n → C(Y, V)),
     ∀ x y, (f (x, y), ∑ i, g i x • h i y) ∈ S := by
   have hS' : {(f, g) | ∀ y, (f y, g y) ∈ S} ∈ 𝓤 C(Y, V) :=
@@ -108,15 +105,11 @@ lemma exists_sum_smul_approx (f : C(X × Y, V)) (hS : S ∈ 𝓤 V) :
   congr 1 with i
   by_cases hi : x ∈ U i <;> simp [hi]
 
-/-- A continuous function on `X × Y` can be uniformly approximated by functions of the form
+/-- A continuous function on `X × Y` can be uniformly approximated by sums of functions of the form
 `f x * g y`. -/
-lemma exists_sum_mul_approx {𝕜 : Type*} [NormedRing 𝕜] (f : C(X × Y, 𝕜)) {ε : ℝ} (hε : 0 < ε) :
-    ∃ (n : ℕ) (g : Fin n → C(X, 𝕜)) (h : Fin n → C(Y, 𝕜)),
-    ‖f - ∑ i, (g i).comp .fst * (h i).comp .snd‖ < ε := by
-  obtain ⟨n, g, h, hfg⟩ := exists_sum_smul_approx (R := 𝕜) f (Metric.dist_mem_uniformity hε)
-  refine ⟨n, g, h, ?_⟩
-  simp only [ContinuousMap.norm_lt_iff _ hε]
-  intro (x, y)
-  simpa [dist_eq_norm_sub] using hfg x y
+lemma exists_sum_mul_approx (f : C(X × Y, V)) (hS : S ∈ 𝓤 V) [Ring V] [UniformAddGroup V]:
+    ∃ (n : ℕ) (g : Fin n → C(X, V)) (h : Fin n → C(Y, V)),
+    ∀ x y, (f (x, y), ∑ i, g i x * h i y) ∈ S :=
+  exists_sum_smul_approx f hS
 
 end ContinuousMap
