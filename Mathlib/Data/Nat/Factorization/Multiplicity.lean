@@ -77,11 +77,6 @@ theorem factorization_eq_card_pow_dvd₀ {m n b : ℕ} (hm : m ≠ 1)
         exact le_log_of_pow_le (one_lt_iff_ne_zero_and_ne_one.2 ⟨m.succ_ne_zero, hm⟩)
           (le_of_dvd hn h)
 
-theorem factorization_mul₀ {p m n : ℕ} (hm: m ≠ 0) (hn: n ≠ 0):
-    (m * n).factorization p = m.factorization p + n.factorization p := by
-  rw [factorization_mul hm hn]
-  rfl
-
 theorem factorization_pow₀ {p m n : ℕ} :
     (m ^ n).factorization p = n * m.factorization p := by
   rw [factorization_pow]
@@ -186,7 +181,8 @@ theorem factorization_factorial_mul {n p : ℕ} (hp : p.Prime) :
   · simp only [hp, factorization_factorial_mul_succ, ih, factorial_succ,
     cast_add, cast_one, ← add_assoc]
     congr 1
-    rw [factorization_mul₀ (Ne.symm (zero_ne_add_one n)) (factorial_ne_zero n)]
+    rw [factorization_mul (Ne.symm (zero_ne_add_one n)) (factorial_ne_zero n),
+    coe_add, Pi.add_apply]
     ring
 
 
@@ -217,21 +213,22 @@ theorem factorization_choose' {p n k b : ℕ} (hp : p.Prime) (hnb : log p (n + k
   have h₁ :
       (choose (n + k) k).factorization p +  (k ! * n !).factorization p =
         #{i ∈ Ico 1 b | p ^ i ≤ k % p ^ i + n % p ^ i} + (k ! * n !).factorization p := by
-    rw [← factorization_mul₀, ← mul_assoc]
+    have h1: (n + k).choose k ≠ 0 := by
+      intro h
+      rw [Nat.choose_eq_zero_iff] at h
+      omega
+    have h2: k ! * n ! ≠ 0 := by
+      have h3 : n ! ≠ 0 := by exact factorial_ne_zero n
+      have h4 : k ! ≠ 0 := by exact factorial_ne_zero k
+      exact Nat.mul_ne_zero h4 h3
+    rw [← Pi.add_apply, ← coe_add, ← factorization_mul h1 h2, ← mul_assoc]
     have h2:= (add_tsub_cancel_right n k) ▸ choose_mul_factorial_mul_factorial (le_add_left k n)
-    rw [h2, factorization_factorial hp hnb, factorization_mul₀,
-      factorization_factorial hp ((log_mono_right (le_add_left k n)).trans_lt hnb),
+    rw [h2, factorization_factorial hp hnb,
+      factorization_mul (factorial_ne_zero k) (factorial_ne_zero n), coe_add,
+      Pi.add_apply, factorization_factorial hp ((log_mono_right (le_add_left k n)).trans_lt hnb),
       factorization_factorial hp ((log_mono_right (le_add_left n k)).trans_lt
       (add_comm n k ▸ hnb)), multiplicity_choose_aux hp (le_add_left k n)]
     simp [add_comm]
-    exact factorial_ne_zero k
-    exact factorial_ne_zero n
-    · intro h
-      rw [Nat.choose_eq_zero_iff] at h
-      omega
-    · have h1 : n ! ≠ 0 := by exact factorial_ne_zero n
-      have h2 : k ! ≠ 0 := by exact factorial_ne_zero k
-      exact Nat.mul_ne_zero h2 h1
   exact Nat.add_right_cancel h₁
 
 /-- The factorization of `p` in `choose n k` is the number of carries when `k` and `n - k`
@@ -258,7 +255,7 @@ theorem factorization_le_factorization_of_dvd_right {a b c : ℕ} (h : b ∣ c)
     intro k1
     rw [k1, mul_zero] at hk
     tauto
-  rw [factorization_mul₀ hb h2]
+  rw [factorization_mul hb h2, coe_add, Pi.add_apply]
   simp only [le_add_iff_nonneg_right, _root_.zero_le]
 
 /-- A lower bound on the factorization of `p` in `choose n k`.
@@ -276,7 +273,7 @@ theorem factorization_le_factorization_choose_add {p : ℕ} :
       intro h2
       rw [choose_eq_zero_iff] at h2
       omega
-    rw [← factorization_mul₀ h0 (Ne.symm (zero_ne_add_one k))]
+    rw [← Pi.add_apply, ← coe_add, ← factorization_mul h0 (Ne.symm (zero_ne_add_one k))]
     have h1: (n + 1) ≠ 0 := by
       exact Ne.symm (zero_ne_add_one n)
     have h2: (n + 1).choose (k + 1) * (k + 1) ≠ 0 := by
