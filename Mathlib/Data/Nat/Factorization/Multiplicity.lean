@@ -3,13 +3,9 @@ Copyright (c) 2025 Qi Wen Wei. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Qi Wen Wei
 -/
-import Mathlib.Data.Nat.Factorization.Basic
-import Mathlib.Data.Nat.Log
-import Mathlib.Data.Nat.Digits
 import Mathlib.Algebra.GeomSum
-import Mathlib.Data.Nat.Prime.Defs
-import Mathlib.RingTheory.Multiplicity
-
+import Mathlib.Data.Nat.Digits
+import Mathlib.Data.Nat.Factorization.Basic
 
 /-!
 # Natural number factorization
@@ -24,21 +20,21 @@ re-written in terms of `factorization`
 
 ## Factorization calculations
 
-* `Nat.Prime.factorization_factorial`: Legendre's Theorem. The factorization of `p` in `n!` is
+* `Nat.factorization_factorial`: Legendre's Theorem. The factorization of `p` in `n!` is
   `n / p + ... + n / p ^ b` for any `b` such that `n / p ^ (b + 1) = 0`. See `padicValNat_factorial`
   for this result stated in the language of `p`-adic valuations and
   `sub_one_mul_padicValNat_factorial` for a factorization result.
-* `Nat.Prime.factorization_factorial_mul`: The factorization of `p` in `(p * n)!` is `n` more than
+* `Nat.factorization_factorial_mul`: The factorization of `p` in `(p * n)!` is `n` more than
   that of `n!`.
-* `Nat.Prime.factorization_choose`: Kummer's Theorem. The factorization of `p` in `n.choose k`
+* `Nat.factorization_choose`: Kummer's Theorem. The factorization of `p` in `n.choose k`
    is the number of carries when `k` and `n - k` are added in base `p`.
    See `padicValNat_choose` for the same result but stated in the language of `p`-adic
    valuations and `sub_one_mul_padicValNat_choose_eq_sub_sum_digits` for a related result.
 
 ## Other declarations
 
-* `Nat.factorization_eq_card_pow_dvd`: The factorization of `m` in `n` is the number of positive
-  natural numbers `i` such that `m ^ i` divides `n`.
+* `Nat.factorization_eq_card_pow_dvd_of_lt`: The factorization of `m` in `n` is the number of
+  positive natural numbers `i` such that `m ^ i` divides `n`. Note m is prime.
 
 ## Tags
 
@@ -49,47 +45,53 @@ open Finset List Finsupp
 
 namespace Nat
 
+theorem Ico_pow_dvd_eq_Ico_of_lt {n p b : ℕ} (pp : p.Prime) (hn : n ≠ 0) (hb : n < p ^ b) :
+    {i ∈ Ico 1 n | p ^ i ∣ n} = {i ∈ Ico 1 b | p ^ i ∣ n} := by
+  ext i
+  simp only [Finset.mem_filter, mem_Ico, and_congr_left_iff, and_congr_right_iff]
+  intro h1 h2
+  constructor
+  · intro h
+    rcases p with - | p
+    · rw [zero_pow (not_eq_zero_of_lt h2), zero_dvd_iff] at h1
+      exact False.elim (hn h1)
+    · refine LE.le.trans_lt ?_ ((lt_pow_iff_log_lt (Prime.one_lt pp) hn).mp hb)
+      apply le_log_of_pow_le (Prime.one_lt pp)
+      obtain ⟨k, hk⟩ := h1
+      have k_nonzero : k ≠ 0 := by
+        rw [hk] at hn
+        exact Nat.ne_zero_of_mul_ne_zero_right hn
+      have k_gt : k > 0 := by exact zero_lt_of_ne_zero k_nonzero
+      calc
+      (p + 1) ^ i ≤ (p + 1) ^ i * k := by exact Nat.le_mul_of_pos_right ((p + 1) ^ i) k_gt
+      _           = n               := by exact hk.symm
+  intro h
+  have p_gt: p > 1 := by exact Prime.one_lt pp
+  exact lt_of_pow_dvd_right hn p_gt h1
+
 /-- The factorization of `m` in `n` is the number of positive natural numbers `i` such that `m ^ i`
 divides `n`. Note `m` is prime. This set is expressed by filtering `Ico 1 b` where `b` is any bound
 greater than `log m n`. -/
-theorem factorization_eq_card_pow_dvd₀ {m n b : ℕ} (hm : m ≠ 1)
-  (hm2: m.Prime) (hn : 0 < n) (hb : log m n < b) :
+theorem factorization_eq_card_pow_dvd_of_lt {m n b : ℕ} (hm : m ≠ 1)
+    (hm2: m.Prime) (hn : 0 < n) (hb : log m n < b) :
     n.factorization m = #{i ∈ Ico 1 b | m ^ i ∣ n} :=
   have fin := Nat.finiteMultiplicity_iff.2 ⟨hm, hn⟩
   calc
-    n.factorization m = #(Ico 1 <| multiplicity m n + 1) := by
-      simp only [card_Ico, add_tsub_cancel_right]
-      rw [← multiplicity_eq_factorization]
-      · exact hm2
-      exact not_eq_zero_of_lt hn
+    n.factorization m = #{i ∈ Ico 1 n | m ^ i ∣ n} := by
+      exact factorization_eq_card_pow_dvd n hm2
     _ = #{i ∈ Ico 1 b | m ^ i ∣ n} := by
-      apply congr_arg _
-      apply Finset.ext fun i => by
-        simp only [mem_Ico, Nat.lt_succ_iff,
-          fin.pow_dvd_iff_le_multiplicity, Finset.mem_filter,
-          and_assoc, and_congr_right_iff, iff_and_self]
-        intro hi h
-        rw [← fin.pow_dvd_iff_le_multiplicity] at h
-        rcases m with - | m
-        · rw [zero_pow, zero_dvd_iff] at h
-          exacts [(hn.ne' h).elim, one_le_iff_ne_zero.1 hi]
-        refine LE.le.trans_lt ?_ hb
-        exact le_log_of_pow_le (one_lt_iff_ne_zero_and_ne_one.2 ⟨m.succ_ne_zero, hm⟩)
-          (le_of_dvd hn h)
+      rw [Ico_pow_dvd_eq_Ico_of_lt hm2 (not_eq_zero_of_lt hn)]
+      exact lt_pow_of_log_lt (Prime.one_lt hm2) hb
 
 theorem factorization_pow_self {p n : ℕ} (hp : p.Prime) : (p ^ n).factorization p = n := by
-  simp only [factorization_pow, coe_smul, Pi.smul_apply, smul_eq_mul]
-  have h1: p.factorization p = 1 := by
-    exact Prime.factorization_self hp
-  rw [h1]
-  simp
+  simp [factorization_pow, Prime.factorization_self hp]
 
 /-- **Legendre's Theorem**
 
 The multiplicity of a prime in `n!` is the sum of the quotients `n / p ^ i`. This sum is expressed
 over the finset `Ico 1 b` where `b` is any bound greater than `log p n`. -/
 theorem factorization_factorial {p : ℕ} (hp : p.Prime) :
-  ∀ {n b : ℕ}, log p n < b → (n !).factorization p = (∑ i ∈ Ico 1 b, n / p ^ i : ℕ)
+    ∀ {n b : ℕ}, log p n < b → (n !).factorization p = (∑ i ∈ Ico 1 b, n / p ^ i : ℕ)
   | 0, b, _ => by simp only [factorial_zero, factorization_one, coe_zero, Pi.zero_apply,
     Nat.zero_div, sum_const_zero]
   | n + 1, b, hb =>
@@ -101,7 +103,7 @@ theorem factorization_factorial {p : ℕ} (hp : p.Prime) :
       _ = #{i ∈ Ico 1 b | p ^ i ∣ n + 1} + (∑ i ∈ Ico 1 b, n / p ^ i : ℕ) := by
         rw [factorization_factorial hp ((log_mono_right <| le_succ _).trans_lt hb)]
         simp only [add_left_inj]
-        apply factorization_eq_card_pow_dvd₀ (Prime.ne_one hp) hp (zero_lt_succ n)
+        apply factorization_eq_card_pow_dvd_of_lt (Prime.ne_one hp) hp (zero_lt_succ n)
         exact hb
       _ = (∑ i ∈ Ico 1 b, n / p ^ i : ℕ) + #{i ∈ Ico 1 b | p ^ i ∣ n + 1} := by
         exact
@@ -123,7 +125,7 @@ theorem sub_one_mul_factorization_factorial {n p : ℕ} (hp : p.Prime) :
 
 /-- Modified version of `factorization_prod` that accounts for inputs. -/
 theorem factorization_prod₀ {α : Type*} {p : ℕ}
-{S : Finset α} {g : α → ℕ} (hS : ∀ x ∈ S, g x ≠ 0) :
+    {S : Finset α} {g : α → ℕ} (hS : ∀ x ∈ S, g x ≠ 0) :
     (S.prod g).factorization p = S.sum fun x => (g x).factorization p := by
   rw [factorization_prod (fun x a ↦ hS x a)]
   exact finset_sum_apply S (fun i ↦ (g i).factorization) p
@@ -242,16 +244,9 @@ theorem factorization_choose {p n k b : ℕ} (hp : p.Prime) (hkn : k ≤ n) (hnb
 but for factorization.
 -/
 theorem factorization_le_factorization_of_dvd_right {a b c : ℕ} (h : b ∣ c)
-(hb: b ≠ 0) (hc: c ≠ 0):
-    b.factorization a ≤ c.factorization a := by
-  rcases h with ⟨k, hk⟩
-  rw [hk]
-  have h2 : k ≠ 0 := by
-    intro k1
-    rw [k1, mul_zero] at hk
-    tauto
-  rw [factorization_mul hb h2, coe_add, Pi.add_apply]
-  simp only [le_add_iff_nonneg_right, _root_.zero_le]
+    (hb: b ≠ 0) (hc: c ≠ 0): b.factorization a ≤ c.factorization a := by
+  rcases h with ⟨k, rfl⟩
+  simp [factorization_mul hb (Nat.ne_zero_of_mul_ne_zero_right hc)]
 
 /-- A lower bound on the factorization of `p` in `choose n k`.
  -/
@@ -289,7 +284,7 @@ theorem factorization_choose_prime_pow_add_factorization (hp : p.Prime) (hkn : k
       simp +contextual [Finset.disjoint_right, *, dvd_iff_mod_eq_zero,
         Nat.mod_lt _ (pow_pos hp.pos _)]
     rw [factorization_choose hp hkn (lt_succ_self _),
-        factorization_eq_card_pow_dvd₀ (ne_of_gt hp.one_lt) hp hk0.bot_lt
+        factorization_eq_card_pow_dvd_of_lt (ne_of_gt hp.one_lt) hp hk0.bot_lt
           (lt_succ_of_le (log_mono_right hkn))]
     rw [log_pow hp.one_lt, ← card_union_of_disjoint hdisj, filter_union_right]
     have filter_le_Ico := (Ico 1 n.succ).card_filter_le
