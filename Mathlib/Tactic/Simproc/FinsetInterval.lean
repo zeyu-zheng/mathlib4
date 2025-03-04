@@ -250,7 +250,8 @@ simproc_decl Iio_ofNat (Iio _) := .ofQ fun u α e ↦ do
       return .done  <| .mk es <| some q(Nat.Iio_succ_eq_of_Icc_zero_eq $p)
   | _, _, _ => return .continue
 
-attribute [nolint unusedHavesSuffices] Iio_ofNat Ico_ofNat_ofNat
+attribute [nolint unusedHavesSuffices]
+  Iio_ofNat Ico_ofNat_ofNat Ioc_ofNat_ofNat Ioo_ofNat_ofNat
 
 /-! ### `ℕ` -/
 
