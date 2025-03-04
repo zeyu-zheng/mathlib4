@@ -5,6 +5,7 @@ Authors: Kim Morrison, Alex J. Best, Yaël Dillies
 -/
 import Mathlib.Init
 import Qq
+import Lean.Expr
 
 /-!
 # Extra `Qq` helpers
@@ -46,5 +47,10 @@ pplication. Recall that all theorems and definitions containing numeric literals
 
 This is a Qq version of `Lean.mkNatLit`. -/
 def mkNatLitQ (n : Nat) : Q(Nat) := mkNatLit n
+
+/-- Returns the integer literal `n`.
+
+This is a Qq version of `Lean.mkIntLit`. -/
+def mkIntLitQ (n : Int) : Q(Int) := mkIntLit n
 
 end Qq
