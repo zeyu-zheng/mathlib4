@@ -14,7 +14,7 @@ import Mathlib.Data.Subtype
 
 import Mathlib.Order.Basic
 import Mathlib.Tactic.Common
-
+import Mathlib.Data.Nat.Basic
 /-!
 # Basic properties of lists
 -/
