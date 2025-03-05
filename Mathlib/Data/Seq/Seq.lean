@@ -6,6 +6,8 @@ Authors: Mario Carneiro
 import Mathlib.Data.Option.NAry
 import Mathlib.Data.Seq.Computation
 import Mathlib.Data.List.Basic
+import Mathlib.Data.Nat.Basic
+import Mathlib.Order.Basic
 
 /-!
 # Possibly infinite lists

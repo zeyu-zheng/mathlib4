@@ -3,8 +3,10 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathlib.Order.RelClasses
 import Mathlib.Data.List.Basic
+import Mathlib.Data.Nat.Basic
+import Mathlib.Order.RelClasses
+import Mathlib.Tactic.Cases
 
 /-!
 # Lexicographic ordering of lists.

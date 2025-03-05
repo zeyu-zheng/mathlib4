@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky, Anthony DeRossi
 -/
 import Mathlib.Data.List.Basic
+import Mathlib.Tactic.Common
 
 /-!
 # Properties of `List.reduceOption`
