@@ -12,9 +12,6 @@ import Mathlib.Logic.OpClass
 import Mathlib.Logic.Unique
 import Mathlib.Data.Subtype
 
-import Mathlib.Order.Basic
-import Mathlib.Tactic.Common
-import Mathlib.Data.Nat.Basic
 /-!
 # Basic properties of lists
 -/
@@ -24,9 +21,9 @@ assert_not_exists Lattice
 assert_not_exists Prod.swap_eq_iff_eq_swap
 assert_not_exists Ring
 assert_not_exists Set.range
--- assert_not_exists Lattice
--- assert_not_exists Monoid
--- assert_not_exists Preorder
+assert_not_exists Lattice
+assert_not_exists Monoid
+assert_not_exists Preorder
 
 open Function
 
