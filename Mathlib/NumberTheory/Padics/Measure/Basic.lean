@@ -56,7 +56,7 @@ def ContinuousLinearMap.lcomp {U V : Type*} (W : Type*)
     [AddCommMonoid U] [Module R U] [TopologicalSpace U]
     [AddCommMonoid V] [Module R V] [TopologicalSpace V]
     [AddCommGroup W] [Module R W] [TopologicalSpace W]
-    [TopologicalAddGroup W] [ContinuousSMul R W]
+    [IsTopologicalAddGroup W] [ContinuousSMul R W]
     (f : U →L[R] V) : (V →L[R] W) →ₗ[R] (U →L[R] W) where
   toFun l := l.comp f
   map_add' _ _ := by simp
@@ -67,9 +67,9 @@ def ContinuousLinearMap.lcomp {U V : Type*} (W : Type*)
 def ContinuousLinearMap.llcomp (U V W : Type*)
     [AddCommGroup U] [Module R U] [TopologicalSpace U]
     [AddCommGroup V] [Module R V] [TopologicalSpace V]
-    [TopologicalAddGroup V] [ContinuousSMul R V]
+    [IsTopologicalAddGroup V] [ContinuousSMul R V]
     [AddCommGroup W] [Module R W] [TopologicalSpace W]
-    [TopologicalAddGroup W] [ContinuousSMul R W] :
+    [IsTopologicalAddGroup W] [ContinuousSMul R W] :
     (U →L[R] V) →ₗ[R] (V →L[R] W) →ₗ[R] (U →L[R] W) where
   toFun l := l.lcomp W
   map_add' _ _ := by ext; simp
@@ -229,7 +229,7 @@ def prodMk : D(X, R) →ₗ[R] D(Y, R) →ₗ[R] D(X × Y, R) :=
 /-- On functions of the form `(x, y) ↦ f x * g y`, the measure `prodMk μ ν` agrees with the
 algebraic tensor product of `μ` and `ν`. -/
 lemma prodMk_prod_apply (f : C(X, R)) (g : C(Y, R)) :
-    prodMk μ ν (((f.comp .fst) * (g.comp .snd))) = μ f * ν g := by
+    prodMk μ ν ((f.comp .fst) * (g.comp .snd)) = μ f * ν g := by
   simp only [← smul_eq_mul, prodMk_apply, ← map_smul]
   congr 1 with y
   simp_rw [contractFst_apply, ContinuousMap.smul_apply, smul_eq_mul, mul_comm (μ f) (g y),
@@ -272,11 +272,11 @@ lemma prodMk_eq_prodMk' : prodMk μ ν = prodMk' μ ν := by
   rcases this with ⟨δ, hδ, hhδ⟩
   have := (Metric.continuousAt_iff.mp <| (μ.prodMk' ν).continuous.continuousAt (x := f)) _ hε2
   rcases this with ⟨δ', hδ', hhδ'⟩
-  obtain ⟨n, G, H, hh⟩ := exists_sum_mul_approx f (lt_min hδ hδ')
-  let T : C(X × Y, R) := ∑ i, (G i).comp .fst * (H i).comp snd
   simp only [dist_eq_norm_sub'] at hhδ hhδ'
-  specialize hhδ' (lt_of_lt_of_le hh (min_le_right δ δ'))
-  specialize hhδ (lt_of_lt_of_le hh (min_le_left δ δ'))
+  obtain ⟨n, G, H, hh⟩ := exists_sum_mul_approx f (Metric.dist_mem_uniformity <| lt_min hδ hδ')
+  let T : C(X × Y, R) := ∑ i, (G i).comp .fst * (H i).comp snd
+  replace hh : ‖f - T‖ < δ ⊓ δ' := by
+    simpa [ContinuousMap.norm_lt_iff _ <| lt_min hδ hδ', T, dist_eq_norm_sub] using hh
   calc
   _ = ‖(prodMk μ ν f - prodMk μ ν T) + (prodMk μ ν T - prodMk' μ ν f)‖ := by abel_nf
   _ ≤ ‖prodMk μ ν f - prodMk μ ν T‖ + ‖prodMk μ ν T - prodMk' μ ν f‖ := norm_add_le _ _
@@ -287,7 +287,8 @@ lemma prodMk_eq_prodMk' : prodMk μ ν = prodMk' μ ν := by
     simp only [T, map_sum]
     congr 1 with i
     rw [prodMk_prod_apply, prodMk'_prod_apply]
-  _ < ε := by linarith
+  _ < ε := by linarith [hhδ' <| hh.trans_le <| min_le_right δ δ',
+                hhδ <| hh.trans_le <| min_le_left δ δ']
 
 end Profinite
 
