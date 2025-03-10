@@ -52,8 +52,6 @@ protected lemma one_ne_zero : (1 : ℤ) ≠ 0 := by decide
 
 protected lemma one_nonneg : 0 ≤ (1 : ℤ) := Int.le_of_lt Int.zero_lt_one
 
-lemma zero_le_ofNat (n : ℕ) : 0 ≤ ofNat n := @le.intro _ _ n (by rw [Int.zero_add]; rfl)
-
 protected theorem neg_eq_neg {a b : ℤ} (h : -a = -b) : a = b := Int.neg_inj.1 h
 
 -- We want to use these lemmas earlier than the lemmas simp can prove them with
@@ -66,9 +64,7 @@ protected lemma neg_nonneg : 0 ≤ -a ↔ a ≤ 0 := ⟨Int.nonpos_of_neg_nonneg
 @[simp, nolint simpNF]
 protected lemma neg_neg_iff_pos : -a < 0 ↔ 0 < a := ⟨Int.pos_of_neg_neg, Int.neg_neg_of_pos⟩
 
-@[simp, nolint simpNF]
-protected lemma neg_nonpos_iff_nonneg : -a ≤ 0 ↔ 0 ≤ a :=
-  ⟨Int.nonneg_of_neg_nonpos, Int.neg_nonpos_of_nonneg⟩
+@[deprecated (since := "2025-03-07")] alias neg_nonpos_iff_nonneg := Int.neg_nonpos_iff
 
 @[simp, nolint simpNF]
 protected lemma sub_pos : 0 < a - b ↔ b < a := ⟨Int.lt_of_sub_pos, Int.sub_pos_of_lt⟩
@@ -404,16 +400,11 @@ lemma exists_lt_and_lt_iff_not_dvd (m : ℤ) (hn : 0 < n) :
     · rw [Int.add_comm _ (1 : ℤ), Int.mul_add, Int.mul_one]
       exact Int.add_lt_add_right (emod_lt_of_pos _ hn) _
 
-lemma natAbs_ediv (a b : ℤ) (H : b ∣ a) : natAbs (a / b) = natAbs a / natAbs b := by
-  rcases Nat.eq_zero_or_pos (natAbs b) with (h | h)
-  · rw [natAbs_eq_zero.1 h]
-    simp [Int.ediv_zero]
-  calc
-    natAbs (a / b) = natAbs (a / b) * 1 := by rw [Nat.mul_one]
-    _ = natAbs (a / b) * (natAbs b / natAbs b) := by rw [Nat.div_self h]
-    _ = natAbs (a / b) * natAbs b / natAbs b := by rw [Nat.mul_div_assoc _ b.natAbs.dvd_refl]
-    _ = natAbs (a / b * b) / natAbs b := by rw [natAbs_mul (a / b) b]
-    _ = natAbs a / natAbs b := by rw [Int.ediv_mul_cancel H]
+lemma natAbs_ediv_of_dvd (a b : ℤ) (H : b ∣ a) : natAbs (a / b) = natAbs a / natAbs b := by
+  if h : b = 0 then
+    simp_all
+  else
+    simp [natAbs_ediv, H, h]
 
 lemma dvd_of_mul_dvd_mul_left (ha : a ≠ 0) (h : a * m ∣ a * n) : m ∣ n := by
   obtain ⟨b, hb⟩ := h
@@ -467,9 +458,6 @@ lemma sign_add_eq_of_sign_eq : ∀ {m n : ℤ}, m.sign = n.sign → (m + n).sign
 
 @[simp] lemma toNat_natCast_add_one {n : ℕ} : ((n : ℤ) + 1).toNat = n + 1 := rfl
 
-@[simp] lemma toNat_le {n : ℕ} : toNat m ≤ n ↔ m ≤ n := by
-  rw [ofNat_le.symm, toNat_eq_max, Int.max_le]; exact and_iff_left (ofNat_zero_le _)
-
 @[simp]
 lemma lt_toNat {m : ℕ} : m < toNat n ↔ (m : ℤ) < n := by rw [← Int.not_le, ← Nat.not_le, toNat_le]
 
@@ -489,14 +477,14 @@ lemma lt_of_toNat_lt {a b : ℤ} (h : toNat a < toNat b) : a < b :=
 theorem toNat_sub_of_le {a b : ℤ} (h : b ≤ a) : (toNat (a - b) : ℤ) = a - b :=
   Int.toNat_of_nonneg (Int.sub_nonneg_of_le h)
 
-lemma toNat_lt' {n : ℕ} (hn : n ≠ 0) : m.toNat < n ↔ m < n := by
+lemma toNat_lt'' {n : ℕ} (hn : n ≠ 0) : m.toNat < n ↔ m < n := by
   rw [← toNat_lt_toNat, toNat_natCast]; omega
 
 /-- The modulus of an integer by another as a natural. Uses the E-rounding convention. -/
 def natMod (m n : ℤ) : ℕ := (m % n).toNat
 
 lemma natMod_lt {n : ℕ} (hn : n ≠ 0) : m.natMod n < n :=
-  (toNat_lt' hn).2 <| emod_lt_of_pos _ <| by omega
+  (toNat_lt'' hn).2 <| emod_lt_of_pos _ <| by omega
 
 attribute [simp] natCast_pow
 
