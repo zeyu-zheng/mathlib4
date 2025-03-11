@@ -51,7 +51,19 @@ variable (P : Extension.{w} R S)
 The cotangent space on `P = R[X]`.
 This is isomorphic to `Sⁿ` with `n` being the number of variables of `P`.
 -/
-abbrev CotangentSpace : Type _ := S ⊗[P.Ring] Ω[P.Ring⁄R]
+def CotangentSpace : Type _ := S ⊗[P.Ring] Ω[P.Ring⁄R]
+
+noncomputable instance : AddCommMonoid P.CotangentSpace :=
+  inferInstanceAs (AddCommMonoid (S ⊗[P.Ring] Ω[P.Ring⁄R]))
+
+noncomputable instance : Module S P.CotangentSpace :=
+  inferInstanceAs (Module S (S ⊗[P.Ring] Ω[P.Ring⁄R]))
+
+noncomputable instance : Module P.Ring P.CotangentSpace :=
+  inferInstanceAs (Module P.Ring (S ⊗[P.Ring] Ω[P.Ring⁄R]))
+
+noncomputable instance : IsScalarTower P.Ring S (P.CotangentSpace) :=
+  inferInstanceAs (IsScalarTower P.Ring S (S ⊗[P.Ring] Ω[P.Ring⁄R]))
 
 /-- The cotangent complex given by a presentation `R[X] → S` (i.e. a closed embedding `S ↪ Aⁿ`). -/
 noncomputable
@@ -86,12 +98,23 @@ variable [IsScalarTower R R' R''] [IsScalarTower S S' S'']
 
 namespace CotangentSpace
 
+noncomputable instance : Module S P'.CotangentSpace :=
+  inferInstanceAs (Module S (S' ⊗[P'.Ring] Ω[P'.Ring⁄R']))
+
+noncomputable instance : LinearMap.CompatibleSMul P'.CotangentSpace P''.CotangentSpace S S' :=
+  inferInstanceAs (LinearMap.CompatibleSMul
+    (S' ⊗[P'.Ring] Ω[P'.Ring⁄R']) (S'' ⊗[P''.Ring] Ω[P''.Ring⁄R'']) S S')
+
+noncomputable instance : LinearMap.CompatibleSMul P'.Cotangent P'.CotangentSpace S S' :=
+  inferInstanceAs (LinearMap.CompatibleSMul P'.Cotangent (S' ⊗[P'.Ring] Ω[P'.Ring⁄R']) S S')
+
 /--
 This is the map on the cotangent space associated to a map of presentation.
 The matrix associated to this map is the Jacobian matrix. See `CotangentSpace.repr_map`.
 -/
 protected noncomputable
 def map (f : Hom P P') : P.CotangentSpace →ₗ[S] P'.CotangentSpace := by
+  unfold CotangentSpace
   letI := ((algebraMap S S').comp (algebraMap P.Ring S)).toAlgebra
   haveI : IsScalarTower P.Ring S S' := IsScalarTower.of_algebraMap_eq' rfl
   letI := f.toAlgHom.toAlgebra
@@ -103,7 +126,7 @@ def map (f : Hom P P') : P.CotangentSpace →ₗ[S] P'.CotangentSpace := by
 @[simp]
 lemma map_tmul (f : Hom P P') (x y) :
     CotangentSpace.map f (x ⊗ₜ .D _ _ y) = (algebraMap _ _ x) ⊗ₜ .D _ _ (f.toAlgHom y) := by
-  simp only [CotangentSpace.map, AlgHom.toRingHom_eq_coe, LinearMap.liftBaseChange_tmul,
+  simp only [CotangentSpace, CotangentSpace.map, AlgHom.toRingHom_eq_coe, LinearMap.liftBaseChange_tmul,
     LinearMap.coe_comp, LinearMap.coe_restrictScalars, Function.comp_apply, map_D, mk_apply]
   rw [smul_tmul', ← Algebra.algebraMap_eq_smul_one]
   rfl
