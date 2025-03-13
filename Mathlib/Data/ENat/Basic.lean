@@ -38,15 +38,15 @@ deriving instance Zero, OrderedCommSemiring, Nontrivial,
   LinearOrder, Bot, LinearOrderedAddCommMonoid, Sub,
   LinearOrderedAddCommMonoidWithTop, WellFoundedRelation
   for ENat
-  -- AddCommMonoidWithOne,
-  -- OrderBot, OrderTop, OrderedSub, SuccOrder, WellFoundedLt, CharZero
+-- The `CanonicallyOrderedAdd, OrderBot, OrderTop, OrderedSub, SuccOrder, WellFoundedLT, CharZero`
+-- instances should be constructed by a deriving handler.
+-- https://github.com/leanprover-community/mathlib4/issues/380
 
 -- Porting Note: In `Data.Nat.ENatPart` proofs timed out when having
 -- the `deriving AddCommMonoidWithOne`, and it seems to work without.
 
 namespace ENat
 
--- Porting note: instances that derive failed to find
 instance : CanonicallyOrderedAdd ℕ∞ := WithTop.canonicallyOrderedAdd
 instance : OrderBot ℕ∞ := WithTop.orderBot
 instance : OrderTop ℕ∞ := WithTop.orderTop
@@ -323,6 +323,16 @@ protected lemma le_sub_of_add_le_left (ha : a ≠ ⊤) : a + b ≤ c → b ≤ c
 
 protected lemma sub_sub_cancel (h : a ≠ ⊤) (h2 : b ≤ a) : a - (a - b) = b :=
   (addLECancellable_of_ne_top <| ne_top_of_le_ne_top h tsub_le_self).tsub_tsub_cancel_of_le h2
+
+lemma add_left_injective_of_ne_top {n : ℕ∞} (hn : n ≠ ⊤) : Function.Injective (· + n) := by
+  intro a b e
+  exact le_antisymm
+    ((WithTop.add_le_add_iff_right hn).mp e.le)
+    ((WithTop.add_le_add_iff_right hn).mp e.ge)
+
+lemma add_right_injective_of_ne_top {n : ℕ∞} (hn : n ≠ ⊤) : Function.Injective (n + ·) := by
+  simp_rw [add_comm n _]
+  exact add_left_injective_of_ne_top hn
 
 section withTop_enat
 

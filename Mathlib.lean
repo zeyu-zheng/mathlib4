@@ -3907,7 +3907,8 @@ import Mathlib.Logic.Equiv.Array
 import Mathlib.Logic.Equiv.Basic
 import Mathlib.Logic.Equiv.Defs
 import Mathlib.Logic.Equiv.Embedding
-import Mathlib.Logic.Equiv.Fin
+import Mathlib.Logic.Equiv.Fin.Basic
+import Mathlib.Logic.Equiv.Fin.Rotate
 import Mathlib.Logic.Equiv.Fintype
 import Mathlib.Logic.Equiv.Functor
 import Mathlib.Logic.Equiv.List
@@ -4702,6 +4703,7 @@ import Mathlib.RepresentationTheory.Invariants
 import Mathlib.RepresentationTheory.Maschke
 import Mathlib.RepresentationTheory.Rep
 import Mathlib.RepresentationTheory.Submodule
+import Mathlib.RepresentationTheory.Tannaka
 import Mathlib.RingTheory.AdicCompletion.Algebra
 import Mathlib.RingTheory.AdicCompletion.AsTensorProduct
 import Mathlib.RingTheory.AdicCompletion.Basic
