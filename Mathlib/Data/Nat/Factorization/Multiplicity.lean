@@ -65,8 +65,8 @@ theorem factorization_eq_card_pow_dvd_of_lt {m n b : ℕ}
     (hm2: m.Prime) (hn : 0 < n) (hb : log m n < b) :
     n.factorization m = #{i ∈ Ico 1 b | m ^ i ∣ n} :=  calc
     n.factorization m = #{i ∈ Ico 1 b | m ^ i ∣ n} := by {
-    rw [factorization_eq_card_pow_dvd n hm2, Ico_pow_dvd_eq_Ico_of_lt hm2 (not_eq_zero_of_lt hn)]
-    exact lt_pow_of_log_lt (Prime.one_lt hm2) hb
+  rw [factorization_eq_card_pow_dvd n hm2, Ico_pow_dvd_eq_Ico_of_lt hm2 (not_eq_zero_of_lt hn)]
+  exact lt_pow_of_log_lt (Prime.one_lt hm2) hb
 }
 
 /-- **Legendre's Theorem**
