@@ -624,7 +624,7 @@ theorem autCongr_trans (ϕ : A₁ ≃ₐ[R] A₂) (ψ : A₂ ≃ₐ[R] A₃) :
     (autCongr ϕ).trans (autCongr ψ) = autCongr (ϕ.trans ψ) :=
   rfl
 
-/-- The tautological action by `A₁ ≃ₐ[R] A₁` on `A₁`.
+/-- The tautological (application) action by `A₁ ≃ₐ[R] A₁` on `A₁`.
 
 This generalizes `Function.End.applyMulAction`. -/
 instance applyMulSemiringAction : MulSemiringAction (A₁ ≃ₐ[R] A₁) A₁ where

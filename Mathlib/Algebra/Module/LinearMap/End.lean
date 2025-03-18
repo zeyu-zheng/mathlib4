@@ -184,7 +184,7 @@ end
 /-! ## Action by a module endomorphism. -/
 
 
-/-- The tautological action by `Module.End R M` (aka `M →ₗ[R] M`) on `M`.
+/-- The tautological (application) action by `Module.End R M` (aka `M →ₗ[R] M`) on `M`.
 
 This generalizes `Function.End.applyMulAction`. -/
 instance applyModule : Module (Module.End R M) M where

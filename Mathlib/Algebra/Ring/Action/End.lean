@@ -28,7 +28,7 @@ ring aut
 namespace RingAut
 variable {G R : Type*} [Group G] [Semiring R]
 
-/-- The tautological action by the group of automorphism of a ring `R` on `R`. -/
+/-- The tautological (application) action by the group of automorphism of a ring `R` on `R`. -/
 instance applyMulSemiringAction :
     MulSemiringAction (RingAut R) R where
   smul := (· <| ·)

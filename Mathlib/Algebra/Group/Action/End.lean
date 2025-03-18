@@ -32,7 +32,7 @@ variable {G M N A α : Type*}
 
 namespace Function.End
 
-/-- The tautological action by `Function.End α` on `α`.
+/-- The tautological (application) action by `Function.End α` on `α`.
 
 This is generalized to bundled endomorphisms by:
 * `Equiv.Perm.applyMulAction`
@@ -51,7 +51,7 @@ instance applyMulAction : MulAction (Function.End α) α where
   one_smul _ := rfl
   mul_smul _ _ _ := rfl
 
-/-- The tautological additive action by `Additive (Function.End α)` on `α`. -/
+/-- The tautological additive (application) action by `Additive (Function.End α)` on `α`. -/
 instance applyAddAction : AddAction (Additive (Function.End α)) α := inferInstance
 
 @[simp] lemma smul_def (f : Function.End α) (a : α) : f • a = f a := rfl
@@ -71,7 +71,7 @@ end Function.End
 
 namespace Equiv.Perm
 
-/-- The tautological action by `Equiv.Perm α` on `α`.
+/-- The tautological (application) action by `Equiv.Perm α` on `α`.
 
 This generalizes `Function.End.applyMulAction`. -/
 instance applyMulAction (α : Type*) : MulAction (Perm α) α where
@@ -92,13 +92,13 @@ end Equiv.Perm
 namespace MulAut
 variable [Monoid M]
 
-/-- The tautological action by `MulAut M` on `M`. -/
+/-- The tautological (application) action by `MulAut M` on `M`. -/
 instance applyMulAction : MulAction (MulAut M) M where
   smul := (· <| ·)
   one_smul _ := rfl
   mul_smul _ _ _ := rfl
 
-/-- The tautological action by `MulAut M` on `M`.
+/-- The tautological (application) action by `MulAut M` on `M`.
 
 This generalizes `Function.End.applyMulAction`. -/
 instance applyMulDistribMulAction : MulDistribMulAction (MulAut M) M where
@@ -120,7 +120,7 @@ end MulAut
 namespace AddAut
 variable [AddMonoid M]
 
-/-- The tautological action by `AddAut M` on `M`. -/
+/-- The tautological (application) action by `AddAut M` on `M`. -/
 instance applyMulAction : MulAction (AddAut M) M where
   smul := (· <| ·)
   one_smul _ := rfl

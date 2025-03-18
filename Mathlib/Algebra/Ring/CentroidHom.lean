@@ -383,7 +383,7 @@ The following instances show that `α` is a non-unital and non-associative algeb
 `CentroidHom α`.
 -/
 
-/-- The tautological action by `CentroidHom α` on `α`.
+/-- The tautological (application) action by `CentroidHom α` on `α`.
 
 This generalizes `Function.End.applyMulAction`. -/
 instance applyModule : Module (CentroidHom α) α where

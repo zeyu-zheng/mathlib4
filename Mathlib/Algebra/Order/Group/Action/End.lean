@@ -17,13 +17,13 @@ assert_not_exists MonoidWithZero
 namespace RelIso
 variable {α : Type*} {r : α → α → Prop}
 
-/-- The tautological action by `r ≃r r` on `α`. -/
+/-- The tautological (application) action by `r ≃r r` on `α`. -/
 instance applyMulAction : MulAction (r ≃r r) α where
   smul := (⇑)
   one_smul _ := rfl
   mul_smul _ _ _ := rfl
 
-/-- The tautological action by `r ≃r r` on `α`. -/
+/-- The tautological (reverse application) action by `r ≃r r` on `α`. -/
 instance applyOpMulAction : MulAction (r ≃r r)ᵐᵒᵖ α where
   smul e := e.unop.symm
   one_smul _ := rfl

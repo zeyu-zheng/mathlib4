@@ -115,7 +115,7 @@ end
 instance instModule [Semiring R] [AddCommMonoid A] [Module R A] : Module R (AddMonoid.End A) :=
   AddMonoidHom.instModule
 
-/-- The tautological action by `AddMonoid.End α` on `α`.
+/-- The tautological (application) action by `AddMonoid.End α` on `α`.
 
 This generalizes `AddMonoid.End.applyDistribMulAction`. -/
 instance applyModule [AddCommMonoid A] : Module (AddMonoid.End A) A where

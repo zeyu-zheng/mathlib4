@@ -538,7 +538,7 @@ section ApplyAction
 
 variable [ContinuousAdd M₁]
 
-/-- The tautological action by `M₁ →L[R₁] M₁` on `M`.
+/-- The tautological (application) action by `M₁ →L[R₁] M₁` on `M`.
 
 This generalizes `Function.End.applyMulAction`. -/
 instance applyModule : Module (M₁ →L[R₁] M₁) M₁ :=

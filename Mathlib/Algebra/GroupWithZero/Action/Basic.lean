@@ -97,7 +97,7 @@ def smulMonoidWithZeroHom [MonoidWithZero M₀] [MulZeroOneClass N₀] [MulActio
 
 namespace AddAut
 
-/-- The tautological action by `AddAut A` on `A`.
+/-- The tautological (application) action by `AddAut A` on `A`.
 
 This generalizes `Function.End.applyMulAction`. -/
 instance applyDistribMulAction [AddMonoid A] : DistribMulAction (AddAut A) A where
