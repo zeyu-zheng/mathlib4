@@ -403,9 +403,7 @@ lemma one_zpow : ∀ n : ℤ, (1 : α) ^ n = 1
 @[to_additive (attr := simp) neg_zsmul]
 lemma zpow_neg (a : α) : ∀ n : ℤ, a ^ (-n) = (a ^ n)⁻¹
   | (_ + 1 : ℕ) => DivInvMonoid.zpow_neg' _ _
-  | 0 => by
-    change a ^ (0 : ℤ) = (a ^ (0 : ℤ))⁻¹
-    simp
+  | 0 => by simp
   | Int.negSucc n => by
     rw [zpow_negSucc, inv_inv, ← zpow_natCast]
     rfl
@@ -716,8 +714,6 @@ theorem div_mul_div_cancel (a b c : G) : a / b * (b / c) = a / c := by
 theorem div_div_div_cancel_right (a b c : G) : a / c / (b / c) = a / b := by
   rw [← inv_div c b, div_inv_eq_mul, div_mul_div_cancel]
 
-@[deprecated (since := "2024-08-24")] alias div_div_div_cancel_right' := div_div_div_cancel_right
-
 @[to_additive]
 theorem div_eq_one : a / b = 1 ↔ a = b :=
   ⟨eq_of_div_eq_one, fun h ↦ by rw [h, div_self']⟩
@@ -775,7 +771,7 @@ theorem inv_pow_sub (a : G) {m n : ℕ} (h : n ≤ m) : a⁻¹ ^ (m - n) = (a ^ 
 @[to_additive add_one_zsmul]
 lemma zpow_add_one (a : G) : ∀ n : ℤ, a ^ (n + 1) = a ^ n * a
   | (n : ℕ) => by simp only [← Int.ofNat_succ, zpow_natCast, pow_succ]
-  | .negSucc 0 => by simp [Int.negSucc_eq', Int.add_left_neg]
+  | -1 => by simp [Int.add_left_neg]
   | .negSucc (n + 1) => by
     rw [zpow_negSucc, pow_succ', mul_inv_rev, inv_mul_cancel_right]
     rw [Int.negSucc_eq, Int.neg_add, Int.neg_add_cancel_right]
@@ -944,8 +940,6 @@ theorem div_mul_mul_cancel (a b c : G) : a / c * (b * c) = a * b := by
 @[to_additive (attr := simp)]
 theorem div_mul_div_cancel' (a b c : G) : a / b * (c / a) = c / b := by
   rw [mul_comm]; apply div_mul_div_cancel
-
-@[deprecated (since := "2024-08-24")] alias div_mul_div_cancel'' := div_mul_div_cancel'
 
 @[to_additive (attr := simp)]
 theorem mul_div_div_cancel (a b c : G) : a * b / (a / c) = b * c := by
