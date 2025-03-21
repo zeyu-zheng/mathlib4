@@ -10,14 +10,14 @@ open Lake DSL
 require "leanprover-community" / "batteries" @ git "lean-pr-testing-7504"
 require "leanprover-community" / "Qq" @ git "master"
 require "leanprover-community" / "aesop" @ git "nightly-testing"
-require "leanprover-community" / "proofwidgets" @ git "v0.0.53" -- ProofWidgets should always be pinned to a specific version
+require "leanprover-community" / "proofwidgets" @ git "v0.0.54-pre" -- ProofWidgets should always be pinned to a specific version
   with NameMap.empty.insert `errorOnBuild
     "ProofWidgets not up-to-date. \
     Please run `lake exe cache get` to fetch the latest ProofWidgets. \
     If this does not work, report your issue on the Lean Zulip."
 require "leanprover-community" / "importGraph" @ git "main"
 require "leanprover-community" / "LeanSearchClient" @ git "main"
-require "leanprover-community" / "plausible" @ git "main"
+require "leanprover-community" / "plausible" @ git "nightly-testing"
 
 /-!
 ## Options for building mathlib
@@ -32,7 +32,7 @@ abbrev mathlibOnlyLinters : Array LeanOption := #[
   ⟨`linter.docPrime, false⟩,
   ⟨`linter.hashCommand, true⟩,
   ⟨`linter.oldObtain, true,⟩,
-  ⟨`linter.refine, true⟩,
+  ⟨`linter.style.cases, true⟩,
   ⟨`linter.style.cdot, true⟩,
   ⟨`linter.style.docString, true⟩,
   ⟨`linter.style.dollarSyntax, true⟩,
@@ -43,6 +43,8 @@ abbrev mathlibOnlyLinters : Array LeanOption := #[
   -- `latest_import.yml` uses this comment: if you edit it, make sure that the workflow still works
   ⟨`linter.style.missingEnd, true⟩,
   ⟨`linter.style.multiGoal, true⟩,
+  ⟨`linter.style.openClassical, true⟩,
+  ⟨`linter.style.refine, true⟩,
   ⟨`linter.style.setOption, true⟩
 ]
 

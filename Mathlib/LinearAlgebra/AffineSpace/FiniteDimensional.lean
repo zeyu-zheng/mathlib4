@@ -3,8 +3,9 @@ Copyright (c) 2020 Joseph Myers. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 -/
+import Mathlib.FieldTheory.Finiteness
 import Mathlib.LinearAlgebra.AffineSpace.Basis
-import Mathlib.LinearAlgebra.FiniteDimensional
+import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 
 /-!
 # Finite-dimensional subspaces of affine spaces.
@@ -479,7 +480,7 @@ theorem collinear_iff_not_affineIndependent {p : Fin 3 → P} :
 theorem affineIndependent_iff_not_collinear_set {p₁ p₂ p₃ : P} :
     AffineIndependent k ![p₁, p₂, p₃] ↔ ¬Collinear k ({p₁, p₂, p₃} : Set P) := by
   rw [affineIndependent_iff_not_collinear]
-  simp_rw [Matrix.range_cons, Matrix.range_empty, Set.singleton_union, insert_emptyc_eq]
+  simp_rw [Matrix.range_cons, Matrix.range_empty, Set.singleton_union, insert_empty_eq]
 
 /-- Three points are collinear if and only if they are not affinely independent. -/
 theorem collinear_iff_not_affineIndependent_set {p₁ p₂ p₃ : P} :

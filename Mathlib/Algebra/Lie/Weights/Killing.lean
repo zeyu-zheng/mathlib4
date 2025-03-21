@@ -106,7 +106,7 @@ lemma killingForm_apply_eq_zero_of_mem_rootSpace_of_add_ne_zero {α β : H → K
   However the semisimplicity of `ad R L z` is (a) non-trivial and (b) requires the assumption
   that `K` is a perfect field and `L` has non-degenerate Killing form. -/
   let σ : (H → K) → (H → K) := fun γ ↦ α + (β + γ)
-  have hσ : ∀ γ, σ γ ≠ γ := fun γ ↦ by simpa only [σ, ← add_assoc] using add_left_ne_self.mpr hαβ
+  have hσ : ∀ γ, σ γ ≠ γ := fun γ ↦ by simpa only [σ, ← add_assoc] using add_ne_right.mpr hαβ
   let f : Module.End K L := (ad K L x) ∘ₗ (ad K L y)
   have hf : ∀ γ, MapsTo f (rootSpace H γ) (rootSpace H (σ γ)) := fun γ ↦
     (mapsTo_toEnd_genWeightSpace_add_of_mem_rootSpace K L H L α (β + γ) hx).comp <|
@@ -554,7 +554,7 @@ lemma finrank_rootSpace_eq_one (α : Weight K H L) (hα : α.IsNonZero) :
         root_apply_coroot hα]
       lie_e := by rw [← lie_skew, hy, neg_zero] }
   obtain ⟨n, hn⟩ := P.exists_nat
-  replace hn : -2 = (n : ℤ) := by norm_cast at hn; simp at hn
+  replace hn : -2 = (n : ℤ) := by norm_cast at hn
   omega
 
 /-- The collection of roots as a `Finset`. -/

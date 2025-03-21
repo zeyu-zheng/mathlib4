@@ -265,7 +265,6 @@ theorem sum_pow_of_commute (x : α → R) (s : Finset α)
       · exact ⟨0, by simp [eq_iff_true_of_subsingleton]⟩
       convert (@one_mul R _ _).symm
       convert @Nat.cast_one R _
-      simp
     · rw [_root_.pow_succ, mul_zero]
       haveI : IsEmpty (Finset.sym (∅ : Finset α) n.succ) := Finset.instIsEmpty
       apply (Fintype.sum_empty _).symm
@@ -336,7 +335,7 @@ theorem multinomial_coe_fill_of_not_mem {m : Fin (n + 1)} {s : Sym α (n - m)} {
   · refine congrArg _ ?_
     rw [coe_fill, coe_replicate, Multiset.filter_add]
     rw [Multiset.filter_eq_self.mpr]
-    · rw [add_right_eq_self]
+    · rw [add_eq_left]
       rw [Multiset.filter_eq_nil]
       exact fun j hj ↦ by simp [Multiset.mem_replicate.mp hj]
     · exact fun j hj h ↦ hx <| by simpa [h] using hj
