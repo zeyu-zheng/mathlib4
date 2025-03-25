@@ -431,6 +431,7 @@ import Mathlib.Algebra.GroupWithZero.Commute
 import Mathlib.Algebra.GroupWithZero.Conj
 import Mathlib.Algebra.GroupWithZero.Defs
 import Mathlib.Algebra.GroupWithZero.Divisibility
+import Mathlib.Algebra.GroupWithZero.Equiv
 import Mathlib.Algebra.GroupWithZero.Hom
 import Mathlib.Algebra.GroupWithZero.Idempotent
 import Mathlib.Algebra.GroupWithZero.Indicator
@@ -942,6 +943,7 @@ import Mathlib.Algebra.Polynomial.Splits
 import Mathlib.Algebra.Polynomial.SumIteratedDerivative
 import Mathlib.Algebra.Polynomial.Taylor
 import Mathlib.Algebra.Polynomial.UnitTrinomial
+import Mathlib.Algebra.Polynomial.ofFn
 import Mathlib.Algebra.PresentedMonoid.Basic
 import Mathlib.Algebra.Prime.Defs
 import Mathlib.Algebra.Prime.Lemmas
@@ -2994,6 +2996,7 @@ import Mathlib.Data.Matroid.IndepAxioms
 import Mathlib.Data.Matroid.Init
 import Mathlib.Data.Matroid.Loop
 import Mathlib.Data.Matroid.Map
+import Mathlib.Data.Matroid.Minor.Basic
 import Mathlib.Data.Matroid.Rank.Cardinal
 import Mathlib.Data.Matroid.Rank.Finite
 import Mathlib.Data.Matroid.Restrict
@@ -4535,10 +4538,12 @@ import Mathlib.Order.Heyting.Hom
 import Mathlib.Order.Heyting.Regular
 import Mathlib.Order.Hom.Basic
 import Mathlib.Order.Hom.Bounded
+import Mathlib.Order.Hom.BoundedLattice
 import Mathlib.Order.Hom.CompleteLattice
 import Mathlib.Order.Hom.Lattice
 import Mathlib.Order.Hom.Order
 import Mathlib.Order.Hom.Set
+import Mathlib.Order.Hom.WithTopBot
 import Mathlib.Order.Ideal
 import Mathlib.Order.InitialSeg
 import Mathlib.Order.Interval.Basic
@@ -4732,6 +4737,7 @@ import Mathlib.Probability.Process.Filtration
 import Mathlib.Probability.Process.HittingTime
 import Mathlib.Probability.Process.PartitionFiltration
 import Mathlib.Probability.Process.Stopping
+import Mathlib.Probability.ProductMeasure
 import Mathlib.Probability.StrongLaw
 import Mathlib.Probability.UniformOn
 import Mathlib.Probability.Variance
@@ -6051,6 +6057,7 @@ import Mathlib.Topology.UniformSpace.CompleteSeparated
 import Mathlib.Topology.UniformSpace.Completion
 import Mathlib.Topology.UniformSpace.Defs
 import Mathlib.Topology.UniformSpace.Dini
+import Mathlib.Topology.UniformSpace.DiscreteUniformity
 import Mathlib.Topology.UniformSpace.Equicontinuity
 import Mathlib.Topology.UniformSpace.Equiv
 import Mathlib.Topology.UniformSpace.HeineCantor
