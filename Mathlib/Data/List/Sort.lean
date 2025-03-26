@@ -182,12 +182,23 @@ variable [Preorder α]
 strictly monotone. -/
 @[simp] theorem sorted_lt_ofFn_iff : (ofFn f).Sorted (· < ·) ↔ StrictMono f := sorted_ofFn_iff
 
+/-- The list `List.ofFn f` is strictly sorted with respect to `(· ≥ ·)` if and only if `f` is
+strictly antitone. -/
+@[simp] theorem sorted_gt_ofFn_iff : (ofFn f).Sorted (· > ·) ↔ StrictAnti f := sorted_ofFn_iff
+
 /-- The list `List.ofFn f` is sorted with respect to `(· ≤ ·)` if and only if `f` is monotone. -/
 @[simp] theorem sorted_le_ofFn_iff : (ofFn f).Sorted (· ≤ ·) ↔ Monotone f :=
   sorted_ofFn_iff.trans monotone_iff_forall_lt.symm
 
 /-- The list obtained from a monotone tuple is sorted. -/
 alias ⟨_, _root_.Monotone.ofFn_sorted⟩ := sorted_le_ofFn_iff
+
+/-- The list `List.ofFn f` is sorted with respect to `(· ≥ ·)` if and only if `f` is antitone. -/
+@[simp] theorem sorted_ge_ofFn_iff : (ofFn f).Sorted (· ≥ ·) ↔ Antitone f :=
+  sorted_ofFn_iff.trans antitone_iff_forall_lt.symm
+
+/-- The list obtained from an antitone tuple is sorted. -/
+alias ⟨_, _root_.Antitone.ofFn_sorted⟩ := sorted_ge_ofFn_iff
 
 end Monotone
 
@@ -614,10 +625,9 @@ which rather than using explicit hypotheses for transitivity and totality,
 use Mathlib order typeclasses instead.
 -/
 
-unseal merge mergeSort in
 example :
     mergeSort [5, 27, 221, 95, 17, 43, 7, 2, 98, 567, 23, 12] (fun m n => m / 10 ≤ n / 10) =
-      [5, 7, 2, 17, 12, 27, 23, 43, 95, 98, 221, 567] := rfl
+      [5, 7, 2, 17, 12, 27, 23, 43, 95, 98, 221, 567] := by simp [mergeSort]
 
 section MergeSort
 
