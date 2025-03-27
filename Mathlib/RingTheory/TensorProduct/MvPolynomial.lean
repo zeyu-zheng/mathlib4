@@ -5,9 +5,11 @@ Authors: Antoine Chambert-Loir
 -/
 
 import Mathlib.LinearAlgebra.DirectSum.Finsupp
-import Mathlib.Algebra.MvPolynomial.Basic
+import Mathlib.Algebra.MvPolynomial.Eval
 import Mathlib.RingTheory.TensorProduct.Basic
 import Mathlib.Algebra.MvPolynomial.Equiv
+import Mathlib.RingTheory.IsTensorProduct
+
 /-!
 
 # Tensor Product of (multivariate) polynomial rings
@@ -182,6 +184,13 @@ noncomputable def rTensorAlgEquiv :
     simp only [_root_.map_mul, rTensorAlgHom_apply_eq]
     rfl
 
+@[simp]
+lemma rTensorAlgEquiv_apply (x : (MvPolynomial σ S) ⊗[R] N) :
+    rTensorAlgEquiv x = rTensorAlgHom x := by
+  rw [← AlgHom.coe_coe, ← AlgEquiv.toAlgHom_eq_coe]
+  congr 1
+  ext _ d <;> simpa [rTensorAlgEquiv] using rTensor_apply_tmul_apply _ _ d
+
 /-- The tensor product of the polynomial algebra by an algebra
   is algebraically equivalent to a polynomial algebra with
   coefficients in that algegra -/
@@ -236,6 +245,17 @@ lemma aeval_one_tmul (f : σ → S) (p : MvPolynomial σ R) :
     rw [← mul_one ((algebraMap R N) a), ← Algebra.smul_def, smul_tmul, Algebra.smul_def, mul_one]
   · simp [hp, hq, tmul_add]
   · simp [h]
+
+section Pushout
+
+attribute [local instance] algebraMvPolynomial
+
+instance : Algebra.IsPushout R S (MvPolynomial σ R) (MvPolynomial σ S) where
+  out := .of_equiv (algebraTensorAlgEquiv R S).toLinearEquiv fun _ ↦ by simp
+
+instance : Algebra.IsPushout R (MvPolynomial σ R) S (MvPolynomial σ S) := .symm inferInstance
+
+end Pushout
 
 end Algebra
 
