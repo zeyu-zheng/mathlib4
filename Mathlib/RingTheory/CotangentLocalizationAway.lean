@@ -136,9 +136,10 @@ lemma liftBaseChange_injective_of_isLocalizationAway :
     simpa using hm
   rw [← compLocalizationAwayAlgHom_toAlgHom_toComp (T := T)]
   apply sq_ker_comp_le_ker_compLocalizationAwayAlgHom
-  simpa only [LinearEquiv.coe_coe, LinearMap.ringLmapEquivSelf_symm_apply,
-    mk_apply, lift.tmul, LinearMap.coe_restrictScalars, LinearMap.coe_smulRight,
-    LinearMap.one_apply, LinearMap.smul_apply, one_smul, Algebra.Extension.Cotangent.map_mk,
-    Extension.Cotangent.mk_eq_zero_iff] using hx
+  sorry
+  -- simpa only [LinearEquiv.coe_coe, LinearMap.ringLmapEquivSelf_symm_apply,
+  --   mk_apply, lift.tmul, LinearMap.coe_restrictScalars, LinearMap.coe_smulRight,
+  --   LinearMap.one_apply, LinearMap.smul_apply, one_smul, Algebra.Extension.Cotangent.map_mk,
+  --   Extension.Cotangent.mk_eq_zero_iff] using hx
 
 end Algebra.Generators

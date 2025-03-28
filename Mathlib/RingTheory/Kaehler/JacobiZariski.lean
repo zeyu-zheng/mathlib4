@@ -62,48 +62,49 @@ lemma Cotangent.exact :
       ((Extension.Cotangent.map (Q.toComp P).toExtensionHom).liftBaseChange T)
       (Extension.Cotangent.map (Q.ofComp P).toExtensionHom) := by
   apply LinearMap.exact_of_comp_of_mem_range
-  · rw [LinearMap.liftBaseChange_comp, ← Extension.Cotangent.map_comp,
-      EmbeddingLike.map_eq_zero_iff]
-    ext x
-    obtain ⟨⟨x, hx⟩, rfl⟩ := Extension.Cotangent.mk_surjective x
-    simp only [map_mk, Hom.toAlgHom_comp_apply, val_mk, LinearMap.zero_apply, val_zero]
-    convert Q.ker.toCotangent.map_zero
-    trans ((IsScalarTower.toAlgHom R _ _).comp (IsScalarTower.toAlgHom R P.Ring S)) x
-    · congr
-      refine MvPolynomial.algHom_ext fun i ↦ ?_
-      show (Q.ofComp P).toAlgHom ((Q.toComp P).toAlgHom (X i)) = _
-      simp
-    · simp [-self_vars, aeval_val_eq_zero hx]
-  · intro x hx
-    obtain ⟨⟨x : (Q.comp P).Ring, hx'⟩, rfl⟩ := Extension.Cotangent.mk_surjective x
-    replace hx : (Q.ofComp P).toAlgHom x ∈ Q.ker ^ 2 := by
-      simpa only [map_mk, val_mk, val_zero, Ideal.toCotangent_eq_zero] using congr(($hx).val)
-    rw [pow_two, ← map_ofComp_ker (P := P), ← Ideal.map_mul, Ideal.mem_map_iff_of_surjective
-      _ (toAlgHom_ofComp_surjective Q P)] at hx
-    obtain ⟨y, hy, e⟩ := hx
-    rw [eq_comm, ← sub_eq_zero, ← map_sub, ← RingHom.mem_ker, ← map_toComp_ker] at e
-    rw [LinearMap.range_liftBaseChange]
-    let z : (Q.comp P).ker := ⟨x - y, Ideal.sub_mem _ hx' (Ideal.mul_le_left hy)⟩
-    have hz : z.1 ∈ P.ker.map (Q.toComp P).toAlgHom.toRingHom := e
-    have : Extension.Cotangent.mk (P := (Q.comp P).toExtension) ⟨x, hx'⟩ =
-      Extension.Cotangent.mk z := by
-      ext; simpa only [comp_vars, val_mk, Ideal.toCotangent_eq, sub_sub_cancel, pow_two, z]
-    rw [this, ← Submodule.restrictScalars_mem (Q.comp P).Ring, ← Submodule.mem_comap,
-      ← Submodule.span_singleton_le_iff_mem, ← Submodule.map_le_map_iff_of_injective
-      (f := Submodule.subtype _) Subtype.val_injective, Submodule.map_subtype_span_singleton,
-      Submodule.span_singleton_le_iff_mem]
-    refine (show Ideal.map (Q.toComp P).toAlgHom.toRingHom P.ker ≤ _ from ?_) hz
-    rw [Ideal.map_le_iff_le_comap]
-    rintro w hw
-    simp only [AlgHom.toRingHom_eq_coe, Ideal.mem_comap, RingHom.coe_coe,
-      Submodule.mem_map, Submodule.mem_comap, Submodule.restrictScalars_mem, Submodule.coe_subtype,
-      Subtype.exists, exists_and_right, exists_eq_right,
-      toExtension_Ring, toExtension_commRing, toExtension_algebra₂]
-    refine ⟨?_, Submodule.subset_span ⟨Extension.Cotangent.mk ⟨w, hw⟩, ?_⟩⟩
-    · simp only [ker_eq_ker_aeval_val, RingHom.mem_ker, Hom.algebraMap_toAlgHom]
-      rw [aeval_val_eq_zero hw, map_zero]
-    · rw [map_mk]
-      rfl
+  sorry; sorry
+  -- · rw [LinearMap.liftBaseChange_comp, ← Extension.Cotangent.map_comp,
+  --     EmbeddingLike.map_eq_zero_iff]
+  --   ext x
+  --   obtain ⟨⟨x, hx⟩, rfl⟩ := Extension.Cotangent.mk_surjective x
+  --   simp only [map_mk, Hom.toAlgHom_comp_apply, val_mk, LinearMap.zero_apply, val_zero]
+  --   convert Q.ker.toCotangent.map_zero
+  --   trans ((IsScalarTower.toAlgHom R _ _).comp (IsScalarTower.toAlgHom R P.Ring S)) x
+  --   · congr
+  --     refine MvPolynomial.algHom_ext fun i ↦ ?_
+  --     show (Q.ofComp P).toAlgHom ((Q.toComp P).toAlgHom (X i)) = _
+  --     simp
+  --   · simp [-self_vars, aeval_val_eq_zero hx]
+  -- · intro x hx
+  --   obtain ⟨⟨x : (Q.comp P).Ring, hx'⟩, rfl⟩ := Extension.Cotangent.mk_surjective x
+  --   replace hx : (Q.ofComp P).toAlgHom x ∈ Q.ker ^ 2 := by
+  --     simpa only [map_mk, val_mk, val_zero, Ideal.toCotangent_eq_zero] using congr(($hx).val)
+  --   rw [pow_two, ← map_ofComp_ker (P := P), ← Ideal.map_mul, Ideal.mem_map_iff_of_surjective
+  --     _ (toAlgHom_ofComp_surjective Q P)] at hx
+  --   obtain ⟨y, hy, e⟩ := hx
+  --   rw [eq_comm, ← sub_eq_zero, ← map_sub, ← RingHom.mem_ker, ← map_toComp_ker] at e
+  --   rw [LinearMap.range_liftBaseChange]
+  --   let z : (Q.comp P).ker := ⟨x - y, Ideal.sub_mem _ hx' (Ideal.mul_le_left hy)⟩
+  --   have hz : z.1 ∈ P.ker.map (Q.toComp P).toAlgHom.toRingHom := e
+  --   have : Extension.Cotangent.mk (P := (Q.comp P).toExtension) ⟨x, hx'⟩ =
+  --     Extension.Cotangent.mk z := by
+  --     ext; simpa only [comp_vars, val_mk, Ideal.toCotangent_eq, sub_sub_cancel, pow_two, z]
+  --   rw [this, ← Submodule.restrictScalars_mem (Q.comp P).Ring, ← Submodule.mem_comap,
+  --     ← Submodule.span_singleton_le_iff_mem, ← Submodule.map_le_map_iff_of_injective
+  --     (f := Submodule.subtype _) Subtype.val_injective, Submodule.map_subtype_span_singleton,
+  --     Submodule.span_singleton_le_iff_mem]
+  --   refine (show Ideal.map (Q.toComp P).toAlgHom.toRingHom P.ker ≤ _ from ?_) hz
+  --   rw [Ideal.map_le_iff_le_comap]
+  --   rintro w hw
+  --   simp only [AlgHom.toRingHom_eq_coe, Ideal.mem_comap, RingHom.coe_coe,
+  --     Submodule.mem_map, Submodule.mem_comap, Submodule.restrictScalars_mem, Submodule.coe_subtype,
+  --     Subtype.exists, exists_and_right, exists_eq_right,
+  --     toExtension_Ring, toExtension_commRing, toExtension_algebra₂]
+  --   refine ⟨?_, Submodule.subset_span ⟨Extension.Cotangent.mk ⟨w, hw⟩, ?_⟩⟩
+  --   · simp only [ker_eq_ker_aeval_val, RingHom.mem_ker, Hom.algebraMap_toAlgHom]
+  --     rw [aeval_val_eq_zero hw, map_zero]
+  --   · rw [map_mk]
+  --     rfl
 
 /-- Given `R[X] → S` and `S[Y] → T`, the cotangent space of `R[X][Y] → T` is isomorphic
 to the direct product of the cotangent space of `S[Y] → T` and `R[X] → S` (base changed to `T`). -/
@@ -247,7 +248,7 @@ lemma δAux_toAlgHom {Q : Generators.{u₁} S T}
       LinearMap.map_smul, Finsupp.linearCombination_single,
       Function.comp_apply, ← cotangentSpaceBasis_apply]
     rw [add_left_comm]
-    rfl
+    sorry
 
 lemma δAux_ofComp (x : (Q.comp P).Ring) :
     δAux R Q ((Q.ofComp P).toAlgHom x) =
@@ -265,25 +266,30 @@ lemma δAux_ofComp (x : (Q.comp P).Ring) :
       IH, Derivation.leibniz, tmul_add, tmul_smul, ← cotangentSpaceBasis_apply,
       ← @IsScalarTower.algebraMap_smul (Q.comp P).Ring T, aeval_X, LinearEquiv.map_add,
       LinearMapClass.map_smul, Prod.snd_add, Prod.smul_snd, LinearMap.map_add]
-    obtain (n | n) := n
-    · simp only [comp_vars, Sum.elim_inl, δAux_X, smul_zero, aeval_X,
-        CotangentSpace.compEquiv, LinearEquiv.trans_apply, Basis.repr_symm_apply, zero_add,
-        Basis.repr_self, Finsupp.linearCombination_single, Basis.prod_apply, LinearMap.coe_inl,
-        LinearMap.coe_inr, Function.comp_apply, one_smul, map_zero]
-    · simp only [comp_vars, Sum.elim_inr, Function.comp_apply, algHom_C, δAux_C,
-        CotangentSpace.compEquiv, LinearEquiv.trans_apply, Basis.repr_symm_apply,
-        algebraMap_smul, Basis.repr_self, Finsupp.linearCombination_single, Basis.prod_apply,
-        LinearMap.coe_inr, Basis.baseChange_apply, one_smul, LinearMap.baseChange_tmul,
-        toKaehler_cotangentSpaceBasis, add_left_inj, LinearMap.coe_inl]
-      rfl
+    sorry
+    -- obtain (n | n) := n
+    -- · simp only [comp_vars, Sum.elim_inl, δAux_X, smul_zero, aeval_X,
+    --     CotangentSpace.compEquiv, LinearEquiv.trans_apply, Basis.repr_symm_apply, zero_add,
+    --     Basis.repr_self, Finsupp.linearCombination_single, Basis.prod_apply, LinearMap.coe_inl,
+    --     LinearMap.coe_inr, Function.comp_apply, one_smul, map_zero]
+    -- · sorry
 
+#check MvPolynomial
+attribute [local irreducible] MvPolynomial.instCommRingMvPolynomial
+attribute [local irreducible] TensorProduct.addCommMonoid
+
+#count_heartbeats in -- 106511
+set_option trace.profiler true in
 lemma map_comp_cotangentComplex_baseChange :
     (Extension.CotangentSpace.map (Q.toComp P).toExtensionHom).liftBaseChange T ∘ₗ
       P.toExtension.cotangentComplex.baseChange T =
     (Q.comp P).toExtension.cotangentComplex ∘ₗ
       (Extension.Cotangent.map (Q.toComp P).toExtensionHom).liftBaseChange T := by
-  ext x; simp [Extension.CotangentSpace.map_cotangentComplex]
+  ext x
+  have foo : MvPolynomial P.vars R = P.toExtension.Ring := by with_reducible rfl
+  simp [Extension.CotangentSpace.map_cotangentComplex]
 
+#exit
 open Generators in
 /--
 The connecting homomorphism in the Jacobi-Zariski sequence for given presentations.

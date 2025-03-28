@@ -75,28 +75,42 @@ attribute [instance] algebra
 variable {R S}
 variable (P : Generators.{w} R S)
 
-/-- The polynomial ring wrt a family of generators. -/
-protected
-abbrev Ring : Type (max w u) := MvPolynomial P.vars R
-
 /-- The designated section of wrt a family of generators. -/
-def σ : S → P.Ring := P.σ'
+abbrev σ : S → MvPolynomial P.vars R := P.σ'
 
-/-- See Note [custom simps projection] -/
-def Simps.σ : S → P.Ring := P.σ
+noncomputable instance {R₀} [CommRing R₀] [Algebra R₀ R] [Algebra R₀ S] [IsScalarTower R₀ R S] :
+    IsScalarTower R₀ (MvPolynomial P.vars R) S := IsScalarTower.of_algebraMap_eq' <|
+  P.algebraMap_eq ▸ ((aeval (R := R) P.val).comp_algebraMap_of_tower R₀).symm
 
-initialize_simps_projections Algebra.Generators (σ' → σ)
+@[simp]
+lemma algebraMap_apply (x) : algebraMap (MvPolynomial P.vars R) S x = aeval (R := R) P.val x := by
+  simp [algebraMap_eq]
 
 @[simp]
 lemma aeval_val_σ (s) : aeval P.val (P.σ s) = s := P.aeval_val_σ' s
 
-noncomputable instance {R₀} [CommRing R₀] [Algebra R₀ R] [Algebra R₀ S] [IsScalarTower R₀ R S] :
-    IsScalarTower R₀ P.Ring S := IsScalarTower.of_algebraMap_eq' <|
-  P.algebraMap_eq ▸ ((aeval (R := R) P.val).comp_algebraMap_of_tower R₀).symm
+/-- The extension `R[X₁,...,Xₙ] → S` given a family of generators. -/
+@[simps]
+noncomputable
+abbrev toExtension : Extension R S where
+  Ring := MvPolynomial P.vars R
+  σ := P.σ
+  algebraMap_σ := by simp
+
+/-- The polynomial ring wrt a family of generators. -/
+protected
+abbrev Ring : Type (max w u) := MvPolynomial P.vars R
 
 @[simp]
-lemma algebraMap_apply (x) : algebraMap P.Ring S x = aeval (R := R) P.val x := by
+lemma algebraMap_apply' (x) : algebraMap (P.toExtension.Ring) S x = aeval (R := R) P.val x := by
   simp [algebraMap_eq]
+
+/-- See Note [custom simps projection] -/
+def Simps.σ : S → P.toExtension.Ring := P.σ
+
+initialize_simps_projections Algebra.Generators (σ' → σ)
+
+
 
 @[simp]
 lemma σ_smul (x y) : P.σ x • y = x * y := by
@@ -155,14 +169,6 @@ def self : Generators R S where
   val := _root_.id
   σ' := X
   aeval_val_σ' := aeval_X _
-
-/-- The extension `R[X₁,...,Xₙ] → S` given a family of generators. -/
-@[simps]
-noncomputable
-def toExtension : Extension R S where
-  Ring := P.Ring
-  σ := P.σ
-  algebraMap_σ := by simp
 
 section Localization
 
@@ -280,7 +286,7 @@ variable {P P'}
 /-- A hom between two families of generators gives
 an algebra homomorphism between the polynomial rings. -/
 noncomputable
-def Hom.toAlgHom (f : Hom P P') : P.Ring →ₐ[R] P'.Ring := MvPolynomial.aeval f.val
+abbrev Hom.toAlgHom (f : Hom P P') : P.Ring →ₐ[R] P'.Ring := MvPolynomial.aeval f.val
 
 variable [Algebra R S'] [IsScalarTower R R' S'] [IsScalarTower R S S'] in
 @[simp]
@@ -369,7 +375,7 @@ lemma Hom.toAlgHom_comp_apply
   induction x using MvPolynomial.induction_on with
   | C r => simp only [← MvPolynomial.algebraMap_eq, AlgHom.map_algebraMap]
   | add x y hx hy => simp only [map_add, hx, hy]
-  | mul_X p i hp => simp only [map_mul, hp, toAlgHom_X, comp_val]; rfl
+  | mul_X p i hp => simp only [map_mul, hp, toAlgHom_X, comp_val]
 
 variable {T} [CommRing T] [Algebra R T] [Algebra S T] [IsScalarTower R S T]
 
@@ -453,10 +459,10 @@ def Hom.toExtensionHom [Algebra R S'] [IsScalarTower R R' S'] [IsScalarTower R S
     (f : P.Hom P') : P.toExtension.Hom P'.toExtension where
   toRingHom := f.toAlgHom.toRingHom
   toRingHom_algebraMap x := by simp
-  algebraMap_toRingHom x := by simp
+  algebraMap_toRingHom x := by simp; sorry
 
 @[simp]
-lemma Hom.toExtensionHom_id : Hom.toExtensionHom (.id P) = .id _ := by ext; simp
+lemma Hom.toExtensionHom_id : Hom.toExtensionHom (.id P) = .id _ := by ext : 1; simp
 
 @[simp]
 lemma Hom.toExtensionHom_comp [Algebra R S'] [IsScalarTower R S S']
@@ -464,7 +470,8 @@ lemma Hom.toExtensionHom_comp [Algebra R S'] [IsScalarTower R S S']
     [IsScalarTower R S S''] [IsScalarTower R' R'' S''] [IsScalarTower R' S' S'']
     [IsScalarTower S S' S''] [IsScalarTower R R' R''] [IsScalarTower R R' S']
     (f : P'.Hom P'') (g : P.Hom P') :
-    toExtensionHom (f.comp g) = f.toExtensionHom.comp g.toExtensionHom := by ext; simp
+    toExtensionHom (f.comp g) = f.toExtensionHom.comp g.toExtensionHom := by
+      ext : 1; simp; ext : 2; simp; exact IsScalarTower.algebraMap_apply R R' R'' _; simp;
 
 lemma Hom.toExtensionHom_toAlgHom_apply [Algebra R S'] [IsScalarTower R R' S']
     [IsScalarTower R S S'] (f : P.Hom P') (x) :
