@@ -247,7 +247,7 @@ theorem factorization_choose_prime_pow_add_factorization (hp : p.Prime) (hkn : k
       exact factorization_pow_self hp
     nth_rewrite 1 [← h1]
     have h3: k ≤ p ^ n ∧ k ≠ 0 := ⟨hkn, hk0⟩
-    exact factorization_le_factorization_choose_add (p^n) k h3
+    exact factorization_le_factorization_choose_add hkn hk0
 
 theorem factorization_choose_prime_pow {p n k : ℕ} (hp : p.Prime) (hkn : k ≤ p ^ n) (hk0 : k ≠ 0) :
     (choose (p ^ n) k).factorization p = ↑(n - k.factorization p) := by
