@@ -14,9 +14,6 @@ This file contains lemmas about the factorization function (the maximum prime po
 number) when applied to naturals, in particular calculating it for factorials and binomial
 coefficients.
 
-This is a port of the lemmas from `Data/Nat/Multiplicity` to here,
-re-written in terms of `factorization`
-
 
 ## Factorization calculations
 
@@ -52,7 +49,7 @@ theorem Ico_pow_dvd_eq_Ico_of_lt {n p b : ℕ} (pp : p.Prime) (hn : n ≠ 0) (hb
   refine fun h1 h2 ↦ ⟨fun h ↦ ?_, fun h ↦ lt_of_pow_dvd_right hn (Prime.one_lt pp) h1⟩
   rcases p with - | p
   · rw [zero_pow (not_eq_zero_of_lt h2), zero_dvd_iff] at h1
-    exact  (hn h1).elim
+    exact (hn h1).elim
   · refine LE.le.trans_lt (le_log_of_pow_le pp.one_lt ?_) ((lt_pow_iff_log_lt pp.one_lt hn).mp hb)
     obtain ⟨k, rfl⟩ := h1
     exact Nat.le_mul_of_pos_right ((p + 1) ^ i)
@@ -210,14 +207,11 @@ theorem factorization_le_factorization_of_dvd_right {a b c : ℕ} (h : b ∣ c)
 /-- A lower bound on the factorization of `p` in `choose n k`.
  -/
 theorem factorization_le_factorization_choose_add {p : ℕ} :
-    ∀ n k : ℕ, (k ≤ n) ∧ (k ≠ 0) →
-    n.factorization p ≤ (choose n k).factorization p + k.factorization p
-  | n, 0 => by
-    intro h
-    tauto
-  | 0, x + 1 => by simp
-  | n + 1, k + 1 => by
-    intro h
+    ∀ {n k : ℕ}, k ≤ n → k ≠ 0 →
+      n.factorization p ≤ (choose n k).factorization p + k.factorization p
+  | n, 0, _, _ => by tauto
+  | 0, x + 1, _, _ => by simp
+  | n + 1, k + 1, hkn, hk => by
     have h0: (n + 1).choose (k + 1) ≠ 0 := by
       intro h2
       rw [choose_eq_zero_iff] at h2
