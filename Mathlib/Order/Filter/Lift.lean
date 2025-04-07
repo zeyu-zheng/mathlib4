@@ -11,6 +11,8 @@ import Mathlib.Order.Filter.Bases.Basic
 # Lift filters along filter and set functions
 -/
 
+assert_not_exists Set.Finite
+
 open Set Filter Function
 
 namespace Filter
