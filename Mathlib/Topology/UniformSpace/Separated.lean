@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
 import Mathlib.Data.Set.Pairwise.Basic
-import Mathlib.Topology.UniformSpace.Entourage
+import Mathlib.Topology.UniformSpace.Defs
 
 /-!
 # Uniform separation
