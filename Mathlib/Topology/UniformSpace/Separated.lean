@@ -17,6 +17,11 @@ For an entourage `U`, a `U`-separated set `s` is a set such that every pair of e
 The concept of uniformly separated sets is used to define two further notions of separation:
 * Metric separation: `Metric.IsSeparated`, defined using the distance entourage.
 * Dynamical nets: `Dynamics.IsDynNetIn`, defined using the dynamical entourage.
+
+## TODO
+
+* Actually use `UniformSpace.IsSeparated` to define the above two notions.
+* Link to the notion of separation given by pairwise disjoint balls.
 -/
 
 open Set
@@ -35,21 +40,21 @@ protected lemma IsSeparated.singleton : IsSeparated U {x} := pairwise_singleton 
 
 alias _root_.Set.Subsingleton.uniformSpaceIsSeparated := IsSeparated.of_subsingleton
 
-nonrec lemma IsSeparated.anti (hUV : U ⊆ V) (hs : IsSeparated V s) : IsSeparated U s :=
+nonrec lemma IsSeparated.anti_left (hUV : U ⊆ V) (hs : IsSeparated V s) : IsSeparated U s :=
   hs.mono' fun _x _y hxy h ↦ hxy <| hUV h
 
-lemma IsSeparated.subset (hst : s ⊆ t) (hs : IsSeparated U t) : IsSeparated U s := hs.mono hst
+lemma IsSeparated.anti_right (hst : s ⊆ t) (hs : IsSeparated U t) : IsSeparated U s := hs.mono hst
 
 lemma isSeparated_insert (hU : IsSymmetricRel U) :
-    IsSeparated U (insert x s) ↔ IsSeparated U s ∧ ∀ y ∈ s, x ≠ y → (x, y) ∉ U :=
-  pairwise_insert_of_symmetric fun _ _ ↦ hU.mk_mem_comm.not.1
+    IsSeparated U (insert x s) ↔ IsSeparated U s ∧ ∀ y ∈ s, (x, y) ∈ U → x = y := by
+  simpa [not_imp_not, IsSeparated] using pairwise_insert_of_symmetric fun _ _ ↦ hU.mk_mem_comm.not.1
 
 lemma isSeparated_insert_of_not_mem (hU : IsSymmetricRel U) (hx : x ∉ s) :
     IsSeparated U (insert x s) ↔ IsSeparated U s ∧ ∀ y ∈ s, (x, y) ∉ U :=
   pairwise_insert_of_symmetric_of_not_mem (fun _ _ ↦ hU.mk_mem_comm.not.1) hx
 
 protected lemma IsSeparated.insert (hU : IsSymmetricRel U) (hs : IsSeparated U s)
-    (h : ∀ y ∈ s, x ≠ y → (x, y) ∉ U) : IsSeparated U (insert x s) :=
+    (h : ∀ y ∈ s, (x, y) ∈ U → x = y) : IsSeparated U (insert x s) :=
   (isSeparated_insert hU).2 ⟨hs, h⟩
 
 end UniformSpace
