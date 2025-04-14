@@ -100,8 +100,6 @@ theorem mk_coe (e : M ≃* N) (e' h₁ h₂ h₃) : (⟨⟨e, e', h₁, h₂⟩,
 @[to_additive (attr := simp)]
 lemma toFun_eq_coe (f : M ≃* N) : f.toFun = f := rfl
 
--- Porting note: `to_fun_eq_coe` no longer needed in Lean4
-
 @[to_additive (attr := simp)]
 theorem coe_toEquiv (f : M ≃* N) : ⇑f.toEquiv = f := rfl
 
