@@ -148,15 +148,6 @@ protected theorem Perm.congr_fun {f g : Equiv.Perm α} (h : f = g) (x : α) : f 
 
 instance inhabited' : Inhabited (α ≃ α) := ⟨Equiv.refl α⟩
 
-/-- Inverse of an equivalence `e : α ≃ β`. -/
-@[symm]
-protected def symm (e : α ≃ β) : β ≃ α := ⟨e.invFun, e.toFun, e.right_inv, e.left_inv⟩
-
-/-- See Note [custom simps projection] -/
-def Simps.symm_apply (e : α ≃ β) : β → α := e.symm
-
-initialize_simps_projections Equiv (toFun → apply, invFun → symm_apply)
-
 /-- Restatement of `Equiv.left_inv` in terms of `Function.LeftInverse`. -/
 theorem left_inv' (e : α ≃ β) : Function.LeftInverse e.symm e := e.left_inv
 /-- Restatement of `Equiv.right_inv` in terms of `Function.RightInverse`. -/

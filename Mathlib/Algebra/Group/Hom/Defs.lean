@@ -8,6 +8,7 @@ import Mathlib.Algebra.Group.Defs
 import Mathlib.Algebra.Notation.Pi
 import Mathlib.Data.FunLike.Basic
 import Mathlib.Logic.Function.Iterate
+import Mathlib.Tactic.Spread
 
 /-!
 # Monoid and group homomorphisms
