@@ -594,32 +594,6 @@ instance : Inhabited (α ≃*o α) :=
 
 variable {α}
 
-/-- Symmetry of multiplication-preserving order isomorphisms -/
-@[to_additive (attr := symm) "Symmetry of addition-preserving order isomorphisms"]
-def symm (f : α ≃*o β) : β ≃*o α where
-  toMulEquiv := f.toMulEquiv.symm
-  map_le_map_iff' {a b} := by simp [← f.map_le_map_iff']
-
-@[to_additive (attr := simp)]
-lemma apply_symm_apply (f : α ≃*o β) (b : β) : f (f.symm b) = b := f.right_inv _
-
-@[to_additive (attr := simp)]
-lemma symm_apply_apply (f : α ≃*o β) (a : α) : f.symm (f a) = a := f.left_inv _
-
-@[to_additive (attr := simp)]
-lemma toMonoidHom_comp_toMonoidHom_symm {α β : Type*} [MulOneClass α] [MulOneClass β] [Preorder α]
-    [Preorder β] (f : α ≃*o β) : f.toMonoidHom.comp f.symm.toMonoidHom = .id _ := by ext; simp
-
-@[to_additive (attr := simp)]
-lemma toMonoidHom_comp_symm {α β : Type*} [MulOneClass α] [MulOneClass β] [Preorder α] [Preorder β]
-    (f : α ≃*o β) : f.toMonoidHom.comp f.symm.toMonoidHom = .id _ := by ext; simp
-
-@[to_additive (attr := simp, norm_cast)]
-lemma coe_symm_mulEquiv (f : α ≃*o β) : (f.symm : β ≃* α) = (f : α ≃* β).symm := rfl
-
-@[to_additive (attr := simp, norm_cast)]
-lemma coe_symm_orderIso (f : α ≃*o β) : (f.symm : β ≃o α) = (f : α ≃o β).symm := rfl
-
 /-- Transitivity of multiplication-preserving order isomorphisms -/
 @[to_additive (attr := trans) "Transitivity of addition-preserving order isomorphisms"]
 def trans (f : α ≃*o β) (g : β ≃*o γ) : α ≃*o γ :=
@@ -680,12 +654,12 @@ def symm (f : α ≃*o β) : β ≃*o α :=
   ⟨f.toMulEquiv.symm, f.toOrderIso.symm.map_rel_iff⟩
 
 /-- See Note [custom simps projection]. -/
-@[to_additive "See Note [custom simps projection]."]
+@[to_additive "See note."]
 def Simps.apply (h : α ≃*o β) : α → β :=
   h
 
-/-- See Note [custom simps projection] -/
-@[to_additive "See Note [custom simps projection]."]
+/-- See Note [custom simps projection]. -/
+@[to_additive "See note."]
 def Simps.symm_apply (h : α ≃*o β) : β → α :=
   h.symm
 
@@ -695,15 +669,14 @@ initialize_simps_projections OrderMonoidIso (toFun → apply, invFun → symm_ap
 @[to_additive]
 theorem invFun_eq_symm {f : α ≃*o β} : f.invFun = f.symm := rfl
 
-/-- `simp`-normal form of `invFun_eq_symm`. -/
 @[to_additive (attr := simp)]
-theorem coe_toEquiv_symm (f : α ≃*o β) : ((f : α ≃ β).symm : β → α) = f.symm := rfl
+theorem symm_toEquiv (f : α ≃*o β) : f.toEquiv.symm = f.symm.toEquiv := rfl
+
+@[to_additive (attr := simp)]
+lemma symm_toOrderIso (f : α ≃*o β) : f.toOrderIso.symm = f.symm.toOrderIso := rfl
 
 @[to_additive (attr := simp)]
 theorem equivLike_inv_eq_symm (f : α ≃*o β) : EquivLike.inv f = f.symm := rfl
-
-@[to_additive (attr := simp)]
-theorem toEquiv_symm (f : α ≃*o β) : (f.symm : β ≃ α) = (f : α ≃ β).symm := rfl
 
 @[to_additive (attr := simp)]
 theorem symm_symm (f : α ≃*o β) : f.symm.symm = f := rfl
