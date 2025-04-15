@@ -72,7 +72,7 @@ lemma superadditive {m n : ℕ+} : f m + f n ≤ f (m + n) := by
   have h := hf.rel m n
   rcases h with ( hl | hr )
   · rw [hl]
-  · rw [hr]; nth_rewrite 1 [← add_zero (f n), ← add_assoc]; apply add_le_add_right (by norm_num)
+  · rw [hr]; omega
 
 lemma superhomogeneous {m n : ℕ+} : ↑n * f m ≤ f (n * m) := by
   induction n with
