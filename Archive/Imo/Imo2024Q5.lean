@@ -502,7 +502,7 @@ lemma Strategy.play_two (s : Strategy N) (m : MonsterData N) {k : ℕ} (hk : 2 <
     s.play m k ⟨2, hk⟩ = (s ![(s Fin.elim0).firstMonster m,
       (s ![(s Fin.elim0).firstMonster m]).firstMonster m]).firstMonster m := by
   have hk' : 3 ≤ k := by omega
-  rw [s.play_apply_of_le m (by norm_num : 2 < 3) hk']
+  rw [s.play_apply_of_le m (by simp : 2 < 3) hk']
   simp only [play, Fin.snoc, lt_self_iff_false, ↓reduceDIte, Nat.reduceAdd, Nat.zero_eq,
     Fin.mk_one, Fin.isValue, cast_eq, Nat.succ_eq_add_one]
   congr

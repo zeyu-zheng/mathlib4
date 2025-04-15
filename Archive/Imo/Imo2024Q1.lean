@@ -57,7 +57,7 @@ lemma condition_sub_two_mul_int_iff {α : ℝ} (m : ℤ) : Condition (α - 2 * m
   simp
 
 lemma condition_toIcoMod_iff {α : ℝ} :
-    Condition (toIcoMod (by norm_num : (0 : ℝ) < 2) 0 α) ↔ Condition α := by
+    Condition (toIcoMod (by simp : (0 : ℝ) < 2) 0 α) ↔ Condition α := by
   rw [toIcoMod, zsmul_eq_mul, mul_comm, condition_sub_two_mul_int_iff]
 
 namespace Condition

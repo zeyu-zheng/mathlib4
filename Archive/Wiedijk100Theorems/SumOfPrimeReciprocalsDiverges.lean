@@ -217,7 +217,7 @@ theorem Real.tendsto_sum_one_div_prime_atTop :
   have h3 :=
     calc
       (#U' : ℝ) ≤ x * ∑ p ∈ P, 1 / (p : ℝ) := card_le_mul_sum
-      _ < x * (1 / 2) := mul_lt_mul_of_pos_left (h1 x) (by norm_num [x])
+      _ < x * (1 / 2) := mul_lt_mul_of_pos_left (h1 x) (by simp [x])
       _ = x / 2 := mul_one_div (x : ℝ) 2
   have h4 :=
     calc

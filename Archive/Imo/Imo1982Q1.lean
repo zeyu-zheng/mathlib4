@@ -115,7 +115,7 @@ lemma imo1982_q1 {f : ℕ+ → ℕ} (hf : IsGood f) : f 1982 = 660 := by
   rw [f_1980, hf.f₂, add_zero] at h
   apply h.resolve_right
   intro hr
-  suffices h : 3334 ≤ 3333 by norm_num at h
+  suffices h : 3334 ≤ 3333 by simp at h
   calc
     3334 = 5 * f 1982 + 29 * f 3 + f 2 := by rw [hf.f₃, hf.f₂, hr, add_zero, mul_one]
     (5 : ℕ+) * f 1982 + (29 : ℕ+) * f 3 + f 2 ≤ f (5 * 1982 + 29 * 3) + f 2 :=

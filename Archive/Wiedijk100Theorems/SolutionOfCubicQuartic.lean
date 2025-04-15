@@ -112,8 +112,8 @@ theorem cubic_eq_zero_iff (ha : a ≠ 0) (hω : IsPrimitiveRoot ω 3)
       x = s - t - b / (3 * a) ∨
         x = s * ω - t * ω ^ 2 - b / (3 * a) ∨ x = s * ω ^ 2 - t * ω - b / (3 * a) := by
   let y := x + b / (3 * a)
-  have h9 : (9 : K) = 3 ^ 2 := by norm_num
-  have h54 : (54 : K) = 2 * 3 ^ 3 := by norm_num
+  have h9 : (9 : K) = 3 ^ 2 := by simp
+  have h54 : (54 : K) = 2 * 3 ^ 3 := by simp
   have h₁ : a * x ^ 3 + b * x ^ 2 + c * x + d = a * (y ^ 3 + 3 * p * y - 2 * q) := by
     rw [hp, hq]
     simp [field_simps, y, ha, h9, h54]; ring
@@ -132,7 +132,7 @@ theorem cubic_eq_zero_iff_of_p_eq_zero (ha : a ≠ 0) (hω : IsPrimitiveRoot ω 
     intros; simp only [mul_eq_zero, sub_eq_zero, or_assoc]
   have hi2 : (2 : K) ≠ 0 := Invertible.ne_zero _
   have hi3 : (3 : K) ≠ 0 := Invertible.ne_zero _
-  have h54 : (54 : K) = 2 * 3 ^ 3 := by norm_num
+  have h54 : (54 : K) = 2 * 3 ^ 3 := by simp
   have hb2 : b ^ 2 = 3 * a * c := by rw [sub_eq_zero] at hpz; rw [hpz]
   have hb3 : b ^ 3 = 3 * a * b * c := by rw [pow_succ, hb2]; ring
   have h₂ :=
@@ -173,7 +173,7 @@ theorem quartic_depressed_eq_zero_iff
     x ^ 4 + p * x ^ 2 + q * x + r = 0 ↔
       x = (-2 * s - v) / 4 ∨ x = (-2 * s + v) / 4 ∨ x = (2 * s - w) / 4 ∨ x = (2 * s + w) / 4 := by
   have hi2 : (2 : K) ≠ 0 := Invertible.ne_zero _
-  have h4 : (4 : K) = 2 ^ 2 := by norm_num
+  have h4 : (4 : K) = 2 ^ 2 := by simp
   have hs_nonzero : s ≠ 0 := by
     contrapose! hq_nonzero with hs0
     linear_combination (exp := 2) -hu + (4 * r - u ^ 2) * hs + (u ^ 2 * s - 4 * r * s) * hs0
@@ -189,7 +189,7 @@ theorem quartic_depressed_eq_zero_iff
       have hv' : discrim 2 (2 * s) (u - q / s) = v * v := by rw [discrim]; linear_combination -hv
       have hw' : discrim 2 (-(2 * s)) (u + q / s) = w * w := by rw [discrim]; linear_combination -hw
       rw [mul_eq_zero, quadratic_eq_zero_iff hi2 hv', quadratic_eq_zero_iff hi2 hw']
-      simp [(by norm_num : (2 : K) * 2 = 4), or_assoc, or_comm]
+      simp [(by simp : (2 : K) * 2 = 4), or_assoc, or_comm]
 
 /-- **The Solution of Quartic**.
   The roots of a quartic polynomial when `q` is nonzero. See [Zwillinger](zwillinger2003).
@@ -208,10 +208,10 @@ theorem quartic_eq_zero_iff (ha : a ≠ 0)
       x = (-2 * s - v) / 4 - b / (4 * a) ∨ x = (-2 * s + v) / 4 - b / (4 * a) ∨
         x = (2 * s - w) / 4 - b / (4 * a) ∨ x = (2 * s + w) / 4 - b / (4 * a) := by
   let y := x + b / (4 * a)
-  have h4 : (4 : K) = 2 ^ 2 := by norm_num
-  have h8 : (8 : K) = 2 ^ 3 := by norm_num
-  have h16 : (16 : K) = 2 ^ 4 := by norm_num
-  have h256 : (256 : K) = 2 ^ 8 := by norm_num
+  have h4 : (4 : K) = 2 ^ 2 := by simp
+  have h8 : (8 : K) = 2 ^ 3 := by simp
+  have h16 : (16 : K) = 2 ^ 4 := by simp
+  have h256 : (256 : K) = 2 ^ 8 := by simp
   have h₁ : a * x ^ 4 + b * x ^ 3 + c * x ^ 2 + d * x + e =
       a * (y ^ 4 + p * y ^ 2 + q * y + r) := by
     rw [hp, hq, hr]
@@ -232,10 +232,10 @@ theorem quartic_eq_zero_iff_of_q_eq_zero (ha : a ≠ 0)
     a * x ^ 4 + b * x ^ 3 + c * x ^ 2 + d * x + e = 0 ↔
       x = v - b / (4 * a) ∨ x = -v - b / (4 * a) ∨ x = w - b / (4 * a) ∨ x = -w - b / (4 * a) := by
   let y := x + b / (4 * a)
-  have h4 : (4 : K) = 2 ^ 2 := by norm_num
-  have h8 : (8 : K) = 2 ^ 3 := by norm_num
-  have h16 : (16 : K) = 2 ^ 4 := by norm_num
-  have h256 : (256 : K) = 2 ^ 8 := by norm_num
+  have h4 : (4 : K) = 2 ^ 2 := by simp
+  have h8 : (8 : K) = 2 ^ 3 := by simp
+  have h16 : (16 : K) = 2 ^ 4 := by simp
+  have h256 : (256 : K) = 2 ^ 8 := by simp
   have h₁ : a * x ^ 4 + b * x ^ 3 + c * x ^ 2 + d * x + e = a * (y ^ 4 + p * y ^ 2 + r) := by
     rw [hp, hr]
     simp [field_simps, y, ha, h4, h8, h16, h256]

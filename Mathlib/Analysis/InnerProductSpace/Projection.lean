@@ -582,7 +582,7 @@ variable (K)
 
 /-- The orthogonal projection has norm `≤ 1`. -/
 theorem orthogonalProjection_norm_le : ‖orthogonalProjection K‖ ≤ 1 :=
-  LinearMap.mkContinuous_norm_le _ (by norm_num) _
+  LinearMap.mkContinuous_norm_le _ (by simp) _
 
 variable (𝕜)
 
@@ -959,7 +959,7 @@ theorem reflection_orthogonalComplement_singleton_eq_neg (v : E) : reflection (�
 theorem reflection_sub {v w : F} (h : ‖v‖ = ‖w‖) : reflection (ℝ ∙ (v - w))ᗮ v = w := by
   set R : F ≃ₗᵢ[ℝ] F := reflection (ℝ ∙ v - w)ᗮ
   suffices R v + R v = w + w by
-    apply smul_right_injective F (by norm_num : (2 : ℝ) ≠ 0)
+    apply smul_right_injective F (by simp : (2 : ℝ) ≠ 0)
     simpa [two_smul] using this
   have h₁ : R (v - w) = -(v - w) := reflection_orthogonalComplement_singleton_eq_neg (v - w)
   have h₂ : R (v + w) = v + w := by
