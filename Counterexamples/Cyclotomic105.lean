@@ -24,10 +24,10 @@ namespace Counterexample
 section Computation
 
 instance Nat.fact_prime_five : Fact (Nat.Prime 5) :=
-  ⟨by simp⟩
+  ⟨by norm_num⟩
 
 instance Nat.fact_prime_seven : Fact (Nat.Prime 7) :=
-  ⟨by simp⟩
+  ⟨by norm_num⟩
 
 theorem properDivisors_15 : Nat.properDivisors 15 = {1, 3, 5} :=
   rfl
