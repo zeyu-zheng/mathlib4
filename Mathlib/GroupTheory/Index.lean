@@ -52,7 +52,9 @@ Returns 0 if the index is infinite."]
 noncomputable def index : ℕ :=
   Nat.card (G ⧸ H)
 
-scoped notation "[" G ":" H "]" => @Subgroup.index G _ H
+@[inherit_doc index] scoped notation "[" G ":" H "]" => @Subgroup.index G _ H
+
+@[inherit_doc AddSubgroup.index]
 scoped[AddSubgroup] notation "[" G ":" H "]" => @AddSubgroup.index G _ H
 
 /-- If `H` and `K` are subgroups of a group `G`, then `relindex H K : ℕ` is the index
