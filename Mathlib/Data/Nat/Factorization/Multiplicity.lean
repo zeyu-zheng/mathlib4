@@ -42,36 +42,12 @@ open Finset List Finsupp
 
 namespace Nat
 
-theorem Ico_pow_dvd_eq_Ico_of_lt {n p b : ℕ} (pp : p.Prime) (hn : n ≠ 0) (hb : n < p ^ b) :
-    {i ∈ Ico 1 n | p ^ i ∣ n} = {i ∈ Ico 1 b | p ^ i ∣ n} := by
-  ext i
-  simp only [Finset.mem_filter, mem_Ico, and_congr_left_iff, and_congr_right_iff]
-  refine fun h1 h2 ↦ ⟨fun h ↦ ?_, fun h ↦ lt_of_pow_dvd_right hn (Prime.one_lt pp) h1⟩
-  rcases p with - | p
-  · rw [zero_pow (not_eq_zero_of_lt h2), zero_dvd_iff] at h1
-    exact (hn h1).elim
-  · refine LE.le.trans_lt (le_log_of_pow_le pp.one_lt ?_) ((lt_pow_iff_log_lt pp.one_lt hn).mp hb)
-    obtain ⟨k, rfl⟩ := h1
-    exact Nat.le_mul_of_pos_right ((p + 1) ^ i)
-      (zero_lt_of_ne_zero <| Nat.ne_zero_of_mul_ne_zero_right hn)
-
-/-- The factorization of `m` in `n` is the number of positive natural numbers `i` such that `m ^ i`
-divides `n`. Note `m` is prime. This set is expressed by filtering `Ico 1 b` where `b` is any bound
-greater than `log m n`. -/
-theorem factorization_eq_card_pow_dvd_of_lt {m n b : ℕ}
-    (hm2: m.Prime) (hn : 0 < n) (hb : log m n < b) :
-    n.factorization m = #{i ∈ Ico 1 b | m ^ i ∣ n} :=  calc
-    n.factorization m = #{i ∈ Ico 1 b | m ^ i ∣ n} := by {
-  rw [factorization_eq_card_pow_dvd n hm2, Ico_pow_dvd_eq_Ico_of_lt hm2 (not_eq_zero_of_lt hn)]
-  exact lt_pow_of_log_lt (Prime.one_lt hm2) hb
-}
-
 /-- **Legendre's Theorem**
 
 The multiplicity of a prime in `n!` is the sum of the quotients `n / p ^ i`. This sum is expressed
 over the finset `Ico 1 b` where `b` is any bound greater than `log p n`. -/
 theorem factorization_factorial {p : ℕ} (hp : p.Prime) :
-    ∀ {n b : ℕ}, log p n < b → (n !).factorization p = (∑ i ∈ Ico 1 b, n / p ^ i : ℕ)
+    ∀ {n b : ℕ}, log p n < b → (n !).factorization p = ∑ i ∈ Ico 1 b, n / p ^ i
   | 0, b, _ => by simp
   | n + 1, b, hb =>
     calc
@@ -80,7 +56,8 @@ theorem factorization_factorial {p : ℕ} (hp : p.Prime) :
           coe_add, Pi.add_apply]
       _ = #{i ∈ Ico 1 b | p ^ i ∣ n + 1} + (∑ i ∈ Ico 1 b, n / p ^ i : ℕ) := by
         rw [factorization_factorial hp ((log_mono_right <| le_succ _).trans_lt hb), add_left_inj]
-        apply factorization_eq_card_pow_dvd_of_lt hp (zero_lt_succ n) hb
+        apply factorization_eq_card_pow_dvd_of_lt hp (zero_lt_succ n)
+          (lt_pow_of_log_lt hp.one_lt hb)
       _ = (∑ i ∈ Ico 1 b, (n / p ^ i + if p ^ i ∣ n + 1 then 1 else 0) : ℕ) := by
         simp [Nat.add_comm, sum_add_distrib, sum_boole]
       _ = (∑ i ∈ Ico 1 b, (n + 1) / p ^ i : ℕ) :=
@@ -94,8 +71,8 @@ theorem sub_one_mul_factorization_factorial {n p : ℕ} (hp : p.Prime) :
     ← Finset.sum_Ico_add' _ 0 _ 1, Ico_zero_eq_range, ←
     sub_one_mul_sum_log_div_pow_eq_sub_sum_digits]
 
-/-- The factorization of `p` in `(p * (n + 1))!` is one more than the sum
-  of the factorizations of `p` in `(p * n)!` and `n + 1`. -/
+/-- The factorization of `p` in `(p * (n + 1))!` is one more than the sum of the factorizations of
+`p` in `(p * n)!` and `n + 1`. -/
 theorem factorization_factorial_mul_succ {n p : ℕ} (hp : p.Prime) :
     ((p * (n + 1))!).factorization p =
     ((p * n)!).factorization p + (n + 1).factorization p + 1 := by
@@ -106,44 +83,24 @@ theorem factorization_factorial_mul_succ {n p : ℕ} (hp : p.Prime) :
   have h4 : ∀ m ∈ Ico (p * n + 1) (p * (n + 1)), m.factorization p = 0 := by
     intro m hm
     apply factorization_eq_zero_of_not_dvd
-    have a1: m ≥ p * n + 1 ∧ m < p * (n + 1) := by
-      exact mem_Ico.mp hm
-    have a2: m > p * n := by
-      have a3: m ≥ p * n + 1 := a1.left
-      exact a3
-    have a3: m < p * (n + 1) := a1.right
-    exact not_dvd_of_between_consec_multiples a2 a3
-  have hS : ∀ x ∈ (Ico 1 (p * (n + 1) + 1)), x ≠ 0 := by
-    intro a1 a2 contra1
-    have contra2: a1 ≥ 1 := by
-      exact (Finset.mem_Ico.mp a2).left
-    rw [contra1] at contra2
-    contradiction
-  have hS2 : ∀ x ∈ (Ico 1 (p * n + 1)), x ≠ 0 := by
-    intro a1 a2 contra1
-    have contra2: a1 ≥ 1 := by
-      exact (Finset.mem_Ico.mp a2).left
-    rw [contra1] at contra2
-    contradiction
-  simp_rw [← prod_Ico_id_eq_factorial, factorization_prod_apply hS, ← sum_Ico_consecutive _ h1 h3,
-    add_assoc]
-  rw [sum_Ico_succ_top h2]
-  have h6: p ≠ 0 := by exact not_eq_zero_of_lt h0
-  have h7: n + 1 ≠ 0 := by exact Ne.symm (zero_ne_add_one n)
-  rw [factorization_prod_apply hS2]
-  rw [factorization_mul h6 h7, coe_add, Pi.add_apply, Prime.factorization_self hp,
-    sum_congr rfl h4, sum_const_zero, zero_add, add_comm 1]
+    exact not_dvd_of_between_consec_multiples (mem_Ico.mp hm).left (mem_Ico.mp hm).right
+  rw [← prod_Ico_id_eq_factorial, factorization_prod_apply (fun _ hx ↦  not_eq_zero_of_lt
+    (Finset.mem_Ico.mp hx).left), ← sum_Ico_consecutive _ h1 h3, add_assoc, sum_Ico_succ_top h2,
+    ← prod_Ico_id_eq_factorial, factorization_prod_apply (fun _ hx ↦  not_eq_zero_of_lt
+    (Finset.mem_Ico.mp hx).left), factorization_mul (not_eq_zero_of_lt h0) (zero_ne_add_one n).symm,
+    coe_add, Pi.add_apply, hp.factorization_self, sum_congr rfl h4, sum_const_zero, zero_add,
+    add_comm 1]
 
 /-- The factorization of `p` in `(p * n)!` is `n` more than that of `n!`. -/
 theorem factorization_factorial_mul {n p : ℕ} (hp : p.Prime) :
     ((p * n)!).factorization p = (n !).factorization p + n := by
-  induction' n with n ih
-  · simp
-  · simp only [factorization_factorial_mul_succ hp, ih, factorial_succ,
+  induction n with
+  | zero => simp
+  | succ n ih =>
+    simp only [factorization_factorial_mul_succ hp, ih, factorial_succ,
       cast_add, cast_one, ←add_assoc, factorization_mul (zero_ne_add_one n).symm
       (factorial_ne_zero n), coe_add, Pi.add_apply]
     ring
-
 
 theorem factorization_factorial_le_div_pred {p : ℕ} (hp : p.Prime) (n : ℕ) :
     (n !).factorization p ≤ (n / (p - 1) : ℕ) := by
@@ -168,25 +125,16 @@ theorem multiplicity_choose_aux {p n b k : ℕ} (hp : p.Prime) (hkn : k ≤ n) :
   is any bound greater than `log p (n + k)`. -/
 theorem factorization_choose' {p n k b : ℕ} (hp : p.Prime) (hnb : log p (n + k) < b) :
     (choose (n + k) k).factorization p = #{i ∈ Ico 1 b | p ^ i ≤ k % p ^ i + n % p ^ i} := by
-  have h₁ :
-      (choose (n + k) k).factorization p +  (k ! * n !).factorization p =
-        #{i ∈ Ico 1 b | p ^ i ≤ k % p ^ i + n % p ^ i} + (k ! * n !).factorization p := by
-    have h1: (n + k).choose k ≠ 0 := by
-      intro h
-      rw [Nat.choose_eq_zero_iff] at h
-      omega
-    have h2: k ! * n ! ≠ 0 := by
-      have h3 : n ! ≠ 0 := by exact factorial_ne_zero n
-      have h4 : k ! ≠ 0 := by exact factorial_ne_zero k
-      exact Nat.mul_ne_zero h4 h3
-    rw [← Pi.add_apply, ← coe_add, ← factorization_mul h1 h2, ← mul_assoc]
-    have h2:= (add_tsub_cancel_right n k) ▸ choose_mul_factorial_mul_factorial (le_add_left k n)
-    rw [h2, factorization_factorial hp hnb,
-      factorization_mul (factorial_ne_zero k) (factorial_ne_zero n), coe_add,
-      Pi.add_apply, factorization_factorial hp ((log_mono_right (le_add_left k n)).trans_lt hnb),
-      factorization_factorial hp ((log_mono_right (le_add_left n k)).trans_lt
+  have h₁ : (choose (n + k) k).factorization p +  (k ! * n !).factorization p
+    = #{i ∈ Ico 1 b | p ^ i ≤ k % p ^ i + n % p ^ i} + (k ! * n !).factorization p := by
+    have h2 := (add_tsub_cancel_right n k) ▸ choose_mul_factorial_mul_factorial (le_add_left k n)
+    rw [← Pi.add_apply, ← coe_add, ← factorization_mul (ne_of_gt <| choose_pos (le_add_left k n))
+      (Nat.mul_ne_zero (factorial_ne_zero k) (factorial_ne_zero n)), ← mul_assoc, h2,
+      factorization_factorial hp hnb, factorization_mul (factorial_ne_zero k) (factorial_ne_zero n),
+      coe_add, Pi.add_apply, factorization_factorial hp ((log_mono_right (le_add_left k n)).trans_lt
+      hnb), factorization_factorial hp ((log_mono_right (le_add_left n k)).trans_lt
       (add_comm n k ▸ hnb)), multiplicity_choose_aux hp (le_add_left k n)]
-    simp [add_comm]
+    simp only [add_tsub_cancel_right, add_comm]
   exact Nat.add_right_cancel h₁
 
 /-- The factorization of `p` in `choose n k` is the number of carries when `k` and `n - k`
@@ -212,17 +160,10 @@ theorem factorization_le_factorization_choose_add {p : ℕ} :
   | n, 0, _, _ => by tauto
   | 0, x + 1, _, _ => by simp
   | n + 1, k + 1, hkn, hk => by
-    have h0: (n + 1).choose (k + 1) ≠ 0 := by
-      intro h2
-      rw [choose_eq_zero_iff] at h2
-      omega
-    rw [← Pi.add_apply, ← coe_add, ← factorization_mul h0 (Ne.symm (zero_ne_add_one k))]
-    have h1: (n + 1) ≠ 0 := by
-      exact Ne.symm (zero_ne_add_one n)
-    have h2: (n + 1).choose (k + 1) * (k + 1) ≠ 0 := by
-      have h3: (k + 1) ≠ 0 := by exact Ne.symm (zero_ne_add_one k)
-      exact Nat.mul_ne_zero h0 h3
-    refine factorization_le_factorization_of_dvd_right ?_ h1 h2
+    rw [← Pi.add_apply, ← coe_add, ← factorization_mul (ne_of_gt <| choose_pos hkn)
+      (zero_ne_add_one k).symm]
+    refine factorization_le_factorization_of_dvd_right ?_ (zero_ne_add_one n).symm
+      (Nat.mul_ne_zero (ne_of_gt <| choose_pos hkn) (zero_ne_add_one k).symm)
     rw [← succ_mul_choose_eq]
     exact dvd_mul_right _ _
 
@@ -231,25 +172,20 @@ variable {p n k : ℕ}
 theorem factorization_choose_prime_pow_add_factorization (hp : p.Prime) (hkn : k ≤ p ^ n)
     (hk0 : k ≠ 0) : (choose (p ^ n) k).factorization p + k.factorization p = n := by
   apply le_antisymm
-  · have hdisj :
-      Disjoint {i ∈ Ico 1 n.succ | p ^ i ≤ k % p ^ i + (p ^ n - k) % p ^ i}
+  · have hdisj : Disjoint {i ∈ Ico 1 n.succ | p ^ i ≤ k % p ^ i + (p ^ n - k) % p ^ i}
         {i ∈ Ico 1 n.succ | p ^ i ∣ k} := by
-      simp +contextual [Finset.disjoint_right, *, dvd_iff_mod_eq_zero,
-        Nat.mod_lt _ (pow_pos hp.pos _)]
-    rw [factorization_choose hp hkn (lt_succ_self _),
-        factorization_eq_card_pow_dvd_of_lt hp hk0.bot_lt
-          (lt_succ_of_le (log_mono_right hkn))]
-    rw [log_pow hp.one_lt, ← card_union_of_disjoint hdisj, filter_union_right]
+      simp +contextual [Finset.disjoint_right, dvd_iff_mod_eq_zero, Nat.mod_lt _ (pow_pos hp.pos _)]
+    rw [factorization_choose hp hkn (lt_succ_self _), factorization_eq_card_pow_dvd_of_lt hp
+      hk0.bot_lt (lt_of_le_of_lt hkn <| Nat.pow_lt_pow_succ hp.one_lt), log_pow hp.one_lt,
+      ← card_union_of_disjoint hdisj, filter_union_right]
     have filter_le_Ico := (Ico 1 n.succ).card_filter_le
       fun x => p ^ x ≤ k % p ^ x + (p ^ n - k) % p ^ x ∨ p ^ x ∣ k
     rwa [card_Ico 1 n.succ] at filter_le_Ico
-  · have h1: (p ^ n).factorization p = n := by
-      exact factorization_pow_self hp
-    nth_rewrite 1 [← h1]
+  · nth_rewrite 1 [← factorization_pow_self (n:=n) hp]
     exact factorization_le_factorization_choose_add hkn hk0
 
 theorem factorization_choose_prime_pow {p n k : ℕ} (hp : p.Prime) (hkn : k ≤ p ^ n) (hk0 : k ≠ 0) :
-    (choose (p ^ n) k).factorization p = ↑(n - k.factorization p) := by
+    (choose (p ^ n) k).factorization p = n - k.factorization p := by
   nth_rewrite 2 [← factorization_choose_prime_pow_add_factorization hp hkn hk0]
   rw [Nat.add_sub_cancel_right]
 

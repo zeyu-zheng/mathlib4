@@ -531,6 +531,25 @@ theorem Ico_filter_pow_dvd_eq {n p b : ℕ} (pp : p.Prime) (hn : n ≠ 0) (hb : 
   exact iff_of_true (lt_of_pow_dvd_right hn pp.two_le h1) <|
     (Nat.pow_le_pow_iff_right pp.one_lt).1 <| (le_of_dvd hn.bot_lt h1).trans hb
 
+theorem Ico_pow_dvd_eq_Ico_of_lt {n p b : ℕ} (pp : p.Prime) (hn : n ≠ 0) (hb : n < p ^ b) :
+    {i ∈ Ico 1 n | p ^ i ∣ n} = {i ∈ Ico 1 b | p ^ i ∣ n} := by
+  ext i
+  simp only [Finset.mem_filter, mem_Ico, and_congr_left_iff, and_congr_right_iff]
+  refine fun h1 h2 ↦ ⟨fun h ↦ ?_, fun h ↦ lt_of_pow_dvd_right hn (Prime.one_lt pp) h1⟩
+  rcases p with - | p
+  · rw [zero_pow (not_eq_zero_of_lt h2), zero_dvd_iff] at h1
+    exact (hn h1).elim
+  · rw [←Nat.pow_lt_pow_iff_right (Prime.one_lt pp)]
+    apply lt_of_le_of_lt (le_of_dvd (Nat.zero_lt_of_ne_zero hn) h1) hb
+
+/-- The factorization of `m` in `n` is the number of positive natural numbers `i` such that `m ^ i`
+divides `n`. Note `m` is prime. This set is expressed by filtering `Ico 1 b` where `b` is any bound
+greater than `log m n`. -/
+theorem factorization_eq_card_pow_dvd_of_lt {m n b : ℕ}
+    (hm2: m.Prime) (hn : 0 < n) (hb : n < m ^ b) :
+    n.factorization m = #{i ∈ Ico 1 b | m ^ i ∣ n} := by
+  rwa [factorization_eq_card_pow_dvd n hm2, Ico_pow_dvd_eq_Ico_of_lt hm2 (not_eq_zero_of_lt hn)]
+
 /-! ### Factorization and coprimes -/
 
 
