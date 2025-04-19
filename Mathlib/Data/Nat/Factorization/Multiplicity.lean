@@ -28,11 +28,6 @@ coefficients.
    See `padicValNat_choose` for the same result but stated in the language of `p`-adic
    valuations and `sub_one_mul_padicValNat_choose_eq_sub_sum_digits` for a related result.
 
-## Other declarations
-
-* `Nat.factorization_eq_card_pow_dvd_of_lt`: The factorization of `m` in `n` is the number of
-  positive natural numbers `i` such that `m ^ i` divides `n`. Note m is prime.
-
 ## Tags
 
 Legendre, p-adic
