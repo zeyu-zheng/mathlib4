@@ -56,7 +56,7 @@ theorem factorization_factorial {p : ℕ} (hp : p.Prime) :
       _ = (∑ i ∈ Ico 1 b, (n / p ^ i + if p ^ i ∣ n + 1 then 1 else 0) : ℕ) := by
         simp [Nat.add_comm, sum_add_distrib, sum_boole]
       _ = (∑ i ∈ Ico 1 b, (n + 1) / p ^ i : ℕ) :=
-        Finset.sum_congr rfl fun _ _ => (succ_div _ _).symm
+        Finset.sum_congr rfl fun _ _ => Nat.succ_div.symm
 
 /-- For a prime number `p`, taking `(p - 1)` times the factorization of `p` in `n!` equals `n` minus
 the sum of base `p` digits of `n`. -/
@@ -79,10 +79,10 @@ theorem factorization_factorial_mul_succ {n p : ℕ} (hp : p.Prime) :
     intro m hm
     apply factorization_eq_zero_of_not_dvd
     exact not_dvd_of_between_consec_multiples (mem_Ico.mp hm).left (mem_Ico.mp hm).right
-  rw [← prod_Ico_id_eq_factorial, factorization_prod_apply (fun _ hx ↦  not_eq_zero_of_lt
-    (Finset.mem_Ico.mp hx).left), ← sum_Ico_consecutive _ h1 h3, add_assoc, sum_Ico_succ_top h2,
-    ← prod_Ico_id_eq_factorial, factorization_prod_apply (fun _ hx ↦  not_eq_zero_of_lt
-    (Finset.mem_Ico.mp hx).left), factorization_mul (not_eq_zero_of_lt h0) (zero_ne_add_one n).symm,
+  rw [← prod_Ico_id_eq_factorial, factorization_prod_apply (fun _ hx ↦ ne_zero_of_lt
+    (mem_Ico.mp hx).left), ← sum_Ico_consecutive _ h1 h3, add_assoc, sum_Ico_succ_top h2,
+    ← prod_Ico_id_eq_factorial, factorization_prod_apply (fun _ hx ↦ ne_zero_of_lt
+    (mem_Ico.mp hx).left), factorization_mul (ne_zero_of_lt h0) (zero_ne_add_one n).symm,
     coe_add, Pi.add_apply, hp.factorization_self, sum_congr rfl h4, sum_const_zero, zero_add,
     add_comm 1]
 
@@ -115,9 +115,9 @@ theorem multiplicity_choose_aux {p n b k : ℕ} (hp : p.Prime) (hkn : k ≤ n) :
     _ = _ := by simp [sum_add_distrib, sum_boole]
 
 
-/-- The factorization of `p` in `choose (n + k) k` is the number of carries when `k` and `n`
-  are added in base `p`. The set is expressed by filtering `Ico 1 b` where `b`
-  is any bound greater than `log p (n + k)`. -/
+/-- The factorization of `p` in `choose (n + k) k` is the number of carries when `k` and `n` are
+added in base `p`. The set is expressed by filtering `Ico 1 b` where `b` is any bound greater
+than `log p (n + k)`. -/
 theorem factorization_choose' {p n k b : ℕ} (hp : p.Prime) (hnb : log p (n + k) < b) :
     (choose (n + k) k).factorization p = #{i ∈ Ico 1 b | p ^ i ≤ k % p ^ i + n % p ^ i} := by
   have h₁ : (choose (n + k) k).factorization p +  (k ! * n !).factorization p
@@ -133,22 +133,20 @@ theorem factorization_choose' {p n k b : ℕ} (hp : p.Prime) (hnb : log p (n + k
   exact Nat.add_right_cancel h₁
 
 /-- The factorization of `p` in `choose n k` is the number of carries when `k` and `n - k`
-  are added in base `p`. The set is expressed by filtering `Ico 1 b` where `b`
-  is any bound greater than `log p n`. -/
+are added in base `p`. The set is expressed by filtering `Ico 1 b` where `b`
+is any bound greater than `log p n`. -/
 theorem factorization_choose {p n k b : ℕ} (hp : p.Prime) (hkn : k ≤ n) (hnb : log p n < b) :
     (choose n k).factorization p = #{i ∈ Ico 1 b | p ^ i ≤ k % p ^ i + (n - k) % p ^ i} := by
   rw [←factorization_choose' hp ((Nat.sub_add_cancel hkn).symm ▸ hnb), Nat.sub_add_cancel hkn]
 
 /-- Modified version of `emultiplicity_le_emultiplicity_of_dvd_right`
-but for factorization.
--/
+but for factorization. -/
 theorem factorization_le_factorization_of_dvd_right {a b c : ℕ} (h : b ∣ c)
     (hb: b ≠ 0) (hc: c ≠ 0): b.factorization a ≤ c.factorization a := by
   rcases h with ⟨k, rfl⟩
   simp [factorization_mul hb (Nat.ne_zero_of_mul_ne_zero_right hc)]
 
-/-- A lower bound on the factorization of `p` in `choose n k`.
- -/
+/-- A lower bound on the factorization of `p` in `choose n k`. -/
 theorem factorization_le_factorization_choose_add {p : ℕ} :
     ∀ {n k : ℕ}, k ≤ n → k ≠ 0 →
       n.factorization p ≤ (choose n k).factorization p + k.factorization p
