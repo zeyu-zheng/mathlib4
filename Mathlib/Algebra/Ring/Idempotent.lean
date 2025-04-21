@@ -47,15 +47,15 @@ instance : HasCompl {a : R // IsIdempotentElem a} where compl a := ⟨1 - a, a.p
 
 end NonAssocRing
 
-section Semiring
-variable [Semiring R] {a b : R}
+section NonAssocSemiring
+variable [NonAssocSemiring R] {a b : R}
 
 lemma of_mul_add (mul : a * b = 0) (add : a + b = 1) : IsIdempotentElem a ∧ IsIdempotentElem b := by
   simp_rw [IsIdempotentElem]; constructor
   · conv_rhs => rw [← mul_one a, ← add, mul_add, mul, add_zero]
   · conv_rhs => rw [← one_mul b, ← add, add_mul, mul, zero_add]
 
-end Semiring
+end NonAssocSemiring
 
 section Ring
 variable [Ring R] {a b : R}

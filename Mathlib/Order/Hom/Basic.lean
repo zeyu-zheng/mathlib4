@@ -908,6 +908,12 @@ theorem le_symm_apply (e : α ≃o β) {x : α} {y : β} : x ≤ e.symm y ↔ e 
 theorem symm_apply_le (e : α ≃o β) {x : α} {y : β} : e.symm y ≤ x ↔ y ≤ e x :=
   e.symm_apply_rel
 
+/-- The order isomorphism between Pi types induced by order isomorphisms between components. -/
+def piCongrRight {ι} {α β : ι → Type*} [∀ i, LE (α i)] [∀ i, LE (β i)]
+    (e : ∀ i, α i ≃o β i) : (∀ i, α i) ≃o (∀ i, β i) where
+  __ := Equiv.piCongrRight fun i ↦ e i
+  map_rel_iff' := by simp_rw [Pi.le_def]; intros; congr! with i; exact (e i).map_rel_iff
+
 end LE
 
 variable [Preorder α] [Preorder β]

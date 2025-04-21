@@ -809,3 +809,34 @@ def booleanAlgebraOfComplemented [BoundedOrder α] [ComplementedLattice α] : Bo
   top_le_sup_compl a := (Classical.choose_spec (exists_isCompl a)).codisjoint.top_le
 
 end DistribLattice
+
+/-- Transfer `BooleanAlgebra` across an `Equiv` -/
+protected abbrev Equiv.booleanAlgebra {α β} (e : α ≃ β) [BooleanAlgebra β] : BooleanAlgebra α where
+  le a b := e a ≤ e b
+  lt a b := e a < e b
+  sup a b := e.symm (e a ⊔ e b)
+  inf a b := e.symm (e a ⊓ e b)
+  compl a := e.symm (e a)ᶜ
+  sdiff a b := e.symm (e a \ e b)
+  himp a b := e.symm (e a ⇨ e b)
+  top := e.symm ⊤
+  bot := e.symm ⊥
+  le_refl _ := le_rfl
+  le_trans _ _ _ := le_trans
+  le_antisymm _ _ h h' := e.injective (le_antisymm h h')
+  lt_iff_le_not_le _ _ := lt_iff_le_not_le
+  le_sup_left _ _ := e.apply_symm_apply _ ▸ le_sup_left
+  le_sup_right _ _ := e.apply_symm_apply _ ▸ le_sup_right
+  sup_le _ _ _ h h' := e.apply_symm_apply _ ▸ sup_le h h'
+  inf_le_left _ _ := e.apply_symm_apply _ ▸ inf_le_left
+  inf_le_right _ _ := e.apply_symm_apply _ ▸ inf_le_right
+  le_inf _ _ _ h h' := e.apply_symm_apply _ ▸ le_inf h h'
+  le_sup_inf _ _ _ := by simpa only [(· ⊔ ·), (· ⊓ ·), e.apply_symm_apply] using le_sup_inf
+  inf_compl_le_bot _ := by
+    simpa only [(· ⊓ ·), e.apply_symm_apply] using BooleanAlgebra.inf_compl_le_bot ..
+  top_le_sup_compl _ := by
+    simpa only [(· ⊔ ·), e.apply_symm_apply] using BooleanAlgebra.top_le_sup_compl ..
+  le_top _ := e.apply_symm_apply _ ▸ le_top
+  bot_le _ := e.apply_symm_apply _ ▸ bot_le
+  sdiff_eq _ _ := congr_arg e.symm (by rw [sdiff_eq, e.apply_symm_apply])
+  himp_eq _ _ := congr_arg e.symm (by rw [himp_eq, e.apply_symm_apply])

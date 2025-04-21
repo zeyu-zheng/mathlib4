@@ -134,3 +134,14 @@ theorem mk_bijOn (G : Type*) [Group G] :
     exact ⟨h, rfl⟩
 
 end ConjClasses
+
+@[to_additive] protected theorem Pi.isMulCentral_iff {ι} {M : ι → Type*} [∀ i, Mul (M i)]
+    {f : Π i, M i} : IsMulCentral f ↔ ∀ i, IsMulCentral (f i) where
+  mp h _ :=
+    have (i) : Nonempty (M i) := (isEmpty_or_nonempty _).resolve_left
+      fun h ↦ have := isEmpty_pi.mpr ⟨i, h⟩; isEmptyElim f
+    h.map_of_surjective (Pi.evalMulHom ..) (Function.apply_surjective _ _)
+  mpr h :=
+  { comm _ := funext fun i ↦ (h i).comm _
+    left_assoc _ _ := funext fun i ↦ (h i).left_assoc _ _
+    right_assoc _ _ := funext fun i ↦ (h i).right_assoc _ _ }

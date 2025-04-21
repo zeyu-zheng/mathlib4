@@ -158,6 +158,11 @@ theorem Injective.ne_iff (hf : Injective f) {x y : α} : f x ≠ f y ↔ x ≠ y
 theorem Injective.ne_iff' (hf : Injective f) {x y : α} {z : β} (h : f y = z) : f x ≠ z ↔ x ≠ y :=
   h ▸ hf.ne_iff
 
+theorem apply_surjective (β : α → Sort*) [∀ a, Nonempty (β a)] (a : α) :
+    Surjective fun f : ∀ a, β a ↦ f a :=
+  fun b ↦ ⟨fun a' ↦ by classical exact
+    if h : a' = a then h ▸ b else Classical.choice inferInstance, by simp⟩
+
 end Function
 
 namespace Function

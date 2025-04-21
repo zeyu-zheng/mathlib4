@@ -80,6 +80,12 @@ protected theorem left_comm (h : IsMulCentral a) (b c) : a * (b * c) = b * (a * 
 protected theorem right_comm (h : IsMulCentral c) (a b) : a * b * c = a * c * b := by
   simp only [h.right_assoc, h.mid_assoc, (h.comm _).eq]
 
+@[to_additive] theorem map_of_surjective {N F} [Mul N] (h : IsMulCentral a) [FunLike F M N]
+    [MulHomClass F M N] (f : F) (hf : Function.Surjective f) : IsMulCentral (f a) where
+  comm := hf.forall.mpr fun _ ↦ by simp_rw [commute_iff_eq, ← map_mul, (h.comm _).eq]
+  left_assoc := hf.forall₂.mpr fun _ _ ↦ by simp_rw [← map_mul, h.left_assoc]
+  right_assoc := hf.forall₂.mpr fun _ _ ↦ by simp_rw [← map_mul, h.right_assoc]
+
 end IsMulCentral
 
 namespace Set
