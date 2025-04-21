@@ -3147,6 +3147,7 @@ import Mathlib.Data.Nat.Factorial.SuperFactorial
 import Mathlib.Data.Nat.Factorization.Basic
 import Mathlib.Data.Nat.Factorization.Defs
 import Mathlib.Data.Nat.Factorization.Induction
+import Mathlib.Data.Nat.Factorization.LCM
 import Mathlib.Data.Nat.Factorization.Multiplicity
 import Mathlib.Data.Nat.Factorization.PrimePow
 import Mathlib.Data.Nat.Factorization.Root
