@@ -306,7 +306,7 @@ jobs:
         id: lint
         uses: leanprover-community/gh-problem-matcher-wrap@5786d89955c20a5afc41c930392e0e400ce1fc66
         with:
-          linters: lean
+          linters: gcc
           run: env LEAN_ABORT_ON_PANIC=1 lake exe runLinter Mathlib
 
       # We no longer run `lean4checker` in regular CI, as it is quite expensive for little benefit.
