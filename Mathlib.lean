@@ -4289,7 +4289,9 @@ import Mathlib.MeasureTheory.Measure.FiniteMeasureProd
 import Mathlib.MeasureTheory.Measure.GiryMonad
 import Mathlib.MeasureTheory.Measure.Haar.Basic
 import Mathlib.MeasureTheory.Measure.Haar.Disintegration
-import Mathlib.MeasureTheory.Measure.Haar.DistribChar
+import Mathlib.MeasureTheory.Measure.Haar.DistribChar.Basic
+import Mathlib.MeasureTheory.Measure.Haar.DistribChar.Complex
+import Mathlib.MeasureTheory.Measure.Haar.DistribChar.Real
 import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
 import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
 import Mathlib.MeasureTheory.Measure.Haar.OfBasis
