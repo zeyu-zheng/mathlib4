@@ -307,10 +307,12 @@ lemma eq_one_of_mul_eq_one_right (H : m * n = 1) : m = 1 := eq_one_of_dvd_one �
 lemma eq_one_of_mul_eq_one_left (H : m * n = 1) : n = 1 :=
   eq_one_of_mul_eq_one_right (n := m) (by rwa [Nat.mul_comm])
 
-@[simp] protected lemma lt_mul_iff_one_lt_left (hb : 0 < b) : b < a * b ↔ 1 < a := by
+@[simp high] -- high priority, to take priority over the general version
+protected lemma lt_mul_iff_one_lt_left (hb : 0 < b) : b < a * b ↔ 1 < a := by
   simpa using Nat.mul_lt_mul_right (b := 1) hb
 
-@[simp] protected lemma lt_mul_iff_one_lt_right (ha : 0 < a) : a < a * b ↔ 1 < b := by
+@[simp high] -- high priority, to take priority over the general version
+protected lemma lt_mul_iff_one_lt_right (ha : 0 < a) : a < a * b ↔ 1 < b := by
   simpa using Nat.mul_lt_mul_left (b := 1) ha
 
 lemma eq_zero_of_double_le (h : 2 * n ≤ n) : n = 0 := by omega
