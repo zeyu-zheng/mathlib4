@@ -269,7 +269,7 @@ section CharDvd
 
 variable {m : ℕ} [CharP R m]
 
-@[simp]
+-- @[simp] -- LHS does not simplify under `simp [*]`
 theorem cast_one (h : m ∣ n) : (cast (1 : ZMod n) : R) = 1 := by
   rcases n with - | n
   · exact Int.cast_one
@@ -315,23 +315,23 @@ def castHom (h : m ∣ n) (R : Type*) [Ring R] [CharP R m] : ZMod n →+* R wher
 theorem castHom_apply {h : m ∣ n} (i : ZMod n) : castHom h R i = cast i :=
   rfl
 
-@[simp]
+-- @[simp] -- LHS does not simplify under `simp [*]`
 theorem cast_sub (h : m ∣ n) (a b : ZMod n) : (cast (a - b : ZMod n) : R) = cast a - cast b :=
   (castHom h R).map_sub a b
 
-@[simp]
+-- @[simp] -- LHS does not simplify under `simp [*]`
 theorem cast_neg (h : m ∣ n) (a : ZMod n) : (cast (-a : ZMod n) : R) = -(cast a) :=
   (castHom h R).map_neg a
 
-@[simp]
+-- @[simp] -- LHS does not simplify under `simp [*]`
 theorem cast_pow (h : m ∣ n) (a : ZMod n) (k : ℕ) : (cast (a ^ k : ZMod n) : R) = (cast a) ^ k :=
   (castHom h R).map_pow a k
 
-@[simp, norm_cast]
+-- @[simp, norm_cast] -- LHS does not simplify under `simp [*]`
 theorem cast_natCast (h : m ∣ n) (k : ℕ) : (cast (k : ZMod n) : R) = k :=
   map_natCast (castHom h R) k
 
-@[simp, norm_cast]
+-- @[simp, norm_cast] -- LHS does not simplify under `simp [*]`
 theorem cast_intCast (h : m ∣ n) (k : ℤ) : (cast (k : ZMod n) : R) = k :=
   map_intCast (castHom h R) k
 
@@ -1226,13 +1226,13 @@ end Module
 section AddGroup
 variable {α : Type*} [AddGroup α] {n : ℕ}
 
-@[simp]
+-- @[simp] -- LHS does not simplify under `simp [*]`
 lemma nsmul_zmod_val_inv_nsmul (hn : (Nat.card α).Coprime n) (a : α) :
     n • (n⁻¹ : ZMod (Nat.card α)).val • a = a := by
   rw [← mul_nsmul', ← mod_natCard_nsmul, ← ZMod.val_natCast, Nat.cast_mul,
     ZMod.mul_val_inv hn.symm, ZMod.val_one_eq_one_mod, mod_natCard_nsmul, one_nsmul]
 
-@[simp]
+-- @[simp] -- LHS does not simplify under `simp [*]`
 lemma zmod_val_inv_nsmul_nsmul (hn : (Nat.card α).Coprime n) (a : α) :
     (n⁻¹ : ZMod (Nat.card α)).val • n • a = a := by
   rw [nsmul_left_comm, nsmul_zmod_val_inv_nsmul hn]
@@ -1243,13 +1243,13 @@ section Group
 variable {α : Type*} [Group α] {n : ℕ}
 
 -- TODO: Without the `existing`, `to_additive` chokes on `Inv (ZMod n)`.
-@[to_additive existing (attr := simp) nsmul_zmod_val_inv_nsmul]
+@[to_additive existing nsmul_zmod_val_inv_nsmul] -- LHS does not simplify under `simp [*]`
 lemma pow_zmod_val_inv_pow (hn : (Nat.card α).Coprime n) (a : α) :
     (a ^ (n⁻¹ : ZMod (Nat.card α)).val) ^ n = a := by
   rw [← pow_mul', ← pow_mod_natCard, ← ZMod.val_natCast, Nat.cast_mul, ZMod.mul_val_inv hn.symm,
     ZMod.val_one_eq_one_mod, pow_mod_natCard, pow_one]
 
-@[to_additive existing (attr := simp) zmod_val_inv_nsmul_nsmul]
+@[to_additive existing zmod_val_inv_nsmul_nsmul] -- LHS does not simplify under `simp [*]`
 lemma pow_pow_zmod_val_inv (hn : (Nat.card α).Coprime n) (a : α) :
     (a ^ n) ^ (n⁻¹ : ZMod (Nat.card α)).val = a := by rw [pow_right_comm, pow_zmod_val_inv_pow hn]
 

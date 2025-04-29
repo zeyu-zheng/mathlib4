@@ -349,7 +349,7 @@ theorem DifferentiableWithinAt.sum (h : ∀ i ∈ u, DifferentiableWithinAt 𝕜
   HasFDerivWithinAt.differentiableWithinAt <|
     HasFDerivWithinAt.sum fun i hi => (h i hi).hasFDerivWithinAt
 
-@[simp, fun_prop]
+@[fun_prop] -- LHS does not simplify under `simp [*]`
 theorem DifferentiableAt.sum (h : ∀ i ∈ u, DifferentiableAt 𝕜 (A i) x) :
     DifferentiableAt 𝕜 (fun y => ∑ i ∈ u, A i y) x :=
   HasFDerivAt.differentiableAt <| HasFDerivAt.sum fun i hi => (h i hi).hasFDerivAt
@@ -359,7 +359,7 @@ theorem DifferentiableOn.sum (h : ∀ i ∈ u, DifferentiableOn 𝕜 (A i) s) :
     DifferentiableOn 𝕜 (fun y => ∑ i ∈ u, A i y) s := fun x hx =>
   DifferentiableWithinAt.sum fun i hi => h i hi x hx
 
-@[simp, fun_prop]
+@[fun_prop] -- LHS does not simplify under `simp [*]`
 theorem Differentiable.sum (h : ∀ i ∈ u, Differentiable 𝕜 (A i)) :
     Differentiable 𝕜 fun y => ∑ i ∈ u, A i y := fun x => DifferentiableAt.sum fun i hi => h i hi x
 

@@ -272,10 +272,8 @@ lemma tilted_neg_same' (hf : Integrable (fun x ↦ exp (f x)) μ) :
     (μ.tilted f).tilted (-f) = (μ Set.univ)⁻¹ • μ := by
   rw [tilted_tilted hf]; simp
 
-@[simp]
 lemma tilted_neg_same [IsProbabilityMeasure μ] (hf : Integrable (fun x ↦ exp (f x)) μ) :
-    (μ.tilted f).tilted (-f) = μ := by
-  simp [hf]
+    (μ.tilted f).tilted (-f) = μ := by simp [*]
 
 lemma tilted_absolutelyContinuous (μ : Measure α) (f : α → ℝ) : μ.tilted f ≪ μ :=
   withDensity_absolutelyContinuous _ _

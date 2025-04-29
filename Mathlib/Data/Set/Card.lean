@@ -620,17 +620,17 @@ theorem ncard_le_ncard_insert (a : α) (s : Set α) : s.ncard ≤ (insert a s).n
     s.finite_or_infinite.elim (fun h ↦ ?_) (fun h ↦ by (rw [h.ncard]; exact Nat.zero_le _))
   rw [ncard_insert_eq_ite h]; split_ifs <;> simp
 
-@[simp] theorem ncard_pair {a b : α} (h : a ≠ b) : ({a, b} : Set α).ncard = 2 := by
-  rw [ncard_insert_of_not_mem, ncard_singleton]; simpa
+theorem ncard_pair {a b : α} (h : a ≠ b) : ({a, b} : Set α).ncard = 2 := by simp [*]
 
 @[simp] theorem ncard_diff_singleton_add_one {a : α} (h : a ∈ s)
     (hs : s.Finite := by toFinite_tac) : (s \ {a}).ncard + 1 = s.ncard := by
   to_encard_tac; rw [hs.cast_ncard_eq, hs.diff.cast_ncard_eq,
     encard_diff_singleton_add_one h]
 
-@[simp] theorem ncard_diff_singleton_of_mem {a : α} (h : a ∈ s) (hs : s.Finite := by toFinite_tac) :
+-- @[simp] -- this lemma is not confluent with the preceding one
+theorem ncard_diff_singleton_of_mem {a : α} (h : a ∈ s) (hs : s.Finite := by toFinite_tac) :
     (s \ {a}).ncard = s.ncard - 1 :=
-  eq_tsub_of_add_eq (ncard_diff_singleton_add_one h hs)
+  eq_tsub_of_add_eq <| by simp [*]
 
 theorem ncard_diff_singleton_lt_of_mem {a : α} (h : a ∈ s) (hs : s.Finite := by toFinite_tac) :
     (s \ {a}).ncard < s.ncard := by

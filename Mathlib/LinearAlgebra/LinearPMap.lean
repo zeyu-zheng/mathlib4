@@ -927,7 +927,7 @@ theorem mem_graph_toLinearPMap {g : Submodule R (E × F)}
   rw [toLinearPMap_apply_aux hg]
   exact valFromGraph_mem hg x.2
 
-@[simp]
+-- @[simp] -- LHS does not simplify under `simp [*]`
 theorem toLinearPMap_graph_eq (g : Submodule R (E × F))
     (hg : ∀ (x : E × F) (_hx : x ∈ g) (_hx' : x.fst = 0), x.snd = 0) :
     g.toLinearPMap.graph = g := by

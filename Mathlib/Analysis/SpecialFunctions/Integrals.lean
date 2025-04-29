@@ -210,7 +210,7 @@ theorem intervalIntegrable_one_div (h : ∀ x : ℝ, x ∈ [[a, b]] → f x ≠ 
     (hf : ContinuousOn f [[a, b]]) : IntervalIntegrable (fun x => 1 / f x) μ a b :=
   (continuousOn_const.div hf h).intervalIntegrable
 
-@[simp]
+-- @[simp] -- LHS does not simplify under `simp [*]`
 theorem intervalIntegrable_inv (h : ∀ x : ℝ, x ∈ [[a, b]] → f x ≠ 0)
     (hf : ContinuousOn f [[a, b]]) : IntervalIntegrable (fun x => (f x)⁻¹) μ a b := by
   simpa only [one_div] using intervalIntegrable_one_div h hf
@@ -219,7 +219,7 @@ theorem intervalIntegrable_inv (h : ∀ x : ℝ, x ∈ [[a, b]] → f x ≠ 0)
 theorem intervalIntegrable_exp : IntervalIntegrable exp μ a b :=
   continuous_exp.intervalIntegrable a b
 
-@[simp]
+-- @[simp] -- LHS does not simplify under `simp [*]`
 theorem _root_.IntervalIntegrable.log (hf : ContinuousOn f [[a, b]])
     (h : ∀ x : ℝ, x ∈ [[a, b]] → f x ≠ 0) :
     IntervalIntegrable (fun x => log (f x)) μ a b :=

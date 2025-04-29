@@ -195,7 +195,7 @@ theorem derivWithin_sum (h : ∀ i ∈ u, DifferentiableWithinAt 𝕜 (A i) s x)
   · exact (HasDerivWithinAt.sum fun i hi => (h i hi).hasDerivWithinAt).derivWithin hsx
   · simp [derivWithin_zero_of_not_uniqueDiffWithinAt hsx]
 
-@[simp]
+-- @[simp] -- LHS does not simplify under `simp [*]`
 theorem deriv_sum (h : ∀ i ∈ u, DifferentiableAt 𝕜 (A i) x) :
     deriv (fun y => ∑ i ∈ u, A i y) x = ∑ i ∈ u, deriv (A i) x :=
   (HasDerivAt.sum fun i hi => (h i hi).hasDerivAt).deriv

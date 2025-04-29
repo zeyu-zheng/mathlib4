@@ -250,14 +250,14 @@ theorem coe_chartAt_symm_fst (p : H × E) (q : TM) :
     ((chartAt (ModelProd H E) q).symm p).1 = ((chartAt H q.1).symm : H → M) p.1 :=
   rfl
 
-@[simp, mfld_simps]
+-- @[simp, mfld_simps] -- LHS does not simplify under `simp [*]`
 theorem trivializationAt_continuousLinearMapAt {b₀ b : M}
     (hb : b ∈ (trivializationAt E (TangentSpace I) b₀).baseSet) :
     (trivializationAt E (TangentSpace I) b₀).continuousLinearMapAt 𝕜 b =
       (tangentBundleCore I M).coordChange (achart H b) (achart H b₀) b :=
   (tangentBundleCore I M).localTriv_continuousLinearMapAt hb
 
-@[simp, mfld_simps]
+-- @[simp, mfld_simps] -- LHS does not simplify under `simp [*]`
 theorem trivializationAt_symmL {b₀ b : M}
     (hb : b ∈ (trivializationAt E (TangentSpace I) b₀).baseSet) :
     (trivializationAt E (TangentSpace I) b₀).symmL 𝕜 b =

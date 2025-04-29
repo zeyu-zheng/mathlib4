@@ -292,7 +292,8 @@ lemma monotone_of_continuous [IsScott α D] (hf : Continuous f) : Monotone f := 
   simpa only [mem_compl_iff, mem_preimage, mem_Iic, le_refl, not_true]
     using isUpperSet_of_isOpen (D := D) ((isOpen_compl_iff.2 isClosed_Iic).preimage hf) hab h
 
-@[simp] lemma scottContinuous_iff_continuous {D : Set (Set α)} [Topology.IsScott α D]
+-- @[simp] -- LHS does not simplify under `simp [*]`
+lemma scottContinuous_iff_continuous {D : Set (Set α)} [Topology.IsScott α D]
     (hD : ∀ a b : α, a ≤ b → {a, b} ∈ D) : ScottContinuousOn D f ↔ Continuous f := by
   refine ⟨fun h ↦ continuous_def.2 fun u hu ↦ ?_, ?_⟩
   · rw [isOpen_iff_isUpperSet_and_dirSupInaccOn (D := D)]

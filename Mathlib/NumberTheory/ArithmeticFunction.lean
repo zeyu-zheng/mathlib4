@@ -543,7 +543,7 @@ variable [MonoidWithZero R]
 theorem map_one {f : ArithmeticFunction R} (h : f.IsMultiplicative) : f 1 = 1 :=
   h.1
 
-@[simp]
+-- @[simp] -- LHS does not simplify under `simp [*]`
 theorem map_mul_of_coprime {f : ArithmeticFunction R} (hf : f.IsMultiplicative) {m n : ℕ}
     (h : m.Coprime n) : f (m * n) = f m * f n :=
   hf.2 h

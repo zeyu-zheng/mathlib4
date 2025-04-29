@@ -296,7 +296,7 @@ theorem disjoint_def' {p₁ p₂ : Submonoid M} :
 
 variable {t : Set M}
 
-@[to_additive (attr := simp)]
+@[to_additive] -- LHS does not simplify under `simp [*]`
 lemma closure_sdiff_eq_closure (hts : t ⊆ closure (s \ t)) : closure (s \ t) = closure s := by
   refine (closure_mono Set.diff_subset).antisymm <| closure_le.mpr <| fun x hxs ↦ ?_
   by_cases hxt : x ∈ t

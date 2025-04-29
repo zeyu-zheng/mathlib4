@@ -289,7 +289,7 @@ theorem mapAccumr₂_eq_map₂_of_constant_state (f : α → β → σ → σ ×
 If an accumulation function `f`, produces the same output bits regardless of accumulation state,
 then the state is redundant and can be optimized out.
 -/
-@[simp]
+-- @[simp] -- LHS does not simplify under `simp [*]`
 theorem mapAccumr_eq_map_of_unused_state (f : α → σ → σ × β) (s : σ)
     (h : ∀ a s s', (f a s).snd = (f a s').snd) :
     (mapAccumr f xs s).snd = (map (fun x => (f x s).snd) xs) :=
@@ -300,7 +300,7 @@ theorem mapAccumr_eq_map_of_unused_state (f : α → σ → σ × β) (s : σ)
 If an accumulation function `f`, produces the same output bits regardless of accumulation state,
 then the state is redundant and can be optimized out.
 -/
-@[simp]
+-- @[simp] -- LHS does not simplify under `simp [*]`
 theorem mapAccumr₂_eq_map₂_of_unused_state (f : α → β → σ → σ × γ) (s : σ)
     (h : ∀ a b s s', (f a b s).snd = (f a b s').snd) :
     (mapAccumr₂ f xs ys s).snd = (map₂ (fun x y => (f x y s).snd) xs ys) :=
@@ -345,7 +345,7 @@ variable {xs : Vector α n} {ys : Vector β n}
 If `f` returns the same output and next state for every value of it's first argument, then
 `xs : Vector` is ignored, and we can rewrite `mapAccumr₂` into `map`.
 -/
-@[simp]
+-- @[simp] -- LHS does not simplify under `simp [*]`
 theorem mapAccumr₂_unused_input_left [Inhabited α] (f : α → β → σ → σ × γ)
     (h : ∀ a b s, f default b s = f a b s) :
     mapAccumr₂ f xs ys s = mapAccumr (fun b s => f default b s) ys s := by
@@ -357,7 +357,7 @@ theorem mapAccumr₂_unused_input_left [Inhabited α] (f : α → β → σ → 
 If `f` returns the same output and next state for every value of it's second argument, then
 `ys : Vector` is ignored, and we can rewrite `mapAccumr₂` into `map`.
 -/
-@[simp]
+-- @[simp] -- LHS does not simplify under `simp [*]`
 theorem mapAccumr₂_unused_input_right [Inhabited β] (f : α → β → σ → σ × γ)
     (h : ∀ a b s, f a default s = f a b s) :
     mapAccumr₂ f xs ys s = mapAccumr (fun a s => f a default s) xs s := by

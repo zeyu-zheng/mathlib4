@@ -155,7 +155,7 @@ lemma LSeriesSummable.sum (hf : ∀ i ∈ S, LSeriesSummable (f i) s) :
     LSeriesSummable (∑ i ∈ S, f i) s := by
   simpa [LSeriesSummable, ← term_sum_apply] using summable_sum hf
 
-@[simp]
+-- @[simp] -- LHS does not simplify under `simp [*]`
 lemma LSeries_sum (hf : ∀ i ∈ S, LSeriesSummable (f i) s) :
     LSeries (∑ i ∈ S, f i) s = ∑ i ∈ S, LSeries (f i) s := by
   simpa [LSeries, term_sum] using Summable.tsum_finsetSum hf

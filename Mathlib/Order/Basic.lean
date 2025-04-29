@@ -472,14 +472,11 @@ abbrev ltTrichotomy (x y : α) (p q r : P) := ltByCases x y (fun _ => p) (fun _ 
 
 variable {p q r s : P}
 
-@[simp]
-lemma ltTrichotomy_lt (h : x < y) : ltTrichotomy x y p q r = p := ltByCases_lt h
+lemma ltTrichotomy_lt (h : x < y) : ltTrichotomy x y p q r = p := by simp [*]
 
-@[simp]
-lemma ltTrichotomy_gt (h : y < x) : ltTrichotomy x y p q r = r := ltByCases_gt h
+lemma ltTrichotomy_gt (h : y < x) : ltTrichotomy x y p q r = r := by simp [*]
 
-@[simp]
-lemma ltTrichotomy_eq (h : x = y) : ltTrichotomy x y p q r = q := ltByCases_eq h
+lemma ltTrichotomy_eq (h : x = y) : ltTrichotomy x y p q r = q := by simp [*]
 
 lemma ltTrichotomy_not_lt (h : ¬ x < y) :
     ltTrichotomy x y p q r = if y < x then r else q := ltByCases_not_lt h

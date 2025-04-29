@@ -320,7 +320,7 @@ theorem mem_idealRange (x : L) : f x ∈ idealRange f := by
   rw [idealRange_eq_map]
   exact LieIdeal.mem_map (LieSubmodule.mem_top x)
 
-@[simp]
+-- @[simp] -- LHS does not simplify under `simp [*]`
 theorem mem_idealRange_iff (h : IsIdealMorphism f) {y : L'} :
     y ∈ idealRange f ↔ ∃ x : L, f x = y := by
   rw [f.isIdealMorphism_def] at h
@@ -431,7 +431,7 @@ theorem map_sup_ker_eq_map' :
     LieIdeal.map f I ⊔ LieIdeal.map f (LieHom.ker f) = LieIdeal.map f I := by
   simpa using map_sup_ker_eq_map (f := f)
 
-@[simp]
+-- @[simp] -- LHS does not simplify under `simp [*]`
 theorem map_comap_eq (h : f.IsIdealMorphism) : map f (comap f J) = f.idealRange ⊓ J := by
   apply le_antisymm
   · rw [le_inf_iff]; exact ⟨f.map_le_idealRange _, map_comap_le⟩

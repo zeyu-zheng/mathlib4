@@ -256,7 +256,7 @@ end LinearMap
 
 section Nonneg
 
-@[simp]
+-- @[simp] -- LHS does not simplify under `simp [*]`
 theorem inner_product_apply_eigenvector {μ : 𝕜} {v : E} {T : E →ₗ[𝕜] E}
     (h : v ∈ Module.End.eigenspace T μ) : ⟪v, T v⟫ = μ * (‖v‖ : 𝕜) ^ 2 := by
   simp only [mem_eigenspace_iff.mp h, inner_smul_right, inner_self_eq_norm_sq_to_K]

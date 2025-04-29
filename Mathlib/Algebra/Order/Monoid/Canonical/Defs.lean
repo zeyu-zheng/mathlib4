@@ -179,7 +179,7 @@ end LE
 section Preorder
 variable [Preorder α] [CanonicallyOrderedMul α] {a b : α}
 
-@[to_additive (attr := simp)]
+@[to_additive] -- LHS does not simplify under `simp [*]`
 theorem one_lt_of_gt (h : a < b) : 1 < b :=
   h.bot_lt
 

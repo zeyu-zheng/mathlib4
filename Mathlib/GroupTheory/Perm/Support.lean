@@ -651,7 +651,7 @@ end Card
 
 end support
 
-@[simp]
+-- @[simp] -- `simp [*]` enters a loop on the LHS
 theorem support_subtype_perm [DecidableEq α] {s : Finset α} (f : Perm α) (h) :
     (f.subtypePerm h : Perm s).support = ({x | f x ≠ x} : Finset s) := by
   ext; simp [Subtype.ext_iff]

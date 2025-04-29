@@ -610,12 +610,12 @@ theorem localTriv_symm_fst (p : B × F) :
     (Z.localTriv i).toPartialHomeomorph.symm p = ⟨p.1, Z.coordChange i (Z.indexAt p.1) p.1 p.2⟩ :=
   rfl
 
-@[simp, mfld_simps]
+-- @[simp, mfld_simps] -- LHS does not simplify under `simp [*]`
 theorem localTriv_symm_apply {b : B} (hb : b ∈ Z.baseSet i) (v : F) :
     (Z.localTriv i).symm b v = Z.coordChange i (Z.indexAt b) b v := by
   apply (Z.localTriv i).symm_apply hb v
 
-@[simp, mfld_simps]
+-- @[simp, mfld_simps] -- LHS does not simplify under `simp [*]`
 theorem localTriv_coordChange_eq {b : B} (hb : b ∈ Z.baseSet i ∩ Z.baseSet j) (v : F) :
     (Z.localTriv i).coordChangeL R (Z.localTriv j) b v = Z.coordChange i j b v := by
   rw [Trivialization.coordChangeL_apply', localTriv_symm_fst, localTriv_apply, coordChange_comp]
@@ -671,7 +671,7 @@ theorem isOpenMap_proj : IsOpenMap Z.proj :=
 
 variable {i j}
 
-@[simp, mfld_simps]
+-- @[simp, mfld_simps] -- LHS does not simplify under `simp [*]`
 theorem localTriv_continuousLinearMapAt {b : B} (hb : b ∈ Z.baseSet i) :
     (Z.localTriv i).continuousLinearMapAt R b = Z.coordChange (Z.indexAt b) i b := by
   ext1 v
@@ -685,7 +685,7 @@ theorem trivializationAt_continuousLinearMapAt {b₀ b : B}
       Z.coordChange (Z.indexAt b) (Z.indexAt b₀) b :=
   Z.localTriv_continuousLinearMapAt hb
 
-@[simp, mfld_simps]
+-- @[simp, mfld_simps] -- LHS does not simplify under `simp [*]`
 theorem localTriv_symmL {b : B} (hb : b ∈ Z.baseSet i) :
     (Z.localTriv i).symmL R b = Z.coordChange i (Z.indexAt b) b := by
   ext1 v

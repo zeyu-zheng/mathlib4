@@ -111,10 +111,10 @@ theorem lift_ι_apply (f : M →ₗ[R] A) (cond : ∀ m, f m * f m = 0) (x) :
     lift R ⟨f, cond⟩ (ι R x) = f x :=
   CliffordAlgebra.lift_ι_apply f _ x
 
-@[simp]
+-- @[simp] -- `simp [*]` almost brings the LHS to the RHS, modulo unfolding `lift`
 theorem lift_unique (f : M →ₗ[R] A) (cond : ∀ m, f m * f m = 0) (g : ExteriorAlgebra R M →ₐ[R] A) :
-    g.toLinearMap.comp (ι R) = f ↔ g = lift R ⟨f, cond⟩ :=
-  CliffordAlgebra.lift_unique f _ _
+    g.toLinearMap.comp (ι R) = f ↔ g = lift R ⟨f, cond⟩ := by
+  simp [lift, *]
 
 variable {R}
 

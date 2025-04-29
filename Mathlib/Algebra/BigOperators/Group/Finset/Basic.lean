@@ -38,9 +38,10 @@ theorem prod_cons (h : a ∉ s) : ∏ x ∈ cons a s h, f x = f a * ∏ x ∈ s,
 theorem prod_insert [DecidableEq ι] : a ∉ s → ∏ x ∈ insert a s, f x = f a * ∏ x ∈ s, f x :=
   fold_insert
 
+-- LHS does not simplify under `simp [*]` but is used elsewhere
 /-- The product of `f` over `insert a s` is the same as
 the product over `s`, as long as `a` is in `s` or `f a = 1`. -/
-@[to_additive (attr := simp) "The sum of `f` over `insert a s` is the same as
+@[to_additive (attr := simp, nolint simpNF) "The sum of `f` over `insert a s` is the same as
 the sum over `s`, as long as `a` is in `s` or `f a = 0`."]
 theorem prod_insert_of_eq_one_if_not_mem [DecidableEq ι] (h : a ∉ s → f a = 1) :
     ∏ x ∈ insert a s, f x = ∏ x ∈ s, f x := by
@@ -50,10 +51,10 @@ theorem prod_insert_of_eq_one_if_not_mem [DecidableEq ι] (h : a ∉ s → f a =
 
 /-- The product of `f` over `insert a s` is the same as
 the product over `s`, as long as `f a = 1`. -/
-@[to_additive (attr := simp) "The sum of `f` over `insert a s` is the same as
+@[to_additive "The sum of `f` over `insert a s` is the same as
 the sum over `s`, as long as `f a = 0`."]
-theorem prod_insert_one [DecidableEq ι] (h : f a = 1) : ∏ x ∈ insert a s, f x = ∏ x ∈ s, f x :=
-  prod_insert_of_eq_one_if_not_mem fun _ => h
+theorem prod_insert_one [DecidableEq ι] (h : f a = 1) : ∏ x ∈ insert a s, f x = ∏ x ∈ s, f x := by
+  simp [*]
 
 @[to_additive (attr := simp)]
 theorem prod_singleton (f : ι → M) (a : ι) : ∏ x ∈ singleton a, f x = f a :=
@@ -64,7 +65,8 @@ theorem prod_pair [DecidableEq ι] {a b : ι} (h : a ≠ b) :
     (∏ x ∈ ({a, b} : Finset ι), f x) = f a * f b := by
   rw [prod_insert (not_mem_singleton.2 h), prod_singleton]
 
-@[to_additive (attr := simp)]
+-- LHS does not simplify under `simp [*]` but is used elsewhere
+@[to_additive (attr := simp, nolint simpNF)]
 theorem prod_image [DecidableEq ι] {s : Finset κ} {g : κ → ι} :
     (∀ x ∈ s, ∀ y ∈ s, g x = g y → x = y) → ∏ x ∈ s.image g, f x = ∏ x ∈ s, f (g x) :=
   fold_image
@@ -1043,7 +1045,8 @@ variable [DecidableEq ι]
 theorem toFinset_sum_count_eq (s : Multiset ι) : ∑ a ∈ s.toFinset, s.count a = card s := by
   simpa using (Finset.sum_multiset_map_count s (fun _ => (1 : ℕ))).symm
 
-@[simp] lemma sum_count_eq_card {s : Finset ι} {m : Multiset ι} (hms : ∀ a ∈ m, a ∈ s) :
+-- @[simp] -- LHS does not simplify under `simp [*]`
+lemma sum_count_eq_card {s : Finset ι} {m : Multiset ι} (hms : ∀ a ∈ m, a ∈ s) :
     ∑ a ∈ s, m.count a = card m := by
   rw [← toFinset_sum_count_eq, ← Finset.sum_filter_ne_zero]
   congr with a

@@ -254,11 +254,11 @@ section
 variable [Semifield α] [LinearOrder α] [IsStrictOrderedRing α] [LinearOrder β]
   {s : Set ι} {f f₁ f₂ : ι → α} {g g₁ g₂ : ι → β}
 
-@[simp]
+-- @[simp] -- LHS does not simplify under `simp [*]`
 lemma monovaryOn_inv_left₀ (hf : ∀ i ∈ s, 0 < f i) : MonovaryOn f⁻¹ g s ↔ AntivaryOn f g s :=
   forall₅_congr fun _i hi _j hj _ ↦ inv_le_inv₀ (hf _ hi) (hf _ hj)
 
-@[simp]
+-- @[simp] -- LHS does not simplify under `simp [*]`
 lemma antivaryOn_inv_left₀ (hf : ∀ i ∈ s, 0 < f i) : AntivaryOn f⁻¹ g s ↔ MonovaryOn f g s :=
   forall₅_congr fun _i hi _j hj _ ↦ inv_le_inv₀ (hf _ hj) (hf _ hi)
 
@@ -290,11 +290,11 @@ section
 variable [LinearOrder α] [Semifield β] [LinearOrder β] [IsStrictOrderedRing β]
   {s : Set ι} {f f₁ f₂ : ι → α} {g g₁ g₂ : ι → β}
 
-@[simp]
+-- @[simp] -- LHS does not simplify under `simp [*]`
 lemma monovaryOn_inv_right₀ (hg : ∀ i ∈ s, 0 < g i) : MonovaryOn f g⁻¹ s ↔ AntivaryOn f g s :=
   forall₂_swap.trans <| forall₄_congr fun i hi j hj ↦ by simp [inv_lt_inv₀ (hg _ hj) (hg _ hi)]
 
-@[simp]
+-- @[simp] -- LHS does not simplify under `simp [*]`
 lemma antivaryOn_inv_right₀ (hg : ∀ i ∈ s, 0 < g i) : AntivaryOn f g⁻¹ s ↔ MonovaryOn f g s :=
   forall₂_swap.trans <| forall₄_congr fun i hi j hj ↦ by simp [inv_lt_inv₀ (hg _ hj) (hg _ hi)]
 
