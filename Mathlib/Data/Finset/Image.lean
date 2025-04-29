@@ -556,7 +556,7 @@ theorem filterMap_mono (h : s ⊆ t) :
   rw [← val_le_iff] at h ⊢
   exact Multiset.filterMap_le_filterMap f h
 
-@[simp]
+-- @[simp] -- LHS does not simplify under `simp [*]`
 theorem _root_.List.toFinset_filterMap [DecidableEq α] [DecidableEq β] (s : List α) :
     (s.filterMap f).toFinset = s.toFinset.filterMap f f_inj := by
   simp [← Finset.coe_inj]
