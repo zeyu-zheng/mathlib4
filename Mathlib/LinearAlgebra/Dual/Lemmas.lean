@@ -291,6 +291,11 @@ open Module
 
 variable {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M] {p : Submodule R M}
 
+@[simp]
+theorem dualCoannihilator_top [Projective R M] :
+    (⊤ : Submodule R (Module.Dual R M)).dualCoannihilator = ⊥ := by
+  rw [dualCoannihilator, dualAnnihilator_top, comap_bot, Module.eval_ker]
+
 theorem exists_dual_map_eq_bot_of_nmem {x : M} (hx : x ∉ p) (hp' : Free R (M ⧸ p)) :
     ∃ f : Dual R M, f x ≠ 0 ∧ p.map f = ⊥ := by
   suffices ∃ f : Dual R (M ⧸ p), f (p.mkQ x) ≠ 0 by
@@ -368,11 +373,6 @@ open Submodule LinearMap
 
 -- We work in vector spaces because `exists_is_compl` only hold for vector spaces
 variable {K V : Type*} [Field K] [AddCommGroup V] [Module K V]
-
-@[simp]
-theorem dualCoannihilator_top (W : Subspace K V) :
-    (⊤ : Subspace K (Module.Dual K W)).dualCoannihilator = ⊥ := by
-  rw [dualCoannihilator, dualAnnihilator_top, comap_bot, Module.eval_ker]
 
 @[simp]
 theorem dualAnnihilator_dualCoannihilator_eq {W : Subspace K V} :
@@ -675,7 +675,7 @@ open Submodule
 theorem range_dualMap_eq_dualAnnihilator_ker_of_surjective (f : M →ₗ[R] M')
     (hf : Function.Surjective f) : LinearMap.range f.dualMap = (LinearMap.ker f).dualAnnihilator :=
   ((f.quotKerEquivOfSurjective hf).dualMap.range_comp _).trans
-  (LinearMap.ker f).range_dualMap_mkQ_eq
+    (LinearMap.ker f).range_dualMap_mkQ_eq
 
 -- Note, this can be specialized to the case where `R` is an injective `R`-module, or when
 -- `f.coker` is a projective `R`-module.

@@ -6,6 +6,7 @@ Authors: Eric Rodriguez
 import Mathlib.Algebra.Group.Fin.Basic
 import Mathlib.Algebra.NeZero
 import Mathlib.Algebra.Ring.Int.Defs
+import Mathlib.Algebra.Ring.GrindInstances
 import Mathlib.Data.Nat.ModEq
 import Mathlib.Data.Fintype.EquivFin
 

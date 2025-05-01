@@ -180,7 +180,7 @@ theorem eq_zero_iff {a : ℤ} {b : ℕ} : J(a | b) = 0 ↔ b ≠ 0 ∧ a.gcd b �
 /-- The symbol `J(0 | b)` vanishes when `b > 1`. -/
 theorem zero_left {b : ℕ} (hb : 1 < b) : J(0 | b) = 0 :=
   (@eq_zero_iff_not_coprime 0 b ⟨ne_zero_of_lt hb⟩).mpr <| by
-    rw [Int.gcd_zero_left, Int.natAbs_ofNat]; exact hb.ne'
+    rw [Int.gcd_zero_left, Int.natAbs_natCast]; exact hb.ne'
 
 /-- The symbol `J(a | b)` takes the value `1` or `-1` if `a` and `b` are coprime. -/
 theorem eq_one_or_neg_one {a : ℤ} {b : ℕ} (h : a.gcd b = 1) : J(a | b) = 1 ∨ J(a | b) = -1 :=
@@ -521,10 +521,10 @@ private theorem fastJacobiSymAux.eq_jacobiSym {a b : ℕ} {flip : Bool} {ha0 : a
   unfold fastJacobiSymAux
   split <;> rename_i ha4
   · rw [IH (a / 4) (a.div_lt_self ha0 (by decide)) hb2 hb1]
-    simp only [Int.ofNat_ediv, Nat.cast_ofNat, div_four_left (a := a) (mod_cast ha4) hb2]
+    simp only [Int.natCast_ediv, Nat.cast_ofNat, div_four_left (a := a) (mod_cast ha4) hb2]
   split <;> rename_i ha2
   · rw [IH (a / 2) (a.div_lt_self ha0 (by decide)) hb2 hb1]
-    simp only [Int.ofNat_ediv, Nat.cast_ofNat, ← even_odd (a := a) (mod_cast ha2) hb2]
+    simp only [Int.natCast_ediv, Nat.cast_ofNat, ← even_odd (a := a) (mod_cast ha2) hb2]
     by_cases h : b % 8 = 3 ∨ b % 8 = 5 <;> simp [h]; cases flip <;> simp
   split <;> rename_i ha1
   · subst ha1; simp
