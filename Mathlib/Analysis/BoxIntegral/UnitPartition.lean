@@ -176,6 +176,8 @@ lemma box.upper_sub_lower (ν : ι → ℤ) (i : ι) :
     (box n ν ).upper i - (box n ν).lower i = 1 / n := by
   simp_rw [box, add_div, add_sub_cancel_left]
 
+section Fintype
+
 variable [Fintype ι]
 
 theorem diam_boxIcc (ν : ι → ℤ) :
@@ -204,17 +206,26 @@ theorem setFinite_index {s : Set (ι → ℝ)} (hs₁ : NullMeasurableSet s) (hs
       (by simp only [Set.iUnion_subset_iff, Set.inter_subset_right, implies_true]) hs₂
   · rw [Set.mem_setOf, Set.inter_eq_self_of_subset_left hν, volume_box]
 
+end Fintype
+
+section Finite
+
+variable [Finite ι]
+
 /-- For `B : BoxIntegral.Box`, the set of indices of `unitPartition.box` that are subsets of `B`.
 This is a finite set. These boxes cover `B` if it has integral vertices, see
 `unitPartition.prepartition_isPartition`. -/
-def admissibleIndex (B : Box ι) : Finset (ι → ℤ) := by
-  refine (setFinite_index n B.measurableSet_coe.nullMeasurableSet ?_).toFinset
-  exact lt_top_iff_ne_top.mp (IsBounded.measure_lt_top B.isBounded)
+def admissibleIndex (B : Box ι) : Finset (ι → ℤ) :=
+  have : Set.Finite {ν : ι → ℤ | box n ν ≤ B} := by
+    cases nonempty_fintype ι
+    apply setFinite_index n B.measurableSet_coe.nullMeasurableSet
+    exact lt_top_iff_ne_top.mp (IsBounded.measure_lt_top B.isBounded)
+  this.toFinset
 
 variable {n} in
 theorem mem_admissibleIndex_iff {B : Box ι} {ν : ι → ℤ} :
     ν ∈ admissibleIndex n B ↔ box n ν ≤ B := by
-  rw [admissibleIndex, Set.Finite.mem_toFinset, Set.mem_setOf_eq, Box.coe_subset_coe]
+  rw [admissibleIndex, Set.Finite.mem_toFinset, Set.mem_setOf_eq]
 
 open Classical in
 /-- For `B : BoxIntegral.Box`, the `TaggedPrepartition` formed by the set of all
@@ -268,7 +279,9 @@ theorem prepartition_isHenstock (B : Box ι) :
   rw [prepartition_tag n hν]
   exact Box.coe_subset_Icc (tag_mem _ _)
 
-theorem prepartition_isSubordinate (B : Box ι) {r : ℝ} (hr : 0 < r) (hn : 1 / n ≤ r) :
+end Finite
+
+theorem prepartition_isSubordinate [Fintype ι] (B : Box ι) {r : ℝ} (hr : 0 < r) (hn : 1 / n ≤ r) :
     (prepartition n B).IsSubordinate (fun _ ↦ ⟨r, hr⟩) := by
   intro _ hI
   obtain ⟨ν, hν, rfl⟩ := mem_prepartition_iff.mp hI
@@ -290,6 +303,10 @@ private theorem mem_admissibleIndex_of_mem_box_aux₂ (x : ℝ) (a : ℤ) :
   rw [sub_add_cancel, div_le_iff₀' h,
     show (n : ℝ) * a = (n * a : ℤ) by norm_cast,
     Int.cast_le, Int.ceil_le, Int.cast_mul, Int.cast_natCast, mul_le_mul_left h]
+
+section Finite
+
+variable [Finite ι]
 
 /-- If `B : BoxIntegral.Box` has integral vertices and contains the point `x`, then the index of
 `x` is admissible for `B`. -/
@@ -323,6 +340,7 @@ local notation "L" => span ℤ (Set.range (Pi.basisFun ℝ ι))
 variable {n} in
 theorem mem_smul_span_iff {v : ι → ℝ} :
     v ∈ (n : ℝ)⁻¹ • L ↔ ∀ i, n * v i ∈ Set.range (algebraMap ℤ ℝ) := by
+  cases nonempty_fintype ι
   rw [ZSpan.smul _ (inv_ne_zero (NeZero.ne _)), Basis.mem_span_iff_repr_mem]
   simp_rw [Basis.repr_isUnitSMul, Pi.basisFun_repr, Units.smul_def, Units.val_inv_eq_inv_val,
     IsUnit.unit_spec, inv_inv, smul_eq_mul]
@@ -344,6 +362,19 @@ theorem tag_index_eq_self_of_mem_smul_span {x : ι → ℝ} (hx : x ∈ (n : ℝ
 theorem eq_of_mem_smul_span_of_index_eq_index {x y : ι → ℝ} (hx : x ∈ (n : ℝ)⁻¹ • L)
     (hy : y ∈ (n : ℝ)⁻¹ • L) (h : index n x = index n y) : x = y := by
   rw [← tag_index_eq_self_of_mem_smul_span n hx, ← tag_index_eq_self_of_mem_smul_span n hy, h]
+
+end Finite
+
+variable [Fintype ι]
+
+open Submodule Pointwise BigOperators
+
+open scoped Pointwise
+
+variable (c : ℝ) (s : Set (ι → ℝ)) (F : (ι → ℝ) → ℝ)
+
+-- The image of `ι → ℤ` inside `ι → ℝ`
+local notation "L" => span ℤ (Set.range (Pi.basisFun ℝ ι))
 
 theorem integralSum_eq_tsum_div {B : Box ι} (hB : hasIntegralVertices B) (hs₀ : s ≤ B) :
     integralSum (Set.indicator s F) (BoxAdditiveMap.toSMul (Measure.toBoxAdditive volume))

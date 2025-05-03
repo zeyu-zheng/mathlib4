@@ -22,7 +22,7 @@ open CategoryTheory Limits
 
 namespace HomologicalComplex
 
-variable {C : Type u} [Category.{v} C] {ι : Type w} [DecidableEq ι]
+variable {C : Type u} [Category.{v} C] {ι : Type w}
   (c : ComplexShape ι) [c.HasNoLoop]
 
 section
