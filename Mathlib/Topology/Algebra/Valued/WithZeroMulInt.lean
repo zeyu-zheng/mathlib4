@@ -38,9 +38,8 @@ theorem tendsto_zero_pow_of_le_neg_one {K : Type*} [Ring K] [Valued K ℤₘ₀]
       linarith
     apply lt_of_le_of_lt <| pow_le_pow_left₀ zero_le' hx m
     rw [← coe_unitsWithZeroEquiv_eq_units_val, ← coe_pow, coe_lt_coe, ← ofAdd_nsmul,
-      nsmul_eq_mul, Int.toNat_of_nonneg hγ]
-    simp
-    rw [← ofAdd_zero, ofAdd_lt]
+      nsmul_eq_mul, Int.toNat_of_nonneg hγ, mul_neg, mul_one, neg_add_rev, neg_neg, ofAdd_add,
+      ofAdd_neg, ofAdd_toAdd, mul_lt_iff_lt_one_right', Left.inv_lt_one_iff, ← ofAdd_zero, ofAdd_lt]
     exact zero_lt_one
   · refine ⟨1, fun b hb => lt_of_le_of_lt
       (pow_le_pow_of_le_one zero_le' (le_trans hx <| le_of_lt h_lt) hb) ?_⟩
