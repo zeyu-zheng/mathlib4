@@ -3,6 +3,7 @@ Copyright (c) 2019 Amelia Livingston. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Amelia Livingston, Bryan Gin-ge Chen, Patrick Massot, Wen Yang, Johan Commelin
 -/
+
 import Mathlib.Data.Set.Finite.Range
 import Mathlib.Order.Partition.Finpartition
 
@@ -415,8 +416,6 @@ theorem out_proj (x : α) : hs.out (hs.proj x) = hs.some (hs.index x) :=
 /-- The indices of `Quotient.out` and `IndexedPartition.out` are equal. -/
 theorem index_out (x : hs.Quotient) : hs.index x.out = hs.index (hs.out x) :=
   Quotient.inductionOn' x fun x => (Setoid.ker_apply_mk_out x).trans (hs.index_some _).symm
-
-@[deprecated (since := "2024-10-19")] alias index_out' := index_out
 
 /-- This lemma is analogous to `Quotient.out_eq'`. -/
 @[simp]
