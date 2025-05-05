@@ -7,7 +7,6 @@ import Mathlib.RingTheory.DedekindDomain.Ideal
 import Mathlib.RingTheory.Valuation.ExtendToLocalization
 import Mathlib.Topology.Algebra.Valued.ValuedField
 import Mathlib.Topology.Algebra.Valued.WithVal
-import Mathlib.Topology.Algebra.Valued.WithZeroMulInt
 
 /-!
 # Adic valuations on Dedekind domains
