@@ -38,6 +38,8 @@ jobs:
   # If a PR is labelled with auto-merge-after-CI, check for permissions:
   # if the user is not a maintainer (or does not have delegation rights),
   # post a comment with an error message and remove the label again.
+  # TODO: check if a PR was delegated and allow that...
+  # TODO: also allow bot PRs? how is that different?
   check_automerge_emoji:
     if: github.event.label.name == 'auto-merge-after-CI'
     runs-on: ubuntu-latest
