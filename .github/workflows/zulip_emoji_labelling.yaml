@@ -34,3 +34,21 @@ jobs:
       run: |
         printf $'Running the python script with pr "%s"\n' "$PR_NUMBER" "$LABEL_STATUS"
         python scripts/zulip_emoji_merge_delegate.py "$ZULIP_API_KEY" "$ZULIP_EMAIL" "$ZULIP_SITE" "$LABEL_STATUS" "$PR_NUMBER"
+
+  # If a PR is labelled with auto-merge-after-CI, check for permissions:
+  # if the user is not a maintainer (or does not have delegation rights),
+  # post a comment with an error message and remove the label again.
+  check_automerge_emoji:
+    if: github.event.label.name == 'auto-merge-after-CI'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check whether user is part of mathlib-maintainers team
+        # TODO: is this the right team name? check carefully!
+        uses: TheModdingInquisition/actions-team-membership@a69636a92bc927f32c3910baac06bacc949c984c # v1.0
+        with:
+          organization: 'leanprover-community'
+          team: 'mathlib-maintainers' # the team to check for (required)
+          token: ${{ secrets.MATHLIB_REVIEWERS_TEAM_KEY }} # Personal Access Token with the `read:org` permission (required)
+          # optional. A comment to post if the user is not part of the team.
+          comment: 'Only maintainers can apply the auto-merge-after-CI label'
+          exit: true # optional: if true (the default), exit if the user is not part of the team
