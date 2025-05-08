@@ -341,15 +341,15 @@ instance : InfSet G.Subgraph where
       symm := fun _ _ => And.imp (forall₂_imp fun _ _ => Adj.symm) G.adj_symm }
 
 @[simp]
-theorem sup_adj : (G₁ ⊔ G₂).Adj a b ↔ G₁.Adj a b ∨ G₂.Adj a b :=
+protected theorem sup_adj : (G₁ ⊔ G₂).Adj a b ↔ G₁.Adj a b ∨ G₂.Adj a b :=
   Iff.rfl
 
 @[simp]
-theorem inf_adj : (G₁ ⊓ G₂).Adj a b ↔ G₁.Adj a b ∧ G₂.Adj a b :=
+protected theorem inf_adj : (G₁ ⊓ G₂).Adj a b ↔ G₁.Adj a b ∧ G₂.Adj a b :=
   Iff.rfl
 
 @[simp]
-theorem top_adj : (⊤ : Subgraph G).Adj a b ↔ G.Adj a b :=
+protected theorem top_adj : (⊤ : Subgraph G).Adj a b ↔ G.Adj a b :=
   Iff.rfl
 
 @[simp]
@@ -373,24 +373,26 @@ theorem verts_bot : (⊥ : G.Subgraph).verts = ∅ :=
   rfl
 
 @[simp]
-theorem sSup_adj {s : Set G.Subgraph} : (sSup s).Adj a b ↔ ∃ G ∈ s, Adj G a b :=
+protected theorem sSup_adj {s : Set G.Subgraph} : (sSup s).Adj a b ↔ ∃ G ∈ s, Adj G a b :=
   Iff.rfl
 
 @[simp]
-theorem sInf_adj {s : Set G.Subgraph} : (sInf s).Adj a b ↔ (∀ G' ∈ s, Adj G' a b) ∧ G.Adj a b :=
+protected theorem sInf_adj {s : Set G.Subgraph} :
+    (sInf s).Adj a b ↔ (∀ G' ∈ s, Adj G' a b) ∧ G.Adj a b :=
   Iff.rfl
 
 @[simp]
-theorem iSup_adj {f : ι → G.Subgraph} : (⨆ i, f i).Adj a b ↔ ∃ i, (f i).Adj a b := by
+protected theorem iSup_adj {f : ι → G.Subgraph} : (⨆ i, f i).Adj a b ↔ ∃ i, (f i).Adj a b := by
   simp [iSup]
 
 @[simp]
-theorem iInf_adj {f : ι → G.Subgraph} : (⨅ i, f i).Adj a b ↔ (∀ i, (f i).Adj a b) ∧ G.Adj a b := by
+protected theorem iInf_adj {f : ι → G.Subgraph} :
+    (⨅ i, f i).Adj a b ↔ (∀ i, (f i).Adj a b) ∧ G.Adj a b := by
   simp [iInf]
 
 theorem sInf_adj_of_nonempty {s : Set G.Subgraph} (hs : s.Nonempty) :
     (sInf s).Adj a b ↔ ∀ G' ∈ s, Adj G' a b :=
-  sInf_adj.trans <|
+  Subgraph.sInf_adj.trans <|
     and_iff_left_of_imp <| by
       obtain ⟨G', hG'⟩ := hs
       exact fun h => G'.adj_sub (h _ hG')
@@ -1017,7 +1019,7 @@ lemma coeSubgraph_restrict_eq {H : G.Subgraph} (H' : G.Subgraph) :
   ext
   · simp [and_comm]
   · simp_rw [coeSubgraph_adj, restrict_adj]
-    simp only [exists_and_left, exists_prop, inf_adj, and_congr_right_iff]
+    simp only [exists_and_left, exists_prop, Subgraph.inf_adj, and_congr_right_iff]
     intro h
     simp [H.edge_vert h, H.edge_vert h.symm]
 
@@ -1172,7 +1174,7 @@ lemma le_induce_top_verts : G' ≤ (⊤ : G.Subgraph).induce G'.verts :=
 lemma le_induce_union : G'.induce s ⊔ G'.induce s' ≤ G'.induce (s ∪ s') := by
   constructor
   · simp only [verts_sup, induce_verts, Set.Subset.rfl]
-  · simp only [sup_adj, induce_adj, Set.mem_union]
+  · simp only [Subgraph.sup_adj, induce_adj, Set.mem_union]
     rintro v w (h | h) <;> simp [h]
 
 lemma le_induce_union_left : G'.induce s ≤ G'.induce (s ∪ s') := by
