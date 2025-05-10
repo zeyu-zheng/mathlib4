@@ -112,12 +112,14 @@ jobs:
 
         # Compute the counts for the HEAD of the PR
         python ./scripts/count-trans-deps.py "Mathlib/" > head.json
+        cat head.json
 
         # Checkout the merge base
         git checkout "$(git merge-base master ${{ github.sha }})"
 
         # Compute the counts for the merge base
         python ./scripts/count-trans-deps.py "Mathlib/" > base.json
+        cat base.json
 
         # switch back to the current branch: the `declarations_diff` script should be here
         git checkout "${currentHash}"
@@ -137,6 +139,7 @@ jobs:
           printf '%s\n' "${graphAndHighPercentReports}" | sed '/^Import changes exceeding/Q'
           ./scripts/import_trans_difference.sh
         )
+        printf '%s\n' "${importCount}"
 
         ## High percentage imports
         high_percentages=$(
