@@ -100,19 +100,7 @@ abbrev GroupLike : Type _ := ({
   inv_mem' := .unitsInv
 } : Subgroup Aˣ)
 
-/-- Group structure on group-like elements of a bialgebra, given by multiplication. -/
-instance GroupLike.instGroup : Group (GroupLike R A) := by unfold GroupLike; infer_instance
-
 end Semiring
-
-section CommSemiring
-variable [CommSemiring R] [CommSemiring A] [Bialgebra R A]
-
-/-- Commutative group structure on group-like elements of a commutative bialgebra,
-given by multiplication. -/
-instance GroupLike.instCommGroup : CommGroup (GroupLike R A) := by unfold GroupLike; infer_instance
-
-end CommSemiring
 
 section CommRing
 variable [CommRing R] [IsDomain R] [Ring A] [Bialgebra R A] [NoZeroSMulDivisors R A] [Nontrivial A]
