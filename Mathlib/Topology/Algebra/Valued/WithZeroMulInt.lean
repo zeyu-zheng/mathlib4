@@ -6,7 +6,8 @@ Authors: Salvatore Mercuri
 import Mathlib.Topology.Algebra.Valued.ValuationTopology
 import Mathlib.RingTheory.Ideal.Quotient.Basic
 
-/-! # Topological results for integer-valued rings
+/-!
+# Topological results for integer-valued rings
 
 This file contains topological results for valuation rings taking values in the
 multiplicative integers with zero adjoined. These are useful for cases where there
