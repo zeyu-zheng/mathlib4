@@ -4,13 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: María Inés de Frutos-Fernández, Filippo A. E. Nuccio
 -/
 import Mathlib.Algebra.Group.Int.TypeTags
-import Mathlib.Algebra.GroupWithZero.WithZero
+import Mathlib.Algebra.Order.GroupWithZero.Canonical
 
 /-!
 # Lemmas about `ℤₘ₀`.
 -/
-
-local notation "ℤₘ₀" => WithZero (Multiplicative ℤ)
 
 namespace WithZero
 
@@ -24,5 +22,8 @@ theorem ofAdd_neg_one_pow_comm (a : ℤ) (n : ℕ) :
   rw [ofAdd_zpow (-1)]
   simp only [zpow_neg, zpow_one, inv_zpow', inv_inv, coe_zpow]
   rw [← zpow_natCast, zpow_comm, ← ofAdd_zpow]
+
+theorem ofAdd_neg_one_lt : ofAdd (-1 : ℤ) < (1 : ℤₘ₀) := by
+  rw [← coe_one, coe_lt_coe, ← ofAdd_zero, ofAdd_lt]; omega
 
 end WithZero
