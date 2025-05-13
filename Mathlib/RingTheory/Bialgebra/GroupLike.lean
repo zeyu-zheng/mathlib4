@@ -40,7 +40,8 @@ structure IsGroupLikeElem (a : A) where
   isUnit : IsUnit a
   comul_eq_tmul_self : comul (R := R) a = a ⊗ₜ a
 
-lemma IsGroupLikeElem.ne_zero [Nontrivial A] (ha : IsGroupLikeElem R a) : a ≠ 0 := ha.isUnit.ne_zero
+@[simp] lemma IsGroupLikeElem.ne_zero [Nontrivial A] (ha : IsGroupLikeElem R a) : a ≠ 0 :=
+  ha.isUnit.ne_zero
 
 /-- The image of a group-like element by the counit is `1`, if `algebraMap R A` is injective. -/
 lemma IsGroupLikeElem.counit_eq_one (ha : IsGroupLikeElem R a) :
@@ -127,11 +128,6 @@ lemma linearIndepOn_isGroupLikeElem : LinearIndepOn R id {a : A | IsGroupLikeEle
   simp only [linearIndepOn_finset_iff, id, Finset.sum_cons, Finset.mem_cons, forall_eq_or_imp,
     add_eq_zero_iff_eq_neg', ← neg_smul]
   rintro c hc
-  -- It's enough to show `c a = 0` since then `∑ x ∈ s, c x • x = 0` and `∀ x ∈ s, c x = 0` by
-  -- induction hypothesis.
-  suffices hca : c a = 0 from ⟨hca, linearIndepOn_finset_iff.1 ih c (by simp [*])⟩
-  -- Assume by contradiction that `c a ≠ 0`.
-  by_contra! hca
   -- `x ⊗ y` over `x, y ∈ s` are linearly independent since `s` is linearly independent and
   -- `R` is a domain.
   replace ih := ih.tmul_of_isDomain ih
@@ -147,24 +143,25 @@ lemma linearIndepOn_isGroupLikeElem : LinearIndepOn R id {a : A | IsGroupLikeEle
       simp_rw [← hc, sum_tmul, smul_tmul, Finset.smul_sum, tmul_sum, tmul_smul, mul_smul]
   simp_rw [← Finset.sum_product'] at key
   apply ih at key
-  -- Pick some `x ∈ s` such that `c x ≠ 0`, which exists since `∑ x ∈ s, c x • x = -c a • a ≠ 0`.
-  obtain ⟨x, hxs, hcx⟩ := Finset.exists_ne_zero_of_sum_ne_zero <| hc.trans_ne <| smul_ne_zero
-    (neg_ne_zero.2 hca)  ha.ne_zero
-  rw [smul_ne_zero_iff_left (hs _ hxs).ne_zero] at hcx
-  -- We claim that `x = a`, contradicting `x ∈ s`, `a ∉ s`.
-  refine ne_of_mem_of_not_mem hxs has <| smul_right_injective _ (pow_ne_zero 2 hcx) ?_
-  -- The proof is a computation using the facts that `c x ^ 2 = -c a * c x` and
-  -- `∑ y ∈ s, c y • y = c x • x`.
-  calc
-        c x ^ 2 • x
-    _ = c x • c x • x := by simp [sq, mul_smul]
-    _ = c x • ∑ y ∈ s, c y • y := by
-      rw [Finset.sum_eq_single x _ (by simp [hxs])]
-      rintro y hys hyx
-      have : c y = 0 := by simpa [*] using key (y, x)
-      simp [this]
-    _ = (-c a * c x) • a := by rw [mul_comm, mul_smul, hc]
-    _ = c x ^ 2 • a := by congr; simpa [hxs, sq] using key (x, x)
+  -- Therefore, `c x = 0` for all `x ∈ s`.
+  replace key x (hx : x ∈ s) : c x = 0 := by
+    -- Indeed, otherwise we would have `a = x`, contradicting `a ∉ s`.
+    contrapose! has
+    convert hx
+    -- This is since `c y = 0` for all `y ∈ s`, `y ≠ x`, and `c x = c a`, and therefore
+    -- `c x • x = ∑ y ∈ s, c y • y = c a • a = c x • a`
+    refine smul_right_injective _ has ?_
+    calc
+          c x • a
+      _ = -c a • a := by congr; simpa [hx, has, eq_comm, -neg_mul] using key (x, x)
+      _ = ∑ y ∈ s, c y • y := by rw [hc]
+      _ = c x • x := by
+        rw [Finset.sum_eq_single x _ (by simp [hx])]
+        rintro y hys hyx
+        have : c y = 0 := by simpa [*] using key (y, x)
+        simp [this]
+  -- We are now done, since `c a • a = ∑ x ∈ s, c x • x = 0`
+  simp_all [ha.ne_zero]
 
 end CommRing
 end Bialgebra
