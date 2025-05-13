@@ -398,6 +398,11 @@ theorem unitsMultiplicativeEquiv_le_one {α : Type*} [AddGroup α] [Preorder α]
     {γ : (WithZero (Multiplicative α))ˣ} : unitsMultiplicativeEquiv γ ≤ (0 : α) ↔ γ.val ≤ 1 := by
   rw [← coe_one, ← unitsMultiplicativeEquiv_le, toAdd_one]
 
+theorem lt_unitsMultiplicativeEquiv {α : Type*} [AddGroup α] [Preorder α]
+    {γ : α} {u : (WithZero (Multiplicative α))ˣ} :
+    Multiplicative.ofAdd γ < u.val ↔ γ < unitsMultiplicativeEquiv u := by
+  simp [← coe_unitsWithZeroEquiv_eq_units_val, ← Multiplicative.toAdd_lt]
+
 end WithZero
 
 section MultiplicativeNotation

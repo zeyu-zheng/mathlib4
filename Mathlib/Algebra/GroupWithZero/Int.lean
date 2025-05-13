@@ -5,6 +5,8 @@ Authors: María Inés de Frutos-Fernández, Filippo A. E. Nuccio
 -/
 import Mathlib.Algebra.Group.Int.TypeTags
 import Mathlib.Algebra.Order.GroupWithZero.Canonical
+import Mathlib.Algebra.Ring.Int.Defs
+import Mathlib.Tactic.ApplyFun
 
 /-!
 # Lemmas about `ℤₘ₀`.
@@ -25,5 +27,14 @@ theorem ofAdd_neg_one_pow_comm (a : ℤ) (n : ℕ) :
 
 theorem ofAdd_neg_one_lt : ofAdd (-1 : ℤ) < (1 : ℤₘ₀) := by
   rw [← coe_one, coe_lt_coe, ← ofAdd_zero, ofAdd_lt]; omega
+
+theorem ofAdd_neg_one_pow (n : ℕ) : ofAdd (-1 : ℤ) ^ n = ofAdd (-n : ℤ) := by
+  apply_fun toAdd
+  simp
+
+theorem ofAdd_neg_one_pow_lt {n : ℕ} {u : ℤₘ₀ˣ} :
+    ofAdd (-1 : ℤ) ^ n < u.val ↔ -n < unitsMultiplicativeEquiv u := by
+  rw [← lt_unitsMultiplicativeEquiv, ← ofAdd_neg_one_pow]
+  simp
 
 end WithZero
