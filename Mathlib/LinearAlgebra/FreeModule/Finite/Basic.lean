@@ -3,6 +3,7 @@ Copyright (c) 2021 Riccardo Brasca. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 -/
+import Mathlib.LinearAlgebra.Dimension.StrongRankCondition
 import Mathlib.LinearAlgebra.FreeModule.Basic
 import Mathlib.LinearAlgebra.Matrix.StdBasis
 import Mathlib.RingTheory.Finiteness.Cardinality
@@ -49,3 +50,14 @@ instance Module.Finite.matrix {R ι₁ ι₂ M : Type*}
 
 example {ι₁ ι₂ R : Type*} [Semiring R] [Finite ι₁] [Finite ι₂] :
     Module.Finite R (Matrix ι₁ ι₂ R) := inferInstance
+
+variable {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M] [IsDomain R]
+  [IsPrincipalIdealRing R] [Module.Finite R M] [NoZeroSMulDivisors R M] [Module.Free R M]
+
+variable (R M) in
+/-- The isomorphism `M ≃ₗ[R] (Fin (Module.finrank R M) → R)`. -/
+noncomputable def Module.Free.finRepr : M ≃ₗ[R] (Fin (Module.finrank R M) → R) :=
+  (Module.Free.repr R M).trans <| .trans
+    (Finsupp.domLCongr <| Finite.equivFinOfCardEq
+      (Module.finrank_eq_nat_card_basis <| Module.Free.chooseBasis R M).symm)
+    (Pi.basisFun _ _).repr.symm
