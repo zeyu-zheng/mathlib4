@@ -1018,8 +1018,13 @@ instance norm : Norm ℝ where
 theorem norm_eq_abs (r : ℝ) : ‖r‖ = |r| :=
   rfl
 
-instance normedAddCommGroup : NormedAddCommGroup ℝ :=
-  ⟨fun _r _y => rfl⟩
+instance instNormedAddCommGroup : NormedAddCommGroup ℝ where
+
+/-! #### Shortcut instances -/
+
+instance instSeminormedAddCommGroup : SeminormedAddCommGroup ℝ := inferInstance
+instance instSeminormedAddGroup : SeminormedAddGroup ℝ := inferInstance
+instance instNormedAddGroup : NormedAddGroup ℝ := inferInstance
 
 theorem norm_of_nonneg (hr : 0 ≤ r) : ‖r‖ = r :=
   abs_of_nonneg hr
