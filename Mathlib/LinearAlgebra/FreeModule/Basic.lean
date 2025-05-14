@@ -82,7 +82,9 @@ Here `ι = ChooseBasisIndex R M`. -/
 noncomputable def chooseBasis : Basis (ChooseBasisIndex R M) R M :=
   ((Module.free_iff_set R M).mp ‹_›).choose_spec.some
 
-/-- The isomorphism `M ≃ₗ[R] (ChooseBasisIndex R M →₀ R)`. -/
+/-- The isomorphism `M ≃ₗ[R] (ChooseBasisIndex R M →₀ R)`.
+
+See `Module.finRepr` for a specialisation to finite free modules. -/
 noncomputable abbrev repr : M ≃ₗ[R] ChooseBasisIndex R M →₀ R := (chooseBasis R M).repr
 
 /-- The universal property of free modules: giving a function `(ChooseBasisIndex R M) → N`, for `N`
