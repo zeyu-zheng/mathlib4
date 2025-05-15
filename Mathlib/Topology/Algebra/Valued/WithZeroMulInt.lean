@@ -15,7 +15,7 @@ is a `Valued R ℤₘ₀` instance but no canonical base with which to embed thi
 `NNReal`.
 -/
 
-open Multiplicative WithZero
+open Multiplicative WithZeroMulInt WithZero
 
 open scoped Topology
 

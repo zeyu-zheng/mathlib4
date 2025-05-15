@@ -10,11 +10,12 @@ import Mathlib.Algebra.Order.GroupWithZero.Canonical
 # Lemmas about `ℤₘ₀`.
 -/
 
-namespace WithZero
+namespace WithZeroMulInt
 
-open Multiplicative
+open Multiplicative WithZero
 
-theorem ofAdd_neg_one_lt : ofAdd (-1 : ℤ) < (1 : ℤₘ₀) := by
+theorem ofAdd_neg_one_lt : ofAdd (-1 : ℤ) < (unitsMultiplicativeEquiv.symm (0 : ℤ)).val := by
+  simp only [unitsMultiplicativeEquiv_symm_zero, Units.val_one]
   rw [← coe_one, coe_lt_coe, ← ofAdd_zero, ofAdd_lt]; omega
 
 theorem ofAdd_neg_one_pow_lt {n : ℕ} {u : ℤₘ₀ˣ} :
@@ -22,4 +23,4 @@ theorem ofAdd_neg_one_pow_lt {n : ℕ} {u : ℤₘ₀ˣ} :
   rw [← lt_unitsMultiplicativeEquiv, ← ofAdd_neg_one_pow]
   simp
 
-end WithZero
+end WithZeroMulInt

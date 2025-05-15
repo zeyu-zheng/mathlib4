@@ -388,20 +388,23 @@ instance instLinearOrderedCommMonoidWithZero [CommMonoid α] [LinearOrder α] [I
 instance instLinearOrderedCommGroupWithZero [CommGroup α] [LinearOrder α] [IsOrderedMonoid α] :
     LinearOrderedCommGroupWithZero (WithZero α) where
 
+open Multiplicative in
 theorem unitsMultiplicativeEquiv_le {α : Type*} [AddGroup α] [Preorder α]
-    {γ : (WithZero (Multiplicative α))ˣ} {u : Multiplicative α} :
-    unitsMultiplicativeEquiv γ ≤ Multiplicative.toAdd u ↔ γ.val ≤ u := by
-  rw [unitsMultiplicativeEquiv_apply, Multiplicative.toAdd_le,
-    ← coe_unitsWithZeroEquiv_eq_units_val, coe_le_coe]
+    {γ : (WithZero (Multiplicative α))ˣ} {u : α} :
+    unitsMultiplicativeEquiv γ ≤ u ↔ γ.val ≤ unitsWithZeroEquiv.symm (ofAdd u) := by
+  simp [unitsMultiplicativeEquiv_apply, ← coe_unitsWithZeroEquiv_eq_units_val]
+  exact ge_iff_le
 
 theorem unitsMultiplicativeEquiv_le_one {α : Type*} [AddGroup α] [Preorder α]
     {γ : (WithZero (Multiplicative α))ˣ} : unitsMultiplicativeEquiv γ ≤ (0 : α) ↔ γ.val ≤ 1 := by
-  rw [← coe_one, ← unitsMultiplicativeEquiv_le, toAdd_one]
+  rw [unitsMultiplicativeEquiv_le, ofAdd_zero]
+  simp only [map_one, Units.val_one]
 
 theorem lt_unitsMultiplicativeEquiv {α : Type*} [AddGroup α] [Preorder α]
     {γ : α} {u : (WithZero (Multiplicative α))ˣ} :
     Multiplicative.ofAdd γ < u.val ↔ γ < unitsMultiplicativeEquiv u := by
-  simp [← coe_unitsWithZeroEquiv_eq_units_val, ← Multiplicative.toAdd_lt]
+  simp [← coe_unitsWithZeroEquiv_eq_units_val, ← Multiplicative.toAdd_lt,
+    unitsMultiplicativeEquiv_apply]
 
 end WithZero
 

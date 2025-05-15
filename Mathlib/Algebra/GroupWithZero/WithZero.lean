@@ -304,6 +304,14 @@ def unitsMultiplicativeEquiv {α : Type*} [AddGroup α] :
   unitsWithZeroEquiv.toEquiv.trans Multiplicative.toAdd
 
 @[simp]
+theorem unitsMultiplicativeEquiv_one {α : Type*} [AddGroup α] :
+    unitsMultiplicativeEquiv (1 : (WithZero (Multiplicative α))ˣ) = 0 := rfl
+
+@[simp]
+theorem unitsMultiplicativeEquiv_symm_zero {α : Type*} [AddGroup α] :
+    unitsMultiplicativeEquiv.symm (0 : α)  = 1 := by
+  simp [unitsMultiplicativeEquiv]
+
 theorem unitsMultiplicativeEquiv_apply
     {α : Type*} [AddGroup α] (γ : (WithZero (Multiplicative α))ˣ) :
     unitsMultiplicativeEquiv γ = Multiplicative.toAdd (unitsWithZeroEquiv γ) := rfl

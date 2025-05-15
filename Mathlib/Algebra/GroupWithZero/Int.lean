@@ -5,7 +5,6 @@ Authors: María Inés de Frutos-Fernández, Filippo A. E. Nuccio
 -/
 import Mathlib.Algebra.Group.Int.TypeTags
 import Mathlib.Algebra.GroupWithZero.WithZero
-import Mathlib.Tactic.ApplyFun
 
 /-!
 # Lemmas about `ℤₘ₀`.
@@ -15,9 +14,9 @@ assert_not_exists Ring
 
 local notation "ℤₘ₀" => WithZero (Multiplicative ℤ)
 
-namespace WithZero
+namespace WithZeroMulInt
 
-open Multiplicative
+open Multiplicative WithZero
 
 theorem ofAdd_zpow (a : ℤ) : (↑(ofAdd a) : ℤₘ₀) = ofAdd (1 : ℤ) ^ a := by
   rw [← WithZero.coe_zpow, WithZero.coe_inj, ← Int.ofAdd_mul, one_mul]
@@ -29,7 +28,6 @@ theorem ofAdd_neg_one_pow_comm (a : ℤ) (n : ℕ) :
   rw [← zpow_natCast, zpow_comm, ← ofAdd_zpow]
 
 theorem ofAdd_neg_one_pow (n : ℕ) : ofAdd (-1 : ℤ) ^ n = ofAdd (-n : ℤ) := by
-  apply_fun toAdd
-  simp
+  simp [← ofAdd_nsmul]
 
-end WithZero
+end WithZeroMulInt
