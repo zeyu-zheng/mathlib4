@@ -5,7 +5,6 @@ Authors: María Inés de Frutos-Fernández, Filippo A. E. Nuccio
 -/
 import Mathlib.Algebra.Group.Int.TypeTags
 import Mathlib.Algebra.Order.GroupWithZero.Canonical
-import Mathlib.Algebra.Ring.Int.Defs
 import Mathlib.Tactic.ApplyFun
 
 /-!
