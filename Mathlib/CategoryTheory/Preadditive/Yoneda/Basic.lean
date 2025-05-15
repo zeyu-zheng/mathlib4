@@ -147,7 +147,6 @@ def preadditiveYonedaMap (X : C) :
 end
 
 /-- Coyoneda for a preadditive category and coyoneda for `AddCommGrp` agree. -/
-@[simps!]
 def preadditiveCoyonedaIsoAddCommGrpCoyoneda : preadditiveCoyoneda ≅ AddCommGrp.coyoneda :=
   NatIso.ofComponents fun X ↦ NatIso.ofComponents fun Y ↦
     AddEquiv.toAddCommGrpIso AddCommGrp.homAddEquiv
