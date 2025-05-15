@@ -7,7 +7,7 @@ import Mathlib.Algebra.AddTorsor.Defs
 import Mathlib.Algebra.AffineMonoid.Basic
 import Mathlib.Algebra.AffineMonoid.Embedding
 import Mathlib.Algebra.AffineMonoid.Irreducible
-import Mathlib.Algebra.AffineMonoid.MonoidAlgebra
+import Mathlib.Algebra.AffineMonoid.UniqueSums
 import Mathlib.Algebra.Algebra.Basic
 import Mathlib.Algebra.Algebra.Bilinear
 import Mathlib.Algebra.Algebra.Defs
