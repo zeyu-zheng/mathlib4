@@ -11,12 +11,12 @@ import Mathlib.RingTheory.Flat.Domain
 
 This file defines group-like elements in a bialgebra, ie units `a` such that `Δ a = a ⊗ₜ a`.
 
-The motivating example is the group ring `R[G]`. Group-like elements of `R[G]` are exactly the image
-of `G` inside `R[G]`. We note two things: these group-like elements form a group and are linearly
-independent.
+The motivating example is the group ring `R[G]`. For a domain `R`, group-like elements of `R[G]` are
+exactly the image of `G` inside `R[G]`. We note two things: these group-like elements form a group
+and are linearly independent.
 
 In an arbitrary bialgebra, group-like elements always form a group, and are linearly independent if
-the base ring is a domain.
+the base ring is.
 
 ## Main declarations
 
@@ -43,12 +43,12 @@ structure IsGroupLikeElem (a : A) where
 @[simp] lemma IsGroupLikeElem.ne_zero [Nontrivial A] (ha : IsGroupLikeElem R a) : a ≠ 0 :=
   ha.isUnit.ne_zero
 
-/-- The image of a group-like element by the counit is `1`, if `algebraMap R A` is injective. -/
-lemma IsGroupLikeElem.counit_eq_one (ha : IsGroupLikeElem R a) :
-    counit a = (1 : R) := algebraMap_injective A <| by
-  simpa [ha.comul_eq_tmul_self, Ring.inverse_mul_cancel _ ha.isUnit, Algebra.smul_def] using
-    congr(Algebra.TensorProduct.lid R A (((1 : R) ⊗ₜ[R] (Ring.inverse a)) *
-      $(rTensor_counit_comul (R := R) a)))
+/-- The image of a group-like element under the counit is `1`. -/
+lemma IsGroupLikeElem.counit_eq_one (ha : IsGroupLikeElem R a) : counit a = (1 : R) :=
+  algebraMap_injective A <| by
+    simpa [ha.comul_eq_tmul_self, Ring.inverse_mul_cancel _ ha.isUnit, Algebra.smul_def] using
+      congr(Algebra.TensorProduct.lid R A (((1 : R) ⊗ₜ[R] (Ring.inverse a)) *
+        $(rTensor_counit_comul (R := R) a)))
 
 /-- A bialgebra hom sends group-like elements to group-like elements. -/
 lemma IsGroupLikeElem.map [FunLike F A B] [BialgHomClass F R A B] (f : F)
