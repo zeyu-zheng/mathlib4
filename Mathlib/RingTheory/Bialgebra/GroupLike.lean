@@ -40,8 +40,7 @@ structure IsGroupLikeElem (a : A) where
   isUnit : IsUnit a
   comul_eq_tmul_self : comul (R := R) a = a ⊗ₜ a
 
-@[simp] lemma IsGroupLikeElem.ne_zero [Nontrivial A] (ha : IsGroupLikeElem R a) : a ≠ 0 :=
-  ha.isUnit.ne_zero
+lemma IsGroupLikeElem.ne_zero [Nontrivial A] (ha : IsGroupLikeElem R a) : a ≠ 0 := ha.isUnit.ne_zero
 
 /-- The image of a group-like element under the counit is `1`. -/
 lemma IsGroupLikeElem.counit_eq_one (ha : IsGroupLikeElem R a) : counit a = (1 : R) :=
