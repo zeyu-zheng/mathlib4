@@ -84,7 +84,7 @@ lemma nnLpNorm_sub_comm (f g : α → E) (p : ℝ≥0∞) (μ : Measure α) :
 @[simp] lemma nnLpNorm_abs (f : α → ℝ) (p : ℝ≥0∞) : nnLpNorm (|f|) p μ = nnLpNorm f p μ :=
   nnLpNorm_norm f p
 
-@[simp] lemma nnLpNorm_abs' (f : α → ℝ) (p : ℝ≥0∞) :
+@[simp] lemma nnLpNorm_fun_abs (f : α → ℝ) (p : ℝ≥0∞) :
     nnLpNorm (fun x ↦ |f x|) p μ = nnLpNorm f p μ := nnLpNorm_abs ..
 
 @[simp] lemma nnLpNorm_const (hp : p ≠ 0) (hμ : μ ≠ 0) (c : E) :
@@ -106,7 +106,7 @@ variable {𝕜 : Type*} [NormedField 𝕜]
     nnLpNorm (1 : α → 𝕜) p μ = (μ Set.univ).toNNReal ^ (p.toReal⁻¹ : ℝ) := by
   simp [Pi.one_def, nnLpNorm_const' hp₀ hp]
 
-lemma nnLpNorm_const_smul [Module 𝕜 E] [IsBoundedSMul 𝕜 E] (c : 𝕜) (f : α → E) (μ : Measure α) :
+lemma nnLpNorm_const_smul [Module 𝕜 E] [NormSMulClass 𝕜 E] (c : 𝕜) (f : α → E) (μ : Measure α) :
     nnLpNorm (c • f) p μ = ‖c‖₊ * nnLpNorm f p μ := by simp [nnLpNorm, eLpNorm_const_smul]
 
 lemma nnLpNorm_nsmul [NormedSpace ℝ E] (n : ℕ) (f : α → E) (μ : Measure α) :
@@ -168,7 +168,7 @@ lemma nnLpNorm_sub_le_nnLpNorm_sub_add_nnLpNorm_sub (hf : MemLp f p μ) (hg : Me
 
 lemma nnLpNorm_sum_le {ι : Type*} {s : Finset ι} {f : ι → α → E} (hf : ∀ i ∈ s, MemLp (f i) p μ)
     (hp : 1 ≤ p) : nnLpNorm (∑ i ∈ s, f i) p μ ≤ ∑ i ∈ s, nnLpNorm (f i) p μ := by
-  rw [← ENNReal.coe_le_coe, coe_nnLpNorm_eq_eLpNorm (memLp_finset_sum' s hf),
+  rw [← ENNReal.coe_le_coe, coe_nnLpNorm_eq_eLpNorm (memLp_finset_sum' s hf:),
     ENNReal.coe_finset_sum]
   exact (eLpNorm_sum_le (fun i hi ↦ (hf _ hi).aestronglyMeasurable) hp).trans_eq <|
     Finset.sum_congr rfl fun i hi ↦ (coe_nnLpNorm_eq_eLpNorm (hf i hi)).symm
