@@ -303,22 +303,37 @@ def log {α : Type*} [AddGroup α] :
     (WithZero (Multiplicative α))ˣ ≃ α :=
   unitsWithZeroEquiv.toEquiv.trans Multiplicative.toAdd
 
+/-- The equivalence between `α` and the units of `WithZero (Multiplicative α)`. -/
+def exp {α : Type*} [AddGroup α] :
+    α ≃ (WithZero (Multiplicative α))ˣ :=
+  log.symm
+
+@[simp]
+theorem exp_log {α : Type*} [AddGroup α] (γ : (WithZero (Multiplicative α))ˣ) :
+    exp (log γ) = γ := by
+  simp [exp]
+
+@[simp]
+theorem log_exp {α : Type*} [AddGroup α] (a : α) :
+    log (exp a) = a := by
+  simp [exp]
+
 @[simp]
 theorem log_one {α : Type*} [AddGroup α] :
-    log (1 : (WithZero (Multiplicative α))ˣ) = 0 :=
+    log 1 = (0 : α) :=
   rfl
 
 @[simp]
-theorem log_symm_zero {α : Type*} [AddGroup α] :
-    log.symm (0 : α)  = 1 := by
-  simp [log]
+theorem exp_zero {α : Type*} [AddGroup α] :
+    exp (0 : α) = 1 := by
+  simp [exp, log]
 
 theorem log_apply {α : Type*} [AddGroup α] (γ : (WithZero (Multiplicative α))ˣ) :
     log γ = Multiplicative.toAdd (unitsWithZeroEquiv γ) :=
   rfl
 
-theorem log_symm_apply {α : Type*} [AddGroup α] (a : α) :
-    log.symm a = unitsWithZeroEquiv.symm (Multiplicative.ofAdd a) :=
+theorem exp_apply {α : Type*} [AddGroup α] (a : α) :
+    exp a = unitsWithZeroEquiv.symm (Multiplicative.ofAdd a) :=
   rfl
 
 end WithZero

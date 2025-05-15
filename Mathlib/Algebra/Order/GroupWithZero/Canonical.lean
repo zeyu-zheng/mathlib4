@@ -391,17 +391,17 @@ instance instLinearOrderedCommGroupWithZero [CommGroup α] [LinearOrder α] [IsO
 open Multiplicative in
 theorem log_le {α : Type*} [AddGroup α] [Preorder α]
     {γ : (WithZero (Multiplicative α))ˣ} {u : α} :
-    log γ ≤ u ↔ γ.val ≤ log.symm u := by
+    log γ ≤ u ↔ γ.val ≤ exp u := by
   simp only [log_apply, ← coe_unitsWithZeroEquiv_eq_units_val, coe_le_coe]
   exact ge_iff_le
 
 theorem log_le_zero {α : Type*} [AddGroup α] [Preorder α]
     {γ : (WithZero (Multiplicative α))ˣ} : log γ ≤ (0 : α) ↔ γ.val ≤ 1 := by
-  simp only [log_le, log_symm_zero, map_one, Units.val_one]
+  simp only [log_le, exp_zero, map_one, Units.val_one]
 
 theorem lt_log {α : Type*} [AddGroup α] [Preorder α]
     {γ : α} {u : (WithZero (Multiplicative α))ˣ} :
-    γ < log u ↔ log.symm γ < u.val := by
+    γ < log u ↔ exp γ < u.val := by
   simp only [log_apply, ← coe_unitsWithZeroEquiv_eq_units_val, coe_lt_coe]
   exact gt_iff_lt
 
