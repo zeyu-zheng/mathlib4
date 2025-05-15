@@ -16,7 +16,7 @@ exactly the image of `G` inside `R[G]`. We note two things: these group-like ele
 and are linearly independent.
 
 In an arbitrary bialgebra, group-like elements always form a group, and are linearly independent if
-the base ring is.
+the base ring is a domain.
 
 ## Main declarations
 
