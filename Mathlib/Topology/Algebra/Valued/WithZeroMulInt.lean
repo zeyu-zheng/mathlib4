@@ -30,7 +30,7 @@ theorem tendsto_zero_pow_of_le_neg_one {x : R} (hx : v x ≤ ofAdd (-1 : ℤ)) :
   simp only [(hasBasis_nhds_zero _ _).tendsto_right_iff, mem_setOf_eq, map_pow, eventually_atTop]
   intro γ _
   by_cases hγ : γ.val ≤ 1
-  · refine ⟨- (unitsMultiplicativeEquiv γ - 1) |>.toNat, fun b hb => ?_⟩
+  · refine ⟨- (log γ - 1) |>.toNat, fun b hb => ?_⟩
     apply lt_of_le_of_lt (pow_le_pow_of_le_one zero_le' (hx.trans <| le_of_lt ofAdd_neg_one_lt) hb)
     exact lt_of_le_of_lt (pow_le_pow_left₀ zero_le' hx _) <| by rw [ofAdd_neg_one_pow_lt]; omega
   · refine ⟨1, fun b hb => lt_of_le_of_lt

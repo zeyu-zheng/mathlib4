@@ -299,21 +299,26 @@ instance instAddMonoidWithOne [AddMonoidWithOne α] : AddMonoidWithOne (WithZero
   natCast_succ n := by cases n <;> simp
 
 /-- The equivalence between the units of `WithZero (Multiplicative α)` and `α`. -/
-def unitsMultiplicativeEquiv {α : Type*} [AddGroup α] :
+def log {α : Type*} [AddGroup α] :
     (WithZero (Multiplicative α))ˣ ≃ α :=
   unitsWithZeroEquiv.toEquiv.trans Multiplicative.toAdd
 
 @[simp]
-theorem unitsMultiplicativeEquiv_one {α : Type*} [AddGroup α] :
-    unitsMultiplicativeEquiv (1 : (WithZero (Multiplicative α))ˣ) = 0 := rfl
+theorem log_one {α : Type*} [AddGroup α] :
+    log (1 : (WithZero (Multiplicative α))ˣ) = 0 :=
+  rfl
 
 @[simp]
-theorem unitsMultiplicativeEquiv_symm_zero {α : Type*} [AddGroup α] :
-    unitsMultiplicativeEquiv.symm (0 : α)  = 1 := by
-  simp [unitsMultiplicativeEquiv]
+theorem log_symm_zero {α : Type*} [AddGroup α] :
+    log.symm (0 : α)  = 1 := by
+  simp [log]
 
-theorem unitsMultiplicativeEquiv_apply
-    {α : Type*} [AddGroup α] (γ : (WithZero (Multiplicative α))ˣ) :
-    unitsMultiplicativeEquiv γ = Multiplicative.toAdd (unitsWithZeroEquiv γ) := rfl
+theorem log_apply {α : Type*} [AddGroup α] (γ : (WithZero (Multiplicative α))ˣ) :
+    log γ = Multiplicative.toAdd (unitsWithZeroEquiv γ) :=
+  rfl
+
+theorem log_symm_apply {α : Type*} [AddGroup α] (a : α) :
+    log.symm a = unitsWithZeroEquiv.symm (Multiplicative.ofAdd a) :=
+  rfl
 
 end WithZero

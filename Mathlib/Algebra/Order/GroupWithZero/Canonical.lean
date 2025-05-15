@@ -389,22 +389,21 @@ instance instLinearOrderedCommGroupWithZero [CommGroup α] [LinearOrder α] [IsO
     LinearOrderedCommGroupWithZero (WithZero α) where
 
 open Multiplicative in
-theorem unitsMultiplicativeEquiv_le {α : Type*} [AddGroup α] [Preorder α]
+theorem log_le {α : Type*} [AddGroup α] [Preorder α]
     {γ : (WithZero (Multiplicative α))ˣ} {u : α} :
-    unitsMultiplicativeEquiv γ ≤ u ↔ γ.val ≤ unitsWithZeroEquiv.symm (ofAdd u) := by
-  simp [unitsMultiplicativeEquiv_apply, ← coe_unitsWithZeroEquiv_eq_units_val]
+    log γ ≤ u ↔ γ.val ≤ log.symm u := by
+  simp only [log_apply, ← coe_unitsWithZeroEquiv_eq_units_val, coe_le_coe]
   exact ge_iff_le
 
-theorem unitsMultiplicativeEquiv_le_one {α : Type*} [AddGroup α] [Preorder α]
-    {γ : (WithZero (Multiplicative α))ˣ} : unitsMultiplicativeEquiv γ ≤ (0 : α) ↔ γ.val ≤ 1 := by
-  rw [unitsMultiplicativeEquiv_le, ofAdd_zero]
-  simp only [map_one, Units.val_one]
+theorem log_le_zero {α : Type*} [AddGroup α] [Preorder α]
+    {γ : (WithZero (Multiplicative α))ˣ} : log γ ≤ (0 : α) ↔ γ.val ≤ 1 := by
+  simp only [log_le, log_symm_zero, map_one, Units.val_one]
 
-theorem lt_unitsMultiplicativeEquiv {α : Type*} [AddGroup α] [Preorder α]
+theorem lt_log {α : Type*} [AddGroup α] [Preorder α]
     {γ : α} {u : (WithZero (Multiplicative α))ˣ} :
-    Multiplicative.ofAdd γ < u.val ↔ γ < unitsMultiplicativeEquiv u := by
-  simp [← coe_unitsWithZeroEquiv_eq_units_val, ← Multiplicative.toAdd_lt,
-    unitsMultiplicativeEquiv_apply]
+    γ < log u ↔ log.symm γ < u.val := by
+  simp only [log_apply, ← coe_unitsWithZeroEquiv_eq_units_val, coe_lt_coe]
+  exact gt_iff_lt
 
 end WithZero
 
