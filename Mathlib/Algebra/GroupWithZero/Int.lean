@@ -11,6 +11,8 @@ import Mathlib.Tactic.ApplyFun
 # Lemmas about `ℤₘ₀`.
 -/
 
+assert_not_exists Ring
+
 namespace WithZero
 
 open Multiplicative
