@@ -14,7 +14,7 @@ assert_not_exists Ring
 
 local notation "ℤₘ₀" => WithZero (Multiplicative ℤ)
 
-namespace WithZeroMulInt
+namespace WithZero
 
 open Multiplicative WithZero
 
@@ -27,7 +27,4 @@ theorem ofAdd_neg_one_pow_comm (a : ℤ) (n : ℕ) :
   simp only [zpow_neg, zpow_one, inv_zpow', inv_inv, coe_zpow]
   rw [← zpow_natCast, zpow_comm, ← ofAdd_zpow]
 
-theorem ofAdd_neg_one_pow (n : ℕ) : ofAdd (-1 : ℤ) ^ n = ofAdd (-n : ℤ) := by
-  simp [← ofAdd_nsmul]
-
-end WithZeroMulInt
+end WithZero
