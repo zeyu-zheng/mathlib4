@@ -256,9 +256,6 @@ theorem coe_unitsWithZeroEquiv_eq_units_val (γ : (WithZero α)ˣ) :
     ↑(unitsWithZeroEquiv γ) = γ.val := by
   simp only [WithZero.unitsWithZeroEquiv, MulEquiv.coe_mk, Equiv.coe_fn_mk, WithZero.coe_unzero]
 
-theorem coe_unitsWithZeroEquiv_symm (a : α) :
-    unitsWithZeroEquiv.symm a = (a : WithZero α) := rfl
-
 /-- Any group with zero is isomorphic to adjoining `0` to the units of itself. -/
 def withZeroUnitsEquiv {G : Type*} [GroupWithZero G]
     [DecidablePred (fun a : G ↦ a = 0)] :
@@ -327,11 +324,5 @@ lemma log_apply (γ : (WithZero (Multiplicative α))ˣ) :
 lemma exp_apply (a : α) :
     exp a = unitsWithZeroEquiv.symm (Multiplicative.ofAdd a) :=
   rfl
-
-lemma exp_val (a : α) : (exp a).val = Multiplicative.ofAdd a := by
-  simp [exp_apply, coe_unitsWithZeroEquiv_symm]
-
-lemma log_eq_val (γ : (WithZero (Multiplicative α))ˣ) : Multiplicative.ofAdd (log γ) = γ.val := by
-  simp [log_apply, coe_unitsWithZeroEquiv_eq_units_val]
 
 end WithZero
