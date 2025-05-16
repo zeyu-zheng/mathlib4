@@ -256,6 +256,9 @@ theorem coe_unitsWithZeroEquiv_eq_units_val (γ : (WithZero α)ˣ) :
     ↑(unitsWithZeroEquiv γ) = γ.val := by
   simp only [WithZero.unitsWithZeroEquiv, MulEquiv.coe_mk, Equiv.coe_fn_mk, WithZero.coe_unzero]
 
+theorem coe_unitsWithZeroEquiv_symm (a : α) :
+    unitsWithZeroEquiv.symm a = (a : WithZero α) := rfl
+
 /-- Any group with zero is isomorphic to adjoining `0` to the units of itself. -/
 def withZeroUnitsEquiv {G : Type*} [GroupWithZero G]
     [DecidablePred (fun a : G ↦ a = 0)] :
@@ -298,42 +301,37 @@ instance instAddMonoidWithOne [AddMonoidWithOne α] : AddMonoidWithOne (WithZero
   natCast_zero := rfl
   natCast_succ n := by cases n <;> simp
 
+variable {α : Type*} [AddGroup α]
+
 /-- The equivalence between the units of `WithZero (Multiplicative α)` and `α`. -/
-def log {α : Type*} [AddGroup α] :
-    (WithZero (Multiplicative α))ˣ ≃ α :=
+def log : (WithZero (Multiplicative α))ˣ ≃ α :=
   unitsWithZeroEquiv.toEquiv.trans Multiplicative.toAdd
 
 /-- The equivalence between `α` and the units of `WithZero (Multiplicative α)`. -/
-def exp {α : Type*} [AddGroup α] :
-    α ≃ (WithZero (Multiplicative α))ˣ :=
-  log.symm
+def exp : α ≃ (WithZero (Multiplicative α))ˣ :=
+  Multiplicative.toAdd.symm.trans unitsWithZeroEquiv.symm.toEquiv
 
-@[simp]
-theorem exp_log {α : Type*} [AddGroup α] (γ : (WithZero (Multiplicative α))ˣ) :
-    exp (log γ) = γ := by
-  simp [exp]
+@[simp] lemma log_symm : (log (α := α)).symm = exp := rfl
+@[simp] lemma exp_symm : (exp (α := α)).symm = log := rfl
 
-@[simp]
-theorem log_exp {α : Type*} [AddGroup α] (a : α) :
-    log (exp a) = a := by
-  simp [exp]
+@[simp] lemma exp_log (γ : (WithZero (Multiplicative α))ˣ) : exp (log γ) = γ := by simp [← log_symm]
+@[simp] lemma log_exp (a : α) : log (exp a) = a := by simp [← exp_symm]
 
-@[simp]
-theorem log_one {α : Type*} [AddGroup α] :
-    log 1 = (0 : α) :=
-  rfl
+@[simp] lemma log_one : log 1 = (0 : α) := rfl
+@[simp] lemma exp_zero : exp (0 : α) = 1 := by simp [exp, log]
 
-@[simp]
-theorem exp_zero {α : Type*} [AddGroup α] :
-    exp (0 : α) = 1 := by
-  simp [exp, log]
-
-theorem log_apply {α : Type*} [AddGroup α] (γ : (WithZero (Multiplicative α))ˣ) :
+lemma log_apply (γ : (WithZero (Multiplicative α))ˣ) :
     log γ = Multiplicative.toAdd (unitsWithZeroEquiv γ) :=
   rfl
 
-theorem exp_apply {α : Type*} [AddGroup α] (a : α) :
+lemma exp_apply (a : α) :
     exp a = unitsWithZeroEquiv.symm (Multiplicative.ofAdd a) :=
   rfl
+
+lemma exp_val (a : α) : (exp a).val = Multiplicative.ofAdd a := by
+  simp [exp_apply, coe_unitsWithZeroEquiv_symm]
+
+lemma log_eq_val (γ : (WithZero (Multiplicative α))ˣ) : Multiplicative.ofAdd (log γ) = γ.val := by
+  simp [log_apply, coe_unitsWithZeroEquiv_eq_units_val]
 
 end WithZero

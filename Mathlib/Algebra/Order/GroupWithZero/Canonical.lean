@@ -388,16 +388,11 @@ instance instLinearOrderedCommMonoidWithZero [CommMonoid α] [LinearOrder α] [I
 instance instLinearOrderedCommGroupWithZero [CommGroup α] [LinearOrder α] [IsOrderedMonoid α] :
     LinearOrderedCommGroupWithZero (WithZero α) where
 
-open Multiplicative in
 theorem log_le {α : Type*} [AddGroup α] [Preorder α]
     {γ : (WithZero (Multiplicative α))ˣ} {u : α} :
     log γ ≤ u ↔ γ.val ≤ exp u := by
   simp only [log_apply, ← coe_unitsWithZeroEquiv_eq_units_val, coe_le_coe]
   exact ge_iff_le
-
-theorem log_le_zero {α : Type*} [AddGroup α] [Preorder α]
-    {γ : (WithZero (Multiplicative α))ˣ} : log γ ≤ (0 : α) ↔ γ.val ≤ 1 := by
-  simp only [log_le, exp_zero, map_one, Units.val_one]
 
 theorem lt_log {α : Type*} [AddGroup α] [Preorder α]
     {γ : α} {u : (WithZero (Multiplicative α))ˣ} :
