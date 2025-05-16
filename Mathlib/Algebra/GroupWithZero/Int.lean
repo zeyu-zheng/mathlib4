@@ -16,7 +16,7 @@ local notation "ℤₘ₀" => WithZero (Multiplicative ℤ)
 
 namespace WithZero
 
-open Multiplicative WithZero
+open Multiplicative
 
 theorem ofAdd_zpow (a : ℤ) : (↑(ofAdd a) : ℤₘ₀) = ofAdd (1 : ℤ) ^ a := by
   rw [← WithZero.coe_zpow, WithZero.coe_inj, ← Int.ofAdd_mul, one_mul]
