@@ -394,7 +394,7 @@ theorem log_le_iff_le_exp {α : Type*} [AddGroup α] [Preorder α]
   simp only [log_apply, ← coe_unitsWithZeroEquiv_eq_units_val, coe_le_coe]
   exact ge_iff_le
 
-theorem lt_log {α : Type*} [AddGroup α] [Preorder α]
+theorem lt_log_iff_exp_lt {α : Type*} [AddGroup α] [Preorder α]
     {γ : α} {u : (WithZero (Multiplicative α))ˣ} :
     γ < log u ↔ exp γ < u.val := by
   simp only [log_apply, ← coe_unitsWithZeroEquiv_eq_units_val, coe_lt_coe]
