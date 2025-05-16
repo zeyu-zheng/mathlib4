@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Salvatore Mercuri
 -/
 import Mathlib.Topology.Algebra.Valued.ValuationTopology
+import Mathlib.Algebra.GroupWithZero.Int
 
 /-!
 # Topological results for integer-valued rings
@@ -14,16 +15,13 @@ is a `Valued R ℤₘ₀` instance but no canonical base with which to embed thi
 `NNReal`.
 -/
 
-open Multiplicative WithZero
+open Multiplicative WithZero WithZeroMulInt
 
 open scoped Topology
 
 namespace Valued.WithZeroMulInt
 
 variable {R : Type*} [Ring R] [Valued R ℤₘ₀]
-
-lemma exp_pow (a : ℤ) (b : ℕ) : exp a ^ b = exp (b * a) := by
-  simp only [← Int.nsmul_eq_mul, exp_apply, ofAdd_nsmul, map_pow]
 
 open Set Filter in
 /-- In a `ℤₘ₀`-valued ring, powers of `x` tend to zero if `v x ≤ ofAdd (-1 : ℤ)`. -/
@@ -32,7 +30,7 @@ theorem tendsto_zero_pow_of_le_neg_one {x : R} (hx : v x ≤ exp (-1 : ℤ)) :
   simp only [(hasBasis_nhds_zero _ _).tendsto_right_iff, mem_setOf_eq, map_pow, eventually_atTop]
   refine fun γ _ => ⟨- (log γ - 1) |>.toNat, fun b hb => ?_⟩
   apply lt_of_le_of_lt (pow_le_pow_left₀ zero_le' hx b) ?_
-  rw [← Units.val_pow_eq_pow_val, exp_pow, ← lt_log]
+  rw [← Units.val_pow_eq_pow_val, exp_pow, ← lt_log_iff_exp_lt]
   omega
 
 open Filter in
