@@ -301,11 +301,10 @@ instance instAddMonoidWithOne [AddMonoidWithOne α] : AddMonoidWithOne (WithZero
 /-!
 ### Exponential and logarithm
 
-In valuation theory, valuations have codomain `{0} ∪ {e ^ n | n : ℤ}`, which we can formalise as
-`ℤₘ₀ := WithZero (Multiplicative ℤ)`. It is important to be able to talk about the maps
-`n ↦ e ^ n` and `e ^ n ↦ n`. We define these as `exp : ℤ → ℤₘ₀` and `log : ℤₘ₀ → ℤ` with junk
-value `log 0 = 0`. Junkless versions are defined as `expEquiv : ℤ ≃ ℤₘ₀ˣ` and `logEquiv : ℤₘ₀ˣ ≃ ℤ`.
--/
+In valuation theory, valuations have codomain `{0} ∪ {c ^ n | n : ℤ}` for some `c > 1`, which we can
+ormalise as `ℤₘ₀ := WithZero (Multiplicative ℤ)`. It is important to be able to talk about the maps
+n ↦ c ^ n` and `c ^ n ↦ n`. We define these as `exp : ℤ → ℤₘ₀` and `log : ℤₘ₀ → ℤ` with junk value
+log 0 = 0`. Junkless versions are defined as `expEquiv : ℤ ≃ ℤₘ₀ˣ` and `logEquiv : ℤₘ₀ˣ ≃ ℤ`. -/
 
 variable {G : Type*}
 
