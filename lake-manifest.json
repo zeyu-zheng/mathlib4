@@ -65,7 +65,7 @@
    "type": "git",
    "subDir": null,
    "scope": "leanprover-community",
-   "rev": "5552c651b98dca287e97fd8dd9e4296e4669e764",
+   "rev": "42868a64d441371ea7520dd97b84875d31114754",
    "name": "batteries",
    "manifestFile": "lake-manifest.json",
    "inputRev": "eric-wieser-patch-3",
