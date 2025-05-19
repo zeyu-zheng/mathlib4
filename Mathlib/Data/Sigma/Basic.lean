@@ -53,9 +53,7 @@ instance instDecidableEqSigma [h₁ : DecidableEq α] [h₂ : ∀ a, DecidableEq
 theorem mk.inj_iff {a₁ a₂ : α} {b₁ : β a₁} {b₂ : β a₂} :
     Sigma.mk a₁ b₁ = ⟨a₂, b₂⟩ ↔ a₁ = a₂ ∧ HEq b₁ b₂ := by simp
 
-@[simp]
-theorem eta : ∀ x : Σa, β a, Sigma.mk x.1 x.2 = x
-  | ⟨_, _⟩ => rfl
+attribute [simp] Sigma.eta
 
 protected theorem eq {α : Type*} {β : α → Type*} : ∀ {p₁ p₂ : Σ a, β a} (h₁ : p₁.1 = p₂.1),
     (Eq.recOn h₁ p₁.2 : β p₂.1) = p₂.2 → p₁ = p₂

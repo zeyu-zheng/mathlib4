@@ -534,7 +534,7 @@ theorem ofList_cons (a : α) (l) : ofList (a::l) = cons a (ofList l) :=
 
 @[simp]
 theorem toList'_nil (l : List α) :
-    Computation.corec (fun ⟨l, s⟩ =>
+    Computation.corec (fun a => letI l := a.1; letI s := a.2
       match Seq.destruct s with
       | none => Sum.inl l.reverse
       | some (none, s') => Sum.inr (l, s')
@@ -543,12 +543,12 @@ theorem toList'_nil (l : List α) :
 
 @[simp]
 theorem toList'_cons (l : List α) (s : WSeq α) (a : α) :
-    Computation.corec (fun ⟨l, s⟩ =>
+    Computation.corec (fun a => letI l := a.1; letI s := a.2
       match Seq.destruct s with
       | none => Sum.inl l.reverse
       | some (none, s') => Sum.inr (l, s')
       | some (some a, s') => Sum.inr (a::l, s')) (l, cons a s) =
-      (Computation.corec (fun ⟨l, s⟩ =>
+      (Computation.corec (fun a => letI l := a.1; letI s := a.2
         match Seq.destruct s with
         | none => Sum.inl l.reverse
         | some (none, s') => Sum.inr (l, s')
@@ -557,12 +557,12 @@ theorem toList'_cons (l : List α) (s : WSeq α) (a : α) :
 
 @[simp]
 theorem toList'_think (l : List α) (s : WSeq α) :
-    Computation.corec (fun ⟨l, s⟩ =>
+    Computation.corec (fun a => letI l := a.1; letI s := a.2
       match Seq.destruct s with
       | none => Sum.inl l.reverse
       | some (none, s') => Sum.inr (l, s')
       | some (some a, s') => Sum.inr (a::l, s')) (l, think s) =
-      (Computation.corec (fun ⟨l, s⟩ =>
+      (Computation.corec (fun a => letI l := a.1; letI s := a.2
         match Seq.destruct s with
         | none => Sum.inl l.reverse
         | some (none, s') => Sum.inr (l, s')
@@ -570,7 +570,7 @@ theorem toList'_think (l : List α) (s : WSeq α) :
   destruct_eq_think <| by simp [toList, think]
 
 theorem toList'_map (l : List α) (s : WSeq α) :
-    Computation.corec (fun ⟨l, s⟩ =>
+    Computation.corec (fun a => letI l := a.1; letI s := a.2
       match Seq.destruct s with
       | none => Sum.inl l.reverse
       | some (none, s') => Sum.inr (l, s')
