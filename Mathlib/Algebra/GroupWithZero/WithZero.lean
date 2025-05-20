@@ -358,12 +358,16 @@ def logEquiv : Gₘ₀ˣ ≃ G := unitsWithZeroEquiv.toEquiv.trans Multiplicativ
 @[simp] lemma expEquiv_symm : (expEquiv (G := G)).symm = logEquiv := rfl
 
 @[simp] lemma coe_expEquiv_apply (a : G) : expEquiv a = exp a := rfl
+
 @[simp] lemma logEquiv_apply (x : Gₘ₀ˣ) : logEquiv x = log x := by
   obtain ⟨_ | a, _ | b, hab, hba⟩ := x
   · cases hab
   · cases hab
   · cases hab
   · rfl
+
+@[simp] lemma logEquiv_unitsMk0 (x : Gₘ₀) (hx : x ≠ 0) : logEquiv (.mk0 x hx) = log x :=
+  logEquiv_apply _
 
 @[simp] lemma exp_sub (a b : G) : exp (a - b) = exp a / exp b := rfl
 @[simp] lemma log_div {x y : Gₘ₀} (hx : x ≠ 0) (hy : y ≠ 0) : log (x / y) = log x - log y := by
