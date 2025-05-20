@@ -373,10 +373,10 @@ end WithZero
 
 namespace Multiplicative
 
-/-- Notation for `WithZero (Multiplicative ℕ)` -/
+/-- Notation for `WithZero (Multiplicative ℕ)`. -/
 scoped notation "ℕₘ₀" => WithZero (Multiplicative ℕ)
 
-/-- Notation for `WithZero (Multiplicative ℤ)` -/
+/-- Notation for `WithZero (Multiplicative ℤ)`. -/
 scoped notation "ℤₘ₀" => WithZero (Multiplicative ℤ)
 
 end Multiplicative
