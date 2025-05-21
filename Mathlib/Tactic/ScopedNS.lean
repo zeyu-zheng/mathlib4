@@ -50,8 +50,8 @@ macro_rules
   | `($[$doc]? $(attr)? scoped[$ns] $mk:postfix $prec $(n)? $(prio)? $sym => $t) =>
     `(with_weak_namespace $(mkIdentFrom ns <| rootNamespace ++ ns.getId)
       $[$doc]? $(attr)? scoped $mk:postfix $prec $(n)? $(prio)? $sym => $t)
-  | `(scoped[$ns] attribute [$[$attr:attr],*] $ids*) =>
+  | `(scoped[$ns] attribute [$[$attr:attr],*] $ids:identWithOptDot*) =>
     `(with_weak_namespace $(mkIdentFrom ns <| rootNamespace ++ ns.getId)
-      attribute [$[scoped $attr:attr],*] $ids*)
+      attribute [$[scoped $attr:attr],*] $ids:identWithOptDot*)
 
 end Mathlib.Tactic
