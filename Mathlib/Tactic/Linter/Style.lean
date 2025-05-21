@@ -510,11 +510,11 @@ this linter returns an empty array.
 def extractOpenNames : Syntax → Array (TSyntax `ident)
   | `(command|$_ in $_) => #[] -- redundant, for clarity
   | `(command|open $decl:openDecl) => match decl with
-    | `(openDecl| $arg hiding $_*)    => #[arg]
-    | `(openDecl| $arg renaming $_,*) => #[arg]
-    | `(openDecl| $arg ($_*))         => #[arg]
-    | `(openDecl| $args*)             => args
-    | `(openDecl| scoped $args*)      => args
+    | `(openDecl| $arg hiding $_:identWithOptDot*) => #[arg]
+    | `(openDecl| $arg renaming $_,*)              => #[arg]
+    | `(openDecl| $arg ($_:identWithOptDot*))      => #[arg]
+    | `(openDecl| $args*)                          => args
+    | `(openDecl| scoped $args*)                   => args
     | _ => unreachable!
   | _ => #[]
 
