@@ -513,8 +513,8 @@ def extractOpenNames : Syntax → Array (TSyntax `ident)
     | `(openDecl| $arg hiding $_:identWithOptDot*) => #[arg]
     | `(openDecl| $arg renaming $_,*)              => #[arg]
     | `(openDecl| $arg ($_:identWithOptDot*))      => #[arg]
-    | `(openDecl| $args*)                          => args
-    | `(openDecl| scoped $args*)                   => args
+    | `(openDecl| $[$args]*)                       => args
+    | `(openDecl| scoped $[$args]*)                => args
     | _ => unreachable!
   | _ => #[]
 
