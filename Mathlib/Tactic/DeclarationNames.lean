@@ -40,7 +40,7 @@ identifiers with the "exported" names.
 -/
 def getAliasSyntax {m} [Monad m] [MonadResolveName m] (stx : Syntax) : m (Array Syntax) := do
   let mut aliases := #[]
-  if let `(export $_ ($ids*)) := stx then
+  if let `(export $_ ($ids:identWithOptDot*)) := stx then
     let currNamespace ← getCurrNamespace
     for idStx in ids do
       let id := idStx.getId
