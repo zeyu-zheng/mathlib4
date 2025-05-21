@@ -25,7 +25,8 @@ declaration with `unsuppress_compilation` if `suppress_compilation` is active.
 
 open Lean Parser Elab Command
 
-private def setDeclModifiersNoncomputable : TSyntax ``declModifiers → CommandElabM (TSyntax ``declModifiers)
+private def setDeclModifiersNoncomputable :
+    TSyntax ``declModifiers → CommandElabM (TSyntax ``declModifiers)
   | `(declModifiers| $[$doc?:docComment]? $(attrs?)? $(vis?)? $[noncomputable]? $(unsafe?)?
       $(recKind?)?) =>
     `(declModifiers| $[$doc?:docComment]? $(attrs?)? $(vis?)? noncomputable $(unsafe?)?
@@ -57,10 +58,8 @@ syntax "unsuppress_compilation" (" in " command)? : command
 /-- Make sure that notations are compiled, even if `suppress_compilation` is active, by prepending
 them with `unsuppress_compilation`. -/
 def expandSuppressCompilationNotation : Macro := fun
-| `($[$doc?:docComment]? $(attrs?)? $(attrKind)? notation
-    $(prec?)? $(name?)? $(prio?)? $items* => $v) => do
-  let defn ← expandNotation <| ← `($[$doc?:docComment]? $(attrs?)? $(attrKind)? notation
-    $(prec?)? $(name?)? $(prio?)? $items* => $v)
+| `($n:notation) => do
+  let defn ← expandNotation <| ← `($n:notation)
   `(unsuppress_compilation in $(⟨defn⟩):command)
 | _ => Macro.throwUnsupported
 
