@@ -281,7 +281,7 @@ protected theorem smash {s₁ s₂ t₁ t₂ : CompositionSeries X}
     · intro i
       simpa [e, smash_castAdd, smash_succ_castAdd] using h₁.choose_spec i
     · intro i
-      simpa [e, smash_natAdd, smash_succ_natAdd] using h₂.choose_spec i⟩
+      simpa [e, -Fin.castSucc_natAdd, smash_natAdd, smash_succ_natAdd] using h₂.choose_spec i⟩
 
 protected theorem snoc {s₁ s₂ : CompositionSeries X} {x₁ x₂ : X} {hsat₁ : IsMaximal s₁.last x₁}
     {hsat₂ : IsMaximal s₂.last x₂} (hequiv : Equivalent s₁ s₂)
@@ -295,7 +295,7 @@ protected theorem snoc {s₁ s₂ : CompositionSeries X} {x₁ x₂ : X} {hsat�
     refine Fin.lastCases ?_ ?_ i
     · simpa [e, apply_last] using hlast
     · intro i
-      simpa [e, Fin.succ_castSucc] using hequiv.choose_spec i⟩
+      simpa [e, ← Fin.castSucc_succ] using hequiv.choose_spec i⟩
 
 theorem length_eq {s₁ s₂ : CompositionSeries X} (h : Equivalent s₁ s₂) : s₁.length = s₂.length := by
   simpa using Fintype.card_congr h.choose
@@ -308,11 +308,8 @@ theorem snoc_snoc_swap {s : CompositionSeries X} {x₁ x₂ y₁ y₂ : X} {hsat
   let e : Fin (s.length + 1 + 1) ≃ Fin (s.length + 1 + 1) :=
     Equiv.swap (Fin.last _) (Fin.castSucc (Fin.last _))
   have h1 : ∀ {i : Fin s.length},
-      (Fin.castSucc (Fin.castSucc i)) ≠ (Fin.castSucc (Fin.last _)) := fun {_} =>
-    ne_of_lt (by simp [Fin.castSucc_lt_last])
-  have h2 : ∀ {i : Fin s.length},
-      (Fin.castSucc (Fin.castSucc i)) ≠ Fin.last _ := fun {_} =>
-    ne_of_lt (by simp [Fin.castSucc_lt_last])
+      (Fin.castSucc (Fin.castSucc i)) ≠ (Fin.castSucc (Fin.last _)) := by simp
+  have h2 : ∀ {i : Fin s.length}, (Fin.castSucc (Fin.castSucc i)) ≠ Fin.last _ := by simp
   ⟨e, by
     intro i
     dsimp only [e]

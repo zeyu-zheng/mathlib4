@@ -153,8 +153,8 @@ lemma crossProduct_ne_zero_iff_linearIndependent {F : Type*} [Field F] {v w : Fi
   · rw [LinearIndependent.pair_iff' hv, not_forall_not]
     rintro ⟨a, rfl⟩
     rw [LinearMap.map_smul, cross_self, smul_zero]
-  have hv' : v = ![v 0, v 1, v 2] := by simp [← List.ofFn_inj]
-  have hw' : w = ![w 0, w 1, w 2] := by simp [← List.ofFn_inj]
+  have hv' : v = ![v 0, v 1, v 2] := by simp [← List.ofFn_inj, List.ofFn_succ]
+  have hw' : w = ![w 0, w 1, w 2] := by simp [← List.ofFn_inj, List.ofFn_succ]
   intro h1 h2
   simp_rw [cross_apply, cons_eq_zero_iff, zero_empty, and_true, sub_eq_zero] at h1
   have h20 := LinearIndependent.pair_iff.mp h2 (- w 0) (v 0)
@@ -164,3 +164,23 @@ lemma crossProduct_ne_zero_iff_linearIndependent {F : Type*} [Field F] {v w : Fi
   simp only [smul_eq_mul, mul_comm (w 0), mul_comm (w 1), mul_comm (w 2), h1] at h20 h21 h22
   rw [hv', cons_eq_zero_iff, cons_eq_zero_iff, cons_eq_zero_iff, zero_empty] at hv
   exact hv ⟨(h20 trivial).2, (h21 trivial).2, (h22 trivial).2, rfl⟩
+
+/-- The scalar triple product expansion of the vector triple product. -/
+theorem cross_cross_eq_smul_sub_smul (u v w : Fin 3 → R) :
+    u ×₃ v ×₃ w = (u ⬝ᵥ w) • v - (v ⬝ᵥ w) • u := by
+  simp_rw [cross_apply, vec3_dotProduct]
+  ext i
+  fin_cases i <;>
+  · simp only [Fin.isValue, Nat.succ_eq_add_one, Nat.reduceAdd, Fin.reduceFinMk, cons_val,
+      Pi.sub_apply, Pi.smul_apply, smul_eq_mul]
+    ring
+
+/-- Alternative form of the scalar triple product expansion of the vector triple product. -/
+theorem cross_cross_eq_smul_sub_smul' (u v w : Fin 3 → R) :
+    u ×₃ (v ×₃ w) = (u ⬝ᵥ w) • v - (v ⬝ᵥ u) • w := by
+  simp_rw [cross_apply, vec3_dotProduct]
+  ext i
+  fin_cases i <;>
+  · simp only [Nat.succ_eq_add_one, Nat.reduceAdd, Fin.isValue, cons_val, cons_val_one,
+      cons_val_zero, Fin.reduceFinMk, Pi.sub_apply, Pi.smul_apply, smul_eq_mul]
+    ring

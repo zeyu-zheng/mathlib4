@@ -50,7 +50,7 @@ instance instBoundedOrder [NeZero n] : BoundedOrder (Fin n) where
   top := rev 0
   le_top i := Nat.le_pred_of_lt i.is_lt
   bot := 0
-  bot_le := Fin.zero_le'
+  bot_le := Fin.zero_le
 
 instance instBiheytingAlgebra [NeZero n] : BiheytingAlgebra (Fin n) :=
   LinearOrder.toBiheytingAlgebra
@@ -205,6 +205,10 @@ alias ⟨_, _root_.GCongr.Fin.succAbove_lt_succAbove⟩ := succAbove_lt_succAbov
 @[simp]
 theorem natAdd_inj (m) {i j : Fin n} : natAdd m i = natAdd m j ↔ i = j :=
   (strictMono_natAdd _).injective.eq_iff
+
+theorem natAdd_injective (m n : ℕ) :
+    Function.Injective (Fin.natAdd n : Fin m → _) :=
+  (strictMono_natAdd _).injective
 
 @[simp]
 theorem natAdd_le_natAdd_iff (m) {i j : Fin n} : natAdd m i ≤ natAdd m j ↔ i ≤ j :=

@@ -25,11 +25,11 @@ General-Valued CSP subsumes Min-Cost-Hom (including 3-SAT for example) and Finit
 * `Function.HasMaxCutProperty`: Can given binary function express the Max-Cut problem?
 * `FractionalOperation`: Multiset of operations on given domain of the same arity.
 * `FractionalOperation.IsSymmetricFractionalPolymorphismFor`: Is given fractional operation a
-   symmetric fractional polymorphism for given VCSP template?
+  symmetric fractional polymorphism for given VCSP template?
 
 ## References
 * [D. A. Cohen, M. C. Cooper, P. Creed, P. G. Jeavons, S. Živný,
-   *An Algebraic Theory of Complexity for Discrete Optimisation*][cohen2012]
+  *An Algebraic Theory of Complexity for Discrete Optimisation*][cohen2012]
 
 -/
 
@@ -131,7 +131,7 @@ lemma Function.HasMaxCutPropertyAt.rows_lt_aux {C : Type*} [PartialOrder C]
     {r : Fin 2 → D} (rin : r ∈ (ω.tt ![![a, b], ![b, a]])) :
     f ![a, b] < f r := by
   rw [FractionalOperation.tt, Multiset.mem_map] at rin
-  rw [show r = ![r 0, r 1] by simp [← List.ofFn_inj]]
+  rw [show r = ![r 0, r 1] by simp [← List.ofFn_inj, List.ofFn_succ]]
   apply lt_of_le_of_ne (mcf.right (r 0) (r 1)).left
   intro equ
   have asymm : r 0 ≠ r 1 := by
@@ -143,7 +143,7 @@ lemma Function.HasMaxCutPropertyAt.rows_lt_aux {C : Type*} [PartialOrder C]
   apply asymm
   obtain ⟨o, in_omega, rfl⟩ := rin
   show o (fun j => ![![a, b], ![b, a]] j 0) = o (fun j => ![![a, b], ![b, a]] j 1)
-  convert symmega ![a, b] ![b, a] (by simp [List.Perm.swap]) o in_omega using 2 <;>
+  convert symmega ![a, b] ![b, a] (by simp [List.Perm.swap, List.ofFn_succ]) o in_omega using 2 <;>
     simp [Matrix.const_fin1_eq]
 
 variable {C : Type*} [AddCommMonoid C] [PartialOrder C] [IsOrderedCancelAddMonoid C]
