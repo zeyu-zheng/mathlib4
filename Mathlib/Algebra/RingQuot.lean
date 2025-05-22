@@ -262,10 +262,10 @@ instance instAddCommMonoid (r : R → R → Prop) : AddCommMonoid (RingQuot r) w
     simp only [add_quot, add_assoc]
   zero_add := by
     rintro ⟨⟨⟩⟩
-    simp [add_quot, ← zero_quot, zero_add]
+    simp [add_quot, ↓ ← zero_quot, zero_add]
   add_zero := by
     rintro ⟨⟨⟩⟩
-    simp only [add_quot, ← zero_quot, add_zero]
+    simp only [add_quot, ↓ ← zero_quot, add_zero]
   add_comm := by
     rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩
     simp only [add_quot, add_comm]

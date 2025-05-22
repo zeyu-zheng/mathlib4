@@ -236,8 +236,8 @@ section TacticInterlude
 /-- Solve equations for `RatFunc K` by working in `FractionRing K[X]`. -/
 macro "frac_tac" : tactic => `(tactic|
   · repeat (rintro (⟨⟩ : RatFunc _))
-    try simp only [← ofFractionRing_zero, ← ofFractionRing_add, ← ofFractionRing_sub,
-      ← ofFractionRing_neg, ← ofFractionRing_one, ← ofFractionRing_mul, ← ofFractionRing_div,
+    try simp only [↓ ← ofFractionRing_zero, ← ofFractionRing_add, ← ofFractionRing_sub,
+      ← ofFractionRing_neg, ↓ ← ofFractionRing_one, ← ofFractionRing_mul, ← ofFractionRing_div,
       ← ofFractionRing_inv,
       add_assoc, zero_add, add_zero, mul_assoc, mul_zero, mul_one, mul_add, inv_zero,
       add_comm, add_left_comm, mul_comm, mul_left_comm, sub_eq_add_neg, div_eq_mul_inv,

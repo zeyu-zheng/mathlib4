@@ -172,7 +172,7 @@ theorem iteratedDerivWithin_scomp_three
       iteratedFDerivWithin_apply_eq_iteratedDerivWithin_mul_prod] says
     simp only [iteratedFDerivWithin_apply_eq_iteratedDerivWithin_mul_prod, Finset.prod_const,
       Finset.card_univ, Fintype.card_fin, Fin.prod_univ_two, Fin.isValue, Matrix.cons_val_zero,
-      Matrix.cons_val_one, Matrix.cons_val_fin_one, mul_smul,
+      Matrix.cons_val_one, Nat.succ_eq_add_one, Nat.reduceAdd, Matrix.cons_val_fin_one, mul_smul,
       smul_comm (iteratedDerivWithin 2 f s x), ← derivWithin_fderivWithin,
       ContinuousLinearMap.smulRight_apply, ContinuousLinearMap.one_apply, add_left_inj]
   abel
