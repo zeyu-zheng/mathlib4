@@ -322,9 +322,9 @@ lemma integral_arcsin_to_pi_div_two_min (h : d ≤ l) :
     ∫ θ in (d / l).arcsin..(π / 2), min d (θ.sin * l) = (π / 2 - (d / l).arcsin) * d := by
   have : Set.EqOn (fun θ => min d (θ.sin * l)) (fun _ => d) (Set.uIcc (d / l).arcsin (π / 2)) := by
     intro θ ⟨hθ₁, hθ₂⟩
-    wlog hθ_ne_pi_div_two : θ ≠ π / 2
+    wlog hθ_ne_pi_div_two : (θ ≠ π / 2:)
     · simp only [ne_eq, not_not] at hθ_ne_pi_div_two
-      simp only [hθ_ne_pi_div_two, Real.sin_pi_div_two, one_mul, min_eq_left h]
+      simp_rw [hθ_ne_pi_div_two, Real.sin_pi_div_two, one_mul, min_eq_left h]
     simp only [min_eq_left (d / l).arcsin_le_pi_div_two,
       max_eq_right (d / l).arcsin_le_pi_div_two] at hθ₁ hθ₂
     have hθ_mem : θ ∈ Set.Ico (-(π / 2)) (π / 2) := by
