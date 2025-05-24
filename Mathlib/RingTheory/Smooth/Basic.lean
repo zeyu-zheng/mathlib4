@@ -159,6 +159,9 @@ instance mvPolynomial (σ : Type u) : FormallySmooth R (MvPolynomial σ R) := by
   rw [← hg, AlgHom.comp_apply, MvPolynomial.aeval_X]
   rfl
 
+instance (σ : Type) : FormallySmooth R (MvPolynomial σ R) :=
+  .of_equiv <| MvPolynomial.renameEquiv R Equiv.ulift
+
 instance polynomial : FormallySmooth R R[X] :=
   FormallySmooth.of_equiv (MvPolynomial.pUnitAlgEquiv R)
 

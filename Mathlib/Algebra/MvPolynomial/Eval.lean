@@ -371,6 +371,15 @@ theorem map_eval₂ (f : R →+* S₁) (g : S₂ → MvPolynomial S₃ R) (p : M
     rw [eval₂_mul, (map f).map_mul, hp, (map f).map_mul, map_X, eval₂_mul, eval₂_X, eval₂_X]
     rfl
 
+lemma eval₂_map_comp_C {ι : Type*} (f : R →+* S₁) (h : ι → MvPolynomial σ S₁)
+    (p : MvPolynomial ι R) : eval₂ ((map f).comp C) h p = eval₂ C h (map f p) := by
+  induction p using MvPolynomial.induction_on <;> simp_all
+
+lemma map_eval {S₂ : Type*} [CommSemiring S₂]
+    (q : S₁ →+* S₂) (g : σ → S₁) (p : MvPolynomial σ S₁) :
+    q (eval g p) = eval (q ∘ g) (map q p) := by
+  rw [← eval₂_eq_eval_map, ← eval₂_id, eval₂_comp_right, map_id]
+
 theorem coeff_map (p : MvPolynomial σ R) : ∀ m : σ →₀ ℕ, coeff m (map f p) = f (coeff m p) := by
   classical
   apply MvPolynomial.induction_on p <;> clear p
@@ -510,6 +519,17 @@ lemma mem_range_map_of_coeffs_subset {f : R →+* S₁} {x : MvPolynomial σ S�
       obtain ⟨u, hu⟩ := hp hx.2
       exact ⟨q + u, by simp [hq, hu]⟩
     · simpa [support_monomial, hs] using not_mem_support_iff.mp ha
+
+/-- If the coefficients of `p` are in the range of `f`, this is a preimage of
+`p` under `MvPolynomial.map f`. -/
+noncomputable def preimage {f : R →+* S₁} {p : MvPolynomial σ S₁}
+    (hp : (p.coeffs : Set S₁) ⊆ Set.range f) : MvPolynomial σ R :=
+  (MvPolynomial.mem_range_map_of_coeffs_subset hp).choose
+
+@[simp]
+lemma map_preimage {f : R →+* S₁} {p : MvPolynomial σ S₁}
+    (hp : (p.coeffs : Set S₁) ⊆ Set.range f) : MvPolynomial.map f (p.preimage hp) = p :=
+  (MvPolynomial.mem_range_map_of_coeffs_subset hp).choose_spec
 
 /-- If `f : S₁ →ₐ[R] S₂` is a morphism of `R`-algebras, then so is `MvPolynomial.map f`. -/
 @[simps!]
