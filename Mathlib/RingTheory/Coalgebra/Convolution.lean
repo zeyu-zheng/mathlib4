@@ -109,29 +109,10 @@ lemma comp_mul_distrib (f g : C →ₗ[R] A) (h : A →ₐ[R] B) :
 
 end Semiring
 
-section CommSemiring
-variable [CommSemiring A] [AddCommMonoid C] [Algebra R A] [Module R C] [Coalgebra R C]
-
-private lemma convMul_comm (f g : C →ₗ[R] A) : f * g = g * f := calc
-      μ ∘ₗ (f ⊗ₘ g) ∘ₗ δ
-  _ = μ ∘ₗ (g ⊗ₘ f) ∘ₗ δ := sorry
-
-instance : CommSemiring (C →ₗ[R] A) where
-  mul_comm := convMul_comm
-
-end CommSemiring
-
 section Ring
 variable [Ring A] [AddCommMonoid C] [Algebra R A] [Module R C] [Coalgebra R C]
 
 instance : Ring (C →ₗ[R] A) where
 
 end Ring
-
-section CommRing
-variable [CommRing A] [AddCommMonoid C] [Algebra R A] [Module R C] [Coalgebra R C]
-
-instance : CommRing (C →ₗ[R] A) where
-
-end CommRing
 end LinearMap
