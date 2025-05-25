@@ -6,6 +6,7 @@ Authors: Johannes Hölzl, Callum Sutton, Yury Kudryashov
 import Mathlib.Algebra.Group.Equiv.Defs
 import Mathlib.Algebra.Group.Hom.Basic
 import Mathlib.Logic.Equiv.Basic
+import Mathlib.Tactic.Spread
 
 /-!
 # Multiplicative and additive equivs
@@ -138,6 +139,7 @@ def piUnique {ι : Type*} (M : ι → Type*) [∀ j, Mul (M j)] [Unique ι] :
 end MulEquiv
 
 namespace MonoidHom
+variable {M N₁ N₂ : Type*} [Monoid M] [CommMonoid N₁] [CommMonoid N₂]
 
 /-- The equivalence `(β →* γ) ≃ (α →* γ)` obtained by precomposition with
 a multiplicative equivalence `e : α ≃* β`. -/
@@ -162,6 +164,14 @@ def postcompEquiv {α β : Type*} [Monoid α] [Monoid β] (e : α ≃* β) (γ :
   invFun g := e.symm.toMonoidHom.comp g
   left_inv _ := by ext; simp
   right_inv _ := by ext; simp
+
+/-- The monoid isomorphism `(M →* N₁) ≃* (M →* N₂)` obtained by postcomposition with
+a multiplicative equivalence `e : N₁ ≃* N₂`. -/
+@[to_additive "The monoid isomorphism `(M →+ N₁) ≃+ (M →+ N₂)` obtained by postcomposition with
+an additive equivalence `e : N₁ ≃+ N₂`."]
+def postcompMulEquiv (e : N₁ ≃* N₂) : (M →* N₁) ≃* (M →* N₂) where
+  __ := postcompEquiv e M
+  map_mul' f g := by ext; exact map_mul e ..
 
 end MonoidHom
 
