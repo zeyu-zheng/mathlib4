@@ -42,8 +42,15 @@ section Semiring
 variable [Semiring A] [Semiring B] [AddCommMonoid C] [Algebra R A] [Algebra R B] [Module R C]
   [Coalgebra R C]
 
-instance instOne : One (C →ₗ[R] A) where one := Algebra.linearMap R A ∘ₗ counit
-instance instMul : Mul (C →ₗ[R] A) where mul f g := mul' R A ∘ₗ TensorProduct.map f g ∘ₗ comul
+/-- Convolution unit on linear maps from a coalgebra to an algebra. -/
+abbrev convOne : One (C →ₗ[R] A) where one := Algebra.linearMap R A ∘ₗ counit
+
+/-- Convolution product on linear maps from a coalgebra to an algebra. -/
+abbrev convMul : Mul (C →ₗ[R] A) where mul f g := mul' R A ∘ₗ TensorProduct.map f g ∘ₗ comul
+
+scoped[ConvolutionProduct] attribute [instance] LinearMap.convOne LinearMap.convMul
+
+open scoped ConvolutionProduct
 
 lemma one_def : (1 : C →ₗ[R] A) = Algebra.linearMap R A ∘ₗ counit := rfl
 lemma mul_def (f g : C →ₗ[R] A) : f * g = mul' R A ∘ₗ TensorProduct.map f g ∘ₗ comul := rfl
@@ -94,7 +101,8 @@ private lemma convMul_one (f : C →ₗ[R] A) : f * 1 = f := calc
     rw [lTensor_counit_comp_comul]
   _ = f := by ext; simp
 
-instance : Semiring (C →ₗ[R] A) where
+/-- Convolution semiring structure on linear maps from a coalgebra to an algebra. -/
+abbrev convSemiring : Semiring (C →ₗ[R] A) where
   left_distrib f g h := by ext; simp [TensorProduct.map_add_right]
   right_distrib f g h := by ext; simp [TensorProduct.map_add_left]
   zero_mul f := by ext; simp
@@ -102,6 +110,8 @@ instance : Semiring (C →ₗ[R] A) where
   mul_assoc := convMul_assoc
   one_mul := one_convMul
   mul_one := convMul_one
+
+scoped[ConvolutionProduct] attribute [instance] LinearMap.convSemiring
 
 lemma _root_.AlgHom.map_comp_mul (h : A →ₐ B) :
     h.toLinearMap ∘ₗ μ = mul' R B ∘ₗ (h.toLinearMap ⊗ₘ h.toLinearMap) := by ext; simp
@@ -115,7 +125,12 @@ end Semiring
 section Ring
 variable [Ring A] [AddCommMonoid C] [Algebra R A] [Module R C] [Coalgebra R C]
 
-instance : Ring (C →ₗ[R] A) where
+open scoped ConvolutionProduct
+
+/-- Convolution ring structure on linear maps from a coalgebra to an algebra. -/
+instance convRing : Ring (C →ₗ[R] A) where
+
+scoped[ConvolutionProduct] attribute [instance] LinearMap.convRing
 
 end Ring
 end LinearMap
