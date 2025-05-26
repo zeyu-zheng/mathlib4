@@ -114,7 +114,7 @@ variable [MulOneClass M] [MulOneClass M₁] [MulOneClass M₂] [CommMonoid N] [C
 
 /-- The isomorphism `(M₁ →* N) ≃* (M₂ →* N)` obtained by postcomposition with
 a multiplicative equivalence `e : M₁ ≃* M₂`. -/
-@[to_additive (attr := simps! toEquiv apply)
+@[to_additive (attr := simps! apply)
 "The isomorphism `(M₁ →+ N) ≃+ (M₂ →+ N)` obtained by postcomposition with
 an additive equivalence `e : M₁ ≃+ M₂`."]
 def monoidHomCongrLeft (e : M₁ ≃* M₂) : (M₁ →* N) ≃* (M₂ →* N) where
@@ -123,7 +123,7 @@ def monoidHomCongrLeft (e : M₁ ≃* M₂) : (M₁ →* N) ≃* (M₂ →* N) w
 
 /-- The isomorphism `(M →* N₁) ≃* (M →* N₂)` obtained by postcomposition with
 a multiplicative equivalence `e : N₁ ≃* N₂`. -/
-@[to_additive (attr := simps! toEquiv apply)
+@[to_additive (attr := simps! apply)
 "The isomorphism `(M →+ N₁) ≃+ (M →+ N₂)` obtained by postcomposition with
 an additive equivalence `e : N₁ ≃+ N₂`."]
 def monoidHomCongrRight (e : N₁ ≃* N₂) : (M →* N₁) ≃* (M →* N₂) where
