@@ -76,6 +76,6 @@ theorem monoidHom_mulEquiv_of_hasEnoughRootsOfUnity : Nonempty ((G →* Mˣ) ≃
         using dvd_exponent e i
     exact HasEnoughRootsOfUnity.of_dvd M hdvd
   let E i := (IsCyclic.monoidHom_equiv_self (Multiplicative (ZMod (n i))) M).some
-  exact ⟨e.monoidHomCongrLeft.trans <| e'.trans <| E.piCongrRight.trans e.symm⟩
+  exact ⟨e.monoidHomCongrLeft.trans <| e'.trans <| .trans (.piCongrRight E) e.symm⟩
 
 end CommGroup
