@@ -36,9 +36,6 @@ open Function
 variable {α β M N : Type*}
 
 namespace Set
-
-section One
-
 variable [One M] [One N] {s t : Set α} {f g : α → M} {a : α}
 
 /-- `Set.mulIndicator s f a` is `f a` if `a ∈ s`, `1` otherwise. -/
@@ -64,17 +61,17 @@ lemma mulIndicator_of_mem (h : a ∈ s) (f : α → M) : mulIndicator s f a = f 
 lemma mulIndicator_of_notMem (h : a ∉ s) (f : α → M) : mulIndicator s f a = 1 := if_neg h
 
 @[deprecated (since := "2025-05-23")]
-alias indicator_preimage_of_not_mem := indicator_preimage_of_notMem
+alias indicator_of_not_mem := indicator_of_notMem
 
 @[to_additive existing, deprecated (since := "2025-05-23")]
-alias mulIndicator_preimage_of_not_mem := mulIndicator_preimage_of_notMem
+alias mulIndicator_of_not_mem := mulIndicator_of_notMem
 
 @[to_additive]
 lemma mulIndicator_eq_one_or_self (s : Set α) (f : α → M) (a : α) :
     mulIndicator s f a = 1 ∨ mulIndicator s f a = f a := by
   by_cases h : a ∈ s
   · exact Or.inr (mulIndicator_of_mem h f)
-  · exact Or.inl (mulIndicator_of_not_mem h f)
+  · exact Or.inl (mulIndicator_of_notMem h f)
 
 @[to_additive (attr := simp)]
 lemma mulIndicator_apply_eq_self : s.mulIndicator f a = f a ↔ a ∉ s → f a = 1 :=
@@ -120,7 +117,7 @@ set. -/
       "If an additive indicator function is not equal to `0` at a point, then that point is
       in the set."]
 lemma mem_of_mulIndicator_ne_one (h : mulIndicator s f a ≠ 1) : a ∈ s :=
-  not_imp_comm.1 (fun hn => mulIndicator_of_not_mem hn f) h
+  not_imp_comm.1 (fun hn => mulIndicator_of_notMem hn f) h
 
 /-- See `Set.eqOn_mulIndicator'` for the version with `sᶜ`. -/
 @[to_additive
@@ -131,11 +128,11 @@ lemma eqOn_mulIndicator : EqOn (mulIndicator s f) f s := fun _ hx => mulIndicato
 @[to_additive
       "See `Set.eqOn_indicator` for the version with `s`."]
 lemma eqOn_mulIndicator' : EqOn (mulIndicator s f) 1 sᶜ :=
-  fun _ hx => mulIndicator_of_not_mem hx f
+  fun _ hx => mulIndicator_of_notMem hx f
 
 @[to_additive]
 lemma mulSupport_mulIndicator_subset : mulSupport (s.mulIndicator f) ⊆ s := fun _ hx =>
-  hx.imp_symm fun h => mulIndicator_of_not_mem h f
+  hx.imp_symm fun h => mulIndicator_of_notMem h f
 
 @[to_additive (attr := simp)]
 lemma mulIndicator_mulSupport : mulIndicator (mulSupport f) f = f :=
@@ -258,14 +255,16 @@ lemma mulIndicator_const_preimage (U : Set α) (s : Set M) (a : M) :
     rw [mulIndicator_const_preimage_eq_union]
     split_ifs <;> simp
 
-lemma indicator_one_preimage [Zero M] (U : Set α) (s : Set M) :
-    U.indicator 1 ⁻¹' s ∈ ({Set.univ, U, Uᶜ, ∅} : Set (Set α)) :=
-  indicator_const_preimage _ _ 1
-
 @[to_additive]
-lemma mulIndicator_preimage_of_not_mem (s : Set α) (f : α → M) {t : Set M} (ht : (1 : M) ∉ t) :
+lemma mulIndicator_preimage_of_notMem (s : Set α) (f : α → M) {t : Set M} (ht : (1 : M) ∉ t) :
     mulIndicator s f ⁻¹' t = f ⁻¹' t ∩ s := by
-  simp [mulIndicator_preimage, Pi.one_def, Set.preimage_const_of_not_mem ht]
+  simp [mulIndicator_preimage, Pi.one_def, Set.preimage_const_of_notMem ht]
+
+@[deprecated (since := "2025-05-23")]
+alias indicator_preimage_of_not_mem := indicator_preimage_of_notMem
+
+@[to_additive existing, deprecated (since := "2025-05-23")]
+alias mulIndicator_preimage_of_not_mem := mulIndicator_preimage_of_notMem
 
 @[to_additive]
 lemma mem_range_mulIndicator {r : M} {s : Set α} {f : α → M} :
@@ -280,5 +279,8 @@ lemma mulIndicator_rel_mulIndicator {r : M → M → Prop} (h1 : r 1 1) (ha : a 
   split_ifs with has
   exacts [ha has, h1]
 
-end One
+lemma indicator_one_preimage [Zero M] (U : Set α) (s : Set M) :
+    U.indicator 1 ⁻¹' s ∈ ({Set.univ, U, Uᶜ, ∅} : Set (Set α)) :=
+  indicator_const_preimage _ _ 1
+
 end Set
