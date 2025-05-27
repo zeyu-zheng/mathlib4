@@ -34,7 +34,7 @@ open TensorProduct in
 Then `I • N` also has finite index. -/
 lemma Submodule.finite_quotient_smul [Finite (R ⧸ I)] [Finite (M ⧸ N)] (hN : N.FG) :
     Finite (M ⧸ I • N) := by
-  suffices (I • N).toAddSubgroup.FiniteIndex from finite_quotient_of_finiteIndex
+  suffices (I • N).toAddSubgroup.FiniteIndex from AddSubgroup.finite_quotient_of_finiteIndex
   suffices Nat.card (N ⧸ (I • N).comap N.subtype) ≠ 0 by
     constructor
     rw [← AddSubgroup.relIndex_mul_index
