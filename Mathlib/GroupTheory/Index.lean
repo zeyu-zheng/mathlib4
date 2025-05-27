@@ -606,8 +606,7 @@ alias _root_.AddSubgroup.relindex_toSubgroup := _root_.AddSubgroup.relIndex_toSu
 
 section FiniteIndex
 
-variable (H K)
-
+variable (H K) in
 /-- Typeclass for finite index subgroups. -/
 class FiniteIndex : Prop where
   /-- The subgroup has finite index -/
@@ -665,8 +664,6 @@ theorem finiteIndex_iInf' {ι : Type*} {s : Finset ι}
 instance instFiniteIndex_subgroupOf (H K : Subgroup G) [H.FiniteIndex] :
     (H.subgroupOf K).FiniteIndex :=
   ⟨fun h => H.index_ne_zero_of_finite <| H.index_eq_zero_of_relIndex_eq_zero h⟩
-
-variable {H K}
 
 @[to_additive]
 theorem finiteIndex_of_le [FiniteIndex H] (h : H ≤ K) : FiniteIndex K :=
