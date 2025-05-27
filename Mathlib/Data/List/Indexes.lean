@@ -76,7 +76,7 @@ theorem mapIdx_eq_ofFn (l : List α) (f : ℕ → α → β) :
     l.mapIdx f = ofFn fun i : Fin l.length ↦ f (i : ℕ) (l.get i) := by
   induction l generalizing f with
   | nil => simp
-  | cons _ _ IH => simp [IH, List.ofFn_succ]
+  | cons _ _ IH => simp [IH]
 
 end MapIdx
 
@@ -218,7 +218,7 @@ theorem mapIdxMGo_eq_mapIdxMAuxSpec
       congr
       conv => { lhs; intro x; rw [ih _ _ h]; }
       funext x
-      simp only [Array.push_toList, append_assoc, singleton_append, Array.size_push,
+      simp only [Array.toList_push, append_assoc, singleton_append, Array.size_push,
         map_eq_pure_bind]
 
 set_option linter.deprecated false in

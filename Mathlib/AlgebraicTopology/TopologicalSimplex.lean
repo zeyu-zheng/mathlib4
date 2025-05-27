@@ -39,14 +39,14 @@ lemma toTopObj_zero_apply_zero (f : ⦋0⦌.toTopObj) : f 0 = 1 := by
   simpa [toType_apply] using show ∑ _, _ = _ from f.2
 
 lemma toTopObj_one_add_eq_one (f : ⦋1⦌.toTopObj) : f 0 + f 1 = 1 := by
-  simpa [toType_apply, Finset.sum, List.ofFn_succ] using show ∑ _, _ = _ from f.2
+  simpa [toType_apply, Finset.sum] using show ∑ _, _ = _ from f.2
 
 lemma toTopObj_one_coe_add_coe_eq_one (f : ⦋1⦌.toTopObj) : (f 0 : ℝ) + f 1 = 1 := by
   norm_cast
   rw [toTopObj_one_add_eq_one]
 
 instance (x : SimplexCategory) : Nonempty x.toTopObj :=
-  ⟨⟨Pi.single (I := Fin _) 0 1, (show ∑ _, _ = _ by simp)⟩⟩
+  ⟨⟨Pi.single 0 1, (show ∑ _, _ = _ by simp)⟩⟩
 
 instance : Unique ⦋0⦌.toTopObj :=
   ⟨⟨1, show ∑ _, _ = _ by simp [toType_apply]⟩, fun f ↦ by ext i; fin_cases i; simp⟩
@@ -56,7 +56,7 @@ open unitInterval in
 def toTopObjOneHomeo : ⦋1⦌.toTopObj ≃ₜ I where
   toFun f := ⟨f 0, (f 0).2, toTopObj_one_coe_add_coe_eq_one f ▸ le_add_of_nonneg_right (f 1).2⟩
   invFun x := ⟨![toNNReal x, toNNReal (σ x)],
-    show ∑ _, _ = _ by ext; simp [toType_apply, Finset.sum, List.ofFn_succ]⟩
+    show ∑ _, _ = _ by ext; simp [toType_apply, Finset.sum]⟩
   left_inv f := by ext i; fin_cases i <;> simp [← toTopObj_one_coe_add_coe_eq_one f]
   right_inv x := by simp
   continuous_toFun := .subtype_mk (continuous_subtype_val.comp

@@ -141,11 +141,11 @@ theorem exists_linearIndependent_pair_of_one_lt_rank [StrongRankCondition R]
     [NoZeroSMulDivisors R M] (h : 1 < Module.rank R M) {x : M} (hx : x ≠ 0) :
     ∃ y, LinearIndependent R ![x, y] := by
   obtain ⟨y, hy⟩ := exists_linearIndependent_snoc_of_lt_rank (linearIndependent_unique ![x] hx) h
-  have : Fin.snoc ![x] y = ![x, y] := by simp [Fin.snoc, ← List.ofFn_inj, List.ofFn_succ]
+  have : Fin.snoc ![x] y = ![x, y] := by simp [Fin.snoc, ← List.ofFn_inj]
   rw [this] at hy
   exact ⟨y, hy⟩
 
-theorem Submodule.exists_smul_not_mem_of_rank_lt {N : Submodule R M}
+theorem Submodule.exists_smul_notMem_of_rank_lt {N : Submodule R M}
     (h : Module.rank R N < Module.rank R M) : ∃ m : M, ∀ r : R, r ≠ 0 → r • m ∉ N := by
   have : Module.rank R (M ⧸ N) ≠ 0 := by
     intro e
@@ -155,6 +155,9 @@ theorem Submodule.exists_smul_not_mem_of_rank_lt {N : Submodule R M}
   push_neg at this
   simp_rw [← N.mkQ_apply, ← map_smul, N.mkQ_apply, ne_eq, Submodule.Quotient.mk_eq_zero] at this
   exact this
+
+@[deprecated (since := "2025-05-23")]
+alias Submodule.exists_smul_not_mem_of_rank_lt := Submodule.exists_smul_notMem_of_rank_lt
 
 open Cardinal Basis Submodule Function Set LinearMap
 
