@@ -1237,8 +1237,8 @@ def of [AddZeroClass G] : Multiplicative G →* k[G] :=
 def of' : G → k[G] := fun a => single a 1
 
 @[simp]
-lemma linearCombination_of' [AddZeroClass G] : linearCombination k (of' k G) = .id := by
-  ext; simp [of']
+lemma linearCombination_of [AddZeroClass G] : linearCombination k (of k G) = .id := by
+  ext; simp; rfl
 
 end
 
