@@ -127,7 +127,7 @@ lemma toLinearMap_eq_toLinearMap (x : M) (y : N) :
 alias toLin_toLinearMap := toLinearMap_eq_toLinearMap
 
 /-- If we interchange the roles of `M` and `N`, we still have a root pairing. -/
-protected def flip : RootPairing ι R N M where
+@[simps toLinearMap] protected def flip : RootPairing ι R N M where
   toLinearMap := P.toLinearMap.flip
   root := P.coroot
   coroot := P.root
