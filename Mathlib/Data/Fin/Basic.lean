@@ -315,7 +315,7 @@ theorem default_eq_zero (n : ℕ) [NeZero n] : (default : Fin n) = 0 :=
   rfl
 
 instance instNatCast [NeZero n] : NatCast (Fin n) where
-  natCast i := Fin.ofNat' n i
+  natCast i := Fin.ofNat n i
 
 lemma natCast_def [NeZero n] (a : ℕ) : (a : Fin n) = ⟨a % n, mod_lt _ n.pos_of_neZero⟩ := rfl
 
@@ -349,8 +349,11 @@ lemma val_sub_one_of_ne_zero [NeZero n] {i : Fin n} (hi : i ≠ 0) : (i - 1).val
 section OfNatCoe
 
 @[simp]
-theorem ofNat'_eq_cast (n : ℕ) [NeZero n] (a : ℕ) : Fin.ofNat' n a = a :=
+theorem ofNat_eq_cast (n : ℕ) [NeZero n] (a : ℕ) : Fin.ofNat n a = a :=
   rfl
+
+@[deprecated ofNat_eq_cast (since := "2025-05-30")]
+alias ofNat'_eq_cast := ofNat_eq_cast
 
 @[simp] lemma val_natCast (a n : ℕ) [NeZero n] : (a : Fin n).val = a % n := rfl
 
@@ -696,8 +699,6 @@ def natAddEmb (n) {m} : Fin m ↪ Fin (n + m) where
   inj' a b := by simp [Fin.ext_iff]
 
 theorem castSucc_castAdd (i : Fin n) : castSucc (castAdd m i) = castAdd (m + 1) i := rfl
-
-theorem castSucc_natAdd (i : Fin m) : castSucc (natAdd n i) = natAdd n (castSucc i) := rfl
 
 theorem succ_castAdd (i : Fin n) : succ (castAdd m i) =
     if h : i.succ = last _ then natAdd n (0 : Fin (m + 1))
