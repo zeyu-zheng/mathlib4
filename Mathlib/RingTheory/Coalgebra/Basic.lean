@@ -377,3 +377,4 @@ instance instCoalgebra : Coalgebra R (ι →₀ A) where
         TensorProduct.map_map_comp_assoc_eq]
 
 end Finsupp
+onoida
