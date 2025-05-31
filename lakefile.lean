@@ -19,11 +19,11 @@ require "leanprover-community" / "plausible" @ git "main"
 ## Options for building mathlib
 -/
 
-/-- These options are used
-* as `leanOptions`, prefixed by `` `weak``, so that `lake build` uses them;
-* as `moreServerArgs`, to set their default value in mathlib
-  (as well as `Archive`, `Counterexamples` and `test`). -/
+/-- These options are used as `leanOptions`, prefixed by `` `weak``, so that
+`lake build` uses them, as well as `Archive` and `Counterexamples`. -/
 abbrev mathlibOnlyLinters : Array LeanOption := #[
+  ⟨`linter.allScriptsDocumented, true⟩,
+  ⟨`linter.checkInitImports, true⟩,
   -- The `docPrime` linter is disabled: https://github.com/leanprover-community/mathlib4/issues/20560
   ⟨`linter.docPrime, false⟩,
   ⟨`linter.hashCommand, true⟩,
@@ -36,12 +36,13 @@ abbrev mathlibOnlyLinters : Array LeanOption := #[
   ⟨`linter.style.lambdaSyntax, true⟩,
   ⟨`linter.style.longLine, true⟩,
   ⟨`linter.style.longFile, .ofNat 1500⟩,
+  ⟨`linter.style.maxHeartbeats, true⟩,
   -- `latest_import.yml` uses this comment: if you edit it, make sure that the workflow still works
   ⟨`linter.style.missingEnd, true⟩,
   ⟨`linter.style.multiGoal, true⟩,
   ⟨`linter.style.openClassical, true⟩,
   ⟨`linter.style.refine, true⟩,
-  ⟨`linter.style.setOption, true⟩
+  ⟨`linter.style.setOption, true⟩,
 ]
 
 /-- These options are passed as `leanOptions` to building mathlib, as well as the
@@ -67,9 +68,8 @@ package mathlib where
 
 @[default_target]
 lean_lib Mathlib where
+  -- Enforce Mathlib's default linters and style options.
   leanOptions := mathlibLeanOptions
-  -- Mathlib also enforces these linter options, which are not active by default.
-  moreServerOptions := mathlibOnlyLinters
 
 -- NB. When adding further libraries, check if they should be excluded from `getLeanLibs` in
 -- `scripts/mk_all.lean`.
@@ -81,11 +81,9 @@ lean_lib MathlibTest where
 
 lean_lib Archive where
   leanOptions := mathlibLeanOptions
-  moreServerOptions := mathlibOnlyLinters
 
 lean_lib Counterexamples where
   leanOptions := mathlibLeanOptions
-  moreServerOptions := mathlibOnlyLinters
 
 /-- Additional documentation in the form of modules that only contain module docstrings. -/
 lean_lib docs where
@@ -129,6 +127,9 @@ lean_exe shake where
 /-- `lake exe lint-style` runs text-based style linters. -/
 lean_exe «lint-style» where
   srcDir := "scripts"
+  supportInterpreter := true
+  -- Executables which import `Lake` must set `-lLake`.
+  weakLinkArgs := #["-lLake"]
 
 /--
 `lake exe pole` queries the Mathlib speedcenter for build times for the current commit,
