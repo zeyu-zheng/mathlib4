@@ -142,7 +142,7 @@ namespace Functor
 
 open scoped Obj
 
-instance isCommMonObj : IsCommMon (F.obj M) where
+instance isCommMon_obj : IsCommMon (F.obj M) where
   mul_comm := by dsimp; rw [← Functor.LaxBraided.braided_assoc, ← Functor.map_comp, A.mul_comm]
 
 variable (F) in
