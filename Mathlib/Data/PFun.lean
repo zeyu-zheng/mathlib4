@@ -51,7 +51,6 @@ Monad operations:
 * `PFun.map`: The monad `map` function, pointwise `Part.map`.
 -/
 
-
 open Function
 
 /-- `PFun α β`, or `α →. β`, is the type of partial functions from

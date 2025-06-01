@@ -39,16 +39,16 @@ finsets, powers in groups, ...).
 Less basic uses of `ℕ` and `ℤ` should however use the typeclass-mediated development.
 
 The relevant files are:
-* `Mathlib.Data.Nat.Basic` for the continuation of the home-baked development on `ℕ`
-* `Mathlib.Data.Int.Init` for the continuation of the home-baked development on `ℤ`
-* `Mathlib.Algebra.Group.Nat` for the monoid instances on `ℕ`
-* `Mathlib.Algebra.Group.Int` for the group instance on `ℤ`
-* `Mathlib.Algebra.Ring.Nat` for the semiring instance on `ℕ`
-* `Mathlib.Algebra.Ring.Int` for the ring instance on `ℤ`
-* `Mathlib.Algebra.Order.Group.Nat` for the ordered monoid instance on `ℕ`
-* `Mathlib.Algebra.Order.Group.Int` for the ordered group instance on `ℤ`
-* `Mathlib.Algebra.Order.Ring.Nat` for the ordered semiring instance on `ℕ`
-* `Mathlib.Algebra.Order.Ring.Int` for the ordered ring instance on `ℤ`
+* `Mathlib/Data/Nat/Basic.lean` for the continuation of the home-baked development on `ℕ`
+* `Mathlib/Data/Int/Init.lean` for the continuation of the home-baked development on `ℤ`
+* `Mathlib/Algebra/Group/Nat.lean` for the monoid instances on `ℕ`
+* `Mathlib/Algebra/Group/Int.lean` for the group instance on `ℤ`
+* `Mathlib/Algebra/Ring/Nat.lean` for the semiring instance on `ℕ`
+* `Mathlib/Algebra/Ring/Int.lean` for the ring instance on `ℤ`
+* `Mathlib/Algebra/Order/Group/Nat.lean` for the ordered monoid instance on `ℕ`
+* `Mathlib/Algebra/Order/Group/Int.lean` for the ordered group instance on `ℤ`
+* `Mathlib/Algebra/Order/Ring/Nat.lean` for the ordered semiring instance on `ℕ`
+* `Mathlib/Algebra/Order/Ring/Int.lean` for the ordered ring instance on `ℤ`
 -/
 
 /- We don't want to import the algebraic hierarchy in this file. -/
@@ -107,7 +107,7 @@ lemma eq_zero_of_double_le (h : 2 * n ≤ n) : n = 0 := eq_zero_of_two_mul_le h
 /-! ### `div` -/
 
 lemma le_div_two_iff_mul_two_le {n m : ℕ} : m ≤ n / 2 ↔ (m : ℤ) * 2 ≤ n := by
-  rw [Nat.le_div_iff_mul_le Nat.zero_lt_two, ← Int.ofNat_le, Int.ofNat_mul, Int.ofNat_two]
+  rw [Nat.le_div_iff_mul_le Nat.zero_lt_two, ← Int.ofNat_le, Int.natCast_mul, Int.ofNat_two]
 
 /-- A version of `Nat.div_lt_self` using successors, rather than additional hypotheses. -/
 lemma div_lt_self' (a b : ℕ) : (a + 1) / (b + 2) < a + 1 :=
@@ -416,7 +416,7 @@ protected theorem not_two_dvd_bit1 (n : ℕ) : ¬2 ∣ 2 * n + 1 := by
 
 /-- `n` is not divisible by `a` iff it is between `a * k` and `a * (k + 1)` for some `k`. -/
 lemma not_dvd_iff_between_consec_multiples (n : ℕ) {a : ℕ} (ha : 0 < a) :
-    ¬a ∣n ↔ (∃ k : ℕ, a * k < n ∧ n < a * (k + 1)) :=
+    ¬ a ∣ n ↔ (∃ k : ℕ, a * k < n ∧ n < a * (k + 1)) :=
   not_dvd_iff_lt_mul_succ n ha
 
 /-- Two natural numbers are equal if and only if they have the same multiples. -/
@@ -443,11 +443,5 @@ instance decidableLoHiLe (lo hi : ℕ) (P : ℕ → Prop) [DecidablePred P] :
     Decidable (∀ x, lo ≤ x → x ≤ hi → P x) :=
   decidable_of_iff (∀ x, lo ≤ x → x < hi + 1 → P x) <|
     forall₂_congr fun _ _ ↦ imp_congr Nat.lt_succ_iff Iff.rfl
-
-end Nat
-
-
-namespace Nat
-variable {a b c d e : ℕ}
 
 end Nat

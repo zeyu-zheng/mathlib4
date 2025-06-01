@@ -825,8 +825,6 @@ lemma pow_subset_pow_mul_of_sq_subset_mul (hst : s ^ 2 ⊆ t * s) (hn : n ≠ 0)
 @[to_additive (attr := simp) nsmul_empty]
 lemma empty_pow (hn : n ≠ 0) : (∅ : Finset α) ^ n = ∅ := match n with | n + 1 => by simp [pow_succ]
 
-@[deprecated (since := "2024-10-21")] alias empty_nsmul := nsmul_empty
-
 @[to_additive]
 lemma Nonempty.pow (hs : s.Nonempty) : ∀ {n}, (s ^ n).Nonempty
   | 0 => by simp
@@ -1029,11 +1027,21 @@ lemma one_mem_inv_mul_iff : (1 : α) ∈ t⁻¹ * s ↔ ¬Disjoint s t := by
     Finset.Nonempty])
 
 @[to_additive]
-theorem not_one_mem_div_iff : (1 : α) ∉ s / t ↔ Disjoint s t :=
+theorem one_notMem_div_iff : (1 : α) ∉ s / t ↔ Disjoint s t :=
   one_mem_div_iff.not_left
 
+@[deprecated (since := "2025-05-23")] alias not_zero_mem_sub_iff := zero_notMem_sub_iff
+
+@[to_additive existing, deprecated (since := "2025-05-23")]
+alias not_one_mem_div_iff := one_notMem_div_iff
+
 @[to_additive]
-lemma not_one_mem_inv_mul_iff : (1 : α) ∉ t⁻¹ * s ↔ Disjoint s t := one_mem_inv_mul_iff.not_left
+lemma one_notMem_inv_mul_iff : (1 : α) ∉ t⁻¹ * s ↔ Disjoint s t := one_mem_inv_mul_iff.not_left
+
+@[deprecated (since := "2025-05-23")] alias not_zero_mem_neg_add_iff := zero_notMem_neg_add_iff
+
+@[to_additive existing, deprecated (since := "2025-05-23")]
+alias not_one_mem_inv_mul_iff := one_notMem_inv_mul_iff
 
 @[to_additive]
 theorem Nonempty.one_mem_div (h : s.Nonempty) : (1 : α) ∈ s / s :=
@@ -1159,8 +1167,7 @@ See `card_le_card_mul_self'` for the version with right-cancellative multiplicat
 -/
 @[to_additive
 "The size of `s + s` is at least the size of `s`, version with left-cancellative addition.
-See `card_le_card_add_self'` for the version with right-cancellative addition."
-]
+See `card_le_card_add_self'` for the version with right-cancellative addition."]
 theorem card_le_card_mul_self {s : Finset α} : #s ≤ #(s * s) := by
   cases s.eq_empty_or_nonempty <;> simp [card_le_card_mul_left, *]
 
@@ -1193,8 +1200,7 @@ See `card_le_card_mul_self` for the version with left-cancellative multiplicatio
 -/
 @[to_additive
 "The size of `s + s` is at least the size of `s`, version with right-cancellative addition.
-See `card_le_card_add_self` for the version with left-cancellative addition."
-]
+See `card_le_card_add_self` for the version with left-cancellative addition."]
 theorem card_le_card_mul_self' : #s ≤ #(s * s) := by
   cases s.eq_empty_or_nonempty <;> simp [card_le_card_mul_right, *]
 

@@ -24,6 +24,7 @@ upstreamed to Batteries easily.
 open Nat
 
 namespace Int
+
 variable {a b c d m n : ℤ}
 
 protected theorem neg_eq_neg {a b : ℤ} (h : -a = -b) : a = b := Int.neg_inj.1 h
@@ -58,7 +59,7 @@ lemma neg_nat_succ (n : ℕ) : -(Nat.succ n : ℤ) = pred (-n) := neg_succ n
 lemma succ_neg_natCast_succ (n : ℕ) : succ (-Nat.succ n) = -n := succ_neg_succ n
 
 @[norm_cast] lemma natCast_pred_of_pos {n : ℕ} (h : 0 < n) : ((n - 1 : ℕ) : ℤ) = (n : ℤ) - 1 := by
-  cases n; cases h; simp [ofNat_succ]
+  cases n; cases h; simp [natCast_succ]
 
 lemma lt_succ_self (a : ℤ) : a < succ a := by unfold succ; omega
 
@@ -81,7 +82,7 @@ It is used as the default induction principle for the `induction` tactic.
     suffices ∀ n : ℕ, p (-n) from this (i + 1)
     intro n; induction n with
     | zero => simp [hz]
-    | succ n ih => simpa [ofNat_succ, Int.neg_add, Int.sub_eq_add_neg] using hn _ ih
+    | succ n ih => simpa [natCast_succ, Int.neg_add, Int.sub_eq_add_neg] using hn _ ih
 
 section inductionOn'
 
@@ -100,7 +101,7 @@ where
   pos : ∀ n : ℕ, C (b + n)
   | 0 => cast (by simp) H0
   | n+1 => cast (by rw [Int.add_assoc]; rfl) <|
-    Hs _ (Int.le_add_of_nonneg_right (ofNat_nonneg _)) (pos n)
+    Hs _ (Int.le_add_of_nonneg_right (natCast_nonneg _)) (pos n)
 
   /-- The negative case of `Int.inductionOn'`. -/
   neg : ∀ n : ℕ, C (b + -[n+1])
@@ -271,8 +272,8 @@ lemma mul_dvd_of_dvd_div (hcb : c ∣ b) (h : a ∣ b / c) : c * a ∣ b :=
 lemma dvd_div_of_mul_dvd (h : a * b ∣ c) : b ∣ c / a :=
   dvd_ediv_of_mul_dvd h
 
-@[simp] lemma dvd_div_iff_mul_dvd (hbc : c ∣ b) : a ∣ b / c ↔ c * a ∣ b :=
-  dvd_ediv_iff_mul_dvd hbc
+lemma dvd_div_iff_mul_dvd (hbc : c ∣ b) : a ∣ b / c ↔ c * a ∣ b := by
+  simp [hbc]
 
 /-- If `n > 0` then `m` is not divisible by `n` iff it is between `n * k` and `n * (k + 1)`
   for some `k`. -/
@@ -318,7 +319,7 @@ def natMod (m n : ℤ) : ℕ := (m % n).toNat
 lemma natMod_lt {n : ℕ} (hn : n ≠ 0) : m.natMod n < n :=
   (toNat_lt'' hn).2 <| emod_lt_of_pos _ <| by omega
 
-/-- For use in `Mathlib.Tactic.NormNum.Pow` -/
+/-- For use in `Mathlib/Tactic/NormNum/Pow.lean` -/
 @[simp] lemma pow_eq (m : ℤ) (n : ℕ) : m.pow n = m ^ n := rfl
 
 end Int

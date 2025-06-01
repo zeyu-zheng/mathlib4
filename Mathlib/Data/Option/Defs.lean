@@ -11,7 +11,7 @@ import Batteries.Tactic.Alias
 # Extra definitions on `Option`
 
 This file defines more operations involving `Option α`. Lemmas about them are located in other
-files under `Mathlib.Data.Option`.
+files under `Mathlib/Data/Option.lean`.
 Other basic operations on `Option` are defined in the core library.
 -/
 
@@ -74,10 +74,5 @@ instance merge_isId (f : α → α → α) : Std.LawfulIdentity (merge f) none w
 @[deprecated (since := "2025-04-04")] alias liftOrGet_isIdempotent :=
   merge_isIdempotent
 @[deprecated (since := "2025-04-04")] alias liftOrGet_isId := merge_isId
-
-/-- Convert `undef` to `none` to make an `LOption` into an `Option`. -/
-def _root_.Lean.LOption.toOption {α} : Lean.LOption α → Option α
-  | .some a => some a
-  | _ => none
 
 end Option
