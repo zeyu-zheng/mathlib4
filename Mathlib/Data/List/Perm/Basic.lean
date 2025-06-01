@@ -191,8 +191,6 @@ theorem Perm.foldl_op_eq {l₁ l₂ : List α} {a : α} (h : l₁ ~ l₂) : (l�
 theorem Perm.foldr_op_eq {l₁ l₂ : List α} {a : α} (h : l₁ ~ l₂) : l₁.foldr op a = l₂.foldr op a :=
   h.foldr_eq _
 
-@[deprecated (since := "2024-09-28")] alias Perm.fold_op_eq := Perm.foldl_op_eq
-
 end
 
 theorem perm_option_toList {o₁ o₂ : Option α} : o₁.toList ~ o₂.toList ↔ o₁ = o₂ := by
@@ -201,8 +199,6 @@ theorem perm_option_toList {o₁ o₂ : Option α} : o₁.toList ~ o₂.toList �
   · cases p.length_eq
   · cases p.length_eq
   · exact Option.mem_toList.1 (p.symm.subset <| by simp)
-
-@[deprecated (since := "2024-10-16")] alias perm_option_to_list := perm_option_toList
 
 theorem perm_replicate_append_replicate
     [DecidableEq α] {l : List α} {a b : α} {m n : ℕ} (h : a ≠ b) :
@@ -225,8 +221,6 @@ theorem Perm.flatMap_left (l : List α) {f g : α → List β} (h : ∀ a ∈ l,
   Perm.flatten_congr <| by
     rwa [List.forall₂_map_right_iff, List.forall₂_map_left_iff, List.forall₂_same]
 
-@[deprecated (since := "2024-10-16")] alias Perm.bind_left := Perm.flatMap_left
-
 attribute [gcongr] Perm.flatMap_right
 
 @[gcongr]
@@ -242,13 +236,9 @@ theorem flatMap_append_perm (l : List α) (f g : α → List β) :
   rw [← append_assoc, ← append_assoc]
   exact perm_append_comm.append_right _
 
-@[deprecated (since := "2024-10-16")] alias bind_append_perm := flatMap_append_perm
-
 theorem map_append_flatMap_perm (l : List α) (f : α → β) (g : α → List β) :
     l.map f ++ l.flatMap g ~ l.flatMap fun x => f x :: g x := by
   simpa [← map_eq_flatMap] using flatMap_append_perm l (fun x => [f x]) g
-
-@[deprecated (since := "2024-10-16")] alias map_append_bind_perm := map_append_flatMap_perm
 
 @[gcongr]
 theorem Perm.product_right {l₁ l₂ : List α} (t₁ : List β) (p : l₁ ~ l₂) :

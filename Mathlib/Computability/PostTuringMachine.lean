@@ -198,10 +198,12 @@ def Respects {σ₁ σ₂} (f₁ : σ₁ → Option σ₁) (f₂ : σ₂ → Opt
 
 theorem tr_reaches₁ {σ₁ σ₂ f₁ f₂} {tr : σ₁ → σ₂ → Prop} (H : Respects f₁ f₂ tr) {a₁ a₂}
     (aa : tr a₁ a₂) {b₁} (ab : Reaches₁ f₁ a₁ b₁) : ∃ b₂, tr b₁ b₂ ∧ Reaches₁ f₂ a₂ b₂ := by
-  induction' ab with c₁ ac c₁ d₁ _ cd IH
-  · have := H aa
+  induction ab with
+  | single ac =>
+    have := H aa
     rwa [show f₁ a₁ = _ from ac] at this
-  · rcases IH with ⟨c₂, cc, ac₂⟩
+  | @tail c₁ d₁ _ cd IH =>
+    rcases IH with ⟨c₂, cc, ac₂⟩
     have := H cc
     rw [show f₁ c₁ = _ from cd] at this
     rcases this with ⟨d₂, dd, cd₂⟩
@@ -217,9 +219,10 @@ theorem tr_reaches {σ₁ σ₂ f₁ f₂} {tr : σ₁ → σ₂ → Prop} (H : 
 theorem tr_reaches_rev {σ₁ σ₂ f₁ f₂} {tr : σ₁ → σ₂ → Prop} (H : Respects f₁ f₂ tr) {a₁ a₂}
     (aa : tr a₁ a₂) {b₂} (ab : Reaches f₂ a₂ b₂) :
     ∃ c₁ c₂, Reaches f₂ b₂ c₂ ∧ tr c₁ c₂ ∧ Reaches f₁ a₁ c₁ := by
-  induction' ab with c₂ d₂ _ cd IH
-  · exact ⟨_, _, ReflTransGen.refl, aa, ReflTransGen.refl⟩
-  · rcases IH with ⟨e₁, e₂, ce, ee, ae⟩
+  induction ab with
+  | refl => exact ⟨_, _, ReflTransGen.refl, aa, ReflTransGen.refl⟩
+  | tail _ cd IH =>
+    rcases IH with ⟨e₁, e₂, ce, ee, ae⟩
     rcases ReflTransGen.cases_head ce with (rfl | ⟨d', cd', de⟩)
     · have := H ee
       revert this
@@ -399,7 +402,7 @@ def Supports (M : Machine Γ Λ) (S : Set Λ) :=
 theorem step_supports (M : Machine Γ Λ) {S : Set Λ} (ss : Supports M S) :
     ∀ {c c' : Cfg Γ Λ}, c' ∈ step M c → c.q ∈ S → c'.q ∈ S := by
   intro ⟨q, T⟩ c' h₁ h₂
-  rcases Option.map_eq_some'.1 h₁ with ⟨⟨q', a⟩, h, rfl⟩
+  rcases Option.map_eq_some_iff.1 h₁ with ⟨⟨q', a⟩, h, rfl⟩
   exact ss.2 h h₂
 
 end
@@ -443,9 +446,9 @@ theorem Machine.map_step {S : Set Λ} (f₂₁ : Function.RightInverse f₁ f₂
     unfold step Machine.map Cfg.map
     simp only [Turing.Tape.map_fst, g₂₁ q h, f₂₁ _]
     rcases M q T.1 with (_ | ⟨q', d | a⟩); · rfl
-    · simp only [step, Cfg.map, Option.map_some', Tape.map_move f₁]
+    · simp only [step, Cfg.map, Option.map_some, Tape.map_move f₁]
       rfl
-    · simp only [step, Cfg.map, Option.map_some', Tape.map_write]
+    · simp only [step, Cfg.map, Option.map_some, Tape.map_write]
       rfl
 
 theorem map_init (g₁ : PointedMap Λ Λ') (l : List Γ) : (init l).map f₁ g₁ = init (l.map f₁) :=
@@ -946,7 +949,7 @@ def trTape' (L R : ListBlank Γ) : Tape Bool := by
       Tape.mk' (L.flatMap (fun x ↦ (enc x).toList.reverse) ⟨n, ?_⟩)
         (R.flatMap (fun x ↦ (enc x).toList) ⟨n, ?_⟩) <;>
     simp only [enc0, List.Vector.replicate, List.reverse_replicate, Bool.default_bool,
-      Vector.toList_mk]
+      List.Vector.toList_mk]
 
 /-- The low level tape corresponding to the given tape over alphabet `Γ`. -/
 def trTape (T : Tape Γ) : Tape Bool :=
@@ -972,10 +975,10 @@ theorem trTape'_move_left (L R : ListBlank Γ) :
     (Tape.move Dir.left)^[n] (trTape' enc0 L R) = trTape' enc0 L.tail (R.cons L.head) := by
   obtain ⟨a, L, rfl⟩ := L.exists_cons
   simp only [trTape', ListBlank.cons_flatMap, ListBlank.head_cons, ListBlank.tail_cons]
-  suffices ∀ {L' R' l₁ l₂} (_ : Vector.toList (enc a) = List.reverseAux l₁ l₂),
+  suffices ∀ {L' R' l₁ l₂} (_ : List.Vector.toList (enc a) = List.reverseAux l₁ l₂),
       (Tape.move Dir.left)^[l₁.length]
       (Tape.mk' (ListBlank.append l₁ L') (ListBlank.append l₂ R')) =
-      Tape.mk' L' (ListBlank.append (Vector.toList (enc a)) R') by
+      Tape.mk' L' (ListBlank.append (List.Vector.toList (enc a)) R') by
     simpa only [List.length_reverse, Vector.toList_length] using this (List.reverse_reverse _).symm
   intro _ _ l₁ l₂ e
   induction' l₁ with b l₁ IH generalizing l₂
@@ -1010,7 +1013,7 @@ theorem stepAux_write (q : Stmt Bool (Λ' Γ Λ σ) σ) (v : σ) (a b : Γ) (L R
   · cases List.length_eq_zero_iff.1 e
     rfl
   rcases l₂' with - | ⟨b, l₂'⟩ <;>
-    simp only [List.length_nil, List.length_cons, Nat.succ_inj', reduceCtorEq] at e
+    simp only [List.length_nil, List.length_cons, Nat.succ_inj, reduceCtorEq] at e
   rw [List.reverseAux, ← IH (a :: l₁) l₂' e]
   simp [stepAux, ListBlank.append, write]
 
@@ -1147,11 +1150,11 @@ theorem tr_supports [Inhabited Λ] {S : Finset Λ} (ss : Supports M S) :
       replace IH₂ := IH₂ hs.2 fun q hq ↦ hw q (Or.inr hq)
       exact ⟨supportsStmt_read _ fun _ ↦ ⟨IH₁.1, IH₂.1⟩, fun q ↦ Or.rec (IH₁.2 _) (IH₂.2 _)⟩
     | goto l =>
-      simp only [writes, Finset.not_mem_empty]; refine ⟨?_, fun _ ↦ False.elim⟩
+      simp only [writes, Finset.notMem_empty]; refine ⟨?_, fun _ ↦ False.elim⟩
       refine supportsStmt_read _ fun a _ s ↦ ?_
       exact Finset.mem_biUnion.2 ⟨_, hs _ _, Finset.mem_insert_self _ _⟩
     | halt =>
-      simp only [writes, Finset.not_mem_empty]; refine ⟨?_, fun _ ↦ False.elim⟩
+      simp only [writes, Finset.notMem_empty]; refine ⟨?_, fun _ ↦ False.elim⟩
       simp only [SupportsStmt, supportsStmt_move, trNormal]⟩
 
 end TM1to1
@@ -1211,7 +1214,7 @@ theorem tr_respects : Respects (TM0.step M) (TM1.step (tr M)) fun a b ↦ trCfg 
     rcases e : M q T.1 with - | val
     · simp only [TM0.step, trCfg, e]; exact Eq.refl none
     obtain ⟨q', s⟩ := val
-    simp only [FRespects, TM0.step, trCfg, e, Option.isSome, cond, Option.map_some']
+    simp only [FRespects, TM0.step, trCfg, e, Option.isSome, cond, Option.map_some]
     revert e
     have : TM1.step (tr M) ⟨some (Λ'.act s q'), (), T⟩ = some ⟨some (Λ'.normal q'), (), match s with
         | TM0.Stmt.move d => T.move d

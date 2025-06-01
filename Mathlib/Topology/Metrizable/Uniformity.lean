@@ -67,7 +67,6 @@ noncomputable def ofPreNNDist (d : X → X → ℝ≥0) (dist_self : ∀ x, d x 
         zipWith_comm_of_comm dist_comm]
       simp only [length, length_append]
   dist_triangle x y z := by
-    unfold dist
     rw [← NNReal.coe_add, NNReal.coe_le_coe]
     refine NNReal.le_iInf_add_iInf fun lxy lyz ↦ ?_
     calc
@@ -282,9 +281,19 @@ lemma TotallyBounded.isSeparable [UniformSpace X] [i : IsCountablyGenerated (�
   obtain ⟨t, _, htc, hts⟩ := EMetric.subset_countable_closure_of_almost_dense_set s h'
   exact ⟨t, htc, hts⟩
 
-open TopologicalSpace in
+variable {α : Type*}
+open TopologicalSpace
+
 instance (priority := 100) DiscreteTopology.metrizableSpace
-    {α} [TopologicalSpace α] [DiscreteTopology α] :
+    [TopologicalSpace α] [DiscreteTopology α] :
     MetrizableSpace α := by
   obtain rfl := DiscreteTopology.eq_bot (α := α)
   exact @UniformSpace.metrizableSpace α ⊥ (isCountablyGenerated_principal _) _
+
+instance (priority := 100) PseudoEMetricSpace.pseudoMetrizableSpace
+    [PseudoEMetricSpace α] : PseudoMetrizableSpace α :=
+  inferInstance
+
+instance (priority := 100) EMetricSpace.metrizableSpace
+    [EMetricSpace α] : MetrizableSpace α :=
+  inferInstance
