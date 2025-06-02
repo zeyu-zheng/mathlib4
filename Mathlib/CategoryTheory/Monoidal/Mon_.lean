@@ -355,7 +355,7 @@ end LaxMonoidal
 section Monoidal
 variable [F.Monoidal]
 
-attribute [local instance] obj.instMon_Class
+open scoped Obj
 
 protected instance Full.mapMon [F.Full] [F.Faithful] : F.mapMon.Full where
   map_surjective {X Y} f :=
