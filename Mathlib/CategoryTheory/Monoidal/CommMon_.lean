@@ -142,8 +142,9 @@ namespace Functor
 
 open scoped Obj
 
-instance isCommMon_obj : IsCommMon (F.obj M) where
-  mul_comm := by dsimp; rw [← Functor.LaxBraided.braided_assoc, ← Functor.map_comp, A.mul_comm]
+instance isCommMon_obj {M : C} [Mon_Class M] [IsCommMon M] : IsCommMon (F.obj M) where
+  mul_comm' := by
+    dsimp; rw [← Functor.LaxBraided.braided_assoc, ← Functor.map_comp, IsCommMon.mul_comm]
 
 variable (F) in
 /-- A lax braided functor takes commutative monoid objects to commutative monoid objects.
