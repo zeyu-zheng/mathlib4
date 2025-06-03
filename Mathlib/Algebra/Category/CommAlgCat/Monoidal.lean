@@ -13,13 +13,13 @@ This file provides the cocartesian-monoidal category structure on `CommAlgCat R`
 explicitly using the tensor product.
 -/
 
+open CategoryTheory CartesianMonoidalCategory Limits TensorProduct
+
 noncomputable section
 
-namespace CategoryTheory.CommAlgCat
-
-open Limits TensorProduct
+namespace CommAlgCat
 universe u v
-variable {R : Type u} [CommRing R] {A B C : CommAlgCat.{u} R}
+variable {R : Type u} [CommRing R] {A B C D : CommAlgCat.{u} R}
 
 variable (A B) in
 /-- The explicit cocone with tensor products as the fibered product in `CommAlgCat`. -/
@@ -109,7 +109,25 @@ open MonoidalCategory
 @[simp] lemma associator_inv_unop_hom :
     (α_ (op A) (op B) (op C)).inv.unop.hom = (Algebra.TensorProduct.assoc R R A B C).toAlgHom := rfl
 
-@[simp] lemma tensorHom_unop_hom {D : CommAlgCat R} (f : A ⟶ C) (g : B ⟶ D) :
+@[simp] lemma braiding_unop_hom_hom :
+    (β_ (op A) (op B)).unop.hom.hom = (Algebra.TensorProduct.comm R B A).toAlgHom := rfl
+
+@[simp] lemma braiding_unop_inv_hom :
+    (β_ (op A) (op B)).unop.inv.hom = (Algebra.TensorProduct.comm R A B).toAlgHom := rfl
+
+@[simp] lemma tensorHom_unop_hom (f : A ⟶ C) (g : B ⟶ D) :
     (f.op ⊗ g.op).unop.hom = Algebra.TensorProduct.map f.hom g.hom := rfl
 
-end CategoryTheory.CommAlgCat
+@[simp] lemma toUnit_unop_hom (A : CommAlgCat R) :
+    (toUnit (op A)).unop.hom = algebraMap R A := rfl
+
+@[simp] lemma fst_unop_hom (A B : CommAlgCat R) :
+    (fst (op A) (op B)).unop.hom = Algebra.TensorProduct.includeLeft := rfl
+
+@[simp] lemma snd_unop_hom (A B : CommAlgCat R) :
+    (snd (op A) (op B)).unop.hom = Algebra.TensorProduct.includeRight := rfl
+
+@[simp] lemma lift_unop_hom (f : A ⟶ C) (g : B ⟶ C) :
+    (lift f.op g.op).unop.hom = Algebra.TensorProduct.lift f.hom g.hom (fun _ _ ↦ .all _ _) := rfl
+
+end CommAlgCat
