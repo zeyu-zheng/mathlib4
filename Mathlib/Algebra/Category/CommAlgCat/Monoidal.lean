@@ -19,7 +19,7 @@ noncomputable section
 
 namespace CommAlgCat
 universe u v
-variable {R : Type u} [CommRing R] {A B C D : CommAlgCat.{u} R}
+variable {R : Type u} [CommRing R] {A B : CommAlgCat.{u} R}
 
 variable (A B) in
 /-- The explicit cocone with tensor products as the fibered product in `CommAlgCat`. -/
@@ -96,38 +96,41 @@ instance : BraidedCategory (CommAlgCat.{u} R)ᵒᵖ where
 
 open MonoidalCategory
 
+variable {A B C D : (CommAlgCat.{u} R)ᵒᵖ}
+
 @[simp] lemma rightWhisker_hom (f : A ⟶ B) :
-    (f.op ▷ op C).unop.hom = Algebra.TensorProduct.map f.hom (.id _ _) := rfl
+    (f ▷ C).unop.hom = Algebra.TensorProduct.map f.unop.hom (.id _ _) := rfl
 
 @[simp] lemma leftWhisker_hom (f : A ⟶ B) :
-    (op C ◁ f.op).unop.hom = Algebra.TensorProduct.map (.id _ _) f.hom := rfl
+    (C ◁ f).unop.hom = Algebra.TensorProduct.map (.id _ _) f.unop.hom := rfl
 
 @[simp] lemma associator_hom_unop_hom :
-    (α_ (op A) (op B) (op C)).hom.unop.hom =
-      (Algebra.TensorProduct.assoc R R A B C).symm.toAlgHom := rfl
+    (α_ A B C).hom.unop.hom =
+      (Algebra.TensorProduct.assoc R R A.unop B.unop C.unop).symm.toAlgHom := rfl
 
 @[simp] lemma associator_inv_unop_hom :
-    (α_ (op A) (op B) (op C)).inv.unop.hom = (Algebra.TensorProduct.assoc R R A B C).toAlgHom := rfl
+    (α_ A B C).inv.unop.hom = (Algebra.TensorProduct.assoc R R A.unop B.unop C.unop).toAlgHom := rfl
 
-@[simp] lemma braiding_unop_hom_hom :
-    (β_ (op A) (op B)).unop.hom.hom = (Algebra.TensorProduct.comm R B A).toAlgHom := rfl
+@[simp] lemma braiding_hom_unop_hom :
+    (β_ A B).hom.unop.hom = (Algebra.TensorProduct.comm R B.unop A.unop).toAlgHom := rfl
 
-@[simp] lemma braiding_unop_inv_hom :
-    (β_ (op A) (op B)).unop.inv.hom = (Algebra.TensorProduct.comm R A B).toAlgHom := rfl
+@[simp] lemma braiding_inv_unop_hom :
+    (β_ A B).inv.unop.hom = (Algebra.TensorProduct.comm R A.unop B.unop).toAlgHom := rfl
 
 @[simp] lemma tensorHom_unop_hom (f : A ⟶ C) (g : B ⟶ D) :
-    (f.op ⊗ g.op).unop.hom = Algebra.TensorProduct.map f.hom g.hom := rfl
+    (f ⊗ g).unop.hom = Algebra.TensorProduct.map f.unop.hom g.unop.hom := rfl
 
-@[simp] lemma toUnit_unop_hom (A : CommAlgCat R) :
-    (toUnit (op A)).unop.hom = algebraMap R A := rfl
+@[simp] lemma toUnit_unop_hom (A : (CommAlgCat R)ᵒᵖ) :
+    (toUnit A).unop.hom = algebraMap R A.unop := rfl
 
-@[simp] lemma fst_unop_hom (A B : CommAlgCat R) :
-    (fst (op A) (op B)).unop.hom = Algebra.TensorProduct.includeLeft := rfl
+@[simp] lemma fst_unop_hom (A B : (CommAlgCat R)ᵒᵖ) :
+    (fst A B).unop.hom = Algebra.TensorProduct.includeLeft := rfl
 
-@[simp] lemma snd_unop_hom (A B : CommAlgCat R) :
-    (snd (op A) (op B)).unop.hom = Algebra.TensorProduct.includeRight := rfl
+@[simp] lemma snd_unop_hom (A B : (CommAlgCat R)ᵒᵖ) :
+    (snd A B).unop.hom = Algebra.TensorProduct.includeRight := rfl
 
-@[simp] lemma lift_unop_hom (f : A ⟶ C) (g : B ⟶ C) :
-    (lift f.op g.op).unop.hom = Algebra.TensorProduct.lift f.hom g.hom (fun _ _ ↦ .all _ _) := rfl
+@[simp] lemma lift_unop_hom (f : C ⟶ A) (g : C ⟶ B) :
+    (lift f g).unop.hom = Algebra.TensorProduct.lift f.unop.hom g.unop.hom (fun _ _ ↦ .all _ _) :=
+  rfl
 
 end CommAlgCat
