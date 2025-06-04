@@ -18,6 +18,7 @@ require "leanprover-community" / "proofwidgets" @ git "v0.0.63-pre" -- ProofWidg
 require "leanprover-community" / "importGraph" @ git "main"
 require "leanprover-community" / "LeanSearchClient" @ git "main"
 require "leanprover-community" / "plausible" @ git "nightly-testing"
+require "leanprover" / "Cli" @ git "lean-pr-testing-8598"
 
 /-!
 ## Options for building mathlib
