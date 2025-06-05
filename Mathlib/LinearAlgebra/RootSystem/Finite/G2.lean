@@ -540,6 +540,8 @@ set_option linter.unusedTactic false in
 notation3 (prettyPrint := false) "p["(l", "* => foldr (h t => List.cons h t) List.nil)"]" =>
   Equiv.ofBijective (List.get l) (by decide)
 
+attribute [local simp] Matrix.one_fin_two
+
 set_option maxHeartbeats 500000 in -- TODO Remove this
 /-- A concrete model of the `𝔤₂` root system.
 
@@ -551,8 +553,7 @@ TODO:
 * upgrade to allow any coeffs not just `ℤ`
 * write API, in particular `EmbeddedG2` instance -/
 def g₂ : RootPairing (Fin 12) ℤ (Fin 2 → ℤ) (Fin 2 → ℤ) where
-  __ := !![2, -3; -1, 2].toPerfectPairing
-    ⟨!![2, 3; 1, 2], by simp [Matrix.one_fin_two], by simp [Matrix.one_fin_two]⟩
+  __ := !![2, -3; -1, 2].toPerfectPairing ⟨!![2, 3; 1, 2], by simp, by simp⟩
   root := ⟨EmbeddedG2.allCoeffs.get, by decide⟩
   coroot := ⟨EmbeddedG2.allCocoeffs.get, by decide⟩
   root_coroot_two i := by fin_cases i <;> decide
