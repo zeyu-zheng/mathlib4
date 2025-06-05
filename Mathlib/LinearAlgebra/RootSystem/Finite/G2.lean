@@ -3,6 +3,7 @@ Copyright (c) 2025 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 -/
+import Mathlib.LinearAlgebra.PerfectPairing.Matrix
 import Mathlib.LinearAlgebra.RootSystem.Finite.Lemmas
 
 /-!
@@ -225,6 +226,11 @@ lemma linearIndependent_short_long :
 abbrev allCoeffs : List (Fin 2 → ℤ) :=
   [![0, 1], ![0, -1], ![1, 0], ![-1, 0], ![1, 1], ![-1, -1],
     ![2, 1], ![-2, -1], ![3, 1], ![-3, -1], ![3, 2], ![-3, -2]]
+
+/-- The coefficients of each coroot in the `𝔤₂` root pairing, relative to the base. -/
+def allCocoeffs : List (Fin 2 → ℤ) :=
+  [![0, 1], ![0, -1], ![1, 0], ![-1, 0], ![1, 3], ![-1, -3],
+    ![2, 3], ![-2, -3], ![1, 1], ![-1, -1], ![1, 2], ![-1, -2]]
 
 lemma allRoots_eq_map_allCoeffs :
     allRoots P = allCoeffs.map (Fintype.linearCombination ℤ ![shortRoot P, longRoot P]) := by
@@ -524,5 +530,48 @@ lemma setOf_index_eq_univ :
 end IsIrreducible
 
 end EmbeddedG2
+
+section Concrete
+
+variable (R)
+
+-- TODO Drop this notation: get computable global in place instead
+set_option linter.unusedTactic false in
+notation3 (prettyPrint := false) "p["(l", "* => foldr (h t => List.cons h t) List.nil)"]" =>
+  Equiv.ofBijective (List.get l) (by decide)
+
+set_option maxHeartbeats 500000 in -- TODO Remove this
+/-- A concrete model of the `𝔤₂` root system.
+
+Note that we could avoid supplying the permutation data by using `RootPairing.mk'` but it would
+restrict us to characteristic zero, and some quite fiddly proofs would appear.
+
+TODO:
+* upgrade to `RootSystem` (easy)
+* upgrade to allow any coeffs not just `ℤ`
+* write API, in particular `EmbeddedG2` instance -/
+def g₂ : RootPairing (Fin 12) ℤ (Fin 2 → ℤ) (Fin 2 → ℤ) where
+  __ := !![2, -3; -1, 2].toPerfectPairing
+    ⟨!![2, 3; 1, 2], by simp [Matrix.one_fin_two], by simp [Matrix.one_fin_two]⟩
+  root := ⟨EmbeddedG2.allCoeffs.get, by decide⟩
+  coroot := ⟨EmbeddedG2.allCocoeffs.get, by decide⟩
+  root_coroot_two i := by fin_cases i <;> decide
+  reflectionPerm :=
+    ![p[1, 0, 4, 5, 2, 3, 6, 7, 10, 11, 8, 9],
+      p[1, 0, 4, 5, 2, 3, 6, 7, 10, 11, 8, 9],
+      p[8, 9, 3, 2, 6, 7, 4, 5, 0, 1, 10, 11],
+      p[8, 9, 3, 2, 6, 7, 4, 5, 0, 1, 10, 11],
+      p[11, 10, 6, 7, 5, 4, 2, 3, 8, 9, 1, 0],
+      p[11, 10, 6, 7, 5, 4, 2, 3, 8, 9, 1, 0],
+      p[0, 1, 5, 4, 3, 2, 7, 6, 11, 10, 9, 8],
+      p[0, 1, 5, 4, 3, 2, 7, 6, 11, 10, 9, 8],
+      p[10, 11, 7, 6, 4, 5, 3, 2, 9, 8, 0, 1],
+      p[10, 11, 7, 6, 4, 5, 3, 2, 9, 8, 0, 1],
+      p[9, 8, 2, 3, 7, 6, 5, 4, 1, 0, 11, 10],
+      p[9, 8, 2, 3, 7, 6, 5, 4, 1, 0, 11, 10]]
+  reflectionPerm_root i j := by fin_cases i <;> fin_cases j <;> decide
+  reflectionPerm_coroot i j := by fin_cases i <;> fin_cases j <;> decide
+
+end Concrete
 
 end RootPairing
