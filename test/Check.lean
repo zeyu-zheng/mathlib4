@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Tactic.Check
 /- Override metavariable delaborator for natural metavariables to print `?m` instead
 of including a unique number, for `#guard_msgs`. -/

@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 set_option autoImplicit true
 example : False → α := nofun
 example : False → α := by nofun

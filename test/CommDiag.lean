@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Tactic.Widget.CommDiag
 import ProofWidgets.Component.Panel.SelectionPanel
 import ProofWidgets.Component.Panel.GoalTypePanel

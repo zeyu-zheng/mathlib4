@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Lean.Expr.ReplaceRec
 import Mathlib.Data.Nat.Notation
 import Lean.Elab.Command

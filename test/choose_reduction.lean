@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Data.Finset.Basic
 /-!
 Tests that `List.choose` and friends all reduce appropriately.

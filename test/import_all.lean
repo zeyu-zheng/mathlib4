@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Lean
 import Std
 import Qq

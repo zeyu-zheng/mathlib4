@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Tactic.TypeStar
 import Mathlib.Tactic.SuccessIfFailWithMsg
 

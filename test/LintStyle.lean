@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Tactic.Linter.Style
 import Mathlib.Tactic.Common
 

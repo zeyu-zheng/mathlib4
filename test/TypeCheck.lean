@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Tactic.TypeCheck
 
 /-- A term where `inferType` returns `Prop`, but which does not type check. -/

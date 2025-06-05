@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 /-
 Tests for norm_cast
 -/

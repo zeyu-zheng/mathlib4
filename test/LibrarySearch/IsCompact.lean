@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Topology.Instances.Real
 import Mathlib.Topology.Algebra.Order.Compact
 

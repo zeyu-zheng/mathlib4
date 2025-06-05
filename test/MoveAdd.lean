@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Tactic.MoveAdd
 import Mathlib.Init.Data.Nat.Lemmas
 import Mathlib.Algebra.Ring.Nat

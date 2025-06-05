@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Tactic.SplitIfs
 example (x : Nat) (p : Prop) [Decidable p] : x = if p then x else x := by
   split_ifs with h1

@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Algebra.Polynomial.Eval
 import Mathlib.Algebra.Polynomial.Inductions
 import Mathlib.Init.Core

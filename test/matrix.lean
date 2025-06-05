@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 /-
 manually ported from
 https://github.com/leanprover-community/mathlib/blob/4f4a1c875d0baa92ab5d92f3fb1bb258ad9f3e5b/test/matrix.lean

@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Tactic.ExtractLets
 
 example (h : let x := 1; x = x) : True := by

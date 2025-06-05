@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Tactic.Propose
 import Mathlib.Tactic.GuardHypNums
 import Mathlib.Algebra.Associated.Basic

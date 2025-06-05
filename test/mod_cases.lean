@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Tactic.ModCases
 
 private axiom test_sorry : ∀ {a}, a

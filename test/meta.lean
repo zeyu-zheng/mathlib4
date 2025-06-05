@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Lean.Expr.Basic
 import Mathlib.Lean.Meta.Basic
 import Mathlib.Tactic.Relation.Rfl

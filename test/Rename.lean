@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Tactic.Rename
 
 example (a : Nat) (b : Int) : Int × Nat := by

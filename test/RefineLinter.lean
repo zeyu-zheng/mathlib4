@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Tactic.Linter.RefineLinter
 
 set_option linter.refine false

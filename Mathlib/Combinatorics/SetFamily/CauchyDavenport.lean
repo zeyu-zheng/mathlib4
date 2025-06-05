@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 /-
 Copyright (c) 2023 Yaël Dillies, Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.

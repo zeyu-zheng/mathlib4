@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Algebra.Algebra.Pi
 import Mathlib.Algebra.Algebra.Defs
 

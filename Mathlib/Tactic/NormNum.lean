@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Tactic.NormNum.Basic
 import Mathlib.Tactic.NormNum.OfScientific
 import Mathlib.Tactic.NormNum.Eq

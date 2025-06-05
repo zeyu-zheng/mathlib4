@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Tactic.Lift
 import Batteries.Tactic.PermuteGoals
 import Mathlib.Tactic.Coe

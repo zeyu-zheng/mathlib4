@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Batteries.Util.ExtendedBinder
 import Mathlib.Tactic.Choose
 

@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Tactic.Explode
 import Mathlib.Data.Real.Basic
 set_option linter.unusedVariables false

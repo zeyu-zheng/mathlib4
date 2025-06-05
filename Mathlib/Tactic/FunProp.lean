@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Tactic.FunProp.Attr
 import Mathlib.Tactic.FunProp.Core
 import Mathlib.Tactic.FunProp.Decl

@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Tactic.Eval
 import Mathlib.Data.Finset.Powerset
 import Mathlib.Data.Finset.Sort

@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Tactic.FunProp.Differentiable
 import Mathlib.Tactic.FunProp.ContDiff
 import Mathlib.MeasureTheory.MeasurableSpace.Basic

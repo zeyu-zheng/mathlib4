@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.CategoryTheory.Category.Basic
 
 structure Foo where

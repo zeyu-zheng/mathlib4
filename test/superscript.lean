@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Util.Superscript
 import Mathlib.Tactic.UnsetOption
 import Lean.PrettyPrinter

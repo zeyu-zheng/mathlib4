@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Tactic.Common
 import Mathlib.Tactic.Linarith
 import Mathlib.Data.Nat.Prime.Defs

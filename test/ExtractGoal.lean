@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Tactic.ExtractGoal
 import Mathlib.Init.Data.Nat.Lemmas
 import Mathlib.Order.Basic

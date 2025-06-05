@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Tactic.DeriveTraversable
 import Mathlib.Control.Traversable.Instances
 

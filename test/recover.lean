@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Tactic.Recover
 
 /-- problematic tactic for testing recovery -/

@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Control.Random
 import Mathlib.Tactic.NormNum
 

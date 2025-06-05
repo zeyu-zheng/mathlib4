@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Util.TermBeta
 -- On command line, tests format functions with => rather than ↦ without this.
 set_option pp.unicode.fun true

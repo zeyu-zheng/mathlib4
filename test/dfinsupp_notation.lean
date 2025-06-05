@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Data.DFinsupp.Notation
 
 example : (fun₀ | 1 => 3 : Π₀ i, Fin (i + 10)) 1 = 3 := by

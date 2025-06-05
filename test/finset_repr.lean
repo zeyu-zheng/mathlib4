@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Data.Finset.Sort
 
 run_cmd Lean.Elab.Command.liftTermElabM do

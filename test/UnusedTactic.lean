@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Tactic.Linter.UnusedTactic
 import Mathlib.Tactic.AdaptationNote
 

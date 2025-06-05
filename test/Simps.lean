@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Algebra.Group.Defs
 import Mathlib.Tactic.Simps.Basic
 import Mathlib.Lean.Exception

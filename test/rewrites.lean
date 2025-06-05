@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Data.Nat.Prime.Defs
 import Mathlib.CategoryTheory.Category.Basic
 import Mathlib.Data.List.InsertNth

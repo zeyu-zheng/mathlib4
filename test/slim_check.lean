@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Algebra.Group.Fin.Basic
 import Mathlib.Tactic.SlimCheck
 import Mathlib.Tactic.SuccessIfFailWithMsg

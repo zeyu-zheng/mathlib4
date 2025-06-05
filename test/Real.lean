@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 /-
 ! This file was ported from Lean 3 source file `test/real.lean`
 ! leanprover-community/mathlib commit d7943885503965d07ccaeb390d65fbc3f45962e6

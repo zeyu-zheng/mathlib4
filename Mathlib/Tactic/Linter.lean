@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 /-
 This is the `Linter`s file: it only imports files defining linters and is
 intended to be imported fairly early in `Mathlib`.

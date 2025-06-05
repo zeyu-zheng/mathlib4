@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Tactic.Basic
 
 example : let x := 22; 0 ≤ x := by

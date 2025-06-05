@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Tactic.Observe
 /-- info: Try this: have h : x + y = y + x := Nat.add_comm x y -/
 #guard_msgs in

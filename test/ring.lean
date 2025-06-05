@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Ring
 

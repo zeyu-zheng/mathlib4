@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 -- tests for by_contra! tactic
 import Mathlib.Tactic.ByContra
 import Mathlib.Tactic.Rename

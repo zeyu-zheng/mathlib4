@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Lean.Elab.Tactic.ElabTerm
 
 open Lean Elab Tactic

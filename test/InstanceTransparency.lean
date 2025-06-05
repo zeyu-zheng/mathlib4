@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Data.Real.Basic
 
 /-! # Test transparency level of `Div` field in `DivInvMonoid`

@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Tactic.LiftLets
 
 private axiom test_sorry : ∀ {α}, α

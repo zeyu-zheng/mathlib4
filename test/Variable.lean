@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Tactic.Variable
 import Mathlib.Algebra.Module.Defs
 import Mathlib.Algebra.Algebra.Defs

@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Tactic.Linter.MinImports
 import Mathlib.Tactic.NormNum.Basic
 import Mathlib.Tactic.FunProp.Attr

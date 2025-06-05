@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Tactic.GuardHypNums
 
 example (a b c : Nat) (_ : a = b) (_ : c = 3) : true := by

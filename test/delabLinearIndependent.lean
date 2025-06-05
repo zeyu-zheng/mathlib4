@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.LinearAlgebra.LinearIndependent
 
 set_option linter.setOption false

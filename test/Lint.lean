@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Tactic.Linter.Lint
 import Mathlib.Tactic.ToAdditive
 

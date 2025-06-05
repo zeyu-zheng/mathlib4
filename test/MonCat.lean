@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Algebra.Category.MonCat.Basic
 
 -- We verify that the coercions of morphisms to functions work correctly:

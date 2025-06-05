@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Tactic.ApplyAt
 import Mathlib.Algebra.Group.Basic
 import Mathlib.Data.Real.Basic

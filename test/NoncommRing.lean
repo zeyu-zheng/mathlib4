@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.GroupTheory.GroupAction.Ring
 import Mathlib.Tactic.NoncommRing
 

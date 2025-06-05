@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Tactic.TermCongr
 import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic.Ring

@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Tactic.Relation.Trans
 import Mathlib.Tactic.GuardGoalNums
 

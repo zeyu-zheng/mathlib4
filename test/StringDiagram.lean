@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Tactic.Widget.StringDiagram
 import ProofWidgets.Component.Panel.SelectionPanel
 

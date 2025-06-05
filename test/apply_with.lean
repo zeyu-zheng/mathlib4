@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Tactic.ApplyWith
 
 set_option autoImplicit true

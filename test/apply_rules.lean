@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Algebra.Order.Field.Basic
 
 set_option autoImplicit true

@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Tactic.ProdAssoc
 
 variable {α β γ δ : Type*}

@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Tactic.RSuffices
 import Mathlib.Tactic.ExistsI
 import Mathlib.Algebra.Ring.Nat

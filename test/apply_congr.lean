@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Tactic.ApplyCongr
 import Mathlib.Algebra.BigOperators.Group.Finset
 

@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Tactic.HelpCmd
 #guard_msgs(error, drop info) in
 #help tactic

@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Tactic.Find
 theorem add_comm_zero {n} : 0 + n = n + 0 := Nat.add_comm _ _
 

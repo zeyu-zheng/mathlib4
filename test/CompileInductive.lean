@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Util.CompileInductive
 import Mathlib.Data.Fin.Fin2
 

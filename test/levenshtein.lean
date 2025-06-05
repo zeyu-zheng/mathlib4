@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Data.List.EditDistance.Defs
 import Mathlib.Algebra.Group.Nat
 

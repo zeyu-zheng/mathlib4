@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib
 
 -- We verify that `exact?` copes with all of Mathlib.

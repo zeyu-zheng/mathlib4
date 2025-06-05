@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.NumberTheory.LegendreSymbol.JacobiSymbol
 import Mathlib.Tactic.NormNum.Prime
 

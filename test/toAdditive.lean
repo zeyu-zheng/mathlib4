@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Algebra.Group.Defs
 import Mathlib.Lean.Exception
 import Mathlib.Util.Time

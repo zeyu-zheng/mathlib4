@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Algebra.Quaternion
 import Mathlib.Data.Real.Basic
 import Mathlib.NumberTheory.Zsqrtd.GaussianInt

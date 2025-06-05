@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Tactic.SimpIntro
 
 set_option autoImplicit true

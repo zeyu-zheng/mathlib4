@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Algebra.Algebra.Rat
 import Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure
 

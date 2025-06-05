@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Lean.Meta.Basic
 import Mathlib.Data.MLList.DepthFirst
 

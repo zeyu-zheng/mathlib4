@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Util.Delaborators
 import Mathlib.Data.Set.Lattice
 

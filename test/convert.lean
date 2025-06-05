@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Tactic.Convert
 import Mathlib.Algebra.Group.Basic
 import Mathlib.Data.Set.Image

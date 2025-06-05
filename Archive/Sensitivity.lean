@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 /-
 Copyright (c) 2019 Reid Barton, Johan Commelin, Jesse Han, Chris Hughes, Robert Y. Lewis,
 Patrick Massot. All rights reserved.

@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Tactic.Abel
 import Mathlib.Tactic.AdaptationNote
 import Mathlib.Tactic.ApplyAt

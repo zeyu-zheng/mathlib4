@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
 
 set_option autoImplicit true

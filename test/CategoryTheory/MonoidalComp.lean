@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Tactic.CategoryTheory.MonoidalComp
 
 universe v u

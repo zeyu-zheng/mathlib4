@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Tactic.GuardGoalNums
 
 example : true ∧ true := by

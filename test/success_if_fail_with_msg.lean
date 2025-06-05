@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Tactic.SuccessIfFailWithMsg
 example : True := by
   success_if_fail_with_msg "no goals to be solved" trivial; trivial

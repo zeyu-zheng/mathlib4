@@ -1,3 +1,4 @@
+import Mathlib.Tactic.Have
 import Mathlib.Algebra.Group.Basic
 import Mathlib.Algebra.Ring.Defs
 import Mathlib.Data.Set.Basic
