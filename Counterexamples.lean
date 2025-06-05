@@ -1,4 +1,3 @@
-import Mathlib.Tactic.Have
 import Counterexamples.CanonicallyOrderedCommSemiringTwoMul
 import Counterexamples.CharPZeroNeCharZero
 import Counterexamples.CliffordAlgebraNotInjective

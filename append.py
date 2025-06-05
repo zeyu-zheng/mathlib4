@@ -15,6 +15,7 @@ BLOCKLIST = [
     # "tests/*",            # skip everything in tests/
     "Mathlib/Tactic/Have.lean", # skip a specific file
     "Archive.lean",
+    "Counterexamples.lean",
     "docs.lean",
     "lakefile.lean",
     "Mathlib.lean",
