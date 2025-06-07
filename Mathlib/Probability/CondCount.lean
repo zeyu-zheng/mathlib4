@@ -176,9 +176,9 @@ theorem condCount_add_compl_eq (u t : Set Ω) (hs : s.Finite) :
       condCount s t := by
   -- Porting note: The original proof used `conv_rhs`. However, that tactic timed out.
   have : condCount s t = (condCount (s ∩ u) t * condCount (s ∩ u ∪ s ∩ uᶜ) (s ∩ u) +
-      condCount (s ∩ uᶜ) t * condCount (s ∩ u ∪ s ∩ uᶜ) (s ∩ uᶜ)) := by
-    rw [condCount_disjoint_union (hs.inter_of_left _) (hs.inter_of_left _)
-      (disjoint_compl_right.mono inf_le_right inf_le_right), Set.inter_union_compl]
+      condCount (s ∩ uᶜ) t * condCount (s ∩ u ∪ s ∩ uᶜ) (s ∩ uᶜ))
+  rw [condCount_disjoint_union (hs.inter_of_left _) (hs.inter_of_left _)
+    (disjoint_compl_right.mono inf_le_right inf_le_right), Set.inter_union_compl]
   rw [this]
   simp [condCount_inter_self hs]
 
