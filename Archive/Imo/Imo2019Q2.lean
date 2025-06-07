@@ -293,8 +293,8 @@ theorem A₁_ne_B : cfg.A₁ ≠ cfg.B := by
   have hBQ₁  : cfg.B ≠ cfg.Q₁
   rw [← h]; exact cfg.sbtw_Q_A₁_Q₁.ne_right
   have hQQ₁ : cfg.Q ≠ cfg.Q₁ := cfg.sbtw_Q_A₁_Q₁.left_ne_right
-  have hBQ₁Q : AffineIndependent ℝ ![cfg.B, cfg.Q₁, cfg.Q] :=
-    hc.affineIndependent_of_mem_of_ne (Set.mem_insert_of_mem _ (Set.mem_insert _ _))
+  have hBQ₁Q : AffineIndependent ℝ ![cfg.B, cfg.Q₁, cfg.Q]
+  apply hc.affineIndependent_of_mem_of_ne (Set.mem_insert_of_mem _ (Set.mem_insert _ _))
       (Set.mem_insert_of_mem _ (Set.mem_insert_of_mem _ (Set.mem_insert _ _)))
       (Set.mem_insert_of_mem _
         (Set.mem_insert_of_mem _ (Set.mem_insert_of_mem _ (Set.mem_singleton _))))
@@ -342,8 +342,8 @@ theorem A₂_ne_C : cfg.A₂ ≠ cfg.C := by
   have h₁ := cfg.sbtw_A_A₁_A₂
   rw [h] at h₁
   refine cfg.not_collinear_ABC ?_
-  have hc : Collinear ℝ ({cfg.A, cfg.B, cfg.C, cfg.A₁} : Set Pt) :=
-    collinear_insert_insert_of_mem_affineSpan_pair h₁.left_mem_affineSpan
+  have hc : Collinear ℝ ({cfg.A, cfg.B, cfg.C, cfg.A₁} : Set Pt)
+  apply collinear_insert_insert_of_mem_affineSpan_pair h₁.left_mem_affineSpan
       cfg.sbtw_B_A₁_C.left_mem_affineSpan
   refine hc.subset (Set.insert_subset_insert (Set.insert_subset_insert ?_))
   rw [Set.singleton_subset_iff]
@@ -408,8 +408,8 @@ theorem Q₁_ne_A₂ : cfg.Q₁ ≠ cfg.A₂ := by
   rw [h] at h₁
   refine cfg.not_collinear_QPA₂ ?_
   have hA₂ := cfg.sbtw_A_A₁_A₂.right_mem_affineSpan
-  have hA₂A₁ : line[ℝ, cfg.A₂, cfg.A₁] ≤ line[ℝ, cfg.A, cfg.A₁] :=
-    affineSpan_pair_le_of_left_mem hA₂
+  have hA₂A₁ : line[ℝ, cfg.A₂, cfg.A₁] ≤ line[ℝ, cfg.A, cfg.A₁]
+  apply affineSpan_pair_le_of_left_mem hA₂
   have hQ : cfg.Q ∈ line[ℝ, cfg.A, cfg.A₁]
   rw [AffineSubspace.le_def'] at hA₂A₁
   exact hA₂A₁ _ h₁.left_mem_affineSpan

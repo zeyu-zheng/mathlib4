@@ -76,18 +76,19 @@ theorem imo1994_q1 (n : ℕ) (m : ℕ) (A : Finset ℕ) (hm : A.card = m + 1)
       intro i j hij
       rwa [add_le_add_iff_right, a.map_rel_iff] at hij ⟩
   -- Proof that the `f i` are greater than `a (rev k)` for `i ≤ k`
-  have hf : map f (Icc 0 k) ⊆ map a.toEmbedding (Ioc (rev k) (Fin.last m)) := by
-    intro x hx
-    simp only [Equiv.subLeft_apply, a, rev] at h
-    simp only [mem_map, mem_Icc, mem_Ioc, Fin.zero_le, true_and_iff, Equiv.subLeft_apply,
-      Function.Embedding.coeFn_mk, exists_prop, RelEmbedding.coe_toEmbedding, f, rev] at hx ⊢
-    rcases hx with ⟨i, ⟨hi, rfl⟩⟩
-    have h1 : a i + a (Fin.last m - k) ≤ n := by unfold_let; linarith only [h, a.monotone hi]
-    have h2 : a i + a (Fin.last m - k) ∈ A := hadd _ (ha _) _ (ha _) h1
-    rw [← mem_coe, ← range_orderEmbOfFin A hm, Set.mem_range] at h2
-    cases' h2 with j hj
-    refine ⟨j, ⟨?_, Fin.le_last j⟩, hj⟩
-    rw [← a.strictMono.lt_iff_lt, hj]
-    simpa using (hrange (a i) (ha i)).1
+  have hf : map f (Icc 0 k) ⊆ map a.toEmbedding (Ioc (rev k) (Fin.last m))
+  intro x hx
+  simp only [Equiv.subLeft_apply, a, rev] at h
+  simp only [mem_map, mem_Icc, mem_Ioc, Fin.zero_le, true_and_iff, Equiv.subLeft_apply,
+    Function.Embedding.coeFn_mk, exists_prop, RelEmbedding.coe_toEmbedding, f, rev] at hx ⊢
+  rcases hx with ⟨i, ⟨hi, rfl⟩⟩
+  have h1 : a i + a (Fin.last m - k) ≤ n
+  unfold_let; linarith only [h, a.monotone hi]
+  have h2 : a i + a (Fin.last m - k) ∈ A := hadd _ (ha _) _ (ha _) h1
+  rw [← mem_coe, ← range_orderEmbOfFin A hm, Set.mem_range] at h2
+  cases' h2 with j hj
+  refine ⟨j, ⟨?_, Fin.le_last j⟩, hj⟩
+  rw [← a.strictMono.lt_iff_lt, hj]
+  simpa using (hrange (a i) (ha i)).1
   -- A set of size `k+1` embed in one of size `k`, which yields a contradiction
   simpa [Fin.coe_sub, tedious, rev] using card_le_card hf
