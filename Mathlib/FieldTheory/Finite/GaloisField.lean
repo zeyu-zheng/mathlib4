@@ -144,9 +144,9 @@ theorem card (h : n ≠ 0) : Fintype.card (GaloisField p n) = p ^ n := by
 
 theorem splits_zmod_X_pow_sub_X : Splits (RingHom.id (ZMod p)) (X ^ p - X) := by
   have hp : 1 < p := h_prime.out.one_lt
-  have h1 : roots (X ^ p - X : (ZMod p)[X]) = Finset.univ.val := by
-    convert FiniteField.roots_X_pow_card_sub_X (ZMod p)
-    exact (ZMod.card p).symm
+  have h1  : roots (X ^ p - X : (ZMod p)[X]) = Finset.univ.val
+  convert FiniteField.roots_X_pow_card_sub_X (ZMod p)
+  exact (ZMod.card p).symm
   have h2 := FiniteField.X_pow_card_sub_X_natDegree_eq (ZMod p) hp
   -- We discharge the `p = 0` separately, to avoid typeclass issues on `ZMod p`.
   cases p; cases hp

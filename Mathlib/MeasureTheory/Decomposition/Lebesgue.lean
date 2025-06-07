@@ -136,7 +136,8 @@ instance HaveLebesgueDecomposition.sum_left {ι : Type*} [Countable ι] (μ : ι
 
 instance HaveLebesgueDecomposition.add_left {μ' : Measure α} [HaveLebesgueDecomposition μ ν]
     [HaveLebesgueDecomposition μ' ν] : HaveLebesgueDecomposition (μ + μ') ν := by
-  have : ∀ b, HaveLebesgueDecomposition (cond b μ μ') ν := by simp [*]
+  have  : ∀ b, HaveLebesgueDecomposition (cond b μ μ') ν
+  simp [*]
   simpa using sum_left (cond · μ μ')
 
 instance haveLebesgueDecompositionSMul' (μ ν : Measure α) [HaveLebesgueDecomposition μ ν]
@@ -160,7 +161,8 @@ instance haveLebesgueDecompositionSMulRight (μ ν : Measure α) [HaveLebesgueDe
     · exact ⟨⟨μ, 0⟩, measurable_const, by simp [hr], by simp⟩
     refine ⟨⟨μ.singularPart ν, r⁻¹ • μ.rnDeriv ν⟩, hmeas.const_smul _,
       hsing.mono_ac AbsolutelyContinuous.rfl smul_absolutelyContinuous, ?_⟩
-    have : r⁻¹ • rnDeriv μ ν = ((r⁻¹ : ℝ≥0) : ℝ≥0∞) • rnDeriv μ ν := by simp [ENNReal.smul_def]
+    have  : r⁻¹ • rnDeriv μ ν = ((r⁻¹ : ℝ≥0) : ℝ≥0∞) • rnDeriv μ ν
+    simp [ENNReal.smul_def]
     rw [this, withDensity_smul _ hmeas, ENNReal.smul_def r, withDensity_smul_measure,
       ← smul_assoc, smul_eq_mul, ENNReal.coe_inv hr, ENNReal.inv_mul_cancel, one_smul]
     · exact hadd
@@ -292,7 +294,8 @@ lemma singularPart_self (μ : Measure α) : μ.singularPart μ = 0 :=
 lemma rnDeriv_self (μ : Measure α) [SigmaFinite μ] : μ.rnDeriv μ =ᵐ[μ] fun _ ↦ 1 := by
   have h := rnDeriv_add_singularPart μ μ
   rw [singularPart_self, add_zero] at h
-  have h_one : μ = μ.withDensity 1 := by simp
+  have h_one  : μ = μ.withDensity 1
+  simp
   conv_rhs at h => rw [h_one]
   rwa [withDensity_eq_iff_of_sigmaFinite (measurable_rnDeriv _ _).aemeasurable] at h
   exact aemeasurable_const
@@ -386,32 +389,32 @@ theorem eq_singularPart {s : Measure α} {f : α → ℝ≥0∞} (hf : Measurabl
   obtain ⟨hmeas, hsing, hadd'⟩ := haveLebesgueDecomposition_spec μ ν
   obtain ⟨⟨S, hS₁, hS₂, hS₃⟩, ⟨T, hT₁, hT₂, hT₃⟩⟩ := hs, hsing
   rw [hadd'] at hadd
-  have hνinter : ν (S ∩ T)ᶜ = 0 := by
-    rw [compl_inter]
-    refine nonpos_iff_eq_zero.1 (le_trans (measure_union_le _ _) ?_)
-    rw [hT₃, hS₃, add_zero]
-  have heq : s.restrict (S ∩ T)ᶜ = (μ.singularPart ν).restrict (S ∩ T)ᶜ := by
-    ext1 A hA
-    have hf : ν.withDensity f (A ∩ (S ∩ T)ᶜ) = 0 := by
-      refine withDensity_absolutelyContinuous ν _ ?_
-      rw [← nonpos_iff_eq_zero]
-      exact hνinter ▸ measure_mono inter_subset_right
-    have hrn : ν.withDensity (μ.rnDeriv ν) (A ∩ (S ∩ T)ᶜ) = 0 := by
-      refine withDensity_absolutelyContinuous ν _ ?_
-      rw [← nonpos_iff_eq_zero]
-      exact hνinter ▸ measure_mono inter_subset_right
-    rw [restrict_apply hA, restrict_apply hA, ← add_zero (s (A ∩ (S ∩ T)ᶜ)), ← hf, ← add_apply, ←
-      hadd, add_apply, hrn, add_zero]
-  have heq' : ∀ A : Set α, MeasurableSet A → s A = s.restrict (S ∩ T)ᶜ A := by
-    intro A hA
-    have hsinter : s (A ∩ (S ∩ T)) = 0 := by
-      rw [← nonpos_iff_eq_zero]
-      exact hS₂ ▸ measure_mono (inter_subset_right.trans inter_subset_left)
-    rw [restrict_apply hA, ← diff_eq, AEDisjoint.measure_diff_left hsinter]
+  have hνinter  : ν (S ∩ T)ᶜ = 0
+  rw [compl_inter]
+  refine nonpos_iff_eq_zero.1 (le_trans (measure_union_le _ _) ?_)
+  rw [hT₃, hS₃, add_zero]
+  have heq  : s.restrict (S ∩ T)ᶜ = (μ.singularPart ν).restrict (S ∩ T)ᶜ
   ext1 A hA
-  have hμinter : μ.singularPart ν (A ∩ (S ∩ T)) = 0 := by
-    rw [← nonpos_iff_eq_zero]
-    exact hT₂ ▸ measure_mono (inter_subset_right.trans inter_subset_right)
+  have hf  : ν.withDensity f (A ∩ (S ∩ T)ᶜ) = 0
+  refine withDensity_absolutelyContinuous ν _ ?_
+  rw [← nonpos_iff_eq_zero]
+  exact hνinter ▸ measure_mono inter_subset_right
+  have hrn  : ν.withDensity (μ.rnDeriv ν) (A ∩ (S ∩ T)ᶜ) = 0
+  refine withDensity_absolutelyContinuous ν _ ?_
+  rw [← nonpos_iff_eq_zero]
+  exact hνinter ▸ measure_mono inter_subset_right
+  rw [restrict_apply hA, restrict_apply hA, ← add_zero (s (A ∩ (S ∩ T)ᶜ)), ← hf, ← add_apply, ←
+    hadd, add_apply, hrn, add_zero]
+  have heq'  : ∀ A : Set α, MeasurableSet A → s A = s.restrict (S ∩ T)ᶜ A
+  intro A hA
+  have hsinter  : s (A ∩ (S ∩ T)) = 0
+  rw [← nonpos_iff_eq_zero]
+  exact hS₂ ▸ measure_mono (inter_subset_right.trans inter_subset_left)
+  rw [restrict_apply hA, ← diff_eq, AEDisjoint.measure_diff_left hsinter]
+  ext1 A hA
+  have hμinter  : μ.singularPart ν (A ∩ (S ∩ T)) = 0
+  rw [← nonpos_iff_eq_zero]
+  exact hT₂ ▸ measure_mono (inter_subset_right.trans inter_subset_right)
   rw [heq' A hA, heq, restrict_apply hA, ← diff_eq, AEDisjoint.measure_diff_left hμinter]
 
 theorem singularPart_smul (μ ν : Measure α) (r : ℝ≥0) :
@@ -478,35 +481,35 @@ theorem eq_withDensity_rnDeriv {s : Measure α} {f : α → ℝ≥0∞} (hf : Me
   obtain ⟨hmeas, hsing, hadd'⟩ := haveLebesgueDecomposition_spec μ ν
   obtain ⟨⟨S, hS₁, hS₂, hS₃⟩, ⟨T, hT₁, hT₂, hT₃⟩⟩ := hs, hsing
   rw [hadd'] at hadd
-  have hνinter : ν (S ∩ T)ᶜ = 0 := by
-    rw [compl_inter]
-    refine nonpos_iff_eq_zero.1 (le_trans (measure_union_le _ _) ?_)
-    rw [hT₃, hS₃, add_zero]
+  have hνinter  : ν (S ∩ T)ᶜ = 0
+  rw [compl_inter]
+  refine nonpos_iff_eq_zero.1 (le_trans (measure_union_le _ _) ?_)
+  rw [hT₃, hS₃, add_zero]
   have heq :
     (ν.withDensity f).restrict (S ∩ T) = (ν.withDensity (μ.rnDeriv ν)).restrict (S ∩ T) := by
     ext1 A hA
-    have hs : s (A ∩ (S ∩ T)) = 0 := by
-      rw [← nonpos_iff_eq_zero]
-      exact hS₂ ▸ measure_mono (inter_subset_right.trans inter_subset_left)
-    have hsing : μ.singularPart ν (A ∩ (S ∩ T)) = 0 := by
-      rw [← nonpos_iff_eq_zero]
-      exact hT₂ ▸ measure_mono (inter_subset_right.trans inter_subset_right)
+    have hs  : s (A ∩ (S ∩ T)) = 0
+    rw [← nonpos_iff_eq_zero]
+    exact hS₂ ▸ measure_mono (inter_subset_right.trans inter_subset_left)
+    have hsing  : μ.singularPart ν (A ∩ (S ∩ T)) = 0
+    rw [← nonpos_iff_eq_zero]
+    exact hT₂ ▸ measure_mono (inter_subset_right.trans inter_subset_right)
     rw [restrict_apply hA, restrict_apply hA, ← add_zero (ν.withDensity f (A ∩ (S ∩ T))), ← hs, ←
       add_apply, add_comm, ← hadd, add_apply, hsing, zero_add]
   have heq' :
     ∀ A : Set α, MeasurableSet A → ν.withDensity f A = (ν.withDensity f).restrict (S ∩ T) A := by
     intro A hA
-    have hνfinter : ν.withDensity f (A ∩ (S ∩ T)ᶜ) = 0 := by
-      rw [← nonpos_iff_eq_zero]
-      exact withDensity_absolutelyContinuous ν f hνinter ▸ measure_mono inter_subset_right
+    have hνfinter  : ν.withDensity f (A ∩ (S ∩ T)ᶜ) = 0
+    rw [← nonpos_iff_eq_zero]
+    exact withDensity_absolutelyContinuous ν f hνinter ▸ measure_mono inter_subset_right
     rw [restrict_apply hA, ← add_zero (ν.withDensity f (A ∩ (S ∩ T))), ← hνfinter, ← diff_eq,
       measure_inter_add_diff _ (hS₁.inter hT₁)]
   ext1 A hA
-  have hνrn : ν.withDensity (μ.rnDeriv ν) (A ∩ (S ∩ T)ᶜ) = 0 := by
-    rw [← nonpos_iff_eq_zero]
-    exact
-      withDensity_absolutelyContinuous ν (μ.rnDeriv ν) hνinter ▸
-        measure_mono inter_subset_right
+  have hνrn  : ν.withDensity (μ.rnDeriv ν) (A ∩ (S ∩ T)ᶜ) = 0
+  rw [← nonpos_iff_eq_zero]
+  exact
+    withDensity_absolutelyContinuous ν (μ.rnDeriv ν) hνinter ▸
+      measure_mono inter_subset_right
   rw [heq' A hA, heq, ← add_zero ((ν.withDensity (μ.rnDeriv ν)).restrict (S ∩ T) A), ← hνrn,
     restrict_apply hA, ← diff_eq, measure_inter_add_diff _ (hS₁.inter hT₁)]
 
@@ -613,16 +616,16 @@ See also `rnDeriv_smul_right_of_ne_top'`, which requires sigma-finite `ν` and `
 theorem rnDeriv_smul_right_of_ne_top (ν μ : Measure α) [IsFiniteMeasure ν]
     [ν.HaveLebesgueDecomposition μ] {r : ℝ≥0∞} (hr : r ≠ 0) (hr_ne_top : r ≠ ∞) :
     ν.rnDeriv (r • μ) =ᵐ[μ] r⁻¹ • ν.rnDeriv μ := by
-  have h : ν.rnDeriv (r.toNNReal • μ) =ᵐ[μ] r.toNNReal⁻¹ • ν.rnDeriv μ := by
-    refine rnDeriv_smul_right ν μ ?_
-    rw [ne_eq, ENNReal.toNNReal_eq_zero_iff]
-    simp [hr, hr_ne_top]
-  have : (r.toNNReal)⁻¹ • rnDeriv ν μ = r⁻¹ • rnDeriv ν μ := by
-    ext x
-    simp only [Pi.smul_apply, ENNReal.smul_def, ne_eq, smul_eq_mul]
-    rw [ENNReal.coe_inv, ENNReal.coe_toNNReal hr_ne_top]
-    rw [ne_eq, ENNReal.toNNReal_eq_zero_iff]
-    simp [hr, hr_ne_top]
+  have h  : ν.rnDeriv (r.toNNReal • μ) =ᵐ[μ] r.toNNReal⁻¹ • ν.rnDeriv μ
+  refine rnDeriv_smul_right ν μ ?_
+  rw [ne_eq, ENNReal.toNNReal_eq_zero_iff]
+  simp [hr, hr_ne_top]
+  have  : (r.toNNReal)⁻¹ • rnDeriv ν μ = r⁻¹ • rnDeriv ν μ
+  ext x
+  simp only [Pi.smul_apply, ENNReal.smul_def, ne_eq, smul_eq_mul]
+  rw [ENNReal.coe_inv, ENNReal.coe_toNNReal hr_ne_top]
+  rw [ne_eq, ENNReal.toNNReal_eq_zero_iff]
+  simp [hr, hr_ne_top]
   simp_rw [this, ENNReal.smul_def, ENNReal.coe_toNNReal hr_ne_top] at h
   exact h
 
@@ -667,45 +670,47 @@ theorem exists_positive_of_not_mutuallySingular (μ ν : Measure α) [IsFiniteMe
   -- and we show that `μ A = 0`
   let A := ⋂ n, (f n)ᶜ
   have hAmeas : MeasurableSet A := MeasurableSet.iInter fun n ↦ (hf₁ n).compl
-  have hA₂ : ∀ n : ℕ, μ.toSignedMeasure - ((1 / (n + 1) : ℝ≥0) • ν).toSignedMeasure ≤[A] 0 := by
-    intro n; exact restrict_le_restrict_subset _ _ (hf₁ n).compl (hf₃ n) (iInter_subset _ _)
-  have hA₃ : ∀ n : ℕ, μ A ≤ (1 / (n + 1) : ℝ≥0) * ν A := by
-    intro n
-    have := nonpos_of_restrict_le_zero _ (hA₂ n)
-    rwa [toSignedMeasure_sub_apply hAmeas, sub_nonpos, ENNReal.toReal_le_toReal] at this
-    exacts [measure_ne_top _ _, measure_ne_top _ _]
-  have hμ : μ A = 0 := by
-    lift μ A to ℝ≥0 using measure_ne_top _ _ with μA
-    lift ν A to ℝ≥0 using measure_ne_top _ _ with νA
-    rw [ENNReal.coe_eq_zero]
-    by_cases hb : 0 < νA
-    · suffices ∀ b, 0 < b → μA ≤ b by
-        by_contra h
-        have h' := this (μA / 2) (half_pos (zero_lt_iff.2 h))
-        rw [← @Classical.not_not (μA ≤ μA / 2)] at h'
-        exact h' (not_le.2 (NNReal.half_lt_self h))
-      intro c hc
-      have : ∃ n : ℕ, 1 / (n + 1 : ℝ) < c * (νA : ℝ)⁻¹ := by
-        refine exists_nat_one_div_lt ?_
-        positivity
-      rcases this with ⟨n, hn⟩
-      have hb₁ : (0 : ℝ) < (νA : ℝ)⁻¹ := by rw [_root_.inv_pos]; exact hb
-      have h' : 1 / (↑n + 1) * νA < c := by
-        rw [← NNReal.coe_lt_coe, ← mul_lt_mul_right hb₁, NNReal.coe_mul, mul_assoc, ←
-          NNReal.coe_inv, ← NNReal.coe_mul, _root_.mul_inv_cancel, ← NNReal.coe_mul, mul_one,
-          NNReal.coe_inv]
-        · exact hn
-        · exact hb.ne'
-      refine le_trans ?_ h'.le
-      rw [← ENNReal.coe_le_coe, ENNReal.coe_mul]
-      exact hA₃ n
-    · rw [not_lt, le_zero_iff] at hb
-      specialize hA₃ 0
-      simp? [hb] at hA₃ says
-        simp only [CharP.cast_eq_zero, zero_add, ne_eq, one_ne_zero, not_false_eq_true, div_self,
-          ENNReal.coe_one, hb, ENNReal.coe_zero, mul_zero, nonpos_iff_eq_zero,
-          ENNReal.coe_eq_zero] at hA₃
-      assumption
+  have hA₂  : ∀ n : ℕ, μ.toSignedMeasure - ((1 / (n + 1) : ℝ≥0) • ν).toSignedMeasure ≤[A] 0
+  intro n; exact restrict_le_restrict_subset _ _ (hf₁ n).compl (hf₃ n) (iInter_subset _ _)
+  have hA₃  : ∀ n : ℕ, μ A ≤ (1 / (n + 1) : ℝ≥0) * ν A
+  intro n
+  have := nonpos_of_restrict_le_zero _ (hA₂ n)
+  rwa [toSignedMeasure_sub_apply hAmeas, sub_nonpos, ENNReal.toReal_le_toReal] at this
+  apply measure_ne_top _ _
+  apply measure_ne_top _ _
+  have hμ  : μ A = 0
+  lift μ A to ℝ≥0 using measure_ne_top _ _ with μA
+  lift ν A to ℝ≥0 using measure_ne_top _ _ with νA
+  rw [ENNReal.coe_eq_zero]
+  by_cases hb : 0 < νA
+  · suffices ∀ b, 0 < b → μA ≤ b by
+      by_contra h
+      have h' := this (μA / 2) (half_pos (zero_lt_iff.2 h))
+      rw [← @Classical.not_not (μA ≤ μA / 2)] at h'
+      exact h' (not_le.2 (NNReal.half_lt_self h))
+    intro c hc
+    have  : ∃ n : ℕ, 1 / (n + 1 : ℝ) < c * (νA : ℝ)⁻¹
+    refine exists_nat_one_div_lt ?_
+    positivity
+    rcases this with ⟨n, hn⟩
+    have hb₁  : (0 : ℝ) < (νA : ℝ)⁻¹
+    rw [_root_.inv_pos]; exact hb
+    have h'  : 1 / (↑n + 1) * νA < c
+    rw [← NNReal.coe_lt_coe, ← mul_lt_mul_right hb₁, NNReal.coe_mul, mul_assoc, ←
+      NNReal.coe_inv, ← NNReal.coe_mul, _root_.mul_inv_cancel, ← NNReal.coe_mul, mul_one,
+      NNReal.coe_inv]
+    · exact hn
+    · exact hb.ne'
+    refine le_trans ?_ h'.le
+    rw [← ENNReal.coe_le_coe, ENNReal.coe_mul]
+    exact hA₃ n
+  · rw [not_lt, le_zero_iff] at hb
+    specialize hA₃ 0
+    simp? [hb] at hA₃ says
+      simp only [CharP.cast_eq_zero, zero_add, ne_eq, one_ne_zero, not_false_eq_true, div_self,
+        ENNReal.coe_one, hb, ENNReal.coe_zero, mul_zero, nonpos_iff_eq_zero,
+        ENNReal.coe_eq_zero] at hA₃
+    assumption
   -- since `μ` and `ν` are not mutually singular, `μ A = 0` implies `ν Aᶜ > 0`
   rw [MutuallySingular] at h; push_neg at h
   have := h _ hAmeas hμ
@@ -759,8 +764,8 @@ theorem iSup_mem_measurableLE (f : ℕ → α → ℝ≥0∞) (hf : ∀ n, f n �
     · intro A hA; simp [(hf 0).2 A hA]
   · have :
       (fun a : α ↦ ⨆ (k : ℕ) (_ : k ≤ m + 1), f k a) = fun a ↦
-        f m.succ a ⊔ ⨆ (k : ℕ) (_ : k ≤ m), f k a :=
-      funext fun _ ↦ iSup_succ_eq_sup _ _ _
+        f m.succ a ⊔ ⨆ (k : ℕ) (_ : k ≤ m), f k a
+    apply funext fun _ ↦ iSup_succ_eq_sup _ _ _
     refine ⟨measurable_iSup fun n ↦ Measurable.iSup_Prop _ (hf n).1, fun A hA ↦ ?_⟩
     rw [this]; exact (sup_mem_measurableLE (hf m.succ) hm).2 A hA
 
@@ -809,43 +814,43 @@ theorem haveLebesgueDecomposition_of_finiteMeasure [IsFiniteMeasure μ] [IsFinit
     -- we set `ξ` to be the supremum of an increasing sequence of functions obtained from above
     set ξ := ⨆ (n) (k) (_ : k ≤ n), f k with hξ
     -- we see that `ξ` has the largest integral among all functions in `measurableLE`
-    have hξ₁ : sSup (measurableLEEval ν μ) = ∫⁻ a, ξ a ∂ν := by
-      have :=
-        @lintegral_tendsto_of_tendsto_of_monotone _ _ ν (fun n ↦ ⨆ (k) (_ : k ≤ n), f k)
-          (⨆ (n) (k) (_ : k ≤ n), f k) ?_ ?_ ?_
-      · refine tendsto_nhds_unique ?_ this
-        refine tendsto_of_tendsto_of_tendsto_of_le_of_le hg₂ tendsto_const_nhds ?_ ?_
-        · intro n; rw [← hf₂ n]
-          apply lintegral_mono
-          convert iSup_le_le f n n le_rfl
-          simp only [iSup_apply]
-        · intro n
-          exact le_sSup ⟨⨆ (k : ℕ) (_ : k ≤ n), f k, iSup_mem_measurableLE' _ hf₁ _, rfl⟩
+    have hξ₁ : sSup (measurableLEEval ν μ) = ∫⁻ a, ξ a ∂ν
+    have :=
+      @lintegral_tendsto_of_tendsto_of_monotone _ _ ν (fun n ↦ ⨆ (k) (_ : k ≤ n), f k)
+        (⨆ (n) (k) (_ : k ≤ n), f k) ?_ ?_ ?_
+    · refine tendsto_nhds_unique ?_ this
+      refine tendsto_of_tendsto_of_tendsto_of_le_of_le hg₂ tendsto_const_nhds ?_ ?_
+      · intro n; rw [← hf₂ n]
+        apply lintegral_mono
+        convert iSup_le_le f n n le_rfl
+        simp only [iSup_apply]
       · intro n
-        refine Measurable.aemeasurable ?_
-        convert (iSup_mem_measurableLE _ hf₁ n).1
-        simp
-      · refine Filter.eventually_of_forall fun a ↦ ?_
-        simp [iSup_monotone' f _]
-      · refine Filter.eventually_of_forall fun a ↦ ?_
-        simp [tendsto_atTop_iSup (iSup_monotone' f a)]
-    have hξm : Measurable ξ := by
-      convert measurable_iSup fun n ↦ (iSup_mem_measurableLE _ hf₁ n).1
-      simp [hξ]
+        exact le_sSup ⟨⨆ (k : ℕ) (_ : k ≤ n), f k, iSup_mem_measurableLE' _ hf₁ _, rfl⟩
+    · intro n
+      refine Measurable.aemeasurable ?_
+      convert (iSup_mem_measurableLE _ hf₁ n).1
+      simp
+    · refine Filter.eventually_of_forall fun a ↦ ?_
+      simp [iSup_monotone' f _]
+    · refine Filter.eventually_of_forall fun a ↦ ?_
+      simp [tendsto_atTop_iSup (iSup_monotone' f a)]
+    have hξm : Measurable ξ
+    convert measurable_iSup fun n ↦ (iSup_mem_measurableLE _ hf₁ n).1
+    simp [hξ]
     -- `ξ` is the `f` in the theorem statement and we set `μ₁` to be `μ - ν.withDensity ξ`
     -- since we need `μ₁ + ν.withDensity ξ = μ`
     set μ₁ := μ - ν.withDensity ξ with hμ₁
-    have hle : ν.withDensity ξ ≤ μ := by
-      refine le_iff.2 fun B hB ↦ ?_
-      rw [hξ, withDensity_apply _ hB]
-      simp_rw [iSup_apply]
-      rw [lintegral_iSup (fun i ↦ (iSup_mem_measurableLE _ hf₁ i).1) (iSup_monotone _)]
-      exact iSup_le fun i ↦ (iSup_mem_measurableLE _ hf₁ i).2 B hB
-    have : IsFiniteMeasure (ν.withDensity ξ) := by
-      refine isFiniteMeasure_withDensity ?_
-      have hle' := hle univ
-      rw [withDensity_apply _ MeasurableSet.univ, Measure.restrict_univ] at hle'
-      exact ne_top_of_le_ne_top (measure_ne_top _ _) hle'
+    have hle : ν.withDensity ξ ≤ μ
+    refine le_iff.2 fun B hB ↦ ?_
+    rw [hξ, withDensity_apply _ hB]
+    simp_rw [iSup_apply]
+    rw [lintegral_iSup (fun i ↦ (iSup_mem_measurableLE _ hf₁ i).1) (iSup_monotone _)]
+    exact iSup_le fun i ↦ (iSup_mem_measurableLE _ hf₁ i).2 B hB
+    have : IsFiniteMeasure (ν.withDensity ξ)
+    refine isFiniteMeasure_withDensity ?_
+    have hle' := hle univ
+    rw [withDensity_apply _ MeasurableSet.univ, Measure.restrict_univ] at hle'
+    exact ne_top_of_le_ne_top (measure_ne_top _ _) hle'
     refine ⟨⟨μ₁, ξ⟩, hξm, ?_, ?_⟩
     · by_contra h
       -- if they are not mutually singular, then from `exists_positive_of_not_mutuallySingular`,
@@ -853,43 +858,43 @@ theorem haveLebesgueDecomposition_of_finiteMeasure [IsFiniteMeasure μ] [IsFinit
       -- positive with respect to `ν - εμ`
       obtain ⟨ε, hε₁, E, hE₁, hE₂, hE₃⟩ := exists_positive_of_not_mutuallySingular μ₁ ν h
       simp_rw [hμ₁] at hE₃
-      have hξle : ∀ A, MeasurableSet A → (∫⁻ a in A, ξ a ∂ν) ≤ μ A := by
-        intro A hA; rw [hξ]
-        simp_rw [iSup_apply]
-        rw [lintegral_iSup (fun n ↦ (iSup_mem_measurableLE _ hf₁ n).1) (iSup_monotone _)]
-        exact iSup_le fun n ↦ (iSup_mem_measurableLE _ hf₁ n).2 A hA
+      have hξle : ∀ A, MeasurableSet A → (∫⁻ a in A, ξ a ∂ν) ≤ μ A
+      intro A hA; rw [hξ]
+      simp_rw [iSup_apply]
+      rw [lintegral_iSup (fun n ↦ (iSup_mem_measurableLE _ hf₁ n).1) (iSup_monotone _)]
+      exact iSup_le fun n ↦ (iSup_mem_measurableLE _ hf₁ n).2 A hA
       -- since `E` is positive, we have `∫⁻ a in A ∩ E, ε + ξ a ∂ν ≤ μ (A ∩ E)` for all `A`
-      have hε₂ : ∀ A : Set α, MeasurableSet A → (∫⁻ a in A ∩ E, ε + ξ a ∂ν) ≤ μ (A ∩ E) := by
-        intro A hA
-        have := subset_le_of_restrict_le_restrict _ _ hE₁ hE₃ A.inter_subset_right
-        rwa [zero_apply, toSignedMeasure_sub_apply (hA.inter hE₁),
-          Measure.sub_apply (hA.inter hE₁) hle,
-          ENNReal.toReal_sub_of_le _ (measure_ne_top _ _), sub_nonneg, le_sub_iff_add_le,
-          ← ENNReal.toReal_add, ENNReal.toReal_le_toReal, Measure.coe_smul, Pi.smul_apply,
-          withDensity_apply _ (hA.inter hE₁), show ε • ν (A ∩ E) = (ε : ℝ≥0∞) * ν (A ∩ E) by rfl,
-          ← setLIntegral_const, ← lintegral_add_left measurable_const] at this
-        · rw [Ne, ENNReal.add_eq_top, not_or]
-          exact ⟨measure_ne_top _ _, measure_ne_top _ _⟩
-        · exact measure_ne_top _ _
-        · exact measure_ne_top _ _
-        · exact measure_ne_top _ _
-        · rw [withDensity_apply _ (hA.inter hE₁)]
-          exact hξle (A ∩ E) (hA.inter hE₁)
+      have hε₂ : ∀ A : Set α, MeasurableSet A → (∫⁻ a in A ∩ E, ε + ξ a ∂ν) ≤ μ (A ∩ E)
+      intro A hA
+      have := subset_le_of_restrict_le_restrict _ _ hE₁ hE₃ A.inter_subset_right
+      rwa [zero_apply, toSignedMeasure_sub_apply (hA.inter hE₁),
+        Measure.sub_apply (hA.inter hE₁) hle,
+        ENNReal.toReal_sub_of_le _ (measure_ne_top _ _), sub_nonneg, le_sub_iff_add_le,
+        ← ENNReal.toReal_add, ENNReal.toReal_le_toReal, Measure.coe_smul, Pi.smul_apply,
+        withDensity_apply _ (hA.inter hE₁), show ε • ν (A ∩ E) = (ε : ℝ≥0∞) * ν (A ∩ E) by rfl,
+        ← setLIntegral_const, ← lintegral_add_left measurable_const] at this
+      · rw [Ne, ENNReal.add_eq_top, not_or]
+        exact ⟨measure_ne_top _ _, measure_ne_top _ _⟩
+      · exact measure_ne_top _ _
+      · exact measure_ne_top _ _
+      · exact measure_ne_top _ _
+      · rw [withDensity_apply _ (hA.inter hE₁)]
+        exact hξle (A ∩ E) (hA.inter hE₁)
       -- from this, we can show `ξ + ε * E.indicator` is a function in `measurableLE` with
       -- integral greater than `ξ`
-      have hξε : (ξ + E.indicator fun _ ↦ (ε : ℝ≥0∞)) ∈ measurableLE ν μ := by
-        refine ⟨Measurable.add hξm (Measurable.indicator measurable_const hE₁), fun A hA ↦ ?_⟩
-        have :
-          (∫⁻ a in A, (ξ + E.indicator fun _ ↦ (ε : ℝ≥0∞)) a ∂ν) =
-            (∫⁻ a in A ∩ E, ε + ξ a ∂ν) + ∫⁻ a in A \ E, ξ a ∂ν := by
-          simp only [lintegral_add_left measurable_const, lintegral_add_left hξm,
-            setLIntegral_const, add_assoc, lintegral_inter_add_diff _ _ hE₁, Pi.add_apply,
-            lintegral_indicator _ hE₁, restrict_apply hE₁]
-          rw [inter_comm, add_comm]
-        rw [this, ← measure_inter_add_diff A hE₁]
-        exact add_le_add (hε₂ A hA) (hξle (A \ E) (hA.diff hE₁))
-      have : (∫⁻ a, ξ a + E.indicator (fun _ ↦ (ε : ℝ≥0∞)) a ∂ν) ≤ sSup (measurableLEEval ν μ) :=
-        le_sSup ⟨ξ + E.indicator fun _ ↦ (ε : ℝ≥0∞), hξε, rfl⟩
+      have hξε : (ξ + E.indicator fun _ ↦ (ε : ℝ≥0∞)) ∈ measurableLE ν μ
+      refine ⟨Measurable.add hξm (Measurable.indicator measurable_const hE₁), fun A hA ↦ ?_⟩
+      have :
+        (∫⁻ a in A, (ξ + E.indicator fun _ ↦ (ε : ℝ≥0∞)) a ∂ν) =
+          (∫⁻ a in A ∩ E, ε + ξ a ∂ν) + ∫⁻ a in A \ E, ξ a ∂ν := by
+        simp only [lintegral_add_left measurable_const, lintegral_add_left hξm,
+          setLIntegral_const, add_assoc, lintegral_inter_add_diff _ _ hE₁, Pi.add_apply,
+          lintegral_indicator _ hE₁, restrict_apply hE₁]
+        rw [inter_comm, add_comm]
+      rw [this, ← measure_inter_add_diff A hE₁]
+      exact add_le_add (hε₂ A hA) (hξle (A \ E) (hA.diff hE₁))
+      have : (∫⁻ a, ξ a + E.indicator (fun _ ↦ (ε : ℝ≥0∞)) a ∂ν) ≤ sSup (measurableLEEval ν μ)
+      exact le_sSup ⟨ξ + E.indicator fun _ ↦ (ε : ℝ≥0∞), hξε, rfl⟩
       -- but this contradicts the maximality of `∫⁻ x, ξ x ∂ν`
       refine not_lt.2 this ?_
       rw [hξ₁, lintegral_add_left hξm, lintegral_indicator _ hE₁, setLIntegral_const]
@@ -922,8 +927,10 @@ nonrec instance (priority := 100) haveLebesgueDecomposition_of_sigmaFinite
   · exact .sfinite_of_isFiniteMeasure fun μ _ ↦ this μ ‹_›
   -- Take a disjoint cover that consists of sets of finite measure `ν`.
   set s : ℕ → Set α := disjointed (spanningSets ν)
-  have hsm : ∀ n, MeasurableSet (s n) := .disjointed <| measurable_spanningSets _
-  have hs : ∀ n, Fact (ν (s n) < ⊤) := fun n ↦
+  have hsm : ∀ n, MeasurableSet (s n)
+  exact .disjointed <| measurable_spanningSets _
+  have hs : ∀ n, Fact (ν (s n) < ⊤)
+  exact fun n ↦
     ⟨lt_of_le_of_lt (measure_mono <| disjointed_le ..) (measure_spanningSets_lt_top ν n)⟩
   -- Note that the restrictions of `μ` and `ν` to `s n` are finite measures.
   -- Therefore, as we proved above, these restrictions have a Lebesgue decomposition.
@@ -931,18 +938,20 @@ nonrec instance (priority := 100) haveLebesgueDecomposition_of_sigmaFinite
   -- of these restrictions.
   set ξ : ℕ → Measure α := fun n : ℕ ↦ singularPart (.restrict μ (s n)) (.restrict ν (s n))
   set f : ℕ → α → ℝ≥0∞ := fun n ↦ (s n).indicator (rnDeriv (.restrict μ (s n)) (.restrict ν (s n)))
-  have hfm (n : ℕ) : Measurable (f n) := by measurability
+  have hfm (n  : ℕ) : Measurable (f n)
+  measurability
   -- Each `ξ n` is supported on `s n` and is mutually singular with the restriction of `ν` to `s n`.
   -- Therefore, `ξ n` is mutually singular with `ν`, hence their sum is mutually singular with `ν`.
-  have hξ : .sum ξ ⟂ₘ ν := by
-    refine MutuallySingular.sum_left.2 fun n ↦ ?_
-    rw [← ν.restrict_add_restrict_compl (hsm n)]
-    refine (mutuallySingular_singularPart ..).add_right (.singularPart ?_ _)
-    refine ⟨(s n)ᶜ, (hsm n).compl, ?_⟩
-    simp [hsm]
+  have hξ  : .sum ξ ⟂ₘ ν
+  refine MutuallySingular.sum_left.2 fun n ↦ ?_
+  rw [← ν.restrict_add_restrict_compl (hsm n)]
+  refine (mutuallySingular_singularPart ..).add_right (.singularPart ?_ _)
+  refine ⟨(s n)ᶜ, (hsm n).compl, ?_⟩
+  simp [hsm]
   -- Finally, the sum of all `ξ n` and measure `ν` with the density `∑' n, f n`
   -- is equal to `μ`, thus `(Measure.sum ξ, ∑' n, f n)` is a Lebesgue decomposition for `μ` and `ν`.
-  have hadd : .sum ξ + ν.withDensity (∑' n, f n) = μ := calc
+  have hadd : .sum ξ + ν.withDensity (∑' n, f n) = μ
+  exact calc
     .sum ξ + ν.withDensity (∑' n, f n) = .sum fun n ↦ ξ n + ν.withDensity (f n) := by
       rw [withDensity_tsum hfm, Measure.sum_add_sum]
     _ = .sum fun n ↦ .restrict μ (s n) := by
@@ -972,8 +981,8 @@ See also `rnDeriv_smul_left_of_ne_top`, which has no hypothesis on `μ` but requ
 theorem rnDeriv_smul_left_of_ne_top' (ν μ : Measure α) [SigmaFinite ν] [SigmaFinite μ]
     {r : ℝ≥0∞} (hr : r ≠ ∞) :
     (r • ν).rnDeriv μ =ᵐ[μ] r • ν.rnDeriv μ := by
-  have h : (r.toNNReal • ν).rnDeriv μ =ᵐ[μ] r.toNNReal • ν.rnDeriv μ :=
-    rnDeriv_smul_left' ν μ r.toNNReal
+  have h : (r.toNNReal • ν).rnDeriv μ =ᵐ[μ] r.toNNReal • ν.rnDeriv μ
+  exact rnDeriv_smul_left' ν μ r.toNNReal
   simpa [ENNReal.smul_def, ENNReal.coe_toNNReal hr] using h
 
 /-- Radon-Nikodym derivative with respect to the scalar multiple of a measure.
@@ -1001,10 +1010,10 @@ See also `rnDeriv_smul_right_of_ne_top`, which has no hypothesis on `μ` but req
 theorem rnDeriv_smul_right_of_ne_top' (ν μ : Measure α) [SigmaFinite ν] [SigmaFinite μ]
     {r : ℝ≥0∞} (hr : r ≠ 0) (hr_ne_top : r ≠ ∞) :
     ν.rnDeriv (r • μ) =ᵐ[μ] r⁻¹ • ν.rnDeriv μ := by
-  have h : ν.rnDeriv (r.toNNReal • μ) =ᵐ[μ] r.toNNReal⁻¹ • ν.rnDeriv μ := by
-    refine rnDeriv_smul_right' ν μ ?_
-    rw [ne_eq, ENNReal.toNNReal_eq_zero_iff]
-    simp [hr, hr_ne_top]
+  have h  : ν.rnDeriv (r.toNNReal • μ) =ᵐ[μ] r.toNNReal⁻¹ • ν.rnDeriv μ
+  refine rnDeriv_smul_right' ν μ ?_
+  rw [ne_eq, ENNReal.toNNReal_eq_zero_iff]
+  simp [hr, hr_ne_top]
   rwa [ENNReal.smul_def, ENNReal.coe_toNNReal hr_ne_top,
     ← ENNReal.toNNReal_inv, ENNReal.smul_def, ENNReal.coe_toNNReal (ENNReal.inv_ne_top.mpr hr)] at h
 

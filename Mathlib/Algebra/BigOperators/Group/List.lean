@@ -453,7 +453,8 @@ theorem prod_inv : ∀ L : List G, L.prod⁻¹ = (L.map fun x => x⁻¹).prod
 @[to_additive "Cancellation of a telescoping sum."]
 theorem prod_range_div (n : ℕ) (f : ℕ → G) :
     ((range n).map fun k ↦ f (k + 1) / f k).prod = f n / f 0 := by
-  have h : ((·⁻¹) ∘ fun k ↦ f (k + 1) / f k) = fun k ↦ f k / f (k + 1) := by ext; apply inv_div
+  have h  : ((·⁻¹) ∘ fun k ↦ f (k + 1) / f k) = fun k ↦ f k / f (k + 1)
+  ext; apply inv_div
   rw [← inv_inj, prod_inv, map_map, inv_div, h, prod_range_div']
 
 /-- Alternative version of `List.prod_set` when the list is over a group -/

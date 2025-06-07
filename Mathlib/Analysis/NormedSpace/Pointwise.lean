@@ -240,11 +240,11 @@ theorem infEdist_thickening (hδ : 0 < δ) (s : Set E) (x : E) :
   cases' r with r
   · exact add_lt_top.2 ⟨lt_top_iff_ne_top.2 <| infEdist_ne_top ⟨z, self_subset_thickening hδ _ hz⟩,
       ofReal_lt_top⟩
-  have hr : 0 < ↑r - δ := by
-    refine sub_pos_of_lt ?_
-    have := hs.trans_lt ((infEdist_le_edist_of_mem hz).trans_lt h)
-    rw [ofReal_eq_coe_nnreal hδ.le] at this
-    exact mod_cast this
+  have hr  : 0 < ↑r - δ
+  refine sub_pos_of_lt ?_
+  have := hs.trans_lt ((infEdist_le_edist_of_mem hz).trans_lt h)
+  rw [ofReal_eq_coe_nnreal hδ.le] at this
+  exact mod_cast this
   rw [edist_lt_coe, ← dist_lt_coe, ← add_sub_cancel δ ↑r] at h
   obtain ⟨y, hxy, hyz⟩ := exists_dist_lt_lt hr hδ h
   refine (ENNReal.add_lt_add_right ofReal_ne_top <|

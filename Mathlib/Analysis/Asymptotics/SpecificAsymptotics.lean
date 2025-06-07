@@ -96,9 +96,9 @@ theorem Asymptotics.IsLittleO.sum_range {α : Type*} [NormedAddCommGroup α] {f 
   intro ε εpos
   obtain ⟨N, hN⟩ : ∃ N : ℕ, ∀ b : ℕ, N ≤ b → ‖f b‖ ≤ ε / 2 * g b := by
     simpa only [A, eventually_atTop] using isLittleO_iff.mp h (half_pos εpos)
-  have : (fun _ : ℕ => ∑ i ∈ range N, f i) =o[atTop] fun n : ℕ => ∑ i ∈ range n, g i := by
-    apply isLittleO_const_left.2
-    exact Or.inr (h'g.congr fun n => (B n).symm)
+  have  : (fun _ : ℕ => ∑ i ∈ range N, f i) =o[atTop] fun n : ℕ => ∑ i ∈ range n, g i
+  apply isLittleO_const_left.2
+  exact Or.inr (h'g.congr fun n => (B n).symm)
   filter_upwards [isLittleO_iff.1 this (half_pos εpos), Ici_mem_atTop N] with n hn Nn
   calc
     ‖∑ i ∈ range n, f i‖ = ‖(∑ i ∈ range N, f i) + ∑ i ∈ Ico N n, f i‖ := by

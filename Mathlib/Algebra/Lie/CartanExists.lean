@@ -92,8 +92,8 @@ lemma lieCharpoly_map_eval (r : R) :
     (lieCharpoly R M x y).map (evalRingHom r) = (φ (r • y + x)).charpoly := by
   rw [lieCharpoly, map_map]
   set b := chooseBasis R L
-  have aux : (fun i ↦ (b.repr y) i * r + (b.repr x) i) = b.repr (r • y + x) := by
-    ext i; simp [mul_comm r]
+  have aux  : (fun i ↦ (b.repr y) i * r + (b.repr x) i) = b.repr (r • y + x)
+  ext i; simp [mul_comm r]
   simp_rw [← coe_aeval_eq_evalRingHom, ← AlgHom.comp_toRingHom, MvPolynomial.comp_aeval,
     map_add, map_mul, aeval_C, Algebra.id.map_eq_id, RingHom.id_apply, aeval_X, aux,
     MvPolynomial.coe_aeval_eq_eval, polyCharpoly_map_eq_charpoly, LieHom.coe_toLinearMap]
@@ -225,34 +225,34 @@ lemma engel_isBot_of_isMin (hLK : finrank K L ≤ #K) (U : LieSubalgebra K L)
   -- on a sufficiently large subset `s` of `K`.
   -- But we first need to get our hands on that subset `s`.
   -- We start by observing that `ψ` has non-trivial constant coefficient.
-  have hψ : constantCoeff ψ ≠ 0 := by
-    -- Suppose that `ψ` in fact has trivial constant coefficient.
-    intro H
-    -- Then there exists a `z ≠ 0` in `Q` such that `⁅x, z⁆ = 0`.
-    obtain ⟨z, hz0, hxz⟩ : ∃ z : Q, z ≠ 0 ∧ ⁅x', z⁆ = 0 := by
-      -- Indeed, if the constant coefficient of `ψ` is trivial,
-      -- then `0` is a root of the characteristic polynomial of `⁅0 • u + x, _⁆` acting on `Q`,
-      -- and hence we find an eigenvector `z` as desired.
-      apply_fun (evalRingHom 0) at H
-      rw [constantCoeff_apply, ← coeff_map, lieCharpoly_map_eval,
-        ← constantCoeff_apply, map_zero, LinearMap.charpoly_constantCoeff_eq_zero_iff] at H
-      simpa only [coe_bracket_of_module, ne_eq, zero_smul, zero_add, toEnd_apply_apply]
-        using H
-    -- It suffices to show `z = 0` (in `Q`) to obtain a contradiction.
-    apply hz0
-    -- We replace `z : Q` by a representative in `L`.
-    obtain ⟨z, rfl⟩ := LieSubmodule.Quotient.surjective_mk' E z
-    -- The assumption `⁅x, z⁆ = 0` is equivalent to `⁅x, z⁆ ∈ E`.
-    have : ⁅x, z⁆ ∈ E := by rwa [← LieSubmodule.Quotient.mk_eq_zero']
-    -- From this we deduce that there exists an `n` such that `⁅x, _⁆ ^ n` vanishes on `⁅x, z⁆`.
-    -- On the other hand, our goal is to show `z = 0` in `Q`,
-    -- which is equivalent to showing that `⁅x, _⁆ ^ n` vanishes on `z`, for some `n`.
-    simp only [coe_bracket_of_module, LieSubmodule.mem_mk_iff', mem_coe_submodule, mem_engel_iff,
-      LieSubmodule.Quotient.mk'_apply, LieSubmodule.Quotient.mk_eq_zero', E, Q] at this ⊢
-    -- Hence we win.
-    obtain ⟨n, hn⟩ := this
-    use n+1
-    rwa [pow_succ]
+  have hψ : constantCoeff ψ ≠ 0
+  -- Suppose that `ψ` in fact has trivial constant coefficient.
+  intro H
+  -- Then there exists a `z ≠ 0` in `Q` such that `⁅x, z⁆ = 0`.
+  obtain ⟨z, hz0, hxz⟩ : ∃ z : Q, z ≠ 0 ∧ ⁅x', z⁆ = 0 := by
+    -- Indeed, if the constant coefficient of `ψ` is trivial,
+    -- then `0` is a root of the characteristic polynomial of `⁅0 • u + x, _⁆` acting on `Q`,
+    -- and hence we find an eigenvector `z` as desired.
+    apply_fun (evalRingHom 0) at H
+    rw [constantCoeff_apply, ← coeff_map, lieCharpoly_map_eval,
+      ← constantCoeff_apply, map_zero, LinearMap.charpoly_constantCoeff_eq_zero_iff] at H
+    simpa only [coe_bracket_of_module, ne_eq, zero_smul, zero_add, toEnd_apply_apply]
+      using H
+  -- It suffices to show `z = 0` (in `Q`) to obtain a contradiction.
+  apply hz0
+  -- We replace `z : Q` by a representative in `L`.
+  obtain ⟨z, rfl⟩ := LieSubmodule.Quotient.surjective_mk' E z
+  -- The assumption `⁅x, z⁆ = 0` is equivalent to `⁅x, z⁆ ∈ E`.
+  have : ⁅x, z⁆ ∈ E := by rwa [← LieSubmodule.Quotient.mk_eq_zero']
+  -- From this we deduce that there exists an `n` such that `⁅x, _⁆ ^ n` vanishes on `⁅x, z⁆`.
+  -- On the other hand, our goal is to show `z = 0` in `Q`,
+  -- which is equivalent to showing that `⁅x, _⁆ ^ n` vanishes on `z`, for some `n`.
+  simp only [coe_bracket_of_module, LieSubmodule.mem_mk_iff', mem_coe_submodule, mem_engel_iff,
+    LieSubmodule.Quotient.mk'_apply, LieSubmodule.Quotient.mk_eq_zero', E, Q] at this ⊢
+  -- Hence we win.
+  obtain ⟨n, hn⟩ := this
+  use n+1
+  rwa [pow_succ]
   -- Now we find a subset `s` of `K` of size `≥ r`
   -- such that `constantCoeff ψ` takes non-zero values on all of `s`.
   -- This turns out to be the subset that we alluded to earlier.
@@ -261,14 +261,14 @@ lemma engel_isBot_of_isMin (hLK : finrank K L ≤ #K) (U : LieSubalgebra K L)
     -- Let `t` denote the set of roots of `constantCoeff ψ`.
     let t := (constantCoeff ψ).roots.toFinset
     -- We show that `t` has cardinality at most `finrank K L - r`.
-    have ht : t.card ≤ finrank K L - r := by
-      refine (Multiset.toFinset_card_le _).trans ?_
-      refine (card_roots' _).trans ?_
-      rw [constantCoeff_apply]
-      -- Indeed, `constantCoeff ψ` has degree at most `finrank K Q = finrank K L - r`.
-      apply lieCharpoly_coeff_natDegree
-      suffices finrank K Q + r = finrank K L by rw [← this, zero_add, Nat.add_sub_cancel]
-      apply Submodule.finrank_quotient_add_finrank
+    have ht : t.card ≤ finrank K L - r
+    refine (Multiset.toFinset_card_le _).trans ?_
+    refine (card_roots' _).trans ?_
+    rw [constantCoeff_apply]
+    -- Indeed, `constantCoeff ψ` has degree at most `finrank K Q = finrank K L - r`.
+    apply lieCharpoly_coeff_natDegree
+    suffices finrank K Q + r = finrank K L by rw [← this, zero_add, Nat.add_sub_cancel]
+    apply Submodule.finrank_quotient_add_finrank
     -- Hence there exists a subset of size `≥ r` in the complement of `t`,
     -- and `constantCoeff ψ` takes non-zero values on all of this subset.
     obtain ⟨s, hs⟩ := exists_finset_le_card K _ hLK
@@ -312,21 +312,22 @@ lemma engel_isBot_of_isMin (hLK : finrank K L ≤ #K) (U : LieSubalgebra K L)
   -- We denote the image of `z` in `Q` by `z'`.
   set z' : Q := LieSubmodule.Quotient.mk' E z
   -- First we observe that `z'` is killed by a power of `⁅v, _⁆`.
-  have hz' : ∃ n : ℕ, (toEnd K U Q v ^ n) z' = 0 := by
-    rw [mem_engel_iff] at hz
-    obtain ⟨n, hn⟩ := hz
-    use n
-    apply_fun LieSubmodule.Quotient.mk' E at hn
-    rw [LieModuleHom.map_zero] at hn
-    rw [← hn]
-    clear hn
-    induction n with
-    | zero => simp only [Nat.zero_eq, pow_zero, LinearMap.one_apply]
-    | succ n ih => rw [pow_succ', pow_succ', LinearMap.mul_apply, ih]; rfl
+  have hz' : ∃ n : ℕ, (toEnd K U Q v ^ n) z' = 0
+  rw [mem_engel_iff] at hz
+  obtain ⟨n, hn⟩ := hz
+  use n
+  apply_fun LieSubmodule.Quotient.mk' E at hn
+  rw [LieModuleHom.map_zero] at hn
+  rw [← hn]
+  clear hn
+  induction n with
+  | zero => simp only [Nat.zero_eq, pow_zero, LinearMap.one_apply]
+  | succ n ih => rw [pow_succ', pow_succ', LinearMap.mul_apply, ih]; rfl
   classical
   -- Now let `n` be the smallest power such that `⁅v, _⁆ ^ n` kills `z'`.
   set n := Nat.find hz' with _hn
-  have hn : (toEnd K U Q v ^ n) z' = 0 := Nat.find_spec hz'
+  have hn : (toEnd K U Q v ^ n) z' = 0
+  apply Nat.find_spec hz'
   -- If `n = 0`, then we are done.
   obtain hn₀|⟨k, hk⟩ : n = 0 ∨ ∃ k, n = k + 1 := by cases n <;> simp
   · simpa only [hn₀, pow_zero, LinearMap.one_apply] using hn

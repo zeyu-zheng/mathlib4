@@ -1929,8 +1929,10 @@ theorem exists_not_mem_of_length_lt {α : Type*} (l : List α) (h : ↑l.length 
     _ ≤ l.length := Cardinal.natCast_le.mpr (List.toFinset_card_le l)
 
 theorem three_le {α : Type*} (h : 3 ≤ #α) (x : α) (y : α) : ∃ z : α, z ≠ x ∧ z ≠ y := by
-  have : ↑(3 : ℕ) ≤ #α := by simpa using h
-  have : ↑(2 : ℕ) < #α := by rwa [← succ_le_iff, ← Cardinal.nat_succ]
+  have  : ↑(3 : ℕ) ≤ #α
+  simpa using h
+  have  : ↑(2 : ℕ) < #α
+  rwa [← succ_le_iff, ← Cardinal.nat_succ]
   have := exists_not_mem_of_length_lt [x, y] this
   simpa [not_or] using this
 

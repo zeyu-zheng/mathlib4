@@ -419,8 +419,8 @@ theorem ArzelaAscoli.compactSpace_of_closed_inducing' [TopologicalSpace ι] {�
     CompactSpace ι := by
   -- By equicontinuity, we know that the topology on `ι` is also the one induced by
   -- `restrict (⋃₀ 𝔖) ∘ F`.
-  have : Inducing (restrict (⋃₀ 𝔖) ∘ F) := by
-    rwa [EquicontinuousOn.inducing_uniformOnFun_iff_pi' 𝔖_compact F_eqcont] at F_ind
+  have  : Inducing (restrict (⋃₀ 𝔖) ∘ F)
+  rwa [EquicontinuousOn.inducing_uniformOnFun_iff_pi' 𝔖_compact F_eqcont] at F_ind
   -- Thus, we just have to check that the range of this map is compact.
   rw [← isCompact_univ_iff, this.isCompact_iff, image_univ]
   -- But then we are working in a product space, where compactness can easily be proven using

@@ -37,13 +37,13 @@ theorem num_den_mk {q : ℚ} {n d : ℤ} (hd : d ≠ 0) (qdf : q = n /. d) :
     ∃ c : ℤ, n = c * q.num ∧ d = c * q.den := by
   obtain rfl | hn := eq_or_ne n 0
   · simp [qdf]
-  have : q.num * d = n * ↑q.den := by
-    refine (divInt_eq_iff ?_ hd).mp ?_
-    · exact Int.natCast_ne_zero.mpr (Rat.den_nz _)
-    · rwa [num_divInt_den]
-  have hqdn : q.num ∣ n := by
-    rw [qdf]
-    exact Rat.num_dvd _ hd
+  have  : q.num * d = n * ↑q.den
+  refine (divInt_eq_iff ?_ hd).mp ?_
+  · exact Int.natCast_ne_zero.mpr (Rat.den_nz _)
+  · rwa [num_divInt_den]
+  have hqdn  : q.num ∣ n
+  rw [qdf]
+  exact Rat.num_dvd _ hd
   refine ⟨n / q.num, ?_, ?_⟩
   · rw [Int.ediv_mul_cancel hqdn]
   · refine Int.eq_mul_div_of_mul_eq_mul_of_dvd_left ?_ hqdn this
@@ -51,16 +51,16 @@ theorem num_den_mk {q : ℚ} {n d : ℤ} (hd : d ≠ 0) (qdf : q = n /. d) :
     exact Rat.num_ne_zero.2 ((divInt_ne_zero hd).mpr hn)
 
 theorem num_mk (n d : ℤ) : (n /. d).num = d.sign * n / n.gcd d := by
-  have (m : ℕ) : Int.natAbs (m + 1) = m + 1 := by
-    rw [← Nat.cast_one, ← Nat.cast_add, Int.natAbs_cast]
+  have (m  : ℕ) : Int.natAbs (m + 1) = m + 1
+  rw [← Nat.cast_one, ← Nat.cast_add, Int.natAbs_cast]
   rcases d with ((_ | _) | _) <;>
   rw [← Int.div_eq_ediv_of_dvd] <;>
   simp [divInt, mkRat, Rat.normalize, Nat.succPNat, Int.sign, Int.gcd,
     Int.zero_ediv, Int.ofNat_dvd_left, Nat.gcd_dvd_left, this]
 
 theorem den_mk (n d : ℤ) : (n /. d).den = if d = 0 then 1 else d.natAbs / n.gcd d := by
-  have (m : ℕ) : Int.natAbs (m + 1) = m + 1 := by
-    rw [← Nat.cast_one, ← Nat.cast_add, Int.natAbs_cast]
+  have (m  : ℕ) : Int.natAbs (m + 1) = m + 1
+  rw [← Nat.cast_one, ← Nat.cast_add, Int.natAbs_cast]
   rcases d with ((_ | _) | _) <;>
     simp [divInt, mkRat, Rat.normalize, Nat.succPNat, Int.sign, Int.gcd,
       if_neg (Nat.cast_add_one_ne_zero _), this]

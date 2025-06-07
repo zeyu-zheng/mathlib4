@@ -148,7 +148,8 @@ theorem log_pos (hx : 1 < x) : 0 < log x :=
 
 theorem log_pos_of_lt_neg_one (hx : x < -1) : 0 < log x := by
   rw [← neg_neg x, log_neg_eq_log]
-  have : 1 < -x := by linarith
+  have  : 1 < -x
+  linarith
   exact log_pos this
 
 theorem log_neg_iff (h : 0 < x) : log x < 0 ↔ x < 1 := by
@@ -160,8 +161,10 @@ theorem log_neg (h0 : 0 < x) (h1 : x < 1) : log x < 0 :=
 
 theorem log_neg_of_lt_zero (h0 : x < 0) (h1 : -1 < x) : log x < 0 := by
   rw [← neg_neg x, log_neg_eq_log]
-  have h0' : 0 < -x := by linarith
-  have h1' : -x < 1 := by linarith
+  have h0'  : 0 < -x
+  linarith
+  have h1'  : -x < 1
+  linarith
   exact log_neg h0' h1'
 
 theorem log_nonneg_iff (hx : 0 < x) : 0 ≤ log x ↔ 1 ≤ x := by rw [← not_lt, log_neg_iff hx, not_lt]
@@ -224,9 +227,9 @@ theorem log_injOn_pos : Set.InjOn log (Set.Ioi 0) :=
   strictMonoOn_log.injOn
 
 theorem log_lt_sub_one_of_pos (hx1 : 0 < x) (hx2 : x ≠ 1) : log x < x - 1 := by
-  have h : log x ≠ 0 := by
-    rwa [← log_one, log_injOn_pos.ne_iff hx1]
-    exact mem_Ioi.mpr zero_lt_one
+  have h  : log x ≠ 0
+  rwa [← log_one, log_injOn_pos.ne_iff hx1]
+  exact mem_Ioi.mpr zero_lt_one
   linarith [add_one_lt_exp h, exp_log hx1]
 
 theorem eq_one_of_pos_of_log_eq_zero {x : ℝ} (h₁ : 0 < x) (h₂ : log x = 0) : x = 1 :=
@@ -275,16 +278,17 @@ theorem log_le_sub_one_of_pos {x : ℝ} (hx : 0 < x) : log x ≤ x - 1 := by
 
 /-- Bound for `|log x * x|` in the interval `(0, 1]`. -/
 theorem abs_log_mul_self_lt (x : ℝ) (h1 : 0 < x) (h2 : x ≤ 1) : |log x * x| < 1 := by
-  have : 0 < 1 / x := by simpa only [one_div, inv_pos] using h1
+  have  : 0 < 1 / x
+  simpa only [one_div, inv_pos] using h1
   replace := log_le_sub_one_of_pos this
   replace : log (1 / x) < 1 / x := by linarith
   rw [log_div one_ne_zero h1.ne', log_one, zero_sub, lt_div_iff h1] at this
-  have aux : 0 ≤ -log x * x := by
-    refine mul_nonneg ?_ h1.le
-    rw [← log_inv]
-    apply log_nonneg
-    rw [← le_inv h1 zero_lt_one, inv_one]
-    exact h2
+  have aux  : 0 ≤ -log x * x
+  refine mul_nonneg ?_ h1.le
+  rw [← log_inv]
+  apply log_nonneg
+  rw [← le_inv h1 zero_lt_one, inv_one]
+  exact h2
   rw [← abs_of_nonneg aux, neg_mul, abs_neg] at this
   exact this
 
@@ -449,30 +453,36 @@ lemma log_pos_of_isRat {n : ℤ} :
     (NormNum.IsRat e n d) → (decide ((1 : ℚ) < n / d)) → (0 < Real.log (e : ℝ))
   | ⟨inv, eq⟩, h => by
     rw [eq, invOf_eq_inv, ← div_eq_mul_inv]
-    have : 1 < (n : ℝ) / d := by exact_mod_cast of_decide_eq_true h
+    have  : 1 < (n : ℝ) / d
+    exact_mod_cast of_decide_eq_true h
     exact Real.log_pos this
 
 lemma log_pos_of_isRat_neg {n : ℤ} :
     (NormNum.IsRat e n d) → (decide (n / d < (-1 : ℚ))) → (0 < Real.log (e : ℝ))
   | ⟨inv, eq⟩, h => by
     rw [eq, invOf_eq_inv, ← div_eq_mul_inv]
-    have : (n : ℝ) / d < -1 := by exact_mod_cast of_decide_eq_true h
+    have  : (n : ℝ) / d < -1
+    exact_mod_cast of_decide_eq_true h
     exact Real.log_pos_of_lt_neg_one this
 
 lemma log_nz_of_isRat {n : ℤ} : (NormNum.IsRat e n d) → (decide ((0 : ℚ) < n / d))
     → (decide (n / d < (1 : ℚ))) → (Real.log (e : ℝ) ≠ 0)
   | ⟨inv, eq⟩, h₁, h₂ => by
     rw [eq, invOf_eq_inv, ← div_eq_mul_inv]
-    have h₁' : 0 < (n : ℝ) / d := by exact_mod_cast of_decide_eq_true h₁
-    have h₂' : (n : ℝ) / d < 1 := by exact_mod_cast of_decide_eq_true h₂
+    have h₁'  : 0 < (n : ℝ) / d
+    exact_mod_cast of_decide_eq_true h₁
+    have h₂'  : (n : ℝ) / d < 1
+    exact_mod_cast of_decide_eq_true h₂
     exact ne_of_lt <| Real.log_neg h₁' h₂'
 
 lemma log_nz_of_isRat_neg {n : ℤ} : (NormNum.IsRat e n d) → (decide (n / d < (0 : ℚ)))
     → (decide ((-1 : ℚ) < n / d)) → (Real.log (e : ℝ) ≠ 0)
   | ⟨inv, eq⟩, h₁, h₂ => by
     rw [eq, invOf_eq_inv, ← div_eq_mul_inv]
-    have h₁' : (n : ℝ) / d < 0 := by exact_mod_cast of_decide_eq_true h₁
-    have h₂' : -1 < (n : ℝ) / d := by exact_mod_cast of_decide_eq_true h₂
+    have h₁'  : (n : ℝ) / d < 0
+    exact_mod_cast of_decide_eq_true h₁
+    have h₂'  : -1 < (n : ℝ) / d
+    exact_mod_cast of_decide_eq_true h₂
     exact ne_of_lt <| Real.log_neg_of_lt_zero h₁' h₂'
 
 /-- Extension for the `positivity` tactic: `Real.log` of a natural number is always nonnegative. -/

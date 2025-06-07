@@ -123,7 +123,8 @@ theorem stereoInvFunAux_apply (w : E) :
 
 theorem stereoInvFunAux_mem (hv : ‖v‖ = 1) {w : E} (hw : w ∈ (ℝ ∙ v)ᗮ) :
     stereoInvFunAux v w ∈ sphere (0 : E) 1 := by
-  have h₁ : (0 : ℝ) < ‖w‖ ^ 2 + 4 := by positivity
+  have h₁  : (0 : ℝ) < ‖w‖ ^ 2 + 4
+  positivity
   suffices ‖(4 : ℝ) • w + (‖w‖ ^ 2 - 4) • v‖ = ‖w‖ ^ 2 + 4 by
     simp only [mem_sphere_zero_iff_norm, norm_smul, Real.norm_eq_abs, abs_inv, this,
       abs_of_pos h₁, stereoInvFunAux_apply, inv_mul_cancel h₁.ne']
@@ -136,11 +137,11 @@ theorem stereoInvFunAux_mem (hv : ‖v‖ = 1) {w : E} (hw : w ∈ (ℝ ∙ v)�
 
 theorem hasFDerivAt_stereoInvFunAux (v : E) :
     HasFDerivAt (stereoInvFunAux v) (ContinuousLinearMap.id ℝ E) 0 := by
-  have h₀ : HasFDerivAt (fun w : E => ‖w‖ ^ 2) (0 : E →L[ℝ] ℝ) 0 := by
-    convert (hasStrictFDerivAt_norm_sq (0 : E)).hasFDerivAt
-    simp
-  have h₁ : HasFDerivAt (fun w : E => (‖w‖ ^ 2 + 4)⁻¹) (0 : E →L[ℝ] ℝ) 0 := by
-    convert (hasFDerivAt_inv _).comp _ (h₀.add (hasFDerivAt_const 4 0)) <;> simp
+  have h₀  : HasFDerivAt (fun w : E => ‖w‖ ^ 2) (0 : E →L[ℝ] ℝ) 0
+  convert (hasStrictFDerivAt_norm_sq (0 : E)).hasFDerivAt
+  simp
+  have h₁  : HasFDerivAt (fun w : E => (‖w‖ ^ 2 + 4)⁻¹) (0 : E →L[ℝ] ℝ) 0
+  convert (hasFDerivAt_inv _).comp _ (h₀.add (hasFDerivAt_const 4 0)) <;> simp
   have h₂ : HasFDerivAt (fun w => (4 : ℝ) • w + (‖w‖ ^ 2 - 4) • v)
       ((4 : ℝ) • ContinuousLinearMap.id ℝ E) 0 := by
     convert ((hasFDerivAt_const (4 : ℝ) 0).smul (hasFDerivAt_id 0)).add
@@ -159,13 +160,13 @@ theorem hasFDerivAt_stereoInvFunAux_comp_coe (v : E) :
 
 theorem contDiff_stereoInvFunAux : ContDiff ℝ ⊤ (stereoInvFunAux v) := by
   have h₀ : ContDiff ℝ ⊤ fun w : E => ‖w‖ ^ 2 := contDiff_norm_sq ℝ
-  have h₁ : ContDiff ℝ ⊤ fun w : E => (‖w‖ ^ 2 + 4)⁻¹ := by
-    refine (h₀.add contDiff_const).inv ?_
-    intro x
-    nlinarith
-  have h₂ : ContDiff ℝ ⊤ fun w => (4 : ℝ) • w + (‖w‖ ^ 2 - 4) • v := by
-    refine (contDiff_const.smul contDiff_id).add ?_
-    exact (h₀.sub contDiff_const).smul contDiff_const
+  have h₁  : ContDiff ℝ ⊤ fun w : E => (‖w‖ ^ 2 + 4)⁻¹
+  refine (h₀.add contDiff_const).inv ?_
+  intro x
+  nlinarith
+  have h₂  : ContDiff ℝ ⊤ fun w => (4 : ℝ) • w + (‖w‖ ^ 2 - 4) • v
+  refine (contDiff_const.smul contDiff_id).add ?_
+  exact (h₀.sub contDiff_const).smul contDiff_const
   exact h₁.smul h₂
 
 /-- Stereographic projection, reverse direction.  This is a map from the orthogonal complement of a
@@ -183,10 +184,10 @@ theorem stereoInvFun_ne_north_pole (hv : ‖v‖ = 1) (w : (ℝ ∙ v)ᗮ) :
   refine Subtype.coe_ne_coe.1 ?_
   rw [← inner_lt_one_iff_real_of_norm_one _ hv]
   · have hw : ⟪v, w⟫_ℝ = 0 := Submodule.mem_orthogonal_singleton_iff_inner_right.mp w.2
-    have hw' : (‖(w : E)‖ ^ 2 + 4)⁻¹ * (‖(w : E)‖ ^ 2 - 4) < 1 := by
-      refine (inv_mul_lt_iff' ?_).mpr ?_
-      · nlinarith
-      linarith
+    have hw'  : (‖(w : E)‖ ^ 2 + 4)⁻¹ * (‖(w : E)‖ ^ 2 - 4) < 1
+    refine (inv_mul_lt_iff' ?_).mpr ?_
+    · nlinarith
+    linarith
     simpa [real_inner_comm, inner_add_right, inner_smul_right, real_inner_self_eq_norm_mul_norm, hw,
       hv] using hw'
   · simpa using stereoInvFunAux_mem hv w.2
@@ -201,30 +202,31 @@ theorem stereo_left_inv (hv : ‖v‖ = 1) {x : sphere (0 : E) 1} (hx : (x : E) 
   -- name two frequently-occuring quantities and write down their basic properties
   set a : ℝ := innerSL _ v x
   set y := orthogonalProjection (ℝ ∙ v)ᗮ x
-  have split : ↑x = a • v + ↑y := by
-    convert (orthogonalProjection_add_orthogonalProjection_orthogonal (ℝ ∙ v) x).symm
-    exact (orthogonalProjection_unit_singleton ℝ hv x).symm
+  have split  : ↑x = a • v + ↑y
+  convert (orthogonalProjection_add_orthogonalProjection_orthogonal (ℝ ∙ v) x).symm
+  exact (orthogonalProjection_unit_singleton ℝ hv x).symm
   have hvy : ⟪v, y⟫_ℝ = 0 := Submodule.mem_orthogonal_singleton_iff_inner_right.mp y.2
-  have pythag : 1 = a ^ 2 + ‖y‖ ^ 2 := by
-    have hvy' : ⟪a • v, y⟫_ℝ = 0 := by simp only [inner_smul_left, hvy, mul_zero]
-    convert norm_add_sq_eq_norm_sq_add_norm_sq_of_inner_eq_zero _ _ hvy' using 2
-    · simp [← split]
-    · simp [norm_smul, hv, ← sq, sq_abs]
-    · exact sq _
+  have pythag  : 1 = a ^ 2 + ‖y‖ ^ 2
+  have hvy'  : ⟪a • v, y⟫_ℝ = 0
+  simp only [inner_smul_left, hvy, mul_zero]
+  convert norm_add_sq_eq_norm_sq_add_norm_sq_of_inner_eq_zero _ _ hvy' using 2
+  · simp [← split]
+  · simp [norm_smul, hv, ← sq, sq_abs]
+  · exact sq _
   -- two facts which will be helpful for clearing denominators in the main calculation
-  have ha : 1 - a ≠ 0 := by
-    have : a < 1 := (inner_lt_one_iff_real_of_norm_one hv (by simp)).mpr hx.symm
-    linarith
+  have ha  : 1 - a ≠ 0
+  have : a < 1 := (inner_lt_one_iff_real_of_norm_one hv (by simp)).mpr hx.symm
+  linarith
   -- the core of the problem is these two algebraic identities:
-  have h₁ : (2 ^ 2 / (1 - a) ^ 2 * ‖y‖ ^ 2 + 4)⁻¹ * 4 * (2 / (1 - a)) = 1 := by
-    field_simp; simp only [Submodule.coe_norm] at *; nlinarith
-  have h₂ : (2 ^ 2 / (1 - a) ^ 2 * ‖y‖ ^ 2 + 4)⁻¹ * (2 ^ 2 / (1 - a) ^ 2 * ‖y‖ ^ 2 - 4) = a := by
-    field_simp
-    transitivity (1 - a) ^ 2 * (a * (2 ^ 2 * ‖y‖ ^ 2 + 4 * (1 - a) ^ 2))
-    · congr
-      simp only [Submodule.coe_norm] at *
-      nlinarith
-    ring!
+  have h₁  : (2 ^ 2 / (1 - a) ^ 2 * ‖y‖ ^ 2 + 4)⁻¹ * 4 * (2 / (1 - a)) = 1
+  field_simp; simp only [Submodule.coe_norm] at *; nlinarith
+  have h₂  : (2 ^ 2 / (1 - a) ^ 2 * ‖y‖ ^ 2 + 4)⁻¹ * (2 ^ 2 / (1 - a) ^ 2 * ‖y‖ ^ 2 - 4) = a
+  field_simp
+  transitivity (1 - a) ^ 2 * (a * (2 ^ 2 * ‖y‖ ^ 2 + 4 * (1 - a) ^ 2))
+  · congr
+    simp only [Submodule.coe_norm] at *
+    nlinarith
+  ring!
   convert
     congr_arg₂ Add.add (congr_arg (fun t => t • (y : E)) h₁) (congr_arg (fun t => t • v) h₂) using 1
   · simp only [innerSL_apply, norm_smul, norm_div, RCLike.norm_ofNat, Real.norm_eq_abs,
@@ -239,8 +241,8 @@ theorem stereo_left_inv (hv : ‖v‖ = 1) {x : sphere (0 : E) 1} (hx : (x : E) 
     rw [one_smul]
 
 theorem stereo_right_inv (hv : ‖v‖ = 1) (w : (ℝ ∙ v)ᗮ) : stereoToFun v (stereoInvFun hv w) = w := by
-  have : 2 / (1 - (‖(w : E)‖ ^ 2 + 4)⁻¹ * (‖(w : E)‖ ^ 2 - 4)) * (‖(w : E)‖ ^ 2 + 4)⁻¹ * 4 = 1 := by
-    field_simp; ring
+  have  : 2 / (1 - (‖(w : E)‖ ^ 2 + 4)⁻¹ * (‖(w : E)‖ ^ 2 - 4)) * (‖(w : E)‖ ^ 2 + 4)⁻¹ * 4 = 1
+  field_simp; ring
   convert congr_arg (· • w) this
   · have h₁ : orthogonalProjection (ℝ ∙ v)ᗮ v = 0 :=
       orthogonalProjection_orthogonalComplement_singleton_eq_zero v
@@ -562,9 +564,9 @@ instance : LieGroup (𝓡 1) circle where
   smooth_mul := by
     apply ContMDiff.codRestrict_sphere
     let c : circle → ℂ := (↑)
-    have h₂ : ContMDiff (𝓘(ℝ, ℂ).prod 𝓘(ℝ, ℂ)) 𝓘(ℝ, ℂ) ∞ fun z : ℂ × ℂ => z.fst * z.snd := by
-      rw [contMDiff_iff]
-      exact ⟨continuous_mul, fun x y => contDiff_mul.contDiffOn⟩
+    have h₂  : ContMDiff (𝓘(ℝ, ℂ).prod 𝓘(ℝ, ℂ)) 𝓘(ℝ, ℂ) ∞ fun z : ℂ × ℂ => z.fst * z.snd
+    rw [contMDiff_iff]
+    exact ⟨continuous_mul, fun x y => contDiff_mul.contDiffOn⟩
     -- Porting note: needed to fill in first 3 arguments or could not figure out typeclasses
     suffices h₁ : ContMDiff ((𝓡 1).prod (𝓡 1)) (𝓘(ℝ, ℂ).prod 𝓘(ℝ, ℂ)) ⊤ (Prod.map c c) from
       h₂.comp h₁

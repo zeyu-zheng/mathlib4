@@ -838,19 +838,19 @@ theorem semiconj_of_group_action_of_forall_translationNumber_eq {G : Type*} [Gro
     ∃ F : CircleDeg1Lift, ∀ g, Semiconj F (f₁ g) (f₂ g) := by
   -- Equality of translation number guarantees that for each `x`
   -- the set `{f₂ g⁻¹ (f₁ g x) | g : G}` is bounded above.
-  have : ∀ x, BddAbove (range fun g => f₂ g⁻¹ (f₁ g x)) := by
-    refine fun x => ⟨x + 2, ?_⟩
-    rintro _ ⟨g, rfl⟩
-    have : τ (f₂ g⁻¹) = -τ (f₂ g) := by
-      rw [← MonoidHom.coe_toHomUnits, MonoidHom.map_inv, translationNumber_units_inv,
-        MonoidHom.coe_toHomUnits]
-    calc
-      f₂ g⁻¹ (f₁ g x) ≤ f₂ g⁻¹ (x + τ (f₁ g) + 1) :=
-        mono _ (map_lt_add_translationNumber_add_one _ _).le
-      _ = f₂ g⁻¹ (x + τ (f₂ g)) + 1 := by rw [h, map_add_one]
-      _ ≤ x + τ (f₂ g) + τ (f₂ g⁻¹) + 1 + 1 :=
-        add_le_add_right (map_lt_add_translationNumber_add_one _ _).le _
-      _ = x + 2 := by simp [this, add_assoc, one_add_one_eq_two]
+  have  : ∀ x, BddAbove (range fun g => f₂ g⁻¹ (f₁ g x))
+  refine fun x => ⟨x + 2, ?_⟩
+  rintro _ ⟨g, rfl⟩
+  have  : τ (f₂ g⁻¹) = -τ (f₂ g)
+  rw [← MonoidHom.coe_toHomUnits, MonoidHom.map_inv, translationNumber_units_inv,
+    MonoidHom.coe_toHomUnits]
+  calc
+    f₂ g⁻¹ (f₁ g x) ≤ f₂ g⁻¹ (x + τ (f₁ g) + 1) :=
+      mono _ (map_lt_add_translationNumber_add_one _ _).le
+    _ = f₂ g⁻¹ (x + τ (f₂ g)) + 1 := by rw [h, map_add_one]
+    _ ≤ x + τ (f₂ g) + τ (f₂ g⁻¹) + 1 + 1 :=
+      add_le_add_right (map_lt_add_translationNumber_add_one _ _).le _
+    _ = x + 2 := by simp [this, add_assoc, one_add_one_eq_two]
   -- We have a theorem about actions by `OrderIso`, so we introduce auxiliary maps
   -- to `ℝ ≃o ℝ`.
   set F₁ := toOrderIso.comp f₁.toHomUnits

@@ -194,12 +194,12 @@ instance Projective.tensorProduct [hM : Module.Projective R M] [hN : Module.Proj
     Module.Projective R (M ⊗[R₀] N) := by
   obtain ⟨sM, hsM⟩ := hM
   obtain ⟨sN, hsN⟩ := hN
-  have : Module.Projective R (M ⊗[R₀] (N →₀ R₀)) := by
-    fapply Projective.of_split (R := R) (M := ((M →₀ R) ⊗[R₀] (N →₀ R₀)))
-    · exact (AlgebraTensorModule.map sM (LinearMap.id (R := R₀) (M := N →₀ R₀)))
-    · exact (AlgebraTensorModule.map
-        (Finsupp.total M M R id) (LinearMap.id (R := R₀) (M := N →₀ R₀)))
-    · ext; simp [hsM _]
+  have  : Module.Projective R (M ⊗[R₀] (N →₀ R₀))
+  fapply Projective.of_split (R := R) (M := ((M →₀ R) ⊗[R₀] (N →₀ R₀)))
+  · exact (AlgebraTensorModule.map sM (LinearMap.id (R := R₀) (M := N →₀ R₀)))
+  · exact (AlgebraTensorModule.map
+      (Finsupp.total M M R id) (LinearMap.id (R := R₀) (M := N →₀ R₀)))
+  · ext; simp [hsM _]
   fapply Projective.of_split (R := R) (M := (M ⊗[R₀] (N →₀ R₀)))
   · exact (AlgebraTensorModule.map (LinearMap.id (R := R) (M := M)) sN)
   · exact (AlgebraTensorModule.map (LinearMap.id (R := R) (M := M)) (Finsupp.total N N R₀ id))

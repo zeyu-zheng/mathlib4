@@ -317,7 +317,8 @@ instance instFunLike : FunLike (OrthonormalBasis ι 𝕜 E) ι E where
         rw [← LinearMap.cancel_right (WithLp.linearEquiv 2 𝕜 (_ → 𝕜)).symm.surjective]
         simp only [LinearIsometryEquiv.toLinearEquiv_symm]
         refine LinearMap.pi_ext fun i k => ?_
-        have : k = k • (1 : 𝕜) := by rw [smul_eq_mul, mul_one]
+        have  : k = k • (1 : 𝕜)
+        rw [smul_eq_mul, mul_one]
         rw [this, Pi.single_smul]
         replace h := congr_fun h i
         simp only [LinearEquiv.comp_coe, map_smul, LinearEquiv.coe_coe,
@@ -758,7 +759,8 @@ theorem Orthonormal.exists_orthonormalBasis_extension (hv : Orthonormal 𝕜 ((�
   have hu₀_finite : u₀.Finite := hu₀.linearIndependent.setFinite
   let u : Finset E := hu₀_finite.toFinset
   let fu : ↥u ≃ ↥u₀ := hu₀_finite.subtypeEquivToFinset.symm
-  have hu : Orthonormal 𝕜 ((↑) : u → E) := by simpa using hu₀.comp _ fu.injective
+  have hu  : Orthonormal 𝕜 ((↑) : u → E)
+  simpa using hu₀.comp _ fu.injective
   refine ⟨u, OrthonormalBasis.mkOfOrthogonalEqBot hu ?_, ?_, ?_⟩
   · simpa [u] using hu₀_max
   · simpa [u] using hu₀s
@@ -768,16 +770,16 @@ theorem Orthonormal.exists_orthonormalBasis_extension_of_card_eq {ι : Type*} [F
     (card_ι : finrank 𝕜 E = Fintype.card ι) {v : ι → E} {s : Set ι}
     (hv : Orthonormal 𝕜 (s.restrict v)) : ∃ b : OrthonormalBasis ι 𝕜 E, ∀ i ∈ s, b i = v i := by
   have hsv : Injective (s.restrict v) := hv.linearIndependent.injective
-  have hX : Orthonormal 𝕜 ((↑) : Set.range (s.restrict v) → E) := by
-    rwa [orthonormal_subtype_range hsv]
+  have hX  : Orthonormal 𝕜 ((↑) : Set.range (s.restrict v) → E)
+  rwa [orthonormal_subtype_range hsv]
   obtain ⟨Y, b₀, hX, hb₀⟩ := hX.exists_orthonormalBasis_extension
-  have hιY : Fintype.card ι = Y.card := by
-    refine card_ι.symm.trans ?_
-    exact FiniteDimensional.finrank_eq_card_finset_basis b₀.toBasis
+  have hιY  : Fintype.card ι = Y.card
+  refine card_ι.symm.trans ?_
+  exact FiniteDimensional.finrank_eq_card_finset_basis b₀.toBasis
   have hvsY : s.MapsTo v Y := (s.mapsTo_image v).mono_right (by rwa [← range_restrict])
-  have hsv' : Set.InjOn v s := by
-    rw [Set.injOn_iff_injective]
-    exact hsv
+  have hsv'  : Set.InjOn v s
+  rw [Set.injOn_iff_injective]
+  exact hsv
   obtain ⟨g, hg⟩ := hvsY.exists_equiv_extend_of_card_eq hιY hsv'
   use b₀.reindex g.symm
   intro i hi
@@ -801,9 +803,9 @@ irreducible_def stdOrthonormalBasis : OrthonormalBasis (Fin (finrank 𝕜 E)) �
 theorem orthonormalBasis_one_dim (b : OrthonormalBasis ι ℝ ℝ) :
     (⇑b = fun _ => (1 : ℝ)) ∨ ⇑b = fun _ => (-1 : ℝ) := by
   have : Unique ι := b.toBasis.unique
-  have : b default = 1 ∨ b default = -1 := by
-    have : ‖b default‖ = 1 := b.orthonormal.1 _
-    rwa [Real.norm_eq_abs, abs_eq (zero_le_one' ℝ)] at this
+  have  : b default = 1 ∨ b default = -1
+  have : ‖b default‖ = 1 := b.orthonormal.1 _
+  rwa [Real.norm_eq_abs, abs_eq (zero_le_one' ℝ)] at this
   rw [eq_const_of_unique b]
   refine this.imp ?_ ?_ <;> (intro; ext; simp [*])
 
@@ -896,28 +898,28 @@ noncomputable def LinearIsometry.extend (L : S →ₗᵢ[𝕜] V) : V →ₗᵢ[
   -- Build a linear map from the isometries on S and Sᗮ
   let M := L.toLinearMap.comp p1 + L3.toLinearMap.comp p2
   -- Prove that M is an isometry
-  have M_norm_map : ∀ x : V, ‖M x‖ = ‖x‖ := by
-    intro x
-    -- Apply M to the orthogonal decomposition of x
-    have Mx_decomp : M x = L (p1 x) + L3 (p2 x) := by
-      simp only [M, LinearMap.add_apply, LinearMap.comp_apply, LinearMap.comp_apply,
-        LinearIsometry.coe_toLinearMap]
-    -- Mx_decomp is the orthogonal decomposition of M x
-    have Mx_orth : ⟪L (p1 x), L3 (p2 x)⟫ = 0 := by
-      have Lp1x : L (p1 x) ∈ LinearMap.range L.toLinearMap :=
-        LinearMap.mem_range_self L.toLinearMap (p1 x)
-      have Lp2x : L3 (p2 x) ∈ (LinearMap.range L.toLinearMap)ᗮ := by
-        simp only [LinearIsometry.coe_comp, Function.comp_apply, Submodule.coe_subtypeₗᵢ, ←
-          Submodule.range_subtype LSᗮ]
-        apply LinearMap.mem_range_self
-      apply Submodule.inner_right_of_mem_orthogonal Lp1x Lp2x
-    -- Apply the Pythagorean theorem and simplify
-    rw [← sq_eq_sq (norm_nonneg _) (norm_nonneg _), norm_sq_eq_add_norm_sq_projection x S]
-    simp only [sq, Mx_decomp]
-    rw [norm_add_sq_eq_norm_sq_add_norm_sq_of_inner_eq_zero (L (p1 x)) (L3 (p2 x)) Mx_orth]
-    simp only [p1, p2, LinearIsometry.norm_map, _root_.add_left_inj, mul_eq_mul_left_iff,
-      norm_eq_zero, true_or_iff, eq_self_iff_true, ContinuousLinearMap.coe_coe, Submodule.coe_norm,
-      Submodule.coe_eq_zero]
+  have M_norm_map  : ∀ x : V, ‖M x‖ = ‖x‖
+  intro x
+  -- Apply M to the orthogonal decomposition of x
+  have Mx_decomp  : M x = L (p1 x) + L3 (p2 x)
+  simp only [M, LinearMap.add_apply, LinearMap.comp_apply, LinearMap.comp_apply,
+    LinearIsometry.coe_toLinearMap]
+  -- Mx_decomp is the orthogonal decomposition of M x
+  have Mx_orth  : ⟪L (p1 x), L3 (p2 x)⟫ = 0
+  have Lp1x : L (p1 x) ∈ LinearMap.range L.toLinearMap :=
+    LinearMap.mem_range_self L.toLinearMap (p1 x)
+  have Lp2x : L3 (p2 x) ∈ (LinearMap.range L.toLinearMap)ᗮ := by
+    simp only [LinearIsometry.coe_comp, Function.comp_apply, Submodule.coe_subtypeₗᵢ, ←
+      Submodule.range_subtype LSᗮ]
+    apply LinearMap.mem_range_self
+  apply Submodule.inner_right_of_mem_orthogonal Lp1x Lp2x
+  -- Apply the Pythagorean theorem and simplify
+  rw [← sq_eq_sq (norm_nonneg _) (norm_nonneg _), norm_sq_eq_add_norm_sq_projection x S]
+  simp only [sq, Mx_decomp]
+  rw [norm_add_sq_eq_norm_sq_add_norm_sq_of_inner_eq_zero (L (p1 x)) (L3 (p2 x)) Mx_orth]
+  simp only [p1, p2, LinearIsometry.norm_map, _root_.add_left_inj, mul_eq_mul_left_iff,
+    norm_eq_zero, true_or_iff, eq_self_iff_true, ContinuousLinearMap.coe_coe, Submodule.coe_norm,
+    Submodule.coe_eq_zero]
   exact
     { toLinearMap := M
       norm_map' := M_norm_map }

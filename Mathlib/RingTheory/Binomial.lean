@@ -373,9 +373,9 @@ theorem descPochhammer_eq_factorial_smul_choose [NatPowAssoc R] (r : R) (n : ℕ
     (descPochhammer ℤ n).smeval r = n.factorial • choose r n := by
   rw [choose, factorial_nsmul_multichoose_eq_ascPochhammer, descPochhammer_eq_ascPochhammer,
     smeval_comp, add_comm_sub, smeval_add, smeval_X, npow_one]
-  have h : smeval (1 - n : Polynomial ℤ) r = 1 - n := by
-    rw [← C_eq_natCast, ← C_1, ← C_sub, smeval_C]
-    simp only [npow_zero, zsmul_one, Int.cast_sub, Int.cast_one, Int.cast_natCast]
+  have h  : smeval (1 - n : Polynomial ℤ) r = 1 - n
+  rw [← C_eq_natCast, ← C_1, ← C_sub, smeval_C]
+  simp only [npow_zero, zsmul_one, Int.cast_sub, Int.cast_one, Int.cast_natCast]
   rw [h, ascPochhammer_smeval_cast, add_comm_sub]
 
 theorem choose_natCast [NatPowAssoc R] (n k : ℕ) : choose (n : R) k = Nat.choose n k := by

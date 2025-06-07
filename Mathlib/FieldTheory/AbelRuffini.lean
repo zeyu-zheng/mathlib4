@@ -90,10 +90,10 @@ theorem gal_X_pow_sub_one_isSolvable (n : ℕ) : IsSolvable (X ^ n - 1 : F[X]).G
   intro σ τ
   ext a ha
   simp only [mem_rootSet_of_ne hn'', map_sub, aeval_X_pow, aeval_one, sub_eq_zero] at ha
-  have key : ∀ σ : (X ^ n - 1 : F[X]).Gal, ∃ m : ℕ, σ a = a ^ m := by
-    intro σ
-    lift n to ℕ+ using hn'
-    exact map_rootsOfUnity_eq_pow_self σ.toAlgHom (rootsOfUnity.mkOfPowEq a ha)
+  have key  : ∀ σ : (X ^ n - 1 : F[X]).Gal, ∃ m : ℕ, σ a = a ^ m
+  intro σ
+  lift n to ℕ+ using hn'
+  exact map_rootsOfUnity_eq_pow_self σ.toAlgHom (rootsOfUnity.mkOfPowEq a ha)
   obtain ⟨c, hc⟩ := key σ
   obtain ⟨d, hd⟩ := key τ
   rw [σ.mul_apply, τ.mul_apply, hc, map_pow, hd, map_pow, hc, ← pow_mul, pow_mul']
@@ -278,11 +278,11 @@ def P (α : solvableByRad F E) : Prop :=
 /-- An auxiliary induction lemma, which is generalized by `solvableByRad.isSolvable`. -/
 theorem induction3 {α : solvableByRad F E} {n : ℕ} (hn : n ≠ 0) (hα : P (α ^ n)) : P α := by
   let p := minpoly F (α ^ n)
-  have hp : p.comp (X ^ n) ≠ 0 := by
-    intro h
-    cases' comp_eq_zero_iff.mp h with h' h'
-    · exact minpoly.ne_zero (isIntegral (α ^ n)) h'
-    · exact hn (by rw [← @natDegree_C F, ← h'.2, natDegree_X_pow])
+  have hp  : p.comp (X ^ n) ≠ 0
+  intro h
+  cases' comp_eq_zero_iff.mp h with h' h'
+  · exact minpoly.ne_zero (isIntegral (α ^ n)) h'
+  · exact hn (by rw [← @natDegree_C F, ← h'.2, natDegree_X_pow])
   apply gal_isSolvable_of_splits
   · exact ⟨splits_of_splits_of_dvd _ hp (SplittingField.splits (p.comp (X ^ n)))
       (minpoly.dvd F α (by rw [aeval_comp, aeval_X_pow, minpoly.aeval]))⟩
@@ -351,11 +351,11 @@ theorem isSolvable (α : solvableByRad F E) : IsSolvable (minpoly F α).Gal := b
 `IsSolvableByRad` root has solvable Galois group -/
 theorem isSolvable' {α : E} {q : F[X]} (q_irred : Irreducible q) (q_aeval : aeval α q = 0)
     (hα : IsSolvableByRad F α) : IsSolvable q.Gal := by
-  have : _root_.IsSolvable (q * C q.leadingCoeff⁻¹).Gal := by
-    rw [minpoly.eq_of_irreducible q_irred q_aeval, ←
-      show minpoly F (⟨α, hα⟩ : solvableByRad F E) = minpoly F α from
-        (minpoly.algebraMap_eq (RingHom.injective _) _).symm]
-    exact isSolvable ⟨α, hα⟩
+  have  : _root_.IsSolvable (q * C q.leadingCoeff⁻¹).Gal
+  rw [minpoly.eq_of_irreducible q_irred q_aeval, ←
+    show minpoly F (⟨α, hα⟩ : solvableByRad F E) = minpoly F α from
+      (minpoly.algebraMap_eq (RingHom.injective _) _).symm]
+  exact isSolvable ⟨α, hα⟩
   refine solvable_of_surjective (Gal.restrictDvd_surjective ⟨C q.leadingCoeff⁻¹, rfl⟩ ?_)
   rw [mul_ne_zero_iff, Ne, Ne, C_eq_zero, inv_eq_zero]
   exact ⟨q_irred.ne_zero, leadingCoeff_ne_zero.mpr q_irred.ne_zero⟩

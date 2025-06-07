@@ -81,8 +81,8 @@ abbrev proj (n : ℕ) : S ⟶ S.diagram.obj ⟨n⟩ := S.asLimitCone.π.app ⟨n
 lemma map_liftedLimit {C D J : Type*} [Category C] [Category D] [Category J] {K : J ⥤ C}
     {F : C ⥤ D} [CreatesLimit K F] {c : Cone (K ⋙ F)} (t : IsLimit c) (n : J) :
     (liftedLimitMapsToOriginal t).inv.hom ≫ F.map ((liftLimit t).π.app n) = c.π.app n := by
-  have : (liftedLimitMapsToOriginal t).hom.hom ≫ c.π.app n = F.map ((liftLimit t).π.app n) := by
-    simp
+  have  : (liftedLimitMapsToOriginal t).hom.hom ≫ c.π.app n = F.map ((liftLimit t).π.app n)
+  simp
   rw [← this, ← Category.assoc, ← Cone.category_comp_hom]
   simp
 

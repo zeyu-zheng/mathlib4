@@ -752,25 +752,26 @@ theorem Biprod.column_nonzero_of_iso {W X Y Z : C} (f : W ⊞ X ⟶ Y ⊞ Z) [Is
   by_contra! h
   rcases h with ⟨nz, a₁, a₂⟩
   set x := biprod.inl ≫ f ≫ inv f ≫ biprod.fst
-  have h₁ : x = 𝟙 W := by simp [x]
-  have h₀ : x = 0 := by
-    dsimp [x]
-    rw [← Category.id_comp (inv f), Category.assoc, ← biprod.total]
-    conv_lhs =>
-      slice 2 3
-      rw [comp_add]
-    simp only [Category.assoc]
-    rw [comp_add_assoc, add_comp]
-    conv_lhs =>
-      congr
-      next => skip
-      slice 1 3
-      rw [a₂]
-    simp only [zero_comp, add_zero]
-    conv_lhs =>
-      slice 1 3
-      rw [a₁]
-    simp only [zero_comp]
+  have h₁  : x = 𝟙 W
+  simp [x]
+  have h₀  : x = 0
+  dsimp [x]
+  rw [← Category.id_comp (inv f), Category.assoc, ← biprod.total]
+  conv_lhs =>
+    slice 2 3
+    rw [comp_add]
+  simp only [Category.assoc]
+  rw [comp_add_assoc, add_comp]
+  conv_lhs =>
+    congr
+    next => skip
+    slice 1 3
+    rw [a₂]
+  simp only [zero_comp, add_zero]
+  conv_lhs =>
+    slice 1 3
+    rw [a₁]
+  simp only [zero_comp]
   exact nz (h₁.symm.trans h₀)
 
 end
@@ -787,17 +788,18 @@ theorem Biproduct.column_nonzero_of_iso' {σ τ : Type} [Finite τ] {S : σ → 
     simp only [Category.assoc]
     apply z
   set x := biproduct.ι S s ≫ f ≫ inv f ≫ biproduct.π S s
-  have h₁ : x = 𝟙 (S s) := by simp [x]
-  have h₀ : x = 0 := by
-    dsimp [x]
-    rw [← Category.id_comp (inv f), Category.assoc, ← biproduct.total]
-    simp only [comp_sum_assoc]
-    conv_lhs =>
-      congr
-      congr
-      next => skip
-      intro j; simp only [reassoced]
-    simp
+  have h₁  : x = 𝟙 (S s)
+  simp [x]
+  have h₀  : x = 0
+  dsimp [x]
+  rw [← Category.id_comp (inv f), Category.assoc, ← biproduct.total]
+  simp only [comp_sum_assoc]
+  conv_lhs =>
+    congr
+    congr
+    next => skip
+    intro j; simp only [reassoced]
+  simp
   exact h₁.symm.trans h₀
 
 /-- If `f : ⨁ S ⟶ ⨁ T` is an isomorphism, and `s` is a non-trivial summand of the source,

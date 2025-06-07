@@ -244,9 +244,9 @@ variable {u v w : Set α}
 theorem subset_positive_null_set (hu : MeasurableSet u) (hv : MeasurableSet v)
     (hw : MeasurableSet w) (hsu : 0 ≤[u] s) (hw₁ : s w = 0) (hw₂ : w ⊆ u) (hwt : v ⊆ w) :
     s v = 0 := by
-  have : s v + s (w \ v) = 0 := by
-    rw [← hw₁, ← of_union Set.disjoint_sdiff_right hv (hw.diff hv), Set.union_diff_self,
-      Set.union_eq_self_of_subset_left hwt]
+  have  : s v + s (w \ v) = 0
+  rw [← hw₁, ← of_union Set.disjoint_sdiff_right hv (hw.diff hv), Set.union_diff_self,
+    Set.union_eq_self_of_subset_left hwt]
   have h₁ := nonneg_of_zero_le_restrict _ (restrict_le_restrict_subset _ _ hu hsu (hwt.trans hw₂))
   have h₂ : 0 ≤ s (w \ v) :=
     nonneg_of_zero_le_restrict _
@@ -291,13 +291,13 @@ theorem of_diff_eq_zero_of_symmDiff_eq_zero_negative (hu : MeasurableSet u) (hv 
 theorem of_inter_eq_of_symmDiff_eq_zero_positive (hu : MeasurableSet u) (hv : MeasurableSet v)
     (hw : MeasurableSet w) (hsu : 0 ≤[u] s) (hsv : 0 ≤[v] s) (hs : s (u ∆ v) = 0) :
     s (w ∩ u) = s (w ∩ v) := by
-  have hwuv : s ((w ∩ u) ∆ (w ∩ v)) = 0 := by
-    refine
-      subset_positive_null_set (hu.union hv) ((hw.inter hu).symmDiff (hw.inter hv))
-        (hu.symmDiff hv) (restrict_le_restrict_union _ _ hu hsu hv hsv) hs
-        Set.symmDiff_subset_union ?_
-    rw [← Set.inter_symmDiff_distrib_left]
-    exact Set.inter_subset_right
+  have hwuv  : s ((w ∩ u) ∆ (w ∩ v)) = 0
+  refine
+    subset_positive_null_set (hu.union hv) ((hw.inter hu).symmDiff (hw.inter hv))
+      (hu.symmDiff hv) (restrict_le_restrict_union _ _ hu hsu hv hsv) hs
+      Set.symmDiff_subset_union ?_
+  rw [← Set.inter_symmDiff_distrib_left]
+  exact Set.inter_subset_right
   obtain ⟨huv, hvu⟩ :=
     of_diff_eq_zero_of_symmDiff_eq_zero_positive (hw.inter hu) (hw.inter hv)
       (restrict_le_restrict_subset _ _ hu hsu (w.inter_subset_right))

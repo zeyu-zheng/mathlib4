@@ -71,12 +71,12 @@ theorem isClosed_subsets_of_isClosed (hs : IsClosed s) :
     IsClosed { t : Closeds α | (t : Set α) ⊆ s } := by
   refine isClosed_of_closure_subset fun
     (t : Closeds α) (ht : t ∈ closure {t : Closeds α | (t : Set α) ⊆ s}) (x : α) (hx : x ∈ t) => ?_
-  have : x ∈ closure s := by
-    refine mem_closure_iff.2 fun ε εpos => ?_
-    obtain ⟨u : Closeds α, hu : u ∈ {t : Closeds α | (t : Set α) ⊆ s}, Dtu : edist t u < ε⟩ :=
-      mem_closure_iff.1 ht ε εpos
-    obtain ⟨y : α, hy : y ∈ u, Dxy : edist x y < ε⟩ := exists_edist_lt_of_hausdorffEdist_lt hx Dtu
-    exact ⟨y, hu hy, Dxy⟩
+  have  : x ∈ closure s
+  refine mem_closure_iff.2 fun ε εpos => ?_
+  obtain ⟨u : Closeds α, hu : u ∈ {t : Closeds α | (t : Set α) ⊆ s}, Dtu : edist t u < ε⟩ :=
+    mem_closure_iff.1 ht ε εpos
+  obtain ⟨y : α, hy : y ∈ u, Dxy : edist x y < ε⟩ := exists_edist_lt_of_hausdorffEdist_lt hx Dtu
+  exact ⟨y, hu hy, Dxy⟩
   rwa [hs.closure_eq] at this
 
 /-- By definition, the edistance on `Closeds α` is given by the Hausdorff edistance -/
@@ -91,8 +91,10 @@ instance Closeds.completeSpace [CompleteSpace α] : CompleteSpace (Closeds α) :
     completeness, by a standard completeness criterion.
     We use the shorthand `B n = 2^{-n}` in ennreal. -/
   let B : ℕ → ℝ≥0∞ := fun n => 2⁻¹ ^ n
-  have B_pos : ∀ n, (0 : ℝ≥0∞) < B n := by simp [B, ENNReal.pow_pos]
-  have B_ne_top : ∀ n, B n ≠ ⊤ := by simp [B, ENNReal.pow_ne_top]
+  have B_pos  : ∀ n, (0 : ℝ≥0∞) < B n
+  simp [B, ENNReal.pow_pos]
+  have B_ne_top  : ∀ n, B n ≠ ⊤
+  simp [B, ENNReal.pow_ne_top]
   /- Consider a sequence of closed sets `s n` with `edist (s n) (s (n+1)) < B n`.
     We will show that it converges. The limit set is `t0 = ⋂n, closure (⋃m≥n, s m)`.
     We will have to show that a point in `s n` is close to a point in `t0`, and a point
@@ -103,69 +105,69 @@ instance Closeds.completeSpace [CompleteSpace α] : CompleteSpace (Closeds α) :
   let t : Closeds α := ⟨t0, isClosed_iInter fun _ => isClosed_closure⟩
   use t
   -- The inequality is written this way to agree with `edist_le_of_edist_le_geometric_of_tendsto₀`
-  have I1 : ∀ n, ∀ x ∈ s n, ∃ y ∈ t0, edist x y ≤ 2 * B n := by
-    /- This is the main difficulty of the proof. Starting from `x ∈ s n`, we want
-           to find a point in `t0` which is close to `x`. Define inductively a sequence of
-           points `z m` with `z n = x` and `z m ∈ s m` and `edist (z m) (z (m+1)) ≤ B m`. This is
-           possible since the Hausdorff distance between `s m` and `s (m+1)` is at most `B m`.
-           This sequence is a Cauchy sequence, therefore converging as the space is complete, to
-           a limit which satisfies the required properties. -/
-    intro n x hx
-    obtain ⟨z, hz₀, hz⟩ :
-      ∃ z : ∀ l, s (n + l), (z 0 : α) = x ∧ ∀ k, edist (z k : α) (z (k + 1) : α) ≤ B n / 2 ^ k := by
-      -- We prove existence of the sequence by induction.
-      have : ∀ (l) (z : s (n + l)), ∃ z' : s (n + l + 1), edist (z : α) z' ≤ B n / 2 ^ l := by
-        intro l z
-        obtain ⟨z', z'_mem, hz'⟩ : ∃ z' ∈ s (n + l + 1), edist (z : α) z' < B n / 2 ^ l := by
-          refine exists_edist_lt_of_hausdorffEdist_lt (s := s (n + l)) z.2 ?_
-          simp only [ENNReal.inv_pow, div_eq_mul_inv]
-          rw [← pow_add]
-          apply hs <;> simp
-        exact ⟨⟨z', z'_mem⟩, le_of_lt hz'⟩
-      use fun k => Nat.recOn k ⟨x, hx⟩ fun l z => (this l z).choose
-      simp only [Nat.add_zero, Nat.zero_eq, Nat.rec_zero, Nat.rec_add_one, true_and]
-      exact fun k => (this k _).choose_spec
-    -- it follows from the previous bound that `z` is a Cauchy sequence
-    have : CauchySeq fun k => (z k : α) := cauchySeq_of_edist_le_geometric_two (B n) (B_ne_top n) hz
-    -- therefore, it converges
-    rcases cauchySeq_tendsto_of_complete this with ⟨y, y_lim⟩
-    use y
-    -- the limit point `y` will be the desired point, in `t0` and close to our initial point `x`.
-    -- First, we check it belongs to `t0`.
-    have : y ∈ t0 :=
-      mem_iInter.2 fun k =>
-        mem_closure_of_tendsto y_lim
-          (by
-            simp only [exists_prop, Set.mem_iUnion, Filter.eventually_atTop, Set.mem_preimage,
-              Set.preimage_iUnion]
-            exact ⟨k, fun m hm => ⟨n + m, zero_add k ▸ add_le_add (zero_le n) hm, (z m).2⟩⟩)
-    use this
-    -- Then, we check that `y` is close to `x = z n`. This follows from the fact that `y`
-    -- is the limit of `z k`, and the distance between `z n` and `z k` has already been estimated.
-    rw [← hz₀]
-    exact edist_le_of_edist_le_geometric_two_of_tendsto₀ (B n) hz y_lim
-  have I2 : ∀ n, ∀ x ∈ t0, ∃ y ∈ s n, edist x y ≤ 2 * B n := by
-    /- For the (much easier) reverse inequality, we start from a point `x ∈ t0` and we want
-            to find a point `y ∈ s n` which is close to `x`.
-            `x` belongs to `t0`, the intersection of the closures. In particular, it is well
-            approximated by a point `z` in `⋃m≥n, s m`, say in `s m`. Since `s m` and
-            `s n` are close, this point is itself well approximated by a point `y` in `s n`,
-            as required. -/
-    intro n x xt0
-    have : x ∈ closure (⋃ m ≥ n, s m : Set α) := by apply mem_iInter.1 xt0 n
-    obtain ⟨z : α, hz, Dxz : edist x z < B n⟩ := mem_closure_iff.1 this (B n) (B_pos n)
-    simp only [exists_prop, Set.mem_iUnion] at hz
-    obtain ⟨m : ℕ, m_ge_n : m ≥ n, hm : z ∈ (s m : Set α)⟩ := hz
-    have : hausdorffEdist (s m : Set α) (s n) < B n := hs n m n m_ge_n (le_refl n)
-    obtain ⟨y : α, hy : y ∈ (s n : Set α), Dzy : edist z y < B n⟩ :=
-      exists_edist_lt_of_hausdorffEdist_lt hm this
-    exact
-      ⟨y, hy,
-        calc
-          edist x y ≤ edist x z + edist z y := edist_triangle _ _ _
-          _ ≤ B n + B n := add_le_add (le_of_lt Dxz) (le_of_lt Dzy)
-          _ = 2 * B n := (two_mul _).symm
-          ⟩
+  have I1  : ∀ n, ∀ x ∈ s n, ∃ y ∈ t0, edist x y ≤ 2 * B n
+  /- This is the main difficulty of the proof. Starting from `x ∈ s n`, we want
+         to find a point in `t0` which is close to `x`. Define inductively a sequence of
+         points `z m` with `z n = x` and `z m ∈ s m` and `edist (z m) (z (m+1)) ≤ B m`. This is
+         possible since the Hausdorff distance between `s m` and `s (m+1)` is at most `B m`.
+         This sequence is a Cauchy sequence, therefore converging as the space is complete, to
+         a limit which satisfies the required properties. -/
+  intro n x hx
+  obtain ⟨z, hz₀, hz⟩ :
+    ∃ z : ∀ l, s (n + l), (z 0 : α) = x ∧ ∀ k, edist (z k : α) (z (k + 1) : α) ≤ B n / 2 ^ k := by
+    -- We prove existence of the sequence by induction.
+    have  : ∀ (l) (z : s (n + l)), ∃ z' : s (n + l + 1), edist (z : α) z' ≤ B n / 2 ^ l
+    intro l z
+    obtain ⟨z', z'_mem, hz'⟩ : ∃ z' ∈ s (n + l + 1), edist (z : α) z' < B n / 2 ^ l := by
+      refine exists_edist_lt_of_hausdorffEdist_lt (s := s (n + l)) z.2 ?_
+      simp only [ENNReal.inv_pow, div_eq_mul_inv]
+      rw [← pow_add]
+      apply hs <;> simp
+    exact ⟨⟨z', z'_mem⟩, le_of_lt hz'⟩
+    use fun k => Nat.recOn k ⟨x, hx⟩ fun l z => (this l z).choose
+    simp only [Nat.add_zero, Nat.zero_eq, Nat.rec_zero, Nat.rec_add_one, true_and]
+    exact fun k => (this k _).choose_spec
+  -- it follows from the previous bound that `z` is a Cauchy sequence
+  have : CauchySeq fun k => (z k : α) := cauchySeq_of_edist_le_geometric_two (B n) (B_ne_top n) hz
+  -- therefore, it converges
+  rcases cauchySeq_tendsto_of_complete this with ⟨y, y_lim⟩
+  use y
+  -- the limit point `y` will be the desired point, in `t0` and close to our initial point `x`.
+  -- First, we check it belongs to `t0`.
+  have : y ∈ t0 :=
+    mem_iInter.2 fun k =>
+      mem_closure_of_tendsto y_lim
+        (by
+          simp only [exists_prop, Set.mem_iUnion, Filter.eventually_atTop, Set.mem_preimage,
+            Set.preimage_iUnion]
+          exact ⟨k, fun m hm => ⟨n + m, zero_add k ▸ add_le_add (zero_le n) hm, (z m).2⟩⟩)
+  use this
+  -- Then, we check that `y` is close to `x = z n`. This follows from the fact that `y`
+  -- is the limit of `z k`, and the distance between `z n` and `z k` has already been estimated.
+  rw [← hz₀]
+  exact edist_le_of_edist_le_geometric_two_of_tendsto₀ (B n) hz y_lim
+  have I2  : ∀ n, ∀ x ∈ t0, ∃ y ∈ s n, edist x y ≤ 2 * B n
+  /- For the (much easier) reverse inequality, we start from a point `x ∈ t0` and we want
+          to find a point `y ∈ s n` which is close to `x`.
+          `x` belongs to `t0`, the intersection of the closures. In particular, it is well
+          approximated by a point `z` in `⋃m≥n, s m`, say in `s m`. Since `s m` and
+          `s n` are close, this point is itself well approximated by a point `y` in `s n`,
+          as required. -/
+  intro n x xt0
+  have : x ∈ closure (⋃ m ≥ n, s m : Set α) := by apply mem_iInter.1 xt0 n
+  obtain ⟨z : α, hz, Dxz : edist x z < B n⟩ := mem_closure_iff.1 this (B n) (B_pos n)
+  simp only [exists_prop, Set.mem_iUnion] at hz
+  obtain ⟨m : ℕ, m_ge_n : m ≥ n, hm : z ∈ (s m : Set α)⟩ := hz
+  have : hausdorffEdist (s m : Set α) (s n) < B n := hs n m n m_ge_n (le_refl n)
+  obtain ⟨y : α, hy : y ∈ (s n : Set α), Dzy : edist z y < B n⟩ :=
+    exists_edist_lt_of_hausdorffEdist_lt hm this
+  exact
+    ⟨y, hy,
+      calc
+        edist x y ≤ edist x z + edist z y := edist_triangle _ _ _
+        _ ≤ B n + B n := add_le_add (le_of_lt Dxz) (le_of_lt Dzy)
+        _ = 2 * B n := (two_mul _).symm
+        ⟩
   -- Deduce from the above inequalities that the distance between `s n` and `t0` is at most `2 B n`.
   have main : ∀ n : ℕ, edist (s n) t ≤ 2 * B n := fun n =>
     hausdorffEdist_le_of_mem_edist (I1 n) (I2 n)

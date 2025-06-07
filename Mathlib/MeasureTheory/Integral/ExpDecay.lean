@@ -28,9 +28,9 @@ open scoped Topology
 /-- `exp (-b * x)` is integrable on `(a, ∞)`. -/
 theorem exp_neg_integrableOn_Ioi (a : ℝ) {b : ℝ} (h : 0 < b) :
     IntegrableOn (fun x : ℝ => exp (-b * x)) (Ioi a) := by
-  have : Tendsto (fun x => -exp (-b * x) / b) atTop (𝓝 (-0 / b)) := by
-    refine Tendsto.div_const (Tendsto.neg ?_) _
-    exact tendsto_exp_atBot.comp (tendsto_id.const_mul_atTop_of_neg (neg_neg_iff_pos.2 h))
+  have  : Tendsto (fun x => -exp (-b * x) / b) atTop (𝓝 (-0 / b))
+  refine Tendsto.div_const (Tendsto.neg ?_) _
+  exact tendsto_exp_atBot.comp (tendsto_id.const_mul_atTop_of_neg (neg_neg_iff_pos.2 h))
   refine integrableOn_Ioi_deriv_of_nonneg' (fun x _ => ?_) (fun x _ => (exp_pos _).le) this
   simpa [h.ne'] using ((hasDerivAt_id x).const_mul b).neg.exp.neg.div_const b
 

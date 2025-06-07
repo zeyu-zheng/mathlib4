@@ -186,12 +186,12 @@ theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
   -- For each `x y`, we define `U x y` to be `{z | f z - ε < g x y z}`,
   -- and observe this is a neighbourhood of `y`.
   let U : X → X → Set X := fun x y => {z | f z - ε < g x y z}
-  have U_nhd_y : ∀ x y, U x y ∈ 𝓝 y := by
-    intro x y
-    refine IsOpen.mem_nhds ?_ ?_
-    · apply isOpen_lt <;> continuity
-    · rw [Set.mem_setOf_eq, w₂]
-      exact sub_lt_self _ pos
+  have U_nhd_y  : ∀ x y, U x y ∈ 𝓝 y
+  intro x y
+  refine IsOpen.mem_nhds ?_ ?_
+  · apply isOpen_lt <;> continuity
+  · rw [Set.mem_setOf_eq, w₂]
+    exact sub_lt_self _ pos
   -- Fixing `x` for a moment, we have a family of functions `fun y ↦ g x y`
   -- which on different patches (the `U x y`) are greater than `f z - ε`.
   -- Taking the supremum of these functions
@@ -342,11 +342,11 @@ theorem Subalgebra.SeparatesPoints.rclike_to_real {A : StarSubalgebra 𝕜 C(X, 
   obtain ⟨_, ⟨f, hfA, rfl⟩, hf⟩ := hA hx
   let F : C(X, 𝕜) := f - const _ (f x₂)
   -- Subtract the constant `f x₂` from `f`; this is still an element of the subalgebra
-  have hFA : F ∈ A := by
-    refine A.sub_mem hfA (@Eq.subst _ (· ∈ A) _ _ ?_ <| A.smul_mem A.one_mem <| f x₂)
-    ext1
-    simp only [coe_smul, coe_one, smul_apply, one_apply, Algebra.id.smul_eq_mul, mul_one,
-      const_apply]
+  have hFA  : F ∈ A
+  refine A.sub_mem hfA (@Eq.subst _ (· ∈ A) _ _ ?_ <| A.smul_mem A.one_mem <| f x₂)
+  ext1
+  simp only [coe_smul, coe_one, smul_apply, one_apply, Algebra.id.smul_eq_mul, mul_one,
+    const_apply]
   -- Consider now the function `fun x ↦ |f x - f x₂| ^ 2`
   refine ⟨_, ⟨⟨(‖F ·‖ ^ 2), by continuity⟩, ?_, rfl⟩, ?_⟩
   · -- This is also an element of the subalgebra, and takes only real values
@@ -369,21 +369,21 @@ theorem ContinuousMap.starSubalgebra_topologicalClosure_eq_top_of_separatesPoint
   let I : C(X, ℝ) →ₗ[ℝ] C(X, 𝕜) := ofRealCLM.compLeftContinuous ℝ X
   -- The main point of the proof is that its range (i.e., every real-valued function) is contained
   -- in the closure of `A`
-  have key : LinearMap.range I ≤ (A.toSubmodule.restrictScalars ℝ).topologicalClosure := by
-    -- Let `A₀` be the subalgebra of `C(X, ℝ)` consisting of `A`'s purely real elements; it is the
-    -- preimage of `A` under `I`.  In this argument we only need its submodule structure.
-    let A₀ : Submodule ℝ C(X, ℝ) := (A.toSubmodule.restrictScalars ℝ).comap I
-    -- By `Subalgebra.SeparatesPoints.rclike_to_real`, this subalgebra also separates points, so
-    -- we may apply the real Stone-Weierstrass result to it.
-    have SW : A₀.topologicalClosure = ⊤ :=
-      haveI := subalgebra_topologicalClosure_eq_top_of_separatesPoints _ hA.rclike_to_real
-      congr_arg Subalgebra.toSubmodule this
-    rw [← Submodule.map_top, ← SW]
-    -- So it suffices to prove that the image under `I` of the closure of `A₀` is contained in the
-    -- closure of `A`, which follows by abstract nonsense
-    have h₁ := A₀.topologicalClosure_map ((@ofRealCLM 𝕜 _).compLeftContinuousCompact X)
-    have h₂ := (A.toSubmodule.restrictScalars ℝ).map_comap_le I
-    exact h₁.trans (Submodule.topologicalClosure_mono h₂)
+  have key  : LinearMap.range I ≤ (A.toSubmodule.restrictScalars ℝ).topologicalClosure
+  -- Let `A₀` be the subalgebra of `C(X, ℝ)` consisting of `A`'s purely real elements; it is the
+  -- preimage of `A` under `I`.  In this argument we only need its submodule structure.
+  let A₀ : Submodule ℝ C(X, ℝ) := (A.toSubmodule.restrictScalars ℝ).comap I
+  -- By `Subalgebra.SeparatesPoints.rclike_to_real`, this subalgebra also separates points, so
+  -- we may apply the real Stone-Weierstrass result to it.
+  have SW : A₀.topologicalClosure = ⊤ :=
+    haveI := subalgebra_topologicalClosure_eq_top_of_separatesPoints _ hA.rclike_to_real
+    congr_arg Subalgebra.toSubmodule this
+  rw [← Submodule.map_top, ← SW]
+  -- So it suffices to prove that the image under `I` of the closure of `A₀` is contained in the
+  -- closure of `A`, which follows by abstract nonsense
+  have h₁ := A₀.topologicalClosure_map ((@ofRealCLM 𝕜 _).compLeftContinuousCompact X)
+  have h₂ := (A.toSubmodule.restrictScalars ℝ).map_comap_le I
+  exact h₁.trans (Submodule.topologicalClosure_mono h₂)
   -- In particular, for a function `f` in `C(X, 𝕜)`, the real and imaginary parts of `f` are in the
   -- closure of `A`
   intro f
@@ -532,9 +532,9 @@ theorem AlgHom.closure_ker_inter {F S K A : Type*} [CommRing K] [Ring A] [Algebr
       using closure_inter_subset_inter_closure s (ker φ : Set A)
   · intro x ⟨hxs, (hxφ : φ x = 0)⟩
     rw [mem_closure_iff_clusterPt, ClusterPt] at hxs
-    have : Tendsto (fun y ↦ y - φ y • 1) (𝓝 x ⊓ 𝓟 s) (𝓝 x) := by
-      conv => congr; rfl; rfl; rw [← sub_zero x, ← zero_smul K 1, ← hxφ]
-      exact Filter.tendsto_inf_left (Continuous.tendsto (by fun_prop) x)
+    have  : Tendsto (fun y ↦ y - φ y • 1) (𝓝 x ⊓ 𝓟 s) (𝓝 x)
+    conv => congr; rfl; rfl; rw [← sub_zero x, ← zero_smul K 1, ← hxφ]
+    exact Filter.tendsto_inf_left (Continuous.tendsto (by fun_prop) x)
     refine mem_closure_of_tendsto this <| eventually_inf_principal.mpr ?_
     filter_upwards [] with g hg using
       ⟨sub_mem hg (SMulMemClass.smul_mem _ <| one_mem _), by simp [RingHom.mem_ker]⟩

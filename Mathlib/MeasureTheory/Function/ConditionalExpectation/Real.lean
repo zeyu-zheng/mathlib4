@@ -223,13 +223,13 @@ section PullOut
 /-- Auxiliary lemma for `condexp_stronglyMeasurable_mul`. -/
 theorem condexp_stronglyMeasurable_simpleFunc_mul (hm : m ≤ m0) (f : @SimpleFunc α m ℝ) {g : α → ℝ}
     (hg : Integrable g μ) : μ[(f * g : α → ℝ)|m] =ᵐ[μ] f * μ[g|m] := by
-  have : ∀ (s c) (f : α → ℝ), Set.indicator s (Function.const α c) * f = s.indicator (c • f) := by
-    intro s c f
-    ext1 x
-    by_cases hx : x ∈ s
-    · simp only [hx, Pi.mul_apply, Set.indicator_of_mem, Pi.smul_apply, Algebra.id.smul_eq_mul,
-        Function.const_apply]
-    · simp only [hx, Pi.mul_apply, Set.indicator_of_not_mem, not_false_iff, zero_mul]
+  have  : ∀ (s c) (f : α → ℝ), Set.indicator s (Function.const α c) * f = s.indicator (c • f)
+  intro s c f
+  ext1 x
+  by_cases hx : x ∈ s
+  · simp only [hx, Pi.mul_apply, Set.indicator_of_mem, Pi.smul_apply, Algebra.id.smul_eq_mul,
+      Function.const_apply]
+  · simp only [hx, Pi.mul_apply, Set.indicator_of_not_mem, not_false_iff, zero_mul]
   apply @SimpleFunc.induction _ _ m _ (fun f => _)
     (fun c s hs => ?_) (fun g₁ g₂ _ h_eq₁ h_eq₂ => ?_) f
   · -- Porting note: if not classical, `DecidablePred fun x ↦ x ∈ s` cannot be synthesised
@@ -318,7 +318,8 @@ theorem condexp_stronglyMeasurable_mul {f g : α → ℝ} (hf : StronglyMeasurab
     rw [← ae_all_iff] at this
     filter_upwards [this] with x hx
     obtain ⟨i, hi⟩ : ∃ i, x ∈ sets i := by
-      have h_mem : x ∈ ⋃ i, sets i := by rw [h_univ]; exact Set.mem_univ _
+      have h_mem  : x ∈ ⋃ i, sets i
+      rw [h_univ]; exact Set.mem_univ _
       simpa using h_mem
     exact hx i hi
   refine fun n => ae_imp_of_ae_restrict ?_
@@ -331,10 +332,10 @@ theorem condexp_stronglyMeasurable_mul {f g : α → ℝ} (hf : StronglyMeasurab
     · exact
         condexp_congr_ae ((indicator_ae_eq_restrict <| hm _ <| h_meas n).symm.mul EventuallyEq.rfl)
     · exact (indicator_ae_eq_restrict <| hm _ <| h_meas n).mul EventuallyEq.rfl
-  have : IsFiniteMeasure (μ.restrict (sets n)) := by
-    constructor
-    rw [Measure.restrict_apply_univ]
-    exact h_finite n
+  have  : IsFiniteMeasure (μ.restrict (sets n))
+  constructor
+  rw [Measure.restrict_apply_univ]
+  exact h_finite n
   refine condexp_stronglyMeasurable_mul_of_bound hm (hf.indicator (h_meas n)) hg.integrableOn n ?_
   filter_upwards with x
   by_cases hxs : x ∈ sets n

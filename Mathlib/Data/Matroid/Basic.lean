@@ -274,8 +274,8 @@ theorem encard_diff_le_aux {B₁ B₂ : Set α}
 
   obtain ⟨f, hf, hB'⟩ := exch B₂ B₁ hB₂ hB₁ e he
 
-  have : encard (insert f (B₂ \ {e}) \ B₁) < encard (B₂ \ B₁) := by
-    rw [insert_diff_of_mem _ hf.1, diff_diff_comm]; exact hcard
+  have : encard (insert f (B₂ \ {e}) \ B₁) < encard (B₂ \ B₁) :=
+  by rw [insert_diff_of_mem _ hf.1, diff_diff_comm]; exact hcard
 
   have hencard := encard_diff_le_aux exch hB₁ hB'
   rw [insert_diff_of_mem _ hf.1, diff_diff_comm, ← union_singleton, ← diff_diff, diff_diff_right,
@@ -591,7 +591,8 @@ theorem Base.mem_of_insert_indep (hB : M.Base B) (heB : M.Indep (insert e B)) : 
 theorem Base.eq_exchange_of_diff_eq_singleton (hB : M.Base B) (hB' : M.Base B') (h : B \ B' = {e}) :
     ∃ f ∈ B' \ B, B' = (insert f B) \ {e} := by
   obtain ⟨f, hf, hb⟩ := hB.exchange hB' (h.symm.subset (mem_singleton e))
-  have hne : f ≠ e := by rintro rfl; exact hf.2 (h.symm.subset (mem_singleton f)).1
+  have hne  : f ≠ e
+  rintro rfl; exact hf.2 (h.symm.subset (mem_singleton f)).1
   rw [insert_diff_singleton_comm hne] at hb
   refine ⟨f, hf, (hb.eq_of_subset_base hB' ?_).symm⟩
   rw [diff_subset_iff, insert_subset_iff, union_comm, ← diff_subset_iff, h, and_iff_left rfl.subset]
@@ -615,7 +616,8 @@ theorem Base.exchange_base_of_indep (hB : M.Base B) (hf : f ∉ B)
 
 theorem Base.exchange_base_of_indep' (hB : M.Base B) (he : e ∈ B) (hf : f ∉ B)
     (hI : M.Indep (insert f B \ {e})) : M.Base (insert f B \ {e}) := by
-  have hfe : f ≠ e := by rintro rfl; exact hf he
+  have hfe  : f ≠ e
+  rintro rfl; exact hf he
   rw [← insert_diff_singleton_comm hfe] at *
   exact hB.exchange_base_of_indep hf hI
 
@@ -1004,10 +1006,10 @@ section Finite
 /-- For finite `E`, finitely many matroids have ground set contained in `E`. -/
 theorem finite_setOf_matroid {E : Set α} (hE : E.Finite) : {M : Matroid α | M.E ⊆ E}.Finite := by
   set f : Matroid α → Set α × (Set (Set α)) := fun M ↦ ⟨M.E, {B | M.Base B}⟩
-  have hf : f.Injective := by
-    refine fun M M' hMM' ↦ ?_
-    rw [Prod.mk.injEq, and_comm, Set.ext_iff, and_comm] at hMM'
-    exact eq_of_base_iff_base_forall hMM'.1 (fun B _ ↦ hMM'.2 B)
+  have hf  : f.Injective
+  refine fun M M' hMM' ↦ ?_
+  rw [Prod.mk.injEq, and_comm, Set.ext_iff, and_comm] at hMM'
+  exact eq_of_base_iff_base_forall hMM'.1 (fun B _ ↦ hMM'.2 B)
   rw [← Set.finite_image_iff hf.injOn]
   refine (hE.finite_subsets.prod hE.finite_subsets.finite_subsets).subset ?_
   rintro _ ⟨M, hE : M.E ⊆ E, rfl⟩

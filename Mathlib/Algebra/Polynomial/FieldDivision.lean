@@ -45,12 +45,12 @@ theorem derivative_rootMultiplicity_of_root_of_mem_nonZeroDivisors
   obtain ⟨g, hp, hndvd⟩ := p.exists_eq_pow_rootMultiplicity_mul_and_not_dvd h t
   set m := p.rootMultiplicity t
   have hm : m - 1 + 1 = m := Nat.sub_add_cancel <| (rootMultiplicity_pos h).2 hpt
-  have hndvd : ¬(X - C t) ^ m ∣ derivative p := by
-    rw [hp, derivative_mul, dvd_add_left (dvd_mul_right _ _),
-      derivative_X_sub_C_pow, ← hm, pow_succ, hm, mul_comm (C _), mul_assoc,
-      dvd_cancel_left_mem_nonZeroDivisors (monic_X_sub_C t |>.pow _ |>.mem_nonZeroDivisors)]
-    rw [dvd_iff_isRoot, IsRoot] at hndvd ⊢
-    rwa [eval_mul, eval_C, mul_left_mem_nonZeroDivisors_eq_zero_iff hnzd]
+  have hndvd  : ¬(X - C t) ^ m ∣ derivative p
+  rw [hp, derivative_mul, dvd_add_left (dvd_mul_right _ _),
+    derivative_X_sub_C_pow, ← hm, pow_succ, hm, mul_comm (C _), mul_assoc,
+    dvd_cancel_left_mem_nonZeroDivisors (monic_X_sub_C t |>.pow _ |>.mem_nonZeroDivisors)]
+  rw [dvd_iff_isRoot, IsRoot] at hndvd ⊢
+  rwa [eval_mul, eval_C, mul_left_mem_nonZeroDivisors_eq_zero_iff hnzd]
   have hnezero : derivative p ≠ 0 := fun h ↦ hndvd (by rw [h]; exact dvd_zero _)
   exact le_antisymm (by rwa [rootMultiplicity_le_iff hnezero, hm])
     (rootMultiplicity_sub_one_le_derivative_rootMultiplicity_of_ne_zero _ t hnezero)
@@ -604,9 +604,9 @@ See also: `Polynomial.Monic.irreducible_iff_natDegree'`.
 -/
 theorem irreducible_iff_lt_natDegree_lt {p : R[X]} (hp0 : p ≠ 0) (hpu : ¬ IsUnit p) :
     Irreducible p ↔ ∀ q, Monic q → natDegree q ∈ Finset.Ioc 0 (natDegree p / 2) → ¬ q ∣ p := by
-  have : p * C (leadingCoeff p)⁻¹ ≠ 1 := by
-    contrapose! hpu
-    exact isUnit_of_mul_eq_one _ _ hpu
+  have  : p * C (leadingCoeff p)⁻¹ ≠ 1
+  contrapose! hpu
+  exact isUnit_of_mul_eq_one _ _ hpu
   rw [← irreducible_mul_leadingCoeff_inv,
       (monic_mul_leadingCoeff_inv hp0).irreducible_iff_lt_natDegree_lt this,
       natDegree_mul_leadingCoeff_inv _ hp0]

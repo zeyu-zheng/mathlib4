@@ -180,15 +180,15 @@ theorem der_replicate_I_of_mod3 (c : ℕ) (h : c % 3 = 1 ∨ c % 3 = 2) :
     Derivable (M :: replicate c I) := by
   -- From `der_cons_replicate`, we can derive the `Miustr` `M::w` described in the introduction.
   cases' le_pow2_and_pow2_eq_mod3 c h with m hm -- `2^m` will be the number of `I`s in `M::w`
-  have hw₂ : Derivable (M :: replicate (2 ^ m) I ++ replicate ((2 ^ m - c) / 3 % 2) U) := by
-    cases' mod_two_eq_zero_or_one ((2 ^ m - c) / 3) with h_zero h_one
-    · -- `(2^m - c)/3 ≡ 0 [MOD 2]`
-      simp only [der_cons_replicate m, append_nil, List.replicate, h_zero]
-    · -- case `(2^m - c)/3 ≡ 1 [MOD 2]`
-      rw [h_one, ← replicate_pow_minus_append, append_assoc]
-      apply Derivable.r1
-      rw [replicate_pow_minus_append]
-      exact der_cons_replicate m
+  have hw₂  : Derivable (M :: replicate (2 ^ m) I ++ replicate ((2 ^ m - c) / 3 % 2) U)
+  cases' mod_two_eq_zero_or_one ((2 ^ m - c) / 3) with h_zero h_one
+  · -- `(2^m - c)/3 ≡ 0 [MOD 2]`
+    simp only [der_cons_replicate m, append_nil, List.replicate, h_zero]
+  · -- case `(2^m - c)/3 ≡ 1 [MOD 2]`
+    rw [h_one, ← replicate_pow_minus_append, append_assoc]
+    apply Derivable.r1
+    rw [replicate_pow_minus_append]
+    exact der_cons_replicate m
   have hw₃ : Derivable (M :: replicate c I ++
       replicate ((2 ^ m - c) / 3) U ++ replicate ((2 ^ m - c) / 3 % 2) U) := by
     apply
@@ -206,15 +206,15 @@ theorem der_replicate_I_of_mod3 (c : ℕ) (h : c % 3 = 1 ∨ c % 3 = 2) :
 example (c : ℕ) (h : c % 3 = 1 ∨ c % 3 = 2) : Derivable (M :: replicate c I) := by
   -- From `der_cons_replicate`, we can derive the `Miustr` `M::w` described in the introduction.
   cases' le_pow2_and_pow2_eq_mod3 c h with m hm -- `2^m` will be the number of `I`s in `M::w`
-  have hw₂ : Derivable (M :: replicate (2 ^ m) I ++ replicate ((2 ^ m - c) / 3 % 2) U) := by
-    cases' mod_two_eq_zero_or_one ((2 ^ m - c) / 3) with h_zero h_one
-    · -- `(2^m - c)/3 ≡ 0 [MOD 2]`
-      simp only [der_cons_replicate m, append_nil, List.replicate, h_zero]
-    · -- case `(2^m - c)/3 ≡ 1 [MOD 2]`
-      rw [h_one, ← replicate_pow_minus_append, append_assoc]
-      apply Derivable.r1
-      rw [replicate_pow_minus_append]
-      exact der_cons_replicate m
+  have hw₂  : Derivable (M :: replicate (2 ^ m) I ++ replicate ((2 ^ m - c) / 3 % 2) U)
+  cases' mod_two_eq_zero_or_one ((2 ^ m - c) / 3) with h_zero h_one
+  · -- `(2^m - c)/3 ≡ 0 [MOD 2]`
+    simp only [der_cons_replicate m, append_nil, List.replicate, h_zero]
+  · -- case `(2^m - c)/3 ≡ 1 [MOD 2]`
+    rw [h_one, ← replicate_pow_minus_append, append_assoc]
+    apply Derivable.r1
+    rw [replicate_pow_minus_append]
+    exact der_cons_replicate m
   have hw₃ : Derivable (M :: replicate c I ++
       replicate ((2 ^ m - c) / 3) U ++ replicate ((2 ^ m - c) / 3 % 2) U) := by
     apply
@@ -263,9 +263,9 @@ theorem count_I_eq_length_of_count_U_zero_and_neg_mem {ys : Miustr} (hu : count 
 -/
 theorem base_case_suf (en : Miustr) (h : Decstr en) (hu : count U en = 0) : Derivable en := by
   rcases h with ⟨⟨mhead, nmtail⟩, hi⟩
-  have : en ≠ nil := by
-    intro k
-    simp only [k, count, countP, countP.go, if_false, zero_mod, zero_ne_one, false_or_iff] at hi
+  have  : en ≠ nil
+  intro k
+  simp only [k, count, countP, countP.go, if_false, zero_mod, zero_ne_one, false_or_iff] at hi
   rcases exists_cons_of_ne_nil this with ⟨y, ys, rfl⟩
   rcases mhead
   rsuffices ⟨c, rfl, hc⟩ : ∃ c, replicate c I = ys ∧ (c % 3 = 1 ∨ c % 3 = 2)
@@ -300,7 +300,8 @@ theorem ind_hyp_suf (k : ℕ) (ys : Miustr) (hu : count U ys = succ k) (hdec : D
       count U (↑(M :: as) ++ ↑[I, I, I] ++ bs : Miustr) = k ∧
       Decstr (↑(M :: as) ++ ↑[I, I, I] ++ bs) := by
   rcases hdec with ⟨⟨mhead, nmtail⟩, hic⟩
-  have : ys ≠ nil := by rintro rfl; contradiction
+  have  : ys ≠ nil
+  rintro rfl; contradiction
   rcases exists_cons_of_ne_nil this with ⟨z, zs, rfl⟩
   rcases mhead
   simp only [count_cons, if_false] at hu

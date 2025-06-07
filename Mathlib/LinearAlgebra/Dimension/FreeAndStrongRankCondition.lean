@@ -49,9 +49,9 @@ theorem le_rank_iff_exists_linearIndependent [Module.Free K V] {c : Cardinal} :
   · intro h
     obtain ⟨κ, t'⟩ := Module.Free.exists_basis (R := K) (M := V)
     let t := t'.reindexRange
-    have : LinearIndependent K ((↑) : Set.range t' → V) := by
-      convert t.linearIndependent
-      ext; exact (Basis.reindexRange_apply _ _).symm
+    have  : LinearIndependent K ((↑) : Set.range t' → V)
+    convert t.linearIndependent
+    ext; exact (Basis.reindexRange_apply _ _).symm
     rw [← t.mk_eq_rank'', le_mk_iff_exists_subset] at h
     rcases h with ⟨s, hst, hsc⟩
     exact ⟨s, hsc, this.mono hst⟩
@@ -78,8 +78,8 @@ theorem rank_le_one_iff [Module.Free K V] :
     rw [← b.mk_eq_rank'', le_one_iff_subsingleton] at hd
     rcases isEmpty_or_nonempty κ with hb | ⟨⟨i⟩⟩
     · use 0
-      have h' : ∀ v : V, v = 0 := by
-        simpa [range_eq_empty, Submodule.eq_bot_iff] using b.span_eq.symm
+      have h'  : ∀ v : V, v = 0
+      simpa [range_eq_empty, Submodule.eq_bot_iff] using b.span_eq.symm
       intro v
       simp [h' v]
     · use b i

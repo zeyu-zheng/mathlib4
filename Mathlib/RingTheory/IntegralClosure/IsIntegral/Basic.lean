@@ -64,7 +64,8 @@ theorem Submodule.span_range_natDegree_eq_adjoin {R A} [CommRing R] [Semiring A]
     span R (Finset.image (x ^ ·) (Finset.range (natDegree f))) =
       Subalgebra.toSubmodule (Algebra.adjoin R {x}) := by
   nontriviality A
-  have hf1 : f ≠ 1 := by rintro rfl; simp [one_ne_zero' A] at hfx
+  have hf1  : f ≠ 1
+  rintro rfl; simp [one_ne_zero' A] at hfx
   refine (span_le.mpr fun s hs ↦ ?_).antisymm fun r hr ↦ ?_
   · rcases Finset.mem_image.1 hs with ⟨k, -, rfl⟩
     exact (Algebra.adjoin R {x}).pow_mem (Algebra.subset_adjoin rfl) k

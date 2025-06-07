@@ -67,18 +67,18 @@ theorem X0_X1_X2_not_mem_kIdeal : (X 0 * X 1 * X 2 : MvPolynomial (Fin 3) (ZMod 
 theorem mul_self_mem_kIdeal_of_X0_X1_X2_mul_mem {x : MvPolynomial (Fin 3) (ZMod 2)}
     (h : X 0 * X 1 * X 2 * x ∈ kIdeal) : x * x ∈ kIdeal := by
   rw [mem_kIdeal_iff] at h
-  have : x ∈ Ideal.span ((X : Fin 3 → MvPolynomial _ (ZMod 2)) '' Set.univ) := by
-    rw [mem_ideal_span_X_image]
-    intro m hm
-    simp_rw [mul_assoc, support_X_mul, Finset.map_map, Finset.mem_map,
-      Function.Embedding.trans_apply, addLeftEmbedding_apply, forall_exists_index,
-      and_imp, forall_apply_eq_imp_iff₂, ← add_assoc, ←
-      Fin.sum_univ_three fun i => Finsupp.single i 1, ← Finsupp.equivFunOnFinite_symm_eq_sum,
-      Finsupp.add_apply, Finsupp.equivFunOnFinite_symm_apply_toFun] at h
-    refine (h _ hm).imp fun i hi => ⟨Set.mem_univ _, ?_⟩
-    rintro hmi
-    rw [hmi] at hi
-    norm_num at hi
+  have  : x ∈ Ideal.span ((X : Fin 3 → MvPolynomial _ (ZMod 2)) '' Set.univ)
+  rw [mem_ideal_span_X_image]
+  intro m hm
+  simp_rw [mul_assoc, support_X_mul, Finset.map_map, Finset.mem_map,
+    Function.Embedding.trans_apply, addLeftEmbedding_apply, forall_exists_index,
+    and_imp, forall_apply_eq_imp_iff₂, ← add_assoc, ←
+    Fin.sum_univ_three fun i => Finsupp.single i 1, ← Finsupp.equivFunOnFinite_symm_eq_sum,
+    Finsupp.add_apply, Finsupp.equivFunOnFinite_symm_apply_toFun] at h
+  refine (h _ hm).imp fun i hi => ⟨Set.mem_univ _, ?_⟩
+  rintro hmi
+  rw [hmi] at hi
+  norm_num at hi
   rw [as_sum x, CharTwo.sum_mul_self]
   refine sum_mem fun m hm => ?_
   rw [mem_kIdeal_iff, monomial_mul]
@@ -107,8 +107,8 @@ theorem comap_C_kIdeal : kIdeal.comap (C : ZMod 2 →+* MvPolynomial (Fin 3) (ZM
 instance K.charP : CharP K 2 := by
   dsimp only [K]
   rw [CharP.quotient_iff_le_ker_natCast]
-  have : Nat.castRingHom (MvPolynomial (Fin 3) (ZMod 2)) = C.comp (Nat.castRingHom _) := by
-    ext1 r; rfl
+  have  : Nat.castRingHom (MvPolynomial (Fin 3) (ZMod 2)) = C.comp (Nat.castRingHom _)
+  ext1 r; rfl
   rw [this, ← Ideal.comap_comap, ← RingHom.comap_ker, comap_C_kIdeal]
   exact Ideal.comap_mono bot_le
 
@@ -185,21 +185,21 @@ theorem Q'_apply_single (i : Fin 3) (x : K) : Q' (Pi.single i x) = x * x :=
 
 theorem Q'_zero_under_ideal (v : Fin 3 → K) (hv : v ∈ LinearMap.ker lFunc) : Q' v = 0 := by
   rw [LinearMap.mem_ker, lFunc_apply] at hv
-  have h0 : α * β * γ * v 0 = 0 := by
-    have := congr_arg (β * γ * ·) hv
-    simp only [mul_zero, mul_add, ← mul_assoc] at this
-    rw [mul_comm (β * γ) α, ← mul_assoc, mul_right_comm β γ β, mul_assoc β γ γ, X_sq, X_sq] at this
-    simpa only [mul_zero, zero_mul, add_zero, zero_add] using this
-  have h1 : α * β * γ * v 1 = 0 := by
-    have := congr_arg (α * γ * ·) hv
-    simp only [mul_zero, mul_add, ← mul_assoc] at this
-    rw [mul_right_comm α γ α, mul_assoc α γ γ, mul_right_comm α γ β, X_sq, X_sq] at this
-    simpa only [mul_zero, zero_mul, add_zero, zero_add] using this
-  have h2 : α * β * γ * v 2 = 0 := by
-    have := congr_arg (α * β * ·) hv
-    simp only [mul_zero, mul_add, ← mul_assoc] at this
-    rw [mul_right_comm α β α, mul_assoc α β β, X_sq, X_sq] at this
-    simpa only [mul_zero, zero_mul, add_zero, zero_add] using this
+  have h0  : α * β * γ * v 0 = 0
+  have := congr_arg (β * γ * ·) hv
+  simp only [mul_zero, mul_add, ← mul_assoc] at this
+  rw [mul_comm (β * γ) α, ← mul_assoc, mul_right_comm β γ β, mul_assoc β γ γ, X_sq, X_sq] at this
+  simpa only [mul_zero, zero_mul, add_zero, zero_add] using this
+  have h1  : α * β * γ * v 1 = 0
+  have := congr_arg (α * γ * ·) hv
+  simp only [mul_zero, mul_add, ← mul_assoc] at this
+  rw [mul_right_comm α γ α, mul_assoc α γ γ, mul_right_comm α γ β, X_sq, X_sq] at this
+  simpa only [mul_zero, zero_mul, add_zero, zero_add] using this
+  have h2  : α * β * γ * v 2 = 0
+  have := congr_arg (α * β * ·) hv
+  simp only [mul_zero, mul_add, ← mul_assoc] at this
+  rw [mul_right_comm α β α, mul_assoc α β β, X_sq, X_sq] at this
+  simpa only [mul_zero, zero_mul, add_zero, zero_add] using this
   rw [Q'_apply, sq_zero_of_αβγ_mul h0, sq_zero_of_αβγ_mul h1, sq_zero_of_αβγ_mul h2, add_zero,
     add_zero]
 
@@ -251,8 +251,8 @@ theorem αβγ_smul_eq_zero : (α * β * γ) • (1 : CliffordAlgebra Q) = 0 := 
     simp_rw [smul_sub, smul_smul] at this
     rwa [mul_assoc β γ γ, mul_right_comm β γ β, mul_right_comm β γ α, mul_comm β α, X_sq, X_sq,
       zero_mul, mul_zero, zero_smul, zero_smul, sub_zero, sub_zero, smul_zero] at this
-  have : (α • x' - β • y' - γ • z') * x' = α • 1 - β • (y' * x') - γ • (z' * x') := by
-    simp_rw [sub_mul, smul_mul_assoc, gen_mul_gen]
+  have  : (α • x' - β • y' - γ • z') * x' = α • 1 - β • (y' * x') - γ • (z' * x')
+  simp_rw [sub_mul, smul_mul_assoc, gen_mul_gen]
   rw [← this]
   rw [quot_obv, zero_mul]
 

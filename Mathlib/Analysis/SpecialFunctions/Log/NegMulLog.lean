@@ -32,7 +32,8 @@ lemma continuous_mul_log : Continuous fun x ↦ x * log x := by
   rw [ContinuousAt, zero_mul]
   simp_rw [mul_comm _ (log _)]
   nth_rewrite 1 [← nhdsWithin_univ]
-  have : (Set.univ : Set ℝ) = Set.Iio 0 ∪ Set.Ioi 0 ∪ {0} := by ext; simp [em]
+  have  : (Set.univ : Set ℝ) = Set.Iio 0 ∪ Set.Ioi 0 ∪ {0}
+  ext; simp [em]
   rw [this, nhdsWithin_union, nhdsWithin_union]
   simp only [nhdsWithin_singleton, sup_le_iff, Filter.nonpos_iff, Filter.tendsto_sup]
   refine ⟨⟨tendsto_log_mul_self_nhds_zero_left, ?_⟩, ?_⟩

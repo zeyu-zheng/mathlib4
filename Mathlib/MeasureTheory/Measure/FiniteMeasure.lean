@@ -370,13 +370,13 @@ theorem testAgainstNN_lipschitz_estimate (μ : FiniteMeasure Ω) (f g : Ω →�
   apply lintegral_mono
   have le_dist : ∀ ω, dist (f ω) (g ω) ≤ nndist f g := BoundedContinuousFunction.dist_coe_le_dist
   intro ω
-  have le' : f ω ≤ g ω + nndist f g := by
-    apply (NNReal.le_add_nndist (f ω) (g ω)).trans
-    rw [add_le_add_iff_left]
-    exact dist_le_coe.mp (le_dist ω)
-  have le : (f ω : ℝ≥0∞) ≤ (g ω : ℝ≥0∞) + nndist f g := by
-    rw [← ENNReal.coe_add]
-    exact ENNReal.coe_mono le'
+  have le'  : f ω ≤ g ω + nndist f g
+  apply (NNReal.le_add_nndist (f ω) (g ω)).trans
+  rw [add_le_add_iff_left]
+  exact dist_le_coe.mp (le_dist ω)
+  have le  : (f ω : ℝ≥0∞) ≤ (g ω : ℝ≥0∞) + nndist f g
+  rw [← ENNReal.coe_add]
+  exact ENNReal.coe_mono le'
   rwa [coe_nnreal_ennreal_nndist] at le
 
 theorem testAgainstNN_lipschitz (μ : FiniteMeasure Ω) :
@@ -474,9 +474,9 @@ theorem tendsto_zero_testAgainstNN_of_tendsto_zero_mass {γ : Type*} {F : Filter
   simp_rw [show ∀ i, dist ((μs i).testAgainstNN f) 0 = (μs i).testAgainstNN f by
       simp only [dist_nndist, NNReal.nndist_zero_eq_val', eq_self_iff_true, imp_true_iff]]
   refine squeeze_zero (fun i => NNReal.coe_nonneg _) obs ?_
-  have lim_pair : Tendsto (fun i => (⟨nndist f 0, (μs i).mass⟩ : ℝ × ℝ)) F (𝓝 ⟨nndist f 0, 0⟩) := by
-    refine (Prod.tendsto_iff _ _).mpr ⟨tendsto_const_nhds, ?_⟩
-    exact (NNReal.continuous_coe.tendsto 0).comp mass_lim
+  have lim_pair  : Tendsto (fun i => (⟨nndist f 0, (μs i).mass⟩ : ℝ × ℝ)) F (𝓝 ⟨nndist f 0, 0⟩)
+  refine (Prod.tendsto_iff _ _).mpr ⟨tendsto_const_nhds, ?_⟩
+  exact (NNReal.continuous_coe.tendsto 0).comp mass_lim
   have key := tendsto_mul.comp lim_pair
   rwa [mul_zero] at key
 

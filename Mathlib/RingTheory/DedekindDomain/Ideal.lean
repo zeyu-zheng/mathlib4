@@ -255,7 +255,8 @@ theorem isDedekindDomainInv_iff [Algebra A K] [IsFractionRing A K] :
 theorem FractionalIdeal.adjoinIntegral_eq_one_of_isUnit [Algebra A K] [IsFractionRing A K] (x : K)
     (hx : IsIntegral A x) (hI : IsUnit (adjoinIntegral A⁰ x hx)) : adjoinIntegral A⁰ x hx = 1 := by
   set I := adjoinIntegral A⁰ x hx
-  have mul_self : I * I = I := by apply coeToSubmodule_injective; simp [I]
+  have mul_self  : I * I = I
+  apply coeToSubmodule_injective; simp [I]
   convert congr_arg (· * I⁻¹) mul_self <;>
     simp only [(mul_inv_cancel_iff_isUnit K).mpr hI, mul_assoc, mul_one]
 
@@ -312,9 +313,9 @@ theorem dimensionLEOne : DimensionLEOne A := ⟨by
     · rw [← mul_assoc (P : FractionalIdeal A⁰ (FractionRing A)), h.mul_inv_eq_one P'_ne, one_mul]
   -- Suppose we have `x ∈ M⁻¹ * P`, then in fact `x = algebraMap _ _ y` for some `y`.
   intro x hx
-  have le_one : (M⁻¹ : FractionalIdeal A⁰ (FractionRing A)) * P ≤ 1 := by
-    rw [← h.inv_mul_eq_one M'_ne]
-    exact mul_left_mono _ ((coeIdeal_le_coeIdeal (FractionRing A)).mpr hM.le)
+  have le_one  : (M⁻¹ : FractionalIdeal A⁰ (FractionRing A)) * P ≤ 1
+  rw [← h.inv_mul_eq_one M'_ne]
+  exact mul_left_mono _ ((coeIdeal_le_coeIdeal (FractionRing A)).mpr hM.le)
   obtain ⟨y, _hy, rfl⟩ := (mem_coeIdeal _).mp (le_one hx)
   -- Since `M` is strictly greater than `P`, let `z ∈ M \ P`.
   obtain ⟨z, hzM, hzp⟩ := SetLike.exists_of_lt hM
@@ -463,14 +464,14 @@ theorem coe_ideal_mul_inv [h : IsDedekindDomain A] (I : Ideal A) (hI0 : I ≠ �
   -- For that, we'll find a subalgebra that is f.g. as a module and contains `x`.
   -- `A` is a noetherian ring, so we just need to find a subalgebra between `{x}` and `I⁻¹`.
   rw [mem_integralClosure_iff_mem_fg]
-  have x_mul_mem : ∀ b ∈ (I⁻¹ : FractionalIdeal A⁰ K), x * b ∈ (I⁻¹ : FractionalIdeal A⁰ K) := by
-    intro b hb
-    rw [mem_inv_iff (coeIdeal_ne_zero.mpr hI0)]
-    dsimp only at hx
-    rw [val_eq_coe, mem_coe, mem_inv_iff hJ0] at hx
-    simp only [mul_assoc, mul_comm b] at hx ⊢
-    intro y hy
-    exact hx _ (mul_mem_mul hy hb)
+  have x_mul_mem  : ∀ b ∈ (I⁻¹ : FractionalIdeal A⁰ K), x * b ∈ (I⁻¹ : FractionalIdeal A⁰ K)
+  intro b hb
+  rw [mem_inv_iff (coeIdeal_ne_zero.mpr hI0)]
+  dsimp only at hx
+  rw [val_eq_coe, mem_coe, mem_inv_iff hJ0] at hx
+  simp only [mul_assoc, mul_comm b] at hx ⊢
+  intro y hy
+  exact hx _ (mul_mem_mul hy hb)
   -- It turns out the subalgebra consisting of all `p(x)` for `p : A[X]` works.
   refine ⟨AlgHom.range (Polynomial.aeval x : A[X] →ₐ[A] K),
     isNoetherian_submodule.mp (isNoetherian (I : FractionalIdeal A⁰ K)⁻¹) _ fun y hy => ?_,
@@ -793,18 +794,18 @@ and the lcm is their infimum, and use this to instantiate `NormalizedGCDMonoid (
 @[simp]
 theorem sup_mul_inf (I J : Ideal A) : (I ⊔ J) * (I ⊓ J) = I * J := by
   letI := UniqueFactorizationMonoid.toNormalizedGCDMonoid (Ideal A)
-  have hgcd : gcd I J = I ⊔ J := by
-    rw [gcd_eq_normalize _ _, normalize_eq]
-    · rw [dvd_iff_le, sup_le_iff, ← dvd_iff_le, ← dvd_iff_le]
-      exact ⟨gcd_dvd_left _ _, gcd_dvd_right _ _⟩
-    · rw [dvd_gcd_iff, dvd_iff_le, dvd_iff_le]
-      simp
-  have hlcm : lcm I J = I ⊓ J := by
-    rw [lcm_eq_normalize _ _, normalize_eq]
-    · rw [lcm_dvd_iff, dvd_iff_le, dvd_iff_le]
-      simp
-    · rw [dvd_iff_le, le_inf_iff, ← dvd_iff_le, ← dvd_iff_le]
-      exact ⟨dvd_lcm_left _ _, dvd_lcm_right _ _⟩
+  have hgcd  : gcd I J = I ⊔ J
+  rw [gcd_eq_normalize _ _, normalize_eq]
+  · rw [dvd_iff_le, sup_le_iff, ← dvd_iff_le, ← dvd_iff_le]
+    exact ⟨gcd_dvd_left _ _, gcd_dvd_right _ _⟩
+  · rw [dvd_gcd_iff, dvd_iff_le, dvd_iff_le]
+    simp
+  have hlcm  : lcm I J = I ⊓ J
+  rw [lcm_eq_normalize _ _, normalize_eq]
+  · rw [lcm_dvd_iff, dvd_iff_le, dvd_iff_le]
+    simp
+  · rw [dvd_iff_le, le_inf_iff, ← dvd_iff_le, ← dvd_iff_le]
+    exact ⟨dvd_lcm_left _ _, dvd_lcm_right _ _⟩
   rw [← hgcd, ← hlcm, associated_iff_eq.mp (gcd_mul_lcm _ _)]
 
 /-- Ideals in a Dedekind domain have gcd and lcm operators that (trivially) are compatible with
@@ -1073,10 +1074,10 @@ theorem idealFactorsEquivOfQuotEquiv_mem_normalizedFactors_of_mem_normalizedFact
     {L : Ideal R} (hL : L ∈ normalizedFactors I) :
     ↑(idealFactorsEquivOfQuotEquiv f ⟨L, dvd_of_mem_normalizedFactors hL⟩)
       ∈ normalizedFactors J := by
-  have hI : I ≠ ⊥ := by
-    intro hI
-    rw [hI, bot_eq_zero, normalizedFactors_zero, ← Multiset.empty_eq_zero] at hL
-    exact Finset.not_mem_empty _ hL
+  have hI  : I ≠ ⊥
+  intro hI
+  rw [hI, bot_eq_zero, normalizedFactors_zero, ← Multiset.empty_eq_zero] at hL
+  exact Finset.not_mem_empty _ hL
   refine mem_normalizedFactors_factor_dvd_iso_of_mem_normalizedFactors hI hJ hL
     (d := (idealFactorsEquivOfQuotEquiv f).toEquiv) ?_
   rintro ⟨l, hl⟩ ⟨l', hl'⟩
@@ -1455,8 +1456,8 @@ theorem count_associates_factors_eq [DecidableEq <| Associates (Ideal R)]
     (I J : Ideal R) (hI : I ≠ 0) (hJ : J.IsPrime) (hJ₀ : J ≠ ⊥) :
     (Associates.mk J).count (Associates.mk I).factors = Multiset.count J (normalizedFactors I) := by
   replace hI : Associates.mk I ≠ 0 := Associates.mk_ne_zero.mpr hI
-  have hJ' : Irreducible (Associates.mk J) := by
-    simpa only [Associates.irreducible_mk] using (Ideal.prime_of_isPrime hJ₀ hJ).irreducible
+  have hJ'  : Irreducible (Associates.mk J)
+  simpa only [Associates.irreducible_mk] using (Ideal.prime_of_isPrime hJ₀ hJ).irreducible
   apply (Ideal.count_normalizedFactors_eq (p := J) (x := I) _ _).symm
   all_goals
     rw [← Ideal.dvd_iff_le, ← Associates.mk_dvd_mk, Associates.mk_pow]

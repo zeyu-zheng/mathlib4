@@ -130,7 +130,8 @@ namespace IndepMatroid
     obtain ⟨f,hf,hfB⟩ := M.indep_aug (M.indep_subset hB diff_subset) hnotmax ⟨hB',hB'max⟩
     simp only [mem_diff, mem_singleton_iff, not_and, not_not] at hf
 
-    have hfB' : f ∉ B := by (intro hfB; obtain rfl := hf.2 hfB; exact he.2 hf.1)
+    have hfB'  : f ∉ B
+    (intro hfB; obtain rfl := hf.2 hfB; exact he.2 hf.1)
 
     refine ⟨f, ⟨hf.1, hfB'⟩, by_contra (fun hnot ↦ ?_)⟩
     obtain ⟨x,hxB, hind⟩ := M.indep_aug hfB hnot ⟨hB, hBmax⟩
@@ -185,19 +186,19 @@ namespace IndepMatroid
     have hB₀ := indep_subset hBmax.1 hB₀B
 
     -- There is a finite subset `I₀` of `I` so that `I₀` doesn't extend into `B₀`
-    have hexI₀ : ∃ I₀, I₀ ⊆ I ∧ I₀.Finite ∧ ∀ x, x ∈ B₀ \ I₀ → ¬Indep (insert x I₀) := by
-      have hchoose : ∀ (b : ↑(B₀ \ I)), ∃ Ib, Ib ⊆ I ∧ Ib.Finite ∧ ¬Indep (insert (b : α) Ib) := by
-        rintro ⟨b, hb⟩; exact htofin I b hI (hcon b ⟨hB₀B hb.1, hb.2⟩)
-      choose! f hf using hchoose
-      have := (hB₀fin.diff I).to_subtype
-      refine ⟨iUnion f ∪ (B₀ ∩ I),
-        union_subset (iUnion_subset (fun i ↦ (hf i).1)) inter_subset_right,
-        (finite_iUnion fun i ↦ (hf i).2.1).union (hB₀fin.subset inter_subset_left),
-        fun x ⟨hxB₀, hxn⟩ hi ↦ ?_⟩
-      have hxI : x ∉ I := fun hxI ↦ hxn <| Or.inr ⟨hxB₀, hxI⟩
-      refine (hf ⟨x, ⟨hxB₀, hxI⟩⟩).2.2 (indep_subset hi <| insert_subset_insert ?_)
-      apply subset_union_of_subset_left
-      apply subset_iUnion
+    have hexI₀  : ∃ I₀, I₀ ⊆ I ∧ I₀.Finite ∧ ∀ x, x ∈ B₀ \ I₀ → ¬Indep (insert x I₀)
+    have hchoose  : ∀ (b : ↑(B₀ \ I)), ∃ Ib, Ib ⊆ I ∧ Ib.Finite ∧ ¬Indep (insert (b : α) Ib)
+    rintro ⟨b, hb⟩; exact htofin I b hI (hcon b ⟨hB₀B hb.1, hb.2⟩)
+    choose! f hf using hchoose
+    have := (hB₀fin.diff I).to_subtype
+    refine ⟨iUnion f ∪ (B₀ ∩ I),
+      union_subset (iUnion_subset (fun i ↦ (hf i).1)) inter_subset_right,
+      (finite_iUnion fun i ↦ (hf i).2.1).union (hB₀fin.subset inter_subset_left),
+      fun x ⟨hxB₀, hxn⟩ hi ↦ ?_⟩
+    have hxI : x ∉ I := fun hxI ↦ hxn <| Or.inr ⟨hxB₀, hxI⟩
+    refine (hf ⟨x, ⟨hxB₀, hxI⟩⟩).2.2 (indep_subset hi <| insert_subset_insert ?_)
+    apply subset_union_of_subset_left
+    apply subset_iUnion
 
     obtain ⟨I₀, hI₀I, hI₀fin, hI₀⟩ := hexI₀
 
@@ -218,12 +219,12 @@ namespace IndepMatroid
     have hJfin := hE₀fin.subset hJss
 
     -- We have `|I₀ + e| ≤ |J|`, since otherwise we could extend the maximal set `J`
-    have hcard : (insert e I₀).ncard ≤ J.ncard := by
-      refine not_lt.1 fun hlt ↦ ?_
-      obtain ⟨f, hfI, hfJ, hfi⟩ := indep_aug hJ hJfin heI₀i (hI₀fin.insert e) hlt
-      have hfE₀ : f ∈ E₀ := mem_of_mem_of_subset hfI (insert_subset_insert subset_union_left)
-      refine hfJ (insert_eq_self.1 <| Eq.symm (hJmax _
-        ⟨hB₀J.trans <| subset_insert _ _,hfi,insert_subset hfE₀ hJss⟩ (subset_insert _ _)))
+    have hcard  : (insert e I₀).ncard ≤ J.ncard
+    refine not_lt.1 fun hlt ↦ ?_
+    obtain ⟨f, hfI, hfJ, hfi⟩ := indep_aug hJ hJfin heI₀i (hI₀fin.insert e) hlt
+    have hfE₀ : f ∈ E₀ := mem_of_mem_of_subset hfI (insert_subset_insert subset_union_left)
+    refine hfJ (insert_eq_self.1 <| Eq.symm (hJmax _
+      ⟨hB₀J.trans <| subset_insert _ _,hfi,insert_subset hfE₀ hJss⟩ (subset_insert _ _)))
 
     -- But this means `|I₀| < |J|`, and extending `I₀` into `J` gives a contradiction
     rw [ncard_insert_of_not_mem heI₀ hI₀fin, ← Nat.lt_iff_add_one_le] at hcard
@@ -267,14 +268,14 @@ theorem _root_.Matroid.existsMaximalSubsetProperty_of_bdd {P : Set α → Prop}
     (hP : ∃ (n : ℕ), ∀ Y, P Y → Y.encard ≤ n) (X : Set α) : ExistsMaximalSubsetProperty P X := by
   obtain ⟨n, hP⟩ := hP
   rintro I hI hIX
-  have hfin : Set.Finite (ncard '' {Y | P Y ∧ I ⊆ Y ∧ Y ⊆ X}) := by
-    rw [finite_iff_bddAbove, bddAbove_def]
-    simp_rw [ENat.le_coe_iff] at hP
-    use n
-    rintro x ⟨Y, ⟨hY,-,-⟩, rfl⟩
-    obtain ⟨n₀, heq, hle⟩ := hP Y hY
-    rwa [ncard_def, heq, ENat.toNat_coe]
-    -- have := (hP Y hY).2
+  have hfin  : Set.Finite (ncard '' {Y | P Y ∧ I ⊆ Y ∧ Y ⊆ X})
+  rw [finite_iff_bddAbove, bddAbove_def]
+  simp_rw [ENat.le_coe_iff] at hP
+  use n
+  rintro x ⟨Y, ⟨hY,-,-⟩, rfl⟩
+  obtain ⟨n₀, heq, hle⟩ := hP Y hY
+  rwa [ncard_def, heq, ENat.toNat_coe]
+  -- have := (hP Y hY).2
   obtain ⟨Y, hY, hY'⟩ := Finite.exists_maximal_wrt' ncard _ hfin ⟨I, hI, rfl.subset, hIX⟩
   refine ⟨Y, hY, fun J ⟨hJ, hIJ, hJX⟩ (hYJ : Y ⊆ J) ↦ (?_ : J ⊆ Y)⟩
   have hJfin := finite_of_encard_le_coe (hP J hJ)

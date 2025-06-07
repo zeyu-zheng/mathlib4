@@ -29,7 +29,8 @@ variable {α : Type*}
 theorem cast_div [DivisionSemiring α] {m n : ℕ} (n_dvd : n ∣ m) (hn : (n : α) ≠ 0) :
     ((m / n : ℕ) : α) = m / n := by
   rcases n_dvd with ⟨k, rfl⟩
-  have : n ≠ 0 := by rintro rfl; simp at hn
+  have  : n ≠ 0
+  rintro rfl; simp at hn
   rw [Nat.mul_div_cancel_left _ <| zero_lt_of_ne_zero this, mul_comm n,
     cast_mul, mul_div_cancel_right₀ _ hn]
 

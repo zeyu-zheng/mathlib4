@@ -156,7 +156,8 @@ theorem preimage_of_equiv {ν : Measure β} (h : IsFundamentalDomain G s μ) {f 
   ae_covers := (hf.ae h.ae_covers).mono fun x ⟨g, hg⟩ => ⟨e g, by rwa [mem_preimage, hef g x]⟩
   aedisjoint a b hab := by
     lift e to G ≃ H using he
-    have : (e.symm a⁻¹)⁻¹ ≠ (e.symm b⁻¹)⁻¹ := by simp [hab]
+    have  : (e.symm a⁻¹)⁻¹ ≠ (e.symm b⁻¹)⁻¹
+    simp [hab]
     have := (h.aedisjoint this).preimage hf
     simp only [Semiconj] at hef
     simpa only [onFun, ← preimage_smul_inv, preimage_preimage, ← hef, e.apply_symm_apply, inv_inv]
@@ -314,10 +315,10 @@ alias set_lintegral_eq := MeasureTheory.IsFundamentalDomain.setLIntegral_eq
 @[to_additive]
 theorem measure_set_eq (hs : IsFundamentalDomain G s μ) (ht : IsFundamentalDomain G t μ) {A : Set α}
     (hA₀ : MeasurableSet A) (hA : ∀ g : G, (fun x => g • x) ⁻¹' A = A) : μ (A ∩ s) = μ (A ∩ t) := by
-  have : ∫⁻ x in s, A.indicator 1 x ∂μ = ∫⁻ x in t, A.indicator 1 x ∂μ := by
-    refine hs.setLIntegral_eq ht (Set.indicator A fun _ => 1) fun g x ↦ ?_
-    convert (Set.indicator_comp_right (g • · : α → α) (g := fun _ ↦ (1 : ℝ≥0∞))).symm
-    rw [hA g]
+  have  : ∫⁻ x in s, A.indicator 1 x ∂μ = ∫⁻ x in t, A.indicator 1 x ∂μ
+  refine hs.setLIntegral_eq ht (Set.indicator A fun _ => 1) fun g x ↦ ?_
+  convert (Set.indicator_comp_right (g • · : α → α) (g := fun _ ↦ (1 : ℝ≥0∞))).symm
+  rw [hA g]
   simpa [Measure.restrict_apply hA₀, lintegral_indicator _ hA₀] using this
 
 /-- If `s` and `t` are two fundamental domains of the same action, then their measures are equal. -/
@@ -656,9 +657,9 @@ lemma IsFundamentalDomain.quotientMeasure_eq [Countable G] [MeasurableSpace G] {
   · exact measurableSet_quotient.mp meas_U
   · intro g
     ext x
-    have : Quotient.mk α_mod_G (g • x) = Quotient.mk α_mod_G x := by
-      apply Quotient.sound
-      use g
+    have  : Quotient.mk α_mod_G (g • x) = Quotient.mk α_mod_G x
+    apply Quotient.sound
+    use g
     simp only [mem_preimage, this]
 
 end FundamentalDomainMeasure
@@ -847,11 +848,11 @@ lemma QuotientMeasureEqMeasurePreimage.sigmaFiniteQuotient
   refine ⟨⟨fun n ↦ π '' (A n), by simp, fun n ↦ ?_, ?_⟩⟩
   · obtain ⟨s, fund_dom_s⟩ := i'
     have : π ⁻¹' (π '' (A n)) = _ := MulAction.quotient_preimage_image_eq_union_mul (A n) (G := G)
-    have measπAn : MeasurableSet (π '' A n) := by
-      let _ : Setoid α := α_mod_G
-      rw [measurableSet_quotient, Quotient.mk''_eq_mk, this]
-      apply MeasurableSet.iUnion
-      exact fun g ↦ MeasurableSet.const_smul (hA_meas n) g
+    have measπAn  : MeasurableSet (π '' A n)
+    let _ : Setoid α := α_mod_G
+    rw [measurableSet_quotient, Quotient.mk''_eq_mk, this]
+    apply MeasurableSet.iUnion
+    exact fun g ↦ MeasurableSet.const_smul (hA_meas n) g
     rw [fund_dom_s.projection_respects_measure_apply (μ := μ) measπAn, this, iUnion_inter]
     refine lt_of_le_of_lt ?_ (hA n)
     rw [fund_dom_s.measure_eq_tsum (A n)]
@@ -868,10 +869,10 @@ theorem QuotientMeasureEqMeasurePreimage.isFiniteMeasure_quotient
     IsFiniteMeasure μ := by
   obtain ⟨𝓕, h𝓕⟩ := hasFun.ExistsIsFundamentalDomain
   rw [h𝓕.projection_respects_measure (μ := μ)]
-  have : Fact (ν 𝓕 < ∞) := by
-    apply Fact.mk
-    convert Ne.lt_top h
-    exact (h𝓕.covolume_eq_volume ν).symm
+  have  : Fact (ν 𝓕 < ∞)
+  apply Fact.mk
+  convert Ne.lt_top h
+  exact (h𝓕.covolume_eq_volume ν).symm
   infer_instance
 
 /-- A finite measure `μ` on `α ⧸ G` satisfying `QuotientMeasureEqMeasurePreimage` has finite

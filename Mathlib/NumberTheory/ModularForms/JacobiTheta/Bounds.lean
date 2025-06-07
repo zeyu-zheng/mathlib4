@@ -75,8 +75,8 @@ lemma f_le_g_nat (k : ℕ) {a t : ℝ} (ha : 0 ≤ a) (ht : 0 < t) (n : ℕ) :
   refine mul_le_mul_of_nonneg_left ?_ (by positivity)
   rw [Real.exp_le_exp, mul_le_mul_right ht,
     mul_le_mul_left_of_neg (neg_lt_zero.mpr pi_pos), ← sub_nonneg]
-  have u : (n : ℝ) ≤ (n : ℝ) ^ 2 := by
-    simpa only [← Nat.cast_pow, Nat.cast_le] using Nat.le_self_pow two_ne_zero _
+  have u  : (n : ℝ) ≤ (n : ℝ) ^ 2
+  simpa only [← Nat.cast_pow, Nat.cast_le] using Nat.le_self_pow two_ne_zero _
   convert add_nonneg (sub_nonneg.mpr u) (by positivity : 0 ≤ 2 * n * a) using 1
   ring
 
@@ -84,18 +84,18 @@ lemma f_le_g_nat (k : ℕ) {a t : ℝ} (ha : 0 ≤ a) (ht : 0 < t) (n : ℕ) :
 def F_nat (k : ℕ) (a t : ℝ) : ℝ := ∑' n, f_nat k a t n
 
 lemma summable_f_nat (k : ℕ) (a : ℝ) {t : ℝ} (ht : 0 < t) : Summable (f_nat k a t) := by
-  have : Summable fun n : ℕ ↦ n ^ k * exp (-π * (n + a) ^ 2 * t) := by
-    refine (((summable_pow_mul_jacobiTheta₂_term_bound (|a| * t) ht k).mul_right
-      (rexp (-π * a ^ 2 * t))).comp_injective Nat.cast_injective).of_norm_bounded _ (fun n ↦ ?_)
-    simp_rw [mul_assoc, Function.comp_apply, ← Real.exp_add, norm_mul, norm_pow, Int.cast_abs,
-      Int.cast_natCast, norm_eq_abs, Nat.abs_cast, abs_exp]
-    refine mul_le_mul_of_nonneg_left ?_ (pow_nonneg (Nat.cast_nonneg _) _)
-    rw [exp_le_exp, ← sub_nonneg]
-    rw [show -π * (t * n ^ 2 - 2 * (|a| * (t * n))) + -π * (a ^ 2 * t) - -π * ((n + a) ^ 2 * t)
-         = π * t * n * (|a| + a) * 2 by ring]
-    refine mul_nonneg (mul_nonneg (by positivity) ?_) two_pos.le
-    rw [← neg_le_iff_add_nonneg]
-    apply neg_le_abs
+  have  : Summable fun n : ℕ ↦ n ^ k * exp (-π * (n + a) ^ 2 * t)
+  refine (((summable_pow_mul_jacobiTheta₂_term_bound (|a| * t) ht k).mul_right
+    (rexp (-π * a ^ 2 * t))).comp_injective Nat.cast_injective).of_norm_bounded _ (fun n ↦ ?_)
+  simp_rw [mul_assoc, Function.comp_apply, ← Real.exp_add, norm_mul, norm_pow, Int.cast_abs,
+    Int.cast_natCast, norm_eq_abs, Nat.abs_cast, abs_exp]
+  refine mul_le_mul_of_nonneg_left ?_ (pow_nonneg (Nat.cast_nonneg _) _)
+  rw [exp_le_exp, ← sub_nonneg]
+  rw [show -π * (t * n ^ 2 - 2 * (|a| * (t * n))) + -π * (a ^ 2 * t) - -π * ((n + a) ^ 2 * t)
+       = π * t * n * (|a| + a) * 2 by ring]
+  refine mul_nonneg (mul_nonneg (by positivity) ?_) two_pos.le
+  rw [← neg_le_iff_add_nonneg]
+  apply neg_le_abs
   apply (this.mul_left (2 ^ k)).of_norm_bounded_eventually_nat
   simp_rw [← mul_assoc, f_nat, norm_mul, norm_eq_abs, abs_exp,
     mul_le_mul_iff_of_pos_right (exp_pos _), ← mul_pow, abs_pow, two_mul]
@@ -132,17 +132,17 @@ lemma isBigO_atTop_F_nat_zero_sub {a : ℝ} (ha : 0 ≤ a) : ∃ p, 0 < p ∧
     (fun t ↦ F_nat 0 a t - (if a = 0 then 1 else 0)) =O[atTop] fun t ↦ exp (-p * t) := by
   split_ifs with h
   · rw [h]
-    have : (fun t ↦ F_nat 0 0 t - 1) =O[atTop] fun t ↦ rexp (-π * t) / (1 - rexp (-π * t)) := by
-      apply Eventually.isBigO
-      filter_upwards [eventually_gt_atTop 0] with t ht
-      exact F_nat_zero_zero_sub_le ht
+    have  : (fun t ↦ F_nat 0 0 t - 1) =O[atTop] fun t ↦ rexp (-π * t) / (1 - rexp (-π * t))
+    apply Eventually.isBigO
+    filter_upwards [eventually_gt_atTop 0] with t ht
+    exact F_nat_zero_zero_sub_le ht
     refine ⟨_, pi_pos, this.trans ?_⟩
     simpa using (isBigO_refl (fun t ↦ rexp (-π * t)) _).mul isBigO_one_aux
   · simp_rw [sub_zero]
-    have : (fun t ↦ F_nat 0 a t) =O[atTop] fun t ↦ rexp (-π * a ^ 2 * t) / (1 - rexp (-π * t)) := by
-      apply Eventually.isBigO
-      filter_upwards [eventually_gt_atTop 0] with t ht
-      exact F_nat_zero_le ha ht
+    have  : (fun t ↦ F_nat 0 a t) =O[atTop] fun t ↦ rexp (-π * a ^ 2 * t) / (1 - rexp (-π * t))
+    apply Eventually.isBigO
+    filter_upwards [eventually_gt_atTop 0] with t ht
+    exact F_nat_zero_le ha ht
     refine ⟨π * a ^ 2, mul_pos pi_pos (sq_pos_of_ne_zero h), this.trans ?_⟩
     simpa only [neg_mul π (a ^ 2), mul_one] using (isBigO_refl _ _).mul isBigO_one_aux
 
@@ -183,8 +183,8 @@ lemma isBigO_atTop_F_nat_one {a : ℝ} (ha : 0 ≤ a) : ∃ p, 0 < p ∧
     refine ⟨p, hp, (Eventually.isBigO ?_).trans hp'⟩
     filter_upwards [eventually_gt_atTop 0] with t ht
     exact F_nat_one_le ha ht
-  have aux' : IsBigO atTop (fun t : ℝ ↦ ((1 - rexp (-π * t)) ^ 2)⁻¹) (fun _ ↦ (1 : ℝ)) := by
-    simpa only [inv_pow, one_pow] using isBigO_one_aux.pow 2
+  have aux'  : IsBigO atTop (fun t : ℝ ↦ ((1 - rexp (-π * t)) ^ 2)⁻¹) (fun _ ↦ (1 : ℝ))
+  simpa only [inv_pow, one_pow] using isBigO_one_aux.pow 2
   rcases eq_or_lt_of_le ha with rfl | ha'
   · exact ⟨_, pi_pos, by simpa only [zero_pow two_ne_zero, zero_add, mul_one, zero_mul, zero_div,
       add_zero] using (isBigO_refl _ _).mul aux'⟩
@@ -213,7 +213,8 @@ lemma f_int_ofNat (k : ℕ) {a : ℝ} (ha : 0 ≤ a) (t : ℝ) (n : ℕ) :
 
 lemma f_int_negSucc (k : ℕ) {a : ℝ} (ha : a ≤ 1) (t : ℝ) (n : ℕ) :
     f_int k a t (Int.negSucc n) = f_nat k (1 - a) t n := by
-  have : (Int.negSucc n) + a = -(n + (1 - a)) := by { push_cast; ring }
+  have  : (Int.negSucc n) + a = -(n + (1 - a))
+  { push_cast; ring }
   rw [f_int, f_nat, this, abs_neg, neg_sq, abs_of_nonneg (by linarith)]
 
 lemma summable_f_int (k : ℕ) (a : ℝ) {t : ℝ} (ht : 0 < t) : Summable (f_int k a t) := by
@@ -250,10 +251,10 @@ lemma isBigO_atTop_F_int_zero_sub (a : UnitAddCircle) : ∃ p, 0 < p ∧
   obtain ⟨a, ha, rfl⟩ := a.eq_coe_Ico
   obtain ⟨p, hp, hp'⟩ := isBigO_atTop_F_nat_zero_sub ha.1
   obtain ⟨q, hq, hq'⟩ := isBigO_atTop_F_nat_zero_sub (sub_nonneg.mpr ha.2.le)
-  have ha' : (a : UnitAddCircle) = 0 ↔ a = 0 := by
-    rw [← AddCircle.coe_eq_coe_iff_of_mem_Ico (hp := ⟨zero_lt_one' ℝ⟩), QuotientAddGroup.mk_zero]
-    · rw [zero_add]; exact ha
-    · simp
+  have ha'  : (a : UnitAddCircle) = 0 ↔ a = 0
+  rw [← AddCircle.coe_eq_coe_iff_of_mem_Ico (hp := ⟨zero_lt_one' ℝ⟩), QuotientAddGroup.mk_zero]
+  · rw [zero_add]; exact ha
+  · simp
   simp_rw [ha']
   simp_rw [eq_false_intro (by linarith [ha.2] : 1 - a ≠ 0), if_false, sub_zero] at hq'
   refine ⟨_, lt_min hp hq, ?_⟩
@@ -272,9 +273,9 @@ lemma isBigO_atTop_F_int_one (a : UnitAddCircle) : ∃ p, 0 < p ∧
   obtain ⟨p, hp, hp'⟩ := isBigO_atTop_F_nat_one ha.1
   obtain ⟨q, hq, hq'⟩ := isBigO_atTop_F_nat_one (sub_nonneg.mpr ha.2.le)
   refine ⟨_, lt_min hp hq, ?_⟩
-  have : F_int 1 a =ᶠ[atTop] fun t ↦ F_nat 1 a t + F_nat 1 (1 - a) t := by
-    filter_upwards [eventually_gt_atTop 0] with t ht
-    exact F_int_eq_of_mem_Icc 1 (Ico_subset_Icc_self ha) ht
+  have  : F_int 1 a =ᶠ[atTop] fun t ↦ F_nat 1 a t + F_nat 1 (1 - a) t
+  filter_upwards [eventually_gt_atTop 0] with t ht
+  exact F_int_eq_of_mem_Icc 1 (Ico_subset_Icc_self ha) ht
   refine this.isBigO.trans ((hp'.trans ?_).add (hq'.trans ?_)) <;>
   apply isBigO_exp_neg_mul_of_le
   exacts [min_le_left .., min_le_right ..]

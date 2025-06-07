@@ -145,8 +145,8 @@ lemma EdgeDisjointTriangles.card_edgeFinset_le (hG : G.EdgeDisjointTriangles) :
   refine card_mul_le_card_mul (fun s e ↦ e ∈ s.sym2) ?_ (fun e he ↦ ?_)
   · simp only [is3Clique_iff, mem_cliqueFinset_iff, mem_sym2_iff, forall_exists_index, and_imp]
     rintro _ a b c hab hac hbc rfl
-    have : Finset.card ({s(a, b), s(a, c), s(b, c)} : Finset (Sym2 α)) = 3 := by
-      refine card_eq_three.2 ⟨_, _, _, ?_, ?_, ?_, rfl⟩ <;> simp [hab.ne, hac.ne, hbc.ne]
+    have  : Finset.card ({s(a, b), s(a, c), s(b, c)} : Finset (Sym2 α)) = 3
+    refine card_eq_three.2 ⟨_, _, _, ?_, ?_, ?_, rfl⟩ <;> simp [hab.ne, hac.ne, hbc.ne]
     rw [← this]
     refine card_mono ?_
     simp [insert_subset, *]

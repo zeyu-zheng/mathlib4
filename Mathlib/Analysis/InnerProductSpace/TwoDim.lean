@@ -152,9 +152,9 @@ theorem areaForm_map {F : Type*} [NormedAddCommGroup F] [InnerProductSpace ℝ F
     [hF : Fact (finrank ℝ F = 2)] (φ : E ≃ₗᵢ[ℝ] F) (x y : F) :
     (Orientation.map (Fin 2) φ.toLinearEquiv o).areaForm x y =
     o.areaForm (φ.symm x) (φ.symm y) := by
-  have : φ.symm ∘ ![x, y] = ![φ.symm x, φ.symm y] := by
-    ext i
-    fin_cases i <;> rfl
+  have  : φ.symm ∘ ![x, y] = ![φ.symm x, φ.symm y]
+  ext i
+  fin_cases i <;> rfl
   simp [areaForm_to_volumeForm, volumeForm_map, this]
 
 /-- The area form is invariant under pullback by a positively-oriented isometric automorphism. -/
@@ -416,7 +416,8 @@ theorem nonneg_inner_and_areaForm_eq_zero_iff_sameRay (x y : E) :
         real_inner_self_eq_norm_sq, zero_smul, one_smul]
       exact this
     rintro ⟨ha, hb⟩
-    have hx' : 0 < ‖x‖ := by simpa using hx
+    have hx'  : 0 < ‖x‖
+    simpa using hx
     have ha' : 0 ≤ a := nonneg_of_mul_nonneg_left ha (by positivity)
     have hb' : b = 0 := eq_zero_of_ne_zero_of_mul_right_eq_zero (pow_ne_zero 2 hx'.ne') hb
     exact (SameRay.sameRay_nonneg_smul_right x ha').add_right $ by simp [hb']
@@ -499,7 +500,8 @@ theorem abs_kahler (x y : E) : Complex.abs (o.kahler x y) = ‖x‖ * ‖y‖ :=
 theorem norm_kahler (x y : E) : ‖o.kahler x y‖ = ‖x‖ * ‖y‖ := by simpa using o.abs_kahler x y
 
 theorem eq_zero_or_eq_zero_of_kahler_eq_zero {x y : E} (hx : o.kahler x y = 0) : x = 0 ∨ y = 0 := by
-  have : ‖x‖ * ‖y‖ = 0 := by simpa [hx] using (o.norm_kahler x y).symm
+  have  : ‖x‖ * ‖y‖ = 0
+  simpa [hx] using (o.norm_kahler x y).symm
   cases' eq_zero_or_eq_zero_of_mul_eq_zero this with h h
   · left
     simpa using h

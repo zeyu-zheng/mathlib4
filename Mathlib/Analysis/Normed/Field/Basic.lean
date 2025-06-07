@@ -383,7 +383,8 @@ theorem List.nnnorm_prod_le [NormOneClass α] (l : List α) : ‖l.prod‖₊ �
 theorem Finset.norm_prod_le' {α : Type*} [NormedCommRing α] (s : Finset ι) (hs : s.Nonempty)
     (f : ι → α) : ‖∏ i ∈ s, f i‖ ≤ ∏ i ∈ s, ‖f i‖ := by
   rcases s with ⟨⟨l⟩, hl⟩
-  have : l.map f ≠ [] := by simpa using hs
+  have  : l.map f ≠ []
+  simpa using hs
   simpa using List.norm_prod_le' this
 
 theorem Finset.nnnorm_prod_le' {α : Type*} [NormedCommRing α] (s : Finset ι) (hs : s.Nonempty)
@@ -821,16 +822,16 @@ instance (priority := 100) NormedDivisionRing.to_hasContinuousInv₀ : HasContin
   refine ⟨fun r r0 => tendsto_iff_norm_sub_tendsto_zero.2 ?_⟩
   have r0' : 0 < ‖r‖ := norm_pos_iff.2 r0
   rcases exists_between r0' with ⟨ε, ε0, εr⟩
-  have : ∀ᶠ e in 𝓝 r, ‖e⁻¹ - r⁻¹‖ ≤ ‖r - e‖ / ‖r‖ / ε := by
-    filter_upwards [(isOpen_lt continuous_const continuous_norm).eventually_mem εr] with e he
-    have e0 : e ≠ 0 := norm_pos_iff.1 (ε0.trans he)
-    calc
-      ‖e⁻¹ - r⁻¹‖ = ‖r‖⁻¹ * ‖r - e‖ * ‖e‖⁻¹ := by
-        rw [← norm_inv, ← norm_inv, ← norm_mul, ← norm_mul, _root_.mul_sub, _root_.sub_mul,
-          mul_assoc _ e, inv_mul_cancel r0, mul_inv_cancel e0, one_mul, mul_one]
-      -- Porting note: `ENNReal.{mul_sub, sub_mul}` should be `protected`
-      _ = ‖r - e‖ / ‖r‖ / ‖e‖ := by field_simp [mul_comm]
-      _ ≤ ‖r - e‖ / ‖r‖ / ε := by gcongr
+  have  : ∀ᶠ e in 𝓝 r, ‖e⁻¹ - r⁻¹‖ ≤ ‖r - e‖ / ‖r‖ / ε
+  filter_upwards [(isOpen_lt continuous_const continuous_norm).eventually_mem εr] with e he
+  have e0 : e ≠ 0 := norm_pos_iff.1 (ε0.trans he)
+  calc
+    ‖e⁻¹ - r⁻¹‖ = ‖r‖⁻¹ * ‖r - e‖ * ‖e‖⁻¹ := by
+      rw [← norm_inv, ← norm_inv, ← norm_mul, ← norm_mul, _root_.mul_sub, _root_.sub_mul,
+        mul_assoc _ e, inv_mul_cancel r0, mul_inv_cancel e0, one_mul, mul_one]
+    -- Porting note: `ENNReal.{mul_sub, sub_mul}` should be `protected`
+    _ = ‖r - e‖ / ‖r‖ / ‖e‖ := by field_simp [mul_comm]
+    _ ≤ ‖r - e‖ / ‖r‖ / ε := by gcongr
   refine squeeze_zero' (eventually_of_forall fun _ => norm_nonneg _) this ?_
   refine (((continuous_const.sub continuous_id).norm.div_const _).div_const _).tendsto' _ _ ?_
   simp

@@ -76,8 +76,8 @@ theorem bitIndices_bit_false (n : ℕ) :
 @[simp] theorem twoPowSum_bitIndices (n : ℕ) : (n.bitIndices.map (fun i ↦ 2 ^ i)).sum = n := by
   induction' n using binaryRec with b n hs
   · simp
-  have hrw : (fun i ↦ 2^i) ∘ (fun x ↦ x+1) = fun i ↦ 2 * 2 ^ i := by
-    ext i; simp [pow_add, mul_comm]
+  have hrw  : (fun i ↦ 2^i) ∘ (fun x ↦ x+1) = fun i ↦ 2 * 2 ^ i
+  ext i; simp [pow_add, mul_comm]
   cases b
   · simpa [hrw, List.sum_map_mul_left]
   simp [hrw, List.sum_map_mul_left, hs, add_comm (a := 1)]
@@ -90,19 +90,20 @@ theorem bitIndices_twoPowsum {L : List ℕ} (hL : List.Sorted (· < ·) L) :
   · simp
   obtain ⟨haL, hL⟩ := sorted_cons.1 hL
   simp_rw [Nat.lt_iff_add_one_le] at haL
-  have h' : ∃ (L₀ : List ℕ), L₀.Sorted (· < ·) ∧ L = L₀.map (· + a + 1) := by
-    refine ⟨L.map (· - (a+1)), ?_, ?_⟩
-    · rwa [Sorted, pairwise_map, Pairwise.and_mem,
-        Pairwise.iff (S := fun x y ↦ x ∈ L ∧ y ∈ L ∧ x < y), ← Pairwise.and_mem]
-      simp only [and_congr_right_iff]
-      exact fun x y hx _ ↦ by rw [tsub_lt_tsub_iff_right (haL _ hx)]
-    have h' : ∀ x ∈ L, ((fun x ↦ x + a + 1) ∘ (fun x ↦ x - (a + 1))) x = x := fun x hx ↦ by
-      simp only [add_assoc, Function.comp_apply]; rw [tsub_add_cancel_of_le (haL _ hx)]
-    simp [List.map_congr_left h']
+  have h'  : ∃ (L₀ : List ℕ), L₀.Sorted (· < ·) ∧ L = L₀.map (· + a + 1)
+  refine ⟨L.map (· - (a+1)), ?_, ?_⟩
+  · rwa [Sorted, pairwise_map, Pairwise.and_mem,
+      Pairwise.iff (S := fun x y ↦ x ∈ L ∧ y ∈ L ∧ x < y), ← Pairwise.and_mem]
+    simp only [and_congr_right_iff]
+    exact fun x y hx _ ↦ by rw [tsub_lt_tsub_iff_right (haL _ hx)]
+  have h' : ∀ x ∈ L, ((fun x ↦ x + a + 1) ∘ (fun x ↦ x - (a + 1))) x = x := fun x hx ↦ by
+    simp only [add_assoc, Function.comp_apply]; rw [tsub_add_cancel_of_le (haL _ hx)]
+  simp [List.map_congr_left h']
   obtain ⟨L₀, hL₀, rfl⟩ := h'
-  have _ : L₀.length < (a :: (L₀.map (· + a + 1))).length := by simp
-  have hrw : (2^·) ∘ (· + a + 1) = fun i ↦ 2^a * (2 * 2^i) := by
-    ext x; simp only [Function.comp_apply, pow_add, pow_one]; ac_rfl
+  have _  : L₀.length < (a :: (L₀.map (· + a + 1))).length
+  simp
+  have hrw  : (2^·) ∘ (· + a + 1) = fun i ↦ 2^a * (2 * 2^i)
+  ext x; simp only [Function.comp_apply, pow_add, pow_one]; ac_rfl
   simp only [List.map_cons, List.map_map, List.sum_map_mul_left, List.sum_cons, hrw]
   nth_rw 1 [← mul_one (a := 2^a)]
   rw [← mul_add, bitIndices_two_pow_mul, add_comm, bitIndices_two_mul_add_one,

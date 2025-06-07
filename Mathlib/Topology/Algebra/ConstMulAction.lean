@@ -448,9 +448,9 @@ instance (priority := 100) t2Space_of_properlyDiscontinuousSMul_of_t2Space [T2Sp
   let U₀ := U₀₀ ∩ K₀
   let V₀₀ := ⋂ γ ∈ bad_Γ_set, v γ
   let V₀ := V₀₀ ∩ L₀
-  have U_nhds : f '' U₀ ∈ 𝓝 (f x₀) := by
-    refine f_op.image_mem_nhds (inter_mem ((biInter_mem bad_Γ_finite).mpr fun γ _ => ?_) K₀_in)
-    exact (continuous_const_smul _).continuousAt (hu γ)
+  have U_nhds  : f '' U₀ ∈ 𝓝 (f x₀)
+  refine f_op.image_mem_nhds (inter_mem ((biInter_mem bad_Γ_finite).mpr fun γ _ => ?_) K₀_in)
+  exact (continuous_const_smul _).continuousAt (hu γ)
   have V_nhds : f '' V₀ ∈ 𝓝 (f y₀) :=
     f_op.image_mem_nhds (inter_mem ((biInter_mem bad_Γ_finite).mpr fun γ _ => hv γ) L₀_in)
   refine ⟨f '' U₀, U_nhds, f '' V₀, V_nhds, MulAction.disjoint_image_image_iff.2 ?_⟩

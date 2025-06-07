@@ -68,7 +68,8 @@ lemma hasSum_mellin_pi_mul {a : ι → ℂ} {q : ι → ℝ} {F : ℝ → ℂ} {
     (hF : ∀ t ∈ Ioi 0, HasSum (fun i ↦ a i * rexp (-π * q i * t)) (F t))
     (h_sum : Summable fun i ↦ ‖a i‖ / (q i) ^ s.re) :
     HasSum (fun i ↦ π ^ (-s) * Gamma s * a i / q i ^ s) (mellin F s) := by
-  have hp i : a i = 0 ∨ 0 < π * q i := by rcases hq i with h | h <;> simp [h, pi_pos]
+  have hp i  : a i = 0 ∨ 0 < π * q i
+  rcases hq i with h | h <;> simp [h, pi_pos]
   convert hasSum_mellin hp hs (by simpa using hF) ?_ using 2 with i
   · have : a i / ↑(π * q i) ^ s = π ^ (-s) * a i / q i ^ s := by
       rcases hq i with h | h
@@ -91,10 +92,10 @@ lemma hasSum_mellin_pi_mul₀ {a : ι → ℂ} {p : ι → ℝ} {F : ℝ → ℂ
     HasSum (fun i ↦ π ^ (-s) * Gamma s * a i / p i ^ s) (mellin F s) := by
   have hs' : s ≠ 0 := fun h ↦ lt_irrefl _ (zero_re ▸ h ▸ hs)
   let a' i := if p i = 0 then 0 else a i
-  have hp' i : a' i = 0 ∨ 0 < p i := by
-    simp only [a']
-    split_ifs with h <;> tauto
-    exact Or.inr (lt_of_le_of_ne (hp i) (Ne.symm h))
+  have hp' i  : a' i = 0 ∨ 0 < p i
+  simp only [a']
+  split_ifs with h <;> tauto
+  exact Or.inr (lt_of_le_of_ne (hp i) (Ne.symm h))
   have (i t) : (if p i = 0 then 0 else a i * rexp (-π * p i * t)) =
       a' i * rexp (-π * p i * t) := by
     simp only [a', ite_mul, zero_mul]
@@ -115,7 +116,8 @@ lemma hasSum_mellin_pi_mul_sq {a : ι → ℂ} {r : ι → ℝ} {F : ℝ → ℂ
     (hF : ∀ t ∈ Ioi 0, HasSum (fun i ↦ if r i = 0 then 0 else a i * rexp (-π * r i ^ 2 * t)) (F t))
     (h_sum : Summable fun i ↦ ‖a i‖ / |r i| ^ s.re) :
     HasSum (fun i ↦ Gammaℝ s * a i / |r i| ^ s) (mellin F (s / 2)) := by
-  have hs' : 0 < (s / 2).re := by rw [div_ofNat_re]; positivity
+  have hs'  : 0 < (s / 2).re
+  rw [div_ofNat_re]; positivity
   simp_rw [← sq_eq_zero_iff (a := r _)] at hF
   convert hasSum_mellin_pi_mul₀ (fun i ↦ sq_nonneg (r i)) hs' hF ?_ using 3 with i
   · rw [← neg_div, Gammaℝ_def]
@@ -133,7 +135,8 @@ lemma hasSum_mellin_pi_mul_sq' {a : ι → ℂ} {r : ι → ℝ} {F : ℝ → �
     HasSum (fun i ↦ Gammaℝ (s + 1) * a i * SignType.sign (r i) / |r i| ^ s)
     (mellin F ((s + 1) / 2)) := by
   have hs₁ : s ≠ 0 := fun h ↦ lt_irrefl _ (zero_re ▸ h ▸ hs)
-  have hs₂ : 0 < (s + 1).re := by rw [add_re, one_re]; positivity
+  have hs₂  : 0 < (s + 1).re
+  rw [add_re, one_re]; positivity
   have hs₃ : s + 1 ≠ 0 := fun h ↦ lt_irrefl _ (zero_re ▸ h ▸ hs₂)
   have (i t) : (a i * r i * rexp (-π * r i ^ 2 * t)) =
       if r i = 0 then 0 else (a i * r i * rexp (-π * r i ^ 2 * t)) := by

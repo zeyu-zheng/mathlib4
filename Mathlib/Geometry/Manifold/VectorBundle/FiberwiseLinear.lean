@@ -116,25 +116,25 @@ theorem SmoothFiberwiseLinear.locality_aux₁ (e : PartialHomeomorph (B × F) (B
               (FiberwiseLinear.partialHomeomorph φ hu hφ.continuousOn h2φ.continuousOn) := by
   rw [SetCoe.forall'] at h
   choose s hs hsp φ u hu hφ h2φ heφ using h
-  have hesu : ∀ p : e.source, e.source ∩ s p = u p ×ˢ univ := by
-    intro p
-    rw [← e.restr_source' (s _) (hs _)]
-    exact (heφ p).1
-  have hu' : ∀ p : e.source, (p : B × F).fst ∈ u p := by
-    intro p
-    have : (p : B × F) ∈ e.source ∩ s p := ⟨p.prop, hsp p⟩
-    simpa only [hesu, mem_prod, mem_univ, and_true_iff] using this
-  have heu : ∀ p : e.source, ∀ q : B × F, q.fst ∈ u p → q ∈ e.source := by
-    intro p q hq
-    have : q ∈ u p ×ˢ (univ : Set F) := ⟨hq, trivial⟩
-    rw [← hesu p] at this
-    exact this.1
-  have he : e.source = (Prod.fst '' e.source) ×ˢ (univ : Set F) := by
-    apply HasSubset.Subset.antisymm
-    · intro p hp
-      exact ⟨⟨p, hp, rfl⟩, trivial⟩
-    · rintro ⟨x, v⟩ ⟨⟨p, hp, rfl : p.fst = x⟩, -⟩
-      exact heu ⟨p, hp⟩ (p.fst, v) (hu' ⟨p, hp⟩)
+  have hesu  : ∀ p : e.source, e.source ∩ s p = u p ×ˢ univ
+  intro p
+  rw [← e.restr_source' (s _) (hs _)]
+  exact (heφ p).1
+  have hu'  : ∀ p : e.source, (p : B × F).fst ∈ u p
+  intro p
+  have : (p : B × F) ∈ e.source ∩ s p := ⟨p.prop, hsp p⟩
+  simpa only [hesu, mem_prod, mem_univ, and_true_iff] using this
+  have heu  : ∀ p : e.source, ∀ q : B × F, q.fst ∈ u p → q ∈ e.source
+  intro p q hq
+  have : q ∈ u p ×ˢ (univ : Set F) := ⟨hq, trivial⟩
+  rw [← hesu p] at this
+  exact this.1
+  have he  : e.source = (Prod.fst '' e.source) ×ˢ (univ : Set F)
+  apply HasSubset.Subset.antisymm
+  · intro p hp
+    exact ⟨⟨p, hp, rfl⟩, trivial⟩
+  · rintro ⟨x, v⟩ ⟨⟨p, hp, rfl : p.fst = x⟩, -⟩
+    exact heu ⟨p, hp⟩ (p.fst, v) (hu' ⟨p, hp⟩)
   refine ⟨Prod.fst '' e.source, he, ?_⟩
   rintro x ⟨p, hp, rfl⟩
   refine ⟨φ ⟨p, hp⟩, u ⟨p, hp⟩, hu ⟨p, hp⟩, ?_, hu' _, hφ ⟨p, hp⟩, h2φ ⟨p, hp⟩, ?_⟩
@@ -176,15 +176,15 @@ theorem SmoothFiberwiseLinear.locality_aux₂ (e : PartialHomeomorph (B × F) (B
     have h1 : e (y, v) = (y, φ p y v) := heuφ _ ⟨(id hyp : (y, v).fst ∈ u p), trivial⟩
     have h2 : e (y, v) = (y, φ p' y v) := heuφ _ ⟨(id hyp' : (y, v).fst ∈ u p'), trivial⟩
     exact congr_arg Prod.snd (h1.symm.trans h2)
-  have hUu' : U = ⋃ i, u i := by
-    ext x
-    rw [mem_iUnion]
-    refine ⟨fun h => ⟨⟨x, h⟩, hux _⟩, ?_⟩
-    rintro ⟨x, hx⟩
-    exact hUu x hx
-  have hU' : IsOpen U := by
-    rw [hUu']
-    apply isOpen_iUnion hu
+  have hUu'  : U = ⋃ i, u i
+  ext x
+  rw [mem_iUnion]
+  refine ⟨fun h => ⟨⟨x, h⟩, hux _⟩, ?_⟩
+  rintro ⟨x, hx⟩
+  exact hUu x hx
+  have hU'  : IsOpen U
+  rw [hUu']
+  apply isOpen_iUnion hu
   let Φ₀ : U → F ≃L[𝕜] F := iUnionLift u (fun x => φ x ∘ (↑)) huφ U hUu'.le
   let Φ : B → F ≃L[𝕜] F := fun y =>
     if hy : y ∈ U then Φ₀ ⟨y, hy⟩ else ContinuousLinearEquiv.refl 𝕜 F

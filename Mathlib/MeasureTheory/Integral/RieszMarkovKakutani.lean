@@ -93,10 +93,10 @@ theorem rieszContentAux_sup_le (K1 K2 : Compacts X) :
   obtain ⟨f1, f_test_function_K1⟩ := exists_lt_rieszContentAux_add_pos Λ K1 (half_pos εpos)
   obtain ⟨f2, f_test_function_K2⟩ := exists_lt_rieszContentAux_add_pos Λ K2 (half_pos εpos)
   --let `f := f1 + f2` test function for the content of `K`
-  have f_test_function_union : ∀ x ∈ K1 ⊔ K2, (1 : ℝ≥0) ≤ (f1 + f2) x := by
-    rintro x (x_in_K1 | x_in_K2)
-    · exact le_add_right (f_test_function_K1.left x x_in_K1)
-    · exact le_add_left (f_test_function_K2.left x x_in_K2)
+  have f_test_function_union  : ∀ x ∈ K1 ⊔ K2, (1 : ℝ≥0) ≤ (f1 + f2) x
+  rintro x (x_in_K1 | x_in_K2)
+  · exact le_add_right (f_test_function_K1.left x x_in_K1)
+  · exact le_add_left (f_test_function_K2.left x x_in_K2)
   --use that `Λf` is an upper bound for `λ(K1⊔K2)`
   apply (rieszContentAux_le Λ f_test_function_union).trans (le_of_lt _)
   rw [map_add]

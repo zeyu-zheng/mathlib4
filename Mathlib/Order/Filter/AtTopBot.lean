@@ -1692,7 +1692,8 @@ theorem tendsto_iff_seq_tendsto {f : α → β} {k : Filter α} {l : Filter β} 
     Tendsto f k l ↔ ∀ x : ℕ → α, Tendsto x atTop k → Tendsto (f ∘ x) atTop l := by
   refine ⟨fun h x hx => h.comp hx, fun H s hs => ?_⟩
   contrapose! H
-  have : NeBot (k ⊓ 𝓟 (f ⁻¹' sᶜ)) := by simpa [neBot_iff, inf_principal_eq_bot]
+  have  : NeBot (k ⊓ 𝓟 (f ⁻¹' sᶜ))
+  simpa [neBot_iff, inf_principal_eq_bot]
   rcases (k ⊓ 𝓟 (f ⁻¹' sᶜ)).exists_seq_tendsto with ⟨x, hx⟩
   rw [tendsto_inf, tendsto_principal] at hx
   refine ⟨x, hx.1, fun h => ?_⟩

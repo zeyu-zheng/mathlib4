@@ -161,13 +161,14 @@ open ZeroObject
 
 instance (priority := 100) [F.IsTriangulated] : PreservesZeroMorphisms F where
   map_zero X Y := by
-    have h₁ : (0 : X ⟶ Y) = 0 ≫ 𝟙 0 ≫ 0 := by simp
-    have h₂ : 𝟙 (F.obj 0) = 0 := by
-      rw [← IsZero.iff_id_eq_zero]
-      apply Triangle.isZero₃_of_isIso₁ _
-        (F.map_distinguished _ (contractible_distinguished (0 : C)))
-      dsimp
-      infer_instance
+    have h₁  : (0 : X ⟶ Y) = 0 ≫ 𝟙 0 ≫ 0
+    simp
+    have h₂  : 𝟙 (F.obj 0) = 0
+    rw [← IsZero.iff_id_eq_zero]
+    apply Triangle.isZero₃_of_isIso₁ _
+      (F.map_distinguished _ (contractible_distinguished (0 : C)))
+    dsimp
+    infer_instance
     rw [h₁, F.map_comp, F.map_comp, F.map_id, h₂, zero_comp, comp_zero]
 
 noncomputable instance [F.IsTriangulated] :

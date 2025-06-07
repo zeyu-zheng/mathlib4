@@ -216,9 +216,9 @@ theorem hasFiniteIntegral_neg_iff {f : α → β} : HasFiniteIntegral (-f) μ �
 
 theorem HasFiniteIntegral.norm {f : α → β} (hfi : HasFiniteIntegral f μ) :
     HasFiniteIntegral (fun a => ‖f a‖) μ := by
-  have eq : (fun a => (nnnorm ‖f a‖ : ℝ≥0∞)) = fun a => (‖f a‖₊ : ℝ≥0∞) := by
-    funext
-    rw [nnnorm_norm]
+  have eq  : (fun a => (nnnorm ‖f a‖ : ℝ≥0∞)) = fun a => (‖f a‖₊ : ℝ≥0∞)
+  funext
+  rw [nnnorm_norm]
   rwa [HasFiniteIntegral, eq]
 
 theorem hasFiniteIntegral_norm_iff (f : α → β) :
@@ -285,24 +285,24 @@ theorem tendsto_lintegral_norm_of_dominated_convergence {F : ℕ → α → β} 
     (h_bound : ∀ n, ∀ᵐ a ∂μ, ‖F n a‖ ≤ bound a)
     (h_lim : ∀ᵐ a ∂μ, Tendsto (fun n => F n a) atTop (𝓝 (f a))) :
     Tendsto (fun n => ∫⁻ a, ENNReal.ofReal ‖F n a - f a‖ ∂μ) atTop (𝓝 0) := by
-  have f_measurable : AEStronglyMeasurable f μ :=
-    aestronglyMeasurable_of_tendsto_ae _ F_measurable h_lim
+  have f_measurable : AEStronglyMeasurable f μ
+  apply aestronglyMeasurable_of_tendsto_ae _ F_measurable h_lim
   let b a := 2 * ENNReal.ofReal (bound a)
   /- `‖F n a‖ ≤ bound a` and `F n a --> f a` implies `‖f a‖ ≤ bound a`, and thus by the
     triangle inequality, have `‖F n a - f a‖ ≤ 2 * (bound a)`. -/
-  have hb : ∀ n, ∀ᵐ a ∂μ, ENNReal.ofReal ‖F n a - f a‖ ≤ b a := by
-    intro n
-    filter_upwards [all_ae_ofReal_F_le_bound h_bound n,
-      all_ae_ofReal_f_le_bound h_bound h_lim] with a h₁ h₂
-    calc
-      ENNReal.ofReal ‖F n a - f a‖ ≤ ENNReal.ofReal ‖F n a‖ + ENNReal.ofReal ‖f a‖ := by
-        rw [← ENNReal.ofReal_add]
-        · apply ofReal_le_ofReal
-          apply norm_sub_le
-        · exact norm_nonneg _
-        · exact norm_nonneg _
-      _ ≤ ENNReal.ofReal (bound a) + ENNReal.ofReal (bound a) := add_le_add h₁ h₂
-      _ = b a := by rw [← two_mul]
+  have hb : ∀ n, ∀ᵐ a ∂μ, ENNReal.ofReal ‖F n a - f a‖ ≤ b a
+  intro n
+  filter_upwards [all_ae_ofReal_F_le_bound h_bound n,
+    all_ae_ofReal_f_le_bound h_bound h_lim] with a h₁ h₂
+  calc
+    ENNReal.ofReal ‖F n a - f a‖ ≤ ENNReal.ofReal ‖F n a‖ + ENNReal.ofReal ‖f a‖ := by
+      rw [← ENNReal.ofReal_add]
+      · apply ofReal_le_ofReal
+        apply norm_sub_le
+      · exact norm_nonneg _
+      · exact norm_nonneg _
+    _ ≤ ENNReal.ofReal (bound a) + ENNReal.ofReal (bound a) := add_le_add h₁ h₂
+    _ = b a := by rw [← two_mul]
   -- On the other hand, `F n a --> f a` implies that `‖F n a - f a‖ --> 0`
   have h : ∀ᵐ a ∂μ, Tendsto (fun n => ENNReal.ofReal ‖F n a - f a‖) atTop (𝓝 0) := by
     rw [← ENNReal.ofReal_zero]
@@ -428,7 +428,8 @@ theorem integrable_congr {f g : α → β} (h : f =ᵐ[μ] g) : Integrable f μ 
   ⟨fun hf => hf.congr h, fun hg => hg.congr h.symm⟩
 
 theorem integrable_const_iff {c : β} : Integrable (fun _ : α => c) μ ↔ c = 0 ∨ μ univ < ∞ := by
-  have : AEStronglyMeasurable (fun _ : α => c) μ := aestronglyMeasurable_const
+  have : AEStronglyMeasurable (fun _ : α => c) μ
+  apply aestronglyMeasurable_const
   rw [Integrable, and_iff_right this, hasFiniteIntegral_const_iff]
 
 @[simp]
@@ -684,10 +685,10 @@ theorem Integrable.bdd_mul {F : Type*} [NormedDivisionRing F] {f g : α → F} (
   · refine ⟨hm.mul hint.1, ?_⟩
     obtain ⟨C, hC⟩ := hfbdd
     have hCnonneg : 0 ≤ C := le_trans (norm_nonneg _) (hC hα.some)
-    have : (fun x => ‖f x * g x‖₊) ≤ fun x => ⟨C, hCnonneg⟩ * ‖g x‖₊ := by
-      intro x
-      simp only [nnnorm_mul]
-      exact mul_le_mul_of_nonneg_right (hC x) (zero_le _)
+    have  : (fun x => ‖f x * g x‖₊) ≤ fun x => ⟨C, hCnonneg⟩ * ‖g x‖₊
+    intro x
+    simp only [nnnorm_mul]
+    exact mul_le_mul_of_nonneg_right (hC x) (zero_le _)
     refine lt_of_le_of_lt (lintegral_mono_nnreal this) ?_
     simp only [ENNReal.coe_mul]
     rw [lintegral_const_mul' _ _ ENNReal.coe_ne_top]
@@ -701,8 +702,10 @@ theorem Integrable.essSup_smul {𝕜 : Type*} [NormedField 𝕜] [NormedSpace �
     Integrable (fun x : α => g x • f x) μ := by
   rw [← memℒp_one_iff_integrable] at *
   refine ⟨g_aestronglyMeasurable.smul hf.1, ?_⟩
-  have h : (1 : ℝ≥0∞) / 1 = 1 / ∞ + 1 / 1 := by norm_num
-  have hg' : eLpNorm g ∞ μ ≠ ∞ := by rwa [eLpNorm_exponent_top]
+  have h  : (1 : ℝ≥0∞) / 1 = 1 / ∞ + 1 / 1
+  norm_num
+  have hg'  : eLpNorm g ∞ μ ≠ ∞
+  rwa [eLpNorm_exponent_top]
   calc
     eLpNorm (fun x : α => g x • f x) 1 μ ≤ _ := by
       simpa using MeasureTheory.eLpNorm_smul_le_mul_eLpNorm hf.1 g_aestronglyMeasurable h
@@ -717,8 +720,10 @@ theorem Integrable.smul_essSup {𝕜 : Type*} [NormedRing 𝕜] [Module 𝕜 β]
     Integrable (fun x : α => f x • g x) μ := by
   rw [← memℒp_one_iff_integrable] at *
   refine ⟨hf.1.smul g_aestronglyMeasurable, ?_⟩
-  have h : (1 : ℝ≥0∞) / 1 = 1 / 1 + 1 / ∞ := by norm_num
-  have hg' : eLpNorm g ∞ μ ≠ ∞ := by rwa [eLpNorm_exponent_top]
+  have h  : (1 : ℝ≥0∞) / 1 = 1 / 1 + 1 / ∞
+  norm_num
+  have hg'  : eLpNorm g ∞ μ ≠ ∞
+  rwa [eLpNorm_exponent_top]
   calc
     eLpNorm (fun x : α => f x • g x) 1 μ ≤ _ := by
       simpa using MeasureTheory.eLpNorm_smul_le_mul_eLpNorm g_aestronglyMeasurable hf.1 h
@@ -849,9 +854,9 @@ lemma integrable_count_iff :
   -- (because summable functions have countable range) but slightly tedious to check.
   rw [Integrable, hasFiniteIntegral_count_iff, and_iff_right_iff_imp]
   intro hs
-  have hs' : (Function.support f).Countable := by
-    simpa only [Ne, Pi.zero_apply, eq_comm, Function.support, norm_eq_zero]
-      using hs.countable_support
+  have hs'  : (Function.support f).Countable
+  simpa only [Ne, Pi.zero_apply, eq_comm, Function.support, norm_eq_zero]
+    using hs.countable_support
   letI : MeasurableSpace β := borel β
   haveI : BorelSpace β := ⟨rfl⟩
   refine aestronglyMeasurable_iff_aemeasurable_separable.mpr ⟨?_, ?_⟩
@@ -926,7 +931,8 @@ end
 
 theorem integrable_withDensity_iff {f : α → ℝ≥0∞} (hf : Measurable f) (hflt : ∀ᵐ x ∂μ, f x < ∞)
     {g : α → ℝ} : Integrable g (μ.withDensity f) ↔ Integrable (fun x => g x * (f x).toReal) μ := by
-  have : (fun x => g x * (f x).toReal) = fun x => (f x).toReal • g x := by simp [mul_comm]
+  have  : (fun x => g x * (f x).toReal) = fun x => (f x).toReal • g x
+  simp [mul_comm]
   rw [this]
   exact integrable_withDensity_iff_integrable_smul' hf hflt
 
@@ -1069,7 +1075,8 @@ theorem integrable_smul_const {f : α → 𝕜} {c : E} (hc : c ≠ 0) :
   simp_rw [Integrable, aestronglyMeasurable_smul_const_iff (f := f) hc, and_congr_right_iff,
     HasFiniteIntegral, nnnorm_smul, ENNReal.coe_mul]
   intro _; rw [lintegral_mul_const' _ _ ENNReal.coe_ne_top, ENNReal.mul_lt_top_iff]
-  have : ∀ x : ℝ≥0∞, x = 0 → x < ∞ := by simp
+  have  : ∀ x : ℝ≥0∞, x = 0 → x < ∞
+  simp
   simp [hc, or_iff_left_of_imp (this _)]
 
 end NormedSpaceOverCompleteField

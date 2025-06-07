@@ -89,9 +89,9 @@ theorem isIntegralClosure_adjoin_singleton_of_prime_pow [hcycl : IsCyclotomicExt
     Units.inv_mul, Int.cast_one, one_mul, smul_def, map_pow] at H
   cases k
   · haveI : IsCyclotomicExtension {1} ℚ K := by simpa using hcycl
-    have : x ∈ (⊥ : Subalgebra ℚ K) := by
-      rw [singleton_one ℚ K]
-      exact mem_top
+    have  : x ∈ (⊥ : Subalgebra ℚ K)
+    rw [singleton_one ℚ K]
+    exact mem_top
     obtain ⟨y, rfl⟩ := mem_bot.1 this
     replace h := (isIntegral_algebraMap_iff (algebraMap ℚ K).injective).1 h
     obtain ⟨z, hz⟩ := IsIntegrallyClosed.isIntegral_iff.1 h
@@ -389,7 +389,8 @@ lemma norm_toInteger_sub_one_of_prime_ne_two [IsCyclotomicExtension {p ^ (k + 1)
 `p ≠ 2`. -/
 lemma norm_toInteger_sub_one_of_prime_ne_two' [hcycl : IsCyclotomicExtension {p} ℚ K]
     (hζ : IsPrimitiveRoot ζ p) (h : p ≠ 2) : Algebra.norm ℤ (hζ.toInteger - 1) = p := by
-  have : IsCyclotomicExtension {p ^ (0 + 1)} ℚ K := by simpa using hcycl
+  have  : IsCyclotomicExtension {p ^ (0 + 1)} ℚ K
+  simpa using hcycl
   replace hζ : IsPrimitiveRoot ζ (p ^ (0 + 1)) := by simpa using hζ
   exact hζ.norm_toInteger_sub_one_of_prime_ne_two h
 
@@ -418,7 +419,8 @@ lemma prime_norm_toInteger_sub_one_of_prime_ne_two [hcycl : IsCyclotomicExtensio
 lemma prime_norm_toInteger_sub_one_of_prime_ne_two' [hcycl : IsCyclotomicExtension {p} ℚ K]
     (hζ : IsPrimitiveRoot ζ ↑p) (hodd : p ≠ 2) :
     Prime (Algebra.norm ℤ (hζ.toInteger - 1)) := by
-  have : IsCyclotomicExtension {p ^ (0 + 1)} ℚ K := by simpa using hcycl
+  have  : IsCyclotomicExtension {p ^ (0 + 1)} ℚ K
+  simpa using hcycl
   replace hζ : IsPrimitiveRoot ζ (p ^ (0 + 1)) := by simpa using hζ
   exact hζ.prime_norm_toInteger_sub_one_of_prime_ne_two hodd
 
@@ -431,8 +433,8 @@ theorem not_exists_int_prime_dvd_sub_of_prime_pow_ne_two
   intro ⟨n, x, h⟩
   -- Let `pB` be the power basis of `𝓞 K` given by powers of `ζ`.
   let pB := hζ.integralPowerBasis
-  have hdim : pB.dim = ↑p ^ k * (↑p - 1) := by
-    simp [integralPowerBasis_dim, pB, Nat.totient_prime_pow hp.1 (Nat.zero_lt_succ k)]
+  have hdim  : pB.dim = ↑p ^ k * (↑p - 1)
+  simp [integralPowerBasis_dim, pB, Nat.totient_prime_pow hp.1 (Nat.zero_lt_succ k)]
   replace hdim : 1 < pB.dim := by
     rw [Nat.one_lt_iff_ne_zero_and_ne_one, hdim]
     refine ⟨by simp only [ne_eq, mul_eq_zero, pow_eq_zero_iff', PNat.ne_zero, false_and, false_or,
@@ -476,7 +478,8 @@ theorem not_exists_int_prime_dvd_sub_of_prime_ne_two'
     [hcycl : IsCyclotomicExtension {p} ℚ K]
     (hζ : IsPrimitiveRoot ζ ↑p) (hodd : p ≠ 2) :
     ¬(∃ n : ℤ, (p : 𝓞 K) ∣ (hζ.toInteger - n : 𝓞 K)) := by
-  have : IsCyclotomicExtension {p ^ (0 + 1)} ℚ K := by simpa using hcycl
+  have  : IsCyclotomicExtension {p ^ (0 + 1)} ℚ K
+  simpa using hcycl
   replace hζ : IsPrimitiveRoot ζ (p ^ (0 + 1)) := by simpa using hζ
   exact not_exists_int_prime_dvd_sub_of_prime_ne_two hζ hodd
 
@@ -491,7 +494,8 @@ theorem finite_quotient_span_sub_one [hcycl : IsCyclotomicExtension {p ^ (k + 1)
 theorem finite_quotient_span_sub_one' [hcycl : IsCyclotomicExtension {p} ℚ K]
     (hζ : IsPrimitiveRoot ζ ↑p) :
     Finite (𝓞 K ⧸ Ideal.span {hζ.toInteger - 1}) := by
-  have : IsCyclotomicExtension {p ^ (0 + 1)} ℚ K := by simpa using hcycl
+  have  : IsCyclotomicExtension {p ^ (0 + 1)} ℚ K
+  simpa using hcycl
   replace hζ : IsPrimitiveRoot ζ (p ^ (0 + 1)) := by simpa using hζ
   exact hζ.finite_quotient_span_sub_one
 
@@ -503,9 +507,9 @@ lemma toInteger_sub_one_dvd_prime [hcycl : IsCyclotomicExtension {p ^ (k + 1)} �
   · replace htwo : (p : ℕ) ^ (k + 1) = 2 := by exact_mod_cast htwo
     have ⟨hp2, hk⟩ := (Nat.Prime.pow_eq_iff Nat.prime_two).1 htwo
     simp only [add_left_eq_self] at hk
-    have hζ' : ζ = -1 := by
-      refine IsPrimitiveRoot.eq_neg_one_of_two_right ?_
-      rwa [hk, zero_add, pow_one, hp2] at hζ
+    have hζ'  : ζ = -1
+    refine IsPrimitiveRoot.eq_neg_one_of_two_right ?_
+    rwa [hk, zero_add, pow_one, hp2] at hζ
     replace hζ' : hζ.toInteger = -1 := by
       ext
       exact hζ'
@@ -522,7 +526,8 @@ lemma toInteger_sub_one_dvd_prime [hcycl : IsCyclotomicExtension {p ^ (k + 1)} �
 /-- In a `p`-th cyclotomic extension of `ℚ`, we have that `ζ - 1` divides `p` in `𝓞 K`. -/
 lemma toInteger_sub_one_dvd_prime' [hcycl : IsCyclotomicExtension {p} ℚ K]
     (hζ : IsPrimitiveRoot ζ ↑p) : ((hζ.toInteger - 1)) ∣ p := by
-  have : IsCyclotomicExtension {p ^ (0 + 1)} ℚ K := by simpa using hcycl
+  have  : IsCyclotomicExtension {p ^ (0 + 1)} ℚ K
+  simpa using hcycl
   replace hζ : IsPrimitiveRoot ζ (p ^ (0 + 1)) := by simpa using hζ
   exact toInteger_sub_one_dvd_prime hζ
 
@@ -586,9 +591,9 @@ theorem absdiscr_prime_pow_succ [IsCyclotomicExtension {p ^ (k + 1)} ℚ K] :
 theorem absdiscr_prime [IsCyclotomicExtension {p} ℚ K] :
     haveI : NumberField K := IsCyclotomicExtension.numberField {p} ℚ K
     NumberField.discr K = (-1) ^ (((p : ℕ) - 1) / 2) * p ^ ((p : ℕ) - 2) := by
-  have : IsCyclotomicExtension {p ^ (0 + 1)} ℚ K := by
-    rw [zero_add, pow_one]
-    infer_instance
+  have  : IsCyclotomicExtension {p ^ (0 + 1)} ℚ K
+  rw [zero_add, pow_one]
+  infer_instance
   rw [absdiscr_prime_pow_succ p 0 K]
   simp only [Int.reduceNeg, pow_zero, one_mul, zero_add, mul_one, mul_eq_mul_left_iff, gt_iff_lt,
     Nat.cast_pos, PNat.pos, pow_eq_zero_iff', neg_eq_zero, one_ne_zero, ne_eq, false_and, or_false]

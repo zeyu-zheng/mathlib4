@@ -34,8 +34,8 @@ theorem imo1975_q1 :
     ∑ i ∈ Finset.Icc 1 n, (x i - y i) ^ 2 ≤ ∑ i ∈ Finset.Icc 1 n, (x i - y (σ i)) ^ 2 := by
   simp only [sub_sq, Finset.sum_add_distrib, Finset.sum_sub_distrib]
   -- a finite sum is invariant if we permute the order of summation
-  have hσy : ∑ i ∈ Finset.Icc 1 n, y i ^ 2 = ∑ i ∈ Finset.Icc 1 n, y (σ i) ^ 2 := by
-    rw [← Equiv.Perm.sum_comp σ (Finset.Icc 1 n) _ hσ]
+  have hσy  : ∑ i ∈ Finset.Icc 1 n, y i ^ 2 = ∑ i ∈ Finset.Icc 1 n, y (σ i) ^ 2
+  rw [← Equiv.Perm.sum_comp σ (Finset.Icc 1 n) _ hσ]
   -- let's cancel terms appearing on both sides
   rw [hσy, add_le_add_iff_right, sub_le_sub_iff_left]
   simp only [gt_iff_lt, Nat.lt_one_iff, mul_assoc, ← Finset.mul_sum, zero_lt_two, mul_le_mul_left]

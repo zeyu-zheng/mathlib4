@@ -211,25 +211,25 @@ private theorem cl_cl {X : Compactum} (A : Set X) : cl (cl A) ⊆ cl A := by
   let C1 := insert AA C0
   let C2 := finiteInterClosure C1
   -- C0 is closed under intersections.
-  have claim1 : ∀ (B) (_ : B ∈ C0) (C) (_ : C ∈ C0), B ∩ C ∈ C0 := by
-    rintro B ⟨Q, hQ, rfl⟩ C ⟨R, hR, rfl⟩
-    use Q ∩ R
-    simp only [and_true_iff, eq_self_iff_true, Set.preimage_inter]
-    exact inter_sets _ hQ hR
+  have claim1  : ∀ (B) (_ : B ∈ C0) (C) (_ : C ∈ C0), B ∩ C ∈ C0
+  rintro B ⟨Q, hQ, rfl⟩ C ⟨R, hR, rfl⟩
+  use Q ∩ R
+  simp only [and_true_iff, eq_self_iff_true, Set.preimage_inter]
+  exact inter_sets _ hQ hR
   -- All sets in C0 are nonempty.
-  have claim2 : ∀ B ∈ C0, Set.Nonempty B := by
-    rintro B ⟨Q, hQ, rfl⟩
-    obtain ⟨q⟩ := Filter.nonempty_of_mem hQ
-    use X.incl q
-    simpa
+  have claim2  : ∀ B ∈ C0, Set.Nonempty B
+  rintro B ⟨Q, hQ, rfl⟩
+  obtain ⟨q⟩ := Filter.nonempty_of_mem hQ
+  use X.incl q
+  simpa
   -- The intersection of AA with every set in C0 is nonempty.
-  have claim3 : ∀ B ∈ C0, (AA ∩ B).Nonempty := by
-    rintro B ⟨Q, hQ, rfl⟩
-    have : (Q ∩ cl A).Nonempty := Filter.nonempty_of_mem (inter_mem hQ hF)
-    rcases this with ⟨q, hq1, P, hq2, hq3⟩
-    refine ⟨P, hq2, ?_⟩
-    rw [← hq3] at hq1
-    simpa
+  have claim3  : ∀ B ∈ C0, (AA ∩ B).Nonempty
+  rintro B ⟨Q, hQ, rfl⟩
+  have : (Q ∩ cl A).Nonempty := Filter.nonempty_of_mem (inter_mem hQ hF)
+  rcases this with ⟨q, hq1, P, hq2, hq3⟩
+  refine ⟨P, hq2, ?_⟩
+  rw [← hq3] at hq1
+  simpa
   -- Suffices to show that the intersection of any finite subcollection of C1 is nonempty.
   suffices ∀ T : fsu, ι T ⊆ C1 → (⋂₀ ι T).Nonempty by
     obtain ⟨G, h1⟩ := exists_ultrafilter_of_finite_inter_nonempty _ this
@@ -242,15 +242,15 @@ private theorem cl_cl {X : Compactum} (A : Set X) : cl (cl A) ⊆ cl A := by
   -- C0 is closed under finite intersections by claim1.
   have claim5 : FiniteInter C0 := ⟨⟨_, univ_mem, Set.preimage_univ⟩, claim1⟩
   -- Every element of C2 is nonempty.
-  have claim6 : ∀ P ∈ C2, (P : Set (Ultrafilter X)).Nonempty := by
-    suffices ∀ P ∈ C2, P ∈ C0 ∨ ∃ Q ∈ C0, P = AA ∩ Q by
-      intro P hP
-      cases' this P hP with h h
-      · exact claim2 _ h
-      · rcases h with ⟨Q, hQ, rfl⟩
-        exact claim3 _ hQ
+  have claim6  : ∀ P ∈ C2, (P : Set (Ultrafilter X)).Nonempty
+  suffices ∀ P ∈ C2, P ∈ C0 ∨ ∃ Q ∈ C0, P = AA ∩ Q by
     intro P hP
-    exact claim5.finiteInterClosure_insert _ hP
+    cases' this P hP with h h
+    · exact claim2 _ h
+    · rcases h with ⟨Q, hQ, rfl⟩
+      exact claim3 _ hQ
+  intro P hP
+  exact claim5.finiteInterClosure_insert _ hP
   intro T hT
   -- Suffices to show that the intersection of the T's is contained in C2.
   suffices ⋂₀ ι T ∈ C2 by exact claim6 _ this
@@ -275,58 +275,58 @@ theorem str_eq_of_le_nhds {X : Compactum} (F : Ultrafilter X) (x : X) : ↑F ≤
   let T2 := finiteInterClosure T1
   intro cond
   -- If F contains a closed set A, then x is contained in A.
-  have claim1 : ∀ A : Set X, IsClosed A → A ∈ F → x ∈ A := by
-    intro A hA h
-    by_contra H
-    rw [le_nhds_iff] at cond
-    specialize cond Aᶜ H hA.isOpen_compl
-    rw [Ultrafilter.mem_coe, Ultrafilter.compl_mem_iff_not_mem] at cond
-    contradiction
+  have claim1  : ∀ A : Set X, IsClosed A → A ∈ F → x ∈ A
+  intro A hA h
+  by_contra H
+  rw [le_nhds_iff] at cond
+  specialize cond Aᶜ H hA.isOpen_compl
+  rw [Ultrafilter.mem_coe, Ultrafilter.compl_mem_iff_not_mem] at cond
+  contradiction
   -- If A ∈ F, then x ∈ cl A.
-  have claim2 : ∀ A : Set X, A ∈ F → x ∈ cl A := by
-    intro A hA
-    exact claim1 (cl A) (isClosed_cl A) (mem_of_superset hA (subset_cl A))
+  have claim2  : ∀ A : Set X, A ∈ F → x ∈ cl A
+  intro A hA
+  exact claim1 (cl A) (isClosed_cl A) (mem_of_superset hA (subset_cl A))
   -- T0 is closed under intersections.
-  have claim3 : ∀ (S1) (_ : S1 ∈ T0) (S2) (_ : S2 ∈ T0), S1 ∩ S2 ∈ T0 := by
-    rintro S1 ⟨S1, hS1, rfl⟩ S2 ⟨S2, hS2, rfl⟩
-    exact ⟨S1 ∩ S2, inter_mem hS1 hS2, by simp [basic_inter]⟩
+  have claim3  : ∀ (S1) (_ : S1 ∈ T0) (S2) (_ : S2 ∈ T0), S1 ∩ S2 ∈ T0
+  rintro S1 ⟨S1, hS1, rfl⟩ S2 ⟨S2, hS2, rfl⟩
+  exact ⟨S1 ∩ S2, inter_mem hS1 hS2, by simp [basic_inter]⟩
   -- For every S ∈ T0, the intersection AA ∩ S is nonempty.
-  have claim4 : ∀ S ∈ T0, (AA ∩ S).Nonempty := by
-    rintro S ⟨S, hS, rfl⟩
-    rcases claim2 _ hS with ⟨G, hG, hG2⟩
-    exact ⟨G, hG2, hG⟩
+  have claim4  : ∀ S ∈ T0, (AA ∩ S).Nonempty
+  rintro S ⟨S, hS, rfl⟩
+  rcases claim2 _ hS with ⟨G, hG, hG2⟩
+  exact ⟨G, hG2, hG⟩
   -- Every element of T0 is nonempty.
-  have claim5 : ∀ S ∈ T0, Set.Nonempty S := by
-    rintro S ⟨S, hS, rfl⟩
-    exact ⟨F, hS⟩
+  have claim5  : ∀ S ∈ T0, Set.Nonempty S
+  rintro S ⟨S, hS, rfl⟩
+  exact ⟨F, hS⟩
   -- Every element of T2 is nonempty.
-  have claim6 : ∀ S ∈ T2, Set.Nonempty S := by
-    suffices ∀ S ∈ T2, S ∈ T0 ∨ ∃ Q ∈ T0, S = AA ∩ Q by
-      intro S hS
-      cases' this _ hS with h h
-      · exact claim5 S h
-      · rcases h with ⟨Q, hQ, rfl⟩
-        exact claim4 Q hQ
+  have claim6  : ∀ S ∈ T2, Set.Nonempty S
+  suffices ∀ S ∈ T2, S ∈ T0 ∨ ∃ Q ∈ T0, S = AA ∩ Q by
     intro S hS
-    apply finiteInterClosure_insert
-    · constructor
-      · use Set.univ
-        refine ⟨Filter.univ_sets _, ?_⟩
-        ext
-        refine ⟨?_, by tauto⟩
-        · intro
-          apply Filter.univ_sets
-      · exact claim3
-    · exact hS
+    cases' this _ hS with h h
+    · exact claim5 S h
+    · rcases h with ⟨Q, hQ, rfl⟩
+      exact claim4 Q hQ
+  intro S hS
+  apply finiteInterClosure_insert
+  · constructor
+    · use Set.univ
+      refine ⟨Filter.univ_sets _, ?_⟩
+      ext
+      refine ⟨?_, by tauto⟩
+      · intro
+        apply Filter.univ_sets
+    · exact claim3
+  · exact hS
   -- It suffices to show that the intersection of any finite subset of T1 is nonempty.
   suffices ∀ F : fsu, ↑F ⊆ T1 → (⋂₀ ι F).Nonempty by
     obtain ⟨G, h1⟩ := Ultrafilter.exists_ultrafilter_of_finite_inter_nonempty _ this
     have c1 : X.join G = F := Ultrafilter.coe_le_coe.1 fun P hP => h1 (Or.inr ⟨P, hP, rfl⟩)
-    have c2 : G.map X.str = X.incl x := by
-      refine Ultrafilter.coe_le_coe.1 fun P hP => ?_
-      apply mem_of_superset (h1 (Or.inl rfl))
-      rintro x ⟨rfl⟩
-      exact hP
+    have c2  : G.map X.str = X.incl x
+    refine Ultrafilter.coe_le_coe.1 fun P hP => ?_
+    apply mem_of_superset (h1 (Or.inl rfl))
+    rintro x ⟨rfl⟩
+    exact hP
     simp [← c1, c2]
   -- Finish...
   intro T hT

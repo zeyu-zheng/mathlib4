@@ -199,7 +199,8 @@ theorem le_bound (f : BoundedAdditiveMeasure α) (s : Set α) : f s ≤ f.C :=
 
 @[simp]
 theorem empty (f : BoundedAdditiveMeasure α) : f ∅ = 0 := by
-  have : (∅ : Set α) = ∅ ∪ ∅ := by simp only [empty_union]
+  have  : (∅ : Set α) = ∅ ∪ ∅
+  simp only [empty_union]
   apply_fun f at this
   rwa [f.additive _ _ (empty_disjoint _), self_eq_add_left] at this
 
@@ -252,25 +253,25 @@ theorem exists_discrete_support_nonpos (f : BoundedAdditiveMeasure α) :
   haveI : Nonempty A := ⟨empty⟩
   -- given a countable set `s`, one can find a set `t` in its complement with measure close to
   -- maximal.
-  have : ∀ s : A, ∃ t : A, ∀ u : A, f (↑u \ ↑s) ≤ 2 * f (↑t \ ↑s) := by
-    intro s
-    have B : BddAbove (range fun u : A => f (↑u \ ↑s)) := by
-      refine ⟨f.C, fun x hx => ?_⟩
-      rcases hx with ⟨u, hu⟩
-      rw [← hu]
-      exact f.le_bound _
-    let S := iSup fun t : A => f (↑t \ ↑s)
-    have S_pos : 0 < S := by
-      rcases h s.1 s.2 with ⟨t, t_count, ht⟩
-      apply ht.trans_le
-      let t' : A := ⟨t, t_count⟩
-      change f (↑t' \ ↑s) ≤ S
-      exact le_ciSup B t'
-    rcases exists_lt_of_lt_ciSup (half_lt_self S_pos) with ⟨t, ht⟩
-    refine ⟨t, fun u => ?_⟩
-    calc
-      f (↑u \ ↑s) ≤ S := le_ciSup B _
-      _ ≤ 2 * f (↑t \ ↑s) := (div_le_iff' two_pos).1 ht.le
+  have  : ∀ s : A, ∃ t : A, ∀ u : A, f (↑u \ ↑s) ≤ 2 * f (↑t \ ↑s)
+  intro s
+  have B  : BddAbove (range fun u : A => f (↑u \ ↑s))
+  refine ⟨f.C, fun x hx => ?_⟩
+  rcases hx with ⟨u, hu⟩
+  rw [← hu]
+  exact f.le_bound _
+  let S := iSup fun t : A => f (↑t \ ↑s)
+  have S_pos  : 0 < S
+  rcases h s.1 s.2 with ⟨t, t_count, ht⟩
+  apply ht.trans_le
+  let t' : A := ⟨t, t_count⟩
+  change f (↑t' \ ↑s) ≤ S
+  exact le_ciSup B t'
+  rcases exists_lt_of_lt_ciSup (half_lt_self S_pos) with ⟨t, ht⟩
+  refine ⟨t, fun u => ?_⟩
+  calc
+    f (↑u \ ↑s) ≤ S := le_ciSup B _
+    _ ≤ 2 * f (↑t \ ↑s) := (div_le_iff' two_pos).1 ht.le
   choose! F hF using this
   -- iterate the above construction, by adding at each step a set with measure close to maximal in
   -- the complement of already chosen points. This is the set `s n` at step `n`.
@@ -282,33 +283,33 @@ theorem exists_discrete_support_nonpos (f : BoundedAdditiveMeasure α) :
   let u : A := ⟨t \ ⋃ n, ↑(s n), t_count.mono diff_subset⟩
   set ε := f ↑u with hε
   have ε_pos : 0 < ε := ht
-  have I1 : ∀ n, ε / 2 ≤ f (↑(s (n + 1)) \ ↑(s n)) := by
-    intro n
-    rw [div_le_iff' (show (0 : ℝ) < 2 by norm_num), hε]
-    convert hF (s n) u using 2
-    · dsimp
-      ext x
-      simp only [not_exists, mem_iUnion, mem_diff]
-      tauto
-    · congr 1
-      simp only [s, Function.iterate_succ', Subtype.coe_mk, union_diff_left, Function.comp]
-  have I2 : ∀ n : ℕ, (n : ℝ) * (ε / 2) ≤ f ↑(s n) := by
-    intro n
-    induction' n with n IH
-    · simp only [s, BoundedAdditiveMeasure.empty, id, Nat.cast_zero, zero_mul,
-        Function.iterate_zero, Subtype.coe_mk, Nat.zero_eq]
-      rfl
-    · have : (s (n + 1)).1 = (s (n + 1)).1 \ (s n).1 ∪ (s n).1 := by
-        simpa only [s, Function.iterate_succ', union_diff_self]
-          using (diff_union_of_subset subset_union_left).symm
-      rw [this, f.additive]
-      swap; · exact disjoint_sdiff_self_left
-      calc
-        ((n + 1 : ℕ) : ℝ) * (ε / 2) = ε / 2 + n * (ε / 2) := by simp only [Nat.cast_succ]; ring
-        _ ≤ f (↑(s (n + 1 : ℕ)) \ ↑(s n)) + f ↑(s n) := add_le_add (I1 n) IH
+  have I1  : ∀ n, ε / 2 ≤ f (↑(s (n + 1)) \ ↑(s n))
+  intro n
+  rw [div_le_iff' (show (0 : ℝ) < 2 by norm_num), hε]
+  convert hF (s n) u using 2
+  · dsimp
+    ext x
+    simp only [not_exists, mem_iUnion, mem_diff]
+    tauto
+  · congr 1
+    simp only [s, Function.iterate_succ', Subtype.coe_mk, union_diff_left, Function.comp]
+  have I2  : ∀ n : ℕ, (n : ℝ) * (ε / 2) ≤ f ↑(s n)
+  intro n
+  induction' n with n IH
+  · simp only [s, BoundedAdditiveMeasure.empty, id, Nat.cast_zero, zero_mul,
+      Function.iterate_zero, Subtype.coe_mk, Nat.zero_eq]
+    rfl
+  · have : (s (n + 1)).1 = (s (n + 1)).1 \ (s n).1 ∪ (s n).1 := by
+      simpa only [s, Function.iterate_succ', union_diff_self]
+        using (diff_union_of_subset subset_union_left).symm
+    rw [this, f.additive]
+    swap; · exact disjoint_sdiff_self_left
+    calc
+      ((n + 1 : ℕ) : ℝ) * (ε / 2) = ε / 2 + n * (ε / 2) := by simp only [Nat.cast_succ]; ring
+      _ ≤ f (↑(s (n + 1 : ℕ)) \ ↑(s n)) + f ↑(s n) := add_le_add (I1 n) IH
   rcases exists_nat_gt (f.C / (ε / 2)) with ⟨n, hn⟩
-  have : (n : ℝ) ≤ f.C / (ε / 2) := by
-    rw [le_div_iff (half_pos ε_pos)]; exact (I2 n).trans (f.le_bound _)
+  have  : (n : ℝ) ≤ f.C / (ε / 2)
+  rw [le_div_iff (half_pos ε_pos)]; exact (I2 n).trans (f.le_bound _)
   exact lt_irrefl _ (this.trans_lt hn)
 
 theorem exists_discrete_support (f : BoundedAdditiveMeasure α) :
@@ -518,7 +519,8 @@ theorem apply_f_eq_continuousPart (Hcont : #ℝ = aleph 1) (φ : (DiscreteCopy �
     φ (f Hcont x) = φ.toBoundedAdditiveMeasure.continuousPart univ := by
   set ψ := φ.toBoundedAdditiveMeasure
   have : φ (f Hcont x) = ψ (spf Hcont x) := rfl
-  have U : univ = spf Hcont x ∪ univ \ spf Hcont x := by simp only [union_univ, union_diff_self]
+  have U  : univ = spf Hcont x ∪ univ \ spf Hcont x
+  simp only [union_univ, union_diff_self]
   rw [this, eq_add_parts, discretePart_apply, hx, ψ.empty, zero_add, U,
     ψ.continuousPart.additive _ _ disjoint_sdiff_self_right,
     ψ.continuousPart_apply_eq_zero_of_countable _ (countable_compl_spf Hcont x), add_zero]
@@ -590,11 +592,11 @@ theorem no_pettis_integral (Hcont : #ℝ = aleph 1) :
         ∀ φ : (DiscreteCopy ℝ →ᵇ ℝ) →L[ℝ] ℝ, ∫ x in Icc 0 1, φ (f Hcont x) = φ g := by
   rintro ⟨g, h⟩
   simp only [integral_comp] at h
-  have : g = 0 := by
-    ext x
-    have : g x = evalCLM ℝ x g := rfl
-    rw [this, ← h]
-    simp
+  have  : g = 0
+  ext x
+  have : g x = evalCLM ℝ x g := rfl
+  rw [this, ← h]
+  simp
   simp only [this, ContinuousLinearMap.map_zero] at h
   specialize h (volume.restrict (Icc (0 : ℝ) 1)).extensionToBoundedFunctions
   simp_rw [toFunctions_toMeasure_continuousPart _ _ MeasurableSet.univ] at h

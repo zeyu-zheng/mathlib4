@@ -446,10 +446,10 @@ theorem measurableSet_of_isOpen [OuterRegular μ] (H : InnerRegularWRT μ p IsOp
     (hd : ∀ ⦃s U⦄, p s → IsOpen U → p (s \ U)) :
     InnerRegularWRT μ p fun s => MeasurableSet s ∧ μ s ≠ ∞ := by
   rintro s ⟨hs, hμs⟩ r hr
-  have h0 : p ∅ := by
-    have : 0 < μ univ := (bot_le.trans_lt hr).trans_le (measure_mono (subset_univ _))
-    obtain ⟨K, -, hK, -⟩ : ∃ K, K ⊆ univ ∧ p K ∧ 0 < μ K := H isOpen_univ _ this
-    simpa using hd hK isOpen_univ
+  have h0  : p ∅
+  have : 0 < μ univ := (bot_le.trans_lt hr).trans_le (measure_mono (subset_univ _))
+  obtain ⟨K, -, hK, -⟩ : ∃ K, K ⊆ univ ∧ p K ∧ 0 < μ K := H isOpen_univ _ this
+  simpa using hd hK isOpen_univ
   obtain ⟨ε, hε, hεs, rfl⟩ : ∃ ε ≠ 0, ε + ε ≤ μ s ∧ r = μ s - (ε + ε) := by
     use (μ s - r) / 2
     simp [*, hr.le, ENNReal.add_halves, ENNReal.sub_sub_cancel, le_add_right, tsub_eq_zero_iff_le]
@@ -505,9 +505,9 @@ theorem weaklyRegular_of_finite [BorelSpace α] (μ : Measure α) [IsFiniteMeasu
     -- the approximating closed set is constructed by considering finitely many sets `s i`, which
     -- cover all the measure up to `ε/2`, approximating each of these by a closed set `F i`, and
     -- taking the union of these (finitely many) `F i`.
-    have : Tendsto (fun t => (∑ k ∈ t, μ (s k)) + ε / 2) atTop (𝓝 <| μ (⋃ n, s n) + ε / 2) := by
-      rw [measure_iUnion hsd hsm]
-      exact Tendsto.add ENNReal.summable.hasSum tendsto_const_nhds
+    have  : Tendsto (fun t => (∑ k ∈ t, μ (s k)) + ε / 2) atTop (𝓝 <| μ (⋃ n, s n) + ε / 2)
+    rw [measure_iUnion hsd hsm]
+    exact Tendsto.add ENNReal.summable.hasSum tendsto_const_nhds
     rcases (this.eventually <| lt_mem_nhds <| ENNReal.lt_add_right hfin ε0').exists with ⟨t, ht⟩
     -- the approximating open set is constructed by taking for each `s n` an approximating open set
     -- `U n` with measure at most `μ (s n) + δ n` for a summable `δ`, and taking the union of these.
@@ -539,10 +539,11 @@ lemma of_restrict {μ : Measure α} {s : ℕ → Set α}
     (h : ∀ n, InnerRegularWRT (μ.restrict (s n)) p MeasurableSet)
     (hs : univ ⊆ ⋃ n, s n) (hmono : Monotone s) : InnerRegularWRT μ p MeasurableSet := by
   intro F hF r hr
-  have hBU : ⋃ n, F ∩ s n = F := by  rw [← inter_iUnion, univ_subset_iff.mp hs, inter_univ]
-  have : μ F = ⨆ n, μ (F ∩ s n) := by
-    rw [← measure_iUnion_eq_iSup, hBU]
-    exact Monotone.directed_le fun m n h ↦ inter_subset_inter_right _ (hmono h)
+  have hBU  : ⋃ n, F ∩ s n = F
+  rw [← inter_iUnion, univ_subset_iff.mp hs, inter_univ]
+  have  : μ F = ⨆ n, μ (F ∩ s n)
+  rw [← measure_iUnion_eq_iSup, hBU]
+  exact Monotone.directed_le fun m n h ↦ inter_subset_inter_right _ (hmono h)
   rw [this] at hr
   rcases lt_iSup_iff.1 hr with ⟨n, hn⟩
   rw [← restrict_apply hF] at hn
@@ -566,10 +567,11 @@ theorem isCompact_isClosed {X : Type*} [TopologicalSpace X] [SigmaCompactSpace X
   intro F hF r hr
   set B : ℕ → Set X := compactCovering X
   have hBc : ∀ n, IsCompact (F ∩ B n) := fun n => (isCompact_compactCovering X n).inter_left hF
-  have hBU : ⋃ n, F ∩ B n = F := by rw [← inter_iUnion, iUnion_compactCovering, Set.inter_univ]
-  have : μ F = ⨆ n, μ (F ∩ B n) := by
-    rw [← measure_iUnion_eq_iSup, hBU]
-    exact Monotone.directed_le fun m n h => inter_subset_inter_right _ (compactCovering_subset _ h)
+  have hBU  : ⋃ n, F ∩ B n = F
+  rw [← inter_iUnion, iUnion_compactCovering, Set.inter_univ]
+  have  : μ F = ⨆ n, μ (F ∩ B n)
+  rw [← measure_iUnion_eq_iSup, hBU]
+  exact Monotone.directed_le fun m n h => inter_subset_inter_right _ (compactCovering_subset _ h)
   rw [this] at hr
   rcases lt_iSup_iff.1 hr with ⟨n, hn⟩
   exact ⟨_, inter_subset_left, hBc n, hn⟩
@@ -582,10 +584,10 @@ lemma restrict (h : InnerRegularWRT μ p (fun s ↦ MeasurableSet s ∧ μ s ≠
   rintro s ⟨s_meas, hs⟩ r hr
   rw [restrict_apply s_meas] at hs
   obtain ⟨K, K_subs, pK, rK⟩ : ∃ K, K ⊆ (toMeasurable μ (s ∩ A)) ∩ s ∧ p K ∧ r < μ K := by
-    have : r < μ ((toMeasurable μ (s ∩ A)) ∩ s) := by
-      apply hr.trans_le
-      rw [restrict_apply s_meas]
-      exact measure_mono <| subset_inter (subset_toMeasurable μ (s ∩ A)) inter_subset_left
+    have  : r < μ ((toMeasurable μ (s ∩ A)) ∩ s)
+    apply hr.trans_le
+    rw [restrict_apply s_meas]
+    exact measure_mono <| subset_inter (subset_toMeasurable μ (s ∩ A)) inter_subset_left
     refine h ⟨(measurableSet_toMeasurable _ _).inter s_meas, ?_⟩ _ this
     apply (lt_of_le_of_lt _ hs.lt_top).ne
     rw [← measure_toMeasurable (s ∩ A)]
@@ -616,10 +618,11 @@ lemma of_sigmaFinite [SigmaFinite μ] :
     InnerRegularWRT μ (fun s ↦ MeasurableSet s ∧ μ s ≠ ∞) (fun s ↦ MeasurableSet s) := by
   intro s hs r hr
   set B : ℕ → Set α := spanningSets μ
-  have hBU : ⋃ n, s ∩ B n = s := by rw [← inter_iUnion, iUnion_spanningSets, inter_univ]
-  have : μ s = ⨆ n, μ (s ∩ B n) := by
-    rw [← measure_iUnion_eq_iSup, hBU]
-    exact Monotone.directed_le fun m n h => inter_subset_inter_right _ (monotone_spanningSets μ h)
+  have hBU  : ⋃ n, s ∩ B n = s
+  rw [← inter_iUnion, iUnion_spanningSets, inter_univ]
+  have  : μ s = ⨆ n, μ (s ∩ B n)
+  rw [← measure_iUnion_eq_iSup, hBU]
+  exact Monotone.directed_le fun m n h => inter_subset_inter_right _ (monotone_spanningSets μ h)
   rw [this] at hr
   rcases lt_iSup_iff.1 hr with ⟨n, hn⟩
   refine ⟨s ∩ B n, inter_subset_left, ⟨hs.inter (measurable_spanningSets μ n), ?_⟩, hn⟩
@@ -836,7 +839,8 @@ instance smul [h : InnerRegularCompactLTTop μ] (c : ℝ≥0∞) : InnerRegularC
     · simp [h'c, ENNReal.mul_eq_top, h's] at hs
   · constructor
     convert InnerRegularWRT.smul h.innerRegular c using 2 with s
-    have : (c • μ) s ≠ ∞ ↔ μ s ≠ ∞ := by simp [not_iff_not, ENNReal.mul_eq_top, hc, h'c]
+    have  : (c • μ) s ≠ ∞ ↔ μ s ≠ ∞
+    simp [not_iff_not, ENNReal.mul_eq_top, hc, h'c]
     simp only [this]
 
 instance smul_nnreal [InnerRegularCompactLTTop μ] (c : ℝ≥0) :
@@ -1001,9 +1005,9 @@ theorem restrict_of_measure_ne_top [R1Space α] [BorelSpace α] [Regular μ]
   have : WeaklyRegular (μ.restrict A) := WeaklyRegular.restrict_of_measure_ne_top h'A
   constructor
   intro V hV r hr
-  have R : restrict μ A V ≠ ∞ := by
-    rw [restrict_apply hV.measurableSet]
-    exact ((measure_mono inter_subset_right).trans_lt h'A.lt_top).ne
+  have R  : restrict μ A V ≠ ∞
+  rw [restrict_apply hV.measurableSet]
+  exact ((measure_mono inter_subset_right).trans_lt h'A.lt_top).ne
   exact MeasurableSet.exists_lt_isCompact_of_ne_top hV.measurableSet R hr
 
 end Regular

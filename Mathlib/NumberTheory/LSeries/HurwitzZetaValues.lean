@@ -105,9 +105,9 @@ theorem cosZeta_two_mul_nat' (hk : k ≠ 0) (hx : x ∈ Icc (0 : ℝ) 1) :
       ((Polynomial.bernoulli (2 * k)).map (algebraMap ℚ ℂ)).eval (x : ℂ) := by
   rw [cosZeta_two_mul_nat hk hx]
   congr 1
-  have : (2 * k)! = (2 * k) * Complex.Gamma (2 * k) := by
-    rw [(by { norm_cast; omega } : 2 * (k : ℂ) = ↑(2 * k - 1) + 1), Complex.Gamma_nat_eq_factorial,
-      ← Nat.cast_add_one, ← Nat.cast_mul, ← Nat.factorial_succ, Nat.sub_add_cancel (by omega)]
+  have  : (2 * k)! = (2 * k) * Complex.Gamma (2 * k)
+  rw [(by { norm_cast; omega } : 2 * (k : ℂ) = ↑(2 * k - 1) + 1), Complex.Gamma_nat_eq_factorial,
+    ← Nat.cast_add_one, ← Nat.cast_mul, ← Nat.factorial_succ, Nat.sub_add_cancel (by omega)]
   simp_rw [this, Gammaℂ, cpow_neg, ← div_div, div_inv_eq_mul, div_mul_eq_mul_div, div_div,
     mul_right_comm (2 : ℂ) (k : ℂ)]
   norm_cast
@@ -118,10 +118,10 @@ theorem sinZeta_two_mul_nat_add_one' (hk : k ≠ 0) (hx : x ∈ Icc (0 : ℝ) 1)
       ((Polynomial.bernoulli (2 * k + 1)).map (algebraMap ℚ ℂ)).eval (x : ℂ) := by
   rw [sinZeta_two_mul_nat_add_one hk hx]
   congr 1
-  have : (2 * k + 1)! = (2 * k + 1) * Complex.Gamma (2 * k + 1) := by
-    rw [(by simp : Complex.Gamma (2 * k + 1) = Complex.Gamma (↑(2 * k) + 1)),
-       Complex.Gamma_nat_eq_factorial, ← Nat.cast_ofNat (R := ℂ), ← Nat.cast_mul,
-      ← Nat.cast_add_one, ← Nat.cast_mul, ← Nat.factorial_succ]
+  have  : (2 * k + 1)! = (2 * k + 1) * Complex.Gamma (2 * k + 1)
+  rw [(by simp : Complex.Gamma (2 * k + 1) = Complex.Gamma (↑(2 * k) + 1)),
+     Complex.Gamma_nat_eq_factorial, ← Nat.cast_ofNat (R := ℂ), ← Nat.cast_mul,
+    ← Nat.cast_add_one, ← Nat.cast_mul, ← Nat.factorial_succ]
   simp_rw [this, Gammaℂ, cpow_neg, ← div_div, div_inv_eq_mul, div_mul_eq_mul_div, div_div]
   rw [(by simp : 2 * (k : ℂ) + 1 = ↑(2 * k + 1)), cpow_natCast]
   ring
@@ -129,17 +129,18 @@ theorem sinZeta_two_mul_nat_add_one' (hk : k ≠ 0) (hx : x ∈ Icc (0 : ℝ) 1)
 theorem hurwitzZetaEven_one_sub_two_mul_nat (hk : k ≠ 0) (hx : x ∈ Icc (0 : ℝ) 1) :
     hurwitzZetaEven x (1 - 2 * k) =
       -1 / (2 * k) * ((Polynomial.bernoulli (2 * k)).map (algebraMap ℚ ℂ)).eval (x : ℂ) := by
-  have h1 (n : ℕ) : (2 * k : ℂ) ≠ -n := by
-    rw [← Int.cast_ofNat, ← Int.cast_natCast, ← Int.cast_mul, ← Int.cast_natCast n, ← Int.cast_neg,
-      Ne, Int.cast_inj, ← Ne]
-    refine ne_of_gt ((neg_nonpos_of_nonneg n.cast_nonneg).trans_lt (mul_pos two_pos ?_))
-    exact Nat.cast_pos.mpr (Nat.pos_of_ne_zero hk)
-  have h2 : (2 * k : ℂ) ≠ 1 := by norm_cast; simp only [mul_eq_one, OfNat.ofNat_ne_one,
-    false_and, not_false_eq_true]
-  have h3 : Gammaℂ (2 * k) ≠ 0 := by
-    refine mul_ne_zero (mul_ne_zero two_ne_zero ?_) (Gamma_ne_zero h1)
-    simp only [ne_eq, cpow_eq_zero_iff, mul_eq_zero, OfNat.ofNat_ne_zero, ofReal_eq_zero,
-      pi_ne_zero, Nat.cast_eq_zero, false_or, false_and, not_false_eq_true]
+  have h1 (n  : ℕ) : (2 * k : ℂ) ≠ -n
+  rw [← Int.cast_ofNat, ← Int.cast_natCast, ← Int.cast_mul, ← Int.cast_natCast n, ← Int.cast_neg,
+    Ne, Int.cast_inj, ← Ne]
+  refine ne_of_gt ((neg_nonpos_of_nonneg n.cast_nonneg).trans_lt (mul_pos two_pos ?_))
+  exact Nat.cast_pos.mpr (Nat.pos_of_ne_zero hk)
+  have h2  : (2 * k : ℂ) ≠ 1
+  norm_cast; simp only [mul_eq_one, OfNat.ofNat_ne_one,
+  false_and, not_false_eq_true]
+  have h3  : Gammaℂ (2 * k) ≠ 0
+  refine mul_ne_zero (mul_ne_zero two_ne_zero ?_) (Gamma_ne_zero h1)
+  simp only [ne_eq, cpow_eq_zero_iff, mul_eq_zero, OfNat.ofNat_ne_zero, ofReal_eq_zero,
+    pi_ne_zero, Nat.cast_eq_zero, false_or, false_and, not_false_eq_true]
   rw [hurwitzZetaEven_one_sub _ h1 (Or.inr h2), ← Gammaℂ, cosZeta_two_mul_nat' hk hx, ← mul_assoc,
     ← mul_div_assoc, mul_assoc, mul_div_cancel_left₀ _ h3, ← mul_div_assoc]
   congr 2
@@ -151,15 +152,15 @@ theorem hurwitzZetaEven_one_sub_two_mul_nat (hk : k ≠ 0) (hx : x ∈ Icc (0 : 
 theorem hurwitzZetaOdd_neg_two_mul_nat (hk : k ≠ 0) (hx : x ∈ Icc (0 : ℝ) 1) :
     hurwitzZetaOdd x (-(2 * k)) =
     -1 / (2 * k + 1) * ((Polynomial.bernoulli (2 * k + 1)).map (algebraMap ℚ ℂ)).eval (x : ℂ) := by
-  have h1 (n : ℕ) : (2 * k + 1 : ℂ) ≠ -n := by
-    rw [← Int.cast_ofNat, ← Int.cast_natCast, ← Int.cast_mul, ← Int.cast_natCast n, ← Int.cast_neg,
-      ← Int.cast_one, ← Int.cast_add, Ne, Int.cast_inj, ← Ne]
-    refine ne_of_gt ((neg_nonpos_of_nonneg n.cast_nonneg).trans_lt ?_)
-    positivity
-  have h3 : Gammaℂ (2 * k + 1) ≠ 0 := by
-    refine mul_ne_zero (mul_ne_zero two_ne_zero ?_) (Gamma_ne_zero h1)
-    simp only [ne_eq, cpow_eq_zero_iff, mul_eq_zero, OfNat.ofNat_ne_zero, ofReal_eq_zero,
-      pi_ne_zero, Nat.cast_eq_zero, false_or, false_and, not_false_eq_true]
+  have h1 (n  : ℕ) : (2 * k + 1 : ℂ) ≠ -n
+  rw [← Int.cast_ofNat, ← Int.cast_natCast, ← Int.cast_mul, ← Int.cast_natCast n, ← Int.cast_neg,
+    ← Int.cast_one, ← Int.cast_add, Ne, Int.cast_inj, ← Ne]
+  refine ne_of_gt ((neg_nonpos_of_nonneg n.cast_nonneg).trans_lt ?_)
+  positivity
+  have h3  : Gammaℂ (2 * k + 1) ≠ 0
+  refine mul_ne_zero (mul_ne_zero two_ne_zero ?_) (Gamma_ne_zero h1)
+  simp only [ne_eq, cpow_eq_zero_iff, mul_eq_zero, OfNat.ofNat_ne_zero, ofReal_eq_zero,
+    pi_ne_zero, Nat.cast_eq_zero, false_or, false_and, not_false_eq_true]
   rw [(by simp : -(2 * k : ℂ) = 1 - (2 * k + 1)),
     hurwitzZetaOdd_one_sub _ h1, ← Gammaℂ, sinZeta_two_mul_nat_add_one' hk hx, ← mul_assoc,
     ← mul_div_assoc, mul_assoc, mul_div_cancel_left₀ _ h3, ← mul_div_assoc]

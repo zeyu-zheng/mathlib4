@@ -62,8 +62,10 @@ theorem bernstein_apply (n ν : ℕ) (x : I) :
 
 theorem bernstein_nonneg {n ν : ℕ} {x : I} : 0 ≤ bernstein n ν x := by
   simp only [bernstein_apply]
-  have h₁ : (0 : ℝ) ≤ x := by unit_interval
-  have h₂ : (0 : ℝ) ≤ 1 - x := by unit_interval
+  have h₁  : (0 : ℝ) ≤ x
+  unit_interval
+  have h₂  : (0 : ℝ) ≤ 1 - x
+  unit_interval
   positivity
 
 namespace Mathlib.Meta.Positivity
@@ -221,7 +223,8 @@ theorem bernsteinApproximation_uniform (f : C(I, ℝ)) :
   have nhds_zero := tendsto_const_div_atTop_nhds_zero_nat (2 * ‖f‖ * δ ^ (-2 : ℤ))
   filter_upwards [nhds_zero.eventually (gt_mem_nhds (half_pos h)), eventually_gt_atTop 0] with n nh
     npos'
-  have npos : 0 < (n : ℝ) := by positivity
+  have npos  : 0 < (n : ℝ)
+  positivity
   -- As `[0,1]` is compact, it suffices to check the inequality pointwise.
   rw [ContinuousMap.norm_lt_iff _ h]
   intro x

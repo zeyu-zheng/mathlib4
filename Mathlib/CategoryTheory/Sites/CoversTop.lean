@@ -132,11 +132,11 @@ lemma exists_unique_section (hx : x.IsCompatible) (hY : J.CoversTop Y) (hF : IsS
           (hx.familyOfElements_isCompatible _) (𝟙 _) ⟨i, ⟨f⟩⟩
       simp only [op_id, F.map_id, types_id_apply] at h
       exact h.trans (hx.familyOfElements_apply _ _ _)
-    have hs' : ∀ {W X : C} (a : W ⟶ X) (i : I) (_ : W ⟶ Y i), F.map a.op (s X) = s W := by
-      intro W X a i b
-      rw [hs i b]
-      exact (Presieve.IsSheafFor.valid_glue (H _ (hY X))
-        (hx.familyOfElements_isCompatible _) a ⟨i, ⟨b⟩⟩).trans (familyOfElements_apply hx _ _ _)
+    have hs'  : ∀ {W X : C} (a : W ⟶ X) (i : I) (_ : W ⟶ Y i), F.map a.op (s X) = s W
+    intro W X a i b
+    rw [hs i b]
+    exact (Presieve.IsSheafFor.valid_glue (H _ (hY X))
+      (hx.familyOfElements_isCompatible _) a ⟨i, ⟨b⟩⟩).trans (familyOfElements_apply hx _ _ _)
     refine ⟨⟨fun X => s X.unop, ?_⟩, fun i => (hs i (𝟙 (Y i))).trans (by simp)⟩
     rintro ⟨Y₁⟩ ⟨Y₂⟩ ⟨f : Y₂ ⟶ Y₁⟩
     change F.map f.op (s Y₁) = s Y₂

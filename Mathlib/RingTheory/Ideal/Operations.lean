@@ -127,7 +127,8 @@ lemma coe_set_smul : (I : Set R) • N = I • N :=
 @[elab_as_elim]
 theorem smul_induction_on {p : M → Prop} {x} (H : x ∈ I • N) (smul : ∀ r ∈ I, ∀ n ∈ N, p (r • n))
     (add : ∀ x y, p x → p y → p (x + y)) : p x := by
-  have H0 : p 0 := by simpa only [zero_smul] using smul 0 I.zero_mem 0 N.zero_mem
+  have H0  : p 0
+  simpa only [zero_smul] using smul 0 I.zero_mem 0 N.zero_mem
   refine Submodule.iSup_induction (x := x) _ H ?_ H0 add
   rintro ⟨i, hi⟩ m ⟨j, hj, hj'⟩
   rw [← hj']
@@ -238,9 +239,9 @@ theorem span_smul_span : Ideal.span S • span R T = span R (⋃ (s ∈ S) (t �
 
 theorem ideal_span_singleton_smul (r : R) (N : Submodule R M) :
     (Ideal.span {r} : Ideal R) • N = r • N := by
-  have : span R (⋃ (t : M) (_ : t ∈ N), {r • t}) = r • N := by
-    convert span_eq (r • N)
-    exact (Set.image_eq_iUnion _ (N : Set M)).symm
+  have  : span R (⋃ (t : M) (_ : t ∈ N), {r • t}) = r • N
+  convert span_eq (r • N)
+  exact (Set.image_eq_iUnion _ (N : Set M)).symm
   conv_lhs => rw [← span_eq N, span_smul_span]
   simpa
 
@@ -330,8 +331,8 @@ theorem mem_ideal_smul_span_iff_exists_sum' {ι : Type*} (s : Set ι) (f : ι �
 theorem mem_smul_top_iff (N : Submodule R M) (x : N) :
     x ∈ I • (⊤ : Submodule R N) ↔ (x : M) ∈ I • N := by
   change _ ↔ N.subtype x ∈ I • N
-  have : Submodule.map N.subtype (I • ⊤) = I • N := by
-    rw [Submodule.map_smul'', Submodule.map_top, Submodule.range_subtype]
+  have  : Submodule.map N.subtype (I • ⊤) = I • N
+  rw [Submodule.map_smul'', Submodule.map_top, Submodule.range_subtype]
   rw [← this]
   exact (Function.Injective.mem_set_image N.injective_subtype).symm
 

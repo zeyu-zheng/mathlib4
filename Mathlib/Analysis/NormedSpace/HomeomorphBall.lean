@@ -139,7 +139,8 @@ theorem univBall_apply_zero (c : P) (r : ℝ) : univBall c r 0 = c := by
 
 @[simp]
 theorem univBall_symm_apply_center (c : P) (r : ℝ) : (univBall c r).symm c = 0 := by
-  have : 0 ∈ (univBall c r).source := by simp
+  have  : 0 ∈ (univBall c r).source
+  simp
   simpa only [univBall_apply_zero] using (univBall c r).left_inv this
 
 @[continuity]

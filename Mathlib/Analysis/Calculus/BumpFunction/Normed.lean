@@ -117,8 +117,8 @@ theorem integral_le_measure_closedBall : ∫ x, f x ∂μ ≤ (μ (closedBall c 
 
 theorem measure_closedBall_div_le_integral [IsAddHaarMeasure μ] (K : ℝ) (h : f.rOut ≤ K * f.rIn) :
     (μ (closedBall c f.rOut)).toReal / K ^ finrank ℝ E ≤ ∫ x, f x ∂μ := by
-  have K_pos : 0 < K := by
-    simpa [f.rIn_pos, not_lt.2 f.rIn_pos.le] using mul_pos_iff.1 (f.rOut_pos.trans_le h)
+  have K_pos  : 0 < K
+  simpa [f.rIn_pos, not_lt.2 f.rIn_pos.le] using mul_pos_iff.1 (f.rOut_pos.trans_le h)
   apply le_trans _ (f.measure_closedBall_le_integral μ)
   rw [div_le_iff (pow_pos K_pos _), addHaar_closedBall' _ _ f.rIn_pos.le,
     addHaar_closedBall' _ _ f.rOut_pos.le, ENNReal.toReal_mul, ENNReal.toReal_mul,
@@ -131,12 +131,12 @@ theorem measure_closedBall_div_le_integral [IsAddHaarMeasure μ] (K : ℝ) (h : 
 theorem normed_le_div_measure_closedBall_rOut [IsAddHaarMeasure μ] (K : ℝ) (h : f.rOut ≤ K * f.rIn)
     (x : E) :
     f.normed μ x ≤ K ^ finrank ℝ E / (μ (closedBall c f.rOut)).toReal := by
-  have K_pos : 0 < K := by
-    simpa [f.rIn_pos, not_lt.2 f.rIn_pos.le] using mul_pos_iff.1 (f.rOut_pos.trans_le h)
-  have : f x / ∫ y, f y ∂μ ≤ 1 / ∫ y, f y ∂μ := by
-    gcongr
-    · exact f.integral_pos.le
-    · exact f.le_one
+  have K_pos  : 0 < K
+  simpa [f.rIn_pos, not_lt.2 f.rIn_pos.le] using mul_pos_iff.1 (f.rOut_pos.trans_le h)
+  have  : f x / ∫ y, f y ∂μ ≤ 1 / ∫ y, f y ∂μ
+  gcongr
+  · exact f.integral_pos.le
+  · exact f.le_one
   apply this.trans
   rw [div_le_div_iff f.integral_pos, one_mul, ← div_le_iff' (pow_pos K_pos _)]
   · exact f.measure_closedBall_div_le_integral μ K h

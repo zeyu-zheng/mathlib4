@@ -45,14 +45,14 @@ variable {x₀ : ℝ} {a b : ℕ} {f : ℝ → ℝ}
 
 theorem AntitoneOn.integral_le_sum (hf : AntitoneOn f (Icc x₀ (x₀ + a))) :
     (∫ x in x₀..x₀ + a, f x) ≤ ∑ i ∈ Finset.range a, f (x₀ + i) := by
-  have hint : ∀ k : ℕ, k < a → IntervalIntegrable f volume (x₀ + k) (x₀ + (k + 1 : ℕ)) := by
-    intro k hk
-    refine (hf.mono ?_).intervalIntegrable
-    rw [uIcc_of_le]
-    · apply Icc_subset_Icc
-      · simp only [le_add_iff_nonneg_right, Nat.cast_nonneg]
-      · simp only [add_le_add_iff_left, Nat.cast_le, Nat.succ_le_of_lt hk]
-    · simp only [add_le_add_iff_left, Nat.cast_le, Nat.le_succ]
+  have hint  : ∀ k : ℕ, k < a → IntervalIntegrable f volume (x₀ + k) (x₀ + (k + 1 : ℕ))
+  intro k hk
+  refine (hf.mono ?_).intervalIntegrable
+  rw [uIcc_of_le]
+  · apply Icc_subset_Icc
+    · simp only [le_add_iff_nonneg_right, Nat.cast_nonneg]
+    · simp only [add_le_add_iff_left, Nat.cast_le, Nat.succ_le_of_lt hk]
+  · simp only [add_le_add_iff_left, Nat.cast_le, Nat.le_succ]
   calc
     ∫ x in x₀..x₀ + a, f x = ∑ i ∈ Finset.range a, ∫ x in x₀ + i..x₀ + (i + 1 : ℕ), f x := by
       convert (intervalIntegral.sum_integral_adjacent_intervals hint).symm
@@ -94,14 +94,14 @@ theorem AntitoneOn.integral_le_sum_Ico (hab : a ≤ b) (hf : AntitoneOn f (Set.I
 
 theorem AntitoneOn.sum_le_integral (hf : AntitoneOn f (Icc x₀ (x₀ + a))) :
     (∑ i ∈ Finset.range a, f (x₀ + (i + 1 : ℕ))) ≤ ∫ x in x₀..x₀ + a, f x := by
-  have hint : ∀ k : ℕ, k < a → IntervalIntegrable f volume (x₀ + k) (x₀ + (k + 1 : ℕ)) := by
-    intro k hk
-    refine (hf.mono ?_).intervalIntegrable
-    rw [uIcc_of_le]
-    · apply Icc_subset_Icc
-      · simp only [le_add_iff_nonneg_right, Nat.cast_nonneg]
-      · simp only [add_le_add_iff_left, Nat.cast_le, Nat.succ_le_of_lt hk]
-    · simp only [add_le_add_iff_left, Nat.cast_le, Nat.le_succ]
+  have hint  : ∀ k : ℕ, k < a → IntervalIntegrable f volume (x₀ + k) (x₀ + (k + 1 : ℕ))
+  intro k hk
+  refine (hf.mono ?_).intervalIntegrable
+  rw [uIcc_of_le]
+  · apply Icc_subset_Icc
+    · simp only [le_add_iff_nonneg_right, Nat.cast_nonneg]
+    · simp only [add_le_add_iff_left, Nat.cast_le, Nat.succ_le_of_lt hk]
+  · simp only [add_le_add_iff_left, Nat.cast_le, Nat.le_succ]
   calc
     (∑ i ∈ Finset.range a, f (x₀ + (i + 1 : ℕ))) =
         ∑ i ∈ Finset.range a, ∫ _ in x₀ + i..x₀ + (i + 1 : ℕ), f (x₀ + (i + 1 : ℕ)) := by simp

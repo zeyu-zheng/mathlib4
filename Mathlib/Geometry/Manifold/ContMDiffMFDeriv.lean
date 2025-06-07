@@ -378,7 +378,8 @@ theorem ContMDiffOn.contMDiffOn_tangentMapWithin (hf : ContMDiffOn I I' n f s) (
       exact (o_open.inter l.open_source).preimage (FiberBundle.continuous_proj E _)
     · show p ∈ π E (TangentSpace I) ⁻¹' (o ∩ l.source)
       simp only [l, preimage_inter, mem_inter_iff, mem_preimage, mem_chart_source, and_true]
-      have : p.proj ∈ f ⁻¹' r.source ∩ s := by simp [r, hp]
+      have  : p.proj ∈ f ⁻¹' r.source ∩ s
+      simp [r, hp]
       rw [ho] at this
       exact this.1
     · have : π E (TangentSpace I) ⁻¹' s ∩ π E (TangentSpace I) ⁻¹' (o ∩ l.source) = s'_lift := by
@@ -390,16 +391,16 @@ theorem ContMDiffOn.contMDiffOn_tangentMapWithin (hf : ContMDiffOn I I' n f s) (
     derivative as a composition of a function between model spaces and of charts.
     Convention: statements about the differentiability of `a ∘ b ∘ c` are named `diff_abc`.
     Statements about differentiability in the bundle have a `_lift` suffix. -/
-  have U' : UniqueMDiffOn I s' := by
-    apply UniqueMDiffOn.inter _ l.open_source
-    rw [ho, inter_comm]
-    exact hs.inter o_open
+  have U'  : UniqueMDiffOn I s'
+  apply UniqueMDiffOn.inter _ l.open_source
+  rw [ho, inter_comm]
+  exact hs.inter o_open
   have U'l : UniqueMDiffOn I s'l := U'.uniqueMDiffOn_preimage (mdifferentiable_chart _ _)
   have diff_f : ContMDiffOn I I' n f s' := hf.mono (by unfold_let s'; mfld_set_tac)
   have diff_r : ContMDiffOn I' I' n r r.source := contMDiffOn_chart
-  have diff_rf : ContMDiffOn I I' n (r ∘ f) s' := by
-    refine ContMDiffOn.comp diff_r diff_f fun x hx => ?_
-    simp only [s', mfld_simps] at hx; simp only [hx, mfld_simps]
+  have diff_rf  : ContMDiffOn I I' n (r ∘ f) s'
+  refine ContMDiffOn.comp diff_r diff_f fun x hx => ?_
+  simp only [s', mfld_simps] at hx; simp only [hx, mfld_simps]
   have diff_l : ContMDiffOn I I n l.symm s'l :=
     haveI A : ContMDiffOn I I n l.symm l.target := contMDiffOn_chart_symm
     A.mono (by unfold_let s'l; mfld_set_tac)
@@ -561,10 +562,10 @@ TODO define splittings of vector bundles; state this result invariantly. -/
 theorem tangentMap_tangentBundle_pure (p : TangentBundle I M) :
     tangentMap I I.tangent (zeroSection E (TangentSpace I)) p = ⟨⟨p.proj, 0⟩, ⟨p.2, 0⟩⟩ := by
   rcases p with ⟨x, v⟩
-  have N : I.symm ⁻¹' (chartAt H x).target ∈ 𝓝 (I ((chartAt H x) x)) := by
-    apply IsOpen.mem_nhds
-    · apply (PartialHomeomorph.open_target _).preimage I.continuous_invFun
-    · simp only [mfld_simps]
+  have N  : I.symm ⁻¹' (chartAt H x).target ∈ 𝓝 (I ((chartAt H x) x))
+  apply IsOpen.mem_nhds
+  · apply (PartialHomeomorph.open_target _).preimage I.continuous_invFun
+  · simp only [mfld_simps]
   have A : MDifferentiableAt I I.tangent (fun x => @TotalSpace.mk M E (TangentSpace I) x 0) x :=
     haveI : Smooth I (I.prod 𝓘(𝕜, E)) (zeroSection E (TangentSpace I : M → Type _)) :=
       Bundle.smooth_zeroSection 𝕜 (TangentSpace I : M → Type _)

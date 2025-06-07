@@ -554,37 +554,37 @@ variable [StarRing A] [CstarRing A]
 also coincide with `‖a‖` which is `max (‖a.fst‖) (‖a.snd‖)`. -/
 theorem norm_fst_eq_snd (a : 𝓜(𝕜, A)) : ‖a.fst‖ = ‖a.snd‖ := by
   -- a handy lemma for this proof
-  have h0 : ∀ f : A →L[𝕜] A, ∀ C : ℝ≥0, (∀ b : A, ‖f b‖₊ ^ 2 ≤ C * ‖f b‖₊ * ‖b‖₊) → ‖f‖₊ ≤ C := by
-    intro f C h
-    have h1 : ∀ b, C * ‖f b‖₊ * ‖b‖₊ ≤ C * ‖f‖₊ * ‖b‖₊ ^ 2 := by
-      intro b
-      convert mul_le_mul_right' (mul_le_mul_left' (f.le_opNNNorm b) C) ‖b‖₊ using 1
-      ring
-    have := NNReal.div_le_of_le_mul $ f.opNNNorm_le_bound _ $ by
-      simpa only [sqrt_sq, sqrt_mul] using fun b ↦ sqrt_le_sqrt.2 $ (h b).trans (h1 b)
-    convert NNReal.rpow_le_rpow this two_pos.le
-    · simp only [NNReal.rpow_two, div_pow, sq_sqrt]
-      simp only [sq, mul_self_div_self]
-    · simp only [NNReal.rpow_two, sq_sqrt]
-  have h1 : ∀ b, ‖a.fst b‖₊ ^ 2 ≤ ‖a.snd‖₊ * ‖a.fst b‖₊ * ‖b‖₊ := by
-    intro b
-    calc
-      ‖a.fst b‖₊ ^ 2 = ‖star (a.fst b) * a.fst b‖₊ := by
-        simpa only [← sq] using CstarRing.nnnorm_star_mul_self.symm
-      _ ≤ ‖a.snd (star (a.fst b))‖₊ * ‖b‖₊ := (a.central (star (a.fst b)) b ▸ nnnorm_mul_le _ _)
-      _ ≤ ‖a.snd‖₊ * ‖a.fst b‖₊ * ‖b‖₊ :=
-        nnnorm_star (a.fst b) ▸ mul_le_mul_right' (a.snd.le_opNNNorm _) _
+  have h0  : ∀ f : A →L[𝕜] A, ∀ C : ℝ≥0, (∀ b : A, ‖f b‖₊ ^ 2 ≤ C * ‖f b‖₊ * ‖b‖₊) → ‖f‖₊ ≤ C
+  intro f C h
+  have h1  : ∀ b, C * ‖f b‖₊ * ‖b‖₊ ≤ C * ‖f‖₊ * ‖b‖₊ ^ 2
+  intro b
+  convert mul_le_mul_right' (mul_le_mul_left' (f.le_opNNNorm b) C) ‖b‖₊ using 1
+  ring
+  have := NNReal.div_le_of_le_mul $ f.opNNNorm_le_bound _ $ by
+    simpa only [sqrt_sq, sqrt_mul] using fun b ↦ sqrt_le_sqrt.2 $ (h b).trans (h1 b)
+  convert NNReal.rpow_le_rpow this two_pos.le
+  · simp only [NNReal.rpow_two, div_pow, sq_sqrt]
+    simp only [sq, mul_self_div_self]
+  · simp only [NNReal.rpow_two, sq_sqrt]
+  have h1  : ∀ b, ‖a.fst b‖₊ ^ 2 ≤ ‖a.snd‖₊ * ‖a.fst b‖₊ * ‖b‖₊
+  intro b
+  calc
+    ‖a.fst b‖₊ ^ 2 = ‖star (a.fst b) * a.fst b‖₊ := by
+      simpa only [← sq] using CstarRing.nnnorm_star_mul_self.symm
+    _ ≤ ‖a.snd (star (a.fst b))‖₊ * ‖b‖₊ := (a.central (star (a.fst b)) b ▸ nnnorm_mul_le _ _)
+    _ ≤ ‖a.snd‖₊ * ‖a.fst b‖₊ * ‖b‖₊ :=
+      nnnorm_star (a.fst b) ▸ mul_le_mul_right' (a.snd.le_opNNNorm _) _
 
-  have h2 : ∀ b, ‖a.snd b‖₊ ^ 2 ≤ ‖a.fst‖₊ * ‖a.snd b‖₊ * ‖b‖₊ := by
-    intro b
-    calc
-      ‖a.snd b‖₊ ^ 2 = ‖a.snd b * star (a.snd b)‖₊ := by
-        simpa only [← sq] using CstarRing.nnnorm_self_mul_star.symm
-      _ ≤ ‖b‖₊ * ‖a.fst (star (a.snd b))‖₊ :=
-        ((a.central b (star (a.snd b))).symm ▸ nnnorm_mul_le _ _)
-      _ = ‖a.fst (star (a.snd b))‖₊ * ‖b‖₊ := mul_comm _ _
-      _ ≤ ‖a.fst‖₊ * ‖a.snd b‖₊ * ‖b‖₊ :=
-        nnnorm_star (a.snd b) ▸ mul_le_mul_right' (a.fst.le_opNNNorm _) _
+  have h2  : ∀ b, ‖a.snd b‖₊ ^ 2 ≤ ‖a.fst‖₊ * ‖a.snd b‖₊ * ‖b‖₊
+  intro b
+  calc
+    ‖a.snd b‖₊ ^ 2 = ‖a.snd b * star (a.snd b)‖₊ := by
+      simpa only [← sq] using CstarRing.nnnorm_self_mul_star.symm
+    _ ≤ ‖b‖₊ * ‖a.fst (star (a.snd b))‖₊ :=
+      ((a.central b (star (a.snd b))).symm ▸ nnnorm_mul_le _ _)
+    _ = ‖a.fst (star (a.snd b))‖₊ * ‖b‖₊ := mul_comm _ _
+    _ ≤ ‖a.fst‖₊ * ‖a.snd b‖₊ * ‖b‖₊ :=
+      nnnorm_star (a.snd b) ▸ mul_le_mul_right' (a.fst.le_opNNNorm _) _
 
   exact le_antisymm (h0 _ _ h1) (h0 _ _ h2)
 

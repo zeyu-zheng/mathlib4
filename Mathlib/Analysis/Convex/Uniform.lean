@@ -67,14 +67,14 @@ theorem exists_forall_closed_ball_dist_add_le_two_sub (hε : 0 < ε) :
   · rw [← one_add_one_eq_two]
     exact (norm_add_le_of_le hx hy').trans (add_sub_assoc _ _ _).ge
   have hδ' : 0 < 1 - δ' := sub_pos_of_lt (min_lt_of_left_lt one_half_lt_one)
-  have h₁ : ∀ z : E, 1 - δ' < ‖z‖ → ‖‖z‖⁻¹ • z‖ = 1 := by
-    rintro z hz
-    rw [norm_smul_of_nonneg (inv_nonneg.2 <| norm_nonneg _), inv_mul_cancel (hδ'.trans hz).ne']
-  have h₂ : ∀ z : E, ‖z‖ ≤ 1 → 1 - δ' ≤ ‖z‖ → ‖‖z‖⁻¹ • z - z‖ ≤ δ' := by
-    rintro z hz hδz
-    nth_rw 3 [← one_smul ℝ z]
-    rwa [← sub_smul, norm_smul_of_nonneg (sub_nonneg_of_le <| one_le_inv (hδ'.trans_le hδz) hz),
-      sub_mul, inv_mul_cancel (hδ'.trans_le hδz).ne', one_mul, sub_le_comm]
+  have h₁  : ∀ z : E, 1 - δ' < ‖z‖ → ‖‖z‖⁻¹ • z‖ = 1
+  rintro z hz
+  rw [norm_smul_of_nonneg (inv_nonneg.2 <| norm_nonneg _), inv_mul_cancel (hδ'.trans hz).ne']
+  have h₂  : ∀ z : E, ‖z‖ ≤ 1 → 1 - δ' ≤ ‖z‖ → ‖‖z‖⁻¹ • z - z‖ ≤ δ'
+  rintro z hz hδz
+  nth_rw 3 [← one_smul ℝ z]
+  rwa [← sub_smul, norm_smul_of_nonneg (sub_nonneg_of_le <| one_le_inv (hδ'.trans_le hδz) hz),
+    sub_mul, inv_mul_cancel (hδ'.trans_le hδz).ne', one_mul, sub_le_comm]
   set x' := ‖x‖⁻¹ • x
   set y' := ‖y‖⁻¹ • y
   have hxy' : ε / 3 ≤ ‖x' - y'‖ :=

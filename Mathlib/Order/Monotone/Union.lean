@@ -24,21 +24,21 @@ variable {α β : Type*} [LinearOrder α] [Preorder β] {a : α} {f : α → β}
 point belonging to both `s` and `t`, then `f` is strictly monotone on `s ∪ t` -/
 protected theorem StrictMonoOn.union {s t : Set α} {c : α} (h₁ : StrictMonoOn f s)
     (h₂ : StrictMonoOn f t) (hs : IsGreatest s c) (ht : IsLeast t c) : StrictMonoOn f (s ∪ t) := by
-  have A : ∀ x, x ∈ s ∪ t → x ≤ c → x ∈ s := by
-    intro x hx hxc
-    cases hx
-    · assumption
+  have A  : ∀ x, x ∈ s ∪ t → x ≤ c → x ∈ s
+  intro x hx hxc
+  cases hx
+  · assumption
+  rcases eq_or_lt_of_le hxc with (rfl | h'x)
+  · exact hs.1
+  exact (lt_irrefl _ (h'x.trans_le (ht.2 (by assumption)))).elim
+  have B  : ∀ x, x ∈ s ∪ t → c ≤ x → x ∈ t
+  intro x hx hxc
+  match hx with
+  | Or.inr hx => exact hx
+  | Or.inl hx =>
     rcases eq_or_lt_of_le hxc with (rfl | h'x)
-    · exact hs.1
-    exact (lt_irrefl _ (h'x.trans_le (ht.2 (by assumption)))).elim
-  have B : ∀ x, x ∈ s ∪ t → c ≤ x → x ∈ t := by
-    intro x hx hxc
-    match hx with
-    | Or.inr hx => exact hx
-    | Or.inl hx =>
-      rcases eq_or_lt_of_le hxc with (rfl | h'x)
-      · exact ht.1
-      exact (lt_irrefl _ (h'x.trans_le (hs.2 hx))).elim
+    · exact ht.1
+    exact (lt_irrefl _ (h'x.trans_le (hs.2 hx))).elim
   intro x hx y hy hxy
   rcases lt_or_le x c with (hxc | hcx)
   · have xs : x ∈ s := A _ hx hxc.le
@@ -72,21 +72,21 @@ protected theorem StrictAntiOn.Iic_union_Ici (h₁ : StrictAntiOn f (Iic a))
 point belonging to both `s` and `t`, then `f` is monotone on `s ∪ t` -/
 protected theorem MonotoneOn.union_right {s t : Set α} {c : α} (h₁ : MonotoneOn f s)
     (h₂ : MonotoneOn f t) (hs : IsGreatest s c) (ht : IsLeast t c) : MonotoneOn f (s ∪ t) := by
-  have A : ∀ x, x ∈ s ∪ t → x ≤ c → x ∈ s := by
-    intro x hx hxc
-    cases hx
-    · assumption
+  have A  : ∀ x, x ∈ s ∪ t → x ≤ c → x ∈ s
+  intro x hx hxc
+  cases hx
+  · assumption
+  rcases eq_or_lt_of_le hxc with (rfl | h'x)
+  · exact hs.1
+  exact (lt_irrefl _ (h'x.trans_le (ht.2 (by assumption)))).elim
+  have B  : ∀ x, x ∈ s ∪ t → c ≤ x → x ∈ t
+  intro x hx hxc
+  match hx with
+  | Or.inr hx => exact hx
+  | Or.inl hx =>
     rcases eq_or_lt_of_le hxc with (rfl | h'x)
-    · exact hs.1
-    exact (lt_irrefl _ (h'x.trans_le (ht.2 (by assumption)))).elim
-  have B : ∀ x, x ∈ s ∪ t → c ≤ x → x ∈ t := by
-    intro x hx hxc
-    match hx with
-    | Or.inr hx => exact hx
-    | Or.inl hx =>
-      rcases eq_or_lt_of_le hxc with (rfl | h'x)
-      · exact ht.1
-      exact (lt_irrefl _ (h'x.trans_le (hs.2 hx))).elim
+    · exact ht.1
+    exact (lt_irrefl _ (h'x.trans_le (hs.2 hx))).elim
   intro x hx y hy hxy
   rcases lt_or_le x c with (hxc | hcx)
   · have xs : x ∈ s := A _ hx hxc.le

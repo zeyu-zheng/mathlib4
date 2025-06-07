@@ -127,8 +127,8 @@ theorem ClassGroup.mk_eq_mk_of_coe_ideal {I J : (FractionalIdeal R⁰ <| Fractio
     exact ⟨_, _, sec_fst_ne_zero (R := R) le_rfl x.ne_zero,
       sec_snd_ne_zero (R := R) le_rfl (x : FractionRing R), hJ⟩
   · rintro ⟨x, y, hx, hy, h⟩
-    have : IsUnit (mk' (FractionRing R) x ⟨y, mem_nonZeroDivisors_of_ne_zero hy⟩) := by
-      simpa only [isUnit_iff_ne_zero, ne_eq, mk'_eq_zero_iff_eq_zero] using hx
+    have  : IsUnit (mk' (FractionRing R) x ⟨y, mem_nonZeroDivisors_of_ne_zero hy⟩)
+    simpa only [isUnit_iff_ne_zero, ne_eq, mk'_eq_zero_iff_eq_zero] using hx
     refine ⟨this.unit, ?_⟩
     rw [mul_comm, ← Units.eq_iff, Units.val_mul, coe_toPrincipalIdeal]
     convert
@@ -306,8 +306,8 @@ theorem ClassGroup.mk0_integralRep [IsDedekindDomain R]
     ClassGroup.mk0 ⟨ClassGroup.integralRep I, ClassGroup.integralRep_mem_nonZeroDivisors I.ne_zero⟩
       = ClassGroup.mk I := by
   rw [← ClassGroup.mk_mk0 (FractionRing R), eq_comm, ClassGroup.mk_eq_mk]
-  have fd_ne_zero : (algebraMap R (FractionRing R)) I.1.den ≠ 0 := by
-    exact IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors (SetLike.coe_mem _)
+  have fd_ne_zero  : (algebraMap R (FractionRing R)) I.1.den ≠ 0
+  exact IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors (SetLike.coe_mem _)
   refine ⟨Units.mk0 (algebraMap R _ I.1.den) fd_ne_zero, ?_⟩
   apply Units.ext
   rw [mul_comm, val_mul, coe_toPrincipalIdeal, val_mk0]
@@ -328,9 +328,9 @@ theorem ClassGroup.mk_eq_one_iff {I : (FractionalIdeal R⁰ K)ˣ} :
   refine ⟨fun ⟨x, hx⟩ => ⟨⟨x, by rw [← hx, coe_spanSingleton]⟩⟩, ?_⟩
   intro hI
   obtain ⟨x, hx⟩ := @Submodule.IsPrincipal.principal _ _ _ _ _ _ hI
-  have hx' : (I : FractionalIdeal R⁰ K) = spanSingleton R⁰ x := by
-    apply Subtype.coe_injective
-    simp only [val_eq_coe, hx, coe_spanSingleton]
+  have hx'  : (I : FractionalIdeal R⁰ K) = spanSingleton R⁰ x
+  apply Subtype.coe_injective
+  simp only [val_eq_coe, hx, coe_spanSingleton]
   refine ⟨Units.mk0 x ?_, ?_⟩
   · intro x_eq; apply Units.ne_zero I; simp [hx', x_eq]
   · simp [hx']

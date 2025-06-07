@@ -105,10 +105,10 @@ theorem isCaratheodory_iUnion_nat {s : ℕ → Set α} (h : ∀ i, IsCaratheodor
     (hd : Pairwise (Disjoint on s)) : IsCaratheodory m (⋃ i, s i) := by
       apply (isCaratheodory_iff_le' m).mpr
       intro t
-      have hp : m (t ∩ ⋃ i, s i) ≤ ⨆ n, m (t ∩ ⋃ i < n, s i) := by
-        convert m.iUnion fun i => t ∩ s i using 1
-        · simp [inter_iUnion]
-        · simp [ENNReal.tsum_eq_iSup_nat, isCaratheodory_sum m h hd]
+      have hp  : m (t ∩ ⋃ i, s i) ≤ ⨆ n, m (t ∩ ⋃ i < n, s i)
+      convert m.iUnion fun i => t ∩ s i using 1
+      · simp [inter_iUnion]
+      · simp [ENNReal.tsum_eq_iSup_nat, isCaratheodory_sum m h hd]
       refine le_trans (add_le_add_right hp _) ?_
       rw [ENNReal.iSup_add]
       refine iSup_le fun n => le_trans (add_le_add_left ?_ _)

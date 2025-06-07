@@ -185,8 +185,8 @@ theorem map_exact : Function.Exact (map I f) (map I g) := by
   · apply AdicCompletion.induction_on I N y (fun b ↦ ?_)
     intro hz
     obtain ⟨k, hk⟩ := Ideal.exists_pow_inf_eq_pow_smul I (LinearMap.range f)
-    have hb (n : ℕ) : g (b n) ∈ (I ^ n • ⊤ : Submodule R P) := by
-      simpa using congrArg (fun x ↦ x.val n) hz
+    have hb (n  : ℕ) : g (b n) ∈ (I ^ n • ⊤ : Submodule R P)
+    simpa using congrArg (fun x ↦ x.val n) hz
     let a := mapExactAux hf hfg hg hk b hb
     refine ⟨AdicCompletion.mk I M (AdicCauchySequence.mk I M (fun n ↦ (a n : M)) ?_), ?_⟩
     · refine fun n ↦ SModEq.symm ?_

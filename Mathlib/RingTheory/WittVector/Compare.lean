@@ -43,8 +43,8 @@ theorem eq_of_le_of_cast_pow_eq_zero [CharP R p] (i : ℕ) (hin : i ≤ n)
     (hpi : (p : TruncatedWittVector p n R) ^ i = 0) : i = n := by
   contrapose! hpi
   replace hin := lt_of_le_of_ne hin hpi; clear hpi
-  have : (p : TruncatedWittVector p n R) ^ i = WittVector.truncate n ((p : 𝕎 R) ^ i) := by
-    rw [RingHom.map_pow, map_natCast]
+  have  : (p : TruncatedWittVector p n R) ^ i = WittVector.truncate n ((p : 𝕎 R) ^ i)
+  rw [RingHom.map_pow, map_natCast]
   rw [this, ne_eq, TruncatedWittVector.ext_iff, not_forall]; clear this
   use ⟨i, hin⟩
   rw [WittVector.coeff_truncate, coeff_zero, Fin.val_mk, WittVector.coeff_p_pow]

@@ -81,7 +81,8 @@ theorem zipWith_swap_prod_support' (l l' : List α) :
 theorem zipWith_swap_prod_support [Fintype α] (l l' : List α) :
     (zipWith swap l l').prod.support ≤ l.toFinset ⊔ l'.toFinset := by
   intro x hx
-  have hx' : x ∈ { x | (zipWith swap l l').prod x ≠ x } := by simpa using hx
+  have hx'  : x ∈ { x | (zipWith swap l l').prod x ≠ x }
+  simpa using hx
   simpa using zipWith_swap_prod_support' _ _ hx'
 
 theorem support_formPerm_le' : { x | formPerm l x ≠ x } ≤ l.toFinset := by
@@ -90,7 +91,8 @@ theorem support_formPerm_le' : { x | formPerm l x ≠ x } ≤ l.toFinset := by
 
 theorem support_formPerm_le [Fintype α] : support (formPerm l) ≤ l.toFinset := by
   intro x hx
-  have hx' : x ∈ { x | formPerm l x ≠ x } := by simpa using hx
+  have hx'  : x ∈ { x | formPerm l x ≠ x }
+  simpa using hx
   simpa using support_formPerm_le' _ hx'
 
 variable {l} {x : α}
@@ -253,7 +255,8 @@ theorem support_formPerm_of_nodup [Fintype α] (l : List α) (h : Nodup l) (h' :
   simp [Set.ext_iff]
 
 theorem formPerm_rotate_one (l : List α) (h : Nodup l) : formPerm (l.rotate 1) = formPerm l := by
-  have h' : Nodup (l.rotate 1) := by simpa using h
+  have h'  : Nodup (l.rotate 1)
+  simpa using h
   ext x
   by_cases hx : x ∈ l.rotate 1
   · obtain ⟨⟨k, hk⟩, rfl⟩ := get_of_mem hx
@@ -319,20 +322,20 @@ theorem formPerm_ext_iff {x y x' y' : α} {l l' : List α} (hd : Nodup (x :: y :
     formPerm (x :: y :: l) = formPerm (x' :: y' :: l') ↔ (x :: y :: l) ~r (x' :: y' :: l') := by
   refine ⟨fun h => ?_, fun hr => formPerm_eq_of_isRotated hd hr⟩
   rw [Equiv.Perm.ext_iff] at h
-  have hx : x' ∈ x :: y :: l := by
-    have : x' ∈ { z | formPerm (x :: y :: l) z ≠ z } := by
-      rw [Set.mem_setOf_eq, h x', formPerm_apply_head _ _ _ hd']
-      simp only [mem_cons, nodup_cons] at hd'
-      push_neg at hd'
-      exact hd'.left.left.symm
-    simpa using support_formPerm_le' _ this
+  have hx  : x' ∈ x :: y :: l
+  have  : x' ∈ { z | formPerm (x :: y :: l) z ≠ z }
+  rw [Set.mem_setOf_eq, h x', formPerm_apply_head _ _ _ hd']
+  simp only [mem_cons, nodup_cons] at hd'
+  push_neg at hd'
+  exact hd'.left.left.symm
+  simpa using support_formPerm_le' _ this
   obtain ⟨⟨n, hn⟩, hx'⟩ := get_of_mem hx
-  have hl : (x :: y :: l).length = (x' :: y' :: l').length := by
-    rw [← dedup_eq_self.mpr hd, ← dedup_eq_self.mpr hd', ← card_toFinset, ← card_toFinset]
-    refine congr_arg Finset.card ?_
-    rw [← Finset.coe_inj, ← support_formPerm_of_nodup' _ hd (by simp), ←
-      support_formPerm_of_nodup' _ hd' (by simp)]
-    simp only [h]
+  have hl  : (x :: y :: l).length = (x' :: y' :: l').length
+  rw [← dedup_eq_self.mpr hd, ← dedup_eq_self.mpr hd', ← card_toFinset, ← card_toFinset]
+  refine congr_arg Finset.card ?_
+  rw [← Finset.coe_inj, ← support_formPerm_of_nodup' _ hd (by simp), ←
+    support_formPerm_of_nodup' _ hd' (by simp)]
+  simp only [h]
   use n
   apply List.ext_get
   · rw [length_rotate, hl]

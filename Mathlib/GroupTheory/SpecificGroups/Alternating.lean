@@ -117,10 +117,10 @@ theorem isConj_of {σ τ : alternatingGroup α} (hc : IsConj (σ : Perm α) (τ 
     refine isConj_iff.2 ⟨⟨π * swap a b, ?_⟩, Subtype.val_injective ?_⟩
     · rw [mem_alternatingGroup, MonoidHom.map_mul, h, sign_swap ab, Int.units_mul_self]
     · simp only [← hπ, coe_mk, Subgroup.coe_mul, Subtype.val]
-      have hd : Disjoint (swap a b) σ := by
-        rw [disjoint_iff_disjoint_support, support_swap ab, Finset.disjoint_insert_left,
-          Finset.disjoint_singleton_left]
-        exact ⟨Finset.mem_compl.1 ha, Finset.mem_compl.1 hb⟩
+      have hd  : Disjoint (swap a b) σ
+      rw [disjoint_iff_disjoint_support, support_swap ab, Finset.disjoint_insert_left,
+        Finset.disjoint_singleton_left]
+      exact ⟨Finset.mem_compl.1 ha, Finset.mem_compl.1 hb⟩
       rw [mul_assoc π _ σ, hd.commute.eq, coe_inv, coe_mk]
       simp [mul_assoc]
 

@@ -478,16 +478,16 @@ we need. -/
 theorem hausdorffDist_optimal_le_HD {f} (h : f ∈ candidatesB X Y) :
     hausdorffDist (range (optimalGHInjl X Y)) (range (optimalGHInjr X Y)) ≤ HD f := by
   refine le_trans (le_of_forall_le_of_dense fun r hr => ?_) (HD_optimalGHDist_le X Y f h)
-  have A : ∀ x ∈ range (optimalGHInjl X Y), ∃ y ∈ range (optimalGHInjr X Y), dist x y ≤ r := by
-    rintro _ ⟨z, rfl⟩
-    have I1 : (⨆ x, ⨅ y, optimalGHDist X Y (inl x, inr y)) < r :=
-      lt_of_le_of_lt (le_max_left _ _) hr
-    have I2 :
-        ⨅ y, optimalGHDist X Y (inl z, inr y) ≤ ⨆ x, ⨅ y, optimalGHDist X Y (inl x, inr y) :=
-      le_csSup (by simpa using HD_bound_aux1 _ 0) (mem_range_self _)
-    have I : ⨅ y, optimalGHDist X Y (inl z, inr y) < r := lt_of_le_of_lt I2 I1
-    rcases exists_lt_of_csInf_lt (range_nonempty _) I with ⟨r', ⟨z', rfl⟩, hr'⟩
-    exact ⟨optimalGHInjr X Y z', mem_range_self _, le_of_lt hr'⟩
+  have A  : ∀ x ∈ range (optimalGHInjl X Y), ∃ y ∈ range (optimalGHInjr X Y), dist x y ≤ r
+  rintro _ ⟨z, rfl⟩
+  have I1 : (⨆ x, ⨅ y, optimalGHDist X Y (inl x, inr y)) < r :=
+    lt_of_le_of_lt (le_max_left _ _) hr
+  have I2 :
+      ⨅ y, optimalGHDist X Y (inl z, inr y) ≤ ⨆ x, ⨅ y, optimalGHDist X Y (inl x, inr y) :=
+    le_csSup (by simpa using HD_bound_aux1 _ 0) (mem_range_self _)
+  have I : ⨅ y, optimalGHDist X Y (inl z, inr y) < r := lt_of_le_of_lt I2 I1
+  rcases exists_lt_of_csInf_lt (range_nonempty _) I with ⟨r', ⟨z', rfl⟩, hr'⟩
+  exact ⟨optimalGHInjr X Y z', mem_range_self _, le_of_lt hr'⟩
   refine hausdorffDist_le_of_mem_dist ?_ A ?_
   · inhabit X
     rcases A _ (mem_range_self default) with ⟨y, -, hy⟩

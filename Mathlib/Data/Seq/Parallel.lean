@@ -56,10 +56,10 @@ theorem terminates_parallel.aux :
     ∀ l S, (∃ a : α, parallel.aux2 l = Sum.inl a) → Terminates (corec parallel.aux1 (l, S)) := by
     intro l S e
     cases' e with a e
-    have : corec parallel.aux1 (l, S) = return a := by
-      apply destruct_eq_pure
-      simp only [parallel.aux1, rmap, corec_eq]
-      rw [e]
+    have  : corec parallel.aux1 (l, S) = return a
+    apply destruct_eq_pure
+    simp only [parallel.aux1, rmap, corec_eq]
+    rw [e]
     rw [this]
     -- Porting note: This line is required.
     exact ret_terminates a
@@ -79,29 +79,29 @@ theorem terminates_parallel.aux :
       rw [e]
       exact ⟨a', rfl⟩
   · intro s IH l S m
-    have H1 : ∀ l', parallel.aux2 l = Sum.inr l' → s ∈ l' := by
-      induction' l with c l IH' <;> intro l' e' <;> simp at m
-      cases' m with e m <;> simp [parallel.aux2] at e'
-      · rw [← e] at e'
-        -- Porting note: `revert e'` & `intro e'` are required.
-        revert e'
-        split
-        · simp
-        · simp only [destruct_think, Sum.inr.injEq]
-          rintro rfl
-          simp
-      · induction' e : List.foldr (fun c o =>
-            match o with
-            | Sum.inl a => Sum.inl a
-            | Sum.inr ls => rmap (fun c' => c' :: ls) (destruct c))
-          (Sum.inr List.nil) l with a' ls <;> erw [e] at e'
-        · contradiction
-        have := IH' m _ e
-        -- Porting note: `revert e'` & `intro e'` are required.
-        revert e'
-        cases destruct c <;> intro e' <;> [injection e'; injection e' with h']
-        rw [← h']
-        simp [this]
+    have H1  : ∀ l', parallel.aux2 l = Sum.inr l' → s ∈ l'
+    induction' l with c l IH' <;> intro l' e' <;> simp at m
+    cases' m with e m <;> simp [parallel.aux2] at e'
+    · rw [← e] at e'
+      -- Porting note: `revert e'` & `intro e'` are required.
+      revert e'
+      split
+      · simp
+      · simp only [destruct_think, Sum.inr.injEq]
+        rintro rfl
+        simp
+    · induction' e : List.foldr (fun c o =>
+          match o with
+          | Sum.inl a => Sum.inl a
+          | Sum.inr ls => rmap (fun c' => c' :: ls) (destruct c))
+        (Sum.inr List.nil) l with a' ls <;> erw [e] at e'
+      · contradiction
+      have := IH' m _ e
+      -- Porting note: `revert e'` & `intro e'` are required.
+      revert e'
+      cases destruct c <;> intro e' <;> [injection e'; injection e' with h']
+      rw [← h']
+      simp [this]
     induction' h : parallel.aux2 l with a l'
     · exact lem1 _ _ ⟨a, h⟩
     · have H2 : corec parallel.aux1 (l, S) = think _ := destruct_eq_think (by
@@ -124,7 +124,8 @@ theorem terminates_parallel {S : WSeq (Computation α)} {c} (h : c ∈ S) [T : T
   intro n; induction' n with n IH <;> intro l S c o T
   · cases' o with a a
     · exact terminates_parallel.aux a T
-    have H : Seq.destruct S = some (some c, Seq.tail S) := by simp [Seq.destruct, (· <$> ·), ← a]
+    have H  : Seq.destruct S = some (some c, Seq.tail S)
+    simp [Seq.destruct, (· <$> ·), ← a]
     induction' h : parallel.aux2 l with a l'
     · have C : corec parallel.aux1 (l, S) = pure a := by
         apply destruct_eq_pure
@@ -157,12 +158,12 @@ theorem terminates_parallel {S : WSeq (Computation α)} {c} (h : c ∈ S) [T : T
         rw [h])
       rw [C]
       refine @Computation.think_terminates _ _ ?_
-      have TT : ∀ l', Terminates (corec parallel.aux1 (l', S.tail)) := by
-        intro
-        apply IH _ _ _ (Or.inr _) T
-        rw [a]
-        cases' S with f al
-        rfl
+      have TT  : ∀ l', Terminates (corec parallel.aux1 (l', S.tail))
+      intro
+      apply IH _ _ _ (Or.inr _) T
+      rw [a]
+      cases' S with f al
+      rfl
       induction' e : Seq.get? S 0 with o
       · have D : Seq.destruct S = none := by
           dsimp [Seq.destruct]
@@ -191,38 +192,38 @@ theorem exists_of_mem_parallel {S : WSeq (Computation α)} {a} (h : a ∈ parall
     cases' a with a l'
     · exact ∃ c ∈ l, a ∈ c
     · exact ∀ a', (∃ c ∈ l', a' ∈ c) → ∃ c ∈ l, a' ∈ c
-  have lem1 : ∀ l : List (Computation α), F l (parallel.aux2 l) := by
-    intro l
-    induction' l with c l IH <;> simp only [parallel.aux2, List.foldr]
-    · intro a h
-      rcases h with ⟨c, hn, _⟩
-      exact False.elim <| List.not_mem_nil _ hn
-    · simp only [parallel.aux2] at IH
-      -- Porting note: `revert IH` & `intro IH` are required.
-      revert IH
-      cases' List.foldr (fun c o =>
-        match o with
-        | Sum.inl a => Sum.inl a
-        | Sum.inr ls => rmap (fun c' => c' :: ls) (destruct c)) (Sum.inr List.nil) l with a ls <;>
-        intro IH <;>
-        simp only [parallel.aux2]
-      · rcases IH with ⟨c', cl, ac⟩
-        exact ⟨c', List.Mem.tail _ cl, ac⟩
-      · induction' h : destruct c with a c' <;> simp only [rmap]
-        · refine ⟨c, List.mem_cons_self _ _, ?_⟩
-          rw [destruct_eq_pure h]
-          apply ret_mem
-        · intro a' h
-          rcases h with ⟨d, dm, ad⟩
-          simp? at dm says simp only [List.mem_cons] at dm
-          cases' dm with e dl
-          · rw [e] at ad
-            refine ⟨c, List.mem_cons_self _ _, ?_⟩
-            rw [destruct_eq_think h]
-            exact think_mem ad
-          · cases' IH a' ⟨d, dl, ad⟩ with d dm
-            cases' dm with dm ad
-            exact ⟨d, List.Mem.tail _ dm, ad⟩
+  have lem1  : ∀ l : List (Computation α), F l (parallel.aux2 l)
+  intro l
+  induction' l with c l IH <;> simp only [parallel.aux2, List.foldr]
+  · intro a h
+    rcases h with ⟨c, hn, _⟩
+    exact False.elim <| List.not_mem_nil _ hn
+  · simp only [parallel.aux2] at IH
+    -- Porting note: `revert IH` & `intro IH` are required.
+    revert IH
+    cases' List.foldr (fun c o =>
+      match o with
+      | Sum.inl a => Sum.inl a
+      | Sum.inr ls => rmap (fun c' => c' :: ls) (destruct c)) (Sum.inr List.nil) l with a ls <;>
+      intro IH <;>
+      simp only [parallel.aux2]
+    · rcases IH with ⟨c', cl, ac⟩
+      exact ⟨c', List.Mem.tail _ cl, ac⟩
+    · induction' h : destruct c with a c' <;> simp only [rmap]
+      · refine ⟨c, List.mem_cons_self _ _, ?_⟩
+        rw [destruct_eq_pure h]
+        apply ret_mem
+      · intro a' h
+        rcases h with ⟨d, dm, ad⟩
+        simp? at dm says simp only [List.mem_cons] at dm
+        cases' dm with e dl
+        · rw [e] at ad
+          refine ⟨c, List.mem_cons_self _ _, ?_⟩
+          rw [destruct_eq_think h]
+          exact think_mem ad
+        · cases' IH a' ⟨d, dl, ad⟩ with d dm
+          cases' dm with dm ad
+          exact ⟨d, List.Mem.tail _ dm, ad⟩
   intro C aC
   -- Porting note: `revert e'` & `intro e'` are required.
   apply memRecOn aC <;> [skip; intro C' IH] <;> intro l S e <;> have e' := congr_arg destruct e <;>

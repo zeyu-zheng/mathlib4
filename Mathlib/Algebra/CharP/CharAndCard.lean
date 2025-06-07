@@ -27,11 +27,11 @@ theorem isUnit_iff_not_dvd_char_of_ringChar_ne_zero (R : Type*) [CommRing R] (p 
   constructor
   · rintro h₁ ⟨q, hq⟩
     rcases IsUnit.exists_left_inv h₁ with ⟨a, ha⟩
-    have h₃ : ¬ringChar R ∣ q := by
-      rintro ⟨r, hr⟩
-      rw [hr, ← mul_assoc, mul_comm p, mul_assoc] at hq
-      nth_rw 1 [← mul_one (ringChar R)] at hq
-      exact Nat.Prime.not_dvd_one hp ⟨r, mul_left_cancel₀ hR hq⟩
+    have h₃  : ¬ringChar R ∣ q
+    rintro ⟨r, hr⟩
+    rw [hr, ← mul_assoc, mul_comm p, mul_assoc] at hq
+    nth_rw 1 [← mul_one (ringChar R)] at hq
+    exact Nat.Prime.not_dvd_one hp ⟨r, mul_left_cancel₀ hR hq⟩
     have h₄ := mt (CharP.intCast_eq_zero_iff R (ringChar R) q).mp
     apply_fun ((↑) : ℕ → R) at hq
     apply_fun (· * ·) a at hq

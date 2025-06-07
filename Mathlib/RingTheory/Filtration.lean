@@ -303,19 +303,20 @@ theorem submodule_eq_span_le_iff_stable_ge (n₀ : ℕ) :
     rintro ⟨_, _, ⟨n', rfl⟩, _, ⟨hn', rfl⟩, m, hm, rfl⟩ -
     dsimp only [Subtype.coe_mk]
     rw [Subalgebra.smul_def, smul_single_apply, if_pos (show n' ≤ n + 1 by omega)]
-    have e : n' ≤ n := by omega
+    have e  : n' ≤ n
+    omega
     have := F.pow_smul_le_pow_smul (n - n') n' 1
     rw [tsub_add_cancel_of_le e, pow_one, add_comm _ 1, ← add_tsub_assoc_of_le e, add_comm] at this
     exact this (Submodule.smul_mem_smul ((l _).2 <| n + 1 - n') hm)
   · let F' := Submodule.span (reesAlgebra I) (⋃ i ≤ n₀, single R i '' (F.N i : Set M))
     intro hF i
-    have : ∀ i ≤ n₀, single R i '' (F.N i : Set M) ⊆ F' := by
-      -- Porting note: Original proof was
-      -- `fun i hi => Set.Subset.trans (Set.subset_iUnion₂ i hi) Submodule.subset_span`
-      intro i hi
-      refine Set.Subset.trans ?_ Submodule.subset_span
-      refine @Set.subset_iUnion₂ _ _ _ (fun i => fun _ => ↑((single R i) '' ((N F i) : Set M))) i ?_
-      exact hi
+    have  : ∀ i ≤ n₀, single R i '' (F.N i : Set M) ⊆ F'
+    -- Porting note: Original proof was
+    -- `fun i hi => Set.Subset.trans (Set.subset_iUnion₂ i hi) Submodule.subset_span`
+    intro i hi
+    refine Set.Subset.trans ?_ Submodule.subset_span
+    refine @Set.subset_iUnion₂ _ _ _ (fun i => fun _ => ↑((single R i) '' ((N F i) : Set M))) i ?_
+    exact hi
     induction' i with j hj
     · exact this _ (zero_le _)
     by_cases hj' : j.succ ≤ n₀

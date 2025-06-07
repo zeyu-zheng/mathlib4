@@ -758,8 +758,10 @@ def equivHomotopy (φ₁ φ₂ : F ⟶ G) :
       zero := fun i j (hij : j + 1 ≠ i) => dif_neg (fun _ => hij (by omega))
       comm := fun p => by
         have eq := Cochain.congr_v z.2 p p (add_zero p)
-        have h₁ : (ComplexShape.up ℤ).Rel (p - 1) p := by simp
-        have h₂ : (ComplexShape.up ℤ).Rel p (p + 1) := by simp
+        have h₁ : (ComplexShape.up ℤ).Rel (p - 1) p
+        simp
+        have h₂ : (ComplexShape.up ℤ).Rel p (p + 1)
+        simp
         simp only [δ_neg_one_cochain, Cochain.ofHom_v, ComplexShape.up_Rel, Cochain.add_v,
           Homotopy.nullHomotopicMap'_f h₁ h₂] at eq
         rw [dNext_eq _ h₂, prevD_eq _ h₁, eq, dif_pos, dif_pos] }

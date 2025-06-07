@@ -43,14 +43,14 @@ theorem Equiv.optionCongr_sign {α : Type*} [DecidableEq α] [Fintype α] (e : P
 theorem map_equiv_removeNone {α : Type*} [DecidableEq α] (σ : Perm (Option α)) :
     (removeNone σ).optionCongr = swap none (σ none) * σ := by
   ext1 x
-  have : Option.map (⇑(removeNone σ)) x = (swap none (σ none)) (σ x) := by
-    cases' x with x
-    · simp
-    · cases h : σ (some _)
-      · simp [removeNone_none _ h]
-      · have hn : σ (some x) ≠ none := by simp [h]
-        have hσn : σ (some x) ≠ σ none := σ.injective.ne (by simp)
-        simp [removeNone_some _ ⟨_, h⟩, ← h, swap_apply_of_ne_of_ne hn hσn]
+  have  : Option.map (⇑(removeNone σ)) x = (swap none (σ none)) (σ x)
+  cases' x with x
+  · simp
+  · cases h : σ (some _)
+    · simp [removeNone_none _ h]
+    · have hn : σ (some x) ≠ none := by simp [h]
+      have hσn : σ (some x) ≠ σ none := σ.injective.ne (by simp)
+      simp [removeNone_some _ ⟨_, h⟩, ← h, swap_apply_of_ne_of_ne hn hσn]
   simpa using this
 
 /-- Permutations of `Option α` are equivalent to fixing an

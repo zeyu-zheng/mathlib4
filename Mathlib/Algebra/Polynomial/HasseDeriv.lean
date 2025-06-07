@@ -140,7 +140,8 @@ theorem factorial_smul_hasseDeriv : ⇑(k ! • @hasseDeriv R _ k) = (@derivativ
   congr 2
   rw [mul_comm (k+1) _, mul_assoc, mul_assoc]
   congr 1
-  have : n + k + 1 = n + (k + 1) := by apply add_assoc
+  have  : n + k + 1 = n + (k + 1)
+  apply add_assoc
   rw [← choose_symm_of_eq_add this, choose_succ_right_eq, mul_comm]
   congr
   rw [add_assoc, add_tsub_cancel_left]
@@ -183,9 +184,9 @@ theorem natDegree_hasseDeriv_le (p : R[X]) (n : ℕ) :
         tsub_le_iff_right, mem_support_iff, Ne, Finset.mem_filter]
       intro x hx hx'
       have hxp : x ≤ p.natDegree := le_natDegree_of_ne_zero hx
-      have hxn : n ≤ x := by
-        contrapose! hx'
-        simp [Nat.choose_eq_zero_of_lt hx']
+      have hxn  : n ≤ x
+      contrapose! hx'
+      simp [Nat.choose_eq_zero_of_lt hx']
       rwa [tsub_add_cancel_of_le (hxn.trans hxp)]
     · simp
 

@@ -189,11 +189,11 @@ theorem Char.card_pow_char_pow {χ : MulChar R R'} (hχ : IsQuadratic χ) (ψ : 
     [fp : Fact p.Prime] [hch : CharP R' p] (hp : IsUnit (p : R)) (hp' : p ≠ 2)
     (hg : gaussSum χ ψ ^ 2 = χ (-1) * Fintype.card R) :
     (χ (-1) * Fintype.card R) ^ (p ^ n / 2) = χ ((p : R) ^ n) := by
-  have : gaussSum χ ψ ≠ 0 := by
-    intro hf
-    rw [hf, zero_pow two_ne_zero, eq_comm, mul_eq_zero] at hg
-    exact not_isUnit_prime_of_dvd_card p
-        ((CharP.cast_eq_zero_iff R' p _).mp <| hg.resolve_left (isUnit_one.neg.map χ).ne_zero) hp
+  have  : gaussSum χ ψ ≠ 0
+  intro hf
+  rw [hf, zero_pow two_ne_zero, eq_comm, mul_eq_zero] at hg
+  exact not_isUnit_prime_of_dvd_card p
+      ((CharP.cast_eq_zero_iff R' p _).mp <| hg.resolve_left (isUnit_one.neg.map χ).ne_zero) hp
   rw [← hg]
   apply mul_right_cancel₀ this
   rw [← hχ.gaussSum_frob_iter p n hp ψ, ← pow_mul, ← pow_succ,
@@ -251,11 +251,11 @@ theorem FiniteField.two_pow_card {F : Type*} [Fintype F] [Field F] (hF : ringCha
   have FFp := hchar.subst hp
   have := Fact.mk FFp
   have hFF := hchar ▸ hF -- `ringChar FF ≠ 2`
-  have hu : IsUnit (ringChar FF : ZMod 8) := by
-    rw [isUnit_iff_not_dvd_char, ringChar_zmod_n]
-    rw [Ne, ← Nat.prime_dvd_prime_iff_eq FFp Nat.prime_two] at hFF
-    change ¬_ ∣ 2 ^ 3
-    exact mt FFp.dvd_of_dvd_pow hFF
+  have hu  : IsUnit (ringChar FF : ZMod 8)
+  rw [isUnit_iff_not_dvd_char, ringChar_zmod_n]
+  rw [Ne, ← Nat.prime_dvd_prime_iff_eq FFp Nat.prime_two] at hFF
+  change ¬_ ∣ 2 ^ 3
+  exact mt FFp.dvd_of_dvd_pow hFF
 
   -- there is a primitive additive character `ℤ/8ℤ → FF`, sending `a + 8ℤ ↦ τ^a`
   -- with a primitive eighth root of unity `τ`
@@ -264,13 +264,13 @@ theorem FiniteField.two_pow_card {F : Type*} [Fintype F] [Field F] (hF : ringCha
   -- This is needed to make `simp_rw [← h₁]` below work.
   let ψ₈char : AddChar (ZMod 8) FF := ψ₈.char
   let τ : FF := ψ₈char 1
-  have τ_spec : τ ^ 4 = -1 := by
-    rw [show τ = ψ₈.char 1 from rfl] -- to make `rw [ψ₈.prim.zmod_char_eq_one_iff]` work
-    refine (sq_eq_one_iff.1 ?_).resolve_left ?_
-    · rw [← pow_mul, ← map_nsmul_eq_pow ψ₈.char, ψ₈.prim.zmod_char_eq_one_iff]
-      decide
-    · rw [← map_nsmul_eq_pow ψ₈.char, ψ₈.prim.zmod_char_eq_one_iff]
-      decide
+  have τ_spec  : τ ^ 4 = -1
+  rw [show τ = ψ₈.char 1 from rfl] -- to make `rw [ψ₈.prim.zmod_char_eq_one_iff]` work
+  refine (sq_eq_one_iff.1 ?_).resolve_left ?_
+  · rw [← pow_mul, ← map_nsmul_eq_pow ψ₈.char, ψ₈.prim.zmod_char_eq_one_iff]
+    decide
+  · rw [← map_nsmul_eq_pow ψ₈.char, ψ₈.prim.zmod_char_eq_one_iff]
+    decide
 
   -- we consider `χ₈` as a multiplicative character `ℤ/8ℤ → FF`
   let χ := χ₈.ringHomComp (Int.castRingHom FF)
@@ -278,23 +278,23 @@ theorem FiniteField.two_pow_card {F : Type*} [Fintype F] [Field F] (hF : ringCha
   have hq : IsQuadratic χ := isQuadratic_χ₈.comp _
 
   -- we now show that the Gauss sum of `χ` and `ψ₈` has the relevant property
-  have h₁ : (fun (a : Fin 8) ↦ ↑(χ₈ a) * τ ^ (a : ℕ)) = fun a ↦ χ a * ↑(ψ₈char a) := by
-    ext1; congr; apply pow_one
-  have hg₁ : gaussSum χ ψ₈char = 2 * (τ - τ ^ 3) := by
-    rw [gaussSum, ← h₁, Fin.sum_univ_eight,
-      -- evaluate `χ₈`
-      show χ₈ 0 = 0 from rfl, show χ₈ 1 = 1 from rfl, show χ₈ 2 = 0 from rfl,
-      show χ₈ 3 = -1 from rfl, show χ₈ 4 = 0 from rfl, show χ₈ 5 = -1 from rfl,
-      show χ₈ 6 = 0 from rfl, show χ₈ 7 = 1 from rfl,
-      -- normalize exponents
-      show ((3 : Fin 8) : ℕ) = 3 from rfl, show ((5 : Fin 8) : ℕ) = 5 from rfl,
-      show ((7 : Fin 8) : ℕ) = 7 from rfl]
-    simp only [Int.cast_zero, zero_mul, Int.cast_one, Fin.val_one, pow_one, one_mul, zero_add,
-      Fin.val_two, add_zero, Int.reduceNeg, Int.cast_neg, neg_mul]
-    linear_combination (τ ^ 3 - τ) * τ_spec
-  have hg : gaussSum χ ψ₈char ^ 2 = χ (-1) * Fintype.card (ZMod 8) := by
-    rw [hχ, one_mul, ZMod.card, Nat.cast_ofNat, hg₁]
-    linear_combination (4 * τ ^ 2 - 8) * τ_spec
+  have h₁  : (fun (a : Fin 8) ↦ ↑(χ₈ a) * τ ^ (a : ℕ)) = fun a ↦ χ a * ↑(ψ₈char a)
+  ext1; congr; apply pow_one
+  have hg₁  : gaussSum χ ψ₈char = 2 * (τ - τ ^ 3)
+  rw [gaussSum, ← h₁, Fin.sum_univ_eight,
+    -- evaluate `χ₈`
+    show χ₈ 0 = 0 from rfl, show χ₈ 1 = 1 from rfl, show χ₈ 2 = 0 from rfl,
+    show χ₈ 3 = -1 from rfl, show χ₈ 4 = 0 from rfl, show χ₈ 5 = -1 from rfl,
+    show χ₈ 6 = 0 from rfl, show χ₈ 7 = 1 from rfl,
+    -- normalize exponents
+    show ((3 : Fin 8) : ℕ) = 3 from rfl, show ((5 : Fin 8) : ℕ) = 5 from rfl,
+    show ((7 : Fin 8) : ℕ) = 7 from rfl]
+  simp only [Int.cast_zero, zero_mul, Int.cast_one, Fin.val_one, pow_one, one_mul, zero_add,
+    Fin.val_two, add_zero, Int.reduceNeg, Int.cast_neg, neg_mul]
+  linear_combination (τ ^ 3 - τ) * τ_spec
+  have hg  : gaussSum χ ψ₈char ^ 2 = χ (-1) * Fintype.card (ZMod 8)
+  rw [hχ, one_mul, ZMod.card, Nat.cast_ofNat, hg₁]
+  linear_combination (4 * τ ^ 2 - 8) * τ_spec
 
   -- this allows us to apply `card_pow_char_pow` to our situation
   have h := Char.card_pow_char_pow (R := ZMod 8) hq ψ₈char (ringChar FF) n hu hFF hg

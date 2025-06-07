@@ -279,7 +279,8 @@ theorem le_succ_iterate (k : ℕ) (x : α) : x ≤ succ^[k] x := by
 theorem isMax_iterate_succ_of_eq_of_lt {n m : ℕ} (h_eq : succ^[n] a = succ^[m] a)
     (h_lt : n < m) : IsMax (succ^[n] a) := by
   refine max_of_succ_le (le_trans ?_ h_eq.symm.le)
-  have : succ (succ^[n] a) = succ^[n + 1] a := by rw [Function.iterate_succ', comp]
+  have  : succ (succ^[n] a) = succ^[n + 1] a
+  rw [Function.iterate_succ', comp]
   rw [this]
   have h_le : n + 1 ≤ m := Nat.succ_le_of_lt h_lt
   exact Monotone.monotone_iterate_of_le_map succ_mono (le_succ a) h_le
@@ -866,16 +867,16 @@ theorem pred_succ_iterate_of_not_isMax (i : α) (n : ℕ) (hin : ¬IsMax (succ^[
   induction' n with n hn
   · simp only [Nat.zero_eq, Function.iterate_zero, id]
   rw [Nat.succ_sub_succ_eq_sub, Nat.sub_zero] at hin
-  have h_not_max : ¬IsMax (succ^[n - 1] i) := by
-    cases' n with n
-    · simpa using hin
-    rw [Nat.succ_sub_succ_eq_sub, Nat.sub_zero] at hn ⊢
-    have h_sub_le : succ^[n] i ≤ succ^[n.succ] i := by
-      rw [Function.iterate_succ']
-      exact le_succ _
-    refine fun h_max => hin fun j hj => ?_
-    have hj_le : j ≤ succ^[n] i := h_max (h_sub_le.trans hj)
-    exact hj_le.trans h_sub_le
+  have h_not_max  : ¬IsMax (succ^[n - 1] i)
+  cases' n with n
+  · simpa using hin
+  rw [Nat.succ_sub_succ_eq_sub, Nat.sub_zero] at hn ⊢
+  have h_sub_le  : succ^[n] i ≤ succ^[n.succ] i
+  rw [Function.iterate_succ']
+  exact le_succ _
+  refine fun h_max => hin fun j hj => ?_
+  have hj_le : j ≤ succ^[n] i := h_max (h_sub_le.trans hj)
+  exact hj_le.trans h_sub_le
   rw [Function.iterate_succ, Function.iterate_succ']
   simp only [Function.comp_apply]
   rw [pred_succ_of_not_isMax hin]
@@ -1426,7 +1427,8 @@ lemma SuccOrder.forall_ne_bot_iff
     (∀ i, i ≠ ⊥ → P i) ↔ (∀ i, P (SuccOrder.succ i)) := by
   refine ⟨fun h i ↦ h _ (Order.succ_ne_bot i), fun h i hi ↦ ?_⟩
   obtain ⟨j, rfl⟩ := exists_succ_iterate_of_le (bot_le : ⊥ ≤ i)
-  have hj : 0 < j := by apply Nat.pos_of_ne_zero; contrapose! hi; simp [hi]
+  have hj  : 0 < j
+  apply Nat.pos_of_ne_zero; contrapose! hi; simp [hi]
   rw [← Nat.succ_pred_eq_of_pos hj]
   simp only [Function.iterate_succ', Function.comp_apply]
   apply h

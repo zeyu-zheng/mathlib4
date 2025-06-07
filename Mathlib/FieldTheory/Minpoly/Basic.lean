@@ -111,10 +111,10 @@ theorem not_isUnit [Nontrivial B] : ¬IsUnit (minpoly A x) := by
 
 theorem mem_range_of_degree_eq_one (hx : (minpoly A x).degree = 1) :
     x ∈ (algebraMap A B).range := by
-  have h : IsIntegral A x := by
-    by_contra h
-    rw [eq_zero h, degree_zero, ← WithBot.coe_one] at hx
-    exact ne_of_lt (show ⊥ < ↑1 from WithBot.bot_lt_coe 1) hx
+  have h  : IsIntegral A x
+  by_contra h
+  rw [eq_zero h, degree_zero, ← WithBot.coe_one] at hx
+  exact ne_of_lt (show ⊥ < ↑1 from WithBot.bot_lt_coe 1) hx
   have key := minpoly.aeval A x
   rw [eq_X_add_C_of_degree_eq_one hx, (minpoly.monic h).leadingCoeff, C_1, one_mul, aeval_add,
     aeval_C, aeval_X, ← eq_neg_iff_add_eq_zero, ← RingHom.map_neg] at key
@@ -140,15 +140,15 @@ theorem unique' {p : A[X]} (hm : p.Monic) (hp : Polynomial.aeval x p = 0)
   rw [hr]
   have hlead := congr_arg leadingCoeff hr
   rw [mul_comm, leadingCoeff_mul_monic hm, (monic hx).leadingCoeff] at hlead
-  have : natDegree r ≤ 0 := by
-    have hr0 : r ≠ 0 := by
-      rintro rfl
-      exact ne_zero hx (mul_zero p ▸ hr)
-    apply_fun natDegree at hr
-    rw [hm.natDegree_mul' hr0] at hr
-    apply Nat.le_of_add_le_add_left
-    rw [add_zero]
-    exact hr.symm.trans_le (natDegree_le_natDegree <| min A x hm hp)
+  have  : natDegree r ≤ 0
+  have hr0  : r ≠ 0
+  rintro rfl
+  exact ne_zero hx (mul_zero p ▸ hr)
+  apply_fun natDegree at hr
+  rw [hm.natDegree_mul' hr0] at hr
+  apply Nat.le_of_add_le_add_left
+  rw [add_zero]
+  exact hr.symm.trans_le (natDegree_le_natDegree <| min A x hm hp)
   rw [eq_C_of_natDegree_le_zero this, ← Nat.eq_zero_of_le_zero this, ← leadingCoeff, ← hlead, C_1,
     mul_one]
 
@@ -177,10 +177,10 @@ variable {x : B}
 theorem natDegree_pos [Nontrivial B] (hx : IsIntegral A x) : 0 < natDegree (minpoly A x) := by
   rw [pos_iff_ne_zero]
   intro ndeg_eq_zero
-  have eq_one : minpoly A x = 1 := by
-    rw [eq_C_of_natDegree_eq_zero ndeg_eq_zero]
-    convert C_1 (R := A)
-    simpa only [ndeg_eq_zero.symm] using (monic hx).leadingCoeff
+  have eq_one  : minpoly A x = 1
+  rw [eq_C_of_natDegree_eq_zero ndeg_eq_zero]
+  convert C_1 (R := A)
+  simpa only [ndeg_eq_zero.symm] using (monic hx).leadingCoeff
   simpa only [eq_one, map_one, one_ne_zero] using aeval A x
 
 /-- The degree of a minimal polynomial is positive. -/

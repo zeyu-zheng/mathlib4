@@ -198,10 +198,10 @@ theorem exponent_dvd_iff_forall_pow_eq_one {n : ℕ} : exponent G ∣ n ↔ ∀ 
     by_contra h
     rw [Nat.dvd_iff_mod_eq_zero, ← Ne, ← pos_iff_ne_zero] at h
     have h₂ : n % exponent G < exponent G := Nat.mod_lt _ (exponent_pos_of_exists n hpos hG)
-    have h₃ : exponent G ≤ n % exponent G := by
-      apply exponent_min' _ h
-      simp_rw [← pow_eq_mod_exponent]
-      exact hG
+    have h₃  : exponent G ≤ n % exponent G
+    apply exponent_min' _ h
+    simp_rw [← pow_eq_mod_exponent]
+    exact hG
     exact h₂.not_le h₃
 
 @[to_additive]
@@ -313,11 +313,11 @@ theorem exponent_ne_zero_iff_range_orderOf_finite (h : ∀ g : G, 0 < orderOf g)
     obtain ⟨m, ⟨t, rfl⟩, het⟩ := Set.Infinite.exists_gt h (exponent G)
     exact pow_ne_one_of_lt_orderOf he het (pow_exponent_eq_one t)
   · lift Set.range (orderOf (G := G)) to Finset ℕ using he with t ht
-    have htpos : 0 < t.prod id := by
-      refine Finset.prod_pos fun a ha => ?_
-      rw [← Finset.mem_coe, ht] at ha
-      obtain ⟨k, rfl⟩ := ha
-      exact h k
+    have htpos  : 0 < t.prod id
+    refine Finset.prod_pos fun a ha => ?_
+    rw [← Finset.mem_coe, ht] at ha
+    obtain ⟨k, rfl⟩ := ha
+    exact h k
     suffices exponent G ∣ t.prod id by
       intro h
       rw [h, zero_dvd_iff] at this
@@ -419,8 +419,8 @@ variable [CommMonoid G]
 theorem exists_orderOf_eq_exponent (hG : ExponentExists G) : ∃ g : G, orderOf g = exponent G := by
   have he := hG.exponent_ne_zero
   have hne : (Set.range (orderOf : G → ℕ)).Nonempty := ⟨1, 1, orderOf_one⟩
-  have hfin : (Set.range (orderOf : G → ℕ)).Finite := by
-    rwa [← exponent_ne_zero_iff_range_orderOf_finite hG.orderOf_pos]
+  have hfin  : (Set.range (orderOf : G → ℕ)).Finite
+  rwa [← exponent_ne_zero_iff_range_orderOf_finite hG.orderOf_pos]
   obtain ⟨t, ht⟩ := hne.csSup_mem hfin
   use t
   apply Nat.dvd_antisymm (order_dvd_exponent _)
@@ -436,19 +436,19 @@ theorem exists_orderOf_eq_exponent (hG : ExponentExists G) : ∃ g : G, orderOf 
     rw [ht] at this
     exact this.not_le (le_csSup hfin.bddAbove <| Set.mem_range_self _)
   have hpk : p ^ k ∣ orderOf t := Nat.ord_proj_dvd _ _
-  have hpk' : orderOf (t ^ p ^ k) = orderOf t / p ^ k := by
-    rw [orderOf_pow' t (pow_ne_zero k hp.ne_zero), Nat.gcd_eq_right hpk]
+  have hpk'  : orderOf (t ^ p ^ k) = orderOf t / p ^ k
+  rw [orderOf_pow' t (pow_ne_zero k hp.ne_zero), Nat.gcd_eq_right hpk]
   obtain ⟨a, ha⟩ := Nat.exists_eq_add_of_lt hpe
-  have hcoprime : (orderOf (t ^ p ^ k)).Coprime (orderOf g) := by
-    rw [hg, Nat.coprime_pow_right_iff (pos_of_gt hpe), Nat.coprime_comm]
-    apply Or.resolve_right (Nat.coprime_or_dvd_of_prime hp _)
-    nth_rw 1 [← pow_one p]
-    have : 1 = (Nat.factorization (orderOf (t ^ p ^ k))) p + 1 := by
-     rw [hpk', Nat.factorization_div hpk]
-     simp [hp]
-    rw [this]
-    -- Porting note: convert made to_additive complain
-    apply Nat.pow_succ_factorization_not_dvd (hG.orderOf_pos <| t ^ p ^ k).ne' hp
+  have hcoprime  : (orderOf (t ^ p ^ k)).Coprime (orderOf g)
+  rw [hg, Nat.coprime_pow_right_iff (pos_of_gt hpe), Nat.coprime_comm]
+  apply Or.resolve_right (Nat.coprime_or_dvd_of_prime hp _)
+  nth_rw 1 [← pow_one p]
+  have  : 1 = (Nat.factorization (orderOf (t ^ p ^ k))) p + 1
+  rw [hpk', Nat.factorization_div hpk]
+  simp [hp]
+  rw [this]
+  -- Porting note: convert made to_additive complain
+  apply Nat.pow_succ_factorization_not_dvd (hG.orderOf_pos <| t ^ p ^ k).ne' hp
   rw [(Commute.all _ g).orderOf_mul_eq_mul_orderOf_of_coprime hcoprime, hpk',
     hg, ha, hk, pow_add, pow_add, pow_one, ← mul_assoc, ← mul_assoc,
     Nat.div_mul_cancel, mul_assoc, lt_mul_iff_one_lt_right <| hG.orderOf_pos t, ← pow_succ]

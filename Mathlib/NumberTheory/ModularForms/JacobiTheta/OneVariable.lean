@@ -40,9 +40,9 @@ theorem jacobiTheta_T_sq_smul (τ : ℍ) : jacobiTheta (ModularGroup.T ^ 2 • �
 theorem jacobiTheta_S_smul (τ : ℍ) :
     jacobiTheta ↑(ModularGroup.S • τ) = (-I * τ) ^ (1 / 2 : ℂ) * jacobiTheta τ := by
   have h0 : (τ : ℂ) ≠ 0 := ne_of_apply_ne im (zero_im.symm ▸ ne_of_gt τ.2)
-  have h1 : (-I * τ) ^ (1 / 2 : ℂ) ≠ 0 := by
-    rw [Ne, cpow_eq_zero_iff, not_and_or]
-    exact Or.inl <| mul_ne_zero (neg_ne_zero.mpr I_ne_zero) h0
+  have h1  : (-I * τ) ^ (1 / 2 : ℂ) ≠ 0
+  rw [Ne, cpow_eq_zero_iff, not_and_or]
+  exact Or.inl <| mul_ne_zero (neg_ne_zero.mpr I_ne_zero) h0
   simp_rw [UpperHalfPlane.modular_S_smul, jacobiTheta_eq_jacobiTheta₂]
   conv_rhs => erw [← ofReal_zero, jacobiTheta₂_functional_equation 0 τ]
   rw [zero_pow two_ne_zero, mul_zero, zero_div, Complex.exp_zero, mul_one, ← mul_assoc, mul_one_div,
@@ -54,10 +54,10 @@ theorem norm_exp_mul_sq_le {τ : ℂ} (hτ : 0 < τ.im) (n : ℤ) :
   have h : y < 1 := exp_lt_one_iff.mpr (mul_neg_of_neg_of_pos (neg_lt_zero.mpr pi_pos) hτ)
   refine (le_of_eq ?_).trans (?_ : y ^ n ^ 2 ≤ _)
   · rw [Complex.norm_eq_abs, Complex.abs_exp]
-    have : (π * I * n ^ 2 * τ : ℂ).re = -π * τ.im * (n : ℝ) ^ 2 := by
-      rw [(by push_cast; ring : (π * I * n ^ 2 * τ : ℂ) = (π * n ^ 2 : ℝ) * (τ * I)),
-        re_ofReal_mul, mul_I_re]
-      ring
+    have  : (π * I * n ^ 2 * τ : ℂ).re = -π * τ.im * (n : ℝ) ^ 2
+    rw [(by push_cast; ring : (π * I * n ^ 2 * τ : ℂ) = (π * n ^ 2 : ℝ) * (τ * I)),
+      re_ofReal_mul, mul_I_re]
+    ring
     obtain ⟨m, hm⟩ := Int.eq_ofNat_of_zero_le (sq_nonneg n)
     rw [this, exp_mul, ← Int.cast_pow, rpow_intCast, hm, zpow_natCast]
   · have : n ^ 2 = (n.natAbs ^ 2 :) := by rw [Nat.cast_pow, Int.natAbs_sq]
@@ -93,9 +93,9 @@ theorem norm_jacobiTheta_sub_one_le {τ : ℂ} (hτ : 0 < im τ) :
           Complex.abs_two]
       _ ≤ 2 * (rexp (-π * τ.im) / (1 - rexp (-π * τ.im))) := by gcongr
       _ = 2 / (1 - rexp (-π * τ.im)) * rexp (-π * τ.im) := by rw [div_mul_comm, mul_comm]
-  have : ∀ n : ℕ, ‖cexp (π * I * ((n : ℂ) + 1) ^ 2 * τ)‖ ≤ rexp (-π * τ.im) ^ (n + 1) := by
-    intro n
-    simpa only [Int.cast_add, Int.cast_one] using norm_exp_mul_sq_le hτ (n + 1)
+  have  : ∀ n : ℕ, ‖cexp (π * I * ((n : ℂ) + 1) ^ 2 * τ)‖ ≤ rexp (-π * τ.im) ^ (n + 1)
+  intro n
+  simpa only [Int.cast_add, Int.cast_one] using norm_exp_mul_sq_le hτ (n + 1)
   have s : HasSum (fun n : ℕ =>
       rexp (-π * τ.im) ^ (n + 1)) (rexp (-π * τ.im) / (1 - rexp (-π * τ.im))) := by
     simp_rw [pow_succ', div_eq_mul_inv, hasSum_mul_left_iff (Real.exp_ne_zero _)]

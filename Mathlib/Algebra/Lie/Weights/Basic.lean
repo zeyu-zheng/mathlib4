@@ -88,16 +88,16 @@ protected theorem weight_vector_multiplication (M₁ M₂ M₃ : Type*)
   -- Eliminate `g` from the picture.
   let f₁ : Module.End R (M₁ ⊗[R] M₂) := (toEnd R L M₁ x - χ₁ • ↑1).rTensor M₂
   let f₂ : Module.End R (M₁ ⊗[R] M₂) := (toEnd R L M₂ x - χ₂ • ↑1).lTensor M₁
-  have h_comm_square : F ∘ₗ ↑g = (g : M₁ ⊗[R] M₂ →ₗ[R] M₃).comp (f₁ + f₂) := by
-    ext m₁ m₂
-    simp only [f₁, f₂, F, ← g.map_lie x (m₁ ⊗ₜ m₂), add_smul, sub_tmul, tmul_sub, smul_tmul,
-      lie_tmul_right, tmul_smul, toEnd_apply_apply, LieModuleHom.map_smul,
-      LinearMap.one_apply, LieModuleHom.coe_toLinearMap, LinearMap.smul_apply, Function.comp_apply,
-      LinearMap.coe_comp, LinearMap.rTensor_tmul, LieModuleHom.map_add, LinearMap.add_apply,
-      LieModuleHom.map_sub, LinearMap.sub_apply, LinearMap.lTensor_tmul,
-      AlgebraTensorModule.curry_apply, TensorProduct.curry_apply, LinearMap.toFun_eq_coe,
-      LinearMap.coe_restrictScalars]
-    abel
+  have h_comm_square  : F ∘ₗ ↑g = (g : M₁ ⊗[R] M₂ →ₗ[R] M₃).comp (f₁ + f₂)
+  ext m₁ m₂
+  simp only [f₁, f₂, F, ← g.map_lie x (m₁ ⊗ₜ m₂), add_smul, sub_tmul, tmul_sub, smul_tmul,
+    lie_tmul_right, tmul_smul, toEnd_apply_apply, LieModuleHom.map_smul,
+    LinearMap.one_apply, LieModuleHom.coe_toLinearMap, LinearMap.smul_apply, Function.comp_apply,
+    LinearMap.coe_comp, LinearMap.rTensor_tmul, LieModuleHom.map_add, LinearMap.add_apply,
+    LieModuleHom.map_sub, LinearMap.sub_apply, LinearMap.lTensor_tmul,
+    AlgebraTensorModule.curry_apply, TensorProduct.curry_apply, LinearMap.toFun_eq_coe,
+    LinearMap.coe_restrictScalars]
+  abel
   rsuffices ⟨k, hk⟩ : ∃ k : ℕ, ((f₁ + f₂) ^ k) (m₁ ⊗ₜ m₂) = 0
   · use k
     change (F ^ k) (g.toLinearMap (m₁ ⊗ₜ[R] m₂)) = 0
@@ -107,17 +107,17 @@ protected theorem weight_vector_multiplication (M₁ M₂ M₃ : Type*)
   simp only [Module.End.mem_maxGenEigenspace] at hm₁ hm₂
   obtain ⟨k₁, hk₁⟩ := hm₁
   obtain ⟨k₂, hk₂⟩ := hm₂
-  have hf₁ : (f₁ ^ k₁) (m₁ ⊗ₜ m₂) = 0 := by
-    simp only [f₁, hk₁, zero_tmul, LinearMap.rTensor_tmul, LinearMap.rTensor_pow]
-  have hf₂ : (f₂ ^ k₂) (m₁ ⊗ₜ m₂) = 0 := by
-    simp only [f₂, hk₂, tmul_zero, LinearMap.lTensor_tmul, LinearMap.lTensor_pow]
+  have hf₁  : (f₁ ^ k₁) (m₁ ⊗ₜ m₂) = 0
+  simp only [f₁, hk₁, zero_tmul, LinearMap.rTensor_tmul, LinearMap.rTensor_pow]
+  have hf₂  : (f₂ ^ k₂) (m₁ ⊗ₜ m₂) = 0
+  simp only [f₂, hk₂, tmul_zero, LinearMap.lTensor_tmul, LinearMap.lTensor_pow]
   -- It's now just an application of the binomial theorem.
   use k₁ + k₂ - 1
-  have hf_comm : Commute f₁ f₂ := by
-    ext m₁ m₂
-    simp only [f₁, f₂, LinearMap.mul_apply, LinearMap.rTensor_tmul, LinearMap.lTensor_tmul,
-      AlgebraTensorModule.curry_apply, LinearMap.toFun_eq_coe, LinearMap.lTensor_tmul,
-      TensorProduct.curry_apply, LinearMap.coe_restrictScalars]
+  have hf_comm  : Commute f₁ f₂
+  ext m₁ m₂
+  simp only [f₁, f₂, LinearMap.mul_apply, LinearMap.rTensor_tmul, LinearMap.lTensor_tmul,
+    AlgebraTensorModule.curry_apply, LinearMap.toFun_eq_coe, LinearMap.lTensor_tmul,
+    TensorProduct.curry_apply, LinearMap.coe_restrictScalars]
   rw [hf_comm.add_pow']
   simp only [TensorProduct.mapIncl, Submodule.subtype_apply, Finset.sum_apply, Submodule.coe_mk,
     LinearMap.coeFn_sum, TensorProduct.map_tmul, LinearMap.smul_apply]
@@ -490,8 +490,8 @@ lemma map_weightSpace_le :
   intro m hm
   simp only [LieSubmodule.mem_comap, mem_weightSpace]
   intro x
-  have : (toEnd R L M₂ x - χ x • ↑1) ∘ₗ f = f ∘ₗ (toEnd R L M x - χ x • ↑1) := by
-    ext; simp
+  have  : (toEnd R L M₂ x - χ x • ↑1) ∘ₗ f = f ∘ₗ (toEnd R L M x - χ x • ↑1)
+  ext; simp
   obtain ⟨k, h⟩ := (mem_weightSpace _ _ _).mp hm x
   exact ⟨k, by simpa [h] using LinearMap.congr_fun (LinearMap.commute_pow_left_of_commute this k) m⟩
 
@@ -586,14 +586,14 @@ private lemma isCompl_weightSpace_zero_posFittingComp_aux
     set M₀ₓ₁ := posFittingComp R L M₀ₓ
     have h₁ : IsCompl M₀ₓ M₁ₓ := isCompl_weightSpaceOf_zero_posFittingCompOf R L M x
     have h₂ : IsCompl M₀ₓ₀ M₀ₓ₁ := h M₀ₓ hx.lt_top
-    have h₃ : M₀ₓ₀.map M₀ₓ.incl = M₀ := by
-      rw [map_weightSpace_eq_of_injective M₀ₓ.injective_incl, inf_eq_left, LieSubmodule.range_incl]
-      exact iInf_le _ x
-    have h₄ : M₀ₓ₁.map M₀ₓ.incl ⊔ M₁ₓ = M₁ := by
-      apply le_antisymm <| sup_le_iff.mpr
-        ⟨map_posFittingComp_le _, posFittingCompOf_le_posFittingComp R L M x⟩
-      rw [← posFittingComp_map_incl_sup_of_codisjoint h₁.codisjoint]
-      exact sup_le_sup_left LieSubmodule.map_incl_le _
+    have h₃  : M₀ₓ₀.map M₀ₓ.incl = M₀
+    rw [map_weightSpace_eq_of_injective M₀ₓ.injective_incl, inf_eq_left, LieSubmodule.range_incl]
+    exact iInf_le _ x
+    have h₄  : M₀ₓ₁.map M₀ₓ.incl ⊔ M₁ₓ = M₁
+    apply le_antisymm <| sup_le_iff.mpr
+      ⟨map_posFittingComp_le _, posFittingCompOf_le_posFittingComp R L M x⟩
+    rw [← posFittingComp_map_incl_sup_of_codisjoint h₁.codisjoint]
+    exact sup_le_sup_left LieSubmodule.map_incl_le _
     rw [← h₃, ← h₄]
     apply Disjoint.isCompl_sup_right_of_isCompl_sup_left
     · rw [disjoint_iff, ← LieSubmodule.map_inf M₀ₓ.injective_incl, h₂.inf_eq_bot,

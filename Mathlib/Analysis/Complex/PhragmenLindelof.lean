@@ -511,9 +511,9 @@ theorem quadrant_III (hd : DiffContOnCl ℂ f (Iio 0 ×ℂ Iio 0))
   obtain ⟨z, rfl⟩ : ∃ z', -z' = z := ⟨-z, neg_neg z⟩
   simp only [neg_re, neg_im, neg_nonpos] at hz_re hz_im
   change ‖(f ∘ Neg.neg) z‖ ≤ C
-  have H : MapsTo Neg.neg (Ioi 0 ×ℂ Ioi 0) (Iio 0 ×ℂ Iio 0) := by
-    intro w hw
-    simpa only [mem_reProdIm, neg_re, neg_im, neg_lt_zero, mem_Iio] using hw
+  have H  : MapsTo Neg.neg (Ioi 0 ×ℂ Ioi 0) (Iio 0 ×ℂ Iio 0)
+  intro w hw
+  simpa only [mem_reProdIm, neg_re, neg_im, neg_lt_zero, mem_Iio] using hw
   refine
     quadrant_I (hd.comp differentiable_neg.diffContOnCl H) ?_ (fun x hx => ?_) (fun x hx => ?_)
       hz_re hz_im

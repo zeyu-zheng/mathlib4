@@ -81,11 +81,11 @@ theorem corners_theorem (ε : ℝ) (hε : 0 < ε) (hG : cornersTheoremBound ε �
     (A : Finset (G × G)) (hAε : ε * card G ^ 2 ≤ A.card) : ¬ IsCornerFree (A : Set (G × G)) := by
   rintro hA
   rw [cornersTheoremBound, Nat.add_one_le_iff] at hG
-  have hε₁ : ε ≤ 1 := by
-    have := hAε.trans (Nat.cast_le.2 A.card_le_univ)
-    simp only [sq, Nat.cast_mul, Fintype.card_prod, Fintype.card_fin] at this
-    rwa [mul_le_iff_le_one_left] at this
-    positivity
+  have hε₁  : ε ≤ 1
+  have := hAε.trans (Nat.cast_le.2 A.card_le_univ)
+  simp only [sq, Nat.cast_mul, Fintype.card_prod, Fintype.card_fin] at this
+  rwa [mul_le_iff_le_one_left] at this
+  positivity
   have := noAccidental hA
   rw [Nat.floor_lt' (by positivity), inv_pos_lt_iff_one_lt_mul'] at hG
   swap
@@ -142,14 +142,14 @@ theorem roth_3ap_theorem (ε : ℝ) (hε : 0 < ε) (hG : cornersTheoremBound ε 
   rintro hA
   classical
   let B : Finset (G × G) := univ.filter fun (x, y) ↦ y - x ∈ A
-  have : ε * card G ^ 2 ≤ B.card := by
-    calc
-      _ = card G * (ε * card G) := by ring
-      _ ≤ card G * A.card := by gcongr
-      _ = B.card := ?_
-    norm_cast
-    rw [← card_univ, ← card_product]
-    exact card_equiv ((Equiv.refl _).prodShear fun a ↦ Equiv.addLeft a) (by simp [B])
+  have  : ε * card G ^ 2 ≤ B.card
+  calc
+    _ = card G * (ε * card G) := by ring
+    _ ≤ card G * A.card := by gcongr
+    _ = B.card := ?_
+  norm_cast
+  rw [← card_univ, ← card_product]
+  exact card_equiv ((Equiv.refl _).prodShear fun a ↦ Equiv.addLeft a) (by simp [B])
   obtain ⟨x₁, y₁, x₂, y₂, hx₁y₁, hx₁y₂, hx₂y₁, hxy, hx₁x₂⟩ :
       ∃ x₁ y₁ x₂ y₂, y₁ - x₁ ∈ A ∧ y₂ - x₁ ∈ A ∧ y₁ - x₂ ∈ A ∧ x₁ + y₂ = x₂ + y₁ ∧ x₁ ≠ x₂ := by
     simpa [IsCornerFree, isCorner_iff, B, -exists_and_left, -exists_and_right]
@@ -166,13 +166,13 @@ theorem roth_3ap_theorem_nat (ε : ℝ) (hε : 0 < ε) (hG : cornersTheoremBound
     (A : Finset ℕ) (hAn : A ⊆ range n) (hAε : ε * n ≤ A.card) : ¬ ThreeAPFree (A : Set ℕ) := by
   rintro hA
   rw [← coe_subset, coe_range] at hAn
-  have : A = Fin.val '' (Nat.cast '' A : Set (Fin (2 * n).succ)) := by
-    rw [Set.image_image, Set.image_congr, Set.image_id]
-    simp only [mem_coe, Nat.succ_eq_add_one, Fin.val_natCast, id_eq, Nat.mod_succ_eq_iff_lt]
-    rintro a ha
-    have := hAn ha
-    simp at this
-    omega
+  have  : A = Fin.val '' (Nat.cast '' A : Set (Fin (2 * n).succ))
+  rw [Set.image_image, Set.image_congr, Set.image_id]
+  simp only [mem_coe, Nat.succ_eq_add_one, Fin.val_natCast, id_eq, Nat.mod_succ_eq_iff_lt]
+  rintro a ha
+  have := hAn ha
+  simp at this
+  omega
   rw [this] at hA
   have := Fin.isAddFreimanIso_Iio two_ne_zero (le_refl (2 * n))
   have := hA.of_image this.isAddFreimanHom Fin.val_injective.injOn $ Set.image_subset_iff.2 $

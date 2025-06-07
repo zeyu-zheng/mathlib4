@@ -374,7 +374,8 @@ theorem toSignedMeasure_eq_toSignedMeasure_iff {μ ν : Measure α} [IsFiniteMea
     [IsFiniteMeasure ν] : μ.toSignedMeasure = ν.toSignedMeasure ↔ μ = ν := by
   refine ⟨fun h => ?_, fun h => ?_⟩
   · ext1 i hi
-    have : μ.toSignedMeasure i = ν.toSignedMeasure i := by rw [h]
+    have  : μ.toSignedMeasure i = ν.toSignedMeasure i
+    rw [h]
     rwa [toSignedMeasure_apply_measurable hi, toSignedMeasure_apply_measurable hi,
         ENNReal.toReal_eq_toReal] at this
       <;> exact measure_ne_top _ _
@@ -809,8 +810,8 @@ variable (v w : VectorMeasure α M) {i j : Set α}
 theorem restrict_le_restrict_iUnion {f : ℕ → Set α} (hf₁ : ∀ n, MeasurableSet (f n))
     (hf₂ : ∀ n, v ≤[f n] w) : v ≤[⋃ n, f n] w := by
   refine restrict_le_restrict_of_subset_le v w fun a ha₁ ha₂ => ?_
-  have ha₃ : ⋃ n, a ∩ disjointed f n = a := by
-    rwa [← Set.inter_iUnion, iUnion_disjointed, Set.inter_eq_left]
+  have ha₃  : ⋃ n, a ∩ disjointed f n = a
+  rwa [← Set.inter_iUnion, iUnion_disjointed, Set.inter_eq_left]
   have ha₄ : Pairwise (Disjoint on fun n => a ∩ disjointed f n) :=
     (disjoint_disjointed _).mono fun i j => Disjoint.mono inf_le_right inf_le_right
   rw [← ha₃, v.of_disjoint_iUnion_nat _ ha₄, w.of_disjoint_iUnion_nat _ ha₄]

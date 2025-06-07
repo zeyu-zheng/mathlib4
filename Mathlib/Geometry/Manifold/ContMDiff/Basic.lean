@@ -57,14 +57,15 @@ theorem ContMDiffWithinAt.comp {t : Set M'} {g : M' → M''} (x : M)
   refine ⟨hg.1.comp hf.1 st, ?_⟩
   set e := extChartAt I x
   set e' := extChartAt I' (f x)
-  have : e' (f x) = (writtenInExtChartAt I I' x f) (e x) := by simp only [e, e', mfld_simps]
+  have  : e' (f x) = (writtenInExtChartAt I I' x f) (e x)
+  simp only [e, e', mfld_simps]
   rw [this] at hg
-  have A : ∀ᶠ y in 𝓝[e.symm ⁻¹' s ∩ range I] e x, f (e.symm y) ∈ t ∧ f (e.symm y) ∈ e'.source := by
-    simp only [e, ← map_extChartAt_nhdsWithin, eventually_map]
-    filter_upwards [hf.1.tendsto (extChartAt_source_mem_nhds I' (f x)),
-      inter_mem_nhdsWithin s (extChartAt_source_mem_nhds I x)]
-    rintro x' (hfx' : f x' ∈ e'.source) ⟨hx's, hx'⟩
-    simp only [e.map_source hx', true_and_iff, e.left_inv hx', st hx's, *]
+  have A  : ∀ᶠ y in 𝓝[e.symm ⁻¹' s ∩ range I] e x, f (e.symm y) ∈ t ∧ f (e.symm y) ∈ e'.source
+  simp only [e, ← map_extChartAt_nhdsWithin, eventually_map]
+  filter_upwards [hf.1.tendsto (extChartAt_source_mem_nhds I' (f x)),
+    inter_mem_nhdsWithin s (extChartAt_source_mem_nhds I x)]
+  rintro x' (hfx' : f x' ∈ e'.source) ⟨hx's, hx'⟩
+  simp only [e.map_source hx', true_and_iff, e.left_inv hx', st hx's, *]
   refine ((hg.2.comp _ (hf.2.mono inter_subset_right) inter_subset_left).mono_of_mem
     (inter_mem ?_ self_mem_nhdsWithin)).congr_of_eventuallyEq ?_ ?_
   · filter_upwards [A]
@@ -401,9 +402,9 @@ lemma contMDiffOn_openEmbedding_symm :
     intros z hz
     -- factorise into the chart `e` and the model `id`
     simp only [mfld_simps]
-    have : I.symm z ∈ range e := by
-      rw [ModelWithCorners.symm, ← mem_preimage]
-      exact hz.2.1
+    have  : I.symm z ∈ range e
+    rw [ModelWithCorners.symm, ← mem_preimage]
+    exact hz.2.1
     rw [h.toPartialHomeomorph_right_inv e this]
     apply I.right_inv
     exact mem_of_subset_of_mem (extChartAt_target_subset_range _ _) hz.1
@@ -414,9 +415,9 @@ space `H'`. Then the smoothness of `e' ∘ f : M → H'` implies the smoothness 
 This is useful, for example, when `e' ∘ f = g ∘ e` for smooth maps `e : M → X` and `g : X → H'`. -/
 lemma ContMDiff.of_comp_openEmbedding {f : M → M'} (hf : ContMDiff I I' n (e' ∘ f)) :
     haveI := h'.singletonChartedSpace; ContMDiff I I' n f := by
-  have : f = (h'.toPartialHomeomorph e').symm ∘ e' ∘ f := by
-    ext
-    rw [Function.comp_apply, Function.comp_apply, OpenEmbedding.toPartialHomeomorph_left_inv]
+  have  : f = (h'.toPartialHomeomorph e').symm ∘ e' ∘ f
+  ext
+  rw [Function.comp_apply, Function.comp_apply, OpenEmbedding.toPartialHomeomorph_left_inv]
   rw [this]
   apply @ContMDiffOn.comp_contMDiff _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     h'.singletonChartedSpace _ _ (range e') _ (contMDiffOn_openEmbedding_symm h') hf

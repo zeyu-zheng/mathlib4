@@ -72,7 +72,8 @@ theorem continuousOn_extendFrom [RegularSpace Y] {f : X → Y} {A B : Set X} (hB
   haveI := mem_closure_iff_nhdsWithin_neBot.mp (hB hyB)
   have limy : Tendsto f (𝓝[A] y) (𝓝 <| φ y) := tendsto_extendFrom (hf y hyB)
   have hVy : V ∈ 𝓝 y := IsOpen.mem_nhds V_op hyV
-  have : V ∩ A ∈ 𝓝[A] y := by simpa only [inter_comm] using inter_mem_nhdsWithin A hVy
+  have  : V ∩ A ∈ 𝓝[A] y
+  simpa only [inter_comm] using inter_mem_nhdsWithin A hVy
   exact V'_closed.mem_of_tendsto limy (mem_of_superset this hV)
 
 /-- If a function `f` to a T₃ space `Y` has a limit within a

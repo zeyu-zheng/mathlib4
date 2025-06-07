@@ -94,10 +94,10 @@ theorem bottom_row_surj {R : Type*} [CommRing R] :
       {cd | IsCoprime (cd 0) (cd 1)} := by
   rintro cd ⟨b₀, a, gcd_eqn⟩
   let A := of ![![a, -b₀], cd]
-  have det_A_1 : det A = 1 := by
-    convert gcd_eqn
-    rw [det_fin_two]
-    simp [A, (by ring : a * cd 1 + b₀ * cd 0 = b₀ * cd 0 + a * cd 1)]
+  have det_A_1  : det A = 1
+  convert gcd_eqn
+  rw [det_fin_two]
+  simp [A, (by ring : a * cd 1 + b₀ * cd 0 = b₀ * cd 0 + a * cd 1)]
   refine ⟨⟨A, det_A_1⟩, Set.mem_univ _, ?_⟩
   ext; simp [A]
 
@@ -193,10 +193,10 @@ theorem tendsto_lcRow0 {cd : Fin 2 → ℤ} (hcd : IsCoprime (cd 0) (cd 1)) :
     Tendsto (fun g : { g : SL(2, ℤ) // (↑ₘg) 1 = cd } => lcRow0 cd ↑(↑g : SL(2, ℝ))) cofinite
       (cocompact ℝ) := by
   let mB : ℝ → Matrix (Fin 2) (Fin 2) ℝ := fun t => of ![![t, (-(1 : ℤ) : ℝ)], (↑) ∘ cd]
-  have hmB : Continuous mB := by
-    refine continuous_matrix ?_
-    simp only [mB, Fin.forall_fin_two, continuous_const, continuous_id', of_apply, cons_val_zero,
-      cons_val_one, and_self_iff]
+  have hmB  : Continuous mB
+  refine continuous_matrix ?_
+  simp only [mB, Fin.forall_fin_two, continuous_const, continuous_id', of_apply, cons_val_zero,
+    cons_val_one, and_self_iff]
   refine Filter.Tendsto.of_tendsto_comp ?_ (comap_cocompact_le hmB)
   let f₁ : SL(2, ℤ) → Matrix (Fin 2) (Fin 2) ℝ := fun g =>
     Matrix.map (↑g : Matrix _ _ ℤ) ((↑) : ℤ → ℝ)
@@ -237,7 +237,8 @@ theorem smul_eq_lcRow0_add {p : Fin 2 → ℤ} (hp : IsCoprime (p 0) (p 1)) (hg 
         ((p 1 : ℂ) * z - p 0) / (((p 0 : ℂ) ^ 2 + (p 1 : ℂ) ^ 2) * (p 0 * z + p 1)) := by
   have nonZ1 : (p 0 : ℂ) ^ 2 + (p 1 : ℂ) ^ 2 ≠ 0 := mod_cast hp.sq_add_sq_ne_zero
   have : ((↑) : ℤ → ℝ) ∘ p ≠ 0 := fun h => hp.ne_zero (by ext i; simpa using congr_fun h i)
-  have nonZ2 : (p 0 : ℂ) * z + p 1 ≠ 0 := by simpa using linear_ne_zero _ z this
+  have nonZ2  : (p 0 : ℂ) * z + p 1 ≠ 0
+  simpa using linear_ne_zero _ z this
   field_simp [nonZ1, nonZ2, denom_ne_zero, num]
   rw [(by simp :
     (p 1 : ℂ) * z - p 0 = (p 1 * z - p 0) * ↑(Matrix.det (↑g : Matrix (Fin 2) (Fin 2) ℤ)))]
@@ -253,9 +254,9 @@ theorem tendsto_abs_re_smul {p : Fin 2 → ℤ} (hp : IsCoprime (p 0) (p 1)) :
     Tendsto (fun g : (fun g : SL(2, ℤ) => (↑ₘg) 1) ⁻¹' {p} => ((g : SL(2, ℤ)) • z).re) cofinite
       (cocompact ℝ)
     by exact tendsto_norm_cocompact_atTop.comp this
-  have : ((p 0 : ℝ) ^ 2 + (p 1 : ℝ) ^ 2)⁻¹ ≠ 0 := by
-    apply inv_ne_zero
-    exact mod_cast hp.sq_add_sq_ne_zero
+  have  : ((p 0 : ℝ) ^ 2 + (p 1 : ℝ) ^ 2)⁻¹ ≠ 0
+  apply inv_ne_zero
+  exact mod_cast hp.sq_add_sq_ne_zero
   let f := Homeomorph.mulRight₀ _ this
   let ff := Homeomorph.addRight
     (((p 1 : ℂ) * z - p 0) / (((p 0 : ℂ) ^ 2 + (p 1 : ℂ) ^ 2) * (p 0 * z + p 1))).re
@@ -356,10 +357,10 @@ theorem normSq_S_smul_lt_one (h : 1 < normSq z) : normSq ↑(S • z) < 1 := by
 
 /-- If `|z| < 1`, then applying `S` strictly decreases `im`. -/
 theorem im_lt_im_S_smul (h : normSq z < 1) : z.im < (S • z).im := by
-  have : z.im < z.im / normSq (z : ℂ) := by
-    have imz : 0 < z.im := im_pos z
-    apply (lt_div_iff z.normSq_pos).mpr
-    nlinarith
+  have  : z.im < z.im / normSq (z : ℂ)
+  have imz : 0 < z.im := im_pos z
+  apply (lt_div_iff z.normSq_pos).mpr
+  nlinarith
   convert this
   simp only [ModularGroup.im_smul_eq_div_normSq]
   simp [denom, coe_S]
@@ -385,7 +386,8 @@ theorem abs_two_mul_re_lt_one_of_mem_fdo (h : z ∈ 𝒟ᵒ) : |2 * z.re| < 1 :=
   exact h.2
 
 theorem three_lt_four_mul_im_sq_of_mem_fdo (h : z ∈ 𝒟ᵒ) : 3 < 4 * z.im ^ 2 := by
-  have : 1 < z.re * z.re + z.im * z.im := by simpa [Complex.normSq_apply] using h.1
+  have  : 1 < z.re * z.re + z.im * z.im
+  simpa [Complex.normSq_apply] using h.1
   have := h.2
   cases abs_cases z.re <;> nlinarith
 
@@ -393,7 +395,8 @@ theorem three_lt_four_mul_im_sq_of_mem_fdo (h : z ∈ 𝒟ᵒ) : 3 < 4 * z.im ^ 
 theorem one_lt_normSq_T_zpow_smul (hz : z ∈ 𝒟ᵒ) (n : ℤ) : 1 < normSq (T ^ n • z : ℍ) := by
   have hz₁ : 1 < z.re * z.re + z.im * z.im := hz.1
   have hzn := Int.nneg_mul_add_sq_of_abs_le_one n (abs_two_mul_re_lt_one_of_mem_fdo hz).le
-  have : 1 < (z.re + ↑n) * (z.re + ↑n) + z.im * z.im := by linarith
+  have  : 1 < (z.re + ↑n) * (z.re + ↑n) + z.im * z.im
+  linarith
   simpa [coe_T_zpow, normSq, num, denom, -map_zpow]
 
 theorem eq_zero_of_mem_fdo_of_T_zpow_mem_fdo {n : ℤ} (hz : z ∈ 𝒟ᵒ) (hg : T ^ n • z ∈ 𝒟ᵒ) :
@@ -417,11 +420,11 @@ theorem exists_smul_mem_fd (z : ℍ) : ∃ g : SL(2, ℤ), g • z ∈ 𝒟 := b
   obtain ⟨g, hg, hg'⟩ := exists_row_one_eq_and_min_re z (bottom_row_coprime g₀)
   refine ⟨g, ?_⟩
   -- `g` has same max im property as `g₀`
-  have hg₀' : ∀ g' : SL(2, ℤ), (g' • z).im ≤ (g • z).im := by
-    have hg'' : (g • z).im = (g₀ • z).im := by
-      rw [ModularGroup.im_smul_eq_div_normSq, ModularGroup.im_smul_eq_div_normSq,
-        denom_apply, denom_apply, hg]
-    simpa only [hg''] using hg₀
+  have hg₀'  : ∀ g' : SL(2, ℤ), (g' • z).im ≤ (g • z).im
+  have hg''  : (g • z).im = (g₀ • z).im
+  rw [ModularGroup.im_smul_eq_div_normSq, ModularGroup.im_smul_eq_div_normSq,
+    denom_apply, denom_apply, hg]
+  simpa only [hg''] using hg₀
   constructor
   · -- Claim: `1 ≤ ⇑norm_sq ↑(g • z)`. If not, then `S•g•z` has larger imaginary part
     contrapose! hg₀'
@@ -479,22 +482,24 @@ theorem abs_c_le_one (hz : z ∈ 𝒟ᵒ) (hg : g • z ∈ 𝒟ᵒ) : |(↑ₘg
 
 /-- An auxiliary result en route to `ModularGroup.eq_smul_self_of_mem_fdo_mem_fdo`. -/
 theorem c_eq_zero (hz : z ∈ 𝒟ᵒ) (hg : g • z ∈ 𝒟ᵒ) : (↑ₘg) 1 0 = 0 := by
-  have hp : ∀ {g' : SL(2, ℤ)}, g' • z ∈ 𝒟ᵒ → (↑ₘg') 1 0 ≠ 1 := by
-    intro g' hg'
-    by_contra hc
-    let a := (↑ₘg') 0 0
-    let d := (↑ₘg') 1 1
-    have had : T ^ (-a) * g' = S * T ^ d := by rw [g_eq_of_c_eq_one hc]; group
-    let w := T ^ (-a) • g' • z
-    have h₁ : w = S • T ^ d • z := by simp only [w, ← mul_smul, had]
-    replace h₁ : normSq w < 1 := h₁.symm ▸ normSq_S_smul_lt_one (one_lt_normSq_T_zpow_smul hz d)
-    have h₂ : 1 < normSq w := one_lt_normSq_T_zpow_smul hg' (-a)
-    linarith
-  have hn : (↑ₘg) 1 0 ≠ -1 := by
-    intro hc
-    replace hc : (↑ₘ(-g)) 1 0 = 1 := by simp [← neg_eq_iff_eq_neg.mpr hc]
-    replace hg : -g • z ∈ 𝒟ᵒ := (SL_neg_smul g z).symm ▸ hg
-    exact hp hg hc
+  have hp  : ∀ {g' : SL(2, ℤ)}, g' • z ∈ 𝒟ᵒ → (↑ₘg') 1 0 ≠ 1
+  intro g' hg'
+  by_contra hc
+  let a := (↑ₘg') 0 0
+  let d := (↑ₘg') 1 1
+  have had  : T ^ (-a) * g' = S * T ^ d
+  rw [g_eq_of_c_eq_one hc]; group
+  let w := T ^ (-a) • g' • z
+  have h₁  : w = S • T ^ d • z
+  simp only [w, ← mul_smul, had]
+  replace h₁ : normSq w < 1 := h₁.symm ▸ normSq_S_smul_lt_one (one_lt_normSq_T_zpow_smul hz d)
+  have h₂ : 1 < normSq w := one_lt_normSq_T_zpow_smul hg' (-a)
+  linarith
+  have hn  : (↑ₘg) 1 0 ≠ -1
+  intro hc
+  replace hc : (↑ₘ(-g)) 1 0 = 1 := by simp [← neg_eq_iff_eq_neg.mpr hc]
+  replace hg : -g • z ∈ 𝒟ᵒ := (SL_neg_smul g z).symm ▸ hg
+  exact hp hg hc
   specialize hp hg
   rcases Int.abs_le_one_iff.mp <| abs_c_le_one hz hg with ⟨⟩ <;> tauto
 

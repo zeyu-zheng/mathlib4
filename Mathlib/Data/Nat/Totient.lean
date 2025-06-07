@@ -144,9 +144,9 @@ theorem totient_div_of_dvd {n d : ℕ} (hnd : d ∣ n) :
   · simp [hd0.ne']
   · simp only [mem_filter, mem_range, exists_prop, and_imp]
     refine fun b hb1 hb2 => ?_
-    have : d ∣ b := by
-      rw [← hb2]
-      apply gcd_dvd_right
+    have  : d ∣ b
+    rw [← hb2]
+    apply gcd_dvd_right
     rcases this with ⟨q, rfl⟩
     refine ⟨q, ⟨⟨(mul_lt_mul_left hd0).1 hb1, ?_⟩, rfl⟩⟩
     rwa [gcd_mul_left, mul_right_eq_self_iff hd0] at hb2
@@ -155,10 +155,10 @@ theorem sum_totient (n : ℕ) : n.divisors.sum φ = n := by
   rcases n.eq_zero_or_pos with (rfl | hn)
   · simp
   rw [← sum_div_divisors n φ]
-  have : n = ∑ d ∈ n.divisors, (filter (fun k : ℕ => n.gcd k = d) (range n)).card := by
-    nth_rw 1 [← card_range n]
-    refine card_eq_sum_card_fiberwise fun x _ => mem_divisors.2 ⟨?_, hn.ne'⟩
-    apply gcd_dvd_left
+  have  : n = ∑ d ∈ n.divisors, (filter (fun k : ℕ => n.gcd k = d) (range n)).card
+  nth_rw 1 [← card_range n]
+  refine card_eq_sum_card_fiberwise fun x _ => mem_divisors.2 ⟨?_, hn.ne'⟩
+  apply gcd_dvd_left
   nth_rw 3 [this]
   exact sum_congr rfl fun x hx => totient_div_of_dvd (dvd_of_mem_divisors hx)
 
@@ -288,10 +288,11 @@ theorem totient_eq_mul_prod_factors (n : ℕ) :
     (φ n : ℚ) = n * ∏ p ∈ n.primeFactors, (1 - (p : ℚ)⁻¹) := by
   by_cases hn : n = 0
   · simp [hn]
-  have hn' : (n : ℚ) ≠ 0 := by simp [hn]
-  have hpQ : (∏ p ∈ n.primeFactors, (p : ℚ)) ≠ 0 := by
-    rw [← cast_prod, cast_ne_zero, ← zero_lt_iff, prod_primeFactors_prod_factorization]
-    exact prod_pos fun p hp => pos_of_mem_primeFactors hp
+  have hn'  : (n : ℚ) ≠ 0
+  simp [hn]
+  have hpQ  : (∏ p ∈ n.primeFactors, (p : ℚ)) ≠ 0
+  rw [← cast_prod, cast_ne_zero, ← zero_lt_iff, prod_primeFactors_prod_factorization]
+  exact prod_pos fun p hp => pos_of_mem_primeFactors hp
   simp only [totient_eq_div_primeFactors_mul n, prod_primeFactors_dvd n, cast_mul, cast_prod,
     cast_div_charZero, mul_comm_div, mul_right_inj' hn', div_eq_iff hpQ, ← prod_mul_distrib]
   refine prod_congr rfl fun p hp => ?_

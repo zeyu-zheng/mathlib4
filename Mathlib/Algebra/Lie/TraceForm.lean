@@ -108,9 +108,10 @@ lemma traceForm_weightSpace_eq [IsDomain R] [IsPrincipalIdealRing R]
     [LieAlgebra.IsNilpotent R L] [IsNoetherian R M] [LinearWeights R L M] (χ : L → R) (x y : L) :
     traceForm R L (weightSpace M χ) x y = finrank R (weightSpace M χ) • (χ x * χ y) := by
   set d := finrank R (weightSpace M χ)
-  have h₁ : χ y • d • χ x - χ y • χ x • (d : R) = 0 := by simp [mul_comm (χ x)]
-  have h₂ : χ x • d • χ y = d • (χ x * χ y) := by
-    simpa [nsmul_eq_mul, smul_eq_mul] using mul_left_comm (χ x) d (χ y)
+  have h₁  : χ y • d • χ x - χ y • χ x • (d : R) = 0
+  simp [mul_comm (χ x)]
+  have h₂  : χ x • d • χ y = d • (χ x * χ y)
+  simpa [nsmul_eq_mul, smul_eq_mul] using mul_left_comm (χ x) d (χ y)
   have := traceForm_eq_zero_of_isNilpotent R L (shiftedWeightSpace R L M χ)
   replace this := LinearMap.congr_fun (LinearMap.congr_fun this x) y
   rwa [LinearMap.zero_apply, LinearMap.zero_apply, traceForm_apply_apply,

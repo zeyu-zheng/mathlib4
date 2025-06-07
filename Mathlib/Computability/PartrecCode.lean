@@ -190,12 +190,14 @@ theorem encode_lt_pair (cf cg) :
 
 theorem encode_lt_comp (cf cg) :
     encode cf < encode (comp cf cg) ∧ encode cg < encode (comp cf cg) := by
-  have : encode (pair cf cg) < encode (comp cf cg) := by simp [encodeCode_eq, encodeCode]
+  have  : encode (pair cf cg) < encode (comp cf cg)
+  simp [encodeCode_eq, encodeCode]
   exact (encode_lt_pair cf cg).imp (fun h => lt_trans h this) fun h => lt_trans h this
 
 theorem encode_lt_prec (cf cg) :
     encode cf < encode (prec cf cg) ∧ encode cg < encode (prec cf cg) := by
-  have : encode (pair cf cg) < encode (prec cf cg) := by simp [encodeCode_eq, encodeCode]
+  have  : encode (pair cf cg) < encode (prec cf cg)
+  simp [encodeCode_eq, encodeCode]
   exact (encode_lt_pair cf cg).imp (fun h => lt_trans h this) fun h => lt_trans h this
 
 theorem encode_lt_rfind' (cf) : encode cf < encode (rfind' cf) := by
@@ -320,11 +322,11 @@ theorem rec_prim' {α σ} [Primcodable α] [Primcodable σ] {c : α → Code} (h
   let m := n.div2.div2
   show G₁ ((a, (List.range (n + 4)).map fun n => F a (ofNat Code n)), n, m)
     = some (F a (ofNat Code (n + 4)))
-  have hm : m < n + 4 := by
-    simp only [m, div2_val]
-    exact lt_of_le_of_lt
-      (le_trans (Nat.div_le_self ..) (Nat.div_le_self ..))
-      (Nat.succ_le_succ (Nat.le_add_right ..))
+  have hm : m < n + 4
+  simp only [m, div2_val]
+  exact lt_of_le_of_lt
+    (le_trans (Nat.div_le_self ..) (Nat.div_le_self ..))
+    (Nat.succ_le_succ (Nat.le_add_right ..))
   have m1 : m.unpair.1 < n + 4 := lt_of_le_of_lt m.unpair_left_le hm
   have m2 : m.unpair.2 < n + 4 := lt_of_le_of_lt m.unpair_right_le hm
   simp [G₁]; simp [m, List.getElem?_map, List.getElem?_range, hm, m1, m2]
@@ -430,11 +432,11 @@ theorem rec_computable {α σ} [Primcodable α] [Primcodable σ] {c : α → Cod
   let m := n.div2.div2
   show G₁ ((a, (List.range (n + 4)).map fun n => F a (ofNat Code n)), n, m)
     = some (F a (ofNat Code (n + 4)))
-  have hm : m < n + 4 := by
-    simp only [m, div2_val]
-    exact lt_of_le_of_lt
-      (le_trans (Nat.div_le_self ..) (Nat.div_le_self ..))
-      (Nat.succ_le_succ (Nat.le_add_right ..))
+  have hm : m < n + 4
+  simp only [m, div2_val]
+  exact lt_of_le_of_lt
+    (le_trans (Nat.div_le_self ..) (Nat.div_le_self ..))
+    (Nat.succ_le_succ (Nat.le_add_right ..))
   have m1 : m.unpair.1 < n + 4 := lt_of_le_of_lt m.unpair_left_le hm
   have m2 : m.unpair.2 < n + 4 := lt_of_le_of_lt m.unpair_right_le hm
   simp [G₁]; simp [m, List.getElem?_map, List.getElem?_range, hm, m1, m2]

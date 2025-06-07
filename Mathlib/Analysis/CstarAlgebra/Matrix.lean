@@ -48,29 +48,29 @@ variable [RCLike 𝕜] [Fintype n] [DecidableEq n]
 theorem entry_norm_bound_of_unitary {U : Matrix n n 𝕜} (hU : U ∈ Matrix.unitaryGroup n 𝕜)
     (i j : n) : ‖U i j‖ ≤ 1 := by
   -- The norm squared of an entry is at most the L2 norm of its row.
-  have norm_sum : ‖U i j‖ ^ 2 ≤ ∑ x, ‖U i x‖ ^ 2 := by
-    apply Multiset.single_le_sum
-    · intro x h_x
-      rw [Multiset.mem_map] at h_x
-      cases' h_x with a h_a
-      rw [← h_a.2]
-      apply sq_nonneg
-    · rw [Multiset.mem_map]
-      use j
-      simp only [eq_self_iff_true, Finset.mem_univ_val, and_self_iff, sq_eq_sq]
+  have norm_sum  : ‖U i j‖ ^ 2 ≤ ∑ x, ‖U i x‖ ^ 2
+  apply Multiset.single_le_sum
+  · intro x h_x
+    rw [Multiset.mem_map] at h_x
+    cases' h_x with a h_a
+    rw [← h_a.2]
+    apply sq_nonneg
+  · rw [Multiset.mem_map]
+    use j
+    simp only [eq_self_iff_true, Finset.mem_univ_val, and_self_iff, sq_eq_sq]
   -- The L2 norm of a row is a diagonal entry of U * Uᴴ
-  have diag_eq_norm_sum : (U * Uᴴ) i i = (∑ x : n, ‖U i x‖ ^ 2 : ℝ) := by
-    simp only [Matrix.mul_apply, Matrix.conjTranspose_apply, ← starRingEnd_apply, RCLike.mul_conj,
-      RCLike.normSq_eq_def', RCLike.ofReal_pow]; norm_cast
+  have diag_eq_norm_sum  : (U * Uᴴ) i i = (∑ x : n, ‖U i x‖ ^ 2 : ℝ)
+  simp only [Matrix.mul_apply, Matrix.conjTranspose_apply, ← starRingEnd_apply, RCLike.mul_conj,
+    RCLike.normSq_eq_def', RCLike.ofReal_pow]; norm_cast
   -- The L2 norm of a row is a diagonal entry of U * Uᴴ, real part
-  have re_diag_eq_norm_sum : RCLike.re ((U * Uᴴ) i i) = ∑ x : n, ‖U i x‖ ^ 2 := by
-    rw [RCLike.ext_iff] at diag_eq_norm_sum
-    rw [diag_eq_norm_sum.1]
-    norm_cast
+  have re_diag_eq_norm_sum  : RCLike.re ((U * Uᴴ) i i) = ∑ x : n, ‖U i x‖ ^ 2
+  rw [RCLike.ext_iff] at diag_eq_norm_sum
+  rw [diag_eq_norm_sum.1]
+  norm_cast
   -- Since U is unitary, the diagonal entries of U * Uᴴ are all 1
   have mul_eq_one : U * Uᴴ = 1 := unitary.mul_star_self_of_mem hU
-  have diag_eq_one : RCLike.re ((U * Uᴴ) i i) = 1 := by
-    simp only [mul_eq_one, eq_self_iff_true, Matrix.one_apply_eq, RCLike.one_re]
+  have diag_eq_one  : RCLike.re ((U * Uᴴ) i i) = 1
+  simp only [mul_eq_one, eq_self_iff_true, Matrix.one_apply_eq, RCLike.one_re]
   -- Putting it all together
   rw [← sq_le_one_iff (norm_nonneg (U i j)), ← diag_eq_one, re_diag_eq_norm_sum]
   exact norm_sum

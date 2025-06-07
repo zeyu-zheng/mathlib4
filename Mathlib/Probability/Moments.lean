@@ -77,11 +77,12 @@ theorem centralMoment_one [IsProbabilityMeasure μ] : centralMoment X 1 μ = 0 :
   · rw [centralMoment_one' h_int]
     simp only [measure_univ, ENNReal.one_toReal, sub_self, zero_mul]
   · simp only [centralMoment, Pi.sub_apply, pow_one]
-    have : ¬Integrable (fun x => X x - integral μ X) μ := by
-      refine fun h_sub => h_int ?_
-      have h_add : X = (fun x => X x - integral μ X) + fun _ => integral μ X := by ext1 x; simp
-      rw [h_add]
-      exact h_sub.add (integrable_const _)
+    have  : ¬Integrable (fun x => X x - integral μ X) μ
+    refine fun h_sub => h_int ?_
+    have h_add  : X = (fun x => X x - integral μ X) + fun _ => integral μ X
+    ext1 x; simp
+    rw [h_add]
+    exact h_sub.add (integrable_const _)
     rw [integral_undef this]
 
 theorem centralMoment_two_eq_variance [IsFiniteMeasure μ] (hX : Memℒp X 2 μ) :
@@ -161,8 +162,8 @@ theorem mgf_nonneg : 0 ≤ mgf X μ t := by
 theorem mgf_pos' (hμ : μ ≠ 0) (h_int_X : Integrable (fun ω => exp (t * X ω)) μ) :
     0 < mgf X μ t := by
   simp_rw [mgf]
-  have : ∫ x : Ω, exp (t * X x) ∂μ = ∫ x : Ω in Set.univ, exp (t * X x) ∂μ := by
-    simp only [Measure.restrict_univ]
+  have  : ∫ x : Ω, exp (t * X x) ∂μ = ∫ x : Ω in Set.univ, exp (t * X x) ∂μ
+  simp only [Measure.restrict_univ]
   rw [this, setIntegral_pos_iff_support_of_nonneg_ae _ _]
   · have h_eq_univ : (Function.support fun x : Ω => exp (t * X x)) = Set.univ := by
       ext1 x
@@ -200,7 +201,8 @@ theorem IndepFun.mgf_add {X Y : Ω → ℝ} (h_indep : IndepFun X Y μ)
 
 theorem IndepFun.mgf_add' {X Y : Ω → ℝ} (h_indep : IndepFun X Y μ) (hX : AEStronglyMeasurable X μ)
     (hY : AEStronglyMeasurable Y μ) : mgf (X + Y) μ t = mgf X μ t * mgf Y μ t := by
-  have A : Continuous fun x : ℝ => exp (t * x) := by fun_prop
+  have A  : Continuous fun x : ℝ => exp (t * x)
+  fun_prop
   have h'X : AEStronglyMeasurable (fun ω => exp (t * X ω)) μ :=
     A.aestronglyMeasurable.comp_aemeasurable hX.aemeasurable
   have h'Y : AEStronglyMeasurable (fun ω => exp (t * Y ω)) μ :=

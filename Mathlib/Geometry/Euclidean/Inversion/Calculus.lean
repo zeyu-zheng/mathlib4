@@ -89,15 +89,15 @@ theorem hasFDerivAt_inversion (hx : x ≠ c) :
     HasFDerivAt (inversion c R)
       ((R / dist x c) ^ 2 • (reflection (ℝ ∙ (x - c))ᗮ : F →L[ℝ] F)) x := by
   rcases add_left_surjective c x with ⟨x, rfl⟩
-  have : HasFDerivAt (inversion c R) (?_ : F →L[ℝ] F) (c + x) := by
-    #adaptation_note /-- nightly-2024-03-16: simp was
-    simp (config := { unfoldPartialApp := true }) only [inversion] -/
-    simp only [inversion_def]
-    simp_rw [dist_eq_norm, div_pow, div_eq_mul_inv]
-    have A := (hasFDerivAt_id (𝕜 := ℝ) (c + x)).sub_const c
-    have B := ((hasDerivAt_inv <| by simpa using hx).comp_hasFDerivAt _ A.norm_sq).const_mul
-      (R ^ 2)
-    exact (B.smul A).add_const c
+  have  : HasFDerivAt (inversion c R) (?_ : F →L[ℝ] F) (c + x)
+  #adaptation_note /-- nightly-2024-03-16: simp was
+  simp (config := { unfoldPartialApp := true }) only [inversion] -/
+  simp only [inversion_def]
+  simp_rw [dist_eq_norm, div_pow, div_eq_mul_inv]
+  have A := (hasFDerivAt_id (𝕜 := ℝ) (c + x)).sub_const c
+  have B := ((hasDerivAt_inv <| by simpa using hx).comp_hasFDerivAt _ A.norm_sq).const_mul
+    (R ^ 2)
+  exact (B.smul A).add_const c
   refine this.congr_fderiv (LinearMap.ext_on_codisjoint
     (Submodule.isCompl_orthogonal_of_completeSpace (K := ℝ ∙ x)).codisjoint
     (LinearMap.eqOn_span' ?_) fun y hy ↦ ?_)

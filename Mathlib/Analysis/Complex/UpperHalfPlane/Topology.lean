@@ -107,13 +107,15 @@ theorem ModularGroup_T_zpow_mem_verticalStrip (z : ℍ) {N : ℕ} (hn : 0 < N) :
   rw [modular_T_zpow_smul z (N * -n)]
   refine ⟨?_, (by simp only [mul_neg, Int.cast_neg, Int.cast_mul, Int.cast_natCast, vadd_im,
     le_refl])⟩
-  have h : (N * (-n : ℝ) +ᵥ z).re = -N * Int.floor (z.re / N) + z.re := by
-    simp only [Int.cast_natCast, mul_neg, vadd_re, neg_mul]
+  have h  : (N * (-n : ℝ) +ᵥ z).re = -N * Int.floor (z.re / N) + z.re
+  simp only [Int.cast_natCast, mul_neg, vadd_re, neg_mul]
   norm_cast at *
   rw [h, add_comm]
   simp only [neg_mul, Int.cast_neg, Int.cast_mul, Int.cast_natCast]
-  have hnn : (0 : ℝ) < (N : ℝ) := by norm_cast at *
-  have h2 : z.re + -(N * n) =  z.re - n * N := by ring
+  have hnn  : (0 : ℝ) < (N : ℝ)
+  norm_cast at *
+  have h2  : z.re + -(N * n) =  z.re - n * N
+  ring
   rw [h2, abs_eq_self.2 (Int.sub_floor_div_mul_nonneg (z.re : ℝ) hnn)]
   apply (Int.sub_floor_div_mul_lt (z.re : ℝ) hnn).le
 

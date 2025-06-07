@@ -297,8 +297,8 @@ variable [AddCommGroup E] [AddCommGroup F] [Module 𝕜 E] [Module 𝕜 F] {x y 
 
 theorem StarConvex.add_smul_mem (hs : StarConvex 𝕜 x s) (hy : x + y ∈ s) {t : 𝕜} (ht₀ : 0 ≤ t)
     (ht₁ : t ≤ 1) : x + t • y ∈ s := by
-  have h : x + t • y = (1 - t) • x + t • (x + y) := by
-    rw [smul_add, ← add_assoc, ← add_smul, sub_add_cancel, one_smul]
+  have h  : x + t • y = (1 - t) • x + t • (x + y)
+  rw [smul_add, ← add_assoc, ← add_smul, sub_add_cancel, one_smul]
   rw [h]
   exact hs hy (sub_nonneg_of_le ht₁) ht₀ (sub_add_cancel _ _)
 

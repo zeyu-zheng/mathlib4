@@ -78,34 +78,34 @@ theorem card_complex_roots_eq_card_real_add_card_not_gal_inv (p : ℚ[X]) :
   -- Porting note: was
   --   change a.card = b.card + c.card
   suffices a.card = b.card + c.card by exact this
-  have ha : ∀ z : ℂ, z ∈ a ↔ aeval z p = 0 := by
-    intro z; rw [Set.mem_toFinset, mem_rootSet_of_ne hp]
-  have hb : ∀ z : ℂ, z ∈ b ↔ aeval z p = 0 ∧ z.im = 0 := by
-    intro z
-    simp_rw [b, Finset.mem_image, Set.mem_toFinset, mem_rootSet_of_ne hp]
-    constructor
-    · rintro ⟨w, hw, rfl⟩
-      exact ⟨by rw [aeval_algHom_apply, hw, map_zero], rfl⟩
-    · rintro ⟨hz1, hz2⟩
-      have key : IsScalarTower.toAlgHom ℚ ℝ ℂ z.re = z := by
-        ext
-        · rfl
-        · rw [hz2]; rfl
-      exact ⟨z.re, inj (by rwa [← aeval_algHom_apply, key, map_zero]), key⟩
+  have ha  : ∀ z : ℂ, z ∈ a ↔ aeval z p = 0
+  intro z; rw [Set.mem_toFinset, mem_rootSet_of_ne hp]
+  have hb  : ∀ z : ℂ, z ∈ b ↔ aeval z p = 0 ∧ z.im = 0
+  intro z
+  simp_rw [b, Finset.mem_image, Set.mem_toFinset, mem_rootSet_of_ne hp]
+  constructor
+  · rintro ⟨w, hw, rfl⟩
+    exact ⟨by rw [aeval_algHom_apply, hw, map_zero], rfl⟩
+  · rintro ⟨hz1, hz2⟩
+    have key  : IsScalarTower.toAlgHom ℚ ℝ ℂ z.re = z
+    ext
+    · rfl
+    · rw [hz2]; rfl
+    exact ⟨z.re, inj (by rwa [← aeval_algHom_apply, key, map_zero]), key⟩
   have hc0 :
     ∀ w : p.rootSet ℂ, galActionHom p ℂ (restrict p ℂ (Complex.conjAe.restrictScalars ℚ)) w = w ↔
         w.val.im = 0 := by
     intro w
     rw [Subtype.ext_iff, galActionHom_restrict]
     exact Complex.conj_eq_iff_im
-  have hc : ∀ z : ℂ, z ∈ c ↔ aeval z p = 0 ∧ z.im ≠ 0 := by
-    intro z
-    simp_rw [c, Finset.mem_image]
-    constructor
-    · rintro ⟨w, hw, rfl⟩
-      exact ⟨(mem_rootSet.mp w.2).2, mt (hc0 w).mpr (Equiv.Perm.mem_support.mp hw)⟩
-    · rintro ⟨hz1, hz2⟩
-      exact ⟨⟨z, mem_rootSet.mpr ⟨hp, hz1⟩⟩, Equiv.Perm.mem_support.mpr (mt (hc0 _).mp hz2), rfl⟩
+  have hc  : ∀ z : ℂ, z ∈ c ↔ aeval z p = 0 ∧ z.im ≠ 0
+  intro z
+  simp_rw [c, Finset.mem_image]
+  constructor
+  · rintro ⟨w, hw, rfl⟩
+    exact ⟨(mem_rootSet.mp w.2).2, mt (hc0 w).mpr (Equiv.Perm.mem_support.mp hw)⟩
+  · rintro ⟨hz1, hz2⟩
+    exact ⟨⟨z, mem_rootSet.mpr ⟨hp, hz1⟩⟩, Equiv.Perm.mem_support.mpr (mt (hc0 _).mp hz2), rfl⟩
   rw [← Finset.card_union_of_disjoint]
   · apply congr_arg Finset.card
     simp_rw [Finset.ext_iff, Finset.mem_union, ha, hb, hc]
@@ -121,11 +121,11 @@ theorem galActionHom_bijective_of_prime_degree {p : ℚ[X]} (p_irr : Irreducible
     (p_roots : Fintype.card (p.rootSet ℂ) = Fintype.card (p.rootSet ℝ) + 2) :
     Function.Bijective (galActionHom p ℂ) := by
   classical
-  have h1 : Fintype.card (p.rootSet ℂ) = p.natDegree := by
-    simp_rw [rootSet_def, Finset.coe_sort_coe, Fintype.card_coe]
-    rw [Multiset.toFinset_card_of_nodup, ← natDegree_eq_card_roots]
-    · exact IsAlgClosed.splits_codomain p
-    · exact nodup_roots ((separable_map (algebraMap ℚ ℂ)).mpr p_irr.separable)
+  have h1  : Fintype.card (p.rootSet ℂ) = p.natDegree
+  simp_rw [rootSet_def, Finset.coe_sort_coe, Fintype.card_coe]
+  rw [Multiset.toFinset_card_of_nodup, ← natDegree_eq_card_roots]
+  · exact IsAlgClosed.splits_codomain p
+  · exact nodup_roots ((separable_map (algebraMap ℚ ℂ)).mpr p_irr.separable)
   let conj' := restrict p ℂ (Complex.conjAe.restrictScalars ℚ)
   refine
     ⟨galActionHom_injective p ℂ, fun x =>

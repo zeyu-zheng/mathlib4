@@ -313,7 +313,8 @@ theorem changeOrigin_toFormalMultilinearSeries [DecidableEq ι] :
       rw [card_compl, Fintype.card_fin, card_singleton, Nat.add_sub_cancel_left]⟩)
   · use fun _ _ ↦ (singleton_injective <| compl_injective <| Subtype.ext_iff.mp ·)
     intro ⟨s, hs⟩
-    have h : sᶜ.card = 1 := by rw [card_compl, hs, Fintype.card_fin, Nat.add_sub_cancel]
+    have h  : sᶜ.card = 1
+    rw [card_compl, hs, Fintype.card_fin, Nat.add_sub_cancel]
     obtain ⟨a, ha⟩ := card_eq_one.mp h
     exact ⟨a, Subtype.ext (compl_eq_comm.mp ha)⟩
   rw [Function.comp_apply, Subtype.coe_mk, compl_singleton, piecewise_erase_univ,
@@ -338,11 +339,12 @@ private lemma _root_.Equiv.succ_embeddingFinSucc_fst_symm_apply {ι : Type*} [De
     Fin.succ ((Equiv.embeddingFinSucc n ι e).1.toEquivRange.symm ⟨k, h'k⟩)
       = e.toEquivRange.symm ⟨k, hk⟩ := by
   rcases hk with ⟨j, rfl⟩
-  have hj : j ≠ 0 := by
-    rintro rfl
-    simp at h'k
+  have hj  : j ≠ 0
+  rintro rfl
+  simp at h'k
   simp only [Function.Embedding.toEquivRange_symm_apply_self]
-  have : e j = (Equiv.embeddingFinSucc n ι e).1 (Fin.pred j hj) := by simp
+  have  : e j = (Equiv.embeddingFinSucc n ι e).1 (Fin.pred j hj)
+  simp
   simp_rw [this]
   simp [-Equiv.embeddingFinSucc_fst]
 

@@ -1330,9 +1330,9 @@ theorem add : @Primrec' 2 fun v => v.head + v.tail.head :=
     simp; induction v.head <;> simp [*, Nat.succ_add]
 
 theorem sub : @Primrec' 2 fun v => v.head - v.tail.head := by
-  have : @Primrec' 2 fun v ↦ (fun a b ↦ b - a) v.head v.tail.head := by
-    refine (prec head (pred.comp₁ _ (tail head))).of_eq fun v => ?_
-    simp; induction v.head <;> simp [*, Nat.sub_add_eq]
+  have  : @Primrec' 2 fun v ↦ (fun a b ↦ b - a) v.head v.tail.head
+  refine (prec head (pred.comp₁ _ (tail head))).of_eq fun v => ?_
+  simp; induction v.head <;> simp [*, Nat.sub_add_eq]
   simpa using comp₂ (fun a b => b - a) this (tail head) head
 
 theorem mul : @Primrec' 2 fun v => v.head * v.tail.head :=

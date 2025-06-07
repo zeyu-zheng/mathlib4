@@ -184,13 +184,13 @@ theorem spectralRadius_le_pow_nnnorm_pow_one_div (a : A) (n : ℕ) :
       (‖(1 : A)‖₊ : ℝ≥0∞) ^ (1 / (n + 1) : ℝ) := by
   refine iSup₂_le fun k hk => ?_
   -- apply easy direction of the spectral mapping theorem for polynomials
-  have pow_mem : k ^ (n + 1) ∈ σ (a ^ (n + 1)) := by
-    simpa only [one_mul, Algebra.algebraMap_eq_smul_one, one_smul, aeval_monomial, one_mul,
-      eval_monomial] using subset_polynomial_aeval a (@monomial 𝕜 _ (n + 1) (1 : 𝕜)) ⟨k, hk, rfl⟩
+  have pow_mem  : k ^ (n + 1) ∈ σ (a ^ (n + 1))
+  simpa only [one_mul, Algebra.algebraMap_eq_smul_one, one_smul, aeval_monomial, one_mul,
+    eval_monomial] using subset_polynomial_aeval a (@monomial 𝕜 _ (n + 1) (1 : 𝕜)) ⟨k, hk, rfl⟩
   -- power of the norm is bounded by norm of the power
-  have nnnorm_pow_le : (↑(‖k‖₊ ^ (n + 1)) : ℝ≥0∞) ≤ ‖a ^ (n + 1)‖₊ * ‖(1 : A)‖₊ := by
-    simpa only [Real.toNNReal_mul (norm_nonneg _), norm_toNNReal, nnnorm_pow k (n + 1),
-      ENNReal.coe_mul] using coe_mono (Real.toNNReal_mono (norm_le_norm_mul_of_mem pow_mem))
+  have nnnorm_pow_le  : (↑(‖k‖₊ ^ (n + 1)) : ℝ≥0∞) ≤ ‖a ^ (n + 1)‖₊ * ‖(1 : A)‖₊
+  simpa only [Real.toNNReal_mul (norm_nonneg _), norm_toNNReal, nnnorm_pow k (n + 1),
+    ENNReal.coe_mul] using coe_mono (Real.toNNReal_mono (norm_le_norm_mul_of_mem pow_mem))
   -- take (n + 1)ᵗʰ roots and clean up the left-hand side
   have hn : 0 < ((n + 1 : ℕ) : ℝ) := mod_cast Nat.succ_pos'
   convert monotone_rpow_of_nonneg (one_div_pos.mpr hn).le nnnorm_pow_le using 1
@@ -233,8 +233,8 @@ local notation "↑ₐ" => algebraMap 𝕜 A
 theorem hasDerivAt_resolvent {a : A} {k : 𝕜} (hk : k ∈ ρ a) :
     HasDerivAt (resolvent a) (-resolvent a k ^ 2) k := by
   have H₁ : HasFDerivAt Ring.inverse _ (↑ₐ k - a) := hasFDerivAt_ring_inverse (𝕜 := 𝕜) hk.unit
-  have H₂ : HasDerivAt (fun k => ↑ₐ k - a) 1 k := by
-    simpa using (Algebra.linearMap 𝕜 A).hasDerivAt.sub_const a
+  have H₂  : HasDerivAt (fun k => ↑ₐ k - a) 1 k
+  simpa using (Algebra.linearMap 𝕜 A).hasDerivAt.sub_const a
   simpa [resolvent, sq, hk.unit_spec, ← Ring.inverse_unit hk.unit] using H₁.comp_hasDerivAt k H₂
 
 -- refactored so this result was no longer necessary or useful
@@ -322,10 +322,10 @@ theorem differentiableOn_inverse_one_sub_smul [CompleteSpace A] {a : A} {r : ℝ
     DifferentiableOn 𝕜 (fun z : 𝕜 => Ring.inverse (1 - z • a)) (Metric.closedBall 0 r) := by
   intro z z_mem
   apply DifferentiableAt.differentiableWithinAt
-  have hu : IsUnit (1 - z • a) := by
-    refine isUnit_one_sub_smul_of_lt_inv_radius (lt_of_le_of_lt (coe_mono ?_) hr)
-    simpa only [norm_toNNReal, Real.toNNReal_coe] using
-      Real.toNNReal_mono (mem_closedBall_zero_iff.mp z_mem)
+  have hu  : IsUnit (1 - z • a)
+  refine isUnit_one_sub_smul_of_lt_inv_radius (lt_of_le_of_lt (coe_mono ?_) hr)
+  simpa only [norm_toNNReal, Real.toNNReal_coe] using
+    Real.toNNReal_mono (mem_closedBall_zero_iff.mp z_mem)
   have H₁ : Differentiable 𝕜 fun w : 𝕜 => 1 - w • a := (differentiable_id.smul_const a).const_sub 1
   exact DifferentiableAt.comp z (differentiableAt_inverse hu) H₁.differentiableAt
 
@@ -387,7 +387,8 @@ protected theorem nonempty : (spectrum ℂ a).Nonempty := by
   /- Suppose `σ a = ∅`, then resolvent set is `ℂ`, any `(z • 1 - a)` is a unit, and `resolvent a`
     is differentiable on `ℂ`. -/
   by_contra! h
-  have H₀ : resolventSet ℂ a = Set.univ := by rwa [spectrum, Set.compl_empty_iff] at h
+  have H₀  : resolventSet ℂ a = Set.univ
+  rwa [spectrum, Set.compl_empty_iff] at h
   have H₁ : Differentiable ℂ fun z : ℂ => resolvent a z := fun z =>
     (hasDerivAt_resolvent (H₀.symm ▸ Set.mem_univ z : z ∈ resolventSet ℂ a)).differentiableAt
   /- Since `resolvent a` tends to zero at infinity, by Liouville's theorem `resolvent a = 0`,
@@ -462,25 +463,25 @@ local notation "↑ₐ" => algebraMap 𝕜 A
 /-- For `𝕜 = ℝ` or `𝕜 = ℂ`, `exp 𝕜` maps the spectrum of `a` into the spectrum of `exp 𝕜 a`. -/
 theorem exp_mem_exp [RCLike 𝕜] [NormedRing A] [NormedAlgebra 𝕜 A] [CompleteSpace A] (a : A)
     {z : 𝕜} (hz : z ∈ spectrum 𝕜 a) : exp 𝕜 z ∈ spectrum 𝕜 (exp 𝕜 a) := by
-  have hexpmul : exp 𝕜 a = exp 𝕜 (a - ↑ₐ z) * ↑ₐ (exp 𝕜 z) := by
-    rw [algebraMap_exp_comm z, ← exp_add_of_commute (Algebra.commutes z (a - ↑ₐ z)).symm,
-      sub_add_cancel]
+  have hexpmul  : exp 𝕜 a = exp 𝕜 (a - ↑ₐ z) * ↑ₐ (exp 𝕜 z)
+  rw [algebraMap_exp_comm z, ← exp_add_of_commute (Algebra.commutes z (a - ↑ₐ z)).symm,
+    sub_add_cancel]
   let b := ∑' n : ℕ, ((n + 1).factorial⁻¹ : 𝕜) • (a - ↑ₐ z) ^ n
-  have hb : Summable fun n : ℕ => ((n + 1).factorial⁻¹ : 𝕜) • (a - ↑ₐ z) ^ n := by
-    refine .of_norm_bounded_eventually _ (Real.summable_pow_div_factorial ‖a - ↑ₐ z‖) ?_
-    filter_upwards [Filter.eventually_cofinite_ne 0] with n hn
-    rw [norm_smul, mul_comm, norm_inv, RCLike.norm_natCast, ← div_eq_mul_inv]
-    exact div_le_div (pow_nonneg (norm_nonneg _) n) (norm_pow_le' (a - ↑ₐ z) (zero_lt_iff.mpr hn))
-      (mod_cast Nat.factorial_pos n) (mod_cast Nat.factorial_le (lt_add_one n).le)
-  have h₀ : (∑' n : ℕ, ((n + 1).factorial⁻¹ : 𝕜) • (a - ↑ₐ z) ^ (n + 1)) = (a - ↑ₐ z) * b := by
-    simpa only [mul_smul_comm, pow_succ'] using hb.tsum_mul_left (a - ↑ₐ z)
-  have h₁ : (∑' n : ℕ, ((n + 1).factorial⁻¹ : 𝕜) • (a - ↑ₐ z) ^ (n + 1)) = b * (a - ↑ₐ z) := by
-    simpa only [pow_succ, Algebra.smul_mul_assoc] using hb.tsum_mul_right (a - ↑ₐ z)
-  have h₃ : exp 𝕜 (a - ↑ₐ z) = 1 + (a - ↑ₐ z) * b := by
-    rw [exp_eq_tsum]
-    convert tsum_eq_zero_add (expSeries_summable' (𝕂 := 𝕜) (a - ↑ₐ z))
-    · simp only [Nat.factorial_zero, Nat.cast_one, inv_one, pow_zero, one_smul]
-    · exact h₀.symm
+  have hb  : Summable fun n : ℕ => ((n + 1).factorial⁻¹ : 𝕜) • (a - ↑ₐ z) ^ n
+  refine .of_norm_bounded_eventually _ (Real.summable_pow_div_factorial ‖a - ↑ₐ z‖) ?_
+  filter_upwards [Filter.eventually_cofinite_ne 0] with n hn
+  rw [norm_smul, mul_comm, norm_inv, RCLike.norm_natCast, ← div_eq_mul_inv]
+  exact div_le_div (pow_nonneg (norm_nonneg _) n) (norm_pow_le' (a - ↑ₐ z) (zero_lt_iff.mpr hn))
+    (mod_cast Nat.factorial_pos n) (mod_cast Nat.factorial_le (lt_add_one n).le)
+  have h₀  : (∑' n : ℕ, ((n + 1).factorial⁻¹ : 𝕜) • (a - ↑ₐ z) ^ (n + 1)) = (a - ↑ₐ z) * b
+  simpa only [mul_smul_comm, pow_succ'] using hb.tsum_mul_left (a - ↑ₐ z)
+  have h₁  : (∑' n : ℕ, ((n + 1).factorial⁻¹ : 𝕜) • (a - ↑ₐ z) ^ (n + 1)) = b * (a - ↑ₐ z)
+  simpa only [pow_succ, Algebra.smul_mul_assoc] using hb.tsum_mul_right (a - ↑ₐ z)
+  have h₃  : exp 𝕜 (a - ↑ₐ z) = 1 + (a - ↑ₐ z) * b
+  rw [exp_eq_tsum]
+  convert tsum_eq_zero_add (expSeries_summable' (𝕂 := 𝕜) (a - ↑ₐ z))
+  · simp only [Nat.factorial_zero, Nat.cast_one, inv_one, pow_zero, one_smul]
+  · exact h₀.symm
   rw [spectrum.mem_iff, IsUnit.sub_iff, ← one_mul (↑ₐ (exp 𝕜 z)), hexpmul, ← _root_.sub_mul,
     Commute.isUnit_mul_iff (Algebra.commutes (exp 𝕜 z) (exp 𝕜 (a - ↑ₐ z) - 1)).symm,
     sub_eq_iff_eq_add'.mpr h₃, Commute.isUnit_mul_iff (h₀ ▸ h₁ : (a - ↑ₐ z) * b = b * (a - ↑ₐ z))]
@@ -614,11 +615,11 @@ lemma real_iff [Algebra ℂ A] {a : A} :
 lemma nnreal_iff_spectralRadius_le [Algebra ℝ A] {a : A} {t : ℝ≥0} (ht : spectralRadius ℝ a ≤ t) :
     SpectrumRestricts a ContinuousMap.realToNNReal ↔
       spectralRadius ℝ (algebraMap ℝ A t - a) ≤ t := by
-  have : spectrum ℝ a ⊆ Set.Icc (-t) t := by
-    intro x hx
-    rw [Set.mem_Icc, ← abs_le, ← Real.norm_eq_abs, ← coe_nnnorm, NNReal.coe_le_coe,
-      ← ENNReal.coe_le_coe]
-    exact le_iSup₂ (α := ℝ≥0∞) x hx |>.trans ht
+  have  : spectrum ℝ a ⊆ Set.Icc (-t) t
+  intro x hx
+  rw [Set.mem_Icc, ← abs_le, ← Real.norm_eq_abs, ← coe_nnnorm, NNReal.coe_le_coe,
+    ← ENNReal.coe_le_coe]
+  exact le_iSup₂ (α := ℝ≥0∞) x hx |>.trans ht
   rw [nnreal_iff]
   refine ⟨fun h ↦ iSup₂_le fun x hx ↦ ?_, fun h ↦ ?_⟩
   · rw [← spectrum.singleton_sub_eq] at hx

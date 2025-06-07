@@ -691,12 +691,12 @@ example {K : Type*} [Field K] [Invertible 2] [Invertible 3]
   (ht : t * s = p) (x : K) (H : 1 + ω + ω ^ 2 = 0) :
   x ^ 3 + 3 * p * x - 2 * q =
     (x - (s - t)) * (x - (s * ω - t * ω ^ 2)) * (x - (s * ω ^ 2 - t * ω)) := by
-  have hs_nonzero : s ≠ 0 := by
-    contrapose! hp_nonzero with hs_nonzero
-    create_polyrith_test
-  have H' : 2 * q = s ^ 3 - t ^ 3 := by
-    rw [← mul_left_inj' (pow_ne_zero 3 hs_nonzero)]
-    create_polyrith_test
+  have hs_nonzero  : s ≠ 0
+  contrapose! hp_nonzero with hs_nonzero
+  create_polyrith_test
+  have H'  : 2 * q = s ^ 3 - t ^ 3
+  rw [← mul_left_inj' (pow_ne_zero 3 hs_nonzero)]
+  create_polyrith_test
   create_polyrith_test
 
 

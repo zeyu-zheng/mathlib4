@@ -107,8 +107,10 @@ section BPosAndNeOne
 variable (b_pos : 0 < b) (b_ne_one : b ≠ 1)
 
 private theorem log_b_ne_zero : log b ≠ 0 := by
-  have b_ne_zero : b ≠ 0 := by linarith
-  have b_ne_minus_one : b ≠ -1 := by linarith
+  have b_ne_zero  : b ≠ 0
+  linarith
+  have b_ne_minus_one  : b ≠ -1
+  linarith
   simp [b_ne_one, b_ne_zero, b_ne_minus_one]
 
 @[simp]

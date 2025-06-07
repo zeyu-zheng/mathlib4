@@ -649,7 +649,8 @@ theorem isClosed_frontier : IsClosed (frontier s) := by
 /-- The frontier of a closed set has no interior point. -/
 theorem interior_frontier (h : IsClosed s) : interior (frontier s) = ∅ := by
   have A : frontier s = s \ interior s := h.frontier_eq
-  have B : interior (frontier s) ⊆ interior s := by rw [A]; exact interior_mono diff_subset
+  have B  : interior (frontier s) ⊆ interior s
+  rw [A]; exact interior_mono diff_subset
   have C : interior (frontier s) ⊆ frontier s := interior_subset
   have : interior (frontier s) ⊆ interior s ∩ (s \ interior s) :=
     subset_inter B (by simpa [A] using C)

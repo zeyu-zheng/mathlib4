@@ -327,10 +327,11 @@ theorem factorization_gcd {a b : ℕ} (ha_pos : a ≠ 0) (hb_pos : b ≠ 0) :
     (gcd a b).factorization = a.factorization ⊓ b.factorization := by
   let dfac := a.factorization ⊓ b.factorization
   let d := dfac.prod (· ^ ·)
-  have dfac_prime : ∀ p : ℕ, p ∈ dfac.support → Prime p := by
-    intro p hp
-    have : p ∈ a.primeFactorsList ∧ p ∈ b.primeFactorsList := by simpa [dfac] using hp
-    exact prime_of_mem_primeFactorsList this.1
+  have dfac_prime  : ∀ p : ℕ, p ∈ dfac.support → Prime p
+  intro p hp
+  have  : p ∈ a.primeFactorsList ∧ p ∈ b.primeFactorsList
+  simpa [dfac] using hp
+  exact prime_of_mem_primeFactorsList this.1
   have h1 : d.factorization = dfac := prod_pow_factorization_eq_self dfac_prime
   have hd_pos : d ≠ 0 := (factorizationEquiv.invFun ⟨dfac, dfac_prime⟩).2.ne'
   suffices d = gcd a b by rwa [← this]
@@ -542,10 +543,10 @@ theorem Ioc_filter_dvd_card_eq_div (n p : ℕ) : ((Ioc 0 n).filter fun x => p �
   induction' n with n IH
   · simp
   -- TODO: Golf away `h1` after Yaël PRs a lemma asserting this
-  have h1 : Ioc 0 n.succ = insert n.succ (Ioc 0 n) := by
-    rcases n.eq_zero_or_pos with (rfl | hn)
-    · simp
-    simp_rw [← Ico_succ_succ, Ico_insert_right (succ_le_succ hn.le), Ico_succ_right]
+  have h1  : Ioc 0 n.succ = insert n.succ (Ioc 0 n)
+  rcases n.eq_zero_or_pos with (rfl | hn)
+  · simp
+  simp_rw [← Ico_succ_succ, Ico_insert_right (succ_le_succ hn.le), Ico_succ_right]
   simp [Nat.succ_div, add_ite, add_zero, h1, filter_insert, apply_ite card, card_insert_eq_ite, IH,
     Finset.mem_filter, mem_Ioc, not_le.2 (lt_add_one n)]
 

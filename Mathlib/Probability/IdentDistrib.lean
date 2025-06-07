@@ -297,19 +297,19 @@ theorem Memℒp.uniformIntegrable_of_identDistrib_aux {ι : Type*} {f : ι → �
   swap; · exact ⟨0, fun i => False.elim (hι <| Nonempty.intro i)⟩
   obtain ⟨C, hC₁, hC₂⟩ := hℒp.eLpNorm_indicator_norm_ge_pos_le (hfmeas _) hε
   refine ⟨⟨C, hC₁.le⟩, fun i => le_trans (le_of_eq ?_) hC₂⟩
-  have : {x | (⟨C, hC₁.le⟩ : ℝ≥0) ≤ ‖f i x‖₊} = {x | C ≤ ‖f i x‖} := by
-    ext x
-    simp_rw [← norm_toNNReal]
-    exact Real.le_toNNReal_iff_coe_le (norm_nonneg _)
+  have  : {x | (⟨C, hC₁.le⟩ : ℝ≥0) ≤ ‖f i x‖₊} = {x | C ≤ ‖f i x‖}
+  ext x
+  simp_rw [← norm_toNNReal]
+  exact Real.le_toNNReal_iff_coe_le (norm_nonneg _)
   rw [this, ← eLpNorm_norm, ← eLpNorm_norm (Set.indicator _ _)]
   simp_rw [norm_indicator_eq_indicator_norm, coe_nnnorm]
   let F : E → ℝ := (fun x : E => if (⟨C, hC₁.le⟩ : ℝ≥0) ≤ ‖x‖₊ then ‖x‖ else 0)
-  have F_meas : Measurable F := by
-    apply measurable_norm.indicator (measurableSet_le measurable_const measurable_nnnorm)
-  have : ∀ k, (fun x ↦ Set.indicator {x | C ≤ ‖f k x‖} (fun a ↦ ‖f k a‖) x) = F ∘ f k := by
-    intro k
-    ext x
-    simp only [Set.indicator, Set.mem_setOf_eq]; norm_cast
+  have F_meas  : Measurable F
+  apply measurable_norm.indicator (measurableSet_le measurable_const measurable_nnnorm)
+  have  : ∀ k, (fun x ↦ Set.indicator {x | C ≤ ‖f k x‖} (fun a ↦ ‖f k a‖) x) = F ∘ f k
+  intro k
+  ext x
+  simp only [Set.indicator, Set.mem_setOf_eq]; norm_cast
   rw [this, this, ← eLpNorm_map_measure F_meas.aestronglyMeasurable (hf i).aemeasurable_fst,
     (hf i).map_eq, eLpNorm_map_measure F_meas.aestronglyMeasurable (hf j).aemeasurable_fst]
 

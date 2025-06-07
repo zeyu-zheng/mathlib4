@@ -198,10 +198,10 @@ theorem finprod_false (f : False → M) : ∏ᶠ i, f i = 1 :=
 @[to_additive]
 theorem finprod_eq_single (f : α → M) (a : α) (ha : ∀ x, x ≠ a → f x = 1) :
     ∏ᶠ x, f x = f a := by
-  have : mulSupport (f ∘ PLift.down) ⊆ ({PLift.up a} : Finset (PLift α)) := by
-    intro x
-    contrapose
-    simpa [PLift.eq_up_iff_down_eq] using ha x.down
+  have  : mulSupport (f ∘ PLift.down) ⊆ ({PLift.up a} : Finset (PLift α))
+  intro x
+  contrapose
+  simpa [PLift.eq_up_iff_down_eq] using ha x.down
   rw [finprod_eq_prod_plift_of_mulSupport_subset this, Finset.prod_singleton]
 
 @[to_additive]
@@ -327,12 +327,12 @@ theorem finprod_mem_def (s : Set α) (f : α → M) : ∏ᶠ a ∈ s, f a = ∏�
 @[to_additive]
 theorem finprod_eq_prod_of_mulSupport_subset (f : α → M) {s : Finset α} (h : mulSupport f ⊆ s) :
     ∏ᶠ i, f i = ∏ i ∈ s, f i := by
-  have A : mulSupport (f ∘ PLift.down) = Equiv.plift.symm '' mulSupport f := by
-    rw [mulSupport_comp_eq_preimage]
-    exact (Equiv.plift.symm.image_eq_preimage _).symm
-  have : mulSupport (f ∘ PLift.down) ⊆ s.map Equiv.plift.symm.toEmbedding := by
-    rw [A, Finset.coe_map]
-    exact image_subset _ h
+  have A  : mulSupport (f ∘ PLift.down) = Equiv.plift.symm '' mulSupport f
+  rw [mulSupport_comp_eq_preimage]
+  exact (Equiv.plift.symm.image_eq_preimage _).symm
+  have  : mulSupport (f ∘ PLift.down) ⊆ s.map Equiv.plift.symm.toEmbedding
+  rw [A, Finset.coe_map]
+  exact image_subset _ h
   rw [finprod_eq_prod_plift_of_mulSupport_subset this]
   simp only [Finset.prod_map, Equiv.coe_toEmbedding]
   congr
@@ -374,10 +374,10 @@ theorem finprod_eq_prod_of_fintype [Fintype α] (f : α → M) : ∏ᶠ i : α, 
 theorem finprod_cond_eq_prod_of_cond_iff (f : α → M) {p : α → Prop} {t : Finset α}
     (h : ∀ {x}, f x ≠ 1 → (p x ↔ x ∈ t)) : (∏ᶠ (i) (_ : p i), f i) = ∏ i ∈ t, f i := by
   set s := { x | p x }
-  have : mulSupport (s.mulIndicator f) ⊆ t := by
-    rw [Set.mulSupport_mulIndicator]
-    intro x hx
-    exact (h hx.2).1 hx.1
+  have  : mulSupport (s.mulIndicator f) ⊆ t
+  rw [Set.mulSupport_mulIndicator]
+  intro x hx
+  exact (h hx.2).1 hx.1
   erw [finprod_mem_def, finprod_eq_prod_of_mulSupport_subset _ this]
   refine Finset.prod_congr rfl fun x hx => mulIndicator_apply_eq_self.2 fun hxs => ?_
   contrapose! hxs
@@ -923,10 +923,10 @@ theorem mul_finprod_cond_ne (a : α) (hf : (mulSupport f).Finite) :
     (f a * ∏ᶠ (i) (_ : i ≠ a), f i) = ∏ᶠ i, f i := by
   classical
     rw [finprod_eq_prod _ hf]
-    have h : ∀ x : α, f x ≠ 1 → (x ≠ a ↔ x ∈ hf.toFinset \ {a}) := by
-      intro x hx
-      rw [Finset.mem_sdiff, Finset.mem_singleton, Finite.mem_toFinset, mem_mulSupport]
-      exact ⟨fun h => And.intro hx h, fun h => h.2⟩
+    have h  : ∀ x : α, f x ≠ 1 → (x ≠ a ↔ x ∈ hf.toFinset \ {a})
+    intro x hx
+    rw [Finset.mem_sdiff, Finset.mem_singleton, Finite.mem_toFinset, mem_mulSupport]
+    exact ⟨fun h => And.intro hx h, fun h => h.2⟩
     rw [finprod_cond_eq_prod_of_cond_iff f (fun hx => h _ hx), Finset.sdiff_singleton_eq_erase]
     by_cases ha : a ∈ mulSupport f
     · apply Finset.mul_prod_erase _ _ ((Finite.mem_toFinset _).mpr ha)
@@ -1057,8 +1057,10 @@ theorem finprod_mem_finset_product₃ {γ : Type*} (s : Finset (α × β × γ))
 @[to_additive]
 theorem finprod_curry (f : α × β → M) (hf : (mulSupport f).Finite) :
     ∏ᶠ ab, f ab = ∏ᶠ (a) (b), f (a, b) := by
-  have h₁ : ∀ a, ∏ᶠ _ : a ∈ hf.toFinset, f a = f a := by simp
-  have h₂ : ∏ᶠ a, f a = ∏ᶠ (a) (_ : a ∈ hf.toFinset), f a := by simp
+  have h₁  : ∀ a, ∏ᶠ _ : a ∈ hf.toFinset, f a = f a
+  simp
+  have h₂  : ∏ᶠ a, f a = ∏ᶠ (a) (_ : a ∈ hf.toFinset), f a
+  simp
   simp_rw [h₂, finprod_mem_finset_product, h₁]
 
 @[to_additive]

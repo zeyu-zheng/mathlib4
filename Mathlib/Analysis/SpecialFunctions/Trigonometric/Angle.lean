@@ -189,7 +189,8 @@ theorem neg_ne_self_iff {θ : Angle} : -θ ≠ θ ↔ θ ≠ 0 ∧ θ ≠ π := 
   rw [← not_or, ← neg_eq_self_iff.not]
 
 theorem two_nsmul_eq_pi_iff {θ : Angle} : (2 : ℕ) • θ = π ↔ θ = (π / 2 : ℝ) ∨ θ = (-π / 2 : ℝ) := by
-  have h : (π : Angle) = ((2 : ℕ) • (π / 2 : ℝ):) := by rw [two_nsmul, add_halves]
+  have h  : (π : Angle) = ((2 : ℕ) • (π / 2 : ℝ):)
+  rw [two_nsmul, add_halves]
   nth_rw 1 [h]
   rw [coe_nsmul, two_nsmul_eq_iff]
   -- Porting note: `congr` didn't simplify the goal of iff of `Or`s
@@ -240,9 +241,9 @@ theorem sin_eq_iff_coe_eq_or_add_eq_pi {θ ψ : ℝ} :
     rintro (⟨k, H⟩ | ⟨k, H⟩)
     · rw [← sub_eq_zero, sin_sub_sin, H, mul_assoc 2 π k, mul_div_cancel_left₀ _ (two_ne_zero' ℝ),
         mul_comm π _, sin_int_mul_pi, mul_zero, zero_mul]
-    have H' : θ + ψ = 2 * k * π + π := by
-      rwa [← sub_add, sub_add_eq_add_sub, sub_eq_iff_eq_add, mul_assoc, mul_comm π _, ←
-        mul_assoc] at H
+    have H'  : θ + ψ = 2 * k * π + π
+    rwa [← sub_add, sub_add_eq_add_sub, sub_eq_iff_eq_add, mul_assoc, mul_comm π _, ←
+      mul_assoc] at H
     rw [← sub_eq_zero, sin_sub_sin, H', add_div, mul_assoc 2 _ π,
       mul_div_cancel_left₀ _ (two_ne_zero' ℝ), cos_add_pi_div_two, sin_int_mul_pi, neg_zero,
       mul_zero]
@@ -834,7 +835,8 @@ theorem sign_two_nsmul_eq_sign_iff {θ : Angle} :
   refine ⟨fun h => ?_, fun h => ?_⟩
   · by_contra hle
     rw [not_lt, le_abs, le_neg] at hle
-    have hpi' : θ.toReal ≠ π := by simpa using hpi
+    have hpi'  : θ.toReal ≠ π
+    simpa using hpi
     rcases hle with (hle | hle) <;> rcases hle.eq_or_lt with (heq | hlt)
     · rw [← coe_toReal θ, ← heq] at h
       simp at h

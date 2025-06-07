@@ -1576,7 +1576,8 @@ lemma antitone_div_right_of_nonpos {b : EReal} (h : b ≤ 0) : Antitone fun a �
   change a' * b⁻¹ ≤ a * b⁻¹
   rw [← neg_neg (a * b⁻¹), ← neg_neg (a' * b⁻¹), neg_le_neg_iff, mul_comm a b⁻¹, mul_comm a' b⁻¹,
     ← neg_mul b⁻¹ a, ← neg_mul b⁻¹ a', mul_comm (-b⁻¹) a, mul_comm (-b⁻¹) a', ← inv_neg b]
-  have : 0 ≤ -b := by apply le_neg_of_le_neg; simp [h]
+  have  : 0 ≤ -b
+  apply le_neg_of_le_neg; simp [h]
   exact div_le_div_right_of_nonneg this h'
 
 lemma div_le_div_right_of_nonpos {a a' b : EReal} (h : b ≤ 0) (h' : a ≤ a') :

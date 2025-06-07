@@ -50,9 +50,9 @@ theorem fg_trans (h1 : (adjoin R s).toSubmodule.FG) (h2 : (adjoin (adjoin R s) t
         rw [← hp']
         exact subset_span hx
       exact adjoin_mono Set.subset_union_left this
-    have : y ∈ Subalgebra.toSubmodule (adjoin (adjoin R s) t) := by
-      rw [← hq']
-      exact subset_span hy
+    have  : y ∈ Subalgebra.toSubmodule (adjoin (adjoin R s) t)
+    rw [← hq']
+    exact subset_span hy
     change y ∈ adjoin R (s ∪ t)
     rwa [adjoin_union_eq_adjoin_adjoin]
   · intro r hr

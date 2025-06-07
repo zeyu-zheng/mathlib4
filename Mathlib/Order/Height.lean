@@ -290,12 +290,12 @@ theorem chainHeight_union_le : (s ∪ t).chainHeight ≤ s.chainHeight + t.chain
     refine iSup₂_le fun l hl ↦ ?_
     let l₁ := l.filter (· ∈ s)
     let l₂ := l.filter (· ∈ t)
-    have hl₁ : ↑l₁.length ≤ s.chainHeight := by
-      apply Set.length_le_chainHeight_of_mem_subchain
-      exact ⟨hl.1.sublist (filter_sublist _), fun i h ↦ by simpa using (of_mem_filter h : _)⟩
-    have hl₂ : ↑l₂.length ≤ t.chainHeight := by
-      apply Set.length_le_chainHeight_of_mem_subchain
-      exact ⟨hl.1.sublist (filter_sublist _), fun i h ↦ by simpa using (of_mem_filter h : _)⟩
+    have hl₁  : ↑l₁.length ≤ s.chainHeight
+    apply Set.length_le_chainHeight_of_mem_subchain
+    exact ⟨hl.1.sublist (filter_sublist _), fun i h ↦ by simpa using (of_mem_filter h : _)⟩
+    have hl₂  : ↑l₂.length ≤ t.chainHeight
+    apply Set.length_le_chainHeight_of_mem_subchain
+    exact ⟨hl.1.sublist (filter_sublist _), fun i h ↦ by simpa using (of_mem_filter h : _)⟩
     refine le_trans ?_ (add_le_add hl₁ hl₂)
     simp_rw [l₁, l₂, ← Nat.cast_add, ← Multiset.coe_card, ← Multiset.card_add,
       ← Multiset.filter_coe]

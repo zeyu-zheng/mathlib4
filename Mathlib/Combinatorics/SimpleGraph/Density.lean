@@ -165,7 +165,8 @@ theorem card_interedges_finpartition [DecidableEq α] [DecidableEq β] (P : Finp
 theorem mul_edgeDensity_le_edgeDensity (hs : s₂ ⊆ s₁) (ht : t₂ ⊆ t₁) (hs₂ : s₂.Nonempty)
     (ht₂ : t₂.Nonempty) :
     (s₂.card : ℚ) / s₁.card * (t₂.card / t₁.card) * edgeDensity r s₂ t₂ ≤ edgeDensity r s₁ t₁ := by
-  have hst : (s₂.card : ℚ) * t₂.card ≠ 0 := by simp [hs₂.ne_empty, ht₂.ne_empty]
+  have hst  : (s₂.card : ℚ) * t₂.card ≠ 0
+  simp [hs₂.ne_empty, ht₂.ne_empty]
   rw [edgeDensity, edgeDensity, div_mul_div_comm, mul_comm, div_mul_div_cancel _ hst]
   gcongr
   exact interedges_mono hs ht
@@ -195,10 +196,10 @@ theorem abs_edgeDensity_sub_edgeDensity_le_two_mul_sub_sq (hs : s₂ ⊆ s₁) (
     (hδ₀ : 0 ≤ δ) (hδ₁ : δ < 1) (hs₂ : (1 - δ) * s₁.card ≤ s₂.card)
     (ht₂ : (1 - δ) * t₁.card ≤ t₂.card) :
     |(edgeDensity r s₂ t₂ : 𝕜) - edgeDensity r s₁ t₁| ≤ 2 * δ - δ ^ 2 := by
-  have hδ' : 0 ≤ 2 * δ - δ ^ 2 := by
-    rw [sub_nonneg, sq]
-    gcongr
-    exact hδ₁.le.trans (by norm_num)
+  have hδ'  : 0 ≤ 2 * δ - δ ^ 2
+  rw [sub_nonneg, sq]
+  gcongr
+  exact hδ₁.le.trans (by norm_num)
   rw [← sub_pos] at hδ₁
   obtain rfl | hs₂' := s₂.eq_empty_or_nonempty
   · rw [Finset.card_empty, Nat.cast_zero] at hs₂
@@ -206,7 +207,8 @@ theorem abs_edgeDensity_sub_edgeDensity_le_two_mul_sub_sq (hs : s₂ ⊆ s₁) (
   obtain rfl | ht₂' := t₂.eq_empty_or_nonempty
   · rw [Finset.card_empty, Nat.cast_zero] at ht₂
     simpa [edgeDensity, (nonpos_of_mul_nonpos_right ht₂ hδ₁).antisymm (Nat.cast_nonneg _)] using hδ'
-  have hr : 2 * δ - δ ^ 2 = 1 - (1 - δ) * (1 - δ) := by ring
+  have hr  : 2 * δ - δ ^ 2 = 1 - (1 - δ) * (1 - δ)
+  ring
   rw [hr]
   norm_cast
   refine
@@ -334,10 +336,10 @@ theorem interedges_biUnion (s : Finset ι) (t : Finset κ) (f : ι → Finset α
 theorem card_interedges_add_card_interedges_compl (h : Disjoint s t) :
     (G.interedges s t).card + (Gᶜ.interedges s t).card = s.card * t.card := by
   rw [← card_product, interedges_def, interedges_def]
-  have : ((s ×ˢ t).filter fun e ↦ Gᶜ.Adj e.1 e.2) = (s ×ˢ t).filter fun e ↦ ¬G.Adj e.1 e.2 := by
-    refine filter_congr fun x hx ↦ ?_
-    rw [mem_product] at hx
-    rw [compl_adj, and_iff_right (h.forall_ne_finset hx.1 hx.2)]
+  have  : ((s ×ˢ t).filter fun e ↦ Gᶜ.Adj e.1 e.2) = (s ×ˢ t).filter fun e ↦ ¬G.Adj e.1 e.2
+  refine filter_congr fun x hx ↦ ?_
+  rw [mem_product] at hx
+  rw [compl_adj, and_iff_right (h.forall_ne_finset hx.1 hx.2)]
   rw [this, ← card_union_of_disjoint, filter_union_filter_neg_eq]
   exact disjoint_filter.2 fun _ _ ↦ Classical.not_not.2
 

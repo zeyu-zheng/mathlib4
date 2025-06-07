@@ -461,17 +461,17 @@ theorem piecewise_bij {β : Type*} {f : ι → α → β}
     (hf : ∀ i, BijOn (f i) (s i) (t i)) :
     Bijective (piecewise hs f) := by
   set g := piecewise hs f with hg
-  have hg_bij : ∀ i, BijOn g (s i) (t i) := by
-    intro i
-    refine BijOn.congr (hf i) ?_
-    intro x hx
-    rw [hg, piecewise_apply, hs.mem_iff_index_eq.mp hx]
-  have hg_inj : InjOn g (⋃ i, s i) := by
-    refine injOn_of_injective ?_
-    refine piecewise_inj hs (fun i ↦ BijOn.injOn (hf i)) ?h_disjoint
-    simp only [fun i ↦ BijOn.image_eq (hf i)]
-    rintro i - j - hij
-    exact ht.disjoint hij
+  have hg_bij  : ∀ i, BijOn g (s i) (t i)
+  intro i
+  refine BijOn.congr (hf i) ?_
+  intro x hx
+  rw [hg, piecewise_apply, hs.mem_iff_index_eq.mp hx]
+  have hg_inj  : InjOn g (⋃ i, s i)
+  refine injOn_of_injective ?_
+  refine piecewise_inj hs (fun i ↦ BijOn.injOn (hf i)) ?h_disjoint
+  simp only [fun i ↦ BijOn.image_eq (hf i)]
+  rintro i - j - hij
+  exact ht.disjoint hij
   rw [bijective_iff_bijOn_univ, ← hs.iUnion, ← ht.iUnion]
   exact bijOn_iUnion hg_bij hg_inj
 

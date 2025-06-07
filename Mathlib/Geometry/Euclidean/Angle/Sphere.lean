@@ -30,10 +30,10 @@ variable [Fact (finrank ℝ V = 2)] (o : Orientation ℝ V (Fin 2))
 form. -/
 theorem oangle_eq_two_zsmul_oangle_sub_of_norm_eq {x y z : V} (hxyne : x ≠ y) (hxzne : x ≠ z)
     (hxy : ‖x‖ = ‖y‖) (hxz : ‖x‖ = ‖z‖) : o.oangle y z = (2 : ℤ) • o.oangle (y - x) (z - x) := by
-  have hy : y ≠ 0 := by
-    rintro rfl
-    rw [norm_zero, norm_eq_zero] at hxy
-    exact hxyne hxy
+  have hy  : y ≠ 0
+  rintro rfl
+  rw [norm_zero, norm_eq_zero] at hxy
+  exact hxyne hxy
   have hx : x ≠ 0 := norm_ne_zero_iff.1 (hxy.symm ▸ norm_ne_zero_iff.2 hy)
   have hz : z ≠ 0 := norm_ne_zero_iff.1 (hxz ▸ norm_ne_zero_iff.2 hx)
   calc
@@ -307,14 +307,17 @@ theorem mem_circumsphere_of_two_zsmul_oangle_eq {t : Triangle ℝ P} {p : P} {i�
     (h : (2 : ℤ) • ∡ (t.points i₁) p (t.points i₃) =
       (2 : ℤ) • ∡ (t.points i₁) (t.points i₂) (t.points i₃)) : p ∈ t.circumsphere := by
   let t'p : Fin 3 → P := Function.update t.points i₂ p
-  have h₁ : t'p i₁ = t.points i₁ := by simp [t'p, h₁₂]
-  have h₂ : t'p i₂ = p := by simp [t'p]
-  have h₃ : t'p i₃ = t.points i₃ := by simp [t'p, h₂₃.symm]
-  have ha : AffineIndependent ℝ t'p := by
-    rw [affineIndependent_iff_not_collinear_of_ne h₁₂ h₁₃ h₂₃, h₁, h₂, h₃,
-      collinear_iff_of_two_zsmul_oangle_eq h, ←
-      affineIndependent_iff_not_collinear_of_ne h₁₂ h₁₃ h₂₃]
-    exact t.independent
+  have h₁  : t'p i₁ = t.points i₁
+  simp [t'p, h₁₂]
+  have h₂  : t'p i₂ = p
+  simp [t'p]
+  have h₃  : t'p i₃ = t.points i₃
+  simp [t'p, h₂₃.symm]
+  have ha  : AffineIndependent ℝ t'p
+  rw [affineIndependent_iff_not_collinear_of_ne h₁₂ h₁₃ h₂₃, h₁, h₂, h₃,
+    collinear_iff_of_two_zsmul_oangle_eq h, ←
+    affineIndependent_iff_not_collinear_of_ne h₁₂ h₁₃ h₂₃]
+  exact t.independent
   let t' : Triangle ℝ P := ⟨t'p, ha⟩
   have h₁' : t'.points i₁ = t.points i₁ := h₁
   have h₂' : t'.points i₂ = p := h₂
@@ -341,8 +344,8 @@ add to π", for oriented angles mod π. -/
 theorem cospherical_of_two_zsmul_oangle_eq_of_not_collinear {p₁ p₂ p₃ p₄ : P}
     (h : (2 : ℤ) • ∡ p₁ p₂ p₄ = (2 : ℤ) • ∡ p₁ p₃ p₄) (hn : ¬Collinear ℝ ({p₁, p₂, p₄} : Set P)) :
     Cospherical ({p₁, p₂, p₃, p₄} : Set P) := by
-  have hn' : ¬Collinear ℝ ({p₁, p₃, p₄} : Set P) := by
-    rwa [← collinear_iff_of_two_zsmul_oangle_eq h]
+  have hn'  : ¬Collinear ℝ ({p₁, p₃, p₄} : Set P)
+  rwa [← collinear_iff_of_two_zsmul_oangle_eq h]
   let t₁ : Affine.Triangle ℝ P := ⟨![p₁, p₂, p₄], affineIndependent_iff_not_collinear_set.2 hn⟩
   let t₂ : Affine.Triangle ℝ P := ⟨![p₁, p₃, p₄], affineIndependent_iff_not_collinear_set.2 hn'⟩
   rw [cospherical_iff_exists_sphere]
@@ -377,8 +380,8 @@ theorem cospherical_or_collinear_of_two_zsmul_oangle_eq {p₁ p₂ p₃ p₄ : P
       refine ⟨t.circumsphere, ?_⟩
       simp_rw [Set.insert_subset_iff, Set.singleton_subset_iff]
       exact ⟨t.mem_circumsphere 0, t.mem_circumsphere 1, t.mem_circumsphere 2⟩
-    have hc' : Collinear ℝ ({p₁, p₃, p₄} : Set P) := by
-      rwa [← collinear_iff_of_two_zsmul_oangle_eq h]
+    have hc'  : Collinear ℝ ({p₁, p₃, p₄} : Set P)
+    rwa [← collinear_iff_of_two_zsmul_oangle_eq h]
     refine Or.inr ?_
     rw [Set.insert_comm p₁ p₂] at hc
     rwa [Set.insert_comm p₁ p₂, hc'.collinear_insert_iff_of_ne (Set.mem_insert _ _)

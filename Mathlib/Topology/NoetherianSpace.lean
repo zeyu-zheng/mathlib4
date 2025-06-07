@@ -208,7 +208,8 @@ theorem NoetherianSpace.exists_open_ne_empty_le_irreducibleComponent [Noetherian
 
   let ι : Set (Set α) := irreducibleComponents α \ {Z}
   have hι : ι.Finite := NoetherianSpace.finite_irreducibleComponents.subset Set.diff_subset
-  have hι' : Finite ι := by rwa [Set.finite_coe_iff]
+  have hι'  : Finite ι
+  rwa [Set.finite_coe_iff]
 
   let U := Z \ ⋃ (x : ι), x
   have hU0 : U ≠ ∅ := fun r ↦ by
@@ -223,23 +224,23 @@ theorem NoetherianSpace.exists_open_ne_empty_le_irreducibleComponent [Noetherian
     simp only [Set.Finite.mem_toFinset, Set.mem_diff, Set.mem_singleton_iff] at hZ'
     exact hZ'.1.2 <| le_antisymm (H.2 hZ'.1.1.1 hZ'.2) hZ'.2
 
-  have hU1 : U = (⋃ (x : ι), x.1) ᶜ := by
-    rw [Set.compl_eq_univ_diff]
-    refine le_antisymm (Set.diff_subset_diff le_top <| subset_refl _) ?_
-    rw [← Set.compl_eq_univ_diff]
-    refine Set.compl_subset_iff_union.mpr (le_antisymm le_top ?_)
-    rw [Set.union_comm, ← Set.sUnion_eq_iUnion, ← Set.sUnion_insert]
-    rintro a -
-    by_cases h : a ∈ U
-    · exact ⟨U, Set.mem_insert _ _, h⟩
-    · rw [Set.mem_diff, Decidable.not_and_iff_or_not_not, not_not, Set.mem_iUnion] at h
-      rcases h with (h|⟨i, hi⟩)
-      · refine ⟨irreducibleComponent a, Or.inr ?_, mem_irreducibleComponent⟩
-        simp only [ι, Set.mem_diff, Set.mem_singleton_iff]
-        refine ⟨irreducibleComponent_mem_irreducibleComponents _, ?_⟩
-        rintro rfl
-        exact h mem_irreducibleComponent
-      · exact ⟨i, Or.inr i.2, hi⟩
+  have hU1  : U = (⋃ (x : ι), x.1) ᶜ
+  rw [Set.compl_eq_univ_diff]
+  refine le_antisymm (Set.diff_subset_diff le_top <| subset_refl _) ?_
+  rw [← Set.compl_eq_univ_diff]
+  refine Set.compl_subset_iff_union.mpr (le_antisymm le_top ?_)
+  rw [Set.union_comm, ← Set.sUnion_eq_iUnion, ← Set.sUnion_insert]
+  rintro a -
+  by_cases h : a ∈ U
+  · exact ⟨U, Set.mem_insert _ _, h⟩
+  · rw [Set.mem_diff, Decidable.not_and_iff_or_not_not, not_not, Set.mem_iUnion] at h
+    rcases h with (h|⟨i, hi⟩)
+    · refine ⟨irreducibleComponent a, Or.inr ?_, mem_irreducibleComponent⟩
+      simp only [ι, Set.mem_diff, Set.mem_singleton_iff]
+      refine ⟨irreducibleComponent_mem_irreducibleComponents _, ?_⟩
+      rintro rfl
+      exact h mem_irreducibleComponent
+    · exact ⟨i, Or.inr i.2, hi⟩
 
   refine ⟨U, hU1 ▸ isOpen_compl_iff.mpr ?_, hU0, sdiff_le⟩
   exact isClosed_iUnion_of_finite fun i ↦ isClosed_of_mem_irreducibleComponents i.1 i.2.1

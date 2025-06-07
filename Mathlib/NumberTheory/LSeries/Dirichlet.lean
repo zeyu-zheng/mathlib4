@@ -66,7 +66,8 @@ lemma not_LSeriesSummable_moebius_at_one : ¬ LSeriesSummable ↗μ 1 := by
 lemma LSeriesSummable_moebius_iff {s : ℂ} : LSeriesSummable ↗μ s ↔ 1 < s.re := by
   refine ⟨fun H ↦ ?_, LSeriesSummable_of_bounded_of_one_lt_re (m := 1) fun n _ ↦ ?_⟩
   · by_contra! h
-    have h' : s.re ≤ (1 : ℂ).re := by simp only [one_re, h]
+    have h'  : s.re ≤ (1 : ℂ).re
+    simp only [one_re, h]
     exact not_LSeriesSummable_moebius_at_one <| LSeriesSummable.of_re_le_re h' H
   · rw [abs_intCast] -- not done by `norm_cast`
     norm_cast
@@ -128,9 +129,9 @@ open ArithmeticFunction in
 /-- The convolution of a Dirichlet character `χ` with the twist `χ * μ` is `δ`,
 the indicator function of `{1}`. -/
 lemma convolution_mul_moebius {n : ℕ} (χ : DirichletCharacter ℂ n) : ↗χ ⍟ (↗χ * ↗μ) = δ := by
-  have : (1 : ℕ → ℂ) ⍟ (μ ·) = δ := by
-    rw [one_convolution_eq_zeta_convolution, ← one_eq_delta]
-    simp_rw [← natCoe_apply, ← intCoe_apply, coe_mul, coe_zeta_mul_coe_moebius]
+  have  : (1 : ℕ → ℂ) ⍟ (μ ·) = δ
+  rw [one_convolution_eq_zeta_convolution, ← one_eq_delta]
+  simp_rw [← natCoe_apply, ← intCoe_apply, coe_mul, coe_zeta_mul_coe_moebius]
   nth_rewrite 1 [← mul_one ↗χ]
   simpa only [mul_convolution_distrib χ 1 ↗μ, this] using mul_delta _
 
@@ -341,10 +342,10 @@ lemma LSeriesSummable_vonMangoldt {s : ℂ} (hs : 1 < s.re) : LSeriesSummable �
     (show abscissaOfAbsConv 1 < s.re by rw [abscissaOfAbsConv_one]; exact_mod_cast hs)
   rw [LSeriesSummable, ← summable_norm_iff] at hf ⊢
   refine Summable.of_nonneg_of_le (fun _ ↦ norm_nonneg _) (fun n ↦ norm_term_le s ?_) hf
-  have hΛ : ‖↗Λ n‖ ≤ ‖Complex.log n‖ := by
-    simp only [norm_eq_abs, abs_ofReal, _root_.abs_of_nonneg vonMangoldt_nonneg,
-      ← Complex.natCast_log, _root_.abs_of_nonneg <| Real.log_natCast_nonneg n]
-    exact ArithmeticFunction.vonMangoldt_le_log
+  have hΛ  : ‖↗Λ n‖ ≤ ‖Complex.log n‖
+  simp only [norm_eq_abs, abs_ofReal, _root_.abs_of_nonneg vonMangoldt_nonneg,
+    ← Complex.natCast_log, _root_.abs_of_nonneg <| Real.log_natCast_nonneg n]
+  exact ArithmeticFunction.vonMangoldt_le_log
   exact hΛ.trans <| by simp only [norm_eq_abs, norm_mul, Pi.one_apply, norm_one, mul_one, le_refl]
 
 end ArithmeticFunction
@@ -373,8 +374,8 @@ lemma LSeries_twist_vonMangoldt_eq {N : ℕ} (χ : DirichletCharacter ℂ N) {s 
       using deriv_const s 1
   -- now `N ≠ 0`
   have hχ : LSeriesSummable ↗χ s := (LSeriesSummable_iff hN χ).mpr hs
-  have hs' : abscissaOfAbsConv ↗χ < s.re := by
-    rwa [absicssaOfAbsConv_eq_one hN, ← EReal.coe_one, EReal.coe_lt_coe_iff]
+  have hs'  : abscissaOfAbsConv ↗χ < s.re
+  rwa [absicssaOfAbsConv_eq_one hN, ← EReal.coe_one, EReal.coe_lt_coe_iff]
   have hΛ : LSeriesSummable (↗χ * ↗Λ) s := LSeriesSummable_twist_vonMangoldt χ hs
   rw [eq_div_iff <| LSeries_ne_zero_of_one_lt_re χ hs, ← LSeries_convolution' hΛ hχ,
     convolution_twist_vonMangoldt, LSeries_deriv hs', neg_neg]

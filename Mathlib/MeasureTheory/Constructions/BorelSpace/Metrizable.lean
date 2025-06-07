@@ -33,15 +33,15 @@ theorem measurable_of_tendsto_metrizable' {ι} {f : ι → α → β} {g : α �
   letI : PseudoMetricSpace β := pseudoMetrizableSpacePseudoMetric β
   apply measurable_of_isClosed'
   intro s h1s h2s h3s
-  have : Measurable fun x => infNndist (g x) s := by
-    suffices Tendsto (fun i x => infNndist (f i x) s) u (𝓝 fun x => infNndist (g x) s) from
-      NNReal.measurable_of_tendsto' u (fun i => (hf i).infNndist) this
-    rw [tendsto_pi_nhds] at lim ⊢
-    intro x
-    exact ((continuous_infNndist_pt s).tendsto (g x)).comp (lim x)
-  have h4s : g ⁻¹' s = (fun x => infNndist (g x) s) ⁻¹' {0} := by
-    ext x
-    simp [h1s, ← h1s.mem_iff_infDist_zero h2s, ← NNReal.coe_eq_zero]
+  have  : Measurable fun x => infNndist (g x) s
+  suffices Tendsto (fun i x => infNndist (f i x) s) u (𝓝 fun x => infNndist (g x) s) from
+    NNReal.measurable_of_tendsto' u (fun i => (hf i).infNndist) this
+  rw [tendsto_pi_nhds] at lim ⊢
+  intro x
+  exact ((continuous_infNndist_pt s).tendsto (g x)).comp (lim x)
+  have h4s  : g ⁻¹' s = (fun x => infNndist (g x) s) ⁻¹' {0}
+  ext x
+  simp [h1s, ← h1s.mem_iff_infDist_zero h2s, ← NNReal.coe_eq_zero]
   rw [h4s]
   exact this (measurableSet_singleton 0)
 
@@ -57,8 +57,8 @@ theorem aemeasurable_of_tendsto_metrizable_ae {ι} {μ : Measure α} {f : ι →
   rcases u.exists_seq_tendsto with ⟨v, hv⟩
   have h'f : ∀ n, AEMeasurable (f (v n)) μ := fun n => hf (v n)
   set p : α → (ℕ → β) → Prop := fun x f' => Tendsto (fun n => f' n) atTop (𝓝 (g x))
-  have hp : ∀ᵐ x ∂μ, p x fun n => f (v n) x := by
-    filter_upwards [h_tendsto] with x hx using hx.comp hv
+  have hp  : ∀ᵐ x ∂μ, p x fun n => f (v n) x
+  filter_upwards [h_tendsto] with x hx using hx.comp hv
   set aeSeqLim := fun x => ite (x ∈ aeSeqSet h'f p) (g x) (⟨f (v 0) x⟩ : Nonempty β).some
   refine
     ⟨aeSeqLim,

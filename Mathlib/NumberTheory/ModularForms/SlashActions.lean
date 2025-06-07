@@ -102,7 +102,8 @@ private theorem slash_mul (k : ℤ) (A B : GL(2, ℝ)⁺) (f : ℍ → ℂ) :
     f ∣[k](A * B) = (f ∣[k]A) ∣[k]B := by
   ext1 x
   simp_rw [slash, UpperHalfPlane.denom_cocycle A B x]
-  have e3 : (A * B) • x = A • B • x := by convert UpperHalfPlane.mul_smul' A B x
+  have e3  : (A * B) • x = A • B • x
+  convert UpperHalfPlane.mul_smul' A B x
   rw [e3]
   simp only [UpperHalfPlane.num, UpperHalfPlane.denom, ofReal_mul, Subgroup.coe_mul,
     UpperHalfPlane.coe_smul, Units.val_mul, Matrix.det_mul,
@@ -199,16 +200,16 @@ theorem mul_slash (k1 k2 : ℤ) (A : GL(2, ℝ)⁺) (f g : ℍ → ℂ) :
   simp only [slash_def, slash, Matrix.GeneralLinearGroup.val_det_apply,
     Pi.mul_apply, Pi.smul_apply, Algebra.smul_mul_assoc, real_smul]
   set d : ℂ := ↑((↑ₘA).det : ℝ)
-  have h1 : d ^ (k1 + k2 - 1) = d * d ^ (k1 - 1) * d ^ (k2 - 1) := by
-    have : d ≠ 0 := by
-      dsimp [d]
-      norm_cast
-      exact Matrix.GLPos.det_ne_zero A
-    rw [← zpow_one_add₀ this, ← zpow_add₀ this]
-    congr; ring
-  have h22 : denom A x ^ (-(k1 + k2)) = denom A x ^ (-k1) * denom A x ^ (-k2) := by
-    rw [Int.neg_add, zpow_add₀]
-    exact UpperHalfPlane.denom_ne_zero A x
+  have h1  : d ^ (k1 + k2 - 1) = d * d ^ (k1 - 1) * d ^ (k2 - 1)
+  have  : d ≠ 0
+  dsimp [d]
+  norm_cast
+  exact Matrix.GLPos.det_ne_zero A
+  rw [← zpow_one_add₀ this, ← zpow_add₀ this]
+  congr; ring
+  have h22  : denom A x ^ (-(k1 + k2)) = denom A x ^ (-k1) * denom A x ^ (-k2)
+  rw [Int.neg_add, zpow_add₀]
+  exact UpperHalfPlane.denom_ne_zero A x
   rw [h1, h22]
   ring
 

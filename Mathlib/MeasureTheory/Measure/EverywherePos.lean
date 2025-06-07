@@ -65,11 +65,11 @@ lemma exists_isOpen_everywherePosSubset_eq_diff (μ : Measure α) (s : Set α) :
   intro x ⟨n, ns, hx⟩
   rcases mem_nhdsWithin_iff_exists_mem_nhds_inter.1 ns with ⟨v, vx, hv⟩
   rcases mem_nhds_iff.1 vx with ⟨w, wv, w_open, xw⟩
-  have A : w ⊆ {x | ∃ n ∈ 𝓝[s] x, μ n = 0} := by
-    intro y yw
-    refine ⟨s ∩ w, inter_mem_nhdsWithin _ (w_open.mem_nhds yw), measure_mono_null ?_ hx⟩
-    rw [inter_comm]
-    exact (inter_subset_inter_left _ wv).trans hv
+  have A  : w ⊆ {x | ∃ n ∈ 𝓝[s] x, μ n = 0}
+  intro y yw
+  refine ⟨s ∩ w, inter_mem_nhdsWithin _ (w_open.mem_nhds yw), measure_mono_null ?_ hx⟩
+  rw [inter_comm]
+  exact (inter_subset_inter_left _ wv).trans hv
   have B : w ∈ 𝓝 x := w_open.mem_nhds xw
   exact mem_of_superset B A
 
@@ -137,9 +137,10 @@ lemma isEverywherePos_everywherePosSubset
     μ.IsEverywherePos (μ.everywherePosSubset s) := by
   intro x hx n hn
   rcases mem_nhdsWithin_iff_exists_mem_nhds_inter.1 hn with ⟨u, u_mem, hu⟩
-  have A : 0 < μ (u ∩ s) := by
-    have : u ∩ s ∈ 𝓝[s] x := by rw [inter_comm]; exact inter_mem_nhdsWithin s u_mem
-    exact hx.2 _ this
+  have A  : 0 < μ (u ∩ s)
+  have  : u ∩ s ∈ 𝓝[s] x
+  rw [inter_comm]; exact inter_mem_nhdsWithin s u_mem
+  exact hx.2 _ this
   have B : (u ∩ μ.everywherePosSubset s : Set α) =ᵐ[μ] (u ∩ s : Set α) :=
     ae_eq_set_inter (ae_eq_refl _) (everywherePosSubset_ae_eq hs)
   rw [← B.measure_eq] at A
@@ -155,9 +156,10 @@ lemma isEverywherePos_everywherePosSubset_of_measure_ne_top
     μ.IsEverywherePos (μ.everywherePosSubset s) := by
   intro x hx n hn
   rcases mem_nhdsWithin_iff_exists_mem_nhds_inter.1 hn with ⟨u, u_mem, hu⟩
-  have A : 0 < μ (u ∩ s) := by
-    have : u ∩ s ∈ 𝓝[s] x := by rw [inter_comm]; exact inter_mem_nhdsWithin s u_mem
-    exact hx.2 _ this
+  have A  : 0 < μ (u ∩ s)
+  have  : u ∩ s ∈ 𝓝[s] x
+  rw [inter_comm]; exact inter_mem_nhdsWithin s u_mem
+  exact hx.2 _ this
   have B : (u ∩ μ.everywherePosSubset s : Set α) =ᵐ[μ] (u ∩ s : Set α) :=
     ae_eq_set_inter (ae_eq_refl _) (everywherePosSubset_ae_eq_of_measure_ne_top hs h's)
   rw [← B.measure_eq] at A

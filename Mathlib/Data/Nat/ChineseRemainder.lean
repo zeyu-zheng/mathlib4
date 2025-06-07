@@ -97,11 +97,11 @@ theorem chineseRemainderOfList_modEq_unique (l : List ι)
   induction' l with i l ih
   · simp [modEq_one]
   · simp only [List.map_cons, List.prod_cons, chineseRemainderOfList]
-    have : Coprime (s i) (l.map s).prod := by
-      simp only [coprime_list_prod_right_iff, List.mem_map, forall_exists_index, and_imp,
-        forall_apply_eq_imp_iff₂]
-      intro j hj
-      exact (List.pairwise_cons.mp co).1 j hj
+    have  : Coprime (s i) (l.map s).prod
+    simp only [coprime_list_prod_right_iff, List.mem_map, forall_exists_index, and_imp,
+      forall_apply_eq_imp_iff₂]
+    intro j hj
+    exact (List.pairwise_cons.mp co).1 j hj
     exact chineseRemainder_modEq_unique this
       (hz i (List.mem_cons_self _ _)) (ih co.of_cons (fun j hj => hz j (List.mem_cons_of_mem _ hj)))
 

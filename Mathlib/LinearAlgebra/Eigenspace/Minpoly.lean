@@ -72,14 +72,14 @@ theorem hasEigenvalue_of_isRoot (h : (minpoly K f).IsRoot μ) : f.HasEigenvalue 
   rw [HasEigenvalue, eigenspace]
   intro con
   cases' (LinearMap.isUnit_iff_ker_eq_bot _).2 con with u hu
-  have p_ne_0 : p ≠ 0 := by
-    intro con
-    apply minpoly.ne_zero (Algebra.IsIntegral.isIntegral (R := K) f)
-    rw [hp, con, mul_zero]
-  have : (aeval f) p = 0 := by
-    have h_aeval := minpoly.aeval K f
-    revert h_aeval
-    simp [hp, ← hu]
+  have p_ne_0  : p ≠ 0
+  intro con
+  apply minpoly.ne_zero (Algebra.IsIntegral.isIntegral (R := K) f)
+  rw [hp, con, mul_zero]
+  have  : (aeval f) p = 0
+  have h_aeval := minpoly.aeval K f
+  revert h_aeval
+  simp [hp, ← hu]
   have h_deg := minpoly.degree_le_of_ne_zero K f p_ne_0 this
   rw [hp, degree_mul, degree_X_sub_C, Polynomial.degree_eq_natDegree p_ne_0] at h_deg
   norm_cast at h_deg

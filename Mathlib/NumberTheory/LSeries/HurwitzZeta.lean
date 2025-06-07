@@ -172,10 +172,10 @@ lemma hurwitzZeta_one_sub (a : UnitAddCircle) {s : ℂ}
 lemma expZeta_one_sub (a : UnitAddCircle) {s : ℂ} (hs : ∀ (n : ℕ), s ≠ 1 - n) :
     expZeta a (1 - s) = (2 * π) ^ (-s) * Gamma s *
     (exp (π * I * s / 2) * hurwitzZeta a s + exp (-π * I * s / 2) * hurwitzZeta (-a) s) := by
-  have hs' (n : ℕ) : s ≠ -↑n := by
-    convert hs (n + 1) using 1
-    push_cast
-    ring
+  have hs' (n  : ℕ) : s ≠ -↑n
+  convert hs (n + 1) using 1
+  push_cast
+  ring
   rw [expZeta, cosZeta_one_sub a hs, sinZeta_one_sub a hs', hurwitzZeta, hurwitzZeta,
     hurwitzZetaEven_neg, hurwitzZetaOdd_neg, Complex.cos, Complex.sin]
   rw [show ↑π * I * s / 2 = ↑π * s / 2 * I by ring,

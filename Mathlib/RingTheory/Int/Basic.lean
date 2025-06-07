@@ -56,9 +56,9 @@ theorem gcd_ne_one_iff_gcd_mul_right_ne_one {a : ℤ} {m n : ℕ} :
 
 theorem sq_of_gcd_eq_one {a b c : ℤ} (h : Int.gcd a b = 1) (heq : a * b = c ^ 2) :
     ∃ a0 : ℤ, a = a0 ^ 2 ∨ a = -a0 ^ 2 := by
-  have h' : IsUnit (GCDMonoid.gcd a b) := by
-    rw [← coe_gcd, h, Int.ofNat_one]
-    exact isUnit_one
+  have h'  : IsUnit (GCDMonoid.gcd a b)
+  rw [← coe_gcd, h, Int.ofNat_one]
+  exact isUnit_one
   obtain ⟨d, ⟨u, hu⟩⟩ := exists_associated_pow_of_mul_eq_pow h' heq
   use d
   rw [← hu]

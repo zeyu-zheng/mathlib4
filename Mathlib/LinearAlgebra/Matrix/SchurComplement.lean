@@ -473,9 +473,9 @@ theorem schur_complement_eq₂₂ [Fintype m] [Fintype n] [DecidableEq n] (A : M
 theorem IsHermitian.fromBlocks₁₁ [Fintype m] [DecidableEq m] {A : Matrix m m 𝕜} (B : Matrix m n 𝕜)
     (D : Matrix n n 𝕜) (hA : A.IsHermitian) :
     (Matrix.fromBlocks A B Bᴴ D).IsHermitian ↔ (D - Bᴴ * A⁻¹ * B).IsHermitian := by
-  have hBAB : (Bᴴ * A⁻¹ * B).IsHermitian := by
-    apply isHermitian_conjTranspose_mul_mul
-    apply hA.inv
+  have hBAB  : (Bᴴ * A⁻¹ * B).IsHermitian
+  apply isHermitian_conjTranspose_mul_mul
+  apply hA.inv
   rw [isHermitian_fromBlocks_iff]
   constructor
   · intro h

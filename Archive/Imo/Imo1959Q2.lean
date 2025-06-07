@@ -66,8 +66,10 @@ theorem isGood_iff_eq_sqrt_two (hx : x ∈ Icc (1 / 2) 1) : IsGood x A ↔ A = s
   positivity
 
 theorem isGood_iff_eq_sqrt (hx : 1 < x) : IsGood x A ↔ A = sqrt (4 * x - 2) := by
-  have h₁ : 1 < sqrt (2 * x - 1) := by simpa only [← not_le, sqrt_two_mul_sub_one_le_one] using hx
-  have h₂ : 1 / 2 ≤ x := by linarith
+  have h₁  : 1 < sqrt (2 * x - 1)
+  simpa only [← not_le, sqrt_two_mul_sub_one_le_one] using hx
+  have h₂  : 1 / 2 ≤ x
+  linarith
   simp only [isGood_iff, h₂, abs_of_pos (sub_pos.2 h₁), add_add_sub_cancel, and_true]
   rw [← mul_two, ← div_eq_iff (by positivity), mul_div_assoc, div_sqrt, ← sqrt_mul' _ zero_le_two,
     eq_comm]
@@ -93,7 +95,8 @@ theorem isGood_iff_of_sqrt_two_lt (hA : sqrt 2 < A) : IsGood x A ↔ x = (A / 2)
   have : 0 < A := lt_trans (by simp) hA
   constructor
   · intro h
-    have hx : 1 < x := by rwa [h.sqrt_two_lt_iff_one_lt] at hA
+    have hx  : 1 < x
+    rwa [h.sqrt_two_lt_iff_one_lt] at hA
     rw [isGood_iff_eq_sqrt hx, eq_comm, sqrt_eq_iff_sq_eq] at h <;> linarith
   · rintro rfl
     rw [isGood_iff_eq_sqrt]

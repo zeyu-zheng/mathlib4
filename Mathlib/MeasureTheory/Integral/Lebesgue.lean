@@ -169,10 +169,10 @@ theorem exists_measurable_le_lintegral_eq (f : α → ℝ≥0∞) :
   rcases eq_or_ne (∫⁻ a, f a ∂μ) 0 with h₀ | h₀
   · exact ⟨0, measurable_zero, zero_le f, h₀.trans lintegral_zero.symm⟩
   rcases exists_seq_strictMono_tendsto' h₀.bot_lt with ⟨L, _, hLf, hL_tendsto⟩
-  have : ∀ n, ∃ g : α → ℝ≥0∞, Measurable g ∧ g ≤ f ∧ L n < ∫⁻ a, g a ∂μ := by
-    intro n
-    simpa only [← iSup_lintegral_measurable_le_eq_lintegral f, lt_iSup_iff, exists_prop] using
-      (hLf n).2
+  have  : ∀ n, ∃ g : α → ℝ≥0∞, Measurable g ∧ g ≤ f ∧ L n < ∫⁻ a, g a ∂μ
+  intro n
+  simpa only [← iSup_lintegral_measurable_le_eq_lintegral f, lt_iSup_iff, exists_prop] using
+    (hLf n).2
   choose g hgm hgf hLg using this
   refine
     ⟨fun x => ⨆ n, g n x, measurable_iSup hgm, fun x => iSup_le fun n => hgf n x, le_antisymm ?_ ?_⟩
@@ -359,28 +359,29 @@ theorem lintegral_iSup {f : ℕ → α → ℝ≥0∞} (hf : ∀ n, Measurable (
   have ha : r < 1 := ENNReal.coe_lt_coe.1 ha
   let rs := s.map fun a => r * a
   have eq_rs : rs.map c = (const α r : α →ₛ ℝ≥0∞) * map c s := rfl
-  have eq : ∀ p, rs.map c ⁻¹' {p} = ⋃ n, rs.map c ⁻¹' {p} ∩ { a | p ≤ f n a } := by
-    intro p
-    rw [← inter_iUnion]; nth_rw 1 [← inter_univ (map c rs ⁻¹' {p})]
-    refine Set.ext fun x => and_congr_right fun hx => true_iff_iff.2 ?_
-    by_cases p_eq : p = 0
-    · simp [p_eq]
-    simp only [coe_map, mem_preimage, Function.comp_apply, mem_singleton_iff] at hx
-    subst hx
-    have : r * s x ≠ 0 := by rwa [Ne, ← ENNReal.coe_eq_zero]
-    have : s x ≠ 0 := right_ne_zero_of_mul this
-    have : (rs.map c) x < ⨆ n : ℕ, f n x := by
-      refine lt_of_lt_of_le (ENNReal.coe_lt_coe.2 ?_) (hsf x)
-      suffices r * s x < 1 * s x by simpa
-      exact mul_lt_mul_of_pos_right ha (pos_iff_ne_zero.2 this)
-    rcases lt_iSup_iff.1 this with ⟨i, hi⟩
-    exact mem_iUnion.2 ⟨i, le_of_lt hi⟩
-  have mono : ∀ r : ℝ≥0∞, Monotone fun n => rs.map c ⁻¹' {r} ∩ { a | r ≤ f n a } := by
-    intro r i j h
-    refine inter_subset_inter_right _ ?_
-    simp_rw [subset_def, mem_setOf]
-    intro x hx
-    exact le_trans hx (h_mono h x)
+  have eq  : ∀ p, rs.map c ⁻¹' {p} = ⋃ n, rs.map c ⁻¹' {p} ∩ { a | p ≤ f n a }
+  intro p
+  rw [← inter_iUnion]; nth_rw 1 [← inter_univ (map c rs ⁻¹' {p})]
+  refine Set.ext fun x => and_congr_right fun hx => true_iff_iff.2 ?_
+  by_cases p_eq : p = 0
+  · simp [p_eq]
+  simp only [coe_map, mem_preimage, Function.comp_apply, mem_singleton_iff] at hx
+  subst hx
+  have  : r * s x ≠ 0
+  rwa [Ne, ← ENNReal.coe_eq_zero]
+  have : s x ≠ 0 := right_ne_zero_of_mul this
+  have  : (rs.map c) x < ⨆ n : ℕ, f n x
+  refine lt_of_lt_of_le (ENNReal.coe_lt_coe.2 ?_) (hsf x)
+  suffices r * s x < 1 * s x by simpa
+  exact mul_lt_mul_of_pos_right ha (pos_iff_ne_zero.2 this)
+  rcases lt_iSup_iff.1 this with ⟨i, hi⟩
+  exact mem_iUnion.2 ⟨i, le_of_lt hi⟩
+  have mono  : ∀ r : ℝ≥0∞, Monotone fun n => rs.map c ⁻¹' {r} ∩ { a | r ≤ f n a }
+  intro r i j h
+  refine inter_subset_inter_right _ ?_
+  simp_rw [subset_def, mem_setOf]
+  intro x hx
+  exact le_trans hx (h_mono h x)
   have h_meas : ∀ n, MeasurableSet {a : α | map c rs a ≤ f n a} := fun n =>
     measurableSet_le (SimpleFunc.measurable _) (hf n)
   calc
@@ -416,11 +417,11 @@ theorem lintegral_iSup' {f : ℕ → α → ℝ≥0∞} (hf : ∀ n, AEMeasurabl
   simp_rw [← iSup_apply]
   let p : α → (ℕ → ℝ≥0∞) → Prop := fun _ f' => Monotone f'
   have hp : ∀ᵐ x ∂μ, p x fun i => f i x := h_mono
-  have h_ae_seq_mono : Monotone (aeSeq hf p) := by
-    intro n m hnm x
-    by_cases hx : x ∈ aeSeqSet hf p
-    · exact aeSeq.prop_of_mem_aeSeqSet hf hx hnm
-    · simp only [aeSeq, hx, if_false, le_rfl]
+  have h_ae_seq_mono  : Monotone (aeSeq hf p)
+  intro n m hnm x
+  by_cases hx : x ∈ aeSeqSet hf p
+  · exact aeSeq.prop_of_mem_aeSeqSet hf hx hnm
+  · simp only [aeSeq, hx, if_false, le_rfl]
   rw [lintegral_congr_ae (aeSeq.iSup hf hp).symm]
   simp_rw [iSup_apply]
   rw [lintegral_iSup (aeSeq.measurable hf p) h_ae_seq_mono]
@@ -707,9 +708,9 @@ theorem lintegral_const_mul' (r : ℝ≥0∞) (f : α → ℝ≥0∞) (hr : r �
   · simp [h]
   apply le_antisymm _ (lintegral_const_mul_le r f)
   have rinv : r * r⁻¹ = 1 := ENNReal.mul_inv_cancel h hr
-  have rinv' : r⁻¹ * r = 1 := by
-    rw [mul_comm]
-    exact rinv
+  have rinv'  : r⁻¹ * r = 1
+  rw [mul_comm]
+  exact rinv
   have := lintegral_const_mul_le (μ := μ) r⁻¹ fun x => r * f x
   simp? [(mul_assoc _ _ _).symm, rinv'] at this says
     simp only [(mul_assoc _ _ _).symm, rinv', one_mul] at this
@@ -896,13 +897,13 @@ theorem meas_ge_le_lintegral_div {f : α → ℝ≥0∞} (hf : AEMeasurable f μ
 
 theorem ae_eq_of_ae_le_of_lintegral_le {f g : α → ℝ≥0∞} (hfg : f ≤ᵐ[μ] g) (hf : ∫⁻ x, f x ∂μ ≠ ∞)
     (hg : AEMeasurable g μ) (hgf : ∫⁻ x, g x ∂μ ≤ ∫⁻ x, f x ∂μ) : f =ᵐ[μ] g := by
-  have : ∀ n : ℕ, ∀ᵐ x ∂μ, g x < f x + (n : ℝ≥0∞)⁻¹ := by
-    intro n
-    simp only [ae_iff, not_lt]
-    have : ∫⁻ x, f x ∂μ + (↑n)⁻¹ * μ { x : α | f x + (n : ℝ≥0∞)⁻¹ ≤ g x } ≤ ∫⁻ x, f x ∂μ :=
-      (lintegral_add_mul_meas_add_le_le_lintegral hfg hg n⁻¹).trans hgf
-    rw [(ENNReal.cancel_of_ne hf).add_le_iff_nonpos_right, nonpos_iff_eq_zero, mul_eq_zero] at this
-    exact this.resolve_left (ENNReal.inv_ne_zero.2 (ENNReal.natCast_ne_top _))
+  have  : ∀ n : ℕ, ∀ᵐ x ∂μ, g x < f x + (n : ℝ≥0∞)⁻¹
+  intro n
+  simp only [ae_iff, not_lt]
+  have : ∫⁻ x, f x ∂μ + (↑n)⁻¹ * μ { x : α | f x + (n : ℝ≥0∞)⁻¹ ≤ g x } ≤ ∫⁻ x, f x ∂μ :=
+    (lintegral_add_mul_meas_add_le_le_lintegral hfg hg n⁻¹).trans hgf
+  rw [(ENNReal.cancel_of_ne hf).add_le_iff_nonpos_right, nonpos_iff_eq_zero, mul_eq_zero] at this
+  exact this.resolve_left (ENNReal.inv_ne_zero.2 (ENNReal.natCast_ne_top _))
   refine hfg.mp ((ae_all_iff.2 this).mono fun x hlt hle => hle.antisymm ?_)
   suffices Tendsto (fun n : ℕ => f x + (n : ℝ≥0∞)⁻¹) atTop (𝓝 (f x)) from
     ge_of_tendsto' this fun i => (hlt i).le
@@ -1044,12 +1045,12 @@ theorem lintegral_iInf' {f : ℕ → α → ℝ≥0∞} (h_meas : ∀ n, AEMeasu
   simp_rw [← iInf_apply]
   let p : α → (ℕ → ℝ≥0∞) → Prop := fun _ f' => Antitone f'
   have hp : ∀ᵐ x ∂μ, p x fun i => f i x := h_anti
-  have h_ae_seq_mono : Antitone (aeSeq h_meas p) := by
-    intro n m hnm x
-    by_cases hx : x ∈ aeSeqSet h_meas p
-    · exact aeSeq.prop_of_mem_aeSeqSet h_meas hx hnm
-    · simp only [aeSeq, hx, if_false]
-      exact le_rfl
+  have h_ae_seq_mono  : Antitone (aeSeq h_meas p)
+  intro n m hnm x
+  by_cases hx : x ∈ aeSeqSet h_meas p
+  · exact aeSeq.prop_of_mem_aeSeqSet h_meas hx hnm
+  · simp only [aeSeq, hx, if_false]
+    exact le_rfl
   rw [lintegral_congr_ae (aeSeq.iInf h_meas hp).symm]
   simp_rw [iInf_apply]
   rw [lintegral_iInf (aeSeq.measurable h_meas p) h_ae_seq_mono]
@@ -1067,11 +1068,11 @@ theorem lintegral_iInf_directed_of_measurable {mα : MeasurableSpace α} [Counta
   · simp only [iInf_of_empty, lintegral_const,
       ENNReal.top_mul (Measure.measure_univ_ne_zero.mpr hμ)]
   inhabit β
-  have : ∀ a, ⨅ b, f b a = ⨅ n, f (h_directed.sequence f n) a := by
-    refine fun a =>
-      le_antisymm (le_iInf fun n => iInf_le _ _)
-        (le_iInf fun b => iInf_le_of_le (Encodable.encode b + 1) ?_)
-    exact h_directed.sequence_le b a
+  have  : ∀ a, ⨅ b, f b a = ⨅ n, f (h_directed.sequence f n) a
+  refine fun a =>
+    le_antisymm (le_iInf fun n => iInf_le _ _)
+      (le_iInf fun b => iInf_le_of_le (Encodable.encode b + 1) ?_)
+  exact h_directed.sequence_le b a
   -- Porting note: used `∘` below to deal with its reduced reducibility
   calc
     ∫⁻ a, ⨅ b, f b a ∂μ
@@ -1214,10 +1215,10 @@ theorem lintegral_iSup_directed_of_measurable [Countable β] {f : β → α → 
   cases isEmpty_or_nonempty β
   · simp [iSup_of_empty]
   inhabit β
-  have : ∀ a, ⨆ b, f b a = ⨆ n, f (h_directed.sequence f n) a := by
-    intro a
-    refine le_antisymm (iSup_le fun b => ?_) (iSup_le fun n => le_iSup (fun n => f n a) _)
-    exact le_iSup_of_le (encode b + 1) (h_directed.le_sequence b a)
+  have  : ∀ a, ⨆ b, f b a = ⨆ n, f (h_directed.sequence f n) a
+  intro a
+  refine le_antisymm (iSup_le fun b => ?_) (iSup_le fun n => le_iSup (fun n => f n a) _)
+  exact le_iSup_of_le (encode b + 1) (h_directed.le_sequence b a)
   calc
     ∫⁻ a, ⨆ b, f b a ∂μ = ∫⁻ a, ⨆ n, f (h_directed.sequence f n) a ∂μ := by simp only [this]
     _ = ⨆ n, ∫⁻ a, f (h_directed.sequence f n) a ∂μ :=
@@ -1232,20 +1233,20 @@ theorem lintegral_iSup_directed [Countable β] {f : β → α → ℝ≥0∞} (h
     (h_directed : Directed (· ≤ ·) f) : ∫⁻ a, ⨆ b, f b a ∂μ = ⨆ b, ∫⁻ a, f b a ∂μ := by
   simp_rw [← iSup_apply]
   let p : α → (β → ENNReal) → Prop := fun x f' => Directed LE.le f'
-  have hp : ∀ᵐ x ∂μ, p x fun i => f i x := by
-    filter_upwards [] with x i j
-    obtain ⟨z, hz₁, hz₂⟩ := h_directed i j
-    exact ⟨z, hz₁ x, hz₂ x⟩
-  have h_ae_seq_directed : Directed LE.le (aeSeq hf p) := by
-    intro b₁ b₂
-    obtain ⟨z, hz₁, hz₂⟩ := h_directed b₁ b₂
-    refine ⟨z, ?_, ?_⟩ <;>
-      · intro x
-        by_cases hx : x ∈ aeSeqSet hf p
-        · repeat rw [aeSeq.aeSeq_eq_fun_of_mem_aeSeqSet hf hx]
-          apply_rules [hz₁, hz₂]
-        · simp only [aeSeq, hx, if_false]
-          exact le_rfl
+  have hp  : ∀ᵐ x ∂μ, p x fun i => f i x
+  filter_upwards [] with x i j
+  obtain ⟨z, hz₁, hz₂⟩ := h_directed i j
+  exact ⟨z, hz₁ x, hz₂ x⟩
+  have h_ae_seq_directed  : Directed LE.le (aeSeq hf p)
+  intro b₁ b₂
+  obtain ⟨z, hz₁, hz₂⟩ := h_directed b₁ b₂
+  refine ⟨z, ?_, ?_⟩ <;>
+    · intro x
+      by_cases hx : x ∈ aeSeqSet hf p
+      · repeat rw [aeSeq.aeSeq_eq_fun_of_mem_aeSeqSet hf hx]
+        apply_rules [hz₁, hz₂]
+      · simp only [aeSeq, hx, if_false]
+        exact le_rfl
   convert lintegral_iSup_directed_of_measurable (aeSeq.measurable hf p) h_ae_seq_directed using 1
   · simp_rw [← iSup_apply]
     rw [lintegral_congr_ae (aeSeq.iSup hf hp).symm]
@@ -1689,30 +1690,30 @@ lemma tendsto_of_lintegral_tendsto_of_monotone_aux {α : Type*} {mα : Measurabl
     (hf_mono : ∀ᵐ a ∂μ, Monotone (fun i ↦ f i a))
     (h_bound : ∀ᵐ a ∂μ, ∀ i, f i a ≤ F a) (h_int_finite : ∫⁻ a, F a ∂μ ≠ ∞) :
     ∀ᵐ a ∂μ, Tendsto (fun i ↦ f i a) atTop (𝓝 (F a)) := by
-  have h_bound_finite : ∀ᵐ a ∂μ, F a ≠ ∞ := by
-    filter_upwards [ae_lt_top' hF_meas h_int_finite] with a ha using ha.ne
-  have h_exists : ∀ᵐ a ∂μ, ∃ l, Tendsto (fun i ↦ f i a) atTop (𝓝 l) := by
-    filter_upwards [h_bound, h_bound_finite, hf_mono] with a h_le h_fin h_mono
-    have h_tendsto : Tendsto (fun i ↦ f i a) atTop atTop ∨
-        ∃ l, Tendsto (fun i ↦ f i a) atTop (𝓝 l) := tendsto_of_monotone h_mono
-    cases' h_tendsto with h_absurd h_tendsto
-    · rw [tendsto_atTop_atTop_iff_of_monotone h_mono] at h_absurd
-      obtain ⟨i, hi⟩ := h_absurd (F a + 1)
-      refine absurd (hi.trans (h_le _)) (not_le.mpr ?_)
-      exact ENNReal.lt_add_right h_fin one_ne_zero
-    · exact h_tendsto
+  have h_bound_finite  : ∀ᵐ a ∂μ, F a ≠ ∞
+  filter_upwards [ae_lt_top' hF_meas h_int_finite] with a ha using ha.ne
+  have h_exists  : ∀ᵐ a ∂μ, ∃ l, Tendsto (fun i ↦ f i a) atTop (𝓝 l)
+  filter_upwards [h_bound, h_bound_finite, hf_mono] with a h_le h_fin h_mono
+  have h_tendsto : Tendsto (fun i ↦ f i a) atTop atTop ∨
+      ∃ l, Tendsto (fun i ↦ f i a) atTop (𝓝 l) := tendsto_of_monotone h_mono
+  cases' h_tendsto with h_absurd h_tendsto
+  · rw [tendsto_atTop_atTop_iff_of_monotone h_mono] at h_absurd
+    obtain ⟨i, hi⟩ := h_absurd (F a + 1)
+    refine absurd (hi.trans (h_le _)) (not_le.mpr ?_)
+    exact ENNReal.lt_add_right h_fin one_ne_zero
+  · exact h_tendsto
   classical
   let F' : α → ℝ≥0∞ := fun a ↦ if h : ∃ l, Tendsto (fun i ↦ f i a) atTop (𝓝 l)
     then h.choose else ∞
-  have hF'_tendsto : ∀ᵐ a ∂μ, Tendsto (fun i ↦ f i a) atTop (𝓝 (F' a)) := by
-    filter_upwards [h_exists] with a ha
-    simp_rw [F', dif_pos ha]
-    exact ha.choose_spec
+  have hF'_tendsto  : ∀ᵐ a ∂μ, Tendsto (fun i ↦ f i a) atTop (𝓝 (F' a))
+  filter_upwards [h_exists] with a ha
+  simp_rw [F', dif_pos ha]
+  exact ha.choose_spec
   suffices F' =ᵐ[μ] F by
     filter_upwards [this, hF'_tendsto] with a h_eq h_tendsto using h_eq ▸ h_tendsto
-  have hF'_le : F' ≤ᵐ[μ] F := by
-    filter_upwards [h_bound, hF'_tendsto] with a h_le h_tendsto
-    exact le_of_tendsto' h_tendsto (fun m ↦ h_le _)
+  have hF'_le  : F' ≤ᵐ[μ] F
+  filter_upwards [h_bound, hF'_tendsto] with a h_le h_tendsto
+  exact le_of_tendsto' h_tendsto (fun m ↦ h_le _)
   suffices ∫⁻ a, F' a ∂μ = ∫⁻ a, F a ∂μ from
     ae_eq_of_ae_le_of_lintegral_le hF'_le (this ▸ h_int_finite) hF_meas this.symm.le
   refine tendsto_nhds_unique ?_ hf_tendsto
@@ -1770,28 +1771,28 @@ lemma tendsto_of_lintegral_tendsto_of_antitone {α : Type*} {mα : MeasurableSpa
     (hf_mono : ∀ᵐ a ∂μ, Antitone (fun i ↦ f i a))
     (h_bound : ∀ᵐ a ∂μ, ∀ i, F a ≤ f i a) (h0 : ∫⁻ a, f 0 a ∂μ ≠ ∞) :
     ∀ᵐ a ∂μ, Tendsto (fun i ↦ f i a) atTop (𝓝 (F a)) := by
-  have h_int_finite : ∫⁻ a, F a ∂μ ≠ ∞ := by
-    refine ((lintegral_mono_ae ?_).trans_lt h0.lt_top).ne
-    filter_upwards [h_bound] with a ha using ha 0
-  have h_exists : ∀ᵐ a ∂μ, ∃ l, Tendsto (fun i ↦ f i a) atTop (𝓝 l) := by
-    filter_upwards [hf_mono] with a h_mono
-    rcases _root_.tendsto_of_antitone h_mono with h | h
-    · refine ⟨0, h.mono_right ?_⟩
-      rw [OrderBot.atBot_eq]
-      exact pure_le_nhds _
-    · exact h
+  have h_int_finite  : ∫⁻ a, F a ∂μ ≠ ∞
+  refine ((lintegral_mono_ae ?_).trans_lt h0.lt_top).ne
+  filter_upwards [h_bound] with a ha using ha 0
+  have h_exists  : ∀ᵐ a ∂μ, ∃ l, Tendsto (fun i ↦ f i a) atTop (𝓝 l)
+  filter_upwards [hf_mono] with a h_mono
+  rcases _root_.tendsto_of_antitone h_mono with h | h
+  · refine ⟨0, h.mono_right ?_⟩
+    rw [OrderBot.atBot_eq]
+    exact pure_le_nhds _
+  · exact h
   classical
   let F' : α → ℝ≥0∞ := fun a ↦ if h : ∃ l, Tendsto (fun i ↦ f i a) atTop (𝓝 l)
     then h.choose else ∞
-  have hF'_tendsto : ∀ᵐ a ∂μ, Tendsto (fun i ↦ f i a) atTop (𝓝 (F' a)) := by
-    filter_upwards [h_exists] with a ha
-    simp_rw [F', dif_pos ha]
-    exact ha.choose_spec
+  have hF'_tendsto  : ∀ᵐ a ∂μ, Tendsto (fun i ↦ f i a) atTop (𝓝 (F' a))
+  filter_upwards [h_exists] with a ha
+  simp_rw [F', dif_pos ha]
+  exact ha.choose_spec
   suffices F' =ᵐ[μ] F by
     filter_upwards [this, hF'_tendsto] with a h_eq h_tendsto using h_eq ▸ h_tendsto
-  have hF'_le : F ≤ᵐ[μ] F' := by
-    filter_upwards [h_bound, hF'_tendsto] with a h_le h_tendsto
-    exact ge_of_tendsto' h_tendsto (fun m ↦ h_le _)
+  have hF'_le  : F ≤ᵐ[μ] F'
+  filter_upwards [h_bound, hF'_tendsto] with a h_le h_tendsto
+  exact ge_of_tendsto' h_tendsto (fun m ↦ h_le _)
   suffices ∫⁻ a, F' a ∂μ = ∫⁻ a, F a ∂μ by
     refine (ae_eq_of_ae_le_of_lintegral_le hF'_le h_int_finite ?_ this.le).symm
     exact ENNReal.aemeasurable_of_tendsto hf_meas hF'_tendsto
@@ -1830,7 +1831,8 @@ theorem exists_measurable_le_forall_setLIntegral_eq [SFinite μ] (f : α → ℝ
   -- Let `φ` be the pointwise supremum of the functions $g_{n}$.
   -- Clearly, `φ` is a measurable function and `φ ≤ f`.
   set φ : α → ℝ≥0∞ := fun x ↦ ⨆ n, g n x
-  have hφm : Measurable φ := by measurability
+  have hφm  : Measurable φ
+  measurability
   have hφle : φ ≤ f := fun x ↦ iSup_le (hgf · x)
   refine ⟨φ, hφm, hφle, fun s ↦ ?_⟩
   -- Now we show the inequality between set integrals.
@@ -1929,7 +1931,8 @@ over the whole space is bounded by that same constant. -/
 theorem lintegral_le_of_forall_fin_meas_trim_le {μ : Measure α} (hm : m ≤ m0)
     [SigmaFinite (μ.trim hm)] (C : ℝ≥0∞) {f : α → ℝ≥0∞}
     (hf : ∀ s, MeasurableSet[m] s → μ s ≠ ∞ → ∫⁻ x in s, f x ∂μ ≤ C) : ∫⁻ x, f x ∂μ ≤ C := by
-  have : ∫⁻ x in univ, f x ∂μ = ∫⁻ x, f x ∂μ := by simp only [Measure.restrict_univ]
+  have  : ∫⁻ x in univ, f x ∂μ = ∫⁻ x, f x ∂μ
+  simp only [Measure.restrict_univ]
   rw [← this]
   refine univ_le_of_forall_fin_meas_le hm C hf fun S _ hS_mono => ?_
   rw [setLIntegral_iUnion_of_directed]
@@ -1954,13 +1957,13 @@ theorem SimpleFunc.exists_lt_lintegral_simpleFunc_of_lt_lintegral {m : Measurabl
   · simp only [hs, const_zero, coe_piecewise, coe_const, SimpleFunc.coe_zero, univ_inter,
       piecewise_eq_indicator, lintegral_indicator, lintegral_const, Measure.restrict_apply',
       ENNReal.coe_indicator, Function.const_apply] at hL
-    have c_ne_zero : c ≠ 0 := by
-      intro hc
-      simp only [hc, ENNReal.coe_zero, zero_mul, not_lt_zero] at hL
-    have : L / c < μ s := by
-      rwa [ENNReal.div_lt_iff, mul_comm]
-      · simp only [c_ne_zero, Ne, ENNReal.coe_eq_zero, not_false_iff, true_or_iff]
-      · simp only [Ne, coe_ne_top, not_false_iff, true_or_iff]
+    have c_ne_zero  : c ≠ 0
+    intro hc
+    simp only [hc, ENNReal.coe_zero, zero_mul, not_lt_zero] at hL
+    have  : L / c < μ s
+    rwa [ENNReal.div_lt_iff, mul_comm]
+    · simp only [c_ne_zero, Ne, ENNReal.coe_eq_zero, not_false_iff, true_or_iff]
+    · simp only [Ne, coe_ne_top, not_false_iff, true_or_iff]
     obtain ⟨t, ht, ts, mlt, t_top⟩ :
       ∃ t : Set α, MeasurableSet t ∧ t ⊆ s ∧ L / ↑c < μ t ∧ μ t < ∞ :=
       Measure.exists_subset_measure_lt_top hs this
@@ -2006,10 +2009,10 @@ theorem exists_lt_lintegral_simpleFunc_of_lt_lintegral {m : MeasurableSpace α} 
     ∃ g : α →ₛ ℝ≥0, (∀ x, g x ≤ f x) ∧ ∫⁻ x, g x ∂μ < ∞ ∧ L < ∫⁻ x, g x ∂μ := by
   simp_rw [lintegral_eq_nnreal, lt_iSup_iff] at hL
   rcases hL with ⟨g₀, hg₀, g₀L⟩
-  have h'L : L < ∫⁻ x, g₀ x ∂μ := by
-    convert g₀L
-    rw [← SimpleFunc.lintegral_eq_lintegral, coe_map]
-    simp only [Function.comp_apply]
+  have h'L  : L < ∫⁻ x, g₀ x ∂μ
+  convert g₀L
+  rw [← SimpleFunc.lintegral_eq_lintegral, coe_map]
+  simp only [Function.comp_apply]
   rcases SimpleFunc.exists_lt_lintegral_simpleFunc_of_lt_lintegral h'L with ⟨g, hg, gL, gtop⟩
   exact ⟨g, fun x => (hg x).trans (coe_le_coe.1 (hg₀ x)), gL, gtop⟩
 

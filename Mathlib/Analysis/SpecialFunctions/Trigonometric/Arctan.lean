@@ -50,7 +50,8 @@ theorem tan_int_mul_pi_div_two (n : ℤ) : tan (n * π / 2) = 0 :=
 
 theorem continuousOn_tan : ContinuousOn tan {x | cos x ≠ 0} := by
   suffices ContinuousOn (fun x => sin x / cos x) {x | cos x ≠ 0} by
-    have h_eq : (fun x => sin x / cos x) = tan := by ext1 x; rw [tan_eq_sin_div_cos]
+    have h_eq  : (fun x => sin x / cos x) = tan
+    ext1 x; rw [tan_eq_sin_div_cos]
     rwa [h_eq] at this
   exact continuousOn_sin.div continuousOn_cos fun x => id
 
@@ -72,7 +73,8 @@ theorem continuousOn_tan_Ioo : ContinuousOn tan (Ioo (-(π / 2)) (π / 2)) := by
     refine hx_gt ?_
     rw [hxr_eq, ← one_mul (π / 2), mul_div_assoc, ge_iff_le, neg_mul_eq_neg_mul,
       mul_le_mul_right (half_pos pi_pos)]
-    have hr_le : r ≤ -1 := by rwa [Int.lt_iff_add_one_le, ← le_neg_iff_add_nonpos_right] at h
+    have hr_le  : r ≤ -1
+    rwa [Int.lt_iff_add_one_le, ← le_neg_iff_add_nonpos_right] at h
     rw [← le_sub_iff_add_le, mul_comm, ← le_div_iff]
     · norm_num
       rw [← Int.cast_one, ← Int.cast_neg]; norm_cast
@@ -226,9 +228,9 @@ theorem arctan_add {x y : ℝ} (h : x * y < 1) :
 
 theorem arctan_add_eq_add_pi {x y : ℝ} (h : 1 < x * y) (hx : 0 < x) :
     arctan x + arctan y = arctan ((x + y) / (1 - x * y)) + π := by
-  have hy : 0 < y := by
-    have := mul_pos_iff.mp (zero_lt_one.trans h)
-    simpa [hx, hx.asymm]
+  have hy  : 0 < y
+  have := mul_pos_iff.mp (zero_lt_one.trans h)
+  simpa [hx, hx.asymm]
   have k := arctan_add (mul_inv x y ▸ inv_lt_one h)
   rw [arctan_inv_of_pos hx, arctan_inv_of_pos hy, show _ + _ = π - (arctan x + arctan y) by ring,
     sub_eq_iff_eq_add, ← sub_eq_iff_eq_add', sub_eq_add_neg, ← arctan_neg, add_comm] at k

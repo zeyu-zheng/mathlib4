@@ -107,9 +107,9 @@ theorem exists_one_le_pow_mul_dist {Z N R : Type*} [PseudoMetricSpace R] {d : N 
   by_cases dm1 : 1 ≤ dist α (j z a) * max (1 / ε) M
   · exact one_le_mul_of_one_le_of_one_le (d0 a) dm1
   · -- `j z a = z / (a + 1)`: we prove that this ratio is close to `α`
-    have : j z a ∈ closedBall α ε := by
-      refine mem_closedBall'.mp (le_trans ?_ ((one_div_le me0 e0).mpr (le_max_left _ _)))
-      exact (le_div_iff me0).mpr (not_le.mp dm1).le
+    have  : j z a ∈ closedBall α ε
+    refine mem_closedBall'.mp (le_trans ?_ ((one_div_le me0 e0).mpr (le_max_left _ _)))
+    exact (le_div_iff me0).mpr (not_le.mp dm1).le
     -- use the "separation from `1`" (assumption `L`) for numerators,
     refine (L this).trans ?_
     -- remove a common factor and use the Lipschitz assumption `B`

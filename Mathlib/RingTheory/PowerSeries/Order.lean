@@ -257,7 +257,8 @@ theorem order_eq_multiplicity_X {R : Type*} [Semiring R] [@DecidableRel R⟦X⟧
   · simp
   induction' ho : order φ using PartENat.casesOn with n
   · simp [hφ] at ho
-  have hn : φ.order.get (order_finite_iff_ne_zero.mpr hφ) = n := by simp [ho]
+  have hn  : φ.order.get (order_finite_iff_ne_zero.mpr hφ) = n
+  simp [ho]
   rw [← hn]
   refine
     le_antisymm (le_multiplicity_of_pow_dvd <| X_pow_order_dvd (order_finite_iff_ne_zero.mpr hφ))
@@ -339,17 +340,18 @@ theorem divided_by_X_pow_orderMul {f g : R⟦X⟧} (hf : f ≠ 0) (hg : g ≠ 0)
   set df := f.order.get (order_finite_iff_ne_zero.mpr hf)
   set dg := g.order.get (order_finite_iff_ne_zero.mpr hg)
   set dfg := (f * g).order.get (order_finite_iff_ne_zero.mpr (mul_ne_zero hf hg)) with hdfg
-  have H_add_d : df + dg = dfg := by simp_all only [PartENat.get_add, order_mul f g]
+  have H_add_d  : df + dg = dfg
+  simp_all only [PartENat.get_add, order_mul f g]
   have H := self_eq_X_pow_order_mul_divided_by_X_pow_order (mul_ne_zero hf hg)
-  have : f * g = X ^ dfg * (divided_by_X_pow_order hf * divided_by_X_pow_order hg) := by
-    calc
-      f * g = X ^ df * divided_by_X_pow_order hf * (X ^ dg * divided_by_X_pow_order hg) := by
-        rw [self_eq_X_pow_order_mul_divided_by_X_pow_order,
-          self_eq_X_pow_order_mul_divided_by_X_pow_order]
-      _ = X ^ df * X ^ dg * divided_by_X_pow_order hf * divided_by_X_pow_order hg := by ring
-      _ = X ^ (df + dg) * divided_by_X_pow_order hf * divided_by_X_pow_order hg := by rw [pow_add]
-      _ = X ^ dfg * divided_by_X_pow_order hf * divided_by_X_pow_order hg := by rw [H_add_d]
-      _ = X ^ dfg * (divided_by_X_pow_order hf * divided_by_X_pow_order hg) := by rw [mul_assoc]
+  have  : f * g = X ^ dfg * (divided_by_X_pow_order hf * divided_by_X_pow_order hg)
+  calc
+    f * g = X ^ df * divided_by_X_pow_order hf * (X ^ dg * divided_by_X_pow_order hg) := by
+      rw [self_eq_X_pow_order_mul_divided_by_X_pow_order,
+        self_eq_X_pow_order_mul_divided_by_X_pow_order]
+    _ = X ^ df * X ^ dg * divided_by_X_pow_order hf * divided_by_X_pow_order hg := by ring
+    _ = X ^ (df + dg) * divided_by_X_pow_order hf * divided_by_X_pow_order hg := by rw [pow_add]
+    _ = X ^ dfg * divided_by_X_pow_order hf * divided_by_X_pow_order hg := by rw [H_add_d]
+    _ = X ^ dfg * (divided_by_X_pow_order hf * divided_by_X_pow_order hg) := by rw [mul_assoc]
   simp [← hdfg, this] at H
   refine (IsLeftCancelMulZero.mul_left_cancel_of_ne_zero (pow_ne_zero dfg X_ne_zero) ?_).symm
   convert H

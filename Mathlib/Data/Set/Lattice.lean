@@ -1764,12 +1764,12 @@ lemma biUnion_compl_eq_of_pairwise_disjoint_of_iUnion_eq_univ {ι : Type*} {Es :
     (⋃ i ∈ I, Es i)ᶜ = ⋃ i ∈ Iᶜ, Es i := by
   ext x
   obtain ⟨i, hix⟩ : ∃ i, x ∈ Es i := by simp [← mem_iUnion, Es_union]
-  have obs : ∀ (J : Set ι), x ∈ ⋃ j ∈ J, Es j ↔ i ∈ J := by
-    refine fun J ↦ ⟨?_, fun i_in_J ↦ by simpa only [mem_iUnion, exists_prop] using ⟨i, i_in_J, hix⟩⟩
-    intro x_in_U
-    simp only [mem_iUnion, exists_prop] at x_in_U
-    obtain ⟨j, j_in_J, hjx⟩ := x_in_U
-    rwa [show i = j by by_contra i_ne_j; exact Disjoint.ne_of_mem (Es_disj i_ne_j) hix hjx rfl]
+  have obs  : ∀ (J : Set ι), x ∈ ⋃ j ∈ J, Es j ↔ i ∈ J
+  refine fun J ↦ ⟨?_, fun i_in_J ↦ by simpa only [mem_iUnion, exists_prop] using ⟨i, i_in_J, hix⟩⟩
+  intro x_in_U
+  simp only [mem_iUnion, exists_prop] at x_in_U
+  obtain ⟨j, j_in_J, hjx⟩ := x_in_U
+  rwa [show i = j by by_contra i_ne_j; exact Disjoint.ne_of_mem (Es_disj i_ne_j) hix hjx rfl]
   have obs' : ∀ (J : Set ι), x ∈ (⋃ j ∈ J, Es j)ᶜ ↔ i ∉ J :=
     fun J ↦ by simpa only [mem_compl_iff, not_iff_not] using obs J
   rw [obs, obs', mem_compl_iff]
@@ -1784,8 +1784,8 @@ namespace Set
 
 lemma nonempty_iInter_Iic_iff [Preorder α] {f : ι → α} :
     (⋂ i, Iic (f i)).Nonempty ↔ BddBelow (range f) := by
-  have : (⋂ (i : ι), Iic (f i)) = lowerBounds (range f) := by
-    ext c; simp [lowerBounds]
+  have  : (⋂ (i : ι), Iic (f i)) = lowerBounds (range f)
+  ext c; simp [lowerBounds]
   simp [this, BddBelow]
 
 lemma nonempty_iInter_Ici_iff [Preorder α] {f : ι → α} :

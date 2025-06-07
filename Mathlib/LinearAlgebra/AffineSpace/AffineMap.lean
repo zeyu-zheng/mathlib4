@@ -147,7 +147,8 @@ protected theorem congr_fun {f g : P1 →ᵃ[k] P2} (h : f = g) (x : P1) : f x =
 theorem ext_linear {f g : P1 →ᵃ[k] P2} (h₁ : f.linear = g.linear) {p : P1} (h₂ : f p = g p) :
     f = g := by
   ext q
-  have hgl : g.linear (q -ᵥ p) = toFun g ((q -ᵥ p) +ᵥ q) -ᵥ toFun g q := by simp
+  have hgl  : g.linear (q -ᵥ p) = toFun g ((q -ᵥ p) +ᵥ q) -ᵥ toFun g q
+  simp
   have := f.map_vadd' q (q -ᵥ p)
   rw [h₁, hgl, toFun_eq_coe, map_vadd, linearMap_vsub, h₂] at this
   simpa
@@ -415,18 +416,18 @@ def linearHom : (P1 →ᵃ[k] P1) →* V1 →ₗ[k] V1 where
 theorem linear_injective_iff (f : P1 →ᵃ[k] P2) :
     Function.Injective f.linear ↔ Function.Injective f := by
   obtain ⟨p⟩ := (inferInstance : Nonempty P1)
-  have h : ⇑f.linear = (Equiv.vaddConst (f p)).symm ∘ f ∘ Equiv.vaddConst p := by
-    ext v
-    simp [f.map_vadd, vadd_vsub_assoc]
+  have h  : ⇑f.linear = (Equiv.vaddConst (f p)).symm ∘ f ∘ Equiv.vaddConst p
+  ext v
+  simp [f.map_vadd, vadd_vsub_assoc]
   rw [h, Equiv.comp_injective, Equiv.injective_comp]
 
 @[simp]
 theorem linear_surjective_iff (f : P1 →ᵃ[k] P2) :
     Function.Surjective f.linear ↔ Function.Surjective f := by
   obtain ⟨p⟩ := (inferInstance : Nonempty P1)
-  have h : ⇑f.linear = (Equiv.vaddConst (f p)).symm ∘ f ∘ Equiv.vaddConst p := by
-    ext v
-    simp [f.map_vadd, vadd_vsub_assoc]
+  have h  : ⇑f.linear = (Equiv.vaddConst (f p)).symm ∘ f ∘ Equiv.vaddConst p
+  ext v
+  simp [f.map_vadd, vadd_vsub_assoc]
   rw [h, Equiv.comp_surjective, Equiv.surjective_comp]
 
 @[simp]
@@ -585,11 +586,11 @@ theorem decomp' (f : V1 →ᵃ[k] V2) : (f.linear : V1 → V2) = ⇑f - fun _ =>
 
 theorem image_uIcc {k : Type*} [LinearOrderedField k] (f : k →ᵃ[k] k) (a b : k) :
     f '' Set.uIcc a b = Set.uIcc (f a) (f b) := by
-  have : ⇑f = (fun x => x + f 0) ∘ fun x => x * (f 1 - f 0) := by
-    ext x
-    change f x = x • (f 1 -ᵥ f 0) +ᵥ f 0
-    rw [← f.linearMap_vsub, ← f.linear.map_smul, ← f.map_vadd]
-    simp only [vsub_eq_sub, add_zero, mul_one, vadd_eq_add, sub_zero, smul_eq_mul]
+  have  : ⇑f = (fun x => x + f 0) ∘ fun x => x * (f 1 - f 0)
+  ext x
+  change f x = x • (f 1 -ᵥ f 0) +ᵥ f 0
+  rw [← f.linearMap_vsub, ← f.linear.map_smul, ← f.map_vadd]
+  simp only [vsub_eq_sub, add_zero, mul_one, vadd_eq_add, sub_zero, smul_eq_mul]
   rw [this, Set.image_comp]
   simp only [Set.image_add_const_uIcc, Set.image_mul_const_uIcc, Function.comp_apply]
 

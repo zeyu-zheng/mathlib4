@@ -30,18 +30,18 @@ theorem tan_arctan {z : ℂ} (h₁ : z ≠ I) (h₂ : z ≠ -I) : tan (arctan z)
     -- multiply top and bottom by `exp (arctan z * I)`
     ← mul_div_mul_right _ _ (exp_ne_zero (arctan z * I)), sub_mul, add_mul,
     ← exp_add, neg_mul, add_left_neg, exp_zero, ← exp_add, ← two_mul]
-  have z₁ : 1 + z * I ≠ 0 := by
-    contrapose! h₁
-    rw [add_eq_zero_iff_neg_eq, ← div_eq_iff I_ne_zero, div_I, neg_one_mul, neg_neg] at h₁
-    exact h₁.symm
-  have z₂ : 1 - z * I ≠ 0 := by
-    contrapose! h₂
-    rw [sub_eq_zero, ← div_eq_iff I_ne_zero, div_I, one_mul] at h₂
-    exact h₂.symm
-  have key : exp (2 * (arctan z * I)) = (1 + z * I) / (1 - z * I) := by
-    rw [arctan, ← mul_rotate, ← mul_assoc,
-      show 2 * (I * (-I / 2)) = 1 by field_simp, one_mul, exp_log]
-    · exact div_ne_zero z₁ z₂
+  have z₁  : 1 + z * I ≠ 0
+  contrapose! h₁
+  rw [add_eq_zero_iff_neg_eq, ← div_eq_iff I_ne_zero, div_I, neg_one_mul, neg_neg] at h₁
+  exact h₁.symm
+  have z₂  : 1 - z * I ≠ 0
+  contrapose! h₂
+  rw [sub_eq_zero, ← div_eq_iff I_ne_zero, div_I, one_mul] at h₂
+  exact h₂.symm
+  have key  : exp (2 * (arctan z * I)) = (1 + z * I) / (1 - z * I)
+  rw [arctan, ← mul_rotate, ← mul_assoc,
+    show 2 * (I * (-I / 2)) = 1 by field_simp, one_mul, exp_log]
+  · exact div_ne_zero z₁ z₂
   -- multiply top and bottom by `1 - z * I`
   rw [key, ← mul_div_mul_right _ _ z₂, sub_mul, add_mul, div_mul_cancel₀ _ z₂, one_mul,
     show _ / _ * I = -(I * I) * z by ring, I_mul_I, neg_neg, one_mul]
@@ -103,9 +103,9 @@ lemma hasSum_arctan_aux {z : ℂ} (hz : ‖z‖ < 1) :
   -- `log_mul_eq_add_log_iff` requires a bound on `arg (1 + z * I) + arg (1 - z * I)⁻¹`.
   -- `arg_one_add_mem_Ioo` provides sufficiently tight bounds on both terms
   have b₁ := arg_one_add_mem_Ioo (z := z * I) (by simpa)
-  have b₂ : arg (1 - z * I)⁻¹ ∈ Set.Ioo (-(π / 2)) (π / 2) := by
-    simp_rw [arg_inv, z₂.1, ite_false, Set.neg_mem_Ioo_iff, neg_neg, sub_eq_add_neg]
-    exact arg_one_add_mem_Ioo (by simpa)
+  have b₂  : arg (1 - z * I)⁻¹ ∈ Set.Ioo (-(π / 2)) (π / 2)
+  simp_rw [arg_inv, z₂.1, ite_false, Set.neg_mem_Ioo_iff, neg_neg, sub_eq_add_neg]
+  exact arg_one_add_mem_Ioo (by simpa)
   have c₁ := add_lt_add b₁.1 b₂.1
   have c₂ := add_lt_add b₁.2 b₂.2
   rw [show -(π / 2) + -(π / 2) = -π by ring] at c₁

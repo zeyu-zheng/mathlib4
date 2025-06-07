@@ -159,9 +159,9 @@ theorem IndepFun.integrable_left_of_integrable_mul {β : Type*} [MeasurableSpace
     filter_upwards [I] with ω hω
     simpa using hω
   refine lt_top_iff_ne_top.2 fun H => ?_
-  have J : IndepFun (fun ω => ‖X ω‖₊ : Ω → ℝ≥0∞) (fun ω => ‖Y ω‖₊ : Ω → ℝ≥0∞) μ := by
-    have M : Measurable fun x : β => (‖x‖₊ : ℝ≥0∞) := measurable_nnnorm.coe_nnreal_ennreal
-    apply IndepFun.comp hXY M M
+  have J  : IndepFun (fun ω => ‖X ω‖₊ : Ω → ℝ≥0∞) (fun ω => ‖Y ω‖₊ : Ω → ℝ≥0∞) μ
+  have M : Measurable fun x : β => (‖x‖₊ : ℝ≥0∞) := measurable_nnnorm.coe_nnreal_ennreal
+  apply IndepFun.comp hXY M M
   have A : (∫⁻ ω, ‖X ω * Y ω‖₊ ∂μ) < ∞ := h'XY.2
   simp only [nnnorm_mul, ENNReal.coe_mul] at A
   rw [lintegral_mul_eq_lintegral_mul_lintegral_of_indepFun'' hX.ennnorm hY.ennnorm J, H] at A
@@ -180,9 +180,9 @@ theorem IndepFun.integrable_right_of_integrable_mul {β : Type*} [MeasurableSpac
     filter_upwards [I] with ω hω
     simpa using hω
   refine lt_top_iff_ne_top.2 fun H => ?_
-  have J : IndepFun (fun ω => ‖X ω‖₊ : Ω → ℝ≥0∞) (fun ω => ‖Y ω‖₊ : Ω → ℝ≥0∞) μ := by
-    have M : Measurable fun x : β => (‖x‖₊ : ℝ≥0∞) := measurable_nnnorm.coe_nnreal_ennreal
-    apply IndepFun.comp hXY M M
+  have J  : IndepFun (fun ω => ‖X ω‖₊ : Ω → ℝ≥0∞) (fun ω => ‖Y ω‖₊ : Ω → ℝ≥0∞) μ
+  have M : Measurable fun x : β => (‖x‖₊ : ℝ≥0∞) := measurable_nnnorm.coe_nnreal_ennreal
+  apply IndepFun.comp hXY M M
   have A : (∫⁻ ω, ‖X ω * Y ω‖₊ ∂μ) < ∞ := h'XY.2
   simp only [nnnorm_mul, ENNReal.coe_mul] at A
   rw [lintegral_mul_eq_lintegral_mul_lintegral_of_indepFun'' hX.ennnorm hY.ennnorm J, H] at A

@@ -20,17 +20,19 @@ then we use it to prove the statement for positive naturals.
 namespace Imo1977Q6
 
 theorem imo1977_q6_nat (f : ℕ → ℕ) (h : ∀ n, f (f n) < f (n + 1)) : ∀ n, f n = n := by
-  have h' : ∀ k n : ℕ, k ≤ n → k ≤ f n := by
-    intro k
-    induction' k with k h_ind
-    · intros; exact Nat.zero_le _
-    · intro n hk
-      apply Nat.succ_le_of_lt
-      calc
-        k ≤ f (f (n - 1)) := h_ind _ (h_ind (n - 1) (le_tsub_of_add_le_right hk))
-        _ < f n := tsub_add_cancel_of_le (le_trans (Nat.succ_le_succ (Nat.zero_le _)) hk) ▸ h _
-  have hf : ∀ n, n ≤ f n := fun n => h' n n rfl.le
-  have hf_mono : StrictMono f := strictMono_nat_of_lt_succ fun _ => lt_of_le_of_lt (hf _) (h _)
+  have h'  : ∀ k n : ℕ, k ≤ n → k ≤ f n
+  intro k
+  induction' k with k h_ind
+  · intros; exact Nat.zero_le _
+  · intro n hk
+    apply Nat.succ_le_of_lt
+    calc
+      k ≤ f (f (n - 1)) := h_ind _ (h_ind (n - 1) (le_tsub_of_add_le_right hk))
+      _ < f n := tsub_add_cancel_of_le (le_trans (Nat.succ_le_succ (Nat.zero_le _)) hk) ▸ h _
+  have hf : ∀ n, n ≤ f n
+  apply fun n => h' n n rfl.le
+  have hf_mono : StrictMono f
+  exact strictMono_nat_of_lt_succ fun _ => lt_of_le_of_lt (hf _) (h _)
   intro
   exact Nat.eq_of_le_of_lt_succ (hf _) (hf_mono.lt_iff_lt.mp (h _))
 

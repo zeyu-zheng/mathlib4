@@ -38,7 +38,8 @@ variable {R : Type u} [CommRing R] [hdomain : IsDomain R] (r s : R) (p q : R[X])
 theorem taylor_mem_nonZeroDivisors (hp : p ∈ R[X]⁰) : taylor r p ∈ R[X]⁰ := by
   rw [mem_nonZeroDivisors_iff]
   intro x hx
-  have : x = taylor (r - r) x := by simp
+  have  : x = taylor (r - r) x
+  simp
   rwa [this, sub_eq_add_neg, ← taylor_taylor, ← taylor_mul,
     LinearMap.map_eq_zero_iff _ (taylor_injective _), mul_right_mem_nonZeroDivisors_eq_zero_iff hp,
     LinearMap.map_eq_zero_iff _ (taylor_injective _)] at hx

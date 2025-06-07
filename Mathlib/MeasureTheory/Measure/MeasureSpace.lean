@@ -318,18 +318,18 @@ theorem measure_iUnion_congr_of_subset [Countable β] {s : β → Set α} {t : �
   push_neg at htop
   refine le_antisymm (measure_mono (iUnion_mono hsub)) ?_
   set M := toMeasurable μ
-  have H : ∀ b, (M (t b) ∩ M (⋃ b, s b) : Set α) =ᵐ[μ] M (t b) := by
-    refine fun b => ae_eq_of_subset_of_measure_ge inter_subset_left ?_ ?_ ?_
-    · calc
-        μ (M (t b)) = μ (t b) := measure_toMeasurable _
-        _ ≤ μ (s b) := h_le b
-        _ ≤ μ (M (t b) ∩ M (⋃ b, s b)) :=
-          measure_mono <|
-            subset_inter ((hsub b).trans <| subset_toMeasurable _ _)
-              ((subset_iUnion _ _).trans <| subset_toMeasurable _ _)
-    · exact (measurableSet_toMeasurable _ _).inter (measurableSet_toMeasurable _ _)
-    · rw [measure_toMeasurable]
-      exact htop b
+  have H  : ∀ b, (M (t b) ∩ M (⋃ b, s b) : Set α) =ᵐ[μ] M (t b)
+  refine fun b => ae_eq_of_subset_of_measure_ge inter_subset_left ?_ ?_ ?_
+  · calc
+      μ (M (t b)) = μ (t b) := measure_toMeasurable _
+      _ ≤ μ (s b) := h_le b
+      _ ≤ μ (M (t b) ∩ M (⋃ b, s b)) :=
+        measure_mono <|
+          subset_inter ((hsub b).trans <| subset_toMeasurable _ _)
+            ((subset_iUnion _ _).trans <| subset_toMeasurable _ _)
+  · exact (measurableSet_toMeasurable _ _).inter (measurableSet_toMeasurable _ _)
+  · rw [measure_toMeasurable]
+    exact htop b
   calc
     μ (⋃ b, t b) ≤ μ (⋃ b, M (t b)) := measure_mono (iUnion_mono fun b => subset_toMeasurable _ _)
     _ = μ (⋃ b, M (t b) ∩ M (⋃ b, s b)) := measure_congr (EventuallyEq.countable_iUnion H).symm
@@ -459,11 +459,11 @@ theorem measure_iUnion_eq_iSup [Countable ι] {s : ι → Set α} (hd : Directed
 theorem measure_iUnion_eq_iSup' {α ι : Type*} [MeasurableSpace α] {μ : Measure α}
     [Countable ι] [Preorder ι] [IsDirected ι (· ≤ ·)]
     {f : ι → Set α} : μ (⋃ i, f i) = ⨆ i, μ (Accumulate f i) := by
-  have hd : Directed (· ⊆ ·) (Accumulate f) := by
-    intro i j
-    rcases directed_of (· ≤ ·) i j with ⟨k, rik, rjk⟩
-    exact ⟨k, biUnion_subset_biUnion_left fun l rli ↦ le_trans rli rik,
-      biUnion_subset_biUnion_left fun l rlj ↦ le_trans rlj rjk⟩
+  have hd  : Directed (· ⊆ ·) (Accumulate f)
+  intro i j
+  rcases directed_of (· ≤ ·) i j with ⟨k, rik, rjk⟩
+  exact ⟨k, biUnion_subset_biUnion_left fun l rli ↦ le_trans rli rik,
+    biUnion_subset_biUnion_left fun l rlj ↦ le_trans rlj rjk⟩
   rw [← iUnion_accumulate]
   exact measure_iUnion_eq_iSup hd
 
@@ -501,12 +501,12 @@ theorem measure_iInter_eq_iInf' {α ι : Type*} [MeasurableSpace α] {μ : Measu
     {f : ι → Set α} (h : ∀ i, MeasurableSet (f i)) (hfin : ∃ i, μ (f i) ≠ ∞) :
     μ (⋂ i, f i) = ⨅ i, μ (⋂ j ≤ i, f j) := by
   let s := fun i ↦ ⋂ j ≤ i, f j
-  have iInter_eq : ⋂ i, f i = ⋂ i, s i := by
-    ext x; simp [s]; constructor
-    · exact fun h _ j _ ↦ h j
-    · intro h i
-      rcases directed_of (· ≤ ·) i i with ⟨j, rij, -⟩
-      exact h j i rij
+  have iInter_eq  : ⋂ i, f i = ⋂ i, s i
+  ext x; simp [s]; constructor
+  · exact fun h _ j _ ↦ h j
+  · intro h i
+    rcases directed_of (· ≤ ·) i i with ⟨j, rij, -⟩
+    exact h j i rij
   have ms : ∀ i, MeasurableSet (s i) :=
     fun i ↦ MeasurableSet.biInter (countable_univ.mono <| subset_univ _) fun i _ ↦ h i
   have hd : Directed (· ⊇ ·) s := by
@@ -567,24 +567,24 @@ theorem tendsto_measure_biInter_gt {ι : Type*} [LinearOrder ι] [TopologicalSpa
     rcases hf with ⟨r, ar, _⟩
     rcases exists_seq_strictAnti_tendsto' ar with ⟨w, w_anti, w_mem, w_lim⟩
     exact ⟨w, w_anti, fun n => (w_mem n).1, w_lim⟩
-  have A : Tendsto (μ ∘ s ∘ u) atTop (𝓝 (μ (⋂ n, s (u n)))) := by
-    refine tendsto_measure_iInter (fun n => hs _ (u_pos n)) ?_ ?_
-    · intro m n hmn
-      exact hm _ _ (u_pos n) (u_anti.antitone hmn)
-    · rcases hf with ⟨r, rpos, hr⟩
-      obtain ⟨n, hn⟩ : ∃ n : ℕ, u n < r := ((tendsto_order.1 u_lim).2 r rpos).exists
-      refine ⟨n, ne_of_lt (lt_of_le_of_lt ?_ hr.lt_top)⟩
-      exact measure_mono (hm _ _ (u_pos n) hn.le)
-  have B : ⋂ n, s (u n) = ⋂ r > a, s r := by
-    apply Subset.antisymm
-    · simp only [subset_iInter_iff, gt_iff_lt]
-      intro r rpos
-      obtain ⟨n, hn⟩ : ∃ n, u n < r := ((tendsto_order.1 u_lim).2 _ rpos).exists
-      exact Subset.trans (iInter_subset _ n) (hm (u n) r (u_pos n) hn.le)
-    · simp only [subset_iInter_iff, gt_iff_lt]
-      intro n
-      apply biInter_subset_of_mem
-      exact u_pos n
+  have A  : Tendsto (μ ∘ s ∘ u) atTop (𝓝 (μ (⋂ n, s (u n))))
+  refine tendsto_measure_iInter (fun n => hs _ (u_pos n)) ?_ ?_
+  · intro m n hmn
+    exact hm _ _ (u_pos n) (u_anti.antitone hmn)
+  · rcases hf with ⟨r, rpos, hr⟩
+    obtain ⟨n, hn⟩ : ∃ n : ℕ, u n < r := ((tendsto_order.1 u_lim).2 r rpos).exists
+    refine ⟨n, ne_of_lt (lt_of_le_of_lt ?_ hr.lt_top)⟩
+    exact measure_mono (hm _ _ (u_pos n) hn.le)
+  have B  : ⋂ n, s (u n) = ⋂ r > a, s r
+  apply Subset.antisymm
+  · simp only [subset_iInter_iff, gt_iff_lt]
+    intro r rpos
+    obtain ⟨n, hn⟩ : ∃ n, u n < r := ((tendsto_order.1 u_lim).2 _ rpos).exists
+    exact Subset.trans (iInter_subset _ n) (hm (u n) r (u_pos n) hn.le)
+  · simp only [subset_iInter_iff, gt_iff_lt]
+    intro n
+    apply biInter_subset_of_mem
+    exact u_pos n
   rw [B] at A
   obtain ⟨n, hn⟩ : ∃ n, μ (s (u n)) < L := ((tendsto_order.1 A).2 _ hL).exists
   have : Ioc a (u n) ∈ 𝓝[>] a := Ioc_mem_nhdsWithin_Ioi ⟨le_rfl, u_pos n⟩
@@ -601,7 +601,8 @@ theorem measure_limsup_eq_zero {s : ℕ → Set α} (hs : (∑' i, μ (s i)) ≠
   -- First we replace the sequence `sₙ` with a sequence of measurable sets `tₙ ⊇ sₙ` of the same
   -- measure.
   set t : ℕ → Set α := fun n => toMeasurable μ (s n)
-  have ht : (∑' i, μ (t i)) ≠ ∞ := by simpa only [t, measure_toMeasurable] using hs
+  have ht  : (∑' i, μ (t i)) ≠ ∞
+  simpa only [t, measure_toMeasurable] using hs
   suffices μ (limsup t atTop) = 0 by
     have A : s ≤ t := fun n => subset_toMeasurable μ (s n)
     -- TODO default args fail
@@ -956,10 +957,10 @@ theorem sInf_caratheodory (s : Set α) (hs : MeasurableSet s) :
   simp only [OuterMeasure.sInfGen, le_iInf_iff, forall_mem_image, measure_eq_iInf t,
     coe_toOuterMeasure]
   intro μ hμ u htu _hu
-  have hm : ∀ {s t}, s ⊆ t → OuterMeasure.sInfGen (toOuterMeasure '' m) s ≤ μ t := by
-    intro s t hst
-    rw [OuterMeasure.sInfGen_def, iInf_image]
-    exact iInf₂_le_of_le μ hμ <| measure_mono hst
+  have hm  : ∀ {s t}, s ⊆ t → OuterMeasure.sInfGen (toOuterMeasure '' m) s ≤ μ t
+  intro s t hst
+  rw [OuterMeasure.sInfGen_def, iInf_image]
+  exact iInf₂_le_of_le μ hμ <| measure_mono hst
   rw [← measure_inter_add_diff u hs]
   exact add_le_add (hm <| inter_subset_inter_left _ htu) (hm <| diff_subset_diff_left htu)
 
@@ -1290,14 +1291,14 @@ theorem ae_eq_image_of_ae_eq_comap {β} [MeasurableSpace α] {mβ : MeasurableSp
     (μ : Measure β) (hfi : Injective f) (hf : ∀ s, MeasurableSet s → NullMeasurableSet (f '' s) μ)
     {s t : Set α} (hst : s =ᵐ[comap f μ] t) : f '' s =ᵐ[μ] f '' t := by
   rw [EventuallyEq, ae_iff] at hst ⊢
-  have h_eq_α : { a : α | ¬s a = t a } = s \ t ∪ t \ s := by
-    ext1 x
-    simp only [eq_iff_iff, mem_setOf_eq, mem_union, mem_diff]
-    tauto
-  have h_eq_β : { a : β | ¬(f '' s) a = (f '' t) a } = f '' s \ f '' t ∪ f '' t \ f '' s := by
-    ext1 x
-    simp only [eq_iff_iff, mem_setOf_eq, mem_union, mem_diff]
-    tauto
+  have h_eq_α  : { a : α | ¬s a = t a } = s \ t ∪ t \ s
+  ext1 x
+  simp only [eq_iff_iff, mem_setOf_eq, mem_union, mem_diff]
+  tauto
+  have h_eq_β  : { a : β | ¬(f '' s) a = (f '' t) a } = f '' s \ f '' t ∪ f '' t \ f '' s
+  ext1 x
+  simp only [eq_iff_iff, mem_setOf_eq, mem_union, mem_diff]
+  tauto
   rw [← Set.image_diff hfi, ← Set.image_diff hfi, ← Set.image_union] at h_eq_β
   rw [h_eq_β]
   rw [h_eq_α] at hst
@@ -1724,9 +1725,9 @@ theorem pairwise_aedisjoint_of_aedisjoint_forall_ne_one {G α : Type*} [Group G]
   replace hg : g ≠ 1 := by
     rw [Ne, inv_mul_eq_one]
     exact hg.symm
-  have : (g₂⁻¹ • ·) ⁻¹' (g • s ∩ s) = g₁ • s ∩ g₂ • s := by
-    rw [preimage_eq_iff_eq_image (MulAction.bijective g₂⁻¹), image_smul, smul_set_inter, smul_smul,
-      smul_smul, inv_mul_self, one_smul]
+  have  : (g₂⁻¹ • ·) ⁻¹' (g • s ∩ s) = g₁ • s ∩ g₂ • s
+  rw [preimage_eq_iff_eq_image (MulAction.bijective g₂⁻¹), image_smul, smul_set_inter, smul_smul,
+    smul_smul, inv_mul_self, one_smul]
   change μ (g₁ • s ∩ g₂ • s) = 0
   exact this ▸ (h_qmp g₂⁻¹).preimage_null (h_ae_disjoint g hg)
 
@@ -1848,13 +1849,13 @@ theorem tendsto_measure_Ico_atTop [SemilatticeSup α] [NoMaxOrder α]
   have h_mono : Monotone fun x => μ (Ico a x) := fun i j hij => by simp only; gcongr
   convert tendsto_atTop_iSup h_mono
   obtain ⟨xs, hxs_mono, hxs_tendsto⟩ := exists_seq_monotone_tendsto_atTop_atTop α
-  have h_Ici : Ici a = ⋃ n, Ico a (xs n) := by
-    ext1 x
-    simp only [mem_Ici, mem_iUnion, mem_Ico, exists_and_left, iff_self_and]
-    intro
-    obtain ⟨y, hxy⟩ := NoMaxOrder.exists_gt x
-    obtain ⟨n, hn⟩ := tendsto_atTop_atTop.mp hxs_tendsto y
-    exact ⟨n, hxy.trans_le (hn n le_rfl)⟩
+  have h_Ici  : Ici a = ⋃ n, Ico a (xs n)
+  ext1 x
+  simp only [mem_Ici, mem_iUnion, mem_Ico, exists_and_left, iff_self_and]
+  intro
+  obtain ⟨y, hxy⟩ := NoMaxOrder.exists_gt x
+  obtain ⟨n, hn⟩ := tendsto_atTop_atTop.mp hxs_tendsto y
+  exact ⟨n, hxy.trans_le (hn n le_rfl)⟩
   rw [h_Ici, measure_iUnion_eq_iSup, iSup_eq_iSup_subseq_of_monotone h_mono hxs_tendsto]
   exact Monotone.directed_le fun i j hij => Ico_subset_Ico_right (hxs_mono hij)
 
@@ -1865,13 +1866,13 @@ theorem tendsto_measure_Ioc_atBot [SemilatticeInf α] [NoMinOrder α]
   have h_mono : Antitone fun x => μ (Ioc x a) := fun i j hij => by simp only; gcongr
   convert tendsto_atBot_iSup h_mono
   obtain ⟨xs, hxs_mono, hxs_tendsto⟩ := exists_seq_antitone_tendsto_atTop_atBot α
-  have h_Iic : Iic a = ⋃ n, Ioc (xs n) a := by
-    ext1 x
-    simp only [mem_Iic, mem_iUnion, mem_Ioc, exists_and_right, iff_and_self]
-    intro
-    obtain ⟨y, hxy⟩ := NoMinOrder.exists_lt x
-    obtain ⟨n, hn⟩ := tendsto_atTop_atBot.mp hxs_tendsto y
-    exact ⟨n, (hn n le_rfl).trans_lt hxy⟩
+  have h_Iic  : Iic a = ⋃ n, Ioc (xs n) a
+  ext1 x
+  simp only [mem_Iic, mem_iUnion, mem_Ioc, exists_and_right, iff_and_self]
+  intro
+  obtain ⟨y, hxy⟩ := NoMinOrder.exists_lt x
+  obtain ⟨n, hn⟩ := tendsto_atTop_atBot.mp hxs_tendsto y
+  exact ⟨n, (hn n le_rfl).trans_lt hxy⟩
   rw [h_Iic, measure_iUnion_eq_iSup, iSup_eq_iSup_subseq_of_antitone h_mono hxs_tendsto]
   exact Monotone.directed_le fun i j hij => Ioc_subset_Ioc_left (hxs_mono hij)
 
@@ -1885,11 +1886,11 @@ theorem tendsto_measure_Iic_atTop [SemilatticeSup α] [(atTop : Filter α).IsCou
   have h_mono : Monotone fun x => μ (Iic x) := fun i j hij => by simp only; gcongr
   convert tendsto_atTop_iSup h_mono
   obtain ⟨xs, hxs_mono, hxs_tendsto⟩ := exists_seq_monotone_tendsto_atTop_atTop α
-  have h_univ : (univ : Set α) = ⋃ n, Iic (xs n) := by
-    ext1 x
-    simp only [mem_univ, mem_iUnion, mem_Iic, true_iff_iff]
-    obtain ⟨n, hn⟩ := tendsto_atTop_atTop.mp hxs_tendsto x
-    exact ⟨n, hn n le_rfl⟩
+  have h_univ  : (univ : Set α) = ⋃ n, Iic (xs n)
+  ext1 x
+  simp only [mem_univ, mem_iUnion, mem_Iic, true_iff_iff]
+  obtain ⟨n, hn⟩ := tendsto_atTop_atTop.mp hxs_tendsto x
+  exact ⟨n, hn n le_rfl⟩
   rw [h_univ, measure_iUnion_eq_iSup, iSup_eq_iSup_subseq_of_monotone h_mono hxs_tendsto]
   exact Monotone.directed_le fun i j hij => Iic_subset_Iic.mpr (hxs_mono hij)
 

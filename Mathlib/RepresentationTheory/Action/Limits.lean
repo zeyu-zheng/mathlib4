@@ -165,19 +165,19 @@ noncomputable instance {J : Type w₁} [Category.{w₂} J] [HasColimitsOfShape J
 noncomputable instance [HasFiniteLimits V] : PreservesFiniteLimits (Action.forget V G) := by
   show PreservesFiniteLimits ((Action.functorCategoryEquivalence V G).functor ⋙
     (evaluation (SingleObj G) V).obj (SingleObj.star G))
-  have : PreservesFiniteLimits ((evaluation (SingleObj G) V).obj (SingleObj.star G)) := by
-    constructor
-    intro _ _ _
-    infer_instance
+  have  : PreservesFiniteLimits ((evaluation (SingleObj G) V).obj (SingleObj.star G))
+  constructor
+  intro _ _ _
+  infer_instance
   apply compPreservesFiniteLimits
 
 noncomputable instance [HasFiniteColimits V] : PreservesFiniteColimits (Action.forget V G) := by
   show PreservesFiniteColimits ((Action.functorCategoryEquivalence V G).functor ⋙
     (evaluation (SingleObj G) V).obj (SingleObj.star G))
-  have : PreservesFiniteColimits ((evaluation (SingleObj G) V).obj (SingleObj.star G)) := by
-    constructor
-    intro _ _ _
-    infer_instance
+  have  : PreservesFiniteColimits ((evaluation (SingleObj G) V).obj (SingleObj.star G))
+  constructor
+  intro _ _ _
+  infer_instance
   apply compPreservesFiniteColimits
 
 noncomputable instance {J : Type w₁} [Category.{w₂} J] (F : J ⥤ Action V G) :

@@ -249,11 +249,11 @@ theorem finprod_heightOneSpectrum_factorization_principal {I : FractionalIdeal R
   set n : R := choose (mk'_surjective R⁰ k)
   set d : ↥R⁰ := choose (choose_spec (mk'_surjective R⁰ k))
   have hnd : mk' K n d = k := choose_spec (choose_spec (mk'_surjective R⁰ k))
-  have hn0 : n ≠ 0 := by
-    by_contra h
-    rw [← hnd, h, IsFractionRing.mk'_eq_div, _root_.map_zero,
-      zero_div, spanSingleton_zero] at hk
-    exact hI hk
+  have hn0  : n ≠ 0
+  by_contra h
+  rw [← hnd, h, IsFractionRing.mk'_eq_div, _root_.map_zero,
+    zero_div, spanSingleton_zero] at hk
+  exact hI hk
   rw [finprod_heightOneSpectrum_factorization_principal_fraction hn0 d, hk, hnd]
 
 variable (K)
@@ -315,14 +315,15 @@ theorem count_well_defined {I : FractionalIdeal R⁰ K} (hI : I ≠ 0) {a : R}
 /-- For nonzero `I, I'`, `val_v(I*I') = val_v(I) + val_v(I')`. -/
 theorem count_mul {I I' : FractionalIdeal R⁰ K} (hI : I ≠ 0) (hI' : I' ≠ 0) :
     count K v (I * I') = count K v I + count K v I' := by
-  have hv : Irreducible (Associates.mk v.asIdeal) := by apply v.associates_irreducible
+  have hv  : Irreducible (Associates.mk v.asIdeal)
+  apply v.associates_irreducible
   obtain ⟨a, J, ha, haJ⟩ := exists_eq_spanSingleton_mul I
-  have ha_ne_zero : Associates.mk (Ideal.span {a} : Ideal R) ≠ 0 := by
-    rw [ne_eq, Associates.mk_eq_zero, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]; exact ha
+  have ha_ne_zero  : Associates.mk (Ideal.span {a} : Ideal R) ≠ 0
+  rw [ne_eq, Associates.mk_eq_zero, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]; exact ha
   have hJ_ne_zero : Associates.mk J ≠ 0 := Associates.mk_ne_zero.mpr (ideal_factor_ne_zero hI haJ)
   obtain ⟨a', J', ha', haJ'⟩ := exists_eq_spanSingleton_mul I'
-  have ha'_ne_zero : Associates.mk (Ideal.span {a'} : Ideal R) ≠ 0 := by
-    rw [ne_eq, Associates.mk_eq_zero, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]; exact ha'
+  have ha'_ne_zero  : Associates.mk (Ideal.span {a'} : Ideal R) ≠ 0
+  rw [ne_eq, Associates.mk_eq_zero, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]; exact ha'
   have hJ'_ne_zero : Associates.mk J' ≠ 0 :=
     Associates.mk_ne_zero.mpr (ideal_factor_ne_zero hI' haJ')
   have h_prod : I * I' = spanSingleton R⁰ ((algebraMap R K) (a * a'))⁻¹ * ↑(J * J') := by
@@ -386,7 +387,8 @@ theorem count_self : count K v (v.asIdeal : FractionalIdeal R⁰ K) = 1 := by
   have h_self : (v.asIdeal : FractionalIdeal R⁰ K) =
       spanSingleton R⁰ ((algebraMap R K) 1)⁻¹ * ↑v.asIdeal := by
     rw [(algebraMap R K).map_one, inv_one, spanSingleton_one, one_mul]
-  have hv_irred : Irreducible (Associates.mk v.asIdeal) := by apply v.associates_irreducible
+  have hv_irred  : Irreducible (Associates.mk v.asIdeal)
+  apply v.associates_irreducible
   rw [count_well_defined K v hv h_self, Associates.count_self hv_irred, Ideal.span_singleton_one,
     ← Ideal.one_eq_top, Associates.mk_one, Associates.factors_one, Associates.count_zero hv_irred,
     ofNat_zero, sub_zero, ofNat_one]

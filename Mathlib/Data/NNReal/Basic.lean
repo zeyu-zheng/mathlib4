@@ -467,10 +467,10 @@ theorem coe_sInf (s : Set ℝ≥0) : (↑(sInf s) : ℝ) = sInf (((↑) : ℝ≥
   rcases Set.eq_empty_or_nonempty s with rfl|hs
   · simp only [Set.image_empty, Real.sInf_empty, coe_eq_zero]
     exact @subset_sInf_emptyset ℝ (Set.Ici (0 : ℝ)) _ _ (_)
-  have A : sInf (Subtype.val '' s) ∈ Set.Ici 0 := by
-    apply Real.sInf_nonneg
-    rintro - ⟨y, -, rfl⟩
-    exact y.2
+  have A  : sInf (Subtype.val '' s) ∈ Set.Ici 0
+  apply Real.sInf_nonneg
+  rintro - ⟨y, -, rfl⟩
+  exact y.2
   exact (@subset_sInf_of_within ℝ (Set.Ici (0 : ℝ)) _ _ (_) s hs (OrderBot.bddBelow s) A).symm
 
 @[simp]
@@ -1059,15 +1059,15 @@ theorem NNReal.exists_lt_of_strictMono [h : Nontrivial Γ₀ˣ] {f : Γ₀ →*�
     {r : ℝ≥0} (hr : 0 < r) : ∃ d : Γ₀ˣ, f d < r := by
   obtain ⟨g, hg1⟩ := (nontrivial_iff_exists_ne (1 : Γ₀ˣ)).mp h
   set u : Γ₀ˣ := if g < 1 then g else g⁻¹ with hu
-  have hfu : f u < 1 := by
-    rw [hu]
-    split_ifs with hu1
-    · rw [← _root_.map_one f]; exact hf hu1
-    · have hfg0 : f g ≠ 0 :=
-        fun h0 ↦ (Units.ne_zero g) ((map_eq_zero f).mp h0)
-      have hg1' : 1 < g := lt_of_le_of_ne (not_lt.mp hu1) hg1.symm
-      rw [Units.val_inv_eq_inv_val, map_inv₀, inv_lt_one_iff hfg0, ← _root_.map_one f]
-      exact hf hg1'
+  have hfu  : f u < 1
+  rw [hu]
+  split_ifs with hu1
+  · rw [← _root_.map_one f]; exact hf hu1
+  · have hfg0 : f g ≠ 0 :=
+      fun h0 ↦ (Units.ne_zero g) ((map_eq_zero f).mp h0)
+    have hg1' : 1 < g := lt_of_le_of_ne (not_lt.mp hu1) hg1.symm
+    rw [Units.val_inv_eq_inv_val, map_inv₀, inv_lt_one_iff hfg0, ← _root_.map_one f]
+    exact hf hg1'
   obtain ⟨n, hn⟩ := exists_pow_lt_of_lt_one hr hfu
   use u ^ n
   rwa [Units.val_pow_eq_pow_val, _root_.map_pow]

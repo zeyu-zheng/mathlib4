@@ -61,10 +61,10 @@ theorem borel_eq_generateFrom_Iio : borel α = .generateFrom (range Iio) := by
       · rw [hb.Ioi_eq, ← compl_Iio]
         exact (H _).compl
       · rcases isOpen_biUnion_countable (Ioi a) Ioi fun _ _ ↦ isOpen_Ioi with ⟨t, hat, htc, htU⟩
-        have : Ioi a = ⋃ b ∈ t, Ici b := by
-          refine Subset.antisymm ?_ <| iUnion₂_subset fun b hb ↦ Ici_subset_Ioi.2 (hat hb)
-          refine Subset.trans ?_ <| iUnion₂_mono fun _ _ ↦ Ioi_subset_Ici_self
-          simpa [CovBy, htU, subset_def] using hcovBy
+        have  : Ioi a = ⋃ b ∈ t, Ici b
+        refine Subset.antisymm ?_ <| iUnion₂_subset fun b hb ↦ Ici_subset_Ioi.2 (hat hb)
+        refine Subset.trans ?_ <| iUnion₂_mono fun _ _ ↦ Ioi_subset_Ici_self
+        simpa [CovBy, htU, subset_def] using hcovBy
         simp only [this, ← compl_Iio]
         exact .biUnion htc <| fun _ _ ↦ (H _).compl
     · apply H
@@ -534,14 +534,14 @@ theorem Measurable.isLUB_of_mem {ι} [Countable ι] {f : ι → δ → α} {g g'
     · convert g'_meas
       rwa [compl_empty, eqOn_univ] at hg'
     · have A : ∀ b ∈ s, IsBot (g b) := by simpa using hg
-      have B : ∀ b ∈ s, g b = g x := by
-        intro b hb
-        apply le_antisymm (A b hb (g x)) (A x hx (g b))
-      have : g = s.piecewise (fun _y ↦ g x) g' := by
-        ext b
-        by_cases hb : b ∈ s
-        · simp [hb, B]
-        · simp [hb, hg' hb]
+      have B  : ∀ b ∈ s, g b = g x
+      intro b hb
+      apply le_antisymm (A b hb (g x)) (A x hx (g b))
+      have  : g = s.piecewise (fun _y ↦ g x) g'
+      ext b
+      by_cases hb : b ∈ s
+      · simp [hb, B]
+      · simp [hb, hg' hb]
       rw [this]
       exact Measurable.piecewise hs measurable_const g'_meas
   · let f' : ι → δ → α := fun i ↦ s.piecewise (f i) g'
@@ -552,12 +552,12 @@ theorem Measurable.isLUB_of_mem {ι} [Countable ι] {f : ι → δ → α} {g g'
     · have A : ∀ i, f' i b = f i b := fun i ↦ by simp [f', hb]
       simpa [A] using hg b hb
     · have A : ∀ i, f' i b = g' b := fun i ↦ by simp [f', hb]
-      have : {a | ∃ (_i : ι), g' b = a} = {g' b} := by
-        apply Subset.antisymm
-        · rintro - ⟨_j, rfl⟩
-          simp only [mem_singleton_iff]
-        · rintro - rfl
-          exact ⟨i, rfl⟩
+      have  : {a | ∃ (_i : ι), g' b = a} = {g' b}
+      apply Subset.antisymm
+      · rintro - ⟨_j, rfl⟩
+        simp only [mem_singleton_iff]
+      · rintro - rfl
+        exact ⟨i, rfl⟩
       simp [A, this, hg' hb, isLUB_singleton]
 
 theorem AEMeasurable.isLUB {ι} {μ : Measure δ} [Countable ι] {f : ι → δ → α} {g : δ → α}
@@ -570,17 +570,17 @@ theorem AEMeasurable.isLUB {ι} {μ : Measure δ} [Countable ι] {f : ι → δ 
     exact aemeasurable_const' (hg.mono fun a ha => hg.mono fun b hb => (ha _).antisymm (hb _))
   let p : δ → (ι → α) → Prop := fun x f' => IsLUB { a | ∃ i, f' i = a } (g x)
   let g_seq := (aeSeqSet hf p).piecewise g fun _ => hα.some
-  have hg_seq : ∀ b, IsLUB { a | ∃ i, aeSeq hf p i b = a } (g_seq b) := by
-    intro b
-    simp only [g_seq, aeSeq, Set.piecewise]
-    split_ifs with h
-    · have h_set_eq : { a : α | ∃ i : ι, (hf i).mk (f i) b = a } =
-        { a : α | ∃ i : ι, f i b = a } := by
-        ext x
-        simp_rw [Set.mem_setOf_eq, aeSeq.mk_eq_fun_of_mem_aeSeqSet hf h]
-      rw [h_set_eq]
-      exact aeSeq.fun_prop_of_mem_aeSeqSet hf h
-    · exact IsGreatest.isLUB ⟨(@exists_const (hα.some = hα.some) ι _).2 rfl, fun x ⟨i, hi⟩ => hi.ge⟩
+  have hg_seq  : ∀ b, IsLUB { a | ∃ i, aeSeq hf p i b = a } (g_seq b)
+  intro b
+  simp only [g_seq, aeSeq, Set.piecewise]
+  split_ifs with h
+  · have h_set_eq : { a : α | ∃ i : ι, (hf i).mk (f i) b = a } =
+      { a : α | ∃ i : ι, f i b = a } := by
+      ext x
+      simp_rw [Set.mem_setOf_eq, aeSeq.mk_eq_fun_of_mem_aeSeqSet hf h]
+    rw [h_set_eq]
+    exact aeSeq.fun_prop_of_mem_aeSeqSet hf h
+  · exact IsGreatest.isLUB ⟨(@exists_const (hα.some = hα.some) ι _).2 rfl, fun x ⟨i, hi⟩ => hi.ge⟩
   refine ⟨g_seq, Measurable.isLUB (aeSeq.measurable hf p) hg_seq, ?_⟩
   exact
     (ite_ae_eq_of_measure_compl_zero g (fun _ => hα.some) (aeSeqSet hf p)
@@ -629,7 +629,8 @@ theorem measurableSet_of_mem_nhdsWithin_Ioi_aux {s : Set α} (h : ∀ x ∈ s, s
     (h' : ∀ x ∈ s, ∃ y, x < y) : MeasurableSet s := by
   choose! M hM using h'
   suffices H : (s \ interior s).Countable by
-    have : s = interior s ∪ s \ interior s := by rw [union_diff_cancel interior_subset]
+    have  : s = interior s ∪ s \ interior s
+    rw [union_diff_cancel interior_subset]
     rw [this]
     exact isOpen_interior.measurableSet.union H.measurableSet
   have A : ∀ x ∈ s, ∃ y ∈ Ioi x, Ioo x y ⊆ s := fun x hx =>
@@ -653,7 +654,8 @@ theorem measurableSet_of_mem_nhdsWithin_Ioi {s : Set α} (h : ∀ x ∈ s, s ∈
     MeasurableSet s := by
   by_cases H : ∃ x ∈ s, IsTop x
   · rcases H with ⟨x₀, x₀s, h₀⟩
-    have : s = {x₀} ∪ s \ {x₀} := by rw [union_diff_cancel (singleton_subset_iff.2 x₀s)]
+    have  : s = {x₀} ∪ s \ {x₀}
+    rw [union_diff_cancel (singleton_subset_iff.2 x₀s)]
     rw [this]
     refine (measurableSet_singleton _).union ?_
     have A : ∀ x ∈ s \ {x₀}, x < x₀ := fun x hx => lt_of_le_of_ne (h₀ _) (by simpa using hx.2)
@@ -672,23 +674,23 @@ lemma measurableSet_bddAbove_range {ι} [Countable ι] {f : ι → δ → α} (h
   rcases isEmpty_or_nonempty α with hα|hα
   · have : ∀ b, range (fun i ↦ f i b) = ∅ := fun b ↦ eq_empty_of_isEmpty _
     simp [this]
-  have A : ∀ (i : ι) (c : α), MeasurableSet {x | f i x ≤ c} := by
-    intro i c
-    exact measurableSet_le (hf i) measurable_const
-  have B : ∀ (c : α), MeasurableSet {x | ∀ i, f i x ≤ c} := by
-    intro c
-    rw [setOf_forall]
-    exact MeasurableSet.iInter (fun i ↦ A i c)
+  have A  : ∀ (i : ι) (c : α), MeasurableSet {x | f i x ≤ c}
+  intro i c
+  exact measurableSet_le (hf i) measurable_const
+  have B  : ∀ (c : α), MeasurableSet {x | ∀ i, f i x ≤ c}
+  intro c
+  rw [setOf_forall]
+  exact MeasurableSet.iInter (fun i ↦ A i c)
   obtain ⟨u, hu⟩ : ∃ (u : ℕ → α), Tendsto u atTop atTop := exists_seq_tendsto (atTop : Filter α)
-  have : {b | BddAbove (range (fun i ↦ f i b))} = {x | ∃ n, ∀ i, f i x ≤ u n} := by
-    apply Subset.antisymm
-    · rintro x ⟨c, hc⟩
-      obtain ⟨n, hn⟩ : ∃ n, c ≤ u n := (tendsto_atTop.1 hu c).exists
-      exact ⟨n, fun i ↦ (hc ((mem_range_self i))).trans hn⟩
-    · rintro x ⟨n, hn⟩
-      refine ⟨u n, ?_⟩
-      rintro - ⟨i, rfl⟩
-      exact hn i
+  have  : {b | BddAbove (range (fun i ↦ f i b))} = {x | ∃ n, ∀ i, f i x ≤ u n}
+  apply Subset.antisymm
+  · rintro x ⟨c, hc⟩
+    obtain ⟨n, hn⟩ : ∃ n, c ≤ u n := (tendsto_atTop.1 hu c).exists
+    exact ⟨n, fun i ↦ (hc ((mem_range_self i))).trans hn⟩
+  · rintro x ⟨n, hn⟩
+    refine ⟨u n, ?_⟩
+    rintro - ⟨i, rfl⟩
+    exact hn i
   rw [this, setOf_exists]
   exact MeasurableSet.iUnion (fun n ↦ B (u n))
 
@@ -787,12 +789,12 @@ theorem measurable_biSup {ι} (s : Set ι) {f : ι → δ → α} (hs : s.Counta
 theorem aemeasurable_biSup {ι} {μ : Measure δ} (s : Set ι) {f : ι → δ → α} (hs : s.Countable)
     (hf : ∀ i ∈ s, AEMeasurable (f i) μ) : AEMeasurable (fun b => ⨆ i ∈ s, f i b) μ := by
   let g : ι → δ → α := fun i ↦ if hi : i ∈ s then (hf i hi).mk (f i) else fun _b ↦ sSup ∅
-  have : ∀ i ∈ s, Measurable (g i) := by
-    intro i hi
-    simpa [g, hi] using (hf i hi).measurable_mk
+  have  : ∀ i ∈ s, Measurable (g i)
+  intro i hi
+  simpa [g, hi] using (hf i hi).measurable_mk
   refine ⟨fun b ↦ ⨆ (i) (_ : i ∈ s), g i b, measurable_biSup s hs this, ?_⟩
-  have : ∀ i ∈ s, ∀ᵐ b ∂μ, f i b = g i b :=
-    fun i hi ↦ by simpa [g, hi] using (hf i hi).ae_eq_mk
+  have : ∀ i ∈ s, ∀ᵐ b ∂μ, f i b = g i b
+  exact fun i hi ↦ by simpa [g, hi] using (hf i hi).ae_eq_mk
   filter_upwards [(ae_ball_iff hs).2 this] with b hb
   exact iSup_congr fun i => iSup_congr (hb i)
 
@@ -905,26 +907,26 @@ theorem measure_eq_measure_preimage_add_measure_tsum_Ico_zpow {α : Type*} [Meas
     μ s =
       μ (s ∩ f ⁻¹' {0}) + μ (s ∩ f ⁻¹' {∞}) +
       ∑' n : ℤ, μ (s ∩ f ⁻¹' Ico ((t : ℝ≥0∞) ^ n) ((t : ℝ≥0∞) ^ (n + 1))) := by
-  have A : μ s = μ (s ∩ f ⁻¹' {0}) + μ (s ∩ f ⁻¹' Ioi 0) := by
-    rw [← measure_union]
-    · rw [← inter_union_distrib_left, ← preimage_union, singleton_union, Ioi_insert,
-        ← _root_.bot_eq_zero, Ici_bot, preimage_univ, inter_univ]
-    · exact disjoint_singleton_left.mpr not_mem_Ioi_self
-        |>.preimage f |>.inter_right' s |>.inter_left' s
-    · exact hs.inter (hf measurableSet_Ioi)
-  have B : μ (s ∩ f ⁻¹' Ioi 0) = μ (s ∩ f ⁻¹' {∞}) + μ (s ∩ f ⁻¹' Ioo 0 ∞) := by
-    rw [← measure_union]
-    · rw [← inter_union_distrib_left]
-      congr
-      ext x
-      simp only [mem_singleton_iff, mem_union, mem_Ioo, mem_Ioi, mem_preimage]
-      obtain (H | H) : f x = ∞ ∨ f x < ∞ := eq_or_lt_of_le le_top
-      · simp only [H, eq_self_iff_true, or_false_iff, ENNReal.zero_lt_top, not_top_lt, and_false]
-      · simp only [H, H.ne, and_true_iff, false_or_iff]
-    · refine disjoint_left.2 fun x hx h'x => ?_
-      have : f x < ∞ := h'x.2.2
-      exact lt_irrefl _ (this.trans_le (le_of_eq hx.2.symm))
-    · exact hs.inter (hf measurableSet_Ioo)
+  have A  : μ s = μ (s ∩ f ⁻¹' {0}) + μ (s ∩ f ⁻¹' Ioi 0)
+  rw [← measure_union]
+  · rw [← inter_union_distrib_left, ← preimage_union, singleton_union, Ioi_insert,
+      ← _root_.bot_eq_zero, Ici_bot, preimage_univ, inter_univ]
+  · exact disjoint_singleton_left.mpr not_mem_Ioi_self
+      |>.preimage f |>.inter_right' s |>.inter_left' s
+  · exact hs.inter (hf measurableSet_Ioi)
+  have B  : μ (s ∩ f ⁻¹' Ioi 0) = μ (s ∩ f ⁻¹' {∞}) + μ (s ∩ f ⁻¹' Ioo 0 ∞)
+  rw [← measure_union]
+  · rw [← inter_union_distrib_left]
+    congr
+    ext x
+    simp only [mem_singleton_iff, mem_union, mem_Ioo, mem_Ioi, mem_preimage]
+    obtain (H | H) : f x = ∞ ∨ f x < ∞ := eq_or_lt_of_le le_top
+    · simp only [H, eq_self_iff_true, or_false_iff, ENNReal.zero_lt_top, not_top_lt, and_false]
+    · simp only [H, H.ne, and_true_iff, false_or_iff]
+  · refine disjoint_left.2 fun x hx h'x => ?_
+    have : f x < ∞ := h'x.2.2
+    exact lt_irrefl _ (this.trans_le (le_of_eq hx.2.symm))
+  · exact hs.inter (hf measurableSet_Ioo)
   have C : μ (s ∩ f ⁻¹' Ioo 0 ∞) =
       ∑' n : ℤ, μ (s ∩ f ⁻¹' Ico ((t : ℝ≥0∞) ^ n) ((t : ℝ≥0∞) ^ (n + 1))) := by
     rw [← measure_iUnion,

@@ -79,10 +79,10 @@ namespace HasZeroMorphisms
 /-- This lemma will be immediately superseded by `ext`, below. -/
 private theorem ext_aux (I J : HasZeroMorphisms C)
     (w : ∀ X Y : C, (I.zero X Y).zero = (J.zero X Y).zero) : I = J := by
-  have : I.zero = J.zero := by
-    funext X Y
-    specialize w X Y
-    apply congrArg Zero.mk w
+  have  : I.zero = J.zero
+  funext X Y
+  specialize w X Y
+  apply congrArg Zero.mk w
   cases I; cases J
   congr
   · apply proof_irrel_heq
@@ -97,10 +97,10 @@ See, particularly, the note on `zeroMorphismsOfZeroObject` below.
 theorem ext (I J : HasZeroMorphisms C) : I = J := by
   apply ext_aux
   intro X Y
-  have : (I.zero X Y).zero ≫ (J.zero Y Y).zero = (I.zero X Y).zero := by
-    apply I.zero_comp X (J.zero Y Y).zero
-  have that : (I.zero X Y).zero ≫ (J.zero Y Y).zero = (J.zero X Y).zero := by
-    apply J.comp_zero (I.zero X Y).zero Y
+  have  : (I.zero X Y).zero ≫ (J.zero Y Y).zero = (I.zero X Y).zero
+  apply I.zero_comp X (J.zero Y Y).zero
+  have that  : (I.zero X Y).zero ≫ (J.zero Y Y).zero = (J.zero X Y).zero
+  apply J.comp_zero (I.zero X Y).zero Y
   rw [← this, ← that]
 
 instance : Subsingleton (HasZeroMorphisms C) :=
@@ -335,14 +335,16 @@ theorem id_zero : 𝟙 (0 : C) = (0 : (0 : C) ⟶ 0) := by apply HasZeroObject.f
 theorem zero_of_to_zero {X : C} (f : X ⟶ 0) : f = 0 := by ext
 
 theorem zero_of_target_iso_zero {X Y : C} (f : X ⟶ Y) (i : Y ≅ 0) : f = 0 := by
-  have h : f = f ≫ i.hom ≫ 𝟙 0 ≫ i.inv := by simp only [Iso.hom_inv_id, id_comp, comp_id]
+  have h  : f = f ≫ i.hom ≫ 𝟙 0 ≫ i.inv
+  simp only [Iso.hom_inv_id, id_comp, comp_id]
   simpa using h
 
 /-- An arrow starting at the zero object is zero -/
 theorem zero_of_from_zero {X : C} (f : 0 ⟶ X) : f = 0 := by ext
 
 theorem zero_of_source_iso_zero {X Y : C} (f : X ⟶ Y) (i : X ≅ 0) : f = 0 := by
-  have h : f = i.hom ≫ 𝟙 0 ≫ i.inv ≫ f := by simp only [Iso.hom_inv_id_assoc, id_comp, comp_id]
+  have h  : f = i.hom ≫ 𝟙 0 ≫ i.inv ≫ f
+  simp only [Iso.hom_inv_id_assoc, id_comp, comp_id]
   simpa using h
 
 theorem zero_of_source_iso_zero' {X Y : C} (f : X ⟶ Y) (i : IsIsomorphic X 0) : f = 0 :=

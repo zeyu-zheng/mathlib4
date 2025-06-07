@@ -46,14 +46,14 @@ theorem cderiv_eq_deriv (hU : IsOpen U) (hf : DifferentiableOn ℂ f U) (hr : 0 
 
 theorem norm_cderiv_le (hr : 0 < r) (hf : ∀ w ∈ sphere z r, ‖f w‖ ≤ M) :
     ‖cderiv r f z‖ ≤ M / r := by
-  have hM : 0 ≤ M := by
-    obtain ⟨w, hw⟩ : (sphere z r).Nonempty := NormedSpace.sphere_nonempty.mpr hr.le
-    exact (norm_nonneg _).trans (hf w hw)
-  have h1 : ∀ w ∈ sphere z r, ‖((w - z) ^ 2)⁻¹ • f w‖ ≤ M / r ^ 2 := by
-    intro w hw
-    simp only [mem_sphere_iff_norm, norm_eq_abs] at hw
-    simp only [norm_smul, inv_mul_eq_div, hw, norm_eq_abs, map_inv₀, Complex.abs_pow]
-    exact div_le_div hM (hf w hw) (sq_pos_of_pos hr) le_rfl
+  have hM  : 0 ≤ M
+  obtain ⟨w, hw⟩ : (sphere z r).Nonempty := NormedSpace.sphere_nonempty.mpr hr.le
+  exact (norm_nonneg _).trans (hf w hw)
+  have h1  : ∀ w ∈ sphere z r, ‖((w - z) ^ 2)⁻¹ • f w‖ ≤ M / r ^ 2
+  intro w hw
+  simp only [mem_sphere_iff_norm, norm_eq_abs] at hw
+  simp only [norm_smul, inv_mul_eq_div, hw, norm_eq_abs, map_inv₀, Complex.abs_pow]
+  exact div_le_div hM (hf w hw) (sq_pos_of_pos hr) le_rfl
   have h2 := circleIntegral.norm_integral_le_of_norm_le_const hr.le h1
   simp only [cderiv, norm_smul]
   refine (mul_le_mul le_rfl h2 (norm_nonneg _) (norm_nonneg _)).trans (le_of_eq ?_)
@@ -62,9 +62,9 @@ theorem norm_cderiv_le (hr : 0 < r) (hf : ∀ w ∈ sphere z r, ‖f w‖ ≤ M)
 
 theorem cderiv_sub (hr : 0 < r) (hf : ContinuousOn f (sphere z r))
     (hg : ContinuousOn g (sphere z r)) : cderiv r (f - g) z = cderiv r f z - cderiv r g z := by
-  have h1 : ContinuousOn (fun w : ℂ => ((w - z) ^ 2)⁻¹) (sphere z r) := by
-    refine ((continuous_id'.sub continuous_const).pow 2).continuousOn.inv₀ fun w hw h => hr.ne ?_
-    rwa [mem_sphere_iff_norm, sq_eq_zero_iff.mp h, norm_zero] at hw
+  have h1  : ContinuousOn (fun w : ℂ => ((w - z) ^ 2)⁻¹) (sphere z r)
+  refine ((continuous_id'.sub continuous_const).pow 2).continuousOn.inv₀ fun w hw h => hr.ne ?_
+  rwa [mem_sphere_iff_norm, sq_eq_zero_iff.mp h, norm_zero] at hw
   simp_rw [cderiv, ← smul_sub]
   congr 1
   simpa only [Pi.sub_apply, smul_sub] using
@@ -110,8 +110,8 @@ theorem tendstoUniformlyOn_deriv_of_cthickening_subset (hf : TendstoLocallyUnifo
     (hF : ∀ᶠ n in φ, DifferentiableOn ℂ (F n) U) {δ : ℝ} (hδ : 0 < δ) (hK : IsCompact K)
     (hU : IsOpen U) (hKU : cthickening δ K ⊆ U) :
     TendstoUniformlyOn (deriv ∘ F) (cderiv δ f) φ K := by
-  have h1 : ∀ᶠ n in φ, ContinuousOn (F n) (cthickening δ K) := by
-    filter_upwards [hF] with n h using h.continuousOn.mono hKU
+  have h1  : ∀ᶠ n in φ, ContinuousOn (F n) (cthickening δ K)
+  filter_upwards [hF] with n h using h.continuousOn.mono hKU
   have h2 : IsCompact (cthickening δ K) := hK.cthickening
   have h3 : TendstoUniformlyOn F f φ (cthickening δ K) :=
     (tendstoLocallyUniformlyOn_iff_forall_isCompact hU).mp hf (cthickening δ K) hKU h2
@@ -135,8 +135,8 @@ theorem _root_.TendstoLocallyUniformlyOn.differentiableOn [φ.NeBot]
   obtain ⟨K, ⟨hKx, hK⟩, hKU⟩ := (compact_basis_nhds x).mem_iff.mp (hU.mem_nhds hx)
   obtain ⟨δ, _, _, h1⟩ := exists_cthickening_tendstoUniformlyOn hf hF hK hU hKU
   have h2 : interior K ⊆ U := interior_subset.trans hKU
-  have h3 : ∀ᶠ n in φ, DifferentiableOn ℂ (F n) (interior K) := by
-    filter_upwards [hF] with n h using h.mono h2
+  have h3  : ∀ᶠ n in φ, DifferentiableOn ℂ (F n) (interior K)
+  filter_upwards [hF] with n h using h.mono h2
   have h4 : TendstoLocallyUniformlyOn F f φ (interior K) := hf.mono h2
   have h5 : TendstoLocallyUniformlyOn (deriv ∘ F) (cderiv δ f) φ (interior K) :=
     h1.tendstoLocallyUniformlyOn.mono interior_subset

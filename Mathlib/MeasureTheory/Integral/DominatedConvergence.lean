@@ -108,12 +108,12 @@ theorem integral_tsum {ι} [Countable ι] {f : ι → α → G} (hf : ∀ i, AES
   by_cases hG : CompleteSpace G; swap
   · simp [integral, hG]
   have hf'' : ∀ i, AEMeasurable (fun x => (‖f i x‖₊ : ℝ≥0∞)) μ := fun i => (hf i).ennnorm
-  have hhh : ∀ᵐ a : α ∂μ, Summable fun n => (‖f n a‖₊ : ℝ) := by
-    rw [← lintegral_tsum hf''] at hf'
-    refine (ae_lt_top' (AEMeasurable.ennreal_tsum hf'') hf').mono ?_
-    intro x hx
-    rw [← ENNReal.tsum_coe_ne_top_iff_summable_coe]
-    exact hx.ne
+  have hhh  : ∀ᵐ a : α ∂μ, Summable fun n => (‖f n a‖₊ : ℝ)
+  rw [← lintegral_tsum hf''] at hf'
+  refine (ae_lt_top' (AEMeasurable.ennreal_tsum hf'') hf').mono ?_
+  intro x hx
+  rw [← ENNReal.tsum_coe_ne_top_iff_summable_coe]
+  exact hx.ne
   convert (MeasureTheory.hasSum_integral_of_dominated_convergence (fun i a => ‖f i a‖₊) hf _ hhh
           ⟨_, _⟩ _).tsum_eq.symm
   · intro n
@@ -125,7 +125,8 @@ theorem integral_tsum {ι} [Countable ι] {f : ι → α → G} (hf : ∀ i, AES
     apply AEMeasurable.nnreal_tsum
     exact fun i => (hf i).nnnorm.aemeasurable
   · dsimp [HasFiniteIntegral]
-    have : ∫⁻ a, ∑' n, ‖f n a‖₊ ∂μ < ⊤ := by rwa [lintegral_tsum hf'', lt_top_iff_ne_top]
+    have  : ∫⁻ a, ∑' n, ‖f n a‖₊ ∂μ < ⊤
+    rwa [lintegral_tsum hf'', lt_top_iff_ne_top]
     convert this using 1
     apply lintegral_congr_ae
     simp_rw [← coe_nnnorm, ← NNReal.coe_tsum, NNReal.nnnorm_eq]
@@ -141,10 +142,10 @@ lemma hasSum_integral_of_summable_integral_norm {ι} [Countable ι] {F : ι → 
   · simp [integral, hE, hasSum_zero]
   rw [integral_tsum (fun i ↦ (hF_int i).1)]
   · exact (hF_sum.of_norm_bounded _ fun i ↦ norm_integral_le_integral_norm _).hasSum
-  have (i : ι) : ∫⁻ (a : α), ‖F i a‖₊ ∂μ = ‖(∫ a : α, ‖F i a‖ ∂μ)‖₊ := by
-    rw [lintegral_coe_eq_integral _ (hF_int i).norm, coe_nnreal_eq, coe_nnnorm,
-      Real.norm_of_nonneg (integral_nonneg (fun a ↦ norm_nonneg (F i a)))]
-    simp only [coe_nnnorm]
+  have (i  : ι) : ∫⁻ (a : α), ‖F i a‖₊ ∂μ = ‖(∫ a : α, ‖F i a‖ ∂μ)‖₊
+  rw [lintegral_coe_eq_integral _ (hF_int i).norm, coe_nnreal_eq, coe_nnnorm,
+    Real.norm_of_nonneg (integral_nonneg (fun a ↦ norm_nonneg (F i a)))]
+  simp only [coe_nnnorm]
   rw [funext this, ← ENNReal.coe_tsum]
   · apply coe_ne_top
   · simp_rw [← NNReal.summable_coe, coe_nnnorm]
@@ -313,14 +314,14 @@ theorem continuousWithinAt_primitive (hb₀ : μ {b₀} = 0)
   by_cases h₀ : b₀ ∈ Icc b₁ b₂
   · have h₁₂ : b₁ ≤ b₂ := h₀.1.trans h₀.2
     have min₁₂ : min b₁ b₂ = b₁ := min_eq_left h₁₂
-    have h_int' : ∀ {x}, x ∈ Icc b₁ b₂ → IntervalIntegrable f μ b₁ x := by
-      rintro x ⟨h₁, h₂⟩
-      apply h_int.mono_set
-      apply uIcc_subset_uIcc
-      · exact ⟨min_le_of_left_le (min_le_right a b₁),
-          h₁.trans (h₂.trans <| le_max_of_le_right <| le_max_right _ _)⟩
-      · exact ⟨min_le_of_left_le <| (min_le_right _ _).trans h₁,
-          le_max_of_le_right <| h₂.trans <| le_max_right _ _⟩
+    have h_int'  : ∀ {x}, x ∈ Icc b₁ b₂ → IntervalIntegrable f μ b₁ x
+    rintro x ⟨h₁, h₂⟩
+    apply h_int.mono_set
+    apply uIcc_subset_uIcc
+    · exact ⟨min_le_of_left_le (min_le_right a b₁),
+        h₁.trans (h₂.trans <| le_max_of_le_right <| le_max_right _ _)⟩
+    · exact ⟨min_le_of_left_le <| (min_le_right _ _).trans h₁,
+        le_max_of_le_right <| h₂.trans <| le_max_right _ _⟩
     have : ∀ b ∈ Icc b₁ b₂,
         ∫ x in a..b, f x ∂μ = (∫ x in a..b₁, f x ∂μ) + ∫ x in b₁..b, f x ∂μ := by
       rintro b ⟨h₁, h₂⟩
@@ -464,9 +465,9 @@ theorem continuousOn_primitive (h_int : IntegrableOn f (Icc a b) μ) :
 
 theorem continuousOn_primitive_Icc (h_int : IntegrableOn f (Icc a b) μ) :
     ContinuousOn (fun x => ∫ t in Icc a x, f t ∂μ) (Icc a b) := by
-  have aux : (fun x => ∫ t in Icc a x, f t ∂μ) = fun x => ∫ t in Ioc a x, f t ∂μ := by
-    ext x
-    exact integral_Icc_eq_integral_Ioc
+  have aux  : (fun x => ∫ t in Icc a x, f t ∂μ) = fun x => ∫ t in Ioc a x, f t ∂μ
+  ext x
+  exact integral_Icc_eq_integral_Ioc
   rw [aux]
   exact continuousOn_primitive h_int
 
@@ -522,12 +523,12 @@ theorem continuous_parametric_primitive_of_continuous
   obtain ⟨δ, δpos, hδ, h'δ, h''δ⟩ : ∃ (δ : ℝ), 0 < δ ∧ δ < 1 ∧ Icc (b₀ - δ) (b₀ + δ) ⊆ Icc a b ∧
       (M + 1) * (μ (Icc (b₀ - δ) (b₀ + δ))).toReal + δ * (μ (Icc a b)).toReal < ε := by
     have A : ∀ᶠ δ in 𝓝[>] (0 : ℝ), δ ∈ Ioo 0 1 := Ioo_mem_nhdsWithin_Ioi (by simp)
-    have B : ∀ᶠ δ in 𝓝 0, Icc (b₀ - δ) (b₀ + δ) ⊆ Icc a b := by
-      have I : Tendsto (fun δ ↦ b₀ - δ) (𝓝 0) (𝓝 (b₀ - 0)) := tendsto_const_nhds.sub tendsto_id
-      have J : Tendsto (fun δ ↦ b₀ + δ) (𝓝 0) (𝓝 (b₀ + 0)) := tendsto_const_nhds.add tendsto_id
-      simp only [sub_zero, add_zero] at I J
-      filter_upwards [(tendsto_order.1 I).1 _ a_lt.2, (tendsto_order.1 J).2 _ lt_b.2] with δ hδ h'δ
-      exact Icc_subset_Icc hδ.le h'δ.le
+    have B  : ∀ᶠ δ in 𝓝 0, Icc (b₀ - δ) (b₀ + δ) ⊆ Icc a b
+    have I : Tendsto (fun δ ↦ b₀ - δ) (𝓝 0) (𝓝 (b₀ - 0)) := tendsto_const_nhds.sub tendsto_id
+    have J : Tendsto (fun δ ↦ b₀ + δ) (𝓝 0) (𝓝 (b₀ + 0)) := tendsto_const_nhds.add tendsto_id
+    simp only [sub_zero, add_zero] at I J
+    filter_upwards [(tendsto_order.1 I).1 _ a_lt.2, (tendsto_order.1 J).2 _ lt_b.2] with δ hδ h'δ
+    exact Icc_subset_Icc hδ.le h'δ.le
     have C : ∀ᶠ δ in 𝓝 0,
         (M + 1) * (μ (Icc (b₀ - δ) (b₀ + δ))).toReal + δ * (μ (Icc a b)).toReal < ε := by
       suffices Tendsto

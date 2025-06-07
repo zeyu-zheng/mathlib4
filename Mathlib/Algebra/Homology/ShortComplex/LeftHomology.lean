@@ -302,9 +302,9 @@ instance : Subsingleton (LeftHomologyMapData φ h₁ h₂) :=
 instance : Inhabited (LeftHomologyMapData φ h₁ h₂) := ⟨by
   let φK : h₁.K ⟶ h₂.K := h₂.liftK (h₁.i ≫ φ.τ₂)
     (by rw [assoc, φ.comm₂₃, h₁.wi_assoc, zero_comp])
-  have commf' : h₁.f' ≫ φK = φ.τ₁ ≫ h₂.f' := by
-    rw [← cancel_mono h₂.i, assoc, assoc, LeftHomologyData.liftK_i,
-      LeftHomologyData.f'_i_assoc, LeftHomologyData.f'_i, φ.comm₁₂]
+  have commf'  : h₁.f' ≫ φK = φ.τ₁ ≫ h₂.f'
+  rw [← cancel_mono h₂.i, assoc, assoc, LeftHomologyData.liftK_i,
+    LeftHomologyData.f'_i_assoc, LeftHomologyData.f'_i, φ.comm₁₂]
   let φH : h₁.H ⟶ h₂.H := h₁.descH (φK ≫ h₂.π)
     (by rw [reassoc_of% commf', h₂.f'_π, comp_zero])
   exact ⟨φK, φH, by simp [φK], commf', by simp [φH]⟩⟩
@@ -910,10 +910,10 @@ instance (φ : S₁ ⟶ S₂) (h₁ : S₁.LeftHomologyData) (h₂ : S₂.LeftHo
     [Epi φ.τ₁] [IsIso φ.τ₂] [Mono φ.τ₃] :
     IsIso (leftHomologyMap' φ h₁ h₂) := by
   let h₂' := LeftHomologyData.ofEpiOfIsIsoOfMono φ h₁
-  have : IsIso (leftHomologyMap' φ h₁ h₂') := by
-    rw [(LeftHomologyMapData.ofEpiOfIsIsoOfMono φ h₁).leftHomologyMap'_eq]
-    dsimp
-    infer_instance
+  have  : IsIso (leftHomologyMap' φ h₁ h₂')
+  rw [(LeftHomologyMapData.ofEpiOfIsIsoOfMono φ h₁).leftHomologyMap'_eq]
+  dsimp
+  infer_instance
   have eq := leftHomologyMap'_comp φ (𝟙 S₂) h₁ h₂' h₂
   rw [comp_id] at eq
   rw [eq]

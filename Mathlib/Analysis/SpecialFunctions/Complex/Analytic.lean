@@ -57,10 +57,10 @@ theorem AnalyticOn.clog (fs : AnalyticOn ℂ f s) (m : ∀ z ∈ s, f z ∈ slit
 /-- `f z ^ g z` is analytic if `f z` is not a nonpositive real -/
 theorem AnalyticAt.cpow (fa : AnalyticAt ℂ f x) (ga : AnalyticAt ℂ g x)
     (m : f x ∈ slitPlane) : AnalyticAt ℂ (fun z ↦ f z ^ g z) x := by
-  have e : (fun z ↦ f z ^ g z) =ᶠ[𝓝 x] fun z ↦ exp (log (f z) * g z) := by
-    filter_upwards [(fa.continuousAt.eventually_ne (slitPlane_ne_zero m))]
-    intro z fz
-    simp only [fz, cpow_def, if_false]
+  have e  : (fun z ↦ f z ^ g z) =ᶠ[𝓝 x] fun z ↦ exp (log (f z) * g z)
+  filter_upwards [(fa.continuousAt.eventually_ne (slitPlane_ne_zero m))]
+  intro z fz
+  simp only [fz, cpow_def, if_false]
   rw [analyticAt_congr e]
   exact ((fa.clog m).mul ga).cexp
 

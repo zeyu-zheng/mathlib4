@@ -428,7 +428,8 @@ variable {S}
 lemma Exact.mono_g (hS : S.Exact) (hf : S.f = 0) : Mono S.g := by
   have := hS.hasHomology
   have := hS.epi_toCycles
-  have : S.iCycles = 0 := by rw [← cancel_epi S.toCycles, comp_zero, toCycles_i, hf]
+  have  : S.iCycles = 0
+  rw [← cancel_epi S.toCycles, comp_zero, toCycles_i, hf]
   apply Preadditive.mono_of_cancel_zero
   intro A x₂ hx₂
   rw [← S.liftCycles_i x₂ hx₂, this, comp_zero]
@@ -436,7 +437,8 @@ lemma Exact.mono_g (hS : S.Exact) (hf : S.f = 0) : Mono S.g := by
 lemma Exact.epi_f (hS : S.Exact) (hg : S.g = 0) : Epi S.f := by
   have := hS.hasHomology
   have := hS.mono_fromOpcycles
-  have : S.pOpcycles = 0 := by rw [← cancel_mono S.fromOpcycles, zero_comp, p_fromOpcycles, hg]
+  have  : S.pOpcycles = 0
+  rw [← cancel_mono S.fromOpcycles, zero_comp, p_fromOpcycles, hg]
   apply Preadditive.epi_of_cancel_zero
   intro A x₂ hx₂
   rw [← S.p_descOpcycles x₂ hx₂, this, zero_comp]
@@ -797,10 +799,14 @@ attribute [local instance] balanced_opposite
 
 lemma epi_τ₂_of_exact_of_epi {S₁ S₂ : ShortComplex C} (φ : S₁ ⟶ S₂)
     (h₂ : S₂.Exact) [Epi S₁.g] [Epi S₂.g] [Epi φ.τ₁] [Epi φ.τ₃] : Epi φ.τ₂ := by
-  have : Mono S₁.op.f := by dsimp; infer_instance
-  have : Mono S₂.op.f := by dsimp; infer_instance
-  have : Mono (opMap φ).τ₁ := by dsimp; infer_instance
-  have : Mono (opMap φ).τ₃ := by dsimp; infer_instance
+  have  : Mono S₁.op.f
+  dsimp; infer_instance
+  have  : Mono S₂.op.f
+  dsimp; infer_instance
+  have  : Mono (opMap φ).τ₁
+  dsimp; infer_instance
+  have  : Mono (opMap φ).τ₃
+  dsimp; infer_instance
   have := mono_τ₂_of_exact_of_mono (opMap φ) h₂.op
   exact unop_epi_of_mono (opMap φ).τ₂
 
@@ -838,13 +844,14 @@ lemma quasiIso_iff_of_zeros {S₁ S₂ : ShortComplex C} (φ : S₁ ⟶ S₂)
     (hf₁ : S₁.f = 0) (hg₁ : S₁.g = 0) (hf₂ : S₂.f = 0) :
     QuasiIso φ ↔
       (ShortComplex.mk φ.τ₂ S₂.g (by rw [φ.comm₂₃, hg₁, zero_comp])).Exact ∧ Mono φ.τ₂ := by
-  have w : φ.τ₂ ≫ S₂.g = 0 := by rw [φ.comm₂₃, hg₁, zero_comp]
+  have w  : φ.τ₂ ≫ S₂.g = 0
+  rw [φ.comm₂₃, hg₁, zero_comp]
   rw [quasiIso_iff_isIso_liftCycles φ hf₁ hg₁ hf₂]
   constructor
   · intro h
-    have : Mono φ.τ₂ := by
-      rw [← S₂.liftCycles_i φ.τ₂ w]
-      apply mono_comp
+    have  : Mono φ.τ₂
+    rw [← S₂.liftCycles_i φ.τ₂ w]
+    apply mono_comp
     refine ⟨?_, this⟩
     apply exact_of_f_is_kernel
     exact IsLimit.ofIsoLimit S₂.cyclesIsKernel

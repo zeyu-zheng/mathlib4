@@ -119,12 +119,12 @@ instance [Countable α] [∀ a, Countable (π a)] : Countable (PSigma π) :=
   Countable.of_equiv (Σa : PLift α, PLift (π a.down)) (Equiv.psigmaEquivSigmaPLift π).symm
 
 instance [Finite α] [∀ a, Countable (π a)] : Countable (∀ a, π a) := by
-  have : ∀ n, Countable (Fin n → ℕ) := by
-    intro n
-    induction' n with n ihn
-    · change Countable (Fin 0 → ℕ); infer_instance
-    · haveI := ihn
-      exact Countable.of_equiv (ℕ × (Fin n → ℕ)) (Equiv.piFinSucc _ _).symm
+  have  : ∀ n, Countable (Fin n → ℕ)
+  intro n
+  induction' n with n ihn
+  · change Countable (Fin 0 → ℕ); infer_instance
+  · haveI := ihn
+    exact Countable.of_equiv (ℕ × (Fin n → ℕ)) (Equiv.piFinSucc _ _).symm
   rcases Finite.exists_equiv_fin α with ⟨n, ⟨e⟩⟩
   have f := fun a => (nonempty_embedding_nat (π a)).some
   exact ((Embedding.piCongrRight f).trans (Equiv.piCongrLeft' _ e).toEmbedding).countable

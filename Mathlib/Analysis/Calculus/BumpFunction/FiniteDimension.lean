@@ -88,14 +88,14 @@ theorem IsOpen.exists_smooth_support_eq {s : Set E} (hs : IsOpen s) :
         simp only [range_const, singleton_subset_iff, left_mem_Icc, zero_le_one]⟩
   let ι := { f : E → ℝ // f.support ⊆ s ∧ HasCompactSupport f ∧ ContDiff ℝ ⊤ f ∧ range f ⊆ Icc 0 1 }
   obtain ⟨T, T_count, hT⟩ : ∃ T : Set ι, T.Countable ∧ ⋃ f ∈ T, support (f : E → ℝ) = s := by
-    have : ⋃ f : ι, (f : E → ℝ).support = s := by
-      refine Subset.antisymm (iUnion_subset fun f => f.2.1) ?_
-      intro x hx
-      rcases exists_smooth_tsupport_subset (hs.mem_nhds hx) with ⟨f, hf⟩
-      let g : ι := ⟨f, (subset_tsupport f).trans hf.1, hf.2.1, hf.2.2.1, hf.2.2.2.1⟩
-      have : x ∈ support (g : E → ℝ) := by
-        simp only [hf.2.2.2.2, Subtype.coe_mk, mem_support, Ne, one_ne_zero, not_false_iff]
-      exact mem_iUnion_of_mem _ this
+    have  : ⋃ f : ι, (f : E → ℝ).support = s
+    refine Subset.antisymm (iUnion_subset fun f => f.2.1) ?_
+    intro x hx
+    rcases exists_smooth_tsupport_subset (hs.mem_nhds hx) with ⟨f, hf⟩
+    let g : ι := ⟨f, (subset_tsupport f).trans hf.1, hf.2.1, hf.2.2.1, hf.2.2.2.1⟩
+    have  : x ∈ support (g : E → ℝ)
+    simp only [hf.2.2.2.2, Subtype.coe_mk, mem_support, Ne, one_ne_zero, not_false_iff]
+    exact mem_iUnion_of_mem _ this
     simp_rw [← this]
     apply isOpen_iUnion_countable
     rintro ⟨f, hf⟩
@@ -309,11 +309,11 @@ theorem w_integral {D : ℝ} (Dpos : 0 < D) : ∫ x : E, w D x ∂μ = 1 := by
   field_simp [(u_int_pos E).ne']
 
 theorem w_support {D : ℝ} (Dpos : 0 < D) : support (w D : E → ℝ) = ball 0 D := by
-  have B : D • ball (0 : E) 1 = ball 0 D := by
-    rw [smul_unitBall Dpos.ne', Real.norm_of_nonneg Dpos.le]
-  have C : D ^ finrank ℝ E ≠ 0 := by
-    norm_cast
-    exact pow_ne_zero _ Dpos.ne'
+  have B  : D • ball (0 : E) 1 = ball 0 D
+  rw [smul_unitBall Dpos.ne', Real.norm_of_nonneg Dpos.le]
+  have C  : D ^ finrank ℝ E ≠ 0
+  norm_cast
+  exact pow_ne_zero _ Dpos.ne'
   simp only [w_def, Algebra.id.smul_eq_mul, support_mul, support_inv, univ_inter,
     support_comp_inv_smul₀ Dpos.ne', u_support, B, support_const (u_int_pos E).ne', support_const C,
     abs_of_nonneg Dpos.le]
@@ -341,17 +341,18 @@ theorem y_neg (D : ℝ) (x : E) : y D (-x) = y D x := by
 theorem y_eq_one_of_mem_closedBall {D : ℝ} {x : E} (Dpos : 0 < D)
     (hx : x ∈ closedBall (0 : E) (1 - D)) : y D x = 1 := by
   change (w D ⋆[lsmul ℝ ℝ, μ] φ) x = 1
-  have B : ∀ y : E, y ∈ ball x D → φ y = 1 := by
-    have C : ball x D ⊆ ball 0 1 := by
-      apply ball_subset_ball'
-      simp only [mem_closedBall] at hx
-      linarith only [hx]
-    intro y hy
-    simp only [φ, indicator, mem_closedBall, ite_eq_left_iff, not_le, zero_ne_one]
-    intro h'y
-    linarith only [mem_ball.1 (C hy), h'y]
+  have B  : ∀ y : E, y ∈ ball x D → φ y = 1
+  have C  : ball x D ⊆ ball 0 1
+  apply ball_subset_ball'
+  simp only [mem_closedBall] at hx
+  linarith only [hx]
+  intro y hy
+  simp only [φ, indicator, mem_closedBall, ite_eq_left_iff, not_le, zero_ne_one]
+  intro h'y
+  linarith only [mem_ball.1 (C hy), h'y]
   have Bx : φ x = 1 := B _ (mem_ball_self Dpos)
-  have B' : ∀ y, y ∈ ball x D → φ y = φ x := by rw [Bx]; exact B
+  have B'  : ∀ y, y ∈ ball x D → φ y = φ x
+  rw [Bx]; exact B
   rw [convolution_eq_right' _ (le_of_eq (w_support E Dpos)) B']
   simp only [lsmul_apply, Algebra.id.smul_eq_mul, integral_mul_right, w_integral E Dpos, Bx,
     one_mul]
@@ -359,17 +360,18 @@ theorem y_eq_one_of_mem_closedBall {D : ℝ} {x : E} (Dpos : 0 < D)
 theorem y_eq_zero_of_not_mem_ball {D : ℝ} {x : E} (Dpos : 0 < D) (hx : x ∉ ball (0 : E) (1 + D)) :
     y D x = 0 := by
   change (w D ⋆[lsmul ℝ ℝ, μ] φ) x = 0
-  have B : ∀ y, y ∈ ball x D → φ y = 0 := by
-    intro y hy
-    simp only [φ, indicator, mem_closedBall_zero_iff, ite_eq_right_iff, one_ne_zero]
-    intro h'y
-    have C : ball y D ⊆ ball 0 (1 + D) := by
-      apply ball_subset_ball'
-      rw [← dist_zero_right] at h'y
-      linarith only [h'y]
-    exact hx (C (mem_ball_comm.1 hy))
+  have B  : ∀ y, y ∈ ball x D → φ y = 0
+  intro y hy
+  simp only [φ, indicator, mem_closedBall_zero_iff, ite_eq_right_iff, one_ne_zero]
+  intro h'y
+  have C  : ball y D ⊆ ball 0 (1 + D)
+  apply ball_subset_ball'
+  rw [← dist_zero_right] at h'y
+  linarith only [h'y]
+  exact hx (C (mem_ball_comm.1 hy))
   have Bx : φ x = 0 := B _ (mem_ball_self Dpos)
-  have B' : ∀ y, y ∈ ball x D → φ y = φ x := by rw [Bx]; exact B
+  have B'  : ∀ y, y ∈ ball x D → φ y = φ x
+  rw [Bx]; exact B
   rw [convolution_eq_right' _ (le_of_eq (w_support E Dpos)) B']
   simp only [lsmul_apply, Algebra.id.smul_eq_mul, Bx, mul_zero, integral_const]
 
@@ -377,17 +379,17 @@ theorem y_nonneg (D : ℝ) (x : E) : 0 ≤ y D x :=
   integral_nonneg (w_mul_φ_nonneg D x)
 
 theorem y_le_one {D : ℝ} (x : E) (Dpos : 0 < D) : y D x ≤ 1 := by
-  have A : (w D ⋆[lsmul ℝ ℝ, μ] φ) x ≤ (w D ⋆[lsmul ℝ ℝ, μ] 1) x := by
-    apply
-      convolution_mono_right_of_nonneg _ (w_nonneg D) (indicator_le_self' fun x _ => zero_le_one)
-        fun _ => zero_le_one
-    refine
-      (HasCompactSupport.convolutionExistsLeft _ (w_compact_support E Dpos) ?_
-          (locallyIntegrable_const (1 : ℝ)) x).integrable
-    exact continuous_const.mul ((u_continuous E).comp (continuous_id.const_smul _))
-  have B : (w D ⋆[lsmul ℝ ℝ, μ] fun _ => (1 : ℝ)) x = 1 := by
-    simp only [convolution, ContinuousLinearMap.map_smul, mul_inv_rev, coe_smul', mul_one,
-      lsmul_apply, Algebra.id.smul_eq_mul, integral_mul_left, w_integral E Dpos, Pi.smul_apply]
+  have A  : (w D ⋆[lsmul ℝ ℝ, μ] φ) x ≤ (w D ⋆[lsmul ℝ ℝ, μ] 1) x
+  apply
+    convolution_mono_right_of_nonneg _ (w_nonneg D) (indicator_le_self' fun x _ => zero_le_one)
+      fun _ => zero_le_one
+  refine
+    (HasCompactSupport.convolutionExistsLeft _ (w_compact_support E Dpos) ?_
+        (locallyIntegrable_const (1 : ℝ)) x).integrable
+  exact continuous_const.mul ((u_continuous E).comp (continuous_id.const_smul _))
+  have B  : (w D ⋆[lsmul ℝ ℝ, μ] fun _ => (1 : ℝ)) x = 1
+  simp only [convolution, ContinuousLinearMap.map_smul, mul_inv_rev, coe_smul', mul_one,
+    lsmul_apply, Algebra.id.smul_eq_mul, integral_mul_left, w_integral E Dpos, Pi.smul_apply]
   exact A.trans (le_of_eq B)
 
 theorem y_pos_of_mem_ball {D : ℝ} {x : E} (Dpos : 0 < D) (D_lt_one : D < 1)
@@ -475,7 +477,8 @@ instance (priority := 100) {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E
     [FiniteDimensional ℝ E] : HasContDiffBump E := by
   refine ⟨⟨?_⟩⟩
   borelize E
-  have IR : ∀ R : ℝ, 1 < R → 0 < (R - 1) / (R + 1) := by intro R hR; apply div_pos <;> linarith
+  have IR  : ∀ R : ℝ, 1 < R → 0 < (R - 1) / (R + 1)
+  intro R hR; apply div_pos <;> linarith
   exact
     { toFun := fun R x => if 1 < R then y ((R - 1) / (R + 1)) (((R + 1) / 2)⁻¹ • x) else 0
       mem_Icc := fun R x => by
@@ -511,11 +514,14 @@ instance (priority := 100) {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E
             dsimp only
             linarith
         · rintro ⟨R, x⟩ ⟨hR : 1 < R, _⟩
-          have A : 0 < (R - 1) / (R + 1) := by apply div_pos <;> linarith
-          have B : (R - 1) / (R + 1) < 1 := by apply (div_lt_one _).2 <;> linarith
+          have A  : 0 < (R - 1) / (R + 1)
+          apply div_pos <;> linarith
+          have B  : (R - 1) / (R + 1) < 1
+          apply (div_lt_one _).2 <;> linarith
           simp only [mem_preimage, prod_mk_mem_set_prod_eq, mem_Ioo, mem_univ, and_true_iff, A, B]
       eq_one := fun R hR x hx => by
-        have A : 0 < R + 1 := by linarith
+        have A  : 0 < R + 1
+        linarith
         simp only [hR, if_true]
         apply y_eq_one_of_mem_closedBall (IR R hR)
         simp only [norm_smul, inv_div, mem_closedBall_zero_iff, Real.norm_eq_abs, abs_div, abs_two,
@@ -524,8 +530,10 @@ instance (priority := 100) {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E
           2 / (R + 1) * ‖x‖ ≤ 2 / (R + 1) := mul_le_of_le_one_right (by positivity) hx
           _ = 1 - (R - 1) / (R + 1) := by field_simp; ring
       support := fun R hR => by
-        have A : 0 < (R + 1) / 2 := by linarith
-        have C : (R - 1) / (R + 1) < 1 := by apply (div_lt_one _).2 <;> linarith
+        have A  : 0 < (R + 1) / 2
+        linarith
+        have C  : (R - 1) / (R + 1) < 1
+        apply (div_lt_one _).2 <;> linarith
         simp only [hR, if_true, support_comp_inv_smul₀ A.ne', y_support _ (IR R hR) C,
           _root_.smul_ball A.ne', Real.norm_of_nonneg A.le, smul_zero]
         refine congr (congr_arg ball (Eq.refl 0)) ?_

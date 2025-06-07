@@ -525,12 +525,12 @@ section PosPart
 theorem posPart_toSimpleFunc (f : α →₁ₛ[μ] ℝ) :
     toSimpleFunc (posPart f) =ᵐ[μ] (toSimpleFunc f).posPart := by
   have eq : ∀ a, (toSimpleFunc f).posPart a = max ((toSimpleFunc f) a) 0 := fun a => rfl
-  have ae_eq : ∀ᵐ a ∂μ, toSimpleFunc (posPart f) a = max ((toSimpleFunc f) a) 0 := by
-    filter_upwards [toSimpleFunc_eq_toFun (posPart f), Lp.coeFn_posPart (f : α →₁[μ] ℝ),
-      toSimpleFunc_eq_toFun f] with _ _ h₂ h₃
-    convert h₂ using 1
-    -- Porting note: added
-    rw [h₃]
+  have ae_eq  : ∀ᵐ a ∂μ, toSimpleFunc (posPart f) a = max ((toSimpleFunc f) a) 0
+  filter_upwards [toSimpleFunc_eq_toFun (posPart f), Lp.coeFn_posPart (f : α →₁[μ] ℝ),
+    toSimpleFunc_eq_toFun f] with _ _ h₂ h₃
+  convert h₂ using 1
+  -- Porting note: added
+  rw [h₃]
   refine ae_eq.mono fun a h => ?_
   rw [h, eq]
 
@@ -546,15 +546,15 @@ theorem negPart_toSimpleFunc (f : α →₁ₛ[μ] ℝ) :
 
 theorem integral_eq_norm_posPart_sub (f : α →₁ₛ[μ] ℝ) : integral f = ‖posPart f‖ - ‖negPart f‖ := by
   -- Convert things in `L¹` to their `SimpleFunc` counterpart
-  have ae_eq₁ : (toSimpleFunc f).posPart =ᵐ[μ] (toSimpleFunc (posPart f)).map norm := by
-    filter_upwards [posPart_toSimpleFunc f] with _ h
-    rw [SimpleFunc.map_apply, h]
-    conv_lhs => rw [← SimpleFunc.posPart_map_norm, SimpleFunc.map_apply]
+  have ae_eq₁  : (toSimpleFunc f).posPart =ᵐ[μ] (toSimpleFunc (posPart f)).map norm
+  filter_upwards [posPart_toSimpleFunc f] with _ h
+  rw [SimpleFunc.map_apply, h]
+  conv_lhs => rw [← SimpleFunc.posPart_map_norm, SimpleFunc.map_apply]
   -- Convert things in `L¹` to their `SimpleFunc` counterpart
-  have ae_eq₂ : (toSimpleFunc f).negPart =ᵐ[μ] (toSimpleFunc (negPart f)).map norm := by
-    filter_upwards [negPart_toSimpleFunc f] with _ h
-    rw [SimpleFunc.map_apply, h]
-    conv_lhs => rw [← SimpleFunc.negPart_map_norm, SimpleFunc.map_apply]
+  have ae_eq₂  : (toSimpleFunc f).negPart =ᵐ[μ] (toSimpleFunc (negPart f)).map norm
+  filter_upwards [negPart_toSimpleFunc f] with _ h
+  rw [SimpleFunc.map_apply, h]
+  conv_lhs => rw [← SimpleFunc.negPart_map_norm, SimpleFunc.map_apply]
   rw [integral, norm_eq_integral, norm_eq_integral, ← SimpleFunc.integral_sub]
   · show (toSimpleFunc f).integral μ =
       ((toSimpleFunc (posPart f)).map norm - (toSimpleFunc (negPart f)).map norm).integral μ
@@ -1006,27 +1006,27 @@ theorem integral_eq_lintegral_pos_part_sub_lintegral_neg_part {f : α → ℝ} (
       ENNReal.toReal (∫⁻ a, .ofReal (f a) ∂μ) - ENNReal.toReal (∫⁻ a, .ofReal (-f a) ∂μ) := by
   let f₁ := hf.toL1 f
   -- Go to the `L¹` space
-  have eq₁ : ENNReal.toReal (∫⁻ a, ENNReal.ofReal (f a) ∂μ) = ‖Lp.posPart f₁‖ := by
-    rw [L1.norm_def]
-    congr 1
-    apply lintegral_congr_ae
-    filter_upwards [Lp.coeFn_posPart f₁, hf.coeFn_toL1] with _ h₁ h₂
-    rw [h₁, h₂, ENNReal.ofReal]
-    congr 1
-    apply NNReal.eq
-    rw [Real.nnnorm_of_nonneg (le_max_right _ _)]
-    rw [Real.coe_toNNReal', NNReal.coe_mk]
+  have eq₁  : ENNReal.toReal (∫⁻ a, ENNReal.ofReal (f a) ∂μ) = ‖Lp.posPart f₁‖
+  rw [L1.norm_def]
+  congr 1
+  apply lintegral_congr_ae
+  filter_upwards [Lp.coeFn_posPart f₁, hf.coeFn_toL1] with _ h₁ h₂
+  rw [h₁, h₂, ENNReal.ofReal]
+  congr 1
+  apply NNReal.eq
+  rw [Real.nnnorm_of_nonneg (le_max_right _ _)]
+  rw [Real.coe_toNNReal', NNReal.coe_mk]
   -- Go to the `L¹` space
-  have eq₂ : ENNReal.toReal (∫⁻ a, ENNReal.ofReal (-f a) ∂μ) = ‖Lp.negPart f₁‖ := by
-    rw [L1.norm_def]
-    congr 1
-    apply lintegral_congr_ae
-    filter_upwards [Lp.coeFn_negPart f₁, hf.coeFn_toL1] with _ h₁ h₂
-    rw [h₁, h₂, ENNReal.ofReal]
-    congr 1
-    apply NNReal.eq
-    simp only [Real.coe_toNNReal', coe_nnnorm, nnnorm_neg]
-    rw [Real.norm_of_nonpos (min_le_right _ _), ← max_neg_neg, neg_zero]
+  have eq₂  : ENNReal.toReal (∫⁻ a, ENNReal.ofReal (-f a) ∂μ) = ‖Lp.negPart f₁‖
+  rw [L1.norm_def]
+  congr 1
+  apply lintegral_congr_ae
+  filter_upwards [Lp.coeFn_negPart f₁, hf.coeFn_toL1] with _ h₁ h₂
+  rw [h₁, h₂, ENNReal.ofReal]
+  congr 1
+  apply NNReal.eq
+  simp only [Real.coe_toNNReal', coe_nnnorm, nnnorm_neg]
+  rw [Real.norm_of_nonpos (min_le_right _ _), ← max_neg_neg, neg_zero]
   rw [eq₁, eq₂, integral, dif_pos, dif_pos]
   exact L1.integral_eq_norm_posPart_sub _
 
@@ -1035,13 +1035,13 @@ theorem integral_eq_lintegral_of_nonneg_ae {f : α → ℝ} (hf : 0 ≤ᵐ[μ] f
     ∫ a, f a ∂μ = ENNReal.toReal (∫⁻ a, ENNReal.ofReal (f a) ∂μ) := by
   by_cases hfi : Integrable f μ
   · rw [integral_eq_lintegral_pos_part_sub_lintegral_neg_part hfi]
-    have h_min : ∫⁻ a, ENNReal.ofReal (-f a) ∂μ = 0 := by
-      rw [lintegral_eq_zero_iff']
-      · refine hf.mono ?_
-        simp only [Pi.zero_apply]
-        intro a h
-        simp only [h, neg_nonpos, ofReal_eq_zero]
-      · exact measurable_ofReal.comp_aemeasurable hfm.aemeasurable.neg
+    have h_min  : ∫⁻ a, ENNReal.ofReal (-f a) ∂μ = 0
+    rw [lintegral_eq_zero_iff']
+    · refine hf.mono ?_
+      simp only [Pi.zero_apply]
+      intro a h
+      simp only [h, neg_nonpos, ofReal_eq_zero]
+    · exact measurable_ofReal.comp_aemeasurable hfm.aemeasurable.neg
     rw [h_min, zero_toReal, _root_.sub_zero]
   · rw [integral_undef hfi]
     simp_rw [Integrable, hfm, hasFiniteIntegral_iff_norm, lt_top_iff_ne_top, Ne, true_and_iff,
@@ -1070,7 +1070,8 @@ theorem integral_eq_integral_pos_part_sub_integral_neg_part {f : α → ℝ} (hf
   · exact hf.neg.real_toNNReal
 
 theorem integral_nonneg_of_ae {f : α → ℝ} (hf : 0 ≤ᵐ[μ] f) : 0 ≤ ∫ a, f a ∂μ := by
-  have A : CompleteSpace ℝ := by infer_instance
+  have A  : CompleteSpace ℝ
+  infer_instance
   simp only [integral_def, A, L1.integral_def, dite_true]
   exact setToFun_nonneg (dominatedFinMeasAdditive_weightedSMul μ)
     (fun s _ _ => weightedSMul_nonneg s) hf
@@ -1087,7 +1088,8 @@ theorem lintegral_coe_eq_integral (f : α → ℝ≥0) (hfi : Integrable (fun x 
 
 theorem ofReal_integral_eq_lintegral_ofReal {f : α → ℝ} (hfi : Integrable f μ) (f_nn : 0 ≤ᵐ[μ] f) :
     ENNReal.ofReal (∫ x, f x ∂μ) = ∫⁻ x, ENNReal.ofReal (f x) ∂μ := by
-  have : f =ᵐ[μ] (‖f ·‖) := f_nn.mono fun _x hx ↦ (abs_of_nonneg hx).symm
+  have : f =ᵐ[μ] (‖f ·‖)
+  apply f_nn.mono fun _x hx ↦ (abs_of_nonneg hx).symm
   simp_rw [integral_congr_ae this, ofReal_integral_norm_eq_lintegral_nnnorm hfi,
     ← ofReal_norm_eq_coe_nnnorm]
   exact lintegral_congr_ae (this.symm.fun_comp ENNReal.ofReal)
@@ -1167,17 +1169,17 @@ lemma integral_tendsto_of_tendsto_of_monotone {μ : Measure α} {f : ℕ → α 
     Tendsto (fun n ↦ ∫ x, f n x ∂μ) atTop (𝓝 (∫ x, F x ∂μ)) := by
   -- switch from the Bochner to the Lebesgue integral
   let f' := fun n x ↦ f n x - f 0 x
-  have hf'_nonneg : ∀ᵐ x ∂μ, ∀ n, 0 ≤ f' n x := by
-    filter_upwards [h_mono] with a ha n
-    simp [f', ha (zero_le n)]
+  have hf'_nonneg  : ∀ᵐ x ∂μ, ∀ n, 0 ≤ f' n x
+  filter_upwards [h_mono] with a ha n
+  simp [f', ha (zero_le n)]
   have hf'_meas : ∀ n, Integrable (f' n) μ := fun n ↦ (hf n).sub (hf 0)
   suffices Tendsto (fun n ↦ ∫ x, f' n x ∂μ) atTop (𝓝 (∫ x, (F - f 0) x ∂μ)) by
     simp_rw [integral_sub (hf _) (hf _), integral_sub' hF (hf 0), tendsto_sub_const_iff] at this
     exact this
-  have hF_ge : 0 ≤ᵐ[μ] fun x ↦ (F - f 0) x := by
-    filter_upwards [h_tendsto, h_mono] with x hx_tendsto hx_mono
-    simp only [Pi.zero_apply, Pi.sub_apply, sub_nonneg]
-    exact ge_of_tendsto' hx_tendsto (fun n ↦ hx_mono (zero_le _))
+  have hF_ge  : 0 ≤ᵐ[μ] fun x ↦ (F - f 0) x
+  filter_upwards [h_tendsto, h_mono] with x hx_tendsto hx_mono
+  simp only [Pi.zero_apply, Pi.sub_apply, sub_nonneg]
+  exact ge_of_tendsto' hx_tendsto (fun n ↦ hx_mono (zero_le _))
   rw [ae_all_iff] at hf'_nonneg
   simp_rw [integral_eq_lintegral_of_nonneg_ae (hf'_nonneg _) (hf'_meas _).1]
   rw [integral_eq_lintegral_of_nonneg_ae hF_ge (hF.1.sub (hf 0).1)]
@@ -1223,48 +1225,48 @@ lemma tendsto_of_integral_tendsto_of_monotone {μ : Measure α} {f : ℕ → α 
   -- reduce to the `ℝ≥0∞` case
   let f' : ℕ → α → ℝ≥0∞ := fun n a ↦ ENNReal.ofReal (f n a - f 0 a)
   let F' : α → ℝ≥0∞ := fun a ↦ ENNReal.ofReal (F a - f 0 a)
-  have hf'_int_eq : ∀ i, ∫⁻ a, f' i a ∂μ = ENNReal.ofReal (∫ a, f i a ∂μ - ∫ a, f 0 a ∂μ) := by
-    intro i
-    unfold_let f'
-    rw [← ofReal_integral_eq_lintegral_ofReal, integral_sub (hf_int i) (hf_int 0)]
-    · exact (hf_int i).sub (hf_int 0)
-    · filter_upwards [hf_mono] with a h_mono
-      simp [h_mono (zero_le i)]
-  have hF'_int_eq : ∫⁻ a, F' a ∂μ = ENNReal.ofReal (∫ a, F a ∂μ - ∫ a, f 0 a ∂μ) := by
-    unfold_let F'
-    rw [← ofReal_integral_eq_lintegral_ofReal, integral_sub hF_int (hf_int 0)]
-    · exact hF_int.sub (hf_int 0)
-    · filter_upwards [hf_bound] with a h_bound
-      simp [h_bound 0]
-  have h_tendsto : Tendsto (fun i ↦ ∫⁻ a, f' i a ∂μ) atTop (𝓝 (∫⁻ a, F' a ∂μ)) := by
-    simp_rw [hf'_int_eq, hF'_int_eq]
-    refine (ENNReal.continuous_ofReal.tendsto _).comp ?_
-    rwa [tendsto_sub_const_iff]
-  have h_mono : ∀ᵐ a ∂μ, Monotone (fun i ↦ f' i a) := by
-    filter_upwards [hf_mono] with a ha_mono i j hij
-    refine ENNReal.ofReal_le_ofReal ?_
-    simp [ha_mono hij]
-  have h_bound : ∀ᵐ a ∂μ, ∀ i, f' i a ≤ F' a := by
-    filter_upwards [hf_bound] with a ha_bound i
-    refine ENNReal.ofReal_le_ofReal ?_
-    simp only [tsub_le_iff_right, sub_add_cancel, ha_bound i]
+  have hf'_int_eq  : ∀ i, ∫⁻ a, f' i a ∂μ = ENNReal.ofReal (∫ a, f i a ∂μ - ∫ a, f 0 a ∂μ)
+  intro i
+  unfold_let f'
+  rw [← ofReal_integral_eq_lintegral_ofReal, integral_sub (hf_int i) (hf_int 0)]
+  · exact (hf_int i).sub (hf_int 0)
+  · filter_upwards [hf_mono] with a h_mono
+    simp [h_mono (zero_le i)]
+  have hF'_int_eq  : ∫⁻ a, F' a ∂μ = ENNReal.ofReal (∫ a, F a ∂μ - ∫ a, f 0 a ∂μ)
+  unfold_let F'
+  rw [← ofReal_integral_eq_lintegral_ofReal, integral_sub hF_int (hf_int 0)]
+  · exact hF_int.sub (hf_int 0)
+  · filter_upwards [hf_bound] with a h_bound
+    simp [h_bound 0]
+  have h_tendsto  : Tendsto (fun i ↦ ∫⁻ a, f' i a ∂μ) atTop (𝓝 (∫⁻ a, F' a ∂μ))
+  simp_rw [hf'_int_eq, hF'_int_eq]
+  refine (ENNReal.continuous_ofReal.tendsto _).comp ?_
+  rwa [tendsto_sub_const_iff]
+  have h_mono  : ∀ᵐ a ∂μ, Monotone (fun i ↦ f' i a)
+  filter_upwards [hf_mono] with a ha_mono i j hij
+  refine ENNReal.ofReal_le_ofReal ?_
+  simp [ha_mono hij]
+  have h_bound  : ∀ᵐ a ∂μ, ∀ i, f' i a ≤ F' a
+  filter_upwards [hf_bound] with a ha_bound i
+  refine ENNReal.ofReal_le_ofReal ?_
+  simp only [tsub_le_iff_right, sub_add_cancel, ha_bound i]
   -- use the corresponding lemma for `ℝ≥0∞`
   have h := tendsto_of_lintegral_tendsto_of_monotone ?_ h_tendsto h_mono h_bound ?_
   rotate_left
   · exact (hF_int.1.aemeasurable.sub (hf_int 0).1.aemeasurable).ennreal_ofReal
   · exact ((lintegral_ofReal_le_lintegral_nnnorm _).trans_lt (hF_int.sub (hf_int 0)).2).ne
   filter_upwards [h, hf_mono, hf_bound] with a ha ha_mono ha_bound
-  have h1 : (fun i ↦ f i a) = fun i ↦ (f' i a).toReal + f 0 a := by
-    unfold_let f'
-    ext i
-    rw [ENNReal.toReal_ofReal]
-    · abel
-    · simp [ha_mono (zero_le i)]
-  have h2 : F a = (F' a).toReal + f 0 a := by
-    unfold_let F'
-    rw [ENNReal.toReal_ofReal]
-    · abel
-    · simp [ha_bound 0]
+  have h1  : (fun i ↦ f i a) = fun i ↦ (f' i a).toReal + f 0 a
+  unfold_let f'
+  ext i
+  rw [ENNReal.toReal_ofReal]
+  · abel
+  · simp [ha_mono (zero_le i)]
+  have h2  : F a = (F' a).toReal + f 0 a
+  unfold_let F'
+  rw [ENNReal.toReal_ofReal]
+  · abel
+  · simp [ha_bound 0]
   rw [h1, h2]
   refine Filter.Tendsto.add ?_ tendsto_const_nhds
   exact (ENNReal.continuousAt_toReal ENNReal.ofReal_ne_top).tendsto.comp ha
@@ -1317,8 +1319,8 @@ theorem L1.norm_of_fun_eq_integral_norm {f : α → H} (hf : Integrable f μ) :
 theorem Memℒp.eLpNorm_eq_integral_rpow_norm {f : α → H} {p : ℝ≥0∞} (hp1 : p ≠ 0) (hp2 : p ≠ ∞)
     (hf : Memℒp f p μ) :
     eLpNorm f p μ = ENNReal.ofReal ((∫ a, ‖f a‖ ^ p.toReal ∂μ) ^ p.toReal⁻¹) := by
-  have A : ∫⁻ a : α, ENNReal.ofReal (‖f a‖ ^ p.toReal) ∂μ = ∫⁻ a : α, ‖f a‖₊ ^ p.toReal ∂μ := by
-    simp_rw [← ofReal_rpow_of_nonneg (norm_nonneg _) toReal_nonneg, ofReal_norm_eq_coe_nnnorm]
+  have A  : ∫⁻ a : α, ENNReal.ofReal (‖f a‖ ^ p.toReal) ∂μ = ∫⁻ a : α, ‖f a‖₊ ^ p.toReal ∂μ
+  simp_rw [← ofReal_rpow_of_nonneg (norm_nonneg _) toReal_nonneg, ofReal_norm_eq_coe_nnnorm]
   simp only [eLpNorm_eq_lintegral_rpow_nnnorm hp1 hp2, one_div]
   rw [integral_eq_lintegral_of_nonneg_ae]; rotate_left
   · exact ae_of_all _ fun x => by positivity
@@ -1333,7 +1335,8 @@ end NormedAddCommGroup
 
 theorem integral_mono_ae {f g : α → ℝ} (hf : Integrable f μ) (hg : Integrable g μ) (h : f ≤ᵐ[μ] g) :
     ∫ a, f a ∂μ ≤ ∫ a, g a ∂μ := by
-  have A : CompleteSpace ℝ := by infer_instance
+  have A  : CompleteSpace ℝ
+  infer_instance
   simp only [integral, A, L1.integral]
   exact setToFun_mono (dominatedFinMeasAdditive_weightedSMul μ)
     (fun s _ _ => weightedSMul_nonneg s) hf hg h
@@ -1354,8 +1357,10 @@ theorem integral_mono_of_nonneg {f g : α → ℝ} (hf : 0 ≤ᵐ[μ] f) (hgi : 
 
 theorem integral_mono_measure {f : α → ℝ} {ν} (hle : μ ≤ ν) (hf : 0 ≤ᵐ[ν] f)
     (hfi : Integrable f ν) : ∫ a, f a ∂μ ≤ ∫ a, f a ∂ν := by
-  have hfi' : Integrable f μ := hfi.mono_measure hle
-  have hf' : 0 ≤ᵐ[μ] f := hle.absolutelyContinuous hf
+  have hfi' : Integrable f μ
+  apply hfi.mono_measure hle
+  have hf' : 0 ≤ᵐ[μ] f
+  apply hle.absolutelyContinuous hf
   rw [integral_eq_lintegral_of_nonneg_ae hf' hfi'.1, integral_eq_lintegral_of_nonneg_ae hf hfi.1,
     ENNReal.toReal_le_toReal]
   exacts [lintegral_mono' hle le_rfl, ((hasFiniteIntegral_iff_ofReal hf').1 hfi'.2).ne,
@@ -1443,11 +1448,11 @@ theorem integral_add_measure {f : α → G} (hμ : Integrable f μ) (hν : Integ
   · simp [integral, hG]
   have hfi := hμ.add_measure hν
   simp_rw [integral_eq_setToFun]
-  have hμ_dfma : DominatedFinMeasAdditive (μ + ν) (weightedSMul μ : Set α → G →L[ℝ] G) 1 :=
-    DominatedFinMeasAdditive.add_measure_right μ ν (dominatedFinMeasAdditive_weightedSMul μ)
+  have hμ_dfma : DominatedFinMeasAdditive (μ + ν) (weightedSMul μ : Set α → G →L[ℝ] G) 1
+  apply DominatedFinMeasAdditive.add_measure_right μ ν (dominatedFinMeasAdditive_weightedSMul μ)
       zero_le_one
-  have hν_dfma : DominatedFinMeasAdditive (μ + ν) (weightedSMul ν : Set α → G →L[ℝ] G) 1 :=
-    DominatedFinMeasAdditive.add_measure_left μ ν (dominatedFinMeasAdditive_weightedSMul ν)
+  have hν_dfma : DominatedFinMeasAdditive (μ + ν) (weightedSMul ν : Set α → G →L[ℝ] G) 1
+  apply DominatedFinMeasAdditive.add_measure_left μ ν (dominatedFinMeasAdditive_weightedSMul ν)
       zero_le_one
   rw [← setToFun_congr_measure_of_add_right hμ_dfma
         (dominatedFinMeasAdditive_weightedSMul μ) f hfi,
@@ -1488,10 +1493,14 @@ theorem hasSum_integral_measure {ι} {m : MeasurableSpace α} {f : α → G} {μ
   simp only [HasSum, ← integral_finset_sum_measure fun i _ => hfi i]
   refine Metric.nhds_basis_ball.tendsto_right_iff.mpr fun ε ε0 => ?_
   lift ε to ℝ≥0 using ε0.le
-  have hf_lt : (∫⁻ x, ‖f x‖₊ ∂Measure.sum μ) < ∞ := hf.2
-  have hmem : ∀ᶠ y in 𝓝 (∫⁻ x, ‖f x‖₊ ∂Measure.sum μ), (∫⁻ x, ‖f x‖₊ ∂Measure.sum μ) < y + ε := by
-    refine tendsto_id.add tendsto_const_nhds (lt_mem_nhds (α := ℝ≥0∞) <| ENNReal.lt_add_right ?_ ?_)
-    exacts [hf_lt.ne, ENNReal.coe_ne_zero.2 (NNReal.coe_ne_zero.1 ε0.ne')]
+  have hf_lt : (∫⁻ x, ‖f x‖₊ ∂Measure.sum μ) < ∞
+  apply hf.2
+  have hmem  : ∀ᶠ y in 𝓝 (∫⁻ x, ‖f x‖₊ ∂Measure.sum μ), (∫⁻ x, ‖f x‖₊ ∂Measure.sum μ) < y + ε
+  refine tendsto_id.add tendsto_const_nhds (lt_mem_nhds (α := ℝ≥0∞) <| ENNReal.lt_add_right ?_ ?_)
+  apply hf_lt.ne
+  apply ENNReal.coe_ne_zero.2
+  apply NNReal.coe_ne_zero.1
+  apply ε0.ne'
   refine ((hasSum_lintegral_measure (fun x => ‖f x‖₊) μ).eventually hmem).mono fun s hs => ?_
   obtain ⟨ν, hν⟩ : ∃ ν, (∑ i ∈ s, μ i) + ν = Measure.sum μ := by
     refine ⟨Measure.sum fun i : ↥(sᶜ : Set ι) => μ i, ?_⟩
@@ -1669,12 +1678,12 @@ theorem integral_mul_norm_le_Lp_mul_Lq {E} [NormedAddCommGroup E] {f g : α → 
   have h_left : ∫⁻ a, ENNReal.ofReal (‖f a‖ * ‖g a‖) ∂μ =
       ∫⁻ a, ((fun x => (‖f x‖₊ : ℝ≥0∞)) * fun x => (‖g x‖₊ : ℝ≥0∞)) a ∂μ := by
     simp_rw [Pi.mul_apply, ← ofReal_norm_eq_coe_nnnorm, ENNReal.ofReal_mul (norm_nonneg _)]
-  have h_right_f : ∫⁻ a, ENNReal.ofReal (‖f a‖ ^ p) ∂μ = ∫⁻ a, (‖f a‖₊ : ℝ≥0∞) ^ p ∂μ := by
-    refine lintegral_congr fun x => ?_
-    rw [← ofReal_norm_eq_coe_nnnorm, ENNReal.ofReal_rpow_of_nonneg (norm_nonneg _) hpq.nonneg]
-  have h_right_g : ∫⁻ a, ENNReal.ofReal (‖g a‖ ^ q) ∂μ = ∫⁻ a, (‖g a‖₊ : ℝ≥0∞) ^ q ∂μ := by
-    refine lintegral_congr fun x => ?_
-    rw [← ofReal_norm_eq_coe_nnnorm, ENNReal.ofReal_rpow_of_nonneg (norm_nonneg _) hpq.symm.nonneg]
+  have h_right_f  : ∫⁻ a, ENNReal.ofReal (‖f a‖ ^ p) ∂μ = ∫⁻ a, (‖f a‖₊ : ℝ≥0∞) ^ p ∂μ
+  refine lintegral_congr fun x => ?_
+  rw [← ofReal_norm_eq_coe_nnnorm, ENNReal.ofReal_rpow_of_nonneg (norm_nonneg _) hpq.nonneg]
+  have h_right_g  : ∫⁻ a, ENNReal.ofReal (‖g a‖ ^ q) ∂μ = ∫⁻ a, (‖g a‖₊ : ℝ≥0∞) ^ q ∂μ
+  refine lintegral_congr fun x => ?_
+  rw [← ofReal_norm_eq_coe_nnnorm, ENNReal.ofReal_rpow_of_nonneg (norm_nonneg _) hpq.symm.nonneg]
   rw [h_left, h_right_f, h_right_g]
   -- we can now apply `ENNReal.lintegral_mul_le_Lp_mul_Lq` (up to the `toReal` application)
   refine ENNReal.toReal_mono ?_ ?_
@@ -1701,18 +1710,18 @@ theorem integral_mul_le_Lp_mul_Lq_of_nonneg {p q : ℝ} (hpq : p.IsConjExponent 
     (hf_nonneg : 0 ≤ᵐ[μ] f) (hg_nonneg : 0 ≤ᵐ[μ] g) (hf : Memℒp f (ENNReal.ofReal p) μ)
     (hg : Memℒp g (ENNReal.ofReal q) μ) :
     ∫ a, f a * g a ∂μ ≤ (∫ a, f a ^ p ∂μ) ^ (1 / p) * (∫ a, g a ^ q ∂μ) ^ (1 / q) := by
-  have h_left : ∫ a, f a * g a ∂μ = ∫ a, ‖f a‖ * ‖g a‖ ∂μ := by
-    refine integral_congr_ae ?_
-    filter_upwards [hf_nonneg, hg_nonneg] with x hxf hxg
-    rw [Real.norm_of_nonneg hxf, Real.norm_of_nonneg hxg]
-  have h_right_f : ∫ a, f a ^ p ∂μ = ∫ a, ‖f a‖ ^ p ∂μ := by
-    refine integral_congr_ae ?_
-    filter_upwards [hf_nonneg] with x hxf
-    rw [Real.norm_of_nonneg hxf]
-  have h_right_g : ∫ a, g a ^ q ∂μ = ∫ a, ‖g a‖ ^ q ∂μ := by
-    refine integral_congr_ae ?_
-    filter_upwards [hg_nonneg] with x hxg
-    rw [Real.norm_of_nonneg hxg]
+  have h_left  : ∫ a, f a * g a ∂μ = ∫ a, ‖f a‖ * ‖g a‖ ∂μ
+  refine integral_congr_ae ?_
+  filter_upwards [hf_nonneg, hg_nonneg] with x hxf hxg
+  rw [Real.norm_of_nonneg hxf, Real.norm_of_nonneg hxg]
+  have h_right_f  : ∫ a, f a ^ p ∂μ = ∫ a, ‖f a‖ ^ p ∂μ
+  refine integral_congr_ae ?_
+  filter_upwards [hf_nonneg] with x hxf
+  rw [Real.norm_of_nonneg hxf]
+  have h_right_g  : ∫ a, g a ^ q ∂μ = ∫ a, ‖g a‖ ^ q ∂μ
+  refine integral_congr_ae ?_
+  filter_upwards [hg_nonneg] with x hxg
+  rw [Real.norm_of_nonneg hxg]
   rw [h_left, h_right_f, h_right_g]
   exact integral_mul_norm_le_Lp_mul_Lq hpq hf hg
 
@@ -1738,12 +1747,12 @@ theorem integral_countable [MeasurableSingletonClass α] (f : α → E) {s : Set
     (hf : Integrable f (μ.restrict s)) :
     ∫ a in s, f a ∂μ = ∑' a : s, (μ {(a : α)}).toReal • f a := by
   have hi : Countable { x // x ∈ s } := Iff.mpr countable_coe_iff hs
-  have hf' : Integrable (fun (x : s) => f x) (Measure.comap Subtype.val μ) := by
-    rw [← map_comap_subtype_coe, integrable_map_measure] at hf
-    · apply hf
-    · exact Integrable.aestronglyMeasurable hf
-    · exact Measurable.aemeasurable measurable_subtype_coe
-    · exact Countable.measurableSet hs
+  have hf'  : Integrable (fun (x : s) => f x) (Measure.comap Subtype.val μ)
+  rw [← map_comap_subtype_coe, integrable_map_measure] at hf
+  · apply hf
+  · exact Integrable.aestronglyMeasurable hf
+  · exact Measurable.aemeasurable measurable_subtype_coe
+  · exact Countable.measurableSet hs
   rw [← integral_subtype_comap hs.measurableSet, integral_countable' hf']
   congr 1 with a : 1
   rw [Measure.comap_apply Subtype.val Subtype.coe_injective
@@ -1792,7 +1801,8 @@ theorem integral_simpleFunc_larger_space (hm : m ≤ m0) (f : @SimpleFunc β m F
     (hf_int : Integrable f μ) :
     ∫ x, f x ∂μ = ∑ x ∈ @SimpleFunc.range β F m f, ENNReal.toReal (μ (f ⁻¹' {x})) • x := by
   simp_rw [← f.coe_toLargerSpace_eq hm]
-  have hf_int : Integrable (f.toLargerSpace hm) μ := by rwa [SimpleFunc.coe_toLargerSpace_eq]
+  have hf_int  : Integrable (f.toLargerSpace hm) μ
+  rwa [SimpleFunc.coe_toLargerSpace_eq]
   rw [SimpleFunc.integral_eq_sum _ hf_int]
   congr 1
 
@@ -1880,9 +1890,9 @@ theorem eLpNorm_one_le_of_le {r : ℝ≥0} (hfint : Integrable f μ) (hfint' : 0
     norm_cast at hf
     -- Porting note: two lines above were
     --rw [hr, Nonneg.coe_zero] at hf
-    have hnegf : ∫ x, -f x ∂μ = 0 := by
-      rw [integral_neg, neg_eq_zero]
-      exact le_antisymm (integral_nonpos_of_ae hf) hfint'
+    have hnegf  : ∫ x, -f x ∂μ = 0
+    rw [integral_neg, neg_eq_zero]
+    exact le_antisymm (integral_nonpos_of_ae hf) hfint'
     have := (integral_eq_zero_iff_of_nonneg_ae ?_ hfint.neg).1 hnegf
     · filter_upwards [this] with ω hω
       rwa [Pi.neg_apply, Pi.zero_apply, neg_eq_zero] at hω
@@ -1899,10 +1909,10 @@ theorem eLpNorm_one_le_of_le {r : ℝ≥0} (hfint : Integrable f μ) (hfint' : 0
     · norm_num
   haveI := hμ
   rw [integral_eq_integral_pos_part_sub_integral_neg_part hfint, sub_nonneg] at hfint'
-  have hposbdd : ∫ ω, max (f ω) 0 ∂μ ≤ (μ Set.univ).toReal • (r : ℝ) := by
-    rw [← integral_const]
-    refine integral_mono_ae hfint.real_toNNReal (integrable_const (r : ℝ)) ?_
-    filter_upwards [hf] with ω hω using Real.toNNReal_le_iff_le_coe.2 hω
+  have hposbdd  : ∫ ω, max (f ω) 0 ∂μ ≤ (μ Set.univ).toReal • (r : ℝ)
+  rw [← integral_const]
+  refine integral_mono_ae hfint.real_toNNReal (integrable_const (r : ℝ)) ?_
+  filter_upwards [hf] with ω hω using Real.toNNReal_le_iff_le_coe.2 hω
   rw [Memℒp.eLpNorm_eq_integral_rpow_norm one_ne_zero ENNReal.one_ne_top
       (memℒp_one_iff_integrable.2 hfint),
     ENNReal.ofReal_le_iff_le_toReal

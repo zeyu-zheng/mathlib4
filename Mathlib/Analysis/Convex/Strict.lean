@@ -303,8 +303,8 @@ theorem StrictConvex.eq_of_openSegment_subset_frontier [Nontrivial 𝕜] [Densel
 
 theorem StrictConvex.add_smul_mem (hs : StrictConvex 𝕜 s) (hx : x ∈ s) (hxy : x + y ∈ s)
     (hy : y ≠ 0) {t : 𝕜} (ht₀ : 0 < t) (ht₁ : t < 1) : x + t • y ∈ interior s := by
-  have h : x + t • y = (1 - t) • x + t • (x + y) := by
-    rw [smul_add, ← add_assoc, ← _root_.add_smul, sub_add_cancel, one_smul]
+  have h  : x + t • y = (1 - t) • x + t • (x + y)
+  rw [smul_add, ← add_assoc, ← _root_.add_smul, sub_add_cancel, one_smul]
   rw [h]
   exact hs hx hxy (fun h => hy <| add_left_cancel (a := x) (by rw [← h, add_zero]))
     (sub_pos_of_lt ht₁) ht₀ (sub_add_cancel 1 t)

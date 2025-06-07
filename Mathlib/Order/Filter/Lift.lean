@@ -173,13 +173,13 @@ theorem lift_iInf_le {f : ι → Filter α} {g : Set α → Filter β} :
 theorem lift_iInf [Nonempty ι] {f : ι → Filter α} {g : Set α → Filter β}
     (hg : ∀ s t, g (s ∩ t) = g s ⊓ g t) : (iInf f).lift g = ⨅ i, (f i).lift g := by
   refine lift_iInf_le.antisymm fun s => ?_
-  have H : ∀ t ∈ iInf f, ⨅ i, (f i).lift g ≤ g t := by
-    intro t ht
-    refine iInf_sets_induct ht ?_ fun hs ht => ?_
-    · inhabit ι
-      exact iInf₂_le_of_le default univ (iInf_le _ univ_mem)
-    · rw [hg]
-      exact le_inf (iInf₂_le_of_le _ _ <| iInf_le _ hs) ht
+  have H  : ∀ t ∈ iInf f, ⨅ i, (f i).lift g ≤ g t
+  intro t ht
+  refine iInf_sets_induct ht ?_ fun hs ht => ?_
+  · inhabit ι
+    exact iInf₂_le_of_le default univ (iInf_le _ univ_mem)
+  · rw [hg]
+    exact le_inf (iInf₂_le_of_le _ _ <| iInf_le _ hs) ht
   simp only [mem_lift_sets (Monotone.of_map_inf hg), exists_imp, and_imp]
   exact fun t ht hs => H t ht hs
 

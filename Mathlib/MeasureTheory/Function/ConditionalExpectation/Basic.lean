@@ -378,11 +378,11 @@ theorem tendsto_condexp_unique (fs gs : ℕ → α → F') (f g : α → F')
   haveI : SigmaFinite (μ.trim hm) := hμm
   refine (condexp_ae_eq_condexpL1 hm f).trans ((condexp_ae_eq_condexpL1 hm g).trans ?_).symm
   rw [← Lp.ext_iff]
-  have hn_eq : ∀ n, condexpL1 hm μ (gs n) = condexpL1 hm μ (fs n) := by
-    intro n
-    ext1
-    refine (condexp_ae_eq_condexpL1 hm (gs n)).symm.trans ((hfg n).symm.trans ?_)
-    exact condexp_ae_eq_condexpL1 hm (fs n)
+  have hn_eq  : ∀ n, condexpL1 hm μ (gs n) = condexpL1 hm μ (fs n)
+  intro n
+  ext1
+  refine (condexp_ae_eq_condexpL1 hm (gs n)).symm.trans ((hfg n).symm.trans ?_)
+  exact condexp_ae_eq_condexpL1 hm (fs n)
   have hcond_fs : Tendsto (fun n => condexpL1 hm μ (fs n)) atTop (𝓝 (condexpL1 hm μ f)) :=
     tendsto_condexpL1_of_dominated_convergence hm _ (fun n => (hfs_int n).1) h_int_bound_fs
       hfs_bound hfs

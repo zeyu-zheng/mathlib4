@@ -169,9 +169,9 @@ theorem withDensity_tsum [Countable ι] (κ : Kernel α β) [IsSFiniteKernel κ]
       exact Pi.summable.mpr fun p => ENNReal.summable
     rw [this]
     exact Measurable.ennreal_tsum' hf
-  have : ∫⁻ b in s, (∑' n, f n) a b ∂κ a = ∫⁻ b in s, ∑' n, (fun b => f n a b) b ∂κ a := by
-    congr with b
-    rw [tsum_apply h_sum, tsum_apply (h_sum_a a)]
+  have  : ∫⁻ b in s, (∑' n, f n) a b ∂κ a = ∫⁻ b in s, ∑' n, (fun b => f n a b) b ∂κ a
+  congr with b
+  rw [tsum_apply h_sum, tsum_apply (h_sum_a a)]
   rw [this, lintegral_tsum fun n => (Measurable.of_uncurry_left (hf n)).aemeasurable]
   congr with n
   rw [Kernel.withDensity_apply' _ (hf n) a s]
@@ -203,42 +203,42 @@ theorem isSFiniteKernel_withDensity_of_isFiniteKernel (κ : Kernel α β) [IsFin
   by_cases hf : Measurable (Function.uncurry f)
   swap; · rw [withDensity_of_not_measurable _ hf]; infer_instance
   let fs : ℕ → α → β → ℝ≥0∞ := fun n a b => min (f a b) (n + 1) - min (f a b) n
-  have h_le : ∀ a b n, ⌈(f a b).toReal⌉₊ ≤ n → f a b ≤ n := by
-    intro a b n hn
-    have : (f a b).toReal ≤ n := Nat.le_of_ceil_le hn
-    rw [← ENNReal.le_ofReal_iff_toReal_le (hf_ne_top a b) _] at this
-    · refine this.trans (le_of_eq ?_)
-      rw [ENNReal.ofReal_natCast]
-    · norm_cast
-      exact zero_le _
-  have h_zero : ∀ a b n, ⌈(f a b).toReal⌉₊ ≤ n → fs n a b = 0 := by
-    intro a b n hn
-    suffices min (f a b) (n + 1) = f a b ∧ min (f a b) n = f a b by
-      simp_rw [fs, this.1, this.2, tsub_self (f a b)]
-    exact ⟨min_eq_left ((h_le a b n hn).trans (le_add_of_nonneg_right zero_le_one)),
-      min_eq_left (h_le a b n hn)⟩
-  have hf_eq_tsum : f = ∑' n, fs n := by
-    have h_sum_a : ∀ a, Summable fun n => fs n a := by
-      refine fun a => Pi.summable.mpr fun b => ?_
-      suffices ∀ n, n ∉ Finset.range ⌈(f a b).toReal⌉₊ → fs n a b = 0 from
-        summable_of_ne_finset_zero this
-      intro n hn_not_mem
-      rw [Finset.mem_range, not_lt] at hn_not_mem
-      exact h_zero a b n hn_not_mem
-    ext a b : 2
-    rw [tsum_apply (Pi.summable.mpr h_sum_a), tsum_apply (h_sum_a a),
-      ENNReal.tsum_eq_liminf_sum_nat]
-    have h_finset_sum : ∀ n, ∑ i ∈ Finset.range n, fs i a b = min (f a b) n := by
-      intro n
-      induction' n with n hn
-      · simp
-      rw [Finset.sum_range_succ, hn]
-      simp [fs]
-    simp_rw [h_finset_sum]
-    refine (Filter.Tendsto.liminf_eq ?_).symm
-    refine Filter.Tendsto.congr' ?_ tendsto_const_nhds
-    rw [Filter.EventuallyEq, Filter.eventually_atTop]
-    exact ⟨⌈(f a b).toReal⌉₊, fun n hn => (min_eq_left (h_le a b n hn)).symm⟩
+  have h_le  : ∀ a b n, ⌈(f a b).toReal⌉₊ ≤ n → f a b ≤ n
+  intro a b n hn
+  have : (f a b).toReal ≤ n := Nat.le_of_ceil_le hn
+  rw [← ENNReal.le_ofReal_iff_toReal_le (hf_ne_top a b) _] at this
+  · refine this.trans (le_of_eq ?_)
+    rw [ENNReal.ofReal_natCast]
+  · norm_cast
+    exact zero_le _
+  have h_zero  : ∀ a b n, ⌈(f a b).toReal⌉₊ ≤ n → fs n a b = 0
+  intro a b n hn
+  suffices min (f a b) (n + 1) = f a b ∧ min (f a b) n = f a b by
+    simp_rw [fs, this.1, this.2, tsub_self (f a b)]
+  exact ⟨min_eq_left ((h_le a b n hn).trans (le_add_of_nonneg_right zero_le_one)),
+    min_eq_left (h_le a b n hn)⟩
+  have hf_eq_tsum  : f = ∑' n, fs n
+  have h_sum_a  : ∀ a, Summable fun n => fs n a
+  refine fun a => Pi.summable.mpr fun b => ?_
+  suffices ∀ n, n ∉ Finset.range ⌈(f a b).toReal⌉₊ → fs n a b = 0 from
+    summable_of_ne_finset_zero this
+  intro n hn_not_mem
+  rw [Finset.mem_range, not_lt] at hn_not_mem
+  exact h_zero a b n hn_not_mem
+  ext a b : 2
+  rw [tsum_apply (Pi.summable.mpr h_sum_a), tsum_apply (h_sum_a a),
+    ENNReal.tsum_eq_liminf_sum_nat]
+  have h_finset_sum  : ∀ n, ∑ i ∈ Finset.range n, fs i a b = min (f a b) n
+  intro n
+  induction' n with n hn
+  · simp
+  rw [Finset.sum_range_succ, hn]
+  simp [fs]
+  simp_rw [h_finset_sum]
+  refine (Filter.Tendsto.liminf_eq ?_).symm
+  refine Filter.Tendsto.congr' ?_ tendsto_const_nhds
+  rw [Filter.EventuallyEq, Filter.eventually_atTop]
+  exact ⟨⌈(f a b).toReal⌉₊, fun n hn => (min_eq_left (h_le a b n hn)).symm⟩
   rw [hf_eq_tsum, withDensity_tsum _ fun n : ℕ => _]
   swap; · exact fun _ => (hf.min measurable_const).sub (hf.min measurable_const)
   refine isSFiniteKernel_sum fun n => ?_
@@ -256,10 +256,10 @@ theorem isSFiniteKernel_withDensity_of_isFiniteKernel (κ : Kernel α β) [IsFin
 `withDensity κ f` is s-finite. -/
 nonrec theorem IsSFiniteKernel.withDensity (κ : Kernel α β) [IsSFiniteKernel κ]
     (hf_ne_top : ∀ a b, f a b ≠ ∞) : IsSFiniteKernel (withDensity κ f) := by
-  have h_eq_sum : withDensity κ f = Kernel.sum fun i => withDensity (seq κ i) f := by
-    rw [← withDensity_kernel_sum _ _]
-    congr
-    exact (kernel_sum_seq κ).symm
+  have h_eq_sum  : withDensity κ f = Kernel.sum fun i => withDensity (seq κ i) f
+  rw [← withDensity_kernel_sum _ _]
+  congr
+  exact (kernel_sum_seq κ).symm
   rw [h_eq_sum]
   exact isSFiniteKernel_sum fun n =>
     isSFiniteKernel_withDensity_of_isFiniteKernel (seq κ n) hf_ne_top

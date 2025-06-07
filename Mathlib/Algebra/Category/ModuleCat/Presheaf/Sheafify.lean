@@ -93,21 +93,25 @@ lemma isCompatible_map_smul : ((r₀.smul m₀).map (whiskerRight φ (forget _))
   let b₂ := m₀ f₂ h₂
   let a₀ := R₀.map g₁.op a₁
   let b₀ := M₀.map g₁.op b₁
-  have ha₁ : (α.app (Opposite.op Y₁)) a₁ = (R.map f₁.op) r := (hr₀ f₁ h₁).symm
-  have ha₂ : (α.app (Opposite.op Y₂)) a₂ = (R.map f₂.op) r := (hr₀ f₂ h₂).symm
-  have hb₁ : (φ.app (Opposite.op Y₁)) b₁ = (A.map f₁.op) m := (hm₀ f₁ h₁).symm
-  have hb₂ : (φ.app (Opposite.op Y₂)) b₂ = (A.map f₂.op) m := (hm₀ f₂ h₂).symm
-  have ha₀ : (α.app (Opposite.op Z)) a₀ = (R.map (f₁.op ≫ g₁.op)) r := by
-    dsimp [a₀]
-    rw [NatTrans.naturality_apply, ha₁, Functor.map_comp, comp_apply]
-  have hb₀ : (φ.app (Opposite.op Z)) b₀ = (A.map (f₁.op ≫ g₁.op)) m := by
-    dsimp [b₀]
-    erw [NatTrans.naturality_apply, hb₁, Functor.map_comp, comp_apply]
-    rfl
-  have ha₀' : (α.app (Opposite.op Z)) a₀ = (R.map (f₂.op ≫ g₂.op)) r := by
-    rw [ha₀, ← op_comp, fac, op_comp]
-  have hb₀' : (φ.app (Opposite.op Z)) b₀ = (A.map (f₂.op ≫ g₂.op)) m := by
-    rw [hb₀, ← op_comp, fac, op_comp]
+  have ha₁ : (α.app (Opposite.op Y₁)) a₁ = (R.map f₁.op) r
+  apply (hr₀ f₁ h₁).symm
+  have ha₂ : (α.app (Opposite.op Y₂)) a₂ = (R.map f₂.op) r
+  apply (hr₀ f₂ h₂).symm
+  have hb₁ : (φ.app (Opposite.op Y₁)) b₁ = (A.map f₁.op) m
+  apply (hm₀ f₁ h₁).symm
+  have hb₂ : (φ.app (Opposite.op Y₂)) b₂ = (A.map f₂.op) m
+  apply (hm₀ f₂ h₂).symm
+  have ha₀  : (α.app (Opposite.op Z)) a₀ = (R.map (f₁.op ≫ g₁.op)) r
+  dsimp [a₀]
+  rw [NatTrans.naturality_apply, ha₁, Functor.map_comp, comp_apply]
+  have hb₀  : (φ.app (Opposite.op Z)) b₀ = (A.map (f₁.op ≫ g₁.op)) m
+  dsimp [b₀]
+  erw [NatTrans.naturality_apply, hb₁, Functor.map_comp, comp_apply]
+  rfl
+  have ha₀'  : (α.app (Opposite.op Z)) a₀ = (R.map (f₂.op ≫ g₂.op)) r
+  rw [ha₀, ← op_comp, fac, op_comp]
+  have hb₀'  : (φ.app (Opposite.op Z)) b₀ = (A.map (f₂.op ≫ g₂.op)) m
+  rw [hb₀, ← op_comp, fac, op_comp]
   dsimp
   erw [← NatTrans.naturality_apply, ← NatTrans.naturality_apply]
   exact (isCompatible_map_smul_aux α φ hA r m f₁ g₁ a₁ a₀ b₁ b₀ ha₁ ha₀ hb₁ hb₀).trans
@@ -172,21 +176,22 @@ def SMulCandidate.mk' (S : Sieve X.unop) (hS : S ∈ J X.unop)
 
 instance : Nonempty (SMulCandidate α φ r m) := ⟨by
   let S := (Presheaf.imageSieve α r ⊓ Presheaf.imageSieve φ m)
-  have hS : S ∈ J _ := by
-    apply J.intersection_covering
-    all_goals apply Presheaf.imageSieve_mem
+  have hS : S ∈ J _
+  apply J.intersection_covering
+  apply Presheaf.imageSieve_mem
+  apply Presheaf.imageSieve_mem
   have h₁ : S ≤ Presheaf.imageSieve α r := fun _ _ h => h.1
   have h₂ : S ≤ Presheaf.imageSieve φ m := fun _ _ h => h.2
   let r₀ := (Presieve.FamilyOfElements.localPreimage (whiskerRight α (forget _)) r).restrict h₁
   let m₀ := (Presieve.FamilyOfElements.localPreimage (whiskerRight φ (forget _)) m).restrict h₂
-  have hr₀ : (r₀.map (whiskerRight α (forget _))).IsAmalgamation r := by
-    rw [Presieve.FamilyOfElements.restrict_map]
-    apply Presieve.isAmalgamation_restrict
-    apply Presieve.FamilyOfElements.isAmalgamation_map_localPreimage
-  have hm₀ : (m₀.map (whiskerRight φ (forget _))).IsAmalgamation m := by
-    rw [Presieve.FamilyOfElements.restrict_map]
-    apply Presieve.isAmalgamation_restrict
-    apply Presieve.FamilyOfElements.isAmalgamation_map_localPreimage
+  have hr₀  : (r₀.map (whiskerRight α (forget _))).IsAmalgamation r
+  rw [Presieve.FamilyOfElements.restrict_map]
+  apply Presieve.isAmalgamation_restrict
+  apply Presieve.FamilyOfElements.isAmalgamation_map_localPreimage
+  have hm₀ : (m₀.map (whiskerRight φ (forget _))).IsAmalgamation m
+  rw [Presieve.FamilyOfElements.restrict_map]
+  apply Presieve.isAmalgamation_restrict
+  apply Presieve.FamilyOfElements.isAmalgamation_map_localPreimage
   exact SMulCandidate.mk' α φ r m S hS r₀ m₀ hr₀ hm₀ _ (Presieve.IsSheafFor.isAmalgamation
     (((sheafCompose J (forget _)).obj A).2.isSheafFor S hS)
     (Presieve.FamilyOfElements.isCompatible_map_smul α φ A.isSeparated r m r₀ m₀ hr₀ hm₀))⟩
@@ -196,9 +201,10 @@ instance : Subsingleton (SMulCandidate α φ r m) where
     rintro ⟨x₁, h₁⟩ ⟨x₂, h₂⟩
     simp only [SMulCandidate.mk.injEq]
     let S := (Presheaf.imageSieve α r ⊓ Presheaf.imageSieve φ m)
-    have hS : S ∈ J _ := by
-      apply J.intersection_covering
-      all_goals apply Presheaf.imageSieve_mem
+    have hS  : S ∈ J _
+    apply J.intersection_covering
+    apply Presheaf.imageSieve_mem
+    apply Presheaf.imageSieve_mem
     apply A.isSeparated _ _ hS
     intro Y f ⟨⟨r₀, hr₀⟩, ⟨m₀, hm₀⟩⟩
     erw [h₁ f.op r₀ hr₀ m₀ hm₀, h₂ f.op r₀ hr₀ m₀ hm₀]
@@ -238,9 +244,11 @@ protected lemma smul_zero : smul α φ r 0 = 0 := by
 
 protected lemma smul_add : smul α φ r (m + m') = smul α φ r m + smul α φ r m' := by
   let S := Presheaf.imageSieve α r ⊓ Presheaf.imageSieve φ m ⊓ Presheaf.imageSieve φ m'
-  have hS : S ∈ J X.unop := by
-    refine J.intersection_covering (J.intersection_covering ?_ ?_) ?_
-    all_goals apply Presheaf.imageSieve_mem
+  have hS  : S ∈ J X.unop
+  refine J.intersection_covering (J.intersection_covering ?_ ?_) ?_
+  apply Presheaf.imageSieve_mem
+  apply Presheaf.imageSieve_mem
+  apply Presheaf.imageSieve_mem
   apply A.isSeparated _ _ hS
   rintro Y f ⟨⟨⟨r₀, hr₀⟩, ⟨m₀ : M₀.presheaf.obj _, hm₀⟩⟩, ⟨m₀' : M₀.presheaf.obj _, hm₀'⟩⟩
   erw [(A.val.map f.op).map_add, map_smul_eq α φ r m f.op r₀ hr₀ m₀ hm₀,
@@ -251,9 +259,11 @@ protected lemma smul_add : smul α φ r (m + m') = smul α φ r m + smul α φ r
 
 protected lemma add_smul : smul α φ (r + r') m = smul α φ r m + smul α φ r' m := by
   let S := Presheaf.imageSieve α r ⊓ Presheaf.imageSieve α r' ⊓ Presheaf.imageSieve φ m
-  have hS : S ∈ J X.unop := by
-    refine J.intersection_covering (J.intersection_covering ?_ ?_) ?_
-    all_goals apply Presheaf.imageSieve_mem
+  have hS  : S ∈ J X.unop
+  refine J.intersection_covering (J.intersection_covering ?_ ?_) ?_
+  apply Presheaf.imageSieve_mem
+  apply Presheaf.imageSieve_mem
+  apply Presheaf.imageSieve_mem
   apply A.isSeparated _ _ hS
   rintro Y f ⟨⟨⟨r₀ : R₀.obj _, hr₀⟩, ⟨r₀' : R₀.obj _, hr₀'⟩⟩, ⟨m₀, hm₀⟩⟩
   erw [(A.val.map f.op).map_add, map_smul_eq α φ r m f.op r₀ hr₀ m₀ hm₀,
@@ -263,9 +273,11 @@ protected lemma add_smul : smul α φ (r + r') m = smul α φ r m + smul α φ r
 
 protected lemma mul_smul : smul α φ (r * r') m = smul α φ r (smul α φ r' m) := by
   let S := Presheaf.imageSieve α r ⊓ Presheaf.imageSieve α r' ⊓ Presheaf.imageSieve φ m
-  have hS : S ∈ J X.unop := by
-    refine J.intersection_covering (J.intersection_covering ?_ ?_) ?_
-    all_goals apply Presheaf.imageSieve_mem
+  have hS  : S ∈ J X.unop
+  refine J.intersection_covering (J.intersection_covering ?_ ?_) ?_
+  apply Presheaf.imageSieve_mem
+  apply Presheaf.imageSieve_mem
+  apply Presheaf.imageSieve_mem
   apply A.isSeparated _ _ hS
   rintro Y f ⟨⟨⟨r₀ : R₀.obj _, hr₀⟩, ⟨r₀' : R₀.obj _, hr₀'⟩⟩, ⟨m₀ : M₀.presheaf.obj _, hm₀⟩⟩
   erw [map_smul_eq α φ (r * r') m f.op (r₀ * r₀')
@@ -289,9 +301,10 @@ noncomputable def module : Module (R.val.obj X) (A.val.obj X) where
 lemma map_smul :
     A.val.map π (smul α φ r m) = smul α φ (R.val.map π r) (A.val.map π m) := by
   let S := Presheaf.imageSieve α (R.val.map π r) ⊓ Presheaf.imageSieve φ (A.val.map π m)
-  have hS : S ∈ J Y.unop := by
-    apply J.intersection_covering
-    all_goals apply Presheaf.imageSieve_mem
+  have hS  : S ∈ J Y.unop
+  apply J.intersection_covering
+  apply Presheaf.imageSieve_mem
+  apply Presheaf.imageSieve_mem
   apply A.isSeparated _ _ hS
   rintro Y f ⟨⟨r₀, hr₀⟩, ⟨m₀, hm₀⟩⟩
   erw [← comp_apply, ← Functor.map_comp,

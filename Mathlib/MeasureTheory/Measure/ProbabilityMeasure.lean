@@ -194,8 +194,8 @@ theorem apply_mono (μ : ProbabilityMeasure Ω) {s₁ s₂ : Set Ω} (h : s₁ �
 
 theorem nonempty (μ : ProbabilityMeasure Ω) : Nonempty Ω := by
   by_contra maybe_empty
-  have zero : (μ : Measure Ω) univ = 0 := by
-    rw [univ_eq_empty_iff.mpr (not_nonempty_iff.mp maybe_empty), measure_empty]
+  have zero  : (μ : Measure Ω) univ = 0
+  rw [univ_eq_empty_iff.mpr (not_nonempty_iff.mp maybe_empty), measure_empty]
   rw [measure_univ] at zero
   exact zero_ne_one zero.symm
 
@@ -351,7 +351,8 @@ def normalize : ProbabilityMeasure Ω :=
 theorem self_eq_mass_mul_normalize (s : Set Ω) : μ s = μ.mass * μ.normalize s := by
   obtain rfl | h := eq_or_ne μ 0
   · simp
-  have mass_nonzero : μ.mass ≠ 0 := by rwa [μ.mass_nonzero_iff]
+  have mass_nonzero  : μ.mass ≠ 0
+  rwa [μ.mass_nonzero_iff]
   simp only [normalize, dif_neg mass_nonzero]
   simp [ProbabilityMeasure.coe_mk, toMeasure_smul, mul_inv_cancel_left₀ mass_nonzero, coeFn_def]
 

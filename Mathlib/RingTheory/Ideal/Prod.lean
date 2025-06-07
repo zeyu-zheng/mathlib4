@@ -101,9 +101,9 @@ theorem isPrime_of_isPrime_prod_top {I : Ideal R} (h : (Ideal.prod I (⊤ : Idea
     rw [h, prod_top_top, isPrime_iff]
     simp [isPrime_iff, h]
   · intro x y hxy
-    have : (⟨x, 1⟩ : R × S) * ⟨y, 1⟩ ∈ prod I ⊤ := by
-      rw [Prod.mk_mul_mk, mul_one, mem_prod]
-      exact ⟨hxy, trivial⟩
+    have  : (⟨x, 1⟩ : R × S) * ⟨y, 1⟩ ∈ prod I ⊤
+    rw [Prod.mk_mul_mk, mul_one, mem_prod]
+    exact ⟨hxy, trivial⟩
     simpa using h.mem_or_mem this
 
 theorem isPrime_of_isPrime_prod_top' {I : Ideal S} (h : (Ideal.prod (⊤ : Ideal R) I).IsPrime) :

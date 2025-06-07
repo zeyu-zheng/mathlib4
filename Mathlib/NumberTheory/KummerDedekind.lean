@@ -152,8 +152,8 @@ theorem comap_map_eq_map_adjoin_of_coprime_conductor
     intro y hy
     obtain ⟨z, hz⟩ := y
     obtain ⟨p, hp, q, hq, hpq⟩ := Submodule.mem_sup.mp ((Ideal.eq_top_iff_one _).mp hx)
-    have temp : algebraMap R S p * z + algebraMap R S q * z = z := by
-      simp only [← add_mul, ← RingHom.map_add (algebraMap R S), hpq, map_one, one_mul]
+    have temp  : algebraMap R S p * z + algebraMap R S q * z = z
+    simp only [← add_mul, ← RingHom.map_add (algebraMap R S), hpq, map_one, one_mul]
     suffices z ∈ algebraMap R<x> S '' I.map (algebraMap R R<x>) ↔
         (⟨z, hz⟩ : R<x>) ∈ I.map (algebraMap R R<x>) by
       rw [← this, ← temp]
@@ -167,12 +167,13 @@ theorem comap_map_eq_map_adjoin_of_coprime_conductor
     refine ⟨fun h => ?_,
       fun h => (Set.mem_image _ _ _).mpr (Exists.intro ⟨z, hz⟩ ⟨by simp [h], rfl⟩)⟩
     obtain ⟨x₁, hx₁, hx₂⟩ := (Set.mem_image _ _ _).mp h
-    have : x₁ = ⟨z, hz⟩ := by
-      apply h_alg
-      simp [hx₂, algebraMap_eq_smul_one]
+    have  : x₁ = ⟨z, hz⟩
+    apply h_alg
+    simp [hx₂, algebraMap_eq_smul_one]
     rwa [← this]
   · -- The converse inclusion is trivial
-    have : algebraMap R S = (algebraMap _ S).comp (algebraMap R R<x>) := by ext; rfl
+    have  : algebraMap R S = (algebraMap _ S).comp (algebraMap R R<x>)
+    ext; rfl
     rw [this, ← Ideal.map_map]
     apply Ideal.le_comap_map
 

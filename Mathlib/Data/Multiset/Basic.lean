@@ -272,12 +272,15 @@ theorem cons_eq_cons {a b : α} {as bs : Multiset α} :
     · subst h
       simp_all
     · have : a ∈ b ::ₘ bs := eq ▸ mem_cons_self _ _
-      have : a ∈ bs := by simpa [h]
+      have  : a ∈ bs
+      simpa [h]
       rcases exists_cons_of_mem this with ⟨cs, hcs⟩
       simp only [h, hcs, false_and, ne_eq, not_false_eq_true, cons_inj_right, exists_eq_right',
         true_and, false_or]
-      have : a ::ₘ as = b ::ₘ a ::ₘ cs := by simp [eq, hcs]
-      have : a ::ₘ as = a ::ₘ b ::ₘ cs := by rwa [cons_swap]
+      have  : a ::ₘ as = b ::ₘ a ::ₘ cs
+      simp [eq, hcs]
+      have  : a ::ₘ as = a ::ₘ b ::ₘ cs
+      rwa [cons_swap]
       simpa using this
   · intro h
     rcases h with (⟨eq₁, eq₂⟩ | ⟨_, cs, eq₁, eq₂⟩)
@@ -1109,9 +1112,9 @@ theorem map_eq_cons [DecidableEq α] (f : α → β) (s : Multiset α) (t : Mult
   · rintro ⟨a, ha, rfl, rfl⟩
     rw [← map_cons, Multiset.cons_erase ha]
   · intro h
-    have : b ∈ s.map f := by
-      rw [h]
-      exact mem_cons_self _ _
+    have  : b ∈ s.map f
+    rw [h]
+    exact mem_cons_self _ _
     obtain ⟨a, h1, rfl⟩ := mem_map.mp this
     obtain ⟨u, rfl⟩ := exists_cons_of_mem h1
     rw [map_cons, cons_inj_right] at h

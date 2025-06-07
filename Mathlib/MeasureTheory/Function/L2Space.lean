@@ -106,7 +106,8 @@ local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
 
 theorem eLpNorm_rpow_two_norm_lt_top (f : Lp F 2 μ) :
     eLpNorm (fun x => ‖f x‖ ^ (2 : ℝ)) 1 μ < ∞ := by
-  have h_two : ENNReal.ofReal (2 : ℝ) = 2 := by simp [zero_le_one]
+  have h_two  : ENNReal.ofReal (2 : ℝ) = 2
+  simp [zero_le_one]
   rw [eLpNorm_norm_rpow f zero_lt_two, one_mul, h_two]
   exact ENNReal.rpow_lt_top_of_nonneg zero_le_two (Lp.eLpNorm_ne_top f)
 
@@ -114,16 +115,16 @@ theorem eLpNorm_rpow_two_norm_lt_top (f : Lp F 2 μ) :
 alias snorm_rpow_two_norm_lt_top := eLpNorm_rpow_two_norm_lt_top
 
 theorem eLpNorm_inner_lt_top (f g : α →₂[μ] E) : eLpNorm (fun x : α => ⟪f x, g x⟫) 1 μ < ∞ := by
-  have h : ∀ x, ‖⟪f x, g x⟫‖ ≤ ‖‖f x‖ ^ (2 : ℝ) + ‖g x‖ ^ (2 : ℝ)‖ := by
-    intro x
-    rw [← @Nat.cast_two ℝ, Real.rpow_natCast, Real.rpow_natCast]
-    calc
-      ‖⟪f x, g x⟫‖ ≤ ‖f x‖ * ‖g x‖ := norm_inner_le_norm _ _
-      _ ≤ 2 * ‖f x‖ * ‖g x‖ :=
-        (mul_le_mul_of_nonneg_right (le_mul_of_one_le_left (norm_nonneg _) one_le_two)
-          (norm_nonneg _))
-      -- TODO(kmill): the type ascription is getting around an elaboration error
-      _ ≤ ‖(‖f x‖ ^ 2 + ‖g x‖ ^ 2 : ℝ)‖ := (two_mul_le_add_sq _ _).trans (le_abs_self _)
+  have h  : ∀ x, ‖⟪f x, g x⟫‖ ≤ ‖‖f x‖ ^ (2 : ℝ) + ‖g x‖ ^ (2 : ℝ)‖
+  intro x
+  rw [← @Nat.cast_two ℝ, Real.rpow_natCast, Real.rpow_natCast]
+  calc
+    ‖⟪f x, g x⟫‖ ≤ ‖f x‖ * ‖g x‖ := norm_inner_le_norm _ _
+    _ ≤ 2 * ‖f x‖ * ‖g x‖ :=
+      (mul_le_mul_of_nonneg_right (le_mul_of_one_le_left (norm_nonneg _) one_le_two)
+        (norm_nonneg _))
+    -- TODO(kmill): the type ascription is getting around an elaboration error
+    _ ≤ ‖(‖f x‖ ^ 2 + ‖g x‖ ^ 2 : ℝ)‖ := (two_mul_le_add_sq _ _).trans (le_abs_self _)
   refine (eLpNorm_mono_ae (ae_of_all _ h)).trans_lt ((eLpNorm_add_le ?_ ?_ le_rfl).trans_lt ?_)
   · exact ((Lp.aestronglyMeasurable f).norm.aemeasurable.pow_const _).aestronglyMeasurable
   · exact ((Lp.aestronglyMeasurable g).norm.aemeasurable.pow_const _).aestronglyMeasurable
@@ -153,7 +154,8 @@ theorem integral_inner_eq_sq_eLpNorm (f : α →₂[μ] E) :
   · exact ((Lp.aestronglyMeasurable f).norm.aemeasurable.pow_const _).aestronglyMeasurable
   congr
   ext1 x
-  have h_two : (2 : ℝ) = ((2 : ℕ) : ℝ) := by simp
+  have h_two  : (2 : ℝ) = ((2 : ℕ) : ℝ)
+  simp
   rw [← Real.rpow_natCast _ 2, ← h_two, ←
     ENNReal.ofReal_rpow_of_nonneg (norm_nonneg _) zero_le_two, ofReal_norm_eq_coe_nnnorm]
   norm_cast
@@ -162,7 +164,8 @@ theorem integral_inner_eq_sq_eLpNorm (f : α →₂[μ] E) :
 alias integral_inner_eq_sq_snorm := integral_inner_eq_sq_eLpNorm
 
 private theorem norm_sq_eq_inner' (f : α →₂[μ] E) : ‖f‖ ^ 2 = RCLike.re ⟪f, f⟫ := by
-  have h_two : (2 : ℝ≥0∞).toReal = 2 := by simp
+  have h_two  : (2 : ℝ≥0∞).toReal = 2
+  simp
   rw [inner_def, integral_inner_eq_sq_eLpNorm, norm_def, ← ENNReal.toReal_pow, RCLike.ofReal_re,
     ENNReal.toReal_eq_toReal (ENNReal.pow_ne_top (Lp.eLpNorm_ne_top f)) _]
   · rw [← ENNReal.rpow_natCast, eLpNorm_eq_eLpNorm' two_ne_zero ENNReal.two_ne_top, eLpNorm', ←
@@ -222,27 +225,27 @@ equal to the integral of the inner product over `s`: `∫ x in s, ⟪c, f x⟫ �
 theorem inner_indicatorConstLp_eq_setIntegral_inner (f : Lp E 2 μ) (hs : MeasurableSet s) (c : E)
     (hμs : μ s ≠ ∞) : (⟪indicatorConstLp 2 hs hμs c, f⟫ : 𝕜) = ∫ x in s, ⟪c, f x⟫ ∂μ := by
   rw [inner_def, ← integral_add_compl hs (L2.integrable_inner _ f)]
-  have h_left : (∫ x in s, ⟪(indicatorConstLp 2 hs hμs c) x, f x⟫ ∂μ) = ∫ x in s, ⟪c, f x⟫ ∂μ := by
-    suffices h_ae_eq : ∀ᵐ x ∂μ, x ∈ s → ⟪indicatorConstLp 2 hs hμs c x, f x⟫ = ⟪c, f x⟫ from
-      setIntegral_congr_ae hs h_ae_eq
-    have h_indicator : ∀ᵐ x : α ∂μ, x ∈ s → indicatorConstLp 2 hs hμs c x = c :=
-      indicatorConstLp_coeFn_mem
-    refine h_indicator.mono fun x hx hxs => ?_
-    congr
-    exact hx hxs
-  have h_right : (∫ x in sᶜ, ⟪(indicatorConstLp 2 hs hμs c) x, f x⟫ ∂μ) = 0 := by
-    suffices h_ae_eq : ∀ᵐ x ∂μ, x ∉ s → ⟪indicatorConstLp 2 hs hμs c x, f x⟫ = 0 by
-      simp_rw [← Set.mem_compl_iff] at h_ae_eq
-      suffices h_int_zero :
-          (∫ x in sᶜ, inner (indicatorConstLp 2 hs hμs c x) (f x) ∂μ) = ∫ _ in sᶜ, (0 : 𝕜) ∂μ by
-        rw [h_int_zero]
-        simp
-      exact setIntegral_congr_ae hs.compl h_ae_eq
-    have h_indicator : ∀ᵐ x : α ∂μ, x ∉ s → indicatorConstLp 2 hs hμs c x = 0 :=
-      indicatorConstLp_coeFn_nmem
-    refine h_indicator.mono fun x hx hxs => ?_
-    rw [hx hxs]
-    exact inner_zero_left _
+  have h_left  : (∫ x in s, ⟪(indicatorConstLp 2 hs hμs c) x, f x⟫ ∂μ) = ∫ x in s, ⟪c, f x⟫ ∂μ
+  suffices h_ae_eq : ∀ᵐ x ∂μ, x ∈ s → ⟪indicatorConstLp 2 hs hμs c x, f x⟫ = ⟪c, f x⟫ from
+    setIntegral_congr_ae hs h_ae_eq
+  have h_indicator : ∀ᵐ x : α ∂μ, x ∈ s → indicatorConstLp 2 hs hμs c x = c :=
+    indicatorConstLp_coeFn_mem
+  refine h_indicator.mono fun x hx hxs => ?_
+  congr
+  exact hx hxs
+  have h_right  : (∫ x in sᶜ, ⟪(indicatorConstLp 2 hs hμs c) x, f x⟫ ∂μ) = 0
+  suffices h_ae_eq : ∀ᵐ x ∂μ, x ∉ s → ⟪indicatorConstLp 2 hs hμs c x, f x⟫ = 0 by
+    simp_rw [← Set.mem_compl_iff] at h_ae_eq
+    suffices h_int_zero :
+        (∫ x in sᶜ, inner (indicatorConstLp 2 hs hμs c x) (f x) ∂μ) = ∫ _ in sᶜ, (0 : 𝕜) ∂μ by
+      rw [h_int_zero]
+      simp
+    exact setIntegral_congr_ae hs.compl h_ae_eq
+  have h_indicator : ∀ᵐ x : α ∂μ, x ∉ s → indicatorConstLp 2 hs hμs c x = 0 :=
+    indicatorConstLp_coeFn_nmem
+  refine h_indicator.mono fun x hx hxs => ?_
+  rw [hx hxs]
+  exact inner_zero_left _
   rw [h_left, h_right, add_zero]
 
 @[deprecated (since := "2024-04-17")]

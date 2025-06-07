@@ -127,32 +127,34 @@ lemma not_hasEigenvalue_zero_tfae (φ : Module.End K M) :
   have := (hasEigenvalue_zero_tfae φ).not
   dsimp only [List.map] at this
   push_neg at this
-  have aux₁ : ∀ m, (m ≠ 0 → φ m ≠ 0) ↔ (φ m = 0 → m = 0) := by intro m; apply not_imp_not
-  have aux₂ : ker φ = ⊥ ↔ ¬ ⊥ < ker φ := by rw [bot_lt_iff_ne_bot, not_not]
+  have aux₁  : ∀ m, (m ≠ 0 → φ m ≠ 0) ↔ (φ m = 0 → m = 0)
+  intro m; apply not_imp_not
+  have aux₂  : ker φ = ⊥ ↔ ¬ ⊥ < ker φ
+  rw [bot_lt_iff_ne_bot, not_not]
   simpa only [aux₁, aux₂] using this
 
 open Module.Free in
 lemma finrank_maxGenEigenspace (φ : Module.End K M) :
     finrank K (φ.maxGenEigenspace 0) = natTrailingDegree (φ.charpoly) := by
   set V := φ.maxGenEigenspace 0
-  have hV : V = ⨆ (n : ℕ), ker (φ ^ n) := by
-    simp [V, Module.End.maxGenEigenspace, Module.End.genEigenspace]
+  have hV  : V = ⨆ (n : ℕ), ker (φ ^ n)
+  simp [V, Module.End.maxGenEigenspace, Module.End.genEigenspace]
   let W := ⨅ (n : ℕ), LinearMap.range (φ ^ n)
-  have hVW : IsCompl V W := by
-    rw [hV]
-    exact LinearMap.isCompl_iSup_ker_pow_iInf_range_pow φ
-  have hφV : ∀ x ∈ V, φ x ∈ V := by
-    simp only [V, Module.End.mem_maxGenEigenspace, zero_smul, sub_zero,
-      forall_exists_index]
-    intro x n hx
-    use n
-    rw [← LinearMap.mul_apply, ← pow_succ, pow_succ', LinearMap.mul_apply, hx, map_zero]
-  have hφW : ∀ x ∈ W, φ x ∈ W := by
-    simp only [W, Submodule.mem_iInf, mem_range]
-    intro x H n
-    obtain ⟨y, rfl⟩ := H n
-    use φ y
-    rw [← LinearMap.mul_apply, ← pow_succ, pow_succ', LinearMap.mul_apply]
+  have hVW  : IsCompl V W
+  rw [hV]
+  exact LinearMap.isCompl_iSup_ker_pow_iInf_range_pow φ
+  have hφV  : ∀ x ∈ V, φ x ∈ V
+  simp only [V, Module.End.mem_maxGenEigenspace, zero_smul, sub_zero,
+    forall_exists_index]
+  intro x n hx
+  use n
+  rw [← LinearMap.mul_apply, ← pow_succ, pow_succ', LinearMap.mul_apply, hx, map_zero]
+  have hφW  : ∀ x ∈ W, φ x ∈ W
+  simp only [W, Submodule.mem_iInf, mem_range]
+  intro x H n
+  obtain ⟨y, rfl⟩ := H n
+  use φ y
+  rw [← LinearMap.mul_apply, ← pow_succ, pow_succ', LinearMap.mul_apply]
   let F := φ.restrict hφV
   let G := φ.restrict hφW
   let ψ := F.prodMap G
@@ -160,27 +162,27 @@ lemma finrank_maxGenEigenspace (φ : Module.End K M) :
   let bV := chooseBasis K V
   let bW := chooseBasis K W
   let b := bV.prod bW
-  have hψ : ψ = e.symm.conj φ := by
-    apply b.ext
-    simp only [Basis.prod_apply, coe_inl, coe_inr, prodMap_apply, LinearEquiv.conj_apply,
-      LinearEquiv.symm_symm, Submodule.coe_prodEquivOfIsCompl, coe_comp, LinearEquiv.coe_coe,
-      Function.comp_apply, coprod_apply, Submodule.coeSubtype, map_add, Sum.forall, Sum.elim_inl,
-      map_zero, ZeroMemClass.coe_zero, add_zero, LinearEquiv.eq_symm_apply, and_self,
-      Submodule.coe_prodEquivOfIsCompl', restrict_coe_apply, implies_true, Sum.elim_inr, zero_add,
-      e, V, W, ψ, F, G, b]
+  have hψ  : ψ = e.symm.conj φ
+  apply b.ext
+  simp only [Basis.prod_apply, coe_inl, coe_inr, prodMap_apply, LinearEquiv.conj_apply,
+    LinearEquiv.symm_symm, Submodule.coe_prodEquivOfIsCompl, coe_comp, LinearEquiv.coe_coe,
+    Function.comp_apply, coprod_apply, Submodule.coeSubtype, map_add, Sum.forall, Sum.elim_inl,
+    map_zero, ZeroMemClass.coe_zero, add_zero, LinearEquiv.eq_symm_apply, and_self,
+    Submodule.coe_prodEquivOfIsCompl', restrict_coe_apply, implies_true, Sum.elim_inr, zero_add,
+    e, V, W, ψ, F, G, b]
   rw [← e.symm.charpoly_conj φ, ← hψ, charpoly_prodMap,
     natTrailingDegree_mul (charpoly_monic _).ne_zero (charpoly_monic _).ne_zero]
-  have hG : natTrailingDegree (charpoly G) = 0 := by
-    apply Polynomial.natTrailingDegree_eq_zero_of_constantCoeff_ne_zero
-    apply ((not_hasEigenvalue_zero_tfae G).out 2 5).mpr
-    intro x hx
-    apply Subtype.ext
-    suffices x.1 ∈ V ⊓ W by rwa [hVW.inf_eq_bot, Submodule.mem_bot] at this
-    suffices x.1 ∈ V from ⟨this, x.2⟩
-    simp only [Module.End.mem_maxGenEigenspace, zero_smul, sub_zero, V]
-    use 1
-    rw [pow_one]
-    rwa [Subtype.ext_iff] at hx
+  have hG  : natTrailingDegree (charpoly G) = 0
+  apply Polynomial.natTrailingDegree_eq_zero_of_constantCoeff_ne_zero
+  apply ((not_hasEigenvalue_zero_tfae G).out 2 5).mpr
+  intro x hx
+  apply Subtype.ext
+  suffices x.1 ∈ V ⊓ W by rwa [hVW.inf_eq_bot, Submodule.mem_bot] at this
+  suffices x.1 ∈ V from ⟨this, x.2⟩
+  simp only [Module.End.mem_maxGenEigenspace, zero_smul, sub_zero, V]
+  use 1
+  rw [pow_one]
+  rwa [Subtype.ext_iff] at hx
   rw [hG, add_zero, eq_comm]
   apply ((charpoly_nilpotent_tfae F).out 2 3).mp
   simp only [Subtype.forall, Module.End.mem_maxGenEigenspace, zero_smul, sub_zero, V, F]

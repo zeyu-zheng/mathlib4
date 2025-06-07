@@ -133,9 +133,9 @@ def ofNatMultiset (v : Multiset ℕ) (h : ∀ p : ℕ, p ∈ v → p.Prime) : Pr
 
 theorem to_ofNatMultiset (v : Multiset ℕ) (h) : (ofNatMultiset v h : Multiset ℕ) = v := by
   dsimp [ofNatMultiset, toNatMultiset]
-  have : (fun p h => (Coe.coe : Nat.Primes → ℕ) ⟨p, h⟩) = fun p _ => id p := by
-    funext p h
-    rfl
+  have  : (fun p h => (Coe.coe : Nat.Primes → ℕ) ⟨p, h⟩) = fun p _ => id p
+  funext p h
+  rfl
   rw [Multiset.map_pmap, this, Multiset.pmap_eq_map, Multiset.map_id]
 
 theorem prod_ofNatMultiset (v : Multiset ℕ) (h) :
@@ -147,10 +147,10 @@ def ofPNatMultiset (v : Multiset ℕ+) (h : ∀ p : ℕ+, p ∈ v → p.Prime) :
 
 theorem to_ofPNatMultiset (v : Multiset ℕ+) (h) : (ofPNatMultiset v h : Multiset ℕ+) = v := by
   dsimp [ofPNatMultiset, toPNatMultiset]
-  have : (fun (p : ℕ+) (h : p.Prime) => (Coe.coe : Nat.Primes → ℕ+) ⟨p, h⟩) = fun p _ => id p := by
-    funext p h
-    apply Subtype.eq
-    rfl
+  have  : (fun (p : ℕ+) (h : p.Prime) => (Coe.coe : Nat.Primes → ℕ+) ⟨p, h⟩) = fun p _ => id p
+  funext p h
+  apply Subtype.eq
+  rfl
   rw [Multiset.map_pmap, this, Multiset.pmap_eq_map, Multiset.map_id]
 
 theorem prod_ofPNatMultiset (v : Multiset ℕ+) (h) : ((ofPNatMultiset v h).prod : ℕ+) = v.prod := by

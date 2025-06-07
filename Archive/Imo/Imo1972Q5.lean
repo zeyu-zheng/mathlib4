@@ -31,10 +31,10 @@ theorem imo1972_q5 (f g : ℝ → ℝ) (hf1 : ∀ x, ∀ y, f (x + y) + f (x - y
   -- Introduce `k`, the supremum of `f`.
   let k : ℝ := sSup S
   -- Show that `‖f x‖ ≤ k`.
-  have hk₁ : ∀ x, ‖f x‖ ≤ k := by
-    have h : BddAbove S := ⟨1, Set.forall_mem_range.mpr hf2⟩
-    intro x
-    exact le_csSup h (Set.mem_range_self x)
+  have hk₁  : ∀ x, ‖f x‖ ≤ k
+  have h : BddAbove S := ⟨1, Set.forall_mem_range.mpr hf2⟩
+  intro x
+  exact le_csSup h (Set.mem_range_self x)
   -- Show that `2 * (‖f x‖ * ‖g y‖) ≤ 2 * k`.
   have hk₂ : ∀ x, 2 * (‖f x‖ * ‖g y‖) ≤ 2 * k := fun x ↦
     calc
@@ -45,26 +45,27 @@ theorem imo1972_q5 (f g : ℝ → ℝ) (hf1 : ∀ x, ∀ y, f (x + y) + f (x - y
       _ = 2 * k := (two_mul _).symm
   set k' := k / ‖g y‖
   -- Demonstrate that `k' < k` using `hneg`.
-  have H₁ : k' < k := by
-    have h₁ : 0 < k := by
-      obtain ⟨x, hx⟩ := hf3
-      calc
-        0 < ‖f x‖ := norm_pos_iff.mpr hx
-        _ ≤ k := hk₁ x
-    rw [div_lt_iff]
-    · apply lt_mul_of_one_lt_right h₁ hneg
-    · exact zero_lt_one.trans hneg
+  have H₁  : k' < k
+  have h₁  : 0 < k
+  obtain ⟨x, hx⟩ := hf3
+  calc
+    0 < ‖f x‖ := norm_pos_iff.mpr hx
+    _ ≤ k := hk₁ x
+  rw [div_lt_iff]
+  · apply lt_mul_of_one_lt_right h₁ hneg
+  · exact zero_lt_one.trans hneg
   -- Demonstrate that `k ≤ k'` using `hk₂`.
-  have H₂ : k ≤ k' := by
-    have h₁ : ∃ x : ℝ, x ∈ S := by use ‖f 0‖; exact Set.mem_range_self 0
-    have h₂ : ∀ x, ‖f x‖ ≤ k' := by
-      intro x
-      rw [le_div_iff]
-      · apply (mul_le_mul_left zero_lt_two).mp (hk₂ x)
-      · exact zero_lt_one.trans hneg
-    apply csSup_le h₁
-    rintro y' ⟨yy, rfl⟩
-    exact h₂ yy
+  have H₂  : k ≤ k'
+  have h₁  : ∃ x : ℝ, x ∈ S
+  use ‖f 0‖; exact Set.mem_range_self 0
+  have h₂  : ∀ x, ‖f x‖ ≤ k'
+  intro x
+  rw [le_div_iff]
+  · apply (mul_le_mul_left zero_lt_two).mp (hk₂ x)
+  · exact zero_lt_one.trans hneg
+  apply csSup_le h₁
+  rintro y' ⟨yy, rfl⟩
+  exact h₂ yy
   -- Conclude by obtaining a contradiction, `k' < k'`.
   apply lt_irrefl k'
   calc
@@ -86,17 +87,18 @@ theorem imo1972_q5' (f g : ℝ → ℝ) (hf1 : ∀ x, ∀ y, f (x + y) + f (x - 
   obtain ⟨x, hx⟩ := hf3
   set k := ⨆ x, ‖f x‖
   have h : ∀ x, ‖f x‖ ≤ k := le_ciSup hf2
-  have hgy : 0 < ‖g y‖ := by linarith
+  have hgy  : 0 < ‖g y‖
+  linarith
   have k_pos : 0 < k := lt_of_lt_of_le (norm_pos_iff.mpr hx) (h x)
   have : k / ‖g y‖ < k := (div_lt_iff hgy).mpr (lt_mul_of_one_lt_right k_pos H)
-  have : k ≤ k / ‖g y‖ := by
-    suffices ∀ x, ‖f x‖ ≤ k / ‖g y‖ from ciSup_le this
-    intro x
-    suffices 2 * (‖f x‖ * ‖g y‖) ≤ 2 * k by
-      rwa [le_div_iff hgy, ← mul_le_mul_left (zero_lt_two : (0 : ℝ) < 2)]
-    calc
-      2 * (‖f x‖ * ‖g y‖) = ‖2 * f x * g y‖ := by simp [abs_mul, mul_assoc]
-      _ = ‖f (x + y) + f (x - y)‖ := by rw [hf1]
-      _ ≤ ‖f (x + y)‖ + ‖f (x - y)‖ := abs_add _ _
-      _ ≤ 2 * k := by linarith [h (x + y), h (x - y)]
+  have  : k ≤ k / ‖g y‖
+  suffices ∀ x, ‖f x‖ ≤ k / ‖g y‖ from ciSup_le this
+  intro x
+  suffices 2 * (‖f x‖ * ‖g y‖) ≤ 2 * k by
+    rwa [le_div_iff hgy, ← mul_le_mul_left (zero_lt_two : (0 : ℝ) < 2)]
+  calc
+    2 * (‖f x‖ * ‖g y‖) = ‖2 * f x * g y‖ := by simp [abs_mul, mul_assoc]
+    _ = ‖f (x + y) + f (x - y)‖ := by rw [hf1]
+    _ ≤ ‖f (x + y)‖ + ‖f (x - y)‖ := abs_add _ _
+    _ ≤ 2 * k := by linarith [h (x + y), h (x - y)]
   linarith

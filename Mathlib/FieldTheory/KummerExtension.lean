@@ -138,9 +138,9 @@ theorem pow_ne_of_irreducible_X_pow_sub_C {n : ℕ} {a : K}
   rintro rfl
   obtain ⟨q, hq⟩ := sub_dvd_pow_sub_pow (X ^ k) (C b) m
   rw [mul_comm, pow_mul, map_pow, hq] at H
-  have : degree q = 0 := by
-    simpa [isUnit_iff_degree_eq_zero, degree_X_pow_sub_C,
-      Nat.pos_iff_ne_zero, (mul_ne_zero_iff.mp hn).2] using H.2 _ q rfl
+  have  : degree q = 0
+  simpa [isUnit_iff_degree_eq_zero, degree_X_pow_sub_C,
+    Nat.pos_iff_ne_zero, (mul_ne_zero_iff.mp hn).2] using H.2 _ q rfl
   apply_fun degree at hq
   simp only [this, ← pow_mul, mul_comm k m, degree_X_pow_sub_C, Nat.pos_iff_ne_zero.mpr hn,
     Nat.pos_iff_ne_zero.mpr (mul_ne_zero_iff.mp hn).2, degree_mul, ← map_pow, add_zero,
@@ -150,9 +150,9 @@ theorem pow_ne_of_irreducible_X_pow_sub_C {n : ℕ} {a : K}
 theorem X_pow_sub_C_irreducible_of_prime {p : ℕ} (hp : p.Prime) {a : K} (ha : ∀ b : K, b ^ p ≠ a) :
     Irreducible (X ^ p - C a) := by
   -- First of all, We may find an irreducible factor `g` of `X ^ p - C a`.
-  have : ¬ IsUnit (X ^ p - C a) := by
-    rw [Polynomial.isUnit_iff_degree_eq_zero, degree_X_pow_sub_C hp.pos, Nat.cast_eq_zero]
-    exact hp.ne_zero
+  have  : ¬ IsUnit (X ^ p - C a)
+  rw [Polynomial.isUnit_iff_degree_eq_zero, degree_X_pow_sub_C hp.pos, Nat.cast_eq_zero]
+  exact hp.ne_zero
   have ⟨g, hg, hg'⟩ := WfDvdMonoid.exists_irreducible_factor this (X_pow_sub_C_ne_zero hp.pos a)
   -- It suffices to show that `deg g = p`.
   suffices natDegree g = p from (associated_of_dvd_of_natDegree_le hg'
@@ -161,15 +161,15 @@ theorem X_pow_sub_C_irreducible_of_prime {p : ℕ} (hp : p.Prime) {a : K} (ha : 
   by_contra h
   have : Fact (Irreducible g) := ⟨hg⟩
   -- Let `r` be a root of `g`, then `N_K(r) ^ p = N_K(r ^ p) = N_K(a) = a ^ (deg g)`.
-  have key : (Algebra.norm K (AdjoinRoot.root g)) ^ p = a ^ g.natDegree := by
-    have := eval₂_eq_zero_of_dvd_of_eval₂_eq_zero _ _ hg' (AdjoinRoot.eval₂_root g)
-    rw [eval₂_sub, eval₂_pow, eval₂_C, eval₂_X, sub_eq_zero] at this
-    rw [← map_pow, this, ← AdjoinRoot.algebraMap_eq, Algebra.norm_algebraMap,
-      ← finrank_top', ← IntermediateField.adjoin_root_eq_top g,
-      IntermediateField.adjoin.finrank,
-      AdjoinRoot.minpoly_root hg.ne_zero, natDegree_mul_C]
-    · simpa using hg.ne_zero
-    · exact AdjoinRoot.isIntegral_root hg.ne_zero
+  have key  : (Algebra.norm K (AdjoinRoot.root g)) ^ p = a ^ g.natDegree
+  have := eval₂_eq_zero_of_dvd_of_eval₂_eq_zero _ _ hg' (AdjoinRoot.eval₂_root g)
+  rw [eval₂_sub, eval₂_pow, eval₂_C, eval₂_X, sub_eq_zero] at this
+  rw [← map_pow, this, ← AdjoinRoot.algebraMap_eq, Algebra.norm_algebraMap,
+    ← finrank_top', ← IntermediateField.adjoin_root_eq_top g,
+    IntermediateField.adjoin.finrank,
+    AdjoinRoot.minpoly_root hg.ne_zero, natDegree_mul_C]
+  · simpa using hg.ne_zero
+  · exact AdjoinRoot.isIntegral_root hg.ne_zero
   -- Since `a ^ (deg g)` is a `p`-power, and `p` is coprime to `deg g`, we conclude that `a` is
   -- also a `p`-power, contradicting the hypothesis
   have : p.Coprime (natDegree g) := hp.coprime_iff_not_dvd.mpr (fun e ↦ h (((natDegree_le_of_dvd hg'
@@ -186,10 +186,10 @@ theorem X_pow_mul_sub_C_irreducible
     (hn : ∀ (E : Type u) [Field E] [Algebra K E] (x : E) (hx : minpoly K x = X ^ m - C a),
       Irreducible (X ^ n - C (AdjoinSimple.gen K x))) :
     Irreducible (X ^ (n * m) - C a) := by
-  have hm' : m ≠ 0 := by
-    rintro rfl
-    rw [pow_zero, ← C.map_one, ← map_sub] at hm
-    exact not_irreducible_C _ hm
+  have hm'  : m ≠ 0
+  rintro rfl
+  rw [pow_zero, ← C.map_one, ← map_sub] at hm
+  exact not_irreducible_C _ hm
   simpa [pow_mul] using irreducible_comp (monic_X_pow_sub_C a hm') (monic_X_pow n) hm
     (by simpa only [Polynomial.map_pow, map_X] using hn)
 
@@ -551,9 +551,9 @@ lemma exists_root_adjoin_eq_top_of_isCyclic :
   have hσ' := orderOf_eq_card_of_forall_mem_zpowers hσ
   -- Since the minimal polynomial of `σ` over `K` is `Xⁿ - 1`,
   -- `σ` has an eigenvector `v` with eigenvalue `ζ`.
-  have : IsRoot (minpoly K σ.toLinearMap) ζ := by
-    simpa [minpoly_algEquiv_toLinearMap σ (isOfFinOrder_of_finite σ), hσ',
-      sub_eq_zero, IsGalois.card_aut_eq_finrank] using hζ.pow_eq_one
+  have  : IsRoot (minpoly K σ.toLinearMap) ζ
+  simpa [minpoly_algEquiv_toLinearMap σ (isOfFinOrder_of_finite σ), hσ',
+    sub_eq_zero, IsGalois.card_aut_eq_finrank] using hζ.pow_eq_one
   obtain ⟨v, hv⟩ := (Module.End.hasEigenvalue_of_isRoot this).exists_hasEigenvector
   have hv' := hv.pow_apply
   simp_rw [← AlgEquiv.pow_toLinearMap, AlgEquiv.toLinearMap_apply] at hv'
@@ -583,15 +583,15 @@ variable {K L}
 lemma irreducible_X_pow_sub_C_of_root_adjoin_eq_top
     {a : K} {α : L} (ha : α ^ (finrank K L) = algebraMap K L a) (hα : K⟮α⟯ = ⊤) :
     Irreducible (X ^ (finrank K L) - C a) := by
-  have : X ^ (finrank K L) - C a = minpoly K α := by
-    refine minpoly.unique _ _ (monic_X_pow_sub_C _ finrank_pos.ne.symm) ?_ ?_
-    · simp only [aeval_def, eval₂_sub, eval₂_X_pow, ha, eval₂_C, sub_self]
-    · intros q hq hq'
-      refine le_trans ?_ (degree_le_of_dvd (minpoly.dvd _ _ hq') hq.ne_zero)
-      rw [degree_X_pow_sub_C finrank_pos,
-        degree_eq_natDegree (minpoly.ne_zero (IsIntegral.of_finite K α)),
-        ← IntermediateField.adjoin.finrank (IsIntegral.of_finite K α), hα, Nat.cast_le]
-      exact (finrank_top K L).ge
+  have  : X ^ (finrank K L) - C a = minpoly K α
+  refine minpoly.unique _ _ (monic_X_pow_sub_C _ finrank_pos.ne.symm) ?_ ?_
+  · simp only [aeval_def, eval₂_sub, eval₂_X_pow, ha, eval₂_C, sub_self]
+  · intros q hq hq'
+    refine le_trans ?_ (degree_le_of_dvd (minpoly.dvd _ _ hq') hq.ne_zero)
+    rw [degree_X_pow_sub_C finrank_pos,
+      degree_eq_natDegree (minpoly.ne_zero (IsIntegral.of_finite K α)),
+      ← IntermediateField.adjoin.finrank (IsIntegral.of_finite K α), hα, Nat.cast_le]
+    exact (finrank_top K L).ge
   exact this ▸ minpoly.irreducible (IsIntegral.of_finite K α)
 
 lemma isSplittingField_X_pow_sub_C_of_root_adjoin_eq_top

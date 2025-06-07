@@ -542,11 +542,11 @@ def isoMkSucc {F G : ComposableArrows C (n + 1)} (α : F.obj' 0 ≅ G.obj' 0)
 lemma ext_succ {F G : ComposableArrows C (n + 1)} (h₀ : F.obj' 0 = G.obj' 0)
     (h : F.δ₀ = G.δ₀) (w : F.map' 0 1 = eqToHom h₀ ≫ G.map' 0 1 ≫
       eqToHom (Functor.congr_obj h.symm 0)) : F = G := by
-  have : ∀ i, F.obj i = G.obj i := by
-    intro ⟨i, hi⟩
-    cases' i with i
-    · exact h₀
-    · exact Functor.congr_obj h ⟨i, by valid⟩
+  have  : ∀ i, F.obj i = G.obj i
+  intro ⟨i, hi⟩
+  cases' i with i
+  · exact h₀
+  · exact Functor.congr_obj h ⟨i, by valid⟩
   exact Functor.ext_of_iso (isoMkSucc (eqToIso h₀) (eqToIso h) (by
       rw [w]
       dsimp [app']

@@ -183,33 +183,36 @@ theorem isLocalStructomorphOn_contDiffGroupoid_iff (f : PartialHomeomorph M M') 
         e ∈ contDiffGroupoid ⊤ I ∧
           e.source ⊆ (c.symm ≫ₕ f ≫ₕ c').source ∧
             EqOn (c' ∘ f ∘ c.symm) e e.source ∧ c x ∈ e.source := by
-      have h1 : c' = chartAt H (f x) := by simp only [f.right_inv hX]
+      have h1  : c' = chartAt H (f x)
+      simp only [f.right_inv hX]
       have h2 : c' ∘ f ∘ c.symm = ⇑(c.symm ≫ₕ f ≫ₕ c') := rfl
-      have hcx : c x ∈ c.symm ⁻¹' f.source := by simp only [c, hx, mfld_simps]
+      have hcx  : c x ∈ c.symm ⁻¹' f.source
+      simp only [c, hx, mfld_simps]
       rw [h2]
       rw [← h1, h2, PartialHomeomorph.isLocalStructomorphWithinAt_iff'] at hxf
       · exact hxf hcx
       · mfld_set_tac
       · apply Or.inl
         simp only [c, hx, h1, mfld_simps]
-    have h2X : c' X = e (c (f.symm X)) := by
-      rw [← hef hex]
-      dsimp only [Function.comp_def]
-      have hfX : f.symm X ∈ c.source := by simp only [c, hX, mfld_simps]
-      rw [c.left_inv hfX, f.right_inv hX]
-    have h3e : EqOn (c ∘ f.symm ∘ c'.symm) e.symm (c'.symm ⁻¹' f.target ∩ e.target) := by
-      have h1 : EqOn (c.symm ≫ₕ f ≫ₕ c').symm e.symm (e.target ∩ e.target) := by
-        apply EqOn.symm
-        refine e.isImage_source_target.symm_eqOn_of_inter_eq_of_eqOn ?_ ?_
-        · rw [inter_self, inter_eq_right.mpr h2e]
-        · rw [inter_self]; exact hef.symm
-      have h2 : e.target ⊆ (c.symm ≫ₕ f ≫ₕ c').target := by
-        intro x hx; rw [← e.right_inv hx, ← hef (e.symm.mapsTo hx)]
-        exact PartialHomeomorph.mapsTo _ (h2e <| e.symm.mapsTo hx)
-      rw [inter_self] at h1
-      rwa [inter_eq_right.mpr]
-      refine h2.trans ?_
-      mfld_set_tac
+    have h2X  : c' X = e (c (f.symm X))
+    rw [← hef hex]
+    dsimp only [Function.comp_def]
+    have hfX  : f.symm X ∈ c.source
+    simp only [c, hX, mfld_simps]
+    rw [c.left_inv hfX, f.right_inv hX]
+    have h3e  : EqOn (c ∘ f.symm ∘ c'.symm) e.symm (c'.symm ⁻¹' f.target ∩ e.target)
+    have h1  : EqOn (c.symm ≫ₕ f ≫ₕ c').symm e.symm (e.target ∩ e.target)
+    apply EqOn.symm
+    refine e.isImage_source_target.symm_eqOn_of_inter_eq_of_eqOn ?_ ?_
+    · rw [inter_self, inter_eq_right.mpr h2e]
+    · rw [inter_self]; exact hef.symm
+    have h2  : e.target ⊆ (c.symm ≫ₕ f ≫ₕ c').target
+    intro x hx; rw [← e.right_inv hx, ← hef (e.symm.mapsTo hx)]
+    exact PartialHomeomorph.mapsTo _ (h2e <| e.symm.mapsTo hx)
+    rw [inter_self] at h1
+    rwa [inter_eq_right.mpr]
+    refine h2.trans ?_
+    mfld_set_tac
     refine ⟨e.symm, StructureGroupoid.symm _ he, h3e, ?_⟩
     rw [h2X]; exact e.mapsTo hex
   · -- We now show the converse: a partial homeomorphism `f : M → M'` which is smooth in both
@@ -226,12 +229,14 @@ theorem isLocalStructomorphOn_contDiffGroupoid_iff (f : PartialHomeomorph M M') 
     · -- smoothness of the candidate local structomorphism in the forward direction
       intro y hy
       simp only [mfld_simps] at hy
-      have H : ContMDiffWithinAt I I ⊤ f (f ≫ₕ c').source ((extChartAt I x).symm y) := by
-        refine (h₁ ((extChartAt I x).symm y) ?_).mono ?_
-        · simp only [hy, mfld_simps]
-        · mfld_set_tac
-      have hy' : (extChartAt I x).symm y ∈ c.source := by simp only [hy, mfld_simps]
-      have hy'' : f ((extChartAt I x).symm y) ∈ c'.source := by simp only [hy, mfld_simps]
+      have H  : ContMDiffWithinAt I I ⊤ f (f ≫ₕ c').source ((extChartAt I x).symm y)
+      refine (h₁ ((extChartAt I x).symm y) ?_).mono ?_
+      · simp only [hy, mfld_simps]
+      · mfld_set_tac
+      have hy'  : (extChartAt I x).symm y ∈ c.source
+      simp only [hy, mfld_simps]
+      have hy''  : f ((extChartAt I x).symm y) ∈ c'.source
+      simp only [hy, mfld_simps]
       rw [contMDiffWithinAt_iff_of_mem_source hy' hy''] at H
       convert H.2.mono _
       · simp only [hy, mfld_simps]
@@ -244,8 +249,10 @@ theorem isLocalStructomorphOn_contDiffGroupoid_iff (f : PartialHomeomorph M M') 
         refine (h₂ ((extChartAt I (f x)).symm y) ?_).mono ?_
         · simp only [hy, mfld_simps]
         · mfld_set_tac
-      have hy' : (extChartAt I (f x)).symm y ∈ c'.source := by simp only [hy, mfld_simps]
-      have hy'' : f.symm ((extChartAt I (f x)).symm y) ∈ c.source := by simp only [hy, mfld_simps]
+      have hy'  : (extChartAt I (f x)).symm y ∈ c'.source
+      simp only [hy, mfld_simps]
+      have hy''  : f.symm ((extChartAt I (f x)).symm y) ∈ c.source
+      simp only [hy, mfld_simps]
       rw [contMDiffWithinAt_iff_of_mem_source hy' hy''] at H
       convert H.2.mono _
       · simp only [hy, mfld_simps]

@@ -47,8 +47,10 @@ def oangle (p₁ p₂ p₃ : P) : Real.Angle :=
 theorem continuousAt_oangle {x : P × P × P} (hx12 : x.1 ≠ x.2.1) (hx32 : x.2.2 ≠ x.2.1) :
     ContinuousAt (fun y : P × P × P => ∡ y.1 y.2.1 y.2.2) x := by
   let f : P × P × P → V × V := fun y => (y.1 -ᵥ y.2.1, y.2.2 -ᵥ y.2.1)
-  have hf1 : (f x).1 ≠ 0 := by simp [hx12]
-  have hf2 : (f x).2 ≠ 0 := by simp [hx32]
+  have hf1  : (f x).1 ≠ 0
+  simp [hx12]
+  have hf2  : (f x).2 ≠ 0
+  simp [hx32]
   exact (o.continuousAt_oangle hf1 hf2).comp ((continuous_fst.vsub continuous_snd.fst).prod_mk
     (continuous_snd.snd.vsub continuous_snd.fst)).continuousAt
 
@@ -716,7 +718,8 @@ theorem _root_.AffineSubspace.SSameSide.oangle_sign_eq {s : AffineSubspace ℝ P
   let sp : Set (P × P × P) := (fun p : P => (p₁, p, p₂)) '' {p | s.SSameSide p₃ p}
   have hc : IsConnected sp := (isConnected_setOf_sSameSide hp₃p₄.2.1 hp₃p₄.nonempty).image _
     (continuous_const.prod_mk (Continuous.Prod.mk_left _)).continuousOn
-  have hf : ContinuousOn (fun p : P × P × P => ∡ p.1 p.2.1 p.2.2) sp := by
+  have hf : ContinuousOn (fun p : P × P × P => ∡ p.1 p.2.1 p.2.2) sp :=
+  by
     refine ContinuousAt.continuousOn fun p hp => continuousAt_oangle ?_ ?_
     all_goals
       simp_rw [sp, Set.mem_image, Set.mem_setOf] at hp
@@ -725,13 +728,13 @@ theorem _root_.AffineSubspace.SSameSide.oangle_sign_eq {s : AffineSubspace ℝ P
       rintro rfl
     · exact hp'.2.2 hp₁
     · exact hp'.2.2 hp₂
-  have hsp : ∀ p : P × P × P, p ∈ sp → ∡ p.1 p.2.1 p.2.2 ≠ 0 ∧ ∡ p.1 p.2.1 p.2.2 ≠ π := by
-    intro p hp
-    simp_rw [sp, Set.mem_image, Set.mem_setOf] at hp
-    obtain ⟨p', hp', rfl⟩ := hp
-    dsimp only
-    rw [oangle_ne_zero_and_ne_pi_iff_affineIndependent]
-    exact affineIndependent_of_ne_of_mem_of_not_mem_of_mem h hp₁ hp'.2.2 hp₂
+  have hsp  : ∀ p : P × P × P, p ∈ sp → ∡ p.1 p.2.1 p.2.2 ≠ 0 ∧ ∡ p.1 p.2.1 p.2.2 ≠ π
+  intro p hp
+  simp_rw [sp, Set.mem_image, Set.mem_setOf] at hp
+  obtain ⟨p', hp', rfl⟩ := hp
+  dsimp only
+  rw [oangle_ne_zero_and_ne_pi_iff_affineIndependent]
+  exact affineIndependent_of_ne_of_mem_of_not_mem_of_mem h hp₁ hp'.2.2 hp₂
   have hp₃ : (p₁, p₃, p₂) ∈ sp :=
     Set.mem_image_of_mem _ (sSameSide_self_iff.2 ⟨hp₃p₄.nonempty, hp₃p₄.2.1⟩)
   have hp₄ : (p₁, p₄, p₂) ∈ sp := Set.mem_image_of_mem _ hp₃p₄
@@ -742,7 +745,8 @@ points on opposite sides of that subspace have opposite signs. -/
 theorem _root_.AffineSubspace.SOppSide.oangle_sign_eq_neg {s : AffineSubspace ℝ P} {p₁ p₂ p₃ p₄ : P}
     (hp₁ : p₁ ∈ s) (hp₂ : p₂ ∈ s) (hp₃p₄ : s.SOppSide p₃ p₄) :
     (∡ p₁ p₄ p₂).sign = -(∡ p₁ p₃ p₂).sign := by
-  have hp₁p₃ : p₁ ≠ p₃ := by rintro rfl; exact hp₃p₄.left_not_mem hp₁
+  have hp₁p₃  : p₁ ≠ p₃
+  rintro rfl; exact hp₃p₄.left_not_mem hp₁
   rw [← (hp₃p₄.symm.trans (sOppSide_pointReflection hp₁ hp₃p₄.left_not_mem)).oangle_sign_eq hp₁ hp₂,
     ← oangle_rotate_sign p₁, ← oangle_rotate_sign p₁, oangle_swap₁₃_sign,
     (sbtw_pointReflection_of_ne ℝ hp₁p₃).symm.oangle_sign_eq _]

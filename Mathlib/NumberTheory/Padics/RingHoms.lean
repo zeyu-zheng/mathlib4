@@ -80,19 +80,19 @@ theorem isUnit_den (r : ℚ) (h : ‖(r : ℚ_[p])‖ ≤ 1) : IsUnit (r.den : �
   apply le_antisymm (r.den : ℤ_[p]).2
   rw [← not_lt, coe_natCast]
   intro norm_denom_lt
-  have hr : ‖(r * r.den : ℚ_[p])‖ = ‖(r.num : ℚ_[p])‖ := by
-    congr
-    rw_mod_cast [@Rat.mul_den_eq_num r]
+  have hr  : ‖(r * r.den : ℚ_[p])‖ = ‖(r.num : ℚ_[p])‖
+  congr
+  rw_mod_cast [@Rat.mul_den_eq_num r]
   rw [padicNormE.mul] at hr
-  have key : ‖(r.num : ℚ_[p])‖ < 1 := by
-    calc
-      _ = _ := hr.symm
-      _ < 1 * 1 := mul_lt_mul' h norm_denom_lt (norm_nonneg _) zero_lt_one
-      _ = 1 := mul_one 1
+  have key  : ‖(r.num : ℚ_[p])‖ < 1
+  calc
+    _ = _ := hr.symm
+    _ < 1 * 1 := mul_lt_mul' h norm_denom_lt (norm_nonneg _) zero_lt_one
+    _ = 1 := mul_one 1
 
-  have : ↑p ∣ r.num ∧ (p : ℤ) ∣ r.den := by
-    simp only [← norm_int_lt_one_iff_dvd, ← padic_norm_e_of_padicInt]
-    exact ⟨key, norm_denom_lt⟩
+  have  : ↑p ∣ r.num ∧ (p : ℤ) ∣ r.den
+  simp only [← norm_int_lt_one_iff_dvd, ← padic_norm_e_of_padicInt]
+  exact ⟨key, norm_denom_lt⟩
   apply hp_prime.1.not_dvd_one
   rwa [← r.reduced.gcd_eq_one, Nat.dvd_gcd_iff, ← Int.natCast_dvd, ← Int.natCast_dvd_natCast]
 
@@ -161,12 +161,12 @@ variable (x : ℤ_[p])
 theorem exists_mem_range : ∃ n : ℕ, n < p ∧ x - n ∈ maximalIdeal ℤ_[p] := by
   simp only [maximalIdeal_eq_span_p, Ideal.mem_span_singleton, ← norm_lt_one_iff_dvd]
   obtain ⟨r, hr⟩ := rat_dense p (x : ℚ_[p]) zero_lt_one
-  have H : ‖(r : ℚ_[p])‖ ≤ 1 := by
-    rw [norm_sub_rev] at hr
-    calc
-      _ = ‖(r : ℚ_[p]) - x + x‖ := by ring_nf
-      _ ≤ _ := padicNormE.nonarchimedean _ _
-      _ ≤ _ := max_le (le_of_lt hr) x.2
+  have H  : ‖(r : ℚ_[p])‖ ≤ 1
+  rw [norm_sub_rev] at hr
+  calc
+    _ = ‖(r : ℚ_[p]) - x + x‖ := by ring_nf
+    _ ≤ _ := padicNormE.nonarchimedean _ _
+    _ ≤ _ := max_le (le_of_lt hr) x.2
 
   obtain ⟨n, hzn, hnp, hn⟩ := exists_mem_range_of_norm_rat_le_one r H
   lift n to ℕ using hzn
@@ -290,7 +290,8 @@ theorem appr_lt (x : ℤ_[p]) (n : ℕ) : x.appr n < p ^ n := by
   induction' n with n ih generalizing x
   · simp only [appr, zero_eq, _root_.pow_zero, zero_lt_one]
   simp only [appr, map_natCast, ZMod.natCast_self, RingHom.map_pow, Int.natAbs, RingHom.map_mul]
-  have hp : p ^ n < p ^ (n + 1) := by apply pow_lt_pow_right hp_prime.1.one_lt (lt_add_one n)
+  have hp  : p ^ n < p ^ (n + 1)
+  apply pow_lt_pow_right hp_prime.1.one_lt (lt_add_one n)
   split_ifs with h
   · apply lt_trans (ih _) hp
   · calc
@@ -337,10 +338,10 @@ theorem appr_spec (n : ℕ) : ∀ x : ℤ_[p], x - appr x n ∈ Ideal.span {(p :
   rw [sub_add_eq_sub_sub]
   obtain ⟨c, hc⟩ := ih x
   simp only [map_natCast, ZMod.natCast_self, RingHom.map_pow, RingHom.map_mul, ZMod.natCast_val]
-  have hc' : c ≠ 0 := by
-    rintro rfl
-    simp only [mul_zero] at hc
-    contradiction
+  have hc'  : c ≠ 0
+  rintro rfl
+  simp only [mul_zero] at hc
+  contradiction
   conv_rhs =>
     congr
     simp only [hc]

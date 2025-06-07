@@ -50,9 +50,9 @@ attribute [local instance] hasEqualizers_of_hasKernels
 
 theorem exact_iff_epi_imageToKernel' : S.Exact ↔ Epi (imageToKernel' S.f S.g S.zero) := by
   rw [S.exact_iff_epi_kernel_lift]
-  have : factorThruImage S.f ≫ imageToKernel' S.f S.g S.zero = kernel.lift S.g S.f S.zero := by
-    simp only [← cancel_mono (kernel.ι _), kernel.lift_ι, imageToKernel',
-      Category.assoc, image.fac]
+  have  : factorThruImage S.f ≫ imageToKernel' S.f S.g S.zero = kernel.lift S.g S.f S.zero
+  simp only [← cancel_mono (kernel.ι _), kernel.lift_ι, imageToKernel',
+    Category.assoc, image.fac]
   constructor
   · intro
     exact epi_of_epi_fac this
@@ -89,11 +89,11 @@ theorem exact_iff_of_forks {cg : KernelFork S.g} (hg : IsLimit cg) {cf : Cokerne
   rw [exact_iff_kernel_ι_comp_cokernel_π_zero]
   let e₁ := IsLimit.conePointUniqueUpToIso (kernelIsKernel S.g) hg
   let e₂ := IsColimit.coconePointUniqueUpToIso (cokernelIsCokernel S.f) hf
-  have : cg.ι ≫ cf.π = e₁.inv ≫ kernel.ι S.g ≫ cokernel.π S.f ≫ e₂.hom := by
-    have eq₁ := IsLimit.conePointUniqueUpToIso_inv_comp (kernelIsKernel S.g) hg (.zero)
-    have eq₂ := IsColimit.comp_coconePointUniqueUpToIso_hom (cokernelIsCokernel S.f) hf (.one)
-    dsimp at eq₁ eq₂
-    rw [← eq₁, ← eq₂, Category.assoc]
+  have  : cg.ι ≫ cf.π = e₁.inv ≫ kernel.ι S.g ≫ cokernel.π S.f ≫ e₂.hom
+  have eq₁ := IsLimit.conePointUniqueUpToIso_inv_comp (kernelIsKernel S.g) hg (.zero)
+  have eq₂ := IsColimit.comp_coconePointUniqueUpToIso_hom (cokernelIsCokernel S.f) hf (.one)
+  dsimp at eq₁ eq₂
+  rw [← eq₁, ← eq₂, Category.assoc]
   rw [this, IsIso.comp_left_eq_zero e₁.inv, ← Category.assoc,
     IsIso.comp_right_eq_zero _ e₂.hom]
 

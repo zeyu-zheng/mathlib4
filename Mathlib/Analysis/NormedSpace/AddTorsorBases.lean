@@ -83,12 +83,12 @@ theorem IsOpen.exists_between_affineIndependent_span_eq_top {s u : Set P} (hu : 
   obtain ⟨ε, ε0, hεu⟩ := Metric.nhds_basis_closedBall.mem_iff.1 (hu.mem_nhds <| hsu hq)
   obtain ⟨t, ht₁, ht₂, ht₃⟩ := exists_subset_affineIndependent_affineSpan_eq_top h
   let f : P → P := fun y => lineMap q y (ε / dist y q)
-  have hf : ∀ y, f y ∈ u := by
-    refine fun y => hεu ?_
-    simp only [f]
-    rw [Metric.mem_closedBall, lineMap_apply, dist_vadd_left, norm_smul, Real.norm_eq_abs,
-      dist_eq_norm_vsub V y q, abs_div, abs_of_pos ε0, abs_of_nonneg (norm_nonneg _), div_mul_comm]
-    exact mul_le_of_le_one_left ε0.le (div_self_le_one _)
+  have hf  : ∀ y, f y ∈ u
+  refine fun y => hεu ?_
+  simp only [f]
+  rw [Metric.mem_closedBall, lineMap_apply, dist_vadd_left, norm_smul, Real.norm_eq_abs,
+    dist_eq_norm_vsub V y q, abs_div, abs_of_pos ε0, abs_of_nonneg (norm_nonneg _), div_mul_comm]
+  exact mul_le_of_le_one_left ε0.le (div_self_le_one _)
   have hεyq : ∀ y ∉ s, ε / dist y q ≠ 0 := fun y hy =>
     div_ne_zero ε0.ne' (dist_ne_zero.2 (ne_of_mem_of_not_mem hq hy).symm)
   classical

@@ -204,7 +204,8 @@ theorem _root_.Polynomial.toLaurent_comp_C : toLaurent (R := R) ∘ Polynomial.C
 
 @[simp]
 theorem _root_.Polynomial.toLaurent_X : (toLaurent Polynomial.X : R[T;T⁻¹]) = T 1 := by
-  have : (Polynomial.X : R[X]) = monomial 1 1 := by simp [← C_mul_X_pow_eq_monomial]
+  have  : (Polynomial.X : R[X]) = monomial 1 1
+  simp [← C_mul_X_pow_eq_monomial]
   simp [this, Polynomial.toLaurent_C_mul_T]
 
 -- @[simp] -- Porting note (#10618): simp can prove this
@@ -242,19 +243,19 @@ protected theorem induction_on {M : R[T;T⁻¹] → Prop} (p : R[T;T⁻¹]) (h_C
     (h_add : ∀ {p q}, M p → M q → M (p + q))
     (h_C_mul_T : ∀ (n : ℕ) (a : R), M (C a * T n) → M (C a * T (n + 1)))
     (h_C_mul_T_Z : ∀ (n : ℕ) (a : R), M (C a * T (-n)) → M (C a * T (-n - 1))) : M p := by
-  have A : ∀ {n : ℤ} {a : R}, M (C a * T n) := by
-    intro n a
-    refine Int.induction_on n ?_ ?_ ?_
-    · simpa only [T_zero, mul_one] using h_C a
-    · exact fun m => h_C_mul_T m a
-    · exact fun m => h_C_mul_T_Z m a
-  have B : ∀ s : Finset ℤ, M (s.sum fun n : ℤ => C (p.toFun n) * T n) := by
-    apply Finset.induction
-    · convert h_C 0
-      simp only [Finset.sum_empty, _root_.map_zero]
-    · intro n s ns ih
-      rw [Finset.sum_insert ns]
-      exact h_add A ih
+  have A  : ∀ {n : ℤ} {a : R}, M (C a * T n)
+  intro n a
+  refine Int.induction_on n ?_ ?_ ?_
+  · simpa only [T_zero, mul_one] using h_C a
+  · exact fun m => h_C_mul_T m a
+  · exact fun m => h_C_mul_T_Z m a
+  have B  : ∀ s : Finset ℤ, M (s.sum fun n : ℤ => C (p.toFun n) * T n)
+  apply Finset.induction
+  · convert h_C 0
+    simp only [Finset.sum_empty, _root_.map_zero]
+  · intro n s ns ih
+    rw [Finset.sum_insert ns]
+    exact h_add A ih
   convert B p.support
   ext a
   simp_rw [← single_eq_C_mul_T]
@@ -395,10 +396,10 @@ theorem toLaurent_support (f : R[X]) : f.toLaurent.support = f.support.map Nat.c
       Finsupp.support_zero, eq_self_iff_true, imp_true_iff, Finset.map_empty,
       Finsupp.support_eq_empty]
   · intro a s as hf f fs
-    have : (erase a f).toLaurent.support = s.map Nat.castEmbedding := by
-      refine hf (f.erase a) ?_
-      simp only [fs, Finset.erase_eq_of_not_mem as, Polynomial.support_erase,
-        Finset.erase_insert_eq_erase]
+    have  : (erase a f).toLaurent.support = s.map Nat.castEmbedding
+    refine hf (f.erase a) ?_
+    simp only [fs, Finset.erase_eq_of_not_mem as, Polynomial.support_erase,
+      Finset.erase_insert_eq_erase]
     rw [← monomial_add_erase f a, Finset.map_insert, ← this, map_add, Polynomial.toLaurent_C_mul_T,
       support_add_eq, Finset.insert_eq]
     · congr
@@ -435,10 +436,10 @@ section ExactDegrees
 theorem degree_C_mul_T (n : ℤ) (a : R) (a0 : a ≠ 0) : degree (C a * T n) = n := by
   rw [degree]
   -- Porting note: was `convert Finset.max_singleton`
-  have : Finsupp.support (C a * T n) = {n} := by
-    refine support_eq_singleton.mpr ?_
-    rw [← single_eq_C_mul_T]
-    simp only [single_eq_same, a0, Ne, not_false_iff, eq_self_iff_true, and_self_iff]
+  have  : Finsupp.support (C a * T n) = {n}
+  refine support_eq_singleton.mpr ?_
+  rw [← single_eq_C_mul_T]
+  simp only [single_eq_same, a0, Ne, not_false_iff, eq_self_iff_true, and_self_iff]
   rw [this]
   exact Finset.max_singleton
 

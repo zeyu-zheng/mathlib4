@@ -128,13 +128,13 @@ theorem leftCancelMulZero_of_le_isLeftRegular
   use 1
   rw [OneMemClass.coe_one, one_mul, one_mul]
   -- The hypothesis `a ≠ 0` in `P` is equivalent to this
-  have b1ne0 : b.1 ≠ 0 := by
-    intro hb1
-    have m0 : (LocalizationMap.toMap fl) 0 = 0 := f.map_zero'
-    have a0 : a * (LocalizationMap.toMap fl) b.2 = 0 ↔ a = 0 :=
-      (f.toLocalizationMap.map_units' b.2).mul_left_eq_zero
-    rw [hb1, m0, a0] at hb
-    exact ha hb
+  have b1ne0  : b.1 ≠ 0
+  intro hb1
+  have m0 : (LocalizationMap.toMap fl) 0 = 0 := f.map_zero'
+  have a0 : a * (LocalizationMap.toMap fl) b.2 = 0 ↔ a = 0 :=
+    (f.toLocalizationMap.map_units' b.2).mul_left_eq_zero
+  rw [hb1, m0, a0] at hb
+  exact ha hb
   have main : g (b.1 * (x.2 * y.1)) = g (b.1 * (y.2 * x.1)) :=
     calc
       g (b.1 * (x.2 * y.1)) = g b.1 * (g x.2 * g y.1) := by rw [map_mul g,map_mul g]

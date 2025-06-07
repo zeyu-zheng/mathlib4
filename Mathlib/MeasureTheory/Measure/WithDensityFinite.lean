@@ -224,9 +224,9 @@ lemma restrict_compl_sigmaFiniteSet_eq_zero_or_top (μ : Measure α) [SFinite μ
 lemma measure_eq_zero_or_top_of_subset_compl_sigmaFiniteSet [SFinite μ]
     (ht_subset : t ⊆ μ.sigmaFiniteSetᶜ) :
     μ t = 0 ∨ μ t = ∞ := by
-  have : μ t = μ.restrict μ.sigmaFiniteSetᶜ t := by
-    rw [Measure.restrict_apply' (measurableSet_sigmaFiniteSet μ).compl,
-      Set.inter_eq_left.mpr ht_subset]
+  have  : μ t = μ.restrict μ.sigmaFiniteSetᶜ t
+  rw [Measure.restrict_apply' (measurableSet_sigmaFiniteSet μ).compl,
+    Set.inter_eq_left.mpr ht_subset]
   rw [this]
   exact restrict_compl_sigmaFiniteSet_eq_zero_or_top μ t
 

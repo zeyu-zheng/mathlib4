@@ -69,12 +69,12 @@ theorem Polynomial.lift_of_splits {F K L : Type*} [Field F] [Field K] [Field L] 
     letI := fieldOfFiniteDimensional F Ks
     letI := (f : Ks →+* L).toAlgebra
     have H5 : IsIntegral Ks a := H1.tower_top
-    have H6 : (minpoly Ks a).Splits (algebraMap Ks L) := by
-      refine splits_of_splits_of_dvd _ ((minpoly.monic H1).map (algebraMap F Ks)).ne_zero
-        ((splits_map_iff _ _).2 ?_) (minpoly.dvd _ _ ?_)
-      · rw [← IsScalarTower.algebraMap_eq]
-        exact H2
-      · rw [Polynomial.aeval_map_algebraMap, minpoly.aeval]
+    have H6  : (minpoly Ks a).Splits (algebraMap Ks L)
+    refine splits_of_splits_of_dvd _ ((minpoly.monic H1).map (algebraMap F Ks)).ne_zero
+      ((splits_map_iff _ _).2 ?_) (minpoly.dvd _ _ ?_)
+    · rw [← IsScalarTower.algebraMap_eq]
+      exact H2
+    · rw [Polynomial.aeval_map_algebraMap, minpoly.aeval]
     obtain ⟨y, hy⟩ := Polynomial.exists_root_of_splits _ H6 (minpoly.degree_pos H5).ne'
     exact ⟨Subalgebra.ofRestrictScalars F _ <| Algebra.adjoin.liftSingleton Ks a y hy⟩
 

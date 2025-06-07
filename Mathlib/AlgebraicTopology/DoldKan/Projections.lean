@@ -106,7 +106,8 @@ theorem comp_P_eq_self {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFa
     by_cases hqn : n < q
     · exact v.of_succ.comp_Hσ_eq_zero hqn
     · obtain ⟨a, ha⟩ := Nat.le.dest (not_lt.mp hqn)
-      have hnaq : n = a + q := by omega
+      have hnaq  : n = a + q
+      omega
       simp only [v.of_succ.comp_Hσ_eq hnaq, neg_eq_zero, ← assoc]
       have eq := v ⟨a, by omega⟩ (by
         simp only [hnaq, Nat.succ_eq_add_one, add_assoc]

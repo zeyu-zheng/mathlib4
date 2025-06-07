@@ -207,29 +207,29 @@ theorem Subpresheaf.sheafify_isSheaf (hF : Presieve.IsSheaf J F) :
   choose W i₁ i₂ hi₂ h₁ h₂ using this
   dsimp [-Sieve.bind_apply] at *
   let x'' : Presieve.FamilyOfElements F S' := fun V i hi => F.map (i₁ V i hi).op (x _ (hi₂ V i hi))
-  have H : ∀ s, x.IsAmalgamation s ↔ x''.IsAmalgamation s.1 := by
-    intro s
-    constructor
-    · intro H V i hi
-      dsimp only [x'']
-      conv_lhs => rw [← h₂ _ _ hi]
-      rw [← H _ (hi₂ _ _ hi)]
-      exact FunctorToTypes.map_comp_apply F (i₂ _ _ hi).op (i₁ _ _ hi).op _
-    · intro H V i hi
-      refine Subtype.ext ?_
-      apply (hF _ (x i hi).2).isSeparatedFor.ext
-      intro V' i' hi'
-      have hi'' : S' (i' ≫ i) := ⟨_, _, _, hi, hi', rfl⟩
-      have := H _ hi''
-      rw [op_comp, F.map_comp] at this
-      exact this.trans (congr_arg Subtype.val (hx _ _ (hi₂ _ _ hi'') hi (h₂ _ _ hi'')))
-  have : x''.Compatible := by
-    intro V₁ V₂ V₃ g₁ g₂ g₃ g₄ S₁ S₂ e
-    rw [← FunctorToTypes.map_comp_apply, ← FunctorToTypes.map_comp_apply]
-    exact
-      congr_arg Subtype.val
-        (hx (g₁ ≫ i₁ _ _ S₁) (g₂ ≫ i₁ _ _ S₂) (hi₂ _ _ S₁) (hi₂ _ _ S₂)
-        (by simp only [Category.assoc, h₂, e]))
+  have H  : ∀ s, x.IsAmalgamation s ↔ x''.IsAmalgamation s.1
+  intro s
+  constructor
+  · intro H V i hi
+    dsimp only [x'']
+    conv_lhs => rw [← h₂ _ _ hi]
+    rw [← H _ (hi₂ _ _ hi)]
+    exact FunctorToTypes.map_comp_apply F (i₂ _ _ hi).op (i₁ _ _ hi).op _
+  · intro H V i hi
+    refine Subtype.ext ?_
+    apply (hF _ (x i hi).2).isSeparatedFor.ext
+    intro V' i' hi'
+    have hi'' : S' (i' ≫ i) := ⟨_, _, _, hi, hi', rfl⟩
+    have := H _ hi''
+    rw [op_comp, F.map_comp] at this
+    exact this.trans (congr_arg Subtype.val (hx _ _ (hi₂ _ _ hi'') hi (h₂ _ _ hi'')))
+  have  : x''.Compatible
+  intro V₁ V₂ V₃ g₁ g₂ g₃ g₄ S₁ S₂ e
+  rw [← FunctorToTypes.map_comp_apply, ← FunctorToTypes.map_comp_apply]
+  exact
+    congr_arg Subtype.val
+      (hx (g₁ ≫ i₁ _ _ S₁) (g₂ ≫ i₁ _ _ S₂) (hi₂ _ _ S₁) (hi₂ _ _ S₂)
+      (by simp only [Category.assoc, h₂, e]))
   obtain ⟨t, ht, ht'⟩ := hF _ (J.bind_covering hS fun V i hi => (x i hi).2) _ this
   refine ⟨⟨t, _⟩, (H ⟨t, ?_⟩).mpr ht, fun y hy => Subtype.ext (ht' _ ((H _).mp hy))⟩
   refine J.superset_covering ?_ (J.bind_covering hS fun V i hi => (x i hi).2)
@@ -354,16 +354,16 @@ theorem imagePresheaf_comp_le (f₁ : F ⟶ F') (f₂ : F' ⟶ F'') :
 
 instance isIso_toImagePresheaf {F F' : Cᵒᵖ ⥤ TypeMax.{v, w}} (f : F ⟶ F') [hf : Mono f] :
   IsIso (toImagePresheaf f) := by
-  have : ∀ (X : Cᵒᵖ), IsIso ((toImagePresheaf f).app X) := by
-    intro X
-    rw [isIso_iff_bijective]
-    constructor
-    · intro x y e
-      have := (NatTrans.mono_iff_mono_app _ _).mp hf X
-      rw [mono_iff_injective] at this
-      exact this (congr_arg Subtype.val e : _)
-    · rintro ⟨_, ⟨x, rfl⟩⟩
-      exact ⟨x, rfl⟩
+  have  : ∀ (X : Cᵒᵖ), IsIso ((toImagePresheaf f).app X)
+  intro X
+  rw [isIso_iff_bijective]
+  constructor
+  · intro x y e
+    have := (NatTrans.mono_iff_mono_app _ _).mp hf X
+    rw [mono_iff_injective] at this
+    exact this (congr_arg Subtype.val e : _)
+  · rintro ⟨_, ⟨x, rfl⟩⟩
+    exact ⟨x, rfl⟩
   apply NatIso.isIso_of_isIso_app
 
 /-- The image sheaf of a morphism between sheaves, defined to be the sheafification of

@@ -219,19 +219,19 @@ theorem one_le_convexBodyLT'Factor : 1 ≤ convexBodyLT'Factor K :=
 
 theorem convexBodyLT'_volume :
     volume (convexBodyLT' K f w₀) = convexBodyLT'Factor K * ∏ w, (f w) ^ (mult w) := by
-  have vol_box : ∀ B : ℝ≥0, volume {x : ℂ | |x.re| < 1 ∧ |x.im| < B^2} = 4*B^2 := by
-    intro B
-    rw [← (Complex.volume_preserving_equiv_real_prod.symm).measure_preimage]
-    · simp_rw [Set.preimage_setOf_eq, Complex.measurableEquivRealProd_symm_apply]
-      rw [show {a : ℝ × ℝ | |a.1| < 1 ∧ |a.2| < B ^ 2} =
-        Set.Ioo (-1 : ℝ) (1 : ℝ) ×ˢ Set.Ioo (- (B : ℝ) ^ 2) ((B : ℝ) ^ 2) by
-          ext; simp_rw [Set.mem_setOf_eq, Set.mem_prod, Set.mem_Ioo, abs_lt]]
-      simp_rw [volume_eq_prod, prod_prod, Real.volume_Ioo, sub_neg_eq_add, one_add_one_eq_two,
-        ← two_mul, ofReal_mul zero_le_two, ofReal_pow (coe_nonneg B), ofReal_ofNat,
-        ofReal_coe_nnreal, ← mul_assoc, show (2 : ℝ≥0∞) * 2 = 4 by norm_num]
-    · refine (MeasurableSet.inter ?_ ?_).nullMeasurableSet
-      · exact measurableSet_lt (measurable_norm.comp Complex.measurable_re) measurable_const
-      · exact measurableSet_lt (measurable_norm.comp Complex.measurable_im) measurable_const
+  have vol_box  : ∀ B : ℝ≥0, volume {x : ℂ | |x.re| < 1 ∧ |x.im| < B^2} = 4*B^2
+  intro B
+  rw [← (Complex.volume_preserving_equiv_real_prod.symm).measure_preimage]
+  · simp_rw [Set.preimage_setOf_eq, Complex.measurableEquivRealProd_symm_apply]
+    rw [show {a : ℝ × ℝ | |a.1| < 1 ∧ |a.2| < B ^ 2} =
+      Set.Ioo (-1 : ℝ) (1 : ℝ) ×ˢ Set.Ioo (- (B : ℝ) ^ 2) ((B : ℝ) ^ 2) by
+        ext; simp_rw [Set.mem_setOf_eq, Set.mem_prod, Set.mem_Ioo, abs_lt]]
+    simp_rw [volume_eq_prod, prod_prod, Real.volume_Ioo, sub_neg_eq_add, one_add_one_eq_two,
+      ← two_mul, ofReal_mul zero_le_two, ofReal_pow (coe_nonneg B), ofReal_ofNat,
+      ofReal_coe_nnreal, ← mul_assoc, show (2 : ℝ≥0∞) * 2 = 4 by norm_num]
+  · refine (MeasurableSet.inter ?_ ?_).nullMeasurableSet
+    · exact measurableSet_lt (measurable_norm.comp Complex.measurable_re) measurable_const
+    · exact measurableSet_lt (measurable_norm.comp Complex.measurable_im) measurable_const
   calc
     _ = (∏ x : {w // InfinitePlace.IsReal w}, ENNReal.ofReal (2 * (f x.val))) *
           ((∏ x ∈ Finset.univ.erase  w₀, ENNReal.ofReal (f x.val) ^ 2 * pi) *
@@ -502,9 +502,9 @@ that `w a < f w` for all infinite places `w`. -/
 theorem exists_ne_zero_mem_ideal_lt (h : minkowskiBound K I < volume (convexBodyLT K f)) :
     ∃ a ∈ (I : FractionalIdeal (𝓞 K)⁰ K), a ≠ 0 ∧ ∀ w : InfinitePlace K, w a < f w := by
   have h_fund := Zspan.isAddFundamentalDomain (fractionalIdealLatticeBasis K I) volume
-  have : Countable (span ℤ (Set.range (fractionalIdealLatticeBasis K I))).toAddSubgroup := by
-    change Countable (span ℤ (Set.range (fractionalIdealLatticeBasis K I)) : Set (E K))
-    infer_instance
+  have  : Countable (span ℤ (Set.range (fractionalIdealLatticeBasis K I))).toAddSubgroup
+  change Countable (span ℤ (Set.range (fractionalIdealLatticeBasis K I)) : Set (E K))
+  infer_instance
   obtain ⟨⟨x, hx⟩, h_nz, h_mem⟩ := exists_ne_zero_mem_lattice_of_measure_mul_two_pow_lt_measure
     h_fund (convexBodyLT_neg_mem K f) (convexBodyLT_convex K f) h
   rw [mem_toAddSubgroup, mem_span_fractionalIdealLatticeBasis] at hx
@@ -518,9 +518,9 @@ theorem exists_ne_zero_mem_ideal_lt' (w₀ : {w : InfinitePlace K // IsComplex w
     ∃ a ∈ (I : FractionalIdeal (𝓞 K)⁰ K), a ≠ 0 ∧ (∀ w : InfinitePlace K, w ≠ w₀ → w a < f w) ∧
       |(w₀.val.embedding a).re| < 1 ∧ |(w₀.val.embedding a).im| < (f w₀ : ℝ) ^ 2 := by
   have h_fund := Zspan.isAddFundamentalDomain (fractionalIdealLatticeBasis K I) volume
-  have : Countable (span ℤ (Set.range (fractionalIdealLatticeBasis K I))).toAddSubgroup := by
-    change Countable (span ℤ (Set.range (fractionalIdealLatticeBasis K I)) : Set (E K))
-    infer_instance
+  have  : Countable (span ℤ (Set.range (fractionalIdealLatticeBasis K I))).toAddSubgroup
+  change Countable (span ℤ (Set.range (fractionalIdealLatticeBasis K I)) : Set (E K))
+  infer_instance
   obtain ⟨⟨x, hx⟩, h_nz, h_mem⟩ := exists_ne_zero_mem_lattice_of_measure_mul_two_pow_lt_measure
     h_fund (convexBodyLT'_neg_mem K f w₀) (convexBodyLT'_convex K f w₀) h
   rw [mem_toAddSubgroup, mem_span_fractionalIdealLatticeBasis] at hx
@@ -547,12 +547,12 @@ theorem exists_primitive_element_lt_of_isReal {w₀ : InfinitePlace K} (hw₀ : 
     (hB : minkowskiBound K ↑1 < convexBodyLTFactor K * B) :
     ∃ a : 𝓞 K, ℚ⟮(a : K)⟯ = ⊤ ∧
       ∀ w : InfinitePlace K, w a < max B 1 := by
-  have : minkowskiBound K ↑1 < volume (convexBodyLT K (fun w ↦ if w = w₀ then B else 1)) := by
-    rw [convexBodyLT_volume, ← Finset.prod_erase_mul _ _ (Finset.mem_univ w₀)]
-    simp_rw [ite_pow, one_pow]
-    rw [Finset.prod_ite_eq']
-    simp_rw [Finset.not_mem_erase, ite_false, mult, hw₀, ite_true, one_mul, pow_one]
-    exact hB
+  have  : minkowskiBound K ↑1 < volume (convexBodyLT K (fun w ↦ if w = w₀ then B else 1))
+  rw [convexBodyLT_volume, ← Finset.prod_erase_mul _ _ (Finset.mem_univ w₀)]
+  simp_rw [ite_pow, one_pow]
+  rw [Finset.prod_ite_eq']
+  simp_rw [Finset.not_mem_erase, ite_false, mult, hw₀, ite_true, one_mul, pow_one]
+  exact hB
   obtain ⟨a, h_nz, h_le⟩ := exists_ne_zero_mem_ringOfIntegers_lt K this
   refine ⟨a, ?_, fun w ↦ lt_of_lt_of_le (h_le w) ?_⟩
   · exact is_primitive_element_of_infinitePlace_lt h_nz
@@ -598,17 +598,17 @@ theorem exists_ne_zero_mem_ideal_of_norm_le {B : ℝ}
     (h : (minkowskiBound K I) ≤ volume (convexBodySum K B)) :
     ∃ a ∈ (I : FractionalIdeal (𝓞 K)⁰ K), a ≠ 0 ∧
       |Algebra.norm ℚ (a : K)| ≤ (B / finrank ℚ K) ^ finrank ℚ K := by
-  have hB : 0 ≤ B := by
-    contrapose! h
-    rw [convexBodySum_volume_eq_zero_of_le_zero K (le_of_lt h)]
-    exact minkowskiBound_pos K I
+  have hB  : 0 ≤ B
+  contrapose! h
+  rw [convexBodySum_volume_eq_zero_of_le_zero K (le_of_lt h)]
+  exact minkowskiBound_pos K I
   -- Some inequalities that will be useful later on
   have h1 : 0 < (finrank ℚ K : ℝ)⁻¹ := inv_pos.mpr (Nat.cast_pos.mpr finrank_pos)
   have h2 : 0 ≤ B / (finrank ℚ K) := div_nonneg hB (Nat.cast_nonneg _)
   have h_fund := Zspan.isAddFundamentalDomain (fractionalIdealLatticeBasis K I) volume
-  have : Countable (span ℤ (Set.range (fractionalIdealLatticeBasis K I))).toAddSubgroup := by
-    change Countable (span ℤ (Set.range (fractionalIdealLatticeBasis K I)) : Set (E K))
-    infer_instance
+  have  : Countable (span ℤ (Set.range (fractionalIdealLatticeBasis K I))).toAddSubgroup
+  change Countable (span ℤ (Set.range (fractionalIdealLatticeBasis K I)) : Set (E K))
+  infer_instance
   obtain ⟨⟨x, hx⟩, h_nz, h_mem⟩ := exists_ne_zero_mem_lattice_of_measure_mul_two_pow_le_measure
       h_fund (fun _ ↦ convexBodySum_neg_mem K B) (convexBodySum_convex K B)
       (convexBodySum_compact K B) h

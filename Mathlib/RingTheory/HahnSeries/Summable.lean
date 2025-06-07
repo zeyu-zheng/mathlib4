@@ -460,10 +460,10 @@ variable [CommRing R] [IsDomain R]
 theorem unit_aux (x : HahnSeries Γ R) {r : R} (hr : r * x.leadingCoeff = 1) :
     0 < (1 - single (-x.order) r * x).orderTop := by
   by_cases hx : x = 0; · simp_all [hx]
-  have hrz : r ≠ 0 := by
-    intro h
-    rw [h, zero_mul] at hr
-    exact (zero_ne_one' R) hr
+  have hrz  : r ≠ 0
+  intro h
+  rw [h, zero_mul] at hr
+  exact (zero_ne_one' R) hr
   refine lt_of_le_of_ne (le_trans ?_ min_orderTop_le_orderTop_sub) fun h => ?_
   · refine le_min (by rw [orderTop_one]) ?_
     refine le_trans ?_ orderTop_add_orderTop_le_orderTop_mul

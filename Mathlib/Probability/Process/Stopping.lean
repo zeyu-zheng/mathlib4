@@ -73,7 +73,8 @@ theorem IsStoppingTime.measurableSet_lt_of_pred [PredOrder ι] (hτ : IsStopping
     simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false_iff]
     rw [isMin_iff_forall_not_lt] at hi_min
     exact hi_min (τ ω)
-  have : {ω : Ω | τ ω < i} = τ ⁻¹' Set.Iic (pred i) := by ext; simp [Iic_pred_of_not_isMin hi_min]
+  have  : {ω : Ω | τ ω < i} = τ ⁻¹' Set.Iic (pred i)
+  ext; simp [Iic_pred_of_not_isMin hi_min]
   rw [this]
   exact f.mono (pred_le i) _ (hτ.measurableSet_le <| pred i)
 
@@ -87,13 +88,13 @@ variable [PartialOrder ι] {τ : Ω → ι} {f : Filtration ι m}
 
 protected theorem measurableSet_eq_of_countable_range (hτ : IsStoppingTime f τ)
     (h_countable : (Set.range τ).Countable) (i : ι) : MeasurableSet[f i] {ω | τ ω = i} := by
-  have : {ω | τ ω = i} = {ω | τ ω ≤ i} \ ⋃ (j ∈ Set.range τ) (_ : j < i), {ω | τ ω ≤ j} := by
-    ext1 a
-    simp only [Set.mem_setOf_eq, Set.mem_range, Set.iUnion_exists, Set.iUnion_iUnion_eq',
-      Set.mem_diff, Set.mem_iUnion, exists_prop, not_exists, not_and, not_le]
-    constructor <;> intro h
-    · simp only [h, lt_iff_le_not_le, le_refl, and_imp, imp_self, imp_true_iff, and_self_iff]
-    · exact h.1.eq_or_lt.resolve_right fun h_lt => h.2 a h_lt le_rfl
+  have  : {ω | τ ω = i} = {ω | τ ω ≤ i} \ ⋃ (j ∈ Set.range τ) (_ : j < i), {ω | τ ω ≤ j}
+  ext1 a
+  simp only [Set.mem_setOf_eq, Set.mem_range, Set.iUnion_exists, Set.iUnion_iUnion_eq',
+    Set.mem_diff, Set.mem_iUnion, exists_prop, not_exists, not_and, not_le]
+  constructor <;> intro h
+  · simp only [h, lt_iff_le_not_le, le_refl, and_imp, imp_self, imp_true_iff, and_self_iff]
+  · exact h.1.eq_or_lt.resolve_right fun h_lt => h.2 a h_lt le_rfl
   rw [this]
   refine (hτ.measurableSet_le i).diff ?_
   refine MeasurableSet.biUnion h_countable fun j _ => ?_
@@ -108,7 +109,8 @@ protected theorem measurableSet_eq_of_countable [Countable ι] (hτ : IsStopping
 
 protected theorem measurableSet_lt_of_countable_range (hτ : IsStoppingTime f τ)
     (h_countable : (Set.range τ).Countable) (i : ι) : MeasurableSet[f i] {ω | τ ω < i} := by
-  have : {ω | τ ω < i} = {ω | τ ω ≤ i} \ {ω | τ ω = i} := by ext1 ω; simp [lt_iff_le_and_ne]
+  have  : {ω | τ ω < i} = {ω | τ ω ≤ i} \ {ω | τ ω = i}
+  ext1 ω; simp [lt_iff_le_and_ne]
   rw [this]
   exact (hτ.measurableSet_le i).diff (hτ.measurableSet_eq_of_countable_range h_countable i)
 
@@ -119,8 +121,8 @@ protected theorem measurableSet_lt_of_countable [Countable ι] (hτ : IsStopping
 protected theorem measurableSet_ge_of_countable_range {ι} [LinearOrder ι] {τ : Ω → ι}
     {f : Filtration ι m} (hτ : IsStoppingTime f τ) (h_countable : (Set.range τ).Countable) (i : ι) :
     MeasurableSet[f i] {ω | i ≤ τ ω} := by
-  have : {ω | i ≤ τ ω} = {ω | τ ω < i}ᶜ := by
-    ext1 ω; simp only [Set.mem_setOf_eq, Set.mem_compl_iff, not_lt]
+  have  : {ω | i ≤ τ ω} = {ω | τ ω < i}ᶜ
+  ext1 ω; simp only [Set.mem_setOf_eq, Set.mem_compl_iff, not_lt]
   rw [this]
   exact (hτ.measurableSet_lt_of_countable_range h_countable i).compl
 
@@ -138,8 +140,8 @@ variable [LinearOrder ι] {f : Filtration ι m} {τ : Ω → ι}
 
 theorem IsStoppingTime.measurableSet_gt (hτ : IsStoppingTime f τ) (i : ι) :
     MeasurableSet[f i] {ω | i < τ ω} := by
-  have : {ω | i < τ ω} = {ω | τ ω ≤ i}ᶜ := by
-    ext1 ω; simp only [Set.mem_setOf_eq, Set.mem_compl_iff, not_le]
+  have  : {ω | i < τ ω} = {ω | τ ω ≤ i}ᶜ
+  ext1 ω; simp only [Set.mem_setOf_eq, Set.mem_compl_iff, not_le]
   rw [this]
   exact (hτ.measurableSet_le i).compl
 
@@ -187,15 +189,15 @@ theorem IsStoppingTime.measurableSet_lt (hτ : IsStoppingTime f τ) (i : ι) :
 
 theorem IsStoppingTime.measurableSet_ge (hτ : IsStoppingTime f τ) (i : ι) :
     MeasurableSet[f i] {ω | i ≤ τ ω} := by
-  have : {ω | i ≤ τ ω} = {ω | τ ω < i}ᶜ := by
-    ext1 ω; simp only [Set.mem_setOf_eq, Set.mem_compl_iff, not_lt]
+  have  : {ω | i ≤ τ ω} = {ω | τ ω < i}ᶜ
+  ext1 ω; simp only [Set.mem_setOf_eq, Set.mem_compl_iff, not_lt]
   rw [this]
   exact (hτ.measurableSet_lt i).compl
 
 theorem IsStoppingTime.measurableSet_eq (hτ : IsStoppingTime f τ) (i : ι) :
     MeasurableSet[f i] {ω | τ ω = i} := by
-  have : {ω | τ ω = i} = {ω | τ ω ≤ i} ∩ {ω | τ ω ≥ i} := by
-    ext1 ω; simp only [Set.mem_setOf_eq, Set.mem_inter_iff, le_antisymm_iff]
+  have  : {ω | τ ω = i} = {ω | τ ω ≤ i} ∩ {ω | τ ω ≥ i}
+  ext1 ω; simp only [Set.mem_setOf_eq, Set.mem_inter_iff, le_antisymm_iff]
   rw [this]
   exact (hτ.measurableSet_le i).inter (hτ.measurableSet_ge i)
 
@@ -374,12 +376,12 @@ theorem measurableSpace_const (f : Filtration ι m) (i : ι) :
 theorem measurableSet_inter_eq_iff (hτ : IsStoppingTime f τ) (s : Set Ω) (i : ι) :
     MeasurableSet[hτ.measurableSpace] (s ∩ {ω | τ ω = i}) ↔
       MeasurableSet[f i] (s ∩ {ω | τ ω = i}) := by
-  have : ∀ j, {ω : Ω | τ ω = i} ∩ {ω : Ω | τ ω ≤ j} = {ω : Ω | τ ω = i} ∩ {_ω | i ≤ j} := by
-    intro j
-    ext1 ω
-    simp only [Set.mem_inter_iff, Set.mem_setOf_eq, and_congr_right_iff]
-    intro hxi
-    rw [hxi]
+  have  : ∀ j, {ω : Ω | τ ω = i} ∩ {ω : Ω | τ ω ≤ j} = {ω : Ω | τ ω = i} ∩ {_ω | i ≤ j}
+  intro j
+  ext1 ω
+  simp only [Set.mem_inter_iff, Set.mem_setOf_eq, and_congr_right_iff]
+  intro hxi
+  rw [hxi]
   constructor <;> intro h
   · specialize h i
     simpa only [Set.inter_assoc, this, le_refl, Set.setOf_true, Set.inter_univ] using h
@@ -429,14 +431,15 @@ variable [LinearOrder ι] {f : Filtration ι m} {τ π : Ω → ι}
 protected theorem measurableSet_le' (hτ : IsStoppingTime f τ) (i : ι) :
     MeasurableSet[hτ.measurableSpace] {ω | τ ω ≤ i} := by
   intro j
-  have : {ω : Ω | τ ω ≤ i} ∩ {ω : Ω | τ ω ≤ j} = {ω : Ω | τ ω ≤ min i j} := by
-    ext1 ω; simp only [Set.mem_inter_iff, Set.mem_setOf_eq, le_min_iff]
+  have  : {ω : Ω | τ ω ≤ i} ∩ {ω : Ω | τ ω ≤ j} = {ω : Ω | τ ω ≤ min i j}
+  ext1 ω; simp only [Set.mem_inter_iff, Set.mem_setOf_eq, le_min_iff]
   rw [this]
   exact f.mono (min_le_right i j) _ (hτ _)
 
 protected theorem measurableSet_gt' (hτ : IsStoppingTime f τ) (i : ι) :
     MeasurableSet[hτ.measurableSpace] {ω | i < τ ω} := by
-  have : {ω : Ω | i < τ ω} = {ω : Ω | τ ω ≤ i}ᶜ := by ext1 ω; simp
+  have  : {ω : Ω | i < τ ω} = {ω : Ω | τ ω ≤ i}ᶜ
+  ext1 ω; simp
   rw [this]
   exact (hτ.measurableSet_le' i).compl
 
@@ -449,19 +452,19 @@ protected theorem measurableSet_eq' [TopologicalSpace ι] [OrderTopology ι]
 protected theorem measurableSet_ge' [TopologicalSpace ι] [OrderTopology ι]
     [FirstCountableTopology ι] (hτ : IsStoppingTime f τ) (i : ι) :
     MeasurableSet[hτ.measurableSpace] {ω | i ≤ τ ω} := by
-  have : {ω | i ≤ τ ω} = {ω | τ ω = i} ∪ {ω | i < τ ω} := by
-    ext1 ω
-    simp only [le_iff_lt_or_eq, Set.mem_setOf_eq, Set.mem_union]
-    rw [@eq_comm _ i, or_comm]
+  have  : {ω | i ≤ τ ω} = {ω | τ ω = i} ∪ {ω | i < τ ω}
+  ext1 ω
+  simp only [le_iff_lt_or_eq, Set.mem_setOf_eq, Set.mem_union]
+  rw [@eq_comm _ i, or_comm]
   rw [this]
   exact (hτ.measurableSet_eq' i).union (hτ.measurableSet_gt' i)
 
 protected theorem measurableSet_lt' [TopologicalSpace ι] [OrderTopology ι]
     [FirstCountableTopology ι] (hτ : IsStoppingTime f τ) (i : ι) :
     MeasurableSet[hτ.measurableSpace] {ω | τ ω < i} := by
-  have : {ω | τ ω < i} = {ω | τ ω ≤ i} \ {ω | τ ω = i} := by
-    ext1 ω
-    simp only [lt_iff_le_and_ne, Set.mem_setOf_eq, Set.mem_diff]
+  have  : {ω | τ ω < i} = {ω | τ ω ≤ i} \ {ω | τ ω = i}
+  ext1 ω
+  simp only [lt_iff_le_and_ne, Set.mem_setOf_eq, Set.mem_diff]
   rw [this]
   exact (hτ.measurableSet_le' i).diff (hτ.measurableSet_eq' i)
 
@@ -480,10 +483,10 @@ protected theorem measurableSet_eq_of_countable' [Countable ι] (hτ : IsStoppin
 protected theorem measurableSet_ge_of_countable_range' (hτ : IsStoppingTime f τ)
     (h_countable : (Set.range τ).Countable) (i : ι) :
     MeasurableSet[hτ.measurableSpace] {ω | i ≤ τ ω} := by
-  have : {ω | i ≤ τ ω} = {ω | τ ω = i} ∪ {ω | i < τ ω} := by
-    ext1 ω
-    simp only [le_iff_lt_or_eq, Set.mem_setOf_eq, Set.mem_union]
-    rw [@eq_comm _ i, or_comm]
+  have  : {ω | i ≤ τ ω} = {ω | τ ω = i} ∪ {ω | i < τ ω}
+  ext1 ω
+  simp only [le_iff_lt_or_eq, Set.mem_setOf_eq, Set.mem_union]
+  rw [@eq_comm _ i, or_comm]
   rw [this]
   exact (hτ.measurableSet_eq_of_countable_range' h_countable i).union (hτ.measurableSet_gt' i)
 
@@ -494,9 +497,9 @@ protected theorem measurableSet_ge_of_countable' [Countable ι] (hτ : IsStoppin
 protected theorem measurableSet_lt_of_countable_range' (hτ : IsStoppingTime f τ)
     (h_countable : (Set.range τ).Countable) (i : ι) :
     MeasurableSet[hτ.measurableSpace] {ω | τ ω < i} := by
-  have : {ω | τ ω < i} = {ω | τ ω ≤ i} \ {ω | τ ω = i} := by
-    ext1 ω
-    simp only [lt_iff_le_and_ne, Set.mem_setOf_eq, Set.mem_diff]
+  have  : {ω | τ ω < i} = {ω | τ ω ≤ i} \ {ω | τ ω = i}
+  ext1 ω
+  simp only [lt_iff_le_and_ne, Set.mem_setOf_eq, Set.mem_diff]
   rw [this]
   exact (hτ.measurableSet_le' i).diff (hτ.measurableSet_eq_of_countable_range' h_countable i)
 
@@ -616,14 +619,14 @@ theorem measurableSet_le_stopping_time [TopologicalSpace ι] [SecondCountableTop
     (hπ : IsStoppingTime f π) : MeasurableSet[hτ.measurableSpace] {ω | τ ω ≤ π ω} := by
   rw [hτ.measurableSet]
   intro j
-  have : {ω | τ ω ≤ π ω} ∩ {ω | τ ω ≤ j} = {ω | min (τ ω) j ≤ min (π ω) j} ∩ {ω | τ ω ≤ j} := by
-    ext1 ω
-    simp only [Set.mem_inter_iff, Set.mem_setOf_eq, min_le_iff, le_min_iff, le_refl, and_true_iff,
-      and_congr_left_iff]
-    intro h
-    simp only [h, or_self_iff, and_true_iff]
-    rw [Iff.comm, or_iff_left_iff_imp]
-    exact h.trans
+  have  : {ω | τ ω ≤ π ω} ∩ {ω | τ ω ≤ j} = {ω | min (τ ω) j ≤ min (π ω) j} ∩ {ω | τ ω ≤ j}
+  ext1 ω
+  simp only [Set.mem_inter_iff, Set.mem_setOf_eq, min_le_iff, le_min_iff, le_refl, and_true_iff,
+    and_congr_left_iff]
+  intro h
+  simp only [h, or_self_iff, and_true_iff]
+  rw [Iff.comm, or_iff_left_iff_imp]
+  exact h.trans
   rw [this]
   refine MeasurableSet.inter ?_ (hτ.measurableSet_le j)
   apply @measurableSet_le _ _ _ _ _ (Filtration.seq f j) _ _ _ _ _ ?_ ?_
@@ -1019,10 +1022,10 @@ theorem IsStoppingTime.piecewise_of_le (hτ_st : IsStoppingTime 𝒢 τ) (hη_st
     (hτ : ∀ ω, i ≤ τ ω) (hη : ∀ ω, i ≤ η ω) (hs : MeasurableSet[𝒢 i] s) :
     IsStoppingTime 𝒢 (s.piecewise τ η) := by
   intro n
-  have : {ω | s.piecewise τ η ω ≤ n} = s ∩ {ω | τ ω ≤ n} ∪ sᶜ ∩ {ω | η ω ≤ n} := by
-    ext1 ω
-    simp only [Set.piecewise, Set.mem_inter_iff, Set.mem_setOf_eq, and_congr_right_iff]
-    by_cases hx : ω ∈ s <;> simp [hx]
+  have  : {ω | s.piecewise τ η ω ≤ n} = s ∩ {ω | τ ω ≤ n} ∪ sᶜ ∩ {ω | η ω ≤ n}
+  ext1 ω
+  simp only [Set.piecewise, Set.mem_inter_iff, Set.mem_setOf_eq, and_congr_right_iff]
+  by_cases hx : ω ∈ s <;> simp [hx]
   rw [this]
   by_cases hin : i ≤ n
   · have hs_n : MeasurableSet[𝒢 n] s := 𝒢.mono hin _ hs

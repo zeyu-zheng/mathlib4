@@ -57,10 +57,10 @@ theorem charpoly_toMatrix {ι : Type w} [DecidableEq ι] [Fintype ι] (b : Basis
   let φ₃ := reindexLinearEquiv R R (Equiv.refl ι') e
   let P := b.toMatrix b'
   let Q := b'.toMatrix b
-  have hPQ : C.mapMatrix (φ₁ P) * C.mapMatrix (φ₃ Q) = 1 := by
-    rw [RingHom.mapMatrix_apply, RingHom.mapMatrix_apply, ← Matrix.map_mul,
-      reindexLinearEquiv_mul R R, Basis.toMatrix_mul_toMatrix_flip,
-      reindexLinearEquiv_one, ← RingHom.mapMatrix_apply, RingHom.map_one]
+  have hPQ  : C.mapMatrix (φ₁ P) * C.mapMatrix (φ₃ Q) = 1
+  rw [RingHom.mapMatrix_apply, RingHom.mapMatrix_apply, ← Matrix.map_mul,
+    reindexLinearEquiv_mul R R, Basis.toMatrix_mul_toMatrix_flip,
+    reindexLinearEquiv_one, ← RingHom.mapMatrix_apply, RingHom.map_one]
   calc
     A.charpoly = (reindex e e A).charpoly := (charpoly_reindex _ _).symm
     _ = det (scalar ι' X - C.mapMatrix (φ A)) := rfl

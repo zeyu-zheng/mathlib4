@@ -61,9 +61,9 @@ lemma strictMono_eulerMascheroniSeq : StrictMono eulerMascheroniSeq := by
   · simp only [add_sub_cancel_left]
 
 lemma one_half_lt_eulerMascheroniSeq_six : 1 / 2 < eulerMascheroniSeq 6 := by
-  have : eulerMascheroniSeq 6 = 49 / 20 - log 7 := by
-    rw [eulerMascheroniSeq]
-    norm_num
+  have  : eulerMascheroniSeq 6 = 49 / 20 - log 7
+  rw [eulerMascheroniSeq]
+  norm_num
   rw [this, lt_sub_iff_add_lt, ← lt_sub_iff_add_lt', log_lt_iff_lt_exp (by positivity)]
   refine lt_of_lt_of_le ?_ (Real.sum_le_exp_of_nonneg (by norm_num) 7)
   simp_rw [Finset.sum_range_succ, Nat.factorial_succ]
@@ -96,9 +96,9 @@ lemma strictAnti_eulerMascheroniSeq' : StrictAnti eulerMascheroniSeq' := by
   · field_simp
 
 lemma eulerMascheroniSeq'_six_lt_two_thirds : eulerMascheroniSeq' 6 < 2 / 3 := by
-  have h1 : eulerMascheroniSeq' 6 = 49 / 20 - log 6 := by
-    rw [eulerMascheroniSeq']
-    norm_num
+  have h1  : eulerMascheroniSeq' 6 = 49 / 20 - log 6
+  rw [eulerMascheroniSeq']
+  norm_num
   rw [h1, sub_lt_iff_lt_add, ← sub_lt_iff_lt_add', lt_log_iff_exp_lt (by positivity)]
   norm_num
   have := rpow_lt_rpow (exp_pos _).le exp_one_lt_d9 (by norm_num : (0 : ℝ) < 107 / 60)
@@ -111,12 +111,12 @@ lemma eulerMascheroniSeq'_six_lt_two_thirds : eulerMascheroniSeq' 6 < 2 / 3 := b
 
 lemma eulerMascheroniSeq_lt_eulerMascheroniSeq' (m n : ℕ) :
     eulerMascheroniSeq m < eulerMascheroniSeq' n := by
-  have (r : ℕ) : eulerMascheroniSeq r < eulerMascheroniSeq' r := by
-    rcases eq_zero_or_pos r with rfl | hr
-    · simp [eulerMascheroniSeq, eulerMascheroniSeq']
-    simp only [eulerMascheroniSeq, eulerMascheroniSeq', hr.ne', if_false]
-    gcongr
-    linarith
+  have (r  : ℕ) : eulerMascheroniSeq r < eulerMascheroniSeq' r
+  rcases eq_zero_or_pos r with rfl | hr
+  · simp [eulerMascheroniSeq, eulerMascheroniSeq']
+  simp only [eulerMascheroniSeq, eulerMascheroniSeq', hr.ne', if_false]
+  gcongr
+  linarith
   apply (strictMono_eulerMascheroniSeq.monotone (le_max_left m n)).trans_lt
   exact (this _).trans_le (strictAnti_eulerMascheroniSeq'.antitone (le_max_right m n))
 

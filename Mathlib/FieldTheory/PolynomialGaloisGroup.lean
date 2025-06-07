@@ -310,36 +310,36 @@ theorem mul_splits_in_splittingField_of_mul {p₁ q₁ p₂ q₂ : F[X]} (hq₁ 
 theorem splits_in_splittingField_of_comp (hq : q.natDegree ≠ 0) :
     p.Splits (algebraMap F (p.comp q).SplittingField) := by
   let P : F[X] → Prop := fun r => r.Splits (algebraMap F (r.comp q).SplittingField)
-  have key1 : ∀ {r : F[X]}, Irreducible r → P r := by
-    intro r hr
-    by_cases hr' : natDegree r = 0
-    · exact splits_of_natDegree_le_one _ (le_trans (le_of_eq hr') zero_le_one)
-    obtain ⟨x, hx⟩ :=
-      exists_root_of_splits _ (SplittingField.splits (r.comp q)) fun h =>
-        hr'
-          ((mul_eq_zero.mp
-                (natDegree_comp.symm.trans (natDegree_eq_of_degree_eq_some h))).resolve_right
-            hq)
-    rw [← aeval_def, aeval_comp] at hx
-    have h_normal : Normal F (r.comp q).SplittingField := SplittingField.instNormal (r.comp q)
-    have qx_int := Normal.isIntegral h_normal (aeval x q)
-    exact
-      splits_of_splits_of_dvd _ (minpoly.ne_zero qx_int) (Normal.splits h_normal _)
-        ((minpoly.irreducible qx_int).dvd_symm hr (minpoly.dvd F _ hx))
-  have key2 : ∀ {p₁ p₂ : F[X]}, P p₁ → P p₂ → P (p₁ * p₂) := by
-    intro p₁ p₂ hp₁ hp₂
-    by_cases h₁ : p₁.comp q = 0
-    · cases' comp_eq_zero_iff.mp h₁ with h h
-      · rw [h, zero_mul]
-        exact splits_zero _
-      · exact False.elim (hq (by rw [h.2, natDegree_C]))
-    by_cases h₂ : p₂.comp q = 0
-    · cases' comp_eq_zero_iff.mp h₂ with h h
-      · rw [h, mul_zero]
-        exact splits_zero _
-      · exact False.elim (hq (by rw [h.2, natDegree_C]))
-    have key := mul_splits_in_splittingField_of_mul h₁ h₂ hp₁ hp₂
-    rwa [← mul_comp] at key
+  have key1  : ∀ {r : F[X]}, Irreducible r → P r
+  intro r hr
+  by_cases hr' : natDegree r = 0
+  · exact splits_of_natDegree_le_one _ (le_trans (le_of_eq hr') zero_le_one)
+  obtain ⟨x, hx⟩ :=
+    exists_root_of_splits _ (SplittingField.splits (r.comp q)) fun h =>
+      hr'
+        ((mul_eq_zero.mp
+              (natDegree_comp.symm.trans (natDegree_eq_of_degree_eq_some h))).resolve_right
+          hq)
+  rw [← aeval_def, aeval_comp] at hx
+  have h_normal : Normal F (r.comp q).SplittingField := SplittingField.instNormal (r.comp q)
+  have qx_int := Normal.isIntegral h_normal (aeval x q)
+  exact
+    splits_of_splits_of_dvd _ (minpoly.ne_zero qx_int) (Normal.splits h_normal _)
+      ((minpoly.irreducible qx_int).dvd_symm hr (minpoly.dvd F _ hx))
+  have key2  : ∀ {p₁ p₂ : F[X]}, P p₁ → P p₂ → P (p₁ * p₂)
+  intro p₁ p₂ hp₁ hp₂
+  by_cases h₁ : p₁.comp q = 0
+  · cases' comp_eq_zero_iff.mp h₁ with h h
+    · rw [h, zero_mul]
+      exact splits_zero _
+    · exact False.elim (hq (by rw [h.2, natDegree_C]))
+  by_cases h₂ : p₂.comp q = 0
+  · cases' comp_eq_zero_iff.mp h₂ with h h
+    · rw [h, mul_zero]
+      exact splits_zero _
+    · exact False.elim (hq (by rw [h.2, natDegree_C]))
+  have key := mul_splits_in_splittingField_of_mul h₁ h₂ hp₁ hp₂
+  rwa [← mul_comp] at key
   -- Porting note: the last part of the proof needs to be unfolded to avoid timeout
   -- original proof
   -- exact

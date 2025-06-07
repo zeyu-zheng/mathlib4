@@ -95,18 +95,18 @@ theorem content_one : content (1 : R[X]) = 1 := by rw [← C_1, content_C, norma
 theorem content_X_mul {p : R[X]} : content (X * p) = content p := by
   rw [content, content, Finset.gcd_def, Finset.gcd_def]
   refine congr rfl ?_
-  have h : (X * p).support = p.support.map ⟨Nat.succ, Nat.succ_injective⟩ := by
-    ext a
-    simp only [exists_prop, Finset.mem_map, Function.Embedding.coeFn_mk, Ne, mem_support_iff]
-    cases' a with a
-    · simp [coeff_X_mul_zero, Nat.succ_ne_zero]
-    rw [mul_comm, coeff_mul_X]
-    constructor
-    · intro h
-      use a
-    · rintro ⟨b, ⟨h1, h2⟩⟩
-      rw [← Nat.succ_injective h2]
-      apply h1
+  have h  : (X * p).support = p.support.map ⟨Nat.succ, Nat.succ_injective⟩
+  ext a
+  simp only [exists_prop, Finset.mem_map, Function.Embedding.coeFn_mk, Ne, mem_support_iff]
+  cases' a with a
+  · simp [coeff_X_mul_zero, Nat.succ_ne_zero]
+  rw [mul_comm, coeff_mul_X]
+  constructor
+  · intro h
+    use a
+  · rintro ⟨b, ⟨h1, h2⟩⟩
+    rw [← Nat.succ_injective h2]
+    apply h1
   rw [h]
   simp only [Finset.map_val, Function.comp_apply, Function.Embedding.coeFn_mk, Multiset.map_map]
   refine congr (congr rfl ?_) rfl

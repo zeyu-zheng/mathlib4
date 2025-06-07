@@ -94,7 +94,8 @@ theorem finite_integral_one_add_norm {r : ℝ} (hnr : (finrank ℝ E : ℝ) < r)
     (∫⁻ x : E, ENNReal.ofReal ((1 + ‖x‖) ^ (-r)) ∂μ) < ∞ := by
   have hr : 0 < r := lt_of_le_of_lt (finrank ℝ E).cast_nonneg hnr
   -- We start by applying the layer cake formula
-  have h_meas : Measurable fun ω : E => (1 + ‖ω‖) ^ (-r) := by fun_prop
+  have h_meas  : Measurable fun ω : E => (1 + ‖ω‖) ^ (-r)
+  fun_prop
   have h_pos : ∀ x : E, 0 ≤ (1 + ‖x‖) ^ (-r) := fun x ↦ by positivity
   rw [lintegral_eq_lintegral_meas_le μ (eventually_of_forall h_pos) h_meas.aemeasurable]
   have h_int : ∀ t, 0 < t → μ {a : E | t ≤ (1 + ‖a‖) ^ (-r)} =

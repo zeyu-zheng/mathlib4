@@ -29,8 +29,8 @@ namespace ZMod
 theorem Ico_map_valMinAbs_natAbs_eq_Ico_map_id (p : ℕ) [hp : Fact p.Prime] (a : ZMod p)
     (hap : a ≠ 0) : ((Ico 1 (p / 2).succ).1.map fun (x : ℕ) => (a * x).valMinAbs.natAbs) =
     (Ico 1 (p / 2).succ).1.map fun a => a := by
-  have he : ∀ {x}, x ∈ Ico 1 (p / 2).succ → x ≠ 0 ∧ x ≤ p / 2 := by
-    simp (config := { contextual := true }) [Nat.lt_succ_iff, Nat.succ_le_iff, pos_iff_ne_zero]
+  have he  : ∀ {x}, x ∈ Ico 1 (p / 2).succ → x ≠ 0 ∧ x ≤ p / 2
+  simp (config := { contextual := true }) [Nat.lt_succ_iff, Nat.succ_le_iff, pos_iff_ne_zero]
   have hep : ∀ {x}, x ∈ Ico 1 (p / 2).succ → x < p := fun hx =>
     lt_of_le_of_lt (he hx).2 (Nat.div_lt_self hp.1.pos (by decide))
   have hpe : ∀ {x}, x ∈ Ico 1 (p / 2).succ → ¬p ∣ x := fun hx hpx =>
@@ -223,7 +223,8 @@ theorem sum_mul_div_add_sum_mul_div_eq_mul (p q : ℕ) [hp : Fact p.Prime] (hq0 
 theorem eisenstein_lemma {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {a : ℕ} (ha1 : a % 2 = 1)
     (ha0 : (a : ZMod p) ≠ 0) : legendreSym p a = (-1) ^ ∑ x ∈ Ico 1 (p / 2).succ, x * a / p := by
   haveI hp' : Fact (p % 2 = 1) := ⟨Nat.Prime.mod_two_eq_one_iff_ne_two.mpr hp⟩
-  have ha0' : ((a : ℤ) : ZMod p) ≠ 0 := by norm_cast
+  have ha0'  : ((a : ℤ) : ZMod p) ≠ 0
+  norm_cast
   rw [neg_one_pow_eq_pow_mod_two, gauss_lemma hp ha0', neg_one_pow_eq_pow_mod_two,
     (by norm_cast : ((a : ℤ) : ZMod p) = (a : ZMod p)),
     show _ = _ from eisenstein_lemma_aux p ha1 ha0]

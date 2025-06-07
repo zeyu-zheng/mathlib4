@@ -211,12 +211,13 @@ theorem unique_unit_speed_on_Icc_zero {s t : ℝ} (hs : 0 ≤ s) (ht : 0 ≤ t) 
     EqOn φ id (Icc 0 s) := by
   rw [← φst] at hf
   convert unique_unit_speed φm hfφ hf ⟨le_rfl, hs⟩ using 1
-  have : φ 0 = 0 := by
-    have hm : 0 ∈ φ '' Icc 0 s := by simp only [φst, ht, mem_Icc, le_refl, and_self]
-    obtain ⟨x, xs, hx⟩ := hm
-    apply le_antisymm ((φm ⟨le_rfl, hs⟩ xs xs.1).trans_eq hx) _
-    have := φst ▸ mapsTo_image φ (Icc 0 s)
-    exact (mem_Icc.mp (@this 0 (by rw [mem_Icc]; exact ⟨le_rfl, hs⟩))).1
+  have  : φ 0 = 0
+  have hm  : 0 ∈ φ '' Icc 0 s
+  simp only [φst, ht, mem_Icc, le_refl, and_self]
+  obtain ⟨x, xs, hx⟩ := hm
+  apply le_antisymm ((φm ⟨le_rfl, hs⟩ xs xs.1).trans_eq hx) _
+  have := φst ▸ mapsTo_image φ (Icc 0 s)
+  exact (mem_Icc.mp (@this 0 (by rw [mem_Icc]; exact ⟨le_rfl, hs⟩))).1
   simp only [tsub_zero, this, add_zero]
   rfl
 

@@ -132,7 +132,8 @@ lemma le_truncatedSup : a ≤ truncatedSup s a := by
 
 lemma map_truncatedSup (e : α ≃o β) (s : Finset α) (a : α) :
     e (truncatedSup s a) = truncatedSup (s.map e.toEquiv.toEmbedding) (e a) := by
-  have : e a ∈ lowerClosure (s.map e.toEquiv.toEmbedding : Set β) ↔ a ∈ lowerClosure s := by simp
+  have  : e a ∈ lowerClosure (s.map e.toEquiv.toEmbedding : Set β) ↔ a ∈ lowerClosure s
+  simp
   simp_rw [truncatedSup, apply_dite e, map_finset_sup', map_top, this]
   congr with h
   simp only [filter_map, Function.comp, Equiv.coe_toEmbedding, RelIso.coe_fn_toEquiv,
@@ -204,7 +205,8 @@ lemma truncatedInf_le : truncatedInf s a ≤ a := by
 
 lemma map_truncatedInf (e : α ≃o β) (s : Finset α) (a : α) :
     e (truncatedInf s a) = truncatedInf (s.map e.toEquiv.toEmbedding) (e a) := by
-  have : e a ∈ upperClosure (s.map e.toEquiv.toEmbedding) ↔ a ∈ upperClosure s := by simp
+  have  : e a ∈ upperClosure (s.map e.toEquiv.toEmbedding) ↔ a ∈ upperClosure s
+  simp
   simp_rw [truncatedInf, apply_dite e, map_finset_inf', map_bot, this]
   congr with h
   simp only [filter_map, Function.comp, Equiv.coe_toEmbedding, RelIso.coe_fn_toEquiv,

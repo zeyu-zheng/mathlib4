@@ -98,11 +98,11 @@ theorem StrictMonoOn.exists_slope_lt_deriv {x y : ℝ} {f : ℝ → ℝ} (hf : C
         exact hf'_mono ⟨hxw, hwy⟩ ⟨hxw.trans hz.1, hz.2⟩ hz.1
     refine ⟨b, ⟨hxw.trans hwb, hby⟩, ?_⟩
     simp only [div_lt_iff, hxy, hxw, hwy, sub_pos] at ha hb ⊢
-    have : deriv f a * (w - x) < deriv f b * (w - x) := by
-      apply mul_lt_mul _ le_rfl (sub_pos.2 hxw) _
-      · exact hf'_mono ⟨hxa, haw.trans hwy⟩ ⟨hxw.trans hwb, hby⟩ (haw.trans hwb)
-      · rw [← hw]
-        exact (hf'_mono ⟨hxw, hwy⟩ ⟨hxw.trans hwb, hby⟩ hwb).le
+    have  : deriv f a * (w - x) < deriv f b * (w - x)
+    apply mul_lt_mul _ le_rfl (sub_pos.2 hxw) _
+    · exact hf'_mono ⟨hxa, haw.trans hwy⟩ ⟨hxw.trans hwb, hby⟩ (haw.trans hwb)
+    · rw [← hw]
+      exact (hf'_mono ⟨hxw, hwy⟩ ⟨hxw.trans hwb, hby⟩ hwb).le
     linarith
 
 theorem StrictMonoOn.exists_deriv_lt_slope_aux {x y : ℝ} {f : ℝ → ℝ} (hf : ContinuousOn f (Icc x y))
@@ -142,11 +142,11 @@ theorem StrictMonoOn.exists_deriv_lt_slope {x y : ℝ} {f : ℝ → ℝ} (hf : C
         exact hf'_mono ⟨hxw, hwy⟩ ⟨hxw.trans hz.1, hz.2⟩ hz.1
     refine ⟨a, ⟨hxa, haw.trans hwy⟩, ?_⟩
     simp only [lt_div_iff, hxy, hxw, hwy, sub_pos] at ha hb ⊢
-    have : deriv f a * (y - w) < deriv f b * (y - w) := by
-      apply mul_lt_mul _ le_rfl (sub_pos.2 hwy) _
-      · exact hf'_mono ⟨hxa, haw.trans hwy⟩ ⟨hxw.trans hwb, hby⟩ (haw.trans hwb)
-      · rw [← hw]
-        exact (hf'_mono ⟨hxw, hwy⟩ ⟨hxw.trans hwb, hby⟩ hwb).le
+    have  : deriv f a * (y - w) < deriv f b * (y - w)
+    apply mul_lt_mul _ le_rfl (sub_pos.2 hwy) _
+    · exact hf'_mono ⟨hxa, haw.trans hwy⟩ ⟨hxw.trans hwb, hby⟩ (haw.trans hwb)
+    · rw [← hw]
+      exact (hf'_mono ⟨hxw, hwy⟩ ⟨hxw.trans hwb, hby⟩ hwb).le
     linarith
 
 /-- If a function `f` is continuous on a convex set `D ⊆ ℝ`, and `f'` is strictly monotone on the

@@ -127,11 +127,11 @@ instance isLocallySurjective_comp {F₁ F₂ F₃ : Cᵒᵖ ⥤ A} (f₁ : F₁ 
     IsLocallySurjective J (f₁ ≫ f₂) where
   imageSieve_mem s := by
     have : (Sieve.bind (imageSieve f₂ s) fun _ _ h => imageSieve f₁ h.choose) ≤
-        imageSieve (f₁ ≫ f₂) s := by
-      rintro V i ⟨W, i, j, H, ⟨t', ht'⟩, rfl⟩
-      refine ⟨t', ?_⟩
-      rw [op_comp, F₃.map_comp, NatTrans.comp_app, comp_apply, comp_apply, ht',
-        elementwise_of% f₂.naturality, H.choose_spec]
+        imageSieve (f₁ ≫ f₂) s
+    rintro V i ⟨W, i, j, H, ⟨t', ht'⟩, rfl⟩
+    refine ⟨t', ?_⟩
+    rw [op_comp, F₃.map_comp, NatTrans.comp_app, comp_apply, comp_apply, ht',
+      elementwise_of% f₂.naturality, H.choose_spec]
     apply J.superset_covering this
     apply J.bind_covering
     · apply imageSieve_mem
@@ -181,9 +181,10 @@ lemma isLocallyInjective_of_isLocallyInjective_of_isLocallySurjective
     IsLocallyInjective J f₂ where
   equalizerSieve_mem {X} x₁ x₂ h := by
     let S := imageSieve f₁ x₁ ⊓ imageSieve f₁ x₂
-    have hS : S ∈ J X.unop := by
-      apply J.intersection_covering
-      all_goals apply imageSieve_mem
+    have hS  : S ∈ J X.unop
+    apply J.intersection_covering
+    apply imageSieve_mem
+    apply imageSieve_mem
     let T : ∀ ⦃Y : C⦄ (f : Y ⟶ X.unop) (_ : S f), Sieve Y := fun Y f hf =>
       equalizerSieve (localPreimage f₁ x₁ f hf.1) (localPreimage f₁ x₂ f hf.2)
     refine J.superset_covering ?_ (J.transitive hS (Sieve.bind S.1 T) ?_)

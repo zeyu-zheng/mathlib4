@@ -522,7 +522,8 @@ lemma bar (x y : Int) (h : 0 ≤ y ∧ 1 ≤ x) : 1 ≤ y + x * x := by linarith
 
 example {α} [LinearOrderedCommRing α] (h : ∃ x : α, 0 ≤ x) : True := by
   cases' h with x h
-  have : 0 ≤ x := by linarith
+  have  : 0 ≤ x
+  linarith
   trivial
 
 -- At one point, this failed, due to `mdata` interfering with `Expr.isEq`.
@@ -612,11 +613,12 @@ example (q : Prop) (p : ∀ (x : ℤ), 1 = 2) : 1 = 2 := by
   nlinarith [p ?a]
 
 example (h : False): True := by
-  have : ∑ k ∈ Finset.empty, k^2 = 0 := by contradiction
-  have : ∀ k : Nat, 0 ≤ k := by
-    intro h
-    -- this should not panic:
-    nlinarith
+  have  : ∑ k ∈ Finset.empty, k^2 = 0
+  contradiction
+  have  : ∀ k : Nat, 0 ≤ k
+  intro h
+  -- this should not panic:
+  nlinarith
   trivial
 
 example (x : Nat) : 0 ≤ x ^ 9890 := by

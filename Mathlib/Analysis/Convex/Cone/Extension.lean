@@ -113,19 +113,19 @@ theorem exists_top (p : E →ₗ.[ℝ] ℝ) (hp_nonneg : ∀ x : p.domain, (x : 
     (hp_dense : ∀ y, ∃ x : p.domain, (x : E) + y ∈ s) :
     ∃ q ≥ p, q.domain = ⊤ ∧ ∀ x : q.domain, (x : E) ∈ s → 0 ≤ q x := by
   set S := { p : E →ₗ.[ℝ] ℝ | ∀ x : p.domain, (x : E) ∈ s → 0 ≤ p x }
-  have hSc : ∀ c, c ⊆ S → IsChain (· ≤ ·) c → ∀ y ∈ c, ∃ ub ∈ S, ∀ z ∈ c, z ≤ ub := by
-    intro c hcs c_chain y hy
-    clear hp_nonneg hp_dense p
-    have cne : c.Nonempty := ⟨y, hy⟩
-    have hcd : DirectedOn (· ≤ ·) c := c_chain.directedOn
-    refine ⟨LinearPMap.sSup c hcd, ?_, fun _ ↦ LinearPMap.le_sSup hcd⟩
-    rintro ⟨x, hx⟩ hxs
-    have hdir : DirectedOn (· ≤ ·) (LinearPMap.domain '' c) :=
-      directedOn_image.2 (hcd.mono LinearPMap.domain_mono.monotone)
-    rcases (mem_sSup_of_directed (cne.image _) hdir).1 hx with ⟨_, ⟨f, hfc, rfl⟩, hfx⟩
-    have : f ≤ LinearPMap.sSup c hcd := LinearPMap.le_sSup _ hfc
-    convert ← hcs hfc ⟨x, hfx⟩ hxs using 1
-    exact this.2 rfl
+  have hSc  : ∀ c, c ⊆ S → IsChain (· ≤ ·) c → ∀ y ∈ c, ∃ ub ∈ S, ∀ z ∈ c, z ≤ ub
+  intro c hcs c_chain y hy
+  clear hp_nonneg hp_dense p
+  have cne : c.Nonempty := ⟨y, hy⟩
+  have hcd : DirectedOn (· ≤ ·) c := c_chain.directedOn
+  refine ⟨LinearPMap.sSup c hcd, ?_, fun _ ↦ LinearPMap.le_sSup hcd⟩
+  rintro ⟨x, hx⟩ hxs
+  have hdir : DirectedOn (· ≤ ·) (LinearPMap.domain '' c) :=
+    directedOn_image.2 (hcd.mono LinearPMap.domain_mono.monotone)
+  rcases (mem_sSup_of_directed (cne.image _) hdir).1 hx with ⟨_, ⟨f, hfc, rfl⟩, hfx⟩
+  have : f ≤ LinearPMap.sSup c hcd := LinearPMap.le_sSup _ hfc
+  convert ← hcs hfc ⟨x, hfx⟩ hxs using 1
+  exact this.2 rfl
   obtain ⟨q, hqs, hpq, hq⟩ := zorn_nonempty_partialOrder₀ S hSc p hp_nonneg
   refine ⟨q, hpq, ?_, hqs⟩
   contrapose! hq

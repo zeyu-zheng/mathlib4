@@ -147,21 +147,23 @@ theorem t2Space_quotient_mulAction_of_properSMul [ProperSMul G X] :
 then this topological space is T2."]
 theorem t2Space_of_properSMul_of_t2Group [h_proper : ProperSMul G X] [T2Space G] : T2Space X := by
   let f := fun x : X ↦ ((1 : G), x)
-  have proper_f : IsProperMap f := by
-    apply isProperMap_of_closedEmbedding
-    rw [closedEmbedding_iff]
-    constructor
-    · let g := fun gx : G × X ↦ gx.2
-      have : Function.LeftInverse g f := fun x ↦ by simp
-      exact this.embedding (by fun_prop) (by fun_prop)
-    · have : range f = ({1} ×ˢ univ) := by simp
-      rw [this]
-      exact isClosed_singleton.prod isClosed_univ
+  have proper_f  : IsProperMap f
+  apply isProperMap_of_closedEmbedding
+  rw [closedEmbedding_iff]
+  constructor
+  · let g := fun gx : G × X ↦ gx.2
+    have : Function.LeftInverse g f := fun x ↦ by simp
+    exact this.embedding (by fun_prop) (by fun_prop)
+  · have : range f = ({1} ×ˢ univ) := by simp
+    rw [this]
+    exact isClosed_singleton.prod isClosed_univ
   rw [t2_iff_isClosed_diagonal]
   let g := fun gx : G × X ↦ (gx.1 • gx.2, gx.2)
   have proper_g : IsProperMap g := (properSMul_iff G X).1 h_proper
-  have : g ∘ f = fun x ↦ (x, x) := by ext x <;> simp
-  have range_gf : range (g ∘ f) = diagonal X := by simp [this]
+  have  : g ∘ f = fun x ↦ (x, x)
+  ext x <;> simp
+  have range_gf  : range (g ∘ f) = diagonal X
+  simp [this]
   rw [← range_gf]
   exact (proper_f.comp proper_g).isClosed_range
 
@@ -177,8 +179,8 @@ theorem properSMul_of_closedEmbedding {H : Type*} [Group H] [MulAction H X] [Top
   isProperMap_smul_pair := by
     have := isProperMap_of_closedEmbedding f_clemb
     have h : IsProperMap (Prod.map f (fun x : X ↦ x)) := IsProperMap.prod_map this isProperMap_id
-    have : (fun hx : H × X ↦ (hx.1 • hx.2, hx.2)) = (fun hx ↦ (f hx.1 • hx.2, hx.2)) := by
-      simp [f_compat]
+    have  : (fun hx : H × X ↦ (hx.1 • hx.2, hx.2)) = (fun hx ↦ (f hx.1 • hx.2, hx.2))
+    simp [f_compat]
     rw [this]
     exact h.comp <| ProperSMul.isProperMap_smul_pair
 
@@ -214,9 +216,9 @@ theorem properlyDiscontinuousSMul_iff_properSMul [T2Space X] [DiscreteTopology G
     have hK' : IsCompact K' := (hK.image continuous_fst).union (hK.image continuous_snd)
     let E := {g : G | Set.Nonempty ((g • ·) '' K' ∩ K')}
     -- The set `E` is finite because the action is properly discontinuous.
-    have fin : Set.Finite E := by
-      simp_rw [E, nonempty_iff_ne_empty]
-      exact h.finite_disjoint_inter_image hK' hK'
+    have fin  : Set.Finite E
+    simp_rw [E, nonempty_iff_ne_empty]
+    exact h.finite_disjoint_inter_image hK' hK'
     -- Therefore we can rewrite `f ⁻¹ (K' × K')` as a finite union of compact sets.
     have : (fun gx : G × X ↦ (gx.1 • gx.2, gx.2)) ⁻¹' (K' ×ˢ K') =
         ⋃ g ∈ E, {g} ×ˢ ((g⁻¹ • ·) '' K' ∩ K') := by

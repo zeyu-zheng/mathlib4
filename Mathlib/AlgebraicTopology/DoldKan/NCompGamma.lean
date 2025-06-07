@@ -47,9 +47,9 @@ theorem PInfty_comp_map_mono_eq_zero (X : SimplicialObject C) {n : ℕ} {Δ' : S
     subst hk
     obtain ⟨j, rfl⟩ := eq_δ_of_mono i
     rw [Isδ₀.iff] at h₂
-    have h₃ : 1 ≤ (j : ℕ) := by
-      by_contra h
-      exact h₂ (by simpa only [Fin.ext_iff, not_le, Nat.lt_one_iff] using h)
+    have h₃  : 1 ≤ (j : ℕ)
+    by_contra h
+    exact h₂ (by simpa only [Fin.ext_iff, not_le, Nat.lt_one_iff] using h)
     exact (HigherFacesVanish.of_P (m + 1) m).comp_δ_eq_zero j h₂ (by omega)
   · simp only [Nat.succ_eq_add_one, ← add_assoc] at hk
     clear h₂ hi
@@ -245,21 +245,21 @@ theorem identity_N₂ :
   rw [Γ₂.map_id, N₂.map_id, comp_id, id_comp, id_comp, identity_N₂_objectwise P]
 
 instance : IsIso (Γ₂N₂.natTrans : (N₂ : Karoubi (SimplicialObject C) ⥤ _) ⋙ _ ⟶ _) := by
-  have : ∀ P : Karoubi (SimplicialObject C), IsIso (Γ₂N₂.natTrans.app P) := by
-    intro P
-    have : IsIso (N₂.map (Γ₂N₂.natTrans.app P)) := by
-      have h := identity_N₂_objectwise P
-      erw [hom_comp_eq_id] at h
-      rw [h]
-      infer_instance
-    exact isIso_of_reflects_iso _ N₂
+  have  : ∀ P : Karoubi (SimplicialObject C), IsIso (Γ₂N₂.natTrans.app P)
+  intro P
+  have  : IsIso (N₂.map (Γ₂N₂.natTrans.app P))
+  have h := identity_N₂_objectwise P
+  erw [hom_comp_eq_id] at h
+  rw [h]
+  infer_instance
+  exact isIso_of_reflects_iso _ N₂
   apply NatIso.isIso_of_isIso_app
 
 instance : IsIso (Γ₂N₁.natTrans : (N₁ : SimplicialObject C ⥤ _) ⋙ _ ⟶ _) := by
-  have : ∀ X : SimplicialObject C, IsIso (Γ₂N₁.natTrans.app X) := by
-    intro X
-    rw [compatibility_Γ₂N₁_Γ₂N₂_natTrans]
-    infer_instance
+  have  : ∀ X : SimplicialObject C, IsIso (Γ₂N₁.natTrans.app X)
+  intro X
+  rw [compatibility_Γ₂N₁_Γ₂N₂_natTrans]
+  infer_instance
   apply NatIso.isIso_of_isIso_app
 
 /-- The unit isomorphism of the Dold-Kan equivalence. -/

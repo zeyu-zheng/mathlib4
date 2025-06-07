@@ -203,16 +203,16 @@ lemma quotientInfToPiQuotient_surj [Finite ι] {I : ι → Ideal R}
   cases nonempty_fintype ι
   intro g
   choose f hf using fun i ↦ mk_surjective (g i)
-  have key : ∀ i, ∃ e : R, mk (I i) e = 1 ∧ ∀ j, j ≠ i → mk (I j) e = 0 := by
-    intro i
-    have hI' : ∀ j ∈ ({i} : Finset ι)ᶜ, IsCoprime (I i) (I j) := by
-      intros j hj
-      exact hI (by simpa [ne_comm, isCoprime_iff_add] using hj)
-    rcases isCoprime_iff_exists.mp (isCoprime_biInf hI') with ⟨u, hu, e, he, hue⟩
-    replace he : ∀ j, j ≠ i → e ∈ I j := by simpa using he
-    refine ⟨e, ?_, ?_⟩
-    · simp [eq_sub_of_add_eq' hue, map_sub, eq_zero_iff_mem.mpr hu]
-    · exact fun j hj ↦ eq_zero_iff_mem.mpr (he j hj)
+  have key  : ∀ i, ∃ e : R, mk (I i) e = 1 ∧ ∀ j, j ≠ i → mk (I j) e = 0
+  intro i
+  have hI'  : ∀ j ∈ ({i} : Finset ι)ᶜ, IsCoprime (I i) (I j)
+  intros j hj
+  exact hI (by simpa [ne_comm, isCoprime_iff_add] using hj)
+  rcases isCoprime_iff_exists.mp (isCoprime_biInf hI') with ⟨u, hu, e, he, hue⟩
+  replace he : ∀ j, j ≠ i → e ∈ I j := by simpa using he
+  refine ⟨e, ?_, ?_⟩
+  · simp [eq_sub_of_add_eq' hue, map_sub, eq_zero_iff_mem.mpr hu]
+  · exact fun j hj ↦ eq_zero_iff_mem.mpr (he j hj)
   choose e he using key
   use mk _ (∑ i, f i*e i)
   ext i

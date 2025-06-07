@@ -98,9 +98,9 @@ theorem image_le_of_liminf_slope_right_lt_deriv_boundary' {f f' : ℝ → ℝ} {
   change Icc a b ⊆ { x | f x ≤ B x }
   set s := { x | f x ≤ B x } ∩ Icc a b
   have A : ContinuousOn (fun x => (f x, B x)) (Icc a b) := hf.prod hB
-  have : IsClosed s := by
-    simp only [s, inter_comm]
-    exact A.preimage_isClosed_of_isClosed isClosed_Icc OrderClosedTopology.isClosed_le'
+  have  : IsClosed s
+  simp only [s, inter_comm]
+  exact A.preimage_isClosed_of_isClosed isClosed_Icc OrderClosedTopology.isClosed_le'
   apply this.Icc_subset_of_forall_exists_gt ha
   rintro x ⟨hxB : f x ≤ B x, xab⟩ y hy
   cases' hxB.lt_or_eq with hxB hxB
@@ -327,13 +327,13 @@ theorem norm_image_sub_le_of_norm_deriv_right_le_segment {f' : ℝ → E} {C : �
     (bound : ∀ x ∈ Ico a b, ‖f' x‖ ≤ C) : ∀ x ∈ Icc a b, ‖f x - f a‖ ≤ C * (x - a) := by
   let g x := f x - f a
   have hg : ContinuousOn g (Icc a b) := hf.sub continuousOn_const
-  have hg' : ∀ x ∈ Ico a b, HasDerivWithinAt g (f' x) (Ici x) x := by
-    intro x hx
-    simpa using (hf' x hx).sub (hasDerivWithinAt_const _ _ _)
+  have hg'  : ∀ x ∈ Ico a b, HasDerivWithinAt g (f' x) (Ici x) x
+  intro x hx
+  simpa using (hf' x hx).sub (hasDerivWithinAt_const _ _ _)
   let B x := C * (x - a)
-  have hB : ∀ x, HasDerivAt B C x := by
-    intro x
-    simpa using (hasDerivAt_const x C).mul ((hasDerivAt_id x).sub (hasDerivAt_const x a))
+  have hB  : ∀ x, HasDerivAt B C x
+  intro x
+  simpa using (hasDerivAt_const x C).mul ((hasDerivAt_id x).sub (hasDerivAt_const x a))
   convert image_norm_le_of_norm_deriv_right_le_deriv_boundary hg hg' _ hB bound
   simp only [g, B]; rw [sub_self, norm_zero, sub_self, mul_zero]
 
@@ -382,8 +382,8 @@ theorem constant_of_has_deriv_right_zero (hcont : ContinuousOn f (Icc a b))
 
 theorem constant_of_derivWithin_zero (hdiff : DifferentiableOn ℝ f (Icc a b))
     (hderiv : ∀ x ∈ Ico a b, derivWithin f (Icc a b) x = 0) : ∀ x ∈ Icc a b, f x = f a := by
-  have H : ∀ x ∈ Ico a b, ‖derivWithin f (Icc a b) x‖ ≤ 0 := by
-    simpa only [norm_le_zero_iff] using fun x hx => hderiv x hx
+  have H  : ∀ x ∈ Ico a b, ‖derivWithin f (Icc a b) x‖ ≤ 0
+  simpa only [norm_le_zero_iff] using fun x hx => hderiv x hx
   simpa only [zero_mul, norm_le_zero_iff, sub_eq_zero] using fun x hx =>
     norm_image_sub_le_of_norm_deriv_le_segment hdiff H x hx
 
@@ -684,7 +684,8 @@ variable (f f' : ℝ → ℝ) {a b : ℝ} (hab : a < b) (hfc : ContinuousOn f (I
 theorem exists_ratio_hasDerivAt_eq_ratio_slope :
     ∃ c ∈ Ioo a b, (g b - g a) * f' c = (f b - f a) * g' c := by
   let h x := (g b - g a) * f x - (f b - f a) * g x
-  have hI : h a = h b := by simp only [h]; ring
+  have hI  : h a = h b
+  simp only [h]; ring
   let h' x := (g b - g a) * f' x - (f b - f a) * g' x
   have hhh' : ∀ x ∈ Ioo a b, HasDerivAt h (h' x) x := fun x hx =>
     ((hff' x hx).const_mul (g b - g a)).sub ((hgg' x hx).const_mul (f b - f a))
@@ -700,20 +701,20 @@ theorem exists_ratio_hasDerivAt_eq_ratio_slope' {lfa lga lfb lgb : ℝ}
     (hfb : Tendsto f (𝓝[<] b) (𝓝 lfb)) (hgb : Tendsto g (𝓝[<] b) (𝓝 lgb)) :
     ∃ c ∈ Ioo a b, (lgb - lga) * f' c = (lfb - lfa) * g' c := by
   let h x := (lgb - lga) * f x - (lfb - lfa) * g x
-  have hha : Tendsto h (𝓝[>] a) (𝓝 <| lgb * lfa - lfb * lga) := by
-    have : Tendsto h (𝓝[>] a) (𝓝 <| (lgb - lga) * lfa - (lfb - lfa) * lga) :=
-      (tendsto_const_nhds.mul hfa).sub (tendsto_const_nhds.mul hga)
-    convert this using 2
-    ring
-  have hhb : Tendsto h (𝓝[<] b) (𝓝 <| lgb * lfa - lfb * lga) := by
-    have : Tendsto h (𝓝[<] b) (𝓝 <| (lgb - lga) * lfb - (lfb - lfa) * lgb) :=
-      (tendsto_const_nhds.mul hfb).sub (tendsto_const_nhds.mul hgb)
-    convert this using 2
-    ring
+  have hha  : Tendsto h (𝓝[>] a) (𝓝 <| lgb * lfa - lfb * lga)
+  have : Tendsto h (𝓝[>] a) (𝓝 <| (lgb - lga) * lfa - (lfb - lfa) * lga) :=
+    (tendsto_const_nhds.mul hfa).sub (tendsto_const_nhds.mul hga)
+  convert this using 2
+  ring
+  have hhb  : Tendsto h (𝓝[<] b) (𝓝 <| lgb * lfa - lfb * lga)
+  have : Tendsto h (𝓝[<] b) (𝓝 <| (lgb - lga) * lfb - (lfb - lfa) * lgb) :=
+    (tendsto_const_nhds.mul hfb).sub (tendsto_const_nhds.mul hgb)
+  convert this using 2
+  ring
   let h' x := (lgb - lga) * f' x - (lfb - lfa) * g' x
-  have hhh' : ∀ x ∈ Ioo a b, HasDerivAt h (h' x) x := by
-    intro x hx
-    exact ((hff' x hx).const_mul _).sub ((hgg' x hx).const_mul _)
+  have hhh'  : ∀ x ∈ Ioo a b, HasDerivAt h (h' x) x
+  intro x hx
+  exact ((hff' x hx).const_mul _).sub ((hgg' x hx).const_mul _)
   rcases exists_hasDerivAt_eq_zero' hab hha hhb hhh' with ⟨c, cmem, hc⟩
   exact ⟨c, cmem, sub_eq_zero.1 hc⟩
 

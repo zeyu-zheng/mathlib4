@@ -78,10 +78,10 @@ theorem exists_sq_add_sq_add_one_eq_mul (p : ℕ) [hp : Fact p.Prime] :
   rcases Nat.sq_add_sq_zmodEq p (-1) with ⟨a, b, ha, hb, hab⟩
   rcases Int.modEq_iff_dvd.1 hab.symm with ⟨k, hk⟩
   rw [sub_neg_eq_add, mul_comm] at hk
-  have hk₀ : 0 < k := by
-    refine pos_of_mul_pos_left ?_ (Nat.cast_nonneg p)
-    rw [← hk]
-    positivity
+  have hk₀  : 0 < k
+  refine pos_of_mul_pos_left ?_ (Nat.cast_nonneg p)
+  rw [← hk]
+  positivity
   lift k to ℕ using hk₀.le
   refine ⟨a, b, k, Nat.cast_pos.1 hk₀, ?_, mod_cast hk⟩
   replace hk : a ^ 2 + b ^ 2 + 1 ^ 2 + 0 ^ 2 = k * p := mod_cast hk
@@ -133,10 +133,10 @@ protected theorem Prime.sum_four_squares {p : ℕ} (hp : p.Prime) :
       a.natAbs ^ 2 + b.natAbs ^ 2 + c.natAbs ^ 2 + d.natAbs ^ 2 = k ↔
         a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 = k := by
     rw [← @Nat.cast_inj ℤ]; push_cast [sq_abs]; rfl
-  have hm : ∃ m < p, 0 < m ∧ ∃ a b c d : ℕ, a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 = m * p := by
-    obtain ⟨a, b, k, hk₀, hkp, hk⟩ := exists_sq_add_sq_add_one_eq_mul p
-    refine ⟨k, hkp, hk₀, a, b, 1, 0, ?_⟩
-    simpa
+  have hm  : ∃ m < p, 0 < m ∧ ∃ a b c d : ℕ, a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 = m * p
+  obtain ⟨a, b, k, hk₀, hkp, hk⟩ := exists_sq_add_sq_add_one_eq_mul p
+  refine ⟨k, hkp, hk₀, a, b, 1, 0, ?_⟩
+  simpa
   -- Take the minimal possible `m`
   rcases Nat.findX hm with ⟨m, ⟨hmp, hm₀, a, b, c, d, habcd⟩, hmin⟩
   -- If `m = 1`, then we are done
@@ -149,7 +149,8 @@ protected theorem Prime.sum_four_squares {p : ℕ} (hp : p.Prime) :
   · -- If `m` is an even number, then `(m / 2) * p` can be represented as a sum of four squares
     rcases hm with ⟨m, rfl⟩
     rw [mul_pos_iff_of_pos_left two_pos] at hm₀
-    have hm₂ : m < 2 * m := by simpa [two_mul]
+    have hm₂  : m < 2 * m
+    simpa [two_mul]
     apply_fun (Nat.cast : ℕ → ℤ) at habcd
     push_cast [mul_assoc] at habcd
     obtain ⟨_, _, _, _, h⟩ := sum_four_squares_of_two_mul_sum_four_squares habcd
@@ -179,9 +180,9 @@ protected theorem Prime.sum_four_squares {p : ℕ} (hp : p.Prime) :
       rw [mul_dvd_mul_iff_left hm₀.ne'] at this
       exact (hp.eq_one_or_self_of_dvd _ this).elim hm₁.ne' hmp.ne
     -- Since `2 * |f x| < m` for each `x ∈ {a, b, c, d}`, we have `r < m`
-    have hrm : r < m := by
-      rw [mul_comm] at hr
-      apply lt_of_sum_four_squares_eq_mul hr <;> apply hf_lt
+    have hrm  : r < m
+    rw [mul_comm] at hr
+    apply lt_of_sum_four_squares_eq_mul hr <;> apply hf_lt
     -- Now it suffices to represent `r * p` as a sum of four squares
     -- More precisely, we will represent `(m * r) * (m * p)` as a sum of squares of four numbers,
     -- each of them is divisible by `m`

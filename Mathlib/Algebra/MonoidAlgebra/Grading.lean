@@ -146,14 +146,14 @@ theorem decomposeAux_coe {i : ι} (x : gradeBy R f i) :
     symm
     exact AddMonoidHom.map_zero _
   · intro m b y hmy hb ih hmby
-    have : Disjoint (Finsupp.single m b).support y.support := by
-      simpa only [Finsupp.support_single_ne_zero _ hb, Finset.disjoint_singleton_left]
+    have  : Disjoint (Finsupp.single m b).support y.support
+    simpa only [Finsupp.support_single_ne_zero _ hb, Finset.disjoint_singleton_left]
     rw [mem_gradeBy_iff, Finsupp.support_add_eq this, Finset.coe_union, Set.union_subset_iff]
       at hmby
     cases' hmby with h1 h2
-    have : f m = i := by
-      rwa [Finsupp.support_single_ne_zero _ hb, Finset.coe_singleton, Set.singleton_subset_iff]
-        at h1
+    have  : f m = i
+    rwa [Finsupp.support_single_ne_zero _ hb, Finset.coe_singleton, Set.singleton_subset_iff]
+      at h1
     subst this
     simp only [map_add, Submodule.coe_mk, decomposeAux_single f m]
     let ih' := ih h2

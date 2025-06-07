@@ -234,9 +234,9 @@ theorem imo1988_q6 {a b : ℕ} (h : a * b + 1 ∣ a ^ 2 + b ^ 2) :
         apply add_pos_of_nonneg_of_pos
         · apply mul_self_nonneg
         · apply mul_pos <;> exact mod_cast hx
-      have hzx : z * z + x * x = (z * x + 1) * k := by
-        rw [← sub_eq_zero, ← h_root]
-        ring
+      have hzx  : z * z + x * x = (z * x + 1) * k
+      rw [← sub_eq_zero, ← h_root]
+      ring
       rw [hzx] at hpos
       replace hpos : z * x + 1 > 0 := pos_of_mul_pos_left hpos (Int.ofNat_zero_le k)
       replace hpos : z * x ≥ 0 := Int.le_of_lt_add_one hpos

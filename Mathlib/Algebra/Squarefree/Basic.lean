@@ -83,7 +83,8 @@ theorem Squarefree.eq_zero_or_one_of_pow_of_not_isUnit [CommMonoid R] {x : R} {n
     n = 0 ∨ n = 1 := by
   contrapose! h'
   replace h' : 2 ≤ n := by omega
-  have : x * x ∣ x ^ n := by rw [← sq]; exact pow_dvd_pow x h'
+  have  : x * x ∣ x ^ n
+  rw [← sq]; exact pow_dvd_pow x h'
   exact h.squarefree_of_dvd this x (refl _)
 
 section SquarefreeGcdOfSquarefree

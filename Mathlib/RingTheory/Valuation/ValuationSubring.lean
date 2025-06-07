@@ -383,7 +383,8 @@ theorem isEquiv_iff_valuationSubring :
   · intro h; ext x; specialize h x 1; simpa using h
   · intro h; apply isEquiv_of_val_le_one
     intro x
-    have : x ∈ v₁.valuationSubring ↔ x ∈ v₂.valuationSubring := by rw [h]
+    have  : x ∈ v₁.valuationSubring ↔ x ∈ v₂.valuationSubring
+    rw [h]
     simpa using this
 
 theorem isEquiv_valuation_valuationSubring : v.IsEquiv v.valuationSubring.valuation := by

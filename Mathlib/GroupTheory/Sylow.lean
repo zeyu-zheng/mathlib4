@@ -320,13 +320,14 @@ theorem Sylow.conj_eq_normalizer_conj_of_mem_centralizer [Fact p.Prime] [Finite 
     (P : Sylow p G) (x g : G) (hx : x ∈ centralizer (P : Set G))
     (hy : g⁻¹ * x * g ∈ centralizer (P : Set G)) :
     ∃ n ∈ (P : Subgroup G).normalizer, g⁻¹ * x * g = n⁻¹ * x * n := by
-  have h1 : ↑P ≤ centralizer (zpowers x : Set G) := by rwa [le_centralizer_iff, zpowers_le]
-  have h2 : ↑(g • P) ≤ centralizer (zpowers x : Set G) := by
-    rw [le_centralizer_iff, zpowers_le]
-    rintro - ⟨z, hz, rfl⟩
-    specialize hy z hz
-    rwa [← mul_assoc, ← eq_mul_inv_iff_mul_eq, mul_assoc, mul_assoc, mul_assoc, ← mul_assoc,
-      eq_inv_mul_iff_mul_eq, ← mul_assoc, ← mul_assoc] at hy
+  have h1  : ↑P ≤ centralizer (zpowers x : Set G)
+  rwa [le_centralizer_iff, zpowers_le]
+  have h2  : ↑(g • P) ≤ centralizer (zpowers x : Set G)
+  rw [le_centralizer_iff, zpowers_le]
+  rintro - ⟨z, hz, rfl⟩
+  specialize hy z hz
+  rwa [← mul_assoc, ← eq_mul_inv_iff_mul_eq, mul_assoc, mul_assoc, mul_assoc, ← mul_assoc,
+    eq_inv_mul_iff_mul_eq, ← mul_assoc, ← mul_assoc] at hy
   obtain ⟨h, hh⟩ :=
     exists_smul_eq (centralizer (zpowers x : Set G)) ((g • P).subtype h2) (P.subtype h1)
   simp_rw [Sylow.smul_subtype, Subgroup.smul_def, smul_smul] at hh
@@ -371,10 +372,10 @@ theorem not_dvd_index_sylow' [hp : Fact p.Prime] (P : Sylow p G) [(P : Subgroup 
   obtain ⟨x, hx⟩ := exists_prime_orderOf_dvd_card' (G := G ⧸ (P : Subgroup G)) p h
   have h := IsPGroup.of_card (((Nat.card_zpowers x).trans hx).trans (pow_one p).symm)
   let Q := (zpowers x).comap (QuotientGroup.mk' (P : Subgroup G))
-  have hQ : IsPGroup p Q := by
-    apply h.comap_of_ker_isPGroup
-    rw [QuotientGroup.ker_mk']
-    exact P.2
+  have hQ  : IsPGroup p Q
+  apply h.comap_of_ker_isPGroup
+  rw [QuotientGroup.ker_mk']
+  exact P.2
   replace hp := mt orderOf_eq_one_iff.mpr (ne_of_eq_of_ne hx hp.1.ne_one)
   rw [← zpowers_eq_bot, ← Ne, ← bot_lt_iff_ne_bot, ←
     comap_lt_comap_of_surjective (QuotientGroup.mk'_surjective _), MonoidHom.comap_bot,

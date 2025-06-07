@@ -187,9 +187,9 @@ theorem degree_sum_eq_of_disjoint (f : S → R[X]) (s : Finset S)
       rw [IH, hy'] at H
       by_cases hx0 : f x = 0
       · simp [hx0, IH]
-      have hy0 : f y ≠ 0 := by
-        contrapose! H
-        simpa [H, degree_eq_bot] using hx0
+      have hy0  : f y ≠ 0
+      contrapose! H
+      simpa [H, degree_eq_bot] using hx0
       refine absurd H (h ?_ ?_ fun H => hx ?_)
       · simp [hx0]
       · simp [hy, hy0]
@@ -255,9 +255,10 @@ theorem degree_map_eq_iff {f : R →+* S} {p : Polynomial R} :
   · simp [h]
   simp only [h, or_false]
   refine ⟨fun h2 ↦ ?_, degree_map_eq_of_leadingCoeff_ne_zero f⟩
-  have h3 : natDegree (map f p) = natDegree p := by simp_rw [natDegree, h2]
-  have h4 : map f p ≠ 0 := by
-    rwa [ne_eq, ← degree_eq_bot, h2, degree_eq_bot]
+  have h3  : natDegree (map f p) = natDegree p
+  simp_rw [natDegree, h2]
+  have h4  : map f p ≠ 0
+  rwa [ne_eq, ← degree_eq_bot, h2, degree_eq_bot]
   rwa [← coeff_natDegree, ← coeff_map, ← h3, coeff_natDegree, ne_eq, leadingCoeff_eq_zero]
 
 @[simp]
@@ -265,7 +266,8 @@ theorem natDegree_map_eq_iff {f : R →+* S} {p : Polynomial R} :
     natDegree (map f p) = natDegree p ↔ f (p.leadingCoeff) ≠ 0 ∨ natDegree p = 0 := by
   rcases eq_or_ne (natDegree p) 0 with h|h
   · simp_rw [h, ne_eq, or_true, iff_true, ← Nat.le_zero, ← h, natDegree_map_le f p]
-  have h2 : p ≠ 0 := by rintro rfl; simp at h
+  have h2  : p ≠ 0
+  rintro rfl; simp at h
   have h3 : degree p ≠ (0 : ℕ)  := degree_ne_of_natDegree_ne h
   simp_rw [h, or_false, natDegree, WithBot.unbot'_eq_unbot'_iff, degree_map_eq_iff]
   simp [h, h2, h3] -- simp doesn't rewrite in the hypothesis for some reason

@@ -654,10 +654,10 @@ theorem mul_mem_connectedComponent_one {G : Type*} [TopologicalSpace G] [MulOneC
     [ContinuousMul G] {g h : G} (hg : g ∈ connectedComponent (1 : G))
     (hh : h ∈ connectedComponent (1 : G)) : g * h ∈ connectedComponent (1 : G) := by
   rw [connectedComponent_eq hg]
-  have hmul : g ∈ connectedComponent (g * h) := by
-    apply Continuous.image_connectedComponent_subset (continuous_mul_left g)
-    rw [← connectedComponent_eq hh]
-    exact ⟨(1 : G), mem_connectedComponent, by simp only [mul_one]⟩
+  have hmul  : g ∈ connectedComponent (g * h)
+  apply Continuous.image_connectedComponent_subset (continuous_mul_left g)
+  rw [← connectedComponent_eq hh]
+  exact ⟨(1 : G), mem_connectedComponent, by simp only [mul_one]⟩
   simpa [← connectedComponent_eq hmul] using mem_connectedComponent
 
 @[to_additive]
@@ -1079,10 +1079,10 @@ variable [TopologicalSpace α] [TopologicalSpace β] [Group α] [MulAction α β
 @[to_additive]
 theorem IsClosed.smul_left_of_isCompact (ht : IsClosed t) (hs : IsCompact s) :
     IsClosed (s • t) := by
-  have : ∀ x ∈ s • t, ∃ g ∈ s, g⁻¹ • x ∈ t := by
-    rintro x ⟨g, hgs, y, hyt, rfl⟩
-    refine ⟨g, hgs, ?_⟩
-    rwa [inv_smul_smul]
+  have  : ∀ x ∈ s • t, ∃ g ∈ s, g⁻¹ • x ∈ t
+  rintro x ⟨g, hgs, y, hyt, rfl⟩
+  refine ⟨g, hgs, ?_⟩
+  rwa [inv_smul_smul]
   choose! f hf using this
   refine isClosed_of_closure_subset (fun x hx ↦ ?_)
   rcases mem_closure_iff_ultrafilter.mp hx with ⟨u, hust, hux⟩
@@ -1246,7 +1246,8 @@ theorem QuotientGroup.isClosedMap_coe {H : Subgroup G} (hH : IsCompact (H : Set 
 
 @[to_additive]
 lemma subset_mul_closure_one (s : Set G) : s ⊆ s * (closure {1} : Set G) := by
-  have : s ⊆ s * ({1} : Set G) := by simp
+  have  : s ⊆ s * ({1} : Set G)
+  simp
   exact this.trans (smul_subset_smul_left subset_closure)
 
 @[to_additive]
@@ -1278,10 +1279,10 @@ lemma compl_mul_closure_one_eq {t : Set G} (ht : t * (closure {1} : Set G) = t) 
   refine Subset.antisymm ?_ (subset_mul_closure_one tᶜ)
   rintro - ⟨x, hx, g, hg, rfl⟩
   by_contra H
-  have : x ∈ t * (closure {1} : Set G) := by
-    rw [← Subgroup.coe_topologicalClosure_bot G] at hg ⊢
-    simp only [smul_eq_mul, mem_compl_iff, not_not] at H
-    exact ⟨x * g, H, g⁻¹, Subgroup.inv_mem _ hg, by simp⟩
+  have  : x ∈ t * (closure {1} : Set G)
+  rw [← Subgroup.coe_topologicalClosure_bot G] at hg ⊢
+  simp only [smul_eq_mul, mem_compl_iff, not_not] at H
+  exact ⟨x * g, H, g⁻¹, Subgroup.inv_mem _ hg, by simp⟩
   rw [ht] at this
   exact hx this
 

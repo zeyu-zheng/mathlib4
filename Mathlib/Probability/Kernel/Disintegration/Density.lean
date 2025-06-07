@@ -249,16 +249,16 @@ lemma setIntegral_densityProcess (hκν : fst κ ≤ ν) [IsFiniteKernel ν]
   have : IsFiniteKernel κ := isFiniteKernel_of_isFiniteKernel_fst (h := isFiniteKernel_of_le hκν)
   obtain ⟨S, hS_subset, rfl⟩ := (measurableSet_generateFrom_countablePartition_iff _ _).mp hA
   simp_rw [sUnion_eq_iUnion]
-  have h_disj : Pairwise (Disjoint on fun i : S ↦ (i : Set γ)) := by
-    intro u v huv
-    #adaptation_note /-- nightly-2024-03-16
-    Previously `Function.onFun` unfolded in the following `simp only`,
-    but now needs a `rw`.
-    This may be a bug: a no import minimization may be required.
-    simp only [Finset.coe_sort_coe, Function.onFun] -/
-    rw [Function.onFun]
-    refine disjoint_countablePartition (hS_subset (by simp)) (hS_subset (by simp)) ?_
-    rwa [ne_eq, ← Subtype.ext_iff]
+  have h_disj  : Pairwise (Disjoint on fun i : S ↦ (i : Set γ))
+  intro u v huv
+  #adaptation_note /-- nightly-2024-03-16
+  Previously `Function.onFun` unfolded in the following `simp only`,
+  but now needs a `rw`.
+  This may be a bug: a no import minimization may be required.
+  simp only [Finset.coe_sort_coe, Function.onFun] -/
+  rw [Function.onFun]
+  refine disjoint_countablePartition (hS_subset (by simp)) (hS_subset (by simp)) ?_
+  rwa [ne_eq, ← Subtype.ext_iff]
   rw [integral_iUnion, iUnion_prod_const, measure_iUnion,
       ENNReal.tsum_toReal_eq (fun _ ↦ measure_ne_top _ _)]
   · congr with u
@@ -583,7 +583,8 @@ lemma setIntegral_density (hκν : fst κ ≤ ν) [IsFiniteKernel ν]
     (a : α) {s : Set β} (hs : MeasurableSet s) {A : Set γ} (hA : MeasurableSet A) :
     ∫ x in A, density κ ν a x s ∂(ν a) = (κ a (A ×ˢ s)).toReal := by
   have : IsFiniteKernel κ := isFiniteKernel_of_isFiniteKernel_fst (h := isFiniteKernel_of_le hκν)
-  have hA' : MeasurableSet[⨆ n, countableFiltration γ n] A := by rwa [iSup_countableFiltration]
+  have hA'  : MeasurableSet[⨆ n, countableFiltration γ n] A
+  rwa [iSup_countableFiltration]
   refine induction_on_inter (m := ⨆ n, countableFiltration γ n)
     (C := fun A ↦ ∫ x in A, density κ ν a x s ∂(ν a) = (κ a (A ×ˢ s)).toReal)
     (measurableSpace_iSup_eq (countableFiltration γ)) ?_ ?_ ?_ ?_ ?_ hA'
@@ -597,9 +598,9 @@ lemma setIntegral_density (hκν : fst κ ≤ ν) [IsFiniteKernel ν]
     rw [iSup_countableFiltration] at hA
     have h := integral_add_compl hA (integrable_density hκν a hs)
     rw [hA_eq, integral_density hκν a hs] at h
-    have : Aᶜ ×ˢ s = univ ×ˢ s \ A ×ˢ s := by
-      rw [prod_diff_prod, compl_eq_univ_diff]
-      simp
+    have  : Aᶜ ×ˢ s = univ ×ˢ s \ A ×ˢ s
+    rw [prod_diff_prod, compl_eq_univ_diff]
+    simp
     rw [this, measure_diff (by intro x; simp) (hA.prod hs) (measure_ne_top (κ a) _),
       ENNReal.toReal_sub_of_le (measure_mono (by intro x; simp)) (measure_ne_top _ _)]
     rw [eq_tsub_iff_add_eq_of_le, add_comm]
@@ -712,9 +713,9 @@ lemma densityProcess_fst_univ [IsFiniteKernel κ] (n : ℕ) (a : α) (x : γ) :
     · rw [ENNReal.div_zero h']
       simp
   · rw [fst_apply' _ _ (measurableSet_countablePartitionSet _ _)]
-    have : countablePartitionSet n x ×ˢ univ = {p : γ × β | p.1 ∈ countablePartitionSet n x} := by
-      ext x
-      simp
+    have  : countablePartitionSet n x ×ˢ univ = {p : γ × β | p.1 ∈ countablePartitionSet n x}
+    ext x
+    simp
     rw [this, ENNReal.div_self]
     · simp
     · rwa [fst_apply' _ _ (measurableSet_countablePartitionSet _ _)] at h

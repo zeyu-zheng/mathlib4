@@ -99,9 +99,9 @@ open Measure
 @[simp]
 lemma lintegral_gammaPDF_eq_one {a r : ℝ} (ha : 0 < a) (hr : 0 < r) :
     ∫⁻ x, gammaPDF a r x = 1 := by
-  have leftSide : ∫⁻ x in Iio 0, gammaPDF a r x = 0 := by
-    rw [setLIntegral_congr_fun measurableSet_Iio
-      (ae_of_all _ (fun x (hx : x < 0) ↦ gammaPDF_of_neg hx)), lintegral_zero]
+  have leftSide  : ∫⁻ x in Iio 0, gammaPDF a r x = 0
+  rw [setLIntegral_congr_fun measurableSet_Iio
+    (ae_of_all _ (fun x (hx : x < 0) ↦ gammaPDF_of_neg hx)), lintegral_zero]
   have rightSide : ∫⁻ x in Ici 0, gammaPDF a r x =
       ∫⁻ x in Ici 0, ENNReal.ofReal (r ^ a / Gamma a * x ^ (a - 1) * exp (-(r * x))) :=
     setLIntegral_congr_fun measurableSet_Ici (ae_of_all _ (fun _ ↦ gammaPDF_of_nonneg))

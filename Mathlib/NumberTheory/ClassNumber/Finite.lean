@@ -191,41 +191,42 @@ theorem exists_mem_finsetApprox (a : S) {b} (hb : b ≠ (0 : R)) :
   set ε : ℝ := normBound abv bS ^ (-1 / Fintype.card ι : ℝ) with ε_eq
   have hε : 0 < ε := Real.rpow_pos_of_pos (Int.cast_pos.mpr (normBound_pos abv bS)) _
   have ε_le : (normBound abv bS : ℝ) * (abv b • ε) ^ (Fintype.card ι : ℝ)
-                ≤ abv b ^ (Fintype.card ι : ℝ) := by
-    have := normBound_pos abv bS
-    have := abv.nonneg b
-    rw [ε_eq, Algebra.smul_def, eq_intCast, mul_rpow, ← rpow_mul, div_mul_cancel₀, rpow_neg_one,
-      mul_left_comm, mul_inv_cancel, mul_one, rpow_natCast] <;>
-      try norm_cast; omega
-    · exact Iff.mpr Int.cast_nonneg this
-    · linarith
+                ≤ abv b ^ (Fintype.card ι : ℝ)
+  have := normBound_pos abv bS
+  have := abv.nonneg b
+  rw [ε_eq, Algebra.smul_def, eq_intCast, mul_rpow, ← rpow_mul, div_mul_cancel₀, rpow_neg_one,
+    mul_left_comm, mul_inv_cancel, mul_one, rpow_natCast] <;>
+    try norm_cast; omega
+  · exact Iff.mpr Int.cast_nonneg this
+  · linarith
   set μ : Fin (cardM bS adm).succ ↪ R := distinctElems bS adm with hμ
   let s : ι →₀ R := bS.repr a
   have s_eq : ∀ i, s i = bS.repr a i := fun i => rfl
   let qs : Fin (cardM bS adm).succ → ι → R := fun j i => μ j * s i / b
   let rs : Fin (cardM bS adm).succ → ι → R := fun j i => μ j * s i % b
   have r_eq : ∀ j i, rs j i = μ j * s i % b := fun i j => rfl
-  have μ_eq : ∀ i j, μ j * s i = b * qs j i + rs j i := by
-    intro i j
-    rw [r_eq, EuclideanDomain.div_add_mod]
-  have μ_mul_a_eq : ∀ j, μ j • a = b • ∑ i, qs j i • bS i + ∑ i, rs j i • bS i := by
-    intro j
-    rw [← bS.sum_repr a]
-    simp only [μ, qs, rs, Finset.smul_sum, ← Finset.sum_add_distrib]
-    refine Finset.sum_congr rfl fun i _ => ?_
+  have μ_eq  : ∀ i j, μ j * s i = b * qs j i + rs j i
+  intro i j
+  rw [r_eq, EuclideanDomain.div_add_mod]
+  have μ_mul_a_eq : ∀ j, μ j • a = b • ∑ i, qs j i • bS i + ∑ i, rs j i • bS i
+  intro j
+  rw [← bS.sum_repr a]
+  simp only [μ, qs, rs, Finset.smul_sum, ← Finset.sum_add_distrib]
+  refine Finset.sum_congr rfl fun i _ => ?_
 -- Porting note `← hμ, ← r_eq` and the final `← μ_eq` were not needed.
-    rw [← hμ, ← r_eq, ← s_eq, ← mul_smul, μ_eq, add_smul, mul_smul, ← μ_eq]
+  rw [← hμ, ← r_eq, ← s_eq, ← mul_smul, μ_eq, add_smul, mul_smul, ← μ_eq]
   obtain ⟨j, k, j_ne_k, hjk⟩ := adm.exists_approx hε hb fun j i => μ j * s i
-  have hjk' : ∀ i, (abv (rs k i - rs j i) : ℝ) < abv b • ε := by simpa only [r_eq] using hjk
+  have hjk'  : ∀ i, (abv (rs k i - rs j i) : ℝ) < abv b • ε
+  simpa only [r_eq] using hjk
   let q := ∑ i, (qs k i - qs j i) • bS i
   set r := μ k - μ j with r_eq
   refine ⟨q, r, (mem_finsetApprox bS adm).mpr ?_, ?_⟩
   · exact ⟨k, j, j_ne_k.symm, rfl⟩
-  have : r • a - b • q = ∑ x : ι, (rs k x • bS x - rs j x • bS x) := by
-    simp only [q, r_eq, sub_smul, μ_mul_a_eq, Finset.smul_sum, ← Finset.sum_add_distrib,
-      ← Finset.sum_sub_distrib, smul_sub]
-    refine Finset.sum_congr rfl fun x _ => ?_
-    ring
+  have  : r • a - b • q = ∑ x : ι, (rs k x • bS x - rs j x • bS x)
+  simp only [q, r_eq, sub_smul, μ_mul_a_eq, Finset.smul_sum, ← Finset.sum_add_distrib,
+    ← Finset.sum_sub_distrib, smul_sub]
+  refine Finset.sum_congr rfl fun x _ => ?_
+  ring
   rw [this, Algebra.norm_algebraMap_of_basis bS, abv.map_pow]
   refine Int.cast_lt.mp ((norm_lt abv bS _ fun i => lt_of_le_of_lt ?_ (hjk' i)).trans_le ?_)
   · apply le_of_eq
@@ -239,9 +240,9 @@ theorem exists_mem_finsetApprox (a : S) {b} (hb : b ≠ (0 : R)) :
 theorem exists_mem_finset_approx' [Algebra.IsAlgebraic R L] (a : S) {b : S} (hb : b ≠ 0) :
     ∃ q : S,
       ∃ r ∈ finsetApprox bS adm, abv (Algebra.norm R (r • a - q * b)) < abv (Algebra.norm R b) := by
-  have inj : Function.Injective (algebraMap R L) := by
-    rw [IsScalarTower.algebraMap_eq R S L]
-    exact (IsIntegralClosure.algebraMap_injective S R L).comp bS.algebraMap_injective
+  have inj  : Function.Injective (algebraMap R L)
+  rw [IsScalarTower.algebraMap_eq R S L]
+  exact (IsIntegralClosure.algebraMap_injective S R L).comp bS.algebraMap_injective
   obtain ⟨a', b', hb', h⟩ := IsIntegralClosure.exists_smul_eq_mul inj a hb
   obtain ⟨q, r, hr, hqr⟩ := exists_mem_finsetApprox bS adm a' hb'
   refine ⟨q, r, hr, ?_⟩
@@ -274,7 +275,8 @@ theorem exists_mk0_eq_mk0 [IsDedekindDomain S] [Algebra.IsAlgebraic R L] (I : (I
       ClassGroup.mk0 I = ClassGroup.mk0 J ∧
         algebraMap _ _ (∏ m ∈ finsetApprox bS adm, m) ∈ (J : Ideal S) := by
   set M := ∏ m ∈ finsetApprox bS adm, m
-  have hM : algebraMap R S M ≠ 0 := prod_finsetApprox_ne_zero bS adm
+  have hM : algebraMap R S M ≠ 0
+  apply prod_finsetApprox_ne_zero bS adm
   obtain ⟨b, b_mem, b_ne_zero, b_min⟩ := exists_min abv I
   suffices Ideal.span {b} ∣ Ideal.span {algebraMap _ _ M} * I.1 by
     obtain ⟨J, hJ⟩ := this
@@ -354,10 +356,10 @@ noncomputable def fintypeOfAdmissibleOfFinite : Fintype (ClassGroup S) := by
   choose s b hb_int using FiniteDimensional.exists_is_basis_integral R K L
 -- Porting note: `this` and `f` below where solved at the end rather than being defined at first.
   have : LinearIndependent R ((Algebra.traceForm K L).dualBasis
-      (traceForm_nondegenerate K L) b) := by
-    apply (Basis.linearIndependent _).restrict_scalars
-    simp only [Algebra.smul_def, mul_one]
-    apply IsFractionRing.injective
+      (traceForm_nondegenerate K L) b)
+  apply (Basis.linearIndependent _).restrict_scalars
+  simp only [Algebra.smul_def, mul_one]
+  apply IsFractionRing.injective
   obtain ⟨n, b⟩ :=
     Submodule.basisOfPidOfLESpan this (IsIntegralClosure.range_le_span_dualBasis S b hb_int)
   let f : (S ⧸ LinearMap.ker (LinearMap.restrictScalars R (Algebra.linearMap S L))) ≃ₗ[R] S := by

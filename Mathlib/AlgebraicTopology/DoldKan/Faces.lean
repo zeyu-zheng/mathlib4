@@ -66,9 +66,9 @@ theorem comp_Hσ_eq {Y : C} {n a q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFac
     φ ≫ (Hσ q).f (n + 1) =
       -φ ≫ X.δ ⟨a + 1, Nat.succ_lt_succ (Nat.lt_succ_iff.mpr (Nat.le.intro hnaq.symm))⟩ ≫
         X.σ ⟨a, Nat.lt_succ_iff.mpr (Nat.le.intro hnaq.symm)⟩ := by
-  have hnaq_shift : ∀ d : ℕ, n + d = a + d + q := by
-    intro d
-    rw [add_assoc, add_comm d, ← add_assoc, hnaq]
+  have hnaq_shift  : ∀ d : ℕ, n + d = a + d + q
+  intro d
+  rw [add_assoc, add_comm d, ← add_assoc, hnaq]
   rw [Hσ, Homotopy.nullHomotopicMap'_f (c_mk (n + 2) (n + 1) rfl) (c_mk (n + 1) n rfl),
     hσ'_eq hnaq (c_mk (n + 1) n rfl), hσ'_eq (hnaq_shift 1) (c_mk (n + 2) (n + 1) rfl)]
   simp only [AlternatingFaceMapComplex.obj_d_eq, eqToHom_refl, comp_id, comp_sum, sum_comp,
@@ -183,10 +183,10 @@ theorem induction {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFacesVa
     rfl
   -- now, we assume j ≠ a (i.e. a < j)
   have haj : a < j := (Ne.le_iff_lt hj₂).mp (by omega)
-  have ham : a ≤ m := by
-    by_contra h
-    rw [not_le, ← Nat.succ_le_iff] at h
-    omega
+  have ham  : a ≤ m
+  by_contra h
+  rw [not_le, ← Nat.succ_le_iff] at h
+  omega
   rw [X.δ_comp_σ_of_gt', j.pred_succ]
   swap
   · rw [Fin.lt_iff_val_lt_val]

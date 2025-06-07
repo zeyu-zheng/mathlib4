@@ -151,9 +151,9 @@ lemma exists_disjoint_finset_diff_eq (hC : IsSetSemiring C) (hs : s ∈ C) (hI :
   have ht : t ∈ C := hI (Set.mem_insert _ _)
   obtain ⟨J, h_ss, h_dis, h_eq⟩ := h ((Set.subset_insert _ _).trans hI)
   let Ju : ∀ u ∈ C, Finset (Set α) := fun u hu ↦ hC.diffFinset hu ht
-  have hJu_subset : ∀ (u) (hu : u ∈ C), ↑(Ju u hu) ⊆ C := by
-    intro u hu x hx
-    exact hC.diffFinset_subset hu ht hx
+  have hJu_subset  : ∀ (u) (hu : u ∈ C), ↑(Ju u hu) ⊆ C
+  intro u hu x hx
+  exact hC.diffFinset_subset hu ht hx
   have hJu_disj : ∀ (u) (hu : u ∈ C), (Ju u hu : Set (Set α)).PairwiseDisjoint id := fun u hu ↦
     hC.pairwiseDisjoint_diffFinset hu ht
   have hJu_sUnion : ∀ (u) (hu : u ∈ C), ⋃₀ (Ju u hu : Set (Set α)) = u \ t :=

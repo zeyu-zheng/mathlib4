@@ -280,7 +280,8 @@ protected lemma of_comp [IsStronglyCartesian p g ψ] [IsStronglyCartesian p (f �
     [IsHomLift p f φ] : IsStronglyCartesian p f φ where
   universal_property' := by
     intro a' h τ hτ
-    have h₁ : IsHomLift p (h ≫ f ≫ g) (τ ≫ ψ) := by simpa using IsHomLift.comp p (h ≫ f) _ τ ψ
+    have h₁  : IsHomLift p (h ≫ f ≫ g) (τ ≫ ψ)
+    simpa using IsHomLift.comp p (h ≫ f) _ τ ψ
     /- We get a morphism `π : a' ⟶ a` such that `π ≫ φ ≫ ψ = τ ≫ ψ` from the universal property
     of `φ ≫ ψ`. This will be the morphism induced by `φ`. -/
     use map p (f ≫ g) (φ ≫ ψ) (f' := h ≫ f ≫ g) rfl (τ ≫ ψ)
@@ -319,9 +320,9 @@ lemma isIso_of_base_isIso (φ : a ⟶ b) [IsStronglyCartesian p f φ] [IsIso f] 
   have inv_hom : φ' ≫ φ = 𝟙 b := fac p (p.map φ) φ _ (𝟙 b)
   refine ⟨?_, inv_hom⟩
   -- We will now show that `φ ≫ φ' = 𝟙 a` by showing that `(φ ≫ φ') ≫ φ = 𝟙 a ≫ φ`.
-  have h₁ : IsHomLift p (𝟙 (p.obj a)) (φ  ≫ φ') := by
-    rw [← IsIso.hom_inv_id (p.map φ)]
-    apply IsHomLift.comp
+  have h₁  : IsHomLift p (𝟙 (p.obj a)) (φ  ≫ φ')
+  rw [← IsIso.hom_inv_id (p.map φ)]
+  apply IsHomLift.comp
   apply IsStronglyCartesian.ext p (p.map φ) φ (𝟙 (p.obj a))
   simp only [assoc, inv_hom, comp_id, id_comp]
 

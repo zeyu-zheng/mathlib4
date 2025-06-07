@@ -313,7 +313,8 @@ theorem Convex.subset_interior_image_homothety_of_one_lt {s : Set E} (hs : Conve
 theorem JoinedIn.of_segment_subset {E : Type*} [AddCommGroup E] [Module ℝ E]
     [TopologicalSpace E] [ContinuousAdd E] [ContinuousSMul ℝ E]
     {x y : E} {s : Set E} (h : [x -[ℝ] y] ⊆ s) : JoinedIn s x y := by
-  have A : Continuous (fun t ↦ (1 - t) • x + t • y : ℝ → E) := by fun_prop
+  have A  : Continuous (fun t ↦ (1 - t) • x + t • y : ℝ → E)
+  fun_prop
   apply JoinedIn.ofLine A.continuousOn (by simp) (by simp)
   convert h
   rw [segment_eq_image ℝ x y]
@@ -362,9 +363,9 @@ theorem isPathConnected_compl_of_isPathConnected_compl_zero [ContinuousSMul ℝ 
   · rcases hpc.1 with ⟨a, ha⟩
     exact ⟨a, mt (Submodule.eq_zero_of_coe_mem_of_disjoint hpq.disjoint) ha⟩
   · intro x hx y hy
-    have : π hpq x ≠ 0 ∧ π hpq y ≠ 0 := by
-      constructor <;> intro h <;> rw [Submodule.linearProjOfIsCompl_apply_eq_zero_iff hpq] at h <;>
-        [exact hx h; exact hy h]
+    have  : π hpq x ≠ 0 ∧ π hpq y ≠ 0
+    constructor <;> intro h <;> rw [Submodule.linearProjOfIsCompl_apply_eq_zero_iff hpq] at h <;>
+      [exact hx h; exact hy h]
     rcases hpc.2 (π hpq x) this.1 (π hpq y) this.2 with ⟨γ₁, hγ₁⟩
     let γ₂ := PathConnectedSpace.somePath (π hpq.symm x) (π hpq.symm y)
     let γ₁' : Path (_ : E) _ := γ₁.map continuous_subtype_val

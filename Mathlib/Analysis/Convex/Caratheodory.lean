@@ -61,18 +61,19 @@ theorem mem_convexHull_erase [DecidableEq E] {t : Finset E} (h : ¬AffineIndepen
     apply s.exists_min_image fun z => f z / g z
     obtain ⟨x, hx, hgx⟩ : ∃ x ∈ t, 0 < g x := gpos
     exact ⟨x, mem_filter.mpr ⟨hx, hgx⟩⟩
-  have hg : 0 < g i₀ := by
-    rw [mem_filter] at mem
-    exact mem.2
+  have hg  : 0 < g i₀
+  rw [mem_filter] at mem
+  exact mem.2
   have hi₀ : i₀ ∈ t := filter_subset _ _ mem
   let k : E → 𝕜 := fun z => f z - f i₀ / g i₀ * g z
-  have hk : k i₀ = 0 := by field_simp [k, ne_of_gt hg]
-  have ksum : ∑ e ∈ t.erase i₀, k e = 1 := by
-    calc
-      ∑ e ∈ t.erase i₀, k e = ∑ e ∈ t, k e := by
-        conv_rhs => rw [← insert_erase hi₀, sum_insert (not_mem_erase i₀ t), hk, zero_add]
-      _ = ∑ e ∈ t, (f e - f i₀ / g i₀ * g e) := rfl
-      _ = 1 := by rw [sum_sub_distrib, fsum, ← mul_sum, gsum, mul_zero, sub_zero]
+  have hk  : k i₀ = 0
+  field_simp [k, ne_of_gt hg]
+  have ksum  : ∑ e ∈ t.erase i₀, k e = 1
+  calc
+    ∑ e ∈ t.erase i₀, k e = ∑ e ∈ t, k e := by
+      conv_rhs => rw [← insert_erase hi₀, sum_insert (not_mem_erase i₀ t), hk, zero_add]
+    _ = ∑ e ∈ t, (f e - f i₀ / g i₀ * g e) := rfl
+    _ = 1 := by rw [sum_sub_distrib, fsum, ← mul_sum, gsum, mul_zero, sub_zero]
   refine ⟨⟨i₀, hi₀⟩, k, ?_, by convert ksum, ?_⟩
   · simp only [k, and_imp, sub_nonneg, mem_erase, Ne, Subtype.coe_mk]
     intro e _ het

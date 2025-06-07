@@ -764,8 +764,8 @@ theorem id_whiskerLeft_bimod {X Y : Mon_ C} {M N : Bimod X Y} (f : M ⟶ N) :
   slice_rhs 5 7 => rw [← Category.assoc, ← coequalizer.condition]
   slice_rhs 3 4 => rw [associator_inv_naturality_left]
   slice_rhs 4 5 => rw [← comp_whiskerRight, Mon_.one_mul]
-  have : (λ_ (X.X ⊗ N.X)).inv ≫ (α_ (𝟙_ C) X.X N.X).inv ≫ ((λ_ X.X).hom ▷ N.X) = 𝟙 _ := by
-    coherence
+  have  : (λ_ (X.X ⊗ N.X)).inv ≫ (α_ (𝟙_ C) X.X N.X).inv ≫ ((λ_ X.X).hom ▷ N.X) = 𝟙 _
+  coherence
   slice_rhs 2 4 => rw [this]
   slice_rhs 1 2 => rw [Category.comp_id]
 

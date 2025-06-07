@@ -90,7 +90,8 @@ theorem image_fst_graph [DecidableEq α] (f : α →₀ M) : f.graph.image Prod.
 theorem graph_injective (α M) [Zero M] : Injective (@graph α M _) := by
   intro f g h
   classical
-    have hsup : f.support = g.support := by rw [← image_fst_graph, h, image_fst_graph]
+    have hsup  : f.support = g.support
+    rw [← image_fst_graph, h, image_fst_graph]
     refine ext_iff'.2 ⟨hsup, fun x hx => apply_eq_of_mem_graph <| h.symm ▸ ?_⟩
     exact mk_mem_graph _ (hsup ▸ hx)
 
@@ -536,7 +537,8 @@ theorem mapDomain_injective {f : α → β} (hf : Function.Injective f) :
     Function.Injective (mapDomain f : (α →₀ M) → β →₀ M) := by
   intro v₁ v₂ eq
   ext a
-  have : mapDomain f v₁ (f a) = mapDomain f v₂ (f a) := by rw [eq]
+  have  : mapDomain f v₁ (f a) = mapDomain f v₂ (f a)
+  rw [eq]
   rwa [mapDomain_apply hf, mapDomain_apply hf] at this
 
 /-- When `f` is an embedding we have an embedding `(α →₀ ℕ) ↪ (β →₀ ℕ)` given by `mapDomain`. -/
@@ -1051,10 +1053,10 @@ protected def curry (f : α × β →₀ M) : α →₀ β →₀ M :=
 @[simp]
 theorem curry_apply (f : α × β →₀ M) (x : α) (y : β) : f.curry x y = f (x, y) := by
   classical
-    have : ∀ b : α × β, single b.fst (single b.snd (f b)) x y = if b = (x, y) then f b else 0 := by
-      rintro ⟨b₁, b₂⟩
-      simp only [ne_eq, single_apply, Prod.ext_iff, ite_and]
-      split_ifs <;> simp [single_apply, *]
+    have  : ∀ b : α × β, single b.fst (single b.snd (f b)) x y = if b = (x, y) then f b else 0
+    rintro ⟨b₁, b₂⟩
+    simp only [ne_eq, single_apply, Prod.ext_iff, ite_and]
+    split_ifs <;> simp [single_apply, *]
     rw [Finsupp.curry, sum_apply, sum_apply, sum_eq_single, this, if_pos rfl]
     · intro b _ b_ne
       rw [this b, if_neg b_ne]

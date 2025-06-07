@@ -106,21 +106,24 @@ theorem real_roots_Phi_le : Fintype.card ((Φ ℚ a b).rootSet ℝ) ≤ 3 := by
 theorem real_roots_Phi_ge_aux (hab : b < a) :
     ∃ x y : ℝ, x ≠ y ∧ aeval x (Φ ℚ a b) = 0 ∧ aeval y (Φ ℚ a b) = 0 := by
   let f : ℝ → ℝ := fun x : ℝ => aeval x (Φ ℚ a b)
-  have hf : f = fun x : ℝ => x ^ 5 - a * x + b := by simp [f, Φ]
+  have hf  : f = fun x : ℝ => x ^ 5 - a * x + b
+  simp [f, Φ]
   have hc : ∀ s : Set ℝ, ContinuousOn f s := fun s => (Φ ℚ a b).continuousOn_aeval
   have ha : (1 : ℝ) ≤ a := Nat.one_le_cast.mpr (Nat.one_le_of_lt hab)
   have hle : (0 : ℝ) ≤ 1 := zero_le_one
-  have hf0 : 0 ≤ f 0 := by simp [hf]
+  have hf0  : 0 ≤ f 0
+  simp [hf]
   by_cases hb : (1 : ℝ) - a + b < 0
   · have hf1 : f 1 < 0 := by simp [hf, hb]
-    have hfa : 0 ≤ f a := by
-      simp_rw [hf, ← sq]
-      refine add_nonneg (sub_nonneg.mpr (pow_le_pow_right ha ?_)) ?_ <;> norm_num
+    have hfa  : 0 ≤ f a
+    simp_rw [hf, ← sq]
+    refine add_nonneg (sub_nonneg.mpr (pow_le_pow_right ha ?_)) ?_ <;> norm_num
     obtain ⟨x, ⟨-, hx1⟩, hx2⟩ := intermediate_value_Ico' hle (hc _) (Set.mem_Ioc.mpr ⟨hf1, hf0⟩)
     obtain ⟨y, ⟨hy1, -⟩, hy2⟩ := intermediate_value_Ioc ha (hc _) (Set.mem_Ioc.mpr ⟨hf1, hfa⟩)
     exact ⟨x, y, (hx1.trans hy1).ne, hx2, hy2⟩
   · replace hb : (b : ℝ) = a - 1 := by linarith [show (b : ℝ) + 1 ≤ a from mod_cast hab]
-    have hf1 : f 1 = 0 := by simp [hf, hb]
+    have hf1  : f 1 = 0
+    simp [hf, hb]
     have hfa :=
       calc
         f (-a) = (a : ℝ) ^ 2 - (a : ℝ) ^ 5 + b := by
@@ -136,8 +139,8 @@ theorem real_roots_Phi_ge_aux (hab : b < a) :
 theorem real_roots_Phi_ge (hab : b < a) : 2 ≤ Fintype.card ((Φ ℚ a b).rootSet ℝ) := by
   have q_ne_zero : Φ ℚ a b ≠ 0 := (monic_Phi a b).ne_zero
   obtain ⟨x, y, hxy, hx, hy⟩ := real_roots_Phi_ge_aux a b hab
-  have key : ↑({x, y} : Finset ℝ) ⊆ (Φ ℚ a b).rootSet ℝ := by
-    simp [Set.insert_subset, mem_rootSet_of_ne q_ne_zero, hx, hy]
+  have key  : ↑({x, y} : Finset ℝ) ⊆ (Φ ℚ a b).rootSet ℝ
+  simp [Set.insert_subset, mem_rootSet_of_ne q_ne_zero, hx, hy]
   convert Fintype.card_le_of_embedding (Set.embeddingOfSubset _ _ key)
   simp only [Finset.coe_sort_coe, Fintype.card_coe, Finset.card_singleton,
     Finset.card_insert_of_not_mem (mt Finset.mem_singleton.mp hxy)]

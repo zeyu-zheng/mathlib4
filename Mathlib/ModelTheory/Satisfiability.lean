@@ -130,15 +130,15 @@ theorem isSatisfiable_union_distinctConstantsTheory_of_card_le (T : L.Theory) (s
   haveI : Inhabited M := Classical.inhabited_of_nonempty inferInstance
   rw [Cardinal.lift_mk_le'] at h
   letI : (constantsOn α).Structure M := constantsOn.structure (Function.extend (↑) h.some default)
-  have : M ⊨ (L.lhomWithConstants α).onTheory T ∪ L.distinctConstantsTheory s := by
-    refine ((LHom.onTheory_model _ _).2 inferInstance).union ?_
-    rw [model_distinctConstantsTheory]
-    refine fun a as b bs ab => ?_
-    rw [← Subtype.coe_mk a as, ← Subtype.coe_mk b bs, ← Subtype.ext_iff]
-    exact
-      h.some.injective
-        ((Subtype.coe_injective.extend_apply h.some default ⟨a, as⟩).symm.trans
-          (ab.trans (Subtype.coe_injective.extend_apply h.some default ⟨b, bs⟩)))
+  have  : M ⊨ (L.lhomWithConstants α).onTheory T ∪ L.distinctConstantsTheory s
+  refine ((LHom.onTheory_model _ _).2 inferInstance).union ?_
+  rw [model_distinctConstantsTheory]
+  refine fun a as b bs ab => ?_
+  rw [← Subtype.coe_mk a as, ← Subtype.coe_mk b bs, ← Subtype.ext_iff]
+  exact
+    h.some.injective
+      ((Subtype.coe_injective.extend_apply h.some default ⟨a, as⟩).symm.trans
+        (ab.trans (Subtype.coe_injective.extend_apply h.some default ⟨b, bs⟩)))
   exact Model.isSatisfiable M
 
 theorem isSatisfiable_union_distinctConstantsTheory_of_infinite (T : L.Theory) (s : Set α)
@@ -198,9 +198,9 @@ theorem exists_elementaryEmbedding_card_eq_of_le (M : Type w') [L.Structure M] [
     (h3 : lift.{w'} κ ≤ Cardinal.lift.{w} #M) :
     ∃ N : Bundled L.Structure, Nonempty (N ↪ₑ[L] M) ∧ #N = κ := by
   obtain ⟨S, _, hS⟩ := exists_elementarySubstructure_card_eq L ∅ κ h1 (by simp) h2 h3
-  have : Small.{w} S := by
-    rw [← lift_inj.{_, w + 1}, lift_lift, lift_lift] at hS
-    exact small_iff_lift_mk_lt_univ.2 (lt_of_eq_of_lt hS κ.lift_lt_univ')
+  have  : Small.{w} S
+  rw [← lift_inj.{_, w + 1}, lift_lift, lift_lift] at hS
+  exact small_iff_lift_mk_lt_univ.2 (lt_of_eq_of_lt hS κ.lift_lt_univ')
   refine
     ⟨(equivShrink S).bundledInduced L,
       ⟨S.subtype.comp (Equiv.bundledInducedEquiv L _).symm.toElementaryEmbedding⟩,
@@ -318,11 +318,11 @@ theorem ModelsBoundedFormula.realize_sentence {φ : L.Sentence} (h : T ⊨ᵇ φ
     [L.Structure M] [M ⊨ T] [Nonempty M] : M ⊨ φ := by
   rw [models_iff_not_satisfiable] at h
   contrapose! h
-  have : M ⊨ T ∪ {Formula.not φ} := by
-    simp only [Set.union_singleton, model_iff, Set.mem_insert_iff, forall_eq_or_imp,
-      Sentence.realize_not]
-    rw [← model_iff]
-    exact ⟨h, inferInstance⟩
+  have  : M ⊨ T ∪ {Formula.not φ}
+  simp only [Set.union_singleton, model_iff, Set.mem_insert_iff, forall_eq_or_imp,
+    Sentence.realize_not]
+  rw [← model_iff]
+  exact ⟨h, inferInstance⟩
   exact Model.isSatisfiable M
 
 theorem models_of_models_theory {T' : L.Theory}

@@ -111,8 +111,8 @@ theorem exists_mulVec_eq_zero_iff_aux {K : Type*} [DecidableEq n] [Field K] {M :
     exact eq_zero_of_mulVec_eq_zero hv mul_eq
   · contrapose!
     intro h
-    have : Function.Injective (Matrix.toLin' M) := by
-      simpa only [← LinearMap.ker_eq_bot, ker_toLin'_eq_bot_iff, not_imp_not] using h
+    have  : Function.Injective (Matrix.toLin' M)
+    simpa only [← LinearMap.ker_eq_bot, ker_toLin'_eq_bot_iff, not_imp_not] using h
     have :
       M *
           LinearMap.toMatrix'

@@ -52,15 +52,16 @@ theorem Set.Countable.isPathConnected_compl_of_one_lt_rank
   -/
   let c := (2 : ℝ)⁻¹ • (a + b)
   let x := (2 : ℝ)⁻¹ • (b - a)
-  have Ia : c - x = a := by
-    simp only [c, x, smul_add, smul_sub]
-    abel_nf
-    simp [← Int.cast_smul_eq_nsmul ℝ 2]
-  have Ib : c + x = b := by
-    simp only [c, x, smul_add, smul_sub]
-    abel_nf
-    simp [← Int.cast_smul_eq_nsmul ℝ 2]
-  have x_ne_zero : x ≠ 0 := by simpa [x] using sub_ne_zero.2 hab.symm
+  have Ia  : c - x = a
+  simp only [c, x, smul_add, smul_sub]
+  abel_nf
+  simp [← Int.cast_smul_eq_nsmul ℝ 2]
+  have Ib  : c + x = b
+  simp only [c, x, smul_add, smul_sub]
+  abel_nf
+  simp [← Int.cast_smul_eq_nsmul ℝ 2]
+  have x_ne_zero  : x ≠ 0
+  simpa [x] using sub_ne_zero.2 hab.symm
   obtain ⟨y, hy⟩ : ∃ y, LinearIndependent ℝ ![x, y] :=
     exists_linearIndependent_pair_of_one_lt_rank h x_ne_zero
   have A : Set.Countable {t : ℝ | ([c + x -[ℝ] c + t • y] ∩ s).Nonempty} := by
@@ -135,25 +136,26 @@ theorem isPathConnected_sphere (h : 1 < Module.rank ℝ E) (x : E) {r : ℝ} (hr
   rcases hr.eq_or_lt with rfl|rpos
   · simpa using isPathConnected_singleton x
   let f : E → E := fun y ↦ x + (r * ‖y‖⁻¹) • y
-  have A : ContinuousOn f {0}ᶜ := by
-    intro y hy
-    apply (continuousAt_const.add _).continuousWithinAt
-    apply (continuousAt_const.mul (ContinuousAt.inv₀ continuousAt_id.norm ?_)).smul continuousAt_id
-    simpa using hy
+  have A  : ContinuousOn f {0}ᶜ
+  intro y hy
+  apply (continuousAt_const.add _).continuousWithinAt
+  apply (continuousAt_const.mul (ContinuousAt.inv₀ continuousAt_id.norm ?_)).smul continuousAt_id
+  simpa using hy
   have B : IsPathConnected ({0}ᶜ : Set E) := isPathConnected_compl_singleton_of_one_lt_rank h 0
   have C : IsPathConnected (f '' {0}ᶜ) := B.image' A
-  have : f '' {0}ᶜ = sphere x r := by
-    apply Subset.antisymm
-    · rintro - ⟨y, hy, rfl⟩
-      have : ‖y‖ ≠ 0 := by simpa using hy
-      simp [f, norm_smul, abs_of_nonneg hr, mul_assoc, inv_mul_cancel this]
-    · intro y hy
-      refine ⟨y - x, ?_, ?_⟩
-      · intro H
-        simp only [mem_singleton_iff, sub_eq_zero] at H
-        simp only [H, mem_sphere_iff_norm, sub_self, norm_zero] at hy
-        exact rpos.ne hy
-      · simp [f, mem_sphere_iff_norm.1 hy, mul_inv_cancel rpos.ne']
+  have  : f '' {0}ᶜ = sphere x r
+  apply Subset.antisymm
+  · rintro - ⟨y, hy, rfl⟩
+    have  : ‖y‖ ≠ 0
+    simpa using hy
+    simp [f, norm_smul, abs_of_nonneg hr, mul_assoc, inv_mul_cancel this]
+  · intro y hy
+    refine ⟨y - x, ?_, ?_⟩
+    · intro H
+      simp only [mem_singleton_iff, sub_eq_zero] at H
+      simp only [H, mem_sphere_iff_norm, sub_self, norm_zero] at hy
+      exact rpos.ne hy
+    · simp [f, mem_sphere_iff_norm.1 hy, mul_inv_cancel rpos.ne']
   rwa [this] at C
 
 /-- In a real vector space of dimension `> 1`, any sphere of nonnegative radius is connected. -/

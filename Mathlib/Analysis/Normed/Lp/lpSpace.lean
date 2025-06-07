@@ -98,10 +98,12 @@ theorem memℓp_gen_iff (hp : 0 < p.toReal) {f : ∀ i, E i} :
 theorem memℓp_gen {f : ∀ i, E i} (hf : Summable fun i => ‖f i‖ ^ p.toReal) : Memℓp f p := by
   rcases p.trichotomy with (rfl | rfl | hp)
   · apply memℓp_zero
-    have H : Summable fun _ : α => (1 : ℝ) := by simpa using hf
+    have H  : Summable fun _ : α => (1 : ℝ)
+    simpa using hf
     exact (Set.Finite.of_summable_const (by norm_num) H).subset (Set.subset_univ _)
   · apply memℓp_infty
-    have H : Summable fun _ : α => (1 : ℝ) := by simpa using hf
+    have H  : Summable fun _ : α => (1 : ℝ)
+    simpa using hf
     simpa using ((Set.Finite.of_summable_const (by norm_num) H).image fun i => ‖f i‖).bddAbove
   exact (memℓp_gen_iff hp).2 hf
 
@@ -167,17 +169,19 @@ theorem of_exponent_ge {p q : ℝ≥0∞} {f : ∀ i, E i} (hfq : Memℓp f q) (
     · simp [hi]
     · exact (hC ⟨i, hi, rfl⟩).trans (le_max_right _ _)
   · apply memℓp_gen
-    have : ∀ i ∉ hfq.finite_dsupport.toFinset, ‖f i‖ ^ p.toReal = 0 := by
-      intro i hi
-      have : f i = 0 := by simpa using hi
-      simp [this, Real.zero_rpow hp.ne']
+    have  : ∀ i ∉ hfq.finite_dsupport.toFinset, ‖f i‖ ^ p.toReal = 0
+    intro i hi
+    have  : f i = 0
+    simpa using hi
+    simp [this, Real.zero_rpow hp.ne']
     exact summable_of_ne_finset_zero this
   · exact hfq
   · apply memℓp_infty
     obtain ⟨A, hA⟩ := (hfq.summable hq).tendsto_cofinite_zero.bddAbove_range_of_cofinite
     use A ^ q.toReal⁻¹
     rintro x ⟨i, rfl⟩
-    have : 0 ≤ ‖f i‖ ^ q.toReal := by positivity
+    have  : 0 ≤ ‖f i‖ ^ q.toReal
+    positivity
     simpa [← Real.rpow_mul, mul_inv_cancel hq.ne'] using
       Real.rpow_le_rpow this (hA ⟨i, rfl⟩) (inv_nonneg.mpr hq.le)
   · apply memℓp_gen
@@ -411,12 +415,14 @@ theorem norm_eq_zero_iff {f : lp E p} : ‖f‖ = 0 ↔ f = 0 := by
   refine ⟨fun h => ?_, by rintro rfl; exact norm_zero⟩
   rcases p.trichotomy with (rfl | rfl | hp)
   · ext i
-    have : { i : α | ¬f i = 0 } = ∅ := by simpa [lp.norm_eq_card_dsupport f] using h
+    have  : { i : α | ¬f i = 0 } = ∅
+    simpa [lp.norm_eq_card_dsupport f] using h
     have : (¬f i = 0) = False := congr_fun this i
     tauto
   · cases' isEmpty_or_nonempty α with _i _i
     · simp [eq_iff_true_of_subsingleton]
-    have H : IsLUB (Set.range fun i => ‖f i‖) 0 := by simpa [h] using lp.isLUB_norm f
+    have H  : IsLUB (Set.range fun i => ‖f i‖) 0
+    simpa [h] using lp.isLUB_norm f
     ext i
     have : ‖f i‖ = 0 := le_antisymm (H.1 ⟨i, rfl⟩) (norm_nonneg _)
     simpa using this
@@ -426,8 +432,8 @@ theorem norm_eq_zero_iff {f : lp E p} : ‖f‖ = 0 ↔ f = 0 := by
     have : ∀ i, 0 ≤ ‖f i‖ ^ p.toReal := fun i => Real.rpow_nonneg (norm_nonneg _) _
     rw [hasSum_zero_iff_of_nonneg this] at hf
     ext i
-    have : f i = 0 ∧ p.toReal ≠ 0 := by
-      simpa [Real.rpow_eq_zero_iff_of_nonneg (norm_nonneg (f i))] using congr_fun hf i
+    have  : f i = 0 ∧ p.toReal ≠ 0
+    simpa [Real.rpow_eq_zero_iff_of_nonneg (norm_nonneg (f i))] using congr_fun hf i
     exact this.1
 
 theorem eq_zero_iff_coeFn_eq_zero {f : lp E p} : f = 0 ↔ ⇑f = 0 := by
@@ -940,9 +946,9 @@ protected theorem norm_sum_single (hp : 0 < p.toReal) (f : ∀ i, E i) (s : Fins
   simp only [lp.single_apply, coeFn_sum, Finset.sum_apply, Finset.sum_dite_eq]
   have h : ∀ i ∉ s, ‖ite (i ∈ s) (f i) 0‖ ^ p.toReal = 0 := fun i hi ↦ by
     simp [if_neg hi, Real.zero_rpow hp.ne']
-  have h' : ∀ i ∈ s, ‖f i‖ ^ p.toReal = ‖ite (i ∈ s) (f i) 0‖ ^ p.toReal := by
-    intro i hi
-    rw [if_pos hi]
+  have h'  : ∀ i ∈ s, ‖f i‖ ^ p.toReal = ‖ite (i ∈ s) (f i) 0‖ ^ p.toReal
+  intro i hi
+  rw [if_pos hi]
   simpa [Finset.sum_congr rfl h'] using hasSum_sum_of_ne_finset_zero h
 
 protected theorem norm_single (hp : 0 < p.toReal) (f : ∀ i, E i) (i : α) :
@@ -955,17 +961,17 @@ protected theorem norm_sub_norm_compl_sub_single (hp : 0 < p.toReal) (f : lp E p
       ∑ i ∈ s, ‖f i‖ ^ p.toReal := by
   refine ((hasSum_norm hp f).sub (hasSum_norm hp (f - ∑ i ∈ s, lp.single p i (f i)))).unique ?_
   let F : α → ℝ := fun i => ‖f i‖ ^ p.toReal - ‖(f - ∑ i ∈ s, lp.single p i (f i)) i‖ ^ p.toReal
-  have hF : ∀ i ∉ s, F i = 0 := by
-    intro i hi
-    suffices ‖f i‖ ^ p.toReal - ‖f i - ite (i ∈ s) (f i) 0‖ ^ p.toReal = 0 by
-      simpa only [F, coeFn_sum, lp.single_apply, coeFn_sub, Pi.sub_apply, Finset.sum_apply,
-        Finset.sum_dite_eq] using this
-    simp only [if_neg hi, sub_zero, sub_self]
-  have hF' : ∀ i ∈ s, F i = ‖f i‖ ^ p.toReal := by
-    intro i hi
-    simp only [F, coeFn_sum, lp.single_apply, if_pos hi, sub_self, eq_self_iff_true, coeFn_sub,
-      Pi.sub_apply, Finset.sum_apply, Finset.sum_dite_eq, sub_eq_self]
-    simp [Real.zero_rpow hp.ne']
+  have hF  : ∀ i ∉ s, F i = 0
+  intro i hi
+  suffices ‖f i‖ ^ p.toReal - ‖f i - ite (i ∈ s) (f i) 0‖ ^ p.toReal = 0 by
+    simpa only [F, coeFn_sum, lp.single_apply, coeFn_sub, Pi.sub_apply, Finset.sum_apply,
+      Finset.sum_dite_eq] using this
+  simp only [if_neg hi, sub_zero, sub_self]
+  have hF'  : ∀ i ∈ s, F i = ‖f i‖ ^ p.toReal
+  intro i hi
+  simp only [F, coeFn_sum, lp.single_apply, if_pos hi, sub_self, eq_self_iff_true, coeFn_sub,
+    Pi.sub_apply, Finset.sum_apply, Finset.sum_dite_eq, sub_eq_self]
+  simp [Real.zero_rpow hp.ne']
   have : HasSum F (∑ i ∈ s, F i) := hasSum_sum_of_ne_finset_zero hF
   rwa [Finset.sum_congr rfl hF'] at this
 
@@ -1037,11 +1043,11 @@ theorem sum_rpow_le_of_tendsto (hp : p ≠ ∞) {C : ℝ} {F : ι → lp E p} (h
   have hp' : p ≠ 0 := (zero_lt_one.trans_le _i.elim).ne'
   have hp'' : 0 < p.toReal := ENNReal.toReal_pos hp' hp
   let G : (∀ a, E a) → ℝ := fun f => ∑ a ∈ s, ‖f a‖ ^ p.toReal
-  have hG : Continuous G := by
-    refine continuous_finset_sum s ?_
-    intro a _
-    have : Continuous fun f : ∀ a, E a => f a := continuous_apply a
-    exact this.norm.rpow_const fun _ => Or.inr hp''.le
+  have hG  : Continuous G
+  refine continuous_finset_sum s ?_
+  intro a _
+  have : Continuous fun f : ∀ a, E a => f a := continuous_apply a
+  exact this.norm.rpow_const fun _ => Or.inr hp''.le
   refine le_of_tendsto (hG.continuousAt.tendsto.comp hf) ?_
   refine hCF.mono ?_
   intro k hCFk

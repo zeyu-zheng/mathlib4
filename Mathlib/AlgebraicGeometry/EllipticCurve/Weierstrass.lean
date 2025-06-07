@@ -587,7 +587,8 @@ lemma coe_inv_variableChange_Δ' : (E.variableChange C).Δ'⁻¹ = C.u ^ 12 * E.
 lemma variableChange_j : (E.variableChange C).j = E.j := by
   rw [j, coe_inv_variableChange_Δ', Units.val_mul, Units.val_pow_eq_pow_val,
     variableChange_toWeierstrassCurve, WeierstrassCurve.variableChange_c₄]
-  have hu : (C.u * C.u⁻¹ : R) ^ 12 = 1 := by rw [C.u.mul_inv, one_pow]
+  have hu  : (C.u * C.u⁻¹ : R) ^ 12 = 1
+  rw [C.u.mul_inv, one_pow]
   linear_combination (norm := (rw [j]; ring1)) E.j * hu
 
 end VariableChange

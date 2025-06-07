@@ -1029,15 +1029,17 @@ theorem mem_support_iff_exists_getVert {u v w : V} {p : G.Walk v w} :
       left
       exact hn.1.symm
     · right
-      have hnp : ¬ p.Nil := by
-        rw [@nil_iff_length_eq]
-        have : 1 ≤ p.length := by omega
-        exact Nat.not_eq_zero_of_lt this
+      have hnp  : ¬ p.Nil
+      rw [@nil_iff_length_eq]
+      have  : 1 ≤ p.length
+      omega
+      exact Nat.not_eq_zero_of_lt this
       rw [← tail_support_eq_support_tail _ hnp]
       rw [mem_support_iff_exists_getVert]
       use n - 1
       simp only [Nat.sub_le_iff_le_add, length_tail_add_one, getVert_tail]
-      have : n - 1 + 1 = n := by omega
+      have  : n - 1 + 1 = n
+      omega
       rwa [this]
 termination_by p.length
 

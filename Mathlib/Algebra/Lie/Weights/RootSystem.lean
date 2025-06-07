@@ -112,14 +112,14 @@ lemma rootSpace_neg_nsmul_add_chainTop_of_lt {n : ℕ} (hn : chainLength α β <
   by_contra e
   let W : Weight K H L := ⟨_, e⟩
   have hW : (W : H → K) = - (n • α) + chainTop α β := rfl
-  have H₁ : 1 + n + chainTopCoeff (-α) W ≤ chainLength (-α) W := by
-    have := apply_coroot_eq_cast' (-α) W
-    simp only [coroot_neg, map_neg, hW, nsmul_eq_mul, Pi.natCast_def, coe_chainTop, zsmul_eq_mul,
-      Int.cast_natCast, Pi.add_apply, Pi.neg_apply, Pi.mul_apply, root_apply_coroot hα, mul_two,
-      neg_add_rev, apply_coroot_eq_cast' α β, Int.cast_sub, Int.cast_mul, Int.cast_ofNat,
-      mul_comm (2 : K), add_sub_cancel, neg_neg, add_sub, Nat.cast_inj,
-      eq_sub_iff_add_eq, ← Nat.cast_add, ← sub_eq_neg_add, sub_eq_iff_eq_add] at this
-    linarith [this, hn]
+  have H₁  : 1 + n + chainTopCoeff (-α) W ≤ chainLength (-α) W
+  have := apply_coroot_eq_cast' (-α) W
+  simp only [coroot_neg, map_neg, hW, nsmul_eq_mul, Pi.natCast_def, coe_chainTop, zsmul_eq_mul,
+    Int.cast_natCast, Pi.add_apply, Pi.neg_apply, Pi.mul_apply, root_apply_coroot hα, mul_two,
+    neg_add_rev, apply_coroot_eq_cast' α β, Int.cast_sub, Int.cast_mul, Int.cast_ofNat,
+    mul_comm (2 : K), add_sub_cancel, neg_neg, add_sub, Nat.cast_inj,
+    eq_sub_iff_add_eq, ← Nat.cast_add, ← sub_eq_neg_add, sub_eq_iff_eq_add] at this
+  linarith [this, hn]
   have H₂ : ((1 + n + chainTopCoeff (-α) W) • α + chainTop (-α) W : H → K) =
       (chainTopCoeff α β + 1) • α + β := by
     simp only [Weight.coe_neg, ← Nat.cast_smul_eq_nsmul ℤ, Nat.cast_add, Nat.cast_one, coe_chainTop,
@@ -231,7 +231,8 @@ lemma chainTopCoeff_of_eq_zsmul_add (β' : Weight K H L) (n : ℤ) (hβ' : (β' 
 
 lemma chainBotCoeff_of_eq_zsmul_add (β' : Weight K H L) (n : ℤ) (hβ' : (β' : H → K) = n • α + β) :
     chainBotCoeff α β' = chainBotCoeff α β + n := by
-  have : (β' : H → K) = -n • (-α) + β := by rwa [neg_smul, smul_neg, neg_neg]
+  have  : (β' : H → K) = -n • (-α) + β
+  rwa [neg_smul, smul_neg, neg_neg]
   rw [chainBotCoeff, chainBotCoeff, ← Weight.coe_neg,
     chainTopCoeff_of_eq_zsmul_add (-α) β hα.neg β' (-n) this, sub_neg_eq_add]
 
@@ -292,9 +293,9 @@ lemma rootSpace_two_smul : rootSpace H (2 • α) = ⊥ := by
 lemma rootSpace_one_div_two_smul : rootSpace H ((2⁻¹ : K) • α) = ⊥ := by
   by_contra h
   let W : Weight K H L := ⟨_, h⟩
-  have hW : 2 • (W : H → K) = α := by
-    show 2 • (2⁻¹ : K) • (α : H → K) = α
-    rw [← Nat.cast_smul_eq_nsmul K, smul_smul]; simp
+  have hW  : 2 • (W : H → K) = α
+  show 2 • (2⁻¹ : K) • (α : H → K) = α
+  rw [← Nat.cast_smul_eq_nsmul K, smul_smul]; simp
   apply α.weightSpace_ne_bot
   have := rootSpace_two_smul W (fun (e : (W : H → K) = 0) ↦ hα <| by
     apply_fun (2 • ·) at e; simpa [hW] using e)
@@ -318,14 +319,15 @@ lemma eq_neg_one_or_eq_zero_or_eq_one_of_eq_smul (k : K) (h : (β : H → K) = k
     rw [chainTopCoeff_zero_right α hα, chainBotCoeff_zero_right α hα, Nat.cast_one] at this
     set k' : ℤ := n - chainTopCoeff α β
     subst H
-    have : k' ∈ ({-1, 0, 1} : Finset ℤ) := by
-      show k' ∈ Finset.Icc (-1 : ℤ) (1 : ℤ)
-      exact this
+    have  : k' ∈ ({-1, 0, 1} : Finset ℤ)
+    show k' ∈ Finset.Icc (-1 : ℤ) (1 : ℤ)
+    exact this
     simpa only [Int.reduceNeg, Finset.mem_insert, Finset.mem_singleton, ← @Int.cast_inj K,
       Int.cast_zero, Int.cast_neg, Int.cast_one] using this
   · apply_fun (· / 2) at H
     rw [hn, smul_eq_mul] at H
-    have hk : k = n + 2⁻¹ - chainTopCoeff α β := by simpa [sub_div, add_div] using H
+    have hk  : k = n + 2⁻¹ - chainTopCoeff α β
+    simpa [sub_div, add_div] using H
     have := (rootSpace_zsmul_add_ne_bot_iff α β hα (chainTopCoeff α β - n)).mpr ?_
     swap
     · simp only [tsub_le_iff_right, le_add_iff_nonneg_right, Nat.cast_nonneg, neg_sub, true_and]
@@ -359,12 +361,13 @@ def reflectRoot (α β : Weight K H L) : Weight K H L where
 lemma reflectRoot_isNonZero (α β : Weight K H L) (hβ : β.IsNonZero) :
     (reflectRoot α β).IsNonZero := by
   intro e
-  have : β (coroot α) = 0 := by
-    by_cases hα : α.IsZero
-    · simp [coroot_eq_zero_iff.mpr hα]
-    apply add_left_injective (β (coroot α))
-    simpa [root_apply_coroot hα, mul_two] using congr_fun (sub_eq_zero.mp e) (coroot α)
-  have : reflectRoot α β = β := by ext; simp [reflectRoot, this]
+  have  : β (coroot α) = 0
+  by_cases hα : α.IsZero
+  · simp [coroot_eq_zero_iff.mpr hα]
+  apply add_left_injective (β (coroot α))
+  simpa [root_apply_coroot hα, mul_two] using congr_fun (sub_eq_zero.mp e) (coroot α)
+  have  : reflectRoot α β = β
+  ext; simp [reflectRoot, this]
   exact hβ (this ▸ e)
 
 variable (H)

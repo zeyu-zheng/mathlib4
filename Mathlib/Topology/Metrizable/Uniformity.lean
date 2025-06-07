@@ -113,37 +113,40 @@ theorem le_two_mul_dist_ofPreNNDist (d : X → X → ℝ≥0) (dist_self : ∀ x
     Then `d x₀ xₖ ≤ L`, `d xₖ xₖ₊₁ ≤ L`, and `d xₖ₊₁ xₙ ≤ L`, thus `d x₀ xₙ ≤ 2 * L`. -/
   rw [dist_ofPreNNDist, ← NNReal.coe_two, ← NNReal.coe_mul, NNReal.mul_iInf, NNReal.coe_le_coe]
   refine le_ciInf fun l => ?_
-  have hd₀_trans : Transitive fun x y => d x y = 0 := by
-    intro a b c hab hbc
-    rw [← nonpos_iff_eq_zero]
-    simpa only [nonpos_iff_eq_zero, hab, hbc, dist_self c, max_self, mul_zero] using hd a b c c
+  have hd₀_trans  : Transitive fun x y => d x y = 0
+  intro a b c hab hbc
+  rw [← nonpos_iff_eq_zero]
+  simpa only [nonpos_iff_eq_zero, hab, hbc, dist_self c, max_self, mul_zero] using hd a b c c
   haveI : IsTrans X fun x y => d x y = 0 := ⟨hd₀_trans⟩
   induction' hn : length l using Nat.strong_induction_on with n ihn generalizing x y l
   simp only at ihn
   subst n
   set L := zipWith d (x::l) (l ++ [y])
-  have hL_len : length L = length l + 1 := by simp [L]
+  have hL_len  : length L = length l + 1
+  simp [L]
   rcases eq_or_ne (d x y) 0 with hd₀ | hd₀
   · simp only [hd₀, zero_le]
   rsuffices ⟨z, z', hxz, hzz', hz'y⟩ : ∃ z z' : X, d x z ≤ L.sum ∧ d z z' ≤ L.sum ∧ d z' y ≤ L.sum
   · exact (hd x z z' y).trans (mul_le_mul_left' (max_le hxz (max_le hzz' hz'y)) _)
   set s : Set ℕ := { m : ℕ | 2 * (take m L).sum ≤ L.sum }
-  have hs₀ : 0 ∈ s := by simp [s]
+  have hs₀  : 0 ∈ s
+  simp [s]
   have hsne : s.Nonempty := ⟨0, hs₀⟩
   obtain ⟨M, hMl, hMs⟩ : ∃ M ≤ length l, IsGreatest s M := by
-    have hs_ub : length l ∈ upperBounds s := by
-      intro m hm
-      rw [← not_lt, Nat.lt_iff_add_one_le, ← hL_len]
-      intro hLm
-      rw [mem_setOf_eq, take_all_of_le hLm, two_mul, add_le_iff_nonpos_left, nonpos_iff_eq_zero,
-          sum_eq_zero_iff, ← forall_iff_forall_mem, forall_zipWith,
-          ← chain_append_singleton_iff_forall₂]
-          at hm <;>
-        [skip; simp]
-      exact hd₀ (hm.rel (mem_append.2 <| Or.inr <| mem_singleton_self _))
+    have hs_ub  : length l ∈ upperBounds s
+    intro m hm
+    rw [← not_lt, Nat.lt_iff_add_one_le, ← hL_len]
+    intro hLm
+    rw [mem_setOf_eq, take_all_of_le hLm, two_mul, add_le_iff_nonpos_left, nonpos_iff_eq_zero,
+        sum_eq_zero_iff, ← forall_iff_forall_mem, forall_zipWith,
+        ← chain_append_singleton_iff_forall₂]
+        at hm <;>
+      [skip; simp]
+    exact hd₀ (hm.rel (mem_append.2 <| Or.inr <| mem_singleton_self _))
     have hs_bdd : BddAbove s := ⟨length l, hs_ub⟩
     exact ⟨sSup s, csSup_le hsne hs_ub, ⟨Nat.sSup_mem hsne hs_bdd, fun k => le_csSup hs_bdd⟩⟩
-  have hM_lt : M < length L := by rwa [hL_len, Nat.lt_succ_iff]
+  have hM_lt  : M < length L
+  rwa [hL_len, Nat.lt_succ_iff]
   have hM_ltx : M < length (x::l) := lt_length_left_of_zipWith hM_lt
   have hM_lty : M < length (l ++ [y]) := lt_length_right_of_zipWith hM_lt
   refine ⟨(x::l)[M], (l ++ [y])[M], ?_, ?_, ?_⟩
@@ -275,11 +278,11 @@ lemma TotallyBounded.isSeparable [UniformSpace X] [i : IsCountablyGenerated (�
     {s : Set X} (h : TotallyBounded s) : TopologicalSpace.IsSeparable s := by
   letI := (UniformSpace.pseudoMetricSpace (X := X)).toPseudoEMetricSpace
   rw [EMetric.totallyBounded_iff] at h
-  have h' : ∀ ε > 0, ∃ t, Set.Countable t ∧ s ⊆ ⋃ y ∈ t, EMetric.closedBall y ε := by
-    intro ε hε
-    obtain ⟨t, ht⟩ := h ε hε
-    refine ⟨t, ht.1.countable, subset_trans ht.2 ?_⟩
-    gcongr
-    exact EMetric.ball_subset_closedBall
+  have h'  : ∀ ε > 0, ∃ t, Set.Countable t ∧ s ⊆ ⋃ y ∈ t, EMetric.closedBall y ε
+  intro ε hε
+  obtain ⟨t, ht⟩ := h ε hε
+  refine ⟨t, ht.1.countable, subset_trans ht.2 ?_⟩
+  gcongr
+  exact EMetric.ball_subset_closedBall
   obtain ⟨t, _, htc, hts⟩ := EMetric.subset_countable_closure_of_almost_dense_set s h'
   exact ⟨t, htc, hts⟩

@@ -180,11 +180,11 @@ theorem normalizer_eq_self_iff :
     rwa [← LieModuleHom.map_lie, LieSubmodule.Quotient.mk_eq_zero] at hx
   · intro x hx
     let y := LieSubmodule.Quotient.mk' H.toLieSubmodule x
-    have hy : y ∈ LieModule.maxTrivSubmodule R H (L ⧸ H.toLieSubmodule) := by
-      rintro ⟨z, hz⟩
-      rw [← LieModuleHom.map_lie, LieSubmodule.Quotient.mk_eq_zero, coe_bracket_of_module,
-        Submodule.coe_mk, mem_toLieSubmodule]
-      exact (H.mem_normalizer_iff' x).mp hx z hz
+    have hy  : y ∈ LieModule.maxTrivSubmodule R H (L ⧸ H.toLieSubmodule)
+    rintro ⟨z, hz⟩
+    rw [← LieModuleHom.map_lie, LieSubmodule.Quotient.mk_eq_zero, coe_bracket_of_module,
+      Submodule.coe_mk, mem_toLieSubmodule]
+    exact (H.mem_normalizer_iff' x).mp hx z hz
     simpa [y] using h y hy
 
 end LieSubalgebra

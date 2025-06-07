@@ -683,8 +683,8 @@ private theorem add''_char (r₁ : X) (s₁ : S) (r₂ : X) (s₂ : S) (rb : R) 
   generalize oreDenom (s₁ : R) s₂ = sa at *
   rw [oreDiv_eq_iff]
   rcases oreCondition sb sa with ⟨rc, sc, hc⟩
-  have : sc * rb * s₂ = rc * ra * s₂ := by
-    rw [mul_assoc rc, ← ha, ← mul_assoc, ← hc, mul_assoc, mul_assoc, hb]
+  have  : sc * rb * s₂ = rc * ra * s₂
+  rw [mul_assoc rc, ← ha, ← mul_assoc, ← hc, mul_assoc, mul_assoc, hb]
   rcases ore_right_cancel _ _ s₂ this with ⟨sd, hd⟩
   use sd * sc
   use sd * rc

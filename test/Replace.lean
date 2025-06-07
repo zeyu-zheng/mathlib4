@@ -23,7 +23,8 @@ example (z : Int) : Nat := by
   assumption
 
 example : True := by
-  have : 1 + 1 = 2 := by simp_arith
+  have  : 1 + 1 = 2
+  simp_arith
   replace : 2 + 2 = 4
   simp_arith
   trivial

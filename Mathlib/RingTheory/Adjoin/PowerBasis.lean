@@ -95,16 +95,16 @@ theorem repr_gen_pow_isIntegral [IsDomain S]
     ∀ i, IsIntegral R (B.basis.repr (B.gen ^ n) i) := by
   intro i
   let Q := X ^ n %ₘ minpoly R B.gen
-  have : B.gen ^ n = aeval B.gen Q := by
-    rw [← @aeval_X_pow R _ _ _ _ B.gen, ← modByMonic_add_div (X ^ n) (minpoly.monic hB)]
-    simp
+  have  : B.gen ^ n = aeval B.gen Q
+  rw [← @aeval_X_pow R _ _ _ _ B.gen, ← modByMonic_add_div (X ^ n) (minpoly.monic hB)]
+  simp
   by_cases hQ : Q = 0
   · simp [this, hQ, isIntegral_zero]
-  have hlt : Q.natDegree < B.dim := by
-    rw [← B.natDegree_minpoly, hmin, (minpoly.monic hB).natDegree_map,
-      natDegree_lt_natDegree_iff hQ]
-    letI : Nontrivial R := Nontrivial.of_polynomial_ne hQ
-    exact degree_modByMonic_lt _ (minpoly.monic hB)
+  have hlt  : Q.natDegree < B.dim
+  rw [← B.natDegree_minpoly, hmin, (minpoly.monic hB).natDegree_map,
+    natDegree_lt_natDegree_iff hQ]
+  letI : Nontrivial R := Nontrivial.of_polynomial_ne hQ
+  exact degree_modByMonic_lt _ (minpoly.monic hB)
   rw [this, aeval_eq_sum_range' hlt]
   simp only [map_sum, LinearEquiv.map_smulₛₗ, RingHom.id_apply, Finset.sum_apply']
   refine IsIntegral.sum _ fun j hj => ?_

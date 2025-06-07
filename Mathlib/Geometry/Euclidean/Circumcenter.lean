@@ -203,22 +203,22 @@ theorem _root_.AffineIndependent.existsUnique_dist_eq {ι : Type*} [hne : Nonemp
         rw [hi default, hdist]
     · have i := hne.some
       let ι2 := { x // x ≠ i }
-      have hc : Fintype.card ι2 = m + 1 := by
-        rw [Fintype.card_of_subtype (Finset.univ.filter fun x => x ≠ i)]
-        · rw [Finset.filter_not]
-          -- Porting note: removed `simp_rw [eq_comm]` and used `filter_eq'` instead of `filter_eq`
-          rw [Finset.filter_eq' _ i, if_pos (Finset.mem_univ _),
-            Finset.card_sdiff (Finset.subset_univ _), Finset.card_singleton, Finset.card_univ, hn]
-          simp
-        · simp
+      have hc  : Fintype.card ι2 = m + 1
+      rw [Fintype.card_of_subtype (Finset.univ.filter fun x => x ≠ i)]
+      · rw [Finset.filter_not]
+        -- Porting note: removed `simp_rw [eq_comm]` and used `filter_eq'` instead of `filter_eq`
+        rw [Finset.filter_eq' _ i, if_pos (Finset.mem_univ _),
+          Finset.card_sdiff (Finset.subset_univ _), Finset.card_singleton, Finset.card_univ, hn]
+        simp
+      · simp
       haveI : Nonempty ι2 := Fintype.card_pos_iff.1 (hc.symm ▸ Nat.zero_lt_succ _)
       have ha2 : AffineIndependent ℝ fun i2 : ι2 => p i2 := ha.subtype _
       replace hm := hm ha2 _ hc
-      have hr : Set.range p = insert (p i) (Set.range fun i2 : ι2 => p i2) := by
-        change _ = insert _ (Set.range fun i2 : { x | x ≠ i } => p i2)
-        rw [← Set.image_eq_range, ← Set.image_univ, ← Set.image_insert_eq]
-        congr with j
-        simp [Classical.em]
+      have hr  : Set.range p = insert (p i) (Set.range fun i2 : ι2 => p i2)
+      change _ = insert _ (Set.range fun i2 : { x | x ≠ i } => p i2)
+      rw [← Set.image_eq_range, ← Set.image_univ, ← Set.image_insert_eq]
+      congr with j
+      simp [Classical.em]
       rw [hr, ← affineSpan_insert_affineSpan]
       refine existsUnique_dist_eq_of_insert (Set.range_nonempty _) (subset_spanPoints ℝ _) ?_ hm
       convert ha.not_mem_affineSpan_diff i Set.univ
@@ -496,12 +496,12 @@ def pointIndexEmbedding (n : ℕ) : Fin (n + 1) ↪ PointsWithCircumcenterIndex 
 theorem sum_pointsWithCircumcenter {α : Type*} [AddCommMonoid α] {n : ℕ}
     (f : PointsWithCircumcenterIndex n → α) :
     ∑ i, f i = (∑ i : Fin (n + 1), f (pointIndex i)) + f circumcenterIndex := by
-  have h : univ = insert circumcenterIndex (univ.map (pointIndexEmbedding n)) := by
-    ext x
-    refine ⟨fun h => ?_, fun _ => mem_univ _⟩
-    cases' x with i
-    · exact mem_insert_of_mem (mem_map_of_mem _ (mem_univ i))
-    · exact mem_insert_self _ _
+  have h  : univ = insert circumcenterIndex (univ.map (pointIndexEmbedding n))
+  ext x
+  refine ⟨fun h => ?_, fun _ => mem_univ _⟩
+  cases' x with i
+  · exact mem_insert_of_mem (mem_map_of_mem _ (mem_univ i))
+  · exact mem_insert_self _ _
   change _ = (∑ i, f (pointIndexEmbedding n i)) + _
   rw [add_comm, h, ← sum_map, sum_insert]
   simp_rw [Finset.mem_map, not_exists]
@@ -635,7 +635,8 @@ theorem reflection_circumcenter_eq_affineCombination_of_pointsWithCircumcenter {
     reflection (affineSpan ℝ (s.points '' {i₁, i₂})) s.circumcenter =
       (univ : Finset (PointsWithCircumcenterIndex n)).affineCombination ℝ s.pointsWithCircumcenter
         (reflectionCircumcenterWeightsWithCircumcenter i₁ i₂) := by
-  have hc : card ({i₁, i₂} : Finset (Fin (n + 1))) = 2 := by simp [h]
+  have hc  : card ({i₁, i₂} : Finset (Fin (n + 1))) = 2
+  simp [h]
   -- Making the next line a separate definition helps the elaborator:
   set W : AffineSubspace ℝ P := affineSpan ℝ (s.points '' {i₁, i₂})
   have h_faces :
@@ -700,11 +701,11 @@ theorem exists_circumradius_eq_of_cospherical_subset {s : AffineSubspace ℝ P} 
   rcases hc with ⟨c, hc, r, hcr⟩
   use r
   intro sx hsxps
-  have hsx : affineSpan ℝ (Set.range sx.points) = s := by
-    refine
-      sx.independent.affineSpan_eq_of_le_of_card_eq_finrank_add_one
-        (spanPoints_subset_coe_of_subset_coe (hsxps.trans h)) ?_
-    simp [hd]
+  have hsx  : affineSpan ℝ (Set.range sx.points) = s
+  refine
+    sx.independent.affineSpan_eq_of_le_of_card_eq_finrank_add_one
+      (spanPoints_subset_coe_of_subset_coe (hsxps.trans h)) ?_
+  simp [hd]
   have hc : c ∈ affineSpan ℝ (Set.range sx.points) := hsx.symm ▸ hc
   exact
     (sx.eq_circumradius_of_dist_eq hc fun i =>
@@ -748,11 +749,11 @@ theorem exists_circumcenter_eq_of_cospherical_subset {s : AffineSubspace ℝ P} 
   rcases hc with ⟨c, hc, r, hcr⟩
   use c
   intro sx hsxps
-  have hsx : affineSpan ℝ (Set.range sx.points) = s := by
-    refine
-      sx.independent.affineSpan_eq_of_le_of_card_eq_finrank_add_one
-        (spanPoints_subset_coe_of_subset_coe (hsxps.trans h)) ?_
-    simp [hd]
+  have hsx  : affineSpan ℝ (Set.range sx.points) = s
+  refine
+    sx.independent.affineSpan_eq_of_le_of_card_eq_finrank_add_one
+      (spanPoints_subset_coe_of_subset_coe (hsxps.trans h)) ?_
+  simp [hd]
   have hc : c ∈ affineSpan ℝ (Set.range sx.points) := hsx.symm ▸ hc
   exact
     (sx.eq_circumcenter_of_dist_eq hc fun i =>

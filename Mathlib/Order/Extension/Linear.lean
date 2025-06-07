@@ -25,29 +25,29 @@ open scoped Classical
 theorem extend_partialOrder {α : Type u} (r : α → α → Prop) [IsPartialOrder α r] :
     ∃ s : α → α → Prop, IsLinearOrder α s ∧ r ≤ s := by
   let S := { s | IsPartialOrder α s }
-  have hS : ∀ c, c ⊆ S → IsChain (· ≤ ·) c → ∀ y ∈ c, ∃ ub ∈ S, ∀ z ∈ c, z ≤ ub := by
-    rintro c hc₁ hc₂ s hs
-    haveI := (hc₁ hs).1
-    refine ⟨sSup c, ?_, fun z hz => le_sSup hz⟩
-    refine
-        { refl := ?_
-          trans := ?_
-          antisymm := ?_ } <;>
-      simp_rw [binary_relation_sSup_iff]
-    · intro x
-      exact ⟨s, hs, refl x⟩
-    · rintro x y z ⟨s₁, h₁s₁, h₂s₁⟩ ⟨s₂, h₁s₂, h₂s₂⟩
-      haveI : IsPartialOrder _ _ := hc₁ h₁s₁
-      haveI : IsPartialOrder _ _ := hc₁ h₁s₂
-      cases' hc₂.total h₁s₁ h₁s₂ with h h
-      · exact ⟨s₂, h₁s₂, _root_.trans (h _ _ h₂s₁) h₂s₂⟩
-      · exact ⟨s₁, h₁s₁, _root_.trans h₂s₁ (h _ _ h₂s₂)⟩
-    · rintro x y ⟨s₁, h₁s₁, h₂s₁⟩ ⟨s₂, h₁s₂, h₂s₂⟩
-      haveI : IsPartialOrder _ _ := hc₁ h₁s₁
-      haveI : IsPartialOrder _ _ := hc₁ h₁s₂
-      cases' hc₂.total h₁s₁ h₁s₂ with h h
-      · exact antisymm (h _ _ h₂s₁) h₂s₂
-      · apply antisymm h₂s₁ (h _ _ h₂s₂)
+  have hS  : ∀ c, c ⊆ S → IsChain (· ≤ ·) c → ∀ y ∈ c, ∃ ub ∈ S, ∀ z ∈ c, z ≤ ub
+  rintro c hc₁ hc₂ s hs
+  haveI := (hc₁ hs).1
+  refine ⟨sSup c, ?_, fun z hz => le_sSup hz⟩
+  refine
+      { refl := ?_
+        trans := ?_
+        antisymm := ?_ } <;>
+    simp_rw [binary_relation_sSup_iff]
+  · intro x
+    exact ⟨s, hs, refl x⟩
+  · rintro x y z ⟨s₁, h₁s₁, h₂s₁⟩ ⟨s₂, h₁s₂, h₂s₂⟩
+    haveI : IsPartialOrder _ _ := hc₁ h₁s₁
+    haveI : IsPartialOrder _ _ := hc₁ h₁s₂
+    cases' hc₂.total h₁s₁ h₁s₂ with h h
+    · exact ⟨s₂, h₁s₂, _root_.trans (h _ _ h₂s₁) h₂s₂⟩
+    · exact ⟨s₁, h₁s₁, _root_.trans h₂s₁ (h _ _ h₂s₂)⟩
+  · rintro x y ⟨s₁, h₁s₁, h₂s₁⟩ ⟨s₂, h₁s₂, h₂s₂⟩
+    haveI : IsPartialOrder _ _ := hc₁ h₁s₁
+    haveI : IsPartialOrder _ _ := hc₁ h₁s₂
+    cases' hc₂.total h₁s₁ h₁s₂ with h h
+    · exact antisymm (h _ _ h₂s₁) h₂s₂
+    · apply antisymm h₂s₁ (h _ _ h₂s₂)
   obtain ⟨s, hs₁ : IsPartialOrder _ _, rs, hs₂⟩ := zorn_nonempty_partialOrder₀ S hS r ‹_›
   haveI : IsPartialOrder α s := hs₁
   refine ⟨s, { total := ?_, refl := hs₁.refl, trans := hs₁.trans, antisymm := hs₁.antisymm } , rs⟩

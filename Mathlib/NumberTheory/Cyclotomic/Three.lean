@@ -46,11 +46,11 @@ lemma _root_.IsPrimitiveRoot.toInteger_cube_eq_one : hζ.toInteger ^ 3 = 1 :=
 -- Here `List` is more convenient than `Finset`, even if further from the informal statement.
 -- For example, `fin_cases` below does not work with a `Finset`.
 theorem Units.mem : u ∈ [1, -1, η, -η, η ^ 2, -η ^ 2] := by
-  have hrank : rank K = 0 := by
-    dsimp only [rank]
-    rw [card_eq_nrRealPlaces_add_nrComplexPlaces, nrRealPlaces_eq_zero (n := 3) K (by decide),
-      zero_add, nrComplexPlaces_eq_totient_div_two (n := 3)]
-    rfl
+  have hrank  : rank K = 0
+  dsimp only [rank]
+  rw [card_eq_nrRealPlaces_add_nrComplexPlaces, nrRealPlaces_eq_zero (n := 3) K (by decide),
+    zero_add, nrComplexPlaces_eq_totient_div_two (n := 3)]
+  rfl
   obtain ⟨⟨x, e⟩, hxu, -⟩ := exist_unique_eq_mul_prod _ u
   replace hxu : u = x := by
     rw [← mul_one x.1, hxu]
@@ -114,7 +114,8 @@ theorem eq_one_or_neg_one_of_unit_of_congruent (hcong : ∃ n : ℤ, λ ^ 2 ∣ 
       (by decide)
     obtain ⟨n, x, hx⟩ := hcong
     refine ⟨-n, -x, sub_eq_iff_eq_add.2 ?_⟩
-    have : (hζ.pow_of_coprime 2 (by decide)).toInteger = hζ.toInteger ^ 2 := by ext; simp
+    have  : (hζ.pow_of_coprime 2 (by decide)).toInteger = hζ.toInteger ^ 2
+    ext; simp
     simp only [this, PNat.val_ofNat, Nat.cast_ofNat, mul_neg, Int.cast_neg, ← neg_add, ←
       sub_eq_iff_eq_add.1 hx, Units.val_neg, val_pow_eq_pow_val, IsUnit.unit_spec, neg_neg]
 
@@ -128,10 +129,10 @@ lemma lambda_dvd_or_dvd_sub_one_or_dvd_add_one : λ ∣ x ∨ λ ∣ x - 1 ∨ �
   let _ : Ring (𝓞 K ⧸ Ideal.span {λ}) := CommRing.toRing -- to speed up instance synthesis
   let _ : AddGroup (𝓞 K ⧸ Ideal.span {λ}) := AddGroupWithOne.toAddGroup -- dito
   have := Finset.mem_univ (Ideal.Quotient.mk (Ideal.span {λ}) x)
-  have h3 : Fintype.card (𝓞 K ⧸ Ideal.span {λ}) = 3 := by
-    rw [← Nat.card_eq_fintype_card, hζ.card_quotient_toInteger_sub_one (by decide),
-      hζ.norm_toInteger_sub_one_of_prime_ne_two' (by decide)]
-    simp only [PNat.val_ofNat, Nat.cast_ofNat, Int.reduceAbs]
+  have h3  : Fintype.card (𝓞 K ⧸ Ideal.span {λ}) = 3
+  rw [← Nat.card_eq_fintype_card, hζ.card_quotient_toInteger_sub_one (by decide),
+    hζ.norm_toInteger_sub_one_of_prime_ne_two' (by decide)]
+  simp only [PNat.val_ofNat, Nat.cast_ofNat, Int.reduceAbs]
   rw [Finset.univ_of_card_le_three h3.le] at this
   simp only [Finset.mem_insert, Finset.mem_singleton] at this
   rcases this with h | h | h

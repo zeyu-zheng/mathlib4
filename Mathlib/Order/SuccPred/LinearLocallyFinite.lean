@@ -83,14 +83,14 @@ theorem isGLB_Ioc_of_isGLB_Ioi {i j k : ι} (hij_lt : i < j) (h : IsGLB (Set.Ioi
 theorem isMax_of_succFn_le [LocallyFiniteOrder ι] (i : ι) (hi : succFn i ≤ i) : IsMax i := by
   refine fun j _ ↦ not_lt.mp fun hij_lt ↦ ?_
   have h_succFn_eq : succFn i = i := le_antisymm hi (le_succFn i)
-  have h_glb : IsGLB (Finset.Ioc i j : Set ι) i := by
-    rw [Finset.coe_Ioc]
-    have h := succFn_spec i
-    rw [h_succFn_eq] at h
-    exact isGLB_Ioc_of_isGLB_Ioi hij_lt h
-  have hi_mem : i ∈ Finset.Ioc i j := by
-    refine Finset.isGLB_mem _ h_glb ?_
-    exact ⟨_, Finset.mem_Ioc.mpr ⟨hij_lt, le_rfl⟩⟩
+  have h_glb  : IsGLB (Finset.Ioc i j : Set ι) i
+  rw [Finset.coe_Ioc]
+  have h := succFn_spec i
+  rw [h_succFn_eq] at h
+  exact isGLB_Ioc_of_isGLB_Ioi hij_lt h
+  have hi_mem  : i ∈ Finset.Ioc i j
+  refine Finset.isGLB_mem _ h_glb ?_
+  exact ⟨_, Finset.mem_Ioc.mpr ⟨hij_lt, le_rfl⟩⟩
   rw [Finset.mem_Ioc] at hi_mem
   exact lt_irrefl i hi_mem.1
 
@@ -127,13 +127,13 @@ instance (priority := 100) LinearLocallyFiniteOrder.isSuccArchimedean [LocallyFi
     · refine ⟨0, ?_⟩
       simpa only [Function.iterate_zero, id] using hij
     by_contra! h
-    have h_lt : ∀ n, succ^[n] i < j := by
-      intro n
-      induction' n with n hn
-      · simpa only [Function.iterate_zero, id] using hij
-      · refine lt_of_le_of_ne ?_ (h _)
-        rw [Function.iterate_succ', Function.comp_apply]
-        exact succ_le_of_lt hn
+    have h_lt  : ∀ n, succ^[n] i < j
+    intro n
+    induction' n with n hn
+    · simpa only [Function.iterate_zero, id] using hij
+    · refine lt_of_le_of_ne ?_ (h _)
+      rw [Function.iterate_succ', Function.comp_apply]
+      exact succ_le_of_lt hn
     have h_mem : ∀ n, succ^[n] i ∈ Finset.Icc i j :=
       fun n ↦ Finset.mem_Icc.mpr ⟨le_succ_iterate n i, (h_lt n).le⟩
     obtain ⟨n, m, hnm, h_eq⟩ : ∃ n m, n < m ∧ succ^[n] i = succ^[m] i := by
@@ -242,11 +242,11 @@ theorem toZ_iterate_pred_of_not_isMin (n : ℕ) (hn : ¬IsMin (pred^[n] i0)) :
     toZ i0 (pred^[n] i0) = -n := by
   cases' n with n n
   · simp only [Nat.zero_eq, Function.iterate_zero, id, toZ_of_eq, Nat.cast_zero, neg_zero]; rfl
-  have : pred^[n.succ] i0 < i0 := by
-    refine lt_of_le_of_ne (pred_iterate_le _ _) fun h_pred_iterate_eq ↦ hn ?_
-    have h_pred_eq_pred : pred^[n.succ] i0 = pred^[0] i0 := by
-      rwa [Function.iterate_zero, id]
-    exact isMin_iterate_pred_of_eq_of_ne h_pred_eq_pred (Nat.succ_ne_zero n)
+  have  : pred^[n.succ] i0 < i0
+  refine lt_of_le_of_ne (pred_iterate_le _ _) fun h_pred_iterate_eq ↦ hn ?_
+  have h_pred_eq_pred  : pred^[n.succ] i0 = pred^[0] i0
+  rwa [Function.iterate_zero, id]
+  exact isMin_iterate_pred_of_eq_of_ne h_pred_eq_pred (Nat.succ_ne_zero n)
   let m := (-toZ i0 (pred^[n.succ] i0)).toNat
   have h_eq : pred^[m] i0 = pred^[n.succ] i0 := iterate_pred_toZ _ this
   by_cases hmn : m = n + 1
@@ -275,11 +275,11 @@ theorem toZ_mono {i j : ι} (h_le : i ≤ j) : toZ i0 i ≤ toZ i0 j := by
   rcases le_or_lt i0 i with hi | hi <;> rcases le_or_lt i0 j with hj | hj
   · let m := Nat.find (exists_succ_iterate_of_le h_le)
     have hm : succ^[m] i = j := Nat.find_spec (exists_succ_iterate_of_le h_le)
-    have hj_eq : j = succ^[(toZ i0 i).toNat + m] i0 := by
-      rw [← hm, add_comm]
-      nth_rw 1 [← iterate_succ_toZ i hi]
-      rw [Function.iterate_add]
-      rfl
+    have hj_eq  : j = succ^[(toZ i0 i).toNat + m] i0
+    rw [← hm, add_comm]
+    nth_rw 1 [← iterate_succ_toZ i hi]
+    rw [Function.iterate_add]
+    rfl
     by_contra h
     by_cases hm0 : m = 0
     · rw [hm0, Function.iterate_zero, id] at hm
@@ -296,11 +296,11 @@ theorem toZ_mono {i j : ι} (h_le : i ≤ j) : toZ i0 i ≤ toZ i0 j := by
   · exact (toZ_neg hi).le.trans (toZ_nonneg hj)
   · let m := Nat.find (exists_pred_iterate_of_le h_le)
     have hm : pred^[m] j = i := Nat.find_spec (exists_pred_iterate_of_le h_le)
-    have hj_eq : i = pred^[(-toZ i0 j).toNat + m] i0 := by
-      rw [← hm, add_comm]
-      nth_rw 1 [← iterate_pred_toZ j hj]
-      rw [Function.iterate_add]
-      rfl
+    have hj_eq  : i = pred^[(-toZ i0 j).toNat + m] i0
+    rw [← hm, add_comm]
+    nth_rw 1 [← iterate_pred_toZ j hj]
+    rw [Function.iterate_add]
+    rfl
     by_contra h
     by_cases hm0 : m = 0
     · rw [hm0, Function.iterate_zero, id] at hm

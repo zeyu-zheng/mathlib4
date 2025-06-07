@@ -123,29 +123,29 @@ private theorem one_sub_eps_mul_card_nonuniformWitness_le_card_star (hV : V ∈ 
     (hε₁ : ε ≤ 1) :
     (1 - ε / 10) * (G.nonuniformWitness ε U V).card ≤ ((star hP G ε hU V).biUnion id).card := by
   have hP₁ : 0 < P.parts.card := Finset.card_pos.2 ⟨_, hU⟩
-  have : (↑2 ^ P.parts.card : ℝ) * m / (U.card * ε) ≤ ε / 10 := by
-    rw [← div_div, div_le_iff']
-    swap
-    · sz_positivity
-    refine le_of_mul_le_mul_left ?_ (pow_pos zero_lt_two P.parts.card)
-    calc
-      ↑2 ^ P.parts.card * ((↑2 ^ P.parts.card * m : ℝ) / U.card) =
-          ((2 : ℝ) * 2) ^ P.parts.card * m / U.card := by
-        rw [mul_pow, ← mul_div_assoc, mul_assoc]
-      _ = ↑4 ^ P.parts.card * m / U.card := by norm_num
-      _ ≤ 1 := div_le_one_of_le (pow_mul_m_le_card_part hP hU) (cast_nonneg _)
-      _ ≤ ↑2 ^ P.parts.card * ε ^ 2 / 10 := by
-        refine (one_le_sq_iff <| by positivity).1 ?_
-        rw [div_pow, mul_pow, pow_right_comm, ← pow_mul ε,
-          one_le_div (sq_pos_of_ne_zero <| by norm_num)]
-        calc
-          (↑10 ^ 2) = 100 := by norm_num
-          _ ≤ ↑4 ^ P.parts.card * ε ^ 5 := hPε
-          _ ≤ ↑4 ^ P.parts.card * ε ^ 4 :=
-            (mul_le_mul_of_nonneg_left (pow_le_pow_of_le_one (by sz_positivity) hε₁ <| le_succ _)
-              (by positivity))
-          _ = (↑2 ^ 2) ^ P.parts.card * ε ^ (2 * 2) := by norm_num
-      _ = ↑2 ^ P.parts.card * (ε * (ε / 10)) := by rw [mul_div_assoc, sq, mul_div_assoc]
+  have  : (↑2 ^ P.parts.card : ℝ) * m / (U.card * ε) ≤ ε / 10
+  rw [← div_div, div_le_iff']
+  swap
+  · sz_positivity
+  refine le_of_mul_le_mul_left ?_ (pow_pos zero_lt_two P.parts.card)
+  calc
+    ↑2 ^ P.parts.card * ((↑2 ^ P.parts.card * m : ℝ) / U.card) =
+        ((2 : ℝ) * 2) ^ P.parts.card * m / U.card := by
+      rw [mul_pow, ← mul_div_assoc, mul_assoc]
+    _ = ↑4 ^ P.parts.card * m / U.card := by norm_num
+    _ ≤ 1 := div_le_one_of_le (pow_mul_m_le_card_part hP hU) (cast_nonneg _)
+    _ ≤ ↑2 ^ P.parts.card * ε ^ 2 / 10 := by
+      refine (one_le_sq_iff <| by positivity).1 ?_
+      rw [div_pow, mul_pow, pow_right_comm, ← pow_mul ε,
+        one_le_div (sq_pos_of_ne_zero <| by norm_num)]
+      calc
+        (↑10 ^ 2) = 100 := by norm_num
+        _ ≤ ↑4 ^ P.parts.card * ε ^ 5 := hPε
+        _ ≤ ↑4 ^ P.parts.card * ε ^ 4 :=
+          (mul_le_mul_of_nonneg_left (pow_le_pow_of_le_one (by sz_positivity) hε₁ <| le_succ _)
+            (by positivity))
+        _ = (↑2 ^ 2) ^ P.parts.card * ε ^ (2 * 2) := by norm_num
+    _ = ↑2 ^ P.parts.card * (ε * (ε / 10)) := by rw [mul_div_assoc, sq, mul_div_assoc]
   calc
     (↑1 - ε / 10) * (G.nonuniformWitness ε U V).card ≤
         (↑1 - ↑2 ^ P.parts.card * m / (U.card * ε)) * (G.nonuniformWitness ε U V).card :=
@@ -216,8 +216,8 @@ private theorem sum_card_subset_chunk_parts_le (m_pos : (0 : ℝ) < m)
 private theorem one_sub_le_m_div_m_add_one_sq [Nonempty α]
     (hPα : P.parts.card * 16 ^ P.parts.card ≤ card α) (hPε : ↑100 ≤ ↑4 ^ P.parts.card * ε ^ 5) :
     ↑1 - ε ^ 5 / ↑50 ≤ (m / (m + 1 : ℝ)) ^ 2 := by
-  have : (m : ℝ) / (m + 1) = 1 - 1 / (m + 1) := by
-    rw [one_sub_div coe_m_add_one_pos.ne', add_sub_cancel_right]
+  have  : (m : ℝ) / (m + 1) = 1 - 1 / (m + 1)
+  rw [one_sub_div coe_m_add_one_pos.ne', add_sub_cancel_right]
   rw [this, sub_sq, one_pow, mul_one]
   refine le_trans ?_ (le_add_of_nonneg_right <| sq_nonneg _)
   rw [sub_le_sub_iff_left, ← le_div_iff' (show (0 : ℝ) < 2 by norm_num), div_div,
@@ -232,9 +232,9 @@ private theorem m_add_one_div_m_le_one_add [Nonempty α]
     (hε₁ : ε ≤ 1) : ((m + 1 : ℝ) / m) ^ 2 ≤ ↑1 + ε ^ 5 / 49 := by
   rw [same_add_div]
   swap; · sz_positivity
-  have : ↑1 + ↑1 / (m : ℝ) ≤ ↑1 + ε ^ 5 / 100 := by
-    rw [add_le_add_iff_left, ← one_div_div (100 : ℝ)]
-    exact one_div_le_one_div_of_le (by sz_positivity) (hundred_div_ε_pow_five_le_m hPα hPε)
+  have  : ↑1 + ↑1 / (m : ℝ) ≤ ↑1 + ε ^ 5 / 100
+  rw [add_le_add_iff_left, ← one_div_div (100 : ℝ)]
+  exact one_div_le_one_div_of_le (by sz_positivity) (hundred_div_ε_pow_five_le_m hPα hPε)
   refine (pow_le_pow_left ?_ this 2).trans ?_
   · positivity
   rw [add_sq, one_pow, add_assoc, add_le_add_iff_left, mul_one, ← le_sub_iff_add_le',

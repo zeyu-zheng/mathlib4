@@ -78,17 +78,17 @@ theorem exists_sub_one_mem_and_smul_eq_zero_of_fg_of_le_smul {R : Type*} [CommRi
     ∃ r : R, r - 1 ∈ I ∧ ∀ n ∈ N, r • n = (0 : M) := by
   rw [fg_def] at hn
   rcases hn with ⟨s, hfs, hs⟩
-  have : ∃ r : R, r - 1 ∈ I ∧ N ≤ (I • span R s).comap (LinearMap.lsmul R M r) ∧ s ⊆ N := by
-    refine ⟨1, ?_, ?_, ?_⟩
-    · rw [sub_self]
-      exact I.zero_mem
-    · rw [hs]
-      intro n hn
-      rw [mem_comap]
-      change (1 : R) • n ∈ I • N
-      rw [one_smul]
-      exact hin hn
-    · rw [← span_le, hs]
+  have  : ∃ r : R, r - 1 ∈ I ∧ N ≤ (I • span R s).comap (LinearMap.lsmul R M r) ∧ s ⊆ N
+  refine ⟨1, ?_, ?_, ?_⟩
+  · rw [sub_self]
+    exact I.zero_mem
+  · rw [hs]
+    intro n hn
+    rw [mem_comap]
+    change (1 : R) • n ∈ I • N
+    rw [one_smul]
+    exact hin hn
+  · rw [← span_le, hs]
   clear hin hs
   revert this
   refine Set.Finite.dinduction_on _ hfs (fun H => ?_) @fun i s _ _ ih H => ?_
@@ -100,19 +100,19 @@ theorem exists_sub_one_mem_and_smul_eq_zero_of_fg_of_le_smul {R : Type*} [CommRi
   rcases H with ⟨r, hr1, hrn, hs⟩
   rw [← Set.singleton_union, span_union, smul_sup] at hrn
   rw [Set.insert_subset_iff] at hs
-  have : ∃ c : R, c - 1 ∈ I ∧ c • i ∈ I • span R s := by
-    specialize hrn hs.1
-    rw [mem_comap, mem_sup] at hrn
-    rcases hrn with ⟨y, hy, z, hz, hyz⟩
-    dsimp at hyz
-    rw [mem_smul_span_singleton] at hy
-    rcases hy with ⟨c, hci, rfl⟩
-    use r - c
-    constructor
-    · rw [sub_right_comm]
-      exact I.sub_mem hr1 hci
-    · rw [sub_smul, ← hyz, add_sub_cancel_left]
-      exact hz
+  have  : ∃ c : R, c - 1 ∈ I ∧ c • i ∈ I • span R s
+  specialize hrn hs.1
+  rw [mem_comap, mem_sup] at hrn
+  rcases hrn with ⟨y, hy, z, hz, hyz⟩
+  dsimp at hyz
+  rw [mem_smul_span_singleton] at hy
+  rcases hy with ⟨c, hci, rfl⟩
+  use r - c
+  constructor
+  · rw [sub_right_comm]
+    exact I.sub_mem hr1 hci
+  · rw [sub_smul, ← hyz, add_sub_cancel_left]
+    exact hz
   rcases this with ⟨c, hc1, hci⟩
   refine ⟨c * r, ?_, ?_, hs.2⟩
   · simpa only [mul_sub, mul_one, sub_add_sub_cancel] using I.add_mem (I.mul_mem_left c hr1) hc1
@@ -142,9 +142,9 @@ theorem _root_.Subalgebra.fg_bot_toSubmodule {R A : Type*} [CommSemiring R] [Sem
 
 theorem fg_unit {R A : Type*} [CommSemiring R] [Semiring A] [Algebra R A] (I : (Submodule R A)ˣ) :
     (I : Submodule R A).FG := by
-  have : (1 : A) ∈ (I * ↑I⁻¹ : Submodule R A) := by
-    rw [I.mul_inv]
-    exact one_le.mp le_rfl
+  have  : (1 : A) ∈ (I * ↑I⁻¹ : Submodule R A)
+  rw [I.mul_inv]
+  exact one_le.mp le_rfl
   obtain ⟨T, T', hT, hT', one_mem⟩ := mem_span_mul_finite_of_mem_mul this
   refine ⟨T, span_eq_of_le _ hT ?_⟩
   rw [← one_mul I, ← mul_one (span R (T : Set A))]
@@ -242,22 +242,22 @@ theorem fg_of_fg_map_of_fg_inf_ker {R M P : Type*} [Ring R] [AddCommGroup M] [Mo
   haveI := Classical.decEq P
   cases' hs1 with t1 ht1
   cases' hs2 with t2 ht2
-  have : ∀ y ∈ t1, ∃ x ∈ s, f x = y := by
-    intro y hy
-    have : y ∈ s.map f := by
-      rw [← ht1]
-      exact subset_span hy
-    rcases mem_map.1 this with ⟨x, hx1, hx2⟩
-    exact ⟨x, hx1, hx2⟩
-  have : ∃ g : P → M, ∀ y ∈ t1, g y ∈ s ∧ f (g y) = y := by
-    choose g hg1 hg2 using this
-    exists fun y => if H : y ∈ t1 then g y H else 0
-    intro y H
-    constructor
-    · simp only [dif_pos H]
-      apply hg1
-    · simp only [dif_pos H]
-      apply hg2
+  have  : ∀ y ∈ t1, ∃ x ∈ s, f x = y
+  intro y hy
+  have  : y ∈ s.map f
+  rw [← ht1]
+  exact subset_span hy
+  rcases mem_map.1 this with ⟨x, hx1, hx2⟩
+  exact ⟨x, hx1, hx2⟩
+  have  : ∃ g : P → M, ∀ y ∈ t1, g y ∈ s ∧ f (g y) = y
+  choose g hg1 hg2 using this
+  exists fun y => if H : y ∈ t1 then g y H else 0
+  intro y H
+  constructor
+  · simp only [dif_pos H]
+    apply hg1
+  · simp only [dif_pos H]
+    apply hg2
   cases' this with g hg
   clear this
   exists t1.image g ∪ t2
@@ -271,9 +271,9 @@ theorem fg_of_fg_map_of_fg_inf_ker {R M P : Type*} [Ring R] [AddCommGroup M] [Mo
       rw [ht2] at this
       exact this.1
   intro x hx
-  have : f x ∈ s.map f := by
-    rw [mem_map]
-    exact ⟨x, hx, rfl⟩
+  have  : f x ∈ s.map f
+  rw [mem_map]
+  exact ⟨x, hx, rfl⟩
   rw [← ht1, ← Set.image_id (t1 : Set P), Finsupp.mem_span_image_iff_total] at this
   rcases this with ⟨l, hl1, hl2⟩
   refine
@@ -369,14 +369,14 @@ theorem fg_iff_compact (s : Submodule R M) : s.FG ↔ CompleteLattice.IsCompactE
       exact fun n _ => singleton_span_isCompactElement n
     · intro h
       -- s is the Sup of the spans of its elements.
-      have sSup' : s = sSup (sp '' ↑s) := by
-        rw [sSup_eq_iSup, iSup_image, ← span_eq_iSup_of_singleton_spans, eq_comm, span_eq]
+      have sSup'  : s = sSup (sp '' ↑s)
+      rw [sSup_eq_iSup, iSup_image, ← span_eq_iSup_of_singleton_spans, eq_comm, span_eq]
       -- by h, s is then below (and equal to) the sup of the spans of finitely many elements.
       obtain ⟨u, ⟨huspan, husup⟩⟩ := h (sp '' ↑s) (le_of_eq sSup')
-      have ssup : s = u.sup id := by
-        suffices u.sup id ≤ s from le_antisymm husup this
-        rw [sSup', Finset.sup_id_eq_sSup]
-        exact sSup_le_sSup huspan
+      have ssup  : s = u.sup id
+      suffices u.sup id ≤ s from le_antisymm husup this
+      rw [sSup', Finset.sup_id_eq_sSup]
+      exact sSup_le_sSup huspan
       -- Porting note: had to split this out of the `obtain`
       have := Finset.subset_image_iff.mp huspan
       obtain ⟨t, ⟨-, rfl⟩⟩ := this
@@ -626,7 +626,8 @@ theorem Module.End.isNilpotent_iff_of_finite {R M : Type*} [CommSemiring R] [Add
   choose g hg using h
   use Finset.sup S g
   ext m
-  have hm : m ∈ Submodule.span R S := by simp [hS]
+  have hm  : m ∈ Submodule.span R S
+  simp [hS]
   induction hm using Submodule.span_induction'
   · next x hx => exact LinearMap.pow_map_zero_of_le (Finset.le_sup hx) (hg x)
   · simp

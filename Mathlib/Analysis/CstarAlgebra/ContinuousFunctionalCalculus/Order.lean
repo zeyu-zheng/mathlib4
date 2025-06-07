@@ -81,9 +81,9 @@ lemma IsSelfAdjoint.le_algebraMap_norm_self {a : A} (ha : IsSelfAdjoint a := by 
 
 lemma IsSelfAdjoint.neg_algebraMap_norm_le_self {a : A} (ha : IsSelfAdjoint a := by cfc_tac) :
     - (algebraMap ℝ A ‖a‖) ≤ a := by
-  have : - a ≤ algebraMap ℝ A ‖a‖ := by
-    rw [← norm_neg]
-    exact IsSelfAdjoint.le_algebraMap_norm_self (neg ha)
+  have  : - a ≤ algebraMap ℝ A ‖a‖
+  rw [← norm_neg]
+  exact IsSelfAdjoint.le_algebraMap_norm_self (neg ha)
   exact neg_le.mp this
 
 lemma CstarRing.mul_star_le_algebraMap_norm_sq {a : A} : a * star a ≤ algebraMap ℝ A (‖a‖ ^ 2) := by
@@ -137,15 +137,16 @@ lemma CstarRing.norm_le_norm_of_nonneg_of_le {a b : A} (ha : 0 ≤ a := by cfc_t
       this a b (by simpa) (by rwa [Unitization.inr_le_iff a b])
   intro a b ha hab
   have hb_nonneg : 0 ≤ b := ha.trans hab
-  have : 0 ≤ a := by cfc_tac
-  have h₂ : cfc (id : ℝ → ℝ) a ≤ cfc (fun _ => ‖b‖) a := by
-    calc _ = a := by rw [cfc_id ℝ a]
-      _ ≤ cfc id b := (cfc_id ℝ b) ▸ hab
-      _ ≤ cfc (fun _ => ‖b‖) b := by
-          refine cfc_mono fun x hx => ?_
-          calc x = ‖x‖ := (Real.norm_of_nonneg (spectrum_nonneg_of_nonneg hb_nonneg hx)).symm
-            _ ≤ ‖b‖ := spectrum.norm_le_norm_of_mem hx
-      _ = _ := by rw [cfc_const _ _, cfc_const _ _]
+  have  : 0 ≤ a
+  cfc_tac
+  have h₂  : cfc (id : ℝ → ℝ) a ≤ cfc (fun _ => ‖b‖) a
+  calc _ = a := by rw [cfc_id ℝ a]
+    _ ≤ cfc id b := (cfc_id ℝ b) ▸ hab
+    _ ≤ cfc (fun _ => ‖b‖) b := by
+        refine cfc_mono fun x hx => ?_
+        calc x = ‖x‖ := (Real.norm_of_nonneg (spectrum_nonneg_of_nonneg hb_nonneg hx)).symm
+          _ ≤ ‖b‖ := spectrum.norm_le_norm_of_mem hx
+    _ = _ := by rw [cfc_const _ _, cfc_const _ _]
   rw [cfc_le_iff id (fun _ => ‖b‖) a] at h₂
   exact h₂ ‖a‖ <| norm_mem_spectrum_of_nonneg ha
 
@@ -162,8 +163,10 @@ lemma CstarRing.conjugate_le_norm_smul {a b : A} (hb : IsSelfAdjoint b := by cfc
 
 lemma CstarRing.conjugate_le_norm_smul' {a b : A} (hb : IsSelfAdjoint b := by cfc_tac) :
     a * b * star a ≤ ‖b‖ • (a * star a) := by
-  have h₁ : a * b * star a = star (star a) * b * star a := by simp
-  have h₂ : a * star a = star (star a) * star a := by simp
+  have h₁  : a * b * star a = star (star a) * b * star a
+  simp
+  have h₂  : a * star a = star (star a) * star a
+  simp
   simp only [h₁, h₂]
   exact conjugate_le_norm_smul
 

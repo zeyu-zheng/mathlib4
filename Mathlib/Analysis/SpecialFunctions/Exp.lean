@@ -42,15 +42,16 @@ theorem exp_bound_sq (x z : ℂ) (hz : ‖z‖ ≤ 1) :
 
 theorem locally_lipschitz_exp {r : ℝ} (hr_nonneg : 0 ≤ r) (hr_le : r ≤ 1) (x y : ℂ)
     (hyx : ‖y - x‖ < r) : ‖exp y - exp x‖ ≤ (1 + r) * ‖exp x‖ * ‖y - x‖ := by
-  have hy_eq : y = x + (y - x) := by abel
-  have hyx_sq_le : ‖y - x‖ ^ 2 ≤ r * ‖y - x‖ := by
-    rw [pow_two]
-    exact mul_le_mul hyx.le le_rfl (norm_nonneg _) hr_nonneg
-  have h_sq : ∀ z, ‖z‖ ≤ 1 → ‖exp (x + z) - exp x‖ ≤ ‖z‖ * ‖exp x‖ + ‖exp x‖ * ‖z‖ ^ 2 := by
-    intro z hz
-    have : ‖exp (x + z) - exp x - z • exp x‖ ≤ ‖exp x‖ * ‖z‖ ^ 2 := exp_bound_sq x z hz
-    rw [← sub_le_iff_le_add', ← norm_smul z]
-    exact (norm_sub_norm_le _ _).trans this
+  have hy_eq  : y = x + (y - x)
+  abel
+  have hyx_sq_le  : ‖y - x‖ ^ 2 ≤ r * ‖y - x‖
+  rw [pow_two]
+  exact mul_le_mul hyx.le le_rfl (norm_nonneg _) hr_nonneg
+  have h_sq  : ∀ z, ‖z‖ ≤ 1 → ‖exp (x + z) - exp x‖ ≤ ‖z‖ * ‖exp x‖ + ‖exp x‖ * ‖z‖ ^ 2
+  intro z hz
+  have : ‖exp (x + z) - exp x - z • exp x‖ ≤ ‖exp x‖ * ‖z‖ ^ 2 := exp_bound_sq x z hz
+  rw [← sub_le_iff_le_add', ← norm_smul z]
+  exact (norm_sub_norm_le _ _).trans this
   calc
     ‖exp y - exp x‖ = ‖exp (x + (y - x)) - exp x‖ := by nth_rw 1 [hy_eq]
     _ ≤ ‖y - x‖ * ‖exp x‖ + ‖exp x‖ * ‖y - x‖ ^ 2 := h_sq (y - x) (hyx.le.trans hr_le)
@@ -269,11 +270,11 @@ theorem tendsto_mul_exp_add_div_pow_atTop (b c : ℝ) (n : ℕ) (hb : 0 < b) :
 `n` and any real numbers `b` and `c` such that `b` is nonzero. -/
 theorem tendsto_div_pow_mul_exp_add_atTop (b c : ℝ) (n : ℕ) (hb : 0 ≠ b) :
     Tendsto (fun x => x ^ n / (b * exp x + c)) atTop (𝓝 0) := by
-  have H : ∀ d e, 0 < d → Tendsto (fun x : ℝ => x ^ n / (d * exp x + e)) atTop (𝓝 0) := by
-    intro b' c' h
-    convert (tendsto_mul_exp_add_div_pow_atTop b' c' n h).inv_tendsto_atTop using 1
-    ext x
-    simp
+  have H  : ∀ d e, 0 < d → Tendsto (fun x : ℝ => x ^ n / (d * exp x + e)) atTop (𝓝 0)
+  intro b' c' h
+  convert (tendsto_mul_exp_add_div_pow_atTop b' c' n h).inv_tendsto_atTop using 1
+  ext x
+  simp
   cases' lt_or_gt_of_ne hb with h h
   · exact H b c h
   · convert (H (-b) (-c) (neg_pos.mpr h)).neg using 1

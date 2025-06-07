@@ -72,7 +72,8 @@ variable [Algebra K S] [Algebra K F]
 theorem PowerBasis.trace_gen_eq_nextCoeff_minpoly [Nontrivial S] (pb : PowerBasis K S) :
     Algebra.trace K S pb.gen = -(minpoly K pb.gen).nextCoeff := by
   have d_pos : 0 < pb.dim := PowerBasis.dim_pos pb
-  have d_pos' : 0 < (minpoly K pb.gen).natDegree := by simpa
+  have d_pos'  : 0 < (minpoly K pb.gen).natDegree
+  simpa
   haveI : Nonempty (Fin pb.dim) := ⟨⟨0, d_pos⟩⟩
   rw [trace_eq_matrix_trace pb.basis, trace_eq_neg_charpoly_coeff, charpoly_leftMulMatrix, ←
     pb.natDegree_minpoly, Fintype.card_fin, ← nextCoeff_of_natDegree_pos d_pos']

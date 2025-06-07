@@ -440,13 +440,13 @@ theorem comapMkQOrderEmbedding_eq (p' : Submodule R (M ⧸ p)) :
 theorem span_preimage_eq [RingHomSurjective τ₁₂] {f : M →ₛₗ[τ₁₂] M₂} {s : Set M₂} (h₀ : s.Nonempty)
     (h₁ : s ⊆ range f) : span R (f ⁻¹' s) = (span R₂ s).comap f := by
   suffices (span R₂ s).comap f ≤ span R (f ⁻¹' s) by exact le_antisymm (span_preimage_le f s) this
-  have hk : ker f ≤ span R (f ⁻¹' s) := by
-    let y := Classical.choose h₀
-    have hy : y ∈ s := Classical.choose_spec h₀
-    rw [ker_le_iff]
-    use y, h₁ hy
-    rw [← Set.singleton_subset_iff] at hy
-    exact Set.Subset.trans subset_span (span_mono (Set.preimage_mono hy))
+  have hk  : ker f ≤ span R (f ⁻¹' s)
+  let y := Classical.choose h₀
+  have hy : y ∈ s := Classical.choose_spec h₀
+  rw [ker_le_iff]
+  use y, h₁ hy
+  rw [← Set.singleton_subset_iff] at hy
+  exact Set.Subset.trans subset_span (span_mono (Set.preimage_mono hy))
   rw [← left_eq_sup] at hk
   rw [range_coe f] at h₁
   rw [hk, ← LinearMap.map_le_map_iff, map_span, map_comap_eq, Set.image_preimage_eq_of_subset h₁]

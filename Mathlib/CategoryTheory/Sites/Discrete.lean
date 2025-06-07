@@ -255,13 +255,13 @@ lemma sheafCompose_reflects_discrete [(sheafCompose J U).ReflectsIsomorphisms]
     [((sheafCompose J U).obj F).IsDiscrete J ht] :
     F.IsDiscrete J ht := by
   let f := (sheafCompose J U).map ((constantSheafAdj J A ht).counit.app F)
-  have : IsIso ((sheafToPresheaf J B).map f) := by
-    simp only [comp_obj, flip_obj_obj, sheafToPresheaf_obj, sheafCompose_obj_val, id_obj,
-      sheafToPresheaf_map, f, ← constantSheafAdj_counit_w]
-    exact inferInstanceAs (IsIso (_ ≫ ((sheafToPresheaf J B).map
-      ((constantSheafAdj J B ht).counit.app ((sheafCompose J U).obj F)))))
-  have : IsIso f := by
-    apply ReflectsIsomorphisms.reflects (sheafToPresheaf J B) _
+  have  : IsIso ((sheafToPresheaf J B).map f)
+  simp only [comp_obj, flip_obj_obj, sheafToPresheaf_obj, sheafCompose_obj_val, id_obj,
+    sheafToPresheaf_map, f, ← constantSheafAdj_counit_w]
+  exact inferInstanceAs (IsIso (_ ≫ ((sheafToPresheaf J B).map
+    ((constantSheafAdj J B ht).counit.app ((sheafCompose J U).obj F)))))
+  have  : IsIso f
+  apply ReflectsIsomorphisms.reflects (sheafToPresheaf J B) _
   apply ReflectsIsomorphisms.reflects (sheafCompose J U) _
 
 instance [h : F.IsDiscrete J ht] :

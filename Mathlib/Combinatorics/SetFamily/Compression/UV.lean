@@ -56,9 +56,9 @@ variable {α : Type*}
 theorem sup_sdiff_injOn [GeneralizedBooleanAlgebra α] (u v : α) :
     { x | Disjoint u x ∧ v ≤ x }.InjOn fun x => (x ⊔ u) \ v := by
   rintro a ha b hb hab
-  have h : ((a ⊔ u) \ v) \ u ⊔ v = ((b ⊔ u) \ v) \ u ⊔ v := by
-    dsimp at hab
-    rw [hab]
+  have h  : ((a ⊔ u) \ v) \ u ⊔ v = ((b ⊔ u) \ v) \ u ⊔ v
+  dsimp at hab
+  rw [hab]
   rwa [sdiff_sdiff_comm, ha.1.symm.sup_sdiff_cancel_right, sdiff_sdiff_comm,
     hb.1.symm.sup_sdiff_cancel_right, sdiff_sup_cancel ha.2, sdiff_sup_cancel hb.2] at h
 
@@ -235,16 +235,16 @@ theorem sup_sdiff_mem_of_mem_compression (ha : a ∈ 𝓒 u v s) (hva : v ≤ a)
   rw [mem_compression, compress_of_disjoint_of_le hua hva] at ha
   obtain ⟨_, ha⟩ | ⟨_, b, hb, rfl⟩ := ha
   · exact ha
-  have hu : u = ⊥ := by
-    suffices Disjoint u (u \ v) by rwa [(hua.mono_right hva).sdiff_eq_left, disjoint_self] at this
-    refine hua.mono_right ?_
-    rw [← compress_idem, compress_of_disjoint_of_le hua hva]
-    exact sdiff_le_sdiff_right le_sup_right
-  have hv : v = ⊥ := by
-    rw [← disjoint_self]
-    apply Disjoint.mono_right hva
-    rw [← compress_idem, compress_of_disjoint_of_le hua hva]
-    exact disjoint_sdiff_self_right
+  have hu  : u = ⊥
+  suffices Disjoint u (u \ v) by rwa [(hua.mono_right hva).sdiff_eq_left, disjoint_self] at this
+  refine hua.mono_right ?_
+  rw [← compress_idem, compress_of_disjoint_of_le hua hva]
+  exact sdiff_le_sdiff_right le_sup_right
+  have hv  : v = ⊥
+  rw [← disjoint_self]
+  apply Disjoint.mono_right hva
+  rw [← compress_idem, compress_of_disjoint_of_le hua hva]
+  exact disjoint_sdiff_self_right
   rwa [hu, hv, compress_self, sup_bot_eq, sdiff_bot]
 
 /-- If `a` is in the `u, v`-compression but `v ≤ a`, then `a` must have been in the original

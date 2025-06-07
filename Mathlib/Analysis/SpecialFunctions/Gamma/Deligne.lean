@@ -94,16 +94,16 @@ lemma differentiable_Gammaℝ_inv : Differentiable ℂ (fun s ↦ (Gammaℝ s)�
   · exact differentiable_one_div_Gamma.comp (differentiable_id.div_const _)
 
 lemma Gammaℝ_residue_zero : Tendsto (fun s ↦ s * Gammaℝ s) (𝓝[≠] 0) (𝓝 2) := by
-  have h : Tendsto (fun z : ℂ ↦ z / 2 * Gamma (z / 2)) (𝓝[≠] 0) (𝓝 1) := by
-    refine tendsto_self_mul_Gamma_nhds_zero.comp ?_
-    rw [tendsto_nhdsWithin_iff, (by simp : 𝓝 (0 : ℂ) = 𝓝 (0 / 2))]
-    exact ⟨(tendsto_id.div_const _).mono_left nhdsWithin_le_nhds,
-      eventually_of_mem self_mem_nhdsWithin fun x hx ↦ div_ne_zero hx two_ne_zero⟩
-  have h' : Tendsto (fun s : ℂ ↦ 2 * (π : ℂ) ^ (-s / 2)) (𝓝[≠] 0) (𝓝 2) := by
-    rw [(by simp : 𝓝 2 = 𝓝 (2 * (π : ℂ) ^ (-(0 : ℂ) / 2)))]
-    refine Tendsto.mono_left (ContinuousAt.tendsto ?_) nhdsWithin_le_nhds
-    exact continuousAt_const.mul ((continuousAt_const_cpow (ofReal_ne_zero.mpr pi_ne_zero)).comp
-      (continuousAt_id.neg.div_const _))
+  have h  : Tendsto (fun z : ℂ ↦ z / 2 * Gamma (z / 2)) (𝓝[≠] 0) (𝓝 1)
+  refine tendsto_self_mul_Gamma_nhds_zero.comp ?_
+  rw [tendsto_nhdsWithin_iff, (by simp : 𝓝 (0 : ℂ) = 𝓝 (0 / 2))]
+  exact ⟨(tendsto_id.div_const _).mono_left nhdsWithin_le_nhds,
+    eventually_of_mem self_mem_nhdsWithin fun x hx ↦ div_ne_zero hx two_ne_zero⟩
+  have h'  : Tendsto (fun s : ℂ ↦ 2 * (π : ℂ) ^ (-s / 2)) (𝓝[≠] 0) (𝓝 2)
+  rw [(by simp : 𝓝 2 = 𝓝 (2 * (π : ℂ) ^ (-(0 : ℂ) / 2)))]
+  refine Tendsto.mono_left (ContinuousAt.tendsto ?_) nhdsWithin_le_nhds
+  exact continuousAt_const.mul ((continuousAt_const_cpow (ofReal_ne_zero.mpr pi_ne_zero)).comp
+    (continuousAt_id.neg.div_const _))
   convert mul_one (2 : ℂ) ▸ (h'.mul h) using 2 with z
   rw [Gammaℝ]
   ring_nf
@@ -148,9 +148,9 @@ lemma Gammaℝ_one_sub_mul_Gammaℝ_one_add (s : ℂ) :
 /-- Another formulation of the reflection formula in terms of `Gammaℝ`. -/
 lemma Gammaℝ_div_Gammaℝ_one_sub {s : ℂ} (hs : ∀ (n : ℕ), s ≠ -(2 * n + 1)) :
     Gammaℝ s / Gammaℝ (1 - s) = Gammaℂ s * cos (π * s / 2) := by
-  have : Gammaℝ (s + 1) ≠ 0 := by
-    simpa only [Ne, Gammaℝ_eq_zero_iff, not_exists, ← eq_sub_iff_add_eq,
-      sub_eq_add_neg, ← neg_add]
+  have  : Gammaℝ (s + 1) ≠ 0
+  simpa only [Ne, Gammaℝ_eq_zero_iff, not_exists, ← eq_sub_iff_add_eq,
+    sub_eq_add_neg, ← neg_add]
   calc Gammaℝ s / Gammaℝ (1 - s)
   _ = (Gammaℝ s * Gammaℝ (s + 1)) / (Gammaℝ (1 - s) * Gammaℝ (1 + s)) := by
     rw [add_comm 1 s, mul_comm (Gammaℝ (1 - s)) (Gammaℝ (s + 1)), ← div_div,
@@ -163,15 +163,15 @@ lemma Gammaℝ_div_Gammaℝ_one_sub {s : ℂ} (hs : ∀ (n : ℕ), s ≠ -(2 * n
 Dirichlet characters (including Riemann zeta). -/
 lemma inv_Gammaℝ_one_sub {s : ℂ} (hs : ∀ (n : ℕ), s ≠ -n) :
     (Gammaℝ (1 - s))⁻¹ = Gammaℂ s * cos (π * s / 2) * (Gammaℝ s)⁻¹ := by
-  have h1 : Gammaℝ s ≠ 0 := by
-    rw [Ne, Gammaℝ_eq_zero_iff, not_exists]
-    intro n h
-    specialize hs (2 * n)
-    simp_all
-  have h2 : ∀ (n : ℕ), s ≠ -(2 * ↑n + 1) := by
-    intro n h
-    specialize hs (2 * n + 1)
-    simp_all
+  have h1  : Gammaℝ s ≠ 0
+  rw [Ne, Gammaℝ_eq_zero_iff, not_exists]
+  intro n h
+  specialize hs (2 * n)
+  simp_all
+  have h2  : ∀ (n : ℕ), s ≠ -(2 * ↑n + 1)
+  intro n h
+  specialize hs (2 * n + 1)
+  simp_all
   rw [← Gammaℝ_div_Gammaℝ_one_sub h2, ← div_eq_mul_inv, div_right_comm, div_self h1, one_div]
 
 /-- Formulation of reflection formula tailored to functional equations of L-functions of odd
@@ -184,13 +184,13 @@ lemma inv_Gammaℝ_two_sub {s : ℂ} (hs : ∀ (n : ℕ), s ≠ -n) :
     mul_one, Complex.sin_pi_div_two, mul_one, cpow_neg_one, mul_one, inv_inv,
     div_mul_cancel₀ _ (ofReal_ne_zero.mpr pi_ne_zero), inv_one]
   rw [← Ne, ← sub_ne_zero] at h
-  have h' (n : ℕ) : s - 1 ≠ -n := by
-    cases' n with m
-    · rwa [Nat.cast_zero, neg_zero]
-    · rw [Ne, sub_eq_iff_eq_add]
-      convert hs m using 2
-      push_cast
-      ring
+  have h' (n  : ℕ) : s - 1 ≠ -n
+  cases' n with m
+  · rwa [Nat.cast_zero, neg_zero]
+  · rw [Ne, sub_eq_iff_eq_add]
+    convert hs m using 2
+    push_cast
+    ring
   rw [(by ring : 2 - s = 1 - (s - 1)), inv_Gammaℝ_one_sub h',
     (by rw [sub_add_cancel] : Gammaℂ s = Gammaℂ (s - 1 + 1)), Gammaℂ_add_one h,
     (by ring : s + 1 = (s - 1) + 2), Gammaℝ_add_two h, mul_sub, sub_div, mul_one,

@@ -490,10 +490,11 @@ protected instance Invertible.star {R : Type*} [MulOneClass R] [StarMul R] (r : 
 
 theorem star_invOf {R : Type*} [Monoid R] [StarMul R] (r : R) [Invertible r]
     [Invertible (star r)] : star (⅟ r) = ⅟ (star r) := by
-  have : star (⅟ r) = star (⅟ r) * ((star r) * ⅟ (star r)) := by
-    simp only [mul_invOf_self, mul_one]
+  have  : star (⅟ r) = star (⅟ r) * ((star r) * ⅟ (star r))
+  simp only [mul_invOf_self, mul_one]
   rw [this, ← mul_assoc]
-  have : (star (⅟ r)) * (star r) = star 1 := by rw [← star_mul, mul_invOf_self]
+  have  : (star (⅟ r)) * (star r) = star 1
+  rw [← star_mul, mul_invOf_self]
   rw [this, star_one, one_mul]
 
 

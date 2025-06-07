@@ -195,9 +195,9 @@ theorem tendsto_approxBounded_of_norm_le {β} {f : α → β} [NormedAddCommGrou
   by_cases hfx0 : ‖f x‖ = 0
   · rw [norm_eq_zero] at hfx0
     rw [hfx0] at h_tendsto ⊢
-    have h_tendsto_norm : Tendsto (fun n => ‖hf.approx n x‖) atTop (𝓝 0) := by
-      convert h_tendsto.norm
-      rw [norm_zero]
+    have h_tendsto_norm  : Tendsto (fun n => ‖hf.approx n x‖) atTop (𝓝 0)
+    convert h_tendsto.norm
+    rw [norm_zero]
     refine squeeze_zero_norm (fun n => ?_) h_tendsto_norm
     calc
       ‖min 1 (c / ‖hf.approx n x‖) • hf.approx n x‖ =
@@ -271,11 +271,11 @@ theorem finStronglyMeasurable_of_set_sigmaFinite [TopologicalSpace β] [Zero β]
   have hS_meas : ∀ n, MeasurableSet (S n) := measurable_spanningSets (μ.restrict t)
   let f_approx := hf_meas.approx
   let fs n := SimpleFunc.restrict (f_approx n) (S n ∩ t)
-  have h_fs_t_compl : ∀ n, ∀ x, x ∉ t → fs n x = 0 := by
-    intro n x hxt
-    rw [SimpleFunc.restrict_apply _ ((hS_meas n).inter ht)]
-    refine Set.indicator_of_not_mem ?_ _
-    simp [hxt]
+  have h_fs_t_compl  : ∀ n, ∀ x, x ∉ t → fs n x = 0
+  intro n x hxt
+  rw [SimpleFunc.restrict_apply _ ((hS_meas n).inter ht)]
+  refine Set.indicator_of_not_mem ?_ _
+  simp [hxt]
   refine ⟨fs, ?_, fun x => ?_⟩
   · simp_rw [SimpleFunc.support_eq]
     refine fun n => (measure_biUnion_finset_le _ _).trans_lt ?_
@@ -841,12 +841,12 @@ theorem stronglyMeasurable_in_set {m : MeasurableSpace α} [TopologicalSpace β]
     ∃ fs : ℕ → α →ₛ β,
       (∀ x, Tendsto (fun n => fs n x) atTop (𝓝 (f x))) ∧ ∀ x ∉ s, ∀ n, fs n x = 0 := by
   let g_seq_s : ℕ → @SimpleFunc α m β := fun n => (hf.approx n).restrict s
-  have hg_eq : ∀ x ∈ s, ∀ n, g_seq_s n x = hf.approx n x := by
-    intro x hx n
-    rw [SimpleFunc.coe_restrict _ hs, Set.indicator_of_mem hx]
-  have hg_zero : ∀ x ∉ s, ∀ n, g_seq_s n x = 0 := by
-    intro x hx n
-    rw [SimpleFunc.coe_restrict _ hs, Set.indicator_of_not_mem hx]
+  have hg_eq  : ∀ x ∈ s, ∀ n, g_seq_s n x = hf.approx n x
+  intro x hx n
+  rw [SimpleFunc.coe_restrict _ hs, Set.indicator_of_mem hx]
+  have hg_zero  : ∀ x ∉ s, ∀ n, g_seq_s n x = 0
+  intro x hx n
+  rw [SimpleFunc.coe_restrict _ hs, Set.indicator_of_not_mem hx]
   refine ⟨g_seq_s, fun x => ?_, hg_zero⟩
   by_cases hx : x ∈ s
   · simp_rw [hg_eq x hx]
@@ -862,10 +862,10 @@ theorem stronglyMeasurable_of_measurableSpace_le_on {α E} {m m₂ : MeasurableS
     (hs : ∀ t, MeasurableSet[m] (s ∩ t) → MeasurableSet[m₂] (s ∩ t))
     (hf : StronglyMeasurable[m] f) (hf_zero : ∀ x ∉ s, f x = 0) :
     StronglyMeasurable[m₂] f := by
-  have hs_m₂ : MeasurableSet[m₂] s := by
-    rw [← Set.inter_univ s]
-    refine hs Set.univ ?_
-    rwa [Set.inter_univ]
+  have hs_m₂  : MeasurableSet[m₂] s
+  rw [← Set.inter_univ s]
+  refine hs Set.univ ?_
+  rwa [Set.inter_univ]
   obtain ⟨g_seq_s, hg_seq_tendsto, hg_seq_zero⟩ := stronglyMeasurable_in_set hs_m hf hf_zero
   let g_seq_s₂ : ℕ → @SimpleFunc α m₂ E := fun n =>
     { toFun := g_seq_s n
@@ -1815,17 +1815,17 @@ theorem measurable_uncurry_of_continuous_of_measurable {α β ι : Type*} [Topol
     refine ⟨h_str_meas.approx, fun j x => ?_⟩
     exact ((hu_cont x).tendsto j).comp (h_str_meas.tendsto_approx j)
   let U (n : ℕ) (p : ι × α) := u (t_sf n p.fst) p.snd
-  have h_tendsto : Tendsto U atTop (𝓝 fun p => u p.fst p.snd) := by
-    rw [tendsto_pi_nhds]
-    exact fun p => ht_sf p.fst p.snd
+  have h_tendsto  : Tendsto U atTop (𝓝 fun p => u p.fst p.snd)
+  rw [tendsto_pi_nhds]
+  exact fun p => ht_sf p.fst p.snd
   refine measurable_of_tendsto_metrizable (fun n => ?_) h_tendsto
-  have h_meas : Measurable fun p : (t_sf n).range × α => u (↑p.fst) p.snd := by
-    have :
-      (fun p : ↥(t_sf n).range × α => u (↑p.fst) p.snd) =
-        (fun p : α × (t_sf n).range => u (↑p.snd) p.fst) ∘ Prod.swap :=
-      rfl
-    rw [this, @measurable_swap_iff α (↥(t_sf n).range) β m]
-    exact measurable_from_prod_countable fun j => h j
+  have h_meas  : Measurable fun p : (t_sf n).range × α => u (↑p.fst) p.snd
+  have :
+    (fun p : ↥(t_sf n).range × α => u (↑p.fst) p.snd) =
+      (fun p : α × (t_sf n).range => u (↑p.snd) p.fst) ∘ Prod.swap :=
+    rfl
+  rw [this, @measurable_swap_iff α (↥(t_sf n).range) β m]
+  exact measurable_from_prod_countable fun j => h j
   have :
     (fun p : ι × α => u (t_sf n p.fst) p.snd) =
       (fun p : ↥(t_sf n).range × α => u p.fst p.snd) ∘ fun p : ι × α =>
@@ -1847,24 +1847,24 @@ theorem stronglyMeasurable_uncurry_of_continuous_of_stronglyMeasurable {α β ι
     refine ⟨h_str_meas.approx, fun j x => ?_⟩
     exact ((hu_cont x).tendsto j).comp (h_str_meas.tendsto_approx j)
   let U (n : ℕ) (p : ι × α) := u (t_sf n p.fst) p.snd
-  have h_tendsto : Tendsto U atTop (𝓝 fun p => u p.fst p.snd) := by
-    rw [tendsto_pi_nhds]
-    exact fun p => ht_sf p.fst p.snd
+  have h_tendsto  : Tendsto U atTop (𝓝 fun p => u p.fst p.snd)
+  rw [tendsto_pi_nhds]
+  exact fun p => ht_sf p.fst p.snd
   refine stronglyMeasurable_of_tendsto _ (fun n => ?_) h_tendsto
-  have h_str_meas : StronglyMeasurable fun p : (t_sf n).range × α => u (↑p.fst) p.snd := by
-    refine stronglyMeasurable_iff_measurable_separable.2 ⟨?_, ?_⟩
-    · have :
-        (fun p : ↥(t_sf n).range × α => u (↑p.fst) p.snd) =
-          (fun p : α × (t_sf n).range => u (↑p.snd) p.fst) ∘ Prod.swap :=
-        rfl
-      rw [this, measurable_swap_iff]
-      exact measurable_from_prod_countable fun j => (h j).measurable
-    · have : IsSeparable (⋃ i : (t_sf n).range, range (u i)) :=
-        .iUnion fun i => (h i).isSeparable_range
-      apply this.mono
-      rintro _ ⟨⟨i, x⟩, rfl⟩
-      simp only [mem_iUnion, mem_range]
-      exact ⟨i, x, rfl⟩
+  have h_str_meas  : StronglyMeasurable fun p : (t_sf n).range × α => u (↑p.fst) p.snd
+  refine stronglyMeasurable_iff_measurable_separable.2 ⟨?_, ?_⟩
+  · have :
+      (fun p : ↥(t_sf n).range × α => u (↑p.fst) p.snd) =
+        (fun p : α × (t_sf n).range => u (↑p.snd) p.fst) ∘ Prod.swap :=
+      rfl
+    rw [this, measurable_swap_iff]
+    exact measurable_from_prod_countable fun j => (h j).measurable
+  · have : IsSeparable (⋃ i : (t_sf n).range, range (u i)) :=
+      .iUnion fun i => (h i).isSeparable_range
+    apply this.mono
+    rintro _ ⟨⟨i, x⟩, rfl⟩
+    simp only [mem_iUnion, mem_range]
+    exact ⟨i, x, rfl⟩
   have :
     (fun p : ι × α => u (t_sf n p.fst) p.snd) =
       (fun p : ↥(t_sf n).range × α => u p.fst p.snd) ∘ fun p : ι × α =>

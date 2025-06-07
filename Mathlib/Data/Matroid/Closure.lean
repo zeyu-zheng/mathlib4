@@ -282,11 +282,11 @@ lemma Indep.closure_eq_setOf_basis_insert (hI : M.Indep I) :
   set F := {x | M.Basis I (insert x I)}
   have hIF : M.Basis I F := hI.basis_setOf_insert_basis
 
-  have hF : M.Flat F := by
-    refine ⟨fun J X hJF hJX e heX ↦ show M.Basis _ _ from ?_, hIF.subset_ground⟩
-    exact (hIF.basis_of_basis_of_subset_of_subset (hJX.basis_union hJF) hJF.subset
-      (hIF.subset.trans subset_union_right)).basis_subset (subset_insert _ _)
-      (insert_subset (Or.inl heX) (hIF.subset.trans subset_union_right))
+  have hF  : M.Flat F
+  refine ⟨fun J X hJF hJX e heX ↦ show M.Basis _ _ from ?_, hIF.subset_ground⟩
+  exact (hIF.basis_of_basis_of_subset_of_subset (hJX.basis_union hJF) hJF.subset
+    (hIF.subset.trans subset_union_right)).basis_subset (subset_insert _ _)
+    (insert_subset (Or.inl heX) (hIF.subset.trans subset_union_right))
 
   rw [subset_antisymm_iff, closure_def, subset_sInter_iff, and_iff_right (sInter_subset_of_mem _)]
   · rintro F' ⟨hF', hIF'⟩ e (he : M.Basis I (insert e I))
@@ -419,19 +419,19 @@ lemma Indep.closure_sInter_eq_biInter_closure_of_forall_subset {Js : Set (Set α
   refine ⟨ fun X hX ↦ M.closure_subset_closure (sInter_subset_of_mem hX),
     fun e he ↦ by_contra fun he' ↦ ?_⟩
   rw [mem_iInter₂] at he
-  have heEI : e ∈ M.E \ I := by
-    refine ⟨M.closure_subset_ground _ (he _ hne.some_mem), fun heI ↦ he' ?_⟩
-    refine mem_closure_of_mem _ (fun X hX' ↦ ?_) hiI.subset_ground
-    rw [← hI.closure_inter_eq_self_of_subset (hIs X hX')]
-    exact ⟨he X hX', heI⟩
+  have heEI  : e ∈ M.E \ I
+  refine ⟨M.closure_subset_ground _ (he _ hne.some_mem), fun heI ↦ he' ?_⟩
+  refine mem_closure_of_mem _ (fun X hX' ↦ ?_) hiI.subset_ground
+  rw [← hI.closure_inter_eq_self_of_subset (hIs X hX')]
+  exact ⟨he X hX', heI⟩
 
   rw [hiI.not_mem_closure_iff_of_not_mem (not_mem_subset hiX heEI.2)] at he'
   obtain ⟨J, hJI, heJ⟩ := he'.subset_basis_of_subset (insert_subset_insert hiX)
     (insert_subset heEI.1 hI.subset_ground)
 
-  have hIb : M.Basis I (insert e I) := by
-    rw [hI.insert_basis_iff_mem_closure]
-    exact (M.closure_subset_closure (hIs _ hne.some_mem)) (he _ hne.some_mem)
+  have hIb  : M.Basis I (insert e I)
+  rw [hI.insert_basis_iff_mem_closure]
+  exact (M.closure_subset_closure (hIs _ hne.some_mem)) (he _ hne.some_mem)
 
   obtain ⟨f, hfIJ, hfb⟩ :=  hJI.exchange hIb ⟨heJ (mem_insert e _), heEI.2⟩
   obtain rfl := hI.eq_of_basis (hfb.basis_subset (insert_subset hfIJ.1

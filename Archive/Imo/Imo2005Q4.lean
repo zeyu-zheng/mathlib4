@@ -29,7 +29,8 @@ theorem find_specified_factor {p : ℕ} (hp : Nat.Prime p) (hp2 : p ≠ 2) (hp3 
   -- Since `p` is neither `2` nor `3`, it is coprime with `2`, `3`, and `6`
   rw [Ne, ← Nat.prime_dvd_prime_iff_eq hp (by decide), ← Nat.Prime.coprime_iff_not_dvd hp]
     at hp2 hp3
-  have : Int.gcd p 6 = 1 := Nat.coprime_mul_iff_right.2 ⟨hp2, hp3⟩
+  have : Int.gcd p 6 = 1
+  apply Nat.coprime_mul_iff_right.2 ⟨hp2, hp3⟩
   -- Nat arithmetic needed to deal with powers
   have hp' : p - 1 = p - 2 + 1 := Eq.symm <| Nat.succ_pred <| (tsub_pos_of_lt hp.one_lt).ne'
   -- Thus it suffices to show that `6 * a (p - 2) ≡ 0 [ZMOD p]`
@@ -60,7 +61,8 @@ theorem imo2005_q4 {k : ℕ} (hk : 0 < k) : (∀ n : ℕ, 1 ≤ n → IsCoprime 
   -- Suppose for the sake of contradiction that `k ≠ 1`.  Then `p` is genuinely a prime factor of
   -- `k`. Hence, it divides none of `a n`, `1 ≤ n`
   by_contra hk'
-  have hp : Nat.Prime p := Nat.minFac_prime hk'
+  have hp : Nat.Prime p
+  apply Nat.minFac_prime hk'
   replace h : ∀ n, 1 ≤ n → ¬(p : ℤ) ∣ a n := fun n hn ↦ by
     have : IsCoprime (a n) p :=
       .of_isCoprime_of_dvd_right (h n hn) (Int.natCast_dvd_natCast.mpr k.minFac_dvd)

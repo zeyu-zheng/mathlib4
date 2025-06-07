@@ -320,11 +320,11 @@ it gives a relationship between the sums of `f` and `f.update` given that both e
 theorem HasProd.update' {α β : Type*} [TopologicalSpace α] [CommMonoid α] [T2Space α]
     [ContinuousMul α] [DecidableEq β] {f : β → α} {a a' : α} (hf : HasProd f a) (b : β) (x : α)
     (hf' : HasProd (update f b x) a') : a * x = a' * f b := by
-  have : ∀ b', f b' * ite (b' = b) x 1 = update f b x b' * ite (b' = b) (f b) 1 := by
-    intro b'
-    split_ifs with hb'
-    · simpa only [Function.update_apply, hb', eq_self_iff_true] using mul_comm (f b) x
-    · simp only [Function.update_apply, hb', if_false]
+  have  : ∀ b', f b' * ite (b' = b) x 1 = update f b x b' * ite (b' = b) (f b) 1
+  intro b'
+  split_ifs with hb'
+  · simpa only [Function.update_apply, hb', eq_self_iff_true] using mul_comm (f b) x
+  · simp only [Function.update_apply, hb', if_false]
   have h := hf.mul (hasProd_ite_eq b x)
   simp_rw [this] at h
   exact HasProd.unique h (hf'.mul (hasProd_ite_eq b (f b)))
@@ -436,8 +436,8 @@ open scoped Classical in
 @[to_additive]
 theorem Function.Injective.tprod_eq {g : γ → β} (hg : Injective g) {f : β → α}
     (hf : mulSupport f ⊆ Set.range g) : ∏' c, f (g c) = ∏' b, f b := by
-  have : mulSupport f = g '' mulSupport (f ∘ g) := by
-    rw [mulSupport_comp_eq_preimage, Set.image_preimage_eq_iff.2 hf]
+  have  : mulSupport f = g '' mulSupport (f ∘ g)
+  rw [mulSupport_comp_eq_preimage, Set.image_preimage_eq_iff.2 hf]
   rw [← Function.comp_def]
   by_cases hf_fin : (mulSupport f).Finite
   · have hfg_fin : (mulSupport (f ∘ g)).Finite := hf_fin.preimage hg.injOn

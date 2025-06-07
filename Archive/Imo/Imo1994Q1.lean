@@ -36,7 +36,8 @@ theorem tedious (m : ℕ) (k : Fin (m + 1)) : m - ((m + 1 - ↑k) + m) % (m + 1)
   cases' k with k hk
   rw [Nat.lt_succ_iff, le_iff_exists_add] at hk
   rcases hk with ⟨c, rfl⟩
-  have : (k + c + 1 - k) + (k + c) = c + (k + c + 1) := by omega
+  have  : (k + c + 1 - k) + (k + c) = c + (k + c + 1)
+  omega
   rw [Fin.val_mk, this, Nat.add_mod_right, Nat.mod_eq_of_lt, Nat.add_sub_cancel]
   omega
 
@@ -54,9 +55,9 @@ theorem imo1994_q1 (n : ℕ) (m : ℕ) (A : Finset ℕ) (hm : A.card = m + 1)
   set rev := Equiv.subLeft (Fin.last m)
   -- `i ↦ m-i`
   -- We reindex the sum by fin (m+1)
-  have : ∑ x ∈ A, x = ∑ i : Fin (m + 1), a i := by
-    convert sum_image (α := ℕ) (β := ℕ) fun x _ y _ => (OrderEmbedding.eq_iff_eq a).1
-    rw [← coe_inj]; simp [a]
+  have  : ∑ x ∈ A, x = ∑ i : Fin (m + 1), a i
+  convert sum_image (α := ℕ) (β := ℕ) fun x _ y _ => (OrderEmbedding.eq_iff_eq a).1
+  rw [← coe_inj]; simp [a]
   rw [this]; clear this
   -- The main proof is a simple calculation by rearranging one of the two sums
   suffices hpair : ∀ k ∈ univ, a k + a (rev k) ≥ n + 1 by calc

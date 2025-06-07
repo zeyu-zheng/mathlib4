@@ -53,26 +53,26 @@ theorem smoothSheafCommRing.isUnit_stalk_iff {x : M}
     -- Represent `f` as the germ of some function (also called `f`) on an open neighbourhood `U` of
     -- `x`, which is nonzero at `x`
     obtain ⟨U : Opens M, hxU, f : C^∞⟮IM, U; 𝓘(𝕜), 𝕜⟯, rfl⟩ := S.germ_exist x f
-    have hf' : f ⟨x, hxU⟩ ≠ 0 := by
-      convert hf
-      exact (smoothSheafCommRing.eval_germ U ⟨x, hxU⟩ f).symm
+    have hf'  : f ⟨x, hxU⟩ ≠ 0
+    convert hf
+    exact (smoothSheafCommRing.eval_germ U ⟨x, hxU⟩ f).symm
     -- In fact, by continuity, `f` is nonzero on a neighbourhood `V` of `x`
     have H :  ∀ᶠ (z : U) in 𝓝 ⟨x, hxU⟩, f z ≠ 0 := f.2.continuous.continuousAt.eventually_ne hf'
     rw [eventually_nhds_iff] at H
     obtain ⟨V₀, hV₀f, hV₀, hxV₀⟩ := H
     let V : Opens M := ⟨Subtype.val '' V₀, U.2.isOpenMap_subtype_val V₀ hV₀⟩
     have hUV : V ≤ U := Subtype.coe_image_subset (U : Set M) V₀
-    have hV : V₀ = Set.range (Set.inclusion hUV) := by
-      convert (Set.range_inclusion hUV).symm
-      ext y
-      show _ ↔ y ∈ Subtype.val ⁻¹' (Subtype.val '' V₀)
-      rw [Set.preimage_image_eq _ Subtype.coe_injective]
+    have hV  : V₀ = Set.range (Set.inclusion hUV)
+    convert (Set.range_inclusion hUV).symm
+    ext y
+    show _ ↔ y ∈ Subtype.val ⁻¹' (Subtype.val '' V₀)
+    rw [Set.preimage_image_eq _ Subtype.coe_injective]
     clear_value V
     subst hV
-    have hxV : x ∈ (V : Set M) := by
-      obtain ⟨x₀, hxx₀⟩ := hxV₀
-      convert x₀.2
-      exact congr_arg Subtype.val hxx₀.symm
+    have hxV  : x ∈ (V : Set M)
+    obtain ⟨x₀, hxx₀⟩ := hxV₀
+    convert x₀.2
+    exact congr_arg Subtype.val hxx₀.symm
     have hVf : ∀ y : V, f (Set.inclusion hUV y) ≠ 0 :=
       fun y ↦ hV₀f (Set.inclusion hUV y) (Set.mem_range_self y)
     -- Let `g` be the pointwise inverse of `f` on `V`, which is smooth since `f` is nonzero there

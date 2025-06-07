@@ -269,9 +269,9 @@ theorem det_eq_one_of_finrank_eq_zero {𝕜 : Type*} [Field 𝕜] {M : Type*} [A
   classical
     refine @LinearMap.det_cases M _ 𝕜 _ _ _ (fun t => t = 1) f ?_ rfl
     intro s b
-    have : IsEmpty s := by
-      rw [← Fintype.card_eq_zero_iff]
-      exact (FiniteDimensional.finrank_eq_card_basis b).symm.trans h
+    have  : IsEmpty s
+    rw [← Fintype.card_eq_zero_iff]
+    exact (FiniteDimensional.finrank_eq_card_basis b).symm.trans h
     exact Matrix.det_isEmpty
 
 /-- Conjugating a linear map by a linear equiv does not change its determinant. -/
@@ -297,8 +297,8 @@ theorem det_conj {N : Type*} [AddCommGroup N] [Module A N] (f : M →ₗ[A] M) (
 theorem isUnit_det {A : Type*} [CommRing A] [Module A M] (f : M →ₗ[A] M) (hf : IsUnit f) :
     IsUnit (LinearMap.det f) := by
   obtain ⟨g, hg⟩ : ∃ g, f.comp g = 1 := hf.exists_right_inv
-  have : LinearMap.det f * LinearMap.det g = 1 := by
-    simp only [← LinearMap.det_comp, hg, MonoidHom.map_one]
+  have  : LinearMap.det f * LinearMap.det g = 1
+  simp only [← LinearMap.det_comp, hg, MonoidHom.map_one]
   exact isUnit_of_mul_eq_one _ _ this
 
 /-- If a linear map has determinant different from `1`, then the space is finite-dimensional. -/
@@ -312,7 +312,8 @@ theorem finiteDimensional_of_det_ne_one {𝕜 : Type*} [Field 𝕜] [Module 𝕜
 /-- If the determinant of a map vanishes, then the map is not onto. -/
 theorem range_lt_top_of_det_eq_zero {𝕜 : Type*} [Field 𝕜] [Module 𝕜 M] {f : M →ₗ[𝕜] M}
     (hf : LinearMap.det f = 0) : LinearMap.range f < ⊤ := by
-  have : FiniteDimensional 𝕜 M := by simp [f.finiteDimensional_of_det_ne_one, hf]
+  have  : FiniteDimensional 𝕜 M
+  simp [f.finiteDimensional_of_det_ne_one, hf]
   contrapose hf
   simp only [lt_top_iff_ne_top, Classical.not_not, ← isUnit_iff_range_eq_top] at hf
   exact isUnit_iff_ne_zero.1 (f.isUnit_det hf)
@@ -320,7 +321,8 @@ theorem range_lt_top_of_det_eq_zero {𝕜 : Type*} [Field 𝕜] [Module 𝕜 M] 
 /-- If the determinant of a map vanishes, then the map is not injective. -/
 theorem bot_lt_ker_of_det_eq_zero {𝕜 : Type*} [Field 𝕜] [Module 𝕜 M] {f : M →ₗ[𝕜] M}
     (hf : LinearMap.det f = 0) : ⊥ < LinearMap.ker f := by
-  have : FiniteDimensional 𝕜 M := by simp [f.finiteDimensional_of_det_ne_one, hf]
+  have  : FiniteDimensional 𝕜 M
+  simp [f.finiteDimensional_of_det_ne_one, hf]
   contrapose hf
   simp only [bot_lt_iff_ne_bot, Classical.not_not, ← isUnit_iff_ker_eq_bot] at hf
   exact isUnit_iff_ne_zero.1 (f.isUnit_det hf)
@@ -502,9 +504,9 @@ theorem is_basis_iff_det {v : ι → M} :
   · intro h
     rw [Basis.det_apply, Basis.toMatrix_eq_toMatrix_constr] at h
     set v' := Basis.map e (LinearEquiv.ofIsUnitDet h) with v'_def
-    have : ⇑v' = v := by
-      ext i
-      rw [v'_def, Basis.map_apply, LinearEquiv.ofIsUnitDet_apply, e.constr_basis]
+    have  : ⇑v' = v
+    ext i
+    rw [v'_def, Basis.map_apply, LinearEquiv.ofIsUnitDet_apply, e.constr_basis]
     rw [← this]
     exact ⟨v'.linearIndependent, v'.span_eq⟩
 

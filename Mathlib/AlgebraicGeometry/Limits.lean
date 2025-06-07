@@ -91,9 +91,9 @@ instance (priority := 100) isOpenImmersion_of_isEmpty {X Y : Scheme} (f : X ⟶ 
 instance (priority := 100) isIso_of_isEmpty {X Y : Scheme} (f : X ⟶ Y) [IsEmpty Y] :
     IsIso f := by
   haveI : IsEmpty X := f.1.base.1.isEmpty
-  have : Epi f.1.base := by
-    rw [TopCat.epi_iff_surjective]; rintro (x : Y)
-    exact isEmptyElim x
+  have  : Epi f.1.base
+  rw [TopCat.epi_iff_surjective]; rintro (x : Y)
+  exact isEmptyElim x
   apply IsOpenImmersion.to_iso
 
 /-- A scheme is initial if its underlying space is empty . -/

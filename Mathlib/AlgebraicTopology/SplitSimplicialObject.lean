@@ -322,9 +322,9 @@ structure Hom (S₁ S₂ : Split C) where
 theorem Hom.ext {S₁ S₂ : Split C} (Φ₁ Φ₂ : Hom S₁ S₂) (h : ∀ n : ℕ, Φ₁.f n = Φ₂.f n) : Φ₁ = Φ₂ := by
   rcases Φ₁ with ⟨F₁, f₁, c₁⟩
   rcases Φ₂ with ⟨F₂, f₂, c₂⟩
-  have h' : f₁ = f₂ := by
-    ext
-    apply h
+  have h'  : f₁ = f₂
+  ext
+  apply h
   subst h'
   simp only [mk.injEq, and_true]
   apply S₁.s.hom_ext

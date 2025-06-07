@@ -138,8 +138,8 @@ example (z : ℤ) (h1 : z ≥ -3) (h2 : z < 2) : z < 20 := by
 
 example (n : ℕ) : n % 2 = 0 ∨ n % 2 = 1 := by
   set r := n % 2 with hr
-  have h2 : r < 2 := by
-    exact Nat.mod_lt _ (by decide)
+  have h2  : r < 2
+  exact Nat.mod_lt _ (by decide)
   interval_cases hrv : r -- Porting note: old syntax was `interval_cases r with hrv`
   · left; exact hrv.symm.trans hrv
                --^ hover says `hrv : r = 0` and jumps to `hrv :` above
@@ -148,12 +148,12 @@ example (n : ℕ) : n % 2 = 0 ∨ n % 2 = 1 := by
 
 /- https://leanprover.zulipchat.com/#narrow/stream/113488-general/topic/interval_cases.20bug -/
 example {x : ℕ} (hx2 : x < 2) (h : False) : False := by
-  have _this : x ≤ 1 := by
-    -- `interval_cases` deliberately not focussed,
-    -- this is testing that the `interval_cases` only acts on `have` side goal, not on both
-    interval_cases x
-    · exact zero_le_one
-    · rfl -- done for free in the mathlib3 version
+  have _this  : x ≤ 1
+  -- `interval_cases` deliberately not focussed,
+  -- this is testing that the `interval_cases` only acts on `have` side goal, not on both
+  interval_cases x
+  · exact zero_le_one
+  · rfl -- done for free in the mathlib3 version
   exact h
 
 /-

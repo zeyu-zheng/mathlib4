@@ -157,9 +157,9 @@ theorem balancedCoreAux_balanced (h0 : (0 : E) ∈ balancedCoreAux 𝕜 s) :
   · simp_rw [zero_smul, h0]
   rw [mem_balancedCoreAux_iff] at hy ⊢
   intro r hr
-  have h'' : 1 ≤ ‖a⁻¹ • r‖ := by
-    rw [norm_smul, norm_inv]
-    exact one_le_mul_of_one_le_of_one_le (one_le_inv (norm_pos_iff.mpr h) ha) hr
+  have h''  : 1 ≤ ‖a⁻¹ • r‖
+  rw [norm_smul, norm_inv]
+  exact one_le_mul_of_one_le_of_one_le (one_le_inv (norm_pos_iff.mpr h) ha) hr
   have h' := hy (a⁻¹ • r) h''
   rwa [smul_assoc, mem_inv_smul_set_iff₀ h] at h'
 

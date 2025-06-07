@@ -117,26 +117,26 @@ theorem isCompactElement_iff_le_of_directed_sSup_le (k : α) :
       -- Consider the set of finite joins of elements of the (plain) set s.
       let S : Set α := { x | ∃ t : Finset α, ↑t ⊆ s ∧ x = t.sup id }
       -- S is directed, nonempty, and still has sup above k.
-      have dir_US : DirectedOn (· ≤ ·) S := by
-        rintro x ⟨c, hc⟩ y ⟨d, hd⟩
-        use x ⊔ y
+      have dir_US  : DirectedOn (· ≤ ·) S
+      rintro x ⟨c, hc⟩ y ⟨d, hd⟩
+      use x ⊔ y
+      constructor
+      · use c ∪ d
         constructor
-        · use c ∪ d
-          constructor
-          · simp only [hc.left, hd.left, Set.union_subset_iff, Finset.coe_union, and_self_iff]
-          · simp only [hc.right, hd.right, Finset.sup_union]
-        simp only [and_self_iff, le_sup_left, le_sup_right]
-      have sup_S : sSup s ≤ sSup S := by
-        apply sSup_le_sSup
-        intro x hx
-        use {x}
-        simpa only [and_true_iff, id, Finset.coe_singleton, eq_self_iff_true,
-          Finset.sup_singleton, Set.singleton_subset_iff]
-      have Sne : S.Nonempty := by
-        suffices ⊥ ∈ S from Set.nonempty_of_mem this
-        use ∅
-        simp only [Set.empty_subset, Finset.coe_empty, Finset.sup_empty, eq_self_iff_true,
-          and_self_iff]
+        · simp only [hc.left, hd.left, Set.union_subset_iff, Finset.coe_union, and_self_iff]
+        · simp only [hc.right, hd.right, Finset.sup_union]
+      simp only [and_self_iff, le_sup_left, le_sup_right]
+      have sup_S  : sSup s ≤ sSup S
+      apply sSup_le_sSup
+      intro x hx
+      use {x}
+      simpa only [and_true_iff, id, Finset.coe_singleton, eq_self_iff_true,
+        Finset.sup_singleton, Set.singleton_subset_iff]
+      have Sne  : S.Nonempty
+      suffices ⊥ ∈ S from Set.nonempty_of_mem this
+      use ∅
+      simp only [Set.empty_subset, Finset.coe_empty, Finset.sup_empty, eq_self_iff_true,
+        and_self_iff]
       -- Now apply the defn of compact and finish.
       obtain ⟨j, ⟨hjS, hjk⟩⟩ := hk S Sne dir_US (le_trans hsup sup_S)
       obtain ⟨t, ⟨htS, htsup⟩⟩ := hjS
@@ -147,11 +147,11 @@ theorem IsCompactElement.exists_finset_of_le_iSup {k : α} (hk : IsCompactElemen
     (f : ι → α) (h : k ≤ ⨆ i, f i) : ∃ s : Finset ι, k ≤ ⨆ i ∈ s, f i := by
   classical
     let g : Finset ι → α := fun s => ⨆ i ∈ s, f i
-    have h1 : DirectedOn (· ≤ ·) (Set.range g) := by
-      rintro - ⟨s, rfl⟩ - ⟨t, rfl⟩
-      exact
-        ⟨g (s ∪ t), ⟨s ∪ t, rfl⟩, iSup_le_iSup_of_subset Finset.subset_union_left,
-          iSup_le_iSup_of_subset Finset.subset_union_right⟩
+    have h1  : DirectedOn (· ≤ ·) (Set.range g)
+    rintro - ⟨s, rfl⟩ - ⟨t, rfl⟩
+    exact
+      ⟨g (s ∪ t), ⟨s ∪ t, rfl⟩, iSup_le_iSup_of_subset Finset.subset_union_left,
+        iSup_le_iSup_of_subset Finset.subset_union_right⟩
     have h2 : k ≤ sSup (Set.range g) :=
       h.trans
         (iSup_le fun i =>
@@ -218,9 +218,9 @@ theorem IsSupClosedCompact.wellFounded (h : IsSupClosedCompact α) :
   refine RelEmbedding.wellFounded_iff_no_descending_seq.mpr ⟨fun a => ?_⟩
   suffices sSup (Set.range a) ∈ Set.range a by
     obtain ⟨n, hn⟩ := Set.mem_range.mp this
-    have h' : sSup (Set.range a) < a (n + 1) := by
-      change _ > _
-      simp [← hn, a.map_rel_iff]
+    have h'  : sSup (Set.range a) < a (n + 1)
+    change _ > _
+    simp [← hn, a.map_rel_iff]
     apply lt_irrefl (a (n + 1))
     apply lt_of_le_of_lt _ h'
     apply le_sSup
@@ -240,11 +240,11 @@ theorem isSupFiniteCompact_iff_all_elements_compact :
     use t, hts
     rwa [← htsup]
   · obtain ⟨t, ⟨hts, htsup⟩⟩ := h (sSup s) s (by rfl)
-    have : sSup s = t.sup id := by
-      suffices t.sup id ≤ sSup s by apply le_antisymm <;> assumption
-      simp only [id, Finset.sup_le_iff]
-      intro x hx
-      exact le_sSup _ _ (hts hx)
+    have  : sSup s = t.sup id
+    suffices t.sup id ≤ sSup s by apply le_antisymm <;> assumption
+    simp only [id, Finset.sup_le_iff]
+    intro x hx
+    exact le_sSup _ _ (hts hx)
     exact ⟨t, hts, this⟩
 
 open List in
@@ -422,13 +422,13 @@ lemma CompleteLattice.independent_iff_supIndep_of_injOn {ι : Type*} {f : ι →
   set t := s.erase ⊥
   replace hf : InjOn f (f ⁻¹' t) := fun i hi j _ hij ↦ by
     refine hf ?_ ?_ hij <;> aesop (add norm simp [t])
-  have : (Finset.erase (insert i (t.preimage _ hf)) i).image f = t := by
-    ext a
-    simp only [Finset.mem_preimage, Finset.mem_erase, ne_eq, Finset.mem_insert, true_or, not_true,
-      Finset.erase_insert_eq_erase, not_and, Finset.mem_image, t]
-    refine ⟨by aesop, fun ⟨ha, has⟩ ↦ ?_⟩
-    obtain ⟨j, hj, rfl⟩ := hs has
-    exact ⟨j, ⟨hj, ha, has⟩, rfl⟩
+  have  : (Finset.erase (insert i (t.preimage _ hf)) i).image f = t
+  ext a
+  simp only [Finset.mem_preimage, Finset.mem_erase, ne_eq, Finset.mem_insert, true_or, not_true,
+    Finset.erase_insert_eq_erase, not_and, Finset.mem_image, t]
+  refine ⟨by aesop, fun ⟨ha, has⟩ ↦ ?_⟩
+  obtain ⟨j, hj, rfl⟩ := hs has
+  exact ⟨j, ⟨hj, ha, has⟩, rfl⟩
   rw [← this, Finset.sup_image]
   specialize h (insert i (t.preimage _ hf))
   rw [Finset.supIndep_iff_disjoint_erase] at h

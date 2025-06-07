@@ -82,9 +82,9 @@ theorem exists_root [IsAlgClosed k] (p : k[X]) (hp : p.degree ≠ 0) : ∃ x, Is
   exists_root_of_splits _ (IsAlgClosed.splits p) hp
 
 theorem exists_pow_nat_eq [IsAlgClosed k] (x : k) {n : ℕ} (hn : 0 < n) : ∃ z, z ^ n = x := by
-  have : degree (X ^ n - C x) ≠ 0 := by
-    rw [degree_X_pow_sub_C hn x]
-    exact ne_of_gt (WithBot.coe_lt_coe.2 hn)
+  have  : degree (X ^ n - C x) ≠ 0
+  rw [degree_X_pow_sub_C hn x]
+  exact ne_of_gt (WithBot.coe_lt_coe.2 hn)
   obtain ⟨z, hz⟩ := exists_root (X ^ n - C x) this
   use z
   simp only [eval_C, eval_X, eval_pow, eval_sub, IsRoot.def] at hz
@@ -127,9 +127,9 @@ theorem of_exists_root (H : ∀ p : k[X], p.Monic → Irreducible p → ∃ x, p
     IsAlgClosed k := by
   refine ⟨fun p ↦ Or.inr ?_⟩
   intro q hq _
-  have : Irreducible (q * C (leadingCoeff q)⁻¹) := by
-    rw [← coe_normUnit_of_ne_zero hq.ne_zero]
-    exact (associated_normalize _).irreducible hq
+  have  : Irreducible (q * C (leadingCoeff q)⁻¹)
+  rw [← coe_normUnit_of_ne_zero hq.ne_zero]
+  exact (associated_normalize _).irreducible hq
   obtain ⟨x, hx⟩ := H (q * C (leadingCoeff q)⁻¹) (monic_mul_leadingCoeff_inv hq.ne_zero) this
   exact degree_mul_leadingCoeff_inv q hq.ne_zero ▸ degree_eq_one_of_irreducible_of_root this hx
 
@@ -137,9 +137,9 @@ theorem of_ringEquiv (k' : Type u) [Field k'] (e : k ≃+* k')
     [IsAlgClosed k] : IsAlgClosed k' := by
   apply IsAlgClosed.of_exists_root
   intro p hmp hp
-  have hpe : degree (p.map e.symm.toRingHom) ≠ 0 := by
-    rw [degree_map]
-    exact ne_of_gt (degree_pos_of_irreducible hp)
+  have hpe  : degree (p.map e.symm.toRingHom) ≠ 0
+  rw [degree_map]
+  exact ne_of_gt (degree_pos_of_irreducible hp)
   rcases IsAlgClosed.exists_root (k := k) (p.map e.symm) hpe with ⟨x, hx⟩
   use e x
   rw [IsRoot] at hx
@@ -291,8 +291,8 @@ instance (priority := 500) {K : Type*} [Field K] [IsAlgClosed K] : Infinite K :=
   set f := (X : K[X]) ^ (n + 1) - 1
   have hfsep : Separable f := separable_X_pow_sub_C 1 (by simp [n]) one_ne_zero
   apply Nat.not_succ_le_self (Fintype.card K)
-  have hroot : n.succ = Fintype.card (f.rootSet K) := by
-    erw [card_rootSet_eq_natDegree hfsep (IsAlgClosed.splits_domain _), natDegree_X_pow_sub_C]
+  have hroot  : n.succ = Fintype.card (f.rootSet K)
+  erw [card_rootSet_eq_natDegree hfsep (IsAlgClosed.splits_domain _), natDegree_X_pow_sub_C]
   rw [hroot]
   exact Fintype.card_le_of_injective _ Subtype.coe_injective
 

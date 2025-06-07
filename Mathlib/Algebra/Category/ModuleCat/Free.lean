@@ -101,11 +101,11 @@ theorem span_exact {β : Type*} {u : ι ⊕ β → S.X₂} (huv : u ∘ Sum.inl 
   rw [Finsupp.mem_span_range_iff_exists_finsupp] at hgm
   obtain ⟨cm, hm⟩ := hgm
   let m' : S.X₂ := Finsupp.sum cm fun j a ↦ a • (u (Sum.inr j))
-  have hsub : m - m' ∈ LinearMap.range S.f := by
-    rw [hS.moduleCat_range_eq_ker]
-    simp only [LinearMap.mem_ker, map_sub, sub_eq_zero]
-    rw [← hm, map_finsupp_sum]
-    simp only [Function.comp_apply, map_smul]
+  have hsub  : m - m' ∈ LinearMap.range S.f
+  rw [hS.moduleCat_range_eq_ker]
+  simp only [LinearMap.mem_ker, map_sub, sub_eq_zero]
+  rw [← hm, map_finsupp_sum]
+  simp only [Function.comp_apply, map_smul]
   obtain ⟨n, hnm⟩ := hsub
   have hn : n ∈ span R (range v) := hv mem_top
   rw [Finsupp.mem_span_range_iff_exists_finsupp] at hn

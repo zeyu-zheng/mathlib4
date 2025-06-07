@@ -230,11 +230,11 @@ theorem add_measure_left {_ : MeasurableSpace α} (μ ν : Measure α)
 
 theorem of_smul_measure (c : ℝ≥0∞) (hc_ne_top : c ≠ ∞) (hT : DominatedFinMeasAdditive (c • μ) T C) :
     DominatedFinMeasAdditive μ T (c.toReal * C) := by
-  have h : ∀ s, MeasurableSet s → c • μ s = ∞ → μ s = ∞ := by
-    intro s _ hcμs
-    simp only [hc_ne_top, Algebra.id.smul_eq_mul, ENNReal.mul_eq_top, or_false_iff, Ne,
-      false_and_iff] at hcμs
-    exact hcμs.2
+  have h  : ∀ s, MeasurableSet s → c • μ s = ∞ → μ s = ∞
+  intro s _ hcμs
+  simp only [hc_ne_top, Algebra.id.smul_eq_mul, ENNReal.mul_eq_top, or_false_iff, Ne,
+    false_and_iff] at hcμs
+  exact hcμs.2
   refine ⟨hT.1.of_eq_top_imp_eq_top (μ := c • μ) h, fun s hs hμs => ?_⟩
   have hcμs : c • μ s ≠ ∞ := mt (h s hs) hμs.ne
   rw [smul_eq_mul] at hcμs
@@ -1273,7 +1273,8 @@ theorem setToFun_congr_ae (hT : DominatedFinMeasAdditive μ T C) (h : f =ᵐ[μ]
 
 theorem setToFun_measure_zero (hT : DominatedFinMeasAdditive μ T C) (h : μ = 0) :
     setToFun μ T hT f = 0 := by
-  have : f =ᵐ[μ] 0 := by simp [h, EventuallyEq]
+  have  : f =ᵐ[μ] 0
+  simp [h, EventuallyEq]
   rw [setToFun_congr_ae hT this, setToFun_zero]
 
 theorem setToFun_measure_zero' (hT : DominatedFinMeasAdditive μ T C)
@@ -1353,14 +1354,14 @@ theorem tendsto_setToFun_of_L1 (hT : DominatedFinMeasAdditive μ T C) {ι} (f : 
   classical
     let f_lp := hfi.toL1 f
     let F_lp i := if hFi : Integrable (fs i) μ then hFi.toL1 (fs i) else 0
-    have tendsto_L1 : Tendsto F_lp l (𝓝 f_lp) := by
-      rw [Lp.tendsto_Lp_iff_tendsto_ℒp']
-      simp_rw [eLpNorm_one_eq_lintegral_nnnorm, Pi.sub_apply]
-      refine (tendsto_congr' ?_).mp hfs
-      filter_upwards [hfsi] with i hi
-      refine lintegral_congr_ae ?_
-      filter_upwards [hi.coeFn_toL1, hfi.coeFn_toL1] with x hxi hxf
-      simp_rw [F_lp, dif_pos hi, hxi, hxf]
+    have tendsto_L1  : Tendsto F_lp l (𝓝 f_lp)
+    rw [Lp.tendsto_Lp_iff_tendsto_ℒp']
+    simp_rw [eLpNorm_one_eq_lintegral_nnnorm, Pi.sub_apply]
+    refine (tendsto_congr' ?_).mp hfs
+    filter_upwards [hfsi] with i hi
+    refine lintegral_congr_ae ?_
+    filter_upwards [hi.coeFn_toL1, hfi.coeFn_toL1] with x hxi hxf
+    simp_rw [F_lp, dif_pos hi, hxi, hxf]
     suffices Tendsto (fun i => setToFun μ T hT (F_lp i)) l (𝓝 (setToFun μ T hT f)) by
       refine (tendsto_congr' ?_).mp this
       filter_upwards [hfsi] with i hi
@@ -1584,7 +1585,8 @@ theorem tendsto_setToFun_filter_of_dominated_convergence (hT : DominatedFinMeasA
     Tendsto (fun n => setToFun μ T hT (fs n)) l (𝓝 <| setToFun μ T hT f) := by
   rw [tendsto_iff_seq_tendsto]
   intro x xl
-  have hxl : ∀ s ∈ l, ∃ a, ∀ b ≥ a, x b ∈ s := by rwa [tendsto_atTop'] at xl
+  have hxl  : ∀ s ∈ l, ∃ a, ∀ b ≥ a, x b ∈ s
+  rwa [tendsto_atTop'] at xl
   have h :
     { x : ι | (fun n => AEStronglyMeasurable (fs n) μ) x } ∩
         { x : ι | (fun n => ∀ᵐ a ∂μ, ‖fs n a‖ ≤ bound a) x } ∈ l :=

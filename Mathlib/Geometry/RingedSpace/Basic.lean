@@ -80,37 +80,37 @@ theorem isUnit_of_isUnit_germ (U : Opens X) (f : X.presheaf.obj (op U))
     (h : ∀ x : U, IsUnit (X.presheaf.germ x f)) : IsUnit f := by
   -- We pick a cover of `U` by open sets `V x`, such that `f` is a unit on each `V x`.
   choose V iVU m h_unit using fun x : U => X.isUnit_res_of_isUnit_germ U f x (h x)
-  have hcover : U ≤ iSup V := by
-    intro x hxU
-    -- Porting note: in Lean3 `rw` is sufficient
-    erw [Opens.mem_iSup]
-    exact ⟨⟨x, hxU⟩, m ⟨x, hxU⟩⟩
+  have hcover  : U ≤ iSup V
+  intro x hxU
+  -- Porting note: in Lean3 `rw` is sufficient
+  erw [Opens.mem_iSup]
+  exact ⟨⟨x, hxU⟩, m ⟨x, hxU⟩⟩
   -- Let `g x` denote the inverse of `f` in `U x`.
   choose g hg using fun x : U => IsUnit.exists_right_inv (h_unit x)
-  have ic : IsCompatible (sheaf X).val V g := by
-    intro x y
-    apply section_ext X.sheaf (V x ⊓ V y)
-    rintro ⟨z, hzVx, hzVy⟩
-    erw [germ_res_apply, germ_res_apply]
-    apply (IsUnit.mul_right_inj (h ⟨z, (iVU x).le hzVx⟩)).mp
+  have ic  : IsCompatible (sheaf X).val V g
+  intro x y
+  apply section_ext X.sheaf (V x ⊓ V y)
+  rintro ⟨z, hzVx, hzVy⟩
+  erw [germ_res_apply, germ_res_apply]
+  apply (IsUnit.mul_right_inj (h ⟨z, (iVU x).le hzVx⟩)).mp
+  -- Porting note: now need explicitly typing the rewrites
+  rw [← show X.presheaf.germ ⟨z, hzVx⟩ (X.presheaf.map (iVU x).op f) =
+    X.presheaf.germ ⟨z, ((iVU x) ⟨z, hzVx⟩).2⟩ f from
+    X.presheaf.germ_res_apply (iVU x) ⟨z, hzVx⟩ f]
+  -- Porting note: change was not necessary in Lean3
+  change X.presheaf.germ ⟨z, hzVx⟩ _ * (X.presheaf.germ ⟨z, hzVx⟩ _) =
+    X.presheaf.germ ⟨z, hzVx⟩ _ * X.presheaf.germ ⟨z, hzVy⟩ (g y)
+  rw [← RingHom.map_mul,
+    congr_arg (X.presheaf.germ (⟨z, hzVx⟩ : V x)) (hg x),
     -- Porting note: now need explicitly typing the rewrites
-    rw [← show X.presheaf.germ ⟨z, hzVx⟩ (X.presheaf.map (iVU x).op f) =
-      X.presheaf.germ ⟨z, ((iVU x) ⟨z, hzVx⟩).2⟩ f from
-      X.presheaf.germ_res_apply (iVU x) ⟨z, hzVx⟩ f]
-    -- Porting note: change was not necessary in Lean3
-    change X.presheaf.germ ⟨z, hzVx⟩ _ * (X.presheaf.germ ⟨z, hzVx⟩ _) =
-      X.presheaf.germ ⟨z, hzVx⟩ _ * X.presheaf.germ ⟨z, hzVy⟩ (g y)
-    rw [← RingHom.map_mul,
-      congr_arg (X.presheaf.germ (⟨z, hzVx⟩ : V x)) (hg x),
-      -- Porting note: now need explicitly typing the rewrites
-      show X.presheaf.germ ⟨z, hzVx⟩ (X.presheaf.map (iVU x).op f) =
-        X.presheaf.germ ⟨z, ((iVU x) ⟨z, hzVx⟩).2⟩ f from X.presheaf.germ_res_apply _ _ f,
-      -- Porting note: now need explicitly typing the rewrites
-      ← show X.presheaf.germ ⟨z, hzVy⟩ (X.presheaf.map (iVU y).op f) =
-          X.presheaf.germ ⟨z, ((iVU x) ⟨z, hzVx⟩).2⟩ f from
-          X.presheaf.germ_res_apply (iVU y) ⟨z, hzVy⟩ f,
-      ← RingHom.map_mul,
-      congr_arg (X.presheaf.germ (⟨z, hzVy⟩ : V y)) (hg y), RingHom.map_one, RingHom.map_one]
+    show X.presheaf.germ ⟨z, hzVx⟩ (X.presheaf.map (iVU x).op f) =
+      X.presheaf.germ ⟨z, ((iVU x) ⟨z, hzVx⟩).2⟩ f from X.presheaf.germ_res_apply _ _ f,
+    -- Porting note: now need explicitly typing the rewrites
+    ← show X.presheaf.germ ⟨z, hzVy⟩ (X.presheaf.map (iVU y).op f) =
+        X.presheaf.germ ⟨z, ((iVU x) ⟨z, hzVx⟩).2⟩ f from
+        X.presheaf.germ_res_apply (iVU y) ⟨z, hzVy⟩ f,
+    ← RingHom.map_mul,
+    congr_arg (X.presheaf.germ (⟨z, hzVy⟩ : V y)) (hg y), RingHom.map_one, RingHom.map_one]
   -- We claim that these local inverses glue together to a global inverse of `f`.
   obtain ⟨gl, gl_spec, -⟩ := X.sheaf.existsUnique_gluing' V U iVU hcover g ic
   apply isUnit_of_mul_eq_one f gl

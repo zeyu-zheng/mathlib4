@@ -437,9 +437,9 @@ theorem sInf_coe (S : Set (LieSubalgebra R L)) : (↑(sInf S) : Set L) = ⋂ s �
   simp
 
 theorem sInf_glb (S : Set (LieSubalgebra R L)) : IsGLB S (sInf S) := by
-  have h : ∀ K K' : LieSubalgebra R L, (K : Set L) ≤ K' ↔ K ≤ K' := by
-    intros
-    exact Iff.rfl
+  have h  : ∀ K K' : LieSubalgebra R L, (K : Set L) ≤ K' ↔ K ≤ K'
+  intros
+  exact Iff.rfl
   apply IsGLB.of_image @h
   simp only [sInf_coe]
   exact isGLB_biInf

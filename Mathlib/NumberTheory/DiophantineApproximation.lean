@@ -99,14 +99,14 @@ theorem exists_int_int_abs_mul_sub_le (ξ : ℝ) {n : ℕ} (n_pos : 0 < n) :
   by_cases H : ∃ m ∈ D, f m = n
   · obtain ⟨m, hm, hf⟩ := H
     have hf' : ((n : ℤ) : ℝ) ≤ fract (ξ * m) * (n + 1) := hf ▸ floor_le (fract (ξ * m) * (n + 1))
-    have hm₀ : 0 < m := by
-      have hf₀ : f 0 = 0 := by
-        -- Porting note: was
-        -- simp only [floor_eq_zero_iff, algebraMap.coe_zero, mul_zero, fract_zero,
-        --   zero_mul, Set.left_mem_Ico, zero_lt_one]
-        simp only [f, cast_zero, mul_zero, fract_zero, zero_mul, floor_zero]
-      refine Ne.lt_of_le (fun h => n_pos.ne ?_) (mem_Icc.mp hm).1
-      exact mod_cast hf₀.symm.trans (h.symm ▸ hf : f 0 = n)
+    have hm₀  : 0 < m
+    have hf₀  : f 0 = 0
+    -- Porting note: was
+    -- simp only [floor_eq_zero_iff, algebraMap.coe_zero, mul_zero, fract_zero,
+    --   zero_mul, Set.left_mem_Ico, zero_lt_one]
+    simp only [f, cast_zero, mul_zero, fract_zero, zero_mul, floor_zero]
+    refine Ne.lt_of_le (fun h => n_pos.ne ?_) (mem_Icc.mp hm).1
+    exact mod_cast hf₀.symm.trans (h.symm ▸ hf : f 0 = n)
     refine ⟨⌊ξ * m⌋ + 1, m, hm₀, (mem_Icc.mp hm).2, ?_⟩
     rw [cast_add, ← sub_sub, sub_mul, cast_one, one_mul, abs_le]
     refine
@@ -114,7 +114,8 @@ theorem exists_int_int_abs_mul_sub_le (ξ : ℝ) {n : ℕ} (n_pos : 0 < n) :
     simpa only [neg_add_cancel_comm_assoc] using hf'
   · -- Porting note(https://github.com/leanprover-community/mathlib4/issues/5127): added `not_and`
     simp_rw [not_exists, not_and] at H
-    have hD : (Ico (0 : ℤ) n).card < D.card := by rw [card_Icc, card_Ico]; exact lt_add_one n
+    have hD  : (Ico (0 : ℤ) n).card < D.card
+    rw [card_Icc, card_Ico]; exact lt_add_one n
     have hfu' : ∀ m, f m ≤ n := fun m => lt_add_one_iff.mp (floor_lt.mpr (mod_cast hfu m))
     have hwd : ∀ m : ℤ, m ∈ D → f m ∈ Ico (0 : ℤ) n := fun x hx =>
       mem_Ico.mpr
@@ -150,9 +151,9 @@ theorem exists_rat_abs_sub_le_and_den_le (ξ : ℝ) {n : ℕ} (n_pos : 0 < n) :
     ∃ q : ℚ, |ξ - q| ≤ 1 / ((n + 1) * q.den) ∧ q.den ≤ n := by
   obtain ⟨j, k, hk₀, hk₁, h⟩ := exists_int_int_abs_mul_sub_le ξ n_pos
   have hk₀' : (0 : ℝ) < k := Int.cast_pos.mpr hk₀
-  have hden : ((j / k : ℚ).den : ℤ) ≤ k := by
-    convert le_of_dvd hk₀ (Rat.den_dvd j k)
-    exact Rat.intCast_div_eq_divInt _ _
+  have hden  : ((j / k : ℚ).den : ℤ) ≤ k
+  convert le_of_dvd hk₀ (Rat.den_dvd j k)
+  exact Rat.intCast_div_eq_divInt _ _
   refine ⟨j / k, ?_, Nat.cast_le.mp (hden.trans hk₁)⟩
   rw [← div_div, le_div_iff (Nat.cast_pos.mpr <| Rat.pos _ : (0 : ℝ) < _)]
   refine (mul_le_mul_of_nonneg_left (Int.cast_le.mpr hden : _ ≤ (k : ℝ)) (abs_nonneg _)).trans ?_
@@ -256,19 +257,19 @@ theorem finite_rat_abs_sub_lt_one_div_den_sq (ξ : ℚ) :
     {q : ℚ | |ξ - q| < 1 / (q.den : ℚ) ^ 2}.Finite := by
   let f : ℚ → ℤ × ℕ := fun q => (q.num, q.den)
   set s := {q : ℚ | |ξ - q| < 1 / (q.den : ℚ) ^ 2}
-  have hinj : Function.Injective f := by
-    intro a b hab
-    simp only [f, Prod.mk.inj_iff] at hab
-    rw [← Rat.num_div_den a, ← Rat.num_div_den b, hab.1, hab.2]
-  have H : f '' s ⊆ ⋃ (y : ℕ) (_ : y ∈ Ioc 0 ξ.den), Icc (⌈ξ * y⌉ - 1) (⌊ξ * y⌋ + 1) ×ˢ {y} := by
-    intro xy hxy
-    simp only [mem_image, mem_setOf] at hxy
-    obtain ⟨q, hq₁, hq₂⟩ := hxy
-    obtain ⟨hd, hn⟩ := den_le_and_le_num_le_of_sub_lt_one_div_den_sq hq₁
-    simp_rw [mem_iUnion]
-    refine ⟨q.den, Set.mem_Ioc.mpr ⟨q.pos, hd⟩, ?_⟩
-    simp only [prod_singleton, mem_image, mem_Icc, (congr_arg Prod.snd (Eq.symm hq₂)).trans rfl]
-    exact ⟨q.num, hn, hq₂⟩
+  have hinj  : Function.Injective f
+  intro a b hab
+  simp only [f, Prod.mk.inj_iff] at hab
+  rw [← Rat.num_div_den a, ← Rat.num_div_den b, hab.1, hab.2]
+  have H  : f '' s ⊆ ⋃ (y : ℕ) (_ : y ∈ Ioc 0 ξ.den), Icc (⌈ξ * y⌉ - 1) (⌊ξ * y⌋ + 1) ×ˢ {y}
+  intro xy hxy
+  simp only [mem_image, mem_setOf] at hxy
+  obtain ⟨q, hq₁, hq₂⟩ := hxy
+  obtain ⟨hd, hn⟩ := den_le_and_le_num_le_of_sub_lt_one_div_den_sq hq₁
+  simp_rw [mem_iUnion]
+  refine ⟨q.den, Set.mem_Ioc.mpr ⟨q.pos, hd⟩, ?_⟩
+  simp only [prod_singleton, mem_image, mem_Icc, (congr_arg Prod.snd (Eq.symm hq₂)).trans rfl]
+  exact ⟨q.num, hn, hq₂⟩
   refine (Finite.subset ?_ H).of_finite_image hinj.injOn
   exact Finite.biUnion (finite_Ioc _ _) fun x _ => Finite.prod (finite_Icc _ _) (finite_singleton _)
 
@@ -402,15 +403,16 @@ private theorem aux₁ : 0 < fract ξ := by
   obtain ⟨hcop, _, h⟩ := h
   refine fract_pos.mpr fun hf => ?_
   rw [hf] at h
-  have H : (2 * v - 1 : ℝ) < 1 := by
-    refine
-      (mul_lt_iff_lt_one_right hv₀).mp ((inv_lt_inv hv₀ (mul_pos hv₁ hv₂)).mp (lt_of_le_of_lt ?_ h))
-    have h' : (⌊ξ⌋ : ℝ) - u / v = (⌊ξ⌋ * v - u) / v := by field_simp
-    rw [h', abs_div, abs_of_pos hv₀, ← one_div, div_le_div_right hv₀]
-    norm_cast
-    rw [← zero_add (1 : ℤ), add_one_le_iff, abs_pos, sub_ne_zero]
-    rintro rfl
-    cases isUnit_iff.mp (isCoprime_self.mp (IsCoprime.mul_left_iff.mp hcop).2) <;> omega
+  have H  : (2 * v - 1 : ℝ) < 1
+  refine
+    (mul_lt_iff_lt_one_right hv₀).mp ((inv_lt_inv hv₀ (mul_pos hv₁ hv₂)).mp (lt_of_le_of_lt ?_ h))
+  have h'  : (⌊ξ⌋ : ℝ) - u / v = (⌊ξ⌋ * v - u) / v
+  field_simp
+  rw [h', abs_div, abs_of_pos hv₀, ← one_div, div_le_div_right hv₀]
+  norm_cast
+  rw [← zero_add (1 : ℤ), add_one_le_iff, abs_pos, sub_ne_zero]
+  rintro rfl
+  cases isUnit_iff.mp (isCoprime_self.mp (IsCoprime.mul_left_iff.mp hcop).2) <;> omega
   norm_cast at H
   linarith only [hv, H]
 
@@ -418,34 +420,35 @@ private theorem aux₁ : 0 < fract ξ := by
 private theorem aux₂ : 0 < u - ⌊ξ⌋ * v ∧ u - ⌊ξ⌋ * v < v := by
   obtain ⟨hcop, _, h⟩ := h
   obtain ⟨hv₀, hv₀'⟩ := aux₀ (zero_lt_two.trans_le hv)
-  have hv₁ : 0 < 2 * v - 1 := by linarith only [hv]
+  have hv₁  : 0 < 2 * v - 1
+  linarith only [hv]
   rw [← one_div, lt_div_iff (mul_pos hv₀ hv₀'), ← abs_of_pos (mul_pos hv₀ hv₀'), ← abs_mul, sub_mul,
     ← mul_assoc, ← mul_assoc, div_mul_cancel₀ _ hv₀.ne', abs_sub_comm, abs_lt, lt_sub_iff_add_lt,
     sub_lt_iff_lt_add, mul_assoc] at h
-  have hu₀ : 0 ≤ u - ⌊ξ⌋ * v := by
-    -- Porting note: this abused the definitional equality `-1 + 1 = 0`
-    -- refine' (mul_nonneg_iff_of_pos_right hv₁).mp ((lt_iff_add_one_le (-1 : ℤ) _).mp _)
-    refine (mul_nonneg_iff_of_pos_right hv₁).mp ?_
-    rw [← sub_one_lt_iff, zero_sub]
-    replace h := h.1
-    rw [← lt_sub_iff_add_lt, ← mul_assoc, ← sub_mul] at h
-    exact mod_cast
-      h.trans_le
-        ((mul_le_mul_right <| hv₀').mpr <|
-          (sub_le_sub_iff_left (u : ℝ)).mpr ((mul_le_mul_right hv₀).mpr (floor_le ξ)))
-  have hu₁ : u - ⌊ξ⌋ * v ≤ v := by
-    refine _root_.le_of_mul_le_mul_right (le_of_lt_add_one ?_) hv₁
-    replace h := h.2
-    rw [← sub_lt_iff_lt_add, ← mul_assoc, ← sub_mul, ← add_lt_add_iff_right (v * (2 * v - 1) : ℝ),
-      add_comm (1 : ℝ)] at h
-    have :=
-      (mul_lt_mul_right <| hv₀').mpr
-        ((sub_lt_sub_iff_left (u : ℝ)).mpr <|
-          (mul_lt_mul_right hv₀).mpr <| sub_right_lt_of_lt_add <| lt_floor_add_one ξ)
-    rw [sub_mul ξ, one_mul, ← sub_add, add_mul] at this
-    exact mod_cast this.trans h
-  have huv_cop : IsCoprime (u - ⌊ξ⌋ * v) v := by
-    rwa [sub_eq_add_neg, ← neg_mul, IsCoprime.add_mul_right_left_iff]
+  have hu₀  : 0 ≤ u - ⌊ξ⌋ * v
+  -- Porting note: this abused the definitional equality `-1 + 1 = 0`
+  -- refine' (mul_nonneg_iff_of_pos_right hv₁).mp ((lt_iff_add_one_le (-1 : ℤ) _).mp _)
+  refine (mul_nonneg_iff_of_pos_right hv₁).mp ?_
+  rw [← sub_one_lt_iff, zero_sub]
+  replace h := h.1
+  rw [← lt_sub_iff_add_lt, ← mul_assoc, ← sub_mul] at h
+  exact mod_cast
+    h.trans_le
+      ((mul_le_mul_right <| hv₀').mpr <|
+        (sub_le_sub_iff_left (u : ℝ)).mpr ((mul_le_mul_right hv₀).mpr (floor_le ξ)))
+  have hu₁  : u - ⌊ξ⌋ * v ≤ v
+  refine _root_.le_of_mul_le_mul_right (le_of_lt_add_one ?_) hv₁
+  replace h := h.2
+  rw [← sub_lt_iff_lt_add, ← mul_assoc, ← sub_mul, ← add_lt_add_iff_right (v * (2 * v - 1) : ℝ),
+    add_comm (1 : ℝ)] at h
+  have :=
+    (mul_lt_mul_right <| hv₀').mpr
+      ((sub_lt_sub_iff_left (u : ℝ)).mpr <|
+        (mul_lt_mul_right hv₀).mpr <| sub_right_lt_of_lt_add <| lt_floor_add_one ξ)
+  rw [sub_mul ξ, one_mul, ← sub_add, add_mul] at this
+  exact mod_cast this.trans h
+  have huv_cop  : IsCoprime (u - ⌊ξ⌋ * v) v
+  rwa [sub_eq_add_neg, ← neg_mul, IsCoprime.add_mul_right_left_iff]
   refine ⟨lt_of_le_of_ne' hu₀ fun hf => ?_, lt_of_le_of_ne hu₁ fun hf => ?_⟩ <;>
     · rw [hf] at huv_cop
       simp only [isCoprime_zero_left, isCoprime_self, isUnit_iff] at huv_cop
@@ -464,19 +467,19 @@ private theorem aux₃ :
   obtain ⟨Hv, Hv'⟩ := aux₀ (zero_lt_two.trans_le hv)
   have H₁ := div_pos (div_pos Hv Hu) hξ₀
   replace h := h.2.2
-  have h' : |fract ξ - u' / v| < ((v : ℝ) * (2 * v - 1))⁻¹ := by
-    rwa [hu'ℝ, add_div, mul_div_cancel_right₀ _ Hv.ne', ← sub_sub, sub_right_comm] at h
-  have H : (2 * u' - 1 : ℝ) ≤ (2 * v - 1) * fract ξ := by
-    replace h := (abs_lt.mp h).1
-    have : (2 * (v : ℝ) - 1) * (-((v : ℝ) * (2 * v - 1))⁻¹ + u' / v) = 2 * u' - (1 + u') / v := by
-      field_simp; ring
-    rw [hu'ℝ, add_div, mul_div_cancel_right₀ _ Hv.ne', ← sub_sub, sub_right_comm, self_sub_floor,
-      lt_sub_iff_add_lt, ← mul_lt_mul_left Hv', this] at h
-    refine LE.le.trans ?_ h.le
-    rw [sub_le_sub_iff_left, div_le_one Hv, add_comm]
-    exact mod_cast huv
-  have help₁ {a b c : ℝ} : a ≠ 0 → b ≠ 0 → c ≠ 0 → |a⁻¹ - b / c| = |(a - c / b) * (b / c / a)| := by
-    intros; rw [abs_sub_comm]; congr 1; field_simp; ring
+  have h'  : |fract ξ - u' / v| < ((v : ℝ) * (2 * v - 1))⁻¹
+  rwa [hu'ℝ, add_div, mul_div_cancel_right₀ _ Hv.ne', ← sub_sub, sub_right_comm] at h
+  have H  : (2 * u' - 1 : ℝ) ≤ (2 * v - 1) * fract ξ
+  replace h := (abs_lt.mp h).1
+  have  : (2 * (v : ℝ) - 1) * (-((v : ℝ) * (2 * v - 1))⁻¹ + u' / v) = 2 * u' - (1 + u') / v
+  field_simp; ring
+  rw [hu'ℝ, add_div, mul_div_cancel_right₀ _ Hv.ne', ← sub_sub, sub_right_comm, self_sub_floor,
+    lt_sub_iff_add_lt, ← mul_lt_mul_left Hv', this] at h
+  refine LE.le.trans ?_ h.le
+  rw [sub_le_sub_iff_left, div_le_one Hv, add_comm]
+  exact mod_cast huv
+  have help₁ {a b c  : ℝ} : a ≠ 0 → b ≠ 0 → c ≠ 0 → |a⁻¹ - b / c| = |(a - c / b) * (b / c / a)|
+  intros; rw [abs_sub_comm]; congr 1; field_simp; ring
   have help₂ :
     ∀ {a b c d : ℝ}, a ≠ 0 → b ≠ 0 → c ≠ 0 → d ≠ 0 → (b * c)⁻¹ * (b / d / a) = (d * c * a)⁻¹ := by
     intros; field_simp; ring
@@ -496,10 +499,10 @@ private theorem invariant : ContfracLegendre.Ass (fract ξ)⁻¹ v (u - ⌊ξ⌋
   · rw [sub_eq_add_neg, ← neg_mul, isCoprime_comm, IsCoprime.add_mul_right_left_iff]
     exact h.1
   · obtain hv₀' := (aux₀ (zero_lt_two.trans_le hv)).2
-    have Hv : (v * (2 * v - 1) : ℝ)⁻¹ + (v : ℝ)⁻¹ = 2 / (2 * v - 1) := by
-      field_simp; ring
-    have Huv : (u / v : ℝ) = ⌊ξ⌋ + (v : ℝ)⁻¹ := by
-      rw [sub_eq_iff_eq_add'.mp huv]; field_simp
+    have Hv  : (v * (2 * v - 1) : ℝ)⁻¹ + (v : ℝ)⁻¹ = 2 / (2 * v - 1)
+    field_simp; ring
+    have Huv  : (u / v : ℝ) = ⌊ξ⌋ + (v : ℝ)⁻¹
+    rw [sub_eq_iff_eq_add'.mp huv]; field_simp
     have h' := (abs_sub_lt_iff.mp h.2.2).1
     rw [Huv, ← sub_sub, sub_lt_iff_lt_add, self_sub_floor, Hv] at h'
     rwa [lt_sub_iff_add_lt', (by ring : (v : ℝ) + -(1 / 2) = (2 * v - 1) / 2),
@@ -528,9 +531,9 @@ theorem exists_rat_eq_convergent' {v : ℕ} (h' : ContfracLegendre.Ass ξ u v) :
       rw [convergent_zero, Rat.coe_int_inj, eq_comm, floor_eq_iff]
       convert And.intro ht (sub_lt_iff_lt_add'.mp (abs_lt.mp h₂).2) <;> norm_num
     · replace h₁ := lt_sub_iff_add_lt'.mp (h₁ rfl)
-      have hξ₁ : ⌊ξ⌋ = u - 1 := by
-        rw [floor_eq_iff, cast_sub, cast_one, sub_add_cancel]
-        exact ⟨(((sub_lt_sub_iff_left _).mpr one_half_lt_one).trans h₁).le, ht⟩
+      have hξ₁  : ⌊ξ⌋ = u - 1
+      rw [floor_eq_iff, cast_sub, cast_one, sub_add_cancel]
+      exact ⟨(((sub_lt_sub_iff_left _).mpr one_half_lt_one).trans h₁).le, ht⟩
       rcases eq_or_ne ξ ⌊ξ⌋ with Hξ | Hξ
       · rw [Hξ, hξ₁, cast_sub, cast_one, ← sub_eq_add_neg, sub_lt_sub_iff_left] at h₁
         exact False.elim (lt_irrefl _ <| h₁.trans one_half_lt_one)
@@ -547,7 +550,8 @@ theorem exists_rat_eq_convergent' {v : ℕ} (h' : ContfracLegendre.Ass ξ u v) :
         simp [convergent, hξ₁, hξ₂, cast_sub, cast_one]
   · obtain ⟨huv₀, huv₁⟩ := aux₂ (Nat.cast_le.mpr ht) h
     have Hv : (v : ℚ) ≠ 0 := (Nat.cast_pos.mpr (zero_lt_one.trans ht)).ne'
-    have huv₁' : (u - ⌊ξ⌋ * v).toNat < v := by zify; rwa [toNat_of_nonneg huv₀.le]
+    have huv₁'  : (u - ⌊ξ⌋ * v).toNat < v
+    zify; rwa [toNat_of_nonneg huv₀.le]
     have inv : ContfracLegendre.Ass (fract ξ)⁻¹ v (u - ⌊ξ⌋ * ↑v).toNat :=
       (toNat_of_nonneg huv₀.le).symm ▸ invariant (Nat.cast_le.mpr ht) h
     obtain ⟨n, hn⟩ := ih (u - ⌊ξ⌋ * v).toNat huv₁' inv

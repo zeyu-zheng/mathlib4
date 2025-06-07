@@ -108,16 +108,16 @@ theorem coeff_add_of_disjoint (x y : 𝕎 R) (h : ∀ n, x.coeff n = 0 ∨ y.coe
   let P : ℕ → Prop := fun n => y.coeff n = 0
   haveI : DecidablePred P := Classical.decPred P
   set z := mk p fun n => if P n then x.coeff n else y.coeff n
-  have hx : select P z = x := by
-    ext1 n; rw [select, coeff_mk, coeff_mk]
-    split_ifs with hn
-    · rfl
-    · rw [(h n).resolve_right hn]
-  have hy : select (fun i => ¬P i) z = y := by
-    ext1 n; rw [select, coeff_mk, coeff_mk]
-    split_ifs with hn
-    · exact hn.symm
-    · rfl
+  have hx  : select P z = x
+  ext1 n; rw [select, coeff_mk, coeff_mk]
+  split_ifs with hn
+  · rfl
+  · rw [(h n).resolve_right hn]
+  have hy  : select (fun i => ¬P i) z = y
+  ext1 n; rw [select, coeff_mk, coeff_mk]
+  split_ifs with hn
+  · exact hn.symm
+  · rfl
   calc
     (x + y).coeff n = z.coeff n := by rw [← hx, ← hy, select_add_select_not P z]
     _ = x.coeff n + y.coeff n := by
@@ -171,7 +171,8 @@ elab_rules : tactic
       rintro ⟨b, k⟩ h -
       replace h := $e:term p _ h
       simp only [Finset.mem_range, Finset.mem_product, true_and, Finset.mem_univ] at h
-      have hk : k < n := by linarith
+      have hk  : k < n
+      linarith
       fin_cases b <;> simp only [Function.uncurry, Matrix.cons_val_zero, Matrix.head_cons,
         WittVector.coeff_mk, Matrix.cons_val_one, WittVector.mk, Fin.mk_zero, Matrix.cons_val',
         Matrix.empty_val', Matrix.cons_val_fin_one, Matrix.cons_val_zero,

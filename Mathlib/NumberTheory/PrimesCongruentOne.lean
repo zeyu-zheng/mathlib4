@@ -28,21 +28,21 @@ theorem exists_prime_gt_modEq_one {k : ℕ} (n : ℕ) (hk0 : k ≠ 0) :
   · rcases exists_infinite_primes (n + 1) with ⟨p, hnp, hp⟩
     exact ⟨p, hp, hnp, modEq_one⟩
   let b := k * (n !)
-  have hgt : 1 < (eval (↑b) (cyclotomic k ℤ)).natAbs := by
-    rcases le_iff_exists_add'.1 hk1.le with ⟨k, rfl⟩
-    have hb : 2 ≤ b := le_mul_of_le_of_one_le hk1 n.factorial_pos
-    calc
-      1 ≤ b - 1 := le_tsub_of_add_le_left hb
-      _ < (eval (b : ℤ) (cyclotomic (k + 1) ℤ)).natAbs :=
-        sub_one_lt_natAbs_cyclotomic_eval hk1 (succ_le_iff.1 hb).ne'
+  have hgt  : 1 < (eval (↑b) (cyclotomic k ℤ)).natAbs
+  rcases le_iff_exists_add'.1 hk1.le with ⟨k, rfl⟩
+  have hb : 2 ≤ b := le_mul_of_le_of_one_le hk1 n.factorial_pos
+  calc
+    1 ≤ b - 1 := le_tsub_of_add_le_left hb
+    _ < (eval (b : ℤ) (cyclotomic (k + 1) ℤ)).natAbs :=
+      sub_one_lt_natAbs_cyclotomic_eval hk1 (succ_le_iff.1 hb).ne'
   let p := minFac (eval (↑b) (cyclotomic k ℤ)).natAbs
   haveI hprime : Fact p.Prime := ⟨minFac_prime (ne_of_lt hgt).symm⟩
-  have hroot : IsRoot (cyclotomic k (ZMod p)) (castRingHom (ZMod p) b) := by
-    have : ((b : ℤ) : ZMod p) = ↑(Int.castRingHom (ZMod p) b) := by simp
-    rw [IsRoot.def, ← map_cyclotomic_int k (ZMod p), eval_map, coe_castRingHom,
-      ← Int.cast_natCast, this, eval₂_hom, Int.coe_castRingHom, ZMod.intCast_zmod_eq_zero_iff_dvd]
-    apply Int.dvd_natAbs.1
-    exact mod_cast minFac_dvd (eval (↑b) (cyclotomic k ℤ)).natAbs
+  have hroot  : IsRoot (cyclotomic k (ZMod p)) (castRingHom (ZMod p) b)
+  have : ((b : ℤ) : ZMod p) = ↑(Int.castRingHom (ZMod p) b) := by simp
+  rw [IsRoot.def, ← map_cyclotomic_int k (ZMod p), eval_map, coe_castRingHom,
+    ← Int.cast_natCast, this, eval₂_hom, Int.coe_castRingHom, ZMod.intCast_zmod_eq_zero_iff_dvd]
+  apply Int.dvd_natAbs.1
+  exact mod_cast minFac_dvd (eval (↑b) (cyclotomic k ℤ)).natAbs
   have hpb : ¬p ∣ b :=
     hprime.1.coprime_iff_not_dvd.1 (coprime_of_root_cyclotomic hk0.bot_lt hroot).symm
   refine ⟨p, hprime.1, not_le.1 fun habs => ?_, ?_⟩

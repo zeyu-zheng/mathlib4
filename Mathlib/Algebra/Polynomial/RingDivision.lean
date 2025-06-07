@@ -459,8 +459,8 @@ theorem eval_divByMonic_eq_trailingCoeff_comp {p : R[X]} {t : R} :
   have mul_eq := p.pow_mul_divByMonic_rootMultiplicity_eq t
   set m := p.rootMultiplicity t
   set g := p /ₘ (X - C t) ^ m
-  have : (g.comp (X + C t)).coeff 0 = g.eval t := by
-    rw [coeff_zero_eq_eval_zero, eval_comp, eval_add, eval_X, eval_C, zero_add]
+  have  : (g.comp (X + C t)).coeff 0 = g.eval t
+  rw [coeff_zero_eq_eval_zero, eval_comp, eval_add, eval_X, eval_C, zero_add]
   rw [← congr_arg (comp · <| X + C t) mul_eq, mul_comp, pow_comp, sub_comp, X_comp, C_comp,
     add_sub_cancel_right, ← reverse_leadingCoeff, reverse_X_pow_mul, reverse_leadingCoeff,
     trailingCoeff, Nat.le_zero.1 (natTrailingDegree_le_of_ne_zero <|
@@ -557,9 +557,9 @@ theorem degree_eq_one_of_irreducible_of_root (hi : Irreducible p) {x : R} (hx : 
 theorem leadingCoeff_divByMonic_of_monic {R : Type u} [CommRing R] {p q : R[X]} (hmonic : q.Monic)
     (hdegree : q.degree ≤ p.degree) : (p /ₘ q).leadingCoeff = p.leadingCoeff := by
   nontriviality
-  have h : q.leadingCoeff * (p /ₘ q).leadingCoeff ≠ 0 := by
-    simpa [divByMonic_eq_zero_iff hmonic, hmonic.leadingCoeff,
-      Nat.WithBot.one_le_iff_zero_lt] using hdegree
+  have h  : q.leadingCoeff * (p /ₘ q).leadingCoeff ≠ 0
+  simpa [divByMonic_eq_zero_iff hmonic, hmonic.leadingCoeff,
+    Nat.WithBot.one_le_iff_zero_lt] using hdegree
   nth_rw 2 [← modByMonic_add_div p hmonic]
   rw [leadingCoeff_add_of_degree_lt, leadingCoeff_monic_mul hmonic]
   rw [degree_mul' h, degree_add_divByMonic hmonic hdegree]
@@ -671,8 +671,8 @@ theorem units_coeff_zero_smul (c : R[X]ˣ) (p : R[X]) : (c : R[X]).coeff 0 • p
 theorem comp_eq_zero_iff : p.comp q = 0 ↔ p = 0 ∨ p.eval (q.coeff 0) = 0 ∧ q = C (q.coeff 0) := by
   constructor
   · intro h
-    have key : p.natDegree = 0 ∨ q.natDegree = 0 := by
-      rw [← mul_eq_zero, ← natDegree_comp, h, natDegree_zero]
+    have key  : p.natDegree = 0 ∨ q.natDegree = 0
+    rw [← mul_eq_zero, ← natDegree_comp, h, natDegree_zero]
     replace key := Or.imp eq_C_of_natDegree_eq_zero eq_C_of_natDegree_eq_zero key
     cases' key with key key
     · rw [key, C_comp] at h

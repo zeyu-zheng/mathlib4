@@ -139,14 +139,14 @@ theorem Nondegenerate.exists_injective_of_card_le [Nondegenerate P L] [Fintype P
       replace := h.trans this
       rwa [← add_tsub_assoc_of_le s.card_le_univ, le_tsub_iff_left (le_add_left s.card_le_univ),
         add_le_add_iff_right] at this
-    have hs₂ : (s.biUnion t)ᶜ.card ≤ 1 := by
-      -- At most one line through two points of `s`
-      refine Finset.card_le_one_iff.mpr @fun p₁ p₂ hp₁ hp₂ => ?_
-      simp_rw [t, Finset.mem_compl, Finset.mem_biUnion, not_exists, not_and,
-        Set.mem_toFinset, Set.mem_setOf_eq, Classical.not_not] at hp₁ hp₂
-      obtain ⟨l₁, l₂, hl₁, hl₂, hl₃⟩ :=
-        Finset.one_lt_card_iff.mp (Nat.one_lt_iff_ne_zero_and_ne_one.mpr ⟨hs₀, hs₁⟩)
-      exact (eq_or_eq (hp₁ l₁ hl₁) (hp₂ l₁ hl₁) (hp₁ l₂ hl₂) (hp₂ l₂ hl₂)).resolve_right hl₃
+    have hs₂  : (s.biUnion t)ᶜ.card ≤ 1
+    -- At most one line through two points of `s`
+    refine Finset.card_le_one_iff.mpr @fun p₁ p₂ hp₁ hp₂ => ?_
+    simp_rw [t, Finset.mem_compl, Finset.mem_biUnion, not_exists, not_and,
+      Set.mem_toFinset, Set.mem_setOf_eq, Classical.not_not] at hp₁ hp₂
+    obtain ⟨l₁, l₂, hl₁, hl₂, hl₃⟩ :=
+      Finset.one_lt_card_iff.mp (Nat.one_lt_iff_ne_zero_and_ne_one.mpr ⟨hs₀, hs₁⟩)
+    exact (eq_or_eq (hp₁ l₁ hl₁) (hp₂ l₁ hl₁) (hp₁ l₂ hl₂) (hp₂ l₂ hl₂)).resolve_right hl₃
     by_cases hs₃ : sᶜ.card = 0
     · rw [hs₃, Nat.le_zero]
       rw [Finset.card_compl, tsub_eq_zero_iff_le, LE.le.le_iff_eq (Finset.card_le_univ _), eq_comm,
@@ -253,9 +253,9 @@ theorem HasLines.lineCount_eq_pointCount [HasLines P L] [Fintype P] [Fintype L]
   classical
     obtain ⟨f, hf1, hf2⟩ := HasLines.exists_bijective_of_card_eq hPL
     let s : Finset (P × L) := Set.toFinset { i | i.1 ∈ i.2 }
-    have step1 : ∑ i : P × L, lineCount L i.1 = ∑ i : P × L, pointCount P i.2 := by
-      rw [← Finset.univ_product_univ, Finset.sum_product_right, Finset.sum_product]
-      simp_rw [Finset.sum_const, Finset.card_univ, hPL, sum_lineCount_eq_sum_pointCount]
+    have step1  : ∑ i : P × L, lineCount L i.1 = ∑ i : P × L, pointCount P i.2
+    rw [← Finset.univ_product_univ, Finset.sum_product_right, Finset.sum_product]
+    simp_rw [Finset.sum_const, Finset.card_univ, hPL, sum_lineCount_eq_sum_pointCount]
     have step2 : ∑ i ∈ s, lineCount L i.1 = ∑ i ∈ s, pointCount P i.2 := by
       rw [s.sum_finset_product Finset.univ fun p => Set.toFinset { l | p ∈ l }]
       on_goal 1 =>
@@ -265,8 +265,8 @@ theorem HasLines.lineCount_eq_pointCount [HasLines P L] [Fintype P] [Fintype L]
           change pointCount P l • _ = lineCount L (f l) • _
           rw [hf2]
       all_goals simp_rw [s, Finset.mem_univ, true_and_iff, Set.mem_toFinset]; exact fun p => Iff.rfl
-    have step3 : ∑ i ∈ sᶜ, lineCount L i.1 = ∑ i ∈ sᶜ, pointCount P i.2 := by
-      rwa [← s.sum_add_sum_compl, ← s.sum_add_sum_compl, step2, add_left_cancel_iff] at step1
+    have step3  : ∑ i ∈ sᶜ, lineCount L i.1 = ∑ i ∈ sᶜ, pointCount P i.2
+    rwa [← s.sum_add_sum_compl, ← s.sum_add_sum_compl, step2, add_left_cancel_iff] at step1
     rw [← Set.toFinset_compl] at step3
     exact
       ((Finset.sum_eq_sum_iff_of_le fun i hi =>

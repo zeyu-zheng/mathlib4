@@ -226,7 +226,8 @@ theorem withDensity_apply_eq_zero' {f : α → ℝ≥0∞} {s : Set α} (hf : AE
   · intro hs
     let t := toMeasurable (μ.withDensity f) s
     apply measure_mono_null (inter_subset_inter_right _ (subset_toMeasurable (μ.withDensity f) s))
-    have A : μ.withDensity f t = 0 := by rw [measure_toMeasurable, hs]
+    have A  : μ.withDensity f t = 0
+    rw [measure_toMeasurable, hs]
     rw [withDensity_apply f (measurableSet_toMeasurable _ s),
       lintegral_eq_zero_iff' (AEMeasurable.restrict hf),
       EventuallyEq, ae_restrict_iff'₀, ae_iff] at A
@@ -239,23 +240,23 @@ theorem withDensity_apply_eq_zero' {f : α → ℝ≥0∞} {s : Set α} (hf : AE
       mem_compl_iff, not_forall]
   · intro hs
     let t := toMeasurable μ ({ x | f x ≠ 0 } ∩ s)
-    have A : s ⊆ t ∪ { x | f x = 0 } := by
-      intro x hx
-      rcases eq_or_ne (f x) 0 with (fx | fx)
-      · simp only [fx, mem_union, mem_setOf_eq, eq_self_iff_true, or_true_iff]
-      · left
-        apply subset_toMeasurable _ _
-        exact ⟨fx, hx⟩
+    have A  : s ⊆ t ∪ { x | f x = 0 }
+    intro x hx
+    rcases eq_or_ne (f x) 0 with (fx | fx)
+    · simp only [fx, mem_union, mem_setOf_eq, eq_self_iff_true, or_true_iff]
+    · left
+      apply subset_toMeasurable _ _
+      exact ⟨fx, hx⟩
     apply measure_mono_null A (measure_union_null _ _)
     · apply withDensity_absolutelyContinuous
       rwa [measure_toMeasurable]
     rcases hf with ⟨g, hg, hfg⟩
-    have t : {x | f x = 0} =ᵐ[μ.withDensity f] {x | g x = 0} := by
-      apply withDensity_absolutelyContinuous
-      filter_upwards [hfg] with a ha
-      rw [eq_iff_iff]
-      exact ⟨fun h ↦ by rw [h] at ha; exact ha.symm,
-             fun h ↦ by rw [h] at ha; exact ha⟩
+    have t  : {x | f x = 0} =ᵐ[μ.withDensity f] {x | g x = 0}
+    apply withDensity_absolutelyContinuous
+    filter_upwards [hfg] with a ha
+    rw [eq_iff_iff]
+    exact ⟨fun h ↦ by rw [h] at ha; exact ha.symm,
+           fun h ↦ by rw [h] at ha; exact ha⟩
     rw [measure_congr t, withDensity_congr_ae hfg]
     have M : MeasurableSet { x : α | g x = 0 } := hg (measurableSet_singleton _)
     rw [withDensity_apply _ M, lintegral_eq_zero_iff hg]
@@ -283,11 +284,11 @@ theorem ae_withDensity_iff_ae_restrict' {p : α → Prop} {f : α → ℝ≥0∞
   rw [ae_withDensity_iff' hf, ae_restrict_iff'₀]
   · simp only [mem_setOf]
   · rcases hf with ⟨g, hg, hfg⟩
-    have nonneg_eq_ae : {x | g x ≠ 0} =ᵐ[μ] {x | f x ≠ 0} := by
-      filter_upwards [hfg] with a ha
-      simp only [eq_iff_iff]
-      exact ⟨fun (h : g a ≠ 0) ↦ by rwa [← ha] at h,
-             fun (h : f a ≠ 0) ↦ by rwa [ha] at h⟩
+    have nonneg_eq_ae  : {x | g x ≠ 0} =ᵐ[μ] {x | f x ≠ 0}
+    filter_upwards [hfg] with a ha
+    simp only [eq_iff_iff]
+    exact ⟨fun (h : g a ≠ 0) ↦ by rwa [← ha] at h,
+           fun (h : f a ≠ 0) ↦ by rwa [ha] at h⟩
     exact NullMeasurableSet.congr
       (MeasurableSet.nullMeasurableSet
         <| hg (measurableSet_singleton _)).compl
@@ -311,7 +312,8 @@ theorem aemeasurable_withDensity_ennreal_iff' {f : α → ℝ≥0}
     · rw [EventuallyEq, ae_withDensity_iff' hf.coe_nnreal_ennreal] at hg'
       rw [ae_restrict_iff' A]
       filter_upwards [hg', hf'_ae] with a ha h'a h_a_nonneg
-      have : (f' a : ℝ≥0∞) ≠ 0 := by simpa only [Ne, ENNReal.coe_eq_zero] using h_a_nonneg
+      have  : (f' a : ℝ≥0∞) ≠ 0
+      simpa only [Ne, ENNReal.coe_eq_zero] using h_a_nonneg
       rw [← h'a] at this ⊢
       rw [ha this]
     · rw [ae_restrict_iff' A.compl]
@@ -438,11 +440,11 @@ theorem lintegral_withDensity_eq_lintegral_mul_non_measurable (μ : Measure α) 
   refine le_antisymm (lintegral_withDensity_le_lintegral_mul μ f_meas g) ?_
   rw [← iSup_lintegral_measurable_le_eq_lintegral, ← iSup_lintegral_measurable_le_eq_lintegral]
   refine iSup₂_le fun i i_meas => iSup_le fun hi => ?_
-  have A : (fun x => (f x)⁻¹ * i x) ≤ g := by
-    intro x
-    dsimp
-    rw [mul_comm, ← div_eq_mul_inv]
-    exact div_le_of_le_mul' (hi x)
+  have A  : (fun x => (f x)⁻¹ * i x) ≤ g
+  intro x
+  dsimp
+  rw [mul_comm, ← div_eq_mul_inv]
+  exact div_le_of_le_mul' (hi x)
   refine le_iSup_of_le (fun x => (f x)⁻¹ * i x) (le_iSup_of_le (f_meas.inv.mul i_meas) ?_)
   refine le_iSup_of_le A ?_
   rw [lintegral_withDensity_eq_lintegral_mul _ f_meas (f_meas.inv.mul i_meas)]
@@ -629,12 +631,12 @@ instance Measure.withDensity.instSFinite [SFinite μ] {f : α → ℝ≥0∞} :
       rw [ENNReal.tsum_apply]
       if hx : x ∈ s then simpa [hx, ENNReal.tsum_const_eq_top_of_ne_zero]
       else simp [hx]
-  have : SigmaFinite (μ.withDensity (sᶜ.indicator f)) := by
-    refine SigmaFinite.withDensity_of_ne_top <| ae_of_all _ fun x hx ↦ ?_
-    simp [indicator_apply, ite_eq_iff, s] at hx
-  have : SigmaFinite (μ.withDensity (s.indicator 1)) := by
-    rw [withDensity_indicator hs]
-    exact SigmaFinite.withDensity 1
+  have  : SigmaFinite (μ.withDensity (sᶜ.indicator f))
+  refine SigmaFinite.withDensity_of_ne_top <| ae_of_all _ fun x hx ↦ ?_
+  simp [indicator_apply, ite_eq_iff, s] at hx
+  have  : SigmaFinite (μ.withDensity (s.indicator 1))
+  rw [withDensity_indicator hs]
+  exact SigmaFinite.withDensity 1
   rw [key]
   infer_instance
 

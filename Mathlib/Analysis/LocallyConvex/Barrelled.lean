@@ -162,9 +162,9 @@ protected theorem banach_steinhaus (H : ∀ k x, BddAbove (range fun i ↦ q k (
   intro k
   -- By assumption the supremum `⊔ i, q k (𝓕 i x)` is well-defined for all `x`, hence the
   -- supremum `⊔ i, (q k) ∘ (𝓕 i)` is well defined in the lattice of seminorms.
-  have : BddAbove (range fun i ↦ (q k).comp (𝓕 i).toLinearMap) := by
-    rw [Seminorm.bddAbove_range_iff]
-    exact H k
+  have  : BddAbove (range fun i ↦ (q k).comp (𝓕 i).toLinearMap)
+  rw [Seminorm.bddAbove_range_iff]
+  exact H k
   -- By definition of the lattice structure on seminorms, `⊔ i, (q k) ∘ (𝓕 i)` is the *pointwise*
   -- supremum of the continuous seminorms `(q k) ∘ (𝓕 i)`. Since `E` is barrelled, this supremum
   -- is continuous.

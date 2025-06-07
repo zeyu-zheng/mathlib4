@@ -77,7 +77,8 @@ theorem Lp.ae_eq_zero_of_forall_setIntegral_eq_zero' (hm : m ≤ m0) (f : Lp E' 
     (hf_meas : AEStronglyMeasurable' m f μ) : f =ᵐ[μ] 0 := by
   let f_meas : lpMeas E' 𝕜 m p μ := ⟨f, hf_meas⟩
   -- Porting note: `simp only` does not call `rfl` to try to close the goal. See https://github.com/leanprover-community/mathlib4/issues/5025
-  have hf_f_meas : f =ᵐ[μ] f_meas := by simp only [Subtype.coe_mk]; rfl
+  have hf_f_meas  : f =ᵐ[μ] f_meas
+  simp only [Subtype.coe_mk]; rfl
   refine hf_f_meas.trans ?_
   refine lpMeas.ae_eq_zero_of_forall_setIntegral_eq_zero hm f_meas hp_ne_zero hp_ne_top ?_ ?_
   · intro s hs hμs
@@ -102,15 +103,15 @@ theorem Lp.ae_eq_of_forall_setIntegral_eq' (hm : m ≤ m0) (f g : Lp E' p μ) (h
     f =ᵐ[μ] g := by
   suffices h_sub : ⇑(f - g) =ᵐ[μ] 0 by
     rw [← sub_ae_eq_zero]; exact (Lp.coeFn_sub f g).symm.trans h_sub
-  have hfg' : ∀ s : Set α, MeasurableSet[m] s → μ s < ∞ → (∫ x in s, (f - g) x ∂μ) = 0 := by
-    intro s hs hμs
-    rw [integral_congr_ae (ae_restrict_of_ae (Lp.coeFn_sub f g))]
-    rw [integral_sub' (hf_int_finite s hs hμs) (hg_int_finite s hs hμs)]
-    exact sub_eq_zero.mpr (hfg s hs hμs)
-  have hfg_int : ∀ s, MeasurableSet[m] s → μ s < ∞ → IntegrableOn (⇑(f - g)) s μ := by
-    intro s hs hμs
-    rw [IntegrableOn, integrable_congr (ae_restrict_of_ae (Lp.coeFn_sub f g))]
-    exact (hf_int_finite s hs hμs).sub (hg_int_finite s hs hμs)
+  have hfg'  : ∀ s : Set α, MeasurableSet[m] s → μ s < ∞ → (∫ x in s, (f - g) x ∂μ) = 0
+  intro s hs hμs
+  rw [integral_congr_ae (ae_restrict_of_ae (Lp.coeFn_sub f g))]
+  rw [integral_sub' (hf_int_finite s hs hμs) (hg_int_finite s hs hμs)]
+  exact sub_eq_zero.mpr (hfg s hs hμs)
+  have hfg_int  : ∀ s, MeasurableSet[m] s → μ s < ∞ → IntegrableOn (⇑(f - g)) s μ
+  intro s hs hμs
+  rw [IntegrableOn, integrable_congr (ae_restrict_of_ae (Lp.coeFn_sub f g))]
+  exact (hf_int_finite s hs hμs).sub (hg_int_finite s hs hμs)
   have hfg_meas : AEStronglyMeasurable' m (⇑(f - g)) μ :=
     AEStronglyMeasurable'.congr (hf_meas.sub hg_meas) (Lp.coeFn_sub f g).symm
   exact

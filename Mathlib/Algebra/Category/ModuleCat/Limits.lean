@@ -191,8 +191,8 @@ instance forget₂AddCommGroupReflectsLimit :
     ReflectsLimit F (forget₂ (ModuleCat.{w} R) AddCommGrp) where
   reflects {c} hc := by
     have : HasLimit (F ⋙ forget₂ (ModuleCat R) AddCommGrp) := ⟨_, hc⟩
-    have : Small.{w} (Functor.sections (F ⋙ forget (ModuleCat R))) := by
-      simpa only [AddCommGrp.hasLimit_iff_small_sections] using this
+    have  : Small.{w} (Functor.sections (F ⋙ forget (ModuleCat R)))
+    simpa only [AddCommGrp.hasLimit_iff_small_sections] using this
     have := reflectsLimitOfReflectsIsomorphisms F (forget₂ (ModuleCat R) AddCommGrp)
     exact isLimitOfReflects _ hc
 

@@ -126,12 +126,12 @@ instance (priority := 10) exponentialIdeal_of_preservesBinaryProducts
     apply CartesianClosed.curry (ir.homEquiv _ _ _)
     apply _ ≫ (ir.homEquiv _ _).symm ((exp.ev A).app (i.obj B))
     exact prodComparison L A _ ≫ Limits.prod.map (𝟙 _) (ε.app _) ≫ inv (prodComparison _ _ _)
-  have : η.app (A ⟹ i.obj B) ≫ q = 𝟙 (A ⟹ i.obj B) := by
-    dsimp
-    rw [← curry_natural_left, curry_eq_iff, uncurry_id_eq_ev, ← ir.homEquiv_naturality_left,
-      ir.homEquiv_apply_eq, assoc, assoc, prodComparison_natural_assoc, L.map_id,
-      ← prod.map_id_comp_assoc, ir.left_triangle_components, prod.map_id_id, id_comp]
-    apply IsIso.hom_inv_id_assoc
+  have  : η.app (A ⟹ i.obj B) ≫ q = 𝟙 (A ⟹ i.obj B)
+  dsimp
+  rw [← curry_natural_left, curry_eq_iff, uncurry_id_eq_ev, ← ir.homEquiv_naturality_left,
+    ir.homEquiv_apply_eq, assoc, assoc, prodComparison_natural_assoc, L.map_id,
+    ← prod.map_id_comp_assoc, ir.left_triangle_components, prod.map_id_id, id_comp]
+  apply IsIso.hom_inv_id_assoc
   haveI : IsSplitMono (η.app (A ⟹ i.obj B)) := IsSplitMono.mk' ⟨_, this⟩
   apply mem_essImage_of_unit_isSplitMono
 

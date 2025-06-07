@@ -450,14 +450,14 @@ protected theorem injective [DecidableEq α] (f : InjectiveFunction α) : Inject
   generalize h₀ : List.map Sigma.fst xs = xs₀
   generalize h₁ : xs.map (@id ((Σ _ : α, α) → α) <| @Sigma.snd α fun _ : α => α) = xs₁
   dsimp [id] at h₁
-  have hxs : xs = TotalFunction.List.toFinmap' (xs₀.zip xs₁) := by
-    rw [← h₀, ← h₁, List.toFinmap']; clear h₀ h₁ xs₀ xs₁ hperm hnodup
-    induction xs with
-    | nil => simp only [List.zip_nil_right, List.map_nil]
-    | cons xs_hd xs_tl xs_ih =>
-      simp only [true_and_iff, Prod.toSigma, eq_self_iff_true, Sigma.eta, List.zip_cons_cons,
-        List.map, List.cons_inj_right]
-      exact xs_ih
+  have hxs  : xs = TotalFunction.List.toFinmap' (xs₀.zip xs₁)
+  rw [← h₀, ← h₁, List.toFinmap']; clear h₀ h₁ xs₀ xs₁ hperm hnodup
+  induction xs with
+  | nil => simp only [List.zip_nil_right, List.map_nil]
+  | cons xs_hd xs_tl xs_ih =>
+    simp only [true_and_iff, Prod.toSigma, eq_self_iff_true, Sigma.eta, List.zip_cons_cons,
+      List.map, List.cons_inj_right]
+    exact xs_ih
   revert hperm hnodup
   rw [hxs]; intros hperm hnodup
   apply InjectiveFunction.applyId_injective

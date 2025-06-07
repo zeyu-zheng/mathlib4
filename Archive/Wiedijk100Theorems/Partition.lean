@@ -290,8 +290,8 @@ theorem oddGF_prop [Field α] (n m : ℕ) (h : n < m * 2) :
   congr with p
   apply forall₂_congr
   intro i hi
-  have hin : i ≤ n := by
-    simpa [p.parts_sum] using Multiset.single_le_sum (fun _ _ => Nat.zero_le _) _ hi
+  have hin  : i ≤ n
+  simpa [p.parts_sum] using Multiset.single_le_sum (fun _ _ => Nat.zero_le _) _ hi
   simp only [mkOdd, exists_prop, mem_range, Function.Embedding.coeFn_mk, mem_map]
   constructor
   · intro hi₂
@@ -335,8 +335,8 @@ theorem distinctGF_prop [CommSemiring α] (n m : ℕ) (h : n < m + 1) :
   congr with p
   apply (and_iff_left _).symm
   intro i hi
-  have : i ≤ n := by
-    simpa [p.parts_sum] using Multiset.single_le_sum (fun _ _ => Nat.zero_le _) _ hi
+  have  : i ≤ n
+  simpa [p.parts_sum] using Multiset.single_le_sum (fun _ _ => Nat.zero_le _) _ hi
   simp only [mkOdd, exists_prop, mem_range, Function.Embedding.coeFn_mk, mem_map]
   refine ⟨i - 1, ?_, Nat.succ_pred_eq_of_pos (p.parts_pos hi)⟩
   rw [tsub_lt_iff_right (Nat.one_le_iff_ne_zero.mpr (p.parts_pos hi).ne')]
@@ -357,10 +357,10 @@ theorem same_gf [Field α] (m : ℕ) :
   set! π₂ : PowerSeries α := ∏ i ∈ range m, (1 - X ^ (m + i + 1)) with hπ₂
   set! π₃ : PowerSeries α := ∏ i ∈ range m, (1 + X ^ (i + 1)) with hπ₃
   rw [← hπ₃] at ih
-  have h : constantCoeff α (1 - X ^ (2 * m + 1)) ≠ 0 := by
-    rw [RingHom.map_sub, RingHom.map_pow, constantCoeff_one, constantCoeff_X,
-      zero_pow (2 * m).succ_ne_zero, sub_zero]
-    exact one_ne_zero
+  have h  : constantCoeff α (1 - X ^ (2 * m + 1)) ≠ 0
+  rw [RingHom.map_sub, RingHom.map_pow, constantCoeff_one, constantCoeff_X,
+    zero_pow (2 * m).succ_ne_zero, sub_zero]
+  exact one_ne_zero
   calc
     (∏ i ∈ range (m + 1), (1 - X ^ (2 * i + 1))⁻¹) *
           ∏ i ∈ range (m + 1), (1 - X ^ (m + 1 + i + 1)) =

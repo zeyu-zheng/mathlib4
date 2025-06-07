@@ -71,13 +71,13 @@ lemma isRatStieltjesPoint_unit_prod_iff (f : α → ℚ → ℝ) (a : α) :
 
 lemma measurableSet_isRatStieltjesPoint (hf : Measurable f) :
     MeasurableSet {a | IsRatStieltjesPoint f a} := by
-  have h1 : MeasurableSet {a | Monotone (f a)} := by
-    change MeasurableSet {a | ∀ q r (_ : q ≤ r), f a q ≤ f a r}
-    simp_rw [Set.setOf_forall]
-    refine MeasurableSet.iInter (fun q ↦ ?_)
-    refine MeasurableSet.iInter (fun r ↦ ?_)
-    refine MeasurableSet.iInter (fun _ ↦ ?_)
-    exact measurableSet_le hf.eval hf.eval
+  have h1  : MeasurableSet {a | Monotone (f a)}
+  change MeasurableSet {a | ∀ q r (_ : q ≤ r), f a q ≤ f a r}
+  simp_rw [Set.setOf_forall]
+  refine MeasurableSet.iInter (fun q ↦ ?_)
+  refine MeasurableSet.iInter (fun r ↦ ?_)
+  refine MeasurableSet.iInter (fun _ ↦ ?_)
+  exact measurableSet_le hf.eval hf.eval
   have h2 : MeasurableSet {a | Tendsto (f a) atTop (𝓝 1)} :=
     measurableSet_tendsto _ (fun q ↦ hf.eval)
   have h3 : MeasurableSet {a | Tendsto (f a) atBot (𝓝 0)} :=
@@ -178,12 +178,13 @@ lemma tendsto_defaultRatCDF_atBot : Tendsto defaultRatCDF atBot (𝓝 0) := by
 lemma iInf_rat_gt_defaultRatCDF (t : ℚ) :
     ⨅ r : Ioi t, defaultRatCDF r = defaultRatCDF t := by
   simp only [defaultRatCDF]
-  have h_bdd : BddBelow (range fun r : ↥(Ioi t) ↦ ite ((r : ℚ) < 0) (0 : ℝ) 1) := by
-    refine ⟨0, fun x hx ↦ ?_⟩
-    obtain ⟨y, rfl⟩ := mem_range.mpr hx
-    dsimp only
-    split_ifs
-    exacts [le_rfl, zero_le_one]
+  have h_bdd  : BddBelow (range fun r : ↥(Ioi t) ↦ ite ((r : ℚ) < 0) (0 : ℝ) 1)
+  refine ⟨0, fun x hx ↦ ?_⟩
+  obtain ⟨y, rfl⟩ := mem_range.mpr hx
+  dsimp only
+  split_ifs
+  apply le_rfl
+  apply zero_le_one
   split_ifs with h
   · refine le_antisymm ?_ (le_ciInf fun x ↦ ?_)
     · obtain ⟨q, htq, hq_neg⟩ : ∃ q, t < q ∧ q < 0 := ⟨t / 2, by linarith, by linarith⟩
@@ -285,18 +286,18 @@ lemma IsMeasurableRatCDF.stieltjesFunctionAux_eq (a : α) (r : ℚ) :
 
 lemma IsMeasurableRatCDF.stieltjesFunctionAux_nonneg (a : α) (r : ℝ) :
     0 ≤ IsMeasurableRatCDF.stieltjesFunctionAux f a r := by
-  have : Nonempty { r' : ℚ // r < ↑r' } := by
-    obtain ⟨r, hrx⟩ := exists_rat_gt r
-    exact ⟨⟨r, hrx⟩⟩
+  have  : Nonempty { r' : ℚ // r < ↑r' }
+  obtain ⟨r, hrx⟩ := exists_rat_gt r
+  exact ⟨⟨r, hrx⟩⟩
   rw [IsMeasurableRatCDF.stieltjesFunctionAux_def]
   exact le_ciInf fun r' ↦ hf.nonneg a _
 
 lemma IsMeasurableRatCDF.monotone_stieltjesFunctionAux (a : α) :
     Monotone (IsMeasurableRatCDF.stieltjesFunctionAux f a) := by
   intro x y hxy
-  have : Nonempty { r' : ℚ // y < ↑r' } := by
-    obtain ⟨r, hrx⟩ := exists_rat_gt y
-    exact ⟨⟨r, hrx⟩⟩
+  have  : Nonempty { r' : ℚ // y < ↑r' }
+  obtain ⟨r, hrx⟩ := exists_rat_gt y
+  exact ⟨⟨r, hrx⟩⟩
   simp_rw [IsMeasurableRatCDF.stieltjesFunctionAux_def]
   refine le_ciInf fun r ↦ (ciInf_le ?_ ?_).trans_eq ?_
   · refine ⟨0, fun z ↦ ?_⟩; rintro ⟨u, rfl⟩; exact hf.nonneg a _
@@ -349,13 +350,13 @@ lemma IsMeasurableRatCDF.tendsto_stieltjesFunction_atBot (a : α) :
     Tendsto (hf.stieltjesFunction a) atBot (𝓝 0) := by
   have h_exists : ∀ x : ℝ, ∃ q : ℚ, x < q ∧ ↑q < x + 1 := fun x ↦ exists_rat_btwn (lt_add_one x)
   let qs : ℝ → ℚ := fun x ↦ (h_exists x).choose
-  have hqs_tendsto : Tendsto qs atBot atBot := by
-    rw [tendsto_atBot_atBot]
-    refine fun q ↦ ⟨q - 1, fun y hy ↦ ?_⟩
-    have h_le : ↑(qs y) ≤ (q : ℝ) - 1 + 1 :=
-      (h_exists y).choose_spec.2.le.trans (add_le_add hy le_rfl)
-    rw [sub_add_cancel] at h_le
-    exact mod_cast h_le
+  have hqs_tendsto  : Tendsto qs atBot atBot
+  rw [tendsto_atBot_atBot]
+  refine fun q ↦ ⟨q - 1, fun y hy ↦ ?_⟩
+  have h_le : ↑(qs y) ≤ (q : ℝ) - 1 + 1 :=
+    (h_exists y).choose_spec.2.le.trans (add_le_add hy le_rfl)
+  rw [sub_add_cancel] at h_le
+  exact mod_cast h_le
   refine tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds
     ((hf.tendsto_atBot_zero a).comp hqs_tendsto) (stieltjesFunction_nonneg hf a) fun x ↦ ?_
   rw [Function.comp_apply, ← stieltjesFunction_eq hf]
@@ -365,12 +366,12 @@ lemma IsMeasurableRatCDF.tendsto_stieltjesFunction_atTop (a : α) :
     Tendsto (hf.stieltjesFunction a) atTop (𝓝 1) := by
   have h_exists : ∀ x : ℝ, ∃ q : ℚ, x - 1 < q ∧ ↑q < x := fun x ↦ exists_rat_btwn (sub_one_lt x)
   let qs : ℝ → ℚ := fun x ↦ (h_exists x).choose
-  have hqs_tendsto : Tendsto qs atTop atTop := by
-    rw [tendsto_atTop_atTop]
-    refine fun q ↦ ⟨q + 1, fun y hy ↦ ?_⟩
-    have h_le : y - 1 ≤ qs y := (h_exists y).choose_spec.1.le
-    rw [sub_le_iff_le_add] at h_le
-    exact_mod_cast le_of_add_le_add_right (hy.trans h_le)
+  have hqs_tendsto  : Tendsto qs atTop atTop
+  rw [tendsto_atTop_atTop]
+  refine fun q ↦ ⟨q + 1, fun y hy ↦ ?_⟩
+  have h_le : y - 1 ≤ qs y := (h_exists y).choose_spec.1.le
+  rw [sub_le_iff_le_add] at h_le
+  exact_mod_cast le_of_add_le_add_right (hy.trans h_le)
   refine tendsto_of_tendsto_of_tendsto_of_le_of_le ((hf.tendsto_atTop_one a).comp hqs_tendsto)
       tendsto_const_nhds ?_ (stieltjesFunction_le_one hf a)
   intro x
@@ -379,11 +380,11 @@ lemma IsMeasurableRatCDF.tendsto_stieltjesFunction_atTop (a : α) :
 
 lemma IsMeasurableRatCDF.measurable_stieltjesFunction (x : ℝ) :
     Measurable fun a ↦ hf.stieltjesFunction a x := by
-  have : (fun a ↦ hf.stieltjesFunction a x) = fun a ↦ ⨅ r : { r' : ℚ // x < r' }, f a ↑r := by
-    ext1 a
-    rw [← StieltjesFunction.iInf_rat_gt_eq]
-    congr with q
-    rw [stieltjesFunction_eq]
+  have  : (fun a ↦ hf.stieltjesFunction a x) = fun a ↦ ⨅ r : { r' : ℚ // x < r' }, f a ↑r
+  ext1 a
+  rw [← StieltjesFunction.iInf_rat_gt_eq]
+  congr with q
+  rw [stieltjesFunction_eq]
   rw [this]
   exact measurable_iInf (fun q ↦ hf.measurable.eval)
 

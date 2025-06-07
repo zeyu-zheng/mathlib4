@@ -459,8 +459,8 @@ noncomputable def unitsSMulEquiv : NormalWord d ≃ NormalWord d :=
 theorem unitsSMul_one_group_smul (g : A) (w : NormalWord d) :
     unitsSMul φ 1 ((g : G) • w) = (φ g : G) • (unitsSMul φ 1 w) := by
   unfold unitsSMul
-  have : Cancels 1 ((g : G) • w) ↔ Cancels 1 w := by
-    simp [Cancels, Subgroup.mul_mem_cancel_left]
+  have  : Cancels 1 ((g : G) • w) ↔ Cancels 1 w
+  simp [Cancels, Subgroup.mul_mem_cancel_left]
   by_cases hcan : Cancels 1 w
   · simp [unitsSMulWithCancel, dif_pos (this.2 hcan), dif_pos hcan]
     cases w using consRecOn
@@ -681,7 +681,8 @@ theorem toList_eq_nil_of_mem_of_range (w : ReducedWord G A B)
     w.toList = [] := by
   rcases hw with ⟨g, hg⟩
   let w' : ReducedWord G A B := { ReducedWord.empty G A B with head := g }
-  have : w.prod φ = w'.prod φ := by simp [ReducedWord.prod, hg]
+  have  : w.prod φ = w'.prod φ
+  simp [ReducedWord.prod, hg]
   simpa using (map_fst_eq_and_of_prod_eq φ this).1
 
 end ReducedWord

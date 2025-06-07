@@ -48,9 +48,9 @@ theorem tendsto_measure_symmDiff_preimage_nhds_zero
     (hf : ∀ᶠ a in l, MeasurePreserving (f a) μ ν) (hg : MeasurePreserving g μ ν)
     (hs : MeasurableSet s) (hνs : ν s ≠ ∞) :
     Tendsto (fun a ↦ μ ((f a ⁻¹' s) ∆ (g ⁻¹' s))) l (𝓝 0) := by
-  have : ν.InnerRegularCompactLTTop := by
-    rw [← hg.map_eq]
-    exact .map_of_continuous (map_continuous _)
+  have  : ν.InnerRegularCompactLTTop
+  rw [← hg.map_eq]
+  exact .map_of_continuous (map_continuous _)
   rw [ENNReal.tendsto_nhds_zero]
   intro ε hε
   -- Without loss of generality, `s` is an open set.
@@ -77,7 +77,8 @@ theorem tendsto_measure_symmDiff_preimage_nhds_zero
       _ = ε := by simp
   -- Take a compact closed subset `K ⊆ g ⁻¹' s` of almost full measure,
   -- `μ (g ⁻¹' s \ K) < ε / 2`.
-  have hνs' : μ (g ⁻¹' s) ≠ ∞ := by rwa [hg.measure_preimage hs.nullMeasurableSet]
+  have hνs'  : μ (g ⁻¹' s) ≠ ∞
+  rwa [hg.measure_preimage hs.nullMeasurableSet]
   obtain ⟨K, hKg, hKco, hKcl, hKμ⟩ :
       ∃ K, MapsTo g K s ∧ IsCompact K ∧ IsClosed K ∧ μ (g ⁻¹' s \ K) < ε / 2 :=
     (hs.preimage hg.measurable).exists_isCompact_isClosed_diff_lt hνs' <| by simp [hε.ne']

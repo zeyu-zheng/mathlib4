@@ -246,12 +246,12 @@ theorem mem_isPairSelfAdjointSubmodule (f : Module.End R M) :
 theorem isPairSelfAdjoint_equiv (e : M' ≃ₗ[R] M) (f : Module.End R M) :
     IsPairSelfAdjoint B₂ F₂ f ↔
       IsPairSelfAdjoint (B₂.comp ↑e ↑e) (F₂.comp ↑e ↑e) (e.symm.conj f) := by
-  have hₗ : (F₂.comp ↑e ↑e).compLeft (e.symm.conj f) = (F₂.compLeft f).comp ↑e ↑e := by
-    ext
-    simp [LinearEquiv.symm_conj_apply]
-  have hᵣ : (B₂.comp ↑e ↑e).compRight (e.symm.conj f) = (B₂.compRight f).comp ↑e ↑e := by
-    ext
-    simp [LinearEquiv.conj_apply]
+  have hₗ  : (F₂.comp ↑e ↑e).compLeft (e.symm.conj f) = (F₂.compLeft f).comp ↑e ↑e
+  ext
+  simp [LinearEquiv.symm_conj_apply]
+  have hᵣ  : (B₂.comp ↑e ↑e).compRight (e.symm.conj f) = (B₂.compRight f).comp ↑e ↑e
+  ext
+  simp [LinearEquiv.conj_apply]
   have he : Function.Surjective (⇑(↑e : M' →ₗ[R] M) : M' → M) := e.surjective
   show BilinForm.IsAdjointPair _ _ _ _ ↔ BilinForm.IsAdjointPair _ _ _ _
   rw [isAdjointPair_iff_compLeft_eq_compRight, isAdjointPair_iff_compLeft_eq_compRight, hᵣ,

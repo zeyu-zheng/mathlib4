@@ -98,11 +98,11 @@ lemma hasDerivAt_logTaylor (n : ℕ) (z : ℂ) :
 lemma hasDerivAt_log_sub_logTaylor (n : ℕ) {z : ℂ} (hz : 1 + z ∈ slitPlane) :
     HasDerivAt (fun z : ℂ ↦ log (1 + z) - logTaylor (n + 1) z) ((-z) ^ n * (1 + z)⁻¹) z := by
   convert ((hasDerivAt_log hz).comp_const_add 1 z).sub (hasDerivAt_logTaylor n z) using 1
-  have hz' : -z ≠ 1 := by
-    intro H
-    rw [neg_eq_iff_eq_neg] at H
-    simp only [H, add_right_neg] at hz
-    exact slitPlane_ne_zero hz rfl
+  have hz'  : -z ≠ 1
+  intro H
+  rw [neg_eq_iff_eq_neg] at H
+  simp only [H, add_right_neg] at hz
+  exact slitPlane_ne_zero hz rfl
   simp_rw [← mul_pow, neg_one_mul, geom_sum_eq hz', ← neg_add', div_neg, add_comm z]
   field_simp [slitPlane_ne_zero hz]
 
@@ -213,19 +213,19 @@ lemma hasSum_taylorSeries_log {z : ℂ} (hz : ‖z‖ < 1) :
     conv => enter [1, x]; rw [← div_one (_ - _), ← logTaylor]
     rw [← isLittleO_iff_tendsto fun _ h ↦ (one_ne_zero h).elim]
     refine IsLittleO.trans_isBigO ?_ <| isBigO_const_one ℂ (1 : ℝ) atTop
-    have H : (fun n ↦ logTaylor n z - log (1 + z)) =O[atTop] (fun n : ℕ ↦ ‖z‖ ^ n) := by
-      have (n : ℕ) : ‖logTaylor n z - log (1 + z)‖
-          ≤ (max ‖log (1 + z)‖ (1 - ‖z‖)⁻¹) * ‖(‖z‖ ^ n)‖ := by
-        rw [norm_sub_rev, norm_pow, norm_norm]
-        cases n with
-        | zero => simp [logTaylor_zero]
-        | succ n =>
-            refine (norm_log_sub_logTaylor_le n hz).trans ?_
-            rw [mul_comm, ← div_one ((max _ _) * _)]
-            gcongr
-            · exact le_max_right ..
-            · linarith
-      exact (isBigOWith_of_le' atTop this).isBigO
+    have H  : (fun n ↦ logTaylor n z - log (1 + z)) =O[atTop] (fun n : ℕ ↦ ‖z‖ ^ n)
+    have (n : ℕ) : ‖logTaylor n z - log (1 + z)‖
+        ≤ (max ‖log (1 + z)‖ (1 - ‖z‖)⁻¹) * ‖(‖z‖ ^ n)‖ := by
+      rw [norm_sub_rev, norm_pow, norm_norm]
+      cases n with
+      | zero => simp [logTaylor_zero]
+      | succ n =>
+          refine (norm_log_sub_logTaylor_le n hz).trans ?_
+          rw [mul_comm, ← div_one ((max _ _) * _)]
+          gcongr
+          · exact le_max_right ..
+          · linarith
+    exact (isBigOWith_of_le' atTop this).isBigO
     refine IsBigO.trans_isLittleO H ?_
     convert isLittleO_pow_pow_of_lt_left (norm_nonneg z) hz
     exact (one_pow _).symm

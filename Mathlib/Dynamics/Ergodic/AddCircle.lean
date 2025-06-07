@@ -56,7 +56,8 @@ theorem ae_empty_or_univ_of_forall_vadd_ae_eq_self {s : Set <| AddCircle T}
   set μ := (volume : Measure <| AddCircle T)
   set n : ι → ℕ := addOrderOf ∘ u
   have hT₀ : 0 < T := hT.out
-  have hT₁ : ENNReal.ofReal T ≠ 0 := by simpa
+  have hT₁  : ENNReal.ofReal T ≠ 0
+  simpa
   rw [ae_eq_empty, ae_eq_univ_iff_measure_eq hs, AddCircle.measure_univ]
   rcases eq_or_ne (μ s) 0 with h | h; · exact Or.inl h
   right

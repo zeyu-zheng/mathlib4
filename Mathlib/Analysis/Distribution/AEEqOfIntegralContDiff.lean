@@ -158,14 +158,14 @@ theorem ae_eq_of_integral_smooth_smul_eq
     (hf : LocallyIntegrable f μ) (hf' : LocallyIntegrable f' μ) (h : ∀ (g : M → ℝ),
       Smooth I 𝓘(ℝ) g → HasCompactSupport g → ∫ x, g x • f x ∂μ = ∫ x, g x • f' x ∂μ) :
     ∀ᵐ x ∂μ, f x = f' x := by
-  have : ∀ᵐ x ∂μ, (f - f') x = 0 := by
-    apply ae_eq_zero_of_integral_smooth_smul_eq_zero I (hf.sub hf')
-    intro g g_diff g_supp
-    simp only [Pi.sub_apply, smul_sub]
-    rw [integral_sub, sub_eq_zero]
-    · exact h g g_diff g_supp
-    · exact hf.integrable_smul_left_of_hasCompactSupport g_diff.continuous g_supp
-    · exact hf'.integrable_smul_left_of_hasCompactSupport g_diff.continuous g_supp
+  have  : ∀ᵐ x ∂μ, (f - f') x = 0
+  apply ae_eq_zero_of_integral_smooth_smul_eq_zero I (hf.sub hf')
+  intro g g_diff g_supp
+  simp only [Pi.sub_apply, smul_sub]
+  rw [integral_sub, sub_eq_zero]
+  · exact h g g_diff g_supp
+  · exact hf.integrable_smul_left_of_hasCompactSupport g_diff.continuous g_supp
+  · exact hf'.integrable_smul_left_of_hasCompactSupport g_diff.continuous g_supp
   filter_upwards [this] with x hx
   simpa [sub_eq_zero] using hx
 

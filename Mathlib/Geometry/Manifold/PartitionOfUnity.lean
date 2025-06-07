@@ -731,18 +731,18 @@ theorem exists_msmooth_support_eq_eq_one_iff
   satisfies the conclusion of the theorem. -/
   rcases hs.exists_msmooth_support_eq I with ⟨f, f_supp, f_diff, f_pos⟩
   rcases ht.isOpen_compl.exists_msmooth_support_eq I with ⟨g, g_supp, g_diff, g_pos⟩
-  have A : ∀ x, 0 < f x + g x := by
-    intro x
-    by_cases xs : x ∈ support f
-    · have : 0 < f x := lt_of_le_of_ne (f_pos x) (Ne.symm xs)
-      linarith [g_pos x]
-    · have : 0 < g x := by
-        apply lt_of_le_of_ne (g_pos x) (Ne.symm ?_)
-        rw [← mem_support, g_supp]
-        contrapose! xs
-        simp? at xs says simp only [mem_compl_iff, Decidable.not_not] at xs
-        exact h.trans f_supp.symm.subset xs
-      linarith [f_pos x]
+  have A  : ∀ x, 0 < f x + g x
+  intro x
+  by_cases xs : x ∈ support f
+  · have : 0 < f x := lt_of_le_of_ne (f_pos x) (Ne.symm xs)
+    linarith [g_pos x]
+  · have : 0 < g x := by
+      apply lt_of_le_of_ne (g_pos x) (Ne.symm ?_)
+      rw [← mem_support, g_supp]
+      contrapose! xs
+      simp? at xs says simp only [mem_compl_iff, Decidable.not_not] at xs
+      exact h.trans f_supp.symm.subset xs
+    linarith [f_pos x]
   refine ⟨fun x ↦ f x / (f x + g x), ?_, ?_, ?_, ?_⟩
   -- show that `f / (f + g)` is smooth
   · exact f_diff.div₀ (f_diff.add g_diff) (fun x ↦ ne_of_gt (A x))

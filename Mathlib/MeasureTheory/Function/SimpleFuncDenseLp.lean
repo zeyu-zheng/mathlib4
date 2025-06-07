@@ -280,8 +280,8 @@ theorem memℒp_top (f : α →ₛ E) (μ : Measure α) : Memℒp f ∞ μ :=
 
 protected theorem eLpNorm'_eq {p : ℝ} (f : α →ₛ F) (μ : Measure α) :
     eLpNorm' f p μ = (∑ y ∈ f.range, (‖y‖₊ : ℝ≥0∞) ^ p * μ (f ⁻¹' {y})) ^ (1 / p) := by
-  have h_map : (fun a => (‖f a‖₊ : ℝ≥0∞) ^ p) = f.map fun a : F => (‖a‖₊ : ℝ≥0∞) ^ p := by
-    simp; rfl
+  have h_map  : (fun a => (‖f a‖₊ : ℝ≥0∞) ^ p) = f.map fun a : F => (‖a‖₊ : ℝ≥0∞) ^ p
+  simp; rfl
   rw [eLpNorm', h_map, lintegral_eq_lintegral, map_lintegral]
 
 @[deprecated (since := "2024-07-27")]
@@ -773,24 +773,24 @@ theorem denseRange_coeSimpleFuncNonnegToLpNonneg [hp : Fact (1 ≤ p)] (hp_ne_to
   borelize G
   rw [mem_closure_iff_seq_limit]
   have hg_memℒp : Memℒp (g : α → G) p μ := Lp.memℒp (g : Lp G p μ)
-  have zero_mem : (0 : G) ∈ (range (g : α → G) ∪ {0} : Set G) ∩ { y | 0 ≤ y } := by
-    simp only [union_singleton, mem_inter_iff, mem_insert_iff, eq_self_iff_true, true_or_iff,
-      mem_setOf_eq, le_refl, and_self_iff]
-  have : SeparableSpace ((range (g : α → G) ∪ {0}) ∩ { y | 0 ≤ y } : Set G) := by
-    apply IsSeparable.separableSpace
-    apply IsSeparable.mono _ Set.inter_subset_left
-    exact
-      (Lp.stronglyMeasurable (g : Lp G p μ)).isSeparable_range.union
-        (finite_singleton _).isSeparable
+  have zero_mem  : (0 : G) ∈ (range (g : α → G) ∪ {0} : Set G) ∩ { y | 0 ≤ y }
+  simp only [union_singleton, mem_inter_iff, mem_insert_iff, eq_self_iff_true, true_or_iff,
+    mem_setOf_eq, le_refl, and_self_iff]
+  have  : SeparableSpace ((range (g : α → G) ∪ {0}) ∩ { y | 0 ≤ y } : Set G)
+  apply IsSeparable.separableSpace
+  apply IsSeparable.mono _ Set.inter_subset_left
+  exact
+    (Lp.stronglyMeasurable (g : Lp G p μ)).isSeparable_range.union
+      (finite_singleton _).isSeparable
   have g_meas : Measurable (g : α → G) := (Lp.stronglyMeasurable (g : Lp G p μ)).measurable
   let x n := SimpleFunc.approxOn g g_meas ((range (g : α → G) ∪ {0}) ∩ { y | 0 ≤ y }) 0 zero_mem n
-  have hx_nonneg : ∀ n, 0 ≤ x n := by
-    intro n a
-    change x n a ∈ { y : G | 0 ≤ y }
-    have A : (range (g : α → G) ∪ {0} : Set G) ∩ { y | 0 ≤ y } ⊆ { y | 0 ≤ y } :=
-      inter_subset_right
-    apply A
-    exact SimpleFunc.approxOn_mem g_meas _ n a
+  have hx_nonneg  : ∀ n, 0 ≤ x n
+  intro n a
+  change x n a ∈ { y : G | 0 ≤ y }
+  have A : (range (g : α → G) ∪ {0} : Set G) ∩ { y | 0 ≤ y } ⊆ { y | 0 ≤ y } :=
+    inter_subset_right
+  apply A
+  exact SimpleFunc.approxOn_mem g_meas _ n a
   have hx_memℒp : ∀ n, Memℒp (x n) p μ :=
     SimpleFunc.memℒp_approxOn _ hg_memℒp _ ⟨aestronglyMeasurable_const, by simp⟩
   have h_toLp := fun n => Memℒp.coeFn_toLp (hx_memℒp n)

@@ -104,8 +104,8 @@ theorem piComparison_fac :
   have h : Pi.lift (fun i ↦ F.map (c.inj i).op) =
       F.map (Pi.lift (fun i ↦ (c.inj i).op)) ≫ piComparison F _ := by simp
   rw [h, ← Category.assoc, ← Functor.map_comp]
-  have hh : Pi.lift (fun i ↦ (c.inj i).op) = (productIsProduct (op <| X ·)).lift c.op := by
-    simp [Pi.lift, productIsProduct]
+  have hh  : Pi.lift (fun i ↦ (c.inj i).op) = (productIsProduct (op <| X ·)).lift c.op
+  simp [Pi.lift, productIsProduct]
   rw [hh, ← desc_op_comp_opCoproductIsoProduct'_hom hc]
   simp
 

@@ -525,10 +525,10 @@ theorem dist_integralSum_sum_integral_le_of_memBaseSet_of_iUnion_eq (h : Integra
     set r := fun x => min (h.convergenceR δ' C x) (HJi.convergenceR δ' C x)
     have hJd : J.distortion ≤ C := le_trans (Finset.le_sup hJ) (le_max_left _ _)
     rcases l.exists_memBaseSet_isPartition J hJd r with ⟨πJ, hC, hp⟩
-    have hC₁ : l.MemBaseSet J C (HJi.convergenceR δ' C) πJ := by
-      refine hC.mono J le_rfl le_rfl fun x _ => ?_; exact min_le_right _ _
-    have hC₂ : l.MemBaseSet J C (h.convergenceR δ' C) πJ := by
-      refine hC.mono J le_rfl le_rfl fun x _ => ?_; exact min_le_left _ _
+    have hC₁  : l.MemBaseSet J C (HJi.convergenceR δ' C) πJ
+    refine hC.mono J le_rfl le_rfl fun x _ => ?_; exact min_le_right _ _
+    have hC₂  : l.MemBaseSet J C (h.convergenceR δ' C) πJ
+    refine hC.mono J le_rfl le_rfl fun x _ => ?_; exact min_le_left _ _
     exact ⟨πJ, hp, HJi.dist_integralSum_integral_le_of_memBaseSet δ'0 hC₁ hp, hC₂⟩
   /- Now we combine these tagged partitions into a tagged prepartition of `I` that covers the
     same part of `I` as `π₀` and apply `BoxIntegral.dist_integralSum_le_of_memBaseSet` to
@@ -627,18 +627,18 @@ theorem integrable_of_bounded_and_ae_continuousWithinAt [CompleteSpace E] {I : B
   refine integrable_iff_cauchy_basis.2 fun ε ε0 ↦ ?_
   rcases exists_pos_mul_lt ε0 (2 * μ.toBoxAdditive I) with ⟨ε₁, ε₁0, hε₁⟩
   rcases hb with ⟨C, hC⟩
-  have C0 : 0 ≤ C := by
-    obtain ⟨x, hx⟩ := BoxIntegral.Box.nonempty_coe I
-    exact le_trans (norm_nonneg (f x)) <| hC x (I.coe_subset_Icc hx)
+  have C0  : 0 ≤ C
+  obtain ⟨x, hx⟩ := BoxIntegral.Box.nonempty_coe I
+  exact le_trans (norm_nonneg (f x)) <| hC x (I.coe_subset_Icc hx)
   rcases exists_pos_mul_lt ε0 (4 * C) with ⟨ε₂, ε₂0, hε₂⟩
   have ε₂0' : ENNReal.ofReal ε₂ ≠ 0 := ne_of_gt <| ofReal_pos.2 ε₂0
 
   -- The set of discontinuities of f is contained in an open set U with μ U < ε₂.
   let D := { x ∈ Box.Icc I | ¬ ContinuousWithinAt f (Box.Icc I) x }
   let μ' := μ.restrict (Box.Icc I)
-  have μ'D : μ' D = 0 := by
-    rcases eventually_iff_exists_mem.1 hc with ⟨V, ae, hV⟩
-    exact eq_of_le_of_not_lt (mem_ae_iff.1 ae ▸ (μ'.mono <| fun x h xV ↦ h.2 (hV x xV))) not_lt_zero
+  have μ'D  : μ' D = 0
+  rcases eventually_iff_exists_mem.1 hc with ⟨V, ae, hV⟩
+  exact eq_of_le_of_not_lt (mem_ae_iff.1 ae ▸ (μ'.mono <| fun x h xV ↦ h.2 (hV x xV))) not_lt_zero
   obtain ⟨U, UD, Uopen, hU⟩ := Set.exists_isOpen_lt_add D (show μ' D ≠ ⊤ by simp [μ'D]) ε₂0'
   rw [μ'D, zero_add] at hU
 
@@ -680,13 +680,13 @@ theorem integrable_of_bounded_and_ae_continuousWithinAt [CompleteSpace E] {I : B
       refine mul_le_mul_of_nonneg_left ?_ toReal_nonneg
       obtain ⟨x, xJ, xnU⟩ : ∃ x ∈ J, x ∉ U := Set.not_subset.1 (hJ.2 hJ.1)
       have hx : x ∈ Box.Icc I \ U := ⟨Box.coe_subset_Icc ((le_of_mem' _ J hJ.1) xJ), xnU⟩
-      have ineq : edist (f (t₁ J)) (f (t₂ J)) ≤ EMetric.diam (f '' (ball x r ∩ (Box.Icc I))) := by
-        apply edist_le_diam_of_mem <;>
-          refine Set.mem_image_of_mem f ⟨?_, tag_mem_Icc _ J⟩ <;>
-          refine closedBall_subset_ball (div_two_lt_of_pos r0) <| mem_closedBall_comm.1 ?_
-        · exact h₁.isSubordinate.infPrepartition π₂.toPrepartition J hJ.1 (Box.coe_subset_Icc xJ)
-        · exact h₂.isSubordinate.infPrepartition π₁.toPrepartition J
-            ((π₁.mem_infPrepartition_comm).1 hJ.1) (Box.coe_subset_Icc xJ)
+      have ineq  : edist (f (t₁ J)) (f (t₂ J)) ≤ EMetric.diam (f '' (ball x r ∩ (Box.Icc I)))
+      apply edist_le_diam_of_mem <;>
+        refine Set.mem_image_of_mem f ⟨?_, tag_mem_Icc _ J⟩ <;>
+        refine closedBall_subset_ball (div_two_lt_of_pos r0) <| mem_closedBall_comm.1 ?_
+      · exact h₁.isSubordinate.infPrepartition π₂.toPrepartition J hJ.1 (Box.coe_subset_Icc xJ)
+      · exact h₂.isSubordinate.infPrepartition π₁.toPrepartition J
+          ((π₁.mem_infPrepartition_comm).1 hJ.1) (Box.coe_subset_Icc xJ)
       rw [← emetric_ball] at ineq
       simpa only [edist_le_ofReal (le_of_lt ε₁0), dist_eq_norm, hJ.1] using ineq.trans (hr x hx)
     refine (norm_sum_le _ _).trans <| (sum_le_sum this).trans ?_

@@ -77,11 +77,11 @@ namespace ZMod
 protected lemma minOrder {n : ℕ} (hn : n ≠ 0) (hn₁ : n ≠ 1) : minOrder (ZMod n) = n.minFac := by
   have : Fact (1 < n) := ⟨one_lt_iff_ne_zero_and_ne_one.mpr ⟨hn, hn₁⟩⟩
   classical
-  have : (↑(n / n.minFac) : ZMod n) ≠ 0 := by
-    rw [Ne, ringChar.spec, ringChar.eq (ZMod n) n]
-    exact
-      not_dvd_of_pos_of_lt (Nat.div_pos (minFac_le hn.bot_lt) n.minFac_pos)
-        (div_lt_self hn.bot_lt (minFac_prime hn₁).one_lt)
+  have  : (↑(n / n.minFac) : ZMod n) ≠ 0
+  rw [Ne, ringChar.spec, ringChar.eq (ZMod n) n]
+  exact
+    not_dvd_of_pos_of_lt (Nat.div_pos (minFac_le hn.bot_lt) n.minFac_pos)
+      (div_lt_self hn.bot_lt (minFac_prime hn₁).one_lt)
   refine ((minOrder_le_natCard (zmultiples_eq_bot.not.2 this) <| toFinite _).trans ?_).antisymm <|
     le_minOrder_iff_forall_addSubgroup.2 fun s hs _ ↦ ?_
   · rw [Nat.card_zmultiples, ZMod.addOrderOf_coe _ hn,

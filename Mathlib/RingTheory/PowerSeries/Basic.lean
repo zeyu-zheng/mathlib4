@@ -571,15 +571,16 @@ theorem coeff_prod (f : ι → PowerSeries R) (d : ℕ) (s : Finset ι) :
 lemma coeff_pow (k n : ℕ) (φ : R⟦X⟧) :
     coeff R n (φ ^ k) = ∑ l ∈ finsuppAntidiag (range k) n, ∏ i ∈ range k, coeff R (l i) φ := by
   have h₁ (i : ℕ) : Function.const ℕ φ i = φ := rfl
-  have h₂ (i : ℕ) : ∏ j ∈ range i, Function.const ℕ φ j = φ ^ i := by
-    apply prod_range_induction (fun _ => φ) (fun i => φ ^ i) rfl (congrFun rfl) i
+  have h₂ (i  : ℕ) : ∏ j ∈ range i, Function.const ℕ φ j = φ ^ i
+  apply prod_range_induction (fun _ => φ) (fun i => φ ^ i) rfl (congrFun rfl) i
   rw [← h₂, ← h₁ k]
   apply coeff_prod (f := Function.const ℕ φ) (d := n) (s := range k)
 
 /-- First coefficient of the product of two power series. -/
 lemma coeff_one_mul (φ ψ : R⟦X⟧) : coeff R 1 (φ * ψ) =
     coeff R 1 φ * constantCoeff R ψ + coeff R 1 ψ * constantCoeff R φ := by
-  have : Finset.antidiagonal 1 = {(0, 1), (1, 0)} := by exact rfl
+  have  : Finset.antidiagonal 1 = {(0, 1), (1, 0)}
+  exact rfl
   rw [coeff_mul, this, Finset.sum_insert, Finset.sum_singleton, coeff_zero_eq_constantCoeff,
     mul_comm, add_comm]
   norm_num
@@ -663,9 +664,9 @@ theorem eq_zero_or_eq_zero_of_mul_eq_zero [NoZeroDivisors R] (φ ψ : R⟦X⟧) 
   classical
   rw [or_iff_not_imp_left]
   intro H
-  have ex : ∃ m, coeff R m φ ≠ 0 := by
-    contrapose! H
-    exact ext H
+  have ex  : ∃ m, coeff R m φ ≠ 0
+  contrapose! H
+  exact ext H
   let m := Nat.find ex
   have hm₁ : coeff R m φ ≠ 0 := Nat.find_spec ex
   have hm₂ : ∀ k < m, ¬coeff R k φ ≠ 0 := fun k => Nat.find_min ex

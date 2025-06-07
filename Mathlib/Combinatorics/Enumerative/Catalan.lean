@@ -81,8 +81,10 @@ private def gosperCatalan (n j : ℕ) : ℚ :=
 private theorem gosper_trick {n i : ℕ} (h : i ≤ n) :
     gosperCatalan (n + 1) (i + 1) - gosperCatalan (n + 1) i =
       Nat.centralBinom i / (i + 1) * Nat.centralBinom (n - i) / (n - i + 1) := by
-  have l₁ : (i : ℚ) + 1 ≠ 0 := by norm_cast
-  have l₂ : (n : ℚ) - i + 1 ≠ 0 := by norm_cast
+  have l₁  : (i : ℚ) + 1 ≠ 0
+  norm_cast
+  have l₂  : (n : ℚ) - i + 1 ≠ 0
+  norm_cast
   have h₁ := (mul_div_cancel_left₀ (↑(Nat.centralBinom (i + 1))) l₁).symm
   have h₂ := (mul_div_cancel_left₀ (↑(Nat.centralBinom (n - i + 1))) l₂).symm
   have h₃ : ((i : ℚ) + 1) * (i + 1).centralBinom = 2 * (2 * i + 1) * i.centralBinom :=
@@ -100,9 +102,12 @@ private theorem gosper_trick {n i : ℕ} (h : i ≤ n) :
 
 private theorem gosper_catalan_sub_eq_central_binom_div (n : ℕ) : gosperCatalan (n + 1) (n + 1) -
     gosperCatalan (n + 1) 0 = Nat.centralBinom (n + 1) / (n + 2) := by
-  have : (n : ℚ) + 1 ≠ 0 := by norm_cast
-  have : (n : ℚ) + 1 + 1 ≠ 0 := by norm_cast
-  have h : (n : ℚ) + 2 ≠ 0 := by norm_cast
+  have  : (n : ℚ) + 1 ≠ 0
+  norm_cast
+  have  : (n : ℚ) + 1 + 1 ≠ 0
+  norm_cast
+  have h  : (n : ℚ) + 2 ≠ 0
+  norm_cast
   simp only [gosperCatalan, Nat.sub_zero, Nat.centralBinom_zero, Nat.sub_self]
   field_simp
   ring
@@ -118,7 +123,8 @@ theorem catalan_eq_centralBinom_div (n : ℕ) : catalan n = n.centralBinom / (n 
                              (Nat.centralBinom (d - i) / (d - i + 1)) : ℚ)
     · congr
       ext1 x
-      have m_le_d : x.val ≤ d := by apply Nat.le_of_lt_succ; apply x.2
+      have m_le_d  : x.val ≤ d
+      apply Nat.le_of_lt_succ; apply x.2
       have d_minus_x_le_d : (d - x.val) ≤ d := tsub_le_self
       rw [hd _ m_le_d, hd _ d_minus_x_le_d]
       norm_cast

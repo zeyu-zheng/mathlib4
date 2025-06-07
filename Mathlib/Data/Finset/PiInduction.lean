@@ -49,9 +49,9 @@ theorem induction_on_pi_of_choice (r : ∀ i, α i → Finset (α i) → Prop)
     rcases H_ex i (f i) hi with ⟨x, x_mem, hr⟩
     set g := update f i ((f i).erase x) with hg
     clear_value g
-    have hx' : x ∉ g i := by
-      rw [hg, update_same]
-      apply not_mem_erase
+    have hx'  : x ∉ g i
+    rw [hg, update_same]
+    apply not_mem_erase
     rw [show f = update g i (insert x (g i)) by
       rw [hg, update_idem, update_same, insert_erase x_mem, update_eq_self]] at hr ihs ⊢
     clear hg

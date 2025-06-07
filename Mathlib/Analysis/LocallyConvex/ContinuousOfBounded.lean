@@ -97,31 +97,31 @@ theorem LinearMap.continuousAt_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
   -- and reformulate non-continuity in terms of these bases
   rcases (nhds_basis_balanced 𝕜 E).exists_antitone_subbasis with ⟨b, bE1, bE⟩
   simp only [_root_.id] at bE
-  have bE' : (𝓝 (0 : E)).HasBasis (fun x : ℕ => x ≠ 0) fun n : ℕ => (n : 𝕜)⁻¹ • b n := by
-    refine bE.1.to_hasBasis ?_ ?_
-    · intro n _
-      use n + 1
-      simp only [Ne, Nat.succ_ne_zero, not_false_iff, Nat.cast_add, Nat.cast_one, true_and_iff]
-      -- `b (n + 1) ⊆ b n` follows from `Antitone`.
-      have h : b (n + 1) ⊆ b n := bE.2 (by simp)
-      refine _root_.trans ?_ h
-      rintro y ⟨x, hx, hy⟩
-      -- Since `b (n + 1)` is balanced `(n+1)⁻¹ b (n + 1) ⊆ b (n + 1)`
-      rw [← hy]
-      refine (bE1 (n + 1)).2.smul_mem ?_ hx
-      have h' : 0 < (n : ℝ) + 1 := n.cast_add_one_pos
-      rw [norm_inv, ← Nat.cast_one, ← Nat.cast_add, RCLike.norm_natCast, Nat.cast_add,
-        Nat.cast_one, inv_le h' zero_lt_one]
-      simp
-    intro n hn
-    -- The converse direction follows from continuity of the scalar multiplication
-    have hcont : ContinuousAt (fun x : E => (n : 𝕜) • x) 0 :=
-      (continuous_const_smul (n : 𝕜)).continuousAt
-    simp only [ContinuousAt, map_zero, smul_zero] at hcont
-    rw [bE.1.tendsto_left_iff] at hcont
-    rcases hcont (b n) (bE1 n).1 with ⟨i, _, hi⟩
-    refine ⟨i, trivial, fun x hx => ⟨(n : 𝕜) • x, hi hx, ?_⟩⟩
-    simp [← mul_smul, hn]
+  have bE'  : (𝓝 (0 : E)).HasBasis (fun x : ℕ => x ≠ 0) fun n : ℕ => (n : 𝕜)⁻¹ • b n
+  refine bE.1.to_hasBasis ?_ ?_
+  · intro n _
+    use n + 1
+    simp only [Ne, Nat.succ_ne_zero, not_false_iff, Nat.cast_add, Nat.cast_one, true_and_iff]
+    -- `b (n + 1) ⊆ b n` follows from `Antitone`.
+    have h : b (n + 1) ⊆ b n := bE.2 (by simp)
+    refine _root_.trans ?_ h
+    rintro y ⟨x, hx, hy⟩
+    -- Since `b (n + 1)` is balanced `(n+1)⁻¹ b (n + 1) ⊆ b (n + 1)`
+    rw [← hy]
+    refine (bE1 (n + 1)).2.smul_mem ?_ hx
+    have h' : 0 < (n : ℝ) + 1 := n.cast_add_one_pos
+    rw [norm_inv, ← Nat.cast_one, ← Nat.cast_add, RCLike.norm_natCast, Nat.cast_add,
+      Nat.cast_one, inv_le h' zero_lt_one]
+    simp
+  intro n hn
+  -- The converse direction follows from continuity of the scalar multiplication
+  have hcont : ContinuousAt (fun x : E => (n : 𝕜) • x) 0 :=
+    (continuous_const_smul (n : 𝕜)).continuousAt
+  simp only [ContinuousAt, map_zero, smul_zero] at hcont
+  rw [bE.1.tendsto_left_iff] at hcont
+  rcases hcont (b n) (bE1 n).1 with ⟨i, _, hi⟩
+  refine ⟨i, trivial, fun x hx => ⟨(n : 𝕜) • x, hi hx, ?_⟩⟩
+  simp [← mul_smul, hn]
   rw [ContinuousAt, map_zero, bE'.tendsto_iff (nhds_basis_balanced 𝕜' F)] at h
   push_neg at h
   rcases h with ⟨V, ⟨hV, -⟩, h⟩
@@ -129,16 +129,16 @@ theorem LinearMap.continuousAt_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
   -- There exists `u : ℕ → E` such that for all `n : ℕ` we have `u n ∈ n⁻¹ • b n` and `f (u n) ∉ V`
   choose! u hu hu' using h
   -- The sequence `(fun n ↦ n • u n)` converges to `0`
-  have h_tendsto : Tendsto (fun n : ℕ => (n : 𝕜) • u n) atTop (𝓝 (0 : E)) := by
-    apply bE.tendsto
-    intro n
-    by_cases h : n = 0
-    · rw [h, Nat.cast_zero, zero_smul]
-      exact mem_of_mem_nhds (bE.1.mem_of_mem <| by trivial)
-    rcases hu n h with ⟨y, hy, hu1⟩
-    convert hy
-    rw [← hu1, ← mul_smul]
-    simp only [h, mul_inv_cancel, Ne, Nat.cast_eq_zero, not_false_iff, one_smul]
+  have h_tendsto  : Tendsto (fun n : ℕ => (n : 𝕜) • u n) atTop (𝓝 (0 : E))
+  apply bE.tendsto
+  intro n
+  by_cases h : n = 0
+  · rw [h, Nat.cast_zero, zero_smul]
+    exact mem_of_mem_nhds (bE.1.mem_of_mem <| by trivial)
+  rcases hu n h with ⟨y, hy, hu1⟩
+  convert hy
+  rw [← hu1, ← mul_smul]
+  simp only [h, mul_inv_cancel, Ne, Nat.cast_eq_zero, not_false_iff, one_smul]
   -- The image `(fun n ↦ n • u n)` is von Neumann bounded:
   have h_bounded : IsVonNBounded 𝕜 (Set.range fun n : ℕ => (n : 𝕜) • u n) :=
     h_tendsto.cauchySeq.totallyBounded_range.isVonNBounded 𝕜

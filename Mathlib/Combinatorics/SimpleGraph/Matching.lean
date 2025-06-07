@@ -204,18 +204,18 @@ lemma odd_matches_node_outside {u : Set V} {c : ConnectedComponent (Subgraph.del
     (hM : M.IsPerfectMatching) (codd : Odd (Nat.card c.supp)) :
     ∃ᵉ (w ∈ u) (v : ((⊤ : G.Subgraph).deleteVerts u).verts), M.Adj v w ∧ v ∈ c.supp := by
   by_contra! h
-  have hMmatch : (M.induce c.supp).IsMatching := by
-    intro v hv
-    obtain ⟨w, hw⟩ := hM.1 (hM.2 v)
-    obtain ⟨⟨v', hv'⟩, ⟨hv , rfl⟩⟩ := hv
-    use w
-    have hwnu : w ∉ u := fun hw' ↦ h w hw' ⟨v', hv'⟩ (hw.1) hv
-    refine ⟨⟨⟨⟨v', hv'⟩, hv, rfl⟩, ?_, hw.1⟩, fun _ hy ↦ hw.2 _ hy.2.2⟩
-    apply ConnectedComponent.mem_coe_supp_of_adj ⟨⟨v', hv'⟩, ⟨hv, rfl⟩⟩ ⟨by trivial, hwnu⟩
-    simp only [Subgraph.induce_verts, Subgraph.verts_top, Set.mem_diff, Set.mem_univ, true_and,
-      Subgraph.induce_adj, hwnu, not_false_eq_true, and_self, Subgraph.top_adj, M.adj_sub hw.1,
-      and_true] at hv' ⊢
-    trivial
+  have hMmatch  : (M.induce c.supp).IsMatching
+  intro v hv
+  obtain ⟨w, hw⟩ := hM.1 (hM.2 v)
+  obtain ⟨⟨v', hv'⟩, ⟨hv , rfl⟩⟩ := hv
+  use w
+  have hwnu : w ∉ u := fun hw' ↦ h w hw' ⟨v', hv'⟩ (hw.1) hv
+  refine ⟨⟨⟨⟨v', hv'⟩, hv, rfl⟩, ?_, hw.1⟩, fun _ hy ↦ hw.2 _ hy.2.2⟩
+  apply ConnectedComponent.mem_coe_supp_of_adj ⟨⟨v', hv'⟩, ⟨hv, rfl⟩⟩ ⟨by trivial, hwnu⟩
+  simp only [Subgraph.induce_verts, Subgraph.verts_top, Set.mem_diff, Set.mem_univ, true_and,
+    Subgraph.induce_adj, hwnu, not_false_eq_true, and_self, Subgraph.top_adj, M.adj_sub hw.1,
+    and_true] at hv' ⊢
+  trivial
 
   apply Nat.odd_iff_not_even.mp codd
   haveI : Fintype ↑(Subgraph.induce M (Subtype.val '' supp c)).verts := Fintype.ofFinite _

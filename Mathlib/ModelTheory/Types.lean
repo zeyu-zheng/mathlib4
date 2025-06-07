@@ -120,9 +120,9 @@ theorem setOf_mem_eq_univ_iff (φ : L[[α]].Sentence) :
 theorem setOf_subset_eq_univ_iff (S : L[[α]].Theory) :
     { p : T.CompleteType α | S ⊆ ↑p } = Set.univ ↔
       ∀ φ, φ ∈ S → (L.lhomWithConstants α).onTheory T ⊨ᵇ φ := by
-  have h : { p : T.CompleteType α | S ⊆ ↑p } = ⋂₀ ((fun φ => { p | φ ∈ p }) '' S) := by
-    ext
-    simp [subset_def]
+  have h  : { p : T.CompleteType α | S ⊆ ↑p } = ⋂₀ ((fun φ => { p | φ ∈ p }) '' S)
+  ext
+  simp [subset_def]
   simp_rw [h, sInter_eq_univ, ← setOf_mem_eq_univ_iff]
   refine ⟨fun h φ φS => h _ ⟨_, φS, rfl⟩, ?_⟩
   rintro h _ ⟨φ, h1, rfl⟩

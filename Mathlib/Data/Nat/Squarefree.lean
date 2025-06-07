@@ -163,29 +163,30 @@ theorem minSqFacAux_has_prop {n : ℕ} (k) (n0 : 0 < n) (i) (e : k = 2 * i + 3)
     have := ih p pp (dvd_trans ⟨_, rfl⟩ d)
     have := Nat.mul_le_mul this this
     exact not_le_of_lt h (le_trans this (le_of_dvd n0 d))
-  have k2 : 2 ≤ k := by omega
+  have k2  : 2 ≤ k
+  omega
   have k0 : 0 < k := lt_of_lt_of_le (by decide) k2
-  have IH : ∀ n', n' ∣ n → ¬k ∣ n' → MinSqFacProp n' (n'.minSqFacAux (k + 2)) := by
-    intro n' nd' nk
-    have hn' := le_of_dvd n0 nd'
-    refine
-      have : Nat.sqrt n' - k < Nat.sqrt n + 2 - k :=
-        lt_of_le_of_lt (Nat.sub_le_sub_right (Nat.sqrt_le_sqrt hn') _) (Nat.minFac_lemma n k h)
-      @minSqFacAux_has_prop n' (k + 2) (pos_of_dvd_of_pos nd' n0) (i + 1)
-        (by simp [e, left_distrib]) fun m m2 d => ?_
-    rcases Nat.eq_or_lt_of_le (ih m m2 (dvd_trans d nd')) with me | ml
-    · subst me
-      contradiction
-    apply (Nat.eq_or_lt_of_le ml).resolve_left
-    intro me
-    rw [← me, e] at d
-    change 2 * (i + 2) ∣ n' at d
-    have := ih _ prime_two (dvd_trans (dvd_of_mul_right_dvd d) nd')
-    rw [e] at this
-    exact absurd this (by omega)
-  have pk : k ∣ n → Prime k := by
-    refine fun dk => prime_def_minFac.2 ⟨k2, le_antisymm (minFac_le k0) ?_⟩
-    exact ih _ (minFac_prime (ne_of_gt k2)) (dvd_trans (minFac_dvd _) dk)
+  have IH  : ∀ n', n' ∣ n → ¬k ∣ n' → MinSqFacProp n' (n'.minSqFacAux (k + 2))
+  intro n' nd' nk
+  have hn' := le_of_dvd n0 nd'
+  refine
+    have : Nat.sqrt n' - k < Nat.sqrt n + 2 - k :=
+      lt_of_le_of_lt (Nat.sub_le_sub_right (Nat.sqrt_le_sqrt hn') _) (Nat.minFac_lemma n k h)
+    @minSqFacAux_has_prop n' (k + 2) (pos_of_dvd_of_pos nd' n0) (i + 1)
+      (by simp [e, left_distrib]) fun m m2 d => ?_
+  rcases Nat.eq_or_lt_of_le (ih m m2 (dvd_trans d nd')) with me | ml
+  · subst me
+    contradiction
+  apply (Nat.eq_or_lt_of_le ml).resolve_left
+  intro me
+  rw [← me, e] at d
+  change 2 * (i + 2) ∣ n' at d
+  have := ih _ prime_two (dvd_trans (dvd_of_mul_right_dvd d) nd')
+  rw [e] at this
+  exact absurd this (by omega)
+  have pk  : k ∣ n → Prime k
+  refine fun dk => prime_def_minFac.2 ⟨k2, le_antisymm (minFac_le k0) ?_⟩
+  exact ih _ (minFac_prime (ne_of_gt k2)) (dvd_trans (minFac_dvd _) dk)
   split_ifs with dk dkk
   · exact ⟨pk dk, (Nat.dvd_div_iff_mul_dvd dk).1 dkk, fun p pp d => ih p pp (dvd_trans ⟨_, rfl⟩ d)⟩
   · specialize IH (n / k) (div_dvd_of_dvd dk) dkk
@@ -314,10 +315,10 @@ theorem sq_mul_squarefree_of_pos {n : ℕ} (hn : 0 < n) :
     ∃ a b : ℕ, 0 < a ∧ 0 < b ∧ b ^ 2 * a = n ∧ Squarefree a := by
   classical -- Porting note: This line is not needed in Lean 3
   set S := (Finset.range (n + 1)).filter (fun s => s ∣ n ∧ ∃ x, s = x ^ 2)
-  have hSne : S.Nonempty := by
-    use 1
-    have h1 : 0 < n ∧ ∃ x : ℕ, 1 = x ^ 2 := ⟨hn, ⟨1, (one_pow 2).symm⟩⟩
-    simp [S, h1]
+  have hSne  : S.Nonempty
+  use 1
+  have h1 : 0 < n ∧ ∃ x : ℕ, 1 = x ^ 2 := ⟨hn, ⟨1, (one_pow 2).symm⟩⟩
+  simp [S, h1]
   let s := Finset.max' S hSne
   have hs : s ∈ S := Finset.max'_mem S hSne
   simp only [S, Finset.mem_filter, Finset.mem_range] at hs

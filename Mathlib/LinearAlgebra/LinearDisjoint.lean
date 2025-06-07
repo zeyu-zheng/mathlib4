@@ -217,9 +217,9 @@ theorem of_basis_mul' {κ ι : Type*} (m : Basis κ R M) (n : Basis ι R N)
   let i0 := (finsuppTensorFinsupp' R κ ι).symm
   let i1 := TensorProduct.congr m.repr n.repr
   let i := mulMap M N ∘ₗ (i0.trans i1.symm).toLinearMap
-  have : i = Finsupp.total (κ × ι) S R fun i ↦ m i.1 * n i.2 := by
-    ext x
-    simp [i, i0, i1, finsuppTensorFinsupp'_symm_single_eq_single_one_tmul]
+  have  : i = Finsupp.total (κ × ι) S R fun i ↦ m i.1 * n i.2
+  ext x
+  simp [i, i0, i1, finsuppTensorFinsupp'_symm_single_eq_single_one_tmul]
   simp_rw [← this, i, LinearMap.coe_comp, LinearEquiv.coe_coe, EquivLike.injective_comp] at H
   exact ⟨H⟩
 
@@ -361,9 +361,9 @@ theorem linearIndependent_mul_of_flat_left (H : M.LinearDisjoint N) [Module.Flat
   have h1 : Function.Injective i1 := Module.Flat.rTensor_preserves_injective_linearMap _ hm
   have h2 : Function.Injective i2 := Module.Flat.lTensor_preserves_injective_linearMap _ hn
   have h : Function.Injective i := H.injective.comp h2 |>.comp h1 |>.comp i0.injective
-  have : i = Finsupp.total (κ × ι) S R fun i ↦ (m i.1).1 * (n i.2).1 := by
-    ext x
-    simp [i, i0, i1, i2, finsuppTensorFinsupp'_symm_single_eq_single_one_tmul]
+  have  : i = Finsupp.total (κ × ι) S R fun i ↦ (m i.1).1 * (n i.2).1
+  ext x
+  simp [i, i0, i1, i2, finsuppTensorFinsupp'_symm_single_eq_single_one_tmul]
   rwa [this] at h
 
 variable {M N} in
@@ -382,9 +382,9 @@ theorem linearIndependent_mul_of_flat_right (H : M.LinearDisjoint N) [Module.Fla
   have h1 : Function.Injective i1 := Module.Flat.lTensor_preserves_injective_linearMap _ hn
   have h2 : Function.Injective i2 := Module.Flat.rTensor_preserves_injective_linearMap _ hm
   have h : Function.Injective i := H.injective.comp h2 |>.comp h1 |>.comp i0.injective
-  have : i = Finsupp.total (κ × ι) S R fun i ↦ (m i.1).1 * (n i.2).1 := by
-    ext x
-    simp [i, i0, i1, i2, finsuppTensorFinsupp'_symm_single_eq_single_one_tmul]
+  have  : i = Finsupp.total (κ × ι) S R fun i ↦ (m i.1).1 * (n i.2).1
+  ext x
+  simp [i, i0, i1, i2, finsuppTensorFinsupp'_symm_single_eq_single_one_tmul]
   rwa [this] at h
 
 variable {M N} in
@@ -416,7 +416,8 @@ theorem of_le_left_of_flat (H : M.LinearDisjoint N) {M' : Submodule R S}
   let i := mulMap M N ∘ₗ (inclusion h).rTensor N
   have hi : Function.Injective i := H.injective.comp <|
     Module.Flat.rTensor_preserves_injective_linearMap _ <| inclusion_injective h
-  have : i = mulMap M' N := by ext; simp [i]
+  have  : i = mulMap M' N
+  ext; simp [i]
   exact ⟨this ▸ hi⟩
 
 variable {M N} in
@@ -427,7 +428,8 @@ theorem of_le_right_of_flat (H : M.LinearDisjoint N) {N' : Submodule R S}
   let i := mulMap M N ∘ₗ (inclusion h).lTensor M
   have hi : Function.Injective i := H.injective.comp <|
     Module.Flat.lTensor_preserves_injective_linearMap _ <| inclusion_injective h
-  have : i = mulMap M N' := by ext; simp [i]
+  have  : i = mulMap M N'
+  ext; simp [i]
   exact ⟨this ▸ hi⟩
 
 variable {M N} in
@@ -473,7 +475,8 @@ theorem not_linearIndependent_pair_of_commute_of_flat_left [Module.Flat R M]
   -- need this instance otherwise it only has semigroup structure
   letI : AddCommGroup (Fin 2 →₀ M) := Finsupp.instAddCommGroup
   let m : Fin 2 →₀ M := .single 0 ⟨b.1, b.2.1⟩ - .single 1 ⟨a.1, a.2.1⟩
-  have hm : mulRightMap M n m = 0 := by simp [m, n, show _ * _ = _ * _ from hc]
+  have hm  : mulRightMap M n m = 0
+  simp [m, n, show _ * _ = _ * _ from hc]
   rw [← LinearMap.mem_ker, H.linearIndependent_right_of_flat hn, mem_bot] at hm
   simp only [Fin.isValue, sub_eq_zero, Finsupp.single_eq_single_iff, zero_ne_one, Subtype.mk.injEq,
     SetLike.coe_eq_coe, false_and, AddSubmonoid.mk_eq_zero, ZeroMemClass.coe_eq_zero,
@@ -489,7 +492,8 @@ theorem not_linearIndependent_pair_of_commute_of_flat_right [Module.Flat R N]
   -- need this instance otherwise it only has semigroup structure
   letI : AddCommGroup (Fin 2 →₀ N) := Finsupp.instAddCommGroup
   let n : Fin 2 →₀ N := .single 0 ⟨b.1, b.2.2⟩ - .single 1 ⟨a.1, a.2.2⟩
-  have hn : mulLeftMap N m n = 0 := by simp [m, n, show _ * _ = _ * _ from hc]
+  have hn  : mulLeftMap N m n = 0
+  simp [m, n, show _ * _ = _ * _ from hc]
   rw [← LinearMap.mem_ker, H.linearIndependent_left_of_flat hm, mem_bot] at hn
   simp only [Fin.isValue, sub_eq_zero, Finsupp.single_eq_single_iff, zero_ne_one, Subtype.mk.injEq,
     SetLike.coe_eq_coe, false_and, AddSubmonoid.mk_eq_zero, ZeroMemClass.coe_eq_zero,

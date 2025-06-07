@@ -465,12 +465,12 @@ theorem toPOUFun_eq_mul_prod (i : ι) (x : X) (t : Finset ι)
 theorem sum_toPOUFun_eq (x : X) : ∑ᶠ i, f.toPOUFun i x = 1 - ∏ᶠ i, (1 - f i x) := by
   set s := (f.point_finite x).toFinset
   have hs : (s : Set ι) = { i | f i x ≠ 0 } := Finite.coe_toFinset _
-  have A : (support fun i => toPOUFun f i x) ⊆ s := by
-    rw [hs]
-    exact fun i hi => f.support_toPOUFun_subset i hi
-  have B : (mulSupport fun i => 1 - f i x) ⊆ s := by
-    rw [hs, mulSupport_one_sub]
-    exact fun i => id
+  have A  : (support fun i => toPOUFun f i x) ⊆ s
+  rw [hs]
+  exact fun i hi => f.support_toPOUFun_subset i hi
+  have B  : (mulSupport fun i => 1 - f i x) ⊆ s
+  rw [hs, mulSupport_one_sub]
+  exact fun i => id
   letI : LinearOrder ι := linearOrderOfSTO WellOrderingRel
   rw [finsum_eq_sum_of_support_subset _ A, finprod_eq_prod_of_mulSupport_subset _ B,
     Finset.prod_one_sub_ordered, sub_sub_cancel]

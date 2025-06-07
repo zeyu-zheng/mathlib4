@@ -365,13 +365,13 @@ theorem valuation_nonneg (x : ℤ_[p]) : 0 ≤ x.valuation := by
 theorem valuation_p_pow_mul (n : ℕ) (c : ℤ_[p]) (hc : c ≠ 0) :
     ((p : ℤ_[p]) ^ n * c).valuation = n + c.valuation := by
   have : ‖(p : ℤ_[p]) ^ n * c‖ = ‖(p : ℤ_[p]) ^ n‖ * ‖c‖ := norm_mul _ _
-  have aux : (p : ℤ_[p]) ^ n * c ≠ 0 := by
-    contrapose! hc
-    rw [mul_eq_zero] at hc
-    cases' hc with hc hc
-    · refine (hp.1.ne_zero ?_).elim
-      exact_mod_cast pow_eq_zero hc
-    · exact hc
+  have aux  : (p : ℤ_[p]) ^ n * c ≠ 0
+  contrapose! hc
+  rw [mul_eq_zero] at hc
+  cases' hc with hc hc
+  · refine (hp.1.ne_zero ?_).elim
+    exact_mod_cast pow_eq_zero hc
+  · exact hc
   rwa [norm_eq_pow_val aux, norm_p_pow, norm_eq_pow_val hc, ← zpow_add₀, ← neg_add,
     zpow_inj, neg_inj] at this
   · exact mod_cast hp.1.pos
@@ -445,10 +445,10 @@ theorem unitCoeff_spec {x : ℤ_[p]} (hx : x ≠ 0) :
     x = (unitCoeff hx : ℤ_[p]) * (p : ℤ_[p]) ^ Int.natAbs (valuation x) := by
   apply Subtype.coe_injective
   push_cast
-  have repr : (x : ℚ_[p]) = unitCoeff hx * (p : ℚ_[p]) ^ x.valuation := by
-    rw [unitCoeff_coe, mul_assoc, ← zpow_add₀]
-    · simp
-    · exact mod_cast hp.1.ne_zero
+  have repr  : (x : ℚ_[p]) = unitCoeff hx * (p : ℚ_[p]) ^ x.valuation
+  rw [unitCoeff_coe, mul_assoc, ← zpow_add₀]
+  · simp
+  · exact mod_cast hp.1.ne_zero
   convert repr using 2
   rw [← zpow_natCast, Int.natAbs_of_nonneg (valuation_nonneg x)]
 
@@ -464,10 +464,10 @@ theorem norm_le_pow_iff_le_valuation (x : ℤ_[p]) (hx : x ≠ 0) (n : ℕ) :
   rw [norm_eq_pow_val hx]
   lift x.valuation to ℕ using x.valuation_nonneg with k
   simp only [Int.ofNat_le, zpow_neg, zpow_natCast]
-  have aux : ∀ m : ℕ, 0 < (p : ℝ) ^ m := by
-    intro m
-    refine pow_pos ?_ m
-    exact mod_cast hp.1.pos
+  have aux  : ∀ m : ℕ, 0 < (p : ℝ) ^ m
+  intro m
+  refine pow_pos ?_ m
+  exact mod_cast hp.1.pos
   rw [inv_le_inv (aux _) (aux _)]
   have : p ^ n ≤ p ^ k ↔ n ≤ k := (pow_right_strictMono hp.1.one_lt).le_iff_le
   rw [← this]
@@ -568,9 +568,9 @@ instance : IsAdicComplete (maximalIdeal ℤ_[p]) ℤ_[p] where
       rw [← neg_sub, norm_neg]
       exact hx hn
     · refine ⟨x'.lim, fun n => ?_⟩
-      have : (0 : ℝ) < (p : ℝ) ^ (-n : ℤ) := by
-        apply zpow_pos_of_pos
-        exact mod_cast hp.1.pos
+      have  : (0 : ℝ) < (p : ℝ) ^ (-n : ℤ)
+      apply zpow_pos_of_pos
+      exact mod_cast hp.1.pos
       obtain ⟨i, hi⟩ := equiv_def₃ (equiv_lim x') this
       by_cases hin : i ≤ n
       · exact (hi i le_rfl n hin).le
@@ -601,20 +601,20 @@ instance isFractionRing : IsFractionRing ℤ_[p] ℚ_[p] where
     · use (⟨x, hx⟩, 1)
       rw [Submonoid.coe_one, map_one, mul_one, PadicInt.algebraMap_apply, Subtype.coe_mk]
     · set n := Int.toNat (-x.valuation) with hn
-      have hn_coe : (n : ℤ) = -x.valuation := by
-        rw [hn, Int.toNat_of_nonneg]
-        rw [Right.nonneg_neg_iff]
-        rw [Padic.norm_le_one_iff_val_nonneg, not_le] at hx
-        exact hx.le
+      have hn_coe  : (n : ℤ) = -x.valuation
+      rw [hn, Int.toNat_of_nonneg]
+      rw [Right.nonneg_neg_iff]
+      rw [Padic.norm_le_one_iff_val_nonneg, not_le] at hx
+      exact hx.le
       set a := x * (p : ℚ_[p]) ^ n with ha
-      have ha_norm : ‖a‖ = 1 := by
-        have hx : x ≠ 0 := by
-          intro h0
-          rw [h0, norm_zero] at hx
-          exact hx zero_le_one
-        rw [ha, padicNormE.mul, padicNormE.norm_p_pow, Padic.norm_eq_pow_val hx, ← zpow_add',
-          hn_coe, neg_neg, add_left_neg, zpow_zero]
-        exact Or.inl (Nat.cast_ne_zero.mpr (NeZero.ne p))
+      have ha_norm  : ‖a‖ = 1
+      have hx  : x ≠ 0
+      intro h0
+      rw [h0, norm_zero] at hx
+      exact hx zero_le_one
+      rw [ha, padicNormE.mul, padicNormE.norm_p_pow, Padic.norm_eq_pow_val hx, ← zpow_add',
+        hn_coe, neg_neg, add_left_neg, zpow_zero]
+      exact Or.inl (Nat.cast_ne_zero.mpr (NeZero.ne p))
       use
         (⟨a, le_of_eq ha_norm⟩,
           ⟨(p ^ n : ℤ_[p]), mem_nonZeroDivisors_iff_ne_zero.mpr (NeZero.ne _)⟩)

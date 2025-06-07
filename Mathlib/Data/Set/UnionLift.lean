@@ -109,9 +109,9 @@ theorem iUnionLift_unary (u : T → T) (ui : ∀ i, S i → S i)
   subst hT'
   cases' Set.mem_iUnion.1 x.prop with i hi
   rw [iUnionLift_of_mem x hi, ← h i]
-  have : x = Set.inclusion (Set.subset_iUnion S i) ⟨x, hi⟩ := by
-    cases x
-    rfl
+  have  : x = Set.inclusion (Set.subset_iUnion S i) ⟨x, hi⟩
+  cases x
+  rfl
   conv_lhs => rw [this, hui, iUnionLift_inclusion]
 
 /-- `iUnionLift_binary` is useful for proving that `iUnionLift` is a homomorphism
@@ -133,12 +133,12 @@ theorem iUnionLift_binary (dir : Directed (· ≤ ·) S) (op : T → T → T) (o
   cases' Set.mem_iUnion.1 y.prop with j hj
   rcases dir i j with ⟨k, hik, hjk⟩
   rw [iUnionLift_of_mem x (hik hi), iUnionLift_of_mem y (hjk hj), ← h k]
-  have hx : x = Set.inclusion (Set.subset_iUnion S k) ⟨x, hik hi⟩ := by
-    cases x
-    rfl
-  have hy : y = Set.inclusion (Set.subset_iUnion S k) ⟨y, hjk hj⟩ := by
-    cases y
-    rfl
+  have hx  : x = Set.inclusion (Set.subset_iUnion S k) ⟨x, hik hi⟩
+  cases x
+  rfl
+  have hy  : y = Set.inclusion (Set.subset_iUnion S k) ⟨y, hjk hj⟩
+  cases y
+  rfl
   have hxy : (Set.inclusion (Set.subset_iUnion S k) (opi k ⟨x, hik hi⟩ ⟨y, hjk hj⟩) : α) ∈ S k :=
     (opi k ⟨x, hik hi⟩ ⟨y, hjk hj⟩).prop
   conv_lhs => rw [hx, hy, ← hopi, iUnionLift_of_mem _ hxy]

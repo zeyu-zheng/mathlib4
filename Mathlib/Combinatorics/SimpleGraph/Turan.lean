@@ -154,18 +154,19 @@ lemma not_adj_trans (h : G.IsTuranMaximal r) (hts : ¬G.Adj t s) (hsu : ¬G.Adj 
   have := (G.adj_replaceVertex_iff_of_ne s nst ntu.symm).not.mpr hsu
   rw [card_edgeFinset_replaceVertex_of_not_adj _ this,
     card_edgeFinset_replaceVertex_of_not_adj _ hst, dst, Nat.add_sub_cancel]
-  have l1 : (G.replaceVertex s t).degree s = G.degree s := by
-    unfold degree; congr 1; ext v
-    simp only [mem_neighborFinset, SimpleGraph.irrefl, ite_self]
-    by_cases eq : v = t
-    · simpa only [eq, not_adj_replaceVertex_same, false_iff]
-    · rw [G.adj_replaceVertex_iff_of_ne s nst eq]
-  have l2 : (G.replaceVertex s t).degree u = G.degree u - 1 := by
-    rw [degree, degree, ← card_singleton t, ← card_sdiff (by simp [h.symm])]
-    congr 1; ext v
-    simp only [mem_neighborFinset, mem_sdiff, mem_singleton, replaceVertex]
-    split_ifs <;> simp_all [adj_comm]
-  have l3 : 0 < G.degree u := by rw [G.degree_pos_iff_exists_adj u]; use t, h.symm
+  have l1  : (G.replaceVertex s t).degree s = G.degree s
+  unfold degree; congr 1; ext v
+  simp only [mem_neighborFinset, SimpleGraph.irrefl, ite_self]
+  by_cases eq : v = t
+  · simpa only [eq, not_adj_replaceVertex_same, false_iff]
+  · rw [G.adj_replaceVertex_iff_of_ne s nst eq]
+  have l2  : (G.replaceVertex s t).degree u = G.degree u - 1
+  rw [degree, degree, ← card_singleton t, ← card_sdiff (by simp [h.symm])]
+  congr 1; ext v
+  simp only [mem_neighborFinset, mem_sdiff, mem_singleton, replaceVertex]
+  split_ifs <;> simp_all [adj_comm]
+  have l3  : 0 < G.degree u
+  rw [G.degree_pos_iff_exists_adj u]; use t, h.symm
   omega
 
 variable (h : G.IsTuranMaximal r)
@@ -217,21 +218,22 @@ theorem isEquipartition : h.finpartition.IsEquipartition := by
   use G.replaceVertex v w, inferInstance, cf.replaceVertex v w
   have large_eq := fp.part_eq_of_mem hl hw
   have small_eq := fp.part_eq_of_mem hs hv
-  have ha : G.Adj v w := by
-    by_contra hn; rw [h.not_adj_iff_part_eq, small_eq, large_eq] at hn
-    rw [hn] at ineq; omega
+  have ha  : G.Adj v w
+  by_contra hn; rw [h.not_adj_iff_part_eq, small_eq, large_eq] at hn
+  rw [hn] at ineq; omega
   rw [G.card_edgeFinset_replaceVertex_of_adj ha,
     degree_eq_card_sub_part_card h, small_eq, degree_eq_card_sub_part_card h, large_eq]
-  have : large.card ≤ Fintype.card V := by simpa using card_le_card large.subset_univ
+  have  : large.card ≤ Fintype.card V
+  simpa using card_le_card large.subset_univ
   omega
 
 lemma card_parts_le : h.finpartition.parts.card ≤ r := by
   by_contra! l
   obtain ⟨z, -, hz⟩ := h.finpartition.exists_subset_part_bijOn
-  have ncf : ¬G.CliqueFree z.card := by
-    refine IsNClique.not_cliqueFree ⟨fun v hv w hw hn ↦ ?_, rfl⟩
-    contrapose! hn
-    exact hz.injOn hv hw (by rwa [← h.not_adj_iff_part_eq])
+  have ncf  : ¬G.CliqueFree z.card
+  refine IsNClique.not_cliqueFree ⟨fun v hv w hw hn ↦ ?_, rfl⟩
+  contrapose! hn
+  exact hz.injOn hv hw (by rwa [← h.not_adj_iff_part_eq])
   rw [Finset.card_eq_of_equiv hz.equiv] at ncf
   exact absurd (h.1.mono (Nat.succ_le_of_lt l)) ncf
 

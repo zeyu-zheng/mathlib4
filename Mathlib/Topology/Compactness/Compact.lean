@@ -472,7 +472,8 @@ theorem Set.Finite.isCompact (hs : s.Finite) : IsCompact s :=
   biUnion_of_singleton s ▸ hs.isCompact_biUnion fun _ _ => isCompact_singleton
 
 theorem IsCompact.finite_of_discrete [DiscreteTopology X] (hs : IsCompact s) : s.Finite := by
-  have : ∀ x : X, ({x} : Set X) ∈ 𝓝 x := by simp [nhds_discrete]
+  have  : ∀ x : X, ({x} : Set X) ∈ 𝓝 x
+  simp [nhds_discrete]
   rcases hs.elim_nhds_subcover (fun x => {x}) fun x _ => this x with ⟨t, _, hst⟩
   simp only [← t.set_biUnion_coe, biUnion_of_singleton] at hst
   exact t.finite_toSet.subset hst
@@ -497,15 +498,16 @@ theorem exists_subset_nhds_of_isCompact' [Nonempty ι] {V : ι → Set X}
   suffices ∃ i, V i ⊆ W from this.imp fun i hi => hi.trans hWU
   by_contra! H
   replace H : ∀ i, (V i ∩ Wᶜ).Nonempty := fun i => Set.inter_compl_nonempty_iff.mpr (H i)
-  have : (⋂ i, V i ∩ Wᶜ).Nonempty := by
-    refine
-      IsCompact.nonempty_iInter_of_directed_nonempty_isCompact_isClosed _ (fun i j => ?_) H
-        (fun i => (hV_cpct i).inter_right W_op.isClosed_compl) fun i =>
-        (hV_closed i).inter W_op.isClosed_compl
-    rcases hV i j with ⟨k, hki, hkj⟩
-    refine ⟨k, ⟨fun x => ?_, fun x => ?_⟩⟩ <;> simp only [and_imp, mem_inter_iff, mem_compl_iff] <;>
-      tauto
-  have : ¬⋂ i : ι, V i ⊆ W := by simpa [← iInter_inter, inter_compl_nonempty_iff]
+  have  : (⋂ i, V i ∩ Wᶜ).Nonempty
+  refine
+    IsCompact.nonempty_iInter_of_directed_nonempty_isCompact_isClosed _ (fun i j => ?_) H
+      (fun i => (hV_cpct i).inter_right W_op.isClosed_compl) fun i =>
+      (hV_closed i).inter W_op.isClosed_compl
+  rcases hV i j with ⟨k, hki, hkj⟩
+  refine ⟨k, ⟨fun x => ?_, fun x => ?_⟩⟩ <;> simp only [and_imp, mem_inter_iff, mem_compl_iff] <;>
+    tauto
+  have  : ¬⋂ i : ι, V i ⊆ W
+  simpa [← iInter_inter, inter_compl_nonempty_iff]
   contradiction
 
 lemma eq_finite_iUnion_of_isTopologicalBasis_of_isCompact_open (b : ι → Set X)
@@ -532,7 +534,8 @@ lemma eq_finite_iUnion_of_isTopologicalBasis_of_isCompact_open (b : ι → Set X
 lemma eq_sUnion_finset_of_isTopologicalBasis_of_isCompact_open (b : Set (Set X))
     (hb : IsTopologicalBasis b) (U : Set X) (hUc : IsCompact U) (hUo : IsOpen U) :
     ∃ s : Finset b, U = s.toSet.sUnion := by
-  have hb' : b = range (fun i ↦ i : b → Set X) := by simp
+  have hb'  : b = range (fun i ↦ i : b → Set X)
+  simp
   rw [hb'] at hb
   choose s hs hU using eq_finite_iUnion_of_isTopologicalBasis_of_isCompact_open _ hb U hUc hUo
   have : Finite s := hs
@@ -879,8 +882,8 @@ theorem isClosedMap_snd_of_compactSpace [CompactSpace X] :
     IsClosedMap (Prod.snd : X × Y → Y) := fun s hs => by
   rw [← isOpen_compl_iff, isOpen_iff_mem_nhds]
   intro y hy
-  have : univ ×ˢ {y} ⊆ sᶜ := by
-    exact fun (x, y') ⟨_, rfl⟩ hs => hy ⟨(x, y'), hs, rfl⟩
+  have  : univ ×ˢ {y} ⊆ sᶜ
+  exact fun (x, y') ⟨_, rfl⟩ hs => hy ⟨(x, y'), hs, rfl⟩
   rcases generalized_tube_lemma isCompact_univ isCompact_singleton hs.isOpen_compl this
     with ⟨U, V, -, hVo, hU, hV, hs⟩
   refine mem_nhds_iff.2 ⟨V, ?_, hVo, hV rfl⟩
@@ -1031,9 +1034,9 @@ theorem isCompact_pi_infinite {s : ∀ i, Set (X i)} :
     (∀ i, IsCompact (s i)) → IsCompact { x : ∀ i, X i | ∀ i, x i ∈ s i } := by
   simp only [isCompact_iff_ultrafilter_le_nhds, nhds_pi, le_pi, le_principal_iff]
   intro h f hfs
-  have : ∀ i : ι, ∃ x, x ∈ s i ∧ Tendsto (Function.eval i) f (𝓝 x) := by
-    refine fun i => h i (f.map _) (mem_map.2 ?_)
-    exact mem_of_superset hfs fun x hx => hx i
+  have  : ∀ i : ι, ∃ x, x ∈ s i ∧ Tendsto (Function.eval i) f (𝓝 x)
+  refine fun i => h i (f.map _) (mem_map.2 ?_)
+  exact mem_of_superset hfs fun x hx => hx i
   choose x hx using this
   exact ⟨x, fun i => (hx i).left, fun i => (hx i).right⟩
 

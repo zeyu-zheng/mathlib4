@@ -137,9 +137,9 @@ theorem intValuation_lt_one_iff_dvd (r : R) :
   · simp [hr]
   · rw [← WithZero.coe_one, ← ofAdd_zero, WithZero.coe_lt_coe, ofAdd_lt, neg_lt_zero, ←
       Int.ofNat_zero, Int.ofNat_lt, zero_lt_iff]
-    have h : (Ideal.span {r} : Ideal R) ≠ 0 := by
-      rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
-      exact hr
+    have h  : (Ideal.span {r} : Ideal R) ≠ 0
+    rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
+    exact hr
     apply Associates.count_ne_zero_iff_dvd h (by apply v.irreducible)
 
 @[deprecated (since := "2024-07-09")]
@@ -259,17 +259,17 @@ theorem intValuation_apply {r : R} (v : IsDedekindDomain.HeightOneSpectrum R) :
 theorem intValuation_exists_uniformizer :
     ∃ π : R, v.intValuationDef π = Multiplicative.ofAdd (-1 : ℤ) := by
   have hv : _root_.Irreducible (Associates.mk v.asIdeal) := v.associates_irreducible
-  have hlt : v.asIdeal ^ 2 < v.asIdeal := by
-    rw [← Ideal.dvdNotUnit_iff_lt]
-    exact
-      ⟨v.ne_bot, v.asIdeal, (not_congr Ideal.isUnit_iff).mpr (Ideal.IsPrime.ne_top v.isPrime),
-        sq v.asIdeal⟩
+  have hlt  : v.asIdeal ^ 2 < v.asIdeal
+  rw [← Ideal.dvdNotUnit_iff_lt]
+  exact
+    ⟨v.ne_bot, v.asIdeal, (not_congr Ideal.isUnit_iff).mpr (Ideal.IsPrime.ne_top v.isPrime),
+      sq v.asIdeal⟩
   obtain ⟨π, mem, nmem⟩ := SetLike.exists_of_lt hlt
-  have hπ : Associates.mk (Ideal.span {π}) ≠ 0 := by
-    rw [Associates.mk_ne_zero']
-    intro h
-    rw [h] at nmem
-    exact nmem (Submodule.zero_mem (v.asIdeal ^ 2))
+  have hπ  : Associates.mk (Ideal.span {π}) ≠ 0
+  rw [Associates.mk_ne_zero']
+  intro h
+  rw [h] at nmem
+  exact nmem (Submodule.zero_mem (v.asIdeal ^ 2))
   use π
   rw [intValuationDef, if_neg (Associates.mk_ne_zero'.mp hπ), WithZero.coe_inj]
   apply congr_arg

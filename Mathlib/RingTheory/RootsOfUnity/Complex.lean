@@ -42,10 +42,12 @@ theorem isPrimitiveRoot_exp_of_coprime (i n : ℕ) (h0 : n ≠ 0) (hi : i.Coprim
     norm_cast
     rintro l k hk
     conv_rhs at hk => rw [mul_comm, ← mul_assoc]
-    have hz : 2 * ↑π * I ≠ 0 := by simp [pi_pos.ne.symm, I_ne_zero]
+    have hz  : 2 * ↑π * I ≠ 0
+    simp [pi_pos.ne.symm, I_ne_zero]
     field_simp [hz] at hk
     norm_cast at hk
-    have : n ∣ i * l := by rw [← Int.natCast_dvd_natCast, hk, mul_comm]; apply dvd_mul_left
+    have  : n ∣ i * l
+    rw [← Int.natCast_dvd_natCast, hk, mul_comm]; apply dvd_mul_left
     exact hi.symm.dvd_of_dvd_mul_left this
 
 theorem isPrimitiveRoot_exp (n : ℕ) (h0 : n ≠ 0) : IsPrimitiveRoot (exp (2 * π * I / n)) n := by

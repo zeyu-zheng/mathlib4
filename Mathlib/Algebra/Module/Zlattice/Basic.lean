@@ -282,9 +282,9 @@ theorem fundamentalDomain_subset_parallelepiped [Fintype ι] :
   exact fun _ h i ↦ Set.Ico_subset_Icc_self (h i)
 
 instance [Finite ι] : DiscreteTopology (span ℤ (Set.range b)) := by
-  have h : Set.MapsTo b.equivFun (span ℤ (Set.range b)) (span ℤ (Set.range (Pi.basisFun ℝ ι))) := by
-    intro _ hx
-    rwa [SetLike.mem_coe, Basis.mem_span_iff_repr_mem] at hx ⊢
+  have h  : Set.MapsTo b.equivFun (span ℤ (Set.range b)) (span ℤ (Set.range (Pi.basisFun ℝ ι)))
+  intro _ hx
+  rwa [SetLike.mem_coe, Basis.mem_span_iff_repr_mem] at hx ⊢
   convert DiscreteTopology.of_continuous_injective ((continuous_equivFun_basis b).restrict h) ?_
   · exact discreteTopology_pi_basisFun
   · refine Subtype.map_injective _ (Basis.equivFun b).injective
@@ -433,10 +433,10 @@ instance instModuleFinite_of_discrete_addSubgroup {E : Type*} [NormedAddCommGrou
     Module.Finite ℤ L := by
   let f := (span ℝ (L : Set E)).subtype
   let L₀ := (AddSubgroup.toIntSubmodule L).comap (f.restrictScalars ℤ)
-  have h_img : f '' L₀ = L := by
-    rw [← LinearMap.coe_restrictScalars ℤ f, ← Submodule.map_coe (f.restrictScalars ℤ),
-      Submodule.map_comap_eq_self, AddSubgroup.coe_toIntSubmodule]
-    exact fun x hx ↦ LinearMap.mem_range.mpr ⟨⟨x, Submodule.subset_span hx⟩, rfl⟩
+  have h_img  : f '' L₀ = L
+  rw [← LinearMap.coe_restrictScalars ℤ f, ← Submodule.map_coe (f.restrictScalars ℤ),
+    Submodule.map_comap_eq_self, AddSubgroup.coe_toIntSubmodule]
+  exact fun x hx ↦ LinearMap.mem_range.mpr ⟨⟨x, Submodule.subset_span hx⟩, rfl⟩
   suffices Module.Finite ℤ L₀ by
     have : L₀.map (f.restrictScalars ℤ) = (AddSubgroup.toIntSubmodule L) :=
       SetLike.ext'_iff.mpr h_img
@@ -453,9 +453,9 @@ theorem Zlattice.module_free [IsZlattice K L] : Module.Free ℤ L := by
   have : Module.Finite ℤ L := module_finite K L
   have : Module ℚ E := Module.compHom E (algebraMap ℚ K)
   have : NoZeroSMulDivisors ℤ E := RatModule.noZeroSMulDivisors
-  have : NoZeroSMulDivisors ℤ L := by
-    change NoZeroSMulDivisors ℤ (AddSubgroup.toIntSubmodule L)
-    exact noZeroSMulDivisors _
+  have  : NoZeroSMulDivisors ℤ L
+  change NoZeroSMulDivisors ℤ (AddSubgroup.toIntSubmodule L)
+  exact noZeroSMulDivisors _
   infer_instance
 
 instance instModuleFree_of_discrete_addSubgroup {E : Type*} [NormedAddCommGroup E]
@@ -463,9 +463,9 @@ instance instModuleFree_of_discrete_addSubgroup {E : Type*} [NormedAddCommGroup 
     Module.Free ℤ L := by
   have : Module ℚ E := Module.compHom E (algebraMap ℚ ℝ)
   have : NoZeroSMulDivisors ℤ E := RatModule.noZeroSMulDivisors
-  have : NoZeroSMulDivisors ℤ L := by
-    change NoZeroSMulDivisors ℤ (AddSubgroup.toIntSubmodule L)
-    exact noZeroSMulDivisors _
+  have  : NoZeroSMulDivisors ℤ L
+  change NoZeroSMulDivisors ℤ (AddSubgroup.toIntSubmodule L)
+  exact noZeroSMulDivisors _
   infer_instance
 
 theorem Zlattice.rank [hs : IsZlattice K L] : finrank ℤ L = finrank K E := by

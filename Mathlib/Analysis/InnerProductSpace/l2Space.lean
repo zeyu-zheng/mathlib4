@@ -350,9 +350,9 @@ theorem Orthonormal.isHilbertSum {v : ι → E} (hv : Orthonormal 𝕜 v)
 
 theorem Submodule.isHilbertSumOrthogonal (K : Submodule 𝕜 E) [hK : CompleteSpace K] :
     IsHilbertSum 𝕜 (fun b => ↥(cond b K Kᗮ)) fun b => (cond b K Kᗮ).subtypeₗᵢ := by
-  have : ∀ b, CompleteSpace (↥(cond b K Kᗮ)) := by
-    intro b
-    cases b <;> first | exact instOrthogonalCompleteSpace K | assumption
+  have  : ∀ b, CompleteSpace (↥(cond b K Kᗮ))
+  intro b
+  cases b <;> first | exact instOrthogonalCompleteSpace K | assumption
   refine IsHilbertSum.mkInternal _ K.orthogonalFamily_self ?_
   refine le_trans ?_ (Submodule.le_topologicalClosure _)
   rw [iSup_bool_eq, cond, cond]

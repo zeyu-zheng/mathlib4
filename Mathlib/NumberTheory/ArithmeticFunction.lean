@@ -298,19 +298,20 @@ theorem one_smul' (b : ArithmeticFunction M) : (1 : ArithmeticFunction R) • b 
   rw [smul_apply]
   by_cases x0 : x = 0
   · simp [x0]
-  have h : {(1, x)} ⊆ divisorsAntidiagonal x := by simp [x0]
+  have h  : {(1, x)} ⊆ divisorsAntidiagonal x
+  simp [x0]
   rw [← sum_subset h]
   · simp
   intro y ymem ynmem
-  have y1ne : y.fst ≠ 1 := by
-    intro con
-    simp only [Con, mem_divisorsAntidiagonal, one_mul, Ne] at ymem
-    simp only [mem_singleton, Prod.ext_iff] at ynmem
-    -- Porting note: `tauto` worked from here.
-    cases y
-    subst con
-    simp only [true_and, one_mul, x0, not_false_eq_true, and_true] at ynmem ymem
-    tauto
+  have y1ne  : y.fst ≠ 1
+  intro con
+  simp only [Con, mem_divisorsAntidiagonal, one_mul, Ne] at ymem
+  simp only [mem_singleton, Prod.ext_iff] at ynmem
+  -- Porting note: `tauto` worked from here.
+  cases y
+  subst con
+  simp only [true_and, one_mul, x0, not_false_eq_true, and_true] at ynmem ymem
+  tauto
 
   simp [y1ne]
 
@@ -758,8 +759,8 @@ theorem lcm_apply_mul_gcd_apply [CommMonoidWithZero R] {f : ArithmeticFunction R
   · simp only [hy, f.map_zero, mul_zero, Nat.lcm_zero_right, Nat.gcd_zero_right, zero_mul]
   have hgcd_ne_zero : x.gcd y ≠ 0 := gcd_ne_zero_left hx
   have hlcm_ne_zero : x.lcm y ≠ 0 := lcm_ne_zero hx hy
-  have hfi_zero : ∀ {i}, f (i ^ 0) = 1 := by
-    intro i; rw [Nat.pow_zero, hf.1]
+  have hfi_zero  : ∀ {i}, f (i ^ 0) = 1
+  intro i; rw [Nat.pow_zero, hf.1]
   iterate 4 rw [hf.multiplicative_factorization f (by assumption),
     Finsupp.prod_of_support_subset _ _ _ (fun _ _ => hfi_zero)
       (s := (x.primeFactors ⊔ y.primeFactors))]

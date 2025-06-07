@@ -214,9 +214,9 @@ theorem adjugate_transpose (A : Matrix n n α) : (adjugate A)ᵀ = adjugate Aᵀ
     congr 1 with rfl
     rw [Pi.single_eq_same, Pi.single_eq_same]
   · -- Otherwise, we need to show that there is a `0` somewhere in the product.
-    have : (∏ j' : n, updateColumn A j (Pi.single i 1) (σ j') j') = 0 := by
-      apply prod_eq_zero (mem_univ j)
-      rw [updateColumn_self, Pi.single_eq_of_ne' h]
+    have  : (∏ j' : n, updateColumn A j (Pi.single i 1) (σ j') j') = 0
+    apply prod_eq_zero (mem_univ j)
+    rw [updateColumn_self, Pi.single_eq_of_ne' h]
     rw [this]
     apply prod_eq_zero (mem_univ (σ⁻¹ i))
     erw [apply_symm_apply σ i, updateRow_self]
@@ -245,11 +245,11 @@ theorem cramer_eq_adjugate_mulVec (A : Matrix n n α) (b : n → α) :
     cramer A b = A.adjugate *ᵥ b := by
   nth_rw 2 [← A.transpose_transpose]
   rw [← adjugate_transpose, adjugate_def]
-  have : b = ∑ i, b i • (Pi.single i 1 : n → α) := by
-    refine (pi_eq_sum_univ b).trans ?_
-    congr with j
-    -- Porting note: needed to help `Pi.smul_apply`
-    simp [Pi.single_apply, eq_comm, Pi.smul_apply (b j)]
+  have  : b = ∑ i, b i • (Pi.single i 1 : n → α)
+  refine (pi_eq_sum_univ b).trans ?_
+  congr with j
+  -- Porting note: needed to help `Pi.smul_apply`
+  simp [Pi.single_apply, eq_comm, Pi.smul_apply (b j)]
   conv_lhs =>
     rw [this]
   ext k
@@ -322,9 +322,9 @@ theorem adjugate_diagonal (v : n → α) :
 theorem _root_.RingHom.map_adjugate {R S : Type*} [CommRing R] [CommRing S] (f : R →+* S)
     (M : Matrix n n R) : f.mapMatrix M.adjugate = Matrix.adjugate (f.mapMatrix M) := by
   ext i k
-  have : Pi.single i (1 : S) = f ∘ Pi.single i 1 := by
-    rw [← f.map_one]
-    exact Pi.single_op (fun _ => f) (fun _ => f.map_zero) i (1 : R)
+  have  : Pi.single i (1 : S) = f ∘ Pi.single i 1
+  rw [← f.map_one]
+  exact Pi.single_op (fun _ => f) (fun _ => f.map_zero) i (1 : R)
   rw [adjugate_apply, RingHom.mapMatrix_apply, map_apply, RingHom.mapMatrix_apply, this, ←
     map_updateRow, ← RingHom.mapMatrix_apply, ← RingHom.map_det, ← adjugate_apply]
 
@@ -436,9 +436,9 @@ theorem isRegular_of_isLeftRegular_det {A : Matrix n n α} (hA : IsLeftRegular A
 
 theorem adjugate_mul_distrib_aux (A B : Matrix n n α) (hA : IsLeftRegular A.det)
     (hB : IsLeftRegular B.det) : adjugate (A * B) = adjugate B * adjugate A := by
-  have hAB : IsLeftRegular (A * B).det := by
-    rw [det_mul]
-    exact hA.mul hB
+  have hAB  : IsLeftRegular (A * B).det
+  rw [det_mul]
+  exact hA.mul hB
   refine (isRegular_of_isLeftRegular_det hAB).left ?_
   simp only
   rw [mul_adjugate, Matrix.mul_assoc, ← Matrix.mul_assoc B, mul_adjugate,
@@ -498,7 +498,8 @@ theorem adjugate_adjugate (A : Matrix n n α) (h : Fintype.card n ≠ 1) :
     rw [← mvPolynomialX_mapMatrix_aeval ℤ A, ← AlgHom.map_adjugate, ← AlgHom.map_adjugate, this,
       ← AlgHom.map_det, ← map_pow (MvPolynomial.aeval _), AlgHom.mapMatrix_apply,
       AlgHom.mapMatrix_apply, Matrix.map_smul' _ _ _ (_root_.map_mul _)]
-  have h_card' : Fintype.card n - 2 + 1 = Fintype.card n - 1 := by simp [h_card]
+  have h_card'  : Fintype.card n - 2 + 1 = Fintype.card n - 1
+  simp [h_card]
   have is_reg : IsSMulRegular (MvPolynomial (n × n) ℤ) (det A') := fun x y =>
     mul_left_cancel₀ (det_mvPolynomialX_ne_zero n ℤ)
   apply is_reg.matrix

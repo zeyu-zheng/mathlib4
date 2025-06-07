@@ -46,9 +46,9 @@ theorem isLocalHomeomorphOn_iff_openEmbedding_restrict {f : X → Y} :
   · obtain ⟨e, hxe, rfl⟩ := h x hx
     exact ⟨e.source, e.open_source.mem_nhds hxe, e.openEmbedding_restrict⟩
   · obtain ⟨U, hU, emb⟩ := h x hx
-    have : OpenEmbedding ((interior U).restrict f) := by
-      refine emb.comp ⟨embedding_inclusion interior_subset, ?_⟩
-      rw [Set.range_inclusion]; exact isOpen_induced isOpen_interior
+    have  : OpenEmbedding ((interior U).restrict f)
+    refine emb.comp ⟨embedding_inclusion interior_subset, ?_⟩
+    rw [Set.range_inclusion]; exact isOpen_induced isOpen_interior
     obtain ⟨cont, inj, openMap⟩ := openEmbedding_iff_continuous_injective_open.mp this
     haveI : Nonempty X := ⟨x⟩
     exact ⟨PartialHomeomorph.ofContinuousOpenRestrict
@@ -92,7 +92,8 @@ theorem of_comp_left (hgf : IsLocalHomeomorphOn (g ∘ f) s) (hg : IsLocalHomeom
     ((cont x hx).preimage_mem_nhds <| g.open_source.mem_nhds hxg)⟩, he ▸ g.map_source hxg⟩,
     fun y hy ↦ ?_⟩
   change f y = g.symm (gf y)
-  have : f y ∈ g.source := by apply interior_subset hy.1.2
+  have  : f y ∈ g.source
+  apply interior_subset hy.1.2
   rw [← he, g.eq_symm_apply this (by apply g.map_source this), Function.comp_apply]
 
 theorem of_comp_right (hgf : IsLocalHomeomorphOn (g ∘ f) s) (hf : IsLocalHomeomorphOn f s) :

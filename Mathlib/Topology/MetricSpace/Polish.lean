@@ -145,18 +145,18 @@ theorem _root_.ClosedEmbedding.polishSpace [TopologicalSpace α] [TopologicalSpa
   letI := upgradePolishSpace β
   letI : MetricSpace α := hf.toEmbedding.comapMetricSpace f
   haveI : SecondCountableTopology α := hf.toEmbedding.secondCountableTopology
-  have : CompleteSpace α := by
-    rw [completeSpace_iff_isComplete_range hf.toEmbedding.to_isometry.uniformInducing]
-    exact hf.isClosed_range.isComplete
+  have  : CompleteSpace α
+  rw [completeSpace_iff_isComplete_range hf.toEmbedding.to_isometry.uniformInducing]
+  exact hf.isClosed_range.isComplete
   infer_instance
 
 /-- Any countable discrete space is Polish. -/
 instance (priority := 50) polish_of_countable [TopologicalSpace α]
     [h : Countable α] [DiscreteTopology α] : PolishSpace α := by
   obtain ⟨f, hf⟩ := h.exists_injective_nat
-  have : ClosedEmbedding f := by
-    apply closedEmbedding_of_continuous_injective_closed continuous_of_discreteTopology hf
-    exact fun t _ => isClosed_discrete _
+  have  : ClosedEmbedding f
+  apply closedEmbedding_of_continuous_injective_closed continuous_of_discreteTopology hf
+  exact fun t _ => isClosed_discrete _
   exact this.polishSpace
 
 /-- Pulling back a Polish topology under an equiv gives again a Polish topology. -/
@@ -296,10 +296,10 @@ instance instMetricSpace : MetricSpace (CompleteCopy s) := by
 
 instance instCompleteSpace [CompleteSpace α] : CompleteSpace (CompleteCopy s) := by
   refine Metric.complete_of_convergent_controlled_sequences ((1 / 2) ^ ·) (by simp) fun u hu ↦ ?_
-  have A : CauchySeq fun n => (u n).1 := by
-    refine cauchySeq_of_le_tendsto_0 (fun n : ℕ => (1 / 2) ^ n) (fun n m N hNn hNm => ?_) ?_
-    · exact (dist_val_le_dist (u n) (u m)).trans (hu N n m hNn hNm).le
-    · exact tendsto_pow_atTop_nhds_zero_of_lt_one (by norm_num) (by norm_num)
+  have A  : CauchySeq fun n => (u n).1
+  refine cauchySeq_of_le_tendsto_0 (fun n : ℕ => (1 / 2) ^ n) (fun n m N hNn hNm => ?_) ?_
+  · exact (dist_val_le_dist (u n) (u m)).trans (hu N n m hNn hNm).le
+  · exact tendsto_pow_atTop_nhds_zero_of_lt_one (by norm_num) (by norm_num)
   obtain ⟨x, xlim⟩ : ∃ x, Tendsto (fun n => (u n).1) atTop (𝓝 x) := cauchySeq_tendsto_of_complete A
   by_cases xs : x ∈ s
   · exact ⟨⟨x, xs⟩, tendsto_subtype_rng.2 xlim⟩
@@ -358,10 +358,10 @@ theorem _root_.IsClosed.isClopenable [TopologicalSpace α] [PolishSpace α] {s :
   let t : Set α := sᶜ
   haveI : PolishSpace t := hs.isOpen_compl.polishSpace
   let f : s ⊕ t ≃ α := Equiv.Set.sumCompl s
-  have hle : TopologicalSpace.coinduced f instTopologicalSpaceSum ≤ ‹_› := by
-    simp only [instTopologicalSpaceSum, coinduced_sup, coinduced_compose, sup_le_iff,
-      ← continuous_iff_coinduced_le]
-    exact ⟨continuous_subtype_val, continuous_subtype_val⟩
+  have hle  : TopologicalSpace.coinduced f instTopologicalSpaceSum ≤ ‹_›
+  simp only [instTopologicalSpaceSum, coinduced_sup, coinduced_compose, sup_le_iff,
+    ← continuous_iff_coinduced_le]
+  exact ⟨continuous_subtype_val, continuous_subtype_val⟩
   refine ⟨.coinduced f instTopologicalSpaceSum, hle, ?_, hs.mono hle, ?_⟩
   · rw [← f.induced_symm]
     exact f.symm.polishSpace_induced

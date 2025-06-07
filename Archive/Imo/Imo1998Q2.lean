@@ -141,7 +141,8 @@ theorem A_card_upper_bound {k : ℕ}
   rw [← Finset.offDiag_card]
   apply Finset.card_le_mul_card_image_of_maps_to (A_maps_to_offDiag_judgePair r)
   intro p hp
-  have hp' : p.Distinct := by simp [Finset.mem_offDiag] at hp; exact hp
+  have hp'  : p.Distinct
+  simp [Finset.mem_offDiag] at hp; exact hp
   rw [← A_fibre_over_judgePair_card r hp']; apply hk; exact hp'
 
 end
@@ -153,7 +154,8 @@ theorem norm_bound_of_odd_sum {x y z : ℤ} (h : x + y = 2 * z + 1) :
     2 * z * z + 2 * z + 1 ≤ x * x + y * y := by
   suffices 4 * z * z + 4 * z + 1 + 1 ≤ 2 * x * x + 2 * y * y by
     rw [← mul_le_mul_left (zero_lt_two' ℤ)]; ring_nf at this ⊢; exact this
-  have h' : (x + y) * (x + y) = 4 * z * z + 4 * z + 1 := by rw [h]; ring
+  have h'  : (x + y) * (x + y) = 4 * z * z + 4 * z + 1
+  rw [h]; ring
   rw [← add_sq_add_sq_sub, h', add_le_add_iff_left]
   suffices 0 < (x - y) * (x - y) by apply Int.add_one_le_of_lt this
   rw [mul_self_pos, sub_ne_zero]; apply Int.ne_of_odd_add ⟨z, h⟩
@@ -166,8 +168,8 @@ theorem judge_pairs_card_lower_bound {z : ℕ} (hJ : Fintype.card J = 2 * z + 1)
     2 * z * z + 2 * z + 1 ≤ (Finset.univ.filter fun p : JudgePair J => p.Agree r c).card := by
   let x := (Finset.univ.filter fun j => r c j).card
   let y := (Finset.univ.filter fun j => ¬r c j).card
-  have h : (Finset.univ.filter fun p : JudgePair J => p.Agree r c).card = x * x + y * y := by
-    simp [x, y, ← Finset.filter_product_card]
+  have h  : (Finset.univ.filter fun p : JudgePair J => p.Agree r c).card = x * x + y * y
+  simp [x, y, ← Finset.filter_product_card]
   rw [h]; apply Int.le_of_ofNat_le_ofNat; simp only [Int.ofNat_add, Int.ofNat_mul]
   apply norm_bound_of_odd_sum
   suffices x + y = 2 * z + 1 by simp [← Int.ofNat_add, this]
@@ -178,21 +180,23 @@ theorem distinct_judge_pairs_card_lower_bound {z : ℕ} (hJ : Fintype.card J = 2
   let s := Finset.univ.filter fun p : JudgePair J => p.Agree r c
   let t := Finset.univ.filter fun p : JudgePair J => p.Distinct
   have hs : 2 * z * z + 2 * z + 1 ≤ s.card := judge_pairs_card_lower_bound r hJ c
-  have hst : s \ t = Finset.univ.diag := by
-    ext p; constructor <;> intros hp
-    · unfold_let s t at hp
-      aesop
-    · unfold_let s t
-      suffices p.judge₁ = p.judge₂ by simp [this]
-      aesop
-  have hst' : (s \ t).card = 2 * z + 1 := by rw [hst, Finset.diag_card, ← hJ]; rfl
+  have hst  : s \ t = Finset.univ.diag
+  ext p; constructor <;> intros hp
+  · unfold_let s t at hp
+    aesop
+  · unfold_let s t
+    suffices p.judge₁ = p.judge₂ by simp [this]
+    aesop
+  have hst'  : (s \ t).card = 2 * z + 1
+  rw [hst, Finset.diag_card, ← hJ]; rfl
   rw [Finset.filter_and, ← Finset.sdiff_sdiff_self_left s t, Finset.card_sdiff]
   · rw [hst']; rw [add_assoc] at hs; apply le_tsub_of_add_le_right hs
   · apply Finset.sdiff_subset
 
 theorem A_card_lower_bound [Fintype C] {z : ℕ} (hJ : Fintype.card J = 2 * z + 1) :
     2 * z * z * Fintype.card C ≤ (A r).card := by
-  have h : ∀ a, a ∈ A r → Prod.fst a ∈ @Finset.univ C _ := by intros; apply Finset.mem_univ
+  have h  : ∀ a, a ∈ A r → Prod.fst a ∈ @Finset.univ C _
+  intros; apply Finset.mem_univ
   apply Finset.mul_card_image_le_card_of_maps_to h
   intro c _
   rw [← A_fibre_over_contestant_card]
@@ -224,10 +228,12 @@ theorem imo1998_q2 [Fintype J] [Fintype C] (a b k : ℕ) (hC : Fintype.card C = 
   have h := le_trans (A_card_lower_bound r hJ) (A_card_upper_bound r hk)
   rw [hC, hJ] at h
   -- We are now essentially done; we just need to bash `h` into exactly the right shape.
-  have hl : k * ((2 * z + 1) * (2 * z + 1) - (2 * z + 1)) = k * (2 * (2 * z + 1)) * z := by
-    have : 0 < 2 * z + 1 := by aesop
-    simp only [mul_comm, add_mul, one_mul, nonpos_iff_eq_zero, add_tsub_cancel_right]; ring
-  have hr : 2 * z * z * a = 2 * z * a * z := by ring
+  have hl  : k * ((2 * z + 1) * (2 * z + 1) - (2 * z + 1)) = k * (2 * (2 * z + 1)) * z
+  have  : 0 < 2 * z + 1
+  aesop
+  simp only [mul_comm, add_mul, one_mul, nonpos_iff_eq_zero, add_tsub_cancel_right]; ring
+  have hr  : 2 * z * z * a = 2 * z * a * z
+  ring
   rw [hl, hr] at h
   cases' z with z
   · simp

@@ -464,10 +464,10 @@ theorem inner_le_Lp_mul_Lq_tsum {f g : ι → ℝ≥0} {p q : ℝ} (hpq : p.IsCo
       exact sum_le_tsum _ (fun _ _ => zero_le _) hf
     · rw [NNReal.rpow_le_rpow_iff (one_div_pos.mpr hpq.symm.pos)]
       exact sum_le_tsum _ (fun _ _ => zero_le _) hg
-  have bdd : BddAbove (Set.range fun s => ∑ i ∈ s, f i * g i) := by
-    refine ⟨(∑' i, f i ^ p) ^ (1 / p) * (∑' i, g i ^ q) ^ (1 / q), ?_⟩
-    rintro a ⟨s, rfl⟩
-    exact H₁ s
+  have bdd  : BddAbove (Set.range fun s => ∑ i ∈ s, f i * g i)
+  refine ⟨(∑' i, f i ^ p) ^ (1 / p) * (∑' i, g i ^ q) ^ (1 / q), ?_⟩
+  rintro a ⟨s, rfl⟩
+  exact H₁ s
   have H₂ : Summable _ := (hasSum_of_isLUB _ (isLUB_ciSup bdd)).summable
   exact ⟨H₂, tsum_le_of_sum_le H₂ H₁⟩
 
@@ -489,9 +489,10 @@ theorem inner_le_Lp_mul_Lq_hasSum {f g : ι → ℝ≥0} {A B : ℝ≥0} {p q : 
     (hpq : p.IsConjExponent q) (hf : HasSum (fun i => f i ^ p) (A ^ p))
     (hg : HasSum (fun i => g i ^ q) (B ^ q)) : ∃ C, C ≤ A * B ∧ HasSum (fun i => f i * g i) C := by
   obtain ⟨H₁, H₂⟩ := inner_le_Lp_mul_Lq_tsum hpq hf.summable hg.summable
-  have hA : A = (∑' i : ι, f i ^ p) ^ (1 / p) := by rw [hf.tsum_eq, rpow_inv_rpow_self hpq.ne_zero]
-  have hB : B = (∑' i : ι, g i ^ q) ^ (1 / q) := by
-    rw [hg.tsum_eq, rpow_inv_rpow_self hpq.symm.ne_zero]
+  have hA  : A = (∑' i : ι, f i ^ p) ^ (1 / p)
+  rw [hf.tsum_eq, rpow_inv_rpow_self hpq.ne_zero]
+  have hB  : B = (∑' i : ι, g i ^ q) ^ (1 / q)
+  rw [hg.tsum_eq, rpow_inv_rpow_self hpq.symm.ne_zero]
   refine ⟨∑' i, f i * g i, ?_, ?_⟩
   · simpa [hA, hB] using H₂
   · simpa only [rpow_self_rpow_inv hpq.ne_zero] using H₁.hasSum
@@ -506,9 +507,9 @@ theorem rpow_sum_le_const_mul_sum_rpow (f : ι → ℝ≥0) {p : ℝ} (hp : 1 �
   let q : ℝ := p / (p - 1)
   have hpq : p.IsConjExponent q := .conjExponent hp
   have hp₁ : 1 / p * p = 1 := one_div_mul_cancel hpq.ne_zero
-  have hq : 1 / q * p = p - 1 := by
-    rw [← hpq.div_conj_eq_sub_one]
-    ring
+  have hq  : 1 / q * p = p - 1
+  rw [← hpq.div_conj_eq_sub_one]
+  ring
   simpa only [NNReal.mul_rpow, ← NNReal.rpow_mul, hp₁, hq, one_mul, one_rpow, rpow_one,
     Pi.one_apply, sum_const, Nat.smul_one_eq_cast] using
     NNReal.rpow_le_rpow (inner_le_Lp_mul_Lq s 1 f hpq.symm) hpq.nonneg
@@ -523,9 +524,9 @@ theorem isGreatest_Lp (f : ι → ℝ≥0) {p q : ℝ} (hpq : p.IsConjExponent q
     by_cases hf : ∑ i ∈ s, f i ^ p = 0
     · simp [hf, hpq.ne_zero, hpq.symm.ne_zero]
     · have A : p + q - q ≠ 0 := by simp [hpq.ne_zero]
-      have B : ∀ y : ℝ≥0, y * y ^ p / y = y ^ p := by
-        refine fun y => mul_div_cancel_left_of_imp fun h => ?_
-        simp [h, hpq.ne_zero]
+      have B  : ∀ y : ℝ≥0, y * y ^ p / y = y ^ p
+      refine fun y => mul_div_cancel_left_of_imp fun h => ?_
+      simp [h, hpq.ne_zero]
       simp only [Set.mem_setOf_eq, div_rpow, ← sum_div, ← rpow_mul,
         div_mul_cancel₀ _ hpq.symm.ne_zero, rpow_one, div_le_iff hf, one_mul, hpq.mul_eq_add, ←
         rpow_sub' _ A, add_sub_cancel_right, le_refl, true_and_iff, ← mul_div_assoc, B]
@@ -571,10 +572,10 @@ theorem Lp_add_le_tsum {f g : ι → ℝ≥0} {p : ℝ} (hp : 1 ≤ p) (hf : Sum
         rw [NNReal.rpow_le_rpow_iff (one_div_pos.mpr pos)] <;>
       refine sum_le_tsum _ (fun _ _ => zero_le _) ?_
     exacts [hf, hg]
-  have bdd : BddAbove (Set.range fun s => ∑ i ∈ s, (f i + g i) ^ p) := by
-    refine ⟨((∑' i, f i ^ p) ^ (1 / p) + (∑' i, g i ^ p) ^ (1 / p)) ^ p, ?_⟩
-    rintro a ⟨s, rfl⟩
-    exact H₁ s
+  have bdd  : BddAbove (Set.range fun s => ∑ i ∈ s, (f i + g i) ^ p)
+  refine ⟨((∑' i, f i ^ p) ^ (1 / p) + (∑' i, g i ^ p) ^ (1 / p)) ^ p, ?_⟩
+  rintro a ⟨s, rfl⟩
+  exact H₁ s
   have H₂ : Summable _ := (hasSum_of_isLUB _ (isLUB_ciSup bdd)).summable
   refine ⟨H₂, ?_⟩
   rw [one_div, NNReal.rpow_inv_le_iff pos, ← one_div]
@@ -598,8 +599,10 @@ theorem Lp_add_le_hasSum {f g : ι → ℝ≥0} {A B : ℝ≥0} {p : ℝ} (hp : 
     ∃ C, C ≤ A + B ∧ HasSum (fun i => (f i + g i) ^ p) (C ^ p) := by
   have hp' : p ≠ 0 := (lt_of_lt_of_le zero_lt_one hp).ne'
   obtain ⟨H₁, H₂⟩ := Lp_add_le_tsum hp hf.summable hg.summable
-  have hA : A = (∑' i : ι, f i ^ p) ^ (1 / p) := by rw [hf.tsum_eq, rpow_inv_rpow_self hp']
-  have hB : B = (∑' i : ι, g i ^ p) ^ (1 / p) := by rw [hg.tsum_eq, rpow_inv_rpow_self hp']
+  have hA  : A = (∑' i : ι, f i ^ p) ^ (1 / p)
+  rw [hf.tsum_eq, rpow_inv_rpow_self hp']
+  have hB  : B = (∑' i : ι, g i ^ p) ^ (1 / p)
+  rw [hg.tsum_eq, rpow_inv_rpow_self hp']
   refine ⟨(∑' i, (f i + g i) ^ p) ^ (1 / p), ?_, ?_⟩
   · simpa [hA, hB] using H₂
   · simpa only [rpow_self_rpow_inv hp'] using H₁.hasSum
@@ -814,12 +817,14 @@ lemma inner_le_weight_mul_Lp_of_nonneg (s : Finset ι) {p : ℝ} (hp : 1 ≤ p) 
     ∑ i ∈ s, w i * f i ≤ (∑ i ∈ s, w i) ^ (1 - p⁻¹) * (∑ i ∈ s, w i * f i ^ p) ^ p⁻¹ := by
   obtain rfl | hp := hp.eq_or_lt
   · simp
-  have hp₀ : 0 < p := by positivity
+  have hp₀  : 0 < p
+  positivity
   have hp₁ : p⁻¹ < 1 := inv_lt_one hp
   by_cases H : (∑ i ∈ s, w i) ^ (1 - p⁻¹) = 0 ∨ (∑ i ∈ s, w i * f i ^ p) ^ p⁻¹ = 0
   · replace H : (∀ i ∈ s, w i = 0) ∨ ∀ i ∈ s, w i = 0 ∨ f i = 0 := by
       simpa [hp₀, hp₁, hp₀.not_lt, hp₁.not_lt, sum_eq_zero_iff_of_nonneg] using H
-    have (i) (hi : i ∈ s) : w i * f i = 0 := by cases' H with H H <;> simp [H i hi]
+    have (i) (hi  : i ∈ s) : w i * f i = 0
+    cases' H with H H <;> simp [H i hi]
     simp [sum_eq_zero this]
   push_neg at H
   by_cases H' : (∑ i ∈ s, w i) ^ (1 - p⁻¹) = ⊤ ∨ (∑ i ∈ s, w i * f i ^ p) ^ p⁻¹ = ⊤
@@ -850,9 +855,9 @@ theorem rpow_sum_le_const_mul_sum_rpow (hp : 1 ≤ p) :
   let q : ℝ := p / (p - 1)
   have hpq : p.IsConjExponent q := .conjExponent hp
   have hp₁ : 1 / p * p = 1 := one_div_mul_cancel hpq.ne_zero
-  have hq : 1 / q * p = p - 1 := by
-    rw [← hpq.div_conj_eq_sub_one]
-    ring
+  have hq  : 1 / q * p = p - 1
+  rw [← hpq.div_conj_eq_sub_one]
+  ring
   simpa only [ENNReal.mul_rpow_of_nonneg _ _ hpq.nonneg, ← ENNReal.rpow_mul, hp₁, hq, coe_one,
     one_mul, one_rpow, rpow_one, Pi.one_apply, sum_const, Nat.smul_one_eq_cast] using
     ENNReal.rpow_le_rpow (inner_le_Lp_mul_Lq s 1 f hpq.symm) hpq.nonneg

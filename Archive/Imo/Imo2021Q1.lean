@@ -46,14 +46,14 @@ namespace Imo2021Q1
 -- n ≤ 2 * l ^ 2 - 4 * l and 2 * l ^ 2 + 4 * l ≤ 2 * n for n ≥ 100.
 theorem exists_numbers_in_interval (n : ℕ) (hn : 100 ≤ n) :
     ∃ l : ℕ, n + 4 * l ≤ 2 * l ^ 2 ∧ 2 * l ^ 2 + 4 * l ≤ 2 * n := by
-  have hn' : 1 ≤ Nat.sqrt (n + 1) := by
-    rw [Nat.le_sqrt]
-    linarith
+  have hn'  : 1 ≤ Nat.sqrt (n + 1)
+  rw [Nat.le_sqrt]
+  linarith
   have h₁ := Nat.sqrt_le' (n + 1)
   have h₂ := Nat.succ_le_succ_sqrt' (n + 1)
-  have h₃ : 10 ≤ (n + 1).sqrt := by
-    rw [Nat.le_sqrt]
-    linarith only [hn]
+  have h₃  : 10 ≤ (n + 1).sqrt
+  rw [Nat.le_sqrt]
+  linarith only [hn]
   rw [← Nat.sub_add_cancel hn'] at h₁ h₂ h₃
   set l := (n + 1).sqrt - 1
   refine ⟨l, ?_, ?_⟩
@@ -65,9 +65,12 @@ theorem exists_triplet_summing_to_squares (n : ℕ) (hn : 100 ≤ n) :
     ∃ a b c : ℕ, n ≤ a ∧ a < b ∧ b < c ∧ c ≤ 2 * n ∧
       (∃ k : ℕ, a + b = k ^ 2) ∧ (∃ l : ℕ, c + a = l ^ 2) ∧ ∃ m : ℕ, b + c = m ^ 2 := by
   obtain ⟨l, hl1, hl2⟩ := exists_numbers_in_interval n hn
-  have p : 1 < l := by contrapose! hl1; interval_cases l <;> linarith
-  have h₁ : 4 * l ≤ 2 * l ^ 2 := by linarith
-  have h₂ : 1 ≤ 2 * l := by linarith
+  have p  : 1 < l
+  contrapose! hl1; interval_cases l <;> linarith
+  have h₁  : 4 * l ≤ 2 * l ^ 2
+  linarith
+  have h₂  : 1 ≤ 2 * l
+  linarith
   refine ⟨2 * l ^ 2 - 4 * l, 2 * l ^ 2 + 1, 2 * l ^ 2 + 4 * l, ?_, ?_, ?_,
     ⟨?_, ⟨2 * l - 1, ?_⟩, ⟨2 * l, ?_⟩, 2 * l + 1, ?_⟩⟩
   all_goals zify [h₁, h₂]; linarith
@@ -116,12 +119,12 @@ theorem imo2021_q1 :
   -- noting that B has cardinality greater or equal to 3, by the explicit construction of the
   -- triplet {a, b, c} before.
   obtain ⟨B, hB, h₁, h₂⟩ := exists_finset_3_le_card_with_pairs_summing_to_squares n hn
-  have hBsub : B ⊆ Finset.Icc n (2 * n) := by
-    intro c hcB; simpa only [Finset.mem_Icc] using h₂ c hcB
-  have hB' : 2 * 1 < (B ∩ (Finset.Icc n (2 * n) \ A) ∪ B ∩ A).card := by
-    rw [← inter_union_distrib_left, sdiff_union_self_eq_union, union_eq_left.2 hA,
-      inter_eq_left.2 hBsub]
-    exact Nat.succ_le_iff.mp hB
+  have hBsub  : B ⊆ Finset.Icc n (2 * n)
+  intro c hcB; simpa only [Finset.mem_Icc] using h₂ c hcB
+  have hB'  : 2 * 1 < (B ∩ (Finset.Icc n (2 * n) \ A) ∪ B ∩ A).card
+  rw [← inter_union_distrib_left, sdiff_union_self_eq_union, union_eq_left.2 hA,
+    inter_eq_left.2 hBsub]
+  exact Nat.succ_le_iff.mp hB
   -- Since B has cardinality greater or equal to 3, there must exist a subset C ⊆ B such that
   -- for any A ⊆ [n, 2n], either C ⊆ A or C ⊆ [n, 2n] \ A and C has cardinality greater
   -- or equal to 2.

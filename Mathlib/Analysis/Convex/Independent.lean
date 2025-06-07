@@ -165,12 +165,12 @@ theorem convexIndependent_iff_finset {p : ι → E} :
       ∀ (s : Finset ι) (x : ι), p x ∈ convexHull 𝕜 (s.image p : Set E) → x ∈ s := by
   refine ⟨fun hc s x hx => hc s x ?_, fun h s x hx => ?_⟩
   · rwa [Finset.coe_image] at hx
-  have hp : Injective p := by
-    rintro a b hab
-    rw [← mem_singleton]
-    refine h {b} a ?_
-    rw [hab, image_singleton, coe_singleton, convexHull_singleton]
-    exact Set.mem_singleton _
+  have hp  : Injective p
+  rintro a b hab
+  rw [← mem_singleton]
+  refine h {b} a ?_
+  rw [hab, image_singleton, coe_singleton, convexHull_singleton]
+  exact Set.mem_singleton _
   rw [convexHull_eq_union_convexHull_finite_subsets] at hx
   simp_rw [Set.mem_iUnion] at hx
   obtain ⟨t, ht, hx⟩ := hx

@@ -50,18 +50,18 @@ theorem prime_ideal_of_disjoint_filter_ideal (hFI : Disjoint (F : Set α) (I : S
   set S : Set (Set α) := { J : Set α | IsIdeal J ∧ I ≤ J ∧ Disjoint (F : Set α) J }
 
   -- Then I is in S...
-  have IinS : ↑I ∈ S := by
-    refine ⟨Order.Ideal.isIdeal I, by trivial⟩
+  have IinS  : ↑I ∈ S
+  refine ⟨Order.Ideal.isIdeal I, by trivial⟩
 
   -- ...and S contains upper bounds for any non-empty chains.
-  have chainub : ∀ c ⊆ S, IsChain (· ⊆ ·) c → c.Nonempty → ∃ ub ∈ S, ∀ s ∈ c, s ⊆ ub := by
-    intros c hcS hcC hcNe
-    use sUnion c
-    refine ⟨?_, fun s hs ↦ le_sSup hs⟩
-    simp only [le_eq_subset, mem_setOf_eq, disjoint_sUnion_right, S]
-    let ⟨J, hJ⟩ := hcNe
-    refine ⟨Order.isIdeal_sUnion_of_isChain (fun _ hJ ↦ (hcS hJ).1) hcC hcNe,
-            ⟨le_trans (hcS hJ).2.1 (le_sSup hJ), fun J hJ ↦ (hcS hJ).2.2⟩⟩
+  have chainub  : ∀ c ⊆ S, IsChain (· ⊆ ·) c → c.Nonempty → ∃ ub ∈ S, ∀ s ∈ c, s ⊆ ub
+  intros c hcS hcC hcNe
+  use sUnion c
+  refine ⟨?_, fun s hs ↦ le_sSup hs⟩
+  simp only [le_eq_subset, mem_setOf_eq, disjoint_sUnion_right, S]
+  let ⟨J, hJ⟩ := hcNe
+  refine ⟨Order.isIdeal_sUnion_of_isChain (fun _ hJ ↦ (hcS hJ).1) hcC hcNe,
+          ⟨le_trans (hcS hJ).2.1 (le_sSup hJ), fun J hJ ↦ (hcS hJ).2.2⟩⟩
 
   -- Thus, by Zorn's lemma, we can pick a maximal ideal J in S.
   obtain ⟨Jset, ⟨Jidl, IJ, JF⟩, ⟨_, Jmax⟩⟩ := zorn_subset_nonempty S chainub I IinS
@@ -99,17 +99,17 @@ theorem prime_ideal_of_disjoint_filter_ideal (hFI : Disjoint (F : Set α) (I : S
   have J₂S : ↑J₂ ∉ S := fun h => J₂J (Jmax J₂ h (le_sup_left : J ≤ J₂))
 
   -- Since Jᵢ is an ideal that contains I, we have that Jᵢ is not disjoint from F.
-  have J₁F : ¬ (Disjoint (F : Set α) J₁) := by
-    intro hdis
-    apply J₁S
-    simp only [le_eq_subset, mem_setOf_eq, SetLike.coe_subset_coe, S]
-    exact ⟨J₁.isIdeal, le_trans IJ' le_sup_left, hdis⟩
+  have J₁F  : ¬ (Disjoint (F : Set α) J₁)
+  intro hdis
+  apply J₁S
+  simp only [le_eq_subset, mem_setOf_eq, SetLike.coe_subset_coe, S]
+  exact ⟨J₁.isIdeal, le_trans IJ' le_sup_left, hdis⟩
 
-  have J₂F : ¬ (Disjoint (F : Set α) J₂) := by
-    intro hdis
-    apply J₂S
-    simp only [le_eq_subset, mem_setOf_eq, SetLike.coe_subset_coe, S]
-    exact ⟨J₂.isIdeal, le_trans IJ' le_sup_left, hdis⟩
+  have J₂F  : ¬ (Disjoint (F : Set α) J₂)
+  intro hdis
+  apply J₂S
+  simp only [le_eq_subset, mem_setOf_eq, SetLike.coe_subset_coe, S]
+  exact ⟨J₂.isIdeal, le_trans IJ' le_sup_left, hdis⟩
 
   -- Thus, pick cᵢ ∈ F ∩ Jᵢ.
   let ⟨c₁, ⟨c₁F, c₁J₁⟩⟩ := Set.not_disjoint_iff.1 J₁F

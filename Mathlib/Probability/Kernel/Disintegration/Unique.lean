@@ -61,8 +61,8 @@ Uniqueness of the disintegration kernel on ℝ. -/
 lemma eq_condKernel_of_measure_eq_compProd_real {ρ : Measure (α × ℝ)} [IsFiniteMeasure ρ]
     (κ : Kernel α ℝ) [IsFiniteKernel κ] (hκ : ρ = ρ.fst ⊗ₘ κ) :
     ∀ᵐ x ∂ρ.fst, κ x = ρ.condKernel x := by
-  have huniv : ∀ᵐ x ∂ρ.fst, κ x Set.univ = ρ.condKernel x Set.univ :=
-    eq_condKernel_of_measure_eq_compProd' κ hκ MeasurableSet.univ
+  have huniv : ∀ᵐ x ∂ρ.fst, κ x Set.univ = ρ.condKernel x Set.univ
+  apply eq_condKernel_of_measure_eq_compProd' κ hκ MeasurableSet.univ
   suffices ∀ᵐ x ∂ρ.fst, ∀ ⦃t⦄, MeasurableSet t → κ x t = ρ.condKernel x t by
     filter_upwards [this] with x hx
     ext t ht; exact hx ht
@@ -92,16 +92,17 @@ theorem eq_condKernel_of_measure_eq_compProd (κ : Kernel α Ω) [IsFiniteKernel
     rw [hρ'def, Measure.fst_apply, Measure.fst_apply, Measure.map_apply]
     exacts [rfl, Measurable.prod measurable_fst <| hf.measurable.comp measurable_snd,
       measurable_fst hs, hs, hs]
-  have hρ'' : ∀ᵐ x ∂ρ.fst, Kernel.map κ f hf.measurable x = ρ'.condKernel x := by
-    rw [← hρ']
-    refine eq_condKernel_of_measure_eq_compProd_real (Kernel.map κ f hf.measurable) ?_
-    ext s hs
-    conv_lhs => rw [hρ'def, hκ]
-    rw [Measure.map_apply (measurable_id.prod_map hf.measurable) hs, hρ',
-      Measure.compProd_apply hs, Measure.compProd_apply (measurable_id.prod_map hf.measurable hs)]
-    congr with a
-    rw [Kernel.map_apply']
-    exacts [rfl, measurable_prod_mk_left hs]
+  have hρ''  : ∀ᵐ x ∂ρ.fst, Kernel.map κ f hf.measurable x = ρ'.condKernel x
+  rw [← hρ']
+  refine eq_condKernel_of_measure_eq_compProd_real (Kernel.map κ f hf.measurable) ?_
+  ext s hs
+  conv_lhs => rw [hρ'def, hκ]
+  rw [Measure.map_apply (measurable_id.prod_map hf.measurable) hs, hρ',
+    Measure.compProd_apply hs, Measure.compProd_apply (measurable_id.prod_map hf.measurable hs)]
+  congr with a
+  rw [Kernel.map_apply']
+  apply rfl
+  apply measurable_prod_mk_left hs
   suffices ∀ᵐ x ∂ρ.fst, ∀ s, MeasurableSet s → ρ'.condKernel x s = ρ.condKernel x (f ⁻¹' s) by
     filter_upwards [hρ'', this] with x hx h
     rw [Kernel.map_apply] at hx
@@ -132,11 +133,11 @@ lemma Kernel.apply_eq_measure_condKernel_of_compProd_eq
     {ρ : Kernel α (β × Ω)} [IsFiniteKernel ρ] {κ : Kernel (α × β) Ω} [IsFiniteKernel κ]
     (hκ : Kernel.fst ρ ⊗ₖ κ = ρ) (a : α) :
     (fun b ↦ κ (a, b)) =ᵐ[Kernel.fst ρ a] (ρ a).condKernel := by
-  have : ρ a = (ρ a).fst ⊗ₘ Kernel.comap κ (fun b ↦ (a, b)) measurable_prod_mk_left := by
-    ext s hs
-    conv_lhs => rw [← hκ]
-    rw [Measure.compProd_apply hs, Kernel.compProd_apply _ _ _ hs]
-    rfl
+  have  : ρ a = (ρ a).fst ⊗ₘ Kernel.comap κ (fun b ↦ (a, b)) measurable_prod_mk_left
+  ext s hs
+  conv_lhs => rw [← hκ]
+  rw [Measure.compProd_apply hs, Kernel.compProd_apply _ _ _ hs]
+  rfl
   have h := eq_condKernel_of_measure_eq_compProd _ this
   rw [Kernel.fst_apply]
   filter_upwards [h] with b hb

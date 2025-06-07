@@ -85,9 +85,9 @@ lemma r_lower_bound_on_verticalStrip {A B : ℝ} (h : 0 < B) (hz : z ∈ vertica
 
 lemma auxbound1 {c : ℝ} (d : ℝ) (hc : 1 ≤ c ^ 2) : r z ≤ Complex.abs (c * z + d) := by
   rcases z with ⟨z, hz⟩
-  have H1 : z.im ≤ √((c * z.re + d) ^ 2 + (c * z).im ^ 2) := by
-    rw [Real.le_sqrt' hz, im_ofReal_mul, mul_pow]
-    exact (le_mul_of_one_le_left (sq_nonneg _) hc).trans <| le_add_of_nonneg_left (sq_nonneg _)
+  have H1  : z.im ≤ √((c * z.re + d) ^ 2 + (c * z).im ^ 2)
+  rw [Real.le_sqrt' hz, im_ofReal_mul, mul_pow]
+  exact (le_mul_of_one_le_left (sq_nonneg _) hc).trans <| le_add_of_nonneg_left (sq_nonneg _)
   simpa only [r, abs_apply, normSq_apply, add_re, re_ofReal_mul, coe_re, ← pow_two, add_im, mul_im,
     coe_im, ofReal_im, zero_mul, add_zero, min_le_iff] using Or.inl H1
 
@@ -112,9 +112,10 @@ lemma div_max_sq_ge_one (x : Fin 2 → ℤ) (hx : x ≠ 0) :
       le_refl]
 
 lemma r_mul_max_le {x : Fin 2 → ℤ} (hx : x ≠ 0) : r z * ‖x‖ ≤ Complex.abs (x 0 * z + x 1) := by
-  have hn0 : ‖x‖ ≠ 0 := by rwa [norm_ne_zero_iff]
-  have h11 : x 0 * (z : ℂ) + x 1 = (x 0 / ‖x‖ * z + x 1 / ‖x‖) * ‖x‖ := by
-    rw [div_mul_eq_mul_div, ← add_div, div_mul_cancel₀ _ (mod_cast hn0)]
+  have hn0  : ‖x‖ ≠ 0
+  rwa [norm_ne_zero_iff]
+  have h11  : x 0 * (z : ℂ) + x 1 = (x 0 / ‖x‖ * z + x 1 / ‖x‖) * ‖x‖
+  rw [div_mul_eq_mul_div, ← add_div, div_mul_cancel₀ _ (mod_cast hn0)]
   rw [norm_eq_max_natAbs, h11, map_mul, Complex.abs_ofReal, abs_norm, norm_eq_max_natAbs]
   gcongr
   · rcases div_max_sq_ge_one x hx with H1 | H2
@@ -170,7 +171,8 @@ condition `a : Fin 2 → ZMod N`) converges locally uniformly on `ℍ`. -/
 theorem eisensteinSeries_tendstoLocallyUniformly {k : ℤ} (hk : 3 ≤ k) {N : ℕ} (a : Fin 2 → ZMod N) :
     TendstoLocallyUniformly (fun (s : Finset (gammaSet N a)) ↦ (∑ x ∈ s, eisSummand k x ·))
       (eisensteinSeries a k ·) Filter.atTop := by
-  have hk' : (2 : ℝ) < k := by norm_cast
+  have hk'  : (2 : ℝ) < k
+  norm_cast
   have p_sum : Summable fun x : gammaSet N a ↦ ‖x.val‖ ^ (-k) :=
     mod_cast (summable_one_div_norm_rpow hk').subtype (gammaSet N a)
   simp only [tendstoLocallyUniformly_iff_forall_isCompact, eisensteinSeries]

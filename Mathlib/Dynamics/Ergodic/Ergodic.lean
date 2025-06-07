@@ -100,8 +100,8 @@ theorem preErgodic_conjugate_iff {e : α ≃ᵐ β} (h : MeasurePreserving e μ 
 
 theorem ergodic_conjugate_iff {e : α ≃ᵐ β} (h : MeasurePreserving e μ μ') :
     Ergodic (e ∘ f ∘ e.symm) μ' ↔ Ergodic f μ := by
-  have : MeasurePreserving (e ∘ f ∘ e.symm) μ' μ' ↔ MeasurePreserving f μ μ := by
-    rw [h.comp_left_iff, (MeasurePreserving.symm e h).comp_right_iff]
+  have  : MeasurePreserving (e ∘ f ∘ e.symm) μ' μ' ↔ MeasurePreserving f μ μ
+  rw [h.comp_left_iff, (MeasurePreserving.symm e h).comp_right_iff]
   replace h : PreErgodic (e ∘ f ∘ e.symm) μ' ↔ PreErgodic f μ := h.preErgodic_conjugate_iff
   exact ⟨fun hf => { this.mp hf.toMeasurePreserving, h.mp hf.toPreErgodic with },
     fun hf => { this.mpr hf.toMeasurePreserving, h.mpr hf.toPreErgodic with }⟩

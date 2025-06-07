@@ -216,7 +216,8 @@ variable {A} {x : B}
 theorem prime (hx : IsIntegral A x) : Prime (minpoly A x) := by
   refine ⟨minpoly.ne_zero hx, not_isUnit A x, ?_⟩
   rintro p q ⟨d, h⟩
-  have : Polynomial.aeval x (p * q) = 0 := by simp [h, aeval A x]
+  have  : Polynomial.aeval x (p * q) = 0
+  simp [h, aeval A x]
   replace : Polynomial.aeval x p = 0 ∨ Polynomial.aeval x q = 0 := by simpa
   exact Or.imp (dvd A x) (dvd A x) this
 
@@ -274,9 +275,9 @@ lemma minpoly_algEquiv_toLinearMap (σ : L ≃ₐ[K] L) (hσ : IsOfFinOrder σ) 
 /-- The minimal polynomial (over `K`) of `σ : Gal(L/K)` is `X ^ (orderOf σ) - 1`. -/
 lemma minpoly_algHom_toLinearMap (σ : L →ₐ[K] L) (hσ : IsOfFinOrder σ) :
     minpoly K σ.toLinearMap = X ^ (orderOf σ) - C 1 := by
-  have : orderOf σ = orderOf (AlgEquiv.algHomUnitsEquiv _ _ hσ.unit) := by
-    rw [← MonoidHom.coe_coe, orderOf_injective (AlgEquiv.algHomUnitsEquiv K L)
-      (AlgEquiv.algHomUnitsEquiv K L).injective, ← orderOf_units, IsOfFinOrder.val_unit]
+  have  : orderOf σ = orderOf (AlgEquiv.algHomUnitsEquiv _ _ hσ.unit)
+  rw [← MonoidHom.coe_coe, orderOf_injective (AlgEquiv.algHomUnitsEquiv K L)
+    (AlgEquiv.algHomUnitsEquiv K L).injective, ← orderOf_units, IsOfFinOrder.val_unit]
   rw [this, ← minpoly_algEquiv_toLinearMap]
   · apply congr_arg
     ext

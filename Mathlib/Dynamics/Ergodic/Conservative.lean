@@ -125,10 +125,10 @@ theorem measure_mem_forall_ge_image_not_mem_eq_zero (hf : Conservative f μ)
     (hs : NullMeasurableSet s μ) (n : ℕ) :
     μ ({ x ∈ s | ∀ m ≥ n, f^[m] x ∉ s }) = 0 := by
   by_contra H
-  have : NullMeasurableSet (s ∩ { x | ∀ m ≥ n, f^[m] x ∉ s }) μ := by
-    simp only [setOf_forall, ← compl_setOf]
-    exact hs.inter <| .biInter (to_countable _) fun m _ ↦
-      (hs.preimage <| hf.toQuasiMeasurePreserving.iterate m).compl
+  have  : NullMeasurableSet (s ∩ { x | ∀ m ≥ n, f^[m] x ∉ s }) μ
+  simp only [setOf_forall, ← compl_setOf]
+  exact hs.inter <| .biInter (to_countable _) fun m _ ↦
+    (hs.preimage <| hf.toQuasiMeasurePreserving.iterate m).compl
   rcases (hf.exists_gt_measure_inter_ne_zero this H) n with ⟨m, hmn, hm⟩
   rcases nonempty_of_measure_ne_zero hm with ⟨x, ⟨_, hxn⟩, hxm, -⟩
   exact hxn m hmn.lt.le hxm
@@ -195,9 +195,9 @@ protected theorem iterate (hf : Conservative f μ) (n : ℕ) : Conservative f^[n
   rw [Nat.frequently_atTop_iff_infinite] at hx
   rcases Nat.exists_lt_modEq_of_infinite hx n.succ_pos with ⟨k, hk, l, hl, hkl, hn⟩
   set m := (l - k) / (n + 1)
-  have : (n + 1) * m = l - k := by
-    apply Nat.mul_div_cancel'
-    exact (Nat.modEq_iff_dvd' hkl.le).1 hn
+  have  : (n + 1) * m = l - k
+  apply Nat.mul_div_cancel'
+  exact (Nat.modEq_iff_dvd' hkl.le).1 hn
   refine ⟨f^[k] x, hk, m, ?_, ?_⟩
   · intro hm
     rw [hm, mul_zero, eq_comm, tsub_eq_zero_iff_le] at this

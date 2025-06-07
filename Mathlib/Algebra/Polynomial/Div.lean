@@ -254,9 +254,10 @@ theorem divByMonic_eq_zero_iff [Nontrivial R] (hq : Monic q) : p /ₘ q = 0 ↔ 
 theorem degree_add_divByMonic (hq : Monic q) (h : degree q ≤ degree p) :
     degree q + degree (p /ₘ q) = degree p := by
   nontriviality R
-  have hdiv0 : p /ₘ q ≠ 0 := by rwa [Ne, divByMonic_eq_zero_iff hq, not_lt]
-  have hlc : leadingCoeff q * leadingCoeff (p /ₘ q) ≠ 0 := by
-    rwa [Monic.def.1 hq, one_mul, Ne, leadingCoeff_eq_zero]
+  have hdiv0  : p /ₘ q ≠ 0
+  rwa [Ne, divByMonic_eq_zero_iff hq, not_lt]
+  have hlc  : leadingCoeff q * leadingCoeff (p /ₘ q) ≠ 0
+  rwa [Monic.def.1 hq, one_mul, Ne, leadingCoeff_eq_zero]
   have hmod : degree (p %ₘ q) < degree (q * (p /ₘ q)) :=
     calc
       degree (p %ₘ q) < degree q := degree_modByMonic_lt _ hq
@@ -310,10 +311,10 @@ theorem natDegree_divByMonic (f : R[X]) {g : R[X]} (hg : g.Monic) :
   rw [divByMonic_eq_zero_iff hg] at hgf
   push_neg at hgf
   have := degree_add_divByMonic hg hgf
-  have hf : f ≠ 0 := by
-    intro hf
-    apply hfg
-    rw [hf, zero_divByMonic]
+  have hf  : f ≠ 0
+  intro hf
+  apply hfg
+  rw [hf, zero_divByMonic]
   rw [degree_eq_natDegree hf, degree_eq_natDegree hg.ne_zero, degree_eq_natDegree hfg,
     ← Nat.cast_add, Nat.cast_inj] at this
   rw [← this, add_tsub_cancel_left]
@@ -518,7 +519,8 @@ theorem rootMultiplicity_C (r a : R) : rootMultiplicity a (C r) = 0 := by
   rw [rootMultiplicity_eq_multiplicity]
   split_ifs with hr
   · rfl
-  have h : natDegree (C r) < natDegree (X - C a) := by simp
+  have h  : natDegree (C r) < natDegree (X - C a)
+  simp
   simp_rw [multiplicity.multiplicity_eq_zero.mpr ((monic_X_sub_C a).not_dvd_of_natDegree_lt hr h),
     PartENat.get_zero]
 
@@ -554,9 +556,9 @@ variable [CommRing R] {p q : R[X]}
 @[simp]
 theorem modByMonic_X_sub_C_eq_C_eval (p : R[X]) (a : R) : p %ₘ (X - C a) = C (p.eval a) := by
   nontriviality R
-  have h : (p %ₘ (X - C a)).eval a = p.eval a := by
-    rw [modByMonic_eq_sub_mul_div _ (monic_X_sub_C a), eval_sub, eval_mul, eval_sub, eval_X,
-      eval_C, sub_self, zero_mul, sub_zero]
+  have h  : (p %ₘ (X - C a)).eval a = p.eval a
+  rw [modByMonic_eq_sub_mul_div _ (monic_X_sub_C a), eval_sub, eval_mul, eval_sub, eval_X,
+    eval_C, sub_self, zero_mul, sub_zero]
   have : degree (p %ₘ (X - C a)) < 1 :=
     degree_X_sub_C a ▸ degree_modByMonic_lt p (monic_X_sub_C a)
   have : degree (p %ₘ (X - C a)) ≤ 0 := by

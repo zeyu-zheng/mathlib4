@@ -45,10 +45,10 @@ theorem IsLocalExtrOn.range_ne_top_of_hasStrictFDerivAt
     (hφ' : HasStrictFDerivAt φ φ' x₀) : LinearMap.range (f'.prod φ') ≠ ⊤ := by
   intro htop
   set fφ := fun x => (f x, φ x)
-  have A : map φ (𝓝[f ⁻¹' {f x₀}] x₀) = 𝓝 (φ x₀) := by
-    change map (Prod.snd ∘ fφ) (𝓝[fφ ⁻¹' {p | p.1 = f x₀}] x₀) = 𝓝 (φ x₀)
-    rw [← map_map, nhdsWithin, map_inf_principal_preimage, (hf'.prod hφ').map_nhds_eq_of_surj htop]
-    exact map_snd_nhdsWithin _
+  have A  : map φ (𝓝[f ⁻¹' {f x₀}] x₀) = 𝓝 (φ x₀)
+  change map (Prod.snd ∘ fφ) (𝓝[fφ ⁻¹' {p | p.1 = f x₀}] x₀) = 𝓝 (φ x₀)
+  rw [← map_map, nhdsWithin, map_inf_principal_preimage, (hf'.prod hφ').map_nhds_eq_of_surj htop]
+  exact map_snd_nhdsWithin _
   exact hextr.not_nhds_le_map A.ge
 
 /-- Lagrange multipliers theorem: if `φ : E → ℝ` has a local extremum on the set `{x | f x = f x₀}`
@@ -88,9 +88,10 @@ theorem IsLocalExtrOn.exists_multipliers_of_hasStrictFDerivAt_1d {f : E → ℝ}
     refine ⟨LinearMap.ext fun x => ?_, hΛ.2⟩
     simpa [hΛ.1] using Λ.map_smul x 1
   · ext x
-    have H₁ : Λ (f' x) = f' x * Λ 1 := by
-      simpa only [mul_one, Algebra.id.smul_eq_mul] using Λ.map_smul (f' x) 1
-    have H₂ : f' x * Λ 1 + Λ₀ * φ' x = 0 := by simpa only [Algebra.id.smul_eq_mul, H₁] using hfΛ x
+    have H₁  : Λ (f' x) = f' x * Λ 1
+    simpa only [mul_one, Algebra.id.smul_eq_mul] using Λ.map_smul (f' x) 1
+    have H₂  : f' x * Λ 1 + Λ₀ * φ' x = 0
+    simpa only [Algebra.id.smul_eq_mul, H₁] using hfΛ x
     simpa [mul_comm] using H₂
 
 /-- Lagrange multipliers theorem, 1d version. Let `f : ι → E → ℝ` be a finite family of functions.

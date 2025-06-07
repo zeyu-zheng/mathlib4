@@ -92,9 +92,9 @@ theorem cyclotomic_pos {n : ℕ} (hn : 2 < n) {R} [LinearOrderedCommRing R] (x :
   · apply pos_of_mul_neg_left
     · rwa [this]
     rw [geom_sum_neg_iff hn'.ne'] at h
-    have h2 : 2 ∈ n.properDivisors.erase 1 := by
-      rw [Finset.mem_erase, mem_properDivisors]
-      exact ⟨by decide, even_iff_two_dvd.mp h.1, hn⟩
+    have h2  : 2 ∈ n.properDivisors.erase 1
+    rw [Finset.mem_erase, mem_properDivisors]
+    exact ⟨by decide, even_iff_two_dvd.mp h.1, hn⟩
     rw [eval_prod, ← Finset.prod_erase_mul _ _ h2]
     apply mul_nonpos_of_nonneg_of_nonpos
     · refine Finset.prod_nonneg fun i hi => le_of_lt ?_
@@ -164,29 +164,29 @@ theorem sub_one_pow_totient_lt_cyclotomic_eval {n : ℕ} {q : ℝ} (hn' : 2 ≤ 
     (q - 1) ^ totient n < (cyclotomic n ℝ).eval q := by
   have hn : 0 < n := pos_of_gt hn'
   have hq := zero_lt_one.trans hq'
-  have hfor : ∀ ζ' ∈ primitiveRoots n ℂ, q - 1 ≤ ‖↑q - ζ'‖ := by
-    intro ζ' hζ'
-    rw [mem_primitiveRoots hn] at hζ'
-    convert norm_sub_norm_le (↑q) ζ'
-    · rw [Complex.norm_real, Real.norm_of_nonneg hq.le]
-    · rw [hζ'.norm'_eq_one hn.ne']
+  have hfor  : ∀ ζ' ∈ primitiveRoots n ℂ, q - 1 ≤ ‖↑q - ζ'‖
+  intro ζ' hζ'
+  rw [mem_primitiveRoots hn] at hζ'
+  convert norm_sub_norm_le (↑q) ζ'
+  · rw [Complex.norm_real, Real.norm_of_nonneg hq.le]
+  · rw [hζ'.norm'_eq_one hn.ne']
   let ζ := Complex.exp (2 * ↑Real.pi * Complex.I / ↑n)
   have hζ : IsPrimitiveRoot ζ n := Complex.isPrimitiveRoot_exp n hn.ne'
-  have hex : ∃ ζ' ∈ primitiveRoots n ℂ, q - 1 < ‖↑q - ζ'‖ := by
-    refine ⟨ζ, (mem_primitiveRoots hn).mpr hζ, ?_⟩
-    suffices ¬SameRay ℝ (q : ℂ) ζ by
-      convert lt_norm_sub_of_not_sameRay this <;>
-        simp only [hζ.norm'_eq_one hn.ne', Real.norm_of_nonneg hq.le, Complex.norm_real]
-    rw [Complex.sameRay_iff]
-    push_neg
-    refine ⟨mod_cast hq.ne', hζ.ne_zero hn.ne', ?_⟩
-    rw [Complex.arg_ofReal_of_nonneg hq.le, Ne, eq_comm, hζ.arg_eq_zero_iff hn.ne']
-    clear_value ζ
-    rintro rfl
-    linarith [hζ.unique IsPrimitiveRoot.one]
-  have : ¬eval (↑q) (cyclotomic n ℂ) = 0 := by
-    erw [cyclotomic.eval_apply q n (algebraMap ℝ ℂ)]
-    simpa only [Complex.coe_algebraMap, Complex.ofReal_eq_zero] using (cyclotomic_pos' n hq').ne'
+  have hex  : ∃ ζ' ∈ primitiveRoots n ℂ, q - 1 < ‖↑q - ζ'‖
+  refine ⟨ζ, (mem_primitiveRoots hn).mpr hζ, ?_⟩
+  suffices ¬SameRay ℝ (q : ℂ) ζ by
+    convert lt_norm_sub_of_not_sameRay this <;>
+      simp only [hζ.norm'_eq_one hn.ne', Real.norm_of_nonneg hq.le, Complex.norm_real]
+  rw [Complex.sameRay_iff]
+  push_neg
+  refine ⟨mod_cast hq.ne', hζ.ne_zero hn.ne', ?_⟩
+  rw [Complex.arg_ofReal_of_nonneg hq.le, Ne, eq_comm, hζ.arg_eq_zero_iff hn.ne']
+  clear_value ζ
+  rintro rfl
+  linarith [hζ.unique IsPrimitiveRoot.one]
+  have  : ¬eval (↑q) (cyclotomic n ℂ) = 0
+  erw [cyclotomic.eval_apply q n (algebraMap ℝ ℂ)]
+  simpa only [Complex.coe_algebraMap, Complex.ofReal_eq_zero] using (cyclotomic_pos' n hq').ne'
   suffices Units.mk0 (Real.toNNReal (q - 1)) (by simp [hq']) ^ totient n <
       Units.mk0 ‖(cyclotomic n ℂ).eval ↑q‖₊ (by simp [this]) by
     simp only [← Units.val_lt_val, Units.val_pow_eq_pow_val, Units.val_mk0, ← NNReal.coe_lt_coe,
@@ -219,42 +219,42 @@ theorem cyclotomic_eval_lt_add_one_pow_totient {n : ℕ} {q : ℝ} (hn' : 3 ≤ 
     (cyclotomic n ℝ).eval q < (q + 1) ^ totient n := by
   have hn : 0 < n := pos_of_gt hn'
   have hq := zero_lt_one.trans hq'
-  have hfor : ∀ ζ' ∈ primitiveRoots n ℂ, ‖↑q - ζ'‖ ≤ q + 1 := by
-    intro ζ' hζ'
-    rw [mem_primitiveRoots hn] at hζ'
-    convert norm_sub_le (↑q) ζ'
-    · rw [Complex.norm_real, Real.norm_of_nonneg (zero_le_one.trans_lt hq').le]
-    · rw [hζ'.norm'_eq_one hn.ne']
+  have hfor  : ∀ ζ' ∈ primitiveRoots n ℂ, ‖↑q - ζ'‖ ≤ q + 1
+  intro ζ' hζ'
+  rw [mem_primitiveRoots hn] at hζ'
+  convert norm_sub_le (↑q) ζ'
+  · rw [Complex.norm_real, Real.norm_of_nonneg (zero_le_one.trans_lt hq').le]
+  · rw [hζ'.norm'_eq_one hn.ne']
   let ζ := Complex.exp (2 * ↑Real.pi * Complex.I / ↑n)
   have hζ : IsPrimitiveRoot ζ n := Complex.isPrimitiveRoot_exp n hn.ne'
-  have hex : ∃ ζ' ∈ primitiveRoots n ℂ, ‖↑q - ζ'‖ < q + 1 := by
-    refine ⟨ζ, (mem_primitiveRoots hn).mpr hζ, ?_⟩
-    suffices ¬SameRay ℝ (q : ℂ) (-ζ) by
-      convert norm_add_lt_of_not_sameRay this using 2
-      · rw [Complex.norm_eq_abs, Complex.abs_ofReal]
-        symm
-        exact abs_eq_self.mpr hq.le
-      · simp [abs_of_pos hq, hζ.norm'_eq_one hn.ne', -Complex.norm_eq_abs]
-    rw [Complex.sameRay_iff]
-    push_neg
-    refine ⟨mod_cast hq.ne', neg_ne_zero.mpr <| hζ.ne_zero hn.ne', ?_⟩
-    rw [Complex.arg_ofReal_of_nonneg hq.le, Ne, eq_comm]
-    intro h
-    rw [Complex.arg_eq_zero_iff, Complex.neg_re, neg_nonneg, Complex.neg_im, neg_eq_zero] at h
-    have hζ₀ : ζ ≠ 0 := by
-      clear_value ζ
-      rintro rfl
-      exact hn.ne' (hζ.unique IsPrimitiveRoot.zero)
-    have : ζ.re < 0 ∧ ζ.im = 0 := ⟨h.1.lt_of_ne ?_, h.2⟩
-    · rw [← Complex.arg_eq_pi_iff, hζ.arg_eq_pi_iff hn.ne'] at this
-      rw [this] at hζ
-      linarith [hζ.unique <| IsPrimitiveRoot.neg_one 0 two_ne_zero.symm]
-    · contrapose! hζ₀
-      apply Complex.ext <;> simp [hζ₀, h.2]
-  have : ¬eval (↑q) (cyclotomic n ℂ) = 0 := by
-    erw [cyclotomic.eval_apply q n (algebraMap ℝ ℂ)]
-    simp only [Complex.coe_algebraMap, Complex.ofReal_eq_zero]
-    exact (cyclotomic_pos' n hq').ne.symm
+  have hex  : ∃ ζ' ∈ primitiveRoots n ℂ, ‖↑q - ζ'‖ < q + 1
+  refine ⟨ζ, (mem_primitiveRoots hn).mpr hζ, ?_⟩
+  suffices ¬SameRay ℝ (q : ℂ) (-ζ) by
+    convert norm_add_lt_of_not_sameRay this using 2
+    · rw [Complex.norm_eq_abs, Complex.abs_ofReal]
+      symm
+      exact abs_eq_self.mpr hq.le
+    · simp [abs_of_pos hq, hζ.norm'_eq_one hn.ne', -Complex.norm_eq_abs]
+  rw [Complex.sameRay_iff]
+  push_neg
+  refine ⟨mod_cast hq.ne', neg_ne_zero.mpr <| hζ.ne_zero hn.ne', ?_⟩
+  rw [Complex.arg_ofReal_of_nonneg hq.le, Ne, eq_comm]
+  intro h
+  rw [Complex.arg_eq_zero_iff, Complex.neg_re, neg_nonneg, Complex.neg_im, neg_eq_zero] at h
+  have hζ₀  : ζ ≠ 0
+  clear_value ζ
+  rintro rfl
+  exact hn.ne' (hζ.unique IsPrimitiveRoot.zero)
+  have : ζ.re < 0 ∧ ζ.im = 0 := ⟨h.1.lt_of_ne ?_, h.2⟩
+  · rw [← Complex.arg_eq_pi_iff, hζ.arg_eq_pi_iff hn.ne'] at this
+    rw [this] at hζ
+    linarith [hζ.unique <| IsPrimitiveRoot.neg_one 0 two_ne_zero.symm]
+  · contrapose! hζ₀
+    apply Complex.ext <;> simp [hζ₀, h.2]
+  have  : ¬eval (↑q) (cyclotomic n ℂ) = 0
+  erw [cyclotomic.eval_apply q n (algebraMap ℝ ℂ)]
+  simp only [Complex.coe_algebraMap, Complex.ofReal_eq_zero]
+  exact (cyclotomic_pos' n hq').ne.symm
   suffices Units.mk0 ‖(cyclotomic n ℂ).eval ↑q‖₊ (by simp [this]) <
       Units.mk0 (Real.toNNReal (q + 1)) (by simp; linarith) ^ totient n by
     simp only [← Units.val_lt_val, Units.val_pow_eq_pow_val, Units.val_mk0, ← NNReal.coe_lt_coe,

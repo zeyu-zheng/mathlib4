@@ -74,8 +74,8 @@ variable (R)
 
 theorem exists_le_isAssociatedPrime_of_isNoetherianRing [H : IsNoetherianRing R] (x : M)
     (hx : x ≠ 0) : ∃ P : Ideal R, IsAssociatedPrime P M ∧ (R ∙ x).annihilator ≤ P := by
-  have : (R ∙ x).annihilator ≠ ⊤ := by
-    rwa [Ne, Ideal.eq_top_iff_one, Submodule.mem_annihilator_span_singleton, one_smul]
+  have  : (R ∙ x).annihilator ≠ ⊤
+  rwa [Ne, Ideal.eq_top_iff_one, Submodule.mem_annihilator_span_singleton, one_smul]
   obtain ⟨P, ⟨l, h₁, y, rfl⟩, h₃⟩ :=
     set_has_maximal_iff_noetherian.mpr H
       { P | (R ∙ x).annihilator ≤ P ∧ P ≠ ⊤ ∧ ∃ y : M, P = (R ∙ y).annihilator }
@@ -138,10 +138,10 @@ theorem IsAssociatedPrime.annihilator_le (h : IsAssociatedPrime I M) :
 theorem IsAssociatedPrime.eq_radical (hI : I.IsPrimary) (h : IsAssociatedPrime J (R ⧸ I)) :
     J = I.radical := by
   obtain ⟨hJ, x, e⟩ := h
-  have : x ≠ 0 := by
-    rintro rfl
-    apply hJ.1
-    rwa [Submodule.span_singleton_eq_bot.mpr rfl, Submodule.annihilator_bot] at e
+  have  : x ≠ 0
+  rintro rfl
+  apply hJ.1
+  rwa [Submodule.span_singleton_eq_bot.mpr rfl, Submodule.annihilator_bot] at e
   obtain ⟨x, rfl⟩ := Ideal.Quotient.mkₐ_surjective R _ x
   replace e : ∀ {y}, y ∈ J ↔ x * y ∈ I := by
     intro y

@@ -118,16 +118,18 @@ noncomputable def log (a : A) : A := cfc Real.log a
 protected lemma _root_.IsSelfAdjoint.log {a : A} : IsSelfAdjoint (log a) := cfc_predicate _ a
 
 lemma log_exp (a : A) (ha : IsSelfAdjoint a := by cfc_tac) : log (NormedSpace.exp ℝ a) = a := by
-  have hcont : ContinuousOn Real.log (Real.exp '' spectrum ℝ a) := by fun_prop (disch := aesop)
+  have hcont  : ContinuousOn Real.log (Real.exp '' spectrum ℝ a)
+  fun_prop (disch := aesop)
   rw [log, ← real_exp_eq_normedSpace_exp, ← cfc_comp' Real.log Real.exp a hcont]
   simp [cfc_id' (R := ℝ) a]
 
 -- TODO: Relate the hypothesis to a notion of strict positivity
 lemma exp_log (a : A) (ha₂ : ∀ x ∈ spectrum ℝ a, 0 < x) (ha₁ : IsSelfAdjoint a := by cfc_tac) :
     NormedSpace.exp ℝ (log a) = a := by
-  have ha₃ : ContinuousOn Real.log (spectrum ℝ a) := by
-    have : ∀ x ∈ spectrum ℝ a, x ≠ 0 := by peel ha₂ with x hx h; exact h.ne'
-    fun_prop (disch := assumption)
+  have ha₃  : ContinuousOn Real.log (spectrum ℝ a)
+  have  : ∀ x ∈ spectrum ℝ a, x ≠ 0
+  peel ha₂ with x hx h; exact h.ne'
+  fun_prop (disch := assumption)
   rw [← real_exp_eq_normedSpace_exp .log, log, ← cfc_comp' Real.exp Real.log a (by fun_prop) ha₃]
   conv_rhs => rw [← cfc_id (R := ℝ) a ha₁]
   exact cfc_congr (Real.exp_log <| ha₂ · ·)
@@ -144,7 +146,8 @@ lemma log_algebraMap {r : ℝ} : log (algebraMap ℝ A r) = algebraMap ℝ A (Re
 lemma log_smul {r : ℝ} (a : A) (ha₂ : ∀ x ∈ spectrum ℝ a, 0 < x) (hr : 0 < r)
     (ha₁ : IsSelfAdjoint a := by cfc_tac) :
     log (r • a) = algebraMap ℝ A (Real.log r) + log a := by
-  have : ∀ x ∈ spectrum ℝ a, x ≠ 0 := by peel ha₂ with x hx h; exact h.ne'
+  have  : ∀ x ∈ spectrum ℝ a, x ≠ 0
+  peel ha₂ with x hx h; exact h.ne'
   rw [log, ← cfc_smul_id (R := ℝ) r a, ← cfc_comp Real.log (r • ·) a, log]
   calc
     _ = cfc (fun z => Real.log r + Real.log z) a :=
@@ -154,9 +157,12 @@ lemma log_smul {r : ℝ} (a : A) (ha₂ : ∀ x ∈ spectrum ℝ a, 0 < x) (hr :
 -- TODO: Relate the hypothesis to a notion of strict positivity
 lemma log_pow (n : ℕ) (a : A) (ha₂ : ∀ x ∈ spectrum ℝ a, 0 < x)
     (ha₁ : IsSelfAdjoint a := by cfc_tac) : log (a ^ n) = n • log a := by
-  have : ∀ x ∈ spectrum ℝ a, x ≠ 0 := by peel ha₂ with x hx h; exact h.ne'
-  have ha₂' : ContinuousOn Real.log (spectrum ℝ a) := by fun_prop (disch := assumption)
-  have ha₂'' : ContinuousOn Real.log ((· ^ n) '' spectrum ℝ a)  := by fun_prop (disch := aesop)
+  have  : ∀ x ∈ spectrum ℝ a, x ≠ 0
+  peel ha₂ with x hx h; exact h.ne'
+  have ha₂'  : ContinuousOn Real.log (spectrum ℝ a)
+  fun_prop (disch := assumption)
+  have ha₂''  : ContinuousOn Real.log ((· ^ n) '' spectrum ℝ a)
+  fun_prop (disch := aesop)
   rw [log, ← cfc_pow_id (R := ℝ) a n ha₁, ← cfc_comp' Real.log (· ^ n) a ha₂'', log]
   simp_rw [Real.log_pow, ← Nat.cast_smul_eq_nsmul ℝ n, cfc_const_mul (n : ℝ) Real.log a ha₂']
 

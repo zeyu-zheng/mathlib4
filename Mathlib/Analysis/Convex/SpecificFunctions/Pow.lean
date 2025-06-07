@@ -35,12 +35,14 @@ namespace NNReal
 lemma strictConcaveOn_rpow {p : ℝ} (hp₀ : 0 < p) (hp₁ : p < 1) :
     StrictConcaveOn ℝ≥0 univ fun x : ℝ≥0 ↦ x ^ p := by
   have hp₀' : 0 < 1 / p := div_pos zero_lt_one hp₀
-  have hp₁' : 1 < 1 / p := by rw [one_lt_div hp₀]; exact hp₁
+  have hp₁'  : 1 < 1 / p
+  rw [one_lt_div hp₀]; exact hp₁
   let f := NNReal.orderIsoRpow (1 / p) hp₀'
-  have h₁ : StrictConvexOn ℝ≥0 univ f := by
-    refine ⟨convex_univ, fun x _ y _ hxy a b ha hb hab => ?_⟩
-    exact (strictConvexOn_rpow hp₁').2 x.2 y.2 (by simp [hxy]) ha hb (by simp; norm_cast)
-  have h₂ : ∀ x, f.symm x = x ^ p := by simp [f, NNReal.orderIsoRpow_symm_eq]
+  have h₁  : StrictConvexOn ℝ≥0 univ f
+  refine ⟨convex_univ, fun x _ y _ hxy a b ha hb hab => ?_⟩
+  exact (strictConvexOn_rpow hp₁').2 x.2 y.2 (by simp [hxy]) ha hb (by simp; norm_cast)
+  have h₂  : ∀ x, f.symm x = x ^ p
+  simp [f, NNReal.orderIsoRpow_symm_eq]
   refine ⟨convex_univ, fun x mx y my hxy a b ha hb hab => ?_⟩
   simp only [← h₂]
   exact (f.strictConcaveOn_symm h₁).2 mx my hxy ha hb hab
@@ -54,8 +56,8 @@ lemma concaveOn_rpow {p : ℝ} (hp₀ : 0 ≤ p) (hp₁ : p ≤ 1) :
   exact (strictConcaveOn_rpow hp₀ hp₁).concaveOn
 
 lemma strictConcaveOn_sqrt : StrictConcaveOn ℝ≥0 univ NNReal.sqrt := by
-  have : NNReal.sqrt = fun x : ℝ≥0 ↦ x ^ (1 / (2 : ℝ)) := by
-    ext x; exact mod_cast NNReal.sqrt_eq_rpow x
+  have  : NNReal.sqrt = fun x : ℝ≥0 ↦ x ^ (1 / (2 : ℝ))
+  ext x; exact mod_cast NNReal.sqrt_eq_rpow x
   rw [this]
   exact strictConcaveOn_rpow (by positivity) (by linarith)
 
@@ -73,7 +75,8 @@ lemma strictConcaveOn_rpow {p : ℝ} (hp₀ : 0 < p) (hp₁ : p < 1) :
   let a' : ℝ≥0 := ⟨a, ha.le⟩
   let b' : ℝ≥0 := ⟨b, hb.le⟩
   have hxy' : x' ≠ y' := Subtype.coe_ne_coe.1 hxy
-  have hab' : a' + b' = 1 := by ext; simp [a', b', hab]
+  have hab'  : a' + b' = 1
+  ext; simp [a', b', hab]
   exact_mod_cast (NNReal.strictConcaveOn_rpow hp₀ hp₁).2 (Set.mem_univ x') (Set.mem_univ y')
     hxy' (mod_cast ha) (mod_cast hb) hab'
 

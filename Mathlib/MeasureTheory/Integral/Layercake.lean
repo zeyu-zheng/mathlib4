@@ -76,8 +76,8 @@ theorem countable_meas_le_ne_meas_lt (g : α → R) :
   let F : R → ℝ≥0∞ := fun t ↦ μ {a : α | t ≤ g a}
   apply (countable_image_gt_image_Ioi F).mono
   intro t ht
-  have : μ {a | t < g a} < μ {a | t ≤ g a} :=
-    lt_of_le_of_ne (measure_mono (fun a ha ↦ le_of_lt ha)) (Ne.symm ht)
+  have : μ {a | t < g a} < μ {a | t ≤ g a}
+  apply lt_of_le_of_ne (measure_mono (fun a ha ↦ le_of_lt ha)) (Ne.symm ht)
   exact ⟨μ {a | t < g a}, this, fun s hs ↦ measure_mono (fun a ha ↦ hs.trans_le ha)⟩
 
 theorem meas_le_ae_eq_meas_lt {R : Type*} [LinearOrder R] [MeasurableSpace R]
@@ -108,20 +108,20 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul_of_measurable_of_sigmaFinite
     (g_nn : ∀ t > 0, 0 ≤ g t) :
     ∫⁻ ω, ENNReal.ofReal (∫ t in (0)..f ω, g t) ∂μ =
       ∫⁻ t in Ioi 0, μ {a : α | t ≤ f a} * ENNReal.ofReal (g t) := by
-  have g_intble' : ∀ t : ℝ, 0 ≤ t → IntervalIntegrable g volume 0 t := by
-    intro t ht
-    cases' eq_or_lt_of_le ht with h h
-    · simp [← h]
-    · exact g_intble t h
+  have g_intble'  : ∀ t : ℝ, 0 ≤ t → IntervalIntegrable g volume 0 t
+  intro t ht
+  cases' eq_or_lt_of_le ht with h h
+  · simp [← h]
+  · exact g_intble t h
   have integrand_eq : ∀ ω,
-      ENNReal.ofReal (∫ t in (0)..f ω, g t) = ∫⁻ t in Ioc 0 (f ω), ENNReal.ofReal (g t) := by
-    intro ω
-    have g_ae_nn : 0 ≤ᵐ[volume.restrict (Ioc 0 (f ω))] g := by
-      filter_upwards [self_mem_ae_restrict (measurableSet_Ioc : MeasurableSet (Ioc 0 (f ω)))]
-        with x hx using g_nn x hx.1
-    rw [← ofReal_integral_eq_lintegral_ofReal (g_intble' (f ω) (f_nn ω)).1 g_ae_nn]
-    congr
-    exact intervalIntegral.integral_of_le (f_nn ω)
+      ENNReal.ofReal (∫ t in (0)..f ω, g t) = ∫⁻ t in Ioc 0 (f ω), ENNReal.ofReal (g t)
+  intro ω
+  have g_ae_nn  : 0 ≤ᵐ[volume.restrict (Ioc 0 (f ω))] g
+  filter_upwards [self_mem_ae_restrict (measurableSet_Ioc : MeasurableSet (Ioc 0 (f ω)))]
+    with x hx using g_nn x hx.1
+  rw [← ofReal_integral_eq_lintegral_ofReal (g_intble' (f ω) (f_nn ω)).1 g_ae_nn]
+  congr
+  exact intervalIntegral.integral_of_le (f_nn ω)
   rw [lintegral_congr integrand_eq]
   simp_rw [← lintegral_indicator (fun t => ENNReal.ofReal (g t)) measurableSet_Ioc]
   -- Porting note: was part of `simp_rw` on the previous line, but didn't trigger.
@@ -131,18 +131,18 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul_of_measurable_of_sigmaFinite
     have aux₁ :
       (fun x => (Ioc 0 (f x)).indicator (fun t : ℝ => ENNReal.ofReal (g t)) s) = fun x =>
         ENNReal.ofReal (g s) * (Ioi (0 : ℝ)).indicator (fun _ => 1) s *
-          (Ici s).indicator (fun _ : ℝ => (1 : ℝ≥0∞)) (f x) := by
-      funext a
-      by_cases h : s ∈ Ioc (0 : ℝ) (f a)
-      · simp only [h, show s ∈ Ioi (0 : ℝ) from h.1, show f a ∈ Ici s from h.2, indicator_of_mem,
-          mul_one]
-      · have h_copy := h
-        simp only [mem_Ioc, not_and, not_le] at h
-        by_cases h' : 0 < s
-        · simp only [h_copy, h h', indicator_of_not_mem, not_false_iff, mem_Ici, not_le, mul_zero]
-        · have : s ∉ Ioi (0 : ℝ) := h'
-          simp only [this, h', indicator_of_not_mem, not_false_iff, mul_zero,
-            zero_mul, mem_Ioc, false_and_iff]
+          (Ici s).indicator (fun _ : ℝ => (1 : ℝ≥0∞)) (f x)
+    funext a
+    by_cases h : s ∈ Ioc (0 : ℝ) (f a)
+    · simp only [h, show s ∈ Ioi (0 : ℝ) from h.1, show f a ∈ Ici s from h.2, indicator_of_mem,
+        mul_one]
+    · have h_copy := h
+      simp only [mem_Ioc, not_and, not_le] at h
+      by_cases h' : 0 < s
+      · simp only [h_copy, h h', indicator_of_not_mem, not_false_iff, mem_Ici, not_le, mul_zero]
+      · have : s ∉ Ioi (0 : ℝ) := h'
+        simp only [this, h', indicator_of_not_mem, not_false_iff, mul_zero,
+          zero_mul, mem_Ioc, false_and_iff]
     simp_rw [aux₁]
     rw [lintegral_const_mul']
     swap
@@ -165,19 +165,21 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul_of_measurable_of_sigmaFinite
   have aux₂ :
     (Function.uncurry fun (x : α) (y : ℝ) =>
         (Ioc 0 (f x)).indicator (fun t : ℝ => ENNReal.ofReal (g t)) y) =
-      {p : α × ℝ | p.2 ∈ Ioc 0 (f p.1)}.indicator fun p => ENNReal.ofReal (g p.2) := by
-    funext p
-    cases p with | mk p_fst p_snd => ?_
-    rw [Function.uncurry_apply_pair]
-    by_cases h : p_snd ∈ Ioc 0 (f p_fst)
-    · have h' : (p_fst, p_snd) ∈ {p : α × ℝ | p.snd ∈ Ioc 0 (f p.fst)} := h
-      rw [Set.indicator_of_mem h', Set.indicator_of_mem h]
-    · have h' : (p_fst, p_snd) ∉ {p : α × ℝ | p.snd ∈ Ioc 0 (f p.fst)} := h
-      rw [Set.indicator_of_not_mem h', Set.indicator_of_not_mem h]
+      {p : α × ℝ | p.2 ∈ Ioc 0 (f p.1)}.indicator fun p => ENNReal.ofReal (g p.2)
+  funext p
+  cases p with | mk p_fst p_snd => ?_
+  rw [Function.uncurry_apply_pair]
+  by_cases h : p_snd ∈ Ioc 0 (f p_fst)
+  · have h' : (p_fst, p_snd) ∈ {p : α × ℝ | p.snd ∈ Ioc 0 (f p.fst)}
+    apply h
+    rw [Set.indicator_of_mem h', Set.indicator_of_mem h]
+  · have h' : (p_fst, p_snd) ∉ {p : α × ℝ | p.snd ∈ Ioc 0 (f p.fst)}
+    apply h
+    rw [Set.indicator_of_not_mem h', Set.indicator_of_not_mem h]
   rw [aux₂]
-  have mble₀ : MeasurableSet {p : α × ℝ | p.snd ∈ Ioc 0 (f p.fst)} := by
-    simpa only [mem_univ, Pi.zero_apply, true_and] using
-      measurableSet_region_between_oc measurable_zero f_mble MeasurableSet.univ
+  have mble₀ : MeasurableSet {p : α × ℝ | p.snd ∈ Ioc 0 (f p.fst)}
+  simpa only [mem_univ, Pi.zero_apply, true_and] using
+    measurableSet_region_between_oc measurable_zero f_mble MeasurableSet.univ
   exact (ENNReal.measurable_ofReal.comp (g_mble.comp measurable_snd)).aemeasurable.indicator₀
     mble₀.nullMeasurableSet
 
@@ -201,18 +203,18 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul_of_measurable (μ : Measure α)
   have f_nonneg : ∀ ω, 0 ≤ f ω := fun ω ↦ f_nn ω
   -- trivial case where `g` is ae zero. Then both integrals vanish.
   by_cases H1 : g =ᵐ[volume.restrict (Ioi (0 : ℝ))] 0
-  · have A : ∫⁻ ω, ENNReal.ofReal (∫ t in (0)..f ω, g t) ∂μ = 0 := by
-      have : ∀ ω, ∫ t in (0)..f ω, g t = ∫ t in (0)..f ω, 0 := by
-        intro ω
-        simp_rw [intervalIntegral.integral_of_le (f_nonneg ω)]
-        apply integral_congr_ae
-        exact ae_restrict_of_ae_restrict_of_subset Ioc_subset_Ioi_self H1
-      simp [this]
-    have B : ∫⁻ t in Ioi 0, μ {a : α | t ≤ f a} * ENNReal.ofReal (g t) = 0 := by
-      have : (fun t ↦ μ {a : α | t ≤ f a} * ENNReal.ofReal (g t))
-        =ᵐ[volume.restrict (Ioi (0 : ℝ))] 0 := by
-          filter_upwards [H1] with t ht using by simp [ht]
-      simp [lintegral_congr_ae this]
+  · have A : ∫⁻ ω, ENNReal.ofReal (∫ t in (0)..f ω, g t) ∂μ = 0
+    have : ∀ ω, ∫ t in (0)..f ω, g t = ∫ t in (0)..f ω, 0
+    intro ω
+    simp_rw [intervalIntegral.integral_of_le (f_nonneg ω)]
+    apply integral_congr_ae
+    exact ae_restrict_of_ae_restrict_of_subset Ioc_subset_Ioi_self H1
+    simp [this]
+    have B : ∫⁻ t in Ioi 0, μ {a : α | t ≤ f a} * ENNReal.ofReal (g t) = 0
+    have : (fun t ↦ μ {a : α | t ≤ f a} * ENNReal.ofReal (g t))
+      =ᵐ[volume.restrict (Ioi (0 : ℝ))] 0
+    filter_upwards [H1] with t ht using by simp [ht]
+    simp [lintegral_congr_ae this]
     rw [A, B]
   -- easy case where both sides are obviously infinite: for some `s`, one has
   -- `μ {a : α | s < f a} = ∞` and moreover `g` is not ae zero on `[0, s]`.
@@ -266,77 +268,79 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul_of_measurable (μ : Measure α)
   sets `{ω | f ω > uₙ}` for `uₙ` a sequence decreasing to `M`. Therefore,
   this case follows from the case where the measure is sigma-finite, applied to `ν`. -/
   push_neg at H2
-  have M_bdd : BddAbove {s : ℝ | g =ᵐ[volume.restrict (Ioc (0 : ℝ) s)] 0} := by
-    contrapose! H1
-    have : ∀ (n : ℕ), g =ᵐ[volume.restrict (Ioc (0 : ℝ) n)] 0 := by
-      intro n
-      rcases not_bddAbove_iff.1 H1 n with ⟨s, hs, ns⟩
-      exact ae_restrict_of_ae_restrict_of_subset (Ioc_subset_Ioc_right ns.le) hs
-    have Hg : g =ᵐ[volume.restrict (⋃ (n : ℕ), (Ioc (0 : ℝ) n))] 0 :=
-      (ae_restrict_iUnion_iff _ _).2 this
-    have : (⋃ (n : ℕ), (Ioc (0 : ℝ) n)) = Ioi 0 :=
-      iUnion_Ioc_eq_Ioi_self_iff.2 (fun x _ ↦ exists_nat_ge x)
-    rwa [this] at Hg
+  have M_bdd  : BddAbove {s : ℝ | g =ᵐ[volume.restrict (Ioc (0 : ℝ) s)] 0}
+  contrapose! H1
+  have : ∀ (n : ℕ), g =ᵐ[volume.restrict (Ioc (0 : ℝ) n)] 0
+  intro n
+  rcases not_bddAbove_iff.1 H1 n with ⟨s, hs, ns⟩
+  exact ae_restrict_of_ae_restrict_of_subset (Ioc_subset_Ioc_right ns.le) hs
+  have Hg : g =ᵐ[volume.restrict (⋃ (n : ℕ), (Ioc (0 : ℝ) n))] 0
+  apply (ae_restrict_iUnion_iff _ _).2 this
+  have : (⋃ (n : ℕ), (Ioc (0 : ℝ) n)) = Ioi 0
+  apply iUnion_Ioc_eq_Ioi_self_iff.2
+  exact fun x _ ↦ exists_nat_ge x
+  rwa [this] at Hg
   -- let `M` be the largest number such that `g` vanishes ae on `(0, M]`.
   let M : ℝ := sSup {s : ℝ | g =ᵐ[volume.restrict (Ioc (0 : ℝ) s)] 0}
-  have zero_mem : 0 ∈ {s : ℝ | g =ᵐ[volume.restrict (Ioc (0 : ℝ) s)] 0} := by simpa using trivial
+  have zero_mem  : 0 ∈ {s : ℝ | g =ᵐ[volume.restrict (Ioc (0 : ℝ) s)] 0}
+  simpa using trivial
   have M_nonneg : 0 ≤ M := le_csSup M_bdd zero_mem
   -- Then the function `g` indeed vanishes ae on `(0, M]`.
-  have hgM : g =ᵐ[volume.restrict (Ioc (0 : ℝ) M)] 0 := by
-    rw [← restrict_Ioo_eq_restrict_Ioc]
-    obtain ⟨u, -, uM, ulim⟩ : ∃ u, StrictMono u ∧ (∀ (n : ℕ), u n < M) ∧ Tendsto u atTop (𝓝 M) :=
-      exists_seq_strictMono_tendsto M
-    have I : ∀ n, g =ᵐ[volume.restrict (Ioc (0 : ℝ) (u n))] 0 := by
-      intro n
-      obtain ⟨s, hs, uns⟩ : ∃ s, g =ᶠ[ae (Measure.restrict volume (Ioc 0 s))] 0 ∧ u n < s :=
-        exists_lt_of_lt_csSup (Set.nonempty_of_mem zero_mem) (uM n)
-      exact ae_restrict_of_ae_restrict_of_subset (Ioc_subset_Ioc_right uns.le) hs
-    have : g =ᵐ[volume.restrict (⋃ n, Ioc (0 : ℝ) (u n))] 0 := (ae_restrict_iUnion_iff _ _).2 I
-    apply ae_restrict_of_ae_restrict_of_subset _ this
-    rintro x ⟨x_pos, xM⟩
-    obtain ⟨n, hn⟩ : ∃ n, x < u n := ((tendsto_order.1 ulim).1 _ xM).exists
-    exact mem_iUnion.2 ⟨n, ⟨x_pos, hn.le⟩⟩
+  have hgM  : g =ᵐ[volume.restrict (Ioc (0 : ℝ) M)] 0
+  rw [← restrict_Ioo_eq_restrict_Ioc]
+  obtain ⟨u, -, uM, ulim⟩ : ∃ u, StrictMono u ∧ (∀ (n : ℕ), u n < M) ∧ Tendsto u atTop (𝓝 M) :=
+    exists_seq_strictMono_tendsto M
+  have I : ∀ n, g =ᵐ[volume.restrict (Ioc (0 : ℝ) (u n))] 0
+  intro n
+  obtain ⟨s, hs, uns⟩ : ∃ s, g =ᶠ[ae (Measure.restrict volume (Ioc 0 s))] 0 ∧ u n < s :=
+    exists_lt_of_lt_csSup (Set.nonempty_of_mem zero_mem) (uM n)
+  exact ae_restrict_of_ae_restrict_of_subset (Ioc_subset_Ioc_right uns.le) hs
+  have : g =ᵐ[volume.restrict (⋃ n, Ioc (0 : ℝ) (u n))] 0 := (ae_restrict_iUnion_iff _ _).2 I
+  apply ae_restrict_of_ae_restrict_of_subset _ this
+  rintro x ⟨x_pos, xM⟩
+  obtain ⟨n, hn⟩ : ∃ n, x < u n := ((tendsto_order.1 ulim).1 _ xM).exists
+  exact mem_iUnion.2 ⟨n, ⟨x_pos, hn.le⟩⟩
   -- Let `ν` be the restriction of `μ` to those points where `f a > M`.
   let ν := μ.restrict {a : α | M < f a}
   -- This measure is sigma-finite (this is the whole point of the argument).
-  have : SigmaFinite ν := by
-    obtain ⟨u, -, uM, ulim⟩ : ∃ u, StrictAnti u ∧ (∀ (n : ℕ), M < u n) ∧ Tendsto u atTop (𝓝 M) :=
-      exists_seq_strictAnti_tendsto M
-    let s : ν.FiniteSpanningSetsIn univ :=
-    { set := fun n ↦ {a | f a ≤ M} ∪ {a | u n < f a}
-      set_mem := fun _ ↦ trivial
-      finite := by
-        intro n
-        have I : ν {a | f a ≤ M} = 0 := by
-          rw [Measure.restrict_apply (measurableSet_le f_mble measurable_const)]
-          convert measure_empty (μ := μ)
-          rw [← disjoint_iff_inter_eq_empty]
-          exact disjoint_left.mpr (fun a ha ↦ by simpa using ha)
-        have J : μ {a | u n < f a} < ∞ := by
-          rw [lt_top_iff_ne_top]
-          apply H2 _ (M_nonneg.trans_lt (uM n))
-          by_contra H3
-          rw [not_lt, intervalIntegral.integral_of_le (M_nonneg.trans (uM n).le)] at H3
-          have g_nn_ae : ∀ᵐ t ∂(volume.restrict (Ioc 0 (u n))), 0 ≤ g t := by
-            filter_upwards [ae_restrict_mem measurableSet_Ioc] with s hs using g_nn _ hs.1
-          have Ig : ∫ (t : ℝ) in Ioc 0 (u n), g t = 0 :=
-            le_antisymm H3 (integral_nonneg_of_ae g_nn_ae)
-          have J : ∀ᵐ t ∂(volume.restrict (Ioc 0 (u n))), g t = 0 :=
-            (integral_eq_zero_iff_of_nonneg_ae g_nn_ae
-              (g_intble (u n) (M_nonneg.trans_lt (uM n))).1).1 Ig
-          have : u n ≤ M := le_csSup M_bdd J
-          exact lt_irrefl _ (this.trans_lt (uM n))
-        refine lt_of_le_of_lt (measure_union_le _ _) ?_
-        rw [I, zero_add]
-        apply lt_of_le_of_lt _ J
-        exact restrict_le_self _
-      spanning := by
-        apply eq_univ_iff_forall.2 (fun a ↦ ?_)
-        rcases le_or_lt (f a) M with ha|ha
-        · exact mem_iUnion.2 ⟨0, Or.inl ha⟩
-        · obtain ⟨n, hn⟩ : ∃ n, u n < f a := ((tendsto_order.1 ulim).2 _ ha).exists
-          exact mem_iUnion.2 ⟨n, Or.inr hn⟩ }
-    exact ⟨⟨s⟩⟩
+  have  : SigmaFinite ν
+  obtain ⟨u, -, uM, ulim⟩ : ∃ u, StrictAnti u ∧ (∀ (n : ℕ), M < u n) ∧ Tendsto u atTop (𝓝 M) :=
+    exists_seq_strictAnti_tendsto M
+  let s : ν.FiniteSpanningSetsIn univ :=
+  { set := fun n ↦ {a | f a ≤ M} ∪ {a | u n < f a}
+    set_mem := fun _ ↦ trivial
+    finite := by
+      intro n
+      have I : ν {a | f a ≤ M} = 0 := by
+        rw [Measure.restrict_apply (measurableSet_le f_mble measurable_const)]
+        convert measure_empty (μ := μ)
+        rw [← disjoint_iff_inter_eq_empty]
+        exact disjoint_left.mpr (fun a ha ↦ by simpa using ha)
+      have J : μ {a | u n < f a} < ∞ := by
+        rw [lt_top_iff_ne_top]
+        apply H2 _ (M_nonneg.trans_lt (uM n))
+        by_contra H3
+        rw [not_lt, intervalIntegral.integral_of_le (M_nonneg.trans (uM n).le)] at H3
+        have g_nn_ae : ∀ᵐ t ∂(volume.restrict (Ioc 0 (u n))), 0 ≤ g t := by
+          filter_upwards [ae_restrict_mem measurableSet_Ioc] with s hs using g_nn _ hs.1
+        have Ig : ∫ (t : ℝ) in Ioc 0 (u n), g t = 0 :=
+          le_antisymm H3 (integral_nonneg_of_ae g_nn_ae)
+        have J : ∀ᵐ t ∂(volume.restrict (Ioc 0 (u n))), g t = 0 :=
+          (integral_eq_zero_iff_of_nonneg_ae g_nn_ae
+            (g_intble (u n) (M_nonneg.trans_lt (uM n))).1).1 Ig
+        have : u n ≤ M := le_csSup M_bdd J
+        exact lt_irrefl _ (this.trans_lt (uM n))
+      refine lt_of_le_of_lt (measure_union_le _ _) ?_
+      rw [I, zero_add]
+      apply lt_of_le_of_lt _ J
+      exact restrict_le_self _
+    spanning := by
+      apply eq_univ_iff_forall.2 (fun a ↦ ?_)
+      rcases le_or_lt (f a) M with ha|ha
+      · exact mem_iUnion.2 ⟨0, Or.inl ha⟩
+      · obtain ⟨n, hn⟩ : ∃ n, u n < f a := ((tendsto_order.1 ulim).2 _ ha).exists
+        exact mem_iUnion.2 ⟨n, Or.inr hn⟩ }
+  exact ⟨⟨s⟩⟩
   -- the first integrals with respect to `μ` and to `ν` coincide, as points with `f a ≤ M` are
   -- weighted by zero as `g` vanishes there.
   have A : ∫⁻ ω, ENNReal.ofReal (∫ t in (0)..f ω, g t) ∂μ
@@ -345,12 +349,12 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul_of_measurable (μ : Measure α)
     have I : ∫⁻ ω in {a | M < f a}ᶜ, ENNReal.ofReal (∫ t in (0).. f ω, g t) ∂μ
              = ∫⁻ _ in {a | M < f a}ᶜ, 0 ∂μ := by
       apply setLIntegral_congr_fun meas.compl (eventually_of_forall (fun s hs ↦ ?_))
-      have : ∫ (t : ℝ) in (0)..f s, g t = ∫ (t : ℝ) in (0)..f s, 0 := by
-        simp_rw [intervalIntegral.integral_of_le (f_nonneg s)]
-        apply integral_congr_ae
-        apply ae_mono (restrict_mono ?_ le_rfl) hgM
-        apply Ioc_subset_Ioc_right
-        simpa using hs
+      have  : ∫ (t : ℝ) in (0)..f s, g t = ∫ (t : ℝ) in (0)..f s, 0
+      simp_rw [intervalIntegral.integral_of_le (f_nonneg s)]
+      apply integral_congr_ae
+      apply ae_mono (restrict_mono ?_ le_rfl) hgM
+      apply Ioc_subset_Ioc_right
+      simpa using hs
       simp [this]
     simp only [lintegral_const, zero_mul] at I
     rw [← lintegral_add_compl _ meas, I, add_zero]
@@ -520,7 +524,8 @@ theorem Integrable.integral_eq_integral_meas_lt
     ∫ ω, f ω ∂μ = ∫ t in Set.Ioi 0, ENNReal.toReal (μ {a : α | t < f a}) := by
   have key := lintegral_eq_lintegral_meas_lt μ f_nn f_intble.aemeasurable
   have lhs_finite : ∫⁻ (ω : α), ENNReal.ofReal (f ω) ∂μ < ∞ := Integrable.lintegral_lt_top f_intble
-  have rhs_finite : ∫⁻ (t : ℝ) in Set.Ioi 0, μ {a | t < f a} < ∞ := by simp only [← key, lhs_finite]
+  have rhs_finite  : ∫⁻ (t : ℝ) in Set.Ioi 0, μ {a | t < f a} < ∞
+  simp only [← key, lhs_finite]
   have rhs_integrand_finite : ∀ (t : ℝ), t > 0 → μ {a | t < f a} < ∞ :=
     fun t ht ↦ measure_gt_lt_top f_intble ht
   convert (ENNReal.toReal_eq_toReal lhs_finite.ne rhs_finite.ne).mpr key
@@ -551,10 +556,11 @@ lemma Integrable.integral_eq_integral_Ioc_meas_le {f : α → ℝ} {M : ℝ}
   rw [setIntegral_eq_of_subset_of_ae_diff_eq_zero
       measurableSet_Ioi.nullMeasurableSet Ioc_subset_Ioi_self ?_]
   apply eventually_of_forall (fun t ht ↦ ?_)
-  have htM : M < t := by simp_all only [mem_diff, mem_Ioi, mem_Ioc, not_and, not_le]
-  have obs : μ {a | M < f a} = 0 := by
-    rw [measure_zero_iff_ae_nmem]
-    filter_upwards [f_bdd] with a ha using not_lt.mpr ha
+  have htM  : M < t
+  simp_all only [mem_diff, mem_Ioi, mem_Ioc, not_and, not_le]
+  have obs  : μ {a | M < f a} = 0
+  rw [measure_zero_iff_ae_nmem]
+  filter_upwards [f_bdd] with a ha using not_lt.mpr ha
   rw [ENNReal.toReal_eq_zero_iff]
   exact Or.inl <| measure_mono_null (fun a ha ↦ lt_of_lt_of_le htM ha) obs
 

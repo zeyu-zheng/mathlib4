@@ -237,8 +237,8 @@ theorem comp_coeff_zero (q : FormalMultilinearSeries 𝕜 F G) (p : FormalMultil
     (v : Fin 0 → E) (v' : Fin 0 → F) : (q.comp p) 0 v = q 0 v' := by
   let c : Composition 0 := Composition.ones 0
   dsimp [FormalMultilinearSeries.comp]
-  have : {c} = (Finset.univ : Finset (Composition 0)) := by
-    apply Finset.eq_of_subset_of_card_le <;> simp [Finset.card_univ, composition_card 0]
+  have  : {c} = (Finset.univ : Finset (Composition 0))
+  apply Finset.eq_of_subset_of_card_le <;> simp [Finset.card_univ, composition_card 0]
   rw [← this, Finset.sum_singleton, compAlongComposition_apply]
   symm; congr! -- Porting note: needed the stronger `congr!`!
 
@@ -384,7 +384,8 @@ theorem comp_id (p : FormalMultilinearSeries 𝕜 E F) : p.comp (id 𝕜 E) = p 
       List.get_of_mem hk
 
     let j : Fin b.length := ⟨i.val, b.blocks_length ▸ i.prop⟩
-    have A : 1 < b.blocksFun j := by convert lt_k
+    have A  : 1 < b.blocksFun j
+    convert lt_k
     ext v
     rw [compAlongComposition_apply, ContinuousMultilinearMap.zero_apply]
     apply ContinuousMultilinearMap.map_coord_zero _ j
@@ -414,7 +415,8 @@ theorem id_comp (p : FormalMultilinearSeries 𝕜 E F) (h : p 0 = 0) : (id 𝕜 
       ∀ b : Composition n,
         b ∈ Finset.univ → b ≠ Composition.single n n_pos → compAlongComposition (id 𝕜 F) p b = 0
       intro b _ hb
-      have A : b.length ≠ 1 := by simpa [Composition.eq_single_iff_length] using hb
+      have A  : b.length ≠ 1
+      simpa [Composition.eq_single_iff_length] using hb
       ext v
       rw [compAlongComposition_apply, id_apply_ne_one _ _ A]
       rfl
@@ -701,8 +703,8 @@ theorem HasFPowerSeriesAt.comp {g : F → G} {f : E → F} {q : FormalMultilinea
     rcases EMetric.mem_nhds_iff.1 (Hf.analyticAt.continuousAt this) with ⟨δ, δpos, Hδ⟩
     exact ⟨δ, δpos, fun hz => Hδ hz⟩
   let rf' := min rf δ
-  have min_pos : 0 < min rf' r := by
-    simp only [rf', r_pos, Hf.r_pos, δpos, lt_min_iff, ENNReal.coe_pos, and_self_iff]
+  have min_pos  : 0 < min rf' r
+  simp only [rf', r_pos, Hf.r_pos, δpos, lt_min_iff, ENNReal.coe_pos, and_self_iff]
   /- We will show that `g ∘ f` admits the power series `q.comp p` in the disk of
     radius `min (r, rf', δ)`. -/
   refine ⟨min rf' r, ?_⟩
@@ -896,7 +898,8 @@ theorem sigma_composition_eq_iff (i j : Σ a : Composition n, Composition a.leng
   rcases i with ⟨a, b⟩
   rcases j with ⟨a', b'⟩
   rintro ⟨h, h'⟩
-  have H : a = a' := by ext1; exact h
+  have H  : a = a'
+  ext1; exact h
   induction H; congr; ext1; exact h'
 
 /-- Rewriting equality in the dependent type
@@ -909,17 +912,17 @@ theorem sigma_pi_composition_eq_iff
   rcases u with ⟨a, b⟩
   rcases v with ⟨a', b'⟩
   dsimp at H
-  have h : a = a' := by
-    ext1
-    have :
-      map List.sum (ofFn fun i : Fin (Composition.length a) => (b i).blocks) =
-        map List.sum (ofFn fun i : Fin (Composition.length a') => (b' i).blocks) := by
-      rw [H]
-    simp only [map_ofFn] at this
-    change
-      (ofFn fun i : Fin (Composition.length a) => (b i).blocks.sum) =
-        ofFn fun i : Fin (Composition.length a') => (b' i).blocks.sum at this
-    simpa [Composition.blocks_sum, Composition.ofFn_blocksFun] using this
+  have h  : a = a'
+  ext1
+  have :
+    map List.sum (ofFn fun i : Fin (Composition.length a) => (b i).blocks) =
+      map List.sum (ofFn fun i : Fin (Composition.length a') => (b' i).blocks) := by
+    rw [H]
+  simp only [map_ofFn] at this
+  change
+    (ofFn fun i : Fin (Composition.length a) => (b i).blocks.sum) =
+      ofFn fun i : Fin (Composition.length a') => (b' i).blocks.sum at this
+  simpa [Composition.blocks_sum, Composition.ofFn_blocksFun] using this
   induction h
   ext1
   · rfl

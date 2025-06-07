@@ -109,9 +109,9 @@ theorem primitive_element_inf_aux [Algebra.IsSeparable F E] : ∃ γ : E, F⟮α
     use γ
     apply le_antisymm
     · rw [adjoin_le_iff]
-      have α_in_Fγ : α ∈ F⟮γ⟯ := by
-        rw [← add_sub_cancel_right α (c • β)]
-        exact F⟮γ⟯.sub_mem (mem_adjoin_simple_self F γ) (F⟮γ⟯.toSubalgebra.smul_mem β_in_Fγ c)
+      have α_in_Fγ  : α ∈ F⟮γ⟯
+      rw [← add_sub_cancel_right α (c • β)]
+      exact F⟮γ⟯.sub_mem (mem_adjoin_simple_self F γ) (F⟮γ⟯.toSubalgebra.smul_mem β_in_Fγ c)
       rintro x (rfl | rfl) <;> assumption
     · rw [adjoin_simple_le_iff]
       have α_in_Fαβ : α ∈ F⟮α, β⟯ := subset_adjoin F {α, β} (Set.mem_insert α {β})
@@ -186,9 +186,9 @@ private theorem primitive_element_inf_aux_of_finite_intermediateField
     rw [show (α + x • β) - (α + y • β) = (x - y) • β by rw [sub_smul]; abel1] at β_in_K
     replace β_in_K := smul_mem _ β_in_K (x := (x - y)⁻¹)
     rw [smul_smul, inv_mul_eq_div, div_self (sub_ne_zero.2 hneq), one_smul] at β_in_K
-    have α_in_K : α ∈ F⟮α + x • β⟯ := by
-      convert ← sub_mem αxβ_in_K (smul_mem _ β_in_K)
-      apply add_sub_cancel_right
+    have α_in_K  : α ∈ F⟮α + x • β⟯
+    convert ← sub_mem αxβ_in_K (smul_mem _ β_in_K)
+    apply add_sub_cancel_right
     rintro x (rfl | rfl) <;> assumption
   · rw [adjoin_simple_le_iff]
     have α_in_Fαβ : α ∈ F⟮α, β⟯ := subset_adjoin F {α, β} (Set.mem_insert α {β})
@@ -210,13 +210,13 @@ theorem exists_primitive_element : ∃ α : E, F⟮α⟯ = ⊤ := by
   rcases isEmpty_or_nonempty (Fintype F) with (F_inf | ⟨⟨F_finite⟩⟩)
   · let P : IntermediateField F E → Prop := fun K => ∃ α : E, F⟮α⟯ = K
     have base : P ⊥ := ⟨0, adjoin_zero⟩
-    have ih : ∀ (K : IntermediateField F E) (x : E), P K → P (K⟮x⟯.restrictScalars F) := by
-      intro K β hK
-      cases' hK with α hK
-      rw [← hK, adjoin_simple_adjoin_simple]
-      haveI : Infinite F := isEmpty_fintype.mp F_inf
-      cases' primitive_element_inf_aux F α β with γ hγ
-      exact ⟨γ, hγ.symm⟩
+    have ih  : ∀ (K : IntermediateField F E) (x : E), P K → P (K⟮x⟯.restrictScalars F)
+    intro K β hK
+    cases' hK with α hK
+    rw [← hK, adjoin_simple_adjoin_simple]
+    haveI : Infinite F := isEmpty_fintype.mp F_inf
+    cases' primitive_element_inf_aux F α β with γ hγ
+    exact ⟨γ, hγ.symm⟩
     exact induction_on_adjoin P base ih ⊤
   · exact exists_primitive_element_of_finite_bot F E
 
@@ -255,10 +255,11 @@ theorem isAlgebraic_of_adjoin_eq_adjoin {α : E} {m n : ℕ} (hneq : m ≠ n)
   let f : F[X] := X ^ m * expand F n s - expand F n r
   refine ⟨f, ?_, ?_⟩
   · have : f.coeff (n * s.natDegree + m) ≠ 0 := by
-      have hn : 0 < n := by linarith only [hm, hmn]
-      have hndvd : ¬ n ∣ n * s.natDegree + m := by
-        rw [← Nat.dvd_add_iff_right (n.dvd_mul_right s.natDegree)]
-        exact Nat.not_dvd_of_pos_of_lt hm hmn
+      have hn  : 0 < n
+      linarith only [hm, hmn]
+      have hndvd  : ¬ n ∣ n * s.natDegree + m
+      rw [← Nat.dvd_add_iff_right (n.dvd_mul_right s.natDegree)]
+      exact Nat.not_dvd_of_pos_of_lt hm hmn
       simp only [f, coeff_sub, coeff_X_pow_mul, s.coeff_expand_mul' hn, coeff_natDegree,
         coeff_expand hn r, hndvd, ite_false, sub_zero]
       exact leadingCoeff_ne_zero.2 hzero

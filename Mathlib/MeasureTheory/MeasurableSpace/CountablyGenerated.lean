@@ -112,13 +112,13 @@ instance (priority := 100) [MeasurableSpace α] [Countable α] : CountablyGenera
     refine ⟨⋃ y, {measurableAtom y}, countable_iUnion (fun i ↦ countable_singleton _), ?_⟩
     refine le_antisymm ?_ (generateFrom_le (by simp [MeasurableSet.measurableAtom_of_countable]))
     intro s hs
-    have : s = ⋃ y ∈ s, measurableAtom y := by
-      apply Subset.antisymm
-      · intro x hx
-        simpa using ⟨x, hx, by simp⟩
-      · simp only [iUnion_subset_iff]
-        intro x hx
-        exact measurableAtom_subset hs hx
+    have  : s = ⋃ y ∈ s, measurableAtom y
+    apply Subset.antisymm
+    · intro x hx
+      simpa using ⟨x, hx, by simp⟩
+    · simp only [iUnion_subset_iff]
+      intro x hx
+      exact measurableAtom_subset hs hx
     rw [this]
     apply MeasurableSet.biUnion (to_countable s) (fun x _hx ↦ ?_)
     apply measurableSet_generateFrom
@@ -345,10 +345,10 @@ lemma measurableSet_generateFrom_memPartition_iff (t : ℕ → Set α) (n : ℕ)
           rw [← sUnion_memPartition t n, union_comm, ← sUnion_union, union_diff_cancel hS_subset]
     · intro f h
       choose S hS_subset hS_eq using h
-      have : Fintype (⋃ n, (S n : Set (Set α))) := by
-        refine (Finite.subset (finite_memPartition t n) ?_).fintype
-        simp only [iUnion_subset_iff]
-        exact hS_subset
+      have  : Fintype (⋃ n, (S n : Set (Set α)))
+      refine (Finite.subset (finite_memPartition t n) ?_).fintype
+      simp only [iUnion_subset_iff]
+      exact hS_subset
       refine ⟨(⋃ n, (S n : Set (Set α))).toFinset, ?_, ?_⟩
       · simp only [coe_toFinset, iUnion_subset_iff]
         exact hS_subset
@@ -360,8 +360,8 @@ lemma measurableSet_generateFrom_memPartition_iff (t : ℕ → Set α) (n : ℕ)
 
 lemma measurableSet_generateFrom_memPartition (t : ℕ → Set α) (n : ℕ) :
     MeasurableSet[generateFrom (memPartition t (n + 1))] (t n) := by
-  have : t n = ⋃ u ∈ memPartition t n, u ∩ t n := by
-    simp_rw [← iUnion_inter, ← sUnion_eq_biUnion, sUnion_memPartition, univ_inter]
+  have  : t n = ⋃ u ∈ memPartition t n, u ∩ t n
+  simp_rw [← iUnion_inter, ← sUnion_eq_biUnion, sUnion_memPartition, univ_inter]
   rw [this]
   refine MeasurableSet.biUnion (finite_memPartition _ _).countable (fun v hv ↦ ?_)
   refine measurableSet_generateFrom ?_

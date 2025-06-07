@@ -145,17 +145,19 @@ theorem inverse_one_sub_norm : (fun t : R => inverse (1 - t)) =O[𝓝 0] (fun _t
   simp only [IsBigO, IsBigOWith, Metric.eventually_nhds_iff]
   refine ⟨‖(1 : R)‖ + 1, (2 : ℝ)⁻¹, by norm_num, fun t ht ↦ ?_⟩
   rw [dist_zero_right] at ht
-  have ht' : ‖t‖ < 1 := by
-    have : (2 : ℝ)⁻¹ < 1 := by cancel_denoms
-    linarith
+  have ht'  : ‖t‖ < 1
+  have  : (2 : ℝ)⁻¹ < 1
+  cancel_denoms
+  linarith
   simp only [inverse_one_sub t ht', norm_one, mul_one, Set.mem_setOf_eq]
   change ‖∑' n : ℕ, t ^ n‖ ≤ _
   have := NormedRing.tsum_geometric_of_norm_lt_one t ht'
-  have : (1 - ‖t‖)⁻¹ ≤ 2 := by
-    rw [← inv_inv (2 : ℝ)]
-    refine inv_le_inv_of_le (by norm_num) ?_
-    have : (2 : ℝ)⁻¹ + (2 : ℝ)⁻¹ = 1 := by ring
-    linarith
+  have  : (1 - ‖t‖)⁻¹ ≤ 2
+  rw [← inv_inv (2 : ℝ)]
+  refine inv_le_inv_of_le (by norm_num) ?_
+  have  : (2 : ℝ)⁻¹ + (2 : ℝ)⁻¹ = 1
+  ring
+  linarith
   linarith
 
 /-- The function `fun t ↦ inverse (x + t)` is O(1) as `t → 0`. -/

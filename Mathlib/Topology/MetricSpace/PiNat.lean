@@ -293,8 +293,8 @@ theorem apply_eq_of_dist_lt {x y : ∀ n, E n} {n : ℕ} (h : dist x y < (1 / 2)
     (hi : i ≤ n) : x i = y i := by
   rcases eq_or_ne x y with (rfl | hne)
   · rfl
-  have : n < firstDiff x y := by
-    simpa [dist_eq_of_ne hne, inv_lt_inv, pow_lt_pow_iff_right, one_lt_two] using h
+  have  : n < firstDiff x y
+  simpa [dist_eq_of_ne hne, inv_lt_inv, pow_lt_pow_iff_right, one_lt_two] using h
   exact apply_eq_of_lt_firstDiff (hi.trans_lt this)
 
 /-- A function to a pseudo-metric-space is `1`-Lipschitz if and only if points in the same cylinder
@@ -516,22 +516,22 @@ theorem cylinder_longestPrefix_eq_of_longestPrefix_lt_firstDiff {x y : ∀ n, E 
     {s : Set (∀ n, E n)} (hs : IsClosed s) (hne : s.Nonempty)
     (H : longestPrefix x s < firstDiff x y) (xs : x ∉ s) (ys : y ∉ s) :
     cylinder x (longestPrefix x s) = cylinder y (longestPrefix y s) := by
-  have l_eq : longestPrefix y s = longestPrefix x s := by
-    rcases lt_trichotomy (longestPrefix y s) (longestPrefix x s) with (L | L | L)
-    · have Ax : (s ∩ cylinder x (longestPrefix x s)).Nonempty :=
-        inter_cylinder_longestPrefix_nonempty hs hne x
-      have Z := disjoint_cylinder_of_longestPrefix_lt hs ys L
-      rw [firstDiff_comm] at H
-      rw [cylinder_eq_cylinder_of_le_firstDiff _ _ H.le] at Z
-      exact (Ax.not_disjoint Z).elim
-    · exact L
-    · have Ay : (s ∩ cylinder y (longestPrefix y s)).Nonempty :=
-        inter_cylinder_longestPrefix_nonempty hs hne y
-      have A'y : (s ∩ cylinder y (longestPrefix x s).succ).Nonempty :=
-        Ay.mono (inter_subset_inter_right s (cylinder_anti _ L))
-      have Z := disjoint_cylinder_of_longestPrefix_lt hs xs (Nat.lt_succ_self _)
-      rw [cylinder_eq_cylinder_of_le_firstDiff _ _ H] at Z
-      exact (A'y.not_disjoint Z).elim
+  have l_eq  : longestPrefix y s = longestPrefix x s
+  rcases lt_trichotomy (longestPrefix y s) (longestPrefix x s) with (L | L | L)
+  · have Ax : (s ∩ cylinder x (longestPrefix x s)).Nonempty :=
+      inter_cylinder_longestPrefix_nonempty hs hne x
+    have Z := disjoint_cylinder_of_longestPrefix_lt hs ys L
+    rw [firstDiff_comm] at H
+    rw [cylinder_eq_cylinder_of_le_firstDiff _ _ H.le] at Z
+    exact (Ax.not_disjoint Z).elim
+  · exact L
+  · have Ay : (s ∩ cylinder y (longestPrefix y s)).Nonempty :=
+      inter_cylinder_longestPrefix_nonempty hs hne y
+    have A'y : (s ∩ cylinder y (longestPrefix x s).succ).Nonempty :=
+      Ay.mono (inter_subset_inter_right s (cylinder_anti _ L))
+    have Z := disjoint_cylinder_of_longestPrefix_lt hs xs (Nat.lt_succ_self _)
+    rw [cylinder_eq_cylinder_of_le_firstDiff _ _ H] at Z
+    exact (A'y.not_disjoint Z).elim
   rw [l_eq, ← mem_cylinder_iff_eq]
   exact cylinder_anti y H.le (mem_cylinder_firstDiff x y)
 
@@ -572,9 +572,9 @@ theorem exists_lipschitz_retraction_of_isClosed {s : Set (∀ n, E n)} (hs : IsC
     · simp
     rcases eq_or_ne (f x) (f y) with (h' | hfxfy)
     · simp [h', dist_nonneg]
-    have I2 : cylinder x (firstDiff x y) = cylinder y (firstDiff x y) := by
-      rw [← mem_cylinder_iff_eq]
-      apply mem_cylinder_firstDiff
+    have I2  : cylinder x (firstDiff x y) = cylinder y (firstDiff x y)
+    rw [← mem_cylinder_iff_eq]
+    apply mem_cylinder_firstDiff
     suffices firstDiff x y ≤ firstDiff (f x) (f y) by
       simpa [dist_eq_of_ne hxy, dist_eq_of_ne hfxfy]
     -- case where `x ∈ s`
@@ -671,8 +671,10 @@ theorem exists_nat_nat_continuous_surjective_of_completeSpace (α : Type*) [Metr
     and we define `f x` there to be the unique point in the intersection.
     This function is continuous and surjective by design. -/
   letI : MetricSpace (ℕ → ℕ) := PiNat.metricSpaceNatNat
-  have I0 : (0 : ℝ) < 1 / 2 := by norm_num
-  have I1 : (1 / 2 : ℝ) < 1 := by norm_num
+  have I0  : (0 : ℝ) < 1 / 2
+  norm_num
+  have I1  : (1 / 2 : ℝ) < 1
+  norm_num
   rcases exists_dense_seq α with ⟨u, hu⟩
   let s : Set (ℕ → ℕ) := { x | (⋂ n : ℕ, closedBall (u (x n)) ((1 / 2) ^ n)).Nonempty }
   let g : s → α := fun x => x.2.some

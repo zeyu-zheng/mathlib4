@@ -118,10 +118,10 @@ theorem iff_pid_with_one_nonzero_prime (R : Type u) [CommRing R] [IsDomain R] :
     · exact ⟨Rlocal, inferInstance⟩
     · rintro Q ⟨hQ1, hQ2⟩
       obtain ⟨q, rfl⟩ := (IsPrincipalIdealRing.principal Q).1
-      have hq : q ≠ 0 := by
-        rintro rfl
-        apply hQ1
-        simp
+      have hq  : q ≠ 0
+      rintro rfl
+      apply hQ1
+      simp
       erw [span_singleton_prime hq] at hQ2
       replace hQ2 := hQ2.irreducible
       rw [irreducible_iff_uniformizer] at hQ2
@@ -244,10 +244,10 @@ theorem aux_pid_of_ufd_of_unique_irreducible (R : Type u) [CommRing R] [IsDomain
     simp only [Set.singleton_zero, Submodule.span_zero]
   obtain ⟨x, hxI, hx0⟩ : ∃ x ∈ I, x ≠ (0 : R) := I.ne_bot_iff.mp I0
   obtain ⟨p, _, H⟩ := HasUnitMulPowIrreducibleFactorization.of_ufd_of_unique_irreducible h₁ h₂
-  have ex : ∃ n : ℕ, p ^ n ∈ I := by
-    obtain ⟨n, u, rfl⟩ := H hx0
-    refine ⟨n, ?_⟩
-    simpa only [Units.mul_inv_cancel_right] using I.mul_mem_right (↑u⁻¹) hxI
+  have ex  : ∃ n : ℕ, p ^ n ∈ I
+  obtain ⟨n, u, rfl⟩ := H hx0
+  refine ⟨n, ?_⟩
+  simpa only [Units.mul_inv_cancel_right] using I.mul_mem_right (↑u⁻¹) hxI
   constructor
   use p ^ Nat.find ex
   show I = Ideal.span _
@@ -331,9 +331,9 @@ open Submodule.IsPrincipal
 
 theorem ideal_eq_span_pow_irreducible {s : Ideal R} (hs : s ≠ ⊥) {ϖ : R} (hirr : Irreducible ϖ) :
     ∃ n : ℕ, s = Ideal.span {ϖ ^ n} := by
-  have gen_ne_zero : generator s ≠ 0 := by
-    rw [Ne, ← eq_bot_iff_generator_eq_zero]
-    assumption
+  have gen_ne_zero  : generator s ≠ 0
+  rw [Ne, ← eq_bot_iff_generator_eq_zero]
+  assumption
   rcases associated_pow_irreducible gen_ne_zero hirr with ⟨n, u, hnu⟩
   use n
   have : span _ = _ := Ideal.span_singleton_generator s
@@ -342,11 +342,11 @@ theorem ideal_eq_span_pow_irreducible {s : Ideal R} (hs : s ≠ ⊥) {ϖ : R} (h
 
 theorem unit_mul_pow_congr_pow {p q : R} (hp : Irreducible p) (hq : Irreducible q) (u v : Rˣ)
     (m n : ℕ) (h : ↑u * p ^ m = v * q ^ n) : m = n := by
-  have key : Associated (Multiset.replicate m p).prod (Multiset.replicate n q).prod := by
-    rw [Multiset.prod_replicate, Multiset.prod_replicate, Associated]
-    refine ⟨u * v⁻¹, ?_⟩
-    simp only [Units.val_mul]
-    rw [mul_left_comm, ← mul_assoc, h, mul_right_comm, Units.mul_inv, one_mul]
+  have key  : Associated (Multiset.replicate m p).prod (Multiset.replicate n q).prod
+  rw [Multiset.prod_replicate, Multiset.prod_replicate, Associated]
+  refine ⟨u * v⁻¹, ?_⟩
+  simp only [Units.val_mul]
+  rw [mul_left_comm, ← mul_assoc, h, mul_right_comm, Units.mul_inv, one_mul]
   have := by
     refine Multiset.card_eq_card_of_rel (UniqueFactorizationMonoid.factors_unique ?_ ?_ key)
     all_goals

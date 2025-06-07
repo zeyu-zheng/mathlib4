@@ -75,11 +75,11 @@ theorem card_mul_le_card_shadow_mul (h𝒜 : (𝒜 : Set (Finset α)).Sized r) :
   -- Porting note: commented out the following line
   -- infer_instance
   rw [mem_bipartiteAbove] at ht
-  have : ∅ ∉ 𝒜 := by
-    rw [← mem_coe, h𝒜.empty_mem_iff, coe_eq_singleton]
-    rintro rfl
-    rw [shadow_singleton_empty] at hs
-    exact not_mem_empty s hs
+  have  : ∅ ∉ 𝒜
+  rw [← mem_coe, h𝒜.empty_mem_iff, coe_eq_singleton]
+  rintro rfl
+  rw [shadow_singleton_empty] at hs
+  exact not_mem_empty s hs
   have h := exists_eq_insert_iff.2 ⟨ht.2, by
     rw [(sized_shadow_iff this).1 (Set.Sized.shadow h𝒜) ht.1, (Set.Sized.shadow h𝒜) hs]⟩
   rcases h with ⟨a, ha, rfl⟩

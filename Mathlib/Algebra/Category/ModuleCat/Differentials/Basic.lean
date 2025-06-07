@@ -113,11 +113,11 @@ noncomputable abbrev d (b : B) : KaehlerDifferential f := (D f).d b
 lemma ext {M : ModuleCat B} {α β : KaehlerDifferential f ⟶ M}
     (h : ∀ (b : B), α (d b) = β (d b)) : α = β := by
   rw [← sub_eq_zero]
-  have : ⊤ ≤ LinearMap.ker (α - β) := by
-    rw [← KaehlerDifferential.span_range_derivation, Submodule.span_le]
-    rintro _ ⟨y, rfl⟩
-    rw [SetLike.mem_coe, LinearMap.mem_ker, LinearMap.sub_apply, sub_eq_zero]
-    apply h
+  have  : ⊤ ≤ LinearMap.ker (α - β)
+  rw [← KaehlerDifferential.span_range_derivation, Submodule.span_le]
+  rintro _ ⟨y, rfl⟩
+  rw [SetLike.mem_coe, LinearMap.mem_ker, LinearMap.sub_apply, sub_eq_zero]
+  apply h
   rw [top_le_iff, LinearMap.ker_eq_top] at this
   exact this
 

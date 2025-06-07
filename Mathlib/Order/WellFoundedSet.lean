@@ -776,9 +776,9 @@ theorem imageProdLex [PartialOrder α] [Preorder β] {s : Set (α ×ₗ β)}
 theorem fiberProdLex [PartialOrder α] [Preorder β] {s : Set (α ×ₗ β)}
     (hαβ : s.IsPWO) (a : α) : {y | toLex (a, y) ∈ s}.IsPWO := by
   let f : α ×ₗ β → β := fun x => (ofLex x).2
-  have h : {y | toLex (a, y) ∈ s} = f '' (s ∩ (fun x ↦ (ofLex x).1) ⁻¹' {a}) := by
-    ext x
-    simp [f]
+  have h  : {y | toLex (a, y) ∈ s} = f '' (s ∩ (fun x ↦ (ofLex x).1) ⁻¹' {a})
+  ext x
+  simp [f]
   rw [h]
   apply IsPWO.image_of_monotoneOn (hαβ.mono inter_subset_left)
   rintro b ⟨-, hb⟩ c ⟨-, hc⟩ hbc

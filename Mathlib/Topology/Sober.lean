@@ -175,9 +175,9 @@ theorem OpenEmbedding.quasiSober {f : α → β} (hf : OpenEmbedding f) [QuasiSo
     obtain ⟨x, hx⟩ := QuasiSober.sober hS''.closure isClosed_closure
     obtain ⟨T, hT, rfl⟩ := hf.toInducing.isClosed_iff.mp hS'
     rw [image_preimage_eq_inter_range] at hx hS''
-    have hxT : x ∈ T := by
-      rw [← hT.closure_eq]
-      exact closure_mono inter_subset_left hx.mem
+    have hxT  : x ∈ T
+    rw [← hT.closure_eq]
+    exact closure_mono inter_subset_left hx.mem
     obtain ⟨y, rfl⟩ : x ∈ range f := by
       rw [hx.mem_open_set_iff hf.isOpen_range]
       refine Nonempty.mono ?_ hS''.1

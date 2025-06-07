@@ -213,9 +213,9 @@ theorem le_topology_of_closedSieves_isSheaf {J₁ J₂ : GrothendieckTopology C}
     (h : Presieve.IsSheaf J₁ (Functor.closedSieves J₂)) : J₁ ≤ J₂ := by
   intro X S hS
   rw [← J₂.close_eq_top_iff_mem]
-  have : J₂.IsClosed (⊤ : Sieve X) := by
-    intro Y f _
-    trivial
+  have  : J₂.IsClosed (⊤ : Sieve X)
+  intro Y f _
+  trivial
   suffices (⟨J₂.close S, J₂.close_isClosed S⟩ : Subtype _) = ⟨⊤, this⟩ by
     rw [Subtype.ext_iff] at this
     exact this

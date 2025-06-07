@@ -104,9 +104,9 @@ theorem lowerCentralSeries_eq_lcs_comap : lowerCentralSeries R L N k = (N.lcs k)
   induction' k with k ih
   · simp
   · simp only [lcs_succ, lowerCentralSeries_succ] at ih ⊢
-    have : N.lcs k ≤ N.incl.range := by
-      rw [N.range_incl]
-      apply lcs_le_self
+    have  : N.lcs k ≤ N.incl.range
+    rw [N.range_incl]
+    apply lcs_le_self
     rw [ih, LieSubmodule.comap_bracket_eq _ _ N.incl N.ker_incl this]
 
 theorem lowerCentralSeries_map_eq_lcs : (lowerCentralSeries R L N k).map N.incl = N.lcs k := by
@@ -304,9 +304,9 @@ noncomputable def nilpotencyLength : ℕ :=
 theorem nilpotencyLength_eq_zero_iff [IsNilpotent R L M] :
     nilpotencyLength R L M = 0 ↔ Subsingleton M := by
   let s := {k | lowerCentralSeries R L M k = ⊥}
-  have hs : s.Nonempty := by
-    obtain ⟨k, hk⟩ := (by infer_instance : IsNilpotent R L M)
-    exact ⟨k, hk⟩
+  have hs  : s.Nonempty
+  obtain ⟨k, hk⟩ := (by infer_instance : IsNilpotent R L M)
+  exact ⟨k, hk⟩
   change sInf s = 0 ↔ _
   rw [← LieSubmodule.subsingleton_iff R L M, ← subsingleton_iff_bot_eq_top, ←
     lowerCentralSeries_zero, @eq_comm (LieSubmodule R L M)]
@@ -319,9 +319,9 @@ theorem nilpotencyLength_eq_succ_iff (k : ℕ) :
       lowerCentralSeries R L M (k + 1) = ⊥ ∧ lowerCentralSeries R L M k ≠ ⊥ := by
   let s := {k | lowerCentralSeries R L M k = ⊥}
   change sInf s = k + 1 ↔ k + 1 ∈ s ∧ k ∉ s
-  have hs : ∀ k₁ k₂, k₁ ≤ k₂ → k₁ ∈ s → k₂ ∈ s := by
-    rintro k₁ k₂ h₁₂ (h₁ : lowerCentralSeries R L M k₁ = ⊥)
-    exact eq_bot_iff.mpr (h₁ ▸ antitone_lowerCentralSeries R L M h₁₂)
+  have hs  : ∀ k₁ k₂, k₁ ≤ k₂ → k₁ ∈ s → k₂ ∈ s
+  rintro k₁ k₂ h₁₂ (h₁ : lowerCentralSeries R L M k₁ = ⊥)
+  exact eq_bot_iff.mpr (h₁ ▸ antitone_lowerCentralSeries R L M h₁₂)
   exact Nat.sInf_upward_closed_eq_succ_iff hs k
 
 @[simp]
@@ -654,9 +654,9 @@ theorem LieIdeal.map_lowerCentralSeries_le (k : ℕ) {f : L →ₗ⁅R⁆ L'} :
 
 theorem LieIdeal.lowerCentralSeries_map_eq (k : ℕ) {f : L →ₗ⁅R⁆ L'} (h : Function.Surjective f) :
     LieIdeal.map f (lowerCentralSeries R L L k) = lowerCentralSeries R L' L' k := by
-  have h' : (⊤ : LieIdeal R L).map f = ⊤ := by
-    rw [← f.idealRange_eq_map]
-    exact f.idealRange_eq_top_of_surjective h
+  have h'  : (⊤ : LieIdeal R L).map f = ⊤
+  rw [← f.idealRange_eq_map]
+  exact f.idealRange_eq_top_of_surjective h
   induction' k with k ih
   · simp only [LieModule.lowerCentralSeries_zero]; exact h'
   · simp only [LieModule.lowerCentralSeries_succ, LieIdeal.map_bracket_eq f h, ih, h']
@@ -757,8 +757,10 @@ variable (R : Type u) {A : Type v} [CommRing R] [Ring A] [Algebra R A]
 theorem _root_.LieAlgebra.ad_nilpotent_of_nilpotent {a : A} (h : IsNilpotent a) :
     IsNilpotent (LieAlgebra.ad R A a) := by
   rw [LieAlgebra.ad_eq_lmul_left_sub_lmul_right]
-  have hl : IsNilpotent (LinearMap.mulLeft R a) := by rwa [LinearMap.isNilpotent_mulLeft_iff]
-  have hr : IsNilpotent (LinearMap.mulRight R a) := by rwa [LinearMap.isNilpotent_mulRight_iff]
+  have hl  : IsNilpotent (LinearMap.mulLeft R a)
+  rwa [LinearMap.isNilpotent_mulLeft_iff]
+  have hr  : IsNilpotent (LinearMap.mulRight R a)
+  rwa [LinearMap.isNilpotent_mulRight_iff]
   have := @LinearMap.commute_mulLeft_right R A _ _ _ _ _ a a
   exact this.isNilpotent_sub hl hr
 

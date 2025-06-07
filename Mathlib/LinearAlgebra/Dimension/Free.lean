@@ -106,8 +106,8 @@ theorem nonempty_linearEquiv_of_lift_rank_eq
     Nonempty (M ≃ₗ[R] M') := by
   obtain ⟨⟨α, B⟩⟩ := Module.Free.exists_basis (R := R) (M := M)
   obtain ⟨⟨β, B'⟩⟩ := Module.Free.exists_basis (R := R) (M := M')
-  have : Cardinal.lift.{v', v} #α = Cardinal.lift.{v, v'} #β := by
-    rw [B.mk_eq_rank'', cnd, B'.mk_eq_rank'']
+  have  : Cardinal.lift.{v', v} #α = Cardinal.lift.{v, v'} #β
+  rw [B.mk_eq_rank'', cnd, B'.mk_eq_rank'']
   exact (Cardinal.lift_mk_eq.{v, v', 0}.1 this).map (B.equiv B')
 
 /-- Two vector spaces are isomorphic if they have the same dimension. -/

@@ -725,12 +725,13 @@ theorem finrank_span_singleton {v : V} (hv : v ≠ 0) : finrank K (K ∙ v) = 1 
 lemma exists_smul_eq_of_finrank_eq_one
     (h : finrank K V = 1) {x : V} (hx : x ≠ 0) (y : V) :
     ∃ (c : K), c • x = y := by
-  have : Submodule.span K {x} = ⊤ := by
-    have : FiniteDimensional K V := .of_finrank_eq_succ h
-    apply eq_top_of_finrank_eq
-    rw [h]
-    exact finrank_span_singleton hx
-  have : y ∈ Submodule.span K {x} := by rw [this]; exact mem_top
+  have  : Submodule.span K {x} = ⊤
+  have : FiniteDimensional K V := .of_finrank_eq_succ h
+  apply eq_top_of_finrank_eq
+  rw [h]
+  exact finrank_span_singleton hx
+  have  : y ∈ Submodule.span K {x}
+  rw [this]; exact mem_top
   exact mem_span_singleton.1 this
 
 theorem Set.finrank_mono [FiniteDimensional K V] {s t : Set V} (h : s ⊆ t) :

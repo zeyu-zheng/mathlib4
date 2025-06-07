@@ -108,7 +108,8 @@ theorem prod_Ico_succ_top {a b : ℕ} (hab : a ≤ b) (f : ℕ → M) :
 @[to_additive]
 theorem prod_eq_prod_Ico_succ_bot {a b : ℕ} (hab : a < b) (f : ℕ → M) :
     ∏ k ∈ Ico a b, f k = f a * ∏ k ∈ Ico (a + 1) b, f k := by
-  have ha : a ∉ Ico (a + 1) b := by simp
+  have ha  : a ∉ Ico (a + 1) b
+  simp
   rw [← prod_insert ha, Nat.Ico_insert_succ_left hab]
 
 @[to_additive]
@@ -191,9 +192,9 @@ theorem prod_Ico_eq_prod_range (f : ℕ → M) (m n : ℕ) :
 
 theorem prod_Ico_reflect (f : ℕ → M) (k : ℕ) {m n : ℕ} (h : m ≤ n + 1) :
     (∏ j ∈ Ico k m, f (n - j)) = ∏ j ∈ Ico (n + 1 - m) (n + 1 - k), f j := by
-  have : ∀ i < m, i ≤ n := by
-    intro i hi
-    exact (add_le_add_iff_right 1).1 (le_trans (Nat.lt_iff_add_one_le.1 hi) h)
+  have  : ∀ i < m, i ≤ n
+  intro i hi
+  exact (add_le_add_iff_right 1).1 (le_trans (Nat.lt_iff_add_one_le.1 hi) h)
   cases' lt_or_le k m with hkm hkm
   · rw [← Nat.Ico_image_const_sub_eq_Ico (this _ hkm)]
     refine (prod_image ?_).symm

@@ -62,13 +62,13 @@ theorem functionField_iff (Fqt : Type*) [Field Fqt] [Algebra Fq[X] Fqt]
     [IsScalarTower Fq[X] Fqt F] [IsScalarTower Fq[X] (RatFunc Fq) F] :
     FunctionField Fq F ↔ FiniteDimensional Fqt F := by
   let e := IsLocalization.algEquiv Fq[X]⁰ (RatFunc Fq) Fqt
-  have : ∀ (c) (x : F), e c • x = c • x := by
-    intro c x
-    rw [Algebra.smul_def, Algebra.smul_def]
-    congr
-    refine congr_fun (f := fun c => algebraMap Fqt F (e c)) ?_ c -- Porting note: Added `(f := _)`
-    refine IsLocalization.ext (nonZeroDivisors Fq[X]) _ _ ?_ ?_ ?_ ?_ ?_ <;> intros <;>
-      simp only [map_one, map_mul, AlgEquiv.commutes, ← IsScalarTower.algebraMap_apply]
+  have  : ∀ (c) (x : F), e c • x = c • x
+  intro c x
+  rw [Algebra.smul_def, Algebra.smul_def]
+  congr
+  refine congr_fun (f := fun c => algebraMap Fqt F (e c)) ?_ c -- Porting note: Added `(f := _)`
+  refine IsLocalization.ext (nonZeroDivisors Fq[X]) _ _ ?_ ?_ ?_ ?_ ?_ <;> intros <;>
+    simp only [map_one, map_mul, AlgEquiv.commutes, ← IsScalarTower.algebraMap_apply]
   constructor <;> intro h
   · let b := FiniteDimensional.finBasis (RatFunc Fq) F
     exact FiniteDimensional.of_fintype_basis (b.mapCoeffs e this)
@@ -105,9 +105,9 @@ instance : IsIntegralClosure (ringOfIntegers Fq F) Fq[X] F :=
 variable [Algebra (RatFunc Fq) F] [IsScalarTower Fq[X] (RatFunc Fq) F]
 
 theorem algebraMap_injective : Function.Injective (⇑(algebraMap Fq[X] (ringOfIntegers Fq F))) := by
-  have hinj : Function.Injective (⇑(algebraMap Fq[X] F)) := by
-    rw [IsScalarTower.algebraMap_eq Fq[X] (RatFunc Fq) F]
-    exact (algebraMap (RatFunc Fq) F).injective.comp (IsFractionRing.injective Fq[X] (RatFunc Fq))
+  have hinj  : Function.Injective (⇑(algebraMap Fq[X] F))
+  rw [IsScalarTower.algebraMap_eq Fq[X] (RatFunc Fq) F]
+  exact (algebraMap (RatFunc Fq) F).injective.comp (IsFractionRing.injective Fq[X] (RatFunc Fq))
   rw [injective_iff_map_eq_zero (algebraMap Fq[X] (↥(ringOfIntegers Fq F)))]
   intro p hp
   rw [← Subtype.coe_inj, Subalgebra.coe_zero] at hp
@@ -213,8 +213,8 @@ theorem inftyValuation.X : inftyValuationDef Fq RatFunc.X = Multiplicative.ofAdd
 theorem inftyValuation.polynomial {p : Fq[X]} (hp : p ≠ 0) :
     inftyValuationDef Fq (algebraMap Fq[X] (RatFunc Fq) p) =
       Multiplicative.ofAdd (p.natDegree : ℤ) := by
-  have hp' : algebraMap Fq[X] (RatFunc Fq) p ≠ 0 := by
-    rw [Ne, RatFunc.algebraMap_eq_zero_iff]; exact hp
+  have hp'  : algebraMap Fq[X] (RatFunc Fq) p ≠ 0
+  rw [Ne, RatFunc.algebraMap_eq_zero_iff]; exact hp
   rw [inftyValuationDef, if_neg hp', RatFunc.intDegree_polynomial]
 
 /-- The valued field `Fq(t)` with the valuation at infinity. -/

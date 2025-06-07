@@ -132,17 +132,19 @@ theorem multiplicity_factorial_mul_succ {n p : ℕ} (hp : p.Prime) :
   have hp' := hp.prime
   have h0 : 2 ≤ p := hp.two_le
   have h1 : 1 ≤ p * n + 1 := Nat.le_add_left _ _
-  have h2 : p * n + 1 ≤ p * (n + 1) := by linarith
-  have h3 : p * n + 1 ≤ p * (n + 1) + 1 := by omega
-  have hm : multiplicity p (p * n)! ≠ ⊤ := by
-    rw [Ne, eq_top_iff_not_finite, Classical.not_not, finite_nat_iff]
-    exact ⟨hp.ne_one, factorial_pos _⟩
+  have h2  : p * n + 1 ≤ p * (n + 1)
+  linarith
+  have h3  : p * n + 1 ≤ p * (n + 1) + 1
+  omega
+  have hm  : multiplicity p (p * n)! ≠ ⊤
+  rw [Ne, eq_top_iff_not_finite, Classical.not_not, finite_nat_iff]
+  exact ⟨hp.ne_one, factorial_pos _⟩
   revert hm
-  have h4 : ∀ m ∈ Ico (p * n + 1) (p * (n + 1)), multiplicity p m = 0 := by
-    intro m hm
-    rw [multiplicity_eq_zero, ← not_dvd_iff_between_consec_multiples _ hp.pos]
-    rw [mem_Ico] at hm
-    exact ⟨n, lt_of_succ_le hm.1, hm.2⟩
+  have h4  : ∀ m ∈ Ico (p * n + 1) (p * (n + 1)), multiplicity p m = 0
+  intro m hm
+  rw [multiplicity_eq_zero, ← not_dvd_iff_between_consec_multiples _ hp.pos]
+  rw [mem_Ico] at hm
+  exact ⟨n, lt_of_succ_le hm.1, hm.2⟩
   simp_rw [← prod_Ico_id_eq_factorial, multiplicity.Finset.prod hp', ← sum_Ico_consecutive _ h1 h3,
     add_assoc]
   intro h
@@ -278,11 +280,11 @@ theorem multiplicity_two_factorial_lt : ∀ {n : ℕ} (_ : n ≠ 0), multiplicit
       rw [Prime.multiplicity_one]
       · simp [zero_lt_one]
       · decide
-    have : multiplicity 2 (2 * n)! < (2 * n : ℕ) := by
-      rw [prime_two.multiplicity_factorial_mul]
-      refine (PartENat.add_lt_add_right (ih hn) (PartENat.natCast_ne_top _)).trans_le ?_
-      rw [two_mul]
-      norm_cast
+    have  : multiplicity 2 (2 * n)! < (2 * n : ℕ)
+    rw [prime_two.multiplicity_factorial_mul]
+    refine (PartENat.add_lt_add_right (ih hn) (PartENat.natCast_ne_top _)).trans_le ?_
+    rw [two_mul]
+    norm_cast
     cases b
     · simpa
     · suffices multiplicity 2 (2 * n + 1) + multiplicity 2 (2 * n)! < ↑(2 * n) + 1 by

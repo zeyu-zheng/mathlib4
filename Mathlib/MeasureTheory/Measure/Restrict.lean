@@ -673,13 +673,13 @@ lemma NullMeasurable.measure_preimage_eq_measure_restrict_preimage_of_ae_compl_e
   · apply le_antisymm _ (measure_mono inter_subset_left)
     apply (measure_mono (Eq.symm (inter_union_compl (f ⁻¹' t) s)).le).trans
     apply (measure_union_le _ _).trans
-    have obs : μ ((f ⁻¹' t) ∩ sᶜ) = 0 := by
-      apply le_antisymm _ (zero_le _)
-      rw [← hs]
-      apply measure_mono (inter_subset_inter_left _ _)
-      intro x hx hfx
-      simp only [mem_preimage, mem_setOf_eq] at hx hfx
-      exact ht (hfx ▸ hx)
+    have obs  : μ ((f ⁻¹' t) ∩ sᶜ) = 0
+    apply le_antisymm _ (zero_le _)
+    rw [← hs]
+    apply measure_mono (inter_subset_inter_left _ _)
+    intro x hx hfx
+    simp only [mem_preimage, mem_setOf_eq] at hx hfx
+    exact ht (hfx ▸ hx)
     simp only [obs, add_zero, le_refl]
   · exact NullMeasurableSet.of_null hs
 

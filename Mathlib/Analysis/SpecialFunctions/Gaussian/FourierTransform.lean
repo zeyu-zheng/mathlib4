@@ -59,8 +59,8 @@ theorem norm_cexp_neg_mul_sq_add_mul_I' (hb : b.re ≠ 0) (c T : ℝ) :
       exp (-(b.re * (T - b.im * c / b.re) ^ 2 - c ^ 2 * (b.im ^ 2 / b.re + b.re))) := by
   have :
     b.re * T ^ 2 - 2 * b.im * c * T - b.re * c ^ 2 =
-      b.re * (T - b.im * c / b.re) ^ 2 - c ^ 2 * (b.im ^ 2 / b.re + b.re) := by
-    field_simp; ring
+      b.re * (T - b.im * c / b.re) ^ 2 - c ^ 2 * (b.im ^ 2 / b.re + b.re)
+  field_simp; ring
   rw [norm_cexp_neg_mul_sq_add_mul_I, this]
 
 theorem verticalIntegral_norm_le (hb : 0 < b.re) (c : ℝ) {T : ℝ} (hT : 0 ≤ T) :
@@ -148,38 +148,40 @@ theorem integral_cexp_neg_mul_sq_add_real_mul_I (hb : 0 < b.re) (c : ℝ) :
   let I₂ := fun T : ℝ => ∫ x : ℝ in -T..T, cexp (-b * (x : ℂ) ^ 2)
   let I₄ := fun T : ℝ => ∫ y : ℝ in (0 : ℝ)..c, cexp (-b * (T + y * I) ^ 2)
   let I₅ := fun T : ℝ => ∫ y : ℝ in (0 : ℝ)..c, cexp (-b * (-T + y * I) ^ 2)
-  have C : ∀ T : ℝ, I₂ T - I₁ T + I * I₄ T - I * I₅ T = 0 := by
-    intro T
-    have :=
-      integral_boundary_rect_eq_zero_of_differentiableOn (fun z => cexp (-b * z ^ 2)) (-T)
-        (T + c * I)
-        (by
-          refine Differentiable.differentiableOn (Differentiable.const_mul ?_ _).cexp
-          exact differentiable_pow 2)
-    simpa only [neg_im, ofReal_im, neg_zero, ofReal_zero, zero_mul, add_zero, neg_re,
-      ofReal_re, add_re, mul_re, I_re, mul_zero, I_im, tsub_zero, add_im, mul_im,
-      mul_one, zero_add, Algebra.id.smul_eq_mul, ofReal_neg] using this
+  have C  : ∀ T : ℝ, I₂ T - I₁ T + I * I₄ T - I * I₅ T = 0
+  intro T
+  have :=
+    integral_boundary_rect_eq_zero_of_differentiableOn (fun z => cexp (-b * z ^ 2)) (-T)
+      (T + c * I)
+      (by
+        refine Differentiable.differentiableOn (Differentiable.const_mul ?_ _).cexp
+        exact differentiable_pow 2)
+  simpa only [neg_im, ofReal_im, neg_zero, ofReal_zero, zero_mul, add_zero, neg_re,
+    ofReal_re, add_re, mul_re, I_re, mul_zero, I_im, tsub_zero, add_im, mul_im,
+    mul_one, zero_add, Algebra.id.smul_eq_mul, ofReal_neg] using this
   simp_rw [id, ← HI₁]
-  have : I₁ = fun T : ℝ => I₂ T + verticalIntegral b c T := by
-    ext1 T
-    specialize C T
-    rw [sub_eq_zero] at C
-    unfold verticalIntegral
-    rw [integral_const_mul, intervalIntegral.integral_sub]
-    · simp_rw [(fun a b => by rw [sq]; ring_nf : ∀ a b : ℂ, (a - b * I) ^ 2 = (-a + b * I) ^ 2)]
-      change I₁ T = I₂ T + I * (I₄ T - I₅ T)
-      rw [mul_sub, ← C]
-      abel
-    all_goals apply Continuous.intervalIntegrable; continuity
+  have  : I₁ = fun T : ℝ => I₂ T + verticalIntegral b c T
+  ext1 T
+  specialize C T
+  rw [sub_eq_zero] at C
+  unfold verticalIntegral
+  rw [integral_const_mul, intervalIntegral.integral_sub]
+  · simp_rw [(fun a b => by rw [sq]; ring_nf : ∀ a b : ℂ, (a - b * I) ^ 2 = (-a + b * I) ^ 2)]
+    change I₁ T = I₂ T + I * (I₄ T - I₅ T)
+    rw [mul_sub, ← C]
+    abel
+  apply Continuous.intervalIntegrable; continuity
+  apply Continuous.intervalIntegrable; continuity
   rw [this, ← add_zero ((π / b : ℂ) ^ (1 / 2 : ℂ)), ← integral_gaussian_complex hb]
-  refine Tendsto.add ?_ (tendsto_verticalIntegral hb c)
+  apply Tendsto.add ?_ (tendsto_verticalIntegral hb c)
   exact
     intervalIntegral_tendsto_integral (integrable_cexp_neg_mul_sq hb) tendsto_neg_atTop_atBot
       tendsto_id
 
 theorem _root_.integral_cexp_quadratic (hb : b.re < 0) (c d : ℂ) :
     ∫ x : ℝ, cexp (b * x ^ 2 + c * x + d) = (π / -b) ^ (1 / 2 : ℂ) * cexp (d - c^2 / (4 * b)) := by
-  have hb' : b ≠ 0 := by contrapose! hb; rw [hb, zero_re]
+  have hb'  : b ≠ 0
+  contrapose! hb; rw [hb, zero_re]
   have h (x : ℝ) : cexp (b * x ^ 2 + c * x + d) =
       cexp (- -b * (x + c / (2 * b)) ^ 2) * cexp (d - c ^ 2 / (4 * b)) := by
     simp_rw [← Complex.exp_add]
@@ -194,14 +196,16 @@ theorem _root_.integral_cexp_quadratic (hb : b.re < 0) (c d : ℂ) :
 
 lemma _root_.integrable_cexp_quadratic' (hb : b.re < 0) (c d : ℂ) :
     Integrable (fun (x : ℝ) ↦ cexp (b * x ^ 2 + c * x + d)) := by
-  have hb' : b ≠ 0 := by contrapose! hb; rw [hb, zero_re]
+  have hb'  : b ≠ 0
+  contrapose! hb; rw [hb, zero_re]
   by_contra H
   simpa [hb', pi_ne_zero, Complex.exp_ne_zero, integral_undef H]
     using integral_cexp_quadratic hb c d
 
 lemma _root_.integrable_cexp_quadratic (hb : 0 < b.re) (c d : ℂ) :
     Integrable (fun (x : ℝ) ↦ cexp (-b * x ^ 2 + c * x + d)) := by
-  have : (-b).re < 0 := by simpa using hb
+  have  : (-b).re < 0
+  simpa using hb
   exact integrable_cexp_quadratic' this c d
 
 theorem _root_.fourierIntegral_gaussian (hb : 0 < b.re) (t : ℂ) :
@@ -298,7 +302,8 @@ theorem integral_cexp_neg_sum_mul_add {ι : Type*} [Fintype ι] {b : ι → ℂ}
   simp_rw [← Finset.sum_neg_distrib, ← Finset.sum_add_distrib, Complex.exp_sum, ← neg_mul]
   rw [integral_fintype_prod_eq_prod (f := fun i (v : ℝ) ↦ cexp (-b i * v ^ 2 + c i * v))]
   congr with i
-  have : (-b i).re < 0 := by simpa using hb i
+  have  : (-b i).re < 0
+  simpa using hb i
   convert integral_cexp_quadratic this (c i) 0 using 1 <;> simp [div_neg]
 
 theorem integral_cexp_neg_mul_sum_add {ι : Type*} [Fintype ι] (hb : 0 < b.re) (c : ι → ℂ) :

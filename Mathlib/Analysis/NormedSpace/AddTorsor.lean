@@ -217,7 +217,8 @@ theorem eventually_homothety_mem_of_mem_interior (x : Q) {s : Set Q} {y : Q} (hy
   rcases eq_or_ne y x with h | h
   · use 1
     simp [h.symm, interior_subset hy]
-  have hxy : 0 < ‖y -ᵥ x‖ := by rwa [norm_pos_iff, vsub_ne_zero]
+  have hxy  : 0 < ‖y -ᵥ x‖
+  rwa [norm_pos_iff, vsub_ne_zero]
   obtain ⟨u, hu₁, hu₂, hu₃⟩ := mem_interior.mp hy
   obtain ⟨ε, hε, hyε⟩ := Metric.isOpen_iff.mp hu₂ y hu₃
   refine ⟨ε / ‖y -ᵥ x‖, div_pos hε hxy, fun δ (hδ : ‖δ - 1‖ < ε / ‖y -ᵥ x‖) => hu₁ (hyε ?_)⟩

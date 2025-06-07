@@ -179,8 +179,10 @@ open LiouvilleNumber
 
 theorem liouville_liouvilleNumber {m : ℕ} (hm : 2 ≤ m) : Liouville (liouvilleNumber m) := by
   -- two useful inequalities
-  have mZ1 : 1 < (m : ℤ) := by norm_cast
-  have m1 : 1 < (m : ℝ) := by norm_cast
+  have mZ1  : 1 < (m : ℤ)
+  norm_cast
+  have m1  : 1 < (m : ℝ)
+  norm_cast
   intro n
   -- the first `n` terms sum to `p / m ^ k!`
   rcases partialSum_eq_rat (zero_lt_two.trans_le hm) n with ⟨p, hp⟩

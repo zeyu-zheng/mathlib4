@@ -186,8 +186,8 @@ variable {𝕜₁ 𝕜₂ : Type*} [NormedDivisionRing 𝕜₁] [NormedDivisionR
 theorem IsVonNBounded.image {σ : 𝕜₁ →+* 𝕜₂} [RingHomSurjective σ] [RingHomIsometric σ] {s : Set E}
     (hs : IsVonNBounded 𝕜₁ s) (f : E →SL[σ] F) : IsVonNBounded 𝕜₂ (f '' s) := by
   have σ_iso : Isometry σ := AddMonoidHomClass.isometry_of_norm σ fun x => RingHomIsometric.is_iso
-  have : map σ (𝓝 0) = 𝓝 0 := by
-    rw [σ_iso.embedding.map_nhds_eq, σ.surjective.range_eq, nhdsWithin_univ, map_zero]
+  have  : map σ (𝓝 0) = 𝓝 0
+  rw [σ_iso.embedding.map_nhds_eq, σ.surjective.range_eq, nhdsWithin_univ, map_zero]
   have hf₀ : Tendsto f (𝓝 0) (𝓝 0) := f.continuous.tendsto' 0 0 (map_zero f)
   simp only [isVonNBounded_iff_tendsto_smallSets_nhds, ← this, tendsto_map'_iff] at hs ⊢
   simpa only [comp_def, image_smul_setₛₗ _ _ σ f] using hf₀.image_smallSets.comp hs
@@ -212,15 +212,15 @@ theorem isVonNBounded_of_smul_tendsto_zero {ε : ι → 𝕜} {l : Filter ι} [l
   rw [(nhds_basis_balanced 𝕜 E).isVonNBounded_iff]
   by_contra! H'
   rcases H' with ⟨V, ⟨hV, hVb⟩, hVS⟩
-  have : ∀ᶠ n in l, ∃ x : S, ε n • (x : E) ∉ V := by
-    filter_upwards [hε] with n hn
-    rw [absorbs_iff_norm] at hVS
-    push_neg at hVS
-    rcases hVS ‖(ε n)⁻¹‖ with ⟨a, haε, haS⟩
-    rcases Set.not_subset.mp haS with ⟨x, hxS, hx⟩
-    refine ⟨⟨x, hxS⟩, fun hnx => ?_⟩
-    rw [← Set.mem_inv_smul_set_iff₀ hn] at hnx
-    exact hx (hVb.smul_mono haε hnx)
+  have  : ∀ᶠ n in l, ∃ x : S, ε n • (x : E) ∉ V
+  filter_upwards [hε] with n hn
+  rw [absorbs_iff_norm] at hVS
+  push_neg at hVS
+  rcases hVS ‖(ε n)⁻¹‖ with ⟨a, haε, haS⟩
+  rcases Set.not_subset.mp haS with ⟨x, hxS, hx⟩
+  refine ⟨⟨x, hxS⟩, fun hnx => ?_⟩
+  rw [← Set.mem_inv_smul_set_iff₀ hn] at hnx
+  exact hx (hVb.smul_mono haε hnx)
   rcases this.choice with ⟨x, hx⟩
   refine Filter.frequently_false l (Filter.Eventually.frequently ?_)
   filter_upwards [hx,

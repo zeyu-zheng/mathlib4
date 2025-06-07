@@ -886,18 +886,18 @@ lemma prod_union_eq_right [DecidableEq α] (hs : ∀ a ∈ s₁, a ∉ s₂ → 
 theorem prod_eq_mul_of_mem {s : Finset α} {f : α → β} (a b : α) (ha : a ∈ s) (hb : b ∈ s)
     (hn : a ≠ b) (h₀ : ∀ c ∈ s, c ≠ a ∧ c ≠ b → f c = 1) : ∏ x ∈ s, f x = f a * f b := by
   haveI := Classical.decEq α; let s' := ({a, b} : Finset α)
-  have hu : s' ⊆ s := by
-    refine insert_subset_iff.mpr ?_
-    apply And.intro ha
-    apply singleton_subset_iff.mpr hb
-  have hf : ∀ c ∈ s, c ∉ s' → f c = 1 := by
-    intro c hc hcs
-    apply h₀ c hc
-    apply not_or.mp
-    intro hab
-    apply hcs
-    rw [mem_insert, mem_singleton]
-    exact hab
+  have hu  : s' ⊆ s
+  refine insert_subset_iff.mpr ?_
+  apply And.intro ha
+  apply singleton_subset_iff.mpr hb
+  have hf  : ∀ c ∈ s, c ∉ s' → f c = 1
+  intro c hc hcs
+  apply h₀ c hc
+  apply not_or.mp
+  intro hab
+  apply hcs
+  rw [mem_insert, mem_singleton]
+  exact hab
   rw [← prod_subset hu hf]
   exact Finset.prod_pair hn
 
@@ -1617,9 +1617,9 @@ theorem prod_update_of_not_mem [DecidableEq α] {s : Finset α} {i : α} (h : i 
     (b : β) : ∏ x ∈ s, Function.update f i b x = ∏ x ∈ s, f x := by
   apply prod_congr rfl
   intros j hj
-  have : j ≠ i := by
-    rintro rfl
-    exact h hj
+  have  : j ≠ i
+  rintro rfl
+  exact h hj
   simp [this]
 
 @[to_additive]

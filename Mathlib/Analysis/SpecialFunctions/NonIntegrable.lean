@@ -101,22 +101,22 @@ theorem not_integrableOn_of_tendsto_norm_atTop_of_deriv_isBigO_filter
     (hfg : deriv f =O[l] g) : ¬IntegrableOn g k := by
   let a : E →ₗᵢ[ℝ] UniformSpace.Completion E := UniformSpace.Completion.toComplₗᵢ
   let f' := a ∘ f
-  have h'd : ∀ᶠ x in l, DifferentiableAt ℝ f' x := by
-    filter_upwards [hd] with x hx using a.toContinuousLinearMap.differentiableAt.comp x hx
+  have h'd  : ∀ᶠ x in l, DifferentiableAt ℝ f' x
+  filter_upwards [hd] with x hx using a.toContinuousLinearMap.differentiableAt.comp x hx
   have h'f : Tendsto (fun x => ‖f' x‖) l atTop := hf.congr (fun x ↦ by simp [f'])
-  have h'fg : deriv f' =O[l] g := by
-    apply IsBigO.trans _ hfg
-    rw [← isBigO_norm_norm]
-    suffices (fun x ↦ ‖deriv f' x‖) =ᶠ[l] (fun x ↦ ‖deriv f x‖) by exact this.isBigO
-    filter_upwards [hd] with x hx
-    have : deriv f' x = a (deriv f x) := by
-      rw [fderiv.comp_deriv x _ hx]
-      · have : fderiv ℝ a (f x) = a.toContinuousLinearMap := a.toContinuousLinearMap.fderiv
-        simp only [this]
-        rfl
-      · exact a.toContinuousLinearMap.differentiableAt
+  have h'fg  : deriv f' =O[l] g
+  apply IsBigO.trans _ hfg
+  rw [← isBigO_norm_norm]
+  suffices (fun x ↦ ‖deriv f' x‖) =ᶠ[l] (fun x ↦ ‖deriv f x‖) by exact this.isBigO
+  filter_upwards [hd] with x hx
+  have  : deriv f' x = a (deriv f x)
+  rw [fderiv.comp_deriv x _ hx]
+  · have : fderiv ℝ a (f x) = a.toContinuousLinearMap := a.toContinuousLinearMap.fderiv
     simp only [this]
-    simp
+    rfl
+  · exact a.toContinuousLinearMap.differentiableAt
+  simp only [this]
+  simp
   exact not_integrableOn_of_tendsto_norm_atTop_of_deriv_isBigO_filter_aux l hl h'd h'f h'fg
 
 /-- If `f` is eventually differentiable along a nontrivial filter `l : Filter ℝ` that is generated
@@ -170,13 +170,13 @@ then it is not interval integrable on any nontrivial interval `a..b`, `c ∈ [a,
 theorem not_intervalIntegrable_of_sub_inv_isBigO_punctured {f : ℝ → F} {a b c : ℝ}
     (hf : (fun x => (x - c)⁻¹) =O[𝓝[≠] c] f) (hne : a ≠ b) (hc : c ∈ [[a, b]]) :
     ¬IntervalIntegrable f volume a b := by
-  have A : ∀ᶠ x in 𝓝[≠] c, HasDerivAt (fun x => Real.log (x - c)) (x - c)⁻¹ x := by
-    filter_upwards [self_mem_nhdsWithin] with x hx
-    simpa using ((hasDerivAt_id x).sub_const c).log (sub_ne_zero.2 hx)
-  have B : Tendsto (fun x => ‖Real.log (x - c)‖) (𝓝[≠] c) atTop := by
-    refine tendsto_abs_atBot_atTop.comp (Real.tendsto_log_nhdsWithin_zero.comp ?_)
-    rw [← sub_self c]
-    exact ((hasDerivAt_id c).sub_const c).tendsto_punctured_nhds one_ne_zero
+  have A  : ∀ᶠ x in 𝓝[≠] c, HasDerivAt (fun x => Real.log (x - c)) (x - c)⁻¹ x
+  filter_upwards [self_mem_nhdsWithin] with x hx
+  simpa using ((hasDerivAt_id x).sub_const c).log (sub_ne_zero.2 hx)
+  have B  : Tendsto (fun x => ‖Real.log (x - c)‖) (𝓝[≠] c) atTop
+  refine tendsto_abs_atBot_atTop.comp (Real.tendsto_log_nhdsWithin_zero.comp ?_)
+  rw [← sub_self c]
+  exact ((hasDerivAt_id c).sub_const c).tendsto_punctured_nhds one_ne_zero
   exact not_intervalIntegrable_of_tendsto_norm_atTop_of_deriv_isBigO_punctured
     (A.mono fun x hx => hx.differentiableAt) B
     (hf.congr' (A.mono fun x hx => hx.deriv.symm) EventuallyEq.rfl) hne hc
@@ -204,8 +204,8 @@ theorem intervalIntegrable_inv_iff {a b : ℝ} :
 /-- The function `fun x ↦ x⁻¹` is not integrable on any interval `[a, +∞)`. -/
 theorem not_IntegrableOn_Ici_inv {a : ℝ} :
     ¬ IntegrableOn (fun x => x⁻¹) (Ici a) := by
-  have A : ∀ᶠ x in atTop, HasDerivAt (fun x => Real.log x) x⁻¹ x := by
-    filter_upwards [Ioi_mem_atTop 0] with x hx using Real.hasDerivAt_log (ne_of_gt hx)
+  have A  : ∀ᶠ x in atTop, HasDerivAt (fun x => Real.log x) x⁻¹ x
+  filter_upwards [Ioi_mem_atTop 0] with x hx using Real.hasDerivAt_log (ne_of_gt hx)
   have B : Tendsto (fun x => ‖Real.log x‖) atTop atTop :=
     tendsto_norm_atTop_atTop.comp Real.tendsto_log_atTop
   exact not_integrableOn_of_tendsto_norm_atTop_of_deriv_isBigO_filter atTop (Ici_mem_atTop a)

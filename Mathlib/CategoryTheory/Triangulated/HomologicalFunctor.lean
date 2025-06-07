@@ -124,18 +124,19 @@ noncomputable instance (priority := 100) [F.IsHomological] :
     ⟨fun {X} => preservesLimitOfIsoDiagram F (diagramIsoPair X).symm⟩
   intro X₁ X₂
   have : HasBinaryBiproduct (F.obj X₁) (F.obj X₂) := HasBinaryBiproducts.has_binary_biproduct _ _
-  have : Mono (F.biprodComparison X₁ X₂) := by
-    rw [mono_iff_cancel_zero]
-    intro Z f hf
-    let S := (ShortComplex.mk _ _ (biprod.inl_snd (X := X₁) (Y := X₂))).map F
-    have : Mono S.f := by dsimp [S]; infer_instance
-    have ex : S.Exact := F.map_distinguished_exact _ (binaryBiproductTriangle_distinguished X₁ X₂)
-    obtain ⟨g, rfl⟩ := ex.lift' f (by simpa using hf =≫ biprod.snd)
-    dsimp [S] at hf ⊢
-    replace hf := hf =≫ biprod.fst
-    simp only [assoc, biprodComparison_fst, zero_comp, ← F.map_comp, biprod.inl_fst,
-      F.map_id, comp_id] at hf
-    rw [hf, zero_comp]
+  have  : Mono (F.biprodComparison X₁ X₂)
+  rw [mono_iff_cancel_zero]
+  intro Z f hf
+  let S := (ShortComplex.mk _ _ (biprod.inl_snd (X := X₁) (Y := X₂))).map F
+  have  : Mono S.f
+  dsimp [S]; infer_instance
+  have ex : S.Exact := F.map_distinguished_exact _ (binaryBiproductTriangle_distinguished X₁ X₂)
+  obtain ⟨g, rfl⟩ := ex.lift' f (by simpa using hf =≫ biprod.snd)
+  dsimp [S] at hf ⊢
+  replace hf := hf =≫ biprod.fst
+  simp only [assoc, biprodComparison_fst, zero_comp, ← F.map_comp, biprod.inl_fst,
+    F.map_id, comp_id] at hf
+  rw [hf, zero_comp]
   have : PreservesBinaryBiproduct X₁ X₂ F := preservesBinaryBiproductOfMonoBiprodComparison _
   apply Limits.preservesBinaryProductOfPreservesBinaryBiproduct
 

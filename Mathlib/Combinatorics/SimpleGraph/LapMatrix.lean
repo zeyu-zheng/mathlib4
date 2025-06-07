@@ -153,11 +153,11 @@ lemma linearIndependent_lapMatrix_ker_basis_aux :
   rw [Fintype.linearIndependent_iff]
   intro g h0
   rw [Subtype.ext_iff] at h0
-  have h : ∑ c, g c • lapMatrix_ker_basis_aux G c = fun i ↦ g (connectedComponentMk G i) := by
-    simp only [lapMatrix_ker_basis_aux, SetLike.mk_smul_mk, AddSubmonoid.coe_finset_sum]
-    conv_lhs => enter [2, c, j]; rw [Pi.smul_apply, smul_eq_mul, mul_ite, mul_one, mul_zero]
-    ext i
-    simp only [Finset.sum_apply, sum_ite_eq, mem_univ, ite_true]
+  have h  : ∑ c, g c • lapMatrix_ker_basis_aux G c = fun i ↦ g (connectedComponentMk G i)
+  simp only [lapMatrix_ker_basis_aux, SetLike.mk_smul_mk, AddSubmonoid.coe_finset_sum]
+  conv_lhs => enter [2, c, j]; rw [Pi.smul_apply, smul_eq_mul, mul_ite, mul_one, mul_zero]
+  ext i
+  simp only [Finset.sum_apply, sum_ite_eq, mem_univ, ite_true]
   rw [h] at h0
   intro c
   obtain ⟨i, h'⟩ : ∃ i : V, G.connectedComponentMk i = c := Quot.exists_rep c

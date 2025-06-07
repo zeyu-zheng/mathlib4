@@ -141,12 +141,12 @@ theorem coeff_isUnit_isNilpotent_of_isUnit (hunit : IsUnit P) :
     rw [nilpotent_iff_mem_prime]
     intros I hI
     let f := mapRingHom (Ideal.Quotient.mk I)
-    have hPQ : degree (f P) = 0 ∧ degree (f Q) = 0 := by
-      rw [← Nat.WithBot.add_eq_zero_iff, ← degree_mul, ← _root_.map_mul, hQ, map_one, degree_one]
-    have hcoeff : (f P).coeff n = 0 := by
-      refine coeff_eq_zero_of_degree_lt ?_
-      rw [hPQ.1]
-      exact WithBot.coe_pos.2 hn.bot_lt
+    have hPQ  : degree (f P) = 0 ∧ degree (f Q) = 0
+    rw [← Nat.WithBot.add_eq_zero_iff, ← degree_mul, ← _root_.map_mul, hQ, map_one, degree_one]
+    have hcoeff  : (f P).coeff n = 0
+    refine coeff_eq_zero_of_degree_lt ?_
+    rw [hPQ.1]
+    exact WithBot.coe_pos.2 hn.bot_lt
     rw [coe_mapRingHom, coeff_map, ← RingHom.mem_ker, Ideal.mk_ker] at hcoeff
     exact hcoeff
 
@@ -160,7 +160,8 @@ theorem isUnit_iff_coeff_isUnit_isNilpotent :
 
 @[simp] lemma isUnit_C_add_X_mul_iff :
     IsUnit (C r + X * P) ↔ IsUnit r ∧ IsNilpotent P := by
-  have : ∀ i, coeff (C r + X * P) (i + 1) = coeff P i := by simp
+  have  : ∀ i, coeff (C r + X * P) (i + 1) = coeff P i
+  simp
   simp_rw [isUnit_iff_coeff_isUnit_isNilpotent, Nat.forall_ne_zero_iff, this]
   simp only [coeff_add, coeff_C_zero, mul_coeff_zero, coeff_X_zero, zero_mul, add_zero,
     and_congr_right_iff, ← Polynomial.isNilpotent_iff]

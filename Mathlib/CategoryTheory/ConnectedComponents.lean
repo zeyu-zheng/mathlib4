@@ -80,12 +80,12 @@ instance (j : ConnectedComponents J) : IsConnected (Component j) := by
   -- Everything which has a zigzag to j₂ can be lifted to the same component as `j₂`.
   let f : ∀ x, Zigzag x j₂ → Component (Quotient.mk'' j₂) := fun x h => ⟨x, Quotient.sound' h⟩
   -- Everything in our chosen zigzag from `j₁` to `j₂` has a zigzag to `j₂`.
-  have hf : ∀ a : J, a ∈ l → Zigzag a j₂ := by
-    intro i hi
-    apply List.Chain.induction (fun t => Zigzag t j₂) _ hl₁ hl₂ _ _ _ (List.mem_of_mem_tail hi)
-    · intro j k
-      apply Relation.ReflTransGen.head
-    · apply Relation.ReflTransGen.refl
+  have hf  : ∀ a : J, a ∈ l → Zigzag a j₂
+  intro i hi
+  apply List.Chain.induction (fun t => Zigzag t j₂) _ hl₁ hl₂ _ _ _ (List.mem_of_mem_tail hi)
+  · intro j k
+    apply Relation.ReflTransGen.head
+  · apply Relation.ReflTransGen.refl
   -- Now lift the zigzag from `j₁` to `j₂` in `J` to the same thing in `component j`.
   refine ⟨l.pmap f hf, ?_, ?_⟩
   · refine @List.chain_pmap_of_chain _ _ _ _ _ f (fun x y _ _ h => ?_) _ _ hl₁ h₁₂ _
@@ -123,9 +123,9 @@ instance : (decomposedTo J).Full where
   map_surjective := by
     rintro ⟨j', X, hX⟩ ⟨k', Y, hY⟩ f
     dsimp at f
-    have : j' = k' := by
-      rw [← hX, ← hY, Quotient.eq'']
-      exact Relation.ReflTransGen.single (Or.inl ⟨f⟩)
+    have  : j' = k'
+    rw [← hX, ← hY, Quotient.eq'']
+    exact Relation.ReflTransGen.single (Or.inl ⟨f⟩)
     subst this
     exact ⟨Sigma.SigmaHom.mk f, rfl⟩
 

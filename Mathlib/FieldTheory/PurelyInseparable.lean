@@ -236,7 +236,8 @@ theorem isPurelyInseparable_iff_pow_mem (q : ℕ) [ExpChar F q] :
     exact ⟨n, (h _).2 <| h1.of_dvd <| minpoly.dvd F _ <| by
       simpa only [expand_aeval, minpoly.aeval] using congr_arg (aeval x) h2⟩
   have hdeg := (minpoly.natSepDegree_eq_one_iff_pow_mem q).2 (h x)
-  have halg : IsIntegral F x := by_contra fun h' ↦ by
+  have halg : IsIntegral F x
+  apply by_contra fun h' ↦ by
     simp only [minpoly.eq_zero h', natSepDegree_zero, zero_ne_one] at hdeg
   refine ⟨halg, fun hsep ↦ ?_⟩
   rw [hsep.natSepDegree_eq_natDegree, ← adjoin.finrank halg,
@@ -482,7 +483,8 @@ theorem isPurelyInseparable_of_finSepDegree_eq_one [Algebra.IsAlgebraic F E]
     (hdeg : finSepDegree F E = 1) : IsPurelyInseparable F E := by
   rw [isPurelyInseparable_iff]
   refine fun x ↦ ⟨Algebra.IsIntegral.isIntegral x, fun hsep ↦ ?_⟩
-  have : Algebra.IsAlgebraic F⟮x⟯ E := Algebra.IsAlgebraic.tower_top (K := F) F⟮x⟯
+  have : Algebra.IsAlgebraic F⟮x⟯ E
+  apply Algebra.IsAlgebraic.tower_top (K := F) F⟮x⟯
   have := finSepDegree_mul_finSepDegree_of_isAlgebraic F F⟮x⟯ E
   rw [hdeg, mul_eq_one, (finSepDegree_adjoin_simple_eq_finrank_iff F E x
       (Algebra.IsAlgebraic.isAlgebraic x)).2 hsep,
@@ -553,7 +555,8 @@ theorem isPurelyInseparable_iff_fd_isPurelyInseparable [Algebra.IsAlgebraic F E]
     ∀ L : IntermediateField F E, FiniteDimensional F L → IsPurelyInseparable F L := by
   refine ⟨fun _ _ _ ↦ IsPurelyInseparable.tower_bot F _ E,
     fun h ↦ isPurelyInseparable_iff.2 fun x ↦ ?_⟩
-  have hx : IsIntegral F x := Algebra.IsIntegral.isIntegral x
+  have hx : IsIntegral F x
+  apply Algebra.IsIntegral.isIntegral x
   refine ⟨hx, fun _ ↦ ?_⟩
   obtain ⟨y, h⟩ := (h _ (adjoin.finiteDimensional hx)).inseparable' _ <|
     show Separable (minpoly F (AdjoinSimple.gen F x)) by rwa [minpoly_eq]
@@ -670,10 +673,10 @@ theorem adjoin_eq_adjoin_pow_expChar_pow_of_isSeparable (S : Set E)
     adjoin F S = adjoin F ((· ^ q ^ n) '' S) := by
   set L := adjoin F S
   set M := adjoin F ((· ^ q ^ n) '' S)
-  have hi : M ≤ L := by
-    rw [adjoin_le_iff]
-    rintro _ ⟨y, hy, rfl⟩
-    exact pow_mem (subset_adjoin F S hy) _
+  have hi  : M ≤ L
+  rw [adjoin_le_iff]
+  rintro _ ⟨y, hy, rfl⟩
+  exact pow_mem (subset_adjoin F S hy) _
   letI := (inclusion hi).toAlgebra
   haveI : Algebra.IsSeparable M (extendScalars hi) :=
     Algebra.isSeparable_tower_top_of_isSeparable F M L
@@ -1004,9 +1007,9 @@ theorem IntermediateField.sepDegree_adjoin_eq_of_isAlgebraic_of_isPurelyInsepara
   set L := adjoin E S
   let E' := (IsScalarTower.toAlgHom F E K).fieldRange
   let j : E ≃ₐ[F] E' := AlgEquiv.ofInjectiveField (IsScalarTower.toAlgHom F E K)
-  have hi : M ≤ L.restrictScalars F := by
-    rw [restrictScalars_adjoin_of_algEquiv (E := K) j rfl, restrictScalars_adjoin]
-    exact adjoin.mono _ _ _ Set.subset_union_right
+  have hi  : M ≤ L.restrictScalars F
+  rw [restrictScalars_adjoin_of_algEquiv (E := K) j rfl, restrictScalars_adjoin]
+  exact adjoin.mono _ _ _ Set.subset_union_right
   let i : M →+* L := Subsemiring.inclusion hi
   letI : Algebra M L := i.toAlgebra
   letI : SMul M L := Algebra.toSMul
@@ -1014,7 +1017,8 @@ theorem IntermediateField.sepDegree_adjoin_eq_of_isAlgebraic_of_isPurelyInsepara
   haveI : IsPurelyInseparable M L := by
     change IsPurelyInseparable M (extendScalars hi)
     obtain ⟨q, _⟩ := ExpChar.exists F
-    have : extendScalars hi = adjoin M (E' : Set K) := restrictScalars_injective F <| by
+    have : extendScalars hi = adjoin M (E' : Set K)
+    apply restrictScalars_injective F <| by
       conv_lhs => rw [extendScalars_restrictScalars, restrictScalars_adjoin_of_algEquiv
         (E := K) j rfl, ← adjoin_self F E', adjoin_adjoin_comm]
     rw [this, isPurelyInseparable_adjoin_iff_pow_mem _ _ q]
@@ -1035,7 +1039,8 @@ for any intermediate field `S` of `K / F` such that `S / F` is algebraic, the `E
 theorem IntermediateField.sepDegree_adjoin_eq_of_isAlgebraic_of_isPurelyInseparable'
     (S : IntermediateField F K) [Algebra.IsAlgebraic F S] [IsPurelyInseparable F E] :
     sepDegree E (adjoin E (S : Set K)) = sepDegree F S := by
-  have : Algebra.IsAlgebraic F (adjoin F (S : Set K)) := by rwa [adjoin_self]
+  have  : Algebra.IsAlgebraic F (adjoin F (S : Set K))
+  rwa [adjoin_self]
   have := sepDegree_adjoin_eq_of_isAlgebraic_of_isPurelyInseparable (F := F) E (S : Set K)
   rwa [adjoin_self] at this
 
@@ -1068,11 +1073,11 @@ theorem Polynomial.Separable.map_irreducible_of_isPurelyInseparable {f : F[X]} (
   let K := AlgebraicClosure E
   obtain ⟨x, hx⟩ := IsAlgClosed.exists_aeval_eq_zero K f
     (natDegree_pos_iff_degree_pos.1 hirr.natDegree_pos).ne'
-  have ha : Associated f (minpoly F x) := by
-    have := isUnit_C.2 (leadingCoeff_ne_zero.2 hirr.ne_zero).isUnit.inv
-    exact ⟨this.unit, by rw [IsUnit.unit_spec, minpoly.eq_of_irreducible hirr hx]⟩
-  have ha' : Associated (f.map (algebraMap F E)) ((minpoly F x).map (algebraMap F E)) :=
-    ha.map (mapRingHom (algebraMap F E)).toMonoidHom
+  have ha  : Associated f (minpoly F x)
+  have := isUnit_C.2 (leadingCoeff_ne_zero.2 hirr.ne_zero).isUnit.inv
+  exact ⟨this.unit, by rw [IsUnit.unit_spec, minpoly.eq_of_irreducible hirr hx]⟩
+  have ha' : Associated (f.map (algebraMap F E)) ((minpoly F x).map (algebraMap F E))
+  apply ha.map (mapRingHom (algebraMap F E)).toMonoidHom
   have heq := minpoly.map_eq_of_isSeparable_of_isPurelyInseparable E x (ha.separable hsep)
   rw [ha'.irreducible_iff, heq]
   exact minpoly.irreducible (Algebra.IsIntegral.isIntegral x)

@@ -437,14 +437,14 @@ theorem summable_of_locally_summable_norm {ι : Type*} {F : ι → C(X, E)}
     (hF : ∀ K : Compacts X, Summable fun i => ‖(F i).restrict K‖) : Summable F := by
   refine (ContinuousMap.exists_tendsto_compactOpen_iff_forall _).2 fun K hK => ?_
   lift K to Compacts X using hK
-  have A : ∀ s : Finset ι, restrict (↑K) (∑ i ∈ s, F i) = ∑ i ∈ s, restrict K (F i) := by
-    intro s
-    ext1 x
-    simp
-    -- This used to be the end of the proof before leanprover/lean4#2644
-    erw [restrict_apply, restrict_apply, restrict_apply, restrict_apply]
-    simp? says simp only [coe_sum, Finset.sum_apply]
-    congr!
+  have A  : ∀ s : Finset ι, restrict (↑K) (∑ i ∈ s, F i) = ∑ i ∈ s, restrict K (F i)
+  intro s
+  ext1 x
+  simp
+  -- This used to be the end of the proof before leanprover/lean4#2644
+  erw [restrict_apply, restrict_apply, restrict_apply, restrict_apply]
+  simp? says simp only [coe_sum, Finset.sum_apply]
+  congr!
   simpa only [HasSum, A] using (hF K).of_norm
 
 end LocalNormalConvergence

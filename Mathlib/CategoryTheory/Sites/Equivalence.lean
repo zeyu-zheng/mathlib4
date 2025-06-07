@@ -62,11 +62,11 @@ instance (priority := 900) [G.IsEquivalence] : IsCoverDense G J where
     simpa [g] using this
 
 instance : e.functor.IsDenseSubsite J (e.inverse.inducedTopology J) := by
-  have : J = e.functor.inducedTopology (e.inverse.inducedTopology J) := by
-    ext X S
-    show _ ↔ _ ∈ J.sieves _
-    erw [← GrothendieckTopology.pullback_mem_iff_of_isIso (i := e.unit.app X)]
-    congr!; ext Y f; simp
+  have  : J = e.functor.inducedTopology (e.inverse.inducedTopology J)
+  ext X S
+  show _ ↔ _ ∈ J.sieves _
+  erw [← GrothendieckTopology.pullback_mem_iff_of_isIso (i := e.unit.app X)]
+  congr!; ext Y f; simp
   nth_rw 1 [this]
   infer_instance
 
@@ -174,10 +174,10 @@ variable {A : Type*} [Category A] {B : Type*} [Category B] (F : A ⥤ B)
 
 theorem hasSheafCompose : J.HasSheafCompose F where
   isSheaf P hP := by
-    have hP' : Presheaf.IsSheaf K (e.inverse.op ⋙ P ⋙ F) := by
-      change Presheaf.IsSheaf K ((_ ⋙ _) ⋙ _)
-      apply HasSheafCompose.isSheaf
-      exact e.inverse.op_comp_isSheaf K J ⟨P, hP⟩
+    have hP'  : Presheaf.IsSheaf K (e.inverse.op ⋙ P ⋙ F)
+    change Presheaf.IsSheaf K ((_ ⋙ _) ⋙ _)
+    apply HasSheafCompose.isSheaf
+    exact e.inverse.op_comp_isSheaf K J ⟨P, hP⟩
     replace hP' : Presheaf.IsSheaf J (e.functor.op ⋙ e.inverse.op ⋙ P ⋙ F) :=
       e.functor.op_comp_isSheaf _ _ ⟨_, hP'⟩
     exact (Presheaf.isSheaf_of_iso_iff ((isoWhiskerRight e.op.unitIso.symm (P ⋙ F)))).mp hP'

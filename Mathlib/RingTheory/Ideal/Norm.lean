@@ -108,9 +108,9 @@ Inspired by [Neukirch], proposition 6.1 -/
 theorem Ideal.mul_add_mem_pow_succ_inj (P : Ideal S) {i : ℕ} (a d d' e e' : S) (a_mem : a ∈ P ^ i)
     (e_mem : e ∈ P ^ (i + 1)) (e'_mem : e' ∈ P ^ (i + 1)) (h : d - d' ∈ P) :
     a * d + e - (a * d' + e') ∈ P ^ (i + 1) := by
-  have : a * d - a * d' ∈ P ^ (i + 1) := by
-    simp only [← mul_sub]
-    exact Ideal.mul_mem_mul a_mem h
+  have  : a * d - a * d' ∈ P ^ (i + 1)
+  simp only [← mul_sub]
+  exact Ideal.mul_mem_mul a_mem h
   convert Ideal.add_mem _ this (Ideal.sub_mem _ e_mem e'_mem) using 1
   ring
 
@@ -147,9 +147,9 @@ Inspired by [Neukirch], proposition 6.1 -/
 theorem Ideal.mul_add_mem_pow_succ_unique [IsDedekindDomain S] {i : ℕ} (a d d' e e' : S)
     (a_not_mem : a ∉ P ^ (i + 1)) (e_mem : e ∈ P ^ (i + 1)) (e'_mem : e' ∈ P ^ (i + 1))
     (h : a * d + e - (a * d' + e') ∈ P ^ (i + 1)) : d - d' ∈ P := by
-  have h' : a * (d - d') ∈ P ^ (i + 1) := by
-    convert Ideal.add_mem _ h (Ideal.sub_mem _ e'_mem e_mem) using 1
-    ring
+  have h'  : a * (d - d') ∈ P ^ (i + 1)
+  convert Ideal.add_mem _ h (Ideal.sub_mem _ e'_mem e_mem) using 1
+  ring
   exact Ideal.mem_prime_of_mul_mem_pow hP a_not_mem h'
 
 /-- Multiplicity of the ideal norm, for powers of prime ideals. -/
@@ -381,8 +381,8 @@ theorem span_singleton_absNorm_le (I : Ideal S) : Ideal.span {(Ideal.absNorm I :
 
 theorem span_singleton_absNorm {I : Ideal S} (hI : (Ideal.absNorm I).Prime) :
     Ideal.span (singleton (Ideal.absNorm I : ℤ)) = I.comap (algebraMap ℤ S) := by
-  have : Ideal.IsPrime (Ideal.span (singleton (Ideal.absNorm I : ℤ))) := by
-    rwa [Ideal.span_singleton_prime (Int.ofNat_ne_zero.mpr hI.ne_zero), ← Nat.prime_iff_prime_int]
+  have  : Ideal.IsPrime (Ideal.span (singleton (Ideal.absNorm I : ℤ)))
+  rwa [Ideal.span_singleton_prime (Int.ofNat_ne_zero.mpr hI.ne_zero), ← Nat.prime_iff_prime_int]
   apply (this.isMaximal _).eq_of_le
   · exact ((isPrime_of_irreducible_absNorm
       ((Nat.irreducible_iff_nat_prime _).mpr hI)).comap (algebraMap ℤ S)).ne_top

@@ -190,8 +190,8 @@ theorem exists_coeff_mem_comap_sdiff_comap_of_root_mem_sdiff [IsPrime I] (hIJ : 
   obtain ⟨hrJ, hrI⟩ := hr
   have rbar_ne_zero : Ideal.Quotient.mk I r ≠ 0 := mt (Quotient.mk_eq_zero I).mp hrI
   have rbar_mem_J : Ideal.Quotient.mk I r ∈ J.map (Ideal.Quotient.mk I) := mem_map_of_mem _ hrJ
-  have quotient_f : ∀ x ∈ I.comap f, (Ideal.Quotient.mk I).comp f x = 0 := by
-    simp [Quotient.eq_zero_iff_mem]
+  have quotient_f  : ∀ x ∈ I.comap f, (Ideal.Quotient.mk I).comp f x = 0
+  simp [Quotient.eq_zero_iff_mem]
   have rbar_root :
     (p.map (Ideal.Quotient.mk (I.comap f))).eval₂ (Quotient.lift (I.comap f) _ quotient_f)
         (Ideal.Quotient.mk I r) =
@@ -326,9 +326,9 @@ theorem IntegralClosure.eq_bot_of_comap_eq_bot [Nontrivial R] {I : Ideal (integr
 theorem exists_ideal_over_prime_of_isIntegral_of_isDomain [Algebra.IsIntegral R S] (P : Ideal R)
     [IsPrime P] (hP : RingHom.ker (algebraMap R S) ≤ P) :
     ∃ Q : Ideal S, IsPrime Q ∧ Q.comap (algebraMap R S) = P := by
-  have hP0 : (0 : S) ∉ Algebra.algebraMapSubmonoid S P.primeCompl := by
-    rintro ⟨x, ⟨hx, x0⟩⟩
-    exact absurd (hP x0) hx
+  have hP0  : (0 : S) ∉ Algebra.algebraMapSubmonoid S P.primeCompl
+  rintro ⟨x, ⟨hx, x0⟩⟩
+  exact absurd (hP x0) hx
   let Rₚ := Localization P.primeCompl
   let Sₚ := Localization (Algebra.algebraMapSubmonoid S P.primeCompl)
   letI : IsDomain (Localization (Algebra.algebraMapSubmonoid S P.primeCompl)) :=
@@ -376,16 +376,16 @@ lemma exists_ideal_comap_le_prime (P : Ideal R) [P.IsPrime]
     ∃ Q ≥ I, Q.IsPrime ∧ Q.comap (algebraMap R S) ≤ P := by
   let Sₚ := Localization (Algebra.algebraMapSubmonoid S P.primeCompl)
   let Iₚ := I.map (algebraMap S Sₚ)
-  have hI' : Disjoint (Algebra.algebraMapSubmonoid S P.primeCompl : Set S) I := by
-    rw [Set.disjoint_iff]
-    rintro _ ⟨⟨x, hx : x ∉ P, rfl⟩, hx'⟩
-    exact (hx (hI hx')).elim
-  have : Iₚ ≠ ⊤ := by
-    rw [Ne, Ideal.eq_top_iff_one, IsLocalization.mem_map_algebraMap_iff
-      (Algebra.algebraMapSubmonoid S P.primeCompl) Sₚ, not_exists]
-    simp only [one_mul, IsLocalization.eq_iff_exists (Algebra.algebraMapSubmonoid S P.primeCompl),
-      not_exists]
-    exact fun x c ↦ hI'.ne_of_mem (mul_mem c.2 x.2.2) (I.mul_mem_left c x.1.2)
+  have hI'  : Disjoint (Algebra.algebraMapSubmonoid S P.primeCompl : Set S) I
+  rw [Set.disjoint_iff]
+  rintro _ ⟨⟨x, hx : x ∉ P, rfl⟩, hx'⟩
+  exact (hx (hI hx')).elim
+  have  : Iₚ ≠ ⊤
+  rw [Ne, Ideal.eq_top_iff_one, IsLocalization.mem_map_algebraMap_iff
+    (Algebra.algebraMapSubmonoid S P.primeCompl) Sₚ, not_exists]
+  simp only [one_mul, IsLocalization.eq_iff_exists (Algebra.algebraMapSubmonoid S P.primeCompl),
+    not_exists]
+  exact fun x c ↦ hI'.ne_of_mem (mul_mem c.2 x.2.2) (I.mul_mem_left c x.1.2)
   obtain ⟨M, hM, hM'⟩ := Ideal.exists_le_maximal _ this
   refine ⟨_, Ideal.map_le_iff_le_comap.mp hM', hM.isPrime.comap _, ?_⟩
   intro x hx

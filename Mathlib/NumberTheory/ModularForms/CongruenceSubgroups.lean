@@ -176,11 +176,12 @@ theorem Gamma1_mem (N : ℕ) (A : SL(2, ℤ)) : A ∈ Gamma1 N ↔
     convert hx
   · intro ha
     simp_rw [Gamma1, Subgroup.mem_map]
-    have hA : A ∈ Gamma0 N := by simp [ha.right.right, Gamma0_mem]
-    have HA : (⟨A, hA⟩ : Gamma0 N) ∈ Gamma1' N := by
-      simp only [Gamma1_to_Gamma0_mem, Subgroup.coe_mk, coe_matrix_coe,
-        Int.coe_castRingHom, map_apply]
-      exact ha
+    have hA  : A ∈ Gamma0 N
+    simp [ha.right.right, Gamma0_mem]
+    have HA  : (⟨A, hA⟩ : Gamma0 N) ∈ Gamma1' N
+    simp only [Gamma1_to_Gamma0_mem, Subgroup.coe_mk, coe_matrix_coe,
+      Int.coe_castRingHom, map_apply]
+    exact ha
     refine ⟨(⟨(⟨A, hA⟩ : Gamma0 N), HA⟩ : (Gamma1' N : Subgroup (Gamma0 N))), ?_⟩
     simp
 

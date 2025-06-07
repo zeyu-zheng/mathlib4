@@ -511,7 +511,8 @@ theorem mk_of_not_mem (hi : i ∉ s) : (mk s x : ∀ i, β i) i = 0 :=
 theorem mk_injective (s : Finset ι) : Function.Injective (@mk ι β _ _ s) := by
   intro x y H
   ext i
-  have h1 : (mk s x : ∀ i, β i) i = (mk s y : ∀ i, β i) i := by rw [H]
+  have h1  : (mk s x : ∀ i, β i) i = (mk s y : ∀ i, β i) i
+  rw [H]
   obtain ⟨i, hi : i ∈ s⟩ := i
   dsimp only [mk_apply, Subtype.coe_mk] at h1
   simpa only [dif_pos hi] using h1
@@ -831,22 +832,22 @@ protected theorem induction {p : (Π₀ i, β i) → Prop} (f : Π₀ i, β i) (
   · have : f = 0 := funext fun i => (H i).resolve_left (Multiset.not_mem_zero _)
     subst this
     exact h0
-  have H2 : p (erase i ⟨f, Trunc.mk ⟨i ::ₘ s, H⟩⟩) := by
-    dsimp only [erase, Trunc.map, Trunc.bind, Trunc.liftOn, Trunc.lift_mk,
-      Function.comp, Subtype.coe_mk]
-    have H2 : ∀ j, j ∈ s ∨ ite (j = i) 0 (f j) = 0 := by
-      intro j
-      cases' H j with H2 H2
-      · cases' Multiset.mem_cons.1 H2 with H3 H3
-        · right; exact if_pos H3
-        · left; exact H3
-      right
-      split_ifs <;> [rfl; exact H2]
-    have H3 : ∀ aux, (⟨fun j : ι => ite (j = i) 0 (f j), Trunc.mk ⟨i ::ₘ s, aux⟩⟩ : Π₀ i, β i) =
-        ⟨fun j : ι => ite (j = i) 0 (f j), Trunc.mk ⟨s, H2⟩⟩ :=
-      fun _ ↦ ext fun _ => rfl
-    rw [H3]
-    apply ih
+  have H2  : p (erase i ⟨f, Trunc.mk ⟨i ::ₘ s, H⟩⟩)
+  dsimp only [erase, Trunc.map, Trunc.bind, Trunc.liftOn, Trunc.lift_mk,
+    Function.comp, Subtype.coe_mk]
+  have H2  : ∀ j, j ∈ s ∨ ite (j = i) 0 (f j) = 0
+  intro j
+  cases' H j with H2 H2
+  · cases' Multiset.mem_cons.1 H2 with H3 H3
+    · right; exact if_pos H3
+    · left; exact H3
+  right
+  split_ifs <;> [rfl; exact H2]
+  have H3 : ∀ aux, (⟨fun j : ι => ite (j = i) 0 (f j), Trunc.mk ⟨i ::ₘ s, aux⟩⟩ : Π₀ i, β i) =
+      ⟨fun j : ι => ite (j = i) 0 (f j), Trunc.mk ⟨s, H2⟩⟩ :=
+    fun _ ↦ ext fun _ => rfl
+  rw [H3]
+  apply ih
   have H3 : single i _ + _ = (⟨f, Trunc.mk ⟨i ::ₘ s, H⟩⟩ : Π₀ i, β i) := single_add_erase _ _
   rw [← H3]
   change p (single i (f i) + _)

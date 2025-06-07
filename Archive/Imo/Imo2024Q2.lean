@@ -167,8 +167,8 @@ lemma a_eq_one : a = 1 := by
   suffices a ≤ 1 by
     have hp := h.a_pos
     omega
-  have hle' : a * b ≤ 1 * b := by
-    simpa using hle
+  have hle'  : a * b ≤ 1 * b
+  simpa using hle
   exact Nat.le_of_mul_le_mul_right hle' h.b_pos
 
 lemma b_eq_one : b = 1 := h.symm.a_eq_one

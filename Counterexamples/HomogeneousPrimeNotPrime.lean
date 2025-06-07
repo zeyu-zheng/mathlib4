@@ -158,20 +158,20 @@ theorem I_isHomogeneous : Ideal.IsHomogeneous (grading R) I := by
 theorem homogeneous_mem_or_mem {x y : R × R} (hx : SetLike.Homogeneous (grading R) x)
     (hy : SetLike.Homogeneous (grading R) y) (hxy : x * y ∈ I) : x ∈ I ∨ y ∈ I := by
   -- Porting note: added `h2` for later use; the proof is hideous
-  have h2 : Prime (2:R) := by
-    unfold Prime
-    refine ⟨by decide, by decide, ?_⟩
-    intro a b
-    have aux2 : (Fin.mk 2 _ : R) = 2 := rfl
-    have aux3 : (Fin.mk 3 _ : R) = -1 := rfl
-    fin_cases a <;>
-      simp (config := {contextual := true}) only
-        [Fin.mk_zero, zero_mul, dvd_zero, true_or, or_true, implies_true, forall_true_left,
-          Fin.mk_one, one_mul, aux2, dvd_refl]
-    fin_cases b <;>
-      simp (config := {contextual := true}) only
-        [Fin.mk_zero, zero_mul, dvd_zero, true_or, or_true, implies_true, forall_true_left,
-          Fin.mk_one, mul_one, aux2, dvd_refl, aux3, or_self, neg_one_mul, neg_neg, dvd_neg]
+  have h2  : Prime (2:R)
+  unfold Prime
+  refine ⟨by decide, by decide, ?_⟩
+  intro a b
+  have aux2 : (Fin.mk 2 _ : R) = 2 := rfl
+  have aux3 : (Fin.mk 3 _ : R) = -1 := rfl
+  fin_cases a <;>
+    simp (config := {contextual := true}) only
+      [Fin.mk_zero, zero_mul, dvd_zero, true_or, or_true, implies_true, forall_true_left,
+        Fin.mk_one, one_mul, aux2, dvd_refl]
+  fin_cases b <;>
+    simp (config := {contextual := true}) only
+      [Fin.mk_zero, zero_mul, dvd_zero, true_or, or_true, implies_true, forall_true_left,
+        Fin.mk_one, mul_one, aux2, dvd_refl, aux3, or_self, neg_one_mul, neg_neg, dvd_neg]
   simp only [I, Ideal.mem_span_singleton] at hxy ⊢
   cases' x; cases' y
   obtain ⟨_ | ⟨⟨⟩⟩, hx : _ = _⟩ := hx <;> obtain ⟨_ | ⟨⟨⟩⟩, hy : _ = _⟩ := hy <;>

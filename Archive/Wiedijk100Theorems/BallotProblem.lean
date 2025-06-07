@@ -204,17 +204,17 @@ theorem first_vote_pos :
       ← counted_succ_succ,
       condCount_eq_one_of ((countedSequence_finite p (q + 1)).image _)
         ((countedSequence_nonempty _ _).image _)]
-    · have : List.cons (-1) '' countedSequence (p + 1) q ∩ {l : List ℤ | l.headI = 1} = ∅ := by
-        ext
-        simp only [mem_inter_iff, mem_image, mem_setOf_eq, mem_empty_iff_false, iff_false_iff,
-          not_and, forall_exists_index, and_imp]
-        rintro l _ rfl
-        norm_num
+    · have : List.cons (-1) '' countedSequence (p + 1) q ∩ {l : List ℤ | l.headI = 1} = ∅
+      ext
+      simp only [mem_inter_iff, mem_image, mem_setOf_eq, mem_empty_iff_false, iff_false_iff,
+        not_and, forall_exists_index, and_imp]
+      rintro l _ rfl
+      norm_num
       have hint :
         countedSequence (p + 1) (q + 1) ∩ List.cons 1 '' countedSequence p (q + 1) =
-          List.cons 1 '' countedSequence p (q + 1) := by
-        rw [inter_eq_right, counted_succ_succ]
-        exact subset_union_left
+          List.cons 1 '' countedSequence p (q + 1)
+      rw [inter_eq_right, counted_succ_succ]
+      exact subset_union_left
       rw [(condCount_eq_zero_iff <| (countedSequence_finite _ _).image _).2 this, condCount,
         cond_apply _ list_int_measurableSet, hint, count_injective_image List.cons_injective,
         count_countedSequence, count_countedSequence, one_mul, zero_mul, add_zero,
@@ -231,7 +231,8 @@ theorem headI_mem_of_nonempty {α : Type*} [Inhabited α] : ∀ {l : List α} (_
 
 theorem first_vote_neg (p q : ℕ) (h : 0 < p + q) :
     condCount (countedSequence p q) {l | l.headI = 1}ᶜ = q / (p + q) := by
-  have h' : (p + q : ℝ≥0∞) ≠ 0 := mod_cast h.ne'
+  have h' : (p + q : ℝ≥0∞) ≠ 0
+  exact mod_cast h.ne'
   have := condCount_compl
     {l : List ℤ | l.headI = 1}ᶜ (countedSequence_finite p q) (countedSequence_nonempty p q)
   rw [compl_compl, first_vote_pos _ _ h] at this
@@ -274,10 +275,10 @@ theorem ballot_pos (p q : ℕ) :
     count_injective_image List.cons_injective]
   congr 1
   have : (1 :: ·) '' countedSequence p (q + 1) ∩ staysPositive =
-      (1 :: ·) '' (countedSequence p (q + 1) ∩ staysPositive) := by
-    simp only [image_inter List.cons_injective, Set.ext_iff, mem_inter_iff, and_congr_right_iff,
-      forall_mem_image, List.cons_injective.mem_set_image, staysPositive_cons_pos _ one_pos]
-    exact fun _ _ ↦ trivial
+      (1 :: ·) '' (countedSequence p (q + 1) ∩ staysPositive)
+  simp only [image_inter List.cons_injective, Set.ext_iff, mem_inter_iff, and_congr_right_iff,
+    forall_mem_image, List.cons_injective.mem_set_image, staysPositive_cons_pos _ one_pos]
+  exact fun _ _ ↦ trivial
   rw [this, count_injective_image]
   exact List.cons_injective
 
@@ -301,11 +302,11 @@ theorem ballot_neg (p q : ℕ) (qp : q < p) :
     count_injective_image List.cons_injective]
   congr 1
   have : List.cons (-1) '' countedSequence (p + 1) q ∩ staysPositive =
-      List.cons (-1) '' (countedSequence (p + 1) q ∩ staysPositive) := by
-    simp only [image_inter List.cons_injective, Set.ext_iff, mem_inter_iff, and_congr_right_iff,
-      forall_mem_image, List.cons_injective.mem_set_image, staysPositive_cons, and_iff_left_iff_imp]
-    intro l hl _
-    simp [sum_of_mem_countedSequence hl, lt_sub_iff_add_lt', qp]
+      List.cons (-1) '' (countedSequence (p + 1) q ∩ staysPositive)
+  simp only [image_inter List.cons_injective, Set.ext_iff, mem_inter_iff, and_congr_right_iff,
+    forall_mem_image, List.cons_injective.mem_set_image, staysPositive_cons, and_iff_left_iff_imp]
+  intro l hl _
+  simp [sum_of_mem_countedSequence hl, lt_sub_iff_add_lt', qp]
   rw [this, count_injective_image]
   exact List.cons_injective
 
@@ -326,23 +327,24 @@ theorem ballot_problem' :
       (countedSequence_finite p (q + 1)) (countedSequence_nonempty _ _)
     haveI := condCount_isProbabilityMeasure
       (countedSequence_finite (p + 1) q) (countedSequence_nonempty _ _)
-    have h₃ : p + 1 + (q + 1) > 0 := Nat.add_pos_left (Nat.succ_pos _) _
+    have h₃ : p + 1 + (q + 1) > 0
+    apply Nat.add_pos_left (Nat.succ_pos _) _
     rw [← condCount_add_compl_eq {l : List ℤ | l.headI = 1} _ (countedSequence_finite _ _),
       first_vote_pos _ _ h₃, first_vote_neg _ _ h₃, ballot_pos, ballot_neg _ _ qp]
     rw [ENNReal.toReal_add, ENNReal.toReal_mul, ENNReal.toReal_mul, ← Nat.cast_add,
       ENNReal.toReal_div, ENNReal.toReal_div, ENNReal.toReal_nat, ENNReal.toReal_nat,
       ENNReal.toReal_nat, h₁, h₂]
-    · have h₄ : (p + 1 : ℝ) + (q + 1 : ℝ) ≠ (0 : ℝ) := by
-        apply ne_of_gt
-        assumption_mod_cast
-      have h₅ : (p + 1 : ℝ) + ↑q ≠ (0 : ℝ) := by
-        apply ne_of_gt
-        norm_cast
-        linarith
-      have h₆ : ↑p + (q + 1 : ℝ) ≠ (0 : ℝ) := by
-        apply ne_of_gt
-        norm_cast
-        linarith
+    · have h₄ : (p + 1 : ℝ) + (q + 1 : ℝ) ≠ (0 : ℝ)
+      apply ne_of_gt
+      assumption_mod_cast
+      have h₅  : (p + 1 : ℝ) + ↑q ≠ (0 : ℝ)
+      apply ne_of_gt
+      norm_cast
+      linarith
+      have h₆  : ↑p + (q + 1 : ℝ) ≠ (0 : ℝ)
+      apply ne_of_gt
+      norm_cast
+      linarith
       field_simp [h₄, h₅, h₆] at *
       ring
     all_goals
@@ -358,11 +360,12 @@ theorem ballot_problem :
     condCount_isProbabilityMeasure (countedSequence_finite p q) (countedSequence_nonempty _ _)
   have :
     (condCount (countedSequence p q) staysPositive).toReal =
-      ((p - q) / (p + q) : ℝ≥0∞).toReal := by
-    rw [ballot_problem' q p qp]
-    rw [ENNReal.toReal_div, ← Nat.cast_add, ← Nat.cast_add, ENNReal.toReal_nat,
-      ENNReal.toReal_sub_of_le, ENNReal.toReal_nat, ENNReal.toReal_nat]
-    exacts [Nat.cast_le.2 qp.le, ENNReal.natCast_ne_top _]
+      ((p - q) / (p + q) : ℝ≥0∞).toReal
+  rw [ballot_problem' q p qp]
+  rw [ENNReal.toReal_div, ← Nat.cast_add, ← Nat.cast_add, ENNReal.toReal_nat,
+    ENNReal.toReal_sub_of_le, ENNReal.toReal_nat, ENNReal.toReal_nat]
+  apply Nat.cast_le.2 qp.le
+  apply ENNReal.natCast_ne_top _
   rwa [ENNReal.toReal_eq_toReal (measure_lt_top _ _).ne] at this
   simp only [Ne, ENNReal.div_eq_top, tsub_eq_zero_iff_le, Nat.cast_le, not_le,
     add_eq_zero_iff, Nat.cast_eq_zero, ENNReal.add_eq_top, ENNReal.natCast_ne_top, or_self_iff,

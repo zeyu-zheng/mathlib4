@@ -236,8 +236,8 @@ since this cardinal is finite, as a natural number in `finrank_V` -/
 
 
 theorem dim_V : Module.rank ℝ (V n) = 2 ^ n := by
-  have : Module.rank ℝ (V n) = (2 ^ n : ℕ) := by
-    rw [rank_eq_card_basis (dualBases_e_ε _).basis, Q.card]
+  have  : Module.rank ℝ (V n) = (2 ^ n : ℕ)
+  rw [rank_eq_card_basis (dualBases_e_ε _).basis, Q.card]
   assumption_mod_cast
 
 instance : FiniteDimensional ℝ (V n) :=
@@ -292,7 +292,8 @@ theorem f_matrix : ∀ p q : Q n, |ε q (f n (e p))| = if p ∈ q.adjacent then 
     dsimp [f]
     simp [Q.not_adjacent_zero]
   · intro p q
-    have ite_nonneg : ite (π q = π p) (1 : ℝ) 0 ≥ 0 := by split_ifs <;> norm_num
+    have ite_nonneg  : ite (π q = π p) (1 : ℝ) 0 ≥ 0
+    split_ifs <;> norm_num
     dsimp only [e, ε, f, V]; rw [LinearMap.prod_apply]; dsimp; cases hp : p 0 <;> cases hq : q 0
     all_goals
       repeat rw [Bool.cond_true]
@@ -370,24 +371,24 @@ theorem exists_eigenvalue (H : Set (Q m.succ)) (hH : Card H ≥ 2 ^ m + 1) :
   let img := range (g m)
   suffices 0 < dim (W ⊓ img) by
     exact mod_cast exists_mem_ne_zero_of_rank_pos this
-  have dim_le : dim (W ⊔ img) ≤ 2 ^ (m + 1 : Cardinal) := by
-    convert ← rank_submodule_le (W ⊔ img)
-    rw [← Nat.cast_succ]
-    apply dim_V
-  have dim_add : dim (W ⊔ img) + dim (W ⊓ img) = dim W + 2 ^ m := by
-    convert ← Submodule.rank_sup_add_rank_inf_eq W img
-    rw [rank_range_of_injective (g m) g_injective]
-    apply dim_V
-  have dimW : dim W = card H := by
-    have li : LinearIndependent ℝ (H.restrict e) := by
-      convert (dualBases_e_ε m.succ).basis.linearIndependent.comp _ Subtype.val_injective
-      rw [(dualBases_e_ε _).coe_basis]
-      rfl
-    have hdW := rank_span li
-    rw [Set.range_restrict] at hdW
-    convert hdW
-    rw [← (dualBases_e_ε _).coe_basis, Cardinal.mk_image_eq (dualBases_e_ε _).basis.injective,
-      Cardinal.mk_fintype]
+  have dim_le  : dim (W ⊔ img) ≤ 2 ^ (m + 1 : Cardinal)
+  convert ← rank_submodule_le (W ⊔ img)
+  rw [← Nat.cast_succ]
+  apply dim_V
+  have dim_add  : dim (W ⊔ img) + dim (W ⊓ img) = dim W + 2 ^ m
+  convert ← Submodule.rank_sup_add_rank_inf_eq W img
+  rw [rank_range_of_injective (g m) g_injective]
+  apply dim_V
+  have dimW  : dim W = card H
+  have li  : LinearIndependent ℝ (H.restrict e)
+  convert (dualBases_e_ε m.succ).basis.linearIndependent.comp _ Subtype.val_injective
+  rw [(dualBases_e_ε _).coe_basis]
+  rfl
+  have hdW := rank_span li
+  rw [Set.range_restrict] at hdW
+  convert hdW
+  rw [← (dualBases_e_ε _).coe_basis, Cardinal.mk_image_eq (dualBases_e_ε _).basis.injective,
+    Cardinal.mk_fintype]
   rw [← finrank_eq_rank ℝ] at dim_le dim_add dimW ⊢
   rw [← finrank_eq_rank ℝ, ← finrank_eq_rank ℝ] at dim_add
   norm_cast at dim_le dim_add dimW ⊢
@@ -399,11 +400,11 @@ theorem exists_eigenvalue (H : Set (Q m.succ)) (hH : Card H ≥ 2 ^ m + 1) :
 theorem huang_degree_theorem (H : Set (Q m.succ)) (hH : Card H ≥ 2 ^ m + 1) :
     ∃ q, q ∈ H ∧ √ (m + 1) ≤ Card H ∩ q.adjacent := by
   rcases exists_eigenvalue H hH with ⟨y, ⟨⟨y_mem_H, y_mem_g⟩, y_ne⟩⟩
-  have coeffs_support : ((dualBases_e_ε m.succ).coeffs y).support ⊆ H.toFinset := by
-    intro p p_in
-    rw [Finsupp.mem_support_iff] at p_in
-    rw [Set.mem_toFinset]
-    exact (dualBases_e_ε _).mem_of_mem_span y_mem_H p p_in
+  have coeffs_support  : ((dualBases_e_ε m.succ).coeffs y).support ⊆ H.toFinset
+  intro p p_in
+  rw [Finsupp.mem_support_iff] at p_in
+  rw [Set.mem_toFinset]
+  exact (dualBases_e_ε _).mem_of_mem_span y_mem_H p p_in
   obtain ⟨q, H_max⟩ : ∃ q : Q m.succ, ∀ q' : Q m.succ, |(ε q' : _) y| ≤ |ε q y| :=
     Finite.exists_max _
   have H_q_pos : 0 < |ε q y| := by

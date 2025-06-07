@@ -158,20 +158,20 @@ theorem ClosureAntitone.map_of_vanishingDiam [CompleteSpace α] (hdiam : Vanishi
   rw [eq_univ_iff_forall]
   intro x
   choose u hu using fun n => hnonempty (res x n)
-  have umem : ∀ n m : ℕ, n ≤ m → u m ∈ A (res x n) := by
-    have : Antitone fun n : ℕ => A (res x n) := by
-      refine antitone_nat_of_succ_le ?_
-      intro n
-      apply hanti.antitone
-    intro n m hnm
-    exact this hnm (hu _)
-  have : CauchySeq u := by
-    rw [Metric.cauchySeq_iff]
-    intro ε ε_pos
-    cases' hdiam.dist_lt _ ε_pos x with n hn
-    use n
-    intro m₀ hm₀ m₁ hm₁
-    apply hn <;> apply umem <;> assumption
+  have umem  : ∀ n m : ℕ, n ≤ m → u m ∈ A (res x n)
+  have  : Antitone fun n : ℕ => A (res x n)
+  refine antitone_nat_of_succ_le ?_
+  intro n
+  apply hanti.antitone
+  intro n m hnm
+  exact this hnm (hu _)
+  have  : CauchySeq u
+  rw [Metric.cauchySeq_iff]
+  intro ε ε_pos
+  cases' hdiam.dist_lt _ ε_pos x with n hn
+  use n
+  intro m₀ hm₀ m₁ hm₁
+  apply hn <;> apply umem <;> assumption
   cases' cauchySeq_tendsto_of_complete this with y hy
   use y
   rw [mem_iInter]

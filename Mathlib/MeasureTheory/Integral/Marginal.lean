@@ -111,7 +111,8 @@ theorem lmarginal_update_of_mem {i : δ} (hi : i ∈ s)
     (∫⋯∫⁻_s, f ∂μ) (Function.update x i y) = (∫⋯∫⁻_s, f ∂μ) x := by
   apply lmarginal_congr
   intro j hj
-  have : j ≠ i := by rintro rfl; exact hj hi
+  have  : j ≠ i
+  rintro rfl; exact hj hi
   apply update_noteq this
 
 theorem lmarginal_union (f : (∀ i, π i) → ℝ≥0∞) (hf : Measurable f)

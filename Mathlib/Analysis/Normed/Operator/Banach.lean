@@ -82,13 +82,13 @@ For further use, we will only need such an element whose image
 is within distance `‖y‖/2` of `y`, to apply an iterative process. -/
 theorem exists_approx_preimage_norm_le (surj : Surjective f) :
     ∃ C ≥ 0, ∀ y, ∃ x, dist (f x) y ≤ 1 / 2 * ‖y‖ ∧ ‖x‖ ≤ C * ‖y‖ := by
-  have A : ⋃ n : ℕ, closure (f '' ball 0 n) = Set.univ := by
-    refine Subset.antisymm (subset_univ _) fun y _ => ?_
-    rcases surj y with ⟨x, hx⟩
-    rcases exists_nat_gt ‖x‖ with ⟨n, hn⟩
-    refine mem_iUnion.2 ⟨n, subset_closure ?_⟩
-    refine (mem_image _ _ _).2 ⟨x, ⟨?_, hx⟩⟩
-    rwa [mem_ball, dist_eq_norm, sub_zero]
+  have A  : ⋃ n : ℕ, closure (f '' ball 0 n) = Set.univ
+  refine Subset.antisymm (subset_univ _) fun y _ => ?_
+  rcases surj y with ⟨x, hx⟩
+  rcases exists_nat_gt ‖x‖ with ⟨n, hn⟩
+  refine mem_iUnion.2 ⟨n, subset_closure ?_⟩
+  refine (mem_image _ _ _).2 ⟨x, ⟨?_, hx⟩⟩
+  rwa [mem_ball, dist_eq_norm, sub_zero]
   have : ∃ (n : ℕ) (x : _), x ∈ interior (closure (f '' ball 0 n)) :=
     nonempty_interior_of_iUnion_of_closed (fun n => isClosed_closure) A
   simp only [mem_interior_iff_mem_nhds, Metric.mem_nhds_iff] at this
@@ -166,28 +166,28 @@ theorem exists_preimage_norm_le (surj : Surjective f) :
     preimage of `y`. This uses completeness of `E`. -/
   choose g hg using hC
   let h y := y - f (g y)
-  have hle : ∀ y, ‖h y‖ ≤ 1 / 2 * ‖y‖ := by
-    intro y
-    rw [← dist_eq_norm, dist_comm]
-    exact (hg y).1
+  have hle  : ∀ y, ‖h y‖ ≤ 1 / 2 * ‖y‖
+  intro y
+  rw [← dist_eq_norm, dist_comm]
+  exact (hg y).1
   refine ⟨2 * C + 1, by linarith, fun y => ?_⟩
-  have hnle : ∀ n : ℕ, ‖h^[n] y‖ ≤ (1 / 2) ^ n * ‖y‖ := by
-    intro n
-    induction' n with n IH
-    · simp only [one_div, Nat.zero_eq, one_mul, iterate_zero_apply, pow_zero, le_rfl]
-    · rw [iterate_succ']
-      apply le_trans (hle _) _
-      rw [pow_succ', mul_assoc]
-      gcongr
+  have hnle  : ∀ n : ℕ, ‖h^[n] y‖ ≤ (1 / 2) ^ n * ‖y‖
+  intro n
+  induction' n with n IH
+  · simp only [one_div, Nat.zero_eq, one_mul, iterate_zero_apply, pow_zero, le_rfl]
+  · rw [iterate_succ']
+    apply le_trans (hle _) _
+    rw [pow_succ', mul_assoc]
+    gcongr
   let u n := g (h^[n] y)
   have ule : ∀ n, ‖u n‖ ≤ (1 / 2) ^ n * (C * ‖y‖) := fun n ↦ by
     apply le_trans (hg _).2
     calc
       C * ‖h^[n] y‖ ≤ C * ((1 / 2) ^ n * ‖y‖) := mul_le_mul_of_nonneg_left (hnle n) C0
       _ = (1 / 2) ^ n * (C * ‖y‖) := by ring
-  have sNu : Summable fun n => ‖u n‖ := by
-    refine .of_nonneg_of_le (fun n => norm_nonneg _) ule ?_
-    exact Summable.mul_right _ (summable_geometric_of_lt_one (by norm_num) (by norm_num))
+  have sNu  : Summable fun n => ‖u n‖
+  refine .of_nonneg_of_le (fun n => norm_nonneg _) ule ?_
+  exact Summable.mul_right _ (summable_geometric_of_lt_one (by norm_num) (by norm_num))
   have su : Summable u := sNu.of_norm
   let x := tsum u
   have x_ineq : ‖x‖ ≤ (2 * C + 1) * ‖y‖ :=
@@ -229,7 +229,8 @@ protected theorem isOpenMap (surj : Surjective f) : IsOpenMap f := by
   rcases isOpen_iff.1 hs x xs with ⟨ε, εpos, hε⟩
   refine ⟨ε / C, div_pos εpos Cpos, fun z hz => ?_⟩
   rcases hC (z - y) with ⟨w, wim, wnorm⟩
-  have : f (x + w) = z := by rw [f.map_add, wim, fxy, add_sub_cancel]
+  have  : f (x + w) = z
+  rw [f.map_add, wim, fxy, add_sub_cancel]
   rw [← this]
   have : x + w ∈ ball x ε :=
     calc
@@ -467,9 +468,9 @@ theorem LinearMap.continuous_of_seq_closed_graph
   refine g.continuous_of_isClosed_graph (IsSeqClosed.isClosed ?_)
   rintro φ ⟨x, y⟩ hφg hφ
   refine hg (Prod.fst ∘ φ) x y ((continuous_fst.tendsto _).comp hφ) ?_
-  have : g ∘ Prod.fst ∘ φ = Prod.snd ∘ φ := by
-    ext n
-    exact (hφg n).symm
+  have  : g ∘ Prod.fst ∘ φ = Prod.snd ∘ φ
+  ext n
+  exact (hφg n).symm
   rw [this]
   exact (continuous_snd.tendsto _).comp hφ
 

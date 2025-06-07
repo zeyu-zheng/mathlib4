@@ -490,11 +490,11 @@ theorem det_eq_of_forall_row_eq_smul_add_pred_aux {n : ℕ} (k : Fin (n + 1)) :
     refine Fin.cases (h0 j) (fun i => ?_) i
     rw [hsucc, hc i (Fin.succ_pos _), zero_mul, add_zero]
   set M' := updateRow M k.succ (N k.succ) with hM'
-  have hM : M = updateRow M' k.succ (M' k.succ + c k • M (Fin.castSucc k)) := by
-    ext i j
-    by_cases hi : i = k.succ
-    · simp [hi, hM', hsucc, updateRow_self]
-    rw [updateRow_ne hi, hM', updateRow_ne hi]
+  have hM  : M = updateRow M' k.succ (M' k.succ + c k • M (Fin.castSucc k))
+  ext i j
+  by_cases hi : i = k.succ
+  · simp [hi, hM', hsucc, updateRow_self]
+  rw [updateRow_ne hi, hM', updateRow_ne hi]
   have k_ne_succ : (Fin.castSucc k) ≠ k.succ := (Fin.castSucc_lt_succ k).ne
   have M_k : M (Fin.castSucc k) = M' (Fin.castSucc k) := (updateRow_ne k_ne_succ).symm
   rw [hM, M_k, det_updateRow_add_smul_self M' k_ne_succ.symm, ih (Function.update c k 0)]
@@ -679,7 +679,8 @@ theorem det_succ_column_zero {n : ℕ} (A : Matrix (Fin n.succ) (Fin n.succ) R) 
   -- `univ_perm_fin_succ` gives a different embedding of `Perm (Fin n)` into
   -- `Perm (Fin n.succ)` than the determinant of the submatrix we want,
   -- permute `A` so that we get the correct one.
-  have : (-1 : R) ^ (i : ℕ) = (Perm.sign i.cycleRange) := by simp [Fin.sign_cycleRange]
+  have  : (-1 : R) ^ (i : ℕ) = (Perm.sign i.cycleRange)
+  simp [Fin.sign_cycleRange]
   rw [Fin.val_succ, pow_succ', this, mul_assoc, mul_assoc, mul_left_comm (ε _),
     ← det_permute, Matrix.det_apply, Finset.mul_sum, Finset.mul_sum]
   -- now we just need to move the corresponding parts to the same place
@@ -709,10 +710,10 @@ theorem det_succ_row {n : ℕ} (A : Matrix (Fin n.succ) (Fin n.succ) R) (i : Fin
     det A =
       ∑ j : Fin n.succ, (-1) ^ (i + j : ℕ) * A i j * det (A.submatrix i.succAbove j.succAbove) := by
   simp_rw [pow_add, mul_assoc, ← mul_sum]
-  have : det A = (-1 : R) ^ (i : ℕ) * (Perm.sign i.cycleRange⁻¹) * det A := by
-    calc
-      det A = ↑((-1 : ℤˣ) ^ (i : ℕ) * (-1 : ℤˣ) ^ (i : ℕ) : ℤˣ) * det A := by simp
-      _ = (-1 : R) ^ (i : ℕ) * (Perm.sign i.cycleRange⁻¹) * det A := by simp [-Int.units_mul_self]
+  have  : det A = (-1 : R) ^ (i : ℕ) * (Perm.sign i.cycleRange⁻¹) * det A
+  calc
+    det A = ↑((-1 : ℤˣ) ^ (i : ℕ) * (-1 : ℤˣ) ^ (i : ℕ) : ℤˣ) * det A := by simp
+    _ = (-1 : R) ^ (i : ℕ) * (Perm.sign i.cycleRange⁻¹) * det A := by simp [-Int.units_mul_self]
   rw [this, mul_assoc]
   congr
   rw [← det_permute, det_succ_row_zero]

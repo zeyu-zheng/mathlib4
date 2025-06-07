@@ -234,12 +234,12 @@ theorem quadraticChar_card_sqrts (hF : ringChar F ≠ 2) (a : F) :
     · rw [(quadraticChar_one_iff_isSquare h₀).mpr h]
       rcases h with ⟨b, h⟩
       rw [h, mul_self_eq_zero] at h₀
-      have h₁ : s = [b, -b].toFinset := by
-        ext1
-        rw [← pow_two] at h
-        simp only [Set.toFinset_setOf, h, mem_filter, mem_univ, true_and, List.toFinset_cons,
-          List.toFinset_nil, insert_emptyc_eq, mem_insert, mem_singleton, s]
-        exact sq_eq_sq_iff_eq_or_eq_neg
+      have h₁  : s = [b, -b].toFinset
+      ext1
+      rw [← pow_two] at h
+      simp only [Set.toFinset_setOf, h, mem_filter, mem_univ, true_and, List.toFinset_cons,
+        List.toFinset_nil, insert_emptyc_eq, mem_insert, mem_singleton, s]
+      exact sq_eq_sq_iff_eq_or_eq_neg
       norm_cast
       rw [h₁, List.toFinset_cons, List.toFinset_cons, List.toFinset_nil]
       exact card_pair (Ne.symm (mt (Ring.eq_self_iff_eq_zero_of_char_ne_two hF).mp h₀))

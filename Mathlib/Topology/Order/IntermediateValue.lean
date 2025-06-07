@@ -322,13 +322,13 @@ is not empty, then `[a, b] ⊆ s`. -/
 theorem IsClosed.Icc_subset_of_forall_exists_gt {a b : α} {s : Set α} (hs : IsClosed (s ∩ Icc a b))
     (ha : a ∈ s) (hgt : ∀ x ∈ s ∩ Ico a b, ∀ y ∈ Ioi x, (s ∩ Ioc x y).Nonempty) : Icc a b ⊆ s := by
   intro y hy
-  have : IsClosed (s ∩ Icc a y) := by
-    suffices s ∩ Icc a y = s ∩ Icc a b ∩ Icc a y by
-      rw [this]
-      exact IsClosed.inter hs isClosed_Icc
-    rw [inter_assoc]
-    congr
-    exact (inter_eq_self_of_subset_right <| Icc_subset_Icc_right hy.2).symm
+  have  : IsClosed (s ∩ Icc a y)
+  suffices s ∩ Icc a y = s ∩ Icc a b ∩ Icc a y by
+    rw [this]
+    exact IsClosed.inter hs isClosed_Icc
+  rw [inter_assoc]
+  congr
+  exact (inter_eq_self_of_subset_right <| Icc_subset_Icc_right hy.2).symm
   exact
     IsClosed.mem_of_ge_of_forall_exists_gt this ha hy.1 fun x hx =>
       hgt x ⟨hx.1, Ico_subset_Ico_right hy.2 hx.2⟩ y hx.2.2
@@ -357,9 +357,9 @@ theorem isPreconnected_Icc_aux (x y : α) (s t : Set α) (hxy : x ≤ y) (hs : I
   apply (IsClosed.inter hs isClosed_Icc).Icc_subset_of_forall_mem_nhdsWithin hx.2
   rintro z ⟨zs, hz⟩
   have zt : z ∈ tᶜ := fun zt => hst ⟨z, xyab <| Ico_subset_Icc_self hz, zs, zt⟩
-  have : tᶜ ∩ Ioc z y ∈ 𝓝[>] z := by
-    rw [← nhdsWithin_Ioc_eq_nhdsWithin_Ioi hz.2]
-    exact mem_nhdsWithin.2 ⟨tᶜ, ht.isOpen_compl, zt, Subset.rfl⟩
+  have  : tᶜ ∩ Ioc z y ∈ 𝓝[>] z
+  rw [← nhdsWithin_Ioc_eq_nhdsWithin_Ioi hz.2]
+  exact mem_nhdsWithin.2 ⟨tᶜ, ht.isOpen_compl, zt, Subset.rfl⟩
   apply mem_of_superset this
   have : Ioc z y ⊆ s ∪ t := fun w hw => hab (xyab ⟨le_trans hz.1 (le_of_lt hw.1), hw.2⟩)
   exact fun w ⟨wt, wzy⟩ => (this wzy).elim id fun h => (wt h).elim
@@ -623,17 +623,17 @@ theorem Continuous.strictMonoOn_of_inj_rigidity {f : α → δ}
   have hsa : s ≤ a := min_le_left a x
   have hbt : b ≤ t := le_max_left b y
   have hst : s ≤ t := hsa.trans $ hbt.trans' hab.le
-  have hf_mono_st : StrictMonoOn f (Icc s t) ∨ StrictAntiOn f (Icc s t) := by
-    letI := Icc.completeLinearOrder hst
-    have := Continuous.strictMono_of_inj_boundedOrder' (f := Set.restrict (Icc s t) f)
-      hf_c.continuousOn.restrict hf_i.injOn.injective
-    exact this.imp strictMono_restrict.mp strictAntiOn_iff_strictAnti.mpr
-  have (h : StrictAntiOn f (Icc s t)) : False := by
-    have : Icc a b ⊆ Icc s t := Icc_subset_Icc hsa hbt
-    replace : StrictAntiOn f (Icc a b) := StrictAntiOn.mono h this
-    replace : IsAntichain (· ≤ ·) (Icc a b) :=
-      IsAntichain.of_strictMonoOn_antitoneOn hf_mono this.antitoneOn
-    exact this.not_lt (left_mem_Icc.mpr (le_of_lt hab)) (right_mem_Icc.mpr (le_of_lt hab)) hab
+  have hf_mono_st  : StrictMonoOn f (Icc s t) ∨ StrictAntiOn f (Icc s t)
+  letI := Icc.completeLinearOrder hst
+  have := Continuous.strictMono_of_inj_boundedOrder' (f := Set.restrict (Icc s t) f)
+    hf_c.continuousOn.restrict hf_i.injOn.injective
+  exact this.imp strictMono_restrict.mp strictAntiOn_iff_strictAnti.mpr
+  have (h  : StrictAntiOn f (Icc s t)) : False
+  have : Icc a b ⊆ Icc s t := Icc_subset_Icc hsa hbt
+  replace : StrictAntiOn f (Icc a b) := StrictAntiOn.mono h this
+  replace : IsAntichain (· ≤ ·) (Icc a b) :=
+    IsAntichain.of_strictMonoOn_antitoneOn hf_mono this.antitoneOn
+  exact this.not_lt (left_mem_Icc.mpr (le_of_lt hab)) (right_mem_Icc.mpr (le_of_lt hab)) hab
   replace hf_mono_st : StrictMonoOn f (Icc s t) := hf_mono_st.resolve_right this
   have hsx : s ≤ x := min_le_right a x
   have hyt : y ≤ t := le_max_right b y
@@ -650,7 +650,8 @@ theorem ContinuousOn.strictMonoOn_of_injOn_Icc {a b : α} {f : α → δ}
   letI := Icc.completeLinearOrder hab
   refine StrictMono.of_restrict ?_
   set g : Icc a b → δ := Set.restrict (Icc a b) f
-  have hgab : g ⊥ ≤ g ⊤ := by aesop
+  have hgab  : g ⊥ ≤ g ⊤
+  aesop
   exact Continuous.strictMono_of_inj_boundedOrder (f := g) hf_c.restrict hgab hf_i.injective
 
 /-- Suppose `f : [a, b] → δ` is

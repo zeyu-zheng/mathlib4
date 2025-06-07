@@ -291,13 +291,13 @@ theorem tsum_prob_mem_Ioi_lt_top {X : Ω → ℝ} (hint : Integrable X) (hnonneg
   have A : Tendsto (fun N : ℕ => ∑ j ∈ range K, ℙ {ω | X ω ∈ Set.Ioc (j : ℝ) N}) atTop
       (𝓝 (∑ j ∈ range K, ℙ {ω | X ω ∈ Set.Ioi (j : ℝ)})) := by
     refine tendsto_finset_sum _ fun i _ => ?_
-    have : {ω | X ω ∈ Set.Ioi (i : ℝ)} = ⋃ N : ℕ, {ω | X ω ∈ Set.Ioc (i : ℝ) N} := by
-      apply Set.Subset.antisymm _ _
-      · intro ω hω
-        obtain ⟨N, hN⟩ : ∃ N : ℕ, X ω ≤ N := exists_nat_ge (X ω)
-        exact Set.mem_iUnion.2 ⟨N, hω, hN⟩
-      · simp (config := {contextual := true}) only [Set.mem_Ioc, Set.mem_Ioi,
-          Set.iUnion_subset_iff, Set.setOf_subset_setOf, imp_true_iff]
+    have  : {ω | X ω ∈ Set.Ioi (i : ℝ)} = ⋃ N : ℕ, {ω | X ω ∈ Set.Ioc (i : ℝ) N}
+    apply Set.Subset.antisymm _ _
+    · intro ω hω
+      obtain ⟨N, hN⟩ : ∃ N : ℕ, X ω ≤ N := exists_nat_ge (X ω)
+      exact Set.mem_iUnion.2 ⟨N, hω, hN⟩
+    · simp (config := {contextual := true}) only [Set.mem_Ioc, Set.mem_Ioi,
+        Set.iUnion_subset_iff, Set.setOf_subset_setOf, imp_true_iff]
     rw [this]
     apply tendsto_measure_iUnion
     intro m n hmn x hx
@@ -310,10 +310,10 @@ theorem sum_variance_truncation_le {X : Ω → ℝ} (hint : Integrable X) (hnonn
     ∑ j ∈ range K, ((j : ℝ) ^ 2)⁻¹ * 𝔼[truncation X j ^ 2] ≤ 2 * 𝔼[X] := by
   set Y := fun n : ℕ => truncation X n
   let ρ : Measure ℝ := Measure.map X ℙ
-  have Y2 : ∀ n, 𝔼[Y n ^ 2] = ∫ x in (0)..n, x ^ 2 ∂ρ := by
-    intro n
-    change 𝔼[fun x => Y n x ^ 2] = _
-    rw [moment_truncation_eq_intervalIntegral_of_nonneg hint.1 two_ne_zero hnonneg]
+  have Y2  : ∀ n, 𝔼[Y n ^ 2] = ∫ x in (0)..n, x ^ 2 ∂ρ
+  intro n
+  change 𝔼[fun x => Y n x ^ 2] = _
+  rw [moment_truncation_eq_intervalIntegral_of_nonneg hint.1 two_ne_zero hnonneg]
   calc
     ∑ j ∈ range K, ((j : ℝ) ^ 2)⁻¹ * 𝔼[Y j ^ 2] =
         ∑ j ∈ range K, ((j : ℝ) ^ 2)⁻¹ * ∫ x in (0)..j, x ^ 2 ∂ρ := by simp_rw [Y2]
@@ -335,7 +335,8 @@ theorem sum_variance_truncation_le {X : Ω → ℝ} (hint : Integrable X) (hnonn
       simp only [Nat.cast_add, Nat.cast_one, le_add_iff_nonneg_right, zero_le_one]
     _ ≤ ∑ k ∈ range K, ∫ x in k..(k + 1 : ℕ), 2 * x ∂ρ := by
       apply sum_le_sum fun k _ => ?_
-      have Ik : (k : ℝ) ≤ (k + 1 : ℕ) := by simp
+      have Ik  : (k : ℝ) ≤ (k + 1 : ℕ)
+      simp
       rw [← intervalIntegral.integral_const_mul, intervalIntegral.integral_of_le Ik,
         intervalIntegral.integral_of_le Ik]
       refine setIntegral_mono_on ?_ ?_ measurableSet_Ioc fun x hx => ?_
@@ -498,10 +499,10 @@ theorem strong_law_aux2 {c : ℝ} (c_one : 1 < c) :
 expectation. This follows from convergence and Cesàro averaging. -/
 theorem strong_law_aux3 :
     (fun n => 𝔼[∑ i ∈ range n, truncation (X i) i] - n * 𝔼[X 0]) =o[atTop] ((↑) : ℕ → ℝ) := by
-  have A : Tendsto (fun i => 𝔼[truncation (X i) i]) atTop (𝓝 𝔼[X 0]) := by
-    convert (tendsto_integral_truncation hint).comp tendsto_natCast_atTop_atTop using 1
-    ext i
-    exact (hident i).truncation.integral_eq
+  have A  : Tendsto (fun i => 𝔼[truncation (X i) i]) atTop (𝓝 𝔼[X 0])
+  convert (tendsto_integral_truncation hint).comp tendsto_natCast_atTop_atTop using 1
+  ext i
+  exact (hident i).truncation.integral_eq
   convert Asymptotics.isLittleO_sum_range_of_tendsto_zero (tendsto_sub_nhds_zero_iff.2 A) using 1
   ext1 n
   simp only [sum_sub_distrib, sum_const, card_range, nsmul_eq_mul, sum_apply, sub_left_inj]
@@ -528,22 +529,22 @@ and Borel-Cantelli. -/
 theorem strong_law_aux5 :
     ∀ᵐ ω, (fun n : ℕ => ∑ i ∈ range n, truncation (X i) i ω - ∑ i ∈ range n, X i ω) =o[atTop]
     fun n : ℕ => (n : ℝ) := by
-  have A : (∑' j : ℕ, ℙ {ω | X j ω ∈ Set.Ioi (j : ℝ)}) < ∞ := by
-    convert tsum_prob_mem_Ioi_lt_top hint (hnonneg 0) using 2
-    ext1 j
-    exact (hident j).measure_mem_eq measurableSet_Ioi
-  have B : ∀ᵐ ω, Tendsto (fun n : ℕ => truncation (X n) n ω - X n ω) atTop (𝓝 0) := by
-    filter_upwards [ae_eventually_not_mem A.ne] with ω hω
-    apply tendsto_const_nhds.congr' _
-    filter_upwards [hω, Ioi_mem_atTop 0] with n hn npos
-    simp only [truncation, indicator, Set.mem_Ioc, id, Function.comp_apply]
-    split_ifs with h
-    · exact (sub_self _).symm
-    · have : -(n : ℝ) < X n ω := by
-        apply lt_of_lt_of_le _ (hnonneg n ω)
-        simpa only [Right.neg_neg_iff, Nat.cast_pos] using npos
-      simp only [this, true_and_iff, not_le] at h
-      exact (hn h).elim
+  have A  : (∑' j : ℕ, ℙ {ω | X j ω ∈ Set.Ioi (j : ℝ)}) < ∞
+  convert tsum_prob_mem_Ioi_lt_top hint (hnonneg 0) using 2
+  ext1 j
+  exact (hident j).measure_mem_eq measurableSet_Ioi
+  have B  : ∀ᵐ ω, Tendsto (fun n : ℕ => truncation (X n) n ω - X n ω) atTop (𝓝 0)
+  filter_upwards [ae_eventually_not_mem A.ne] with ω hω
+  apply tendsto_const_nhds.congr' _
+  filter_upwards [hω, Ioi_mem_atTop 0] with n hn npos
+  simp only [truncation, indicator, Set.mem_Ioc, id, Function.comp_apply]
+  split_ifs with h
+  · exact (sub_self _).symm
+  · have : -(n : ℝ) < X n ω := by
+      apply lt_of_lt_of_le _ (hnonneg n ω)
+      simpa only [Right.neg_neg_iff, Nat.cast_pos] using npos
+    simp only [this, true_and_iff, not_le] at h
+    exact (hn h).elim
   filter_upwards [B] with ω hω
   convert isLittleO_sum_range_of_tendsto_zero hω using 1
   ext n
@@ -554,10 +555,10 @@ theorem strong_law_aux5 :
 `Xᵢ` and its truncated version have the same asymptotic behavior. -/
 theorem strong_law_aux6 {c : ℝ} (c_one : 1 < c) :
     ∀ᵐ ω, Tendsto (fun n : ℕ => (∑ i ∈ range ⌊c ^ n⌋₊, X i ω) / ⌊c ^ n⌋₊) atTop (𝓝 𝔼[X 0]) := by
-  have H : ∀ n : ℕ, (0 : ℝ) < ⌊c ^ n⌋₊ := by
-    intro n
-    refine zero_lt_one.trans_le ?_
-    simp only [Nat.one_le_cast, Nat.one_le_floor_iff, one_le_pow_of_one_le c_one.le n]
+  have H  : ∀ n : ℕ, (0 : ℝ) < ⌊c ^ n⌋₊
+  intro n
+  refine zero_lt_one.trans_le ?_
+  simp only [Nat.one_le_cast, Nat.one_le_floor_iff, one_le_pow_of_one_le c_one.le n]
   filter_upwards [strong_law_aux4 X hint hindep hident hnonneg c_one,
     strong_law_aux5 X hint hident hnonneg] with ω hω h'ω
   rw [← tendsto_sub_nhds_zero_iff, ← Asymptotics.isLittleO_one_iff ℝ]
@@ -654,12 +655,12 @@ lemma strong_law_ae_simpleFunc_comp (X : ℕ → Ω → E) (h' : Measurable (X 0
       · exact fun i j hij ↦ IndepFun.comp (hindep hij) F_meas F_meas
       · exact fun i ↦ (hident i).comp F_meas
     filter_upwards [this] with ω hω
-    have I : indicator s (Function.const E c) = (fun x ↦ (indicator s (1 : E → ℝ) x) • c) := by
-      ext
-      rw [← indicator_smul_const_apply]
-      congr! 1
-      ext
-      simp
+    have I  : indicator s (Function.const E c) = (fun x ↦ (indicator s (1 : E → ℝ) x) • c)
+    ext
+    rw [← indicator_smul_const_apply]
+    congr! 1
+    ext
+    simp
     simp only [I, integral_smul_const]
     convert Tendsto.smul_const hω c using 1
     simp [Y, ← sum_smul, smul_smul]
@@ -687,7 +688,8 @@ lemma strong_law_ae_of_measurable
   to the one-dimensional law of large numbers: it converges ae to `𝔼[‖X 0 - φ (X 0)‖]`, which
   is arbitrarily small for well chosen `φ`. -/
   let s : Set E := Set.range (X 0) ∪ {0}
-  have zero_s : 0 ∈ s := by simp [s]
+  have zero_s  : 0 ∈ s
+  simp [s]
   have : SeparableSpace s := h'.separableSpace_range_union_singleton
   have : Nonempty s := ⟨0, zero_s⟩
   -- sequence of approximating simple functions.

@@ -32,7 +32,8 @@ section
 theorem Int.isCoprime_iff_gcd_eq_one {m n : ℤ} : IsCoprime m n ↔ Int.gcd m n = 1 := by
   constructor
   · rintro ⟨a, b, h⟩
-    have : 1 = m * a + n * b := by rwa [mul_comm m, mul_comm n, eq_comm]
+    have  : 1 = m * a + n * b
+    rwa [mul_comm m, mul_comm n, eq_comm]
     exact Nat.dvd_one.mp (Int.gcd_dvd_iff.mpr ⟨a, b, this⟩)
   · rw [← Int.ofNat_inj, IsCoprime, Int.gcd_eq_gcd_ab, mul_comm m, mul_comm n, Nat.cast_one]
     intro h

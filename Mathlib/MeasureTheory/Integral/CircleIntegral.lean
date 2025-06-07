@@ -186,9 +186,9 @@ theorem lipschitzWith_circleMap (c : ℂ) (R : ℝ) : LipschitzWith (Real.nnabs 
 
 theorem continuous_circleMap_inv {R : ℝ} {z w : ℂ} (hw : w ∈ ball z R) :
     Continuous fun θ => (circleMap z R θ - w)⁻¹ := by
-  have : ∀ θ, circleMap z R θ - w ≠ 0 := by
-    simp_rw [sub_ne_zero]
-    exact fun θ => circleMap_ne_mem_ball hw θ
+  have  : ∀ θ, circleMap z R θ - w ≠ 0
+  simp_rw [sub_ne_zero]
+  exact fun θ => circleMap_ne_mem_ball hw θ
   -- Porting note: was `continuity`
   exact Continuous.inv₀ (by fun_prop) this
 
@@ -271,12 +271,12 @@ theorem circleIntegrable_sub_zpow_iff {c w : ℂ} {R : ℝ} {n : ℤ} :
     replace hθ : θ ∈ [[0, 2 * π]] := Icc_subset_uIcc (Ioc_subset_Icc_self hθ)
     refine not_intervalIntegrable_of_sub_inv_isBigO_punctured ?_ Real.two_pi_pos.ne hθ
     set f : ℝ → ℂ := fun θ' => circleMap c R θ' - circleMap c R θ
-    have : ∀ᶠ θ' in 𝓝[≠] θ, f θ' ∈ ball (0 : ℂ) 1 \ {0} := by
-      suffices ∀ᶠ z in 𝓝[≠] circleMap c R θ, z - circleMap c R θ ∈ ball (0 : ℂ) 1 \ {0} from
-        ((differentiable_circleMap c R θ).hasDerivAt.tendsto_punctured_nhds
-          (deriv_circleMap_ne_zero hR)).eventually this
-      filter_upwards [self_mem_nhdsWithin, mem_nhdsWithin_of_mem_nhds (ball_mem_nhds _ zero_lt_one)]
-      simp_all [dist_eq, sub_eq_zero]
+    have  : ∀ᶠ θ' in 𝓝[≠] θ, f θ' ∈ ball (0 : ℂ) 1 \ {0}
+    suffices ∀ᶠ z in 𝓝[≠] circleMap c R θ, z - circleMap c R θ ∈ ball (0 : ℂ) 1 \ {0} from
+      ((differentiable_circleMap c R θ).hasDerivAt.tendsto_punctured_nhds
+        (deriv_circleMap_ne_zero hR)).eventually this
+    filter_upwards [self_mem_nhdsWithin, mem_nhdsWithin_of_mem_nhds (ball_mem_nhds _ zero_lt_one)]
+    simp_all [dist_eq, sub_eq_zero]
     refine (((hasDerivAt_circleMap c R θ).isBigO_sub.mono inf_le_left).inv_rev
       (this.mono fun θ' h₁ h₂ => absurd h₂ h₁.2)).trans ?_
     refine IsBigO.of_bound |R|⁻¹ (this.mono fun θ' hθ' => ?_)
@@ -285,7 +285,8 @@ theorem circleIntegrable_sub_zpow_iff {c w : ℂ} {R : ℝ} {n : ℤ} :
       simpa only [inv_mul_cancel_left₀, abs_eq_zero.not.2 hR, norm_eq_abs, map_inv₀,
         Algebra.id.smul_eq_mul, map_mul, abs_circleMap_zero, abs_I, mul_one, abs_zpow, Ne,
         not_false_iff] using this
-    have : x ∈ Ioo (0 : ℝ) 1 := by simpa [x, and_comm] using hθ'
+    have  : x ∈ Ioo (0 : ℝ) 1
+    simpa [x, and_comm] using hθ'
     rw [← zpow_neg_one]
     refine (zpow_strictAnti this.1 this.2).le_iff_le.2 (Int.lt_add_one_iff.1 ?_); exact hn
   · rintro (rfl | H)
@@ -362,7 +363,8 @@ theorem norm_integral_le_of_norm_le_const {f : ℂ → E} {c : ℂ} {R C : ℝ} 
 theorem norm_two_pi_i_inv_smul_integral_le_of_norm_le_const {f : ℂ → E} {c : ℂ} {R C : ℝ}
     (hR : 0 ≤ R) (hf : ∀ z ∈ sphere c R, ‖f z‖ ≤ C) :
     ‖(2 * π * I : ℂ)⁻¹ • ∮ z in C(c, R), f z‖ ≤ R * C := by
-  have : ‖(2 * π * I : ℂ)⁻¹‖ = (2 * π)⁻¹ := by simp [Real.pi_pos.le]
+  have  : ‖(2 * π * I : ℂ)⁻¹‖ = (2 * π)⁻¹
+  simp [Real.pi_pos.le]
   rw [norm_smul, this, ← div_eq_inv_mul, div_le_iff Real.two_pi_pos, mul_comm (R * C), ← mul_assoc]
   exact norm_integral_le_of_norm_le_const hR hf
 
@@ -511,7 +513,8 @@ theorem le_radius_cauchyPowerSeries (f : ℂ → E) (c : ℂ) (R : ℝ≥0) :
     exact mul_nonneg (inv_nonneg.2 Real.two_pi_pos.le)
       (intervalIntegral.integral_nonneg Real.two_pi_pos.le fun _ _ => norm_nonneg _)
   · rw [inv_pow]
-    have : (R : ℝ) ^ n ≠ 0 := by norm_cast at hR ⊢
+    have  : (R : ℝ) ^ n ≠ 0
+    norm_cast at hR ⊢
     rw [inv_mul_cancel_right₀ this]
 
 /-- For any circle integrable function `f`, the power series `cauchyPowerSeries f c R` multiplied
@@ -583,9 +586,10 @@ theorem integral_sub_inv_of_mem_ball {c w : ℂ} {R : ℝ} (hw : w ∈ ball c R)
     refine (H.unique ?_).symm
     simpa only [smul_eq_mul, mul_one, add_sub_cancel] using
       hasSum_two_pi_I_cauchyPowerSeries_integral A hw
-  have H : ∀ n : ℕ, n ≠ 0 → (∮ z in C(c, R), (z - c) ^ (-n - 1 : ℤ)) = 0 := by
-    refine fun n hn => integral_sub_zpow_of_ne ?_ _ _ _; simpa
-  have : (∮ z in C(c, R), ((w - c) / (z - c)) ^ 0 * (z - c)⁻¹) = 2 * π * I := by simp [hR.ne']
+  have H  : ∀ n : ℕ, n ≠ 0 → (∮ z in C(c, R), (z - c) ^ (-n - 1 : ℤ)) = 0
+  refine fun n hn => integral_sub_zpow_of_ne ?_ _ _ _; simpa
+  have  : (∮ z in C(c, R), ((w - c) / (z - c)) ^ 0 * (z - c)⁻¹) = 2 * π * I
+  simp [hR.ne']
   refine this ▸ hasSum_single _ fun n hn => ?_
   simp only [div_eq_mul_inv, mul_pow, integral_const_mul, mul_assoc]
   rw [(integral_congr hR.le fun z hz => _).trans (H n hn), mul_zero]

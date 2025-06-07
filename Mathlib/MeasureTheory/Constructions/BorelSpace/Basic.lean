@@ -197,8 +197,10 @@ instance Subtype.borelSpace {α : Type*} [TopologicalSpace α] [MeasurableSpace 
 
 instance Countable.instBorelSpace [Countable α] [MeasurableSpace α] [MeasurableSingletonClass α]
     [TopologicalSpace α] [DiscreteTopology α] : BorelSpace α := by
-  have : ∀ s, @MeasurableSet α inferInstance s := fun s ↦ s.to_countable.measurableSet
-  have : ∀ s, @MeasurableSet α (borel α) s := fun s ↦ measurableSet_generateFrom (isOpen_discrete s)
+  have : ∀ s, @MeasurableSet α inferInstance s
+  exact fun s ↦ s.to_countable.measurableSet
+  have : ∀ s, @MeasurableSet α (borel α) s
+  apply fun s ↦ measurableSet_generateFrom (isOpen_discrete s)
   exact ⟨by aesop⟩
 
 instance Subtype.opensMeasurableSpace {α : Type*} [TopologicalSpace α] [MeasurableSpace α]
@@ -351,8 +353,8 @@ instance Pi.opensMeasurableSpace {ι : Type*} {π : ι → Type*} [Countable ι]
     OpensMeasurableSpace (∀ i, π i) := by
   constructor
   have : Pi.topologicalSpace = .generateFrom { t | ∃ (s : ∀ a, Set (π a)) (i : Finset ι),
-      (∀ a ∈ i, s a ∈ countableBasis (π a)) ∧ t = pi (↑i) s } := by
-    simp only [funext fun a => @eq_generateFrom_countableBasis (π a) _ _, pi_generateFrom_eq]
+      (∀ a ∈ i, s a ∈ countableBasis (π a)) ∧ t = pi (↑i) s }
+  simp only [funext fun a => @eq_generateFrom_countableBasis (π a) _ _, pi_generateFrom_eq]
   rw [borel_eq_generateFrom_of_subbasis this]
   apply generateFrom_le
   rintro _ ⟨s, i, hi, rfl⟩
@@ -384,44 +386,44 @@ instance Prod.opensMeasurableSpace [h : SecondCountableTopologyEither α β] :
   apply opensMeasurableSpace_iff_forall_measurableSet.2 (fun s hs ↦ ?_)
   rcases h.out with hα|hβ
   · let F : Set α → Set β := fun a ↦ {y | ∃ b, IsOpen b ∧ y ∈ b ∧ a ×ˢ b ⊆ s}
-    have A : ∀ a, IsOpen (F a) := by
-      intro a
-      apply isOpen_iff_forall_mem_open.2
-      rintro y ⟨b, b_open, yb, hb⟩
-      exact ⟨b, fun z zb ↦ ⟨b, b_open, zb, hb⟩, b_open, yb⟩
-    have : s = ⋃ a ∈ countableBasis α, a ×ˢ F a := by
-      apply Subset.antisymm
-      · rintro ⟨y1, y2⟩ hy
-        rcases isOpen_prod_iff.1 hs y1 y2 hy with ⟨u, v, u_open, v_open, yu, yv, huv⟩
-        obtain ⟨a, ha, ya, au⟩ : ∃ a ∈ countableBasis α, y1 ∈ a ∧ a ⊆ u :=
-          IsTopologicalBasis.exists_subset_of_mem_open (isBasis_countableBasis α) yu u_open
-        simp only [mem_iUnion, mem_prod, mem_setOf_eq, exists_and_left, exists_prop]
-        exact ⟨a, ya, ha, v, v_open, yv, (Set.prod_mono_left au).trans huv⟩
-      · rintro ⟨y1, y2⟩ hy
-        simp only [mem_iUnion, mem_prod, mem_setOf_eq, exists_and_left, exists_prop] at hy
-        rcases hy with ⟨a, ya, -, b, -, yb, hb⟩
-        exact hb (mem_prod.2 ⟨ya, yb⟩)
+    have A  : ∀ a, IsOpen (F a)
+    intro a
+    apply isOpen_iff_forall_mem_open.2
+    rintro y ⟨b, b_open, yb, hb⟩
+    exact ⟨b, fun z zb ↦ ⟨b, b_open, zb, hb⟩, b_open, yb⟩
+    have  : s = ⋃ a ∈ countableBasis α, a ×ˢ F a
+    apply Subset.antisymm
+    · rintro ⟨y1, y2⟩ hy
+      rcases isOpen_prod_iff.1 hs y1 y2 hy with ⟨u, v, u_open, v_open, yu, yv, huv⟩
+      obtain ⟨a, ha, ya, au⟩ : ∃ a ∈ countableBasis α, y1 ∈ a ∧ a ⊆ u :=
+        IsTopologicalBasis.exists_subset_of_mem_open (isBasis_countableBasis α) yu u_open
+      simp only [mem_iUnion, mem_prod, mem_setOf_eq, exists_and_left, exists_prop]
+      exact ⟨a, ya, ha, v, v_open, yv, (Set.prod_mono_left au).trans huv⟩
+    · rintro ⟨y1, y2⟩ hy
+      simp only [mem_iUnion, mem_prod, mem_setOf_eq, exists_and_left, exists_prop] at hy
+      rcases hy with ⟨a, ya, -, b, -, yb, hb⟩
+      exact hb (mem_prod.2 ⟨ya, yb⟩)
     rw [this]
     apply MeasurableSet.biUnion (countable_countableBasis α) (fun a ha ↦ ?_)
     exact (isOpen_of_mem_countableBasis ha).measurableSet.prod (A a).measurableSet
   · let F : Set β → Set α := fun a ↦ {y | ∃ b, IsOpen b ∧ y ∈ b ∧ b ×ˢ a ⊆ s}
-    have A : ∀ a, IsOpen (F a) := by
-      intro a
-      apply isOpen_iff_forall_mem_open.2
-      rintro y ⟨b, b_open, yb, hb⟩
-      exact ⟨b, fun z zb ↦ ⟨b, b_open, zb, hb⟩, b_open, yb⟩
-    have : s = ⋃ a ∈ countableBasis β, F a ×ˢ a := by
-      apply Subset.antisymm
-      · rintro ⟨y1, y2⟩ hy
-        rcases isOpen_prod_iff.1 hs y1 y2 hy with ⟨u, v, u_open, v_open, yu, yv, huv⟩
-        obtain ⟨a, ha, ya, au⟩ : ∃ a ∈ countableBasis β, y2 ∈ a ∧ a ⊆ v :=
-          IsTopologicalBasis.exists_subset_of_mem_open (isBasis_countableBasis β) yv v_open
-        simp only [mem_iUnion, mem_prod, mem_setOf_eq, exists_and_left, exists_prop]
-        exact ⟨a, ⟨u, u_open, yu, (Set.prod_mono_right au).trans huv⟩, ha, ya⟩
-      · rintro ⟨y1, y2⟩ hy
-        simp only [mem_iUnion, mem_prod, mem_setOf_eq, exists_and_left, exists_prop] at hy
-        rcases hy with ⟨a, ⟨b, -, yb, hb⟩, -, ya⟩
-        exact hb (mem_prod.2 ⟨yb, ya⟩)
+    have A  : ∀ a, IsOpen (F a)
+    intro a
+    apply isOpen_iff_forall_mem_open.2
+    rintro y ⟨b, b_open, yb, hb⟩
+    exact ⟨b, fun z zb ↦ ⟨b, b_open, zb, hb⟩, b_open, yb⟩
+    have  : s = ⋃ a ∈ countableBasis β, F a ×ˢ a
+    apply Subset.antisymm
+    · rintro ⟨y1, y2⟩ hy
+      rcases isOpen_prod_iff.1 hs y1 y2 hy with ⟨u, v, u_open, v_open, yu, yv, huv⟩
+      obtain ⟨a, ha, ya, au⟩ : ∃ a ∈ countableBasis β, y2 ∈ a ∧ a ⊆ v :=
+        IsTopologicalBasis.exists_subset_of_mem_open (isBasis_countableBasis β) yv v_open
+      simp only [mem_iUnion, mem_prod, mem_setOf_eq, exists_and_left, exists_prop]
+      exact ⟨a, ⟨u, u_open, yu, (Set.prod_mono_right au).trans huv⟩, ha, ya⟩
+    · rintro ⟨y1, y2⟩ hy
+      simp only [mem_iUnion, mem_prod, mem_setOf_eq, exists_and_left, exists_prop] at hy
+      rcases hy with ⟨a, ⟨b, -, yb, hb⟩, -, ya⟩
+      exact hb (mem_prod.2 ⟨yb, ya⟩)
     rw [this]
     apply MeasurableSet.biUnion (countable_countableBasis β) (fun a ha ↦ ?_)
     exact (A a).measurableSet.prod (isOpen_of_mem_countableBasis ha).measurableSet
@@ -615,7 +617,8 @@ lemma MeasurableEmbedding.borelSpace {α β : Type*} [MeasurableSpace α] [Topol
     (h'e : MeasurableEmbedding e) (h''e : Inducing e) :
     BorelSpace α := by
   constructor
-  have : MeasurableSpace.comap e (borel β) = ‹_› := by simpa [hβ.measurable_eq] using h'e.comap_eq
+  have  : MeasurableSpace.comap e (borel β) = ‹_›
+  simpa [hβ.measurable_eq] using h'e.comap_eq
   rw [← this, ← borel_comap, h''e.induced]
 
 instance _root_.ULift.instBorelSpace : BorelSpace (ULift α) :=

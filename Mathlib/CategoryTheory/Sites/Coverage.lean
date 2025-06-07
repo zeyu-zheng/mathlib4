@@ -111,13 +111,13 @@ lemma isSheafFor_of_factorsThru
     refine hS.1.ext (fun Y g hg => ?_)
     simp only [← h2 hg, op_comp, P.map_comp, types_comp_apply, h₁ _ (h1 _ ), h₂ _ (h1 _)]
   let y : S.FamilyOfElements P := fun Y g hg => P.map (i _).op (x (e hg) (h1 _))
-  have hy : y.Compatible := by
-    intro Y₁ Y₂ Z g₁ g₂ f₁ f₂ h₁ h₂ h
-    rw [← types_comp_apply (P.map (i h₁).op) (P.map g₁.op),
-      ← types_comp_apply (P.map (i h₂).op) (P.map g₂.op),
-      ← P.map_comp, ← op_comp, ← P.map_comp, ← op_comp]
-    apply hx
-    simp only [h2, h, Category.assoc]
+  have hy  : y.Compatible
+  intro Y₁ Y₂ Z g₁ g₂ f₁ f₂ h₁ h₂ h
+  rw [← types_comp_apply (P.map (i h₁).op) (P.map g₁.op),
+    ← types_comp_apply (P.map (i h₂).op) (P.map g₂.op),
+    ← P.map_comp, ← op_comp, ← P.map_comp, ← op_comp]
+  apply hx
+  simp only [h2, h, Category.assoc]
   let ⟨_, h2'⟩ := hS
   obtain ⟨z, hz⟩ := h2' y hy
   refine ⟨z, fun Y g hg => ?_⟩

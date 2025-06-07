@@ -41,9 +41,9 @@ instance (priority := 100) LinearOrderedAddCommGroup.topologicalAddGroup :
         _ < δ + (ε - δ) := add_lt_add hx hy
         _ = ε := add_sub_cancel _ _
     · -- Otherwise `ε`-nhd of each point `a` is `{a}`
-      have hε : ∀ {x y}, |x - y| < ε → x = y := by
-        intro x y h
-        simpa [sub_eq_zero] using h₂ _ h
+      have hε  : ∀ {x y}, |x - y| < ε → x = y
+      intro x y h
+      simpa [sub_eq_zero] using h₂ _ h
       filter_upwards [(eventually_abs_sub_lt a ε0).prod_nhds (eventually_abs_sub_lt b ε0)]
       rintro ⟨x, y⟩ ⟨hx : |x - a| < ε, hy : |y - b| < ε⟩
       simpa [hε hx, hε hy]

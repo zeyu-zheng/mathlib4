@@ -31,10 +31,10 @@ theorem hofer {X : Type*} [MetricSpace X] [CompleteSpace X] (x : X) (ε : ℝ) (
     {ϕ : X → ℝ} (cont : Continuous ϕ) (nonneg : ∀ y, 0 ≤ ϕ y) : ∃ ε' > 0, ∃ x' : X,
     ε' ≤ ε ∧ d x' x ≤ 2 * ε ∧ ε * ϕ x ≤ ε' * ϕ x' ∧ ∀ y, d x' y ≤ ε' → ϕ y ≤ 2 * ϕ x' := by
   by_contra H
-  have reformulation : ∀ (x') (k : ℕ), ε * ϕ x ≤ ε / 2 ^ k * ϕ x' ↔ 2 ^ k * ϕ x ≤ ϕ x' := by
-    intro x' k
-    rw [div_mul_eq_mul_div, le_div_iff, mul_assoc, mul_le_mul_left ε_pos, mul_comm]
-    positivity
+  have reformulation  : ∀ (x') (k : ℕ), ε * ϕ x ≤ ε / 2 ^ k * ϕ x' ↔ 2 ^ k * ϕ x ≤ ϕ x'
+  intro x' k
+  rw [div_mul_eq_mul_div, le_div_iff, mul_assoc, mul_le_mul_left ε_pos, mul_comm]
+  positivity
   -- Now let's specialize to `ε/2^k`
   replace H : ∀ k : ℕ, ∀ x', d x' x ≤ 2 * ε ∧ 2 ^ k * ϕ x ≤ ϕ x' →
       ∃ y, d x' y ≤ ε / 2 ^ k ∧ 2 * ϕ x' < ϕ y := by

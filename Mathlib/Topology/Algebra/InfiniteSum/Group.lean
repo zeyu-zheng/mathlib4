@@ -194,8 +194,8 @@ theorem cauchySeq_finset_iff_prod_vanishing :
     rcases h d hd with ⟨s, h⟩
     use (s, s)
     rintro ⟨t₁, t₂⟩ ⟨ht₁, ht₂⟩
-    have : ((∏ b ∈ t₂, f b) / ∏ b ∈ t₁, f b) = (∏ b ∈ t₂ \ s, f b) / ∏ b ∈ t₁ \ s, f b := by
-      rw [← Finset.prod_sdiff ht₁, ← Finset.prod_sdiff ht₂, mul_div_mul_right_eq_div]
+    have  : ((∏ b ∈ t₂, f b) / ∏ b ∈ t₁, f b) = (∏ b ∈ t₂ \ s, f b) / ∏ b ∈ t₁ \ s, f b
+    rw [← Finset.prod_sdiff ht₁, ← Finset.prod_sdiff ht₂, mul_div_mul_right_eq_div]
     simp only [this]
     exact hde _ (h _ Finset.sdiff_disjoint) _ (h _ Finset.sdiff_disjoint)
 
@@ -345,8 +345,8 @@ theorem multipliable_const_iff [Infinite β] [T2Space G] (a : G) :
   refine ⟨fun h ↦ ?_, ?_⟩
   · by_contra ha
     have : {a}ᶜ ∈ 𝓝 1 := compl_singleton_mem_nhds (Ne.symm ha)
-    have : Finite β := by
-      simpa [← Set.finite_univ_iff] using h.tendsto_cofinite_one this
+    have  : Finite β
+    simpa [← Set.finite_univ_iff] using h.tendsto_cofinite_one this
     exact not_finite β
   · rintro rfl
     exact multipliable_one

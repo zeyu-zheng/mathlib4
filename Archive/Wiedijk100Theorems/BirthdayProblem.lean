@@ -68,14 +68,14 @@ theorem birthday_measure :
     ℙ ({f | (Function.Injective f)} : Set ((Fin 23) → (Fin 365))) < 1 / 2 := by
   rw [FinFin.measure_apply]
   generalize_proofs hfin
-  have : |hfin.toFinset| = 42200819302092359872395663074908957253749760700776448000000 := by
-    trans ‖Fin 23 ↪ Fin 365‖
-    · rw [← Fintype.card_coe]
-      apply Fintype.card_congr
-      rw [Set.Finite.coeSort_toFinset, Set.coe_setOf]
-      exact Equiv.subtypeInjectiveEquivEmbedding _ _
-    · rw [Fintype.card_embedding_eq, Fintype.card_fin, Fintype.card_fin]
-      rfl
+  have  : |hfin.toFinset| = 42200819302092359872395663074908957253749760700776448000000
+  trans ‖Fin 23 ↪ Fin 365‖
+  · rw [← Fintype.card_coe]
+    apply Fintype.card_congr
+    rw [Set.Finite.coeSort_toFinset, Set.coe_setOf]
+    exact Equiv.subtypeInjectiveEquivEmbedding _ _
+  · rw [Fintype.card_embedding_eq, Fintype.card_fin, Fintype.card_fin]
+    rfl
   rw [this, ENNReal.lt_div_iff_mul_lt, mul_comm, mul_div, ENNReal.div_lt_iff]
   rotate_left
   iterate 2 right; norm_num

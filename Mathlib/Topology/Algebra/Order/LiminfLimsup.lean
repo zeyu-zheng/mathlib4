@@ -435,10 +435,10 @@ theorem iSup_eq_of_forall_le_of_tendsto {x : R} {as : ι → R} (le_x : ∀ i, a
 theorem iUnion_Ici_eq_Ioi_of_lt_of_tendsto (x : R) {as : ι → R} (x_lt : ∀ i, x < as i)
     {F : Filter ι} [Filter.NeBot F] (as_lim : Filter.Tendsto as F (𝓝 x)) :
     ⋃ i : ι, Ici (as i) = Ioi x := by
-  have obs : x ∉ range as := by
-    intro maybe_x_is
-    rcases mem_range.mp maybe_x_is with ⟨i, hi⟩
-    simpa only [hi, lt_self_iff_false] using x_lt i
+  have obs  : x ∉ range as
+  intro maybe_x_is
+  rcases mem_range.mp maybe_x_is with ⟨i, hi⟩
+  simpa only [hi, lt_self_iff_false] using x_lt i
   -- Porting note: `rw at *` was too destructive. Let's only rewrite `obs` and the goal.
   have := iInf_eq_of_forall_le_of_tendsto (fun i ↦ (x_lt i).le) as_lim
   rw [← this] at obs

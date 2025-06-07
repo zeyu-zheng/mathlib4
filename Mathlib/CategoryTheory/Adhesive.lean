@@ -156,11 +156,11 @@ theorem IsPushout.isVanKampen_inl {W E X Z : C} (c : BinaryCofan W E) [FinitaryE
     refine ⟨hc₄, ?_⟩
     let Y'' := pullback αZ i
     let cmp : Y' ⟶ Y'' := pullback.lift i' αY hi.w
-    have e₁ : (g' ≫ cmp) ≫ pullback.snd _ _ = αW ≫ c.inl := by
-      rw [Category.assoc, pullback.lift_snd, hg.w]
+    have e₁  : (g' ≫ cmp) ≫ pullback.snd _ _ = αW ≫ c.inl
+    rw [Category.assoc, pullback.lift_snd, hg.w]
     have e₂ : (pullback.fst _ _ ≫ cmp : pullback αY c.inr ⟶ _) ≫ pullback.snd _ _ =
-        pullback.snd _ _ ≫ c.inr := by
-      rw [Category.assoc, pullback.lift_snd, pullback.condition]
+        pullback.snd _ _ ≫ c.inr
+    rw [Category.assoc, pullback.lift_snd, pullback.condition]
     obtain ⟨hc₄⟩ := ((BinaryCofan.isVanKampen_iff _).mp (FinitaryExtensive.vanKampen c hc)
       (BinaryCofan.mk _ _) αW _ _ e₁.symm e₂.symm).mpr <| by
         constructor

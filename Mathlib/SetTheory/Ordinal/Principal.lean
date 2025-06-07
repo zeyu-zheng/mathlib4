@@ -247,7 +247,8 @@ theorem principal_mul_one : Principal (· * ·) 1 := by
   exact zero_mul _
 
 theorem principal_mul_two : Principal (· * ·) 2 := fun a b ha hb => by
-  have h₂ : succ (1 : Ordinal) = 2 := by simp
+  have h₂  : succ (1 : Ordinal) = 2
+  simp
   dsimp only
   rw [← h₂, lt_succ_iff] at ha hb ⊢
   convert mul_le_mul' ha hb

@@ -327,7 +327,8 @@ lemma disjoint_genEigenspace [NoZeroSMulDivisors R M]
     apply Commute.isNilpotent_sub (x := f₂) (y := f₁) _ ⟨l, ?_⟩ ⟨k, ?_⟩
     · ext; simp [f₁, f₂, smul_sub, sub_sub, smul_comm μ₁, add_sub_left_comm]
     all_goals ext ⟨x, _, _⟩; simpa [LinearMap.restrict_apply, LinearMap.pow_restrict _] using ‹_›
-  have hf₁₂ : f₂ - f₁ = algebraMap R (End R p) (μ₁ - μ₂) := by ext; simp [f₁, f₂, sub_smul]
+  have hf₁₂  : f₂ - f₁ = algebraMap R (End R p) (μ₁ - μ₂)
+  ext; simp [f₁, f₂, sub_smul]
   rw [hf₁₂, IsNilpotent.map_iff (NoZeroSMulDivisors.algebraMap_injective R (End R p)),
     isNilpotent_iff_eq_zero, sub_eq_zero] at this
   contradiction
@@ -494,8 +495,8 @@ lemma iSup_genEigenspace_inf_le_add
     mem_genEigenspace] at hm ⊢
   obtain ⟨⟨k₁, hk₁⟩, ⟨k₂, hk₂⟩⟩ := hm
   use k₁ + k₂ - 1
-  have : f₁ + f₂ - (μ₁ + μ₂) • 1 = (f₁ - μ₁ • 1) + (f₂ - μ₂ • 1) := by
-    rw [add_smul]; exact add_sub_add_comm f₁ f₂ (μ₁ • 1) (μ₂ • 1)
+  have  : f₁ + f₂ - (μ₁ + μ₂) • 1 = (f₁ - μ₁ • 1) + (f₂ - μ₂ • 1)
+  rw [add_smul]; exact add_sub_add_comm f₁ f₂ (μ₁ • 1) (μ₂ • 1)
   replace h : Commute (f₁ - μ₁ • 1) (f₂ - μ₂ • 1) :=
     (h.sub_right <| Algebra.commute_algebraMap_right μ₂ f₁).sub_left
       (Algebra.commute_algebraMap_left μ₁ _)
@@ -515,7 +516,8 @@ lemma map_smul_of_iInf_genEigenspace_ne_bot [NoZeroSMulDivisors R M]
     μ (t • x) = t • μ x := by
   by_contra contra
   let g : L → Submodule R M := fun x ↦ ⨆ k, (f x).genEigenspace (μ x) k
-  have : ⨅ x, g x ≤ g x ⊓ g (t • x) := le_inf_iff.mpr ⟨iInf_le g x, iInf_le g (t • x)⟩
+  have : ⨅ x, g x ≤ g x ⊓ g (t • x)
+  apply le_inf_iff.mpr ⟨iInf_le g x, iInf_le g (t • x)⟩
   refine h_ne <| eq_bot_iff.mpr (le_trans this (disjoint_iff_inf_le.mp ?_))
   apply Disjoint.mono_left (iSup_genEigenspace_le_smul (f x) (μ x) t)
   simp only [g, map_smul]
@@ -528,8 +530,8 @@ lemma map_add_of_iInf_genEigenspace_ne_bot_of_commute [NoZeroSMulDivisors R M]
     μ (x + y) = μ x + μ y := by
   by_contra contra
   let g : L → Submodule R M := fun x ↦ ⨆ k, (f x).genEigenspace (μ x) k
-  have : ⨅ x, g x ≤ (g x ⊓ g y) ⊓ g (x + y) :=
-    le_inf_iff.mpr ⟨le_inf_iff.mpr ⟨iInf_le g x, iInf_le g y⟩, iInf_le g (x + y)⟩
+  have : ⨅ x, g x ≤ (g x ⊓ g y) ⊓ g (x + y)
+  apply le_inf_iff.mpr ⟨le_inf_iff.mpr ⟨iInf_le g x, iInf_le g y⟩, iInf_le g (x + y)⟩
   refine h_ne <| eq_bot_iff.mpr (le_trans this (disjoint_iff_inf_le.mp ?_))
   apply Disjoint.mono_left (iSup_genEigenspace_inf_le_add (f x) (f y) (μ x) (μ y) (h x y))
   simp only [g, map_add]

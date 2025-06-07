@@ -79,10 +79,11 @@ because it holds over any field, whereas `spectrum.map_polynomial_aeval_of_degre
 theorem subset_polynomial_aeval (a : A) (p : 𝕜[X]) : (eval · p) '' σ a ⊆ σ (aeval a p) := by
   rintro _ ⟨k, hk, rfl⟩
   let q := C (eval k p) - p
-  have hroot : IsRoot q k := by simp only [q, eval_C, eval_sub, sub_self, IsRoot.def]
+  have hroot  : IsRoot q k
+  simp only [q, eval_C, eval_sub, sub_self, IsRoot.def]
   rw [← mul_div_eq_iff_isRoot, ← neg_mul_neg, neg_sub] at hroot
-  have aeval_q_eq : ↑ₐ (eval k p) - aeval a p = aeval a q := by
-    simp only [q, aeval_C, map_sub, sub_left_inj]
+  have aeval_q_eq  : ↑ₐ (eval k p) - aeval a p = aeval a q
+  simp only [q, aeval_C, map_sub, sub_left_inj]
   rw [mem_iff, aeval_q_eq, ← hroot, aeval_mul]
   have hcomm := (Commute.all (C k - X) (-(q / (X - C k)))).map (aeval a : 𝕜[X] →ₐ[𝕜] A)
   apply mt fun h => (hcomm.isUnit_mul_iff.mp h).1
@@ -103,8 +104,8 @@ theorem map_polynomial_aeval_of_degree_pos [IsAlgClosed 𝕜] (a : A) (p : 𝕜[
   have lead_unit := (Units.map ↑ₐ.toMonoidHom (Units.mk0 _ lead_ne)).isUnit
   /- leading coefficient is a unit so product of linear factors is not a unit;
     apply `exists_mem_of_not_is_unit_aeval_prod`. -/
-  have p_a_eq : aeval a (C k - p) = ↑ₐ k - aeval a p := by
-    simp only [aeval_C, map_sub, sub_left_inj]
+  have p_a_eq  : aeval a (C k - p) = ↑ₐ k - aeval a p
+  simp only [aeval_C, map_sub, sub_left_inj]
   rw [mem_iff, ← p_a_eq, hprod, aeval_mul,
     ((Commute.all _ _).map (aeval a : 𝕜[X] →ₐ[𝕜] A)).isUnit_mul_iff, aeval_C] at hk
   replace hk := exists_mem_of_not_isUnit_aeval_prod (not_and.mp hk lead_unit)
@@ -145,7 +146,8 @@ over an algebraically closed field `𝕜` has non-empty spectrum. -/
 theorem nonempty_of_isAlgClosed_of_finiteDimensional [IsAlgClosed 𝕜] [Nontrivial A]
     [I : FiniteDimensional 𝕜 A] (a : A) : (σ a).Nonempty := by
   obtain ⟨p, ⟨h_mon, h_eval_p⟩⟩ := isIntegral_of_noetherian (IsNoetherian.iff_fg.2 I) a
-  have nu : ¬IsUnit (aeval a p) := by rw [← aeval_def] at h_eval_p; rw [h_eval_p]; simp
+  have nu  : ¬IsUnit (aeval a p)
+  rw [← aeval_def] at h_eval_p; rw [h_eval_p]; simp
   rw [eq_prod_roots_of_monic_of_splits_id h_mon (IsAlgClosed.splits p)] at nu
   obtain ⟨k, hk, _⟩ := exists_mem_of_not_isUnit_aeval_prod nu
   exact ⟨k, hk⟩

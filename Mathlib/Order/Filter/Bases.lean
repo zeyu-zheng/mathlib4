@@ -167,12 +167,12 @@ theorem mem_filter_of_mem (B : FilterBasis α) {U : Set α} : U ∈ B → U ∈ 
   ⟨U, U_in, Subset.refl _⟩
 
 theorem eq_iInf_principal (B : FilterBasis α) : B.filter = ⨅ s : B.sets, 𝓟 s := by
-  have : Directed (· ≥ ·) fun s : B.sets => 𝓟 (s : Set α) := by
-    rintro ⟨U, U_in⟩ ⟨V, V_in⟩
-    rcases B.inter_sets U_in V_in with ⟨W, W_in, W_sub⟩
-    use ⟨W, W_in⟩
-    simp only [le_principal_iff, mem_principal, Subtype.coe_mk]
-    exact subset_inter_iff.mp W_sub
+  have  : Directed (· ≥ ·) fun s : B.sets => 𝓟 (s : Set α)
+  rintro ⟨U, U_in⟩ ⟨V, V_in⟩
+  rcases B.inter_sets U_in V_in with ⟨W, W_in, W_sub⟩
+  use ⟨W, W_in⟩
+  simp only [le_principal_iff, mem_principal, Subtype.coe_mk]
+  exact subset_inter_iff.mp W_sub
   ext U
   simp [mem_filter_iff, mem_iInf_of_directed this]
 

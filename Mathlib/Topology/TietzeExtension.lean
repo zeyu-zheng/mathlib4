@@ -165,8 +165,10 @@ function, then there exists a bounded continuous function `g : Y →ᵇ ℝ` of 
 such that the distance between `g ∘ e` and `f` is at most `(2 / 3) * ‖f‖`. -/
 theorem tietze_extension_step (f : X →ᵇ ℝ) (e : C(X, Y)) (he : ClosedEmbedding e) :
     ∃ g : Y →ᵇ ℝ, ‖g‖ ≤ ‖f‖ / 3 ∧ dist (g.compContinuous e) f ≤ 2 / 3 * ‖f‖ := by
-  have h3 : (0 : ℝ) < 3 := by norm_num1
-  have h23 : 0 < (2 / 3 : ℝ) := by norm_num1
+  have h3  : (0 : ℝ) < 3
+  norm_num1
+  have h23  : 0 < (2 / 3 : ℝ)
+  norm_num1
   -- In the trivial case `f = 0`, we take `g = 0`
   rcases eq_or_ne f 0 with (rfl | hf)
   · use 0
@@ -322,9 +324,9 @@ theorem exists_extension_forall_exists_le_ge_of_closedEmbedding [Nonempty X] (f 
   set c := (a + b) / 2
   have hac : a < c := left_lt_add_div_two.2 hlt
   have hcb : c < b := add_div_two_lt_right.2 hlt
-  have hsub : c - a = b - c := by
-    field_simp [c]
-    ring
+  have hsub  : c - a = b - c
+  field_simp [c]
+  ring
   /- Due to `exists_extension_forall_mem_Icc_of_closedEmbedding`, there exists an extension `g`
     such that `g y ∈ [a, b]` for all `y`. However, if `a` and/or `b` do not belong to the range of
     `f`, then we need to ensure that these points do not belong to the range of `g`. This is done
@@ -337,12 +339,12 @@ theorem exists_extension_forall_exists_le_ge_of_closedEmbedding [Nonempty X] (f 
     /- Otherwise, `g ⁻¹' {a}` is disjoint with `range e ∪ g ⁻¹' (Ici c)`, hence there exists a
         function `dg : Y → ℝ` such that `dg ∘ e = 0`, `dg y = 0` whenever `c ≤ g y`, `dg y = c - a`
         whenever `g y = a`, and `0 ≤ dg y ≤ c - a` for all `y`.  -/
-    have hd : Disjoint (range e ∪ g ⁻¹' Ici c) (g ⁻¹' {a}) := by
-      refine disjoint_union_left.2 ⟨?_, Disjoint.preimage _ ?_⟩
-      · rw [Set.disjoint_left]
-        rintro _ ⟨x, rfl⟩ (rfl : g (e x) = a)
-        exact ha' ⟨x, (congr_fun hgf x).symm⟩
-      · exact Set.disjoint_singleton_right.2 hac.not_le
+    have hd  : Disjoint (range e ∪ g ⁻¹' Ici c) (g ⁻¹' {a})
+    refine disjoint_union_left.2 ⟨?_, Disjoint.preimage _ ?_⟩
+    · rw [Set.disjoint_left]
+      rintro _ ⟨x, rfl⟩ (rfl : g (e x) = a)
+      exact ha' ⟨x, (congr_fun hgf x).symm⟩
+    · exact Set.disjoint_singleton_right.2 hac.not_le
     rcases exists_bounded_mem_Icc_of_closed_of_le
         (he.isClosed_range.union <| isClosed_Ici.preimage g.continuous)
         (isClosed_singleton.preimage g.continuous) hd (sub_nonneg.2 hac.le) with
@@ -351,13 +353,13 @@ theorem exists_extension_forall_exists_le_ge_of_closedEmbedding [Nonempty X] (f 
       intro x
       simp [dg0 (Or.inl <| mem_range_self _), ← hgf]
     refine ⟨g + dg, fun y => ?_, funext hgf⟩
-    have hay : a < (g + dg) y := by
-      rcases (hg_mem y).1.eq_or_lt with (rfl | hlt)
-      · refine (lt_add_iff_pos_right _).2 ?_
-        calc
-          0 < c - g y := sub_pos.2 hac
-          _ = dg y := (dga rfl).symm
-      · exact hlt.trans_le (le_add_of_nonneg_right (dgmem y).1)
+    have hay  : a < (g + dg) y
+    rcases (hg_mem y).1.eq_or_lt with (rfl | hlt)
+    · refine (lt_add_iff_pos_right _).2 ?_
+      calc
+        0 < c - g y := sub_pos.2 hac
+        _ = dg y := (dga rfl).symm
+    · exact hlt.trans_le (le_add_of_nonneg_right (dgmem y).1)
     rcases ha.exists_between hay with ⟨_, ⟨x, rfl⟩, _, hxy⟩
     refine ⟨x, hxy.le, ?_⟩
     rcases le_total c (g y) with hc | hc
@@ -370,12 +372,12 @@ theorem exists_extension_forall_exists_le_ge_of_closedEmbedding [Nonempty X] (f 
   choose xl hxl hgb using hg_mem
   rcases em (∃ x, f x = b) with (⟨x, rfl⟩ | hb')
   · exact ⟨g, fun y => ⟨xl y, x, hxl y, hgb y⟩, hgf⟩
-  have hd : Disjoint (range e ∪ g ⁻¹' Iic c) (g ⁻¹' {b}) := by
-    refine disjoint_union_left.2 ⟨?_, Disjoint.preimage _ ?_⟩
-    · rw [Set.disjoint_left]
-      rintro _ ⟨x, rfl⟩ (rfl : g (e x) = b)
-      exact hb' ⟨x, (congr_fun hgf x).symm⟩
-    · exact Set.disjoint_singleton_right.2 hcb.not_le
+  have hd  : Disjoint (range e ∪ g ⁻¹' Iic c) (g ⁻¹' {b})
+  refine disjoint_union_left.2 ⟨?_, Disjoint.preimage _ ?_⟩
+  · rw [Set.disjoint_left]
+    rintro _ ⟨x, rfl⟩ (rfl : g (e x) = b)
+    exact hb' ⟨x, (congr_fun hgf x).symm⟩
+  · exact Set.disjoint_singleton_right.2 hcb.not_le
   rcases exists_bounded_mem_Icc_of_closed_of_le
       (he.isClosed_range.union <| isClosed_Iic.preimage g.continuous)
       (isClosed_singleton.preimage g.continuous) hd (sub_nonneg.2 hcb.le) with
@@ -384,13 +386,13 @@ theorem exists_extension_forall_exists_le_ge_of_closedEmbedding [Nonempty X] (f 
     intro x
     simp [dg0 (Or.inl <| mem_range_self _), ← hgf]
   refine ⟨g - dg, fun y => ?_, funext hgf⟩
-  have hyb : (g - dg) y < b := by
-    rcases (hgb y).eq_or_lt with (rfl | hlt)
-    · refine (sub_lt_self_iff _).2 ?_
-      calc
-        0 < g y - c := sub_pos.2 hcb
-        _ = dg y := (dgb rfl).symm
-    · exact ((sub_le_self_iff _).2 (dgmem _).1).trans_lt hlt
+  have hyb  : (g - dg) y < b
+  rcases (hgb y).eq_or_lt with (rfl | hlt)
+  · refine (sub_lt_self_iff _).2 ?_
+    calc
+      0 < g y - c := sub_pos.2 hcb
+      _ = dg y := (dgb rfl).symm
+  · exact ((sub_le_self_iff _).2 (dgmem _).1).trans_lt hlt
   rcases hb.exists_between hyb with ⟨_, ⟨xu, rfl⟩, hyxu, _⟩
   cases' lt_or_le c (g y) with hc hc
   · rcases em (a ∈ range f) with (⟨x, rfl⟩ | _)

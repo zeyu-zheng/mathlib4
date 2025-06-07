@@ -110,12 +110,12 @@ lemma isAffine_of_isAffineOpen_basicOpen (s : Set Γ(X, ⊤))
     (hs : Ideal.span s = ⊤) (hs₂ : ∀ i ∈ s, IsAffineOpen (X.basicOpen i)) :
     IsAffine X := by
   have : QuasiSeparatedSpace X := isAffineOpen_of_isAffineOpen_basicOpen_aux s hs hs₂
-  have : CompactSpace X := by
-    obtain ⟨s', hs', e⟩ := (Ideal.span_eq_top_iff_finite _).mp hs
-    rw [← isCompact_univ_iff, ← Opens.coe_top, ← iSup_basicOpen_of_span_eq_top _ _ e]
-    simp only [Finset.mem_coe, Opens.iSup_mk, Opens.carrier_eq_coe, Opens.coe_mk]
-    apply s'.isCompact_biUnion
-    exact fun i hi ↦ (hs₂ _ (hs' hi)).isCompact
+  have  : CompactSpace X
+  obtain ⟨s', hs', e⟩ := (Ideal.span_eq_top_iff_finite _).mp hs
+  rw [← isCompact_univ_iff, ← Opens.coe_top, ← iSup_basicOpen_of_span_eq_top _ _ e]
+  simp only [Finset.mem_coe, Opens.iSup_mk, Opens.carrier_eq_coe, Opens.coe_mk]
+  apply s'.isCompact_biUnion
+  exact fun i hi ↦ (hs₂ _ (hs' hi)).isCompact
   constructor
   refine HasAffineProperty.of_iSup_eq_top (P := MorphismProperty.isomorphisms Scheme)
     (fun i : s ↦ ⟨PrimeSpectrum.basicOpen i.1, ?_⟩) ?_ (fun i ↦ ⟨?_, ?_⟩)

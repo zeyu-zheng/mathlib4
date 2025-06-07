@@ -148,13 +148,13 @@ lemma unique_eventuallyEq_zpow_smul_nonzero {m n : ℤ}
   let ⟨g, hg_an, _, hg_eq⟩ := hm
   let ⟨j, hj_an, hj_ne, hj_eq⟩ := hn
   contrapose! hj_ne
-  have : ∃ᶠ z in 𝓝[≠] z₀, j z = (z - z₀) ^ (m - n) • g z := by
-    apply Filter.Eventually.frequently
-    rw [eventually_nhdsWithin_iff] at hg_eq hj_eq ⊢
-    filter_upwards [hg_eq, hj_eq] with z hfz hfz' hz
-    rw [← add_sub_cancel_left n m, add_sub_assoc, zpow_add₀ <| sub_ne_zero.mpr hz, mul_smul,
-      hfz' hz, smul_right_inj <| zpow_ne_zero _ <| sub_ne_zero.mpr hz] at hfz
-    exact hfz hz
+  have  : ∃ᶠ z in 𝓝[≠] z₀, j z = (z - z₀) ^ (m - n) • g z
+  apply Filter.Eventually.frequently
+  rw [eventually_nhdsWithin_iff] at hg_eq hj_eq ⊢
+  filter_upwards [hg_eq, hj_eq] with z hfz hfz' hz
+  rw [← add_sub_cancel_left n m, add_sub_assoc, zpow_add₀ <| sub_ne_zero.mpr hz, mul_smul,
+    hfz' hz, smul_right_inj <| zpow_ne_zero _ <| sub_ne_zero.mpr hz] at hfz
+  exact hfz hz
   rw [frequently_eq_iff_eventually_eq hj_an] at this
   · rw [EventuallyEq.eq_of_nhds this, sub_self, zero_zpow _ (sub_ne_zero.mpr hj_ne), zero_smul]
   conv => enter [2, z, 1]; rw [← Int.toNat_sub_of_le h_le, zpow_natCast]

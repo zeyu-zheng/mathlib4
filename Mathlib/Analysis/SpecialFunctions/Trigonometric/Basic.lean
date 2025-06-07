@@ -533,8 +533,10 @@ theorem cos_eq_one_iff_of_lt_of_lt {x : ℝ} (hx₁ : -(2 * π) < x) (hx₂ : x 
 theorem sin_lt_sin_of_lt_of_le_pi_div_two {x y : ℝ} (hx₁ : -(π / 2) ≤ x) (hy₂ : y ≤ π / 2)
     (hxy : x < y) : sin x < sin y := by
   rw [← sub_pos, sin_sub_sin]
-  have : 0 < sin ((y - x) / 2) := by apply sin_pos_of_pos_of_lt_pi <;> linarith
-  have : 0 < cos ((y + x) / 2) := by refine cos_pos_of_mem_Ioo ⟨?_, ?_⟩ <;> linarith
+  have  : 0 < sin ((y - x) / 2)
+  apply sin_pos_of_pos_of_lt_pi <;> linarith
+  have  : 0 < cos ((y + x) / 2)
+  refine cos_pos_of_mem_Ioo ⟨?_, ?_⟩ <;> linarith
   positivity
 
 theorem strictMonoOn_sin : StrictMonoOn sin (Icc (-(π / 2)) (π / 2)) := fun _ hx _ hy hxy =>
@@ -658,7 +660,8 @@ theorem cos_pi_over_two_pow : ∀ n : ℕ, cos (π / 2 ^ (n + 1)) = sqrtTwoAddSe
   | n + 1 => by
     have A : (1 : ℝ) < 2 ^ (n + 1) := one_lt_pow one_lt_two n.succ_ne_zero
     have B : π / 2 ^ (n + 1) < π := div_lt_self pi_pos A
-    have C : 0 < π / 2 ^ (n + 1) := by positivity
+    have C  : 0 < π / 2 ^ (n + 1)
+    positivity
     rw [pow_succ, div_mul_eq_div_div, cos_half, cos_pi_over_two_pow n, sqrtTwoAddSeries,
       add_div_eq_mul_add_div, one_mul, ← div_mul_eq_div_div, sqrt_div, sqrt_mul_self] <;>
       linarith [sqrtTwoAddSeries_nonneg le_rfl n]
@@ -747,11 +750,11 @@ theorem sin_pi_div_thirty_two : sin (π / 32) = √(2 - √(2 + √(2 + √2))) 
 /-- The cosine of `π / 3` is `1 / 2`. -/
 @[simp]
 theorem cos_pi_div_three : cos (π / 3) = 1 / 2 := by
-  have h₁ : (2 * cos (π / 3) - 1) ^ 2 * (2 * cos (π / 3) + 2) = 0 := by
-    have : cos (3 * (π / 3)) = cos π := by
-      congr 1
-      ring
-    linarith [cos_pi, cos_three_mul (π / 3)]
+  have h₁  : (2 * cos (π / 3) - 1) ^ 2 * (2 * cos (π / 3) + 2) = 0
+  have  : cos (3 * (π / 3)) = cos π
+  congr 1
+  ring
+  linarith [cos_pi, cos_three_mul (π / 3)]
   cases' mul_eq_zero.mp h₁ with h h
   · linarith [pow_eq_zero h]
   · have : cos π < cos (π / 3) := by
@@ -806,7 +809,8 @@ theorem sinOrderIso_apply (x : Icc (-(π / 2)) (π / 2)) : sinOrderIso x = ⟨si
 @[simp]
 theorem tan_pi_div_four : tan (π / 4) = 1 := by
   rw [tan_eq_sin_div_cos, cos_pi_div_four, sin_pi_div_four]
-  have h : √2 / 2 > 0 := by positivity
+  have h  : √2 / 2 > 0
+  positivity
   exact div_self (ne_of_gt h)
 
 @[simp]

@@ -140,11 +140,11 @@ lemma isIntegral_discr_mul_of_mem_traceDual
     {b : Basis ι K L} (hb : ∀ i, IsIntegral A (b i))
     {a x : L} (ha : a ∈ I) (hx : x ∈ Iᵛ) :
     IsIntegral A ((discr K b) • a * x) := by
-  have hinv : IsUnit (traceMatrix K b).det := by
-    simpa [← discr_def] using discr_isUnit_of_basis _ b
+  have hinv  : IsUnit (traceMatrix K b).det
+  simpa [← discr_def] using discr_isUnit_of_basis _ b
   have H := mulVec_cramer (traceMatrix K b) fun i => trace K L (x * a * b i)
-  have : Function.Injective (traceMatrix K b).mulVec := by
-    rwa [mulVec_injective_iff_isUnit, isUnit_iff_isUnit_det]
+  have  : Function.Injective (traceMatrix K b).mulVec
+  rwa [mulVec_injective_iff_isUnit, isUnit_iff_isUnit_det]
   rw [← traceMatrix_of_basis_mulVec, ← mulVec_smul, this.eq_iff,
     traceMatrix_of_basis_mulVec] at H
   rw [← b.equivFun.symm_apply_apply (_ * _), b.equivFun_symm_apply]
@@ -473,7 +473,8 @@ lemma traceForm_dualSubmodule_adjoin
   have hKx : IsIntegral K x := Algebra.IsIntegral.isIntegral x
   let pb := (Algebra.adjoin.powerBasis' hKx).map
     ((Subalgebra.equivOfEq _ _ hx).trans (Subalgebra.topEquiv))
-  have pbgen : pb.gen = x := by simp [pb]
+  have pbgen  : pb.gen = x
+  simp [pb]
   have hpb : ⇑(LinearMap.BilinForm.dualBasis (traceForm K L) _ pb.basis) = _ :=
     _root_.funext (traceForm_dualBasis_powerBasis_eq pb)
   have : (Subalgebra.toSubmodule (Algebra.adjoin A {x})) =

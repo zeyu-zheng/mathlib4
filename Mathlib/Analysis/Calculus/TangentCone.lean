@@ -103,10 +103,10 @@ theorem tangentConeAt.lim_zero {α : Type*} (l : Filter α) {c : α → 𝕜} {d
   have B : Tendsto (fun n => ‖c n • d n‖) l (𝓝 ‖y‖) := (continuous_norm.tendsto _).comp hd
   have C : Tendsto (fun n => ‖c n‖⁻¹ * ‖c n • d n‖) l (𝓝 (0 * ‖y‖)) := A.mul B
   rw [zero_mul] at C
-  have : ∀ᶠ n in l, ‖c n‖⁻¹ * ‖c n • d n‖ = ‖d n‖ := by
-    refine (eventually_ne_of_tendsto_norm_atTop hc 0).mono fun n hn => ?_
-    rw [norm_smul, ← mul_assoc, inv_mul_cancel, one_mul]
-    rwa [Ne, norm_eq_zero]
+  have  : ∀ᶠ n in l, ‖c n‖⁻¹ * ‖c n • d n‖ = ‖d n‖
+  refine (eventually_ne_of_tendsto_norm_atTop hc 0).mono fun n hn => ?_
+  rw [norm_smul, ← mul_assoc, inv_mul_cancel, one_mul]
+  rwa [Ne, norm_eq_zero]
   have D : Tendsto (fun n => ‖d n‖) l (𝓝 0) := Tendsto.congr' this C
   rw [tendsto_zero_iff_norm_tendsto_zero]
   exact D
@@ -132,12 +132,12 @@ theorem tangentCone_inter_nhds (ht : t ∈ 𝓝 x) : tangentConeAt 𝕜 (s ∩ t
 theorem subset_tangentCone_prod_left {t : Set F} {y : F} (ht : y ∈ closure t) :
     LinearMap.inl 𝕜 E F '' tangentConeAt 𝕜 s x ⊆ tangentConeAt 𝕜 (s ×ˢ t) (x, y) := by
   rintro _ ⟨v, ⟨c, d, hd, hc, hy⟩, rfl⟩
-  have : ∀ n, ∃ d', y + d' ∈ t ∧ ‖c n • d'‖ < ((1 : ℝ) / 2) ^ n := by
-    intro n
-    rcases mem_closure_iff_nhds.1 ht _
-        (eventually_nhds_norm_smul_sub_lt (c n) y (pow_pos one_half_pos n)) with
-      ⟨z, hz, hzt⟩
-    exact ⟨z - y, by simpa using hzt, by simpa using hz⟩
+  have  : ∀ n, ∃ d', y + d' ∈ t ∧ ‖c n • d'‖ < ((1 : ℝ) / 2) ^ n
+  intro n
+  rcases mem_closure_iff_nhds.1 ht _
+      (eventually_nhds_norm_smul_sub_lt (c n) y (pow_pos one_half_pos n)) with
+    ⟨z, hz, hzt⟩
+  exact ⟨z - y, by simpa using hzt, by simpa using hz⟩
   choose d' hd' using this
   refine ⟨c, fun n => (d n, d' n), ?_, hc, ?_⟩
   · show ∀ᶠ n in atTop, (x, y) + (d n, d' n) ∈ s ×ˢ t
@@ -151,12 +151,12 @@ theorem subset_tangentCone_prod_left {t : Set F} {y : F} (ht : y ∈ closure t) 
 theorem subset_tangentCone_prod_right {t : Set F} {y : F} (hs : x ∈ closure s) :
     LinearMap.inr 𝕜 E F '' tangentConeAt 𝕜 t y ⊆ tangentConeAt 𝕜 (s ×ˢ t) (x, y) := by
   rintro _ ⟨w, ⟨c, d, hd, hc, hy⟩, rfl⟩
-  have : ∀ n, ∃ d', x + d' ∈ s ∧ ‖c n • d'‖ < ((1 : ℝ) / 2) ^ n := by
-    intro n
-    rcases mem_closure_iff_nhds.1 hs _
-        (eventually_nhds_norm_smul_sub_lt (c n) x (pow_pos one_half_pos n)) with
-      ⟨z, hz, hzs⟩
-    exact ⟨z - x, by simpa using hzs, by simpa using hz⟩
+  have  : ∀ n, ∃ d', x + d' ∈ s ∧ ‖c n • d'‖ < ((1 : ℝ) / 2) ^ n
+  intro n
+  rcases mem_closure_iff_nhds.1 hs _
+      (eventually_nhds_norm_smul_sub_lt (c n) x (pow_pos one_half_pos n)) with
+    ⟨z, hz, hzs⟩
+  exact ⟨z - x, by simpa using hzs, by simpa using hz⟩
   choose d' hd' using this
   refine ⟨c, fun n => (d' n, d n), ?_, hc, ?_⟩
   · show ∀ᶠ n in atTop, (x, y) + (d' n, d n) ∈ s ×ˢ t

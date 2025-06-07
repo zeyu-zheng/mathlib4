@@ -60,9 +60,9 @@ theorem cpow_eq_nhds' {p : ℂ × ℂ} (hp_fst : p.fst ≠ 0) :
 
 -- Continuity of `fun x => a ^ x`: union of these two lemmas is optimal.
 theorem continuousAt_const_cpow {a b : ℂ} (ha : a ≠ 0) : ContinuousAt (fun x : ℂ => a ^ x) b := by
-  have cpow_eq : (fun x : ℂ => a ^ x) = fun x => exp (log a * x) := by
-    ext1 b
-    rw [cpow_def_of_ne_zero ha]
+  have cpow_eq  : (fun x : ℂ => a ^ x) = fun x => exp (log a * x)
+  ext1 b
+  rw [cpow_def_of_ne_zero ha]
   rw [cpow_eq]
   exact continuous_exp.continuousAt.comp (ContinuousAt.mul continuousAt_const continuousAt_id)
 
@@ -455,7 +455,8 @@ theorem continuous_rpow_const {y : ℝ} : Continuous fun a : ℝ≥0∞ => a ^ y
   · simp only [rpow_zero]
     exact continuousAt_const
   · obtain ⟨z, hz⟩ : ∃ z, y = -z := ⟨-y, (neg_neg _).symm⟩
-    have z_pos : 0 < z := by simpa [hz] using hy
+    have z_pos  : 0 < z
+    simpa [hz] using hy
     simp_rw [hz, rpow_neg]
     exact continuous_inv.continuousAt.comp (continuousAt_rpow_const_of_pos z_pos)
 

@@ -304,11 +304,11 @@ theorem derivedSeries_of_derivedLength_succ (I : LieIdeal R L) (k : ℕ) :
   rw [abelian_iff_derived_succ_eq_bot]
   let s := { k | derivedSeriesOfIdeal R L k I = ⊥ }
   change sInf s = k + 1 ↔ k + 1 ∈ s ∧ k ∉ s
-  have hs : ∀ k₁ k₂ : ℕ, k₁ ≤ k₂ → k₁ ∈ s → k₂ ∈ s := by
-    intro k₁ k₂ h₁₂ h₁
-    suffices derivedSeriesOfIdeal R L k₂ I ≤ ⊥ by exact eq_bot_iff.mpr this
-    change derivedSeriesOfIdeal R L k₁ I = ⊥ at h₁; rw [← h₁]
-    exact derivedSeriesOfIdeal_antitone I h₁₂
+  have hs  : ∀ k₁ k₂ : ℕ, k₁ ≤ k₂ → k₁ ∈ s → k₂ ∈ s
+  intro k₁ k₂ h₁₂ h₁
+  suffices derivedSeriesOfIdeal R L k₂ I ≤ ⊥ by exact eq_bot_iff.mpr this
+  change derivedSeriesOfIdeal R L k₁ I = ⊥ at h₁; rw [← h₁]
+  exact derivedSeriesOfIdeal_antitone I h₁₂
   exact Nat.sInf_upward_closed_eq_succ_iff hs k
 
 theorem derivedLength_eq_derivedLengthOfIdeal (I : LieIdeal R L) :
@@ -340,10 +340,10 @@ theorem derivedLength_zero (I : LieIdeal R L) [hI : IsSolvable R I] :
     derivedLengthOfIdeal R L I = 0 ↔ I = ⊥ := by
   let s := { k | derivedSeriesOfIdeal R L k I = ⊥ }
   change sInf s = 0 ↔ _
-  have hne : s ≠ ∅ := by
-    obtain ⟨k, hk⟩ := id hI
-    refine Set.Nonempty.ne_empty ⟨k, ?_⟩
-    rw [derivedSeries_def, LieIdeal.derivedSeries_eq_bot_iff] at hk; exact hk
+  have hne  : s ≠ ∅
+  obtain ⟨k, hk⟩ := id hI
+  refine Set.Nonempty.ne_empty ⟨k, ?_⟩
+  rw [derivedSeries_def, LieIdeal.derivedSeries_eq_bot_iff] at hk; exact hk
   simp [s, hne]
 
 theorem abelian_of_solvable_ideal_eq_bot_iff (I : LieIdeal R L) [h : IsSolvable R I] :
@@ -355,7 +355,8 @@ theorem abelian_of_solvable_ideal_eq_bot_iff (I : LieIdeal R L) [h : IsSolvable 
     rw [h]
   · rename_i k h
     obtain ⟨_, h₂⟩ := (derivedSeries_of_derivedLength_succ R L I k).mp h
-    have h₃ : I ≠ ⊥ := by intro contra; apply h₂; rw [contra]; apply derivedSeries_of_bot_eq_bot
+    have h₃  : I ≠ ⊥
+    intro contra; apply h₂; rw [contra]; apply derivedSeries_of_bot_eq_bot
     simp only [h₂, h₃]
 
 end LieAlgebra

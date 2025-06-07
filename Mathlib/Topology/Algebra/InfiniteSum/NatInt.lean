@@ -346,12 +346,12 @@ lemma HasProd.of_nat_of_neg_add_one {f : ℤ → M}
     (hf₁ : HasProd (fun n : ℕ ↦ f n) m) (hf₂ : HasProd (fun n : ℕ ↦ f (-(n + 1))) m') :
     HasProd f (m * m') := by
   have hi₂ : Injective Int.negSucc := @Int.negSucc.inj
-  have : IsCompl (Set.range ((↑) : ℕ → ℤ)) (Set.range Int.negSucc) := by
-    constructor
-    · rw [disjoint_iff_inf_le]
-      rintro _ ⟨⟨i, rfl⟩, ⟨j, ⟨⟩⟩⟩
-    · rw [codisjoint_iff_le_sup]
-      rintro (i | j) <;> simp
+  have  : IsCompl (Set.range ((↑) : ℕ → ℤ)) (Set.range Int.negSucc)
+  constructor
+  · rw [disjoint_iff_inf_le]
+    rintro _ ⟨⟨i, rfl⟩, ⟨j, ⟨⟩⟩⟩
+  · rw [codisjoint_iff_le_sup]
+    rintro (i | j) <;> simp
   exact (Nat.cast_injective.hasProd_range_iff.mpr hf₁).mul_isCompl
     this (hi₂.hasProd_range_iff.mpr hf₂)
 
@@ -406,14 +406,14 @@ theorem HasProd.nat_mul_neg {f : ℤ → M} (hf : HasProd f m) :
   refine ⟨u.image Int.natAbs, fun v' hv' ↦ ?_⟩
   let u1 := v'.image fun x : ℕ ↦ (x : ℤ)
   let u2 := v'.image fun x : ℕ ↦ -(x : ℤ)
-  have A : u ⊆ u1 ∪ u2 := by
-    intro x hx
-    simp only [u1, u2, mem_union, mem_image, exists_prop]
-    rcases le_total 0 x with (h'x | h'x)
-    · refine Or.inl ⟨_, hv' <| mem_image.mpr ⟨x, hx, rfl⟩, ?_⟩
-      simp only [Int.natCast_natAbs, abs_eq_self, h'x]
-    · refine Or.inr ⟨_, hv' <| mem_image.mpr ⟨x, hx, rfl⟩, ?_⟩
-      simp only [abs_of_nonpos h'x, Int.natCast_natAbs, neg_neg]
+  have A  : u ⊆ u1 ∪ u2
+  intro x hx
+  simp only [u1, u2, mem_union, mem_image, exists_prop]
+  rcases le_total 0 x with (h'x | h'x)
+  · refine Or.inl ⟨_, hv' <| mem_image.mpr ⟨x, hx, rfl⟩, ?_⟩
+    simp only [Int.natCast_natAbs, abs_eq_self, h'x]
+  · refine Or.inr ⟨_, hv' <| mem_image.mpr ⟨x, hx, rfl⟩, ?_⟩
+    simp only [abs_of_nonpos h'x, Int.natCast_natAbs, neg_neg]
   exact ⟨_, A, calc
     (∏ x ∈ u1 ∪ u2, (f x * if x = 0 then f 0 else 1)) =
         (∏ x ∈ u1 ∪ u2, f x) * ∏ x ∈ u1 ∩ u2, f x := by

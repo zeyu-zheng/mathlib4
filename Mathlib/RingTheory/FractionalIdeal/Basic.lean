@@ -335,7 +335,8 @@ theorem zero_of_num_eq_bot [NoZeroSMulDivisors R P] (hS : 0 ∉ S) {I : Fraction
   intro x hx
   suffices (den I : R) • x = 0 from
     (smul_eq_zero.mp this).resolve_left (ne_of_mem_of_not_mem (SetLike.coe_mem _) hS)
-  have h_eq : I.den • (I : Submodule R P) = ⊥ := by rw [den_mul_self_eq_num, hI, Submodule.map_bot]
+  have h_eq  : I.den • (I : Submodule R P) = ⊥
+  rw [den_mul_self_eq_num, hI, Submodule.map_bot]
   exact (Submodule.eq_bot_iff _).mp h_eq (den I • x) ⟨x, hx, rfl⟩
 
 theorem num_zero_eq (h_inj : Function.Injective (algebraMap R P)) :

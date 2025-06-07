@@ -228,10 +228,10 @@ theorem exists_isOpen_isBounded_image_inter_of_isCompact_of_forall_continuousWit
     [TopologicalSpace β] {k s : Set β} {f : β → α} (hk : IsCompact k)
     (hf : ∀ x ∈ k, ContinuousWithinAt f s x) :
     ∃ t, k ⊆ t ∧ IsOpen t ∧ IsBounded (f '' (t ∩ s)) := by
-  have : Disjoint (𝓝ˢ k ⊓ 𝓟 s) (comap f (cobounded α)) := by
-    rw [disjoint_assoc, inf_comm, hk.disjoint_nhdsSet_left]
-    exact fun x hx ↦ disjoint_left_comm.2 <|
-      tendsto_comap.disjoint (disjoint_cobounded_nhds _) (hf x hx)
+  have  : Disjoint (𝓝ˢ k ⊓ 𝓟 s) (comap f (cobounded α))
+  rw [disjoint_assoc, inf_comm, hk.disjoint_nhdsSet_left]
+  exact fun x hx ↦ disjoint_left_comm.2 <|
+    tendsto_comap.disjoint (disjoint_cobounded_nhds _) (hf x hx)
   rcases ((((hasBasis_nhdsSet _).inf_principal _)).disjoint_iff ((basis_sets _).comap _)).1 this
     with ⟨U, ⟨hUo, hkU⟩, t, ht, hd⟩
   refine ⟨U, hkU, hUo, (isBounded_compl_iff.2 ht).subset ?_⟩
@@ -475,16 +475,16 @@ theorem _root_.IsComplete.nonempty_iInter_of_nonempty_biInter {s : ℕ → Set �
     (h : ∀ N, (⋂ n ≤ N, s n).Nonempty) (h' : Tendsto (fun n => diam (s n)) atTop (𝓝 0)) :
     (⋂ n, s n).Nonempty := by
   let u N := (h N).some
-  have I : ∀ n N, n ≤ N → u N ∈ s n := by
-    intro n N hn
-    apply mem_of_subset_of_mem _ (h N).choose_spec
-    intro x hx
-    simp only [mem_iInter] at hx
-    exact hx n hn
-  have : CauchySeq u := by
-    apply cauchySeq_of_le_tendsto_0 _ _ h'
-    intro m n N hm hn
-    exact dist_le_diam_of_mem (h's N) (I _ _ hm) (I _ _ hn)
+  have I  : ∀ n N, n ≤ N → u N ∈ s n
+  intro n N hn
+  apply mem_of_subset_of_mem _ (h N).choose_spec
+  intro x hx
+  simp only [mem_iInter] at hx
+  exact hx n hn
+  have  : CauchySeq u
+  apply cauchySeq_of_le_tendsto_0 _ _ h'
+  intro m n N hm hn
+  exact dist_le_diam_of_mem (h's N) (I _ _ hm) (I _ _ hn)
   obtain ⟨x, -, xlim⟩ : ∃ x ∈ s 0, Tendsto (fun n : ℕ => u n) atTop (𝓝 x) :=
     cauchySeq_tendsto_of_isComplete h0 (fun n => I 0 n (zero_le _)) this
   refine ⟨x, mem_iInter.2 fun n => ?_⟩

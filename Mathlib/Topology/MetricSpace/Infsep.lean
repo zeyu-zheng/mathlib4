@@ -416,8 +416,8 @@ theorem Finite.infsep_of_nontrivial (hsf : s.Finite) (hs : s.Nontrivial) :
 
 theorem _root_.Finset.coe_infsep [DecidableEq α] (s : Finset α) : (s : Set α).infsep =
     if hs : s.offDiag.Nonempty then s.offDiag.inf' hs (uncurry dist) else 0 := by
-  have H : (s : Set α).Nontrivial ↔ s.offDiag.Nonempty := by
-    rw [← Set.offDiag_nonempty, ← Finset.coe_offDiag, Finset.coe_nonempty]
+  have H  : (s : Set α).Nontrivial ↔ s.offDiag.Nonempty
+  rw [← Set.offDiag_nonempty, ← Finset.coe_offDiag, Finset.coe_nonempty]
   split_ifs with hs
   · simp_rw [(H.mpr hs).infsep_of_fintype, ← Finset.coe_offDiag, Finset.toFinset_coe]
   · exact (not_nontrivial_iff.mp (H.mp.mt hs)).infsep_zero

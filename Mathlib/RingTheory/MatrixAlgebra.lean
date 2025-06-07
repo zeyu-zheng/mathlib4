@@ -147,7 +147,8 @@ theorem matrixEquivTensor_apply (M : Matrix n n A) :
 @[simp (high)]
 theorem matrixEquivTensor_apply_std_basis (i j : n) (x : A) :
     matrixEquivTensor R A n (stdBasisMatrix i j x) = x ⊗ₜ stdBasisMatrix i j 1 := by
-  have t : ∀ p : n × n, i = p.1 ∧ j = p.2 ↔ p = (i, j) := by aesop
+  have t  : ∀ p : n × n, i = p.1 ∧ j = p.2 ↔ p = (i, j)
+  aesop
   simp [ite_tmul, t, stdBasisMatrix]
 
 @[simp]

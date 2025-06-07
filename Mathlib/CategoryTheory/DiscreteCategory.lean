@@ -280,7 +280,8 @@ variable {C : Type u₂} [Category.{v₂} C]
 @[simp]
 theorem functor_map_id (F : Discrete J ⥤ C) {j : Discrete J} (f : j ⟶ j) :
     F.map f = 𝟙 (F.obj j) := by
-  have h : f = 𝟙 j := by aesop_cat
+  have h  : f = 𝟙 j
+  aesop_cat
   rw [h]
   simp
 

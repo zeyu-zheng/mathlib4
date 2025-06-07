@@ -319,13 +319,13 @@ theorem smul_map_diagonal_volume_pi [DecidableEq ι] {D : ι → ℝ} (h : det (
     ext f
     simp only [LinearMap.coe_proj, Algebra.id.smul_eq_mul, LinearMap.smul_apply, mem_univ_pi,
       mem_preimage, LinearMap.pi_apply, diagonal_toLin']
-  have B : ∀ i, ofReal (abs (D i)) * volume ((D i * ·) ⁻¹' s i) = volume (s i) := by
-    intro i
-    have A : D i ≠ 0 := by
-      simp only [det_diagonal, Ne] at h
-      exact Finset.prod_ne_zero_iff.1 h i (Finset.mem_univ i)
-    rw [volume_preimage_mul_left A, ← mul_assoc, ← ENNReal.ofReal_mul (abs_nonneg _), ← abs_mul,
-      mul_inv_cancel A, abs_one, ENNReal.ofReal_one, one_mul]
+  have B  : ∀ i, ofReal (abs (D i)) * volume ((D i * ·) ⁻¹' s i) = volume (s i)
+  intro i
+  have A  : D i ≠ 0
+  simp only [det_diagonal, Ne] at h
+  exact Finset.prod_ne_zero_iff.1 h i (Finset.mem_univ i)
+  rw [volume_preimage_mul_left A, ← mul_assoc, ← ENNReal.ofReal_mul (abs_nonneg _), ← abs_mul,
+    mul_inv_cancel A, abs_one, ENNReal.ofReal_one, one_mul]
   rw [this, volume_pi_pi, Finset.abs_prod,
     ENNReal.ofReal_prod_of_nonneg fun i _ => abs_nonneg (D i), ← Finset.prod_mul_distrib]
   simp only [B]
@@ -381,8 +381,10 @@ theorem map_linearMap_volume_pi_eq_smul_volume_pi {f : (ι → ℝ) →ₗ[ℝ] 
   classical
     -- this is deduced from the matrix case
     let M := LinearMap.toMatrix' f
-    have A : LinearMap.det f = det M := by simp only [M, LinearMap.det_toMatrix']
-    have B : f = toLin' M := by simp only [M, toLin'_toMatrix']
+    have A  : LinearMap.det f = det M
+    simp only [M, LinearMap.det_toMatrix']
+    have B  : f = toLin' M
+    simp only [M, toLin'_toMatrix']
     rw [A, B]
     apply map_matrix_volume_pi_eq_smul_volume_pi
     rwa [A] at hf

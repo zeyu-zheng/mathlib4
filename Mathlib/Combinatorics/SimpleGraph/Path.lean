@@ -1032,7 +1032,8 @@ theorem reachable_deleteEdges_iff_exists_cycle.aux [DecidableEq V] {u v w : V}
   let puw := (c.takeUntil v hv).takeUntil w hw
   let pwv := (c.takeUntil v hv).dropUntil w hw
   let pvu := c.dropUntil v hv
-  have : c = (puw.append pwv).append pvu := by simp [puw, pwv, pvu]
+  have  : c = (puw.append pwv).append pvu
+  simp [puw, pwv, pvu]
   -- We have two walks from v to w
   --      pvu     puw
   --   v ----> u ----> w
@@ -1064,9 +1065,9 @@ theorem adj_and_reachable_delete_edges_iff_exists_cycle {v w : V} :
   · rintro ⟨u, c, hc, he⟩
     refine ⟨c.adj_of_mem_edges he, ?_⟩
     by_contra! hb
-    have hb' : ∀ p : G.Walk w v, s(w, v) ∈ p.edges := by
-      intro p
-      simpa [Sym2.eq_swap] using hb p.reverse
+    have hb'  : ∀ p : G.Walk w v, s(w, v) ∈ p.edges
+    intro p
+    simpa [Sym2.eq_swap] using hb p.reverse
     have hvc : v ∈ c.support := Walk.fst_mem_support_of_mem_edges c he
     refine reachable_deleteEdges_iff_exists_cycle.aux hb' (c.rotate hvc) (hc.isTrail.rotate hvc)
       ?_ (Walk.start_mem_support _)

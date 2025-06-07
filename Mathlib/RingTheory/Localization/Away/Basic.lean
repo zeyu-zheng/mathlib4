@@ -190,9 +190,9 @@ lemma away_of_isIdempotentElem {R S} [CommRing R] [CommRing S] [Algebra R S]
     (H' : Function.Surjective (algebraMap R S)) :
     IsLocalization.Away e S where
   map_units' r := by
-    have : algebraMap R S e = 1 := by
-      rw [← (algebraMap R S).map_one, eq_comm, ← sub_eq_zero, ← map_sub, ← RingHom.mem_ker,
-        H, Ideal.mem_span_singleton]
+    have  : algebraMap R S e = 1
+    rw [← (algebraMap R S).map_one, eq_comm, ← sub_eq_zero, ← map_sub, ← RingHom.mem_ker,
+      H, Ideal.mem_span_singleton]
     obtain ⟨r, n, rfl⟩ := r
     simp [this]
   surj' z := by
@@ -373,19 +373,19 @@ theorem exists_reduced_fraction' {b : B} (hb : b ≠ 0) (hx : Irreducible x) :
     ∃ (a : R) (n : ℤ), ¬x ∣ a ∧ selfZPow x B n * algebraMap R B a = b := by
   obtain ⟨⟨a₀, y⟩, H⟩ := surj (Submonoid.powers x) b
   obtain ⟨d, hy⟩ := (Submonoid.mem_powers_iff y.1 x).mp y.2
-  have ha₀ : a₀ ≠ 0 := by
-    haveI :=
-      @isDomain_of_le_nonZeroDivisors B _ R _ _ _ (Submonoid.powers x) _
+  have ha₀  : a₀ ≠ 0
+  haveI :=
+    @isDomain_of_le_nonZeroDivisors B _ R _ _ _ (Submonoid.powers x) _
+      (powers_le_nonZeroDivisors_of_noZeroDivisors hx.ne_zero)
+  simp only [map_zero, ← hy, map_pow] at H
+  apply ((injective_iff_map_eq_zero' (algebraMap R B)).mp _ a₀).mpr.mt
+  · rw [← H]
+    apply mul_ne_zero hb (pow_ne_zero _ _)
+    exact
+      IsLocalization.to_map_ne_zero_of_mem_nonZeroDivisors B
         (powers_le_nonZeroDivisors_of_noZeroDivisors hx.ne_zero)
-    simp only [map_zero, ← hy, map_pow] at H
-    apply ((injective_iff_map_eq_zero' (algebraMap R B)).mp _ a₀).mpr.mt
-    · rw [← H]
-      apply mul_ne_zero hb (pow_ne_zero _ _)
-      exact
-        IsLocalization.to_map_ne_zero_of_mem_nonZeroDivisors B
-          (powers_le_nonZeroDivisors_of_noZeroDivisors hx.ne_zero)
-          (mem_nonZeroDivisors_iff_ne_zero.mpr hx.ne_zero)
-    · exact IsLocalization.injective B (powers_le_nonZeroDivisors_of_noZeroDivisors hx.ne_zero)
+        (mem_nonZeroDivisors_iff_ne_zero.mpr hx.ne_zero)
+  · exact IsLocalization.injective B (powers_le_nonZeroDivisors_of_noZeroDivisors hx.ne_zero)
   simp only [← hy] at H
   obtain ⟨m, a, hyp1, hyp2⟩ := WfDvdMonoid.max_power_factor ha₀ hx
   refine ⟨a, m - d, ?_⟩

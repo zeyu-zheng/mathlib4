@@ -191,12 +191,12 @@ example : Derivable "MIUIU" := by
   exact Derivable.r2 MIU_der -- `"MIUIU"` can be derived as `"MIU"` can.
 
 example : Derivable "MUI" := by
-  have h₂ : Derivable "MII" := by
-    change Derivable (M :: [I] ++ [I])
-    exact Derivable.r2 Derivable.mk
-  have h₃ : Derivable "MIIII" := by
-    change Derivable (M :: [I, I] ++ [I, I])
-    exact Derivable.r2 h₂
+  have h₂  : Derivable "MII"
+  change Derivable (M :: [I] ++ [I])
+  exact Derivable.r2 Derivable.mk
+  have h₃  : Derivable "MIIII"
+  change Derivable (M :: [I, I] ++ [I, I])
+  exact Derivable.r2 h₂
   change Derivable ([M] ++ U :: [I])
   exact Derivable.r3 h₃ -- We prove our main goal using rule 3
 

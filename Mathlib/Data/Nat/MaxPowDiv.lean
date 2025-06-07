@@ -102,11 +102,11 @@ theorem pow_dvd (p n : ℕ) : p ^ (p.maxPowDiv n) ∣ n := by
 theorem le_of_dvd {p n pow : ℕ} (hp : 1 < p) (hn : 0 < n) (h : p ^ pow ∣ n) :
     pow ≤ p.maxPowDiv n := by
   have ⟨c, hc⟩ := h
-  have : 0 < c := by
-    apply Nat.pos_of_ne_zero
-    intro h'
-    rw [h',mul_zero] at hc
-    exact not_eq_zero_of_lt hn hc
+  have  : 0 < c
+  apply Nat.pos_of_ne_zero
+  intro h'
+  rw [h',mul_zero] at hc
+  exact not_eq_zero_of_lt hn hc
   simp [hc, base_pow_mul hp this]
 
 end maxPowDiv

@@ -21,8 +21,8 @@ variable [MeasurableSpace α] {μ : Measure α} {f g : α → ℝ} {s : Set α}
 theorem volume_regionBetween_eq_integral' [SigmaFinite μ] (f_int : IntegrableOn f s μ)
     (g_int : IntegrableOn g s μ) (hs : MeasurableSet s) (hfg : f ≤ᵐ[μ.restrict s] g) :
     μ.prod volume (regionBetween f g s) = ENNReal.ofReal (∫ y in s, (g - f) y ∂μ) := by
-  have h : g - f =ᵐ[μ.restrict s] fun x => Real.toNNReal (g x - f x) :=
-    hfg.mono fun x hx => (Real.coe_toNNReal _ <| sub_nonneg.2 hx).symm
+  have h : g - f =ᵐ[μ.restrict s] fun x => Real.toNNReal (g x - f x)
+  apply hfg.mono fun x hx => (Real.coe_toNNReal _ <| sub_nonneg.2 hx).symm
   rw [volume_regionBetween_eq_lintegral f_int.aemeasurable g_int.aemeasurable hs,
     integral_congr_ae h, lintegral_congr_ae,
     lintegral_coe_eq_integral _ ((integrable_congr h).mp (g_int.sub f_int))]
@@ -80,8 +80,8 @@ of finite integrals, see `intervalIntegral.integral_comp_neg`.
 itself, it does not apply when `f` is more complicated -/
 theorem integral_comp_neg_Iic {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     (c : ℝ) (f : ℝ → E) : (∫ x in Iic c, f (-x)) = ∫ x in Ioi (-c), f x := by
-  have A : MeasurableEmbedding fun x : ℝ => -x :=
-    (Homeomorph.neg ℝ).closedEmbedding.measurableEmbedding
+  have A : MeasurableEmbedding fun x : ℝ => -x
+  apply (Homeomorph.neg ℝ).closedEmbedding.measurableEmbedding
   have := MeasurableEmbedding.setIntegral_map (μ := volume) A f (Ici (-c))
   rw [Measure.map_neg_eq_self (volume : Measure ℝ)] at this
   simp_rw [← integral_Ici_eq_integral_Ioi, this, neg_preimage, preimage_neg_Ici, neg_neg]
@@ -95,16 +95,16 @@ theorem integral_comp_neg_Ioi {E : Type*} [NormedAddCommGroup E] [NormedSpace �
 
 theorem integral_comp_abs {f : ℝ → ℝ} :
     ∫ x, f |x| = 2 * ∫ x in Ioi (0 : ℝ), f x := by
-  have eq : ∫ (x : ℝ) in Ioi 0, f |x| = ∫ (x : ℝ) in Ioi 0, f x := by
-    refine setIntegral_congr measurableSet_Ioi (fun _ hx => ?_)
-    rw [abs_eq_self.mpr (le_of_lt (by exact hx))]
+  have eq  : ∫ (x : ℝ) in Ioi 0, f |x| = ∫ (x : ℝ) in Ioi 0, f x
+  refine setIntegral_congr measurableSet_Ioi (fun _ hx => ?_)
+  rw [abs_eq_self.mpr (le_of_lt (by exact hx))]
   by_cases hf : IntegrableOn (fun x => f |x|) (Ioi 0)
-  · have int_Iic : IntegrableOn (fun x ↦ f |x|) (Iic 0) := by
-      rw [← Measure.map_neg_eq_self (volume : Measure ℝ)]
-      let m : MeasurableEmbedding fun x : ℝ => -x := (Homeomorph.neg ℝ).measurableEmbedding
-      rw [m.integrableOn_map_iff]
-      simp_rw [Function.comp, abs_neg, neg_preimage, preimage_neg_Iic, neg_zero]
-      exact integrableOn_Ici_iff_integrableOn_Ioi.mpr hf
+  · have int_Iic : IntegrableOn (fun x ↦ f |x|) (Iic 0)
+    rw [← Measure.map_neg_eq_self (volume : Measure ℝ)]
+    let m : MeasurableEmbedding fun x : ℝ => -x := (Homeomorph.neg ℝ).measurableEmbedding
+    rw [m.integrableOn_map_iff]
+    simp_rw [Function.comp, abs_neg, neg_preimage, preimage_neg_Iic, neg_zero]
+    exact integrableOn_Ici_iff_integrableOn_Ioi.mpr hf
     calc
       _ = (∫ x in Iic 0, f |x|) + ∫ x in Ioi 0, f |x| := by
         rw [← integral_union (Iic_disjoint_Ioi le_rfl) measurableSet_Ioi int_Iic hf,
@@ -115,7 +115,7 @@ theorem integral_comp_abs {f : ℝ → ℝ} :
         rw [← neg_zero, ← integral_comp_neg_Iic, neg_zero]
         refine setIntegral_congr measurableSet_Iic (fun _ hx => ?_)
         rw [abs_eq_neg_self.mpr (by exact hx)]
-  · have : ¬ Integrable (fun x => f |x|) := by
-      contrapose! hf
-      exact hf.integrableOn
+  · have : ¬ Integrable (fun x => f |x|)
+    contrapose! hf
+    exact hf.integrableOn
     rw [← eq, integral_undef hf, integral_undef this, mul_zero]

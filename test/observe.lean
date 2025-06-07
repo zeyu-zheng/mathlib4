@@ -9,10 +9,10 @@ theorem euclid (n : ℕ) : ∃ N, n < N ∧ N.Prime := by
   let N := n.factorial + 1
   let p := minFac N
   use p
-  have prime : p.Prime := by
-    apply minFac_prime
-    observe : n.factorial > 0
-    omega
+  have prime  : p.Prime
+  apply minFac_prime
+  observe : n.factorial > 0
+  omega
   constructor
   · by_contra!
     observe : p ∣ n.factorial

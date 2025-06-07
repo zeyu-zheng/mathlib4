@@ -274,10 +274,10 @@ theorem orderOf_eq_of_pow_and_pow_div_prime (hn : 0 < n) (hx : x ^ n = 1)
   suffices a = 1 by simp [this, ha]
   -- Assume `a` is not one...
   by_contra h
-  have a_min_fac_dvd_p_sub_one : a.minFac ∣ n := by
-    obtain ⟨b, hb⟩ : ∃ b : ℕ, a = b * a.minFac := exists_eq_mul_left_of_dvd a.minFac_dvd
-    rw [hb, ← mul_assoc] at ha
-    exact Dvd.intro_left (orderOf x * b) ha.symm
+  have a_min_fac_dvd_p_sub_one  : a.minFac ∣ n
+  obtain ⟨b, hb⟩ : ∃ b : ℕ, a = b * a.minFac := exists_eq_mul_left_of_dvd a.minFac_dvd
+  rw [hb, ← mul_assoc] at ha
+  exact Dvd.intro_left (orderOf x * b) ha.symm
   -- Use the minimum prime factor of `a` as `p`.
   refine hd a.minFac (Nat.minFac_prime h) a_min_fac_dvd_p_sub_one ?_
   rw [← orderOf_dvd_iff_pow_eq_one, Nat.dvd_div_iff_mul_dvd a_min_fac_dvd_p_sub_one, ha, mul_comm,
@@ -480,18 +480,18 @@ theorem pow_inj_iff_of_orderOf_eq_zero (h : orderOf x = 0) {n m : ℕ} : x ^ n =
 theorem infinite_not_isOfFinOrder {x : G} (h : ¬IsOfFinOrder x) :
     { y : G | ¬IsOfFinOrder y }.Infinite := by
   let s := { n | 0 < n }.image fun n : ℕ => x ^ n
-  have hs : s ⊆ { y : G | ¬IsOfFinOrder y } := by
-    rintro - ⟨n, hn : 0 < n, rfl⟩ (contra : IsOfFinOrder (x ^ n))
-    apply h
-    rw [isOfFinOrder_iff_pow_eq_one] at contra ⊢
-    obtain ⟨m, hm, hm'⟩ := contra
-    exact ⟨n * m, mul_pos hn hm, by rwa [pow_mul]⟩
+  have hs  : s ⊆ { y : G | ¬IsOfFinOrder y }
+  rintro - ⟨n, hn : 0 < n, rfl⟩ (contra : IsOfFinOrder (x ^ n))
+  apply h
+  rw [isOfFinOrder_iff_pow_eq_one] at contra ⊢
+  obtain ⟨m, hm, hm'⟩ := contra
+  exact ⟨n * m, mul_pos hn hm, by rwa [pow_mul]⟩
   suffices s.Infinite by exact this.mono hs
   contrapose! h
-  have : ¬Injective fun n : ℕ => x ^ n := by
-    have := Set.not_injOn_infinite_finite_image (Set.Ioi_infinite 0) (Set.not_infinite.mp h)
-    contrapose! this
-    exact Set.injOn_of_injective this
+  have  : ¬Injective fun n : ℕ => x ^ n
+  have := Set.not_injOn_infinite_finite_image (Set.Ioi_infinite 0) (Set.not_infinite.mp h)
+  contrapose! this
+  exact Set.injOn_of_injective this
   rwa [injective_pow_iff_not_isOfFinOrder, Classical.not_not] at this
 
 @[to_additive (attr := simp)]
@@ -1089,7 +1089,8 @@ lemma CharP.addOrderOf_one : CharP R (addOrderOf (1 : R)) where
 variable {R} in
 lemma charP_of_ne_zero (hn : card R = p) (hR : ∀ i < p, (i : R) = 0 → i = 0) : CharP R p where
   cast_eq_zero_iff' n := by
-    have H : (p : R) = 0 := by rw [← hn, Nat.cast_card_eq_zero]
+    have H  : (p : R) = 0
+    rw [← hn, Nat.cast_card_eq_zero]
     constructor
     · intro h
       rw [← Nat.mod_add_div n p, Nat.cast_add, Nat.cast_mul, H, zero_mul, add_zero] at h
@@ -1105,7 +1106,8 @@ end NonAssocRing
 lemma charP_of_prime_pow_injective (R) [Ring R] [Fintype R] (p n : ℕ) [hp : Fact p.Prime]
     (hn : card R = p ^ n) (hR : ∀ i ≤ n, (p : R) ^ i = 0 → i = n) : CharP R (p ^ n) := by
   obtain ⟨c, hc⟩ := CharP.exists R
-  have hcpn : c ∣ p ^ n := by rw [← CharP.cast_eq_zero_iff R c, ← hn, Nat.cast_card_eq_zero]
+  have hcpn  : c ∣ p ^ n
+  rw [← CharP.cast_eq_zero_iff R c, ← hn, Nat.cast_card_eq_zero]
   obtain ⟨i, hi, rfl⟩ : ∃ i ≤ n, c = p ^ i := by rwa [Nat.dvd_prime_pow hp.1] at hcpn
   obtain rfl : i = n := hR i hi $ by rw [← Nat.cast_pow, CharP.cast_eq_zero]
   assumption

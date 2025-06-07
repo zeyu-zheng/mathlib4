@@ -380,21 +380,21 @@ lemma norm_le_interp_of_mem_verticalClosedStrip' (f : ℂ → E) {z : ℂ} {a b 
     (hB : BddAbove ((norm ∘ f) '' (verticalClosedStrip 0 1)))
     (ha : ∀ z ∈ re ⁻¹' {0}, ‖f z‖ ≤ a) (hb : ∀ z ∈ re ⁻¹' {1}, ‖f z‖ ≤ b) :
     ‖f z‖ ≤ a ^ (1 - z.re) * b ^ z.re := by
-  have : ‖interpStrip f z‖ ≤ (sSupNormIm f 0) ^ (1 - z.re) * (sSupNormIm f 1) ^ z.re := by
-    by_cases h : sSupNormIm f 0 = 0 ∨ sSupNormIm f 1 = 0
-    · rw [interpStrip_eq_of_zero f z h, norm_zero, mul_nonneg_iff]
-      left
-      exact ⟨Real.rpow_nonneg (sSupNormIm_nonneg f _) _,
-        Real.rpow_nonneg (sSupNormIm_nonneg f _) _ ⟩
-    · push_neg at h
-      rcases h with ⟨h0, h1⟩
-      rw [ne_comm] at h0 h1
-      simp_rw [interpStrip_eq_of_pos f _ (lt_of_le_of_ne (sSupNormIm_nonneg f 0) h0)
-        (lt_of_le_of_ne (sSupNormIm_nonneg f 1) h1)]
-      simp only [norm_eq_abs, map_mul]
-      rw [abs_cpow_eq_rpow_re_of_pos ((Ne.le_iff_lt h0).mp (sSupNormIm_nonneg f _)) _]
-      rw [abs_cpow_eq_rpow_re_of_pos ((Ne.le_iff_lt h1).mp (sSupNormIm_nonneg f _)) _]
-      simp only [sub_re, one_re, le_refl]
+  have  : ‖interpStrip f z‖ ≤ (sSupNormIm f 0) ^ (1 - z.re) * (sSupNormIm f 1) ^ z.re
+  by_cases h : sSupNormIm f 0 = 0 ∨ sSupNormIm f 1 = 0
+  · rw [interpStrip_eq_of_zero f z h, norm_zero, mul_nonneg_iff]
+    left
+    exact ⟨Real.rpow_nonneg (sSupNormIm_nonneg f _) _,
+      Real.rpow_nonneg (sSupNormIm_nonneg f _) _ ⟩
+  · push_neg at h
+    rcases h with ⟨h0, h1⟩
+    rw [ne_comm] at h0 h1
+    simp_rw [interpStrip_eq_of_pos f _ (lt_of_le_of_ne (sSupNormIm_nonneg f 0) h0)
+      (lt_of_le_of_ne (sSupNormIm_nonneg f 1) h1)]
+    simp only [norm_eq_abs, map_mul]
+    rw [abs_cpow_eq_rpow_re_of_pos ((Ne.le_iff_lt h0).mp (sSupNormIm_nonneg f _)) _]
+    rw [abs_cpow_eq_rpow_re_of_pos ((Ne.le_iff_lt h1).mp (sSupNormIm_nonneg f _)) _]
+    simp only [sub_re, one_re, le_refl]
   apply (norm_le_interpStrip_of_mem_verticalClosedStrip f hz hd hB).trans (this.trans _)
   apply mul_le_mul_of_nonneg _ _ (Real.rpow_nonneg (sSupNormIm_nonneg f _) _)
   · apply (Real.rpow_nonneg _ _)

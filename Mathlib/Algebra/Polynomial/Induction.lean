@@ -38,18 +38,18 @@ variable [Semiring R] {p q r : R[X]}
 protected theorem induction_on {M : R[X] → Prop} (p : R[X]) (h_C : ∀ a, M (C a))
     (h_add : ∀ p q, M p → M q → M (p + q))
     (h_monomial : ∀ (n : ℕ) (a : R), M (C a * X ^ n) → M (C a * X ^ (n + 1))) : M p := by
-  have A : ∀ {n : ℕ} {a}, M (C a * X ^ n) := by
-    intro n a
-    induction' n with n ih
-    · rw [pow_zero, mul_one]; exact h_C a
-    · exact h_monomial _ _ ih
-  have B : ∀ s : Finset ℕ, M (s.sum fun n : ℕ => C (p.coeff n) * X ^ n) := by
-    apply Finset.induction
-    · convert h_C 0
-      exact C_0.symm
-    · intro n s ns ih
-      rw [sum_insert ns]
-      exact h_add _ _ A ih
+  have A  : ∀ {n : ℕ} {a}, M (C a * X ^ n)
+  intro n a
+  induction' n with n ih
+  · rw [pow_zero, mul_one]; exact h_C a
+  · exact h_monomial _ _ ih
+  have B  : ∀ s : Finset ℕ, M (s.sum fun n : ℕ => C (p.coeff n) * X ^ n)
+  apply Finset.induction
+  · convert h_C 0
+    exact C_0.symm
+  · intro n s ns ih
+    rw [sum_insert ns]
+    exact h_add _ _ A ih
   rw [← sum_C_mul_X_pow_eq p, Polynomial.sum]
   exact B (support p)
 
@@ -79,10 +79,10 @@ theorem mem_span_C_coeff : f ∈ Ideal.span { g : R[X] | ∃ i : ℕ, g = C (coe
   nth_rw 1 [(sum_C_mul_X_pow_eq f).symm]
   refine Submodule.sum_mem _ fun n _hn => ?_
   dsimp
-  have : C (coeff f n) ∈ p := by
-    apply subset_span
-    rw [mem_setOf_eq]
-    use n
+  have  : C (coeff f n) ∈ p
+  apply subset_span
+  rw [mem_setOf_eq]
+  use n
   have : monomial n (1 : R) • C (coeff f n) ∈ p := p.smul_mem _ this
   convert this using 1
   simp only [monomial_mul_C, one_mul, smul_eq_mul]

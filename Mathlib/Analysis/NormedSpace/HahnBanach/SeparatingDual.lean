@@ -162,9 +162,10 @@ lemma completeSpace_of_completeSpace_continuousLinearMap [CompleteSpace (E →L[
   have : CauchySeq g := (ContinuousLinearMap.smulRightL 𝕜 E F φ).lipschitz.cauchySeq_comp hf
   obtain ⟨a, ha⟩ : ∃ a, Tendsto g atTop (𝓝 a) := cauchy_iff_exists_le_nhds.mp this
   refine ⟨a v, ?_⟩
-  have : Tendsto (fun n ↦ g n v) atTop (𝓝 (a v)) := by
-    have : Continuous (fun (i : E →L[𝕜] F) ↦ i v) := by fun_prop
-    exact (this.tendsto _).comp ha
+  have  : Tendsto (fun n ↦ g n v) atTop (𝓝 (a v))
+  have  : Continuous (fun (i : E →L[𝕜] F) ↦ i v)
+  fun_prop
+  exact (this.tendsto _).comp ha
   simpa [g, ContinuousLinearMap.smulRightL, hφ]
 
 lemma completeSpace_continuousLinearMap_iff :
@@ -188,9 +189,9 @@ lemma completeSpace_of_completeSpace_continuousMultilinearMap
   let g : ℕ → (ContinuousMultilinearMap 𝕜 M F) := fun n ↦
     compContinuousLinearMapL φ
     (ContinuousMultilinearMap.smulRightL 𝕜 _ F ((ContinuousMultilinearMap.mkPiAlgebra 𝕜 ι 𝕜)) (f n))
-  have : CauchySeq g := by
-    refine (ContinuousLinearMap.lipschitz _).cauchySeq_comp ?_
-    exact (ContinuousLinearMap.lipschitz _).cauchySeq_comp hf
+  have  : CauchySeq g
+  refine (ContinuousLinearMap.lipschitz _).cauchySeq_comp ?_
+  exact (ContinuousLinearMap.lipschitz _).cauchySeq_comp hf
   obtain ⟨a, ha⟩ : ∃ a, Tendsto g atTop (𝓝 a) := cauchy_iff_exists_le_nhds.mp this
   refine ⟨a m, ?_⟩
   have : Tendsto (fun n ↦ g n m) atTop (𝓝 (a m)) := ((continuous_eval_const _).tendsto _).comp ha

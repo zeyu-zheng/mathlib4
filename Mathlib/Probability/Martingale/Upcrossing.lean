@@ -311,11 +311,11 @@ theorem Adapted.isStoppingTime_crossing (hf : Adapted ℱ f) :
   · refine ⟨isStoppingTime_const _ 0, ?_⟩
     simp [hitting_isStoppingTime hf measurableSet_Iic]
   · obtain ⟨_, ih₂⟩ := ih
-    have : IsStoppingTime ℱ (upperCrossingTime a b f N (k + 1)) := by
-      intro n
-      simp_rw [upperCrossingTime_succ_eq]
-      exact isStoppingTime_hitting_isStoppingTime ih₂ (fun _ => lowerCrossingTime_le)
-        measurableSet_Ici hf _
+    have  : IsStoppingTime ℱ (upperCrossingTime a b f N (k + 1))
+    intro n
+    simp_rw [upperCrossingTime_succ_eq]
+    exact isStoppingTime_hitting_isStoppingTime ih₂ (fun _ => lowerCrossingTime_le)
+      measurableSet_Ici hf _
     refine ⟨this, ?_⟩
     intro n
     exact isStoppingTime_hitting_isStoppingTime this (fun _ => upperCrossingTime_le)
@@ -536,10 +536,10 @@ theorem le_sub_of_le_upcrossingsBefore (hN : 0 < N) (hab : a < b)
 theorem sub_eq_zero_of_upcrossingsBefore_lt (hab : a < b) (hn : upcrossingsBefore a b f N ω < n) :
     stoppedValue f (upperCrossingTime a b f N (n + 1)) ω -
       stoppedValue f (lowerCrossingTime a b f N n) ω = 0 := by
-  have : N ≤ upperCrossingTime a b f N n ω := by
-    rw [upcrossingsBefore] at hn
-    rw [← not_lt]
-    exact fun h => not_le.2 hn (le_csSup (upperCrossingTime_lt_bddAbove hab) h)
+  have  : N ≤ upperCrossingTime a b f N n ω
+  rw [upcrossingsBefore] at hn
+  rw [← not_lt]
+  exact fun h => not_le.2 hn (le_csSup (upperCrossingTime_lt_bddAbove hab) h)
   simp [stoppedValue, upperCrossingTime_stabilize' (Nat.le_succ n) this,
     lowerCrossingTime_stabilize' le_rfl (le_trans this upperCrossingTime_le_lowerCrossingTime)]
 
@@ -616,14 +616,15 @@ theorem crossing_pos_eq (hab : a < b) :
     upperCrossingTime 0 (b - a) (fun n ω => (f n ω - a)⁺) N n = upperCrossingTime a b f N n ∧
       lowerCrossingTime 0 (b - a) (fun n ω => (f n ω - a)⁺) N n = lowerCrossingTime a b f N n := by
   have hab' : 0 < b - a := sub_pos.2 hab
-  have hf : ∀ ω i, b - a ≤ (f i ω - a)⁺ ↔ b ≤ f i ω := by
-    intro i ω
-    refine ⟨fun h => ?_, fun h => ?_⟩
-    · rwa [← sub_le_sub_iff_right a, ←
-        posPart_eq_of_posPart_pos (lt_of_lt_of_le hab' h)]
-    · rw [← sub_le_sub_iff_right a] at h
-      rwa [posPart_eq_self.2 (le_trans hab'.le h)]
-  have hf' (ω i) : (f i ω - a)⁺ ≤ 0 ↔ f i ω ≤ a := by rw [posPart_nonpos, sub_nonpos]
+  have hf  : ∀ ω i, b - a ≤ (f i ω - a)⁺ ↔ b ≤ f i ω
+  intro i ω
+  refine ⟨fun h => ?_, fun h => ?_⟩
+  · rwa [← sub_le_sub_iff_right a, ←
+      posPart_eq_of_posPart_pos (lt_of_lt_of_le hab' h)]
+  · rw [← sub_le_sub_iff_right a] at h
+    rwa [posPart_eq_self.2 (le_trans hab'.le h)]
+  have hf' (ω i)  : (f i ω - a)⁺ ≤ 0 ↔ f i ω ≤ a
+  rw [posPart_nonpos, sub_nonpos]
   induction' n with k ih
   · refine ⟨rfl, ?_⟩
     #adaptation_note /-- nightly-2024-03-16: simp was
@@ -770,13 +771,13 @@ theorem Adapted.measurable_upcrossings (hf : Adapted ℱ f) (hab : a < b) :
 
 theorem upcrossings_lt_top_iff :
     upcrossings a b f ω < ∞ ↔ ∃ k, ∀ N, upcrossingsBefore a b f N ω ≤ k := by
-  have : upcrossings a b f ω < ∞ ↔ ∃ k : ℝ≥0, upcrossings a b f ω ≤ k := by
-    constructor
-    · intro h
-      lift upcrossings a b f ω to ℝ≥0 using h.ne with r hr
-      exact ⟨r, le_rfl⟩
-    · rintro ⟨k, hk⟩
-      exact lt_of_le_of_lt hk ENNReal.coe_lt_top
+  have  : upcrossings a b f ω < ∞ ↔ ∃ k : ℝ≥0, upcrossings a b f ω ≤ k
+  constructor
+  · intro h
+    lift upcrossings a b f ω to ℝ≥0 using h.ne with r hr
+    exact ⟨r, le_rfl⟩
+  · rintro ⟨k, hk⟩
+    exact lt_of_le_of_lt hk ENNReal.coe_lt_top
   simp_rw [this, upcrossings, iSup_le_iff]
   constructor <;> rintro ⟨k, hk⟩
   · obtain ⟨m, hm⟩ := exists_nat_ge k
@@ -791,11 +792,11 @@ theorem Submartingale.mul_lintegral_upcrossings_le_lintegral_pos_part [IsFiniteM
       ⨆ N, ∫⁻ ω, ENNReal.ofReal ((f N ω - a)⁺) ∂μ := by
   by_cases hab : a < b
   · simp_rw [upcrossings]
-    have : ∀ N, ∫⁻ ω, ENNReal.ofReal ((f N ω - a)⁺) ∂μ = ENNReal.ofReal (∫ ω, (f N ω - a)⁺ ∂μ) := by
-      intro N
-      rw [ofReal_integral_eq_lintegral_ofReal]
-      · exact (hf.sub_martingale (martingale_const _ _ _)).pos.integrable _
-      · exact eventually_of_forall fun ω => posPart_nonneg _
+    have  : ∀ N, ∫⁻ ω, ENNReal.ofReal ((f N ω - a)⁺) ∂μ = ENNReal.ofReal (∫ ω, (f N ω - a)⁺ ∂μ)
+    intro N
+    rw [ofReal_integral_eq_lintegral_ofReal]
+    · exact (hf.sub_martingale (martingale_const _ _ _)).pos.integrable _
+    · exact eventually_of_forall fun ω => posPart_nonneg _
     rw [lintegral_iSup']
     · simp_rw [this, ENNReal.mul_iSup, iSup_le_iff]
       intro N

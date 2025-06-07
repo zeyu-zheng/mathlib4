@@ -157,11 +157,11 @@ theorem mem_supp {α : TypeVec n} (x : F α) (i) (u : α i) :
     u ∈ supp x i ↔ ∀ a f, abs ⟨a, f⟩ = x → u ∈ f i '' univ := by
   rw [supp]; dsimp; constructor
   · intro h a f haf
-    have : LiftP (fun i u => u ∈ f i '' univ) x := by
-      rw [liftP_iff]
-      refine ⟨a, f, haf.symm, ?_⟩
-      intro i u
-      exact mem_image_of_mem _ (mem_univ _)
+    have  : LiftP (fun i u => u ∈ f i '' univ) x
+    rw [liftP_iff]
+    refine ⟨a, f, haf.symm, ?_⟩
+    intro i u
+    exact mem_image_of_mem _ (mem_univ _)
     exact h this
   intro h p; rw [liftP_iff]
   rintro ⟨a, f, xeq, h'⟩
@@ -176,13 +176,15 @@ theorem has_good_supp_iff {α : TypeVec n} (x : F α) :
       ∃ a f, abs ⟨a, f⟩ = x ∧ ∀ i a' f', abs ⟨a', f'⟩ = x → f i '' univ ⊆ f' i '' univ := by
   constructor
   · intro h
-    have : LiftP (supp x) x := by rw [h]; introv; exact id
+    have  : LiftP (supp x) x
+    rw [h]; introv; exact id
     rw [liftP_iff] at this
     rcases this with ⟨a, f, xeq, h'⟩
     refine ⟨a, f, xeq.symm, ?_⟩
     intro a' f' h''
     rintro hu u ⟨j, _h₂, hfi⟩
-    have hh : u ∈ supp x a' := by rw [← hfi]; apply h'
+    have hh  : u ∈ supp x a'
+    rw [← hfi]; apply h'
     exact (mem_supp x _ u).mp hh _ _ hu
   rintro ⟨a, f, xeq, h⟩ p; rw [liftP_iff]; constructor
   · rintro ⟨a', f', xeq', h'⟩ i u usuppx

@@ -551,7 +551,8 @@ theorem zpow_of_gcd_eq_one (h : IsPrimitiveRoot ζ k) (i : ℤ) (hi : i.gcd k = 
   · lift i to ℕ using h0
     rw [zpow_natCast]
     exact h.pow_of_coprime i hi
-  have : 0 ≤ -i := by simp only [not_le, neg_nonneg] at h0 ⊢; exact le_of_lt h0
+  have  : 0 ≤ -i
+  simp only [not_le, neg_nonneg] at h0 ⊢; exact le_of_lt h0
   lift -i to ℕ using this with i' hi'
   rw [← inv_iff, ← zpow_neg, ← hi', zpow_natCast]
   apply h.pow_of_coprime
@@ -593,11 +594,11 @@ theorem neZero' {n : ℕ+} (hζ : IsPrimitiveRoot ζ n) : NeZero ((n : ℕ) : R)
     have := hζ.pow_eq_one
     rw [hm.1, hk, pow_succ', mul_assoc, pow_mul', ← frobenius_def, ← frobenius_one p] at this
     exfalso
-    have hpos : 0 < p ^ k * m := by
-      refine mul_pos (pow_pos hpri.1.pos _) (Nat.pos_of_ne_zero fun h => ?_)
-      have H := hm.1
-      rw [h] at H
-      simp at H
+    have hpos  : 0 < p ^ k * m
+    refine mul_pos (pow_pos hpri.1.pos _) (Nat.pos_of_ne_zero fun h => ?_)
+    have H := hm.1
+    rw [h] at H
+    simp at H
     refine hζ.pow_ne_one_of_pos_of_lt hpos ?_ (frobenius_inj R p this)
     rw [hm.1, hk, pow_succ', mul_assoc, mul_comm p]
     exact lt_mul_of_one_lt_right hpos hpri.1.one_lt
@@ -671,7 +672,8 @@ theorem zmodEquivZPowers_apply_coe_int (i : ℤ) :
 @[simp]
 theorem zmodEquivZPowers_apply_coe_nat (i : ℕ) :
     h.zmodEquivZPowers i = Additive.ofMul (⟨ζ ^ i, i, rfl⟩ : Subgroup.zpowers ζ) := by
-  have : (i : ZMod k) = (i : ℤ) := by norm_cast
+  have  : (i : ZMod k) = (i : ℤ)
+  norm_cast
   simp only [this, zmodEquivZPowers_apply_coe_int, zpow_natCast]
 
 @[simp]
@@ -901,10 +903,10 @@ theorem nthRoots_one_eq_biUnion_primitiveRoots' {ζ : R} {n : ℕ+} (h : IsPrimi
       Finset.mem_biUnion, Finset.mem_filter, Finset.mem_range, mem_nthRoots, Finset.mem_mk,
       Nat.mem_divisors, and_true_iff, Ne, PNat.ne_zero, PNat.pos, not_false_iff]
     rintro ⟨a, ⟨d, hd⟩, ha⟩
-    have hazero : 0 < a := by
-      contrapose! hd with ha0
-      simp_all only [nonpos_iff_eq_zero, zero_mul]
-      exact n.ne_zero
+    have hazero  : 0 < a
+    contrapose! hd with ha0
+    simp_all only [nonpos_iff_eq_zero, zero_mul]
+    exact n.ne_zero
     rw [mem_primitiveRoots hazero] at ha
     rw [hd, pow_mul, ha.pow_eq_one, one_pow]
   · apply le_of_eq

@@ -65,9 +65,9 @@ theorem finrank_add_le_finrank_add_finrank (s t : Submodule K V) [FiniteDimensio
 
 theorem eq_top_of_disjoint [FiniteDimensional K V] (s t : Submodule K V)
     (hdim : finrank K s + finrank K t = finrank K V) (hdisjoint : Disjoint s t) : s ⊔ t = ⊤ := by
-  have h_finrank_inf : finrank K ↑(s ⊓ t) = 0 := by
-    rw [disjoint_iff_inf_le, le_bot_iff] at hdisjoint
-    rw [hdisjoint, finrank_bot]
+  have h_finrank_inf  : finrank K ↑(s ⊓ t) = 0
+  rw [disjoint_iff_inf_le, le_bot_iff] at hdisjoint
+  rw [hdisjoint, finrank_bot]
   apply eq_top_of_finrank_eq
   rw [← hdim]
   convert s.finrank_sup_add_finrank_inf_eq t

@@ -113,8 +113,8 @@ private theorem weight_add_weight_pairMap {k : ℕ} (t : Finset σ × σ) (h : t
     weight σ R k t + weight σ R k (pairMap σ t) = 0 := by
   rw [weight, weight]
   rw [mem_pairs] at h
-  have h2 (n : ℕ) : -(-1 : MvPolynomial σ R) ^ n = (-1) ^ (n + 1) := by
-    rw [← neg_one_mul ((-1 : MvPolynomial σ R) ^ n), pow_add, pow_one, mul_comm]
+  have h2 (n  : ℕ) : -(-1 : MvPolynomial σ R) ^ n = (-1) ^ (n + 1)
+  rw [← neg_one_mul ((-1 : MvPolynomial σ R) ^ n), pow_add, pow_one, mul_comm]
   rcases (em (t.snd ∈ t.fst)) with h1 | h1
   · rw [pairMap_of_snd_mem_fst σ h1]
     simp only [← prod_erase_mul t.fst (fun j ↦ (X j : MvPolynomial σ R)) h1,
@@ -152,7 +152,8 @@ private theorem sum_filter_pairs_eq_sum_powersetCard_mem_filter_antidiagonal_sum
   apply sum_finset_product
   simp only [mem_filter, mem_powersetCard_univ, mem_univ, and_true, and_iff_right_iff_imp]
   rintro p hp
-  have : card p.fst ≤ k := by apply le_of_lt; aesop
+  have  : card p.fst ≤ k
+  apply le_of_lt; aesop
   aesop
 
 private lemma filter_pairs_lt (k : ℕ) :
@@ -259,12 +260,12 @@ theorem psum_eq_mul_esymm_sub_sum (k : ℕ) (h : 0 < k) : psum σ R k =
   simp only [mul_sub_left_distrib, ← mul_assoc, ← pow_add, Even.neg_one_pow ⟨k + 1, rfl⟩, one_mul,
     not_le, lt_one_iff, filter_filter (fun a : ℕ × ℕ ↦ a.fst < k) (fun a ↦ ¬0 < a.fst)]
     at sub_both_sides
-  have : filter (fun a ↦ a.fst < k ∧ ¬0 < a.fst) (antidiagonal k) = {(0, k)} := by
-    ext a
-    rw [mem_filter, mem_antidiagonal, mem_singleton]
-    refine ⟨?_, by rintro rfl; omega⟩
-    rintro ⟨ha, ⟨_, ha0⟩⟩
-    rw [← ha, Nat.eq_zero_of_not_pos ha0, zero_add, ← Nat.eq_zero_of_not_pos ha0]
+  have  : filter (fun a ↦ a.fst < k ∧ ¬0 < a.fst) (antidiagonal k) = {(0, k)}
+  ext a
+  rw [mem_filter, mem_antidiagonal, mem_singleton]
+  refine ⟨?_, by rintro rfl; omega⟩
+  rintro ⟨ha, ⟨_, ha0⟩⟩
+  rw [← ha, Nat.eq_zero_of_not_pos ha0, zero_add, ← Nat.eq_zero_of_not_pos ha0]
   rw [this, sum_singleton] at sub_both_sides
   simp only [_root_.pow_zero, esymm_zero, mul_one, one_mul, filter_filter] at sub_both_sides
   exact sub_both_sides.symm

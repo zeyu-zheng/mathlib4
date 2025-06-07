@@ -508,10 +508,10 @@ theorem countable_setOf_covBy_right [OrderTopology α] [SecondCountableTopology 
     H.of_diff (subsingleton_isBot α).countable
   simp only [and_assoc]
   let t := { x | x ∈ s ∧ x ∈ a ∧ y x ∉ a ∧ ¬IsBot x }
-  have : ∀ x ∈ t, ∃ z < x, Ioc z x ⊆ a := by
-    intro x hx
-    apply exists_Ioc_subset_of_mem_nhds (ha.mem_nhds hx.2.1)
-    simpa only [IsBot, not_forall, not_le] using hx.right.right.right
+  have  : ∀ x ∈ t, ∃ z < x, Ioc z x ⊆ a
+  intro x hx
+  apply exists_Ioc_subset_of_mem_nhds (ha.mem_nhds hx.2.1)
+  simpa only [IsBot, not_forall, not_le] using hx.right.right.right
   choose! z hz h'z using this
   have : PairwiseDisjoint t fun x => Ioc (z x) x := fun x xt x' x't hxx' => by
     rcases hxx'.lt_or_lt with (h' | h')
@@ -567,27 +567,27 @@ theorem countable_image_lt_image_Ioi [OrderTopology α] [LinearOrder β] (f : β
   have : ∀ x, x ∈ s → ∃ z, f x < z ∧ ∀ y, x < y → z ≤ f y := fun x hx ↦ hx
   -- choose `z x` such that `f` does not take the values in `(f x, z x)`.
   choose! z hz using this
-  have I : InjOn f s := by
-    apply StrictMonoOn.injOn
-    intro x hx y _ hxy
-    calc
-      f x < z x := (hz x hx).1
-      _ ≤ f y := (hz x hx).2 y hxy
+  have I  : InjOn f s
+  apply StrictMonoOn.injOn
+  intro x hx y _ hxy
+  calc
+    f x < z x := (hz x hx).1
+    _ ≤ f y := (hz x hx).2 y hxy
   -- show that `f s` is countable by arguing that a disjoint family of disjoint open intervals
   -- (the intervals `(f x, z x)`) is at most countable.
-  have fs_count : (f '' s).Countable := by
-    have A : (f '' s).PairwiseDisjoint fun x => Ioo x (z (invFunOn f s x)) := by
-      rintro _ ⟨u, us, rfl⟩ _ ⟨v, vs, rfl⟩ huv
-      wlog hle : u ≤ v generalizing u v
-      · exact (this v vs u us huv.symm (le_of_not_le hle)).symm
-      have hlt : u < v := hle.lt_of_ne (ne_of_apply_ne _ huv)
-      apply disjoint_iff_forall_ne.2
-      rintro a ha b hb rfl
-      simp only [I.leftInvOn_invFunOn us, I.leftInvOn_invFunOn vs] at ha hb
-      exact lt_irrefl _ ((ha.2.trans_le ((hz u us).2 v hlt)).trans hb.1)
-    apply Set.PairwiseDisjoint.countable_of_Ioo A
-    rintro _ ⟨y, ys, rfl⟩
-    simpa only [I.leftInvOn_invFunOn ys] using (hz y ys).1
+  have fs_count  : (f '' s).Countable
+  have A  : (f '' s).PairwiseDisjoint fun x => Ioo x (z (invFunOn f s x))
+  rintro _ ⟨u, us, rfl⟩ _ ⟨v, vs, rfl⟩ huv
+  wlog hle : u ≤ v generalizing u v
+  · exact (this v vs u us huv.symm (le_of_not_le hle)).symm
+  have hlt : u < v := hle.lt_of_ne (ne_of_apply_ne _ huv)
+  apply disjoint_iff_forall_ne.2
+  rintro a ha b hb rfl
+  simp only [I.leftInvOn_invFunOn us, I.leftInvOn_invFunOn vs] at ha hb
+  exact lt_irrefl _ ((ha.2.trans_le ((hz u us).2 v hlt)).trans hb.1)
+  apply Set.PairwiseDisjoint.countable_of_Ioo A
+  rintro _ ⟨y, ys, rfl⟩
+  simpa only [I.leftInvOn_invFunOn ys] using (hz y ys).1
   exact MapsTo.countable_of_injOn (mapsTo_image f s) I fs_count
 
 /-- For a function taking values in a second countable space, the set of points `x` for
@@ -615,26 +615,27 @@ instance instIsCountablyGenerated_atTop [OrderTopology α] [SecondCountableTopol
     rw [atTop_eq_pure_of_isTop hx]
     exact isCountablyGenerated_pure x
   · rcases exists_countable_basis α with ⟨b, b_count, b_ne, hb⟩
-    have : Countable b := by exact Iff.mpr countable_coe_iff b_count
-    have A : ∀ (s : b), ∃ (x : α), x ∈ (s : Set α) := by
-      intro s
-      have : (s : Set α) ≠ ∅ := by
-        intro H
-        apply b_ne
-        convert s.2
-        exact H.symm
-      exact Iff.mp nmem_singleton_empty this
+    have  : Countable b
+    exact Iff.mpr countable_coe_iff b_count
+    have A  : ∀ (s : b), ∃ (x : α), x ∈ (s : Set α)
+    intro s
+    have  : (s : Set α) ≠ ∅
+    intro H
+    apply b_ne
+    convert s.2
+    exact H.symm
+    exact Iff.mp nmem_singleton_empty this
     choose a ha using A
-    have : (atTop : Filter α) = (generate (Ici '' (range a))) := by
-      apply atTop_eq_generate_of_not_bddAbove
-      intro ⟨x, hx⟩
-      simp only [IsTop, not_exists, not_forall, not_le] at h
-      rcases h x with ⟨y, hy⟩
-      obtain ⟨s, sb, -, hs⟩ : ∃ s, s ∈ b ∧ y ∈ s ∧ s ⊆ Ioi x :=
-        hb.exists_subset_of_mem_open hy isOpen_Ioi
-      have I : a ⟨s, sb⟩ ≤ x := hx (mem_range_self _)
-      have J : x < a ⟨s, sb⟩ := hs (ha ⟨s, sb⟩)
-      exact lt_irrefl _ (I.trans_lt J)
+    have  : (atTop : Filter α) = (generate (Ici '' (range a)))
+    apply atTop_eq_generate_of_not_bddAbove
+    intro ⟨x, hx⟩
+    simp only [IsTop, not_exists, not_forall, not_le] at h
+    rcases h x with ⟨y, hy⟩
+    obtain ⟨s, sb, -, hs⟩ : ∃ s, s ∈ b ∧ y ∈ s ∧ s ⊆ Ioi x :=
+      hb.exists_subset_of_mem_open hy isOpen_Ioi
+    have I : a ⟨s, sb⟩ ≤ x := hx (mem_range_self _)
+    have J : x < a ⟨s, sb⟩ := hs (ha ⟨s, sb⟩)
+    exact lt_irrefl _ (I.trans_lt J)
     rw [this]
     exact ⟨_, (countable_range _).image _, rfl⟩
 

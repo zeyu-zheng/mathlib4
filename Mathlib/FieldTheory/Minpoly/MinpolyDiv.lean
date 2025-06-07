@@ -111,14 +111,14 @@ lemma natDegree_minpolyDiv_lt [Nontrivial S] :
 lemma coeff_minpolyDiv_mem_adjoin (x : S) (i) :
     coeff (minpolyDiv R x) i ∈ Algebra.adjoin R {x} := by
   by_contra H
-  have : ∀ j, coeff (minpolyDiv R x) (i + j) ∉ Algebra.adjoin R {x} := by
-    intro j; induction j with
-    | zero => exact H
-    | succ j IH =>
-      intro H; apply IH
-      rw [coeff_minpolyDiv]
-      refine add_mem ?_ (mul_mem H (Algebra.self_mem_adjoin_singleton R x))
-      exact Subalgebra.algebraMap_mem _ _
+  have  : ∀ j, coeff (minpolyDiv R x) (i + j) ∉ Algebra.adjoin R {x}
+  intro j; induction j with
+  | zero => exact H
+  | succ j IH =>
+    intro H; apply IH
+    rw [coeff_minpolyDiv]
+    refine add_mem ?_ (mul_mem H (Algebra.self_mem_adjoin_singleton R x))
+    exact Subalgebra.algebraMap_mem _ _
   apply this (natDegree (minpolyDiv R x) + 1)
   rw [coeff_eq_zero_of_natDegree_lt]
   · exact zero_mem _

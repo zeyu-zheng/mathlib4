@@ -171,10 +171,10 @@ theorem karoubi_PInfty_f {Y : Karoubi (SimplicialObject C)} (n : ℕ) :
   change (P₁.f n).f = Y.p.app (op [n]) ≫ P₂.f n
   -- The proof proceeds by obtaining relations h₃₂, h₄₃, h₁₄.
   have h₃₂ : (P₃.f n).f = P₂.f n := Karoubi.hom_ext_iff.mp (map_PInfty_f (toKaroubi C) Y₂ n)
-  have h₄₃ : P₄.f n = P₃.f n := by
-    have h := Functor.congr_obj (toKaroubi_comp_karoubiFunctorCategoryEmbedding _ _) Y₂
-    simp only [P₃, P₄, ← natTransPInfty_f_app]
-    congr 1
+  have h₄₃  : P₄.f n = P₃.f n
+  have h := Functor.congr_obj (toKaroubi_comp_karoubiFunctorCategoryEmbedding _ _) Y₂
+  simp only [P₃, P₄, ← natTransPInfty_f_app]
+  congr 1
   have h₁₄ := Idempotents.natTrans_eq
     ((𝟙 (karoubiFunctorCategoryEmbedding SimplexCategoryᵒᵖ C)) ◫
       (natTransPInfty_f (Karoubi C) n)) Y

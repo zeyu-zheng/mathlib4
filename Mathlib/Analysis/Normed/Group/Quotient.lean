@@ -210,10 +210,10 @@ theorem norm_mk_eq_zero (S : AddSubgroup M) (hS : IsClosed (S : Set M)) (m : M)
 
 theorem quotient_nhd_basis (S : AddSubgroup M) :
     (𝓝 (0 : M ⧸ S)).HasBasis (fun ε ↦ 0 < ε) fun ε ↦ { x | ‖x‖ < ε } := by
-  have : ∀ ε : ℝ, mk '' ball (0 : M) ε = { x : M ⧸ S | ‖x‖ < ε } := by
-    refine fun ε ↦ Set.ext <| forall_mk.2 fun x ↦ ?_
-    rw [ball_zero_eq, mem_setOf_eq, norm_lt_iff, mem_image]
-    exact exists_congr fun _ ↦ and_comm
+  have  : ∀ ε : ℝ, mk '' ball (0 : M) ε = { x : M ⧸ S | ‖x‖ < ε }
+  refine fun ε ↦ Set.ext <| forall_mk.2 fun x ↦ ?_
+  rw [ball_zero_eq, mem_setOf_eq, norm_lt_iff, mem_image]
+  exact exists_congr fun _ ↦ and_comm
   rw [← mk_zero, nhds_eq, ← funext this]
   exact .map _ Metric.nhds_basis_ball
 
@@ -301,9 +301,9 @@ theorem norm_normedMk (S : AddSubgroup M) (h : (S.topologicalClosure : Set M) �
 theorem norm_trivial_quotient_mk (S : AddSubgroup M)
     (h : (S.topologicalClosure : Set M) = Set.univ) : ‖S.normedMk‖ = 0 := by
   refine le_antisymm (opNorm_le_bound _ le_rfl fun x => ?_) (norm_nonneg _)
-  have hker : x ∈ S.normedMk.ker.topologicalClosure := by
-    rw [S.ker_normedMk, ← SetLike.mem_coe, h]
-    trivial
+  have hker  : x ∈ S.normedMk.ker.topologicalClosure
+  rw [S.ker_normedMk, ← SetLike.mem_coe, h]
+  trivial
   rw [ker_normedMk] at hker
   simp only [(quotient_norm_eq_zero_iff S x).mpr hker, normedMk.apply, zero_mul, le_rfl]
 
@@ -345,9 +345,9 @@ theorem isQuotientQuotient (S : AddSubgroup M) : IsQuotient S.normedMk :=
 theorem IsQuotient.norm_lift {f : NormedAddGroupHom M N} (hquot : IsQuotient f) {ε : ℝ} (hε : 0 < ε)
     (n : N) : ∃ m : M, f m = n ∧ ‖m‖ < ‖n‖ + ε := by
   obtain ⟨m, rfl⟩ := hquot.surjective n
-  have nonemp : ((fun m' => ‖m + m'‖) '' f.ker).Nonempty := by
-    rw [Set.image_nonempty]
-    exact ⟨0, f.ker.zero_mem⟩
+  have nonemp  : ((fun m' => ‖m + m'‖) '' f.ker).Nonempty
+  rw [Set.image_nonempty]
+  exact ⟨0, f.ker.zero_mem⟩
   rcases Real.lt_sInf_add_pos nonemp hε
     with ⟨_, ⟨⟨x, hx, rfl⟩, H : ‖m + x‖ < sInf ((fun m' : M => ‖m + m'‖) '' f.ker) + ε⟩⟩
   exact ⟨m + x, by rw [map_add, (NormedAddGroupHom.mem_ker f x).mp hx, add_zero], by

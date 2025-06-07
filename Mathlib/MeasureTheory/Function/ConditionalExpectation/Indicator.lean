@@ -41,9 +41,9 @@ theorem condexp_ae_eq_restrict_zero (hs : MeasurableSet[m] s) (hf : f =ᵐ[μ.re
   by_cases hμm : SigmaFinite (μ.trim hm)
   swap; · simp_rw [condexp_of_not_sigmaFinite hm hμm]; rfl
   haveI : SigmaFinite (μ.trim hm) := hμm
-  have : SigmaFinite ((μ.restrict s).trim hm) := by
-    rw [← restrict_trim hm _ hs]
-    exact Restrict.sigmaFinite _ s
+  have  : SigmaFinite ((μ.restrict s).trim hm)
+  rw [← restrict_trim hm _ hs]
+  exact Restrict.sigmaFinite _ s
   by_cases hf_int : Integrable f μ
   swap; · rw [condexp_undef hf_int]
   refine ae_eq_of_forall_setIntegral_eq_of_sigmaFinite' hm ?_ ?_ ?_ ?_ ?_
@@ -78,8 +78,8 @@ theorem condexp_indicator (hf_int : Integrable f μ) (hs : MeasurableSet[m] s) :
   haveI : SigmaFinite (μ.trim hm) := hμm
   -- use `have` to perform what should be the first calc step because of an error I don't
   -- understand
-  have : s.indicator (μ[f|m]) =ᵐ[μ] s.indicator (μ[s.indicator f + sᶜ.indicator f|m]) := by
-    rw [Set.indicator_self_add_compl s f]
+  have  : s.indicator (μ[f|m]) =ᵐ[μ] s.indicator (μ[s.indicator f + sᶜ.indicator f|m])
+  rw [Set.indicator_self_add_compl s f]
   refine (this.trans ?_).symm
   calc
     s.indicator (μ[s.indicator f + sᶜ.indicator f|m]) =ᵐ[μ]
@@ -111,7 +111,8 @@ theorem condexp_indicator (hf_int : Integrable f μ) (hs : MeasurableSet[m] s) :
 theorem condexp_restrict_ae_eq_restrict (hm : m ≤ m0) [SigmaFinite (μ.trim hm)]
     (hs_m : MeasurableSet[m] s) (hf_int : Integrable f μ) :
     (μ.restrict s)[f|m] =ᵐ[μ.restrict s] μ[f|m] := by
-  have : SigmaFinite ((μ.restrict s).trim hm) := by rw [← restrict_trim hm _ hs_m]; infer_instance
+  have  : SigmaFinite ((μ.restrict s).trim hm)
+  rw [← restrict_trim hm _ hs_m]; infer_instance
   rw [ae_eq_restrict_iff_indicator_ae_eq (hm _ hs_m)]
   refine EventuallyEq.trans ?_ (condexp_indicator hf_int hs_m)
   refine ae_eq_condexp_of_forall_setIntegral_eq hm (hf_int.indicator (hm _ hs_m)) ?_ ?_ ?_
@@ -143,7 +144,8 @@ theorem condexp_ae_eq_restrict_of_measurableSpace_eq_on {m m₂ m0 : MeasurableS
     (hs : ∀ t, MeasurableSet[m] (s ∩ t) ↔ MeasurableSet[m₂] (s ∩ t)) :
     μ[f|m] =ᵐ[μ.restrict s] μ[f|m₂] := by
   rw [ae_eq_restrict_iff_indicator_ae_eq (hm _ hs_m)]
-  have hs_m₂ : MeasurableSet[m₂] s := by rwa [← Set.inter_univ s, ← hs Set.univ, Set.inter_univ]
+  have hs_m₂  : MeasurableSet[m₂] s
+  rwa [← Set.inter_univ s, ← hs Set.univ, Set.inter_univ]
   by_cases hf_int : Integrable f μ
   swap; · simp_rw [condexp_undef hf_int]; rfl
   refine ((condexp_indicator hf_int hs_m).symm.trans ?_).trans (condexp_indicator hf_int hs_m₂)

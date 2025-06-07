@@ -158,24 +158,24 @@ private theorem step0 : N ≠ ⊥ := by
 /-- Do not use this lemma: It is made obsolete by `exists_right_complement'_of_coprime` -/
 private theorem step1 (K : Subgroup G) (hK : K ⊔ N = ⊤) : K = ⊤ := by
   contrapose! h3
-  have h4 : (N.comap K.subtype).index = N.index := by
-    rw [← N.relindex_top_right, ← hK]
-    exact (relindex_sup_right K N).symm
-  have h5 : Nat.card K < Nat.card G := by
-    rw [← K.index_mul_card]
-    exact lt_mul_of_one_lt_left Nat.card_pos (one_lt_index_of_ne_top h3)
-  have h6 : Nat.Coprime (Nat.card (N.comap K.subtype)) (N.comap K.subtype).index := by
-    rw [h4]
-    exact h1.coprime_dvd_left (card_comap_dvd_of_injective N K.subtype Subtype.coe_injective)
+  have h4  : (N.comap K.subtype).index = N.index
+  rw [← N.relindex_top_right, ← hK]
+  exact (relindex_sup_right K N).symm
+  have h5  : Nat.card K < Nat.card G
+  rw [← K.index_mul_card]
+  exact lt_mul_of_one_lt_left Nat.card_pos (one_lt_index_of_ne_top h3)
+  have h6  : Nat.Coprime (Nat.card (N.comap K.subtype)) (N.comap K.subtype).index
+  rw [h4]
+  exact h1.coprime_dvd_left (card_comap_dvd_of_injective N K.subtype Subtype.coe_injective)
   obtain ⟨H, hH⟩ := h2 K h5 h6
   replace hH : Nat.card (H.map K.subtype) = N.index := by
     rw [← relindex_bot_left, ← relindex_comap, MonoidHom.comap_bot, Subgroup.ker_subtype,
       relindex_bot_left, ← IsComplement'.index_eq_card (IsComplement'.symm hH), index_comap,
       subtype_range, ← relindex_sup_right, hK, relindex_top_right]
-  have h7 : Nat.card N * Nat.card (H.map K.subtype) = Nat.card G := by
-    rw [hH, ← N.index_mul_card, mul_comm]
-  have h8 : (Nat.card N).Coprime (Nat.card (H.map K.subtype)) := by
-    rwa [hH]
+  have h7  : Nat.card N * Nat.card (H.map K.subtype) = Nat.card G
+  rw [hH, ← N.index_mul_card, mul_comm]
+  have h8  : (Nat.card N).Coprime (Nat.card (H.map K.subtype))
+  rwa [hH]
   exact ⟨H.map K.subtype, isComplement'_of_coprime h7 h8⟩
 
 /-- Do not use this lemma: It is made obsolete by `exists_right_complement'_of_coprime` -/
@@ -183,11 +183,11 @@ private theorem step2 (K : Subgroup G) [K.Normal] (hK : K ≤ N) : K = ⊥ ∨ K
   have : Function.Surjective (QuotientGroup.mk' K) := Quotient.surjective_Quotient_mk''
   have h4 := step1 h1 h2 h3
   contrapose! h4
-  have h5 : Nat.card (G ⧸ K) < Nat.card G := by
-    rw [← index_eq_card, ← K.index_mul_card]
-    refine
-      lt_mul_of_one_lt_right (Nat.pos_of_ne_zero index_ne_zero_of_finite)
-        (K.one_lt_card_iff_ne_bot.mpr h4.1)
+  have h5  : Nat.card (G ⧸ K) < Nat.card G
+  rw [← index_eq_card, ← K.index_mul_card]
+  refine
+    lt_mul_of_one_lt_right (Nat.pos_of_ne_zero index_ne_zero_of_finite)
+      (K.one_lt_card_iff_ne_bot.mpr h4.1)
   have h6 :
     (Nat.card (N.map (QuotientGroup.mk' K))).Coprime (N.map (QuotientGroup.mk' K)).index := by
     have index_map := N.index_map_eq this (by rwa [QuotientGroup.ker_mk'])
@@ -275,9 +275,9 @@ theorem exists_right_complement'_of_coprime {N : Subgroup G} [N.Normal]
     haveI := (Cardinal.toNat_eq_one_iff_unique.mp hN).1
     rw [N.eq_bot_of_subsingleton]
     exact ⟨⊤, isComplement'_bot_top⟩
-  have hN3 : Nat.card G ≠ 0 := by
-    rw [← N.card_mul_index]
-    exact mul_ne_zero hN1 hN2
+  have hN3  : Nat.card G ≠ 0
+  rw [← N.card_mul_index]
+  exact mul_ne_zero hN1 hN2
   haveI := (Cardinal.lt_aleph0_iff_fintype.mp
     (lt_of_not_ge (mt Cardinal.toNat_apply_of_aleph0_le hN3))).some
   exact exists_right_complement'_of_coprime_aux' rfl hN

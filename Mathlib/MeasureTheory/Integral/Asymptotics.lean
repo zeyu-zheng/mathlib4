@@ -124,9 +124,9 @@ theorem LocallyIntegrable.integrable_of_isBigO_atTop_of_norm_isNegInvariant
   have h_int := (hf.locallyIntegrableOn (Ici 0)).integrableOn_of_isBigO_atTop ho hg
   rw [← integrableOn_univ, ← Iic_union_Ici_of_le le_rfl, integrableOn_union]
   refine ⟨?_, h_int⟩
-  have h_map_neg : (μ.restrict (Ici 0)).map Neg.neg = μ.restrict (Iic 0) := by
-    conv => rhs; rw [← Measure.map_neg_eq_self μ, measurableEmbedding_neg.restrict_map]
-    simp
+  have h_map_neg  : (μ.restrict (Ici 0)).map Neg.neg = μ.restrict (Iic 0)
+  conv => rhs; rw [← Measure.map_neg_eq_self μ, measurableEmbedding_neg.restrict_map]
+  simp
   rw [IntegrableOn, ← h_map_neg, measurableEmbedding_neg.integrable_map_iff]
   refine h_int.congr' ?_ hsymm.restrict
   refine AEStronglyMeasurable.comp_aemeasurable ?_ measurable_neg.aemeasurable

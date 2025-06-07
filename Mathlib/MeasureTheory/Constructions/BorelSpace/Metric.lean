@@ -126,15 +126,15 @@ thickenings converges to the measure of its closure as `r` tends to `0`. -/
 theorem tendsto_measure_cthickening {μ : Measure α} {s : Set α}
     (hs : ∃ R > 0, μ (cthickening R s) ≠ ∞) :
     Tendsto (fun r => μ (cthickening r s)) (𝓝 0) (𝓝 (μ (closure s))) := by
-  have A : Tendsto (fun r => μ (cthickening r s)) (𝓝[Ioi 0] 0) (𝓝 (μ (closure s))) := by
-    rw [closure_eq_iInter_cthickening]
-    exact
-      tendsto_measure_biInter_gt (fun r _ => isClosed_cthickening.measurableSet)
-        (fun i j _ ij => cthickening_mono ij _) hs
-  have B : Tendsto (fun r => μ (cthickening r s)) (𝓝[Iic 0] 0) (𝓝 (μ (closure s))) := by
-    apply Tendsto.congr' _ tendsto_const_nhds
-    filter_upwards [self_mem_nhdsWithin (α := ℝ)] with _ hr
-    rw [cthickening_of_nonpos hr]
+  have A  : Tendsto (fun r => μ (cthickening r s)) (𝓝[Ioi 0] 0) (𝓝 (μ (closure s)))
+  rw [closure_eq_iInter_cthickening]
+  exact
+    tendsto_measure_biInter_gt (fun r _ => isClosed_cthickening.measurableSet)
+      (fun i j _ ij => cthickening_mono ij _) hs
+  have B  : Tendsto (fun r => μ (cthickening r s)) (𝓝[Iic 0] 0) (𝓝 (μ (closure s)))
+  apply Tendsto.congr' _ tendsto_const_nhds
+  filter_upwards [self_mem_nhdsWithin (α := ℝ)] with _ hr
+  rw [cthickening_of_nonpos hr]
   convert B.sup A
   exact (nhds_left_sup_nhds_right' 0).symm
 

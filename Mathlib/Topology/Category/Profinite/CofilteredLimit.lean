@@ -67,16 +67,16 @@ theorem exists_isClopen_of_cofiltered {U : Set C.pt} (hC : IsLimit C) (hU : IsCl
 
   -- Since `U` is also closed, hence compact, it is covered by finitely many of the
   -- clopens constructed in the previous step.
-  have hUo : ∀ (i : ↑S), IsOpen ((fun s ↦ (forget Profinite).map (C.π.app (j s)) ⁻¹' V s) i) := by
-    intro s
-    exact (hV s).1.2.preimage (C.π.app (j s)).continuous
-  have hsU : U ⊆ ⋃ (i : ↑S), (fun s ↦ (forget Profinite).map (C.π.app (j s)) ⁻¹' V s) i := by
-    dsimp only
-    rw [h]
-    rintro x ⟨T, hT, hx⟩
-    refine ⟨_, ⟨⟨T, hT⟩, rfl⟩, ?_⟩
-    dsimp only [forget_map_eq_coe]
-    rwa [← (hV ⟨T, hT⟩).2]
+  have hUo  : ∀ (i : ↑S), IsOpen ((fun s ↦ (forget Profinite).map (C.π.app (j s)) ⁻¹' V s) i)
+  intro s
+  exact (hV s).1.2.preimage (C.π.app (j s)).continuous
+  have hsU  : U ⊆ ⋃ (i : ↑S), (fun s ↦ (forget Profinite).map (C.π.app (j s)) ⁻¹' V s) i
+  dsimp only
+  rw [h]
+  rintro x ⟨T, hT, hx⟩
+  refine ⟨_, ⟨⟨T, hT⟩, rfl⟩, ?_⟩
+  dsimp only [forget_map_eq_coe]
+  rwa [← (hV ⟨T, hT⟩).2]
   have := hU.1.isCompact.elim_finite_subcover (fun s : S => C.π.app (j s) ⁻¹' V s) hUo hsU
   -- Porting note: same remark as after `hB`
   -- We thus obtain a finite set `G : Finset J` and a clopen set of `F.obj j` for each
@@ -132,14 +132,15 @@ theorem exists_locallyConstant_finite_aux {α : Type*} [Finite α] (hC : IsLimit
   choose j g h using hff
   let G : Finset J := Finset.univ.image j
   obtain ⟨j0, hj0⟩ := IsCofiltered.inf_objs_exists G
-  have hj : ∀ a, j a ∈ (Finset.univ.image j : Finset J) := by
-    intro a
-    simp only [Finset.mem_image, Finset.mem_univ, true_and, exists_apply_eq_apply]
+  have hj  : ∀ a, j a ∈ (Finset.univ.image j : Finset J)
+  intro a
+  simp only [Finset.mem_image, Finset.mem_univ, true_and, exists_apply_eq_apply]
   let fs : ∀ a : α, j0 ⟶ j a := fun a => (hj0 (hj a)).some
   let gg : α → LocallyConstant (F.obj j0) (Fin 2) := fun a => (g a).comap (F.map (fs _))
   let ggg := LocallyConstant.unflip gg
   refine ⟨j0, ggg, ?_⟩
-  have : f.map ι = LocallyConstant.unflip (f.map ι).flip := by simp
+  have  : f.map ι = LocallyConstant.unflip (f.map ι).flip
+  simp
   rw [this]; clear this
   have :
     LocallyConstant.comap (C.π.app j0) ggg =
@@ -167,11 +168,11 @@ theorem exists_locallyConstant_finite_nonempty {α : Type*} [Finite α] [Nonempt
   simp only [Functor.const_obj_obj, LocallyConstant.coe_comap, LocallyConstant.map_apply,
     Function.comp_apply]
   dsimp [σ]
-  have h1 : ι (f x) = gg (C.π.app j x) := by
-    change f.map (fun a b => if a = b then (0 : Fin 2) else 1) x = _
-    -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
-    erw [h]
-    rfl
+  have h1  : ι (f x) = gg (C.π.app j x)
+  change f.map (fun a b => if a = b then (0 : Fin 2) else 1) x = _
+  -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
+  erw [h]
+  rfl
   have h2 : ∃ a : α, ι a = gg (C.π.app j x) := ⟨f x, h1⟩
   -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
   erw [dif_pos h2]

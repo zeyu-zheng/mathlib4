@@ -52,10 +52,11 @@ def LiouvilleWith (p x : ℝ) : Prop :=
 theorem liouvilleWith_one (x : ℝ) : LiouvilleWith 1 x := by
   use 2
   refine ((eventually_gt_atTop 0).mono fun n hn => ?_).frequently
-  have hn' : (0 : ℝ) < n := by simpa
-  have : x < ↑(⌊x * ↑n⌋ + 1) / ↑n := by
-    rw [lt_div_iff hn', Int.cast_add, Int.cast_one]
-    exact Int.lt_floor_add_one _
+  have hn'  : (0 : ℝ) < n
+  simpa
+  have  : x < ↑(⌊x * ↑n⌋ + 1) / ↑n
+  rw [lt_div_iff hn', Int.cast_add, Int.cast_one]
+  exact Int.lt_floor_add_one _
   refine ⟨⌊x * n⌋ + 1, this.ne, ?_⟩
   rw [abs_sub_comm, abs_of_pos (sub_pos.2 this), rpow_one, sub_lt_iff_lt_add',
     add_div_eq_mul_add_div _ _ hn'.ne']
@@ -94,10 +95,10 @@ satisfies Liouville condition with exponent `q` and constant `1`. -/
 theorem frequently_lt_rpow_neg (h : LiouvilleWith p x) (hlt : q < p) :
     ∃ᶠ n : ℕ in atTop, ∃ m : ℤ, x ≠ m / n ∧ |x - m / n| < n ^ (-q) := by
   rcases h.exists_pos with ⟨C, _hC₀, hC⟩
-  have : ∀ᶠ n : ℕ in atTop, C < n ^ (p - q) := by
-    simpa only [(· ∘ ·), neg_sub, one_div] using
-      ((tendsto_rpow_atTop (sub_pos.2 hlt)).comp tendsto_natCast_atTop_atTop).eventually
-        (eventually_gt_atTop C)
+  have  : ∀ᶠ n : ℕ in atTop, C < n ^ (p - q)
+  simpa only [(· ∘ ·), neg_sub, one_div] using
+    ((tendsto_rpow_atTop (sub_pos.2 hlt)).comp tendsto_natCast_atTop_atTop).eventually
+      (eventually_gt_atTop C)
   refine (this.and_frequently hC).mono ?_
   rintro n ⟨hnC, hn, m, hne, hlt⟩
   replace hn : (0 : ℝ) < n := Nat.cast_pos.2 hn
@@ -109,8 +110,8 @@ theorem mul_rat (h : LiouvilleWith p x) (hr : r ≠ 0) : LiouvilleWith p (x * r)
   rcases h.exists_pos with ⟨C, _hC₀, hC⟩
   refine ⟨r.den ^ p * (|r| * C), (tendsto_id.nsmul_atTop r.pos).frequently (hC.mono ?_)⟩
   rintro n ⟨_hn, m, hne, hlt⟩
-  have A : (↑(r.num * m) : ℝ) / ↑(r.den • id n) = m / n * r := by
-    simp [← div_mul_div_comm, ← r.cast_def, mul_comm]
+  have A  : (↑(r.num * m) : ℝ) / ↑(r.den • id n) = m / n * r
+  simp [← div_mul_div_comm, ← r.cast_def, mul_comm]
   refine ⟨r.num * m, ?_, ?_⟩
   · rw [A]; simp [hne, hr]
   · rw [A, ← sub_mul, abs_mul]
@@ -165,14 +166,15 @@ theorem add_rat (h : LiouvilleWith p x) (r : ℚ) : LiouvilleWith p (x + r) := b
   rcases h.exists_pos with ⟨C, _hC₀, hC⟩
   refine ⟨r.den ^ p * C, (tendsto_id.nsmul_atTop r.pos).frequently (hC.mono ?_)⟩
   rintro n ⟨hn, m, hne, hlt⟩
-  have : (↑(r.den * m + r.num * n : ℤ) / ↑(r.den • id n) : ℝ) = m / n + r := by
-    rw [Algebra.id.smul_eq_mul, id]
-    nth_rewrite 4 [← Rat.num_div_den r]
-    push_cast
-    rw [add_div, mul_div_mul_left _ _ (by positivity), mul_div_mul_right _ _ (by positivity)]
+  have  : (↑(r.den * m + r.num * n : ℤ) / ↑(r.den • id n) : ℝ) = m / n + r
+  rw [Algebra.id.smul_eq_mul, id]
+  nth_rewrite 4 [← Rat.num_div_den r]
+  push_cast
+  rw [add_div, mul_div_mul_left _ _ (by positivity), mul_div_mul_right _ _ (by positivity)]
   refine ⟨r.den * m + r.num * n, ?_⟩; rw [this, add_sub_add_right_eq_sub]
   refine ⟨by simpa, hlt.trans_le (le_of_eq ?_)⟩
-  have : (r.den ^ p : ℝ) ≠ 0 := by positivity
+  have  : (r.den ^ p : ℝ) ≠ 0
+  positivity
   simp [mul_rpow, Nat.cast_nonneg, mul_div_mul_left, this]
 
 @[simp]
@@ -268,7 +270,8 @@ theorem ne_cast_int (h : LiouvilleWith p x) (hp : 1 < p) (m : ℤ) : x ≠ m := 
   rcases ((eventually_gt_atTop 0).and_frequently (h.frequently_lt_rpow_neg hp)).exists with
     ⟨n : ℕ, hn : 0 < n, m : ℤ, hne : (M : ℝ) ≠ m / n, hlt : |(M - m / n : ℝ)| < n ^ (-1 : ℝ)⟩
   refine hlt.not_le ?_
-  have hn' : (0 : ℝ) < n := by simpa
+  have hn'  : (0 : ℝ) < n
+  simpa
   rw [rpow_neg_one, ← one_div, sub_div' _ _ _ hn'.ne', abs_div, Nat.abs_cast, div_le_div_right hn']
   norm_cast
   rw [← zero_add (1 : ℤ), Int.add_one_le_iff, abs_pos, sub_ne_zero]
@@ -298,14 +301,14 @@ theorem frequently_exists_num (hx : Liouville x) (n : ℕ) :
   simp only [Liouville, not_forall, not_exists, not_frequently, not_and, not_lt,
     eventually_atTop] at H
   rcases H with ⟨N, hN⟩
-  have : ∀ b > (1 : ℕ), ∀ᶠ m : ℕ in atTop, ∀ a : ℤ, 1 / (b : ℝ) ^ m ≤ |x - a / b| := by
-    intro b hb
-    replace hb : (1 : ℝ) < b := Nat.one_lt_cast.2 hb
-    have H : Tendsto (fun m => 1 / (b : ℝ) ^ m : ℕ → ℝ) atTop (𝓝 0) := by
-      simp only [one_div]
-      exact tendsto_inv_atTop_zero.comp (tendsto_pow_atTop_atTop_of_one_lt hb)
-    refine (H.eventually (hx.irrational.eventually_forall_le_dist_cast_div b)).mono ?_
-    exact fun m hm a => hm a
+  have  : ∀ b > (1 : ℕ), ∀ᶠ m : ℕ in atTop, ∀ a : ℤ, 1 / (b : ℝ) ^ m ≤ |x - a / b|
+  intro b hb
+  replace hb : (1 : ℝ) < b := Nat.one_lt_cast.2 hb
+  have H  : Tendsto (fun m => 1 / (b : ℝ) ^ m : ℕ → ℝ) atTop (𝓝 0)
+  simp only [one_div]
+  exact tendsto_inv_atTop_zero.comp (tendsto_pow_atTop_atTop_of_one_lt hb)
+  refine (H.eventually (hx.irrational.eventually_forall_le_dist_cast_div b)).mono ?_
+  exact fun m hm a => hm a
   have : ∀ᶠ m : ℕ in atTop, ∀ b < N, 1 < b → ∀ a : ℤ, 1 / (b : ℝ) ^ m ≤ |x - a / b| :=
     (finite_lt_nat N).eventually_all.2 fun b _hb => eventually_imp_distrib_left.2 (this b)
   rcases (this.and (eventually_ge_atTop n)).exists with ⟨m, hm, hnm⟩

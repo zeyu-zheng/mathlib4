@@ -210,9 +210,9 @@ theorem LinearMap.continuous_on_pi {ι : Type*} {R : Type*} {M : Type*} [Finite 
   classical
     -- for the proof, write `f` in the standard basis, and use that each coordinate is a continuous
     -- function.
-    have : (f : (ι → R) → M) = fun x => ∑ i : ι, x i • f fun j => if i = j then 1 else 0 := by
-      ext x
-      exact f.pi_apply_eq_sum_univ x
+    have  : (f : (ι → R) → M) = fun x => ∑ i : ι, x i • f fun j => if i = j then 1 else 0
+    ext x
+    exact f.pi_apply_eq_sum_univ x
     rw [this]
     refine continuous_finset_sum _ fun i _ => ?_
     exact (continuous_apply i).smul continuous_const

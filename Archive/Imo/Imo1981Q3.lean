@@ -52,9 +52,12 @@ variable {N}
 
 theorem m_le_n {m n : ℤ} (h1 : ProblemPredicate N m n) : m ≤ n := by
   by_contra h2
-  have h3 : 1 = (n * (n - m) - m ^ 2) ^ 2 := by linear_combination - h1.eq_one
-  have h4 : n * (n - m) - m ^ 2 < -1 := by nlinarith [h1.n_range.left]
-  have h5 : 1 < (n * (n - m) - m ^ 2) ^ 2 := by nlinarith
+  have h3  : 1 = (n * (n - m) - m ^ 2) ^ 2
+  linear_combination - h1.eq_one
+  have h4  : n * (n - m) - m ^ 2 < -1
+  nlinarith [h1.n_range.left]
+  have h5  : 1 < (n * (n - m) - m ^ 2) ^ 2
+  nlinarith
   exact h5.ne h3
 
 theorem eq_imp_1 {n : ℤ} (h1 : ProblemPredicate N n n) : n = 1 :=
@@ -64,16 +67,18 @@ theorem eq_imp_1 {n : ℤ} (h1 : ProblemPredicate N n n) : n = 1 :=
 theorem reduction {m n : ℤ} (h1 : ProblemPredicate N m n) (h2 : 1 < n) :
     ProblemPredicate N (n - m) m := by
   obtain (rfl : m = n) | (h3 : m < n) := h1.m_le_n.eq_or_lt
-  · have h4 : m = 1 := h1.eq_imp_1
+  · have h4 : m = 1
+    apply h1.eq_imp_1
     exact absurd h4.symm h2.ne
   exact
     { n_range := h1.m_range
       m_range := by
-        have h5 : 0 < n - m := sub_pos.mpr h3
-        have h6 : n - m < N := by
-          calc
-            _ < n := sub_lt_self n h1.m_range.left
-            _ ≤ N := h1.n_range.right
+        have h5 : 0 < n - m
+        apply sub_pos.mpr h3
+        have h6  : n - m < N
+        calc
+          _ < n := sub_lt_self n h1.m_range.left
+          _ ≤ N := h1.n_range.right
         exact ⟨h5, h6.le⟩
       eq_one := by linear_combination h1.eq_one }
 
@@ -111,14 +116,17 @@ Now we can use induction to show that solutions must be Fibonacci numbers.
 theorem imp_fib {n : ℕ} : ∀ m : ℕ, NatPredicate N m n → ∃ k : ℕ, m = fib k ∧ n = fib (k + 1) := by
   refine Nat.strong_induction_on n ?_
   intro n h1 m h2
-  have h3 : m ≤ n := h2.m_le_n
+  have h3 : m ≤ n
+  apply h2.m_le_n
   obtain (rfl : 1 = n) | (h4 : 1 < n) := (succ_le_iff.mpr h2.n_pos).eq_or_lt
   · use 1
-    have h5 : 1 ≤ m := succ_le_iff.mpr h2.m_pos
+    have h5 : 1 ≤ m
+    apply succ_le_iff.mpr h2.m_pos
     simpa [fib_one, fib_two, (by decide : 1 + 1 = 2)] using (h3.antisymm h5 : m = 1)
   · obtain (rfl : m = n) | (h6 : m < n) := h3.eq_or_lt
     · exact absurd h2.eq_imp_1 (Nat.ne_of_gt h4)
-    · have h7 : NatPredicate N (n - m) m := h2.reduction h4
+    · have h7 : NatPredicate N (n - m) m
+      apply h2.reduction h4
       obtain ⟨k : ℕ, hnm : n - m = fib k, rfl : m = fib (k + 1)⟩ := h1 m h6 (n - m) h7
       use k + 1, rfl
       rw [fib_add_two, ← hnm, tsub_add_cancel_of_le h3]
@@ -134,22 +142,25 @@ variable {K : ℕ} (HK : N < fib K + fib (K + 1)) {N}
 theorem m_n_bounds {m n : ℕ} (h1 : NatPredicate N m n) : m ≤ fib K ∧ n ≤ fib (K + 1) := by
   obtain ⟨k : ℕ, hm : m = fib k, hn : n = fib (k + 1)⟩ := h1.imp_fib m
   by_cases h2 : k < K + 1
-  · have h3 : k ≤ K := Nat.lt_succ_iff.mp h2
+  · have h3 : k ≤ K
+    apply Nat.lt_succ_iff.mp h2
     constructor
     · calc
         m = fib k := hm
         _ ≤ fib K := fib_mono h3
-    · have h6 : k + 1 ≤ K + 1 := succ_le_succ h3
+    · have h6 : k + 1 ≤ K + 1
+      apply succ_le_succ h3
       calc
         n = fib (k + 1) := hn
         _ ≤ fib (K + 1) := fib_mono h6
-  · have h7 : N < n := by
-      have h8 : K + 2 ≤ k + 1 := succ_le_succ (not_lt.mp h2)
-      rw [← fib_add_two] at HK
-      calc
-        N < fib (K + 2) := HK
-        _ ≤ fib (k + 1) := fib_mono h8
-        _ = n := hn.symm
+  · have h7 : N < n
+    have h8 : K + 2 ≤ k + 1
+    apply succ_le_succ (not_lt.mp h2)
+    rw [← fib_add_two] at HK
+    calc
+      N < fib (K + 2) := HK
+      _ ≤ fib (k + 1) := fib_mono h8
+      _ = n := hn.symm
     have h9 : n ≤ N := h1.n_le_N
     exact absurd h7 h9.not_lt
 
@@ -159,12 +170,16 @@ We spell out the consequences of this result for `specifiedSet N` here.
 variable {M : ℕ} (HM : M = fib K ^ 2 + fib (K + 1) ^ 2)
 
 theorem k_bound {m n : ℤ} (h1 : ProblemPredicate N m n) : m ^ 2 + n ^ 2 ≤ M := by
-  have h2 : 0 ≤ m := h1.m_range.left.le
-  have h3 : 0 ≤ n := h1.n_range.left.le
+  have h2 : 0 ≤ m
+  apply h1.m_range.left.le
+  have h3 : 0 ≤ n
+  apply h1.n_range.left.le
   rw [← natAbs_of_nonneg h2, ← natAbs_of_nonneg h3] at h1; clear h2 h3
   obtain ⟨h4 : m.natAbs ≤ fib K, h5 : n.natAbs ≤ fib (K + 1)⟩ := m_n_bounds HK h1
-  have h6 : m ^ 2 ≤ (fib K : ℤ) ^ 2 := Int.natAbs_le_iff_sq_le.mp h4
-  have h7 : n ^ 2 ≤ (fib (K + 1) : ℤ) ^ 2 := Int.natAbs_le_iff_sq_le.mp h5
+  have h6 : m ^ 2 ≤ (fib K : ℤ) ^ 2
+  exact Int.natAbs_le_iff_sq_le.mp h4
+  have h7 : n ^ 2 ≤ (fib (K + 1) : ℤ) ^ 2
+  exact Int.natAbs_le_iff_sq_le.mp h5
   linarith
 
 theorem solution_bound : ∀ {k : ℤ}, k ∈ specifiedSet N → k ≤ M

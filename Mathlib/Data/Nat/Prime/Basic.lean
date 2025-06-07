@@ -174,7 +174,8 @@ theorem Prime.pow_minFac {p k : ℕ} (hp : p.Prime) (hk : k ≠ 0) : (p ^ k).min
 theorem Prime.mul_eq_prime_sq_iff {x y p : ℕ} (hp : p.Prime) (hx : x ≠ 1) (hy : y ≠ 1) :
     x * y = p ^ 2 ↔ x = p ∧ y = p := by
   refine ⟨fun h => ?_, fun ⟨h₁, h₂⟩ => h₁.symm ▸ h₂.symm ▸ (sq _).symm⟩
-  have pdvdxy : p ∣ x * y := by rw [h]; simp [sq]
+  have pdvdxy  : p ∣ x * y
+  rw [h]; simp [sq]
   -- Could be `wlog := hp.dvd_mul.1 pdvdxy using x y`, but that imports more than we want.
   suffices ∀ x' y' : ℕ, x' ≠ 1 → y' ≠ 1 → x' * y' = p ^ 2 → p ∣ x' → x' = p ∧ y' = p by
     obtain hx | hy := hp.dvd_mul.1 pdvdxy <;>
@@ -257,12 +258,14 @@ theorem eq_one_iff_not_exists_prime_dvd {n : ℕ} : n = 1 ↔ ∀ p : ℕ, p.Pri
 theorem succ_dvd_or_succ_dvd_of_succ_sum_dvd_mul {p : ℕ} (p_prime : Prime p) {m n k l : ℕ}
     (hpm : p ^ k ∣ m) (hpn : p ^ l ∣ n) (hpmn : p ^ (k + l + 1) ∣ m * n) :
     p ^ (k + 1) ∣ m ∨ p ^ (l + 1) ∣ n := by
-  have hpd : p ^ (k + l) * p ∣ m * n := by
-      let hpmn' : p ^ (succ (k + l)) ∣ m * n := hpmn
-      rwa [pow_succ'] at hpmn'
+  have hpd  : p ^ (k + l) * p ∣ m * n
+  let hpmn' : p ^ (succ (k + l)) ∣ m * n := hpmn
+  rwa [pow_succ'] at hpmn'
   have hpd2 : p ∣ m * n / p ^ (k + l) := dvd_div_of_mul_dvd hpd
-  have hpd3 : p ∣ m * n / (p ^ k * p ^ l) := by simpa [pow_add] using hpd2
-  have hpd4 : p ∣ m / p ^ k * (n / p ^ l) := by simpa [Nat.div_mul_div_comm hpm hpn] using hpd3
+  have hpd3  : p ∣ m * n / (p ^ k * p ^ l)
+  simpa [pow_add] using hpd2
+  have hpd4  : p ∣ m / p ^ k * (n / p ^ l)
+  simpa [Nat.div_mul_div_comm hpm hpn] using hpd3
   have hpd5 : p ∣ m / p ^ k ∨ p ∣ n / p ^ l :=
     (Prime.dvd_mul p_prime).1 hpd4
   suffices p ^ k * p ∣ m ∨ p ^ l * p ∣ n by rwa [_root_.pow_succ, _root_.pow_succ]

@@ -141,12 +141,12 @@ theorem two_mul_card_image_offDiag (s : Finset α) :
   obtain ⟨hx, hy, hxy⟩ : x ∈ s ∧ y ∈ s ∧ x ≠ y := by
     cases h <;> refine ⟨‹_›, ‹_›, ?_⟩ <;> [exact ha; exact ha.symm]
   have hxy' : y ≠ x := hxy.symm
-  have : (s.offDiag.filter fun z => Sym2.mk z = s(x, y)) = ({(x, y), (y, x)} : Finset _) := by
-    ext ⟨x₁, y₁⟩
-    rw [mem_filter, mem_insert, mem_singleton, Sym2.eq_iff, Prod.mk.inj_iff, Prod.mk.inj_iff,
-      and_iff_right_iff_imp]
-    -- `hxy'` is used in `exact`
-    rintro (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩) <;> rw [mem_offDiag] <;> exact ⟨‹_›, ‹_›, ‹_›⟩
+  have  : (s.offDiag.filter fun z => Sym2.mk z = s(x, y)) = ({(x, y), (y, x)} : Finset _)
+  ext ⟨x₁, y₁⟩
+  rw [mem_filter, mem_insert, mem_singleton, Sym2.eq_iff, Prod.mk.inj_iff, Prod.mk.inj_iff,
+    and_iff_right_iff_imp]
+  -- `hxy'` is used in `exact`
+  rintro (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩) <;> rw [mem_offDiag] <;> exact ⟨‹_›, ‹_›, ‹_›⟩
   rw [this, card_insert_of_not_mem, card_singleton]
   simp only [not_and, Prod.mk.inj_iff, mem_singleton]
   exact fun _ => hxy'

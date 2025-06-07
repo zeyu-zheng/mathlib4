@@ -51,12 +51,12 @@ noncomputable instance [IsIntegral X] : Field X.functionField := by
   rw [or_iff_not_imp_right, ← (X.presheaf.germ ⟨_, m⟩).map_zero]
   intro ha
   replace ha := ne_of_apply_ne _ ha
-  have hs : genericPoint X ∈ RingedSpace.basicOpen _ s := by
-    rw [← SetLike.mem_coe, (genericPoint_spec X).mem_open_set_iff, Set.top_eq_univ,
-      Set.univ_inter, Set.nonempty_iff_ne_empty, Ne, ← Opens.coe_bot, ← SetLike.ext'_iff]
-    · erw [basicOpen_eq_bot_iff]
-      exact ha
-    · exact (RingedSpace.basicOpen _ _).isOpen
+  have hs  : genericPoint X ∈ RingedSpace.basicOpen _ s
+  rw [← SetLike.mem_coe, (genericPoint_spec X).mem_open_set_iff, Set.top_eq_univ,
+    Set.univ_inter, Set.nonempty_iff_ne_empty, Ne, ← Opens.coe_bot, ← SetLike.ext'_iff]
+  · erw [basicOpen_eq_bot_iff]
+    exact ha
+  · exact (RingedSpace.basicOpen _ _).isOpen
   have := (X.presheaf.germ ⟨_, hs⟩).isUnit_map (RingedSpace.isUnit_res_basicOpen _ s)
   rwa [TopCat.Presheaf.germ_res_apply] at this
 

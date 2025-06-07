@@ -125,11 +125,12 @@ theorem linearIndependent_of_isOrthoᵢ {B : V₁ →ₛₗ[I₁] V₁ →ₛₗ
   classical
     rw [linearIndependent_iff']
     intro s w hs i hi
-    have : B (s.sum fun i : n ↦ w i • v i) (v i) = 0 := by rw [hs, map_zero, zero_apply]
-    have hsum : (s.sum fun j : n ↦ I₁ (w j) • B (v j) (v i)) = I₁ (w i) • B (v i) (v i) := by
-      apply Finset.sum_eq_single_of_mem i hi
-      intro j _hj hij
-      rw [isOrthoᵢ_def.1 hv₁ _ _ hij, smul_zero]
+    have  : B (s.sum fun i : n ↦ w i • v i) (v i) = 0
+    rw [hs, map_zero, zero_apply]
+    have hsum  : (s.sum fun j : n ↦ I₁ (w j) • B (v j) (v i)) = I₁ (w i) • B (v i) (v i)
+    apply Finset.sum_eq_single_of_mem i hi
+    intro j _hj hij
+    rw [isOrthoᵢ_def.1 hv₁ _ _ hij, smul_zero]
     simp_rw [B.map_sum₂, map_smulₛₗ₂, hsum] at this
     apply (map_eq_zero I₁).mp
     exact (smul_eq_zero.mp this).elim _root_.id (hv₂ i · |>.elim)
@@ -246,8 +247,8 @@ theorem IsAlt.self_eq_zero (x : M₁) : B x x = 0 :=
 
 theorem IsAlt.eq_of_add_add_eq_zero [IsCancelAdd M] {a b c : M₁} (hAdd : a + b + c = 0) :
     B a b = B b c := by
-  have : B a a + B a b + B a c = B a c + B b c + B c c := by
-    simp_rw [← map_add, ← map_add₂, hAdd, map_zero, LinearMap.zero_apply]
+  have  : B a a + B a b + B a c = B a c + B b c + B c c
+  simp_rw [← map_add, ← map_add₂, hAdd, map_zero, LinearMap.zero_apply]
   rw [H, H, zero_add, add_zero, add_comm] at this
   exact add_left_cancel this
 
@@ -643,10 +644,10 @@ theorem separatingLeft_iff_linear_nontrivial {B : M₁ →ₛₗ[I₁] M₂ →�
     B.SeparatingLeft ↔ ∀ x : M₁, B x = 0 → x = 0 := by
   constructor <;> intro h x hB
   · simpa only [hB, zero_apply, eq_self_iff_true, forall_const] using h x
-  have h' : B x = 0 := by
-    ext
-    rw [zero_apply]
-    exact hB _
+  have h'  : B x = 0
+  ext
+  rw [zero_apply]
+  exact hB _
   exact h x h'
 
 theorem separatingRight_iff_linear_flip_nontrivial {B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] M} :

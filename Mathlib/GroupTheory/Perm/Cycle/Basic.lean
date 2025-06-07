@@ -266,8 +266,8 @@ protected theorem IsCycle.extendDomain {p : β → Prop} [DecidablePred p] (f : 
   refine ⟨f a, ?_, fun b hb => ?_⟩
   · rw [extendDomain_apply_image]
     exact Subtype.coe_injective.ne (f.injective.ne ha)
-  have h : b = f (f.symm ⟨b, of_not_not <| hb ∘ extendDomain_apply_not_subtype _ _⟩) := by
-    rw [apply_symm_apply, Subtype.coe_mk]
+  have h  : b = f (f.symm ⟨b, of_not_not <| hb ∘ extendDomain_apply_not_subtype _ _⟩)
+  rw [apply_symm_apply, Subtype.coe_mk]
   rw [h] at hb ⊢
   simp only [extendDomain_apply_image, Subtype.coe_injective.ne_iff, f.injective.ne_iff] at hb
   exact (ha' hb).extendDomain
@@ -462,9 +462,9 @@ termination_by f.support.card
 
 theorem IsCycle.of_pow {n : ℕ} (h1 : IsCycle (f ^ n)) (h2 : f.support ⊆ (f ^ n).support) :
     IsCycle f := by
-  have key : ∀ x : α, (f ^ n) x ≠ x ↔ f x ≠ x := by
-    simp_rw [← mem_support, ← Finset.ext_iff]
-    exact (support_pow_le _ n).antisymm h2
+  have key  : ∀ x : α, (f ^ n) x ≠ x ↔ f x ≠ x
+  simp_rw [← mem_support, ← Finset.ext_iff]
+  exact (support_pow_le _ n).antisymm h2
   obtain ⟨x, hx1, hx2⟩ := h1
   refine ⟨x, (key x).mp hx1, fun y hy => ?_⟩
   cases' hx2 ((key y).mpr hy) with i _
@@ -487,19 +487,20 @@ theorem nodup_of_pairwise_disjoint_cycles {l : List (Perm β)} (h1 : ∀ f ∈ l
 we have the weaker assumption that `∀ (x ∈ f.support), f x = g x`. -/
 theorem IsCycle.support_congr (hf : IsCycle f) (hg : IsCycle g) (h : f.support ⊆ g.support)
     (h' : ∀ x ∈ f.support, f x = g x) : f = g := by
-  have : f.support = g.support := by
-    refine le_antisymm h ?_
-    intro z hz
-    obtain ⟨x, hx, _⟩ := id hf
-    have hx' : g x ≠ x := by rwa [← h' x (mem_support.mpr hx)]
-    obtain ⟨m, hm⟩ := hg.exists_pow_eq hx' (mem_support.mp hz)
-    have h'' : ∀ x ∈ f.support ∩ g.support, f x = g x := by
-      intro x hx
-      exact h' x (mem_of_mem_inter_left hx)
-    rwa [← hm, ←
-      pow_eq_on_of_mem_support h'' _ x
-        (mem_inter_of_mem (mem_support.mpr hx) (mem_support.mpr hx')),
-      pow_apply_mem_support, mem_support]
+  have  : f.support = g.support
+  refine le_antisymm h ?_
+  intro z hz
+  obtain ⟨x, hx, _⟩ := id hf
+  have hx'  : g x ≠ x
+  rwa [← h' x (mem_support.mpr hx)]
+  obtain ⟨m, hm⟩ := hg.exists_pow_eq hx' (mem_support.mp hz)
+  have h''  : ∀ x ∈ f.support ∩ g.support, f x = g x
+  intro x hx
+  exact h' x (mem_of_mem_inter_left hx)
+  rwa [← hm, ←
+    pow_eq_on_of_mem_support h'' _ x
+      (mem_inter_of_mem (mem_support.mpr hx) (mem_support.mpr hx')),
+    pow_apply_mem_support, mem_support]
   refine Equiv.Perm.support_congr h ?_
   simpa [← this] using h'
 
@@ -508,11 +509,12 @@ and that intersection is not empty, then the two cyclic permutations must be equ
 theorem IsCycle.eq_on_support_inter_nonempty_congr (hf : IsCycle f) (hg : IsCycle g)
     (h : ∀ x ∈ f.support ∩ g.support, f x = g x)
     (hx : f x = g x) (hx' : x ∈ f.support) : f = g := by
-  have hx'' : x ∈ g.support := by rwa [mem_support, ← hx, ← mem_support]
-  have : f.support ⊆ g.support := by
-    intro y hy
-    obtain ⟨k, rfl⟩ := hf.exists_pow_eq (mem_support.mp hx') (mem_support.mp hy)
-    rwa [pow_eq_on_of_mem_support h _ _ (mem_inter_of_mem hx' hx''), pow_apply_mem_support]
+  have hx''  : x ∈ g.support
+  rwa [mem_support, ← hx, ← mem_support]
+  have  : f.support ⊆ g.support
+  intro y hy
+  obtain ⟨k, rfl⟩ := hf.exists_pow_eq (mem_support.mp hx') (mem_support.mp hy)
+  rwa [pow_eq_on_of_mem_support h _ _ (mem_inter_of_mem hx' hx''), pow_apply_mem_support]
   rw [inter_eq_left.mpr this] at h
   exact hf.support_congr hg this h
 
@@ -545,19 +547,21 @@ theorem IsCycle.pow_iff [Finite β] {f : Perm β} (hf : IsCycle f) {n : ℕ} :
     cases nonempty_fintype β
     constructor
     · intro h
-      have hr : support (f ^ n) = support f := by
-        rw [hf.support_pow_eq_iff]
-        rintro ⟨k, rfl⟩
-        refine h.ne_one ?_
-        simp [pow_mul, pow_orderOf_eq_one]
-      have : orderOf (f ^ n) = orderOf f := by rw [h.orderOf, hr, hf.orderOf]
+      have hr  : support (f ^ n) = support f
+      rw [hf.support_pow_eq_iff]
+      rintro ⟨k, rfl⟩
+      refine h.ne_one ?_
+      simp [pow_mul, pow_orderOf_eq_one]
+      have  : orderOf (f ^ n) = orderOf f
+      rw [h.orderOf, hr, hf.orderOf]
       rw [orderOf_pow, Nat.div_eq_self] at this
       cases' this with h
       · exact absurd h (orderOf_pos _).ne'
       · rwa [Nat.coprime_iff_gcd_eq_one, Nat.gcd_comm]
     · intro h
       obtain ⟨m, hm⟩ := exists_pow_eq_self_of_coprime h
-      have hf' : IsCycle ((f ^ n) ^ m) := by rwa [hm]
+      have hf'  : IsCycle ((f ^ n) ^ m)
+      rwa [hm]
       refine hf'.of_pow fun x hx => ?_
       rw [hm]
       exact support_pow_le _ n hx
@@ -619,10 +623,10 @@ theorem IsCycle.isCycle_pow_pos_of_lt_prime_order [Finite β] {f : Perm β} (hf 
     (hf' : (orderOf f).Prime) (n : ℕ) (hn : 0 < n) (hn' : n < orderOf f) : IsCycle (f ^ n) := by
   classical
     cases nonempty_fintype β
-    have : n.Coprime (orderOf f) := by
-      refine Nat.Coprime.symm ?_
-      rw [Nat.Prime.coprime_iff_not_dvd hf']
-      exact Nat.not_dvd_of_pos_of_lt hn hn'
+    have  : n.Coprime (orderOf f)
+    refine Nat.Coprime.symm ?_
+    rw [Nat.Prime.coprime_iff_not_dvd hf']
+    exact Nat.not_dvd_of_pos_of_lt hn hn'
     obtain ⟨m, hm⟩ := exists_pow_eq_self_of_coprime this
     have hf'' := hf
     rw [← hm] at hf''

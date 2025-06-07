@@ -363,13 +363,14 @@ theorem exists_measurable_superset_eq_trim (m : OuterMeasure α) (s : Set α) :
     exact ⟨univ, subset_univ s, MeasurableSet.univ, hs _ (subset_univ s) MeasurableSet.univ⟩
   · have : ∀ r > ms, ∃ t, s ⊆ t ∧ MeasurableSet t ∧ m t < r := by
       intro r hs
-      have : ∃t, MeasurableSet t ∧ s ⊆ t ∧ m t < r := by simpa [ms, iInf_lt_iff] using hs
+      have  : ∃t, MeasurableSet t ∧ s ⊆ t ∧ m t < r
+      simpa [ms, iInf_lt_iff] using hs
       rcases this with ⟨t, hmt, hin, hlt⟩
       exists t
-    have : ∀ n : ℕ, ∃ t, s ⊆ t ∧ MeasurableSet t ∧ m t < ms + (n : ℝ≥0∞)⁻¹ := by
-      intro n
-      refine this _ (ENNReal.lt_add_right hs ?_)
-      simp
+    have  : ∀ n : ℕ, ∃ t, s ⊆ t ∧ MeasurableSet t ∧ m t < ms + (n : ℝ≥0∞)⁻¹
+    intro n
+    refine this _ (ENNReal.lt_add_right hs ?_)
+    simp
     choose t hsub hm hm' using this
     refine ⟨⋂ n, t n, subset_iInter hsub, MeasurableSet.iInter hm, ?_⟩
     have : Tendsto (fun n : ℕ => ms + (n : ℝ≥0∞)⁻¹) atTop (𝓝 (ms + 0)) :=

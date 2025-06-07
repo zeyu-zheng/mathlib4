@@ -259,10 +259,10 @@ theorem list_prod_right {a : ℤ} {l : List ℕ} (hl : ∀ n ∈ l, n ≠ 0) :
 /-- If `J(a | n) = -1`, then `n` has a prime divisor `p` such that `J(a | p) = -1`. -/
 theorem eq_neg_one_at_prime_divisor_of_eq_neg_one {a : ℤ} {n : ℕ} (h : J(a | n) = -1) :
     ∃ p : ℕ, p.Prime ∧ p ∣ n ∧ J(a | p) = -1 := by
-  have hn₀ : n ≠ 0 := by
-    rintro rfl
-    rw [zero_right, eq_neg_self_iff] at h
-    exact one_ne_zero h
+  have hn₀  : n ≠ 0
+  rintro rfl
+  rw [zero_right, eq_neg_self_iff] at h
+  exact one_ne_zero h
   have hf₀ (p) (hp : p ∈ n.primeFactorsList) : p ≠ 0 := (Nat.pos_of_mem_primeFactorsList hp).ne.symm
   rw [← Nat.prod_primeFactorsList hn₀, list_prod_right hf₀] at h
   obtain ⟨p, hmem, hj⟩ := List.mem_map.mp (List.neg_one_mem_of_prod_eq_neg_one h)
@@ -334,9 +334,9 @@ theorem at_neg_two {b : ℕ} (hb : Odd b) : J(-2 | b) = χ₈' b :=
 theorem div_four_left {a : ℤ} {b : ℕ} (ha4 : a % 4 = 0) (hb2 : b % 2 = 1) :
     J(a / 4 | b) = J(a | b) := by
   obtain ⟨a, rfl⟩ := Int.dvd_of_emod_eq_zero ha4
-  have : Int.gcd (2 : ℕ) b = 1 := by
-    rw [Int.gcd_natCast_natCast, ← b.mod_add_div 2, hb2, Nat.gcd_add_mul_left_right,
-      Nat.gcd_one_right]
+  have  : Int.gcd (2 : ℕ) b = 1
+  rw [Int.gcd_natCast_natCast, ← b.mod_add_div 2, hb2, Nat.gcd_add_mul_left_right,
+    Nat.gcd_one_right]
   rw [Int.mul_ediv_cancel_left _ (by decide), jacobiSym.mul_left,
     (by decide : (4 : ℤ) = (2 : ℕ) ^ 2), jacobiSym.sq_one' this, one_mul]
 

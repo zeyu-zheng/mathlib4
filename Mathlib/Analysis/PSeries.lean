@@ -203,9 +203,9 @@ theorem summable_schlomilch_iff {C : ℕ} {u : ℕ → ℕ} {f : ℕ → ℝ≥0
 open ENNReal in
 theorem summable_condensed_iff {f : ℕ → ℝ≥0} (hf : ∀ ⦃m n⦄, 0 < m → m ≤ n → f n ≤ f m) :
     (Summable fun k : ℕ => (2 : ℝ≥0) ^ k * f (2 ^ k)) ↔ Summable f := by
-  have h_succ_diff : SuccDiffBounded 2 (2 ^ ·) := by
-    intro n
-    simp [pow_succ, mul_two, two_mul]
+  have h_succ_diff  : SuccDiffBounded 2 (2 ^ ·)
+  intro n
+  simp [pow_succ, mul_two, two_mul]
   convert summable_schlomilch_iff hf (pow_pos zero_lt_two) (pow_right_strictMono _root_.one_lt_two)
     two_ne_zero h_succ_diff
   simp [pow_succ, mul_two, two_mul]
@@ -220,9 +220,9 @@ theorem summable_schlomilch_iff_of_nonneg {C : ℕ} {u : ℕ → ℕ} {f : ℕ �
     (Summable fun k : ℕ => (u (k + 1) - (u k : ℝ)) * f (u k)) ↔ Summable f := by
   lift f to ℕ → ℝ≥0 using h_nonneg
   simp only [NNReal.coe_le_coe] at *
-  have (k : ℕ) : (u (k + 1) - (u k : ℝ)) = ((u (k + 1) : ℝ≥0) - (u k : ℝ≥0) : ℝ≥0) := by
-    have := Nat.cast_le (α := ℝ≥0).mpr <| (hu_strict k.lt_succ_self).le
-    simp [NNReal.coe_sub this]
+  have (k  : ℕ) : (u (k + 1) - (u k : ℝ)) = ((u (k + 1) : ℝ≥0) - (u k : ℝ≥0) : ℝ≥0)
+  have := Nat.cast_le (α := ℝ≥0).mpr <| (hu_strict k.lt_succ_self).le
+  simp [NNReal.coe_sub this]
   simp_rw [this]
   exact_mod_cast NNReal.summable_schlomilch_iff hf h_pos hu_strict hC_nonzero h_succ_diff
 
@@ -230,9 +230,9 @@ theorem summable_schlomilch_iff_of_nonneg {C : ℕ} {u : ℕ → ℕ} {f : ℕ �
 theorem summable_condensed_iff_of_nonneg {f : ℕ → ℝ} (h_nonneg : ∀ n, 0 ≤ f n)
     (h_mono : ∀ ⦃m n⦄, 0 < m → m ≤ n → f n ≤ f m) :
     (Summable fun k : ℕ => (2 : ℝ) ^ k * f (2 ^ k)) ↔ Summable f := by
-  have h_succ_diff : SuccDiffBounded 2 (2 ^ ·) := by
-    intro n
-    simp [pow_succ, mul_two, two_mul]
+  have h_succ_diff  : SuccDiffBounded 2 (2 ^ ·)
+  intro n
+  simp [pow_succ, mul_two, two_mul]
   convert summable_schlomilch_iff_of_nonneg h_nonneg h_mono (pow_pos zero_lt_two)
     (pow_right_strictMono one_lt_two) two_ne_zero h_succ_diff
   simp [pow_succ, mul_two, two_mul]
@@ -385,8 +385,10 @@ theorem sum_Ioc_inv_sq_le_sub {k n : ℕ} (hk : k ≠ 0) (h : k ≤ n) :
   apply (add_le_add IH le_rfl).trans
   simp only [sub_eq_add_neg, add_assoc, Nat.cast_add, Nat.cast_one, le_add_neg_iff_add_le,
     add_le_iff_nonpos_right, neg_add_le_iff_le_add, add_zero]
-  have A : 0 < (n : α) := by simpa using hk.bot_lt.trans_le hn
-  have B : 0 < (n : α) + 1 := by linarith
+  have A  : 0 < (n : α)
+  simpa using hk.bot_lt.trans_le hn
+  have B  : 0 < (n : α) + 1
+  linarith
   field_simp
   rw [div_le_div_iff _ A, ← sub_nonneg]
   · ring_nf

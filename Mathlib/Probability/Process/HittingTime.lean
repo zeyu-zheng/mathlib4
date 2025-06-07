@@ -64,11 +64,11 @@ variable [ConditionallyCompleteLinearOrder ι] {u : ι → Ω → β} {s : Set �
 /-- This lemma is strictly weaker than `hitting_of_le`. -/
 theorem hitting_of_lt {m : ι} (h : m < n) : hitting u s n m ω = m := by
   simp_rw [hitting]
-  have h_not : ¬∃ (j : ι) (_ : j ∈ Set.Icc n m), u j ω ∈ s := by
-    push_neg
-    intro j
-    rw [Set.Icc_eq_empty_of_lt h]
-    simp only [Set.mem_empty_iff_false, IsEmpty.forall_iff]
+  have h_not  : ¬∃ (j : ι) (_ : j ∈ Set.Icc n m), u j ω ∈ s
+  push_neg
+  intro j
+  rw [Set.Icc_eq_empty_of_lt h]
+  simp only [Set.mem_empty_iff_false, IsEmpty.forall_iff]
   simp only [exists_prop] at h_not
   simp only [h_not, if_false]
 
@@ -125,9 +125,9 @@ theorem hitting_mem_Icc {m : ι} (hnm : n ≤ m) (ω : Ω) : hitting u s n m ω 
 theorem hitting_mem_set [IsWellOrder ι (· < ·)] {m : ι} (h_exists : ∃ j ∈ Set.Icc n m, u j ω ∈ s) :
     u (hitting u s n m ω) ω ∈ s := by
   simp_rw [hitting, if_pos h_exists]
-  have h_nonempty : (Set.Icc n m ∩ {i : ι | u i ω ∈ s}).Nonempty := by
-    obtain ⟨k, hk₁, hk₂⟩ := h_exists
-    exact ⟨k, Set.mem_inter hk₁ hk₂⟩
+  have h_nonempty  : (Set.Icc n m ∩ {i : ι | u i ω ∈ s}).Nonempty
+  obtain ⟨k, hk₁, hk₂⟩ := h_exists
+  exact ⟨k, Set.mem_inter hk₁ hk₂⟩
   have h_mem := csInf_mem h_nonempty
   rw [Set.mem_inter_iff] at h_mem
   exact h_mem.2
@@ -249,12 +249,12 @@ theorem isStoppingTime_hitting_isStoppingTime [ConditionallyCompleteLinearOrder 
       ⋃ i > n, {x | τ x = i} ∩ {x | hitting u s i N x ≤ n} := by
     ext x
     simp [← exists_or, ← or_and_right, le_or_lt]
-  have h₂ : ⋃ i > n, {x | τ x = i} ∩ {x | hitting u s i N x ≤ n} = ∅ := by
-    ext x
-    simp only [gt_iff_lt, Set.mem_iUnion, Set.mem_inter_iff, Set.mem_setOf_eq, exists_prop,
-      Set.mem_empty_iff_false, iff_false_iff, not_exists, not_and, not_le]
-    rintro m hm rfl
-    exact lt_of_lt_of_le hm (le_hitting (hτbdd _) _)
+  have h₂  : ⋃ i > n, {x | τ x = i} ∩ {x | hitting u s i N x ≤ n} = ∅
+  ext x
+  simp only [gt_iff_lt, Set.mem_iUnion, Set.mem_inter_iff, Set.mem_setOf_eq, exists_prop,
+    Set.mem_empty_iff_false, iff_false_iff, not_exists, not_and, not_le]
+  rintro m hm rfl
+  exact lt_of_lt_of_le hm (le_hitting (hτbdd _) _)
   rw [h₁, h₂, Set.union_empty]
   exact MeasurableSet.iUnion fun i => MeasurableSet.iUnion fun hi =>
     (f.mono hi _ (hτ.measurableSet_eq i)).inter (hitting_isStoppingTime hf hs n)

@@ -123,16 +123,16 @@ theorem mem_sumCongrHom_range_of_perm_mapsTo_inl {m n : Type*} [Finite m] [Finit
     {σ : Perm (m ⊕ n)} (h : Set.MapsTo σ (Set.range Sum.inl) (Set.range Sum.inl)) :
     σ ∈ (sumCongrHom m n).range := by
   classical
-    have h1 : ∀ x : m ⊕ n, (∃ a : m, Sum.inl a = x) → ∃ a : m, Sum.inl a = σ x := by
-      rintro x ⟨a, ha⟩
-      apply h
-      rw [← ha]
-      exact ⟨a, rfl⟩
-    have h3 : ∀ x : m ⊕ n, (∃ b : n, Sum.inr b = x) → ∃ b : n, Sum.inr b = σ x := by
-      rintro x ⟨b, hb⟩
-      apply (perm_mapsTo_inl_iff_mapsTo_inr σ).mp h
-      rw [← hb]
-      exact ⟨b, rfl⟩
+    have h1  : ∀ x : m ⊕ n, (∃ a : m, Sum.inl a = x) → ∃ a : m, Sum.inl a = σ x
+    rintro x ⟨a, ha⟩
+    apply h
+    rw [← ha]
+    exact ⟨a, rfl⟩
+    have h3  : ∀ x : m ⊕ n, (∃ b : n, Sum.inr b = x) → ∃ b : n, Sum.inr b = σ x
+    rintro x ⟨b, hb⟩
+    apply (perm_mapsTo_inl_iff_mapsTo_inr σ).mp h
+    rw [← hb]
+    exact ⟨b, rfl⟩
     let σ₁' := subtypePermOfFintype σ h1
     let σ₂' := subtypePermOfFintype σ h3
     let σ₁ := permCongr (Equiv.ofInjective _ Sum.inl_injective).symm σ₁'

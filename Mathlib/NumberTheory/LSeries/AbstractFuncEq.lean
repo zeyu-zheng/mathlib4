@@ -232,8 +232,8 @@ theorem functional_equation (s : ℂ) :
   simp_rw [P.h_feq' t ht, ← mul_smul]
   -- some simple `cpow` arithmetic to finish
   rw [cpow_neg, ofReal_cpow (le_of_lt ht)]
-  have : (t : ℂ) ^ (P.k : ℂ) ≠ 0 := by
-    simpa only [← ofReal_cpow (le_of_lt ht), ofReal_ne_zero] using (rpow_pos_of_pos ht _).ne'
+  have  : (t : ℂ) ^ (P.k : ℂ) ≠ 0
+  simpa only [← ofReal_cpow (le_of_lt ht), ofReal_ne_zero] using (rpow_pos_of_pos ht _).ne'
   field_simp [P.hε]
 
 end StrongFEPair
@@ -260,11 +260,11 @@ def g_modif : ℝ → E :=
 
 lemma hf_modif_int :
     LocallyIntegrableOn P.f_modif (Ioi 0) := by
-  have : LocallyIntegrableOn (fun x : ℝ ↦ (P.ε * ↑(x ^ (-P.k))) • P.g₀) (Ioi 0) := by
-    refine ContinuousOn.locallyIntegrableOn ?_ measurableSet_Ioi
-    refine ContinuousAt.continuousOn (fun x (hx : 0 < x) ↦ ?_)
-    refine (continuousAt_const.mul ?_).smul continuousAt_const
-    exact continuous_ofReal.continuousAt.comp (continuousAt_rpow_const _ _ (Or.inl hx.ne'))
+  have  : LocallyIntegrableOn (fun x : ℝ ↦ (P.ε * ↑(x ^ (-P.k))) • P.g₀) (Ioi 0)
+  refine ContinuousOn.locallyIntegrableOn ?_ measurableSet_Ioi
+  refine ContinuousAt.continuousOn (fun x (hx : 0 < x) ↦ ?_)
+  refine (continuousAt_const.mul ?_).smul continuousAt_const
+  exact continuous_ofReal.continuousAt.comp (continuousAt_rpow_const _ _ (Or.inl hx.ne'))
   refine LocallyIntegrableOn.add (fun x hx ↦ ?_) (fun x hx ↦ ?_)
   · obtain ⟨s, hs, hs'⟩ := P.hf_int.sub (locallyIntegrableOn_const _) x hx
     refine ⟨s, hs, ?_⟩
@@ -338,8 +338,10 @@ lemma f_modif_aux1 : EqOn (fun x ↦ P.f_modif x - P.f x + P.f₀)
 `0` and `∞`. -/
 lemma f_modif_aux2 {s : ℂ} (hs : P.k < re s) :
     mellin (fun x ↦ P.f_modif x - P.f x + P.f₀) s = (1 / s) • P.f₀ + (P.ε  / (P.k - s)) • P.g₀ := by
-  have h_re1 : -1 < re (s - 1) := by simpa using P.hk.trans hs
-  have h_re2 : -1 < re (s - P.k - 1) := by simpa using hs
+  have h_re1  : -1 < re (s - 1)
+  simpa using P.hk.trans hs
+  have h_re2  : -1 < re (s - P.k - 1)
+  simpa using hs
   calc
   _ = ∫ (x : ℝ) in Ioi 0, (x : ℂ) ^ (s - 1) •
       ((Ioo 0 1).indicator (fun t : ℝ ↦ P.f₀ - (P.ε * ↑(t ^ (-P.k))) • P.g₀) x

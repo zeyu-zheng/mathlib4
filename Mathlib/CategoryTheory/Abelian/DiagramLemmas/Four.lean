@@ -65,19 +65,19 @@ theorem mono_of_epi_of_mono_of_mono' (hR₁ : R₁.map' 0 2 = 0)
     Mono (app' φ 2) := by
   apply mono_of_cancel_zero
   intro A f₂ h₁
-  have h₂ : f₂ ≫ R₁.map' 2 3 = 0 := by
-    rw [← cancel_mono (app' φ 3 _), assoc, NatTrans.naturality, reassoc_of% h₁,
-      zero_comp, zero_comp]
+  have h₂  : f₂ ≫ R₁.map' 2 3 = 0
+  rw [← cancel_mono (app' φ 3 _), assoc, NatTrans.naturality, reassoc_of% h₁,
+    zero_comp, zero_comp]
   obtain ⟨A₁, π₁, _, f₁, hf₁⟩ := (hR₁'.exact 0).exact_up_to_refinements f₂ h₂
   dsimp at hf₁
-  have h₃ : (f₁ ≫ app' φ 1) ≫ R₂.map' 1 2 = 0 := by
-    rw [assoc, ← NatTrans.naturality, ← reassoc_of% hf₁, h₁, comp_zero]
+  have h₃  : (f₁ ≫ app' φ 1) ≫ R₂.map' 1 2 = 0
+  rw [assoc, ← NatTrans.naturality, ← reassoc_of% hf₁, h₁, comp_zero]
   obtain ⟨A₂, π₂, _, g₀, hg₀⟩ := (hR₂.exact 0).exact_up_to_refinements _ h₃
   obtain ⟨A₃, π₃, _, f₀, hf₀⟩ := surjective_up_to_refinements_of_epi (app' φ 0 _) g₀
-  have h₄ : f₀ ≫ R₁.map' 0 1 = π₃ ≫ π₂ ≫ f₁ := by
-    rw [← cancel_mono (app' φ 1 _), assoc, assoc, assoc, NatTrans.naturality,
-      ← reassoc_of% hf₀, hg₀]
-    rfl
+  have h₄  : f₀ ≫ R₁.map' 0 1 = π₃ ≫ π₂ ≫ f₁
+  rw [← cancel_mono (app' φ 1 _), assoc, assoc, assoc, NatTrans.naturality,
+    ← reassoc_of% hf₀, hg₀]
+  rfl
   rw [← cancel_epi π₁, comp_zero, hf₁, ← cancel_epi π₂, ← cancel_epi π₃, comp_zero,
     comp_zero, ← reassoc_of% h₄, ← R₁.map'_comp 0 1 2, hR₁, comp_zero]
 
@@ -140,12 +140,12 @@ set_option simprocs false in
 theorem isIso_of_epi_of_isIso_of_isIso_of_mono (h₀ : Epi (app' φ 0)) (h₁ : IsIso (app' φ 1))
     (h₂ : IsIso (app' φ 3)) (h₃ : Mono (app' φ 4)) : IsIso (app' φ 2) := by
   dsimp at h₀ h₁ h₂ h₃
-  have : Mono (app' φ 2) := by
-    apply mono_of_epi_of_mono_of_mono (δlastFunctor.map φ) (R₁.exact_iff_δlast.1 hR₁).1
-      (R₂.exact_iff_δlast.1 hR₂).1 <;> dsimp <;> infer_instance
-  have : Epi (app' φ 2) := by
-    apply epi_of_epi_of_epi_of_mono (δ₀Functor.map φ) (R₁.exact_iff_δ₀.1 hR₁).2
-      (R₂.exact_iff_δ₀.1 hR₂).2 <;> dsimp <;> infer_instance
+  have  : Mono (app' φ 2)
+  apply mono_of_epi_of_mono_of_mono (δlastFunctor.map φ) (R₁.exact_iff_δlast.1 hR₁).1
+    (R₂.exact_iff_δlast.1 hR₂).1 <;> dsimp <;> infer_instance
+  have  : Epi (app' φ 2)
+  apply epi_of_epi_of_epi_of_mono (δ₀Functor.map φ) (R₁.exact_iff_δ₀.1 hR₁).2
+    (R₂.exact_iff_δ₀.1 hR₂).2 <;> dsimp <;> infer_instance
   apply isIso_of_mono_of_epi
 
 end Five

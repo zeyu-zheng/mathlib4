@@ -238,8 +238,8 @@ lemma shiftIso_hom_app_comp_shiftMap_of_add_eq_zero [F.ShiftSequence G]
       F.shiftMap f a a' ha' =
     (F.shift a').map (f⟦n⟧' ≫ (shiftFunctorCompIsoId C m n
       (by rw [← add_left_inj m, add_assoc, hnm, zero_add, add_zero])).hom.app Y) := by
-  have hnm' : m + n = 0 := by
-    rw [← add_left_inj m, add_assoc, hnm, zero_add, add_zero]
+  have hnm'  : m + n = 0
+  rw [← add_left_inj m, add_assoc, hnm, zero_add, add_zero]
   dsimp
   simp [F.shiftIso_hom_app_comp_shiftMap f n 0 hnm' a' a, shiftIso_zero_hom_app,
     shiftFunctorCompIsoId]

@@ -332,11 +332,11 @@ instance colimitLimitToLimitColimit_isIso : IsIso (colimitLimitToLimitColimit F)
 
 instance colimitLimitToLimitColimitCone_iso (F : J ⥤ K ⥤ Type v) :
     IsIso (colimitLimitToLimitColimitCone F) := by
-  have : IsIso (colimitLimitToLimitColimitCone F).hom := by
-    suffices IsIso (colimitLimitToLimitColimit (uncurry.obj F) ≫
-        lim.map (whiskerRight (currying.unitIso.app F).inv colim)) by
-      apply IsIso.comp_isIso
-    infer_instance
+  have  : IsIso (colimitLimitToLimitColimitCone F).hom
+  suffices IsIso (colimitLimitToLimitColimit (uncurry.obj F) ≫
+      lim.map (whiskerRight (currying.unitIso.app F).inv colim)) by
+    apply IsIso.comp_isIso
+  infer_instance
   apply Cones.cone_iso_of_hom_iso
 
 noncomputable instance filteredColimPreservesFiniteLimitsOfTypes :

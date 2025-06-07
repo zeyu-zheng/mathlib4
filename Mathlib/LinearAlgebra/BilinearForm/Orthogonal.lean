@@ -108,11 +108,12 @@ theorem linearIndependent_of_iIsOrtho {n : Type w} {B : BilinForm K V} {v : n �
   classical
     rw [linearIndependent_iff']
     intro s w hs i hi
-    have : B (s.sum fun i : n => w i • v i) (v i) = 0 := by rw [hs, zero_left]
-    have hsum : (s.sum fun j : n => w j * B (v j) (v i)) = w i * B (v i) (v i) := by
-      apply Finset.sum_eq_single_of_mem i hi
-      intro j _ hij
-      rw [iIsOrtho_def.1 hv₁ _ _ hij, mul_zero]
+    have  : B (s.sum fun i : n => w i • v i) (v i) = 0
+    rw [hs, zero_left]
+    have hsum  : (s.sum fun j : n => w j * B (v j) (v i)) = w i * B (v i) (v i)
+    apply Finset.sum_eq_single_of_mem i hi
+    intro j _ hij
+    rw [iIsOrtho_def.1 hv₁ _ _ hij, mul_zero]
     simp_rw [sum_left, smul_left, hsum] at this
     exact eq_zero_of_ne_zero_of_mul_right_eq_zero (hv₂ i) this
 
@@ -339,14 +340,14 @@ lemma isCompl_orthogonal_iff_disjoint (hB₀ : B.IsRefl) :
 reflexive bilinear form if that bilinear form restricted on to the subspace is nondegenerate. -/
 theorem isCompl_orthogonal_of_restrict_nondegenerate
     (b₁ : B.IsRefl) (b₂ : (B.restrict W).Nondegenerate) : IsCompl W (B.orthogonal W) := by
-  have : W ⊓ B.orthogonal W = ⊥ := by
-    rw [eq_bot_iff]
-    intro x hx
-    obtain ⟨hx₁, hx₂⟩ := mem_inf.1 hx
-    refine Subtype.mk_eq_mk.1 (b₂ ⟨x, hx₁⟩ ?_)
-    rintro ⟨n, hn⟩
-    simp only [restrict_apply, domRestrict_apply]
-    exact b₁ n x (b₁ x n (b₁ n x (hx₂ n hn)))
+  have  : W ⊓ B.orthogonal W = ⊥
+  rw [eq_bot_iff]
+  intro x hx
+  obtain ⟨hx₁, hx₂⟩ := mem_inf.1 hx
+  refine Subtype.mk_eq_mk.1 (b₂ ⟨x, hx₁⟩ ?_)
+  rintro ⟨n, hn⟩
+  simp only [restrict_apply, domRestrict_apply]
+  exact b₁ n x (b₁ x n (b₁ n x (hx₂ n hn)))
   refine IsCompl.of_eq this (eq_top_of_finrank_eq <| (finrank_le _).antisymm ?_)
   conv_rhs => rw [← add_zero (finrank K _)]
   rw [← finrank_bot K V, ← this, finrank_sup_add_finrank_inf_eq,

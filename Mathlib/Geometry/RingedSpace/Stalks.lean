@@ -164,7 +164,8 @@ instance isIso {X Y : PresheafedSpace.{_, _, v} C} (α : X ⟶ Y) [IsIso α] (x 
     IsIso (α.stalkMap x) where
   out := by
     let β : Y ⟶ X := CategoryTheory.inv α
-    have h_eq : (α ≫ β).base x = x := by rw [IsIso.hom_inv_id α, id_base, TopCat.id_app]
+    have h_eq  : (α ≫ β).base x = x
+    rw [IsIso.hom_inv_id α, id_base, TopCat.id_app]
     -- Intuitively, the inverse of the stalk map of `α` at `x` should just be the stalk map of `β`
     -- at `α x`. Unfortunately, we have a problem with dependent type theory here: Because `x`
     -- is not *definitionally* equal to `β (α x)`, the map `stalk_map β (α x)` has not the correct

@@ -128,8 +128,10 @@ noncomputable def r (i' : ι') : Option ι :=
 
 lemma r_eq_some {i : ι} {i' : ι'} (hi : e.f i = i') :
     e.r i' = some i := by
-  have h : ∃ (i : ι), e.f i = i' := ⟨i, hi⟩
-  have : h.choose = i := e.injective_f (h.choose_spec.trans (hi.symm))
+  have h : ∃ (i : ι), e.f i = i'
+  exact ⟨i, hi⟩
+  have : h.choose = i
+  apply e.injective_f (h.choose_spec.trans (hi.symm))
   dsimp [r]
   rw [dif_pos ⟨i, hi⟩, this]
 

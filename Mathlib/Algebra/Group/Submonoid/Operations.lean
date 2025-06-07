@@ -700,12 +700,12 @@ theorem prod_le_iff {s : Submonoid M} {t : Submonoid N} {u : Submonoid (M × N)}
       apply h
       exact ⟨Submonoid.one_mem _, hx⟩
   · rintro ⟨hH, hK⟩ ⟨x1, x2⟩ ⟨h1, h2⟩
-    have h1' : inl M N x1 ∈ u := by
-      apply hH
-      simpa using h1
-    have h2' : inr M N x2 ∈ u := by
-      apply hK
-      simpa using h2
+    have h1'  : inl M N x1 ∈ u
+    apply hH
+    simpa using h1
+    have h2'  : inr M N x2 ∈ u
+    apply hK
+    simpa using h2
     simpa using Submonoid.mul_mem _ h1' h2'
 
 end Submonoid

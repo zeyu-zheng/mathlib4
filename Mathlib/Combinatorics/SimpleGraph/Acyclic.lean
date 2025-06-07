@@ -153,8 +153,8 @@ lemma IsTree.card_edgeFinset [Fintype V] [Fintype G.edgeSet] (hG : G.IsTree) :
   have := hG.isConnected.nonempty
   inhabit V
   classical
-  have : Finset.card ({default} : Finset V)ᶜ + 1 = Fintype.card V := by
-    rw [Finset.card_compl, Finset.card_singleton, Nat.sub_add_cancel Fintype.card_pos]
+  have  : Finset.card ({default} : Finset V)ᶜ + 1 = Fintype.card V
+  rw [Finset.card_compl, Finset.card_singleton, Nat.sub_add_cancel Fintype.card_pos]
   rw [← this, add_left_inj]
   choose f hf hf' using (hG.existsUnique_path · default)
   refine Eq.symm <| Finset.card_bij

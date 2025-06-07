@@ -229,18 +229,18 @@ theorem add_point (f : α → E) {s : Set α} {x : α} (hx : x ∈ s) (u : ℕ �
       split_ifs
       · exact us i
       · exact hx
-    have hv : Monotone v := by
-      refine monotone_nat_of_le_succ fun i => ?_
-      simp only [v]
-      rcases lt_trichotomy i n with (hi | rfl | hi)
-      · have : i + 1 ≤ n := Nat.succ_le_of_lt hi
-        simp only [hi.le, this, if_true]
-        exact hu (Nat.le_succ i)
-      · simp only [le_refl, if_true, add_le_iff_nonpos_right, Nat.le_zero, Nat.one_ne_zero,
-          if_false, h]
-      · have A : ¬i ≤ n := hi.not_le
-        have B : ¬i + 1 ≤ n := fun h => A (i.le_succ.trans h)
-        simp only [A, B, if_false, le_rfl]
+    have hv  : Monotone v
+    refine monotone_nat_of_le_succ fun i => ?_
+    simp only [v]
+    rcases lt_trichotomy i n with (hi | rfl | hi)
+    · have : i + 1 ≤ n := Nat.succ_le_of_lt hi
+      simp only [hi.le, this, if_true]
+      exact hu (Nat.le_succ i)
+    · simp only [le_refl, if_true, add_le_iff_nonpos_right, Nat.le_zero, Nat.one_ne_zero,
+        if_false, h]
+    · have A : ¬i ≤ n := hi.not_le
+      have B : ¬i + 1 ≤ n := fun h => A (i.le_succ.trans h)
+      simp only [A, B, if_false, le_rfl]
     refine ⟨v, n + 2, hv, vs, (mem_image _ _ _).2 ⟨n + 1, ?_, ?_⟩, ?_⟩
     · rw [mem_Iio]; exact Nat.lt_succ_self (n + 1)
     · have : ¬n + 1 ≤ n := Nat.not_succ_le_self n
@@ -818,8 +818,8 @@ theorem ae_differentiableWithinAt_of_mem {f : ℝ → V} {s : Set ℝ}
   let A := (Basis.ofVectorSpace ℝ V).equivFun.toContinuousLinearEquiv
   suffices H : ∀ᵐ x, x ∈ s → DifferentiableWithinAt ℝ (A ∘ f) s x by
     filter_upwards [H] with x hx xs
-    have : f = (A.symm ∘ A) ∘ f := by
-      simp only [ContinuousLinearEquiv.symm_comp_self, Function.id_comp]
+    have  : f = (A.symm ∘ A) ∘ f
+    simp only [ContinuousLinearEquiv.symm_comp_self, Function.id_comp]
     rw [this]
     exact A.symm.differentiableAt.comp_differentiableWithinAt x (hx xs)
   apply ae_differentiableWithinAt_of_mem_pi

@@ -267,11 +267,13 @@ theorem exists_factorization_of_comp_eq_zero_of_free [Flat R M] {K N : Type u}
     revert N
     apply Submodule.fg_induction (N := K') (hN := hK')
     · intro k N _ _ _ _ f x hfx
-      have : x (f k) = 0 := by simpa using LinearMap.congr_fun hfx k
+      have  : x (f k) = 0
+      simpa using LinearMap.congr_fun hfx k
       simpa using exists_factorization_of_apply_eq_zero_of_free this
     · intro K₁ K₂ ih₁ ih₂ N _ _ _ _ f x hfx
       obtain ⟨κ₁, _, a₁, y₁, rfl, ha₁⟩ := ih₁ hfx
-      have : y₁ ∘ₗ (a₁ ∘ₗ f) = 0 := by rw [← comp_assoc, hfx]
+      have  : y₁ ∘ₗ (a₁ ∘ₗ f) = 0
+      rw [← comp_assoc, hfx]
       obtain ⟨κ₂, hκ₂, a₂, y₂, rfl, ha₂⟩ := ih₂ this
       use κ₂, hκ₂, a₂ ∘ₗ a₁, y₂
       simp_rw [comp_assoc]
@@ -287,8 +289,8 @@ theorem exists_factorization_of_isFinitelyPresented [Flat R M] {P : Type u} [Add
         h₁ = h₃ ∘ₗ h₂ := by
   obtain ⟨L, _, _, K, ϕ, _, _, hK⟩ := FinitePresentation.equiv_quotient R P
   haveI : Finite R ↥K := Module.Finite.iff_fg.mpr hK
-  have : (h₁ ∘ₗ ϕ.symm ∘ₗ K.mkQ) ∘ₗ K.subtype = 0 := by
-    simp_rw [comp_assoc, (LinearMap.exact_subtype_mkQ K).linearMap_comp_eq_zero, comp_zero]
+  have  : (h₁ ∘ₗ ϕ.symm ∘ₗ K.mkQ) ∘ₗ K.subtype = 0
+  simp_rw [comp_assoc, (LinearMap.exact_subtype_mkQ K).linearMap_comp_eq_zero, comp_zero]
   obtain ⟨κ, hκ, a, y, hay, ha⟩ := exists_factorization_of_comp_eq_zero_of_free this
   use κ, hκ, (K.liftQ a (by rwa [← range_le_ker_iff, Submodule.range_subtype] at ha)) ∘ₗ ϕ, y
   apply (cancel_right ϕ.symm.surjective).mp

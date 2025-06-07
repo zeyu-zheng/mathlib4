@@ -153,11 +153,11 @@ theorem isRegularOf_not_existsPolitician (hG' : ¬ExistsPolitician G) :
   apply degree_eq_of_not_adj hG
   intro hcontra
   rcases Finset.card_eq_one.mp (hG hvw') with ⟨⟨a, ha⟩, h⟩
-  have key : ∀ {x}, x ∈ G.commonNeighbors v w → x = a := by
-    intro x hx
-    have h' : ⟨x, hx⟩ ∈ (univ : Finset (G.commonNeighbors v w)) := mem_univ (Subtype.mk x hx)
-    rw [h, mem_singleton] at h'
-    injection h'
+  have key  : ∀ {x}, x ∈ G.commonNeighbors v w → x = a
+  intro x hx
+  have h' : ⟨x, hx⟩ ∈ (univ : Finset (G.commonNeighbors v w)) := mem_univ (Subtype.mk x hx)
+  rw [h, mem_singleton] at h'
+  injection h'
   apply hxy'
   rw [key ((mem_commonNeighbors G).mpr ⟨hvx, G.symm hxw⟩),
     key ((mem_commonNeighbors G).mpr ⟨hvy, G.symm hcontra⟩)]
@@ -227,14 +227,16 @@ theorem false_of_three_le_degree (hd : G.IsRegularOfDegree d) (h : 3 ≤ d) : Fa
   -- get a prime factor of d - 1
   let p : ℕ := (d - 1).minFac
   have p_dvd_d_pred := (ZMod.natCast_zmod_eq_zero_iff_dvd _ _).mpr (d - 1).minFac_dvd
-  have dpos : 1 ≤ d := by linarith
-  have d_cast : ↑(d - 1) = (d : ℤ) - 1 := by norm_cast
+  have dpos  : 1 ≤ d
+  linarith
+  have d_cast  : ↑(d - 1) = (d : ℤ) - 1
+  norm_cast
   haveI : Fact p.Prime := ⟨Nat.minFac_prime (by linarith)⟩
   have hp2 : 2 ≤ p := (Fact.out (p := p.Prime)).two_le
-  have dmod : (d : ZMod p) = 1 := by
-    rw [← Nat.succ_pred_eq_of_pos dpos, Nat.succ_eq_add_one, Nat.pred_eq_sub_one]
-    simp only [add_left_eq_self, Nat.cast_add, Nat.cast_one]
-    exact p_dvd_d_pred
+  have dmod  : (d : ZMod p) = 1
+  rw [← Nat.succ_pred_eq_of_pos dpos, Nat.succ_eq_add_one, Nat.pred_eq_sub_one]
+  simp only [add_left_eq_self, Nat.cast_add, Nat.cast_one]
+  exact p_dvd_d_pred
   have Vmod := card_mod_p_of_regular hG dmod hd
   -- now we reduce to a trace calculation
   have := ZMod.trace_pow_card (G.adjMatrix (ZMod p))
@@ -254,18 +256,19 @@ theorem false_of_three_le_degree (hd : G.IsRegularOfDegree d) (h : 3 ≤ d) : Fa
   trivially a politician. -/
 theorem existsPolitician_of_degree_le_one (hd : G.IsRegularOfDegree d) (hd1 : d ≤ 1) :
     ExistsPolitician G := by
-  have sq : d * d = d := by interval_cases d <;> norm_num
+  have sq  : d * d = d
+  interval_cases d <;> norm_num
   have h := card_of_regular hG hd
   rw [sq] at h
-  have : Fintype.card V ≤ 1 := by
-    cases hn : Fintype.card V with
-    | zero => exact zero_le _
-    | succ n =>
-      have : n = 0 := by
-        rw [hn, Nat.succ_sub_succ_eq_sub, tsub_zero] at h
-        linarith
-      subst n
-      rfl
+  have  : Fintype.card V ≤ 1
+  cases hn : Fintype.card V with
+  | zero => exact zero_le _
+  | succ n =>
+    have : n = 0 := by
+      rw [hn, Nat.succ_sub_succ_eq_sub, tsub_zero] at h
+      linarith
+    subst n
+    rfl
   use Classical.arbitrary V
   intro w h; exfalso
   apply h

@@ -75,10 +75,10 @@ theorem lift_comp : (of σ ⋙q lift σ φ τ h) = φ := by
     iterate 2 apply (cast_heq _ _).trans
     apply HEq.symm
     apply (eqRec_heq _ _).trans
-    have : ∀ {α γ} {β : α → γ → Sort _} {a a'} (p : a = a') g (b : β a g), HEq (p ▸ b) b := by
-      intros
-      subst_vars
-      rfl
+    have  : ∀ {α γ} {β : α → γ → Sort _} {a a'} (p : a = a') g (b : β a g), HEq (p ▸ b) b
+    intros
+    subst_vars
+    rfl
     apply this
 
 theorem lift_unique (Φ : Push σ ⥤q W') (Φ₀ : Φ.obj = τ) (Φcomp : (of σ ⋙q Φ) = φ) :

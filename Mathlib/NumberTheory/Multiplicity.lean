@@ -76,12 +76,12 @@ variable {p : ℕ} (a b)
 theorem odd_sq_dvd_geom_sum₂_sub (hp : Odd p) :
     (p : R) ^ 2 ∣ (∑ i ∈ range p, (a + p * b) ^ i * a ^ (p - 1 - i)) - p * a ^ (p - 1) := by
   have h1 : ∀ (i : ℕ),
-      (p : R) ^ 2 ∣ (a + ↑p * b) ^ i - (a ^ (i - 1) * (↑p * b) * i + a ^ i) := by
-    intro i
-    calc
-      ↑p ^ 2 ∣ (↑p * b) ^ 2 := by simp only [mul_pow, dvd_mul_right]
-      _ ∣ (a + ↑p * b) ^ i - (a ^ (i - 1) * (↑p * b) * ↑i + a ^ i) := by
-        simp only [sq_dvd_add_pow_sub_sub (↑p * b) a i, ← sub_sub]
+      (p : R) ^ 2 ∣ (a + ↑p * b) ^ i - (a ^ (i - 1) * (↑p * b) * i + a ^ i)
+  intro i
+  calc
+    ↑p ^ 2 ∣ (↑p * b) ^ 2 := by simp only [mul_pow, dvd_mul_right]
+    _ ∣ (a + ↑p * b) ^ i - (a ^ (i - 1) * (↑p * b) * ↑i + a ^ i) := by
+      simp only [sq_dvd_add_pow_sub_sub (↑p * b) a i, ← sub_sub]
   simp_rw [← mem_span_singleton, ← Ideal.Quotient.eq] at *
   let s : R := (p : R)^2
   calc
@@ -102,10 +102,10 @@ theorem odd_sq_dvd_geom_sum₂_sub (hp : Odd p) :
             (∑ x ∈ Finset.range p, a ^ (x - 1) * (a ^ (p - 1 - x) * (↑p * (b * ↑x)))) +
           mk (span {s}) (∑ _x ∈ Finset.range p, a ^ (p - 1)) := by
       rw [add_right_inj]
-      have : ∀ (x : ℕ), (hx : x ∈ range p) → a ^ (x + (p - 1 - x)) = a ^ (p - 1) := by
-        intro x hx
-        rw [← Nat.add_sub_assoc _ x, Nat.add_sub_cancel_left]
-        exact Nat.le_sub_one_of_lt (Finset.mem_range.mp hx)
+      have  : ∀ (x : ℕ), (hx : x ∈ range p) → a ^ (x + (p - 1 - x)) = a ^ (p - 1)
+      intro x hx
+      rw [← Nat.add_sub_assoc _ x, Nat.add_sub_cancel_left]
+      exact Nat.le_sub_one_of_lt (Finset.mem_range.mp hx)
       rw [Finset.sum_congr rfl this]
     _ =
         mk (span {s})
@@ -119,9 +119,9 @@ theorem odd_sq_dvd_geom_sum₂_sub (hp : Odd p) :
       rw [Finset.sum_congr rfl]
       rintro (⟨⟩ | ⟨x⟩) hx
       · rw [Nat.cast_zero, mul_zero, mul_zero]
-      · have : x.succ - 1 + (p - 1 - x.succ) = p - 2 := by
-          rw [← Nat.add_sub_assoc (Nat.le_sub_one_of_lt (Finset.mem_range.mp hx))]
-          exact congr_arg Nat.pred (Nat.add_sub_cancel_left _ _)
+      · have : x.succ - 1 + (p - 1 - x.succ) = p - 2
+        rw [← Nat.add_sub_assoc (Nat.le_sub_one_of_lt (Finset.mem_range.mp hx))]
+        exact congr_arg Nat.pred (Nat.add_sub_cancel_left _ _)
         rw [this]
         ring1
     _ = mk (span {s}) (↑p * a ^ (p - 1)) := by
@@ -255,19 +255,21 @@ theorem Int.sq_mod_four_eq_one_of_odd {x : ℤ} : Odd x → x ^ 2 % 4 = 1 := by
 
 theorem Int.two_pow_two_pow_add_two_pow_two_pow {x y : ℤ} (hx : ¬2 ∣ x) (hxy : 4 ∣ x - y) (i : ℕ) :
     multiplicity 2 (x ^ 2 ^ i + y ^ 2 ^ i) = ↑(1 : ℕ) := by
-  have hx_odd : Odd x := by rwa [Int.odd_iff_not_even, even_iff_two_dvd]
+  have hx_odd  : Odd x
+  rwa [Int.odd_iff_not_even, even_iff_two_dvd]
   have hxy_even : Even (x - y) := even_iff_two_dvd.mpr (dvd_trans (by decide) hxy)
-  have hy_odd : Odd y := by simpa using hx_odd.sub_even hxy_even
+  have hy_odd  : Odd y
+  simpa using hx_odd.sub_even hxy_even
   refine multiplicity.eq_coe_iff.mpr ⟨?_, ?_⟩
   · rw [pow_one, ← even_iff_two_dvd]
     exact hx_odd.pow.add_odd hy_odd.pow
   cases' i with i
   · intro hxy'
-    have : 2 * 2 ∣ 2 * x := by
-      have := dvd_add hxy hxy'
-      norm_num at *
-      rw [two_mul]
-      exact this
+    have  : 2 * 2 ∣ 2 * x
+    have := dvd_add hxy hxy'
+    norm_num at *
+    rw [two_mul]
+    exact this
     have : 2 ∣ x := (mul_dvd_mul_iff_left (by norm_num)).mp this
     contradiction
   suffices ∀ x : ℤ, Odd x → x ^ 2 ^ (i + 1) % 4 = 1 by
@@ -285,9 +287,11 @@ theorem Int.two_pow_two_pow_sub_pow_two_pow {x y : ℤ} (n : ℕ) (hxy : 4 ∣ x
 
 theorem Int.two_pow_sub_pow' {x y : ℤ} (n : ℕ) (hxy : 4 ∣ x - y) (hx : ¬2 ∣ x) :
     multiplicity 2 (x ^ n - y ^ n) = multiplicity 2 (x - y) + multiplicity (2 : ℤ) n := by
-  have hx_odd : Odd x := by rwa [Int.odd_iff_not_even, even_iff_two_dvd]
+  have hx_odd  : Odd x
+  rwa [Int.odd_iff_not_even, even_iff_two_dvd]
   have hxy_even : Even (x - y) := even_iff_two_dvd.mpr (dvd_trans (by decide) hxy)
-  have hy_odd : Odd y := by simpa using hx_odd.sub_even hxy_even
+  have hy_odd  : Odd y
+  simpa using hx_odd.sub_even hxy_even
   cases' n with n
   · simp only [pow_zero, sub_self, multiplicity.zero, Int.ofNat_zero, Nat.zero_eq, add_top]
   have h : (multiplicity 2 n.succ).Dom := multiplicity.finite_nat_iff.mpr ⟨by norm_num, n.succ_pos⟩
@@ -310,19 +314,19 @@ theorem Int.two_pow_sub_pow' {x y : ℤ} (n : ℕ) (hxy : 4 ∣ x - y) (hx : ¬2
 theorem Int.two_pow_sub_pow {x y : ℤ} {n : ℕ} (hxy : 2 ∣ x - y) (hx : ¬2 ∣ x) (hn : Even n) :
     multiplicity 2 (x ^ n - y ^ n) + 1 =
       multiplicity 2 (x + y) + multiplicity 2 (x - y) + multiplicity (2 : ℤ) n := by
-  have hy : Odd y := by
-    rw [← even_iff_two_dvd, ← Int.odd_iff_not_even] at hx
-    replace hxy := (@even_neg _ _ (x - y)).mpr (even_iff_two_dvd.mpr hxy)
-    convert Even.add_odd hxy hx
-    abel
+  have hy  : Odd y
+  rw [← even_iff_two_dvd, ← Int.odd_iff_not_even] at hx
+  replace hxy := (@even_neg _ _ (x - y)).mpr (even_iff_two_dvd.mpr hxy)
+  convert Even.add_odd hxy hx
+  abel
   cases' hn with d hd
   subst hd
   simp only [← two_mul, pow_mul]
-  have hxy4 : 4 ∣ x ^ 2 - y ^ 2 := by
-    rw [Int.dvd_iff_emod_eq_zero, Int.sub_emod, Int.sq_mod_four_eq_one_of_odd _,
-      Int.sq_mod_four_eq_one_of_odd hy]
-    · norm_num
-    · simp only [Int.odd_iff_not_even, even_iff_two_dvd, hx, not_false_iff]
+  have hxy4  : 4 ∣ x ^ 2 - y ^ 2
+  rw [Int.dvd_iff_emod_eq_zero, Int.sub_emod, Int.sq_mod_four_eq_one_of_odd _,
+    Int.sq_mod_four_eq_one_of_odd hy]
+  · norm_num
+  · simp only [Int.odd_iff_not_even, even_iff_two_dvd, hx, not_false_iff]
   rw [Int.two_pow_sub_pow' d hxy4 _, sq_sub_sq, ← Int.ofNat_mul_out, multiplicity.mul Int.prime_two,
     multiplicity.mul Int.prime_two]
   · suffices multiplicity (2 : ℤ) ↑(2 : ℕ) = 1 by rw [this, add_comm (1 : PartENat), ← add_assoc]

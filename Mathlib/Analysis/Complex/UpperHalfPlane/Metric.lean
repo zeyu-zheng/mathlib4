@@ -140,7 +140,8 @@ theorem center_zero (z : ℍ) : center z 0 = z :=
 
 theorem dist_coe_center_sq (z w : ℍ) (r : ℝ) : dist (z : ℂ) (w.center r) ^ 2 =
     2 * z.im * w.im * (Real.cosh (dist z w) - Real.cosh r) + (w.im * Real.sinh r) ^ 2 := by
-  have H : 2 * z.im * w.im ≠ 0 := by positivity
+  have H  : 2 * z.im * w.im ≠ 0
+  positivity
   simp only [Complex.dist_eq, Complex.sq_abs, normSq_apply, coe_re, coe_im, center_re, center_im,
     cosh_dist', mul_div_cancel₀ _ H, sub_sq z.im, mul_pow, Real.cosh_sq, sub_re, sub_im, mul_sub, ←
     sq]
@@ -157,8 +158,10 @@ theorem cmp_dist_eq_cmp_dist_coe_center (z w : ℍ) (r : ℝ) :
   · trans Ordering.gt
     exacts [(hr₀.trans_le dist_nonneg).cmp_eq_gt,
       ((mul_neg_of_pos_of_neg w.im_pos (sinh_neg_iff.2 hr₀)).trans_le dist_nonneg).cmp_eq_gt.symm]
-  have hr₀' : 0 ≤ w.im * Real.sinh r := by positivity
-  have hzw₀ : 0 < 2 * z.im * w.im := by positivity
+  have hr₀'  : 0 ≤ w.im * Real.sinh r
+  positivity
+  have hzw₀  : 0 < 2 * z.im * w.im
+  positivity
   simp only [← cosh_strictMonoOn.cmp_map_eq dist_nonneg hr₀, ←
     (pow_left_strictMonoOn two_ne_zero).cmp_map_eq dist_nonneg hr₀', dist_coe_center_sq]
   rw [← cmp_mul_pos_left hzw₀, ← cmp_sub_zero, ← mul_sub, ← cmp_add_right, zero_add]
@@ -197,7 +200,8 @@ theorem le_dist_iff_le_dist_coe_center :
 /-- For two points on the same vertical line, the distance is equal to the distance between the
 logarithms of their imaginary parts. -/
 nonrec theorem dist_of_re_eq (h : z.re = w.re) : dist z w = dist (log z.im) (log w.im) := by
-  have h₀ : 0 < z.im / w.im := by positivity
+  have h₀  : 0 < z.im / w.im
+  positivity
   rw [dist_eq_iff_dist_coe_center_eq, Real.dist_eq, ← abs_sinh, ← log_div z.im_ne_zero w.im_ne_zero,
     sinh_log h₀, dist_of_re_eq, coe_im, coe_im, center_im, cosh_abs, cosh_log h₀, inv_div] <;>
   [skip; exact h]

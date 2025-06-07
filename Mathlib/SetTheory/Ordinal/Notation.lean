@@ -648,14 +648,14 @@ theorem split_eq_scale_split' : ∀ {o o' m} [NF o], split' o = (o', m) → spli
       haveI := h.fst
       haveI := h.snd
       simp only [split_eq_scale_split' h', and_imp]
-      have : 1 + (e - 1) = e := by
-        refine repr_inj.1 ?_
-        simp only [repr_add, repr, opow_zero, Nat.succPNat_coe, Nat.cast_one, mul_one, add_zero,
-          repr_sub]
-        have := mt repr_inj.1 e0
-        refine Ordinal.add_sub_cancel_of_le ?_
-        have := one_le_iff_ne_zero.2 this
-        exact this
+      have  : 1 + (e - 1) = e
+      refine repr_inj.1 ?_
+      simp only [repr_add, repr, opow_zero, Nat.succPNat_coe, Nat.cast_one, mul_one, add_zero,
+        repr_sub]
+      have := mt repr_inj.1 e0
+      refine Ordinal.add_sub_cancel_of_le ?_
+      have := one_le_iff_ne_zero.2 this
+      exact this
       intros
       substs o' m
       simp [scale, this]
@@ -674,9 +674,9 @@ theorem nf_repr_split' : ∀ {o o' m} [NF o], split' o = (o', m) → NF o' ∧ r
       simp only [IH₂, and_imp]
       intros
       substs o' m
-      have : (ω : Ordinal.{0}) ^ repr e = ω ^ (1 : Ordinal.{0}) * ω ^ (repr e - 1) := by
-        have := mt repr_inj.1 e0
-        rw [← opow_add, Ordinal.add_sub_cancel_of_le (one_le_iff_ne_zero.2 this)]
+      have  : (ω : Ordinal.{0}) ^ repr e = ω ^ (1 : Ordinal.{0}) * ω ^ (repr e - 1)
+      have := mt repr_inj.1 e0
+      rw [← opow_add, Ordinal.add_sub_cancel_of_le (one_le_iff_ne_zero.2 this)]
       refine ⟨NF.oadd (by infer_instance) _ ?_, ?_⟩
       · simp at this ⊢
         refine

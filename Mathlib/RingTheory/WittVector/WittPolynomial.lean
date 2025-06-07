@@ -158,11 +158,11 @@ section PPrime
 variable [hp : NeZero p]
 
 theorem wittPolynomial_vars [CharZero R] (n : ℕ) : (wittPolynomial p R n).vars = range (n + 1) := by
-  have : ∀ i, (monomial (Finsupp.single i (p ^ (n - i))) ((p : R) ^ i)).vars = {i} := by
-    intro i
-    refine vars_monomial_single i (pow_ne_zero _ hp.1) ?_
-    rw [← Nat.cast_pow, Nat.cast_ne_zero]
-    exact pow_ne_zero i hp.1
+  have  : ∀ i, (monomial (Finsupp.single i (p ^ (n - i))) ((p : R) ^ i)).vars = {i}
+  intro i
+  refine vars_monomial_single i (pow_ne_zero _ hp.1) ?_
+  rw [← Nat.cast_pow, Nat.cast_ne_zero]
+  exact pow_ne_zero i hp.1
   rw [wittPolynomial, vars_sum_of_disjoint]
   · simp only [this, biUnion_singleton_eq_self]
   · simp only [this]

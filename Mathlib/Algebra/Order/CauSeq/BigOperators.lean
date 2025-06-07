@@ -200,7 +200,8 @@ lemma geo_series_const (a : α) {x : α} (hx1 : |x| < 1) :
 lemma series_ratio_test {f : ℕ → β} (n : ℕ) (r : α) (hr0 : 0 ≤ r) (hr1 : r < 1)
     (h : ∀ m, n ≤ m → abv (f m.succ) ≤ r * abv (f m)) :
     IsCauSeq abv fun m ↦ ∑ n ∈ range m, f n := by
-  have har1 : |r| < 1 := by rwa [abs_of_nonneg hr0]
+  have har1  : |r| < 1
+  rwa [abs_of_nonneg hr0]
   refine (geo_series_const (abv (f n.succ) * r⁻¹ ^ n.succ) har1).of_abv_le n.succ fun m hmn ↦ ?_
   obtain rfl | hr := hr0.eq_or_lt
   · have m_pos := lt_of_lt_of_le (Nat.succ_pos n) hmn

@@ -165,9 +165,9 @@ theorem integrableOn_union : IntegrableOn f (s ∪ t) μ ↔ IntegrableOn f s μ
 @[simp]
 theorem integrableOn_singleton_iff {x : α} [MeasurableSingletonClass α] :
     IntegrableOn f {x} μ ↔ f x = 0 ∨ μ {x} < ∞ := by
-  have : f =ᵐ[μ.restrict {x}] fun _ => f x := by
-    filter_upwards [ae_restrict_mem (measurableSet_singleton x)] with _ ha
-    simp only [mem_singleton_iff.1 ha]
+  have  : f =ᵐ[μ.restrict {x}] fun _ => f x
+  filter_upwards [ae_restrict_mem (measurableSet_singleton x)] with _ ha
+  simp only [mem_singleton_iff.1 ha]
   rw [IntegrableOn, integrable_congr this, integrable_const_iff]
   simp
 
@@ -257,14 +257,15 @@ theorem IntegrableOn.restrict_toMeasurable (hf : IntegrableOn f s μ) (h's : ∀
     μ.restrict (toMeasurable μ s) = μ.restrict s := by
   rcases exists_seq_strictAnti_tendsto (0 : ℝ) with ⟨u, _, u_pos, u_lim⟩
   let v n := toMeasurable (μ.restrict s) { x | u n ≤ ‖f x‖ }
-  have A : ∀ n, μ (s ∩ v n) ≠ ∞ := by
-    intro n
-    rw [inter_comm, ← Measure.restrict_apply (measurableSet_toMeasurable _ _),
-      measure_toMeasurable]
-    exact (hf.measure_norm_ge_lt_top (u_pos n)).ne
+  have A  : ∀ n, μ (s ∩ v n) ≠ ∞
+  intro n
+  rw [inter_comm, ← Measure.restrict_apply (measurableSet_toMeasurable _ _),
+    measure_toMeasurable]
+  exact (hf.measure_norm_ge_lt_top (u_pos n)).ne
   apply Measure.restrict_toMeasurable_of_cover _ A
   intro x hx
-  have : 0 < ‖f x‖ := by simp only [h's x hx, norm_pos_iff, Ne, not_false_iff]
+  have  : 0 < ‖f x‖
+  simp only [h's x hx, norm_pos_iff, Ne, not_false_iff]
   obtain ⟨n, hn⟩ : ∃ n, u n < ‖f x‖ := ((tendsto_order.1 u_lim).2 _ this).exists
   exact mem_iUnion.2 ⟨n, subset_toMeasurable _ _ hn.le⟩
 
@@ -275,18 +276,18 @@ theorem IntegrableOn.of_ae_diff_eq_zero (hf : IntegrableOn f s μ) (ht : NullMea
   let u := { x ∈ s | f x ≠ 0 }
   have hu : IntegrableOn f u μ := hf.mono_set fun x hx => hx.1
   let v := toMeasurable μ u
-  have A : IntegrableOn f v μ := by
-    rw [IntegrableOn, hu.restrict_toMeasurable]
-    · exact hu
-    · intro x hx; exact hx.2
-  have B : IntegrableOn f (t \ v) μ := by
-    apply integrableOn_zero.congr
-    filter_upwards [ae_restrict_of_ae h't,
-      ae_restrict_mem₀ (ht.diff (measurableSet_toMeasurable μ u).nullMeasurableSet)] with x hxt hx
-    by_cases h'x : x ∈ s
-    · by_contra H
-      exact hx.2 (subset_toMeasurable μ u ⟨h'x, Ne.symm H⟩)
-    · exact (hxt ⟨hx.1, h'x⟩).symm
+  have A  : IntegrableOn f v μ
+  rw [IntegrableOn, hu.restrict_toMeasurable]
+  · exact hu
+  · intro x hx; exact hx.2
+  have B  : IntegrableOn f (t \ v) μ
+  apply integrableOn_zero.congr
+  filter_upwards [ae_restrict_of_ae h't,
+    ae_restrict_mem₀ (ht.diff (measurableSet_toMeasurable μ u).nullMeasurableSet)] with x hxt hx
+  by_cases h'x : x ∈ s
+  · by_contra H
+    exact hx.2 (subset_toMeasurable μ u ⟨h'x, Ne.symm H⟩)
+  · exact (hxt ⟨hx.1, h'x⟩).symm
   apply (A.union B).mono_set _
   rw [union_diff_self]
   exact subset_union_right
@@ -321,8 +322,8 @@ theorem integrableOn_iff_integrable_of_support_subset (h1s : support f ⊆ s) :
 theorem integrableOn_Lp_of_measure_ne_top {E} [NormedAddCommGroup E] {p : ℝ≥0∞} {s : Set α}
     (f : Lp E p μ) (hp : 1 ≤ p) (hμs : μ s ≠ ∞) : IntegrableOn f s μ := by
   refine memℒp_one_iff_integrable.mp ?_
-  have hμ_restrict_univ : (μ.restrict s) Set.univ < ∞ := by
-    simpa only [Set.univ_inter, MeasurableSet.univ, Measure.restrict_apply, lt_top_iff_ne_top]
+  have hμ_restrict_univ  : (μ.restrict s) Set.univ < ∞
+  simpa only [Set.univ_inter, MeasurableSet.univ, Measure.restrict_apply, lt_top_iff_ne_top]
   haveI hμ_finite : IsFiniteMeasure (μ.restrict s) := ⟨hμ_restrict_univ⟩
   exact ((Lp.memℒp _).restrict s).memℒp_of_exponent_le hp
 

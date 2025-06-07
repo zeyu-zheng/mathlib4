@@ -255,10 +255,11 @@ theorem zeroLocus_empty_of_one_mem {s : Set R} (h : (1 : R) ∈ s) : zeroLocus s
   rw [Set.eq_empty_iff_forall_not_mem]
   intro x hx
   rw [mem_zeroLocus] at hx
-  have x_prime : x.asIdeal.IsPrime := by infer_instance
-  have eq_top : x.asIdeal = ⊤ := by
-    rw [Ideal.eq_top_iff_one]
-    exact hx h
+  have x_prime  : x.asIdeal.IsPrime
+  infer_instance
+  have eq_top  : x.asIdeal = ⊤
+  rw [Ideal.eq_top_iff_one]
+  exact hx h
   apply x_prime.ne_top eq_top
 
 @[simp]
@@ -288,9 +289,9 @@ theorem zeroLocus_eq_top_iff (s : Set R) :
   constructor
   · intro h x hx
     refine nilpotent_iff_mem_prime.mpr (fun J hJ ↦ ?_)
-    have hJz : ⟨J, hJ⟩ ∈ zeroLocus s := by
-      rw [h]
-      trivial
+    have hJz  : ⟨J, hJ⟩ ∈ zeroLocus s
+    rw [h]
+    trivial
     exact (mem_zeroLocus _ _).mpr hJz hx
   · rw [eq_top_iff]
     intro h p _
@@ -417,11 +418,11 @@ theorem exists_primeSpectrum_prod_le (I : Ideal R) :
   by_cases htop : M = ⊤
   · rw [htop]
     exact ⟨0, le_top⟩
-  have lt_add : ∀ z ∉ M, M < M + span R {z} := by
-    intro z hz
-    refine lt_of_le_of_ne le_sup_left fun m_eq => hz ?_
-    rw [m_eq]
-    exact Ideal.mem_sup_right (mem_span_singleton_self z)
+  have lt_add  : ∀ z ∉ M, M < M + span R {z}
+  intro z hz
+  refine lt_of_le_of_ne le_sup_left fun m_eq => hz ?_
+  rw [m_eq]
+  exact Ideal.mem_sup_right (mem_span_singleton_self z)
   obtain ⟨x, hx, y, hy, hxy⟩ := (Ideal.not_isPrime_iff.mp h_prM).resolve_left htop
   obtain ⟨Wx, h_Wx⟩ := hgt (M + span R {x}) (lt_add _ hx)
   obtain ⟨Wy, h_Wy⟩ := hgt (M + span R {y}) (lt_add _ hy)
@@ -459,11 +460,11 @@ theorem exists_primeSpectrum_prod_le_and_ne_bot_of_domain (h_fA : ¬IsField A) {
     rw [Multiset.map_singleton, Multiset.prod_singleton]
     exact ⟨le_rfl, h_nzM⟩
   obtain ⟨x, hx, y, hy, h_xy⟩ := (Ideal.not_isPrime_iff.mp h_prM).resolve_left h_topM
-  have lt_add : ∀ z ∉ M, M < M + span A {z} := by
-    intro z hz
-    refine lt_of_le_of_ne le_sup_left fun m_eq => hz ?_
-    rw [m_eq]
-    exact mem_sup_right (mem_span_singleton_self z)
+  have lt_add  : ∀ z ∉ M, M < M + span A {z}
+  intro z hz
+  refine lt_of_le_of_ne le_sup_left fun m_eq => hz ?_
+  rw [m_eq]
+  exact mem_sup_right (mem_span_singleton_self z)
   obtain ⟨Wx, h_Wx_le, h_Wx_ne⟩ := hgt (M + span A {x}) (lt_add _ hx) (ne_bot_of_gt (lt_add _ hx))
   obtain ⟨Wy, h_Wy_le, h_Wx_ne⟩ := hgt (M + span A {y}) (lt_add _ hy) (ne_bot_of_gt (lt_add _ hy))
   use Wx + Wy

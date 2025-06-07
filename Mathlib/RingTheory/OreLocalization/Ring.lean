@@ -44,12 +44,13 @@ protected theorem add_smul (y z : R[S⁻¹]) (x : X[S⁻¹]) :
   rcases oreDivSMulChar' (sa • r₂) r₁ (sa * s₂) s₁ with ⟨rb, sb, hb, q⟩
   rw [q]
   clear q
-  have hs₃rasb : sb * ra * s₃ ∈ S := by
-    rw [mul_assoc, ← ha]
-    norm_cast
-    apply SetLike.coe_mem
+  have hs₃rasb  : sb * ra * s₃ ∈ S
+  rw [mul_assoc, ← ha]
+  norm_cast
+  apply SetLike.coe_mem
   rw [OreLocalization.expand _ _ _ hs₃rasb]
-  have ha' : ↑((sb * sa) * s₂) = sb * ra * s₃ := by simp [ha, mul_assoc]
+  have ha'  : ↑((sb * sa) * s₂) = sb * ra * s₃
+  simp [ha, mul_assoc]
   rw [← Subtype.coe_eq_of_eq_mk ha']
   rcases oreDivSMulChar' ((sb * ra) • r₃) r₁ (sb * sa * s₂) s₁ with ⟨rc, sc, hc, hc'⟩
   rw [hc']
@@ -262,9 +263,9 @@ protected theorem inv_def {r : R} {s : R⁰} :
 protected theorem mul_inv_cancel (x : R[R⁰⁻¹]) (h : x ≠ 0) : x * x⁻¹ = 1 := by
   induction' x with r s
   rw [OreLocalization.inv_def, OreLocalization.one_def]
-  have hr : r ≠ 0 := by
-    rintro rfl
-    simp at h
+  have hr  : r ≠ 0
+  rintro rfl
+  simp at h
   simp only [hr]
   with_unfolding_all apply OreLocalization.mul_inv ⟨r, _⟩
 

@@ -360,10 +360,10 @@ theorem nth_of_forall {n : ℕ} (hp : ∀ n' ≤ n, p n') : nth p n = n := by
 @[simp] theorem nth_true (n : ℕ) : nth (fun _ ↦ True) n = n := nth_of_forall fun _ _ ↦ trivial
 
 theorem nth_of_forall_not {n : ℕ} (hp : ∀ n' ≥ n, ¬p n') : nth p n = 0 := by
-  have : setOf p ⊆ Finset.range n := by
-    intro n' hn'
-    contrapose! hp
-    exact ⟨n', by simpa using hp, Set.mem_setOf.mp hn'⟩
+  have  : setOf p ⊆ Finset.range n
+  intro n' hn'
+  contrapose! hp
+  exact ⟨n', by simpa using hp, Set.mem_setOf.mp hn'⟩
   rw [nth_of_card_le ((finite_toSet _).subset this)]
   · refine (Finset.card_le_card ?_).trans_eq (Finset.card_range n)
     exact Set.Finite.toFinset_subset.mpr this

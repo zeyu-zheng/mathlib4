@@ -52,10 +52,10 @@ theorem iff_exists_tensorProduct [EssFiniteType R S] :
   rw [iff_subsingleton_kaehlerDifferential, KaehlerDifferential,
     Ideal.cotangent_subsingleton_iff, Ideal.isIdempotentElem_iff_of_fg _
       (KaehlerDifferential.ideal_fg R S)]
-  have : ∀ t : S ⊗[R] S, TensorProduct.lmul' R t = 1 ↔ 1 - t ∈ KaehlerDifferential.ideal R S := by
-    intro t
-    simp only [KaehlerDifferential.ideal, RingHom.mem_ker, map_sub, map_one,
-      sub_eq_zero, @eq_comm S 1]
+  have  : ∀ t : S ⊗[R] S, TensorProduct.lmul' R t = 1 ↔ 1 - t ∈ KaehlerDifferential.ideal R S
+  intro t
+  simp only [KaehlerDifferential.ideal, RingHom.mem_ker, map_sub, map_one,
+    sub_eq_zero, @eq_comm S 1]
   simp_rw [this, ← KaehlerDifferential.span_range_eq_ideal]
   constructor
   · rintro ⟨e, he₁, he₂ : _ = Ideal.span _⟩
@@ -173,50 +173,50 @@ lemma finite_of_free [Module.Free R S] : Module.Finite R S := by
   let F : I →₀ I →₀ R := Finsupp.onFinset f.support (fun j ↦ b.repr (x * f j))
     (fun j ↦ not_imp_comm.mp fun hj ↦ by simp [Finsupp.not_mem_support_iff.mp hj])
   have hG : ∀ j ∉ (Finset.biUnion f.support fun i ↦ (a i).support),
-      b.repr (f.sum (fun i y ↦ a i j • y)) = 0 := by
-    intros j hj
-    simp only [Finset.mem_biUnion, Finsupp.mem_support_iff, ne_eq, not_exists, not_and,
-      not_not] at hj
-    simp only [Finsupp.sum]
-    trans b.repr (f.support.sum (fun _ ↦ 0))
-    · refine congr_arg b.repr (Finset.sum_congr rfl ?_)
-      simp only [Finsupp.mem_support_iff]
-      intro i hi
-      rw [hj i hi, zero_smul]
-    · simp only [Finset.sum_const_zero, map_zero]
+      b.repr (f.sum (fun i y ↦ a i j • y)) = 0
+  intros j hj
+  simp only [Finset.mem_biUnion, Finsupp.mem_support_iff, ne_eq, not_exists, not_and,
+    not_not] at hj
+  simp only [Finsupp.sum]
+  trans b.repr (f.support.sum (fun _ ↦ 0))
+  · refine congr_arg b.repr (Finset.sum_congr rfl ?_)
+    simp only [Finsupp.mem_support_iff]
+    intro i hi
+    rw [hj i hi, zero_smul]
+  · simp only [Finset.sum_const_zero, map_zero]
   -- And `G` such that `∑ₛ aᵢⱼfᵢ = ∑ Gᵢⱼbⱼ`, where `aᵢⱼ` are the coefficients `bᵢx = ∑ aᵢⱼbⱼ`.
   let G : I →₀ I →₀ R := Finsupp.onFinset (Finset.biUnion f.support (fun i ↦ (a i).support))
     (fun j ↦ b.repr (f.sum (fun i y ↦ a i j • y)))
     (fun j ↦ not_imp_comm.mp (hG j))
   -- Then `∑ Fᵢⱼ(bⱼ ⊗ bᵢ) = ∑ fⱼx ⊗ bᵢ = ∑ fⱼ ⊗ xbᵢ = ∑ aᵢⱼ(fⱼ ⊗ bᵢ) = ∑ Gᵢⱼ(bⱼ ⊗ bᵢ)`.
   -- Since `bⱼ ⊗ bᵢ` forms an `R`-basis of `S ⊗ S`, we conclude that `F = G`.
-  have : F = G := by
-    apply Finsupp.finsuppProdEquiv.symm.injective
-    apply (Finsupp.equivCongrLeft (Equiv.prodComm I I)).injective
-    apply (b.tensorProduct b).repr.symm.injective
-    simp only [Basis.repr_symm_apply, Finsupp.coe_lsum, LinearMap.coe_smulRight,
-      LinearMap.id_coe, id_eq, Basis.tensorProduct_apply, Finsupp.finsuppProdEquiv,
-      Equiv.coe_fn_symm_mk, Finsupp.uncurry, map_finsupp_sum,
-      Finsupp.total_single, Basis.tensorProduct_apply, Finsupp.equivCongrLeft_apply,
-      Finsupp.total_equivMapDomain, Equiv.coe_prodComm]
-    rw [Finsupp.onFinset_sum, Finsupp.onFinset_sum]
-    simp only [Function.comp_apply, Prod.swap_prod_mk, Basis.tensorProduct_apply]
-    have : ∀ i, ((b.repr (x * f i)).sum fun j k ↦ k • b j ⊗ₜ[R] b i) = (x * f i) ⊗ₜ[R] b i := by
-      intro i
-      simp_rw [Finsupp.sum, TensorProduct.smul_tmul', ← TensorProduct.sum_tmul]
-      congr 1
-      exact b.total_repr _
-    trans (x ⊗ₜ 1) * elem R S
-    · simp_rw [this, hf, Finsupp.sum, Finset.mul_sum, TensorProduct.tmul_mul_tmul, one_mul]
-    · rw [← one_tmul_mul_elem, hf, finite_of_free_aux]
-      rfl
-    · intro; simp
-    · intro; simp
+  have  : F = G
+  apply Finsupp.finsuppProdEquiv.symm.injective
+  apply (Finsupp.equivCongrLeft (Equiv.prodComm I I)).injective
+  apply (b.tensorProduct b).repr.symm.injective
+  simp only [Basis.repr_symm_apply, Finsupp.coe_lsum, LinearMap.coe_smulRight,
+    LinearMap.id_coe, id_eq, Basis.tensorProduct_apply, Finsupp.finsuppProdEquiv,
+    Equiv.coe_fn_symm_mk, Finsupp.uncurry, map_finsupp_sum,
+    Finsupp.total_single, Basis.tensorProduct_apply, Finsupp.equivCongrLeft_apply,
+    Finsupp.total_equivMapDomain, Equiv.coe_prodComm]
+  rw [Finsupp.onFinset_sum, Finsupp.onFinset_sum]
+  simp only [Function.comp_apply, Prod.swap_prod_mk, Basis.tensorProduct_apply]
+  have  : ∀ i, ((b.repr (x * f i)).sum fun j k ↦ k • b j ⊗ₜ[R] b i) = (x * f i) ⊗ₜ[R] b i
+  intro i
+  simp_rw [Finsupp.sum, TensorProduct.smul_tmul', ← TensorProduct.sum_tmul]
+  congr 1
+  exact b.total_repr _
+  trans (x ⊗ₜ 1) * elem R S
+  · simp_rw [this, hf, Finsupp.sum, Finset.mul_sum, TensorProduct.tmul_mul_tmul, one_mul]
+  · rw [← one_tmul_mul_elem, hf, finite_of_free_aux]
+    rfl
+  · intro; simp
+  · intro; simp
   -- In particular, `fⱼx = ∑ Fᵢⱼbⱼ = ∑ Gᵢⱼbⱼ = ∑ₛ aᵢⱼfᵢ` for all `j`.
-  have : ∀ j, x * f j = f.sum fun i y ↦ a i j • y := by
-    intro j
-    apply b.repr.injective
-    exact DFunLike.congr_fun this j
+  have  : ∀ j, x * f j = f.sum fun i y ↦ a i j • y
+  intro j
+  apply b.repr.injective
+  exact DFunLike.congr_fun this j
   -- Since `∑ₛ fⱼbⱼ = 1`, `x = ∑ₛ aᵢⱼfᵢbⱼ` is indeed in the span of `{ fᵢbⱼ | i, j ∈ s }`.
   rw [← mul_one x, ← @lmul_elem R, hf, map_finsupp_sum, Finsupp.sum, Finset.mul_sum]
   simp only [TensorProduct.lmul'_apply_tmul, Finset.coe_image₂, ← mul_assoc, this,

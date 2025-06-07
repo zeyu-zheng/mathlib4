@@ -40,9 +40,9 @@ open selfAdjoint
 theorem Commute.expUnitary_add {a b : selfAdjoint A} (h : Commute (a : A) (b : A)) :
     expUnitary (a + b) = expUnitary a * expUnitary b := by
   ext
-  have hcomm : Commute (I • (a : A)) (I • (b : A)) := by
-    unfold Commute SemiconjBy
-    simp only [h.eq, Algebra.smul_mul_assoc, Algebra.mul_smul_comm]
+  have hcomm  : Commute (I • (a : A)) (I • (b : A))
+  unfold Commute SemiconjBy
+  simp only [h.eq, Algebra.smul_mul_assoc, Algebra.mul_smul_comm]
   simpa only [expUnitary_coe, AddSubgroup.coe_add, smul_add] using exp_add_of_commute hcomm
 
 theorem Commute.expUnitary {a b : selfAdjoint A} (h : Commute (a : A) (b : A)) :

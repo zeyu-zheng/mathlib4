@@ -157,14 +157,14 @@ lemma ofTensorProduct_surjective_of_finite [Module.Finite R M] :
   obtain ⟨n, p, hp⟩ := Module.Finite.exists_fin' R M
   let f := ofTensorProduct I M ∘ₗ p.baseChange (AdicCompletion I R)
   let g := map I p ∘ₗ ofTensorProduct I (Fin n → R)
-  have hfg : f = g := by
-    ext
-    simp [f, g]
-  have hf : Function.Surjective f := by
-    simp only [hfg, LinearMap.coe_comp, g]
-    apply Function.Surjective.comp
-    · exact AdicCompletion.map_surjective I hp
-    · exact (ofTensorProduct_bijective_of_pi_of_fintype I (Fin n)).surjective
+  have hfg  : f = g
+  ext
+  simp [f, g]
+  have hf  : Function.Surjective f
+  simp only [hfg, LinearMap.coe_comp, g]
+  apply Function.Surjective.comp
+  · exact AdicCompletion.map_surjective I hp
+  · exact (ofTensorProduct_bijective_of_pi_of_fintype I (Fin n)).surjective
   exact Function.Surjective.of_comp hf
 
 section Noetherian
@@ -332,8 +332,8 @@ lemma ofTensorProductEquivOfFiniteNoetherian_apply [Module.Finite R M]
 @[simp]
 lemma ofTensorProductEquivOfFiniteNoetherian_symm_of [Module.Finite R M] (x : M) :
     (ofTensorProductEquivOfFiniteNoetherian I M).symm ((of I M) x) = 1 ⊗ₜ x := by
-  have h : (of I M) x = ofTensorProductEquivOfFiniteNoetherian I M (1 ⊗ₜ x) := by
-    simp
+  have h  : (of I M) x = ofTensorProductEquivOfFiniteNoetherian I M (1 ⊗ₜ x)
+  simp
   rw [h, LinearEquiv.symm_apply_apply]
 
 section

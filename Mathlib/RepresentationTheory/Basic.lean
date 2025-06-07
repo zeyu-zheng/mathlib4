@@ -313,9 +313,9 @@ theorem ofMulAction_apply {H : Type*} [MulAction G H] (g : G) (f : H →₀ k) (
   conv_lhs => rw [← smul_inv_smul g h]
   let h' := g⁻¹ • h
   change ofMulAction k G H g f (g • h') = f h'
-  have hg : Function.Injective (g • · : H → H) := by
-    intro h₁ h₂
-    simp
+  have hg  : Function.Injective (g • · : H → H)
+  intro h₁ h₂
+  simp
   simp only [ofMulAction_def, Finsupp.lmapDomain_apply, Finsupp.mapDomain_apply, hg]
 
 -- Porting note: did not need this in ML3; noncomputable because IR check complains

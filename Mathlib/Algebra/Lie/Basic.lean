@@ -137,7 +137,8 @@ instance lieRingSelfModule : LieRingModule L L :=
 
 @[simp]
 theorem lie_skew : -⁅y, x⁆ = ⁅x, y⁆ := by
-  have h : ⁅x + y, x⁆ + ⁅x + y, y⁆ = 0 := by rw [← lie_add]; apply lie_self
+  have h  : ⁅x + y, x⁆ + ⁅x + y, y⁆ = 0
+  rw [← lie_add]; apply lie_self
   simpa [neg_eq_iff_add_eq_zero] using h
 
 /-- Every Lie algebra is a module over itself. -/

@@ -227,27 +227,27 @@ lemma floor_fExample (x : ℚ) :
     simp [(Int.fract_nonneg x).lt_of_ne' h, (Int.fract_lt_one x).le]
 
 lemma card_range_fExample : #(Set.range (fun x ↦ fExample x + fExample (-x))) = 2 := by
-  have h : Set.range (fun x ↦ fExample x + fExample (-x)) = {0, -2} := by
-    ext x
-    simp only [Set.mem_range, Set.mem_insert_iff, Set.mem_singleton_iff]
-    refine ⟨fun h ↦ ?_, fun h ↦ ?_⟩
-    · rcases h with ⟨y, rfl⟩
-      rw [← Int.floor_add_fract (fExample y), ← Int.floor_add_fract (fExample (-y))]
-      by_cases h : Int.fract y = 0
-      · simp [fract_fExample, floor_fExample, h]
-      · refine .inr ?_
-        simp only [fract_fExample, floor_fExample, h, if_false, sub_add_sub_cancel,
-                   Int.fract_neg_eq_zero]
-        rw [Int.fract_neg h, Int.floor_neg, Int.cast_neg, Int.ceil_eq_add_one_sub_fract h,
-            ← Int.self_sub_fract]
-        abel_nf
-        simp
-    · rcases h with rfl | rfl
-      · refine ⟨0, by simp [fExample]⟩
-      · refine ⟨1 / 2, ?_⟩
-        rw [(by norm_num : (-(1 / 2) : ℚ) = (-1 : ℤ) + (1 / 2 : ℚ)), fExample_int_add,
-            fExample_of_mem_Ico ⟨by norm_num, by norm_num⟩]
-        norm_num
+  have h  : Set.range (fun x ↦ fExample x + fExample (-x)) = {0, -2}
+  ext x
+  simp only [Set.mem_range, Set.mem_insert_iff, Set.mem_singleton_iff]
+  refine ⟨fun h ↦ ?_, fun h ↦ ?_⟩
+  · rcases h with ⟨y, rfl⟩
+    rw [← Int.floor_add_fract (fExample y), ← Int.floor_add_fract (fExample (-y))]
+    by_cases h : Int.fract y = 0
+    · simp [fract_fExample, floor_fExample, h]
+    · refine .inr ?_
+      simp only [fract_fExample, floor_fExample, h, if_false, sub_add_sub_cancel,
+                 Int.fract_neg_eq_zero]
+      rw [Int.fract_neg h, Int.floor_neg, Int.cast_neg, Int.ceil_eq_add_one_sub_fract h,
+          ← Int.self_sub_fract]
+      abel_nf
+      simp
+  · rcases h with rfl | rfl
+    · refine ⟨0, by simp [fExample]⟩
+    · refine ⟨1 / 2, ?_⟩
+      rw [(by norm_num : (-(1 / 2) : ℚ) = (-1 : ℤ) + (1 / 2 : ℚ)), fExample_int_add,
+          fExample_of_mem_Ico ⟨by norm_num, by norm_num⟩]
+      norm_num
   rw [h]
   simp
 

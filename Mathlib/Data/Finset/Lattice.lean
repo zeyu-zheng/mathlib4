@@ -225,9 +225,9 @@ theorem sup_le_of_le_directed {α : Type*} [SemilatticeSup α] [OrderBot α] (s 
     · simpa only [forall_prop_of_true, and_true_iff, forall_prop_of_false, bot_le, not_false_iff,
         sup_empty, forall_true_iff, not_mem_empty]
     · intro h
-      have incs : (r : Set α) ⊆ ↑(insert a r) := by
-        rw [Finset.coe_subset]
-        apply Finset.subset_insert
+      have incs  : (r : Set α) ⊆ ↑(insert a r)
+      rw [Finset.coe_subset]
+      apply Finset.subset_insert
       -- x ∈ s is above the sup of r
       obtain ⟨x, ⟨hxs, hsx_sup⟩⟩ := ih fun x hx => h x <| incs hx
       -- y ∈ s is above a
@@ -1560,14 +1560,14 @@ theorem card_le_of_interleaved {s t : Finset α}
     rcases h x hx a has hxa fun z hzs hz => hz.2.not_le <| ha _ hzs hz.1 with ⟨b, hbt, hxb, hba⟩
     exact ⟨b, hbt, hxb, hba.trans_le <| ha _ hy hxy⟩
   set f : α → WithTop α := fun x => (t.filter fun y => x < y).min
-  have f_mono : StrictMonoOn f s := by
-    intro x hx y hy hxy
-    rcases h x hx y hy hxy with ⟨a, hat, hxa, hay⟩
-    calc
-      f x ≤ a := min_le (mem_filter.2 ⟨hat, by simpa⟩)
-      _ < f y :=
-        (Finset.lt_inf_iff <| WithTop.coe_lt_top a).2 fun b hb =>
-          WithTop.coe_lt_coe.2 <| hay.trans (by simpa using (mem_filter.1 hb).2)
+  have f_mono  : StrictMonoOn f s
+  intro x hx y hy hxy
+  rcases h x hx y hy hxy with ⟨a, hat, hxa, hay⟩
+  calc
+    f x ≤ a := min_le (mem_filter.2 ⟨hat, by simpa⟩)
+    _ < f y :=
+      (Finset.lt_inf_iff <| WithTop.coe_lt_top a).2 fun b hb =>
+        WithTop.coe_lt_coe.2 <| hay.trans (by simpa using (mem_filter.1 hb).2)
 
   calc
     s.card = (s.image f).card := (card_image_of_injOn f_mono.injOn).symm

@@ -1001,10 +1001,10 @@ theorem integral_lt_integral_of_continuousOn_of_le_of_exists_lt {f g : ℝ → �
   · simpa only [measurableSet_Ioc, ae_restrict_eq]
       using (ae_restrict_mem measurableSet_Ioc).mono hle
   contrapose! hlt
-  have h_eq : f =ᵐ[volume.restrict (Ioc a b)] g := by
-    simp only [← not_le, ← ae_iff] at hlt
-    exact EventuallyLE.antisymm ((ae_restrict_iff' measurableSet_Ioc).2 <|
-      eventually_of_forall hle) hlt
+  have h_eq  : f =ᵐ[volume.restrict (Ioc a b)] g
+  simp only [← not_le, ← ae_iff] at hlt
+  exact EventuallyLE.antisymm ((ae_restrict_iff' measurableSet_Ioc).2 <|
+    eventually_of_forall hle) hlt
   rw [Measure.restrict_congr_set Ioc_ae_eq_Icc] at h_eq
   exact fun c hc ↦ (Measure.eqOn_Icc_of_ae_eq volume hab.ne h_eq hfc hgc hc).ge
 

@@ -58,14 +58,14 @@ theorem Real.fourierCoeff_tsum_comp_add {f : C(ℝ, ℂ)}
   -- NB: This proof can be shortened somewhat by telescoping together some of the steps in the calc
   -- block, but I think it's more legible this way. We start with preliminaries about the integrand.
   let e : C(ℝ, ℂ) := (fourier (-m)).comp ⟨((↑) : ℝ → UnitAddCircle), continuous_quotient_mk'⟩
-  have neK : ∀ (K : Compacts ℝ) (g : C(ℝ, ℂ)), ‖(e * g).restrict K‖ = ‖g.restrict K‖ := by
-    have (x : ℝ) : ‖e x‖ = 1 := abs_coe_circle (AddCircle.toCircle (-m • x))
-    intro K g
-    simp_rw [norm_eq_iSup_norm, restrict_apply, mul_apply, norm_mul, this, one_mul]
-  have eadd : ∀ (n : ℤ), e.comp (ContinuousMap.addRight n) = e := by
-    intro n; ext1 x
-    have : Periodic e 1 := Periodic.comp (fun x => AddCircle.coe_add_period 1 x) (fourier (-m))
-    simpa only [mul_one] using this.int_mul n x
+  have neK  : ∀ (K : Compacts ℝ) (g : C(ℝ, ℂ)), ‖(e * g).restrict K‖ = ‖g.restrict K‖
+  have (x : ℝ) : ‖e x‖ = 1 := abs_coe_circle (AddCircle.toCircle (-m • x))
+  intro K g
+  simp_rw [norm_eq_iSup_norm, restrict_apply, mul_apply, norm_mul, this, one_mul]
+  have eadd  : ∀ (n : ℤ), e.comp (ContinuousMap.addRight n) = e
+  intro n; ext1 x
+  have : Periodic e 1 := Periodic.comp (fun x => AddCircle.coe_add_period 1 x) (fourier (-m))
+  simpa only [mul_one] using this.int_mul n x
   -- Now the main argument. First unwind some definitions.
   calc
     fourierCoeff (Periodic.lift <| f.periodic_tsum_comp_add_zsmul 1) m =
@@ -155,12 +155,12 @@ theorem isBigO_norm_Icc_restrict_atTop {f : C(ℝ, E)} {b : ℝ} (hb : 0 < b)
 theorem isBigO_norm_Icc_restrict_atBot {f : C(ℝ, E)} {b : ℝ} (hb : 0 < b)
     (hf : f =O[atBot] fun x : ℝ => |x| ^ (-b)) (R S : ℝ) :
     (fun x : ℝ => ‖f.restrict (Icc (x + R) (x + S))‖) =O[atBot] fun x : ℝ => |x| ^ (-b) := by
-  have h1 : (f.comp (ContinuousMap.mk _ continuous_neg)) =O[atTop] fun x : ℝ => |x| ^ (-b) := by
-    convert hf.comp_tendsto tendsto_neg_atTop_atBot using 1
-    ext1 x; simp only [Function.comp_apply, abs_neg]
+  have h1  : (f.comp (ContinuousMap.mk _ continuous_neg)) =O[atTop] fun x : ℝ => |x| ^ (-b)
+  convert hf.comp_tendsto tendsto_neg_atTop_atBot using 1
+  ext1 x; simp only [Function.comp_apply, abs_neg]
   have h2 := (isBigO_norm_Icc_restrict_atTop hb h1 (-S) (-R)).comp_tendsto tendsto_neg_atBot_atTop
-  have : (fun x : ℝ => |x| ^ (-b)) ∘ Neg.neg = fun x : ℝ => |x| ^ (-b) := by
-    ext1 x; simp only [Function.comp_apply, abs_neg]
+  have  : (fun x : ℝ => |x| ^ (-b)) ∘ Neg.neg = fun x : ℝ => |x| ^ (-b)
+  ext1 x; simp only [Function.comp_apply, abs_neg]
   rw [this] at h2
   refine (isBigO_of_le _ fun x => ?_).trans h2
   -- equality holds, but less work to prove `≤` alone

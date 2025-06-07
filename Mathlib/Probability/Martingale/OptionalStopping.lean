@@ -43,12 +43,12 @@ theorem Submartingale.expected_stoppedValue_mono [SigmaFiniteFiltration μ 𝒢]
     {N : ℕ} (hbdd : ∀ ω, π ω ≤ N) : μ[stoppedValue f τ] ≤ μ[stoppedValue f π] := by
   rw [← sub_nonneg, ← integral_sub', stoppedValue_sub_eq_sum' hle hbdd]
   · simp only [Finset.sum_apply]
-    have : ∀ i, MeasurableSet[𝒢 i] {ω : Ω | τ ω ≤ i ∧ i < π ω} := by
-      intro i
-      refine (hτ i).inter ?_
-      convert (hπ i).compl using 1
-      ext x
-      simp; rfl
+    have  : ∀ i, MeasurableSet[𝒢 i] {ω : Ω | τ ω ≤ i ∧ i < π ω}
+    intro i
+    refine (hτ i).inter ?_
+    convert (hπ i).compl using 1
+    ext x
+    simp; rfl
     rw [integral_finset_sum]
     · refine Finset.sum_nonneg fun i _ => ?_
       rw [integral_indicator (𝒢.le _ _ (this _)), integral_sub', sub_nonneg]
@@ -108,7 +108,8 @@ theorem smul_le_stoppedValue_hitting [IsFiniteMeasure μ] (hsub : Submartingale 
     (n : ℕ) : ε • μ {ω | (ε : ℝ) ≤ (range (n + 1)).sup' nonempty_range_succ fun k => f k ω} ≤
     ENNReal.ofReal (∫ ω in {ω | (ε : ℝ) ≤ (range (n + 1)).sup' nonempty_range_succ fun k => f k ω},
       stoppedValue f (hitting f {y : ℝ | ↑ε ≤ y} 0 n) ω ∂μ) := by
-  have hn : Set.Icc 0 n = {k | k ≤ n} := by ext x; simp
+  have hn  : Set.Icc 0 n = {k | k ≤ n}
+  ext x; simp
   have : ∀ ω, ((ε : ℝ) ≤ (range (n + 1)).sup' nonempty_range_succ fun k => f k ω) →
       (ε : ℝ) ≤ stoppedValue f (hitting f {y : ℝ | ↑ε ≤ y} 0 n) ω := by
     intro x hx

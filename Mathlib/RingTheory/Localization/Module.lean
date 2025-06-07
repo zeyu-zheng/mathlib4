@@ -57,12 +57,12 @@ theorem LinearIndependent.of_isLocalizedModule {ι : Type*} {v : ι → M}
   rw [linearIndependent_iff'] at hv ⊢
   intro t g hg i hi
   choose! a g' hg' using IsLocalization.exist_integer_multiples S t g
-  have h0 : f (∑ i ∈ t, g' i • v i) = 0 := by
-    apply_fun ((a : R) • ·) at hg
-    rw [smul_zero, Finset.smul_sum] at hg
-    rw [map_sum, ← hg]
-    refine Finset.sum_congr rfl fun i hi => ?_
-    rw [← smul_assoc, ← hg' i hi, map_smul, Function.comp_apply, algebraMap_smul]
+  have h0  : f (∑ i ∈ t, g' i • v i) = 0
+  apply_fun ((a : R) • ·) at hg
+  rw [smul_zero, Finset.smul_sum] at hg
+  rw [map_sum, ← hg]
+  refine Finset.sum_congr rfl fun i hi => ?_
+  rw [← smul_assoc, ← hg' i hi, map_smul, Function.comp_apply, algebraMap_smul]
   obtain ⟨s, hs⟩ := (IsLocalizedModule.eq_zero_iff S f).mp h0
   simp_rw [Finset.smul_sum, Submonoid.smul_def, smul_smul] at hs
   specialize hv t _ hs i hi

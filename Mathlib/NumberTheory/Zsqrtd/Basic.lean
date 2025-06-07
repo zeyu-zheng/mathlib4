@@ -707,8 +707,8 @@ theorem nonneg_muld {a : ℤ√d} (ha : Nonneg a) : Nonneg (sqrtd * a) :=
     simpa [SqLe, mul_comm, mul_left_comm] using Nat.mul_le_mul_left d (nonnegg_neg_pos.1 ha)
 
 theorem nonneg_mul_lem {x y : ℕ} {a : ℤ√d} (ha : Nonneg a) : Nonneg (⟨x, y⟩ * a) := by
-  have : (⟨x, y⟩ * a : ℤ√d) = (x : ℤ√d) * a + sqrtd * ((y : ℤ√d) * a) := by
-    rw [decompose, right_distrib, mul_assoc, Int.cast_natCast, Int.cast_natCast]
+  have  : (⟨x, y⟩ * a : ℤ√d) = (x : ℤ√d) * a + sqrtd * ((y : ℤ√d) * a)
+  rw [decompose, right_distrib, mul_assoc, Int.cast_natCast, Int.cast_natCast]
   rw [this]
   exact (nonneg_smul ha).add (nonneg_muld <| nonneg_smul ha)
 

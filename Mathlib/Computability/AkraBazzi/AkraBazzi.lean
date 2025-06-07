@@ -228,11 +228,13 @@ lemma exists_eventually_r_le_const_mul :
     ∃ c ∈ Set.Ioo (0 : ℝ) 1, ∀ᶠ (n : ℕ) in atTop, ∀ i, r i n ≤ c * n := by
   let c := b (max_bi b) + (1 - b (max_bi b)) / 2
   have h_max_bi_pos : 0 < b (max_bi b) := R.b_pos _
-  have h_max_bi_lt_one : 0 < 1 - b (max_bi b) := by
-    have : b (max_bi b) < 1 := R.b_lt_one _
-    linarith
-  have hc_pos : 0 < c := by positivity
-  have h₁ : 0 < (1 - b (max_bi b)) / 2 := by positivity
+  have h_max_bi_lt_one  : 0 < 1 - b (max_bi b)
+  have : b (max_bi b) < 1 := R.b_lt_one _
+  linarith
+  have hc_pos  : 0 < c
+  positivity
+  have h₁  : 0 < (1 - b (max_bi b)) / 2
+  positivity
   have hc_lt_one : c < 1 :=
     calc b (max_bi b) + (1 - b (max_bi b)) / 2 = b (max_bi b) * (1 / 2) + 1 / 2 := by ring
                                              _ < 1 * (1 / 2) + 1 / 2 := by
@@ -302,10 +304,10 @@ local notation "ε" => smoothingFn
 lemma one_add_smoothingFn_le_two {x : ℝ} (hx : exp 1 ≤ x) : 1 + ε x ≤ 2 := by
   simp only [smoothingFn, ← one_add_one_eq_two]
   gcongr
-  have : 1 < x := by
-    calc 1 = exp 0 := by simp
-         _ < exp 1 := by simp
-         _ ≤ x := hx
+  have  : 1 < x
+  calc 1 = exp 0 := by simp
+       _ < exp 1 := by simp
+       _ ≤ x := hx
   rw [div_le_one (log_pos this)]
   calc 1 = log (exp 1) := by simp
        _ ≤ log x := log_le_log (exp_pos _) hx
@@ -330,9 +332,9 @@ lemma growsPolynomially_one_add_smoothingFn : GrowsPolynomially fun x => 1 + ε 
 
 lemma eventually_one_sub_smoothingFn_gt_const_real (c : ℝ) (hc : c < 1) :
     ∀ᶠ (x : ℝ) in atTop, c < 1 - ε x := by
-  have h₁ : Tendsto (fun x => 1 - ε x) atTop (𝓝 1) := by
-    rw [← isEquivalent_const_iff_tendsto one_ne_zero]
-    exact isEquivalent_one_sub_smoothingFn_one
+  have h₁  : Tendsto (fun x => 1 - ε x) atTop (𝓝 1)
+  rw [← isEquivalent_const_iff_tendsto one_ne_zero]
+  exact isEquivalent_one_sub_smoothingFn_one
   rw [tendsto_order] at h₁
   exact h₁.1 c hc
 
@@ -472,8 +474,8 @@ lemma isEquivalent_smoothingFn_sub_self (i : α) :
       _ = (fun (n : ℕ) => -log (b i) / ((log (b i) + log n) * log n)) := by ext; congr; ring
       _ ~[atTop] (fun (n : ℕ) => -log (b i) / (log n * log n)) := by
             refine IsEquivalent.div (IsEquivalent.refl) <| IsEquivalent.mul ?_ (IsEquivalent.refl)
-            have : (fun (n : ℕ) => log (b i) + log n) = fun (n : ℕ) => log n + log (b i) := by
-              ext; simp [add_comm]
+            have  : (fun (n : ℕ) => log (b i) + log n) = fun (n : ℕ) => log n + log (b i)
+            ext; simp [add_comm]
             rw [this]
             exact IsEquivalent.add_isLittleO IsEquivalent.refl
               <| IsLittleO.natCast_atTop (f := fun (_ : ℝ) => log (b i))
@@ -487,10 +489,10 @@ lemma isTheta_smoothingFn_sub_self (i : α) :
     _ = fun (n : ℕ) => (-log (b i)) * 1 / (log n)^2 := by simp only [mul_one]
     _ = fun (n : ℕ) => -log (b i) * (1 / (log n)^2) := by simp_rw [← mul_div_assoc]
     _ =Θ[atTop] fun (n : ℕ) => 1 / (log n)^2 := by
-                  have : -log (b i) ≠ 0 := by
-                    rw [neg_ne_zero]
-                    exact Real.log_ne_zero_of_pos_of_ne_one
-                            (R.b_pos i) (ne_of_lt <| R.b_lt_one i)
+                  have  : -log (b i) ≠ 0
+                  rw [neg_ne_zero]
+                  exact Real.log_ne_zero_of_pos_of_ne_one
+                          (R.b_pos i) (ne_of_lt <| R.b_lt_one i)
                   rw [← isTheta_const_mul_right this]
 
 
@@ -514,7 +516,8 @@ lemma strictAnti_sumCoeffsExp : StrictAnti (fun (p : ℝ) => ∑ i, a i * (b i) 
   exact Real.strictAnti_rpow_of_base_lt_one (R.b_pos i) (R.b_lt_one i)
 
 lemma tendsto_zero_sumCoeffsExp : Tendsto (fun (p : ℝ) => ∑ i, a i * (b i) ^ p) atTop (𝓝 0) := by
-  have h₁ : Finset.univ.sum (fun _ : α => (0 : ℝ)) = 0 := by simp
+  have h₁  : Finset.univ.sum (fun _ : α => (0 : ℝ)) = 0
+  simp
   rw [← h₁]
   refine tendsto_finset_sum (univ : Finset α) (fun i _ => ?_)
   rw [← mul_zero (a i)]
@@ -686,7 +689,8 @@ lemma eventually_atTop_sumTransform_ge :
   obtain ⟨c₂, hc₂_mem, hc₂⟩ := R.g_grows_poly.eventually_atTop_ge_nat hc₁_mem
   obtain ⟨c₃, hc₃_mem, hc₃⟩ := R.exists_eventually_r_le_const_mul
   have hc₁_pos : 0 < c₁ := hc₁_mem.1
-  have hc₃' : 0 < (1 - c₃) := by have := hc₃_mem.2; linarith
+  have hc₃'  : 0 < (1 - c₃)
+  have := hc₃_mem.2; linarith
   refine ⟨min (c₂ * (1 - c₃)) ((1 - c₃) * c₂ / c₁^((p a b) + 1)), by positivity, ?_⟩
   filter_upwards [hc₁, hc₂, hc₃, R.eventually_r_pos, R.eventually_r_lt_n, eventually_gt_atTop 0]
     with n hn₁ hn₂ hn₃ hrpos hr_lt_n hn_pos
@@ -781,7 +785,8 @@ lemma isBigO_apply_r_sub_b (q : ℝ → ℝ) (hq_diff : DifferentiableOn ℝ q (
     (hq_poly : GrowsPolynomially fun x => ‖deriv q x‖) (i : α) :
     (fun n => q (r i n) - q (b i * n)) =O[atTop] fun n => (deriv q n) * (r i n - b i * n) := by
   let b' := b (min_bi b) / 2
-  have hb_pos : 0 < b' := by have := R.b_pos (min_bi b); positivity
+  have hb_pos  : 0 < b'
+  have := R.b_pos (min_bi b); positivity
   have hb_lt_one : b' < 1 := calc
     b (min_bi b) / 2 < b (min_bi b) := by exact div_two_lt_of_pos (R.b_pos (min_bi b))
                    _ < 1 := R.b_lt_one (min_bi b)
@@ -915,9 +920,9 @@ lemma growsPolynomially_deriv_rpow_p_mul_one_sub_smoothingFn (p : ℝ) :
     have h₁ : (fun x => ‖deriv (fun z => z ^ p * (1 - ε z)) x‖)
         =ᶠ[atTop] fun z => z⁻¹ / (log z ^ 2) := by
       filter_upwards [eventually_deriv_one_sub_smoothingFn, eventually_gt_atTop 1] with x hx hx_pos
-      have : 0 ≤ x⁻¹ / (log x ^ 2) := by
-        have hlog : 0 < log x := Real.log_pos hx_pos
-        positivity
+      have  : 0 ≤ x⁻¹ / (log x ^ 2)
+      have hlog : 0 < log x := Real.log_pos hx_pos
+      positivity
       simp only [hp, Real.rpow_zero, one_mul, differentiableAt_const, hx, Real.norm_of_nonneg this]
     refine GrowsPolynomially.congr_of_eventuallyEq h₁ ?_
     refine GrowsPolynomially.div (GrowsPolynomially.inv growsPolynomially_id)
@@ -937,9 +942,9 @@ lemma growsPolynomially_deriv_rpow_p_mul_one_add_smoothingFn (p : ℝ) :
     have h₁ : (fun x => ‖deriv (fun z => z ^ p * (1 + ε z)) x‖)
         =ᶠ[atTop] fun z => z⁻¹ / (log z ^ 2) := by
       filter_upwards [eventually_deriv_one_add_smoothingFn, eventually_gt_atTop 1] with x hx hx_pos
-      have : 0 ≤ x⁻¹ / (log x ^ 2) := by
-        have hlog : 0 < log x := Real.log_pos hx_pos
-        positivity
+      have  : 0 ≤ x⁻¹ / (log x ^ 2)
+      have hlog : 0 < log x := Real.log_pos hx_pos
+      positivity
       simp only [neg_div, norm_neg, hp, Real.rpow_zero,
         one_mul, differentiableAt_const, hx, Real.norm_of_nonneg this]
     refine GrowsPolynomially.congr_of_eventuallyEq h₁ ?_
@@ -959,13 +964,13 @@ lemma rpow_p_mul_one_sub_smoothingFn_le :
   rw [Filter.eventually_all]
   intro i
   let q : ℝ → ℝ := fun x => x ^ (p a b) * (1 - ε x)
-  have h_diff_q : DifferentiableOn ℝ q (Set.Ioi 1) := by
-    refine DifferentiableOn.mul
-      (DifferentiableOn.mono (differentiableOn_rpow_const _) fun z hz => ?_)
-        differentiableOn_one_sub_smoothingFn
-    rw [Set.mem_compl_singleton_iff]
-    rw [Set.mem_Ioi] at hz
-    exact ne_of_gt <| zero_lt_one.trans hz
+  have h_diff_q  : DifferentiableOn ℝ q (Set.Ioi 1)
+  refine DifferentiableOn.mul
+    (DifferentiableOn.mono (differentiableOn_rpow_const _) fun z hz => ?_)
+      differentiableOn_one_sub_smoothingFn
+  rw [Set.mem_compl_singleton_iff]
+  rw [Set.mem_Ioi] at hz
+  exact ne_of_gt <| zero_lt_one.trans hz
   have h_deriv_q : deriv q =O[atTop] fun x => x ^ ((p a b) - 1) := calc
     deriv q = deriv fun x => (fun z => z ^ (p a b)) x * (fun z => 1 - ε z) x := by rfl
           _ =ᶠ[atTop] fun x => deriv (fun z => z ^ (p a b)) x * (1 - ε x) +
@@ -1003,7 +1008,8 @@ lemma rpow_p_mul_one_sub_smoothingFn_le :
               exact IsBigO.mul (IsBigO.natCast_atTop h_deriv_q) (isBigO_refl _ _)
         _ =ᶠ[atTop] fun n => n^(p a b) / (log n) ^ 2 := by
               filter_upwards [eventually_ne_atTop 0] with n hn
-              have hn' : (n : ℝ) ≠ 0 := by positivity
+              have hn'  : (n : ℝ) ≠ 0
+              positivity
               simp [← mul_div_assoc, ← Real.rpow_add_one hn']
         _ = fun (n : ℕ) => (n : ℝ) ^ (p a b) * (1 / (log n)^2) := by
               simp_rw [mul_div, mul_one]
@@ -1054,13 +1060,13 @@ lemma rpow_p_mul_one_add_smoothingFn_ge :
   rw [Filter.eventually_all]
   intro i
   let q : ℝ → ℝ := fun x => x ^ (p a b) * (1 + ε x)
-  have h_diff_q : DifferentiableOn ℝ q (Set.Ioi 1) := by
-    refine DifferentiableOn.mul
-        (DifferentiableOn.mono (differentiableOn_rpow_const _) fun z hz => ?_)
-        differentiableOn_one_add_smoothingFn
-    rw [Set.mem_compl_singleton_iff]
-    rw [Set.mem_Ioi] at hz
-    exact ne_of_gt <| zero_lt_one.trans hz
+  have h_diff_q  : DifferentiableOn ℝ q (Set.Ioi 1)
+  refine DifferentiableOn.mul
+      (DifferentiableOn.mono (differentiableOn_rpow_const _) fun z hz => ?_)
+      differentiableOn_one_add_smoothingFn
+  rw [Set.mem_compl_singleton_iff]
+  rw [Set.mem_Ioi] at hz
+  exact ne_of_gt <| zero_lt_one.trans hz
   have h_deriv_q : deriv q =O[atTop] fun x => x ^ ((p a b) - 1) := calc
     deriv q = deriv fun x => (fun z => z ^ (p a b)) x * (fun z => 1 + ε z) x := by rfl
           _ =ᶠ[atTop] fun x => deriv (fun z => z ^ (p a b)) x * (1 + ε x)

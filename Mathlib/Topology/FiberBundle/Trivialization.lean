@@ -487,9 +487,9 @@ trivialization of `Z` containing `z`. -/
 theorem continuousAt_of_comp_right {X : Type*} [TopologicalSpace X] {f : Z → X} {z : Z}
     (e : Trivialization F proj) (he : proj z ∈ e.baseSet)
     (hf : ContinuousAt (f ∘ e.toPartialEquiv.symm) (e z)) : ContinuousAt f z := by
-  have hez : z ∈ e.toPartialEquiv.symm.target := by
-    rw [PartialEquiv.symm_target, e.mem_source]
-    exact he
+  have hez  : z ∈ e.toPartialEquiv.symm.target
+  rw [PartialEquiv.symm_target, e.mem_source]
+  exact he
   rwa [e.toPartialHomeomorph.symm.continuousAt_iff_continuousAt_comp_right hez,
     PartialHomeomorph.symm_symm]
 

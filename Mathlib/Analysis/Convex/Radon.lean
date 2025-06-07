@@ -45,13 +45,13 @@ theorem radon_partition {f : ι → E} (h : ¬ AffineIndependent 𝕜 f) :
   let I : Finset ι := s.filter fun i ↦ 0 ≤ w i
   let J : Finset ι := s.filter fun i ↦ w i < 0
   let p : E := centerMass I w f -- point of intersection
-  have hJI : ∑ j ∈ J, w j + ∑ i ∈ I, w i = 0 := by
-    simpa only [h_wsum, not_lt] using sum_filter_add_sum_filter_not s (fun i ↦ w i < 0) w
-  have hI : 0 < ∑ i ∈ I, w i := by
-    rcases exists_pos_of_sum_zero_of_exists_nonzero _ h_wsum ⟨nonzero_w_index, h1, h2⟩
-      with ⟨pos_w_index, h1', h2'⟩
-    exact sum_pos' (fun _i hi ↦ (mem_filter.1 hi).2)
-      ⟨pos_w_index, by simp only [I, mem_filter, h1', h2'.le, and_self, h2']⟩
+  have hJI  : ∑ j ∈ J, w j + ∑ i ∈ I, w i = 0
+  simpa only [h_wsum, not_lt] using sum_filter_add_sum_filter_not s (fun i ↦ w i < 0) w
+  have hI  : 0 < ∑ i ∈ I, w i
+  rcases exists_pos_of_sum_zero_of_exists_nonzero _ h_wsum ⟨nonzero_w_index, h1, h2⟩
+    with ⟨pos_w_index, h1', h2'⟩
+  exact sum_pos' (fun _i hi ↦ (mem_filter.1 hi).2)
+    ⟨pos_w_index, by simp only [I, mem_filter, h1', h2'.le, and_self, h2']⟩
   have hp : centerMass J w f = p := centerMass_of_sum_add_sum_eq_zero hJI <| by
     simpa only [← h_vsum, not_lt] using sum_filter_add_sum_filter_not s (fun i ↦ w i < 0) _
   refine ⟨I, p, ?_, ?_⟩
@@ -98,10 +98,10 @@ theorem helly_theorem' {F : ι → Set E} {s : Finset ι}
     · simp only [coe_mem, card_erase_of_mem]; omega
   /- This family of vectors is not affine independent because the number of them exceeds the
   dimension of the space. -/
-  have h_ind : ¬AffineIndependent 𝕜 a := by
-    rw [← finrank_vectorSpan_le_iff_not_affineIndependent 𝕜 a (n := (k - 1))]
-    · exact (Submodule.finrank_le (vectorSpan 𝕜 (range a))).trans (Nat.le_pred_of_lt h_card)
-    · simp only [card_coe]; omega
+  have h_ind  : ¬AffineIndependent 𝕜 a
+  rw [← finrank_vectorSpan_le_iff_not_affineIndependent 𝕜 a (n := (k - 1))]
+  · exact (Submodule.finrank_le (vectorSpan 𝕜 (range a))).trans (Nat.le_pred_of_lt h_card)
+  · simp only [card_coe]; omega
   /- Use `radon_partition` to conclude there is a subset `I` of `s` and a point `p : E` which
   lies in the convex hull of either `a '' I` or `a '' Iᶜ`. We claim that `p ∈ ⋂ i ∈ s, F i`. -/
   obtain ⟨I, p, hp_I, hp_Ic⟩ := radon_partition h_ind
@@ -193,9 +193,9 @@ theorem helly_theorem_compact' [TopologicalSpace E] [T2Space E] {F : ι → Set 
   cases' isEmpty_or_nonempty ι with _ h_nonempty
   · simp only [iInter_of_empty, Set.univ_nonempty]
   /- By the finite version of theorem, every finite subfamily has an intersection. -/
-  have h_fin (I : Finset ι) : (⋂ i ∈ I, F i).Nonempty := by
-    apply helly_theorem' (s := I) (𝕜 := 𝕜) (by simp [h_convex])
-    exact fun J _ hJ_card ↦ h_inter J hJ_card
+  have h_fin (I  : Finset ι) : (⋂ i ∈ I, F i).Nonempty
+  apply helly_theorem' (s := I) (𝕜 := 𝕜) (by simp [h_convex])
+  exact fun J _ hJ_card ↦ h_inter J hJ_card
   /- The following is a clumsy proof that family of compact sets with the finite intersection
   property has a nonempty intersection. -/
   have i0 : ι := Nonempty.some h_nonempty
@@ -219,14 +219,14 @@ theorem helly_theorem_compact [TopologicalSpace E] [T2Space E] {F : ι → Set E
     (⋂ i, F i).Nonempty := by
   apply helly_theorem_compact' h_convex h_compact
   intro I hI_card
-  have hJ : ∃ J : Finset ι, I ⊆ J ∧ J.card = finrank 𝕜 E + 1 := by
-    by_cases h : Infinite ι
-    · exact Infinite.exists_superset_card_eq _ _ hI_card
-    · have : Finite ι := Finite.of_not_infinite h
-      have : Fintype ι := Fintype.ofFinite ι
-      apply exists_superset_card_eq hI_card
-      simp only [PartENat.card_eq_coe_fintype_card] at h_card
-      rwa [← Nat.cast_one, ← Nat.cast_add, Nat.cast_le] at h_card
+  have hJ  : ∃ J : Finset ι, I ⊆ J ∧ J.card = finrank 𝕜 E + 1
+  by_cases h : Infinite ι
+  · exact Infinite.exists_superset_card_eq _ _ hI_card
+  · have : Finite ι := Finite.of_not_infinite h
+    have : Fintype ι := Fintype.ofFinite ι
+    apply exists_superset_card_eq hI_card
+    simp only [PartENat.card_eq_coe_fintype_card] at h_card
+    rwa [← Nat.cast_one, ← Nat.cast_add, Nat.cast_le] at h_card
   obtain ⟨J, hJ_ss, hJ_card⟩ := hJ
   apply Set.Nonempty.mono <| biInter_mono hJ_ss (by intro _ _; rfl)
   exact h_inter J hJ_card

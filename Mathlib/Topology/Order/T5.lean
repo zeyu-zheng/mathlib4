@@ -30,10 +30,10 @@ theorem ordConnectedComponent_mem_nhds : ordConnectedComponent s a ∈ 𝓝 a �
 
 theorem compl_section_ordSeparatingSet_mem_nhdsWithin_Ici (hd : Disjoint s (closure t))
     (ha : a ∈ s) : (ordConnectedSection (ordSeparatingSet s t))ᶜ ∈ 𝓝[≥] a := by
-  have hmem : tᶜ ∈ 𝓝[≥] a := by
-    refine mem_nhdsWithin_of_mem_nhds ?_
-    rw [← mem_interior_iff_mem_nhds, interior_compl]
-    exact disjoint_left.1 hd ha
+  have hmem  : tᶜ ∈ 𝓝[≥] a
+  refine mem_nhdsWithin_of_mem_nhds ?_
+  rw [← mem_interior_iff_mem_nhds, interior_compl]
+  exact disjoint_left.1 hd ha
   rcases exists_Icc_mem_subset_of_mem_nhdsWithin_Ici hmem with ⟨b, hab, hmem', hsub⟩
   by_cases H : Disjoint (Icc a b) (ordConnectedSection <| ordSeparatingSet s t)
   · exact mem_of_superset hmem' (disjoint_left.1 H)

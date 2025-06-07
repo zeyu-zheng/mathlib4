@@ -180,11 +180,11 @@ theorem disjoint_ordT5Nhd : Disjoint (ordT5Nhd s t) (ordT5Nhd t s) := by
   · exact H b hbt hb a has ha (le_of_not_le hab)
   cases' ha with ha ha'
   cases' hb with hb hb'
-  have hsub : [[a, b]] ⊆ (ordSeparatingSet s t).ordConnectedSectionᶜ := by
-    rw [ordSeparatingSet_comm, uIcc_comm] at hb'
-    calc
-      [[a, b]] ⊆ [[a, x]] ∪ [[x, b]] := uIcc_subset_uIcc_union_uIcc
-      _ ⊆ (ordSeparatingSet s t).ordConnectedSectionᶜ := union_subset ha' hb'
+  have hsub  : [[a, b]] ⊆ (ordSeparatingSet s t).ordConnectedSectionᶜ
+  rw [ordSeparatingSet_comm, uIcc_comm] at hb'
+  calc
+    [[a, b]] ⊆ [[a, x]] ∪ [[x, b]] := uIcc_subset_uIcc_union_uIcc
+    _ ⊆ (ordSeparatingSet s t).ordConnectedSectionᶜ := union_subset ha' hb'
   clear ha' hb'
   rcases le_total x a with hxa | hax
   · exact hb (Icc_subset_uIcc' ⟨hxa, hab⟩) has

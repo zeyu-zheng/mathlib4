@@ -55,7 +55,8 @@ theorem ker_diagonal_toLin' [DecidableEq m] (w : m → K) :
   rw [← comap_bot, ← iInf_ker_proj, comap_iInf]
   have := fun i : m => ker_comp (toLin' (diagonal w)) (proj i)
   simp only [comap_iInf, ← this, proj_diagonal, ker_smul']
-  have : univ ⊆ { i : m | w i = 0 } ∪ { i : m | w i = 0 }ᶜ := by rw [Set.union_compl_self]
+  have  : univ ⊆ { i : m | w i = 0 } ∪ { i : m | w i = 0 }ᶜ
+  rw [Set.union_compl_self]
   exact (iSup_range_stdBasis_eq_iInf_ker_proj K (fun _ : m => K) disjoint_compl_right this
     (Set.toFinite _)).symm
 
@@ -79,7 +80,8 @@ variable {m n : Type*} [Fintype m] [Fintype n] {K : Type u} [Field K]
 
 theorem rank_diagonal [DecidableEq m] [DecidableEq K] (w : m → K) :
     LinearMap.rank (toLin' (diagonal w)) = Fintype.card { i // w i ≠ 0 } := by
-  have hu : univ ⊆ { i : m | w i = 0 }ᶜ ∪ { i : m | w i = 0 } := by rw [Set.compl_union_self]
+  have hu  : univ ⊆ { i : m | w i = 0 }ᶜ ∪ { i : m | w i = 0 }
+  rw [Set.compl_union_self]
   have hd : Disjoint { i : m | w i ≠ 0 } { i : m | w i = 0 } := disjoint_compl_left
   have B₁ := iSup_range_stdBasis_eq_iInf_ker_proj K (fun _ : m => K) hd hu (Set.toFinite _)
   have B₂ := iInfKerProjEquiv K (fun _ ↦ K) hd hu

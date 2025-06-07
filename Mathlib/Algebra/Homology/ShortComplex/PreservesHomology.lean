@@ -756,9 +756,9 @@ instance quasiIso_map_of_preservesLeftHomology
     [F.PreservesLeftHomologyOf S₁] [F.PreservesLeftHomologyOf S₂]
     [QuasiIso φ] : QuasiIso (F.mapShortComplex.map φ) := by
   have γ : LeftHomologyMapData φ S₁.leftHomologyData S₂.leftHomologyData := default
-  have : IsIso γ.φH := by
-    rw [← γ.quasiIso_iff]
-    infer_instance
+  have  : IsIso γ.φH
+  rw [← γ.quasiIso_iff]
+  infer_instance
   rw [(γ.map F).quasiIso_iff, LeftHomologyMapData.map_φH]
   infer_instance
 
@@ -778,9 +778,9 @@ instance quasiIso_map_of_preservesRightHomology
     [F.PreservesRightHomologyOf S₁] [F.PreservesRightHomologyOf S₂]
     [QuasiIso φ] : QuasiIso (F.mapShortComplex.map φ) := by
   have γ : RightHomologyMapData φ S₁.rightHomologyData S₂.rightHomologyData := default
-  have : IsIso γ.φH := by
-    rw [← γ.quasiIso_iff]
-    infer_instance
+  have  : IsIso γ.φH
+  rw [← γ.quasiIso_iff]
+  infer_instance
   rw [(γ.map F).quasiIso_iff, RightHomologyMapData.map_φH]
   infer_instance
 

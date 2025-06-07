@@ -27,7 +27,8 @@ lemma gaussSum_aux_of_mulShift (χ : DirichletCharacter R N) {d : ℕ}
     simpa only [Int.cast_mul, Int.cast_natCast, mulShift_apply, mul_assoc, one_apply]
       using DFunLike.ext_iff.mp he (a * y)
   rw [← Units.eq_iff, Units.val_one, ZMod.unitsMap_def, Units.coe_map] at hu
-  have : ZMod.castHom hd (ZMod d) u.val = ((u.val.val : ℤ) : ZMod d) := by simp
+  have  : ZMod.castHom hd (ZMod d) u.val = ((u.val.val : ℤ) : ZMod d)
+  simp
   rwa [MonoidHom.coe_coe, this, ← Int.cast_one, eq_comm,
     ZMod.intCast_eq_intCast_iff_dvd_sub] at hu
 

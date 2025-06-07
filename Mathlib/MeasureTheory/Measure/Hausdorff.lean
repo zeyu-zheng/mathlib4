@@ -574,10 +574,10 @@ theorem hausdorffMeasure_zero_or_top {d₁ d₂ : ℝ} (h : d₁ < d₂) (s : Se
     exact hc.not_le (this c (pos_iff_ne_zero.1 hc0))
   intro c hc
   refine le_iff'.1 (mkMetric_mono_smul ENNReal.coe_ne_top (mod_cast hc) ?_) s
-  have : 0 < ((c : ℝ≥0∞) ^ (d₂ - d₁)⁻¹) := by
-    rw [ENNReal.coe_rpow_of_ne_zero hc, pos_iff_ne_zero, Ne, ENNReal.coe_eq_zero,
-      NNReal.rpow_eq_zero_iff]
-    exact mt And.left hc
+  have  : 0 < ((c : ℝ≥0∞) ^ (d₂ - d₁)⁻¹)
+  rw [ENNReal.coe_rpow_of_ne_zero hc, pos_iff_ne_zero, Ne, ENNReal.coe_eq_zero,
+    NNReal.rpow_eq_zero_iff]
+  exact mt And.left hc
   filter_upwards [Ico_mem_nhdsWithin_Ici ⟨le_rfl, this⟩]
   rintro r ⟨hr₀, hrc⟩
   lift r to ℝ≥0 using ne_top_of_lt hrc
@@ -617,9 +617,9 @@ theorem hausdorffMeasure_zero_singleton (x : X) : μH[0] ({x} : Set X) = 1 := by
   apply le_antisymm
   · let r : ℕ → ℝ≥0∞ := fun _ => 0
     let t : ℕ → Unit → Set X := fun _ _ => {x}
-    have ht : ∀ᶠ n in atTop, ∀ i, diam (t n i) ≤ r n := by
-      simp only [t, r, imp_true_iff, eq_self_iff_true, diam_singleton, eventually_atTop,
-        nonpos_iff_eq_zero, exists_const]
+    have ht  : ∀ᶠ n in atTop, ∀ i, diam (t n i) ≤ r n
+    simp only [t, r, imp_true_iff, eq_self_iff_true, diam_singleton, eventually_atTop,
+      nonpos_iff_eq_zero, exists_const]
     simpa [t, liminf_const] using hausdorffMeasure_le_liminf_sum 0 {x} r tendsto_const_nhds t ht
   · rw [hausdorffMeasure_apply]
     suffices
@@ -767,10 +767,10 @@ theorem hausdorffMeasure_preimage_le (hf : AntilipschitzWith K f) (hd : 0 ≤ d)
   rcases eq_or_ne K 0 with (rfl | h0)
   · rcases eq_empty_or_nonempty (f ⁻¹' s) with (hs | ⟨x, hx⟩)
     · simp only [hs, measure_empty, zero_le]
-    have : f ⁻¹' s = {x} := by
-      haveI : Subsingleton X := hf.subsingleton
-      have : (f ⁻¹' s).Subsingleton := subsingleton_univ.anti (subset_univ _)
-      exact (subsingleton_iff_singleton hx).1 this
+    have  : f ⁻¹' s = {x}
+    haveI : Subsingleton X := hf.subsingleton
+    have : (f ⁻¹' s).Subsingleton := subsingleton_univ.anti (subset_univ _)
+    exact (subsingleton_iff_singleton hx).1 this
     rw [this]
     rcases eq_or_lt_of_le hd with (rfl | h'd)
     · simp only [ENNReal.rpow_zero, one_mul, mul_zero]
@@ -778,8 +778,10 @@ theorem hausdorffMeasure_preimage_le (hf : AntilipschitzWith K f) (hd : 0 ≤ d)
       exact one_le_hausdorffMeasure_zero_of_nonempty ⟨f x, hx⟩
     · haveI := noAtoms_hausdorff X h'd
       simp only [zero_le, measure_singleton]
-  have hKd0 : (K : ℝ≥0∞) ^ d ≠ 0 := by simp [h0]
-  have hKd : (K : ℝ≥0∞) ^ d ≠ ∞ := by simp [hd]
+  have hKd0  : (K : ℝ≥0∞) ^ d ≠ 0
+  simp [h0]
+  have hKd  : (K : ℝ≥0∞) ^ d ≠ ∞
+  simp [hd]
   simp only [hausdorffMeasure_apply, ENNReal.mul_iSup, ENNReal.mul_iInf_of_ne hKd0 hKd,
     ← ENNReal.tsum_mul_left]
   refine iSup₂_le fun ε ε0 => ?_
@@ -1016,9 +1018,9 @@ theorem hausdorffMeasure_smul_right_image [NormedAddCommGroup E] [NormedSpace �
       · rw [smul_comm (norm _), smul_comm (norm _), inv_smul_smul₀ hn] at h
         exact h
     · exact hausdorffMeasure_real.symm
-  have iso_smul : Isometry (LinearMap.toSpanSingleton ℝ E (‖v‖⁻¹ • v)) := by
-    refine AddMonoidHomClass.isometry_of_norm _ fun x => (norm_smul _ _).trans ?_
-    rw [norm_smul, norm_inv, norm_norm, inv_mul_cancel hn, mul_one, LinearMap.id_apply]
+  have iso_smul  : Isometry (LinearMap.toSpanSingleton ℝ E (‖v‖⁻¹ • v))
+  refine AddMonoidHomClass.isometry_of_norm _ fun x => (norm_smul _ _).trans ?_
+  rw [norm_smul, norm_inv, norm_norm, inv_mul_cancel hn, mul_one, LinearMap.id_apply]
   rw [Set.image_smul, Measure.hausdorffMeasure_smul₀ zero_le_one hn, nnnorm_norm,
       NNReal.rpow_one, iso_smul.hausdorffMeasure_image (Or.inl <| zero_le_one' ℝ)]
 

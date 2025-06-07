@@ -107,8 +107,10 @@ lemma StrictConvexOn.map_sum_lt (hf : StrictConvexOn 𝕜 s f) (h₀ : ∀ i ∈
   -- We replace `t` by `t \ {j, k}`
   have : k ∈ t.erase j := mem_erase.2 ⟨ne_of_apply_ne _ hjk.symm, hk⟩
   let u := (t.erase j).erase k
-  have hj : j ∉ u := by simp [u]
-  have hk : k ∉ u := by simp [u]
+  have hj  : j ∉ u
+  simp [u]
+  have hk  : k ∉ u
+  simp [u]
   have ht :
       t = (u.cons k hk).cons j (mem_cons.not.2 <| not_or_intro (ne_of_apply_ne _ hjk) hj) := by
     simp [insert_erase this, insert_erase ‹j ∈ t›, *]
@@ -118,9 +120,12 @@ lemma StrictConvexOn.map_sum_lt (hf : StrictConvexOn 𝕜 s f) (h₀ : ∀ i ∈
   have := h₀ j <| by simp
   have := h₀ k <| by simp
   let c := w j + w k
-  have hc : w j / c + w k / c = 1 := by field_simp
-  have hcj : c * (w j / c) = w j := by field_simp
-  have hck : c * (w k / c) = w k := by field_simp
+  have hc  : w j / c + w k / c = 1
+  field_simp
+  have hcj  : c * (w j / c) = w j
+  field_simp
+  have hck  : c * (w k / c) = w k
+  field_simp
   calc f (w j • p j + (w k • p k + ∑ x ∈ u, w x • p x))
     _ = f (c • ((w j / c) • p j + (w k / c) • p k) + ∑ x ∈ u, w x • p x) := by
       rw [smul_add, ← mul_smul, ← mul_smul, hcj, hck, add_assoc]
@@ -186,18 +191,18 @@ lemma StrictConvexOn.map_sum_eq_iff {w : ι → 𝕜} {p : ι → E} (hf : Stric
   · obtain rfl | ⟨i₀, hi₀⟩ := t.eq_empty_or_nonempty
     · simp
     intro h_eq i hi
-    have H : ∀ j ∈ t, p j = p i₀ := by
-      intro j hj
-      apply hf.eq_of_le_map_sum h₀ h₁ hmem h_eq.ge hj hi₀
+    have H  : ∀ j ∈ t, p j = p i₀
+    intro j hj
+    apply hf.eq_of_le_map_sum h₀ h₁ hmem h_eq.ge hj hi₀
     calc p i = p i₀ := by rw [H _ hi]
       _ = (1 : 𝕜) • p i₀ := by simp
       _ = (∑ j ∈ t, w j) • p i₀ := by rw [h₁]
       _ = ∑ j ∈ t, (w j • p i₀) := by rw [sum_smul]
       _ = ∑ j ∈ t, (w j • p j) := by congr! 2 with j hj; rw [← H _ hj]
   · intro h
-    have H : ∀ j ∈ t, w j • f (p j) = w j • f (∑ i ∈ t, w i • p i) := by
-      intro j hj
-      simp [h j hj]
+    have H  : ∀ j ∈ t, w j • f (p j) = w j • f (∑ i ∈ t, w i • p i)
+    intro j hj
+    simp [h j hj]
     rw [sum_congr rfl H, ← sum_smul, h₁, one_smul]
 
 /-- Canonical form of the **equality case of Jensen's equality**.
@@ -219,8 +224,10 @@ lemma StrictConvexOn.map_sum_eq_iff' (hf : StrictConvexOn 𝕜 s f) (h₀ : ∀ 
     (h₁ : ∑ i ∈ t, w i = 1) (hmem : ∀ i ∈ t, p i ∈ s) :
     f (∑ i ∈ t, w i • p i) = ∑ i ∈ t, w i • f (p i) ↔
       ∀ j ∈ t, w j ≠ 0 → p j = ∑ i ∈ t, w i • p i := by
-  have hw (i) (_ : i ∈ t) : w i • p i ≠ 0 → w i ≠ 0 := by aesop
-  have hw' (i) (_ : i ∈ t) : w i • f (p i) ≠ 0 → w i ≠ 0 := by aesop
+  have hw (i) (_  : i ∈ t) : w i • p i ≠ 0 → w i ≠ 0
+  aesop
+  have hw' (i) (_  : i ∈ t) : w i • f (p i) ≠ 0 → w i ≠ 0
+  aesop
   rw [← sum_filter_of_ne hw, ← sum_filter_of_ne hw', hf.map_sum_eq_iff]
   · simp
   · simp (config := { contextual := true }) [(h₀ _ _).gt_iff_ne]
@@ -268,7 +275,8 @@ theorem ConvexOn.exists_ge_of_centerMass (h : ConvexOn 𝕜 s f) (hw₀ : ∀ i 
   set y := t.centerMass w p
   -- TODO: can `rsuffices` be used to write the `exact` first, then the proof of this obtain?
   obtain ⟨i, hi, hfi⟩ : ∃ i ∈ t.filter fun i => w i ≠ 0, w i • f y ≤ w i • (f ∘ p) i := by
-    have hw' : (0 : 𝕜) < ∑ i ∈ filter (fun i => w i ≠ 0) t, w i := by rwa [sum_filter_ne_zero]
+    have hw'  : (0 : 𝕜) < ∑ i ∈ filter (fun i => w i ≠ 0) t, w i
+    rwa [sum_filter_ne_zero]
     refine exists_le_of_sum_le (nonempty_of_sum_ne_zero hw'.ne') ?_
     rw [← sum_smul, ← smul_le_smul_iff_of_pos_left (inv_pos.2 hw'), inv_smul_smul₀ hw'.ne', ←
       centerMass, centerMass_filter_ne_zero]

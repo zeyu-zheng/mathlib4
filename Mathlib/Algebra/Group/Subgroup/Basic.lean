@@ -2857,17 +2857,17 @@ theorem normalClosure_eq_top_of {N : Subgroup G} [hn : N.Normal] {g g' : G} {hg 
     {hg' : g' ∈ N} (hc : IsConj g g') (ht : normalClosure ({⟨g, hg⟩} : Set N) = ⊤) :
     normalClosure ({⟨g', hg'⟩} : Set N) = ⊤ := by
   obtain ⟨c, rfl⟩ := isConj_iff.1 hc
-  have h : ∀ x : N, (MulAut.conj c) x ∈ N := by
-    rintro ⟨x, hx⟩
-    exact hn.conj_mem _ hx c
-  have hs : Function.Surjective (((MulAut.conj c).toMonoidHom.restrict N).codRestrict _ h) := by
-    rintro ⟨x, hx⟩
-    refine ⟨⟨c⁻¹ * x * c, ?_⟩, ?_⟩
-    · have h := hn.conj_mem _ hx c⁻¹
-      rwa [inv_inv] at h
-    simp only [MonoidHom.codRestrict_apply, MulEquiv.coe_toMonoidHom, MulAut.conj_apply, coe_mk,
-      MonoidHom.restrict_apply, Subtype.mk_eq_mk, ← mul_assoc, mul_inv_self, one_mul]
-    rw [mul_assoc, mul_inv_self, mul_one]
+  have h  : ∀ x : N, (MulAut.conj c) x ∈ N
+  rintro ⟨x, hx⟩
+  exact hn.conj_mem _ hx c
+  have hs  : Function.Surjective (((MulAut.conj c).toMonoidHom.restrict N).codRestrict _ h)
+  rintro ⟨x, hx⟩
+  refine ⟨⟨c⁻¹ * x * c, ?_⟩, ?_⟩
+  · have h := hn.conj_mem _ hx c⁻¹
+    rwa [inv_inv] at h
+  simp only [MonoidHom.codRestrict_apply, MulEquiv.coe_toMonoidHom, MulAut.conj_apply, coe_mk,
+    MonoidHom.restrict_apply, Subtype.mk_eq_mk, ← mul_assoc, mul_inv_self, one_mul]
+  rw [mul_assoc, mul_inv_self, mul_one]
   rw [eq_top_iff, ← MonoidHom.range_top_of_surjective _ hs, MonoidHom.range_eq_map]
   refine le_trans (map_mono (eq_top_iff.1 ht)) (map_le_iff_le_comap.2 (normalClosure_le_normal ?_))
   rw [Set.singleton_subset_iff, SetLike.mem_coe]

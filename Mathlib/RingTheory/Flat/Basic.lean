@@ -124,11 +124,11 @@ lemma of_retract [f : Flat R M] (i : N →ₗ[R] M) (r : M →ₗ[R] N) (h : r.c
     Flat R N := by
   rw [iff_rTensor_injective] at *
   intro I hI
-  have h₁ : Function.Injective (lTensor R i) := by
-    apply Function.RightInverse.injective (g := (lTensor R r))
-    intro x
-    rw [← LinearMap.comp_apply, ← lTensor_comp, h]
-    simp
+  have h₁  : Function.Injective (lTensor R i)
+  apply Function.RightInverse.injective (g := (lTensor R r))
+  intro x
+  rw [← LinearMap.comp_apply, ← lTensor_comp, h]
+  simp
   rw [← Function.Injective.of_comp_iff h₁ (rTensor N I.subtype), ← LinearMap.coe_comp]
   rw [LinearMap.lTensor_comp_rTensor, ← LinearMap.rTensor_comp_lTensor]
   rw [LinearMap.coe_comp, Function.Injective.of_comp_iff (f hI)]
@@ -139,7 +139,8 @@ lemma of_retract [f : Flat R M] (i : N →ₗ[R] M) (r : M →ₗ[R] N) (h : r.c
 
 /-- A `R`-module linearly equivalent to a flat `R`-module is flat. -/
 lemma of_linearEquiv [f : Flat R M] (e : N ≃ₗ[R] M) : Flat R N := by
-  have h : e.symm.toLinearMap.comp e.toLinearMap = LinearMap.id := by simp
+  have h  : e.symm.toLinearMap.comp e.toLinearMap = LinearMap.id
+  simp
   exact of_retract _ _ _ e.toLinearMap e.symm.toLinearMap h
 
 /-- A direct sum of flat `R`-modules is flat. -/
@@ -163,18 +164,18 @@ instance directSum (ι : Type v) (M : ι → Type w) [(i : ι) → AddCommGroup 
   rw [LinearEquiv.coe_toEquiv, ← LinearEquiv.coe_coe, ← LinearMap.coe_comp]
   rw [LinearEquiv.coe_toEquiv, ← LinearEquiv.coe_coe, ← LinearMap.coe_comp]
   rw [← psi_def, injective_iff_map_eq_zero ((η₁.comp ρ).comp ψ)]
-  have h₁ : ∀ (i : ι), (π i).comp ((η₁.comp ρ).comp ψ) = (η i).comp ((φ i).comp (τ i)) := by
-    intro i
-    apply DirectSum.linearMap_ext
-    intro j
-    apply TensorProduct.ext'
-    intro a m
-    simp only [ρ, ψ, φ, η, η₁, coe_comp, LinearEquiv.coe_coe, Function.comp_apply,
-      directSumRight_symm_lof_tmul, rTensor_tmul, Submodule.coeSubtype, lid_tmul, map_smul]
-    rw [DirectSum.component.of, DirectSum.component.of]
-    by_cases h₂ : j = i
-    · subst j; simp
-    · simp [h₂]
+  have h₁  : ∀ (i : ι), (π i).comp ((η₁.comp ρ).comp ψ) = (η i).comp ((φ i).comp (τ i))
+  intro i
+  apply DirectSum.linearMap_ext
+  intro j
+  apply TensorProduct.ext'
+  intro a m
+  simp only [ρ, ψ, φ, η, η₁, coe_comp, LinearEquiv.coe_coe, Function.comp_apply,
+    directSumRight_symm_lof_tmul, rTensor_tmul, Submodule.coeSubtype, lid_tmul, map_smul]
+  rw [DirectSum.component.of, DirectSum.component.of]
+  by_cases h₂ : j = i
+  · subst j; simp
+  · simp [h₂]
   intro a ha; rw [DirectSum.ext_iff R]; intro i
   have f := LinearMap.congr_arg (f := (π i)) ha
   erw [LinearMap.congr_fun (h₁ i) a] at f

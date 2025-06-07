@@ -189,19 +189,19 @@ theorem LinearMap.exists_leftInverse_of_injective (f : V →ₗ[K] V') (hf_inj :
   let B := Basis.ofVectorSpaceIndex K V
   let hB := Basis.ofVectorSpace K V
   have hB₀ : _ := hB.linearIndependent.to_subtype_range
-  have : LinearIndependent K (fun x => x : f '' B → V') := by
-    have h₁ : LinearIndependent K ((↑) : ↥(f '' Set.range (Basis.ofVectorSpace K V)) → V') :=
-      LinearIndependent.image_subtype (f := f) hB₀ (show Disjoint _ _ by simp [hf_inj])
-    rwa [Basis.range_ofVectorSpace K V] at h₁
+  have  : LinearIndependent K (fun x => x : f '' B → V')
+  have h₁ : LinearIndependent K ((↑) : ↥(f '' Set.range (Basis.ofVectorSpace K V)) → V') :=
+    LinearIndependent.image_subtype (f := f) hB₀ (show Disjoint _ _ by simp [hf_inj])
+  rwa [Basis.range_ofVectorSpace K V] at h₁
   let C := this.extend (subset_univ _)
   have BC := this.subset_extend (subset_univ _)
   let hC := Basis.extend this
   haveI Vinh : Inhabited V := ⟨0⟩
   refine ⟨(hC.constr ℕ : _ → _) (C.restrict (invFun f)), hB.ext fun b => ?_⟩
   rw [image_subset_iff] at BC
-  have fb_eq : f b = hC ⟨f b, BC b.2⟩ := by
-    change f b = Basis.extend this _
-    simp_rw [Basis.extend_apply_self]
+  have fb_eq  : f b = hC ⟨f b, BC b.2⟩
+  change f b = Basis.extend this _
+  simp_rw [Basis.extend_apply_self]
   dsimp []
   rw [Basis.ofVectorSpace_apply_self, fb_eq, hC.constr_basis]
   exact leftInverse_invFun (LinearMap.ker_eq_bot.1 hf_inj) _

@@ -77,10 +77,10 @@ def succNthDefiningPoly (n : ℕ) (a₁ a₂ : 𝕎 k) (bs : Fin (n + 1) → k) 
 theorem succNthDefiningPoly_degree [IsDomain k] (n : ℕ) (a₁ a₂ : 𝕎 k) (bs : Fin (n + 1) → k)
     (ha₁ : a₁.coeff 0 ≠ 0) (ha₂ : a₂.coeff 0 ≠ 0) :
     (succNthDefiningPoly p n a₁ a₂ bs).degree = p := by
-  have : (X ^ p * C (a₁.coeff 0 ^ p ^ (n + 1))).degree = (p : WithBot ℕ) := by
-    rw [degree_mul, degree_C]
-    · simp only [Nat.cast_withBot, add_zero, degree_X, degree_pow, Nat.smul_one_eq_cast]
-    · exact pow_ne_zero _ ha₁
+  have  : (X ^ p * C (a₁.coeff 0 ^ p ^ (n + 1))).degree = (p : WithBot ℕ)
+  rw [degree_mul, degree_C]
+  · simp only [Nat.cast_withBot, add_zero, degree_X, degree_pow, Nat.smul_one_eq_cast]
+  · exact pow_ne_zero _ ha₁
   have : (X ^ p * C (a₁.coeff 0 ^ p ^ (n + 1)) - X * C (a₂.coeff 0 ^ p ^ (n + 1))).degree =
       (p : WithBot ℕ) := by
     rw [degree_sub_eq_left_of_degree_lt, this]
@@ -161,7 +161,8 @@ theorem solution_spec' {a₁ : 𝕎 k} (ha₁ : a₁.coeff 0 ≠ 0) (a₂ : 𝕎
     solution p a₁ a₂ ^ p * a₁.coeff 0 = solution p a₁ a₂ * a₂.coeff 0 := by
   have := solution_spec p a₁ a₂
   cases' Nat.exists_eq_succ_of_ne_zero hp.out.ne_zero with q hq
-  have hq' : q = p - 1 := by simp only [hq, tsub_zero, Nat.succ_sub_succ_eq_sub]
+  have hq'  : q = p - 1
+  simp only [hq, tsub_zero, Nat.succ_sub_succ_eq_sub]
   conv_lhs =>
     congr
     congr
@@ -237,10 +238,10 @@ theorem exists_frobenius_solution_fractionRing_aux (m n : ℕ) (r' q' : 𝕎 k) 
       (frobenius_frobeniusRotation p hr' hq')
     dsimp at H
     refine (Eq.trans ?_ H).trans ?_ <;> ring
-  have hq'' : algebraMap (𝕎 k) (FractionRing (𝕎 k)) q' ≠ 0 := by
-    have hq''' : q' ≠ 0 := fun h => hq' (by simp [h])
-    simpa only [Ne, map_zero] using
-      (IsFractionRing.injective (𝕎 k) (FractionRing (𝕎 k))).ne hq'''
+  have hq''  : algebraMap (𝕎 k) (FractionRing (𝕎 k)) q' ≠ 0
+  have hq''' : q' ≠ 0 := fun h => hq' (by simp [h])
+  simpa only [Ne, map_zero] using
+    (IsFractionRing.injective (𝕎 k) (FractionRing (𝕎 k))).ne hq'''
   rw [zpow_sub₀ (FractionRing.p_nonzero p k)]
   field_simp [FractionRing.p_nonzero p k]
   simp only [IsFractionRing.fieldEquivOfRingEquiv, IsLocalization.ringEquivOfRingEquiv_eq,

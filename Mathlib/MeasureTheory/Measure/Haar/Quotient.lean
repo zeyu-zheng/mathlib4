@@ -87,14 +87,15 @@ lemma MeasureTheory.QuotientMeasureEqMeasurePreimage.smulInvariantMeasure_quotie
       h𝓕_translate_fundom.projection_respects_measure_apply (μ := μ) hA]
     change ν ((π ⁻¹' _) ∩ _) = ν ((π ⁻¹' _) ∩ _)
     set π_preA := π ⁻¹' A
-    have : π ⁻¹' ((fun x : G ⧸ Γ => g • x) ⁻¹' A) = (g * ·) ⁻¹' π_preA := by ext1; simp [π_preA]
+    have  : π ⁻¹' ((fun x : G ⧸ Γ => g • x) ⁻¹' A) = (g * ·) ⁻¹' π_preA
+    ext1; simp [π_preA]
     rw [this]
-    have : ν ((g * ·) ⁻¹' π_preA ∩ 𝓕) = ν (π_preA ∩ (g⁻¹ * ·) ⁻¹' 𝓕) := by
-      trans ν ((g * ·) ⁻¹' (π_preA ∩ (g⁻¹ * ·) ⁻¹' 𝓕))
-      · rw [preimage_inter]
-        congr 2
-        simp [Set.preimage]
-      rw [measure_preimage_mul]
+    have  : ν ((g * ·) ⁻¹' π_preA ∩ 𝓕) = ν (π_preA ∩ (g⁻¹ * ·) ⁻¹' 𝓕)
+    trans ν ((g * ·) ⁻¹' (π_preA ∩ (g⁻¹ * ·) ⁻¹' 𝓕))
+    · rw [preimage_inter]
+      congr 2
+      simp [Set.preimage]
+    rw [measure_preimage_mul]
     rw [this, ← preimage_smul_inv]; rfl
 
 /-- Given a subgroup `Γ` of a topological group `G` with measure `ν`, and a measure 'μ' on the
@@ -292,13 +293,14 @@ theorem IsFundamentalDomain.QuotientMeasureEqMeasurePreimage_smulHaarMeasure {�
     QuotientMeasureEqMeasurePreimage ν
       ((ν ((π ⁻¹' (K : Set (G ⧸ Γ))) ∩ 𝓕)) • haarMeasure K) := by
   set c := ν ((π ⁻¹' (K : Set (G ⧸ Γ))) ∩ 𝓕)
-  have c_ne_top : c ≠ ∞ := by
-    contrapose! h𝓕_finite
-    have : c ≤ ν 𝓕 := measure_mono (Set.inter_subset_right)
-    rw [h𝓕_finite] at this
-    exact top_unique this
+  have c_ne_top  : c ≠ ∞
+  contrapose! h𝓕_finite
+  have : c ≤ ν 𝓕 := measure_mono (Set.inter_subset_right)
+  rw [h𝓕_finite] at this
+  exact top_unique this
   set μ := c • haarMeasure K
-  have hμK : μ K = c := by simp [μ, haarMeasure_self]
+  have hμK  : μ K = c
+  simp [μ, haarMeasure_self]
   haveI : SigmaFinite μ := by
     clear_value c
     lift c to NNReal using c_ne_top
@@ -405,22 +407,22 @@ lemma QuotientGroup.integral_mul_eq_integral_automorphize_mul {K : Type*} [Norme
       = ∫ x : G ⧸ Γ, g x * (QuotientGroup.automorphize f x) ∂μ_𝓕 := by
   let π : G → G ⧸ Γ := QuotientGroup.mk
   have meas_π : Measurable π := continuous_quotient_mk'.measurable
-  have H₀ : QuotientGroup.automorphize ((g ∘ π) * f) = g * (QuotientGroup.automorphize f) := by
-    exact QuotientGroup.automorphize_smul_left f g
+  have H₀  : QuotientGroup.automorphize ((g ∘ π) * f) = g * (QuotientGroup.automorphize f)
+  exact QuotientGroup.automorphize_smul_left f g
   calc ∫ (x : G), g (π x) * (f x) ∂μ =
         ∫ (x : G ⧸ Γ), QuotientGroup.automorphize ((g ∘ π) * f) x ∂μ_𝓕 := ?_
     _ = ∫ (x : G ⧸ Γ), g x * (QuotientGroup.automorphize f x) ∂μ_𝓕 := by simp [H₀]
-  have H₁ : Integrable ((g ∘ π) * f) μ := by
-    have : AEStronglyMeasurable (fun (x : G) ↦ g (x : (G ⧸ Γ))) μ :=
-      (hg.mono_ac h𝓕.absolutelyContinuous_map).comp_measurable meas_π
-    refine Integrable.essSup_smul f_ℒ_1 this ?_
-    have hg' : AEStronglyMeasurable (fun x ↦ (‖g x‖₊ : ℝ≥0∞)) μ_𝓕 :=
-      (ENNReal.continuous_coe.comp continuous_nnnorm).comp_aestronglyMeasurable hg
-    rw [← essSup_comp_quotientGroup_mk h𝓕 hg'.aemeasurable]
-    exact g_ℒ_infinity
-  have H₂ : AEStronglyMeasurable (QuotientGroup.automorphize ((g ∘ π) * f)) μ_𝓕 := by
-    simp_rw [H₀]
-    exact hg.mul F_ae_measurable
+  have H₁  : Integrable ((g ∘ π) * f) μ
+  have : AEStronglyMeasurable (fun (x : G) ↦ g (x : (G ⧸ Γ))) μ :=
+    (hg.mono_ac h𝓕.absolutelyContinuous_map).comp_measurable meas_π
+  refine Integrable.essSup_smul f_ℒ_1 this ?_
+  have hg' : AEStronglyMeasurable (fun x ↦ (‖g x‖₊ : ℝ≥0∞)) μ_𝓕 :=
+    (ENNReal.continuous_coe.comp continuous_nnnorm).comp_aestronglyMeasurable hg
+  rw [← essSup_comp_quotientGroup_mk h𝓕 hg'.aemeasurable]
+  exact g_ℒ_infinity
+  have H₂  : AEStronglyMeasurable (QuotientGroup.automorphize ((g ∘ π) * f)) μ_𝓕
+  simp_rw [H₀]
+  exact hg.mul F_ae_measurable
   apply QuotientGroup.integral_eq_integral_automorphize h𝓕 H₁ H₂
 
 end UnfoldingTrick

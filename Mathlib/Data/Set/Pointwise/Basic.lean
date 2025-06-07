@@ -1054,15 +1054,15 @@ namespace Group
 @[to_additive]
 theorem card_pow_eq_card_pow_card_univ_aux {f : ℕ → ℕ} (h1 : Monotone f) {B : ℕ} (h2 : ∀ n, f n ≤ B)
     (h3 : ∀ n, f n = f (n + 1) → f (n + 1) = f (n + 2)) : ∀ k, B ≤ k → f k = f B := by
-  have key : ∃ n : ℕ, n ≤ B ∧ f n = f (n + 1) := by
-    contrapose! h2
-    suffices ∀ n : ℕ, n ≤ B + 1 → n ≤ f n by exact ⟨B + 1, this (B + 1) (le_refl (B + 1))⟩
-    exact fun n =>
-      Nat.rec (fun _ => Nat.zero_le (f 0))
-        (fun n ih h =>
-          lt_of_le_of_lt (ih (n.le_succ.trans h))
-            (lt_of_le_of_ne (h1 n.le_succ) (h2 n (Nat.succ_le_succ_iff.mp h))))
-        n
+  have key  : ∃ n : ℕ, n ≤ B ∧ f n = f (n + 1)
+  contrapose! h2
+  suffices ∀ n : ℕ, n ≤ B + 1 → n ≤ f n by exact ⟨B + 1, this (B + 1) (le_refl (B + 1))⟩
+  exact fun n =>
+    Nat.rec (fun _ => Nat.zero_le (f 0))
+      (fun n ih h =>
+        lt_of_le_of_lt (ih (n.le_succ.trans h))
+          (lt_of_le_of_ne (h1 n.le_succ) (h2 n (Nat.succ_le_succ_iff.mp h))))
+      n
   obtain ⟨n, hn1, hn2⟩ := key
   replace key : ∀ k : ℕ, f (n + k) = f (n + k + 1) ∧ f (n + k) = f n := fun k =>
     Nat.rec ⟨hn2, rfl⟩ (fun k ih => ⟨h3 _ ih.1, ih.1.symm.trans ih.2⟩) k

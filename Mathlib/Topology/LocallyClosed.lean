@@ -148,10 +148,10 @@ lemma isLocallyClosed_tfae (s : Set X) :
       IsOpen (closure s ↓∩ s)] := by
   tfae_have 1 → 2
   · rintro ⟨U, Z, hU, hZ, rfl⟩
-    have : Z ∪ (frontier (U ∩ Z))ᶜ = univ := by
-      nth_rw 1 [← hZ.closure_eq]
-      rw [← compl_subset_iff_union, compl_subset_compl]
-      refine frontier_subset_closure.trans (closure_mono inter_subset_right)
+    have  : Z ∪ (frontier (U ∩ Z))ᶜ = univ
+    nth_rw 1 [← hZ.closure_eq]
+    rw [← compl_subset_iff_union, compl_subset_compl]
+    refine frontier_subset_closure.trans (closure_mono inter_subset_right)
     rw [coborder_eq_union_frontier_compl, inter_union_distrib_right, this,
       inter_univ]
     exact hU.union isClosed_frontier.isOpen_compl

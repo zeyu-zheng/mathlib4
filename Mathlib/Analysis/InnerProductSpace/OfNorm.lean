@@ -104,11 +104,14 @@ theorem innerProp_neg_one : innerProp' E ((-1 : ℤ) : 𝕜) := by
     Int.cast_neg, neg_smul, neg_one_mul]
   rw [neg_mul_comm]
   congr 1
-  have h₁ : ‖-x - y‖ = ‖x + y‖ := by rw [← neg_add', norm_neg]
-  have h₂ : ‖-x + y‖ = ‖x - y‖ := by rw [← neg_sub, norm_neg, sub_eq_neg_add]
-  have h₃ : ‖(I : 𝕜) • -x + y‖ = ‖(I : 𝕜) • x - y‖ := by
-    rw [← neg_sub, norm_neg, sub_eq_neg_add, ← smul_neg]
-  have h₄ : ‖(I : 𝕜) • -x - y‖ = ‖(I : 𝕜) • x + y‖ := by rw [smul_neg, ← neg_add', norm_neg]
+  have h₁  : ‖-x - y‖ = ‖x + y‖
+  rw [← neg_add', norm_neg]
+  have h₂  : ‖-x + y‖ = ‖x - y‖
+  rw [← neg_sub, norm_neg, sub_eq_neg_add]
+  have h₃  : ‖(I : 𝕜) • -x + y‖ = ‖(I : 𝕜) • x - y‖
+  rw [← neg_sub, norm_neg, sub_eq_neg_add, ← smul_neg]
+  have h₄  : ‖(I : 𝕜) • -x - y‖ = ‖(I : 𝕜) • x + y‖
+  rw [smul_neg, ← neg_add', norm_neg]
   rw [h₁, h₂, h₃, h₄]
   ring
 
@@ -119,18 +122,21 @@ theorem _root_.Continuous.inner_ {f g : ℝ → E} (hf : Continuous f) (hg : Con
 
 theorem inner_.norm_sq (x : E) : ‖x‖ ^ 2 = re (inner_ 𝕜 x x) := by
   simp only [inner_]
-  have h₁ : RCLike.normSq (4 : 𝕜) = 16 := by
-    have : ((4 : ℝ) : 𝕜) = (4 : 𝕜) := by norm_cast
-    rw [← this, normSq_eq_def', RCLike.norm_of_nonneg (by norm_num : (0 : ℝ) ≤ 4)]
-    norm_num
-  have h₂ : ‖x + x‖ = 2 * ‖x‖ := by rw [← two_smul 𝕜, norm_smul, RCLike.norm_two]
+  have h₁  : RCLike.normSq (4 : 𝕜) = 16
+  have  : ((4 : ℝ) : 𝕜) = (4 : 𝕜)
+  norm_cast
+  rw [← this, normSq_eq_def', RCLike.norm_of_nonneg (by norm_num : (0 : ℝ) ≤ 4)]
+  norm_num
+  have h₂  : ‖x + x‖ = 2 * ‖x‖
+  rw [← two_smul 𝕜, norm_smul, RCLike.norm_two]
   simp only [h₁, h₂, algebraMap_eq_ofReal, sub_self, norm_zero, mul_re, inv_re, ofNat_re, map_sub,
     map_add, ofReal_re, ofNat_im, ofReal_im, mul_im, I_re, inv_im]
   ring
 
 theorem inner_.conj_symm (x y : E) : conj (inner_ 𝕜 y x) = inner_ 𝕜 x y := by
   simp only [inner_]
-  have h4 : conj (4⁻¹ : 𝕜) = 4⁻¹ := by norm_num
+  have h4  : conj (4⁻¹ : 𝕜) = 4⁻¹
+  norm_num
   rw [map_mul, h4]
   congr 1
   simp only [map_sub, map_add, conj_ofReal, map_mul, conj_I]
@@ -138,17 +144,17 @@ theorem inner_.conj_symm (x y : E) : conj (inner_ 𝕜 y x) = inner_ 𝕜 x y :=
   by_cases hI : (I : 𝕜) = 0
   · simp only [hI, neg_zero, zero_mul]
   -- Porting note: this replaces `norm_I_of_ne_zero` which does not exist in Lean 4
-  have : ‖(I : 𝕜)‖ = 1 := by
-    rw [← mul_self_inj_of_nonneg (norm_nonneg I) zero_le_one, one_mul, ← norm_mul,
-      I_mul_I_of_nonzero hI, norm_neg, norm_one]
-  have h₁ : ‖(I : 𝕜) • y - x‖ = ‖(I : 𝕜) • x + y‖ := by
-    trans ‖(I : 𝕜) • ((I : 𝕜) • y - x)‖
-    · rw [norm_smul, this, one_mul]
-    · rw [smul_sub, smul_smul, I_mul_I_of_nonzero hI, neg_one_smul, ← neg_add', add_comm, norm_neg]
-  have h₂ : ‖(I : 𝕜) • y + x‖ = ‖(I : 𝕜) • x - y‖ := by
-    trans ‖(I : 𝕜) • ((I : 𝕜) • y + x)‖
-    · rw [norm_smul, this, one_mul]
-    · rw [smul_add, smul_smul, I_mul_I_of_nonzero hI, neg_one_smul, ← neg_add_eq_sub]
+  have  : ‖(I : 𝕜)‖ = 1
+  rw [← mul_self_inj_of_nonneg (norm_nonneg I) zero_le_one, one_mul, ← norm_mul,
+    I_mul_I_of_nonzero hI, norm_neg, norm_one]
+  have h₁  : ‖(I : 𝕜) • y - x‖ = ‖(I : 𝕜) • x + y‖
+  trans ‖(I : 𝕜) • ((I : 𝕜) • y - x)‖
+  · rw [norm_smul, this, one_mul]
+  · rw [smul_sub, smul_smul, I_mul_I_of_nonzero hI, neg_one_smul, ← neg_add', add_comm, norm_neg]
+  have h₂  : ‖(I : 𝕜) • y + x‖ = ‖(I : 𝕜) • x - y‖
+  trans ‖(I : 𝕜) • ((I : 𝕜) • y + x)‖
+  · rw [norm_smul, this, one_mul]
+  · rw [smul_add, smul_smul, I_mul_I_of_nonzero hI, neg_one_smul, ← neg_add_eq_sub]
   rw [h₁, h₂, ← sub_add_eq_add_sub]
   simp only [neg_mul, sub_eq_add_neg, neg_neg]
 
@@ -258,9 +264,9 @@ private theorem int_prop (n : ℤ) : innerProp' E (n : 𝕜) := by
 
 private theorem rat_prop (r : ℚ) : innerProp' E (r : 𝕜) := by
   intro x y
-  have : (r.den : 𝕜) ≠ 0 := by
-    haveI : CharZero 𝕜 := RCLike.charZero_rclike
-    exact mod_cast r.pos.ne'
+  have  : (r.den : 𝕜) ≠ 0
+  haveI : CharZero 𝕜 := RCLike.charZero_rclike
+  exact mod_cast r.pos.ne'
   rw [← r.num_div_den, ← mul_right_inj' this, ← nat r.den _ y, smul_smul, Rat.cast_div]
   simp only [map_natCast, Rat.cast_natCast, map_intCast, Rat.cast_intCast, map_div₀]
   rw [← mul_assoc, mul_div_cancel₀ _ this, int_prop _ x, map_intCast]
@@ -278,14 +284,17 @@ private theorem I_prop : innerProp' E (I : 𝕜) := by
   by_cases hI : (I : 𝕜) = 0
   · rw [hI, ← Nat.cast_zero]; exact nat_prop _
   intro x y
-  have hI' : (-I : 𝕜) * I = 1 := by rw [← inv_I, inv_mul_cancel hI]
+  have hI'  : (-I : 𝕜) * I = 1
+  rw [← inv_I, inv_mul_cancel hI]
   rw [conj_I, inner_, inner_, mul_left_comm]
   congr 1
   rw [smul_smul, I_mul_I_of_nonzero hI, neg_one_smul]
   rw [mul_sub, mul_add, mul_sub, mul_assoc I (𝓚 ‖I • x - y‖), ← mul_assoc (-I) I, hI', one_mul,
     mul_assoc I (𝓚 ‖I • x + y‖), ← mul_assoc (-I) I, hI', one_mul]
-  have h₁ : ‖-x - y‖ = ‖x + y‖ := by rw [← neg_add', norm_neg]
-  have h₂ : ‖-x + y‖ = ‖x - y‖ := by rw [← neg_sub, norm_neg, sub_eq_neg_add]
+  have h₁  : ‖-x - y‖ = ‖x + y‖
+  rw [← neg_add', norm_neg]
+  have h₂  : ‖-x + y‖ = ‖x - y‖
+  rw [← neg_sub, norm_neg, sub_eq_neg_add]
   rw [h₁, h₂]
   simp only [sub_eq_add_neg, mul_assoc]
   rw [← neg_mul_eq_neg_mul, ← neg_mul_eq_neg_mul]

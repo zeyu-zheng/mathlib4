@@ -97,10 +97,10 @@ theorem precise_refinement_set [ParacompactSpace X] {s : Set X} (hs : IsClosed s
     (uo : ∀ i, IsOpen (u i)) (us : s ⊆ ⋃ i, u i) :
     ∃ v : ι → Set X, (∀ i, IsOpen (v i)) ∧ (s ⊆ ⋃ i, v i) ∧ LocallyFinite v ∧ ∀ i, v i ⊆ u i := by
   -- Porting note (#10888): added proof of uc
-  have uc : (iUnion fun i => Option.elim' sᶜ u i) = univ := by
-    apply Subset.antisymm (subset_univ _)
-    · simp_rw [← compl_union_self s, Option.elim', iUnion_option]
-      apply union_subset_union_right sᶜ us
+  have uc  : (iUnion fun i => Option.elim' sᶜ u i) = univ
+  apply Subset.antisymm (subset_univ _)
+  · simp_rw [← compl_union_self s, Option.elim', iUnion_option]
+    apply union_subset_union_right sᶜ us
   rcases precise_refinement (Option.elim' sᶜ u) (Option.forall.2 ⟨isOpen_compl_iff.2 hs, uo⟩)
       uc with
     ⟨v, vo, vc, vf, vu⟩
@@ -113,8 +113,8 @@ theorem ClosedEmbedding.paracompactSpace [ParacompactSpace Y] {e : X → Y} (he 
   locallyFinite_refinement α s ho hu := by
     choose U hUo hU using fun a ↦ he.isOpen_iff.1 (ho a)
     simp only [← hU] at hu ⊢
-    have heU : range e ⊆ ⋃ i, U i := by
-      simpa only [range_subset_iff, mem_iUnion, iUnion_eq_univ_iff] using hu
+    have heU  : range e ⊆ ⋃ i, U i
+    simpa only [range_subset_iff, mem_iUnion, iUnion_eq_univ_iff] using hu
     rcases precise_refinement_set he.isClosed_range U hUo heU with ⟨V, hVo, heV, hVf, hVU⟩
     refine ⟨α, fun a ↦ e ⁻¹' (V a), fun a ↦ (hVo a).preimage he.continuous, ?_,
       hVf.preimage_continuous he.continuous, fun a ↦ ⟨a, preimage_mono (hVU a)⟩⟩

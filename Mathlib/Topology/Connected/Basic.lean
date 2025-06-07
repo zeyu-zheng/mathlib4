@@ -84,9 +84,9 @@ then the original set is preconnected as well. -/
 theorem isPreconnected_of_forall {s : Set α} (x : α)
     (H : ∀ y ∈ s, ∃ t, t ⊆ s ∧ x ∈ t ∧ y ∈ t ∧ IsPreconnected t) : IsPreconnected s := by
   rintro u v hu hv hs ⟨z, zs, zu⟩ ⟨y, ys, yv⟩
-  have xs : x ∈ s := by
-    rcases H y ys with ⟨t, ts, xt, -, -⟩
-    exact ts xt
+  have xs  : x ∈ s
+  rcases H y ys with ⟨t, ts, xt, -, -⟩
+  exact ts xt
   -- Porting note (#11215): TODO: use `wlog xu : x ∈ u := hs xs using u v y z, v u z y`
   cases hs xs with
   | inl xu =>
@@ -399,13 +399,13 @@ theorem IsPreconnected.subset_right_of_subset_union (hu : IsOpen u) (hv : IsOpen
 contained in `u`, then the whole set `s` is contained in `u`. -/
 theorem IsPreconnected.subset_of_closure_inter_subset (hs : IsPreconnected s) (hu : IsOpen u)
     (h'u : (s ∩ u).Nonempty) (h : closure u ∩ s ⊆ u) : s ⊆ u := by
-  have A : s ⊆ u ∪ (closure u)ᶜ := by
-    intro x hx
-    by_cases xu : x ∈ u
-    · exact Or.inl xu
-    · right
-      intro h'x
-      exact xu (h (mem_inter h'x hx))
+  have A  : s ⊆ u ∪ (closure u)ᶜ
+  intro x hx
+  by_cases xu : x ∈ u
+  · exact Or.inl xu
+  · right
+    intro h'x
+    exact xu (h (mem_inter h'x hx))
   apply hs.subset_left_of_subset_union hu isClosed_closure.isOpen_compl _ A h'u
   exact disjoint_compl_right.mono_right (compl_subset_compl.2 subset_closure)
 
@@ -434,10 +434,10 @@ theorem isPreconnected_univ_pi [∀ i, TopologicalSpace (π i)] {s : ∀ i, Set 
     have := I.piecewise_mem_set_pi hfs hgs
     refine (hsuv this).elim ihI fun h => ?_
     set S := update (I.piecewise f g) i '' s i
-    have hsub : S ⊆ pi univ s := by
-      refine image_subset_iff.2 fun z hz => ?_
-      rwa [update_preimage_univ_pi]
-      exact fun j _ => this j trivial
+    have hsub  : S ⊆ pi univ s
+    refine image_subset_iff.2 fun z hz => ?_
+    rwa [update_preimage_univ_pi]
+    exact fun j _ => this j trivial
     have hconn : IsPreconnected S :=
       (hs i).image _ (continuous_const.update i continuous_id).continuousOn
     have hSu : (S ∩ u).Nonempty := ⟨_, mem_image_of_mem _ (hfs _ trivial), hI⟩
@@ -514,12 +514,12 @@ theorem IsPreconnected.subset_connectedComponent {x : α} {s : Set α} (H1 : IsP
 
 theorem IsPreconnected.subset_connectedComponentIn {x : α} {F : Set α} (hs : IsPreconnected s)
     (hxs : x ∈ s) (hsF : s ⊆ F) : s ⊆ connectedComponentIn F x := by
-  have : IsPreconnected (((↑) : F → α) ⁻¹' s) := by
-    refine inducing_subtype_val.isPreconnected_image.mp ?_
-    rwa [Subtype.image_preimage_coe, inter_eq_right.mpr hsF]
-  have h2xs : (⟨x, hsF hxs⟩ : F) ∈ (↑) ⁻¹' s := by
-    rw [mem_preimage]
-    exact hxs
+  have  : IsPreconnected (((↑) : F → α) ⁻¹' s)
+  refine inducing_subtype_val.isPreconnected_image.mp ?_
+  rwa [Subtype.image_preimage_coe, inter_eq_right.mpr hsF]
+  have h2xs  : (⟨x, hsF hxs⟩ : F) ∈ (↑) ⁻¹' s
+  rw [mem_preimage]
+  exact hxs
   have := this.subset_connectedComponent h2xs
   rw [connectedComponentIn_eq_image (hsF hxs)]
   refine Subset.trans ?_ (image_subset _ this)

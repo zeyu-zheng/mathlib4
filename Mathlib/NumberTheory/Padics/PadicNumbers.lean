@@ -861,7 +861,8 @@ theorem norm_int_lt_one_iff_dvd (k : ℤ) : ‖(k : ℚ_[p])‖ < 1 ↔ ↑p ∣
 
 theorem norm_int_le_pow_iff_dvd (k : ℤ) (n : ℕ) :
     ‖(k : ℚ_[p])‖ ≤ (p : ℝ) ^ (-n : ℤ) ↔ (p ^ n : ℤ) ∣ k := by
-  have : (p : ℝ) ^ (-n : ℤ) = (p : ℚ) ^ (-n : ℤ) := by simp
+  have  : (p : ℝ) ^ (-n : ℤ) = (p : ℚ) ^ (-n : ℤ)
+  simp
   rw [show (k : ℚ_[p]) = ((k : ℚ) : ℚ_[p]) by norm_cast, eq_padicNorm, this]
   norm_cast
   rw [← padicNorm.dvd_iff_norm_le]
@@ -954,10 +955,10 @@ theorem valuation_zero : valuation (0 : ℚ_[p]) = 0 :=
 @[simp]
 theorem valuation_one : valuation (1 : ℚ_[p]) = 0 := by
   change dite (CauSeq.const (padicNorm p) 1 ≈ _) _ _ = _
-  have h : ¬CauSeq.const (padicNorm p) 1 ≈ 0 := by
-    intro H
-    erw [const_equiv p] at H
-    exact one_ne_zero H
+  have h  : ¬CauSeq.const (padicNorm p) 1 ≈ 0
+  intro H
+  erw [const_equiv p] at H
+  exact one_ne_zero H
   rw [dif_neg h]
   simp
 
@@ -990,9 +991,9 @@ theorem valuation_map_add {x y : ℚ_[p]} (hxy : x + y ≠ 0) :
     · rw [hy, add_zero]
       exact min_le_left _ _
     · have h_norm : ‖x + y‖ ≤ max ‖x‖ ‖y‖ := padicNormE.nonarchimedean x y
-      have hp_one : (1 : ℝ) < p := by
-        rw [← Nat.cast_one, Nat.cast_lt]
-        exact Nat.Prime.one_lt hp.elim
+      have hp_one  : (1 : ℝ) < p
+      rw [← Nat.cast_one, Nat.cast_lt]
+      exact Nat.Prime.one_lt hp.elim
       rwa [norm_eq_pow_val hx, norm_eq_pow_val hy, norm_eq_pow_val hxy,
         zpow_le_max_iff_min_le hp_one] at h_norm
 
@@ -1000,12 +1001,12 @@ theorem valuation_map_add {x y : ℚ_[p]} (hxy : x + y ≠ 0) :
 theorem valuation_map_mul {x y : ℚ_[p]} (hx : x ≠ 0) (hy : y ≠ 0) :
     valuation (x * y : ℚ_[p]) = valuation x + valuation y := by
   have h_norm : ‖x * y‖ = ‖x‖ * ‖y‖ := norm_mul x y
-  have hp_ne_one : (p : ℝ) ≠ 1 := by
-    rw [← Nat.cast_one, Ne, Nat.cast_inj]
-    exact Nat.Prime.ne_one hp.elim
-  have hp_pos : (0 : ℝ) < p := by
-    rw [← Nat.cast_zero, Nat.cast_lt]
-    exact Nat.Prime.pos hp.elim
+  have hp_ne_one  : (p : ℝ) ≠ 1
+  rw [← Nat.cast_one, Ne, Nat.cast_inj]
+  exact Nat.Prime.ne_one hp.elim
+  have hp_pos  : (0 : ℝ) < p
+  rw [← Nat.cast_zero, Nat.cast_lt]
+  exact Nat.Prime.pos hp.elim
   rw [norm_eq_pow_val hx, norm_eq_pow_val hy, norm_eq_pow_val (mul_ne_zero hx hy), ←
     zpow_add₀ (ne_of_gt hp_pos), zpow_inj hp_pos hp_ne_one, ← neg_add, neg_inj] at h_norm
   exact h_norm
@@ -1064,9 +1065,9 @@ section NormLEIff
 
 theorem norm_le_pow_iff_norm_lt_pow_add_one (x : ℚ_[p]) (n : ℤ) :
     ‖x‖ ≤ (p : ℝ) ^ n ↔ ‖x‖ < (p : ℝ) ^ (n + 1) := by
-  have aux : ∀ n : ℤ, 0 < ((p : ℝ) ^ n) := by
-    apply Nat.zpow_pos_of_pos
-    exact hp.1.pos
+  have aux  : ∀ n : ℤ, 0 < ((p : ℝ) ^ n)
+  apply Nat.zpow_pos_of_pos
+  exact hp.1.pos
   by_cases hx0 : x = 0
   · simp [hx0, norm_zero, aux, le_of_lt (aux _)]
   rw [norm_eq_pow_val hx0]

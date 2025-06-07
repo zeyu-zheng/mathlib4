@@ -567,13 +567,13 @@ theorem ContinuousOn.restrict_mapsTo {f : α → β} {s : Set α} {t : Set β} (
 
 theorem continuousOn_iff' {f : α → β} {s : Set α} :
     ContinuousOn f s ↔ ∀ t : Set β, IsOpen t → ∃ u, IsOpen u ∧ f ⁻¹' t ∩ s = u ∩ s := by
-  have : ∀ t, IsOpen (s.restrict f ⁻¹' t) ↔ ∃ u : Set α, IsOpen u ∧ f ⁻¹' t ∩ s = u ∩ s := by
-    intro t
-    rw [isOpen_induced_iff, Set.restrict_eq, Set.preimage_comp]
-    simp only [Subtype.preimage_coe_eq_preimage_coe_iff]
-    constructor <;>
-      · rintro ⟨u, ou, useq⟩
-        exact ⟨u, ou, by simpa only [Set.inter_comm, eq_comm] using useq⟩
+  have  : ∀ t, IsOpen (s.restrict f ⁻¹' t) ↔ ∃ u : Set α, IsOpen u ∧ f ⁻¹' t ∩ s = u ∩ s
+  intro t
+  rw [isOpen_induced_iff, Set.restrict_eq, Set.preimage_comp]
+  simp only [Subtype.preimage_coe_eq_preimage_coe_iff]
+  constructor <;>
+    · rintro ⟨u, ou, useq⟩
+      exact ⟨u, ou, by simpa only [Set.inter_comm, eq_comm] using useq⟩
   rw [continuousOn_iff_continuous_restrict, continuous_def]; simp only [this]
 
 /-- If a function is continuous on a set for some topologies, then it is
@@ -592,10 +592,10 @@ theorem ContinuousOn.mono_rng {α β : Type*} {t₁ : TopologicalSpace α} {t₂
 
 theorem continuousOn_iff_isClosed {f : α → β} {s : Set α} :
     ContinuousOn f s ↔ ∀ t : Set β, IsClosed t → ∃ u, IsClosed u ∧ f ⁻¹' t ∩ s = u ∩ s := by
-  have : ∀ t, IsClosed (s.restrict f ⁻¹' t) ↔ ∃ u : Set α, IsClosed u ∧ f ⁻¹' t ∩ s = u ∩ s := by
-    intro t
-    rw [isClosed_induced_iff, Set.restrict_eq, Set.preimage_comp]
-    simp only [Subtype.preimage_coe_eq_preimage_coe_iff, eq_comm, Set.inter_comm s]
+  have  : ∀ t, IsClosed (s.restrict f ⁻¹' t) ↔ ∃ u : Set α, IsClosed u ∧ f ⁻¹' t ∩ s = u ∩ s
+  intro t
+  rw [isClosed_induced_iff, Set.restrict_eq, Set.preimage_comp]
+  simp only [Subtype.preimage_coe_eq_preimage_coe_iff, eq_comm, Set.inter_comm s]
   rw [continuousOn_iff_continuous_restrict, continuous_iff_isClosed]; simp only [this]
 
 theorem ContinuousOn.prod_map {f : α → γ} {g : β → δ} {s : Set α} {t : Set β}

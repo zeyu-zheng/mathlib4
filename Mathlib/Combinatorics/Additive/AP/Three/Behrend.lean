@@ -148,8 +148,8 @@ theorem map_mod (a : Fin n.succ → ℕ) : map d a % d = a 0 % d := by
 theorem map_eq_iff {x₁ x₂ : Fin n.succ → ℕ} (hx₁ : ∀ i, x₁ i < d) (hx₂ : ∀ i, x₂ i < d) :
     map d x₁ = map d x₂ ↔ x₁ 0 = x₂ 0 ∧ map d (x₁ ∘ Fin.succ) = map d (x₂ ∘ Fin.succ) := by
   refine ⟨fun h => ?_, fun h => by rw [map_succ', map_succ', h.1, h.2]⟩
-  have : x₁ 0 = x₂ 0 := by
-    rw [← mod_eq_of_lt (hx₁ _), ← map_mod, ← mod_eq_of_lt (hx₂ _), ← map_mod, h]
+  have  : x₁ 0 = x₂ 0
+  rw [← mod_eq_of_lt (hx₁ _), ← map_mod, ← mod_eq_of_lt (hx₂ _), ← map_mod, h]
   rw [map_succ, map_succ, this, add_right_inj, mul_eq_mul_right_iff] at h
   exact ⟨this, h.resolve_right (pos_of_gt (hx₁ 0)).ne'⟩
 
@@ -278,7 +278,8 @@ open Real
 section NumericalBounds
 
 theorem log_two_mul_two_le_sqrt_log_eight : log 2 * 2 ≤ √(log 8) := by
-  have : (8 : ℝ) = 2 ^ ((3 : ℕ) : ℝ) := by rw [rpow_natCast]; norm_num
+  have  : (8 : ℝ) = 2 ^ ((3 : ℕ) : ℝ)
+  rw [rpow_natCast]; norm_num
   rw [this, log_rpow zero_lt_two (3 : ℕ)]
   apply le_sqrt_of_sq_le
   rw [mul_pow, sq (log 2), mul_assoc, mul_comm]
@@ -294,17 +295,17 @@ theorem two_div_one_sub_two_div_e_le_eight : 2 / (1 - 2 / exp 1) ≤ 8 := by
   rw [sub_pos, div_lt_one] <;> exact exp_one_gt_d9.trans' (by norm_num)
 
 theorem le_sqrt_log (hN : 4096 ≤ N) : log (2 / (1 - 2 / exp 1)) * (69 / 50) ≤ √(log ↑N) := by
-  have : (12 : ℕ) * log 2 ≤ log N := by
-    rw [← log_rpow zero_lt_two, rpow_natCast]
-    exact log_le_log (by positivity) (mod_cast hN)
+  have  : (12 : ℕ) * log 2 ≤ log N
+  rw [← log_rpow zero_lt_two, rpow_natCast]
+  exact log_le_log (by positivity) (mod_cast hN)
   refine (mul_le_mul_of_nonneg_right (log_le_log ?_ two_div_one_sub_two_div_e_le_eight) <| by
     norm_num1).trans ?_
   · refine div_pos zero_lt_two ?_
     rw [sub_pos, div_lt_one (exp_pos _)]
     exact exp_one_gt_d9.trans_le' (by norm_num1)
-  have l8 : log 8 = (3 : ℕ) * log 2 := by
-    rw [← log_rpow zero_lt_two, rpow_natCast]
-    norm_num
+  have l8  : log 8 = (3 : ℕ) * log 2
+  rw [← log_rpow zero_lt_two, rpow_natCast]
+  norm_num
   rw [l8]
   apply le_sqrt_of_sq_le (le_trans _ this)
   rw [mul_right_comm, mul_pow, sq (log 2), ← mul_assoc]
@@ -315,7 +316,8 @@ theorem le_sqrt_log (hN : 4096 ≤ N) : log (2 / (1 - 2 / exp 1)) * (69 / 50) �
 
 theorem exp_neg_two_mul_le {x : ℝ} (hx : 0 < x) : exp (-2 * x) < exp (2 - ⌈x⌉₊) / ⌈x⌉₊ := by
   have h₁ := ceil_lt_add_one hx.le
-  have h₂ : 1 - x ≤ 2 - ⌈x⌉₊ := by linarith
+  have h₂  : 1 - x ≤ 2 - ⌈x⌉₊
+  linarith
   calc
     _ ≤ exp (1 - x) / (x + 1) := ?_
     _ ≤ exp (2 - ⌈x⌉₊) / (x + 1) := by gcongr
@@ -326,9 +328,9 @@ theorem exp_neg_two_mul_le {x : ℝ} (hx : 0 < x) : exp (-2 * x) < exp (2 - ⌈x
 
 theorem div_lt_floor {x : ℝ} (hx : 2 / (1 - 2 / exp 1) ≤ x) : x / exp 1 < (⌊x / 2⌋₊ : ℝ) := by
   apply lt_of_le_of_lt _ (sub_one_lt_floor _)
-  have : 0 < 1 - 2 / exp 1 := by
-    rw [sub_pos, div_lt_one (exp_pos _)]
-    exact lt_of_le_of_lt (by norm_num) exp_one_gt_d9
+  have  : 0 < 1 - 2 / exp 1
+  rw [sub_pos, div_lt_one (exp_pos _)]
+  exact lt_of_le_of_lt (by norm_num) exp_one_gt_d9
   rwa [le_sub_comm, div_eq_mul_one_div x, div_eq_mul_one_div x, ← mul_sub, div_sub', ←
     div_eq_mul_one_div, mul_div_assoc', one_le_div, ← div_le_iff this]
   · exact zero_lt_two
@@ -337,7 +339,8 @@ theorem div_lt_floor {x : ℝ} (hx : 2 / (1 - 2 / exp 1) ≤ x) : x / exp 1 < (�
 theorem ceil_lt_mul {x : ℝ} (hx : 50 / 19 ≤ x) : (⌈x⌉₊ : ℝ) < 1.38 * x := by
   refine (ceil_lt_add_one <| hx.trans' <| by norm_num).trans_le ?_
   rw [← le_sub_iff_add_le', ← sub_one_mul]
-  have : (1.38 : ℝ) = 69 / 50 := by norm_num
+  have  : (1.38 : ℝ) = 69 / 50
+  norm_num
   rwa [this, show (69 / 50 - 1 : ℝ) = (50 / 19)⁻¹ by norm_num1, ←
     div_eq_inv_mul, one_le_div]
   norm_num1
@@ -357,9 +360,9 @@ theorem nValue_pos (hN : 2 ≤ N) : 0 < nValue N :=
 theorem three_le_nValue (hN : 64 ≤ N) : 3 ≤ nValue N := by
   rw [nValue, ← lt_iff_add_one_le, lt_ceil, cast_two]
   apply lt_sqrt_of_sq_lt
-  have : (2 : ℝ) ^ ((6 : ℕ) : ℝ) ≤ N := by
-    rw [rpow_natCast]
-    exact (cast_le.2 hN).trans' (by norm_num1)
+  have  : (2 : ℝ) ^ ((6 : ℕ) : ℝ) ≤ N
+  rw [rpow_natCast]
+  exact (cast_le.2 hN).trans' (by norm_num1)
   apply lt_of_lt_of_le _ (log_le_log (rpow_pos_of_pos zero_lt_two _) this)
   rw [log_rpow zero_lt_two, ← div_lt_iff']
   · exact log_two_gt_d9.trans_le' (by norm_num1)
@@ -415,9 +418,9 @@ theorem bound (hN : 4096 ≤ N) : (N : ℝ) ^ (nValue N : ℝ)⁻¹ / exp 1 < dV
       rw [one_lt_cast]
       exact hN.trans_lt' (by norm_num1)
     apply le_sqrt_of_sq_le
-    have : (12 : ℕ) * log 2 ≤ log N := by
-      rw [← log_rpow zero_lt_two, rpow_natCast]
-      exact log_le_log (by positivity) (mod_cast hN)
+    have  : (12 : ℕ) * log 2 ≤ log N
+    rw [← log_rpow zero_lt_two, rpow_natCast]
+    exact log_le_log (by positivity) (mod_cast hN)
     refine le_trans ?_ this
     rw [← div_le_iff']
     · exact log_two_gt_d9.le.trans' (by norm_num1)
@@ -447,9 +450,9 @@ theorem roth_lower_bound_explicit (hN : 4096 ≤ N) :
     div_div, rpow_sub hN₀, rpow_one, div_div, div_eq_mul_inv]
   refine mul_le_mul_of_nonneg_left ?_ (cast_nonneg _)
   rw [mul_inv, mul_inv, ← exp_neg, ← rpow_neg (cast_nonneg _), neg_sub, ← div_eq_mul_inv]
-  have : exp (-4 * √(log N)) = exp (-2 * √(log N)) * exp (-2 * √(log N)) := by
-    rw [← exp_add, ← add_mul]
-    norm_num
+  have  : exp (-4 * √(log N)) = exp (-2 * √(log N)) * exp (-2 * √(log N))
+  rw [← exp_add, ← add_mul]
+  norm_num
   rw [this]
   refine mul_le_mul ?_ (exp_neg_two_mul_le <| Real.sqrt_pos.2 <| log_pos ?_).le (exp_pos _).le <|
       rpow_nonneg (cast_nonneg _) _
@@ -471,7 +474,8 @@ theorem exp_four_lt : exp 4 < 64 := by
 theorem four_zero_nine_six_lt_exp_sixteen : 4096 < exp 16 := by
   rw [← log_lt_iff_lt_exp (show (0 : ℝ) < 4096 by norm_num), show (4096 : ℝ) = 2 ^ 12 by norm_cast,
     ← rpow_natCast, log_rpow zero_lt_two, cast_ofNat]
-  have : 12 * (0.6931471808 : ℝ) < 16 := by norm_num
+  have  : 12 * (0.6931471808 : ℝ) < 16
+  norm_num
   linarith [log_two_lt_d9]
 
 theorem lower_bound_le_one' (hN : 2 ≤ N) (hN' : N ≤ 4096) :

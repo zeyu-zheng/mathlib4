@@ -196,11 +196,13 @@ theorem ghDist_le_hausdorffDist {X : Type u} [MetricSpace X] [CompactSpace X] [N
   letI : MetricSpace (Subtype s) := by infer_instance
   haveI : CompactSpace (Subtype s) := ⟨isCompact_iff_isCompact_univ.1 ‹IsCompact s›⟩
   haveI : Nonempty (Subtype s) := ⟨Φ' xX⟩
-  have ΦΦ' : Φ = Subtype.val ∘ Φ' := by funext; rfl
-  have ΨΨ' : Ψ = Subtype.val ∘ Ψ' := by funext; rfl
-  have : hausdorffDist (range Φ) (range Ψ) = hausdorffDist (range Φ') (range Ψ') := by
-    rw [ΦΦ', ΨΨ', range_comp, range_comp]
-    exact hausdorffDist_image isometry_subtype_coe
+  have ΦΦ'  : Φ = Subtype.val ∘ Φ'
+  funext; rfl
+  have ΨΨ'  : Ψ = Subtype.val ∘ Ψ'
+  funext; rfl
+  have  : hausdorffDist (range Φ) (range Ψ) = hausdorffDist (range Φ') (range Ψ')
+  rw [ΦΦ', ΨΨ', range_comp, range_comp]
+  exact hausdorffDist_image isometry_subtype_coe
   rw [this]
   -- Embed `s` in `ℓ^∞(ℝ)` through its Kuratowski embedding
   let F := kuratowskiEmbedding (Subtype s)
@@ -334,21 +336,22 @@ theorem hausdorffDist_optimal {X : Type u} [MetricSpace X] [CompactSpace X] [Non
         _ = dist (f (inl x)) z := by rw [hy]
         _ ≤ r := le_of_lt hz
 
-    have I2 : ∀ y : Y, (⨅ x, Fb (inl x, inr y)) ≤ r := by
-      intro y
-      have : f (inr y) ∈ ↑q := Ψrange.subst (mem_range_self _)
-      rcases exists_dist_lt_of_hausdorffDist_lt' this hr
-          (hausdorffEdist_ne_top_of_nonempty_of_bounded p.nonempty q.nonempty p.isCompact.isBounded
-            q.isCompact.isBounded) with
-        ⟨z, zq, hz⟩
-      have : z ∈ range Φ := by rwa [← Φrange] at zq
-      rcases mem_range.1 this with ⟨x, hx⟩
-      calc
-        (⨅ x, Fb (inl x, inr y)) ≤ Fb (inl x, inr y) :=
-          ciInf_le (by simpa only [add_zero] using HD_below_aux2 0) x
-        _ = dist (Φ x) (Ψ y) := rfl
-        _ = dist z (f (inr y)) := by rw [hx]
-        _ ≤ r := le_of_lt hz
+    have I2  : ∀ y : Y, (⨅ x, Fb (inl x, inr y)) ≤ r
+    intro y
+    have : f (inr y) ∈ ↑q := Ψrange.subst (mem_range_self _)
+    rcases exists_dist_lt_of_hausdorffDist_lt' this hr
+        (hausdorffEdist_ne_top_of_nonempty_of_bounded p.nonempty q.nonempty p.isCompact.isBounded
+          q.isCompact.isBounded) with
+      ⟨z, zq, hz⟩
+    have  : z ∈ range Φ
+    rwa [← Φrange] at zq
+    rcases mem_range.1 this with ⟨x, hx⟩
+    calc
+      (⨅ x, Fb (inl x, inr y)) ≤ Fb (inl x, inr y) :=
+        ciInf_le (by simpa only [add_zero] using HD_below_aux2 0) x
+      _ = dist (Φ x) (Ψ y) := rfl
+      _ = dist z (f (inr y)) := by rw [hx]
+      _ ≤ r := le_of_lt hz
 
     simp only [HD, ciSup_le I1, ciSup_le I2, max_le_iff, and_self_iff]
   /- Get the same inequality for any coupling. If the coupling is quite good, the desired
@@ -637,10 +640,10 @@ instance : SecondCountableTopology GHSpace := by
   -- for each `p`, `s p` is a finite `ε`-dense subset of `p` (or rather the metric space
   -- `p.rep` representing `p`)
   choose s hs using this
-  have : ∀ p : GHSpace, ∀ t : Set p.Rep, t.Finite → ∃ n : ℕ, ∃ _ : Equiv t (Fin n), True := by
-    intro p t ht
-    letI : Fintype t := Finite.fintype ht
-    exact ⟨Fintype.card t, Fintype.equivFin t, trivial⟩
+  have  : ∀ p : GHSpace, ∀ t : Set p.Rep, t.Finite → ∃ n : ℕ, ∃ _ : Equiv t (Fin n), True
+  intro p t ht
+  letI : Fintype t := Finite.fintype ht
+  exact ⟨Fintype.card t, Fintype.equivFin t, trivial⟩
   choose N e _ using this
   -- cardinality of the nice finite subset `s p` of `p.rep`, called `N p`
   let N := fun p : GHSpace => N p (s p) (hs p).1
@@ -776,10 +779,10 @@ theorem totallyBounded {t : Set GHSpace} {C : ℝ} {u : ℕ → ℝ} {K : ℕ �
   have εpos : 0 < ε := mul_pos (by norm_num) δpos
   -- choose `n` for which `u n < ε`
   rcases Metric.tendsto_atTop.1 ulim ε εpos with ⟨n, hn⟩
-  have u_le_ε : u n ≤ ε := by
-    have := hn n le_rfl
-    simp only [Real.dist_eq, add_zero, sub_eq_add_neg, neg_zero] at this
-    exact le_of_lt (lt_of_le_of_lt (le_abs_self _) this)
+  have u_le_ε  : u n ≤ ε
+  have := hn n le_rfl
+  simp only [Real.dist_eq, add_zero, sub_eq_add_neg, neg_zero] at this
+  exact le_of_lt (lt_of_le_of_lt (le_abs_self _) this)
   -- construct a finite subset `s p` of `p` which is `ε`-dense and has cardinal `≤ K n`
   have :
     ∀ p : GHSpace,
@@ -795,7 +798,8 @@ theorem totallyBounded {t : Set GHSpace} {C : ℝ} {u : ℕ → ℝ} {K : ℕ �
     · rcases hcov _ (Set.not_not_mem.1 hp) n with ⟨s, ⟨scard, scover⟩⟩
       rcases Cardinal.lt_aleph0.1 (lt_of_le_of_lt scard (Cardinal.nat_lt_aleph0 _)) with ⟨N, hN⟩
       rw [hN, Cardinal.natCast_le] at scard
-      have : #s = #(Fin N) := by rw [hN, Cardinal.mk_fin]
+      have  : #s = #(Fin N)
+      rw [hN, Cardinal.mk_fin]
       cases' Quotient.exact this with E
       use s, N, scard, E
       simp only [scover, imp_true_iff]

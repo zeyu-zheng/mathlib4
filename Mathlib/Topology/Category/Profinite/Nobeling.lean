@@ -312,8 +312,8 @@ theorem lt_iff_lex_lt (l m : Products I) : l < m ↔ List.Lex (·<·) l.val m.va
   cases l; cases m; rw [Subtype.mk_lt_mk]; exact Iff.rfl
 
 instance : IsWellFounded (Products I) (·<·) := by
-  have : (· < · : Products I → _ → _) = (fun l m ↦ List.Lex (·<·) l.val m.val) := by
-    ext; exact lt_iff_lex_lt _ _
+  have  : (· < · : Products I → _ → _) = (fun l m ↦ List.Lex (·<·) l.val m.val)
+  ext; exact lt_iff_lex_lt _ _
   rw [this]
   dsimp [Products]
   rw [(by rfl : (·>· : I → _) = flip (·<·))]
@@ -591,9 +591,9 @@ theorem GoodProducts.finsupp_sum_mem_span_eval {a : I} {as : List I}
   rw [hsm]
   apply Submodule.smul_mem
   apply Submodule.subset_span
-  have hmas : m.val ≤ as := by
-    apply hc
-    simpa only [Finset.mem_coe, Finsupp.mem_support_iff] using hm
+  have hmas  : m.val ≤ as
+  apply hc
+  simpa only [Finset.mem_coe, Finsupp.mem_support_iff] using hm
   refine ⟨⟨a :: m.val, ha.cons_of_le m.prop hmas⟩, ⟨List.cons_le_cons a hmas, ?_⟩⟩
   simp only [Products.eval, List.map, List.prod_cons]
 
@@ -807,8 +807,8 @@ instance : Unique { l // Products.isGood ({fun _ ↦ false} : Set (I → Bool)) 
     apply (List.Lex.nil_left_or_eq_nil l (r := (·<·))).resolve_left
     intro _
     apply hll
-    have he : {Products.nil} ⊆ {m | m < ⟨l,hl⟩} := by
-      simpa only [Products.nil, Products.lt_iff_lex_lt, Set.singleton_subset_iff, Set.mem_setOf_eq]
+    have he  : {Products.nil} ⊆ {m | m < ⟨l,hl⟩}
+    simpa only [Products.nil, Products.lt_iff_lex_lt, Set.singleton_subset_iff, Set.mem_setOf_eq]
     apply Submodule.span_mono (Set.image_subset _ he)
     rw [Products.span_nil_eq_top]
     exact Submodule.mem_top
@@ -1046,15 +1046,16 @@ theorem Products.limitOrdinal (l : Products I) : l.isGood (π C (ord I · < o)) 
     ∃ (o' : Ordinal), o' < o ∧ l.isGood (π C (ord I · < o')) := by
   refine ⟨fun h ↦ ?_, fun ⟨o', ⟨ho', hl⟩⟩ ↦ isGood_mono C (le_of_lt ho') hl⟩
   use Finset.sup l.val.toFinset (fun a ↦ Order.succ (ord I a))
-  have ha : ⊥ < o := by rw [Ordinal.bot_eq_zero, Ordinal.pos_iff_ne_zero]; exact ho.1
-  have hslt : Finset.sup l.val.toFinset (fun a ↦ Order.succ (ord I a)) < o := by
-    simp only [Finset.sup_lt_iff ha, List.mem_toFinset]
-    exact fun b hb ↦ ho.2 _ (prop_of_isGood C (ord I · < o) h b hb)
+  have ha  : ⊥ < o
+  rw [Ordinal.bot_eq_zero, Ordinal.pos_iff_ne_zero]; exact ho.1
+  have hslt  : Finset.sup l.val.toFinset (fun a ↦ Order.succ (ord I a)) < o
+  simp only [Finset.sup_lt_iff ha, List.mem_toFinset]
+  exact fun b hb ↦ ho.2 _ (prop_of_isGood C (ord I · < o) h b hb)
   refine ⟨hslt, fun he ↦ h ?_⟩
-  have hlt : ∀ i ∈ l.val, ord I i < Finset.sup l.val.toFinset (fun a ↦ Order.succ (ord I a)) := by
-    intro i hi
-    simp only [Finset.lt_sup_iff, List.mem_toFinset, Order.lt_succ_iff]
-    exact ⟨i, hi, le_rfl⟩
+  have hlt  : ∀ i ∈ l.val, ord I i < Finset.sup l.val.toFinset (fun a ↦ Order.succ (ord I a))
+  intro i hi
+  simp only [Finset.lt_sup_iff, List.mem_toFinset, Order.lt_succ_iff]
+  exact ⟨i, hi, le_rfl⟩
   rwa [eval_πs_image' C (le_of_lt hslt) hlt, ← eval_πs' C (le_of_lt hslt) hlt,
     Submodule.apply_mem_span_image_iff_mem_span (injective_πs' C _)]
 
@@ -1370,12 +1371,12 @@ theorem union_succ : GoodProducts C = GoodProducts (π C (ord I · < o)) ∪ Max
       have h' := Products.prop_of_isGood_of_contained C _ h hsC
       simp only [Order.lt_succ_iff] at h'
       simp only [not_imp_not] at hh
-      have hh' : ∀ a ∈ l.val, ord I a < o := by
-        intro a ha
-        refine (h' a ha).lt_of_ne ?_
-        rw [ne_eq, ord_term ho a]
-        rintro rfl
-        contradiction
+      have hh'  : ∀ a ∈ l.val, ord I a < o
+      intro a ha
+      refine (h' a ha).lt_of_ne ?_
+      rw [ne_eq, ord_term ho a]
+      rintro rfl
+      contradiction
       rwa [Products.eval_πs_image C hh', ← Products.eval_πs C hh',
         Submodule.apply_mem_span_image_iff_mem_span (injective_πs _ _)]
   · refine h.elim (fun hh ↦ ?_) And.left
@@ -1492,9 +1493,9 @@ theorem GoodProducts.head!_eq_o_of_maxProducts [Inhabited I] (l : ↑(MaxProduct
     (List.head!_mem_self (List.ne_nil_of_mem hm))
   simp only [Order.lt_succ_iff] at this
   refine eq_of_le_of_not_lt this (not_lt.mpr ?_)
-  have h : ord I (term I ho) ≤ ord I l.val.val.head! := by
-    simp only [← ord_term_aux, ord, Ordinal.typein_le_typein, not_lt]
-    exact Products.rel_head!_of_mem hm
+  have h  : ord I (term I ho) ≤ ord I l.val.val.head!
+  simp only [← ord_term_aux, ord, Ordinal.typein_le_typein, not_lt]
+  exact Products.rel_head!_of_mem hm
   rwa [ord_term_aux] at h
 
 theorem GoodProducts.max_eq_o_cons_tail (l : MaxProducts C ho) :
@@ -1511,8 +1512,8 @@ theorem Products.evalCons {l : List I} {a : I}
 theorem Products.max_eq_eval [Inhabited I] (l : Products I) (hl : l.val ≠ [])
     (hlh : l.val.head! = term I ho) :
     Linear_CC' C hsC ho (l.eval C) = l.Tail.eval (C' C ho) := by
-  have hlc : ((term I ho) :: l.Tail.val).Chain' (·>·) := by
-    rw [← max_eq_o_cons_tail ho l hl hlh]; exact l.prop
+  have hlc  : ((term I ho) :: l.Tail.val).Chain' (·>·)
+  rw [← max_eq_o_cons_tail ho l hl hlh]; exact l.prop
   rw [max_eq_o_cons_tail' ho l hl hlh hlc, Products.evalCons]
   ext x
   simp only [Linear_CC', Linear_CC'₁, LocallyConstant.comapₗ, Linear_CC'₀, Subtype.coe_eta,
@@ -1521,11 +1522,11 @@ theorem Products.max_eq_eval [Inhabited I] (l : Products I) (hl : l.val ≠ [])
     Pi.mul_apply]
   rw [CC'₁, CC'₀, Products.eval_eq, Products.eval_eq, Products.eval_eq]
   simp only [mul_ite, mul_one, mul_zero]
-  have hi' : ∀ i, i ∈ l.Tail.val → (x.val i = SwapTrue o x.val i) := by
-    intro i hi
-    simp only [SwapTrue, @eq_comm _ (x.val i), ite_eq_right_iff, ord_term ho]
-    rintro rfl
-    exact ((List.Chain.rel hlc hi).ne rfl).elim
+  have hi'  : ∀ i, i ∈ l.Tail.val → (x.val i = SwapTrue o x.val i)
+  intro i hi
+  simp only [SwapTrue, @eq_comm _ (x.val i), ite_eq_right_iff, ord_term ho]
+  rintro rfl
+  exact ((List.Chain.rel hlc hi).ne rfl).elim
   have H : (∀ i, i ∈ l.Tail.val → (x.val i = true)) =
       (∀ i, i ∈ l.Tail.val → (SwapTrue o x.val i = true)) := by
     apply forall_congr; intro i; apply forall_congr; intro hi; rw [hi' i hi]

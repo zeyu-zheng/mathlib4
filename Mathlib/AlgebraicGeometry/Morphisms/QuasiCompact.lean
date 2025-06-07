@@ -94,10 +94,10 @@ theorem isCompact_basicOpen (X : Scheme) {U : X.Opens} (hU : IsCompact (U : Set 
   let g : s → X.affineOpens := by
     intro V
     use V.1 ⊓ X.basicOpen f
-    have : V.1.1 ⟶ U := by
-      apply homOfLE; change _ ⊆ (U : Set X); rw [e]
-      convert Set.subset_iUnion₂ (s := fun (U : X.affineOpens) (_ : U ∈ s) => (U : Set X))
-        V V.prop using 1
+    have  : V.1.1 ⟶ U
+    apply homOfLE; change _ ⊆ (U : Set X); rw [e]
+    convert Set.subset_iUnion₂ (s := fun (U : X.affineOpens) (_ : U ∈ s) => (U : Set X))
+      V V.prop using 1
     erw [← X.toLocallyRingedSpace.toRingedSpace.basicOpen_res this.op]
     exact IsAffineOpen.basicOpen V.1.prop _
   haveI : Finite s := hs.to_subtype
@@ -164,8 +164,10 @@ theorem quasiCompact_stableUnderBaseChange :
   apply AffineTargetMorphismProperty.StableUnderBaseChange.mk
   intro X Y S _ _ f g h
   let 𝒰 := Scheme.Pullback.openCoverOfRight Y.affineCover.finiteSubcover f g
-  have : Finite 𝒰.J := by dsimp [𝒰]; infer_instance
-  have : ∀ i, CompactSpace (𝒰.obj i) := by intro i; dsimp [𝒰]; infer_instance
+  have  : Finite 𝒰.J
+  dsimp [𝒰]; infer_instance
+  have  : ∀ i, CompactSpace (𝒰.obj i)
+  intro i; dsimp [𝒰]; infer_instance
   exact 𝒰.compactSpace
 
 variable {Z : Scheme.{u}}
@@ -188,8 +190,8 @@ theorem compact_open_induction_on {P : X.Opens → Prop} (S : X.Opens)
   apply @Set.Finite.induction_on _ _ _ hs
   · convert h₁; rw [iSup_eq_bot]; rintro ⟨_, h⟩; exact h.elim
   · intro x s _ hs h₄
-    have : IsCompact (⨆ i : s, (i : X.Opens)).1 := by
-      refine ((isCompactOpen_iff_eq_finset_affine_union _).mpr ?_).1; exact ⟨s, hs, by simp⟩
+    have  : IsCompact (⨆ i : s, (i : X.Opens)).1
+    refine ((isCompactOpen_iff_eq_finset_affine_union _).mpr ?_).1; exact ⟨s, hs, by simp⟩
     convert h₂ _ this x h₄
     rw [iSup_subtype, sup_comm]
     conv_rhs => rw [iSup_subtype]
@@ -210,12 +212,12 @@ theorem exists_pow_mul_eq_zero_of_res_basicOpen_eq_zero_of_isCompact (X : Scheme
   obtain ⟨s, hs, e⟩ := (isCompactOpen_iff_eq_finset_affine_union U.1).mp ⟨hU, U.2⟩
   replace e : U = iSup fun i : s => (i : X.Opens) := by
     ext1; simpa using e
-  have h₁ : ∀ i : s, i.1.1 ≤ U := by
-    intro i
-    change (i : X.Opens) ≤ U
-    rw [e]
-    -- Porting note: `exact le_iSup _ _` no longer works
-    exact le_iSup (fun (i : s) => (i : Opens (X.toPresheafedSpace))) _
+  have h₁  : ∀ i : s, i.1.1 ≤ U
+  intro i
+  change (i : X.Opens) ≤ U
+  rw [e]
+  -- Porting note: `exact le_iSup _ _` no longer works
+  exact le_iSup (fun (i : s) => (i : Opens (X.toPresheafedSpace))) _
   have H' := fun i : s =>
     exists_pow_mul_eq_zero_of_res_basicOpen_eq_zero_of_isAffineOpen X i.1.2
       (X.presheaf.map (homOfLE (h₁ i)).op x) (X.presheaf.map (homOfLE (h₁ i)).op f) ?_
@@ -253,14 +255,15 @@ lemma Scheme.isNilpotent_iff_basicOpen_eq_bot_of_isCompact {X : Scheme.{u}}
     {U : X.Opens} (hU : IsCompact (U : Set X)) (f : Γ(X, U)) :
     IsNilpotent f ↔ X.basicOpen f = ⊥ := by
   refine ⟨X.basicOpen_eq_bot_of_isNilpotent U f, fun hf ↦ ?_⟩
-  have h : (1 : Γ(X, U)) |_ X.basicOpen f = (0 : Γ(X, X.basicOpen f)) := by
-    have e : X.basicOpen f ≤ ⊥ := by rw [hf]
-    rw [← X.presheaf.restrict_restrict e bot_le]
-    have : Subsingleton Γ(X, ⊥) :=
-      CommRingCat.subsingleton_of_isTerminal X.sheaf.isTerminalOfEmpty
-    rw [Subsingleton.eq_zero (1 |_ ⊥)]
-    show X.presheaf.map _ 0 = 0
-    rw [map_zero]
+  have h  : (1 : Γ(X, U)) |_ X.basicOpen f = (0 : Γ(X, X.basicOpen f))
+  have e  : X.basicOpen f ≤ ⊥
+  rw [hf]
+  rw [← X.presheaf.restrict_restrict e bot_le]
+  have : Subsingleton Γ(X, ⊥) :=
+    CommRingCat.subsingleton_of_isTerminal X.sheaf.isTerminalOfEmpty
+  rw [Subsingleton.eq_zero (1 |_ ⊥)]
+  show X.presheaf.map _ 0 = 0
+  rw [map_zero]
   obtain ⟨n, hn⟩ := exists_pow_mul_eq_zero_of_res_basicOpen_eq_zero_of_isCompact X hU 1 f h
   rw [mul_one] at hn
   use n

@@ -242,11 +242,11 @@ def Fix.dest : Fix F → F (Fix F) :=
 
 theorem Fix.rec_eq {α : Type _} (g : F α → α) (x : F (Fix F)) :
     Fix.rec g (Fix.mk x) = g (Fix.rec g <$> x) := by
-  have : recF g ∘ fixToW = Fix.rec g := by
-    ext ⟨x⟩
-    apply recF_eq_of_Wequiv
-    rw [fixToW]
-    apply Wrepr_equiv
+  have  : recF g ∘ fixToW = Fix.rec g
+  ext ⟨x⟩
+  apply recF_eq_of_Wequiv
+  rw [fixToW]
+  apply Wrepr_equiv
   conv =>
     lhs
     rw [Fix.rec, Fix.mk]
@@ -257,11 +257,11 @@ theorem Fix.rec_eq {α : Type _} (g : F α → α) (x : F (Fix F)) :
 
 theorem Fix.ind_aux (a : q.P.A) (f : q.P.B a → q.P.W) :
     Fix.mk (abs ⟨a, fun x => ⟦f x⟧⟩) = ⟦⟨a, f⟩⟧ := by
-  have : Fix.mk (abs ⟨a, fun x => ⟦f x⟧⟩) = ⟦Wrepr ⟨a, f⟩⟧ := by
-    apply Quot.sound; apply Wequiv.abs'
-    rw [PFunctor.W.dest_mk, abs_map, abs_repr, ← abs_map, PFunctor.map_eq]
-    simp only [Wrepr, recF_eq, PFunctor.W.dest_mk, abs_repr, Function.comp]
-    rfl
+  have  : Fix.mk (abs ⟨a, fun x => ⟦f x⟧⟩) = ⟦Wrepr ⟨a, f⟩⟧
+  apply Quot.sound; apply Wequiv.abs'
+  rw [PFunctor.W.dest_mk, abs_map, abs_repr, ← abs_map, PFunctor.map_eq]
+  simp only [Wrepr, recF_eq, PFunctor.W.dest_mk, abs_repr, Function.comp]
+  rfl
   rw [this]
   apply Quot.sound
   apply Wrepr_equiv
@@ -377,26 +377,26 @@ private theorem Cofix.bisim_aux (r : Cofix F → Cofix F → Prop) (h' : ∀ x, 
   rintro ⟨x⟩ ⟨y⟩ rxy
   apply Quot.sound
   let r' x y := r (Quot.mk _ x) (Quot.mk _ y)
-  have : IsPrecongr r' := by
-    intro a b r'ab
-    have h₀ :
-      Quot.mk r <$> Quot.mk Mcongr <$> abs (PFunctor.M.dest a) =
-        Quot.mk r <$> Quot.mk Mcongr <$> abs (PFunctor.M.dest b) :=
-      h _ _ r'ab
-    have h₁ : ∀ u v : q.P.M, Mcongr u v → Quot.mk r' u = Quot.mk r' v := by
-      intro u v cuv
-      apply Quot.sound
-      simp only [r']
-      rw [Quot.sound cuv]
-      apply h'
-    let f : Quot r → Quot r' :=
-      Quot.lift (Quot.lift (Quot.mk r') h₁) <| by
-        rintro ⟨c⟩ ⟨d⟩ rcd
-        exact Quot.sound rcd
-    have : f ∘ Quot.mk r ∘ Quot.mk Mcongr = Quot.mk r' := rfl
-    rw [← this, ← PFunctor.map_map _ _ f, ← PFunctor.map_map _ _ (Quot.mk r), abs_map, abs_map,
-      abs_map, h₀]
-    rw [← PFunctor.map_map _ _ f, ← PFunctor.map_map _ _ (Quot.mk r), abs_map, abs_map, abs_map]
+  have  : IsPrecongr r'
+  intro a b r'ab
+  have h₀ :
+    Quot.mk r <$> Quot.mk Mcongr <$> abs (PFunctor.M.dest a) =
+      Quot.mk r <$> Quot.mk Mcongr <$> abs (PFunctor.M.dest b) :=
+    h _ _ r'ab
+  have h₁ : ∀ u v : q.P.M, Mcongr u v → Quot.mk r' u = Quot.mk r' v := by
+    intro u v cuv
+    apply Quot.sound
+    simp only [r']
+    rw [Quot.sound cuv]
+    apply h'
+  let f : Quot r → Quot r' :=
+    Quot.lift (Quot.lift (Quot.mk r') h₁) <| by
+      rintro ⟨c⟩ ⟨d⟩ rcd
+      exact Quot.sound rcd
+  have : f ∘ Quot.mk r ∘ Quot.mk Mcongr = Quot.mk r' := rfl
+  rw [← this, ← PFunctor.map_map _ _ f, ← PFunctor.map_map _ _ (Quot.mk r), abs_map, abs_map,
+    abs_map, h₀]
+  rw [← PFunctor.map_map _ _ f, ← PFunctor.map_map _ _ (Quot.mk r), abs_map, abs_map, abs_map]
   exact ⟨r', this, rxy⟩
 
 theorem Cofix.bisim_rel (r : Cofix F → Cofix F → Prop)
@@ -535,9 +535,9 @@ theorem mem_supp {α : Type u} (x : F α) (u : α) :
     u ∈ supp x ↔ ∀ a f, abs ⟨a, f⟩ = x → u ∈ f '' univ := by
   rw [supp]; dsimp; constructor
   · intro h a f haf
-    have : Liftp (fun u => u ∈ f '' univ) x := by
-      rw [liftp_iff]
-      exact ⟨a, f, haf.symm, fun i => mem_image_of_mem _ (mem_univ _)⟩
+    have  : Liftp (fun u => u ∈ f '' univ) x
+    rw [liftp_iff]
+    exact ⟨a, f, haf.symm, fun i => mem_image_of_mem _ (mem_univ _)⟩
     exact h this
   intro h p; rw [liftp_iff]
   rintro ⟨a, f, xeq, h'⟩
@@ -554,13 +554,15 @@ theorem has_good_supp_iff {α : Type u} (x : F α) :
       ∃ a f, abs ⟨a, f⟩ = x ∧ ∀ a' f', abs ⟨a', f'⟩ = x → f '' univ ⊆ f' '' univ := by
   constructor
   · intro h
-    have : Liftp (supp x) x := by rw [h]; intro u; exact id
+    have  : Liftp (supp x) x
+    rw [h]; intro u; exact id
     rw [liftp_iff] at this
     rcases this with ⟨a, f, xeq, h'⟩
     refine ⟨a, f, xeq.symm, ?_⟩
     intro a' f' h''
     rintro u ⟨i, _, hfi⟩
-    have : u ∈ supp x := by rw [← hfi]; apply h'
+    have  : u ∈ supp x
+    rw [← hfi]; apply h'
     exact (mem_supp x u).mp this _ _ h''
   rintro ⟨a, f, xeq, h⟩ p; rw [liftp_iff]; constructor
   · rintro ⟨a', f', xeq', h'⟩ u usuppx

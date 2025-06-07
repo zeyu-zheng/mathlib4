@@ -67,7 +67,8 @@ variable {T : E →ₗ[𝕜] E} (hT : T.IsSymmetric)
 theorem invariant_orthogonalComplement_eigenspace (μ : 𝕜) (v : E) (hv : v ∈ (eigenspace T μ)ᗮ) :
     T v ∈ (eigenspace T μ)ᗮ := by
   intro w hw
-  have : T w = (μ : 𝕜) • w := by rwa [mem_eigenspace_iff] at hw
+  have  : T w = (μ : 𝕜) • w
+  rwa [mem_eigenspace_iff] at hw
   simp [← hT w, this, inner_smul_left, hv w hw]
 
 /-- The eigenvalues of a self-adjoint operator are real. -/
@@ -262,23 +263,25 @@ theorem inner_product_apply_eigenvector {μ : 𝕜} {v : E} {T : E →ₗ[𝕜] 
 theorem eigenvalue_nonneg_of_nonneg {μ : ℝ} {T : E →ₗ[𝕜] E} (hμ : HasEigenvalue T μ)
     (hnn : ∀ x : E, 0 ≤ RCLike.re ⟪x, T x⟫) : 0 ≤ μ := by
   obtain ⟨v, hv⟩ := hμ.exists_hasEigenvector
-  have hpos : (0 : ℝ) < ‖v‖ ^ 2 := by simpa only [sq_pos_iff, norm_ne_zero_iff] using hv.2
-  have : RCLike.re ⟪v, T v⟫ = μ * ‖v‖ ^ 2 := by
-    have := congr_arg RCLike.re (inner_product_apply_eigenvector hv.1)
-    -- Porting note: why can't `exact_mod_cast` do this? These lemmas are marked `norm_cast`
-    rw [← RCLike.ofReal_pow, ← RCLike.ofReal_mul] at this
-    exact mod_cast this
+  have hpos  : (0 : ℝ) < ‖v‖ ^ 2
+  simpa only [sq_pos_iff, norm_ne_zero_iff] using hv.2
+  have  : RCLike.re ⟪v, T v⟫ = μ * ‖v‖ ^ 2
+  have := congr_arg RCLike.re (inner_product_apply_eigenvector hv.1)
+  -- Porting note: why can't `exact_mod_cast` do this? These lemmas are marked `norm_cast`
+  rw [← RCLike.ofReal_pow, ← RCLike.ofReal_mul] at this
+  exact mod_cast this
   exact (mul_nonneg_iff_of_pos_right hpos).mp (this ▸ hnn v)
 
 theorem eigenvalue_pos_of_pos {μ : ℝ} {T : E →ₗ[𝕜] E} (hμ : HasEigenvalue T μ)
     (hnn : ∀ x : E, 0 < RCLike.re ⟪x, T x⟫) : 0 < μ := by
   obtain ⟨v, hv⟩ := hμ.exists_hasEigenvector
-  have hpos : (0 : ℝ) < ‖v‖ ^ 2 := by simpa only [sq_pos_iff, norm_ne_zero_iff] using hv.2
-  have : RCLike.re ⟪v, T v⟫ = μ * ‖v‖ ^ 2 := by
-    have := congr_arg RCLike.re (inner_product_apply_eigenvector hv.1)
-    -- Porting note: why can't `exact_mod_cast` do this? These lemmas are marked `norm_cast`
-    rw [← RCLike.ofReal_pow, ← RCLike.ofReal_mul] at this
-    exact mod_cast this
+  have hpos  : (0 : ℝ) < ‖v‖ ^ 2
+  simpa only [sq_pos_iff, norm_ne_zero_iff] using hv.2
+  have  : RCLike.re ⟪v, T v⟫ = μ * ‖v‖ ^ 2
+  have := congr_arg RCLike.re (inner_product_apply_eigenvector hv.1)
+  -- Porting note: why can't `exact_mod_cast` do this? These lemmas are marked `norm_cast`
+  rw [← RCLike.ofReal_pow, ← RCLike.ofReal_mul] at this
+  exact mod_cast this
   exact (mul_pos_iff_of_pos_right hpos).mp (this ▸ hnn v)
 
 end Nonneg

@@ -261,11 +261,13 @@ lemma segment_inter_eq_endpoint_of_linearIndependent_sub
   rw [segment_eq_image, mem_image] at hzt hzs
   rcases hzt with ⟨p, ⟨p0, p1⟩, rfl⟩
   rcases hzs with ⟨q, ⟨q0, q1⟩, H⟩
-  have Hx : x = (x - c) + c := by abel
-  have Hy : y = (y - c) + c := by abel
+  have Hx  : x = (x - c) + c
+  abel
+  have Hy  : y = (y - c) + c
+  abel
   rw [Hx, Hy, smul_add, smul_add] at H
-  have : c + q • (y - c) = c + p • (x - c) := by
-    convert H using 1 <;> simp [sub_smul]
+  have  : c + q • (y - c) = c + p • (x - c)
+  convert H using 1 <;> simp [sub_smul]
   obtain ⟨rfl, rfl⟩ : p = 0 ∧ q = 0 := h.eq_zero_of_pair' ((add_right_inj c).1 this).symm
   simp
 

@@ -715,12 +715,12 @@ theorem span_image_eq_map_total (s : Set α) :
     intro i hi
     exact ⟨_, Finsupp.single_mem_supported R 1 hi.1, by simp [hi.2]⟩
   · refine map_le_iff_le_comap.2 fun z hz => ?_
-    have : ∀ i, z i • v i ∈ span R (v '' s) := by
-      intro c
-      haveI := Classical.decPred fun x => x ∈ s
-      by_cases h : c ∈ s
-      · exact smul_mem _ _ (subset_span (Set.mem_image_of_mem _ h))
-      · simp [(Finsupp.mem_supported' R _).1 hz _ h]
+    have  : ∀ i, z i • v i ∈ span R (v '' s)
+    intro c
+    haveI := Classical.decPred fun x => x ∈ s
+    by_cases h : c ∈ s
+    · exact smul_mem _ _ (subset_span (Set.mem_image_of_mem _ h))
+    · simp [(Finsupp.mem_supported' R _).1 hz _ h]
     -- Porting note: `rw` is required to infer metavariables in `sum_mem`.
     rw [mem_comap, total_apply]
     refine sum_mem ?_

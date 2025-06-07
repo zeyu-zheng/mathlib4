@@ -49,7 +49,8 @@ lemma hfunext {α α' : Sort u} {β : α → Sort v} {β' : α' → Sort v} {f :
     (hα : α = α') (h : ∀a a', HEq a a' → HEq (f a) (f' a')) : HEq f f' := by
   subst hα
   have : ∀a, HEq (f a) (f' a) := fun a ↦ h a a (HEq.refl a)
-  have : β = β' := by funext a; exact type_eq_of_heq (this a)
+  have  : β = β'
+  funext a; exact type_eq_of_heq (this a)
   subst this
   apply heq_of_eq
   funext a
@@ -251,12 +252,12 @@ theorem not_surjective_Type {α : Type u} (f : α → Type max u v) : ¬Surjecti
   let T : Type max u v := Sigma f
   cases hf (Set T) with | intro U hU =>
   let g : Set T → T := fun s ↦ ⟨U, cast hU.symm s⟩
-  have hg : Injective g := by
-    intro s t h
-    suffices cast hU (g s).2 = cast hU (g t).2 by
-      simp only [cast_cast, cast_eq] at this
-      assumption
-    · congr
+  have hg : Injective g
+  intro s t h
+  suffices cast hU (g s).2 = cast hU (g t).2 by
+    simp only [cast_cast, cast_eq] at this
+    assumption
+  · congr
   exact cantor_injective g hg
 
 /-- `g` is a partial inverse to `f` (an injective but not necessarily

@@ -235,9 +235,9 @@ theorem eval_basis_of_ne (hij : i ≠ j) (hj : j ∈ s) : (Lagrange.basis s v i)
 @[simp]
 theorem natDegree_basis (hvs : Set.InjOn v s) (hi : i ∈ s) :
     (Lagrange.basis s v i).natDegree = s.card - 1 := by
-  have H : ∀ j, j ∈ s.erase i → basisDivisor (v i) (v j) ≠ 0 := by
-    simp_rw [Ne, mem_erase, basisDivisor_eq_zero_iff]
-    exact fun j ⟨hij₁, hj⟩ hij₂ => hij₁ (hvs hj hi hij₂.symm)
+  have H  : ∀ j, j ∈ s.erase i → basisDivisor (v i) (v j) ≠ 0
+  simp_rw [Ne, mem_erase, basisDivisor_eq_zero_iff]
+  exact fun j ⟨hij₁, hj⟩ hij₂ => hij₁ (hvs hj hi hij₂.symm)
   rw [← card_erase_of_mem hi, card_eq_sum_ones]
   convert natDegree_prod _ _ H using 1
   refine sum_congr rfl fun j hj => (natDegree_basisDivisor_of_ne ?_).symm
@@ -404,9 +404,9 @@ theorem interpolate_eq_sum_interpolate_insert_sdiff (hvt : Set.InjOn v t) (hs : 
     intro i hi
     have hs : 1 ≤ s.card := Nonempty.card_pos ⟨_, hi⟩
     have hst' : s.card ≤ t.card := card_le_card hst
-    have H : t.card = 1 + (t.card - s.card) + (s.card - 1) := by
-      rw [add_assoc, tsub_add_tsub_cancel hst' hs, ← add_tsub_assoc_of_le (hs.trans hst'),
-        Nat.succ_add_sub_one, zero_add]
+    have H  : t.card = 1 + (t.card - s.card) + (s.card - 1)
+    rw [add_assoc, tsub_add_tsub_cancel hst' hs, ← add_tsub_assoc_of_le (hs.trans hst'),
+      Nat.succ_add_sub_one, zero_add]
     rw [degree_basis (Set.InjOn.mono hst hvt) hi, H, WithBot.coe_add, Nat.cast_withBot,
       WithBot.add_lt_add_iff_right (@WithBot.coe_ne_bot _ (s.card - 1))]
     convert degree_interpolate_lt _
@@ -531,7 +531,8 @@ theorem eval_nodal_derivative_eval_node_eq [DecidableEq ι] {i : ι} (hi : i ∈
 @[simp] theorem nodal_subgroup_eq_X_pow_card_sub_one [IsDomain R]
   (G : Subgroup Rˣ) [Fintype G] :
   nodal (G : Set Rˣ).toFinset ((↑) : Rˣ → R) = X ^ (Fintype.card G) - 1 := by
-  have h : degree (1 : R[X]) < degree ((X : R[X]) ^ Fintype.card G) := by simp [Fintype.card_pos]
+  have h  : degree (1 : R[X]) < degree ((X : R[X]) ^ Fintype.card G)
+  simp [Fintype.card_pos]
   apply eq_of_degree_le_of_eval_index_eq (v := ((↑) : Rˣ → R)) (G : Set Rˣ).toFinset
   · exact Set.injOn_of_injective Units.ext
   · simp

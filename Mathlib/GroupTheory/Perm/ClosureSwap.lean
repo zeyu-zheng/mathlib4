@@ -60,11 +60,11 @@ an orbit, then there exists a generator that sends some element of T into the co
 theorem exists_smul_not_mem_of_subset_orbit_closure (S : Set G) (T : Set α) {a : α}
     (hS : ∀ g ∈ S, g⁻¹ ∈ S) (subset : T ⊆ orbit (closure S) a) (not_mem : a ∉ T)
     (nonempty : T.Nonempty) : ∃ σ ∈ S, ∃ a ∈ T, σ • a ∉ T := by
-  have key0 : ¬ closure S ≤ stabilizer G T := by
-    have ⟨b, hb⟩ := nonempty
-    obtain ⟨σ, rfl⟩ := subset hb
-    contrapose! not_mem with h
-    exact smul_mem_smul_set_iff.mp ((h σ.2).symm ▸ hb)
+  have key0  : ¬ closure S ≤ stabilizer G T
+  have ⟨b, hb⟩ := nonempty
+  obtain ⟨σ, rfl⟩ := subset hb
+  contrapose! not_mem with h
+  exact smul_mem_smul_set_iff.mp ((h σ.2).symm ▸ hb)
   contrapose! key0
   refine (closure_le _).mpr fun σ hσ ↦ ?_
   simp_rw [SetLike.mem_coe, mem_stabilizer_iff, Set.ext_iff, mem_smul_set_iff_inv_smul_mem]

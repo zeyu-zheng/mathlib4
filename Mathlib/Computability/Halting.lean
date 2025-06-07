@@ -80,16 +80,16 @@ theorem merge' {f g : α →. σ} (hf : Partrec f) (hg : Partrec g) :
   refine
     ⟨k', ((nat_iff.2 hk).comp Computable.encode).bind (Computable.decode.ofOption.comp snd).to₂,
       fun a => ?_⟩
-  have : ∀ x ∈ k' a, x ∈ f a ∨ x ∈ g a := by
-    intro x h'
-    simp only [k', exists_prop, mem_coe, mem_bind_iff, Option.mem_def] at h'
-    obtain ⟨n, hn, hx⟩ := h'
-    have := (H _).1 _ hn
-    simp only [decode₂_encode, coe_some, bind_some, mem_map_iff] at this
-    obtain ⟨a', ha, rfl⟩ | ⟨a', ha, rfl⟩ := this <;> simp only [encodek, Option.some_inj] at hx <;>
-      rw [hx] at ha
-    · exact Or.inl ha
-    · exact Or.inr ha
+  have  : ∀ x ∈ k' a, x ∈ f a ∨ x ∈ g a
+  intro x h'
+  simp only [k', exists_prop, mem_coe, mem_bind_iff, Option.mem_def] at h'
+  obtain ⟨n, hn, hx⟩ := h'
+  have := (H _).1 _ hn
+  simp only [decode₂_encode, coe_some, bind_some, mem_map_iff] at this
+  obtain ⟨a', ha, rfl⟩ | ⟨a', ha, rfl⟩ := this <;> simp only [encodek, Option.some_inj] at hx <;>
+    rw [hx] at ha
+  · exact Or.inl ha
+  · exact Or.inr ha
   refine ⟨this, ⟨fun h => (this _ ⟨h, rfl⟩).imp Exists.fst Exists.fst, ?_⟩⟩
   intro h
   rw [bind_dom]

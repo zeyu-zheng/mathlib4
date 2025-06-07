@@ -50,9 +50,9 @@ theorem separate_convex_open_set [TopologicalSpace E] [AddCommGroup E] [Topologi
   have := exists_extension_of_le_sublinear f (gauge s) (fun c hc => gauge_smul_of_nonneg hc.le)
     (gauge_add_le hs₁ <| absorbent_nhds_zero <| hs₂.mem_nhds hs₀) ?_
   · obtain ⟨φ, hφ₁, hφ₂⟩ := this
-    have hφ₃ : φ x₀ = 1 := by
-      rw [← f.domain.coe_mk x₀ (Submodule.mem_span_singleton_self _), hφ₁,
-        LinearPMap.mkSpanSingleton'_apply_self]
+    have hφ₃  : φ x₀ = 1
+    rw [← f.domain.coe_mk x₀ (Submodule.mem_span_singleton_self _), hφ₁,
+      LinearPMap.mkSpanSingleton'_apply_self]
     have hφ₄ : ∀ x ∈ s, φ x < 1 := fun x hx =>
       (hφ₂ x).trans_lt (gauge_lt_one_of_mem_of_isOpen hs₂ hx)
     refine ⟨⟨φ, ?_⟩, hφ₃, hφ₄⟩
@@ -128,11 +128,11 @@ theorem geometric_hahn_banach_open_open (hs₁ : Convex ℝ s) (hs₂ : IsOpen s
   obtain rfl | ⟨b₀, hb₀⟩ := t.eq_empty_or_nonempty
   · exact ⟨0, 1, fun a _ha => by norm_num, by simp⟩
   obtain ⟨f, s, hf₁, hf₂⟩ := geometric_hahn_banach_open hs₁ hs₂ ht₁ disj
-  have hf : IsOpenMap f := by
-    refine f.isOpenMap_of_ne_zero ?_
-    rintro rfl
-    simp_rw [ContinuousLinearMap.zero_apply] at hf₁ hf₂
-    exact (hf₁ _ ha₀).not_le (hf₂ _ hb₀)
+  have hf  : IsOpenMap f
+  refine f.isOpenMap_of_ne_zero ?_
+  rintro rfl
+  simp_rw [ContinuousLinearMap.zero_apply] at hf₁ hf₂
+  exact (hf₁ _ ha₀).not_le (hf₂ _ hb₀)
   refine ⟨f, s, hf₁, image_subset_iff.1 (?_ : f '' t ⊆ Ioi s)⟩
   rw [← interior_Ici]
   refine interior_maximal (image_subset_iff.2 hf₂) (f.isOpenMap_of_ne_zero ?_ _ ht₃)

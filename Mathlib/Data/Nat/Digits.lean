@@ -273,7 +273,8 @@ This section contains various lemmas of properties relating to `digits` and `ofD
 theorem digits_eq_nil_iff_eq_zero {b n : ℕ} : digits b n = [] ↔ n = 0 := by
   constructor
   · intro h
-    have : ofDigits b (digits b n) = ofDigits b [] := by rw [h]
+    have  : ofDigits b (digits b n) = ofDigits b []
+    rw [h]
     convert this
     rw [ofDigits_digits]
   · rintro rfl
@@ -465,7 +466,8 @@ theorem pow_length_le_mul_ofDigits {b : ℕ} {l : List ℕ} (hl : l ≠ []) (hl2
     List.length_dropLast, ofDigits_singleton, add_comm (l.length - 1), pow_add, pow_one]
   apply Nat.mul_le_mul_left
   refine le_trans ?_ (Nat.le_add_left _ _)
-  have : 0 < l.getLast hl := by rwa [pos_iff_ne_zero]
+  have  : 0 < l.getLast hl
+  rwa [pos_iff_ne_zero]
   convert Nat.mul_le_mul_left ((b + 2) ^ (l.length - 1)) this using 1
   rw [Nat.mul_one]
 
@@ -796,8 +798,10 @@ namespace NormDigits
 theorem digits_succ (b n m r l) (e : r + b * m = n) (hr : r < b)
     (h : Nat.digits b m = l ∧ 1 < b ∧ 0 < m) : (Nat.digits b n = r :: l) ∧ 1 < b ∧ 0 < n := by
   rcases h with ⟨h, b2, m0⟩
-  have b0 : 0 < b := by omega
-  have n0 : 0 < n := by linarith [mul_pos b0 m0]
+  have b0  : 0 < b
+  omega
+  have n0  : 0 < n
+  linarith [mul_pos b0 m0]
   refine ⟨?_, b2, n0⟩
   obtain ⟨rfl, rfl⟩ := (Nat.div_mod_unique b0).2 ⟨e, hr⟩
   subst h; exact Nat.digits_def' b2 n0

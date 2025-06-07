@@ -42,17 +42,17 @@ theorem not_zero {n : ℕ} (h1 : ProblemPredicate n) : n ≠ 0 :=
   digits_ne_nil_iff_ne_zero.mp h2
 
 theorem ge_100 {n : ℕ} (h1 : ProblemPredicate n) : 100 ≤ n := by
-  have h2 : 10 ^ 3 ≤ 10 * n := by
-    rw [← h1.left]
-    refine Nat.base_pow_length_digits_le 10 n ?_ (not_zero h1)
-    simp
+  have h2  : 10 ^ 3 ≤ 10 * n
+  rw [← h1.left]
+  refine Nat.base_pow_length_digits_le 10 n ?_ (not_zero h1)
+  simp
   linarith
 
 theorem lt_1000 {n : ℕ} (h1 : ProblemPredicate n) : n < 1000 := by
-  have h2 : n < 10 ^ 3 := by
-    rw [← h1.left]
-    refine Nat.lt_base_pow_length_digits ?_
-    simp
+  have h2  : n < 10 ^ 3
+  rw [← h1.left]
+  refine Nat.lt_base_pow_length_digits ?_
+  simp
   linarith
 
 /-

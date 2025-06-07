@@ -118,8 +118,8 @@ theorem sl_non_abelian [Fintype n] [Nontrivial R] (h : 1 < Fintype.card n) :
   let A := Eb R i j hij
   let B := Eb R j i hij.symm
   intro c
-  have c' : A.val * B.val = B.val * A.val := by
-    rw [← sub_eq_zero, ← sl_bracket, c.trivial, ZeroMemClass.coe_zero]
+  have c'  : A.val * B.val = B.val * A.val
+  rw [← sub_eq_zero, ← sl_bracket, c.trivial, ZeroMemClass.coe_zero]
   simpa [A, B, stdBasisMatrix, Matrix.mul_apply, hij] using congr_fun (congr_fun c' i) i
 
 end SpecialLinear
@@ -243,8 +243,8 @@ theorem s_as_blocks : S l R = Matrix.fromBlocks 1 0 0 (-1) := by
   rfl
 
 theorem jd_transform [Fintype l] : (PD l R)ᵀ * JD l R * PD l R = (2 : R) • S l R := by
-  have h : (PD l R)ᵀ * JD l R = Matrix.fromBlocks 1 1 1 (-1) := by
-    simp [PD, JD, Matrix.fromBlocks_transpose, Matrix.fromBlocks_multiply]
+  have h  : (PD l R)ᵀ * JD l R = Matrix.fromBlocks 1 1 1 (-1)
+  simp [PD, JD, Matrix.fromBlocks_transpose, Matrix.fromBlocks_multiply]
   rw [h, PD, s_as_blocks, Matrix.fromBlocks_multiply, Matrix.fromBlocks_smul]
   simp [two_smul]
 

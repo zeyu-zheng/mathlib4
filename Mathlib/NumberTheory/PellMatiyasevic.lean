@@ -233,9 +233,9 @@ theorem n_lt_a_pow : ∀ n : ℕ, n < a ^ n
   | 0 => Nat.le_refl 1
   | n + 1 => by
     have IH := n_lt_a_pow n
-    have : a ^ n + a ^ n ≤ a ^ n * a := by
-      rw [← mul_two]
-      exact Nat.mul_le_mul_left _ a1
+    have  : a ^ n + a ^ n ≤ a ^ n * a
+    rw [← mul_two]
+    exact Nat.mul_le_mul_left _ a1
     simp only [_root_.pow_succ, gt_iff_lt]
     refine lt_of_lt_of_le ?_ this
     exact add_lt_add_of_lt_of_le IH (lt_of_le_of_lt (Nat.zero_le _) IH)
@@ -450,12 +450,12 @@ theorem dvd_of_ysq_dvd {n t} (h : yn a1 n * yn a1 n ∣ yn a1 t) : yn a1 n ∣ t
 
 theorem pellZd_succ_succ (n) :
     pellZd a1 (n + 2) + pellZd a1 n = (2 * a : ℕ) * pellZd a1 (n + 1) := by
-  have : (1 : ℤ√(d a1)) + ⟨a, 1⟩ * ⟨a, 1⟩ = ⟨a, 1⟩ * (2 * a) := by
-    rw [Zsqrtd.natCast_val]
-    change (⟨_, _⟩ : ℤ√(d a1)) = ⟨_, _⟩
-    rw [dz_val]
-    dsimp [az]
-    ext <;> dsimp <;> ring_nf
+  have  : (1 : ℤ√(d a1)) + ⟨a, 1⟩ * ⟨a, 1⟩ = ⟨a, 1⟩ * (2 * a)
+  rw [Zsqrtd.natCast_val]
+  change (⟨_, _⟩ : ℤ√(d a1)) = ⟨_, _⟩
+  rw [dz_val]
+  dsimp [az]
+  ext <;> dsimp <;> ring_nf
   simpa [mul_add, mul_comm, mul_left_comm, add_comm] using congr_arg (· * pellZd a1 n) this
 
 theorem xy_succ_succ (n) :
@@ -521,9 +521,9 @@ theorem xn_modEq_x2n_add_lem (n j) : xn a1 n ∣ d a1 * yn a1 n * (yn a1 n * xn 
   have h1 : d a1 * yn a1 n * (yn a1 n * xn a1 j) + xn a1 j =
       (d a1 * yn a1 n * yn a1 n + 1) * xn a1 j := by
     simp [add_mul, mul_assoc]
-  have h2 : d a1 * yn a1 n * yn a1 n + 1 = xn a1 n * xn a1 n := by
-    zify at *
-    apply add_eq_of_eq_sub' (Eq.symm (pell_eqz a1 n))
+  have h2  : d a1 * yn a1 n * yn a1 n + 1 = xn a1 n * xn a1 n
+  zify at *
+  apply add_eq_of_eq_sub' (Eq.symm (pell_eqz a1 n))
   rw [h2] at h1; rw [h1, mul_assoc]; exact dvd_mul_right _ _
 
 theorem xn_modEq_x2n_add (n j) : xn a1 (2 * n + j) + xn a1 j ≡ 0 [MOD xn a1 n] := by
@@ -534,15 +534,15 @@ theorem xn_modEq_x2n_add (n j) : xn a1 (2 * n + j) + xn a1 j ≡ 0 [MOD xn a1 n]
     ((dvd_mul_right _ _).mul_left _).modEq_zero_nat.add (xn_modEq_x2n_add_lem _ _ _).modEq_zero_nat
 
 theorem xn_modEq_x2n_sub_lem {n j} (h : j ≤ n) : xn a1 (2 * n - j) + xn a1 j ≡ 0 [MOD xn a1 n] := by
-  have h1 : xz a1 n ∣ d a1 * yz a1 n * yz a1 (n - j) + xz a1 j := by
-    rw [yz_sub _ h, mul_sub_left_distrib, sub_add_eq_add_sub]
-    exact
-      dvd_sub
-        (by
-          delta xz; delta yz
-          rw [mul_comm (xn _ _ : ℤ)]
-          exact mod_cast (xn_modEq_x2n_add_lem _ n j))
-        ((dvd_mul_right _ _).mul_left _)
+  have h1  : xz a1 n ∣ d a1 * yz a1 n * yz a1 (n - j) + xz a1 j
+  rw [yz_sub _ h, mul_sub_left_distrib, sub_add_eq_add_sub]
+  exact
+    dvd_sub
+      (by
+        delta xz; delta yz
+        rw [mul_comm (xn _ _ : ℤ)]
+        exact mod_cast (xn_modEq_x2n_add_lem _ n j))
+      ((dvd_mul_right _ _).mul_left _)
   rw [two_mul, add_tsub_assoc_of_le h, xn_add, add_assoc, ← zero_add 0]
   exact
     (dvd_mul_right _ _).modEq_zero_nat.add

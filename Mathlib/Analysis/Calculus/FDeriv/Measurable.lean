@@ -198,7 +198,8 @@ theorem differentiable_set_subset_D :
   intro x hx
   rw [D, mem_iInter]
   intro e
-  have : (0 : ℝ) < (1 / 2) ^ e := by positivity
+  have  : (0 : ℝ) < (1 / 2) ^ e
+  positivity
   rcases mem_A_of_differentiable this hx.1 with ⟨R, R_pos, hR⟩
   obtain ⟨n, hn⟩ : ∃ n : ℕ, (1 / 2) ^ n < R :=
     exists_pow_lt_of_lt_one R_pos (by norm_num : (1 : ℝ) / 2 < 1)
@@ -451,9 +452,9 @@ theorem A_mem_nhdsWithin_Ioi {L : F} {r ε x : ℝ} (hx : x ∈ A f L r ε) : A 
   obtain ⟨s, s_gt, s_lt⟩ : ∃ s : ℝ, r / 2 < s ∧ s < r' := exists_between rr'.1
   have : s ∈ Ioc (r / 2) r := ⟨s_gt, le_of_lt (s_lt.trans_le rr'.2)⟩
   refine ⟨x + r' - s, by simp only [mem_Ioi]; linarith, fun x' hx' => ⟨s, this, ?_⟩⟩
-  have A : Icc x' (x' + s) ⊆ Icc x (x + r') := by
-    apply Icc_subset_Icc hx'.1.le
-    linarith [hx'.2]
+  have A  : Icc x' (x' + s) ⊆ Icc x (x + r')
+  apply Icc_subset_Icc hx'.1.le
+  linarith [hx'.2]
   intro y hy z hz
   exact hr' y (A hy) z (A hz)
 
@@ -477,7 +478,8 @@ theorem le_of_mem_A {r ε : ℝ} {L : F} {x : ℝ} (hx : x ∈ A f L r ε) {y z 
     (hy : y ∈ Icc x (x + r / 2)) (hz : z ∈ Icc x (x + r / 2)) :
   ‖f z - f y - (z - y) • L‖ ≤ ε * r := by
   rcases hx with ⟨r', r'mem, hr'⟩
-  have A : x + r / 2 ≤ x + r' := by linarith [r'mem.1]
+  have A  : x + r / 2 ≤ x + r'
+  linarith [r'mem.1]
   exact hr' _ ((Icc_subset_Icc le_rfl A) hy) _ ((Icc_subset_Icc le_rfl A) hz)
 
 theorem mem_A_of_differentiable {ε : ℝ} (hε : 0 < ε) {x : ℝ}
@@ -599,17 +601,17 @@ theorem D_subset_differentiable_set {K : Set F} (hK : IsComplete K) :
   /- For definiteness, use `L0 e = L e (n e) (n e)`, to have a single sequence. We claim that this
     is a Cauchy sequence. -/
   let L0 : ℕ → F := fun e => L e (n e) (n e)
-  have : CauchySeq L0 := by
-    rw [Metric.cauchySeq_iff']
-    intro ε εpos
-    obtain ⟨e, he⟩ : ∃ e : ℕ, (1 / 2) ^ e < ε / 12 :=
-      exists_pow_lt_of_lt_one (div_pos εpos (by norm_num)) (by norm_num)
-    refine ⟨e, fun e' he' => ?_⟩
-    rw [dist_comm, dist_eq_norm]
-    calc
-      ‖L0 e - L0 e'‖ ≤ 12 * (1 / 2) ^ e := M _ _ _ _ _ _ le_rfl le_rfl le_rfl le_rfl he'
-      _ < 12 * (ε / 12) := mul_lt_mul' le_rfl he (le_of_lt P) (by norm_num)
-      _ = ε := by field_simp [(by norm_num : (12 : ℝ) ≠ 0)]
+  have  : CauchySeq L0
+  rw [Metric.cauchySeq_iff']
+  intro ε εpos
+  obtain ⟨e, he⟩ : ∃ e : ℕ, (1 / 2) ^ e < ε / 12 :=
+    exists_pow_lt_of_lt_one (div_pos εpos (by norm_num)) (by norm_num)
+  refine ⟨e, fun e' he' => ?_⟩
+  rw [dist_comm, dist_eq_norm]
+  calc
+    ‖L0 e - L0 e'‖ ≤ 12 * (1 / 2) ^ e := M _ _ _ _ _ _ le_rfl le_rfl le_rfl le_rfl he'
+    _ < 12 * (ε / 12) := mul_lt_mul' le_rfl he (le_of_lt P) (by norm_num)
+    _ = ε := by field_simp [(by norm_num : (12 : ℝ) ≠ 0)]
 
   -- As it is Cauchy, the sequence `L0` converges, to a limit `f'` in `K`.
   obtain ⟨f', f'K, hf'⟩ : ∃ f' ∈ K, Tendsto L0 atTop (𝓝 f') :=
@@ -807,8 +809,10 @@ lemma isOpen_A_with_param {r s : ℝ} (hf : Continuous f.uncurry) (L : E →L[�
   rcases exists_between hrt with ⟨t', hrt', ht't⟩
   obtain ⟨b, b_lt, hb⟩ : ∃ b, b < s * r ∧ ∀ y ∈ closedBall x t, ∀ z ∈ closedBall x t,
       ‖f a z - f a y - (L z - L y)‖ ≤ b := by
-    have B : Continuous (fun (p : E × E) ↦ ‖f a p.2 - f a p.1 - (L p.2 - L p.1)‖) := by fun_prop
-    have C : (closedBall x t ×ˢ closedBall x t).Nonempty := by simp; linarith
+    have B  : Continuous (fun (p : E × E) ↦ ‖f a p.2 - f a p.1 - (L p.2 - L p.1)‖)
+    fun_prop
+    have C  : (closedBall x t ×ˢ closedBall x t).Nonempty
+    simp; linarith
     rcases ((isCompact_closedBall x t).prod (isCompact_closedBall x t)).exists_isMaxOn
       C B.continuousOn with ⟨p, pt, hp⟩
     simp only [mem_prod, mem_closedBall] at pt
@@ -939,12 +943,12 @@ theorem stronglyMeasurable_deriv_with_param [LocallyCompactSpace 𝕜] [Measurab
     have : range (fun (p : α × 𝕜) ↦ deriv (f p.1) p.2)
         ⊆ closure (Submodule.span 𝕜 (range f.uncurry)) := by
       rintro - ⟨p, rfl⟩
-      have A : deriv (f p.1) p.2 ∈ closure (Submodule.span 𝕜 (range (f p.1))) := by
-        rw [← image_univ]
-        apply range_deriv_subset_closure_span_image _ dense_univ (mem_range_self _)
-      have B : range (f p.1) ⊆ range (f.uncurry) := by
-        rintro - ⟨x, rfl⟩
-        exact mem_range_self (p.1, x)
+      have A  : deriv (f p.1) p.2 ∈ closure (Submodule.span 𝕜 (range (f p.1)))
+      rw [← image_univ]
+      apply range_deriv_subset_closure_span_image _ dense_univ (mem_range_self _)
+      have B  : range (f p.1) ⊆ range (f.uncurry)
+      rintro - ⟨x, rfl⟩
+      exact mem_range_self (p.1, x)
       exact closure_mono (Submodule.span_mono B) A
     exact (isSeparable_range hf).span.closure.mono this
   · exact (measurable_deriv_with_param hf).stronglyMeasurable

@@ -88,7 +88,8 @@ theorem aestronglyMeasurable_withDensity_iff {E : Type*} [NormedAddCommGroup E]
     · rw [EventuallyEq, ae_withDensity_iff hf.coe_nnreal_ennreal] at hg'
       rw [ae_restrict_iff' A]
       filter_upwards [hg'] with a ha h'a
-      have : (f a : ℝ≥0∞) ≠ 0 := by simpa only [Ne, ENNReal.coe_eq_zero] using h'a
+      have  : (f a : ℝ≥0∞) ≠ 0
+      simpa only [Ne, ENNReal.coe_eq_zero] using h'a
       rw [ha this]
     · filter_upwards [ae_restrict_mem A.compl] with x hx
       simp only [Classical.not_not, mem_setOf_eq, mem_compl_iff] at hx

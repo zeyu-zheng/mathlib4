@@ -127,12 +127,12 @@ theorem commute [FaithfulSMul M X] {P Q : M} (h₁ : IsLprojection X P) (h₂ : 
       rw [le_antisymm_iff]
       refine ⟨?_, norm_nonneg _⟩
       rwa [← mul_zero (2 : ℝ), mul_le_mul_left (show (0 : ℝ) < 2 by norm_num)] at e1
-  have QP_eq_QPQ : Q * P = Q * P * Q := by
-    have e1 : P * (1 - Q) = P * (1 - Q) - (Q * P - Q * P * Q) :=
-      calc
-        P * (1 - Q) = (1 - Q) * P * (1 - Q) := by rw [PR_eq_RPR (1 - Q) h₂.Lcomplement]
-        _ = P * (1 - Q) - (Q * P - Q * P * Q) := by noncomm_ring
-    rwa [eq_sub_iff_add_eq, add_right_eq_self, sub_eq_zero] at e1
+  have QP_eq_QPQ  : Q * P = Q * P * Q
+  have e1 : P * (1 - Q) = P * (1 - Q) - (Q * P - Q * P * Q) :=
+    calc
+      P * (1 - Q) = (1 - Q) * P * (1 - Q) := by rw [PR_eq_RPR (1 - Q) h₂.Lcomplement]
+      _ = P * (1 - Q) - (Q * P - Q * P * Q) := by noncomm_ring
+  rwa [eq_sub_iff_add_eq, add_right_eq_self, sub_eq_zero] at e1
   show P * Q = Q * P
   rw [QP_eq_QPQ, PR_eq_RPR Q h₂]
 
@@ -282,16 +282,16 @@ instance [FaithfulSMul M X] : Lattice { P : M // IsLprojection X P } where
 instance Subtype.distribLattice [FaithfulSMul M X] :
     DistribLattice { P : M // IsLprojection X P } where
   le_sup_inf P Q R := by
-    have e₁ : ↑((P ⊔ Q) ⊓ (P ⊔ R)) = ↑P + ↑Q * (R : M) * ↑Pᶜ := by
-      rw [coe_inf, coe_sup, coe_sup, ← add_sub, ← add_sub, ← compl_mul, ← compl_mul, add_mul,
-        mul_add, (Pᶜ.prop.commute Q.prop).eq, mul_add, ← mul_assoc, mul_assoc (Q : M),
-        (Pᶜ.prop.commute P.prop).eq, mul_compl_self, zero_mul, mul_zero,
-        zero_add, add_zero, ← mul_assoc, mul_assoc (Q : M), P.prop.proj.eq, Pᶜ.prop.proj.eq,
-        mul_assoc, (Pᶜ.prop.commute R.prop).eq, ← mul_assoc]
-    have e₂ : ↑((P ⊔ Q) ⊓ (P ⊔ R)) * ↑(P ⊔ Q ⊓ R) = (P : M) + ↑Q * ↑R * ↑Pᶜ := by
-      rw [coe_inf, coe_sup, coe_sup, coe_sup, ← add_sub, ← add_sub, ← add_sub, ← compl_mul, ←
-        compl_mul, ← compl_mul, (Pᶜ.prop.commute (Q ⊓ R).prop).eq, coe_inf, mul_assoc,
-        distrib_lattice_lemma, (Q.prop.commute R.prop).eq, distrib_lattice_lemma]
+    have e₁  : ↑((P ⊔ Q) ⊓ (P ⊔ R)) = ↑P + ↑Q * (R : M) * ↑Pᶜ
+    rw [coe_inf, coe_sup, coe_sup, ← add_sub, ← add_sub, ← compl_mul, ← compl_mul, add_mul,
+      mul_add, (Pᶜ.prop.commute Q.prop).eq, mul_add, ← mul_assoc, mul_assoc (Q : M),
+      (Pᶜ.prop.commute P.prop).eq, mul_compl_self, zero_mul, mul_zero,
+      zero_add, add_zero, ← mul_assoc, mul_assoc (Q : M), P.prop.proj.eq, Pᶜ.prop.proj.eq,
+      mul_assoc, (Pᶜ.prop.commute R.prop).eq, ← mul_assoc]
+    have e₂  : ↑((P ⊔ Q) ⊓ (P ⊔ R)) * ↑(P ⊔ Q ⊓ R) = (P : M) + ↑Q * ↑R * ↑Pᶜ
+    rw [coe_inf, coe_sup, coe_sup, coe_sup, ← add_sub, ← add_sub, ← add_sub, ← compl_mul, ←
+      compl_mul, ← compl_mul, (Pᶜ.prop.commute (Q ⊓ R).prop).eq, coe_inf, mul_assoc,
+      distrib_lattice_lemma, (Q.prop.commute R.prop).eq, distrib_lattice_lemma]
     rw [le_def, e₁, coe_inf, e₂]
 
 instance Subtype.BooleanAlgebra [FaithfulSMul M X] :

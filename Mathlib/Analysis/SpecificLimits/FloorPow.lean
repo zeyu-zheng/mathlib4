@@ -36,125 +36,125 @@ theorem tendsto_div_of_monotone_of_exists_subseq_tendsto_div (u : ℕ → ℝ) (
     to the limit `l` up to `1 + ε`.
     We give a version of this proof by clearing out denominators first, to avoid discussing the sign
     of different quantities. -/
-  have lnonneg : 0 ≤ l := by
-    rcases hlim 2 one_lt_two with ⟨c, _, ctop, clim⟩
-    have : Tendsto (fun n => u 0 / c n) atTop (𝓝 0) :=
-      tendsto_const_nhds.div_atTop (tendsto_natCast_atTop_iff.2 ctop)
-    apply le_of_tendsto_of_tendsto' this clim fun n => ?_
-    gcongr
-    exact hmono (zero_le _)
-  have A : ∀ ε : ℝ, 0 < ε → ∀ᶠ n in atTop, u n - n * l ≤ ε * (1 + ε + l) * n := by
-    intro ε εpos
-    rcases hlim (1 + ε) ((lt_add_iff_pos_right _).2 εpos) with ⟨c, cgrowth, ctop, clim⟩
-    have L : ∀ᶠ n in atTop, u (c n) - c n * l ≤ ε * c n := by
-      rw [← tendsto_sub_nhds_zero_iff, ← Asymptotics.isLittleO_one_iff ℝ,
-        Asymptotics.isLittleO_iff] at clim
-      filter_upwards [clim εpos, ctop (Ioi_mem_atTop 0)] with n hn cnpos'
-      have cnpos : 0 < c n := cnpos'
-      calc
-        u (c n) - c n * l = (u (c n) / c n - l) * c n := by
-          simp only [cnpos.ne', Ne, Nat.cast_eq_zero, not_false_iff, field_simps]
-        _ ≤ ε * c n := by
-          gcongr
-          refine (le_abs_self _).trans ?_
-          simpa using hn
-    obtain ⟨a, ha⟩ :
-      ∃ a : ℕ, ∀ b : ℕ, a ≤ b → (c (b + 1) : ℝ) ≤ (1 + ε) * c b ∧ u (c b) - c b * l ≤ ε * c b :=
-      eventually_atTop.1 (cgrowth.and L)
-    let M := ((Finset.range (a + 1)).image fun i => c i).max' (by simp)
-    filter_upwards [Ici_mem_atTop M] with n hn
-    have exN : ∃ N, n < c N := by
-      rcases (tendsto_atTop.1 ctop (n + 1)).exists with ⟨N, hN⟩
-      exact ⟨N, by linarith only [hN]⟩
-    let N := Nat.find exN
-    have ncN : n < c N := Nat.find_spec exN
-    have aN : a + 1 ≤ N := by
-      by_contra! h
-      have cNM : c N ≤ M := by
-        apply le_max'
-        apply mem_image_of_mem
-        exact mem_range.2 h
-      exact lt_irrefl _ ((cNM.trans hn).trans_lt ncN)
-    have Npos : 0 < N := lt_of_lt_of_le Nat.succ_pos' aN
-    have cNn : c (N - 1) ≤ n := by
-      have : N - 1 < N := Nat.pred_lt Npos.ne'
-      simpa only [not_lt] using Nat.find_min exN this
-    have IcN : (c N : ℝ) ≤ (1 + ε) * c (N - 1) := by
-      have A : a ≤ N - 1 := by
-        apply @Nat.le_of_add_le_add_right a 1 (N - 1)
-        rw [Nat.sub_add_cancel Npos]
-        exact aN
-      have B : N - 1 + 1 = N := Nat.succ_pred_eq_of_pos Npos
-      have := (ha _ A).1
-      rwa [B] at this
+  have lnonneg  : 0 ≤ l
+  rcases hlim 2 one_lt_two with ⟨c, _, ctop, clim⟩
+  have : Tendsto (fun n => u 0 / c n) atTop (𝓝 0) :=
+    tendsto_const_nhds.div_atTop (tendsto_natCast_atTop_iff.2 ctop)
+  apply le_of_tendsto_of_tendsto' this clim fun n => ?_
+  gcongr
+  exact hmono (zero_le _)
+  have A  : ∀ ε : ℝ, 0 < ε → ∀ᶠ n in atTop, u n - n * l ≤ ε * (1 + ε + l) * n
+  intro ε εpos
+  rcases hlim (1 + ε) ((lt_add_iff_pos_right _).2 εpos) with ⟨c, cgrowth, ctop, clim⟩
+  have L : ∀ᶠ n in atTop, u (c n) - c n * l ≤ ε * c n := by
+    rw [← tendsto_sub_nhds_zero_iff, ← Asymptotics.isLittleO_one_iff ℝ,
+      Asymptotics.isLittleO_iff] at clim
+    filter_upwards [clim εpos, ctop (Ioi_mem_atTop 0)] with n hn cnpos'
+    have cnpos : 0 < c n := cnpos'
     calc
-      u n - n * l ≤ u (c N) - c (N - 1) * l := by gcongr; exact hmono ncN.le
-      _ = u (c N) - c N * l + (c N - c (N - 1)) * l := by ring
-      _ ≤ ε * c N + ε * c (N - 1) * l := by
+      u (c n) - c n * l = (u (c n) / c n - l) * c n := by
+        simp only [cnpos.ne', Ne, Nat.cast_eq_zero, not_false_iff, field_simps]
+      _ ≤ ε * c n := by
         gcongr
-        · exact (ha N (a.le_succ.trans aN)).2
-        · linarith only [IcN]
-      _ ≤ ε * ((1 + ε) * c (N - 1)) + ε * c (N - 1) * l := by gcongr
-      _ = ε * (1 + ε + l) * c (N - 1) := by ring
-      _ ≤ ε * (1 + ε + l) * n := by gcongr
-  have B : ∀ ε : ℝ, 0 < ε → ∀ᶠ n : ℕ in atTop, (n : ℝ) * l - u n ≤ ε * (1 + l) * n := by
-    intro ε εpos
-    rcases hlim (1 + ε) ((lt_add_iff_pos_right _).2 εpos) with ⟨c, cgrowth, ctop, clim⟩
-    have L : ∀ᶠ n : ℕ in atTop, (c n : ℝ) * l - u (c n) ≤ ε * c n := by
-      rw [← tendsto_sub_nhds_zero_iff, ← Asymptotics.isLittleO_one_iff ℝ,
-        Asymptotics.isLittleO_iff] at clim
-      filter_upwards [clim εpos, ctop (Ioi_mem_atTop 0)] with n hn cnpos'
-      have cnpos : 0 < c n := cnpos'
-      calc
-        (c n : ℝ) * l - u (c n) = -(u (c n) / c n - l) * c n := by
-          simp only [cnpos.ne', Ne, Nat.cast_eq_zero, not_false_iff, neg_sub, field_simps]
-        _ ≤ ε * c n := by
-          gcongr
-          refine le_trans (neg_le_abs _) ?_
-          simpa using hn
-    obtain ⟨a, ha⟩ :
-      ∃ a : ℕ,
-        ∀ b : ℕ, a ≤ b → (c (b + 1) : ℝ) ≤ (1 + ε) * c b ∧ (c b : ℝ) * l - u (c b) ≤ ε * c b :=
-      eventually_atTop.1 (cgrowth.and L)
-    let M := ((Finset.range (a + 1)).image fun i => c i).max' (by simp)
-    filter_upwards [Ici_mem_atTop M] with n hn
-    have exN : ∃ N, n < c N := by
-      rcases (tendsto_atTop.1 ctop (n + 1)).exists with ⟨N, hN⟩
-      exact ⟨N, by linarith only [hN]⟩
-    let N := Nat.find exN
-    have ncN : n < c N := Nat.find_spec exN
-    have aN : a + 1 ≤ N := by
-      by_contra! h
-      have cNM : c N ≤ M := by
-        apply le_max'
-        apply mem_image_of_mem
-        exact mem_range.2 h
-      exact lt_irrefl _ ((cNM.trans hn).trans_lt ncN)
-    have Npos : 0 < N := lt_of_lt_of_le Nat.succ_pos' aN
-    have aN' : a ≤ N - 1 := by
+        refine (le_abs_self _).trans ?_
+        simpa using hn
+  obtain ⟨a, ha⟩ :
+    ∃ a : ℕ, ∀ b : ℕ, a ≤ b → (c (b + 1) : ℝ) ≤ (1 + ε) * c b ∧ u (c b) - c b * l ≤ ε * c b :=
+    eventually_atTop.1 (cgrowth.and L)
+  let M := ((Finset.range (a + 1)).image fun i => c i).max' (by simp)
+  filter_upwards [Ici_mem_atTop M] with n hn
+  have exN : ∃ N, n < c N := by
+    rcases (tendsto_atTop.1 ctop (n + 1)).exists with ⟨N, hN⟩
+    exact ⟨N, by linarith only [hN]⟩
+  let N := Nat.find exN
+  have ncN : n < c N := Nat.find_spec exN
+  have aN : a + 1 ≤ N := by
+    by_contra! h
+    have cNM : c N ≤ M := by
+      apply le_max'
+      apply mem_image_of_mem
+      exact mem_range.2 h
+    exact lt_irrefl _ ((cNM.trans hn).trans_lt ncN)
+  have Npos : 0 < N := lt_of_lt_of_le Nat.succ_pos' aN
+  have cNn : c (N - 1) ≤ n := by
+    have : N - 1 < N := Nat.pred_lt Npos.ne'
+    simpa only [not_lt] using Nat.find_min exN this
+  have IcN : (c N : ℝ) ≤ (1 + ε) * c (N - 1) := by
+    have A : a ≤ N - 1 := by
       apply @Nat.le_of_add_le_add_right a 1 (N - 1)
       rw [Nat.sub_add_cancel Npos]
       exact aN
-    have cNn : c (N - 1) ≤ n := by
-      have : N - 1 < N := Nat.pred_lt Npos.ne'
-      simpa only [not_lt] using Nat.find_min exN this
+    have B : N - 1 + 1 = N := Nat.succ_pred_eq_of_pos Npos
+    have := (ha _ A).1
+    rwa [B] at this
+  calc
+    u n - n * l ≤ u (c N) - c (N - 1) * l := by gcongr; exact hmono ncN.le
+    _ = u (c N) - c N * l + (c N - c (N - 1)) * l := by ring
+    _ ≤ ε * c N + ε * c (N - 1) * l := by
+      gcongr
+      · exact (ha N (a.le_succ.trans aN)).2
+      · linarith only [IcN]
+    _ ≤ ε * ((1 + ε) * c (N - 1)) + ε * c (N - 1) * l := by gcongr
+    _ = ε * (1 + ε + l) * c (N - 1) := by ring
+    _ ≤ ε * (1 + ε + l) * n := by gcongr
+  have B  : ∀ ε : ℝ, 0 < ε → ∀ᶠ n : ℕ in atTop, (n : ℝ) * l - u n ≤ ε * (1 + l) * n
+  intro ε εpos
+  rcases hlim (1 + ε) ((lt_add_iff_pos_right _).2 εpos) with ⟨c, cgrowth, ctop, clim⟩
+  have L : ∀ᶠ n : ℕ in atTop, (c n : ℝ) * l - u (c n) ≤ ε * c n := by
+    rw [← tendsto_sub_nhds_zero_iff, ← Asymptotics.isLittleO_one_iff ℝ,
+      Asymptotics.isLittleO_iff] at clim
+    filter_upwards [clim εpos, ctop (Ioi_mem_atTop 0)] with n hn cnpos'
+    have cnpos : 0 < c n := cnpos'
     calc
-      (n : ℝ) * l - u n ≤ c N * l - u (c (N - 1)) := by
+      (c n : ℝ) * l - u (c n) = -(u (c n) / c n - l) * c n := by
+        simp only [cnpos.ne', Ne, Nat.cast_eq_zero, not_false_iff, neg_sub, field_simps]
+      _ ≤ ε * c n := by
         gcongr
-        exact hmono cNn
-      _ ≤ (1 + ε) * c (N - 1) * l - u (c (N - 1)) := by
-        gcongr
-        have B : N - 1 + 1 = N := Nat.succ_pred_eq_of_pos Npos
-        simpa [B] using (ha _ aN').1
-      _ = c (N - 1) * l - u (c (N - 1)) + ε * c (N - 1) * l := by ring
-      _ ≤ ε * c (N - 1) + ε * c (N - 1) * l := add_le_add (ha _ aN').2 le_rfl
-      _ = ε * (1 + l) * c (N - 1) := by ring
-      _ ≤ ε * (1 + l) * n := by gcongr
+        refine le_trans (neg_le_abs _) ?_
+        simpa using hn
+  obtain ⟨a, ha⟩ :
+    ∃ a : ℕ,
+      ∀ b : ℕ, a ≤ b → (c (b + 1) : ℝ) ≤ (1 + ε) * c b ∧ (c b : ℝ) * l - u (c b) ≤ ε * c b :=
+    eventually_atTop.1 (cgrowth.and L)
+  let M := ((Finset.range (a + 1)).image fun i => c i).max' (by simp)
+  filter_upwards [Ici_mem_atTop M] with n hn
+  have exN : ∃ N, n < c N := by
+    rcases (tendsto_atTop.1 ctop (n + 1)).exists with ⟨N, hN⟩
+    exact ⟨N, by linarith only [hN]⟩
+  let N := Nat.find exN
+  have ncN : n < c N := Nat.find_spec exN
+  have aN : a + 1 ≤ N := by
+    by_contra! h
+    have cNM : c N ≤ M := by
+      apply le_max'
+      apply mem_image_of_mem
+      exact mem_range.2 h
+    exact lt_irrefl _ ((cNM.trans hn).trans_lt ncN)
+  have Npos : 0 < N := lt_of_lt_of_le Nat.succ_pos' aN
+  have aN' : a ≤ N - 1 := by
+    apply @Nat.le_of_add_le_add_right a 1 (N - 1)
+    rw [Nat.sub_add_cancel Npos]
+    exact aN
+  have cNn : c (N - 1) ≤ n := by
+    have : N - 1 < N := Nat.pred_lt Npos.ne'
+    simpa only [not_lt] using Nat.find_min exN this
+  calc
+    (n : ℝ) * l - u n ≤ c N * l - u (c (N - 1)) := by
+      gcongr
+      exact hmono cNn
+    _ ≤ (1 + ε) * c (N - 1) * l - u (c (N - 1)) := by
+      gcongr
+      have B : N - 1 + 1 = N := Nat.succ_pred_eq_of_pos Npos
+      simpa [B] using (ha _ aN').1
+    _ = c (N - 1) * l - u (c (N - 1)) + ε * c (N - 1) * l := by ring
+    _ ≤ ε * c (N - 1) + ε * c (N - 1) * l := add_le_add (ha _ aN').2 le_rfl
+    _ = ε * (1 + l) * c (N - 1) := by ring
+    _ ≤ ε * (1 + l) * n := by gcongr
   refine tendsto_order.2 ⟨fun d hd => ?_, fun d hd => ?_⟩
   · obtain ⟨ε, hε, εpos⟩ : ∃ ε : ℝ, d + ε * (1 + l) < l ∧ 0 < ε := by
-      have L : Tendsto (fun ε => d + ε * (1 + l)) (𝓝[>] 0) (𝓝 (d + 0 * (1 + l))) := by
-        apply Tendsto.mono_left _ nhdsWithin_le_nhds
-        exact tendsto_const_nhds.add (tendsto_id.mul tendsto_const_nhds)
+      have L  : Tendsto (fun ε => d + ε * (1 + l)) (𝓝[>] 0) (𝓝 (d + 0 * (1 + l)))
+      apply Tendsto.mono_left _ nhdsWithin_le_nhds
+      exact tendsto_const_nhds.add (tendsto_id.mul tendsto_const_nhds)
       simp only [zero_mul, add_zero] at L
       exact (((tendsto_order.1 L).2 l hd).and self_mem_nhdsWithin).exists
     filter_upwards [B ε εpos, Ioi_mem_atTop 0] with n hn npos
@@ -167,11 +167,11 @@ theorem tendsto_div_of_monotone_of_exists_subseq_tendsto_div (u : ℕ → ℝ) (
       _ = (n : ℝ)⁻¹ * (n * l - ε * (1 + l) * n) := by ring
       _ ≤ (n : ℝ)⁻¹ * u n := by gcongr; linarith only [hn]
   · obtain ⟨ε, hε, εpos⟩ : ∃ ε : ℝ, l + ε * (1 + ε + l) < d ∧ 0 < ε := by
-      have L : Tendsto (fun ε => l + ε * (1 + ε + l)) (𝓝[>] 0) (𝓝 (l + 0 * (1 + 0 + l))) := by
-        apply Tendsto.mono_left _ nhdsWithin_le_nhds
-        exact
-          tendsto_const_nhds.add
-            (tendsto_id.mul ((tendsto_const_nhds.add tendsto_id).add tendsto_const_nhds))
+      have L  : Tendsto (fun ε => l + ε * (1 + ε + l)) (𝓝[>] 0) (𝓝 (l + 0 * (1 + 0 + l)))
+      apply Tendsto.mono_left _ nhdsWithin_le_nhds
+      exact
+        tendsto_const_nhds.add
+          (tendsto_id.mul ((tendsto_const_nhds.add tendsto_id).add tendsto_const_nhds))
       simp only [zero_mul, add_zero] at L
       exact (((tendsto_order.1 L).2 d hd).and self_mem_nhdsWithin).exists
     filter_upwards [A ε εpos, Ioi_mem_atTop 0] with n hn (npos : 0 < n)
@@ -193,11 +193,11 @@ theorem tendsto_div_of_monotone_of_tendsto_div_floor_pow (u : ℕ → ℝ) (l : 
   refine
     ⟨fun n => ⌊c k ^ n⌋₊, ?_,
       (tendsto_nat_floor_atTop (α := ℝ)).comp (tendsto_pow_atTop_atTop_of_one_lt (cone k)), hc k⟩
-  have H : ∀ n : ℕ, (0 : ℝ) < ⌊c k ^ n⌋₊ := by
-    intro n
-    refine zero_lt_one.trans_le ?_
-    simp only [Real.rpow_natCast, Nat.one_le_cast, Nat.one_le_floor_iff,
-      one_le_pow_of_one_le (cone k).le n]
+  have H  : ∀ n : ℕ, (0 : ℝ) < ⌊c k ^ n⌋₊
+  intro n
+  refine zero_lt_one.trans_le ?_
+  simp only [Real.rpow_natCast, Nat.one_le_cast, Nat.one_le_floor_iff,
+    one_le_pow_of_one_le (cone k).le n]
   have A :
     Tendsto (fun n : ℕ => (⌊c k ^ (n + 1)⌋₊ : ℝ) / c k ^ (n + 1) * c k / (⌊c k ^ n⌋₊ / c k ^ n))
       atTop (𝓝 (1 * c k / 1)) := by
@@ -206,12 +206,12 @@ theorem tendsto_div_of_monotone_of_tendsto_div_floor_pow (u : ℕ → ℝ) (l : 
       exact (tendsto_pow_atTop_atTop_of_one_lt (cone k)).comp (tendsto_add_atTop_nat 1)
     · refine tendsto_nat_floor_div_atTop.comp ?_
       exact tendsto_pow_atTop_atTop_of_one_lt (cone k)
-  have B : Tendsto (fun n : ℕ => (⌊c k ^ (n + 1)⌋₊ : ℝ) / ⌊c k ^ n⌋₊) atTop (𝓝 (c k)) := by
-    simp only [one_mul, div_one] at A
-    convert A using 1
-    ext1 n
-    field_simp [(zero_lt_one.trans (cone k)).ne', (H n).ne']
-    ring
+  have B  : Tendsto (fun n : ℕ => (⌊c k ^ (n + 1)⌋₊ : ℝ) / ⌊c k ^ n⌋₊) atTop (𝓝 (c k))
+  simp only [one_mul, div_one] at A
+  convert A using 1
+  ext1 n
+  field_simp [(zero_lt_one.trans (cone k)).ne', (H n).ne']
+  ring
   filter_upwards [(tendsto_order.1 B).2 a hk] with n hn
   exact (div_le_iff (H n)).1 hn.le
 
@@ -221,14 +221,15 @@ theorem sum_div_pow_sq_le_div_sq (N : ℕ) {j : ℝ} (hj : 0 < j) {c : ℝ} (hc 
     (∑ i ∈ (range N).filter (j < c ^ ·), (1 : ℝ) / (c ^ i) ^ 2) ≤ c ^ 3 * (c - 1)⁻¹ / j ^ 2 := by
   have cpos : 0 < c := zero_lt_one.trans hc
   have A : (0 : ℝ) < c⁻¹ ^ 2 := sq_pos_of_pos (inv_pos.2 cpos)
-  have B : c ^ 2 * ((1 : ℝ) - c⁻¹ ^ 2)⁻¹ ≤ c ^ 3 * (c - 1)⁻¹ := by
-    rw [← div_eq_mul_inv, ← div_eq_mul_inv, div_le_div_iff _ (sub_pos.2 hc)]
-    swap
-    · exact sub_pos.2 (pow_lt_one (inv_nonneg.2 cpos.le) (inv_lt_one hc) two_ne_zero)
-    have : c ^ 3 = c ^ 2 * c := by ring
-    simp only [mul_sub, this, mul_one, inv_pow, sub_le_sub_iff_left]
-    rw [mul_assoc, mul_comm c, ← mul_assoc, mul_inv_cancel (sq_pos_of_pos cpos).ne', one_mul]
-    simpa using pow_le_pow_right hc.le one_le_two
+  have B  : c ^ 2 * ((1 : ℝ) - c⁻¹ ^ 2)⁻¹ ≤ c ^ 3 * (c - 1)⁻¹
+  rw [← div_eq_mul_inv, ← div_eq_mul_inv, div_le_div_iff _ (sub_pos.2 hc)]
+  swap
+  · exact sub_pos.2 (pow_lt_one (inv_nonneg.2 cpos.le) (inv_lt_one hc) two_ne_zero)
+  have  : c ^ 3 = c ^ 2 * c
+  ring
+  simp only [mul_sub, this, mul_one, inv_pow, sub_le_sub_iff_left]
+  rw [mul_assoc, mul_comm c, ← mul_assoc, mul_inv_cancel (sq_pos_of_pos cpos).ne', one_mul]
+  simpa using pow_le_pow_right hc.le one_le_two
   have C : c⁻¹ ^ 2 < 1 := pow_lt_one (inv_nonneg.2 cpos.le) (inv_lt_one hc) two_ne_zero
   calc
     (∑ i ∈ (range N).filter (j < c ^ ·), (1 : ℝ) / (c ^ i) ^ 2) ≤

@@ -101,10 +101,10 @@ theorem FinitaryExtensive.vanKampen [FinitaryExtensive C] {F : Discrete WalkingP
     (c : Cocone F) (hc : IsColimit c) : IsVanKampenColimit c := by
   let X := F.obj ⟨WalkingPair.left⟩
   let Y := F.obj ⟨WalkingPair.right⟩
-  have : F = pair X Y := by
-    apply Functor.hext
-    · rintro ⟨⟨⟩⟩ <;> rfl
-    · rintro ⟨⟨⟩⟩ ⟨j⟩ ⟨⟨rfl : _ = j⟩⟩ <;> simp
+  have  : F = pair X Y
+  apply Functor.hext
+  · rintro ⟨⟨⟩⟩ <;> rfl
+  · rintro ⟨⟨⟩⟩ ⟨j⟩ ⟨⟨rfl : _ = j⟩⟩ <;> simp
   clear_value X Y
   subst this
   exact FinitaryExtensive.van_kampen' c hc
@@ -122,8 +122,8 @@ instance preservesPullbackInl' :
 
 instance hasPullbackInr' :
     HasPullback f coprod.inr := by
-  have : IsPullback (𝟙 _) (f ≫ (coprod.braiding X Y).hom) f (coprod.braiding Y X).hom :=
-    IsPullback.of_horiz_isIso ⟨by simp⟩
+  have : IsPullback (𝟙 _) (f ≫ (coprod.braiding X Y).hom) f (coprod.braiding Y X).hom
+  apply IsPullback.of_horiz_isIso ⟨by simp⟩
   have := (IsPullback.of_hasPullback (f ≫ (coprod.braiding X Y).hom) coprod.inl).paste_horiz this
   simp only [coprod.braiding_hom, Category.comp_id, colimit.ι_desc, BinaryCofan.mk_pt,
     BinaryCofan.ι_app_left, BinaryCofan.mk_inl] at this
@@ -218,26 +218,26 @@ instance types.finitaryExtensive : FinitaryExtensive (Type u) := by
     constructor
     · refine ⟨⟨hαX.symm⟩, ⟨PullbackCone.isLimitAux' _ ?_⟩⟩
       intro s
-      have : ∀ x, ∃! y, s.fst x = Sum.inl y := by
-        intro x
-        cases' h : s.fst x with val val
-        · simp only [Types.binaryCoproductCocone_pt, Functor.const_obj_obj, Sum.inl.injEq,
-            exists_unique_eq']
-        · apply_fun f at h
-          cases ((congr_fun s.condition x).symm.trans h).trans (congr_fun hαY val : _).symm
+      have  : ∀ x, ∃! y, s.fst x = Sum.inl y
+      intro x
+      cases' h : s.fst x with val val
+      · simp only [Types.binaryCoproductCocone_pt, Functor.const_obj_obj, Sum.inl.injEq,
+          exists_unique_eq']
+      · apply_fun f at h
+        cases ((congr_fun s.condition x).symm.trans h).trans (congr_fun hαY val : _).symm
       delta ExistsUnique at this
       choose l hl hl' using this
       exact ⟨l, (funext hl).symm, Types.isTerminalPunit.hom_ext _ _,
         fun {l'} h₁ _ => funext fun x => hl' x (l' x) (congr_fun h₁ x).symm⟩
     · refine ⟨⟨hαY.symm⟩, ⟨PullbackCone.isLimitAux' _ ?_⟩⟩
       intro s
-      have : ∀ x, ∃! y, s.fst x = Sum.inr y := by
-        intro x
-        cases' h : s.fst x with val val
-        · apply_fun f at h
-          cases ((congr_fun s.condition x).symm.trans h).trans (congr_fun hαX val : _).symm
-        · simp only [Types.binaryCoproductCocone_pt, Functor.const_obj_obj, Sum.inr.injEq,
-            exists_unique_eq']
+      have  : ∀ x, ∃! y, s.fst x = Sum.inr y
+      intro x
+      cases' h : s.fst x with val val
+      · apply_fun f at h
+        cases ((congr_fun s.condition x).symm.trans h).trans (congr_fun hαX val : _).symm
+      · simp only [Types.binaryCoproductCocone_pt, Functor.const_obj_obj, Sum.inr.injEq,
+          exists_unique_eq']
       delta ExistsUnique at this
       choose l hl hl' using this
       exact ⟨l, (funext hl).symm, Types.isTerminalPunit.hom_ext _ _,
@@ -310,13 +310,13 @@ instance finitaryExtensive_TopCat : FinitaryExtensive TopCat.{u} := by
     constructor
     · refine ⟨⟨hαX.symm⟩, ⟨PullbackCone.isLimitAux' _ ?_⟩⟩
       intro s
-      have : ∀ x, ∃! y, s.fst x = Sum.inl y := by
-        intro x
-        cases' h : s.fst x with val val
-        · exact ⟨val, rfl, fun y h => Sum.inl_injective h.symm⟩
-        · apply_fun f at h
-          cases ((ConcreteCategory.congr_hom s.condition x).symm.trans h).trans
-            (ConcreteCategory.congr_hom hαY val : _).symm
+      have  : ∀ x, ∃! y, s.fst x = Sum.inl y
+      intro x
+      cases' h : s.fst x with val val
+      · exact ⟨val, rfl, fun y h => Sum.inl_injective h.symm⟩
+      · apply_fun f at h
+        cases ((ConcreteCategory.congr_hom s.condition x).symm.trans h).trans
+          (ConcreteCategory.congr_hom hαY val : _).symm
       delta ExistsUnique at this
       choose l hl hl' using this
       refine ⟨⟨l, ?_⟩, ContinuousMap.ext fun a => (hl a).symm, TopCat.isTerminalPUnit.hom_ext _ _,
@@ -327,13 +327,13 @@ instance finitaryExtensive_TopCat : FinitaryExtensive TopCat.{u} := by
       exact (funext hl).symm
     · refine ⟨⟨hαY.symm⟩, ⟨PullbackCone.isLimitAux' _ ?_⟩⟩
       intro s
-      have : ∀ x, ∃! y, s.fst x = Sum.inr y := by
-        intro x
-        cases' h : s.fst x with val val
-        · apply_fun f at h
-          cases ((ConcreteCategory.congr_hom s.condition x).symm.trans h).trans
-            (ConcreteCategory.congr_hom hαX val : _).symm
-        · exact ⟨val, rfl, fun y h => Sum.inr_injective h.symm⟩
+      have : ∀ x, ∃! y, s.fst x = Sum.inr y
+      intro x
+      cases' h : s.fst x with val val
+      · apply_fun f at h
+        cases ((ConcreteCategory.congr_hom s.condition x).symm.trans h).trans
+          (ConcreteCategory.congr_hom hαX val : _).symm
+      · exact ⟨val, rfl, fun y h => Sum.inr_injective h.symm⟩
       delta ExistsUnique at this
       choose l hl hl' using this
       refine ⟨⟨l, ?_⟩, ContinuousMap.ext fun a => (hl a).symm, TopCat.isTerminalPUnit.hom_ext _ _,
@@ -363,10 +363,10 @@ theorem finitaryExtensive_of_reflective
     (isoWhiskerLeft _ (asIso adj.counit) ≪≫ Functor.rightUnitor _).hom).mp
   have : ∀ (Z : C) (i : Discrete WalkingPair) (f : Z ⟶ (colimit.cocone (pair X Y ⋙ Gr)).pt),
         PreservesLimit (cospan f ((colimit.cocone (pair X Y ⋙ Gr)).ι.app i)) Gl := by
-    have : pair X Y ⋙ Gr = pair (Gr.obj X) (Gr.obj Y) := by
-      apply Functor.hext
-      · rintro ⟨⟨⟩⟩ <;> rfl
-      · rintro ⟨⟨⟩⟩ ⟨j⟩ ⟨⟨rfl : _ = j⟩⟩ <;> simp
+    have  : pair X Y ⋙ Gr = pair (Gr.obj X) (Gr.obj Y)
+    apply Functor.hext
+    · rintro ⟨⟨⟩⟩ <;> rfl
+    · rintro ⟨⟨⟩⟩ ⟨j⟩ ⟨⟨rfl : _ = j⟩⟩ <;> simp
     rw [this]
     rintro Z ⟨_|_⟩ f <;> dsimp <;> infer_instance
   refine ((FinitaryExtensive.vanKampen _ (colimit.isColimit <| pair X Y ⋙ _)).map_reflective
@@ -497,13 +497,14 @@ lemma FinitaryPreExtensive.hasPullbacks_of_is_coproduct [FinitaryPreExtensive C]
         exact dif_neg j.prop }
   let e' : c.pt ≅ f i ⨿ (∐ fun j : ({i}ᶜ : Set ι) ↦ f j) :=
     hc.coconePointUniqueUpToIso (getColimitCocone _).2 ≪≫ e
-  have : coprod.inl ≫ e'.inv = c.ι.app ⟨i⟩ := by
-    simp only [e', Iso.trans_inv, coprod.desc_comp, colimit.ι_desc, BinaryCofan.mk_pt,
-      BinaryCofan.ι_app_left, BinaryCofan.mk_inl]
-    exact colimit.comp_coconePointUniqueUpToIso_inv _ _
+  have : coprod.inl ≫ e'.inv = c.ι.app ⟨i⟩
+  simp only [e', Iso.trans_inv, coprod.desc_comp, colimit.ι_desc, BinaryCofan.mk_pt,
+    BinaryCofan.ι_app_left, BinaryCofan.mk_inl]
+  exact colimit.comp_coconePointUniqueUpToIso_inv _ _
   clear_value e'
   rw [← this]
-  have : IsPullback (𝟙 _) (g ≫ e'.hom) g e'.inv := IsPullback.of_horiz_isIso ⟨by simp⟩
+  have : IsPullback (𝟙 _) (g ≫ e'.hom) g e'.inv
+  apply IsPullback.of_horiz_isIso ⟨by simp⟩
   exact ⟨⟨⟨_, ((IsPullback.of_hasPullback (g ≫ e'.hom) coprod.inl).paste_horiz this).isLimit⟩⟩⟩
 
 lemma FinitaryExtensive.mono_ι [FinitaryExtensive C] {ι : Type*} [Finite ι] {F : Discrete ι ⥤ C}

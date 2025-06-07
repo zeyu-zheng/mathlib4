@@ -90,9 +90,9 @@ theorem arg_mul_cos_add_sin_mul_I {r : ℝ} (hr : 0 < r) {θ : ℝ} (hθ : θ �
   · rw [Set.mem_Icc, not_and_or, not_le, not_le] at h₁
     cases' h₁ with h₁ h₁
     · replace hθ := hθ.1
-      have hcos : Real.cos θ < 0 := by
-        rw [← neg_pos, ← Real.cos_add_pi]
-        refine Real.cos_pos_of_mem_Ioo ⟨?_, ?_⟩ <;> linarith
+      have hcos  : Real.cos θ < 0
+      rw [← neg_pos, ← Real.cos_add_pi]
+      refine Real.cos_pos_of_mem_Ioo ⟨?_, ?_⟩ <;> linarith
       have hsin : Real.sin θ < 0 := Real.sin_neg_of_neg_of_neg_pi_lt (by linarith) hθ
       rw [if_neg, if_neg, ← Real.sin_add_pi, Real.arcsin_sin, add_sub_cancel_right] <;> [linarith;
         linarith; exact hsin.not_le; exact hcos.not_le]
@@ -435,9 +435,9 @@ theorem arg_neg_coe_angle {x : ℂ} (hx : x ≠ 0) : (arg (-x) : Real.Angle) = a
 
 theorem arg_mul_cos_add_sin_mul_I_eq_toIocMod {r : ℝ} (hr : 0 < r) (θ : ℝ) :
     arg (r * (cos θ + sin θ * I)) = toIocMod Real.two_pi_pos (-π) θ := by
-  have hi : toIocMod Real.two_pi_pos (-π) θ ∈ Set.Ioc (-π) π := by
-    convert toIocMod_mem_Ioc _ _ θ
-    ring
+  have hi  : toIocMod Real.two_pi_pos (-π) θ ∈ Set.Ioc (-π) π
+  convert toIocMod_mem_Ioc _ _ θ
+  ring
   convert arg_mul_cos_add_sin_mul_I hr hi using 3
   simp [toIocMod, cos_sub_int_mul_two_pi, sin_sub_int_mul_two_pi]
 
@@ -541,9 +541,9 @@ theorem arg_eq_nhds_of_im_neg (hz : im z < 0) : arg =ᶠ[𝓝 z] fun x => -Real.
   ((continuous_im.tendsto _).eventually (gt_mem_nhds hz)).mono fun _ => arg_of_im_neg
 
 theorem continuousAt_arg (h : x ∈ slitPlane) : ContinuousAt arg x := by
-  have h₀ : abs x ≠ 0 := by
-    rw [abs.ne_zero_iff]
-    exact slitPlane_ne_zero h
+  have h₀  : abs x ≠ 0
+  rw [abs.ne_zero_iff]
+  exact slitPlane_ne_zero h
   rw [mem_slitPlane_iff, ← lt_or_lt_iff_ne] at h
   rcases h with (hx_re | hx_im | hx_im)
   exacts [(Real.continuousAt_arcsin.comp
@@ -574,11 +574,11 @@ theorem tendsto_arg_nhdsWithin_im_neg_of_re_neg_of_im_zero {z : ℂ} (hre : z.re
 
 theorem continuousWithinAt_arg_of_re_neg_of_im_zero {z : ℂ} (hre : z.re < 0) (him : z.im = 0) :
     ContinuousWithinAt arg { z : ℂ | 0 ≤ z.im } z := by
-  have : arg =ᶠ[𝓝[{ z : ℂ | 0 ≤ z.im }] z] fun x => Real.arcsin ((-x).im / abs x) + π := by
-    have : ∀ᶠ x : ℂ in 𝓝 z, x.re < 0 := continuous_re.tendsto z (gt_mem_nhds hre)
-    filter_upwards [self_mem_nhdsWithin (s := { z : ℂ | 0 ≤ z.im }),
-      mem_nhdsWithin_of_mem_nhds this] with _ him hre
-    rw [arg, if_neg hre.not_le, if_pos him]
+  have  : arg =ᶠ[𝓝[{ z : ℂ | 0 ≤ z.im }] z] fun x => Real.arcsin ((-x).im / abs x) + π
+  have : ∀ᶠ x : ℂ in 𝓝 z, x.re < 0 := continuous_re.tendsto z (gt_mem_nhds hre)
+  filter_upwards [self_mem_nhdsWithin (s := { z : ℂ | 0 ≤ z.im }),
+    mem_nhdsWithin_of_mem_nhds this] with _ him hre
+  rw [arg, if_neg hre.not_le, if_pos him]
   refine ContinuousWithinAt.congr_of_eventuallyEq ?_ this ?_
   · refine
       (Real.continuousAt_arcsin.comp_continuousWithinAt

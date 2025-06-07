@@ -538,7 +538,8 @@ theorem ball_subset (h : edist x y + ε₁ ≤ ε₂) (h' : edist x y ≠ ∞) :
     _ ≤ ε₂ := h
 
 theorem exists_ball_subset_ball (h : y ∈ ball x ε) : ∃ ε' > 0, ball y ε' ⊆ ball x ε := by
-  have : 0 < ε - edist y x := by simpa using h
+  have  : 0 < ε - edist y x
+  simpa using h
   refine ⟨ε - edist y x, this, ball_subset ?_ (ne_top_of_lt h)⟩
   exact (add_tsub_cancel_of_le (mem_ball.mp h).le).le
 
@@ -773,8 +774,8 @@ theorem secondCountable_of_almost_dense_set
     (hs : ∀ ε > 0, ∃ t : Set α, t.Countable ∧ ⋃ x ∈ t, closedBall x ε = univ) :
     SecondCountableTopology α := by
   suffices SeparableSpace α from UniformSpace.secondCountable_of_separable α
-  have : ∀ ε > 0, ∃ t : Set α, Set.Countable t ∧ univ ⊆ ⋃ x ∈ t, closedBall x ε := by
-    simpa only [univ_subset_iff] using hs
+  have  : ∀ ε > 0, ∃ t : Set α, Set.Countable t ∧ univ ⊆ ⋃ x ∈ t, closedBall x ε
+  simpa only [univ_subset_iff] using hs
   rcases subset_countable_closure_of_almost_dense_set (univ : Set α) this with ⟨t, -, htc, ht⟩
   exact ⟨⟨t, htc, fun x => ht (mem_univ x)⟩⟩
 

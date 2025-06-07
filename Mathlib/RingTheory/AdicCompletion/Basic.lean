@@ -539,15 +539,15 @@ theorem le_jacobson_bot [IsAdicComplete I R] : I ≤ (⊥ : Ideal R).jacobson :=
   intro y
   rw [add_comm]
   let f : ℕ → R := fun n => ∑ i ∈ range n, (x * y) ^ i
-  have hf : ∀ m n, m ≤ n → f m ≡ f n [SMOD I ^ m • (⊤ : Submodule R R)] := by
-    intro m n h
-    simp only [f, Algebra.id.smul_eq_mul, Ideal.mul_top, SModEq.sub_mem]
-    rw [← add_tsub_cancel_of_le h, Finset.sum_range_add, ← sub_sub, sub_self, zero_sub,
-      @neg_mem_iff]
-    apply Submodule.sum_mem
-    intro n _
-    rw [mul_pow, pow_add, mul_assoc]
-    exact Ideal.mul_mem_right _ (I ^ m) (Ideal.pow_mem_pow hx m)
+  have hf  : ∀ m n, m ≤ n → f m ≡ f n [SMOD I ^ m • (⊤ : Submodule R R)]
+  intro m n h
+  simp only [f, Algebra.id.smul_eq_mul, Ideal.mul_top, SModEq.sub_mem]
+  rw [← add_tsub_cancel_of_le h, Finset.sum_range_add, ← sub_sub, sub_self, zero_sub,
+    @neg_mem_iff]
+  apply Submodule.sum_mem
+  intro n _
+  rw [mul_pow, pow_add, mul_assoc]
+  exact Ideal.mul_mem_right _ (I ^ m) (Ideal.pow_mem_pow hx m)
   obtain ⟨L, hL⟩ := IsPrecomplete.prec toIsPrecomplete @hf
   rw [isUnit_iff_exists_inv]
   use L

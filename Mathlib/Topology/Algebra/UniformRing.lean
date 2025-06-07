@@ -73,10 +73,10 @@ variable [UniformAddGroup α]
 
 theorem continuous_mul : Continuous fun p : Completion α × Completion α => p.1 * p.2 := by
   let m := (AddMonoidHom.mul : α →+ α →+ α).compr₂ toCompl
-  have : Continuous fun p : α × α => m p.1 p.2 := by
-    apply (continuous_coe α).comp _
-    simp only [AddMonoidHom.coe_mul, AddMonoidHom.coe_mulLeft]
-    exact _root_.continuous_mul
+  have  : Continuous fun p : α × α => m p.1 p.2
+  apply (continuous_coe α).comp _
+  simp only [AddMonoidHom.coe_mul, AddMonoidHom.coe_mulLeft]
+  exact _root_.continuous_mul
   have di : DenseInducing (toCompl : α → Completion α) := denseInducing_coe
   convert di.extend_Z_bilin di this
 

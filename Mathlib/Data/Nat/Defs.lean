@@ -923,11 +923,13 @@ theorem diag_induction (P : ℕ → ℕ → Prop) (ha : ∀ a, P (a + 1) (a + 1)
   | a + 1, b + 1, h => by
     apply hd _ _ (Nat.add_lt_add_iff_right.1 h)
     · have this : a + 1 = b ∨ a + 1 < b := by omega
-      have wf : (a + 1) + b < (a + 1) + (b + 1) := by simp
+      have wf : (a + 1) + b < (a + 1) + (b + 1) :=
+      by simp
       rcases this with (rfl | h)
       · exact ha _
       apply diag_induction P ha hb hd (a + 1) b h
-    have _ : a + (b + 1) < (a + 1) + (b + 1) := by simp
+    have _ : a + (b + 1) < (a + 1) + (b + 1) :=
+    by simp
     apply diag_induction P ha hb hd a (b + 1)
     apply Nat.lt_of_le_of_lt (Nat.le_succ _) h
   termination_by a b _c => a + b
@@ -1169,7 +1171,8 @@ lemma succ_div : ∀ a b : ℕ, (a + 1) / b = a / b + if b ∣ a + 1 then 1 else
   | a, 0 => by simp
   | 0, 1 => by simp
   | 0, b + 2 => by
-    have hb2 : b + 2 > 1 := by simp
+    have hb2  : b + 2 > 1
+    simp
     simp [ne_of_gt hb2, div_eq_of_lt hb2]
   | a + 1, b + 1 => by
     rw [Nat.div_eq]
@@ -1180,10 +1183,10 @@ lemma succ_div : ∀ a b : ℕ, (a + 1) / b = a / b + if b ∣ a + 1 then 1 else
     · have hb_le_a : b ≤ a := le_of_lt_succ (lt_of_le_of_ne hb_le_a1 hb_eq_a)
       have h₁ : 0 < b + 1 ∧ b + 1 ≤ a + 1 + 1 := ⟨succ_pos _, Nat.add_le_add_iff_right.2 hb_le_a1⟩
       have h₂ : 0 < b + 1 ∧ b + 1 ≤ a + 1 := ⟨succ_pos _, Nat.add_le_add_iff_right.2 hb_le_a⟩
-      have dvd_iff : b + 1 ∣ a - b + 1 ↔ b + 1 ∣ a + 1 + 1 := by
-        rw [Nat.dvd_add_iff_left (Nat.dvd_refl (b + 1)), ← Nat.add_sub_add_right a 1 b,
-          Nat.add_comm (_ - _), Nat.add_assoc, Nat.sub_add_cancel (succ_le_succ hb_le_a),
-          Nat.add_comm 1]
+      have dvd_iff  : b + 1 ∣ a - b + 1 ↔ b + 1 ∣ a + 1 + 1
+      rw [Nat.dvd_add_iff_left (Nat.dvd_refl (b + 1)), ← Nat.add_sub_add_right a 1 b,
+        Nat.add_comm (_ - _), Nat.add_assoc, Nat.sub_add_cancel (succ_le_succ hb_le_a),
+        Nat.add_comm 1]
       have wf : a - b < a + 1 := lt_succ_of_le (Nat.sub_le _ _)
       rw [if_pos h₁, if_pos h₂, Nat.add_sub_add_right, Nat.add_sub_add_right, Nat.add_comm a,
         Nat.add_sub_assoc hb_le_a, Nat.add_comm 1,
@@ -1341,7 +1344,8 @@ lemma sqrt.lt_iter_succ_sq (n guess : ℕ) (hn : n < (guess + 1) * (guess + 1)) 
     refine Nat.mul_self_lt_mul_self (?_ : _ < _ * ((_ / 2) + 1))
     rw [← add_div_right _ (by decide), Nat.mul_comm 2, Nat.mul_assoc,
       show guess + n / guess + 2 = (guess + n / guess + 1) + 1 from rfl]
-    have aux_lemma {a : ℕ} : a ≤ 2 * ((a + 1) / 2) := by omega
+    have aux_lemma {a  : ℕ} : a ≤ 2 * ((a + 1) / 2)
+    omega
     refine lt_of_lt_of_le ?_ (Nat.mul_le_mul_left _ aux_lemma)
     rw [Nat.add_assoc, Nat.mul_add]
     exact Nat.add_lt_add_left (lt_mul_div_succ _ (lt_of_le_of_lt (Nat.zero_le m) h)) _

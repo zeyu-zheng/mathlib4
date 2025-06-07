@@ -264,18 +264,18 @@ lemma essSup_restrict_eq_of_support_subset {s : Set α} {f : α → ℝ≥0∞} 
   apply le_of_forall_lt (fun c hc ↦ ?_)
   obtain ⟨d, cd, hd⟩ : ∃ d, c < d ∧ d < essSup f μ := exists_between hc
   let t := {x | d < f x}
-  have A : 0 < (μ.restrict t) t := by
-    simp only [Measure.restrict_apply_self]
-    rw [essSup_eq_sInf] at hd
-    have : d ∉ {a | μ {x | a < f x} = 0} := not_mem_of_lt_csInf hd (OrderBot.bddBelow _)
-    exact bot_lt_iff_ne_bot.2 this
-  have B : 0 < (μ.restrict s) t := by
-    have : μ.restrict t ≤ μ.restrict s := by
-      apply Measure.restrict_mono _ le_rfl
-      apply subset_trans _ hsf
-      intro x (hx : d < f x)
-      exact (lt_of_le_of_lt bot_le hx).ne'
-    exact lt_of_lt_of_le A (this _)
+  have A  : 0 < (μ.restrict t) t
+  simp only [Measure.restrict_apply_self]
+  rw [essSup_eq_sInf] at hd
+  have : d ∉ {a | μ {x | a < f x} = 0} := not_mem_of_lt_csInf hd (OrderBot.bddBelow _)
+  exact bot_lt_iff_ne_bot.2 this
+  have B  : 0 < (μ.restrict s) t
+  have  : μ.restrict t ≤ μ.restrict s
+  apply Measure.restrict_mono _ le_rfl
+  apply subset_trans _ hsf
+  intro x (hx : d < f x)
+  exact (lt_of_le_of_lt bot_le hx).ne'
+  exact lt_of_lt_of_le A (this _)
   apply cd.trans_le
   rw [essSup_eq_sInf]
   apply le_sInf (fun b hb ↦ ?_)

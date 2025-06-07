@@ -96,12 +96,12 @@ theorem martingale_martingalePart (hf : Adapted ℱ f) (hf_int : ∀ n, Integrab
       · exact (hf 0).mono (ℱ.mono (zero_le i))
     · exact eventuallyEq_sum fun k _ => condexp_sub ((hf_int _).sub (hf_int _)) integrable_condexp
   refine h_eq_sum.trans ?_
-  have h_ge : ∀ k, i ≤ k → μ[f (k + 1) - f k|ℱ i] - μ[μ[f (k + 1) - f k|ℱ k]|ℱ i] =ᵐ[μ] 0 := by
-    intro k hk
-    have : μ[μ[f (k + 1) - f k|ℱ k]|ℱ i] =ᵐ[μ] μ[f (k + 1) - f k|ℱ i] :=
-      condexp_condexp_of_le (ℱ.mono hk) (ℱ.le k)
-    filter_upwards [this] with x hx
-    rw [Pi.sub_apply, Pi.zero_apply, hx, sub_self]
+  have h_ge  : ∀ k, i ≤ k → μ[f (k + 1) - f k|ℱ i] - μ[μ[f (k + 1) - f k|ℱ k]|ℱ i] =ᵐ[μ] 0
+  intro k hk
+  have : μ[μ[f (k + 1) - f k|ℱ k]|ℱ i] =ᵐ[μ] μ[f (k + 1) - f k|ℱ i] :=
+    condexp_condexp_of_le (ℱ.mono hk) (ℱ.le k)
+  filter_upwards [this] with x hx
+  rw [Pi.sub_apply, Pi.zero_apply, hx, sub_self]
   have h_lt : ∀ k, k < i → μ[f (k + 1) - f k|ℱ i] - μ[μ[f (k + 1) - f k|ℱ k]|ℱ i] =ᵐ[μ]
       f (k + 1) - f k - μ[f (k + 1) - f k|ℱ k] := by
     refine fun k hk => EventuallyEq.sub ?_ ?_
@@ -125,12 +125,12 @@ theorem martingalePart_add_ae_eq [SigmaFiniteFiltration μ ℱ] {f g : ℕ → �
     (hf : Martingale f ℱ μ) (hg : Adapted ℱ fun n => g (n + 1)) (hg0 : g 0 = 0)
     (hgint : ∀ n, Integrable (g n) μ) (n : ℕ) : martingalePart (f + g) ℱ μ n =ᵐ[μ] f n := by
   set h := f - martingalePart (f + g) ℱ μ with hhdef
-  have hh : h = predictablePart (f + g) ℱ μ - g := by
-    rw [hhdef, sub_eq_sub_iff_add_eq_add, add_comm (predictablePart (f + g) ℱ μ),
-      martingalePart_add_predictablePart]
-  have hhpred : Adapted ℱ fun n => h (n + 1) := by
-    rw [hh]
-    exact adapted_predictablePart.sub hg
+  have hh  : h = predictablePart (f + g) ℱ μ - g
+  rw [hhdef, sub_eq_sub_iff_add_eq_add, add_comm (predictablePart (f + g) ℱ μ),
+    martingalePart_add_predictablePart]
+  have hhpred  : Adapted ℱ fun n => h (n + 1)
+  rw [hh]
+  exact adapted_predictablePart.sub hg
   have hhmgle : Martingale h ℱ μ := hf.sub (martingale_martingalePart
     (hf.adapted.add <| Predictable.adapted hg <| hg0.symm ▸ stronglyMeasurable_zero) fun n =>
     (hf.integrable n).add <| hgint n)

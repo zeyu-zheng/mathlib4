@@ -105,13 +105,13 @@ theorem finitePresentation_ofLocalizationSpanTarget :
   of preimages of `s`. But the preimages do not necessarily span `MvPolynomial (Fin n) R`, so
   we quotient out by an ideal and apply `finitePresentation_ofLocalizationSpanTarget_aux`.
   -/
-  have hfintype : Algebra.FiniteType R S := by
-    apply finiteType_ofLocalizationSpanTarget f s hs
-    intro r
-    convert_to Algebra.FiniteType R (Localization.Away r.val)
-    · rw [RingHom.FiniteType]
-      constructor <;> intro h <;> convert h <;> ext <;> simp_rw [Algebra.smul_def] <;> rfl
-    · infer_instance
+  have hfintype  : Algebra.FiniteType R S
+  apply finiteType_ofLocalizationSpanTarget f s hs
+  intro r
+  convert_to Algebra.FiniteType R (Localization.Away r.val)
+  · rw [RingHom.FiniteType]
+    constructor <;> intro h <;> convert h <;> ext <;> simp_rw [Algebra.smul_def] <;> rfl
+  · infer_instance
   rw [RingHom.FinitePresentation]
   obtain ⟨n, f, hf⟩ := Algebra.FiniteType.iff_quotient_mvPolynomial''.mp hfintype
   obtain ⟨l, hl⟩ := (Finsupp.mem_span_iff_total S (s : Set S) 1).mp
@@ -120,16 +120,16 @@ theorem finitePresentation_ofLocalizationSpanTarget :
   choose h' hh' using (fun g : s ↦ hf (l g))
   let I : Ideal (MvPolynomial (Fin n) R) := Ideal.span { ∑ g : s, g' g * h' g - 1 }
   let A := MvPolynomial (Fin n) R ⧸ I
-  have hfI : ∀ a ∈ I, f a = 0 := by
-    intro p hp
-    simp only [Finset.univ_eq_attach, I, Ideal.mem_span_singleton] at hp
-    obtain ⟨q, rfl⟩ := hp
-    simp only [map_mul, map_sub, map_sum, map_one, hg', hh']
-    erw [Finsupp.total_apply_of_mem_supported S (s := s.attach)] at hl
-    · rw [← hl]
-      simp only [Finset.coe_sort_coe, smul_eq_mul, mul_comm, sub_self, mul_zero, zero_mul]
-    · rintro a -
-      simp
+  have hfI  : ∀ a ∈ I, f a = 0
+  intro p hp
+  simp only [Finset.univ_eq_attach, I, Ideal.mem_span_singleton] at hp
+  obtain ⟨q, rfl⟩ := hp
+  simp only [map_mul, map_sub, map_sum, map_one, hg', hh']
+  erw [Finsupp.total_apply_of_mem_supported S (s := s.attach)] at hl
+  · rw [← hl]
+    simp only [Finset.coe_sort_coe, smul_eq_mul, mul_comm, sub_self, mul_zero, zero_mul]
+  · rintro a -
+    simp
   let f' : A →ₐ[R] S := Ideal.Quotient.liftₐ I f hfI
   have hf' : Function.Surjective f' :=
     Ideal.Quotient.lift_surjective_of_surjective I hfI hf

@@ -307,9 +307,9 @@ theorem card_fixedPoints_modEq [DecidableEq α] {f : Function.End α} {p n : ℕ
   let σ : α ≃ α := ⟨f, f ^ (p ^ n - 1),
     leftInverse_iff_comp.mpr ((pow_sub_mul_pow f (Nat.one_le_pow n p hp.out.pos)).trans hf),
     leftInverse_iff_comp.mpr ((pow_mul_pow_sub f (Nat.one_le_pow n p hp.out.pos)).trans hf)⟩
-  have hσ : σ ^ p ^ n = 1 := by
-    rw [DFunLike.ext'_iff, coe_pow]
-    exact (hom_coe_pow (fun g : Function.End α ↦ g) rfl (fun g h ↦ rfl) f (p ^ n)).symm.trans hf
+  have hσ  : σ ^ p ^ n = 1
+  rw [DFunLike.ext'_iff, coe_pow]
+  exact (hom_coe_pow (fun g : Function.End α ↦ g) rfl (fun g h ↦ rfl) f (p ^ n)).symm.trans hf
   suffices Fintype.card f.fixedPoints = (support σ)ᶜ.card from
     this ▸ (card_compl_support_modEq hσ).symm
   suffices f.fixedPoints = (support σ)ᶜ by
@@ -553,7 +553,8 @@ theorem _root_.card_support_eq_three_iff : σ.support.card = 3 ↔ σ.IsThreeCyc
     rw [IsThreeCycle, ← cons_erase hn, h1, h, ← cons_zero]
   obtain ⟨m, hm⟩ := exists_mem_of_ne_zero h1
   rw [← sum_cycleType, ← cons_erase hn, ← cons_erase hm, Multiset.sum_cons, Multiset.sum_cons] at h
-  have : ∀ {k}, 2 ≤ m → 2 ≤ n → n + (m + k) = 3 → False := by omega
+  have  : ∀ {k}, 2 ≤ m → 2 ≤ n → n + (m + k) = 3 → False
+  omega
   cases this (two_le_of_mem_cycleType (mem_of_mem_erase hm)) (two_le_of_mem_cycleType hn) h
 
 theorem isCycle (h : IsThreeCycle σ) : IsCycle σ := by
@@ -620,8 +621,8 @@ theorem IsSwap.mul_mem_closure_three_cycles {σ τ : Perm α} (hσ : IsSwap σ) 
   by_cases ac : a = c
   · subst ac
     exact swap_mul_swap_same_mem_closure_three_cycles ab cd
-  have h' : swap a b * swap c d = swap a b * swap a c * (swap c a * swap c d) := by
-    simp [swap_comm c a, mul_assoc]
+  have h'  : swap a b * swap c d = swap a b * swap a c * (swap c a * swap c d)
+  simp [swap_comm c a, mul_assoc]
   rw [h']
   exact
     mul_mem (swap_mul_swap_same_mem_closure_three_cycles ab ac)

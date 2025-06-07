@@ -76,11 +76,11 @@ theorem quadraticChar_card_card [DecidableEq F] (hF : ringChar F ≠ 2) {F' : Ty
     quadraticChar F (Fintype.card F') =
     quadraticChar F' (quadraticChar F (-1) * Fintype.card F) := by
   let χ := (quadraticChar F).ringHomComp (algebraMap ℤ F')
-  have hχ₁ : χ ≠ 1 := by
-    obtain ⟨a, ha⟩ := quadraticChar_exists_neg_one' hF
-    refine ne_one_iff.mpr ⟨a, ?_⟩
-    simpa only [ringHomComp_apply, ha, eq_intCast, Int.cast_neg, Int.cast_one, χ] using
-      Ring.neg_one_ne_one_of_char_ne_two hF'
+  have hχ₁  : χ ≠ 1
+  obtain ⟨a, ha⟩ := quadraticChar_exists_neg_one' hF
+  refine ne_one_iff.mpr ⟨a, ?_⟩
+  simpa only [ringHomComp_apply, ha, eq_intCast, Int.cast_neg, Int.cast_one, χ] using
+    Ring.neg_one_ne_one_of_char_ne_two hF'
   have h := Char.card_pow_card hχ₁ ((quadraticChar_isQuadratic F).comp _) h hF'
   rw [← quadraticChar_eq_pow_of_char_ne_two' hF'] at h
   exact (IsQuadratic.eq_of_eq_coe (quadraticChar_isQuadratic F')
@@ -105,7 +105,8 @@ theorem FiniteField.isSquare_odd_prime_iff (hF : ringChar F ≠ 2) {p : ℕ} [Fa
   · rw [show (p : F) = 0 by rw [← hFp]; exact ringChar.Nat.cast_ringChar]
     simp only [isSquare_zero, Ne, true_iff_iff, map_mul]
     obtain ⟨n, _, hc⟩ := FiniteField.card F (ringChar F)
-    have hchar : ringChar F = ringChar (ZMod p) := by rw [hFp]; exact (ringChar_zmod_n p).symm
+    have hchar  : ringChar F = ringChar (ZMod p)
+    rw [hFp]; exact (ringChar_zmod_n p).symm
     conv => enter [1, 1, 2]; rw [hc, Nat.cast_pow, map_pow, hchar, map_ringChar]
     simp only [zero_pow n.ne_zero, mul_zero, zero_eq_neg, one_ne_zero, not_false_iff]
   · rw [← Iff.not_left (@quadraticChar_neg_one_iff_not_isSquare F _ _ _ _),

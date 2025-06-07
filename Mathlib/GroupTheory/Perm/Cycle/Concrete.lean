@@ -325,10 +325,10 @@ theorem toList_formPerm_singleton (x y : α) : toList (formPerm [x]) y = [] := b
 theorem toList_formPerm_nontrivial (l : List α) (hl : 2 ≤ l.length) (hn : Nodup l) :
     toList (formPerm l) (l.get ⟨0, (zero_lt_two.trans_le hl)⟩) = l := by
   have hc : l.formPerm.IsCycle := List.isCycle_formPerm hn hl
-  have hs : l.formPerm.support = l.toFinset := by
-    refine support_formPerm_of_nodup _ hn ?_
-    rintro _ rfl
-    simp [Nat.succ_le_succ_iff] at hl
+  have hs  : l.formPerm.support = l.toFinset
+  refine support_formPerm_of_nodup _ hn ?_
+  rintro _ rfl
+  simp [Nat.succ_le_succ_iff] at hl
   rw [toList, hc.cycleOf_eq (mem_support.mp _), hs, card_toFinset, dedup_eq_self.mpr hn]
   · refine ext_getElem (by simp) fun k hk hk' => ?_
     simp only [get_eq_getElem, formPerm_pow_apply_getElem _ hn, zero_add, getElem_map,
@@ -378,7 +378,8 @@ def toCycle (f : Perm α) (hf : IsCycle f) : Cycle α :=
 
 theorem toCycle_eq_toList (f : Perm α) (hf : IsCycle f) (x : α) (hx : f x ≠ x) :
     toCycle f hf = toList f x := by
-  have key : (Finset.univ : Finset α).val = x ::ₘ Finset.univ.val.erase x := by simp
+  have key  : (Finset.univ : Finset α).val = x ::ₘ Finset.univ.val.erase x
+  simp
   rw [toCycle, key]
   simp [hx]
 

@@ -48,15 +48,15 @@ theorem mem_of_finset_sum_eq_one_of_pow_smul_mem
   choose n hn using H
   let s' : ι → S' := fun x => ⟨s x, hs x⟩
   let l' : ι → S' := fun x => ⟨l x, hl x⟩
-  have e' : ∑ i ∈ ι', l' i * s' i = 1 := by
-    ext
-    show S'.subtype (∑ i ∈ ι', l' i * s' i) = 1
-    simpa only [map_sum, map_mul] using e
-  have : Ideal.span (s' '' ι') = ⊤ := by
-    rw [Ideal.eq_top_iff_one, ← e']
-    apply sum_mem
-    intros i hi
-    exact Ideal.mul_mem_left _ _ <| Ideal.subset_span <| Set.mem_image_of_mem s' hi
+  have e'  : ∑ i ∈ ι', l' i * s' i = 1
+  ext
+  show S'.subtype (∑ i ∈ ι', l' i * s' i) = 1
+  simpa only [map_sum, map_mul] using e
+  have  : Ideal.span (s' '' ι') = ⊤
+  rw [Ideal.eq_top_iff_one, ← e']
+  apply sum_mem
+  intros i hi
+  exact Ideal.mul_mem_left _ _ <| Ideal.subset_span <| Set.mem_image_of_mem s' hi
   let N := ι'.sup n
   have hN := Ideal.span_pow_eq_top _ this N
   apply (Algebra.ofId S' S).range.toSubmodule.mem_of_span_top_of_smul_mem _ hN

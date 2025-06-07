@@ -213,12 +213,12 @@ theorem isBounded_of_image2_left (f : α → β → γ) {K₁ : ℝ≥0}
     (hst : IsBounded (Set.image2 f s t)) : IsBounded s ∨ IsBounded t := by
   contrapose! hst
   obtain ⟨b, hb⟩ : t.Nonempty := nonempty_of_not_isBounded hst.2
-  have : ¬IsBounded (Set.image2 f s {b}) := by
-    intro h
-    apply hst.1
-    rw [Set.image2_singleton_right] at h
-    replace h := (hf b).isBounded_preimage h
-    exact h.subset (subset_preimage_image _ _)
+  have  : ¬IsBounded (Set.image2 f s {b})
+  intro h
+  apply hst.1
+  rw [Set.image2_singleton_right] at h
+  replace h := (hf b).isBounded_preimage h
+  exact h.subset (subset_preimage_image _ _)
   exact mt (IsBounded.subset · (image2_subset subset_rfl (singleton_subset_iff.mpr hb))) this
 
 theorem isBounded_of_image2_right {f : α → β → γ} {K₂ : ℝ≥0} (hf : ∀ a, AntilipschitzWith K₂ (f a))

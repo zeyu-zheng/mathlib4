@@ -177,11 +177,11 @@ variable [CommGroup α] [Fintype α] (s t : Finset α)
 lemma mulEnergy_univ_left : Eₘ[univ, t] = Fintype.card α * t.card ^ 2 := by
   simp only [mulEnergy, univ_product_univ, Fintype.card, sq, ← card_product]
   let f : α × α × α → (α × α) × α × α := fun x => ((x.1 * x.2.2, x.1 * x.2.1), x.2)
-  have : (↑((univ : Finset α) ×ˢ t ×ˢ t) : Set (α × α × α)).InjOn f := by
-    rintro ⟨a₁, b₁, c₁⟩ _ ⟨a₂, b₂, c₂⟩ h₂ h
-    simp_rw [Prod.ext_iff] at h
-    obtain ⟨h, rfl, rfl⟩ := h
-    rw [mul_right_cancel h.1]
+  have  : (↑((univ : Finset α) ×ˢ t ×ˢ t) : Set (α × α × α)).InjOn f
+  rintro ⟨a₁, b₁, c₁⟩ _ ⟨a₂, b₂, c₂⟩ h₂ h
+  simp_rw [Prod.ext_iff] at h
+  obtain ⟨h, rfl, rfl⟩ := h
+  rw [mul_right_cancel h.1]
   rw [← card_image_of_injOn this]
   congr with a
   simp only [mem_filter, mem_product, mem_univ, true_and_iff, mem_image, exists_prop,

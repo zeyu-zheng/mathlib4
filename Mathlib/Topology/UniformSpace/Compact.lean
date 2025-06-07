@@ -67,8 +67,10 @@ theorem unique_uniformity_of_compact [t : TopologicalSpace γ] [CompactSpace γ]
     {u u' : UniformSpace γ} (h : u.toTopologicalSpace = t) (h' : u'.toTopologicalSpace = t) :
     u = u' := by
   refine UniformSpace.ext ?_
-  have : @CompactSpace γ u.toTopologicalSpace := by rwa [h]
-  have : @CompactSpace γ u'.toTopologicalSpace := by rwa [h']
+  have  : @CompactSpace γ u.toTopologicalSpace
+  rwa [h]
+  have  : @CompactSpace γ u'.toTopologicalSpace
+  rwa [h']
   rw [@compactSpace_uniformity _ u, compactSpace_uniformity, h, h']
 
 /-- The unique uniform structure inducing a given compact topological structure. -/

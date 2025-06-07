@@ -145,11 +145,11 @@ theorem sourceAffineLocally_isLocal (h₁ : RingHom.RespectsIso P)
   · intro X Y _ f r H
     rw [sourceAffineLocally_morphismRestrict]
     intro U hU
-    have : X.basicOpen (f.appLE ⊤ U (by simp) r) = U := by
-      simp only [Scheme.Hom.appLE, Opens.map_top, CommRingCat.coe_comp_of, RingHom.coe_comp,
-        Function.comp_apply]
-      rw [Scheme.basicOpen_res]
-      simpa using hU
+    have  : X.basicOpen (f.appLE ⊤ U (by simp) r) = U
+    simp only [Scheme.Hom.appLE, Opens.map_top, CommRingCat.coe_comp_of, RingHom.coe_comp,
+      Function.comp_apply]
+    rw [Scheme.basicOpen_res]
+    simpa using hU
     rw [← f.appLE_congr _ rfl this P,
       IsAffineOpen.appLE_eq_away_map f (isAffineOpen_top Y) U.2 _ r]
     apply (config := { allowSynthFailures := true }) h₂.away

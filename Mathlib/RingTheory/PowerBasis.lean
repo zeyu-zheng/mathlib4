@@ -86,10 +86,10 @@ theorem finrank [StrongRankCondition R] (pb : PowerBasis R S) :
 theorem mem_span_pow' {x y : S} {d : ℕ} :
     y ∈ Submodule.span R (Set.range fun i : Fin d => x ^ (i : ℕ)) ↔
       ∃ f : R[X], f.degree < d ∧ y = aeval x f := by
-  have : (Set.range fun i : Fin d => x ^ (i : ℕ)) = (fun i : ℕ => x ^ i) '' ↑(Finset.range d) := by
-    ext n
-    simp_rw [Set.mem_range, Set.mem_image, Finset.mem_coe, Finset.mem_range]
-    exact ⟨fun ⟨⟨i, hi⟩, hy⟩ => ⟨i, hi, hy⟩, fun ⟨i, hi, hy⟩ => ⟨⟨i, hi⟩, hy⟩⟩
+  have  : (Set.range fun i : Fin d => x ^ (i : ℕ)) = (fun i : ℕ => x ^ i) '' ↑(Finset.range d)
+  ext n
+  simp_rw [Set.mem_range, Set.mem_image, Finset.mem_coe, Finset.mem_range]
+  exact ⟨fun ⟨⟨i, hi⟩, hy⟩ => ⟨i, hi, hy⟩, fun ⟨i, hi, hy⟩ => ⟨⟨i, hi⟩, hy⟩⟩
   simp only [this, Finsupp.mem_span_image_iff_total, degree_lt_iff_coeff_zero, support,
     exists_iff_exists_finsupp, coeff, aeval_def, eval₂RingHom', eval₂_eq_sum, Polynomial.sum,
     Finsupp.mem_supported', Finsupp.total, Finsupp.sum, Algebra.smul_def, eval₂_zero, exists_prop,
@@ -250,10 +250,10 @@ theorem constr_pow_aeval (pb : PowerBasis A S) {y : S'} (hy : aeval y (minpoly A
     @aeval_modByMonic_eq_self_of_root _ _ _ _ _ f _ (minpoly.monic pb.isIntegral_gen) y hy]
   by_cases hf : f %ₘ minpoly A pb.gen = 0
   · simp only [hf, map_zero]
-  have : (f %ₘ minpoly A pb.gen).natDegree < pb.dim := by
-    rw [← pb.natDegree_minpoly]
-    apply natDegree_lt_natDegree hf
-    exact degree_modByMonic_lt _ (minpoly.monic pb.isIntegral_gen)
+  have  : (f %ₘ minpoly A pb.gen).natDegree < pb.dim
+  rw [← pb.natDegree_minpoly]
+  apply natDegree_lt_natDegree hf
+  exact degree_modByMonic_lt _ (minpoly.monic pb.isIntegral_gen)
   rw [aeval_eq_sum_range' this, aeval_eq_sum_range' this, map_sum]
   refine Finset.sum_congr rfl fun i (hi : i ∈ Finset.range pb.dim) => ?_
   rw [Finset.mem_range] at hi

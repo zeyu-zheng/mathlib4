@@ -262,7 +262,8 @@ theorem matPolyEquiv_coeff_apply (m : Matrix n n R[X]) (k : ℕ) (i j : n) :
 @[simp]
 theorem matPolyEquiv_symm_apply_coeff (p : (Matrix n n R)[X]) (i j : n) (k : ℕ) :
     coeff (matPolyEquiv.symm p i j) k = coeff p k i j := by
-  have t : p = matPolyEquiv (matPolyEquiv.symm p) := by simp
+  have t  : p = matPolyEquiv (matPolyEquiv.symm p)
+  simp
   conv_rhs => rw [t]
   simp only [matPolyEquiv_coeff_apply]
 

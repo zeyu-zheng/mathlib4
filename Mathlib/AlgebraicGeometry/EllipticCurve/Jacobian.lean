@@ -545,8 +545,8 @@ lemma Y_eq_negY_of_Y_eq [NoZeroDivisors R] {P Q : Fin 3 → R} (hQz : Q z ≠ 0)
 
 lemma nonsingular_iff_of_Y_eq_negY {P : Fin 3 → F} (hPz : P z ≠ 0) (hy : P y = W.negY P) :
     W.Nonsingular P ↔ W.Equation P ∧ eval P W.polynomialX ≠ 0 := by
-  have : eval P W.polynomialY = P y - W.negY P := by
-    rw [negY, eval_polynomialY]; ring1
+  have  : eval P W.polynomialY = P y - W.negY P
+  rw [negY, eval_polynomialY]; ring1
   rw [nonsingular_iff_of_Z_ne_zero hPz, this, hy, sub_self, ne_self_iff_false, or_false]
 
 end Negation
@@ -1165,9 +1165,9 @@ lemma add_of_equiv {P Q : Fin 3 → R} (h : P ≈ Q) : W'.add P Q = W'.dblXYZ P 
 
 lemma add_smul_of_equiv {P Q : Fin 3 → R} (h : P ≈ Q) {u v : R} (hu : IsUnit u) (hv : IsUnit v) :
     W'.add (u • P) (v • Q) = u ^ 4 • W'.add P Q := by
-  have smul : P ≈ Q ↔ u • P ≈ v • Q := by
-    erw [← Quotient.eq, ← Quotient.eq, smul_eq P hu, smul_eq Q hv]
-    rfl
+  have smul  : P ≈ Q ↔ u • P ≈ v • Q
+  erw [← Quotient.eq, ← Quotient.eq, smul_eq P hu, smul_eq Q hv]
+  rfl
   rw [add_of_equiv <| smul.mp h, dblXYZ_smul, add_of_equiv h]
 
 lemma add_self (P : Fin 3 → R) : W'.add P P = W'.dblXYZ P :=
@@ -1181,9 +1181,9 @@ lemma add_of_not_equiv {P Q : Fin 3 → R} (h : ¬P ≈ Q) : W'.add P Q = W'.add
 
 lemma add_smul_of_not_equiv {P Q : Fin 3 → R} (h : ¬P ≈ Q) {u v : R} (hu : IsUnit u)
     (hv : IsUnit v) : W'.add (u • P) (v • Q) = (u * v) ^ 2 • W'.add P Q := by
-  have smul : P ≈ Q ↔ u • P ≈ v • Q := by
-    erw [← Quotient.eq, ← Quotient.eq, smul_eq P hu, smul_eq Q hv]
-    rfl
+  have smul  : P ≈ Q ↔ u • P ≈ v • Q
+  erw [← Quotient.eq, ← Quotient.eq, smul_eq P hu, smul_eq Q hv]
+  rfl
   rw [add_of_not_equiv <| h.comp smul.mpr, addXYZ_smul, add_of_not_equiv h]
 
 lemma add_smul_equiv (P Q : Fin 3 → R) {u v : R} (hu : IsUnit u) (hv : IsUnit v) :

@@ -400,9 +400,9 @@ theorem attach_affineCombination_of_injective [DecidableEq P] (s : Finset P) (w 
   let g₁ : s → V := fun i => w (f i) • (f i -ᵥ Classical.choice S.nonempty)
   let g₂ : P → V := fun i => w i • (i -ᵥ Classical.choice S.nonempty)
   change univ.sum g₁ = (image f univ).sum g₂
-  have hgf : g₁ = g₂ ∘ f := by
-    ext
-    simp
+  have hgf  : g₁ = g₂ ∘ f
+  ext
+  simp
   rw [hgf, sum_image]
   · simp only [Function.comp_apply]
   · exact fun _ _ _ _ hxy => hf hxy
@@ -850,20 +850,20 @@ theorem centroid_eq_centroid_image_of_inj_on {p : ι → P}
   have hf : ∀ x, f x ∈ s ∧ p (f x) = x := fun x => x.property.choose_spec
   let f' : ps → ι := fun x => f ⟨x, hps ▸ x.property⟩
   have hf' : ∀ x, f' x ∈ s ∧ p (f' x) = x := fun x => hf ⟨x, hps ▸ x.property⟩
-  have hf'i : Function.Injective f' := by
-    intro x y h
-    rw [Subtype.ext_iff, ← (hf' x).2, ← (hf' y).2, h]
+  have hf'i  : Function.Injective f'
+  intro x y h
+  rw [Subtype.ext_iff, ← (hf' x).2, ← (hf' y).2, h]
   let f'e : ps ↪ ι := ⟨f', hf'i⟩
-  have hu : Finset.univ.map f'e = s := by
-    ext x
-    rw [mem_map]
-    constructor
-    · rintro ⟨i, _, rfl⟩
-      exact (hf' i).1
-    · intro hx
-      use ⟨p x, hps.symm ▸ Set.mem_image_of_mem _ hx⟩, mem_univ _
-      refine hi _ (hf' _).1 _ hx ?_
-      rw [(hf' _).2]
+  have hu  : Finset.univ.map f'e = s
+  ext x
+  rw [mem_map]
+  constructor
+  · rintro ⟨i, _, rfl⟩
+    exact (hf' i).1
+  · intro hx
+    use ⟨p x, hps.symm ▸ Set.mem_image_of_mem _ hx⟩, mem_univ _
+    refine hi _ (hf' _).1 _ hx ?_
+    rw [(hf' _).2]
   rw [← hu, centroid_map]
   congr with x
   change p (f' x) = ↑x
@@ -916,9 +916,9 @@ theorem affineCombination_mem_affineSpan [Nontrivial k] {s : Finset ι} {w : ι 
     have hn : s.Nonempty := Finset.nonempty_of_sum_ne_zero hnz
     cases' hn with i1 hi1
     let w1 : ι → k := Function.update (Function.const ι 0) i1 1
-    have hw1 : ∑ i ∈ s, w1 i = 1 := by
-      simp only [Function.const_zero, Finset.sum_update_of_mem hi1, Pi.zero_apply,
-          Finset.sum_const_zero, add_zero]
+    have hw1  : ∑ i ∈ s, w1 i = 1
+    simp only [Function.const_zero, Finset.sum_update_of_mem hi1, Pi.zero_apply,
+        Finset.sum_const_zero, add_zero]
     have hw1s : s.affineCombination k p w1 = p i1 :=
       s.affineCombination_of_eq_one_of_eq_zero w1 p hi1 (Function.update_same _ _ _) fun _ _ hne =>
         Function.update_noteq hne _ _
@@ -1049,13 +1049,13 @@ theorem mem_affineSpan_iff_eq_weightedVSubOfPoint_vadd [Nontrivial k] (p : ι �
   · rintro ⟨s, w, rfl⟩
     classical
       let w' : ι → k := Function.update w j (1 - (s \ {j}).sum w)
-      have h₁ : (insert j s).sum w' = 1 := by
-        by_cases hj : j ∈ s
-        · simp [Finset.sum_update_of_mem hj, Finset.insert_eq_of_mem hj]
-        · simp [Finset.sum_insert hj, Finset.sum_update_of_not_mem hj, hj]
-      have hww : ∀ i, i ≠ j → w i = w' i := by
-        intro i hij
-        simp [w', hij]
+      have h₁  : (insert j s).sum w' = 1
+      by_cases hj : j ∈ s
+      · simp [Finset.sum_update_of_mem hj, Finset.insert_eq_of_mem hj]
+      · simp [Finset.sum_insert hj, Finset.sum_update_of_not_mem hj, hj]
+      have hww  : ∀ i, i ≠ j → w i = w' i
+      intro i hij
+      simp [w', hij]
       rw [s.weightedVSubOfPoint_eq_of_weights_eq p j w w' hww, ←
         s.weightedVSubOfPoint_insert w' p j, ←
         (insert j s).affineCombination_eq_weightedVSubOfPoint_vadd_of_sum_eq_one w' p h₁ (p j)]
@@ -1069,7 +1069,8 @@ unchanged. -/
 theorem affineSpan_eq_affineSpan_lineMap_units [Nontrivial k] {s : Set P} {p : P} (hp : p ∈ s)
     (w : s → Units k) :
     affineSpan k (Set.range fun q : s => AffineMap.lineMap p ↑q (w q : k)) = affineSpan k s := by
-  have : s = Set.range ((↑) : s → P) := by simp
+  have  : s = Set.range ((↑) : s → P)
+  simp
   conv_rhs =>
     rw [this]
 

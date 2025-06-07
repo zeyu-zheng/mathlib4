@@ -118,7 +118,8 @@ We'll show, for each `i` from 1 to 4, that if `en` follows by Rule `i` from `st`
 theorem goodm_of_rule1 (xs : Miustr) (h₁ : Derivable (xs ++ ↑[I])) (h₂ : Goodm (xs ++ ↑[I])) :
     Goodm (xs ++ ↑[I, U]) := by
   cases' h₂ with mhead nmtail
-  have : xs ≠ nil := by rintro rfl; contradiction
+  have  : xs ≠ nil
+  rintro rfl; contradiction
   constructor
   · -- Porting note: Original proof was `rwa [head_append] at * <;> exact this`.
     -- However, there is no `headI_append`
@@ -142,7 +143,8 @@ theorem goodm_of_rule2 (xs : Miustr) (_ : Derivable (M :: xs)) (h₂ : Goodm (M 
 theorem goodm_of_rule3 (as bs : Miustr) (h₁ : Derivable (as ++ ↑[I, I, I] ++ bs))
     (h₂ : Goodm (as ++ ↑[I, I, I] ++ bs)) : Goodm (as ++ ↑(U :: bs)) := by
   cases' h₂ with mhead nmtail
-  have k : as ≠ nil := by rintro rfl; contradiction
+  have k  : as ≠ nil
+  rintro rfl; contradiction
   constructor
   · cases as
     · contradiction
@@ -162,7 +164,8 @@ The proof of the next lemma is identical, on the tactic level, to the previous p
 theorem goodm_of_rule4 (as bs : Miustr) (h₁ : Derivable (as ++ ↑[U, U] ++ bs))
     (h₂ : Goodm (as ++ ↑[U, U] ++ bs)) : Goodm (as ++ bs) := by
   cases' h₂ with mhead nmtail
-  have k : as ≠ nil := by rintro rfl; contradiction
+  have k  : as ≠ nil
+  rintro rfl; contradiction
   constructor
   · cases as
     · contradiction

@@ -178,11 +178,11 @@ theorem integral_boundary_rect_of_hasFDerivAt_real_off_countable (f : ℂ → E)
   simp only [he] at *
   set F : ℝ × ℝ → E := f ∘ e
   set F' : ℝ × ℝ → ℝ × ℝ →L[ℝ] E := fun p => (f' (e p)).comp (e : ℝ × ℝ →L[ℝ] ℂ)
-  have hF' : ∀ p : ℝ × ℝ, (-(I • F' p)) (1, 0) + F' p (0, 1) = -(I • f' (e p) 1 - f' (e p) I) := by
-    rintro ⟨x, y⟩
-    simp only [F', ContinuousLinearMap.neg_apply, ContinuousLinearMap.smul_apply,
-      ContinuousLinearMap.comp_apply, ContinuousLinearEquiv.coe_coe, he₁, he₂, neg_add_eq_sub,
-      neg_sub]
+  have hF'  : ∀ p : ℝ × ℝ, (-(I • F' p)) (1, 0) + F' p (0, 1) = -(I • f' (e p) 1 - f' (e p) I)
+  rintro ⟨x, y⟩
+  simp only [F', ContinuousLinearMap.neg_apply, ContinuousLinearMap.smul_apply,
+    ContinuousLinearMap.comp_apply, ContinuousLinearEquiv.coe_coe, he₁, he₂, neg_add_eq_sub,
+    neg_sub]
   set R : Set (ℝ × ℝ) := [[z.re, w.re]] ×ˢ [[w.im, z.im]]
   set t : Set (ℝ × ℝ) := e ⁻¹' s
   rw [uIcc_comm z.im] at Hc Hi; rw [min_comm z.im, max_comm z.im] at Hd
@@ -307,7 +307,8 @@ theorem circleIntegral_sub_center_inv_smul_eq_of_differentiable_on_annulus_off_c
   set g : ℂ → ℂ := (c + exp ·)
   have hdg : Differentiable ℂ g := differentiable_exp.const_add _
   replace hs : (g ⁻¹' s).Countable := (hs.preimage (add_right_injective c)).preimage_cexp
-  have h_maps : MapsTo g R A := by rintro z ⟨h, -⟩; simpa [g, A, dist_eq, abs_exp, hle] using h.symm
+  have h_maps  : MapsTo g R A
+  rintro z ⟨h, -⟩; simpa [g, A, dist_eq, abs_exp, hle] using h.symm
   replace hc : ContinuousOn (f ∘ g) R := hc.comp hdg.continuous.continuousOn h_maps
   replace hd : ∀ z ∈ Ioo (min a b) (max a b) ×ℂ Ioo (min 0 (2 * π)) (max 0 (2 * π)) \ g ⁻¹' s,
       DifferentiableAt ℂ (f ∘ g) z := by
@@ -448,11 +449,11 @@ theorem two_pi_I_inv_smul_circleIntegral_sub_inv_smul_of_differentiable_on_off_c
   have hR : 0 < R := dist_nonneg.trans_lt hw
   suffices w ∈ closure (ball c R \ s) by
     lift R to ℝ≥0 using hR.le
-    have A : ContinuousAt (fun w => (2 * π * I : ℂ)⁻¹ • ∮ z in C(c, R), (z - w)⁻¹ • f z) w := by
-      have := hasFPowerSeriesOn_cauchy_integral
-        ((hc.mono sphere_subset_closedBall).circleIntegrable R.coe_nonneg) hR
-      refine this.continuousOn.continuousAt (EMetric.isOpen_ball.mem_nhds ?_)
-      rwa [Metric.emetric_ball_nnreal]
+    have A  : ContinuousAt (fun w => (2 * π * I : ℂ)⁻¹ • ∮ z in C(c, R), (z - w)⁻¹ • f z) w
+    have := hasFPowerSeriesOn_cauchy_integral
+      ((hc.mono sphere_subset_closedBall).circleIntegrable R.coe_nonneg) hR
+    refine this.continuousOn.continuousAt (EMetric.isOpen_ball.mem_nhds ?_)
+    rwa [Metric.emetric_ball_nnreal]
     have B : ContinuousAt f w := hc.continuousAt (closedBall_mem_nhds_of_mem hw)
     refine tendsto_nhds_unique_of_frequently_eq A B ((mem_closure_iff_frequently.1 this).mono ?_)
     intro z hz
@@ -535,9 +536,9 @@ theorem hasFPowerSeriesOnBall_of_differentiable_off_countable {R : ℝ≥0} {c :
   r_le := le_radius_cauchyPowerSeries _ _ _
   r_pos := ENNReal.coe_pos.2 hR
   hasSum := fun {w} hw => by
-    have hw' : c + w ∈ ball c R := by
-      simpa only [add_mem_ball_iff_norm, ← coe_nnnorm, mem_emetric_ball_zero_iff,
-        NNReal.coe_lt_coe, ENNReal.coe_lt_coe] using hw
+    have hw'  : c + w ∈ ball c R
+    simpa only [add_mem_ball_iff_norm, ← coe_nnnorm, mem_emetric_ball_zero_iff,
+      NNReal.coe_lt_coe, ENNReal.coe_lt_coe] using hw
     rw [← two_pi_I_inv_smul_circleIntegral_sub_inv_smul_of_differentiable_on_off_countable
       hs hw' hc hd]
     exact (hasFPowerSeriesOn_cauchy_integral
@@ -616,10 +617,10 @@ theorem analyticAt_iff_eventually_differentiableAt {f : ℂ → E} {c : ℂ} :
     apply AnalyticAt.differentiableAt
   · intro d
     rcases _root_.eventually_nhds_iff.mp d with ⟨s, d, o, m⟩
-    have h : AnalyticOn ℂ f s := by
-      refine DifferentiableOn.analyticOn ?_ o
-      intro z m
-      exact (d z m).differentiableWithinAt
+    have h  : AnalyticOn ℂ f s
+    refine DifferentiableOn.analyticOn ?_ o
+    intro z m
+    exact (d z m).differentiableWithinAt
     exact h _ m
 
 end Complex

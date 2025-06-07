@@ -110,14 +110,14 @@ theorem exists_ne_zero_mem_ideal_of_norm_le_mul_sqrt_discr (I : (FractionalIdeal
         (finrank ℚ K).factorial / (finrank ℚ K) ^ (finrank ℚ K) * Real.sqrt |discr K| := by
   -- The smallest possible value for `exists_ne_zero_mem_ideal_of_norm_le`
   let B := (minkowskiBound K I * (convexBodySumFactor K)⁻¹).toReal ^ (1 / (finrank ℚ K : ℝ))
-  have h_le : (minkowskiBound K I) ≤ volume (convexBodySum K B) := by
-    refine le_of_eq ?_
-    rw [convexBodySum_volume, ← ENNReal.ofReal_pow (by positivity), ← Real.rpow_natCast,
-      ← Real.rpow_mul toReal_nonneg, div_mul_cancel₀, Real.rpow_one, ofReal_toReal, mul_comm,
-      mul_assoc, ← coe_mul, inv_mul_cancel (convexBodySumFactor_ne_zero K), ENNReal.coe_one,
-      mul_one]
-    · exact mul_ne_top (ne_of_lt (minkowskiBound_lt_top K I)) coe_ne_top
-    · exact (Nat.cast_ne_zero.mpr (ne_of_gt finrank_pos))
+  have h_le  : (minkowskiBound K I) ≤ volume (convexBodySum K B)
+  refine le_of_eq ?_
+  rw [convexBodySum_volume, ← ENNReal.ofReal_pow (by positivity), ← Real.rpow_natCast,
+    ← Real.rpow_mul toReal_nonneg, div_mul_cancel₀, Real.rpow_one, ofReal_toReal, mul_comm,
+    mul_assoc, ← coe_mul, inv_mul_cancel (convexBodySumFactor_ne_zero K), ENNReal.coe_one,
+    mul_one]
+  · exact mul_ne_top (ne_of_lt (minkowskiBound_lt_top K I)) coe_ne_top
+  · exact (Nat.cast_ne_zero.mpr (ne_of_gt finrank_pos))
   convert exists_ne_zero_mem_ideal_of_norm_le K I h_le
   rw [div_pow B, ← Real.rpow_natCast B, ← Real.rpow_mul (by positivity), div_mul_cancel₀ _
     (Nat.cast_ne_zero.mpr <| ne_of_gt finrank_pos), Real.rpow_one, mul_comm_div, mul_div_assoc']
@@ -170,9 +170,9 @@ theorem abs_discr_ge (h : 1 < finrank ℚ K) :
   -- algebraic integer `x` of small norm and the fact that `1 ≤ |Norm x|` to get a lower bound
   -- on `sqrt |discr K|`.
   obtain ⟨x, h_nz, h_bd⟩ := exists_ne_zero_mem_ringOfIntegers_of_norm_le_mul_sqrt_discr K
-  have h_nm : (1 : ℝ) ≤ |Algebra.norm ℚ (x : K)| := by
-    rw [← Algebra.coe_norm_int, ← Int.cast_one, ← Int.cast_abs, Rat.cast_intCast, Int.cast_le]
-    exact Int.one_le_abs (Algebra.norm_ne_zero_iff.mpr h_nz)
+  have h_nm  : (1 : ℝ) ≤ |Algebra.norm ℚ (x : K)|
+  rw [← Algebra.coe_norm_int, ← Int.cast_one, ← Int.cast_abs, Rat.cast_intCast, Int.cast_le]
+  exact Int.one_le_abs (Algebra.norm_ne_zero_iff.mpr h_nz)
   replace h_bd := le_trans h_nm h_bd
   rw [← inv_mul_le_iff (by positivity), inv_div, mul_one, Real.le_sqrt (by positivity)
     (by positivity), ← Int.cast_abs, div_pow, mul_pow, ← pow_mul, ← pow_mul] at h_bd
@@ -273,12 +273,12 @@ variable {N} (hK : |discr K| ≤ N)
 /-- If `|discr K| ≤ N` then the degree of `K` is at most `rankOfDiscrBdd`. -/
 theorem rank_le_rankOfDiscrBdd :
     finrank ℚ K ≤ rankOfDiscrBdd N := by
-  have h_nz : N ≠ 0 := by
-    refine fun h ↦ discr_ne_zero K ?_
-    rwa [h, Nat.cast_zero, abs_nonpos_iff] at hK
-  have h₂ : 1 < 3 * π / 4 := by
-    rw [_root_.lt_div_iff (by positivity), ← _root_.div_lt_iff' (by positivity), one_mul]
-    linarith [Real.pi_gt_three]
+  have h_nz  : N ≠ 0
+  refine fun h ↦ discr_ne_zero K ?_
+  rwa [h, Nat.cast_zero, abs_nonpos_iff] at hK
+  have h₂  : 1 < 3 * π / 4
+  rw [_root_.lt_div_iff (by positivity), ← _root_.div_lt_iff' (by positivity), one_mul]
+  linarith [Real.pi_gt_three]
   obtain h | h := lt_or_le 1 (finrank ℚ K)
   · apply le_max_of_le_right
     rw [Nat.le_floor_iff]
@@ -298,8 +298,8 @@ theorem rank_le_rankOfDiscrBdd :
 
 /-- If `|discr K| ≤ N` then the Minkowski bound of `K` is less than `boundOfDiscrBdd`. -/
 theorem minkowskiBound_lt_boundOfDiscBdd : minkowskiBound K ↑1 < boundOfDiscBdd N := by
-  have : boundOfDiscBdd N - 1 < boundOfDiscBdd N := by
-    simp_rw [boundOfDiscBdd, add_tsub_cancel_right, lt_add_iff_pos_right, zero_lt_one]
+  have  : boundOfDiscBdd N - 1 < boundOfDiscBdd N
+  simp_rw [boundOfDiscBdd, add_tsub_cancel_right, lt_add_iff_pos_right, zero_lt_one]
   refine lt_of_le_of_lt ?_ (coe_lt_coe.mpr this)
   rw [minkowskiBound, volume_fundamentalDomain_fractionalIdealLatticeBasis, boundOfDiscBdd,
     add_tsub_cancel_right, Units.val_one, FractionalIdeal.absNorm_one, Rat.cast_one,

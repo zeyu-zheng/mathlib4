@@ -91,12 +91,12 @@ lemma eq_unit_mul_divisor {N : ℕ} (a : ZMod N) :
   obtain ⟨N₀, (hN₀ : _ = d * _)⟩ := a.val.gcd_dvd_right N
   refine ⟨d, ⟨N₀, hN₀⟩, ?_⟩
   -- Show `a` is a unit mod `N / d`.
-  have hu₀ : IsUnit (a₀ : ZMod N₀) := by
-    refine (isUnit_iff_coprime _ _).mpr (Nat.isCoprime_iff_coprime.mp ?_)
-    obtain ⟨p, q, hpq⟩ : ∃ (p q : ℤ), d = a.val * p + N * q := ⟨_, _, Nat.gcd_eq_gcd_ab _ _⟩
-    rw [ha₀, hN₀, Nat.cast_mul, Nat.cast_mul, mul_assoc, mul_assoc, ← mul_add, eq_comm,
-      mul_comm _ p, mul_comm _ q] at hpq
-    exact ⟨p, q, Int.eq_one_of_mul_eq_self_right (Nat.cast_ne_zero.mpr hd) hpq⟩
+  have hu₀  : IsUnit (a₀ : ZMod N₀)
+  refine (isUnit_iff_coprime _ _).mpr (Nat.isCoprime_iff_coprime.mp ?_)
+  obtain ⟨p, q, hpq⟩ : ∃ (p q : ℤ), d = a.val * p + N * q := ⟨_, _, Nat.gcd_eq_gcd_ab _ _⟩
+  rw [ha₀, hN₀, Nat.cast_mul, Nat.cast_mul, mul_assoc, mul_assoc, ← mul_add, eq_comm,
+    mul_comm _ p, mul_comm _ q] at hpq
+  exact ⟨p, q, Int.eq_one_of_mul_eq_self_right (Nat.cast_ne_zero.mpr hd) hpq⟩
   -- Lift it arbitrarily to a unit mod `N`.
   obtain ⟨u, hu⟩ := (ZMod.unitsMap_surjective (⟨d, mul_comm d N₀ ▸ hN₀⟩ : N₀ ∣ N)) hu₀.unit
   rw [unitsMap_def, ← Units.eq_iff, Units.coe_map, IsUnit.unit_spec, MonoidHom.coe_coe] at hu

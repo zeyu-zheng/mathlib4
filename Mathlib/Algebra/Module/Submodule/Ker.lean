@@ -129,12 +129,12 @@ theorem _root_.AddMonoidHom.coe_toIntLinearMap_ker {M M₂ : Type*} [AddCommGrou
     (f : M →+ M₂) : LinearMap.ker f.toIntLinearMap = AddSubgroup.toIntSubmodule f.ker := rfl
 
 theorem ker_eq_bot_of_injective {f : F} (hf : Injective f) : ker f = ⊥ := by
-  have : Disjoint ⊤ (ker f) := by
-    -- Porting note: `← map_zero f` should work here, but it needs to be directly applied to H.
-    rw [disjoint_ker]
-    intros _ _ H
-    rw [← map_zero f] at H
-    exact hf H
+  have  : Disjoint ⊤ (ker f)
+  -- Porting note: `← map_zero f` should work here, but it needs to be directly applied to H.
+  rw [disjoint_ker]
+  intros _ _ H
+  rw [← map_zero f] at H
+  exact hf H
   simpa [disjoint_iff_inf_le]
 
 /-- The increasing sequence of submodules consisting of the kernels of the iterates of a linear map.
@@ -191,7 +191,8 @@ theorem ker_eq_bot {f : M →ₛₗ[τ₁₂] M₂} : ker f = ⊥ ↔ Injective 
   rw [← LinearMap.ker_eq_bot]
   refine ⟨fun h ↦ le_bot_iff.1 ?_, fun h ↦ le_bot_iff.1 ?_⟩
   · intro x ⟨hx, h'x⟩
-    have : ⟨x, hx⟩ ∈ LinearMap.ker (LinearMap.domRestrict f S) := by simpa using h'x
+    have  : ⟨x, hx⟩ ∈ LinearMap.ker (LinearMap.domRestrict f S)
+    simpa using h'x
     rw [h] at this
     simpa using this
   · rintro ⟨x, hx⟩ h'x

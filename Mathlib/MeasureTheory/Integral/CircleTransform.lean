@@ -98,20 +98,20 @@ theorem continuousOn_prod_circle_transform_function {R r : ℝ} (hr : r < R) {z 
 
 theorem continuousOn_abs_circleTransformBoundingFunction {R r : ℝ} (hr : r < R) (z : ℂ) :
     ContinuousOn (abs ∘ circleTransformBoundingFunction R z) (closedBall z r ×ˢ univ) := by
-  have : ContinuousOn (circleTransformBoundingFunction R z) (closedBall z r ×ˢ univ) := by
-    apply_rules [ContinuousOn.smul, continuousOn_const]
-    · simp only [deriv_circleMap]
-      apply_rules [ContinuousOn.mul, (continuous_circleMap 0 R).comp_continuousOn continuousOn_snd,
-        continuousOn_const]
-    · simpa only [inv_pow] using continuousOn_prod_circle_transform_function hr
+  have  : ContinuousOn (circleTransformBoundingFunction R z) (closedBall z r ×ˢ univ)
+  apply_rules [ContinuousOn.smul, continuousOn_const]
+  · simp only [deriv_circleMap]
+    apply_rules [ContinuousOn.mul, (continuous_circleMap 0 R).comp_continuousOn continuousOn_snd,
+      continuousOn_const]
+  · simpa only [inv_pow] using continuousOn_prod_circle_transform_function hr
   exact this.norm
 
 theorem abs_circleTransformBoundingFunction_le {R r : ℝ} (hr : r < R) (hr' : 0 ≤ r) (z : ℂ) :
     ∃ x : closedBall z r ×ˢ [[0, 2 * π]], ∀ y : closedBall z r ×ˢ [[0, 2 * π]],
     abs (circleTransformBoundingFunction R z y) ≤ abs (circleTransformBoundingFunction R z x) := by
   have cts := continuousOn_abs_circleTransformBoundingFunction hr z
-  have comp : IsCompact (closedBall z r ×ˢ [[0, 2 * π]]) := by
-    apply_rules [IsCompact.prod, ProperSpace.isCompact_closedBall z r, isCompact_uIcc]
+  have comp  : IsCompact (closedBall z r ×ˢ [[0, 2 * π]])
+  apply_rules [IsCompact.prod, ProperSpace.isCompact_closedBall z r, isCompact_uIcc]
   have none : (closedBall z r ×ˢ [[0, 2 * π]]).Nonempty :=
     (nonempty_closedBall.2 hr').prod nonempty_uIcc
   have := IsCompact.exists_isMaxOn comp none (cts.mono <| prod_mono_right (subset_univ _))

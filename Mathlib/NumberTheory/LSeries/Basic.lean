@@ -140,12 +140,12 @@ lemma LSeriesSummable.congr' {f g : ℕ → ℂ} (s : ℂ) (h : f =ᶠ[atTop] g)
     LSeriesSummable g s := by
   rw [← Nat.cofinite_eq_atTop] at h
   refine (summable_norm_iff.mpr hf).of_norm_bounded_eventually _ ?_
-  have : term f s =ᶠ[cofinite] term g s := by
-    rw [eventuallyEq_iff_exists_mem] at h ⊢
-    obtain ⟨S, hS, hS'⟩ := h
-    refine ⟨S \ {0}, diff_mem hS <| (Set.finite_singleton 0).compl_mem_cofinite, fun n hn ↦ ?_⟩
-    simp only [Set.mem_diff, Set.mem_singleton_iff] at hn
-    simp only [term_of_ne_zero hn.2, hS' hn.1]
+  have  : term f s =ᶠ[cofinite] term g s
+  rw [eventuallyEq_iff_exists_mem] at h ⊢
+  obtain ⟨S, hS, hS'⟩ := h
+  refine ⟨S \ {0}, diff_mem hS <| (Set.finite_singleton 0).compl_mem_cofinite, fun n hn ↦ ?_⟩
+  simp only [Set.mem_diff, Set.mem_singleton_iff] at hn
+  simp only [term_of_ne_zero hn.2, hS' hn.1]
   exact Eventually.mono this.symm fun n hn ↦ by simp only [hn, le_rfl]
 
 open Filter in
@@ -301,21 +301,22 @@ lemma LSeriesSummable_of_le_const_mul_rpow {f : ℕ → ℂ} {x : ℝ} {s : ℂ}
     (h : ∃ C, ∀ n ≠ 0, ‖f n‖ ≤ C * n ^ (x - 1)) :
     LSeriesSummable f s := by
   obtain ⟨C, hC⟩ := h
-  have hC₀ : 0 ≤ C := by
-    specialize hC 1 one_ne_zero
-    simp only [Nat.cast_one, Real.one_rpow, mul_one] at hC
-    exact (norm_nonneg _).trans hC
-  have hsum : Summable fun n : ℕ ↦ ‖(C : ℂ) / n ^ (s + (1 - x))‖ := by
-    simp_rw [div_eq_mul_inv, norm_mul, ← cpow_neg]
-    have hsx : -s.re + x - 1 < -1 := by linarith only [hs]
-    refine Summable.mul_left _ <|
-      Summable.of_norm_bounded_eventually_nat (fun n ↦ (n : ℝ) ^ (-s.re + x - 1)) ?_ ?_
-    · simp only [Real.summable_nat_rpow, hsx]
-    · simp only [neg_add_rev, neg_sub, norm_norm, Filter.eventually_atTop]
-      refine ⟨1, fun n hn ↦ ?_⟩
-      simp only [norm_natCast_cpow_of_pos hn, add_re, sub_re, neg_re, ofReal_re, one_re]
-      convert le_refl ?_ using 2
-      ring
+  have hC₀  : 0 ≤ C
+  specialize hC 1 one_ne_zero
+  simp only [Nat.cast_one, Real.one_rpow, mul_one] at hC
+  exact (norm_nonneg _).trans hC
+  have hsum  : Summable fun n : ℕ ↦ ‖(C : ℂ) / n ^ (s + (1 - x))‖
+  simp_rw [div_eq_mul_inv, norm_mul, ← cpow_neg]
+  have hsx  : -s.re + x - 1 < -1
+  linarith only [hs]
+  refine Summable.mul_left _ <|
+    Summable.of_norm_bounded_eventually_nat (fun n ↦ (n : ℝ) ^ (-s.re + x - 1)) ?_ ?_
+  · simp only [Real.summable_nat_rpow, hsx]
+  · simp only [neg_add_rev, neg_sub, norm_norm, Filter.eventually_atTop]
+    refine ⟨1, fun n hn ↦ ?_⟩
+    simp only [norm_natCast_cpow_of_pos hn, add_re, sub_re, neg_re, ofReal_re, one_re]
+    convert le_refl ?_ using 2
+    ring
   refine Summable.of_norm <| hsum.of_nonneg_of_le (fun _ ↦ norm_nonneg _) (fun n ↦ ?_)
   rcases n.eq_zero_or_pos with rfl | hn
   · simp only [term_zero, norm_zero]

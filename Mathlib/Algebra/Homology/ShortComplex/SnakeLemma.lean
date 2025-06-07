@@ -161,9 +161,9 @@ lemma exact_C₃_up : (ShortComplex.mk S.v₀₁.τ₃ S.v₁₂.τ₃
   exact_of_f_is_kernel _ S.h₀τ₃
 
 instance mono_L₀_f [Mono S.L₁.f] : Mono S.L₀.f := by
-  have : Mono (S.L₀.f ≫ S.v₀₁.τ₂) := by
-    rw [← S.v₀₁.comm₁₂]
-    apply mono_comp
+  have  : Mono (S.L₀.f ≫ S.v₀₁.τ₂)
+  rw [← S.v₀₁.comm₁₂]
+  apply mono_comp
   exact mono_of_mono _ S.v₀₁.τ₂
 
 /-- `L₃.X₁` is the cokernel of `v₁₂.τ₁ : L₁.X₁ ⟶ L₂.X₁`. -/
@@ -198,9 +198,9 @@ lemma exact_C₃_down : (ShortComplex.mk S.v₁₂.τ₃ S.v₂₃.τ₃
   exact_of_g_is_cokernel _ S.h₃τ₃
 
 instance epi_L₃_g [Epi S.L₂.g] : Epi S.L₃.g := by
-  have : Epi (S.v₂₃.τ₂ ≫ S.L₃.g) := by
-    rw [S.v₂₃.comm₂₃]
-    apply epi_comp
+  have  : Epi (S.v₂₃.τ₂ ≫ S.L₃.g)
+  rw [S.v₂₃.comm₂₃]
+  apply epi_comp
   exact epi_of_epi S.v₂₃.τ₂ _
 
 lemma L₀_exact : S.L₀.Exact := by
@@ -208,9 +208,9 @@ lemma L₀_exact : S.L₀.Exact := by
   intro A x₂ hx₂
   obtain ⟨A₁, π₁, hπ₁, y₁, hy₁⟩ := S.L₁_exact.exact_up_to_refinements (x₂ ≫ S.v₀₁.τ₂)
     (by rw [assoc, S.v₀₁.comm₂₃, reassoc_of% hx₂, zero_comp])
-  have hy₁' : y₁ ≫ S.v₁₂.τ₁ = 0 := by
-    simp only [← cancel_mono S.L₂.f, assoc, zero_comp, S.v₁₂.comm₁₂,
-      ← reassoc_of% hy₁, w₀₂_τ₂, comp_zero]
+  have hy₁'  : y₁ ≫ S.v₁₂.τ₁ = 0
+  simp only [← cancel_mono S.L₂.f, assoc, zero_comp, S.v₁₂.comm₁₂,
+    ← reassoc_of% hy₁, w₀₂_τ₂, comp_zero]
   obtain ⟨x₁, hx₁⟩ : ∃ x₁, x₁ ≫ S.v₀₁.τ₁ = y₁ := ⟨_, S.exact_C₁_up.lift_f y₁ hy₁'⟩
   refine ⟨A₁, π₁, hπ₁, x₁, ?_⟩
   simp only [← cancel_mono S.v₀₁.τ₂, assoc, ← S.v₀₁.comm₁₂, reassoc_of% hx₁, hy₁]
@@ -313,19 +313,19 @@ lemma L₁'_exact : S.L₁'.Exact := by
   dsimp at x₃ hx₃
   obtain ⟨A₁, π₁, hπ₁, p, hp⟩ := surjective_up_to_refinements_of_epi S.L₀'.g x₃
   dsimp [L₀'] at p hp
-  have hp' : (p ≫ S.φ₁) ≫ S.v₂₃.τ₁ = 0 := by
-    rw [assoc, ← S.snd_δ, ← reassoc_of% hp, hx₃, comp_zero]
+  have hp'  : (p ≫ S.φ₁) ≫ S.v₂₃.τ₁ = 0
+  rw [assoc, ← S.snd_δ, ← reassoc_of% hp, hx₃, comp_zero]
   obtain ⟨A₂, π₂, hπ₂, x₁, hx₁⟩ := S.exact_C₁_down.exact_up_to_refinements (p ≫ S.φ₁) hp'
   dsimp at x₁ hx₁
   let x₂' := x₁ ≫ S.L₁.f
   let x₂ := π₂ ≫ p ≫ pullback.fst _ _
-  have hx₂' : (x₂ - x₂') ≫ S.v₁₂.τ₂ = 0 := by
-    simp only [x₂, x₂', sub_comp, assoc, ← S.v₁₂.comm₁₂, ← reassoc_of% hx₁, φ₂, φ₁_L₂_f, sub_self]
+  have hx₂'  : (x₂ - x₂') ≫ S.v₁₂.τ₂ = 0
+  simp only [x₂, x₂', sub_comp, assoc, ← S.v₁₂.comm₁₂, ← reassoc_of% hx₁, φ₂, φ₁_L₂_f, sub_self]
   let k₂ : A₂ ⟶ S.L₀.X₂ := S.exact_C₂_up.lift _ hx₂'
   have hk₂ : k₂ ≫ S.v₀₁.τ₂ = x₂ - x₂' := S.exact_C₂_up.lift_f _ _
-  have hk₂' : k₂ ≫ S.L₀.g = π₂ ≫ p ≫ pullback.snd _ _ := by
-    simp only [x₂, x₂', ← cancel_mono S.v₀₁.τ₃, assoc, ← S.v₀₁.comm₂₃, reassoc_of% hk₂,
-      sub_comp, S.L₁.zero, comp_zero, sub_zero, pullback.condition]
+  have hk₂'  : k₂ ≫ S.L₀.g = π₂ ≫ p ≫ pullback.snd _ _
+  simp only [x₂, x₂', ← cancel_mono S.v₀₁.τ₃, assoc, ← S.v₀₁.comm₂₃, reassoc_of% hk₂,
+    sub_comp, S.L₁.zero, comp_zero, sub_zero, pullback.condition]
   exact ⟨A₂, π₂ ≫ π₁, epi_comp _ _, k₂, by simp only [assoc, L₁'_f, ← hk₂', hp]⟩
 
 /-- The duality isomorphism `S.P ≅ Opposite.unop S.op.P'`. -/

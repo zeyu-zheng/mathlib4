@@ -177,9 +177,9 @@ lemma norm_jacobiTheta₂_term_fderiv_le (n : ℤ) (z τ : ℂ) :
 
 lemma norm_jacobiTheta₂_term_fderiv_ge (n : ℤ) (z τ : ℂ) :
     π * |n| ^ 2 * ‖jacobiTheta₂_term n z τ‖ ≤ ‖jacobiTheta₂_term_fderiv n z τ‖ := by
-  have : ‖(jacobiTheta₂_term_fderiv n z τ) (0, 1)‖ ≤ ‖jacobiTheta₂_term_fderiv n z τ‖ := by
-    refine (ContinuousLinearMap.le_opNorm _ _).trans ?_
-    simp_rw [Prod.norm_def, norm_one, norm_zero, max_eq_right zero_le_one, mul_one, le_refl]
+  have  : ‖(jacobiTheta₂_term_fderiv n z τ) (0, 1)‖ ≤ ‖jacobiTheta₂_term_fderiv n z τ‖
+  refine (ContinuousLinearMap.le_opNorm _ _).trans ?_
+  simp_rw [Prod.norm_def, norm_one, norm_zero, max_eq_right zero_le_one, mul_one, le_refl]
   refine le_trans ?_ this
   simp_rw [jacobiTheta₂_term_fderiv, jacobiTheta₂_term, ContinuousLinearMap.coe_smul',
     Pi.smul_apply, ContinuousLinearMap.add_apply, ContinuousLinearMap.coe_smul',
@@ -294,13 +294,13 @@ lemma hasFDerivAt_jacobiTheta₂ (z : ℂ) {τ : ℂ} (hτ : 0 < im τ) :
   obtain ⟨T, hT, hτ'⟩ := exists_between hτ
   obtain ⟨S, hz⟩ := exists_gt |im z|
   let V := {u | |im u| < S} ×ˢ {v | T < im v}
-  have hVo : IsOpen V := by
-    refine ((_root_.continuous_abs.comp continuous_im).isOpen_preimage _ isOpen_Iio).prod ?_
-    exact continuous_im.isOpen_preimage _ isOpen_Ioi
+  have hVo  : IsOpen V
+  refine ((_root_.continuous_abs.comp continuous_im).isOpen_preimage _ isOpen_Iio).prod ?_
+  exact continuous_im.isOpen_preimage _ isOpen_Ioi
   have hVmem : (z, τ) ∈ V := ⟨hz, hτ'⟩
-  have hVp : IsPreconnected V := by
-    refine (Convex.isPreconnected ?_).prod (convex_halfspace_im_gt T).isPreconnected
-    simpa only [abs_lt] using (convex_halfspace_im_gt _).inter (convex_halfspace_im_lt _)
+  have hVp  : IsPreconnected V
+  refine (Convex.isPreconnected ?_).prod (convex_halfspace_im_gt T).isPreconnected
+  simpa only [abs_lt] using (convex_halfspace_im_gt _).inter (convex_halfspace_im_lt _)
   let f : ℤ → ℂ × ℂ → ℂ := fun n p ↦ jacobiTheta₂_term n p.1 p.2
   let f' : ℤ → ℂ × ℂ → ℂ × ℂ →L[ℂ] ℂ := fun n p ↦ jacobiTheta₂_term_fderiv n p.1 p.2
   have hf (n : ℤ) : ∀ p ∈ V, HasFDerivAt (f n) (f' n p) p :=
@@ -365,8 +365,9 @@ lemma continuousAt_jacobiTheta₂' (z : ℂ) {τ : ℂ} (hτ : 0 < im τ) :
     isOpen_Iio).prod (continuous_im.isOpen_preimage _ isOpen_Ioi)
   refine ContinuousOn.continuousAt ?_ (hVo.mem_nhds ⟨hz, hτ'⟩)
   let u (n : ℤ) : ℝ := 2 * π * |n| * rexp (-π * (T * n ^ 2 - 2 * S * |n|))
-  have hu : Summable u  := by simpa only [u, mul_assoc, pow_one]
-      using (summable_pow_mul_jacobiTheta₂_term_bound S hT 1).mul_left (2 * π)
+  have hu  : Summable u
+  simpa only [u, mul_assoc, pow_one]
+  using (summable_pow_mul_jacobiTheta₂_term_bound S hT 1).mul_left (2 * π)
   refine continuousOn_tsum (fun n ↦ ?_) hu (fun n ⟨z', τ'⟩ ⟨hz', hτ'⟩ ↦ ?_)
   · apply Continuous.continuousOn
     unfold jacobiTheta₂'_term jacobiTheta₂_term

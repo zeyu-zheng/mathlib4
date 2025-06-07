@@ -45,8 +45,8 @@ lemma lintegral_condKernel_mem (a : α) {s : Set (β × Ω)} (hs : MeasurableSet
 lemma setLIntegral_condKernel_eq_measure_prod (a : α) {s : Set β} (hs : MeasurableSet s)
     {t : Set Ω} (ht : MeasurableSet t) :
     ∫⁻ b in s, Kernel.condKernel κ (a, b) t ∂(Kernel.fst κ a) = κ a (s ×ˢ t) := by
-  have : κ a (s ×ˢ t) = (Kernel.fst κ ⊗ₖ Kernel.condKernel κ) a (s ×ˢ t) := by
-    congr; exact (κ.disintegrate _).symm
+  have  : κ a (s ×ˢ t) = (Kernel.fst κ ⊗ₖ Kernel.condKernel κ) a (s ×ˢ t)
+  congr; exact (κ.disintegrate _).symm
   rw [this, Kernel.compProd_apply _ _ _ (hs.prod ht)]
   classical
   have : ∀ b, Kernel.condKernel κ (a, b) {c | (b, c) ∈ s ×ˢ t}
@@ -164,8 +164,8 @@ lemma lintegral_condKernel_mem {s : Set (β × Ω)} (hs : MeasurableSet s) :
 lemma setLIntegral_condKernel_eq_measure_prod {s : Set β} (hs : MeasurableSet s) {t : Set Ω}
     (ht : MeasurableSet t) :
     ∫⁻ b in s, ρ.condKernel b t ∂ρ.fst = ρ (s ×ˢ t) := by
-  have : ρ (s ×ˢ t) = (ρ.fst ⊗ₘ ρ.condKernel) (s ×ˢ t) := by
-    congr; exact (ρ.disintegrate _).symm
+  have  : ρ (s ×ˢ t) = (ρ.fst ⊗ₘ ρ.condKernel) (s ×ˢ t)
+  congr; exact (ρ.disintegrate _).symm
   rw [this, compProd_apply (hs.prod ht)]
   classical
   have : ∀ b, ρ.condKernel b (Prod.mk b ⁻¹' s ×ˢ t)

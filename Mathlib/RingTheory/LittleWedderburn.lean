@@ -67,10 +67,12 @@ private theorem center_eq_top [Finite D] (hD : InductionHyp D) : Subring.center 
   by_contra! hZ
   letI : Field Z := hD.field hZ.lt_top
   set q := card Z with card_Z
-  have hq : 1 < q := by rw [card_Z]; exact one_lt_card
+  have hq  : 1 < q
+  rw [card_Z]; exact one_lt_card
   let n := finrank Z D
   have card_D : card D = q ^ n := card_eq_pow_finrank
-  have h1qn : 1 ≤ q ^ n := by rw [← card_D]; exact card_pos
+  have h1qn  : 1 ≤ q ^ n
+  rw [← card_D]; exact card_pos
   -- We go about this by looking at the class equation for `Dˣ`:
   -- `q ^ n - 1 = q - 1 + ∑ x : conjugacy classes (D ∖ Dˣ), |x|`.
   -- The next few lines gets the equation into basically this form over `ℤ`.
@@ -110,21 +112,22 @@ private theorem center_eq_top [Finite D] (hD : InductionHyp D) : Subring.center 
   -- gives us the desired contradiction..
   rw [Set.toFinset_card, ConjClasses.card_carrier, ← card_congr
         (show Zxˣ ≃* _ from unitsCentralizerEquiv _ x).toEquiv, card_units, card_D]
-  have hZx : Zx ≠ ⊤ := by
-    by_contra! hZx
-    refine (ConjClasses.mk_bijOn (Dˣ)).mapsTo (Set.subset_center_units ?_) hx
-    exact Subring.centralizer_eq_top_iff_subset.mp hZx <| Set.mem_singleton _
+  have hZx  : Zx ≠ ⊤
+  by_contra! hZx
+  refine (ConjClasses.mk_bijOn (Dˣ)).mapsTo (Set.subset_center_units ?_) hx
+  exact Subring.centralizer_eq_top_iff_subset.mp hZx <| Set.mem_singleton _
   letI : Field Zx := hD.field hZx.lt_top
   letI : Algebra Z Zx := (Subring.inclusion <| Subring.center_le_centralizer {(x : D)}).toAlgebra
   let d := finrank Z Zx
   have card_Zx : card Zx = q ^ d := card_eq_pow_finrank
-  have h1qd : 1 ≤ q ^ d := by rw [← card_Zx]; exact card_pos
+  have h1qd  : 1 ≤ q ^ d
+  rw [← card_Zx]; exact card_pos
   haveI : IsScalarTower Z Zx D := ⟨fun x y z ↦ mul_assoc _ _ _⟩
   rw [card_units, card_Zx, Int.natCast_div, Nat.cast_sub h1qd, Nat.cast_sub h1qn, Nat.cast_one,
       Nat.cast_pow, Nat.cast_pow]
   apply Int.dvd_div_of_mul_dvd
-  have aux : ∀ {k : ℕ}, ((X : ℤ[X]) ^ k - 1).eval ↑q = (q : ℤ) ^ k - 1 := by
-    simp only [eval_X, eval_one, eval_pow, eval_sub, eq_self_iff_true, forall_const]
+  have aux  : ∀ {k : ℕ}, ((X : ℤ[X]) ^ k - 1).eval ↑q = (q : ℤ) ^ k - 1
+  simp only [eval_X, eval_one, eval_pow, eval_sub, eq_self_iff_true, forall_const]
   rw [← aux, ← aux, ← eval_mul]
   refine (evalRingHom ↑q).map_dvd (X_pow_sub_one_mul_cyclotomic_dvd_X_pow_sub_one_of_dvd ℤ ?_)
   refine Nat.mem_properDivisors.mpr ⟨⟨_, (finrank_mul_finrank Z Zx D).symm⟩, ?_⟩

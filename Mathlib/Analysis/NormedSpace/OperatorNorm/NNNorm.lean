@@ -195,9 +195,9 @@ theorem sSup_closed_unit_ball_eq_nnnorm {𝕜 𝕜₂ E F : Type*} [NormedAddCom
     [SeminormedAddCommGroup F] [DenselyNormedField 𝕜] [NontriviallyNormedField 𝕜₂] {σ₁₂ : 𝕜 →+* 𝕜₂}
     [NormedSpace 𝕜 E] [NormedSpace 𝕜₂ F] [RingHomIsometric σ₁₂] (f : E →SL[σ₁₂] F) :
     sSup ((fun x => ‖f x‖₊) '' closedBall 0 1) = ‖f‖₊ := by
-  have hbdd : ∀ y ∈ (fun x => ‖f x‖₊) '' closedBall 0 1, y ≤ ‖f‖₊ := by
-    rintro - ⟨x, hx, rfl⟩
-    exact f.unit_le_opNorm x (mem_closedBall_zero_iff.1 hx)
+  have hbdd  : ∀ y ∈ (fun x => ‖f x‖₊) '' closedBall 0 1, y ≤ ‖f‖₊
+  rintro - ⟨x, hx, rfl⟩
+  exact f.unit_le_opNorm x (mem_closedBall_zero_iff.1 hx)
   refine le_antisymm (csSup_le ((nonempty_closedBall.mpr zero_le_one).image _) hbdd) ?_
   rw [← sSup_unit_ball_eq_nnnorm]
   exact csSup_le_csSup ⟨‖f‖₊, hbdd⟩ ((nonempty_ball.2 zero_lt_one).image _)

@@ -483,8 +483,8 @@ theorem natSepDegree_eq_one_iff_of_monic' (q : ℕ) [ExpChar F q] (hm : f.Monic)
     ∃ (n : ℕ) (y : F), f = expand F (q ^ n) (X - C y) := by
   refine ⟨fun h ↦ ?_, fun ⟨n, y, h⟩ ↦ ?_⟩
   · obtain ⟨g, h1, n, rfl⟩ := hi.hasSeparableContraction q
-    have h2 : g.natDegree = 1 := by
-      rwa [natSepDegree_expand _ q, h1.natSepDegree_eq_natDegree] at h
+    have h2  : g.natDegree = 1
+    rwa [natSepDegree_expand _ q, h1.natSepDegree_eq_natDegree] at h
     rw [((monic_expand_iff <| expChar_pow_pos F q n).mp hm).eq_X_add_C h2]
     exact ⟨n, -(g.coeff 0), by rw [map_neg, sub_neg_eq_add]⟩
   rw [h, natSepDegree_expand _ q, natSepDegree_X_sub_C]

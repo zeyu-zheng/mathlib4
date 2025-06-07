@@ -238,7 +238,8 @@ private theorem mul_assoc (a b c : ⨁ i, A i) : a * b * c = a * (b * c) := by
   suffices (mulHom A).compHom.comp (mulHom A) =
       (AddMonoidHom.compHom flipHom <| (mulHom A).flip.compHom.comp (mulHom A)).flip by
       have sol := DFunLike.congr_fun (DFunLike.congr_fun (DFunLike.congr_fun this a) b) c
-      have aux : ∀ a b, (mulHom A) a b = a * b := fun _ _ ↦ rfl
+      have aux : ∀ a b, (mulHom A) a b = a * b
+      apply fun _ _ ↦ rfl
       simp only [coe_comp, Function.comp_apply, AddMonoidHom.compHom_apply_apply, aux, flip_apply,
         AddMonoidHom.flipHom_apply] at sol
       exact sol

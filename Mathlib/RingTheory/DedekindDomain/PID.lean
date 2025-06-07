@@ -38,9 +38,9 @@ theorem Ideal.eq_span_singleton_of_mem_of_not_mem_sq_of_not_mem_prime_ne {P : Id
     (hP : P.IsPrime) [IsDedekindDomain R] {x : R} (x_mem : x ∈ P) (hxP2 : x ∉ P ^ 2)
     (hxQ : ∀ Q : Ideal R, IsPrime Q → Q ≠ P → x ∉ Q) : P = Ideal.span {x} := by
   letI := Classical.decEq (Ideal R)
-  have hx0 : x ≠ 0 := by
-    rintro rfl
-    exact hxP2 (zero_mem _)
+  have hx0  : x ≠ 0
+  rintro rfl
+  exact hxP2 (zero_mem _)
   by_cases hP0 : P = ⊥
   · subst hP0
     -- Porting note: was `simpa using hxP2` but that hypothesis didn't even seem relevant in Lean 3
@@ -80,16 +80,16 @@ theorem FractionalIdeal.isPrincipal_of_unit_of_comap_mul_span_singleton_eq_top {
     Submodule.IsPrincipal (I : Submodule R A) := by
   have hinv := I.mul_inv
   set J := Submodule.comap (Algebra.linearMap R A) ((I : Submodule R A) * Submodule.span R {v})
-  have hJ : IsLocalization.coeSubmodule A J = ↑I * Submodule.span R {v} := by
-    -- Porting note: had to insert `val_eq_coe` into this rewrite.
-    -- Arguably this is because `Subtype.ext_iff` is breaking the `FractionalIdeal` API.
-    rw [Subtype.ext_iff, val_eq_coe, coe_mul, val_eq_coe, coe_one] at hinv
-    apply Submodule.map_comap_eq_self
-    rw [← Submodule.one_eq_range, ← hinv]
-    exact Submodule.mul_le_mul_right ((Submodule.span_singleton_le_iff_mem _ _).2 hv)
-  have : (1 : A) ∈ ↑I * Submodule.span R {v} := by
-    rw [← hJ, h, IsLocalization.coeSubmodule_top, Submodule.mem_one]
-    exact ⟨1, (algebraMap R _).map_one⟩
+  have hJ  : IsLocalization.coeSubmodule A J = ↑I * Submodule.span R {v}
+  -- Porting note: had to insert `val_eq_coe` into this rewrite.
+  -- Arguably this is because `Subtype.ext_iff` is breaking the `FractionalIdeal` API.
+  rw [Subtype.ext_iff, val_eq_coe, coe_mul, val_eq_coe, coe_one] at hinv
+  apply Submodule.map_comap_eq_self
+  rw [← Submodule.one_eq_range, ← hinv]
+  exact Submodule.mul_le_mul_right ((Submodule.span_singleton_le_iff_mem _ _).2 hv)
+  have  : (1 : A) ∈ ↑I * Submodule.span R {v}
+  rw [← hJ, h, IsLocalization.coeSubmodule_top, Submodule.mem_one]
+  exact ⟨1, (algebraMap R _).map_one⟩
   obtain ⟨w, hw, hvw⟩ := Submodule.mem_mul_span_singleton.1 this
   refine ⟨⟨w, ?_⟩⟩
   rw [← FractionalIdeal.coe_spanSingleton S, ← inv_inv I, eq_comm]
@@ -111,10 +111,10 @@ theorem FractionalIdeal.isPrincipal.of_finite_maximals_of_inv {A : Type*} [CommR
   rw [Subtype.ext_iff, val_eq_coe, coe_mul] at hinv
   let s := hf.toFinset
   haveI := Classical.decEq (Ideal R)
-  have coprime : ∀ M ∈ s, ∀ M' ∈ s.erase M, M ⊔ M' = ⊤ := by
-    simp_rw [Finset.mem_erase, hf.mem_toFinset]
-    rintro M hM M' ⟨hne, hM'⟩
-    exact Ideal.IsMaximal.coprime_of_ne hM hM' hne.symm
+  have coprime  : ∀ M ∈ s, ∀ M' ∈ s.erase M, M ⊔ M' = ⊤
+  simp_rw [Finset.mem_erase, hf.mem_toFinset]
+  rintro M hM M' ⟨hne, hM'⟩
+  exact Ideal.IsMaximal.coprime_of_ne hM hM' hne.symm
   have nle : ∀ M ∈ s, ¬⨅ M' ∈ s.erase M, M' ≤ M := fun M hM =>
     left_lt_sup.1
       ((hf.mem_toFinset.1 hM).ne_top.lt_top.trans_eq (Ideal.sup_iInf_eq_top <| coprime M hM).symm)

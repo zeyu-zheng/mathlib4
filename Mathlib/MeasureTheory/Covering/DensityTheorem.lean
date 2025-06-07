@@ -90,18 +90,18 @@ theorem closedBall_mem_vitaliFamily_of_dist_le_mul {K : ℝ} {x y : α} {r : ℝ
     · have I1 : closedBall x (3 * ((K + 1) * r)) ⊆ closedBall y ((4 * K + 3) * r) := by
         apply closedBall_subset_closedBall'
         linarith
-      have I2 : closedBall y ((4 * K + 3) * r) ⊆ closedBall y (max (4 * K + 3) 3 * r) := by
-        apply closedBall_subset_closedBall
-        exact mul_le_mul_of_nonneg_right (le_max_left _ _) rpos.le
+      have I2  : closedBall y ((4 * K + 3) * r) ⊆ closedBall y (max (4 * K + 3) 3 * r)
+      apply closedBall_subset_closedBall
+      exact mul_le_mul_of_nonneg_right (le_max_left _ _) rpos.le
       apply (measure_mono (I1.trans I2)).trans
       exact measure_mul_le_scalingConstantOf_mul _
         ⟨zero_lt_three.trans_le (le_max_right _ _), le_rfl⟩ hr
   · refine ⟨R / 4, H, ?_⟩
-    have : closedBall x (3 * (R / 4)) ⊆ closedBall y r := by
-      apply closedBall_subset_closedBall'
-      have A : y ∈ closedBall y r := mem_closedBall_self rpos.le
-      have B := mem_closedBall'.1 (H A)
-      linarith
+    have  : closedBall x (3 * (R / 4)) ⊆ closedBall y r
+    apply closedBall_subset_closedBall'
+    have A : y ∈ closedBall y r := mem_closedBall_self rpos.le
+    have B := mem_closedBall'.1 (H A)
+    linarith
     apply (measure_mono this).trans _
     refine le_mul_of_one_le_left (zero_le _) ?_
     exact ENNReal.one_le_coe_iff.2 (le_max_right _ _)
@@ -114,10 +114,10 @@ theorem tendsto_closedBall_filterAt {K : ℝ} {x : α} {ι : Type*} {l : Filter 
     exact closedBall_mem_vitaliFamily_of_dist_le_mul μ hj h'j
   · rcases l.eq_or_neBot with rfl | h
     · simp
-    have hK : 0 ≤ K := by
-      rcases (xmem.and (δlim self_mem_nhdsWithin)).exists with ⟨j, hj, h'j⟩
-      have : 0 ≤ K * δ j := nonempty_closedBall.1 ⟨x, hj⟩
-      exact (mul_nonneg_iff_left_nonneg_of_pos (mem_Ioi.1 h'j)).1 this
+    have hK  : 0 ≤ K
+    rcases (xmem.and (δlim self_mem_nhdsWithin)).exists with ⟨j, hj, h'j⟩
+    have : 0 ≤ K * δ j := nonempty_closedBall.1 ⟨x, hj⟩
+    exact (mul_nonneg_iff_left_nonneg_of_pos (mem_Ioi.1 h'j)).1 this
     have δpos := eventually_mem_of_tendsto_nhdsWithin δlim
     replace δlim := tendsto_nhds_of_tendsto_nhdsWithin δlim
     replace hK : 0 < K + 1 := by linarith

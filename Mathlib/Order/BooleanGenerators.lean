@@ -71,13 +71,13 @@ lemma mono (hS : BooleanGenerators S) {T : Set α} (hTS : T ⊆ S) : BooleanGene
 
 lemma atomistic (hS : BooleanGenerators S) (a : α) (ha : a ≤ sSup S) : ∃ T ⊆ S, a = sSup T := by
   obtain ⟨C, hC, rfl⟩ := IsCompactlyGenerated.exists_sSup_eq a
-  have aux : ∀ b : α, IsCompactElement b → b ≤ sSup S → ∃ T ⊆ S, b = sSup T := by
-    intro b hb hbS
-    obtain ⟨s, hs₁, hs₂⟩ := hb S hbS
-    obtain ⟨t, ht, rfl⟩ := hS.finitelyAtomistic s b hs₁ hb hs₂
-    refine ⟨t, ?_, Finset.sup_id_eq_sSup t⟩
-    refine Set.Subset.trans ?_ hs₁
-    simpa only [Finset.coe_subset] using ht
+  have aux  : ∀ b : α, IsCompactElement b → b ≤ sSup S → ∃ T ⊆ S, b = sSup T
+  intro b hb hbS
+  obtain ⟨s, hs₁, hs₂⟩ := hb S hbS
+  obtain ⟨t, ht, rfl⟩ := hS.finitelyAtomistic s b hs₁ hb hs₂
+  refine ⟨t, ?_, Finset.sup_id_eq_sSup t⟩
+  refine Set.Subset.trans ?_ hs₁
+  simpa only [Finset.coe_subset] using ht
   choose T hT₁ hT₂ using aux
   use sSup {T c h₁ h₂ | (c ∈ C) (h₁ : IsCompactElement c) (h₂ : c ≤ sSup S)}
   constructor

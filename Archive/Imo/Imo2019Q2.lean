@@ -273,24 +273,25 @@ theorem A₁_ne_B : cfg.A₁ ≠ cfg.B := by
   intro h
   have hwbtw := cfg.wbtw_A_P_A₁
   rw [h] at hwbtw
-  have hPQ : line[ℝ, cfg.P, cfg.Q] = line[ℝ, cfg.A, cfg.B] := by
-    rw [AffineSubspace.eq_iff_direction_eq_of_mem (left_mem_affineSpan_pair _ _ _)
-      hwbtw.mem_affineSpan]
-    exact cfg.PQ_parallel_AB.direction_eq
+  have hPQ  : line[ℝ, cfg.P, cfg.Q] = line[ℝ, cfg.A, cfg.B]
+  rw [AffineSubspace.eq_iff_direction_eq_of_mem (left_mem_affineSpan_pair _ _ _)
+    hwbtw.mem_affineSpan]
+  exact cfg.PQ_parallel_AB.direction_eq
   haveI := someOrientation V
-  have haQ : (2 : ℤ) • ∡ cfg.C cfg.B cfg.Q = (2 : ℤ) • ∡ cfg.C cfg.B cfg.A := by
-    rw [Collinear.two_zsmul_oangle_eq_right _ cfg.A_ne_B cfg.Q_ne_B]
-    rw [Set.pair_comm, Set.insert_comm]
-    refine collinear_insert_of_mem_affineSpan_pair ?_
-    rw [← hPQ]
-    exact right_mem_affineSpan_pair _ _ _
-  have ha : (2 : ℤ) • ∡ cfg.C cfg.B cfg.Q = (2 : ℤ) • ∡ cfg.C cfg.Q₁ cfg.Q := by
-    rw [oangle_CQ₁Q_eq_oangle_CBA, haQ]
-  have hn : ¬Collinear ℝ ({cfg.C, cfg.B, cfg.Q} : Set Pt) := by
-    rw [collinear_iff_of_two_zsmul_oangle_eq haQ, Set.pair_comm, Set.insert_comm, Set.pair_comm]
-    exact cfg.not_collinear_ABC
+  have haQ  : (2 : ℤ) • ∡ cfg.C cfg.B cfg.Q = (2 : ℤ) • ∡ cfg.C cfg.B cfg.A
+  rw [Collinear.two_zsmul_oangle_eq_right _ cfg.A_ne_B cfg.Q_ne_B]
+  rw [Set.pair_comm, Set.insert_comm]
+  refine collinear_insert_of_mem_affineSpan_pair ?_
+  rw [← hPQ]
+  exact right_mem_affineSpan_pair _ _ _
+  have ha  : (2 : ℤ) • ∡ cfg.C cfg.B cfg.Q = (2 : ℤ) • ∡ cfg.C cfg.Q₁ cfg.Q
+  rw [oangle_CQ₁Q_eq_oangle_CBA, haQ]
+  have hn  : ¬Collinear ℝ ({cfg.C, cfg.B, cfg.Q} : Set Pt)
+  rw [collinear_iff_of_two_zsmul_oangle_eq haQ, Set.pair_comm, Set.insert_comm, Set.pair_comm]
+  exact cfg.not_collinear_ABC
   have hc := cospherical_of_two_zsmul_oangle_eq_of_not_collinear ha hn
-  have hBQ₁ : cfg.B ≠ cfg.Q₁ := by rw [← h]; exact cfg.sbtw_Q_A₁_Q₁.ne_right
+  have hBQ₁  : cfg.B ≠ cfg.Q₁
+  rw [← h]; exact cfg.sbtw_Q_A₁_Q₁.ne_right
   have hQQ₁ : cfg.Q ≠ cfg.Q₁ := cfg.sbtw_Q_A₁_Q₁.left_ne_right
   have hBQ₁Q : AffineIndependent ℝ ![cfg.B, cfg.Q₁, cfg.Q] :=
     hc.affineIndependent_of_mem_of_ne (Set.mem_insert_of_mem _ (Set.mem_insert _ _))
@@ -354,12 +355,14 @@ theorem B₂_ne_Q : cfg.B₂ ≠ cfg.Q := by rw [← symm_A₂]; exact cfg.symm.
 
 theorem B₂_ne_A₂ : cfg.B₂ ≠ cfg.A₂ := by
   intro h
-  have hA : Sbtw ℝ (cfg.triangleABC.points 1) cfg.A₁ (cfg.triangleABC.points 2) := cfg.sbtw_B_A₁_C
-  have hB : Sbtw ℝ (cfg.triangleABC.points 0) cfg.B₁ (cfg.triangleABC.points 2) := cfg.sbtw_A_B₁_C
-  have hA' : cfg.A₂ ∈ line[ℝ, cfg.triangleABC.points 0, cfg.A₁] :=
-    Sphere.secondInter_vsub_mem_affineSpan _ _ _
-  have hB' : cfg.A₂ ∈ line[ℝ, cfg.triangleABC.points 1, cfg.B₁] := by
-    rw [← h]; exact Sphere.secondInter_vsub_mem_affineSpan _ _ _
+  have hA : Sbtw ℝ (cfg.triangleABC.points 1) cfg.A₁ (cfg.triangleABC.points 2)
+  apply cfg.sbtw_B_A₁_C
+  have hB : Sbtw ℝ (cfg.triangleABC.points 0) cfg.B₁ (cfg.triangleABC.points 2)
+  apply cfg.sbtw_A_B₁_C
+  have hA' : cfg.A₂ ∈ line[ℝ, cfg.triangleABC.points 0, cfg.A₁]
+  apply Sphere.secondInter_vsub_mem_affineSpan _ _ _
+  have hB' : cfg.A₂ ∈ line[ℝ, cfg.triangleABC.points 1, cfg.B₁]
+  rw [← h]; exact Sphere.secondInter_vsub_mem_affineSpan _ _ _
   exact (sbtw_of_sbtw_of_sbtw_of_mem_affineSpan_pair (by decide) hA hB hA' hB').symm.not_rotate
     cfg.sbtw_A_A₁_A₂.wbtw
 
@@ -393,10 +396,10 @@ theorem not_collinear_QPA₂ : ¬Collinear ℝ ({cfg.Q, cfg.P, cfg.A₂} : Set P
   haveI := someOrientation V
   rw [collinear_iff_of_two_zsmul_oangle_eq cfg.two_zsmul_oangle_QPA₂_eq_two_zsmul_oangle_BAA₂, ←
     affineIndependent_iff_not_collinear_set]
-  have h : Cospherical ({cfg.B, cfg.A, cfg.A₂} : Set Pt) := by
-    refine cfg.triangleABC.circumsphere.cospherical.subset ?_
-    simp only [Set.insert_subset_iff, cfg.A_mem_circumsphere, cfg.B_mem_circumsphere,
-      cfg.A₂_mem_circumsphere, Sphere.mem_coe, Set.singleton_subset_iff, and_true]
+  have h  : Cospherical ({cfg.B, cfg.A, cfg.A₂} : Set Pt)
+  refine cfg.triangleABC.circumsphere.cospherical.subset ?_
+  simp only [Set.insert_subset_iff, cfg.A_mem_circumsphere, cfg.B_mem_circumsphere,
+    cfg.A₂_mem_circumsphere, Sphere.mem_coe, Set.singleton_subset_iff, and_true]
   exact h.affineIndependent_of_ne cfg.A_ne_B.symm cfg.A₂_ne_B.symm cfg.A₂_ne_A.symm
 
 theorem Q₁_ne_A₂ : cfg.Q₁ ≠ cfg.A₂ := by
@@ -407,9 +410,9 @@ theorem Q₁_ne_A₂ : cfg.Q₁ ≠ cfg.A₂ := by
   have hA₂ := cfg.sbtw_A_A₁_A₂.right_mem_affineSpan
   have hA₂A₁ : line[ℝ, cfg.A₂, cfg.A₁] ≤ line[ℝ, cfg.A, cfg.A₁] :=
     affineSpan_pair_le_of_left_mem hA₂
-  have hQ : cfg.Q ∈ line[ℝ, cfg.A, cfg.A₁] := by
-    rw [AffineSubspace.le_def'] at hA₂A₁
-    exact hA₂A₁ _ h₁.left_mem_affineSpan
+  have hQ : cfg.Q ∈ line[ℝ, cfg.A, cfg.A₁]
+  rw [AffineSubspace.le_def'] at hA₂A₁
+  exact hA₂A₁ _ h₁.left_mem_affineSpan
   exact collinear_triple_of_mem_affineSpan_pair hQ cfg.wbtw_A_P_A₁.mem_affineSpan hA₂
 
 theorem affineIndependent_QPA₂ : AffineIndependent ℝ ![cfg.Q, cfg.P, cfg.A₂] :=

@@ -59,7 +59,8 @@ theorem not_countably_generated_cocompact : ¬IsCountablyGenerated (cocompact �
 
 theorem not_countably_generated_nhds_infty_opc : ¬IsCountablyGenerated (𝓝 (∞ : ℚ∞)) := by
   intro
-  have : IsCountablyGenerated (comap (OnePoint.some : ℚ → ℚ∞) (𝓝 ∞)) := by infer_instance
+  have  : IsCountablyGenerated (comap (OnePoint.some : ℚ → ℚ∞) (𝓝 ∞))
+  infer_instance
   rw [OnePoint.comap_coe_nhds_infty, coclosedCompact_eq_cocompact] at this
   exact not_countably_generated_cocompact this
 

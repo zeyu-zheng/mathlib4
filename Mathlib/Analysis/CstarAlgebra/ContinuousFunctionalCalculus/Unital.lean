@@ -304,8 +304,8 @@ lemma cfc_apply_of_not_continuousOn {f : R → R} (a : A) (hf : ¬ ContinuousOn 
 
 lemma cfcHom_eq_cfc_extend {a : A} (g : R → R) (ha : p a) (f : C(spectrum R a, R)) :
     cfcHom ha f = cfc (Function.extend Subtype.val f g) a := by
-  have h : f = (spectrum R a).restrict (Function.extend Subtype.val f g) := by
-    ext; simp [Subtype.val_injective.extend_apply]
+  have h  : f = (spectrum R a).restrict (Function.extend Subtype.val f g)
+  ext; simp [Subtype.val_injective.extend_apply]
   have hg : ContinuousOn (Function.extend Subtype.val f g) (spectrum R a) :=
     continuousOn_iff_continuous_restrict.mpr <| h ▸ map_continuous f
   rw [cfc_apply ..]
@@ -420,7 +420,8 @@ lemma cfc_add (f g : R → R) (hf : ContinuousOn f (spectrum R a) := by cfc_cont
 lemma cfc_const_add (r : R) (f : R → R) (a : A)
     (hf : ContinuousOn f (spectrum R a) := by cfc_cont_tac) (ha : p a := by cfc_tac) :
     cfc (fun x => r + f x) a = algebraMap R A r + cfc f a := by
-  have : (fun z => r + f z) = (fun z => (fun _ => r) z + f z) := by ext; simp
+  have  : (fun z => r + f z) = (fun z => (fun _ => r) z + f z)
+  ext; simp
   rw [this, cfc_add a _ _ (continuousOn_const (c := r)) hf, cfc_const r a ha]
 
 lemma cfc_add_const (r : R) (f : R → R) (a : A)
@@ -436,9 +437,9 @@ lemma cfc_sum {ι : Type*} (f : ι → R → R) (a : A) (s : Finset ι)
     cfc (∑ i in s, f i)  a = ∑ i in s, cfc (f i) a := by
   by_cases ha : p a
   · have hsum : s.sum f = fun z => ∑ i ∈ s, f i z := by ext; simp
-    have hf' : ContinuousOn (∑ i : s, f i) (spectrum R a) := by
-      rw [sum_coe_sort s, hsum]
-      exact continuousOn_finset_sum s fun i hi => hf i hi
+    have hf'  : ContinuousOn (∑ i : s, f i) (spectrum R a)
+    rw [sum_coe_sort s, hsum]
+    exact continuousOn_finset_sum s fun i hi => hf i hi
     rw [← sum_coe_sort s, ← sum_coe_sort s]
     rw [cfc_apply_pi _ a _ (fun ⟨i, hi⟩ => hf i hi), ← map_sum, cfc_apply _ a ha hf']
     congr 1
