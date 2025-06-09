@@ -123,7 +123,7 @@ private theorem one_sub_eps_mul_card_nonuniformWitness_le_card_star (hV : V ∈ 
     (hε₁ : ε ≤ 1) :
     (1 - ε / 10) * (G.nonuniformWitness ε U V).card ≤ ((star hP G ε hU V).biUnion id).card := by
   have hP₁ : 0 < P.parts.card := Finset.card_pos.2 ⟨_, hU⟩
-  have  : (↑2 ^ P.parts.card : ℝ) * m / (U.card * ε) ≤ ε / 10
+  have : (↑2 ^ P.parts.card : ℝ) * m / (U.card * ε) ≤ ε / 10
   rw [← div_div, div_le_iff']
   swap
   · sz_positivity
@@ -216,7 +216,7 @@ private theorem sum_card_subset_chunk_parts_le (m_pos : (0 : ℝ) < m)
 private theorem one_sub_le_m_div_m_add_one_sq [Nonempty α]
     (hPα : P.parts.card * 16 ^ P.parts.card ≤ card α) (hPε : ↑100 ≤ ↑4 ^ P.parts.card * ε ^ 5) :
     ↑1 - ε ^ 5 / ↑50 ≤ (m / (m + 1 : ℝ)) ^ 2 := by
-  have  : (m : ℝ) / (m + 1) = 1 - 1 / (m + 1)
+  have : (m : ℝ) / (m + 1) = 1 - 1 / (m + 1)
   rw [one_sub_div coe_m_add_one_pos.ne', add_sub_cancel_right]
   rw [this, sub_sq, one_pow, mul_one]
   refine le_trans ?_ (le_add_of_nonneg_right <| sq_nonneg _)
@@ -232,7 +232,7 @@ private theorem m_add_one_div_m_le_one_add [Nonempty α]
     (hε₁ : ε ≤ 1) : ((m + 1 : ℝ) / m) ^ 2 ≤ ↑1 + ε ^ 5 / 49 := by
   rw [same_add_div]
   swap; · sz_positivity
-  have  : ↑1 + ↑1 / (m : ℝ) ≤ ↑1 + ε ^ 5 / 100
+  have : ↑1 + ↑1 / (m : ℝ) ≤ ↑1 + ε ^ 5 / 100
   rw [add_le_add_iff_left, ← one_div_div (100 : ℝ)]
   exact one_div_le_one_div_of_le (by sz_positivity) (hundred_div_ε_pow_five_le_m hPα hPε)
   refine (pow_le_pow_left ?_ this 2).trans ?_

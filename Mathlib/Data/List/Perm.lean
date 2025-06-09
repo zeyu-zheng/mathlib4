@@ -345,10 +345,10 @@ theorem Perm.drop_inter [DecidableEq α] {xs ys : List α} (n : ℕ) (h : xs ~ y
     xs.drop n ~ ys.inter (xs.drop n) := by
   by_cases h'' : n ≤ xs.length
   · let n' := xs.length - n
-    have h₀  : n = xs.length - n'
+    have h₀ : n = xs.length - n'
     rwa [Nat.sub_sub_self]
     have h₁ : n' ≤ xs.length := Nat.sub_le ..
-    have h₂  : xs.drop n = (xs.reverse.take n').reverse
+    have h₂ : xs.drop n = (xs.reverse.take n').reverse
     rw [take_reverse _ h₁, h₀, reverse_reverse]
     rw [h₂]
     apply (reverse_perm _).trans
@@ -560,7 +560,7 @@ theorem permutations'Aux_get_zero (s : List α) (x : α)
 theorem injective_permutations'Aux (x : α) : Function.Injective (permutations'Aux x) := by
   intro s t h
   apply insertNth_injective s.length x
-  have hl  : s.length = t.length
+  have hl : s.length = t.length
   simpa using congr_arg length h
   rw [← get_permutations'Aux s x s.length (by simp),
     ← get_permutations'Aux t x s.length (by simp [hl])]
@@ -587,7 +587,7 @@ theorem nodup_permutations'Aux_iff {s : List α} {x : α} : Nodup (permutations'
   · simpa [Nat.lt_succ_iff] using hk.le
   · simpa using hk
   rw [nthLe_permutations'Aux, nthLe_permutations'Aux]
-  have hl  : length (insertNth k x s) = length (insertNth (k + 1) x s)
+  have hl : length (insertNth k x s) = length (insertNth (k + 1) x s)
   rw [length_insertNth _ _ hk.le, length_insertNth _ _ (Nat.succ_le_of_lt hk)]
   refine ext_nthLe hl fun n hn hn' => ?_
   rcases lt_trichotomy n k with (H | rfl | H)

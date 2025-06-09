@@ -113,7 +113,7 @@ variable [LinearOrderedSemifield 𝕜] [OrderedAddCommMonoid M] [OrderedAddCommM
 the first axiom of `OrderedSMul`. -/
 theorem OrderedSMul.mk' (h : ∀ ⦃a b : M⦄ ⦃c : 𝕜⦄, a < b → 0 < c → c • a ≤ c • b) :
     OrderedSMul 𝕜 M := by
-  have hlt'  : ∀ (a b : M) (c : 𝕜), a < b → 0 < c → c • a < c • b
+  have hlt' : ∀ (a b : M) (c : 𝕜), a < b → 0 < c → c • a < c • b
   refine fun a b c hab hc => (h hab hc).lt_of_ne ?_
   rw [Ne, hc.ne'.isUnit.smul_left_cancel]
   exact hab.ne

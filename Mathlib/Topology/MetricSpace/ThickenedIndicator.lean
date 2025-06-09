@@ -135,7 +135,7 @@ theorem thickenedIndicatorAux_tendsto_indicator_closure {δseq : ℕ → ℝ}
     rcases δseq_lim with ⟨N, hN⟩
     apply @tendsto_atTop_of_eventually_const _ _ _ _ _ _ _ N
     intro n n_large
-    have key  : x ∉ thickening ε E
+    have key : x ∉ thickening ε E
     simpa only [thickening, mem_setOf_eq, not_lt] using ε_lt.le
     refine le_antisymm ?_ bot_le
     apply (thickenedIndicatorAux_mono (lt_of_abs_lt (hN n n_large)).le E x).trans

@@ -425,7 +425,7 @@ theorem Subalgebra.inv_mem_of_root_of_coeff_zero_ne_zero {x : A} {p : K[X]}
   suffices (x⁻¹ : L) = (-p.coeff 0)⁻¹ • aeval x (divX p) by
     rw [this]
     exact A.smul_mem (aeval x _).2 _
-  have  : aeval (x : L) p = 0
+  have : aeval (x : L) p = 0
   rw [Subalgebra.aeval_coe, aeval_eq, Subalgebra.coe_zero]
   -- Porting note: this was a long sequence of `rw`.
   rw [inv_eq_of_root_of_coeff_zero_ne_zero this coeff_zero_ne, div_eq_inv_mul, Algebra.smul_def]

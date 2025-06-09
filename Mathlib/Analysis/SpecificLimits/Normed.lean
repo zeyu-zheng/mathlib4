@@ -267,7 +267,7 @@ section Geometric
 variable {K : Type*} [NormedDivisionRing K] {ξ : K}
 
 theorem hasSum_geometric_of_norm_lt_one (h : ‖ξ‖ < 1) : HasSum (fun n : ℕ ↦ ξ ^ n) (1 - ξ)⁻¹ := by
-  have xi_ne_one  : ξ ≠ 1
+  have xi_ne_one : ξ ≠ 1
   contrapose! h
   simp [h]
   have A : Tendsto (fun n ↦ (ξ ^ n - 1) * (ξ - 1)⁻¹) atTop (𝓝 ((0 - 1) * (ξ - 1)⁻¹)) :=
@@ -347,11 +347,11 @@ alias summable_pow_mul_geometric_of_norm_lt_1 := summable_pow_mul_geometric_of_n
 /-- If `‖r‖ < 1`, then `∑' n : ℕ, n * r ^ n = r / (1 - r) ^ 2`, `HasSum` version. -/
 theorem hasSum_coe_mul_geometric_of_norm_lt_one {𝕜 : Type*} [NormedDivisionRing 𝕜] [CompleteSpace 𝕜]
     {r : 𝕜} (hr : ‖r‖ < 1) : HasSum (fun n ↦ n * r ^ n : ℕ → 𝕜) (r / (1 - r) ^ 2) := by
-  have A  : Summable (fun n ↦ (n : 𝕜) * r ^ n : ℕ → 𝕜)
+  have A : Summable (fun n ↦ (n : 𝕜) * r ^ n : ℕ → 𝕜)
   simpa only [pow_one] using summable_pow_mul_geometric_of_norm_lt_one 1 hr
   have B : HasSum (r ^ · : ℕ → 𝕜) (1 - r)⁻¹ := hasSum_geometric_of_norm_lt_one hr
   refine A.hasSum_iff.2 ?_
-  have hr'  : r ≠ 1
+  have hr' : r ≠ 1
   rintro rfl
   simp [lt_irrefl] at hr
   set s : 𝕜 := ∑' n : ℕ, n * r ^ n
@@ -482,7 +482,7 @@ theorem NormedRing.tsum_geometric_of_norm_lt_one (x : R) (h : ‖x‖ < 1) :
   rw [tsum_eq_zero_add (summable_geometric_of_norm_lt_one x h)]
   simp only [_root_.pow_zero]
   refine le_trans (norm_add_le _ _) ?_
-  have  : ‖∑' b : ℕ, (fun n ↦ x ^ (n + 1)) b‖ ≤ (1 - ‖x‖)⁻¹ - 1
+  have : ‖∑' b : ℕ, (fun n ↦ x ^ (n + 1)) b‖ ≤ (1 - ‖x‖)⁻¹ - 1
   refine tsum_of_norm_bounded ?_ fun b ↦ norm_pow_le' _ (Nat.succ_pos b)
   convert (hasSum_nat_add_iff' 1).mpr (hasSum_geometric_of_lt_one (norm_nonneg x) h)
   simp
@@ -494,7 +494,7 @@ alias NormedRing.tsum_geometric_of_norm_lt_1 := NormedRing.tsum_geometric_of_nor
 theorem geom_series_mul_neg (x : R) (h : ‖x‖ < 1) : (∑' i : ℕ, x ^ i) * (1 - x) = 1 := by
   have := (NormedRing.summable_geometric_of_norm_lt_one x h).hasSum.mul_right (1 - x)
   refine tendsto_nhds_unique this.tendsto_sum_nat ?_
-  have  : Tendsto (fun n : ℕ ↦ 1 - x ^ n) atTop (𝓝 1)
+  have : Tendsto (fun n : ℕ ↦ 1 - x ^ n) atTop (𝓝 1)
   simpa using tendsto_const_nhds.sub (tendsto_pow_atTop_nhds_zero_of_norm_lt_one h)
   convert← this
   rw [← geom_sum_mul_neg, Finset.sum_mul]
@@ -502,7 +502,7 @@ theorem geom_series_mul_neg (x : R) (h : ‖x‖ < 1) : (∑' i : ℕ, x ^ i) * 
 theorem mul_neg_geom_series (x : R) (h : ‖x‖ < 1) : ((1 - x) * ∑' i : ℕ, x ^ i) = 1 := by
   have := (NormedRing.summable_geometric_of_norm_lt_one x h).hasSum.mul_left (1 - x)
   refine tendsto_nhds_unique this.tendsto_sum_nat ?_
-  have  : Tendsto (fun n : ℕ ↦ 1 - x ^ n) atTop (𝓝 1)
+  have : Tendsto (fun n : ℕ ↦ 1 - x ^ n) atTop (𝓝 1)
   simpa using tendsto_const_nhds.sub (tendsto_pow_atTop_nhds_zero_of_norm_lt_one h)
   convert← this
   rw [← mul_neg_geom_sum, Finset.mul_sum]
@@ -575,7 +575,7 @@ theorem not_summable_of_ratio_norm_eventually_ge {α : Type*} [SeminormedAddComm
 theorem not_summable_of_ratio_test_tendsto_gt_one {α : Type*} [SeminormedAddCommGroup α]
     {f : ℕ → α} {l : ℝ} (hl : 1 < l) (h : Tendsto (fun n ↦ ‖f (n + 1)‖ / ‖f n‖) atTop (𝓝 l)) :
     ¬Summable f := by
-  have key  : ∀ᶠ n in atTop, ‖f n‖ ≠ 0
+  have key : ∀ᶠ n in atTop, ‖f n‖ ≠ 0
   filter_upwards [eventually_ge_of_tendsto_gt hl h] with _ hn hc
   rw [hc, _root_.div_zero] at hn
   linarith
@@ -641,7 +641,7 @@ theorem Antitone.cauchySeq_series_mul_of_tendsto_zero_of_bounded (hfa : Antitone
     (hf0 : Tendsto f atTop (𝓝 0)) (hzb : ∀ n, ‖∑ i ∈ range n, z i‖ ≤ b) :
     CauchySeq fun n ↦ ∑ i ∈ range n, f i • z i := by
   have hfa' : Monotone fun n ↦ -f n := fun _ _ hab ↦ neg_le_neg <| hfa hab
-  have hf0'  : Tendsto (fun n ↦ -f n) atTop (𝓝 0)
+  have hf0' : Tendsto (fun n ↦ -f n) atTop (𝓝 0)
   convert hf0.neg
   norm_num
   convert (hfa'.cauchySeq_series_mul_of_tendsto_zero_of_bounded hf0' hzb).neg
@@ -691,7 +691,7 @@ upper bounds on the limit. -/
 theorem Monotone.tendsto_le_alternating_series
     (hfl : Tendsto (fun n ↦ ∑ i ∈ range n, (-1) ^ i * f i) atTop (𝓝 l))
     (hfm : Monotone f) (k : ℕ) : l ≤ ∑ i ∈ range (2 * k), (-1) ^ i * f i := by
-  have ha  : Antitone (fun n ↦ ∑ i ∈ range (2 * n), (-1) ^ i * f i)
+  have ha : Antitone (fun n ↦ ∑ i ∈ range (2 * n), (-1) ^ i * f i)
   refine antitone_nat_of_succ_le (fun n ↦ ?_)
   rw [show 2 * (n + 1) = 2 * n + 1 + 1 by ring, sum_range_succ, sum_range_succ]
   simp_rw [_root_.pow_succ', show (-1 : E) ^ (2 * n) = 1 by simp, neg_one_mul, one_mul,
@@ -705,7 +705,7 @@ lower bounds on the limit. -/
 theorem Monotone.alternating_series_le_tendsto
     (hfl : Tendsto (fun n ↦ ∑ i ∈ range n, (-1) ^ i * f i) atTop (𝓝 l))
     (hfm : Monotone f) (k : ℕ) : ∑ i ∈ range (2 * k + 1), (-1) ^ i * f i ≤ l := by
-  have hm  : Monotone (fun n ↦ ∑ i ∈ range (2 * n + 1), (-1) ^ i * f i)
+  have hm : Monotone (fun n ↦ ∑ i ∈ range (2 * n + 1), (-1) ^ i * f i)
   refine monotone_nat_of_le_succ (fun n ↦ ?_)
   rw [show 2 * (n + 1) = 2 * n + 1 + 1 by ring,
     sum_range_succ _ (2 * n + 1 + 1), sum_range_succ _ (2 * n + 1)]
@@ -720,7 +720,7 @@ lower bounds on the limit. -/
 theorem Antitone.alternating_series_le_tendsto
     (hfl : Tendsto (fun n ↦ ∑ i ∈ range n, (-1) ^ i * f i) atTop (𝓝 l))
     (hfa : Antitone f) (k : ℕ) : ∑ i ∈ range (2 * k), (-1) ^ i * f i ≤ l := by
-  have hm  : Monotone (fun n ↦ ∑ i ∈ range (2 * n), (-1) ^ i * f i)
+  have hm : Monotone (fun n ↦ ∑ i ∈ range (2 * n), (-1) ^ i * f i)
   refine monotone_nat_of_le_succ (fun n ↦ ?_)
   rw [show 2 * (n + 1) = 2 * n + 1 + 1 by ring, sum_range_succ, sum_range_succ]
   simp_rw [_root_.pow_succ', show (-1 : E) ^ (2 * n) = 1 by simp, neg_one_mul, one_mul,
@@ -734,7 +734,7 @@ upper bounds on the limit. -/
 theorem Antitone.tendsto_le_alternating_series
     (hfl : Tendsto (fun n ↦ ∑ i ∈ range n, (-1) ^ i * f i) atTop (𝓝 l))
     (hfa : Antitone f) (k : ℕ) : l ≤ ∑ i ∈ range (2 * k + 1), (-1) ^ i * f i := by
-  have ha  : Antitone (fun n ↦ ∑ i ∈ range (2 * n + 1), (-1) ^ i * f i)
+  have ha : Antitone (fun n ↦ ∑ i ∈ range (2 * n + 1), (-1) ^ i * f i)
   refine antitone_nat_of_succ_le (fun n ↦ ?_)
   rw [show 2 * (n + 1) = 2 * n + 1 + 1 by ring, sum_range_succ, sum_range_succ]
   simp_rw [_root_.pow_succ', show (-1 : E) ^ (2 * n) = 1 by simp, neg_one_mul, neg_neg, one_mul,

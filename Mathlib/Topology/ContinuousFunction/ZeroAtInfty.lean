@@ -349,7 +349,7 @@ protected theorem bounded (f : F) : ∃ C, ∀ x y : α, dist ((f : α → β) x
     (tendsto_def.mp (zero_at_infty (f : F)) _ (closedBall_mem_nhds (0 : β) zero_lt_one))
   obtain ⟨C, hC⟩ := (hK₁.image (map_continuous f)).isBounded.subset_closedBall (0 : β)
   refine ⟨max C 1 + max C 1, fun x y => ?_⟩
-  have  : ∀ x, f x ∈ closedBall (0 : β) (max C 1)
+  have : ∀ x, f x ∈ closedBall (0 : β) (max C 1)
   intro x
   by_cases hx : x ∈ K
   · exact (mem_closedBall.mp <| hC ⟨x, hx, rfl⟩).trans (le_max_left _ _)
@@ -413,7 +413,7 @@ theorem isometry_toBCF : Isometry (toBCF : C₀(α, β) → α →ᵇ β) := by 
 theorem isClosed_range_toBCF : IsClosed (range (toBCF : C₀(α, β) → α →ᵇ β)) := by
   refine isClosed_iff_clusterPt.mpr fun f hf => ?_
   rw [clusterPt_principal_iff] at hf
-  have  : Tendsto f (cocompact α) (𝓝 0)
+  have : Tendsto f (cocompact α) (𝓝 0)
   refine Metric.tendsto_nhds.mpr fun ε hε => ?_
   obtain ⟨_, hg, g, rfl⟩ := hf (ball f (ε / 2)) (ball_mem_nhds f <| half_pos hε)
   refine (Metric.tendsto_nhds.mp (zero_at_infty g) (ε / 2) (half_pos hε)).mp

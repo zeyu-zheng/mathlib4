@@ -130,7 +130,7 @@ namespace IndepMatroid
     obtain ⟨f,hf,hfB⟩ := M.indep_aug (M.indep_subset hB diff_subset) hnotmax ⟨hB',hB'max⟩
     simp only [mem_diff, mem_singleton_iff, not_and, not_not] at hf
 
-    have hfB'  : f ∉ B
+    have hfB' : f ∉ B
     (intro hfB; obtain rfl := hf.2 hfB; exact he.2 hf.1)
 
     refine ⟨f, ⟨hf.1, hfB'⟩, by_contra (fun hnot ↦ ?_)⟩
@@ -186,8 +186,8 @@ namespace IndepMatroid
     have hB₀ := indep_subset hBmax.1 hB₀B
 
     -- There is a finite subset `I₀` of `I` so that `I₀` doesn't extend into `B₀`
-    have hexI₀  : ∃ I₀, I₀ ⊆ I ∧ I₀.Finite ∧ ∀ x, x ∈ B₀ \ I₀ → ¬Indep (insert x I₀)
-    have hchoose  : ∀ (b : ↑(B₀ \ I)), ∃ Ib, Ib ⊆ I ∧ Ib.Finite ∧ ¬Indep (insert (b : α) Ib)
+    have hexI₀ : ∃ I₀, I₀ ⊆ I ∧ I₀.Finite ∧ ∀ x, x ∈ B₀ \ I₀ → ¬Indep (insert x I₀)
+    have hchoose : ∀ (b : ↑(B₀ \ I)), ∃ Ib, Ib ⊆ I ∧ Ib.Finite ∧ ¬Indep (insert (b : α) Ib)
     rintro ⟨b, hb⟩; exact htofin I b hI (hcon b ⟨hB₀B hb.1, hb.2⟩)
     choose! f hf using hchoose
     have := (hB₀fin.diff I).to_subtype
@@ -219,7 +219,7 @@ namespace IndepMatroid
     have hJfin := hE₀fin.subset hJss
 
     -- We have `|I₀ + e| ≤ |J|`, since otherwise we could extend the maximal set `J`
-    have hcard  : (insert e I₀).ncard ≤ J.ncard
+    have hcard : (insert e I₀).ncard ≤ J.ncard
     refine not_lt.1 fun hlt ↦ ?_
     obtain ⟨f, hfI, hfJ, hfi⟩ := indep_aug hJ hJfin heI₀i (hI₀fin.insert e) hlt
     have hfE₀ : f ∈ E₀ := mem_of_mem_of_subset hfI (insert_subset_insert subset_union_left)
@@ -268,7 +268,7 @@ theorem _root_.Matroid.existsMaximalSubsetProperty_of_bdd {P : Set α → Prop}
     (hP : ∃ (n : ℕ), ∀ Y, P Y → Y.encard ≤ n) (X : Set α) : ExistsMaximalSubsetProperty P X := by
   obtain ⟨n, hP⟩ := hP
   rintro I hI hIX
-  have hfin  : Set.Finite (ncard '' {Y | P Y ∧ I ⊆ Y ∧ Y ⊆ X})
+  have hfin : Set.Finite (ncard '' {Y | P Y ∧ I ⊆ Y ∧ Y ⊆ X})
   rw [finite_iff_bddAbove, bddAbove_def]
   simp_rw [ENat.le_coe_iff] at hP
   use n

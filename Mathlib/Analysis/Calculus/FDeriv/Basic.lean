@@ -234,7 +234,7 @@ theorem HasFDerivWithinAt.lim (h : HasFDerivWithinAt f f' s x) {α : Type*} (l :
     {c : α → 𝕜} {d : α → E} {v : E} (dtop : ∀ᶠ n in l, x + d n ∈ s)
     (clim : Tendsto (fun n => ‖c n‖) l atTop) (cdlim : Tendsto (fun n => c n • d n) l (𝓝 v)) :
     Tendsto (fun n => c n • (f (x + d n) - f x)) l (𝓝 (f' v)) := by
-  have tendsto_arg  : Tendsto (fun n => x + d n) l (𝓝[s] x)
+  have tendsto_arg : Tendsto (fun n => x + d n) l (𝓝[s] x)
   conv in 𝓝[s] x => rw [← add_zero x]
   rw [nhdsWithin, tendsto_inf]
   constructor
@@ -613,8 +613,8 @@ theorem fderivWithin_subset (st : s ⊆ t) (ht : UniqueDiffWithinAt 𝕜 s x)
   fderivWithin_of_mem (nhdsWithin_mono _ st self_mem_nhdsWithin) ht h
 
 theorem fderivWithin_inter (ht : t ∈ 𝓝 x) : fderivWithin 𝕜 f (s ∩ t) x = fderivWithin 𝕜 f s x := by
-  have A  : 𝓝[(s ∩ t) \ {x}] x = 𝓝[s \ {x}] x
-  have  : (s ∩ t) \ {x} = (s \ {x}) ∩ t
+  have A : 𝓝[(s ∩ t) \ {x}] x = 𝓝[s \ {x}] x
+  have : (s ∩ t) \ {x} = (s \ {x}) ∩ t
   rw [inter_comm, inter_diff_assoc, inter_comm]
   rw [this, ← nhdsWithin_restrict' _ ht]
   simp [fderivWithin, A, hasFDerivWithinAt_inter ht]
@@ -623,7 +623,7 @@ theorem fderivWithin_inter (ht : t ∈ 𝓝 x) : fderivWithin 𝕜 f (s ∩ t) x
 theorem fderivWithin_univ : fderivWithin 𝕜 f univ = fderiv 𝕜 f := by
   ext1 x
   nontriviality E
-  have H  : 𝓝[univ \ {x}] x ≠ ⊥
+  have H : 𝓝[univ \ {x}] x ≠ ⊥
   rw [← compl_eq_univ_diff, ← neBot_iff]
   exact Module.punctured_nhds_neBot 𝕜 E x
   simp [fderivWithin, fderiv, H]
@@ -687,7 +687,7 @@ section Continuous
 
 theorem HasFDerivAtFilter.tendsto_nhds (hL : L ≤ 𝓝 x) (h : HasFDerivAtFilter f f' x L) :
     Tendsto f L (𝓝 (f x)) := by
-  have  : Tendsto (fun x' => f x' - f x) L (𝓝 0)
+  have : Tendsto (fun x' => f x' - f x) L (𝓝 0)
   refine h.isBigO_sub.trans_tendsto (Tendsto.mono_left ?_ hL)
   rw [← sub_self x]
   exact tendsto_id.sub tendsto_const_nhds
@@ -769,7 +769,7 @@ theorem differentiableWithinAt_congr_set (h : s =ᶠ[𝓝 x] t) :
 theorem fderivWithin_congr_set' (y : E) (h : s =ᶠ[𝓝[{y}ᶜ] x] t) :
     fderivWithin 𝕜 f s x = fderivWithin 𝕜 f t x := by
   have : s =ᶠ[𝓝[{x}ᶜ] x] t := nhdsWithin_compl_singleton_le x y h
-  have  : 𝓝[s \ {x}] x = 𝓝[t \ {x}] x
+  have : 𝓝[s \ {x}] x = 𝓝[t \ {x}] x
   simpa only [set_eventuallyEq_iff_inf_principal, ← nhdsWithin_inter', diff_eq,
     inter_comm] using this
   simp only [fderivWithin, hasFDerivWithinAt_congr_set' y h, this]

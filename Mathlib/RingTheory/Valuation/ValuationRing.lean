@@ -126,7 +126,7 @@ noncomputable instance linearOrder : LinearOrder (ValueGroup A K) where
   le_antisymm := by
     rintro ⟨a⟩ ⟨b⟩ ⟨e, rfl⟩ ⟨f, hf⟩
     by_cases hb : b = 0; · simp [hb]
-    have  : IsUnit e
+    have : IsUnit e
     apply isUnit_of_dvd_one
     use f
     rw [mul_comm]
@@ -350,7 +350,7 @@ instance (priority := 100) [LocalRing R] [IsBezout R] : ValuationRing R := by
       (show g ∈ Ideal.span {a * g, b * g} by rw [e]; exact Ideal.subset_span (by simp))
   rcases eq_or_ne g 0 with h | h
   · simp [h]
-  have  : x * a + y * b = 1
+  have : x * a + y * b = 1
   apply mul_left_injective₀ h; convert e' using 1 <;> ring
   cases' LocalRing.isUnit_or_isUnit_of_add_one this with h' h' <;> [left; right]
   all_goals exact mul_dvd_mul_right (isUnit_iff_forall_dvd.mp (isUnit_of_mul_isUnit_right h') _) _

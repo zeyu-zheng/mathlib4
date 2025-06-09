@@ -223,7 +223,7 @@ theorem LinearIndependent.comp (h : LinearIndependent R v) (f : ι' → ι) (hf 
     LinearIndependent R (v ∘ f) := by
   rw [linearIndependent_iff, Finsupp.total_comp]
   intro l hl
-  have h_map_domain  : ∀ x, (Finsupp.mapDomain f l) (f x) = 0
+  have h_map_domain : ∀ x, (Finsupp.mapDomain f l) (f x) = 0
   rw [linearIndependent_iff.1 h (Finsupp.mapDomain f l) hl]; simp
   ext x
   convert h_map_domain x
@@ -350,7 +350,7 @@ theorem LinearIndependent.fin_cons' {m : ℕ} (x : M) (v : Fin m → M) (hli : L
   rw [Fintype.linearIndependent_iff] at hli ⊢
   rintro g total_eq j
   simp_rw [Fin.sum_univ_succ, Fin.cons_zero, Fin.cons_succ] at total_eq
-  have  : g 0 = 0
+  have : g 0 = 0
   refine x_ortho (g 0) ⟨∑ i : Fin m, g i.succ • v i, ?_⟩ total_eq
   exact sum_mem fun i _ => smul_mem _ _ (subset_span ⟨i, rfl⟩)
   rw [this, zero_smul, zero_add] at total_eq
@@ -526,10 +526,10 @@ alias ⟨LinearIndependent.injective_total, _⟩ := linearIndependent_iff_inject
 theorem LinearIndependent.injective [Nontrivial R] (hv : LinearIndependent R v) : Injective v := by
   intro i j hij
   let l : ι →₀ R := Finsupp.single i (1 : R) - Finsupp.single j 1
-  have h_total  : Finsupp.total ι M R v l = 0
+  have h_total : Finsupp.total ι M R v l = 0
   simp_rw [l, LinearMap.map_sub, Finsupp.total_apply]
   simp [hij]
-  have h_single_eq  : Finsupp.single i (1 : R) = Finsupp.single j 1
+  have h_single_eq : Finsupp.single i (1 : R) = Finsupp.single j 1
   rw [linearIndependent_iff] at hv
   simp [eq_add_of_sub_eq' (hv l h_total)]
   simpa [Finsupp.single_eq_single_iff] using h_single_eq
@@ -586,7 +586,7 @@ theorem LinearIndependent.units_smul {v : ι → M} (hv : LinearIndependent R v)
 
 lemma LinearIndependent.eq_of_pair {x y : M} (h : LinearIndependent R ![x, y])
     {s t s' t' : R} (h' : s • x + t • y = s' • x + t' • y) : s = s' ∧ t = t' := by
-  have  : (s - s') • x + (t - t') • y = 0
+  have : (s - s') • x + (t - t') • y = 0
   rw [← sub_eq_zero_of_eq h', ← sub_eq_zero]
   simp only [sub_smul]
   abel
@@ -605,15 +605,15 @@ lemma LinearIndependent.linear_combination_pair_of_det_ne_zero {R M : Type*} [Co
     {a b c d : R} (h' : a * d - b * c ≠ 0) :
     LinearIndependent R ![a • x + b • y, c • x + d • y] := by
   apply LinearIndependent.pair_iff.2 (fun s t hst ↦ ?_)
-  have H  : (s * a + t * c) • x + (s * b + t * d) • y = 0
+  have H : (s * a + t * c) • x + (s * b + t * d) • y = 0
   convert hst using 1
   simp only [_root_.add_smul, smul_add, smul_smul]
   abel
   have I1 : s * a + t * c = 0 := (h.eq_zero_of_pair H).1
   have I2 : s * b + t * d = 0 := (h.eq_zero_of_pair H).2
-  have J1  : (a * d - b * c) * s = 0
+  have J1 : (a * d - b * c) * s = 0
   linear_combination d * I1 - c * I2
-  have J2  : (a * d - b * c) * t = 0
+  have J2 : (a * d - b * c) * t = 0
   linear_combination -b * I1 + a * I2
   exact ⟨by simpa [h'] using mul_eq_zero.1 J1, by simpa [h'] using mul_eq_zero.1 J2⟩
 
@@ -660,10 +660,10 @@ theorem LinearIndependent.eq_of_smul_apply_eq_smul_apply {M : Type*} [AddCommGro
     {v : ι → M} (li : LinearIndependent R v) (c d : R) (i j : ι) (hc : c ≠ 0)
     (h : c • v i = d • v j) : i = j := by
   let l : ι →₀ R := Finsupp.single i c - Finsupp.single j d
-  have h_total  : Finsupp.total ι M R v l = 0
+  have h_total : Finsupp.total ι M R v l = 0
   simp_rw [l, LinearMap.map_sub, Finsupp.total_apply]
   simp [h]
-  have h_single_eq  : Finsupp.single i c = Finsupp.single j d
+  have h_single_eq : Finsupp.single i c = Finsupp.single j d
   rw [linearIndependent_iff] at li
   simp [eq_add_of_sub_eq' (li l h_total)]
   rcases (Finsupp.single_eq_single_iff ..).mp h_single_eq with (⟨H, _⟩ | ⟨hc, _⟩)
@@ -684,7 +684,7 @@ theorem LinearIndependent.disjoint_span_image (hv : LinearIndependent R v) {s t 
 
 theorem LinearIndependent.not_mem_span_image [Nontrivial R] (hv : LinearIndependent R v) {s : Set ι}
     {x : ι} (h : x ∉ s) : v x ∉ Submodule.span R (v '' s) := by
-  have h'  : v x ∈ Submodule.span R (v '' {x})
+  have h' : v x ∈ Submodule.span R (v '' {x})
   rw [Set.image_singleton]
   exact mem_span_singleton_self (v x)
   intro w
@@ -924,7 +924,7 @@ theorem exists_maximal_independent' (s : ι → M) :
   let indep : Set ι → Prop := fun I => LinearIndependent R (s ∘ (↑) : I → M)
   let X := { I : Set ι // indep I }
   let r : X → X → Prop := fun I J => I.1 ⊆ J.1
-  have key  : ∀ c : Set X, IsChain r c → indep (⋃ (I : X) (_ : I ∈ c), I)
+  have key : ∀ c : Set X, IsChain r c → indep (⋃ (I : X) (_ : I ∈ c), I)
   intro c hc
   dsimp [indep]
   rw [linearIndependent_comp_subtype]
@@ -951,9 +951,9 @@ theorem exists_maximal_independent (s : ι → M) :
     intro i hi
     specialize hImaximal (I ∪ {i}) (by simp)
     set J := I ∪ {i} with hJ
-    have memJ  : ∀ {x}, x ∈ J ↔ x = i ∨ x ∈ I
+    have memJ : ∀ {x}, x ∈ J ↔ x = i ∨ x ∈ I
     simp [hJ]
-    have hiJ  : i ∈ J
+    have hiJ : i ∈ J
     simp [J]
     have h := by
       refine mt hImaximal ?_
@@ -961,7 +961,7 @@ theorem exists_maximal_independent (s : ι → M) :
         rw [h2] at hi
         exact absurd hiJ hi
     obtain ⟨f, supp_f, sum_f, f_ne⟩ := linearDependent_comp_subtype.mp h
-    have hfi  : f i ≠ 0
+    have hfi : f i ≠ 0
     contrapose hIlinind
     refine linearDependent_comp_subtype.mpr ⟨f, ?_, sum_f, f_ne⟩
     simp only [Finsupp.mem_supported, hJ] at supp_f ⊢
@@ -984,12 +984,12 @@ theorem surjective_of_linearIndependent_of_span [Nontrivial R] (hv : LinearIndep
   intro i
   let repr : (span R (range (v ∘ f)) : Type _) → ι' →₀ R := (hv.comp f f.injective).repr
   let l := (repr ⟨v i, hss (mem_range_self i)⟩).mapDomain f
-  have h_total_l  : Finsupp.total ι M R v l = v i
+  have h_total_l : Finsupp.total ι M R v l = v i
   dsimp only [l]
   rw [Finsupp.total_mapDomain]
   rw [(hv.comp f f.injective).total_repr]
   -- Porting note: `rfl` isn't necessary.
-  have h_total_eq  : (Finsupp.total ι M R v) l = (Finsupp.total ι M R v) (Finsupp.single i 1)
+  have h_total_eq : (Finsupp.total ι M R v) l = (Finsupp.total ι M R v) (Finsupp.single i 1)
   rw [h_total_l, Finsupp.total_single, one_smul]
   have l_eq : l = _ := LinearMap.ker_eq_bot.1 hv h_total_eq
   dsimp only [l] at l_eq
@@ -1204,7 +1204,7 @@ theorem mem_span_insert_exchange :
   simp only [mem_span_insert, forall_exists_index, and_imp]
   rintro a z hz rfl h
   refine ⟨a⁻¹, -a⁻¹ • z, smul_mem _ _ hz, ?_⟩
-  have a0  : a ≠ 0
+  have a0 : a ≠ 0
   rintro rfl
   simp_all
   simp [a0, smul_add, smul_smul]

@@ -141,12 +141,12 @@ theorem beattySeq_symmDiff_beattySeq'_pos {r s : ℝ} (hrs : r.IsConjExponent s)
     · rw [Set.mem_setOf_eq, ← hjk, beattySeq', sub_pos, Int.lt_ceil, Int.cast_one]
       exact one_lt_mul_of_le_of_lt (by norm_cast) hrs.symm.one_lt
   intro j (hj : 0 < j)
-  have hb₁  : ∀ s ≥ 0, j ∈ {beattySeq s k | k > 0} ↔ j ∈ {beattySeq s k | k}
+  have hb₁ : ∀ s ≥ 0, j ∈ {beattySeq s k | k > 0} ↔ j ∈ {beattySeq s k | k}
   intro _ hs
   refine ⟨fun ⟨k, _, hk⟩ ↦ ⟨k, hk⟩, fun ⟨k, hk⟩ ↦ ⟨k, ?_, hk⟩⟩
   rw [← hk, beattySeq, Int.floor_pos] at hj
   exact_mod_cast pos_of_mul_pos_left (zero_lt_one.trans_le hj) hs
-  have hb₂  : ∀ s ≥ 0, j ∈ {beattySeq' s k | k > 0} ↔ j ∈ {beattySeq' s k | k}
+  have hb₂ : ∀ s ≥ 0, j ∈ {beattySeq' s k | k > 0} ↔ j ∈ {beattySeq' s k | k}
   intro _ hs
   refine ⟨fun ⟨k, _, hk⟩ ↦ ⟨k, hk⟩, fun ⟨k, hk⟩ ↦ ⟨k, ?_, hk⟩⟩
   rw [← hk, beattySeq', sub_pos, Int.lt_ceil, Int.cast_one] at hj

@@ -467,7 +467,7 @@ theorem coe_sInf (s : Set ℝ≥0) : (↑(sInf s) : ℝ) = sInf (((↑) : ℝ≥
   rcases Set.eq_empty_or_nonempty s with rfl|hs
   · simp only [Set.image_empty, Real.sInf_empty, coe_eq_zero]
     exact @subset_sInf_emptyset ℝ (Set.Ici (0 : ℝ)) _ _ (_)
-  have A  : sInf (Subtype.val '' s) ∈ Set.Ici 0
+  have A : sInf (Subtype.val '' s) ∈ Set.Ici 0
   apply Real.sInf_nonneg
   rintro - ⟨y, -, rfl⟩
   exact y.2
@@ -1059,7 +1059,7 @@ theorem NNReal.exists_lt_of_strictMono [h : Nontrivial Γ₀ˣ] {f : Γ₀ →*�
     {r : ℝ≥0} (hr : 0 < r) : ∃ d : Γ₀ˣ, f d < r := by
   obtain ⟨g, hg1⟩ := (nontrivial_iff_exists_ne (1 : Γ₀ˣ)).mp h
   set u : Γ₀ˣ := if g < 1 then g else g⁻¹ with hu
-  have hfu  : f u < 1
+  have hfu : f u < 1
   rw [hu]
   split_ifs with hu1
   · rw [← _root_.map_one f]; exact hf hu1

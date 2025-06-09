@@ -378,7 +378,7 @@ theorem tendsto_condexp_unique (fs gs : ℕ → α → F') (f g : α → F')
   haveI : SigmaFinite (μ.trim hm) := hμm
   refine (condexp_ae_eq_condexpL1 hm f).trans ((condexp_ae_eq_condexpL1 hm g).trans ?_).symm
   rw [← Lp.ext_iff]
-  have hn_eq  : ∀ n, condexpL1 hm μ (gs n) = condexpL1 hm μ (fs n)
+  have hn_eq : ∀ n, condexpL1 hm μ (gs n) = condexpL1 hm μ (fs n)
   intro n
   ext1
   refine (condexp_ae_eq_condexpL1 hm (gs n)).symm.trans ((hfg n).symm.trans ?_)

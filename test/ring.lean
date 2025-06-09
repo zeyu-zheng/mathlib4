@@ -133,7 +133,7 @@ example (x : ℕ) : (22 + 7 * x + 3 * 8 = 0 + 7 * x + 46 + 1)
 noncomputable def f : Nat → Nat := test_sorry
 
 example (a : Nat) : 1 * f a * 1 = f (a + 0) := by
-  have ha  : a + 0 = a
+  have ha : a + 0 = a
   ring
   rw [ha] -- goal has mdata
   ring1

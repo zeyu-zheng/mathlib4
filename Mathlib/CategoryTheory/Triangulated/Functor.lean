@@ -161,9 +161,9 @@ open ZeroObject
 
 instance (priority := 100) [F.IsTriangulated] : PreservesZeroMorphisms F where
   map_zero X Y := by
-    have h₁  : (0 : X ⟶ Y) = 0 ≫ 𝟙 0 ≫ 0
+    have h₁ : (0 : X ⟶ Y) = 0 ≫ 𝟙 0 ≫ 0
     simp
-    have h₂  : 𝟙 (F.obj 0) = 0
+    have h₂ : 𝟙 (F.obj 0) = 0
     rw [← IsZero.iff_id_eq_zero]
     apply Triangle.isZero₃_of_isIso₁ _
       (F.map_distinguished _ (contractible_distinguished (0 : C)))

@@ -310,7 +310,7 @@ theorem mul_splits_in_splittingField_of_mul {p₁ q₁ p₂ q₂ : F[X]} (hq₁ 
 theorem splits_in_splittingField_of_comp (hq : q.natDegree ≠ 0) :
     p.Splits (algebraMap F (p.comp q).SplittingField) := by
   let P : F[X] → Prop := fun r => r.Splits (algebraMap F (r.comp q).SplittingField)
-  have key1  : ∀ {r : F[X]}, Irreducible r → P r
+  have key1 : ∀ {r : F[X]}, Irreducible r → P r
   intro r hr
   by_cases hr' : natDegree r = 0
   · exact splits_of_natDegree_le_one _ (le_trans (le_of_eq hr') zero_le_one)
@@ -326,7 +326,7 @@ theorem splits_in_splittingField_of_comp (hq : q.natDegree ≠ 0) :
   exact
     splits_of_splits_of_dvd _ (minpoly.ne_zero qx_int) (Normal.splits h_normal _)
       ((minpoly.irreducible qx_int).dvd_symm hr (minpoly.dvd F _ hx))
-  have key2  : ∀ {p₁ p₂ : F[X]}, P p₁ → P p₂ → P (p₁ * p₂)
+  have key2 : ∀ {p₁ p₂ : F[X]}, P p₁ → P p₂ → P (p₁ * p₂)
   intro p₁ p₂ hp₁ hp₂
   by_cases h₁ : p₁.comp q = 0
   · cases' comp_eq_zero_iff.mp h₁ with h h

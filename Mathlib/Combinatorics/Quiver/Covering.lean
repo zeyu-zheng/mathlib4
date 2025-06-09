@@ -102,7 +102,7 @@ protected structure Prefunctor.IsCovering : Prop where
 theorem Prefunctor.IsCovering.map_injective (hφ : φ.IsCovering) {u v : U} :
     Injective fun f : u ⟶ v => φ.map f := by
   rintro f g he
-  have  : φ.star u (Quiver.Star.mk f) = φ.star u (Quiver.Star.mk g)
+  have : φ.star u (Quiver.Star.mk f) = φ.star u (Quiver.Star.mk g)
   simpa using he
   simpa using (hφ.star_bijective u).left this
 
@@ -210,10 +210,10 @@ theorem Prefunctor.pathStar_injective (hφ : ∀ u, Injective (φ.star u)) (u : 
     have hφx := Path.obj_eq_of_cons_eq_cons h'
     have hφp := Path.heq_of_cons_eq_cons h'
     have hφe := HEq.trans (Hom.cast_heq rfl hφy _).symm (Path.hom_heq_of_cons_eq_cons h')
-    have h_path_star  : φ.pathStar u ⟨x₁, p₁⟩ = φ.pathStar u ⟨x₂, p₂⟩
+    have h_path_star : φ.pathStar u ⟨x₁, p₁⟩ = φ.pathStar u ⟨x₂, p₂⟩
     simp only [Prefunctor.pathStar_apply, Sigma.mk.inj_iff]; exact ⟨hφx, hφp⟩
     cases ih h_path_star
-    have h_star  : φ.star x₁ ⟨y₁, e₁⟩ = φ.star x₁ ⟨y₂, e₂⟩
+    have h_star : φ.star x₁ ⟨y₁, e₁⟩ = φ.star x₁ ⟨y₂, e₂⟩
     simp only [Prefunctor.star_apply, Sigma.mk.inj_iff]; exact ⟨hφy, hφe⟩
     cases hφ x₁ h_star
     rfl

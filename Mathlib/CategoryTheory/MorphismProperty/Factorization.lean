@@ -74,7 +74,7 @@ lemma comp_eq_top_iff : W₁.comp W₂ = ⊤ ↔ HasFactorization W₁ W₂ := b
   constructor
   · intro h
     refine ⟨fun f => ?_⟩
-    have  : W₁.comp W₂ f
+    have : W₁.comp W₂ f
     simp only [h, top_apply]
     exact ⟨this.some⟩
   · intro

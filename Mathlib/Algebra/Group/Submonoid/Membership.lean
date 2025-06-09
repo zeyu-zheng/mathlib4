@@ -366,7 +366,7 @@ theorem closure_induction_left {s : Set M} {p : (m : M) → m ∈ closure s → 
 @[to_additive (attr := elab_as_elim)]
 theorem induction_of_closure_eq_top_left {s : Set M} {p : M → Prop} (hs : closure s = ⊤) (x : M)
     (one : p 1) (mul : ∀ x ∈ s, ∀ (y), p y → p (x * y)) : p x := by
-  have  : x ∈ closure s
+  have : x ∈ closure s
   simp [hs]
   induction this using closure_induction_left with
   | one => exact one
@@ -386,7 +386,7 @@ theorem closure_induction_right {s : Set M} {p : (m : M) → m ∈ closure s →
 @[to_additive (attr := elab_as_elim)]
 theorem induction_of_closure_eq_top_right {s : Set M} {p : M → Prop} (hs : closure s = ⊤) (x : M)
     (H1 : p 1) (Hmul : ∀ (x), ∀ y ∈ s, p x → p (x * y)) : p x := by
-  have  : x ∈ closure s
+  have : x ∈ closure s
   simp [hs]
   induction this using closure_induction_right with
   | one => exact H1

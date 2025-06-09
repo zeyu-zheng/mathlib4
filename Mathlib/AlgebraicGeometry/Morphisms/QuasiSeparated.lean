@@ -175,7 +175,7 @@ theorem IsAffineOpen.isQuasiSeparated {X : Scheme} {U : X.Opens} (hU : IsAffineO
 theorem QuasiSeparated.of_comp {X Y Z : Scheme} (f : X ⟶ Y) (g : Y ⟶ Z) [QuasiSeparated (f ≫ g)] :
     QuasiSeparated f := by
   let 𝒰 := (Z.affineCover.pullbackCover g).bind fun x => Scheme.affineCover _
-  have (i)  : IsAffine (𝒰.obj i)
+  have (i) : IsAffine (𝒰.obj i)
   dsimp [𝒰]; infer_instance
   apply HasAffineProperty.of_openCover
     ((Z.affineCover.pullbackCover g).bind fun x => Scheme.affineCover _)

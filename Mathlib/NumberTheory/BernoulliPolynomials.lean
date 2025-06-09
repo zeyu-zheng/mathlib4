@@ -71,7 +71,7 @@ theorem bernoulli_zero : bernoulli 0 = 1 := by simp [bernoulli]
 @[simp]
 theorem bernoulli_eval_zero (n : ℕ) : (bernoulli n).eval 0 = _root_.bernoulli n := by
   rw [bernoulli, eval_finset_sum, sum_range_succ]
-  have  : ∑ x ∈ range n, _root_.bernoulli x * n.choose x * 0 ^ (n - x) = 0
+  have : ∑ x ∈ range n, _root_.bernoulli x * n.choose x * 0 ^ (n - x) = 0
   apply sum_eq_zero fun x hx => _
   intros x hx
   simp [tsub_eq_zero_iff_le, mem_range.1 hx]
@@ -176,7 +176,7 @@ theorem bernoulli_succ_eval (n p : ℕ) : (bernoulli p.succ).eval (n : ℚ) =
 theorem bernoulli_eval_one_add (n : ℕ) (x : ℚ) :
     (bernoulli n).eval (1 + x) = (bernoulli n).eval x + n * x ^ (n - 1) := by
   refine Nat.strong_induction_on n fun d hd => ?_
-  have nz  : ((d.succ : ℕ) : ℚ) ≠ 0
+  have nz : ((d.succ : ℕ) : ℚ) ≠ 0
   norm_cast
   apply (mul_right_inj' nz).1
   rw [← smul_eq_mul, ← eval_smul, bernoulli_eq_sub_sum, mul_add, ← smul_eq_mul, ← eval_smul,

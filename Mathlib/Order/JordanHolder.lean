@@ -200,7 +200,7 @@ theorem last_eraseLast_le (s : CompositionSeries X) : s.eraseLast.last ≤ s.las
 theorem mem_eraseLast_of_ne_of_mem {s : CompositionSeries X} {x : X}
     (hx : x ≠ s.last) (hxs : x ∈ s) : x ∈ s.eraseLast := by
   rcases hxs with ⟨i, rfl⟩
-  have hi  : (i : ℕ) < (s.length - 1).succ
+  have hi : (i : ℕ) < (s.length - 1).succ
   conv_rhs => rw [← Nat.succ_sub (length_pos_of_nontrivial ⟨_, ⟨i, rfl⟩, _, s.last_mem, hx⟩),
     Nat.add_one_sub_one]
   exact lt_of_le_of_ne (Nat.le_of_lt_succ i.2) (by simpa [last, s.inj, Fin.ext_iff] using hx)
@@ -212,7 +212,7 @@ theorem mem_eraseLast {s : CompositionSeries X} {x : X} (h : 0 < s.length) :
   simp only [RelSeries.mem_def, eraseLast]
   constructor
   · rintro ⟨i, rfl⟩
-    have hi  : (i : ℕ) < s.length
+    have hi : (i : ℕ) < s.length
     conv_rhs => rw [← Nat.add_one_sub_one s.length, Nat.succ_sub h]
     exact i.2
     -- porting note (#10745): was `simp [top, Fin.ext_iff, ne_of_lt hi]`.
@@ -226,7 +226,7 @@ theorem lt_last_of_mem_eraseLast {s : CompositionSeries X} {x : X} (h : 0 < s.le
 
 theorem isMaximal_eraseLast_last {s : CompositionSeries X} (h : 0 < s.length) :
     IsMaximal s.eraseLast.last s.last := by
-  have  : s.length - 1 + 1 = s.length
+  have : s.length - 1 + 1 = s.length
   conv_rhs => rw [← Nat.add_one_sub_one s.length]; rw [Nat.succ_sub h]
   rw [last_eraseLast, last]
   convert s.step ⟨s.length - 1, by omega⟩; ext; simp [this]

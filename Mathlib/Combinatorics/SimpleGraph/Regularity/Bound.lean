@@ -144,7 +144,7 @@ theorem card_aux₁ (hucard : u.card = m * 4 ^ P.parts.card + a) :
 theorem card_aux₂ (hP : P.IsEquipartition) (hu : u ∈ P.parts)
     (hucard : ¬u.card = m * 4 ^ P.parts.card + a) :
     (4 ^ P.parts.card - (a + 1)) * m + (a + 1) * (m + 1) = u.card := by
-  have  : m * 4 ^ P.parts.card ≤ card α / P.parts.card
+  have : m * 4 ^ P.parts.card ≤ card α / P.parts.card
   rw [stepBound, ← Nat.div_div_eq_div_mul]
   exact Nat.div_mul_le_self _ _
   rw [Nat.add_sub_of_le this] at hucard

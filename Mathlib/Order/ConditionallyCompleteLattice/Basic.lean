@@ -941,7 +941,7 @@ theorem csSup_eq_csSup_of_forall_exists_le {s t : Set α}
       · refine ⟨b, fun x hx ↦ ?_⟩
         rcases hs x hx with ⟨y, hy, hxy⟩
         exact hxy.trans (hb hy)
-    have Bt  : BddAbove t
+    have Bt : BddAbove t
     rcases B with ⟨b, hb⟩|hB
     · refine ⟨b, fun y hy ↦ ?_⟩
       rcases ht y hy with ⟨x, hx, hyx⟩

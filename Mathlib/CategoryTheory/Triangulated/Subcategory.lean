@@ -239,7 +239,7 @@ instance [IsTriangulated C] : S.W.HasRightCalculusOfFractions where
   ext Y Z Z' f₁ f₂ s hs hf₁ := by
     rw [S.W_iff'] at hs
     obtain ⟨Z, g, h, H, mem⟩ := hs
-    have hf₂  : (f₁ - f₂) ≫ s = 0
+    have hf₂ : (f₁ - f₂) ≫ s = 0
     rw [sub_comp, hf₁, sub_self]
     obtain ⟨q, hq⟩ := Triangle.coyoneda_exact₂ _ H _ hf₂
     obtain ⟨Y', r, t, mem'⟩ := distinguished_cocone_triangle₁ q

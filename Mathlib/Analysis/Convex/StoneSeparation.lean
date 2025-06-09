@@ -41,7 +41,7 @@ theorem not_disjoint_segment_convexHull_triple {p q u v x y z : E} (hz : z ∈ s
     rw [zero_smul, zero_add, habv, one_smul]
     exact ⟨q, right_mem_segment _ _ _, subset_convexHull _ _ <| by simp⟩
   obtain ⟨au, bu, hau, hbu, habu, rfl⟩ := hu
-  have hab  : 0 < az * av + bz * au
+  have hab : 0 < az * av + bz * au
   positivity
   refine ⟨(az * av / (az * av + bz * au)) • (au • x + bu • p) +
     (bz * au / (az * av + bz * au)) • (av • y + bv • q), ⟨_, _, ?_, ?_, ?_, rfl⟩, ?_⟩
@@ -52,13 +52,13 @@ theorem not_disjoint_segment_convexHull_triple {p q u v x y z : E} (hz : z ∈ s
   classical
     let w : Fin 3 → 𝕜 := ![az * av * bu, bz * au * bv, au * av]
     let z : Fin 3 → E := ![p, q, az • x + bz • y]
-    have hw₀  : ∀ i, 0 ≤ w i
+    have hw₀ : ∀ i, 0 ≤ w i
     rintro i
     fin_cases i
     · exact mul_nonneg (mul_nonneg haz hav) hbu
     · exact mul_nonneg (mul_nonneg hbz hau) hbv
     · exact mul_nonneg hau hav
-    have hw  : ∑ i, w i = az * av + bz * au
+    have hw : ∑ i, w i = az * av + bz * au
     trans az * av * bu + (bz * au * bv + au * av)
     · simp [w, Fin.sum_univ_succ, Fin.sum_univ_zero]
     rw [← one_mul (au * av), ← habz, add_mul, ← add_assoc, add_add_add_comm, mul_assoc, ← mul_add,

@@ -313,7 +313,7 @@ theorem changeOrigin_toFormalMultilinearSeries [DecidableEq ι] :
       rw [card_compl, Fintype.card_fin, card_singleton, Nat.add_sub_cancel_left]⟩)
   · use fun _ _ ↦ (singleton_injective <| compl_injective <| Subtype.ext_iff.mp ·)
     intro ⟨s, hs⟩
-    have h  : sᶜ.card = 1
+    have h : sᶜ.card = 1
     rw [card_compl, hs, Fintype.card_fin, Nat.add_sub_cancel]
     obtain ⟨a, ha⟩ := card_eq_one.mp h
     exact ⟨a, Subtype.ext (compl_eq_comm.mp ha)⟩
@@ -339,11 +339,11 @@ private lemma _root_.Equiv.succ_embeddingFinSucc_fst_symm_apply {ι : Type*} [De
     Fin.succ ((Equiv.embeddingFinSucc n ι e).1.toEquivRange.symm ⟨k, h'k⟩)
       = e.toEquivRange.symm ⟨k, hk⟩ := by
   rcases hk with ⟨j, rfl⟩
-  have hj  : j ≠ 0
+  have hj : j ≠ 0
   rintro rfl
   simp at h'k
   simp only [Function.Embedding.toEquivRange_symm_apply_self]
-  have  : e j = (Equiv.embeddingFinSucc n ι e).1 (Fin.pred j hj)
+  have : e j = (Equiv.embeddingFinSucc n ι e).1 (Fin.pred j hj)
   simp
   simp_rw [this]
   simp [-Equiv.embeddingFinSucc_fst]

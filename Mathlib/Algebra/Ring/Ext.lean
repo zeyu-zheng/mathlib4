@@ -118,7 +118,7 @@ TODO consider relocating these lemmas.
     (h_add : local_hAdd[R, inst₁] = local_hAdd[R, inst₂])
     (h_one : (letI := inst₁; One.one : R) = (letI := inst₂; One.one : R)) :
     inst₁ = inst₂ := by
-  have h_monoid  : inst₁.toAddMonoid = inst₂.toAddMonoid
+  have h_monoid : inst₁.toAddMonoid = inst₂.toAddMonoid
   ext : 1; exact h_add
   have h_zero' : inst₁.toZero = inst₂.toZero := congrArg (·.toZero) h_monoid
   have h_one' : inst₁.toOne = inst₂.toOne :=
@@ -152,7 +152,7 @@ defined in `Mathlib/Algebra/GroupWithZero/Defs.lean` as well. -/
     (h_add : local_hAdd[R, inst₁] = local_hAdd[R, inst₂])
     (h_mul : local_hMul[R, inst₁] = local_hMul[R, inst₂]) :
     inst₁ = inst₂ := by
-  have h  : inst₁.toNonUnitalNonAssocSemiring = inst₂.toNonUnitalNonAssocSemiring
+  have h : inst₁.toNonUnitalNonAssocSemiring = inst₂.toNonUnitalNonAssocSemiring
   ext : 1 <;> assumption
   have h_zero : (inst₁.toMulZeroClass).toZero.zero = (inst₂.toMulZeroClass).toZero.zero :=
     congrArg (fun inst => (inst.toMulZeroClass).toZero.zero) h
@@ -217,7 +217,7 @@ namespace NonUnitalRing
     (h_add : local_hAdd[R, inst₁] = local_hAdd[R, inst₂])
     (h_mul : local_hMul[R, inst₁] = local_hMul[R, inst₂]) :
     inst₁ = inst₂ := by
-  have  : inst₁.toNonUnitalNonAssocRing = inst₂.toNonUnitalNonAssocRing
+  have : inst₁.toNonUnitalNonAssocRing = inst₂.toNonUnitalNonAssocRing
   ext : 1 <;> assumption
   -- Split into fields and prove they are equal using the above.
   cases inst₁; cases inst₂
@@ -283,9 +283,9 @@ namespace NonAssocRing
     (h_add : local_hAdd[R, inst₁] = local_hAdd[R, inst₂])
     (h_mul : local_hMul[R, inst₁] = local_hMul[R, inst₂]) :
     inst₁ = inst₂ := by
-  have h₁  : inst₁.toNonUnitalNonAssocRing = inst₂.toNonUnitalNonAssocRing
+  have h₁ : inst₁.toNonUnitalNonAssocRing = inst₂.toNonUnitalNonAssocRing
   ext : 1 <;> assumption
-  have h₂  : inst₁.toNonAssocSemiring = inst₂.toNonAssocSemiring
+  have h₂ : inst₁.toNonAssocSemiring = inst₂.toNonAssocSemiring
   ext : 1 <;> assumption
   -- Mathematically non-trivial fact: `intCast` is determined by the rest.
   have h₃ : inst₁.toAddCommGroupWithOne = inst₂.toAddCommGroupWithOne :=
@@ -321,11 +321,11 @@ namespace Semiring
     (h_mul : local_hMul[R, inst₁] = local_hMul[R, inst₂]) :
     inst₁ = inst₂ := by
   -- Show that enough substructures are equal.
-  have h₁  : inst₁.toNonUnitalSemiring = inst₂.toNonUnitalSemiring
+  have h₁ : inst₁.toNonUnitalSemiring = inst₂.toNonUnitalSemiring
   ext : 1 <;> assumption
-  have h₂  : inst₁.toNonAssocSemiring = inst₂.toNonAssocSemiring
+  have h₂ : inst₁.toNonAssocSemiring = inst₂.toNonAssocSemiring
   ext : 1 <;> assumption
-  have h₃  : (inst₁.toMonoidWithZero).toMonoid = (inst₂.toMonoidWithZero).toMonoid
+  have h₃ : (inst₁.toMonoidWithZero).toMonoid = (inst₂.toMonoidWithZero).toMonoid
   ext : 1; exact h_mul
   -- Split into fields and prove they are equal using the above.
   cases inst₁; cases inst₂
@@ -361,9 +361,9 @@ namespace Ring
     (h_mul : local_hMul[R, inst₁] = local_hMul[R, inst₂]) :
     inst₁ = inst₂ := by
   -- Show that enough substructures are equal.
-  have h₁  : inst₁.toSemiring = inst₂.toSemiring
+  have h₁ : inst₁.toSemiring = inst₂.toSemiring
   ext : 1 <;> assumption
-  have h₂  : inst₁.toNonAssocRing = inst₂.toNonAssocRing
+  have h₂ : inst₁.toNonAssocRing = inst₂.toNonAssocRing
   ext : 1 <;> assumption
   /- We prove that the `SubNegMonoid`s are equal because they are one
   field away from `Sub` and `Neg`, enabling use of `injection`. -/

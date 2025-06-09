@@ -116,7 +116,7 @@ theorem bernoulli'_three : bernoulli' 3 = 0 := by
 
 @[simp]
 theorem bernoulli'_four : bernoulli' 4 = -1 / 30 := by
-  have  : Nat.choose 4 2 = 6
+  have : Nat.choose 4 2 = 6
   decide -- shrug
   rw [bernoulli'_def]
   norm_num [sum_range_succ, sum_range_succ, sum_range_zero, this]
@@ -135,7 +135,7 @@ theorem sum_bernoulli' (n : ℕ) : (∑ k ∈ range n, (n.choose k : ℚ) * bern
   simp_rw [mul_sum, ← mul_assoc]
   refine sum_congr rfl fun k hk => ?_
   congr
-  have  : ((n - k : ℕ) : ℚ) + 1 ≠ 0
+  have : ((n - k : ℕ) : ℚ) + 1 ≠ 0
   norm_cast
   field_simp [← cast_sub (mem_range.1 hk).le, mul_comm]
   rw_mod_cast [tsub_add_eq_add_tsub (mem_range.1 hk).le, choose_mul_succ_eq]
@@ -175,7 +175,7 @@ theorem bernoulli'_odd_eq_zero {n : ℕ} (h_odd : Odd n) (hlt : 1 < n) : bernoul
       specialize h n
       split_ifs at h <;> simp_all [B, h_odd.neg_one_pow, factorial_ne_zero]
     · simpa (config := {decide := true}) [Nat.factorial] using h 1
-  have h  : B * (exp ℚ - 1) = X * exp ℚ
+  have h : B * (exp ℚ - 1) = X * exp ℚ
   simpa [bernoulli'PowerSeries] using bernoulli'PowerSeries_mul_exp_sub_one ℚ
   rw [sub_mul, h, mul_sub X, sub_right_inj, ← neg_sub, mul_neg, neg_eq_iff_eq_neg]
   suffices evalNegHom (B * (exp ℚ - 1)) * exp ℚ = evalNegHom (X * exp ℚ) * exp ℚ by
@@ -233,11 +233,11 @@ theorem bernoulli_spec' (n : ℕ) :
   · simp
   rw [if_neg (succ_ne_zero _)]
   -- algebra facts
-  have h₁  : (1, n) ∈ antidiagonal n.succ
+  have h₁ : (1, n) ∈ antidiagonal n.succ
   simp [mem_antidiagonal, add_comm]
-  have h₂  : (n : ℚ) + 1 ≠ 0
+  have h₂ : (n : ℚ) + 1 ≠ 0
   norm_cast
-  have h₃  : (1 + n).choose n = n + 1
+  have h₃ : (1 + n).choose n = n + 1
   simp [add_comm]
   -- key equation: the corresponding fact for `bernoulli'`
   have H := bernoulli'_spec' n.succ
@@ -364,7 +364,7 @@ theorem sum_Ico_pow (n p : ℕ) :
   suffices (∑ k ∈ Ico 1 n.succ, (k : ℚ) ^ p.succ) = ∑ i ∈ range p.succ.succ, f' i by convert this
   -- prove some algebraic facts that will make things easier for us later on
   have hle := Nat.le_add_left 1 n
-  have hne  : (p + 1 + 1 : ℚ) ≠ 0
+  have hne : (p + 1 + 1 : ℚ) ≠ 0
   norm_cast
   have h1 : ∀ r : ℚ, r * (p + 1 + 1) * (n : ℚ) ^ p.succ / (p + 1 + 1 : ℚ) = r * (n : ℚ) ^ p.succ :=
       fun r => by rw [mul_div_right_comm, mul_div_cancel_right₀ _ hne]

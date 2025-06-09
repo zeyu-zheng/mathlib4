@@ -330,7 +330,7 @@ theorem of_separable_splitting_field_aux [hFE : FiniteDimensional F E] [sp : p.I
   have h1 : p ≠ 0 := fun hp => by
     rw [hp, Polynomial.aroots_zero] at hx
     exact Multiset.not_mem_zero x hx
-  have h2  : minpoly K x ∣ p.map (algebraMap F K)
+  have h2 : minpoly K x ∣ p.map (algebraMap F K)
   apply minpoly.dvd
   rw [Polynomial.aeval_def, Polynomial.eval₂_map, ← Polynomial.eval_map, ←
     IsScalarTower.algebraMap_eq]
@@ -358,7 +358,7 @@ theorem of_separable_splitting_field [sp : p.IsSplittingField F E] (hp : p.Separ
   haveI hFE : FiniteDimensional F E := Polynomial.IsSplittingField.finiteDimensional E p
   letI := Classical.decEq E
   let s := p.rootSet E
-  have adjoin_root  : IntermediateField.adjoin F s = ⊤
+  have adjoin_root : IntermediateField.adjoin F s = ⊤
   apply IntermediateField.toSubalgebra_injective
   rw [IntermediateField.top_toSubalgebra, ← top_le_iff, ← sp.adjoin_rootSet]
   apply IntermediateField.algebra_adjoin_le_adjoin

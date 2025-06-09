@@ -129,7 +129,7 @@ theorem uniformCauchySeqOnFilter_of_fderiv (hf' : UniformCauchySeqOnFilter f' l 
     obtain ⟨a, b, c, d, e⟩ := eventually_prod_iff.1 ((hf' ε hε).and this)
     obtain ⟨R, hR, hR'⟩ := Metric.nhds_basis_ball.eventually_iff.mp d
     let r := min 1 R
-    have hr  : 0 < r
+    have hr : 0 < r
     simp [r, hR]
     have hr' : ∀ ⦃y : E⦄, y ∈ Metric.ball x r → c y := fun y hy =>
       hR' (lt_of_lt_of_le (Metric.mem_ball.mp hy) (min_le_right _ _))
@@ -392,7 +392,7 @@ theorem hasFDerivAt_of_tendstoLocallyUniformlyOn [NeBot l] {s : Set E} (hs : IsO
     (hfg : ∀ x ∈ s, Tendsto (fun n => f n x) l (𝓝 (g x))) (hx : x ∈ s) :
     HasFDerivAt g (g' x) x := by
   have h1 : s ∈ 𝓝 x := hs.mem_nhds hx
-  have h3  : Set.univ ×ˢ s ∈ l ×ˢ 𝓝 x
+  have h3 : Set.univ ×ˢ s ∈ l ×ˢ 𝓝 x
   simp only [h1, prod_mem_prod_iff, univ_mem, and_self_iff]
   have h4 : ∀ᶠ n : ι × E in l ×ˢ 𝓝 x, HasFDerivAt (f n.1) (f' n.1 n.2) n.2 :=
     eventually_of_mem h3 fun ⟨n, z⟩ ⟨_, hz⟩ => hf n z hz
@@ -424,11 +424,11 @@ theorem hasFDerivAt_of_tendstoUniformly [NeBot l] (hf' : TendstoUniformly f' g' 
     (hf : ∀ n : ι, ∀ x : E, HasFDerivAt (f n) (f' n x) x)
     (hfg : ∀ x : E, Tendsto (fun n => f n x) l (𝓝 (g x))) : ∀ x : E, HasFDerivAt g (g' x) x := by
   intro x
-  have hf  : ∀ n : ι, ∀ x : E, x ∈ Set.univ → HasFDerivAt (f n) (f' n x) x
+  have hf : ∀ n : ι, ∀ x : E, x ∈ Set.univ → HasFDerivAt (f n) (f' n x) x
   simp [hf]
-  have hfg  : ∀ x : E, x ∈ Set.univ → Tendsto (fun n => f n x) l (𝓝 (g x))
+  have hfg : ∀ x : E, x ∈ Set.univ → Tendsto (fun n => f n x) l (𝓝 (g x))
   simp [hfg]
-  have hf'  : TendstoUniformlyOn f' g' l Set.univ
+  have hf' : TendstoUniformlyOn f' g' l Set.univ
   rwa [tendstoUniformlyOn_univ]
   exact hasFDerivAt_of_tendstoUniformlyOn isOpen_univ hf' hf hfg x (Set.mem_univ x)
 
@@ -497,7 +497,7 @@ theorem hasDerivAt_of_tendstoUniformlyOnFilter [NeBot l]
   -- Now we need to rewrite hf' in terms of `ContinuousLinearMap`s. The tricky part is that
   -- operator norms are written in terms of `≤` whereas metrics are written in terms of `<`. So we
   -- need to shrink `ε` utilizing the archimedean property of `ℝ`
-  have hf'  : TendstoUniformlyOnFilter F' G' l (𝓝 x)
+  have hf' : TendstoUniformlyOnFilter F' G' l (𝓝 x)
   rw [Metric.tendstoUniformlyOnFilter_iff] at hf' ⊢
   intro ε hε
   obtain ⟨q, hq, hq'⟩ := exists_between hε.lt
@@ -544,11 +544,11 @@ theorem hasDerivAt_of_tendstoUniformly [NeBot l] (hf' : TendstoUniformly f' g' l
     (hf : ∀ᶠ n in l, ∀ x : 𝕜, HasDerivAt (f n) (f' n x) x)
     (hfg : ∀ x : 𝕜, Tendsto (fun n => f n x) l (𝓝 (g x))) : ∀ x : 𝕜, HasDerivAt g (g' x) x := by
   intro x
-  have hf  : ∀ᶠ n in l, ∀ x : 𝕜, x ∈ Set.univ → HasDerivAt (f n) (f' n x) x
+  have hf : ∀ᶠ n in l, ∀ x : 𝕜, x ∈ Set.univ → HasDerivAt (f n) (f' n x) x
   filter_upwards [hf] with n h x _ using h x
-  have hfg  : ∀ x : 𝕜, x ∈ Set.univ → Tendsto (fun n => f n x) l (𝓝 (g x))
+  have hfg : ∀ x : 𝕜, x ∈ Set.univ → Tendsto (fun n => f n x) l (𝓝 (g x))
   simp [hfg]
-  have hf'  : TendstoUniformlyOn f' g' l Set.univ
+  have hf' : TendstoUniformlyOn f' g' l Set.univ
   rwa [tendstoUniformlyOn_univ]
   exact hasDerivAt_of_tendstoUniformlyOn isOpen_univ hf' hf hfg x (Set.mem_univ x)
 

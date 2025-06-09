@@ -294,7 +294,7 @@ lemma C_addPolynomial_slope {x₁ x₂ y₁ y₂ : F} (h₁ : W.Equation x₁ y�
 lemma XYIdeal_eq₂ {x₁ x₂ y₁ y₂ : F} (h₁ : W.Equation x₁ y₁)
     (h₂ : W.Equation x₂ y₂) (hxy : x₁ = x₂ → y₁ ≠ W.negY x₂ y₂) :
     XYIdeal W x₂ (C y₂) = XYIdeal W x₂ (linePolynomial x₁ y₁ <| W.slope x₁ x₂ y₁ y₂) := by
-  have hy₂  : y₂ = (linePolynomial x₁ y₁ <| W.slope x₁ x₂ y₁ y₂).eval x₂
+  have hy₂ : y₂ = (linePolynomial x₁ y₁ <| W.slope x₁ x₂ y₁ y₂).eval x₂
   by_cases hx : x₁ = x₂
   · rcases hx, Y_eq_of_Y_ne h₁ h₂ hx <| hxy hx with ⟨rfl, rfl⟩
     field_simp [linePolynomial, sub_ne_zero_of_ne <| hxy rfl]
@@ -439,7 +439,7 @@ lemma degree_norm_smul_basis [IsDomain R] (p q : R[X]) :
     (Algebra.norm R[X] <| p • (1 : W.CoordinateRing) + q • mk W Y).degree =
       max (2 • p.degree) (2 • q.degree + 3) := by
   have hdp : (p ^ 2).degree = 2 • p.degree := degree_pow p 2
-  have hdpq  : (p * q * (C W.a₁ * X + C W.a₃)).degree ≤ p.degree + q.degree + 1
+  have hdpq : (p * q * (C W.a₁ * X + C W.a₃)).degree ≤ p.degree + q.degree + 1
   simpa only [degree_mul] using add_le_add_left degree_linear_le (p.degree + q.degree)
   have hdq :
       (q ^ 2 * (X ^ 3 + C W.a₂ * X ^ 2 + C W.a₄ * X + C W.a₆)).degree = 2 • q.degree + 3 := by

@@ -52,7 +52,7 @@ theorem iff_exists_tensorProduct [EssFiniteType R S] :
   rw [iff_subsingleton_kaehlerDifferential, KaehlerDifferential,
     Ideal.cotangent_subsingleton_iff, Ideal.isIdempotentElem_iff_of_fg _
       (KaehlerDifferential.ideal_fg R S)]
-  have  : ∀ t : S ⊗[R] S, TensorProduct.lmul' R t = 1 ↔ 1 - t ∈ KaehlerDifferential.ideal R S
+  have : ∀ t : S ⊗[R] S, TensorProduct.lmul' R t = 1 ↔ 1 - t ∈ KaehlerDifferential.ideal R S
   intro t
   simp only [KaehlerDifferential.ideal, RingHom.mem_ker, map_sub, map_one,
     sub_eq_zero, @eq_comm S 1]
@@ -190,7 +190,7 @@ lemma finite_of_free [Module.Free R S] : Module.Finite R S := by
     (fun j ↦ not_imp_comm.mp (hG j))
   -- Then `∑ Fᵢⱼ(bⱼ ⊗ bᵢ) = ∑ fⱼx ⊗ bᵢ = ∑ fⱼ ⊗ xbᵢ = ∑ aᵢⱼ(fⱼ ⊗ bᵢ) = ∑ Gᵢⱼ(bⱼ ⊗ bᵢ)`.
   -- Since `bⱼ ⊗ bᵢ` forms an `R`-basis of `S ⊗ S`, we conclude that `F = G`.
-  have  : F = G
+  have : F = G
   apply Finsupp.finsuppProdEquiv.symm.injective
   apply (Finsupp.equivCongrLeft (Equiv.prodComm I I)).injective
   apply (b.tensorProduct b).repr.symm.injective
@@ -201,7 +201,7 @@ lemma finite_of_free [Module.Free R S] : Module.Finite R S := by
     Finsupp.total_equivMapDomain, Equiv.coe_prodComm]
   rw [Finsupp.onFinset_sum, Finsupp.onFinset_sum]
   simp only [Function.comp_apply, Prod.swap_prod_mk, Basis.tensorProduct_apply]
-  have  : ∀ i, ((b.repr (x * f i)).sum fun j k ↦ k • b j ⊗ₜ[R] b i) = (x * f i) ⊗ₜ[R] b i
+  have : ∀ i, ((b.repr (x * f i)).sum fun j k ↦ k • b j ⊗ₜ[R] b i) = (x * f i) ⊗ₜ[R] b i
   intro i
   simp_rw [Finsupp.sum, TensorProduct.smul_tmul', ← TensorProduct.sum_tmul]
   congr 1
@@ -213,7 +213,7 @@ lemma finite_of_free [Module.Free R S] : Module.Finite R S := by
   · intro; simp
   · intro; simp
   -- In particular, `fⱼx = ∑ Fᵢⱼbⱼ = ∑ Gᵢⱼbⱼ = ∑ₛ aᵢⱼfᵢ` for all `j`.
-  have  : ∀ j, x * f j = f.sum fun i y ↦ a i j • y
+  have : ∀ j, x * f j = f.sum fun i y ↦ a i j • y
   intro j
   apply b.repr.injective
   exact DFunLike.congr_fun this j

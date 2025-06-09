@@ -113,7 +113,7 @@ lemma continuous_integral_apply_inv_mul
   obtain ⟨t, t_comp, ht⟩ : ∃ t, IsCompact t ∧ t ∈ 𝓝 x₀ := exists_compact_mem_nhds x₀
   let k' : Set G := t • k⁻¹
   have k'_comp : IsCompact k' := t_comp.smul_set k_comp.inv
-  have A  : ContinuousOn (fun (x : G) ↦ ∫ y, g (y⁻¹ * x) ∂μ) t
+  have A : ContinuousOn (fun (x : G) ↦ ∫ y, g (y⁻¹ * x) ∂μ) t
   apply continuousOn_integral_of_compact_support k'_comp
   · exact (hg.comp (continuous_snd.inv.mul continuous_fst)).continuousOn
   · intro p x hp hx
@@ -157,7 +157,7 @@ lemma integral_isMulLeftInvariant_isMulRightInvariant_combo
   · simp [Hf]
   let D : G → ℝ := fun (x : G) ↦ ∫ y, g (y⁻¹ * x) ∂ν
   have D_cont : Continuous D := continuous_integral_apply_inv_mul hg h'g
-  have D_pos  : ∀ x, 0 < D x
+  have D_pos : ∀ x, 0 < D x
   intro x
   have C : Continuous (fun y ↦ g (y⁻¹ * x)) := hg.comp (continuous_inv.mul continuous_const)
   apply (integral_pos_iff_support_of_nonneg _ _).2
@@ -375,7 +375,7 @@ lemma haarScalarFactor_eq_mul (μ' μ ν : Measure G)
   simp only [integral_smul_nnreal_measure, smul_smul,
     integral_isMulLeftInvariant_eq_smul_of_hasCompactSupport μ' ν g_cont g_comp,
     integral_isMulLeftInvariant_eq_smul_of_hasCompactSupport μ ν g_cont g_comp] at Z
-  have int_g_pos  : 0 < ∫ x, g x ∂ν
+  have int_g_pos : 0 < ∫ x, g x ∂ν
   apply (integral_pos_iff_support_of_nonneg g_nonneg _).2
   · exact IsOpen.measure_pos ν g_cont.isOpen_support ⟨1, g_one⟩
   · exact g_cont.integrable_of_hasCompactSupport g_comp
@@ -459,7 +459,7 @@ lemma measure_preimage_isMulLeftInvariant_eq_smul_of_hasCompactSupport
   obtain ⟨u, -, u_mem, u_lim⟩ : ∃ u, StrictAnti u ∧ (∀ (n : ℕ), u n ∈ Ioo 0 1)
     ∧ Tendsto u atTop (𝓝 0) := exists_seq_strictAnti_tendsto' (zero_lt_one : (0 : ℝ) < 1)
   let v : ℕ → ℝ → ℝ := fun n x ↦ thickenedIndicator (u_mem n).1 ({1} : Set ℝ) x
-  have vf_cont n  : Continuous ((v n) ∘ f)
+  have vf_cont n : Continuous ((v n) ∘ f)
   apply Continuous.comp (continuous_induced_dom.comp ?_) hf
   exact BoundedContinuousFunction.continuous (thickenedIndicator (u_mem n).left {1})
   have I : ∀ (ν : Measure G), IsFiniteMeasureOnCompacts ν →
@@ -669,7 +669,7 @@ Two Haar measures which are probability measures coincide. -/
 lemma isHaarMeasure_eq_of_isProbabilityMeasure [LocallyCompactSpace G] (μ' μ : Measure G)
     [IsProbabilityMeasure μ] [IsProbabilityMeasure μ'] [IsHaarMeasure μ] [IsHaarMeasure μ'] :
     μ' = μ := by
-  have  : CompactSpace G
+  have : CompactSpace G
   by_contra H
   rw [not_compactSpace_iff] at H
   simpa using measure_univ_of_isMulLeftInvariant μ
@@ -729,19 +729,19 @@ theorem measure_isHaarMeasure_eq_smul_of_isEverywherePos [LocallyCompactSpace G]
     · intro a ac
       exact subset_biUnion_of_mem (u := id) ac
   change m ⊆ s ∧ PairwiseDisjoint m (fun x ↦ x • k) at mA
-  have sm  : s ⊆ ⋃ x ∈ m, x • (k * k⁻¹)
+  have sm : s ⊆ ⋃ x ∈ m, x • (k * k⁻¹)
   intro y hy
   by_cases h'y : m ∪ {y} ∈ A
   · have : m ∪ {y} = m := m_max _ h'y subset_union_left
-    have ym  : y ∈ m
+    have ym : y ∈ m
     simpa using subset_union_right.trans this.subset
-    have  : y ∈ y • (k * k⁻¹)
+    have : y ∈ y • (k * k⁻¹)
     simpa using mem_leftCoset y (Set.mul_mem_mul one_k (Set.inv_mem_inv.mpr one_k))
     exact mem_biUnion ym this
   · obtain ⟨x, xm, -, z, zy, zx⟩ : ∃ x ∈ m, y ≠ x ∧ ∃ z, z ∈ y • k ∧ z ∈ x • k := by
       simpa [A, mA.1, hy, insert_subset_iff, pairwiseDisjoint_insert, mA.2, not_disjoint_iff]
         using h'y
-    have  : y ∈ x • (k * k⁻¹)
+    have : y ∈ x • (k * k⁻¹)
     rw [show y = x * ((x⁻¹ * z) * (y⁻¹ * z)⁻¹) by group]
     have : (x⁻¹ * z) * (y⁻¹ * z)⁻¹ ∈ k * k⁻¹ := Set.mul_mem_mul ((mem_leftCoset_iff x).mp zx)
       (Set.inv_mem_inv.mpr ((mem_leftCoset_iff y).mp zy))
@@ -752,16 +752,16 @@ theorem measure_isHaarMeasure_eq_smul_of_isEverywherePos [LocallyCompactSpace G]
     simp [sm]
   by_cases h'm : Set.Countable m
   · rcases h'm.exists_eq_range hm with ⟨f, rfl⟩
-    have M i  : MeasurableSet (disjointed (fun n ↦ s ∩ f n • (k * k⁻¹)) i)
+    have M i : MeasurableSet (disjointed (fun n ↦ s ∩ f n • (k * k⁻¹)) i)
     apply MeasurableSet.disjointed (fun j ↦ hs.inter ?_)
     have : IsClosed (k • k⁻¹) := IsClosed.smul_left_of_isCompact k_closed.inv k_comp
     exact (IsClosed.smul this (f j)).measurableSet
     simp only [mem_range, iUnion_exists, iUnion_iUnion_eq'] at sm
-    have s_eq  : s = ⋃ n, s ∩ (f n • (k * k⁻¹))
+    have s_eq : s = ⋃ n, s ∩ (f n • (k * k⁻¹))
     rwa [← inter_iUnion, eq_comm, inter_eq_left]
-    have I  : μ' s = ∑' n, μ' (disjointed (fun n ↦ s ∩ f n • (k * k⁻¹)) n)
+    have I : μ' s = ∑' n, μ' (disjointed (fun n ↦ s ∩ f n • (k * k⁻¹)) n)
     rw [← measure_iUnion (disjoint_disjointed _) M, iUnion_disjointed, ← s_eq]
-    have J  : ν s = ∑' n, ν (disjointed (fun n ↦ s ∩ f n • (k * k⁻¹)) n)
+    have J : ν s = ∑' n, ν (disjointed (fun n ↦ s ∩ f n • (k * k⁻¹)) n)
     rw [← measure_iUnion (disjoint_disjointed _) M, iUnion_disjointed, ← s_eq]
     rw [I, J]
     congr with n
@@ -829,9 +829,9 @@ lemma measure_isMulLeftInvariant_eq_smul_of_ne_top [LocallyCompactSpace G]
   let c := haarScalarFactor μ' μ
   /- By regularity, every measurable set of finite measure may be approximated by compact sets.
   Therefore, the measures coincide on measurable sets of finite measure. -/
-  have B  : ∀ s, MeasurableSet s → μ s < ∞ → μ' s < ∞ → μ' s = (c • μ) s
+  have B : ∀ s, MeasurableSet s → μ s < ∞ → μ' s < ∞ → μ' s = (c • μ) s
   intro s s_meas hs h's
-  have  : (c • μ) s ≠ ∞
+  have : (c • μ) s ≠ ∞
   simp [ENNReal.mul_eq_top, hs.ne]
   rw [s_meas.measure_eq_iSup_isCompact_of_ne_top h's.ne,
       s_meas.measure_eq_iSup_isCompact_of_ne_top this]
@@ -841,11 +841,11 @@ lemma measure_isMulLeftInvariant_eq_smul_of_ne_top [LocallyCompactSpace G]
   version for measurable sets. -/
   let t := toMeasurable μ' s ∩ toMeasurable μ s
   have st : s ⊆ t := subset_inter (subset_toMeasurable μ' s) (subset_toMeasurable μ s)
-  have mu'_t  : μ' t = μ' s
+  have mu'_t : μ' t = μ' s
   apply le_antisymm
   · exact (measure_mono inter_subset_left).trans (measure_toMeasurable s).le
   · exact measure_mono st
-  have mu_t  : μ t = μ s
+  have mu_t : μ t = μ s
   apply le_antisymm
   · exact (measure_mono inter_subset_right).trans (measure_toMeasurable s).le
   · exact measure_mono st
@@ -878,7 +878,7 @@ lemma isMulLeftInvariant_eq_smul_of_regular [LocallyCompactSpace G]
     (μ' μ : Measure G) [IsHaarMeasure μ] [IsFiniteMeasureOnCompacts μ'] [IsMulLeftInvariant μ']
     [Regular μ] [Regular μ'] :
     μ' = haarScalarFactor μ' μ • μ := by
-  have A  : ∀ U, IsOpen U → μ' U = (haarScalarFactor μ' μ • μ) U
+  have A : ∀ U, IsOpen U → μ' U = (haarScalarFactor μ' μ • μ) U
   intro U hU
   rw [hU.measure_eq_iSup_isCompact, hU.measure_eq_iSup_isCompact]
   congr! 4 with K _KU K_comp
@@ -932,13 +932,13 @@ instance (priority := 100) IsHaarMeasure.isInvInvariant_of_regular
   constructor
   let c : ℝ≥0∞ := haarScalarFactor μ.inv μ
   have hc : μ.inv = c • μ := isMulLeftInvariant_eq_smul_of_regular μ.inv μ
-  have  : map Inv.inv (map Inv.inv μ) = c ^ 2 • μ
+  have : map Inv.inv (map Inv.inv μ) = c ^ 2 • μ
   rw [← inv_def μ, hc, Measure.map_smul, ← inv_def μ, hc, smul_smul, pow_two]
-  have μeq  : μ = c ^ 2 • μ
+  have μeq : μ = c ^ 2 • μ
   rw [map_map continuous_inv.measurable continuous_inv.measurable] at this
   simpa only [inv_involutive, Involutive.comp_self, Measure.map_id]
   have K : PositiveCompacts G := Classical.arbitrary _
-  have  : c ^ 2 * μ K = 1 ^ 2 * μ K
+  have : c ^ 2 * μ K = 1 ^ 2 * μ K
   conv_rhs => rw [μeq]
   simp
   have : c ^ 2 = 1 ^ 2 :=
@@ -957,13 +957,13 @@ instance (priority := 100) IsHaarMeasure.isInvInvariant_of_innerRegular
   constructor
   let c : ℝ≥0∞ := haarScalarFactor μ.inv μ
   have hc : μ.inv = c • μ := isMulLeftInvariant_eq_smul_of_innerRegular μ.inv μ
-  have  : map Inv.inv (map Inv.inv μ) = c ^ 2 • μ
+  have : map Inv.inv (map Inv.inv μ) = c ^ 2 • μ
   rw [← inv_def μ, hc, Measure.map_smul, ← inv_def μ, hc, smul_smul, pow_two]
-  have μeq  : μ = c ^ 2 • μ
+  have μeq : μ = c ^ 2 • μ
   rw [map_map continuous_inv.measurable continuous_inv.measurable] at this
   simpa only [inv_involutive, Involutive.comp_self, Measure.map_id]
   have K : PositiveCompacts G := Classical.arbitrary _
-  have  : c ^ 2 * μ K = 1 ^ 2 * μ K
+  have : c ^ 2 * μ K = 1 ^ 2 * μ K
   conv_rhs => rw [μeq]
   simp
   have : c ^ 2 = 1 ^ 2 :=

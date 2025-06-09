@@ -175,7 +175,7 @@ theorem continuousAt_extend [T3Space γ] {b : β} {f : α → γ} (di : DenseInd
     simpa [ContinuousAt, (closed_nhds_basis (φ b)).tendsto_right_iff]
   intro V' V'_in V'_closed
   set V₁ := { x | Tendsto f (comap i <| 𝓝 x) (𝓝 <| φ x) }
-  have V₁_in  : V₁ ∈ 𝓝 b
+  have V₁_in : V₁ ∈ 𝓝 b
   filter_upwards [hf]
   rintro x ⟨c, hc⟩
   rwa [← di.extend_eq_of_tendsto hc] at hc
@@ -325,7 +325,7 @@ theorem Filter.HasBasis.hasBasis_of_denseInducing [TopologicalSpace α] [Topolog
   intro T
   refine ⟨fun hT => ?_, fun hT => ?_⟩
   · obtain ⟨T', hT₁, hT₂, hT₃⟩ := exists_mem_nhds_isClosed_subset hT
-    have hT₄  : f ⁻¹' T' ∈ 𝓝 x
+    have hT₄ : f ⁻¹' T' ∈ 𝓝 x
     rw [hf.toInducing.nhds_eq_comap x]
     exact ⟨T', hT₁, Subset.rfl⟩
     obtain ⟨i, hi, hi'⟩ := (h _).mp hT₄

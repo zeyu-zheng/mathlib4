@@ -162,7 +162,7 @@ theorem age.countable_quotient [h : Countable M] : (Quotient.mk' '' L.age M).Cou
     exact ⟨⟨(fg_iff_structure_fg _).1 (fg_closure s.finite_toSet), ⟨Substructure.subtype _⟩⟩, hs⟩
   · simp only [mem_range, Quotient.eq]
     rintro ⟨P, ⟨⟨s, hs⟩, ⟨PM⟩⟩, hP2⟩
-    have  : P ≈ N
+    have : P ≈ N
     apply Quotient.eq'.mp; rw [hP2]; rfl -- Porting note: added
     refine ⟨s.image PM, Setoid.trans (b := P) ?_ this⟩
     rw [← Embedding.coe_toHom, Finset.coe_image, closure_image PM.toHom, hs, ← Hom.range_eq_map]
@@ -202,7 +202,7 @@ theorem exists_cg_is_age_of (hn : K.Nonempty)
   obtain ⟨F, hF⟩ := hc.exists_eq_range (hn.image _)
   simp only [Set.ext_iff, Quotient.forall, mem_image, mem_range, Quotient.eq'] at hF
   simp_rw [Quotient.eq_mk_iff_out] at hF
-  have hF'  : ∀ n : ℕ, (F n).out ∈ K
+  have hF' : ∀ n : ℕ, (F n).out ∈ K
   intro n
   obtain ⟨P, hP1, hP2⟩ := (hF (F n).out).2 ⟨n, Setoid.refl _⟩
   -- Porting note: fix hP2 because `Quotient.out (Quotient.mk' x) ≈ a` was not simplified
@@ -217,7 +217,7 @@ theorem exists_cg_is_age_of (hn : K.Nonempty)
     refine DirectedSystem.natLERec (G' := fun i => (G i).val) (L := L) ?_
     dsimp only [G]
     exact fun n => (hP _ n).some
-  have  : DirectedSystem (fun n ↦ (G n).val) fun i j h ↦ ↑(f i j h)
+  have : DirectedSystem (fun n ↦ (G n).val) fun i j h ↦ ↑(f i j h)
   dsimp [f, G]; infer_instance
   refine ⟨Bundled.of (@DirectLimit L _ _ (fun n ↦ (G n).val) _ f _ _), ?_, ?_⟩
   · exact DirectLimit.cg _ (fun n => (fg _ (G n).2).cg)

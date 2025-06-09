@@ -50,7 +50,7 @@ lemma bergelson' {s : ℕ → Set α} (hs : ∀ n, MeasurableSet (s n)) (hr₀ :
   apply measure_iUnion_null fun u ↦ meas_eLpNormEssSup_lt
   -- The important thing about `N` is that if we remove `N` from our space, then finite unions of
   -- the `s n` are null iff they are empty.
-  have hN₁ (u  : Finset ℕ) : ((⋂ n ∈ u, s n) \ N).Nonempty → 0 < μ (⋂ n ∈ u, s n)
+  have hN₁ (u : Finset ℕ) : ((⋂ n ∈ u, s n) \ N).Nonempty → 0 < μ (⋂ n ∈ u, s n)
   simp_rw [pos_iff_ne_zero]
   rintro ⟨x, hx⟩ hu
   refine hx.2 (mem_iUnion.2 ⟨u, ?_⟩)
@@ -60,13 +60,13 @@ lemma bergelson' {s : ℕ → Set α} (hs : ∀ n, MeasurableSet (s n)) (hr₀ :
   -- Define `f n` to be the average of the first `n + 1` indicators of the `s k`.
   let f (n : ℕ) : α → ℝ≥0∞ := (↑(n + 1) : ℝ≥0∞)⁻¹ • ∑ k in Finset.range (n + 1), (s k).indicator 1
   -- We gather a few simple properties of `f`.
-  have hfapp  : ∀ n a, f n a = (↑(n + 1))⁻¹ * ∑ k in Finset.range (n + 1), (s k).indicator 1 a
+  have hfapp : ∀ n a, f n a = (↑(n + 1))⁻¹ * ∑ k in Finset.range (n + 1), (s k).indicator 1 a
   simp only [f, Pi.natCast_def, Pi.smul_apply, Pi.inv_apply, Finset.sum_apply, eq_self_iff_true,
   forall_const, imp_true_iff, smul_eq_mul]
   have hf n : Measurable (f n)
   apply Measurable.mul' (@measurable_const ℝ≥0∞ _ _ _ (↑(n + 1))⁻¹)
       (Finset.measurable_sum' _ fun i _ ↦ measurable_one.indicator $ hs i)
-  have hf₁ n  : f n ≤ 1
+  have hf₁ n : f n ≤ 1
   rintro a
   rw [hfapp, ← ENNReal.div_eq_inv_mul]
   refine (ENNReal.div_le_iff_le_mul (Or.inl $ Nat.cast_ne_zero.2 n.succ_ne_zero) $
@@ -74,7 +74,7 @@ lemma bergelson' {s : ℕ → Set α} (hs : ∀ n, MeasurableSet (s n)) (hr₀ :
   rw [mul_comm, ← nsmul_eq_mul, ← Finset.card_range n.succ]
   exact Finset.sum_le_card_nsmul _ _ _ fun _ _ ↦ indicator_le (fun _ _ ↦ le_rfl) _
   -- By assumption, `f n` has integral at least `r`.
-  have hrf n  : r ≤ ∫⁻ a, f n a ∂μ
+  have hrf n : r ≤ ∫⁻ a, f n a ∂μ
   simp_rw [hfapp]
   rw [lintegral_const_mul _ (Finset.measurable_sum _ fun _ _ ↦ measurable_one.indicator $ hs _),
     lintegral_finset_sum _ fun _ _ ↦ measurable_one.indicator (hs _)]
@@ -82,9 +82,9 @@ lemma bergelson' {s : ℕ → Set α} (hs : ∀ n, MeasurableSet (s n)) (hr₀ :
   rw [← ENNReal.div_eq_inv_mul, ENNReal.le_div_iff_mul_le (by simp) (by simp), ← nsmul_eq_mul']
   simpa using Finset.card_nsmul_le_sum (Finset.range (n + 1)) _ _ fun _ _ ↦ hr _
   -- Collect some basic fact
-  have hμ  : μ ≠ 0
+  have hμ : μ ≠ 0
   rintro rfl; exact hr₀ $ le_bot_iff.1 $ hr 0
-  have  : ∫⁻ x, limsup (f · x) atTop ∂μ ≤ μ univ
+  have : ∫⁻ x, limsup (f · x) atTop ∂μ ≤ μ univ
   rw [← lintegral_one]
   exact lintegral_mono fun a ↦ limsup_le_of_le ⟨0, fun R _ ↦ bot_le⟩ $
     eventually_of_forall fun n ↦ hf₁ _ _

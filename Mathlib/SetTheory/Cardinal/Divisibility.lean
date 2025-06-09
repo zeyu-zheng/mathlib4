@@ -116,7 +116,7 @@ theorem nat_is_prime_iff : Prime (n : Cardinal) ↔ n.Prime := by
     lift c to ℕ using hc
     exact mod_cast h b c (mod_cast hbc)
   rcases aleph0_le_mul_iff.mp h' with ⟨hb, hc, hℵ₀⟩
-  have hn  : (n : Cardinal) ≠ 0
+  have hn : (n : Cardinal) ≠ 0
   intro h
   rw [h, zero_dvd_iff, mul_eq_zero] at hbc
   cases hbc <;> contradiction

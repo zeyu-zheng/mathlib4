@@ -947,7 +947,7 @@ lemma transGen_covBy_of_lt [Preorder α] [LocallyFiniteOrder α] {x y : α} (hxy
   have z_card : (Ico x z).card < (Ico x y).card := card_lt_card <| ssubset_iff_of_subset
     (Ico_subset_Ico le_rfl (mem_Ico.mp z_mem).2.le) |>.mpr ⟨z, z_mem, right_not_mem_Ico⟩
   /- Since `z` is maximal in `Ico x y`, `z ⋖ y`. -/
-  have hzy  : z ⋖ y
+  have hzy : z ⋖ y
   refine ⟨(mem_Ico.mp z_mem).2, fun c hc hcy ↦ ?_⟩
   exact hz _ (mem_Ico.mpr ⟨((mem_Ico.mp z_mem).1.trans_lt hc).le, hcy⟩) hc
   by_cases hxz : x < z

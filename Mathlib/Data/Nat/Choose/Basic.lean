@@ -185,7 +185,7 @@ theorem choose_symm_half (m : ℕ) : choose (2 * m + 1) (m + 1) = choose (2 * m 
   rw [Nat.add_comm m 1, Nat.add_assoc 1 m m, Nat.add_comm (2 * m) 1, Nat.two_mul m]
 
 theorem choose_succ_right_eq (n k : ℕ) : choose n (k + 1) * (k + 1) = choose n k * (n - k) := by
-  have e  : (n + 1) * choose n k = choose n (k + 1) * (k + 1) + choose n k * (k + 1)
+  have e : (n + 1) * choose n k = choose n (k + 1) * (k + 1) + choose n k * (k + 1)
   rw [← Nat.add_mul, Nat.add_comm (choose _ _), ← choose_succ_succ, succ_mul_choose_eq]
   rw [← Nat.sub_eq_of_eq_add e, Nat.mul_comm, ← Nat.mul_sub_left_distrib, Nat.add_sub_add_right]
 

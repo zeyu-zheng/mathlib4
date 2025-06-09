@@ -64,7 +64,7 @@ local notation3 "i" => fun (w : V) => (1 / (2 * ‖w‖ ^ 2) : ℝ) • w
 /-- Shifting `f` by `(1 / (2 * ‖w‖ ^ 2)) • w` negates the integral in the Riemann-Lebesgue lemma. -/
 theorem fourierIntegral_half_period_translate {w : V} (hw : w ≠ 0) :
     (∫ v : V, 𝐞 (-⟪v, w⟫) • f (v + i w)) = -∫ v : V, 𝐞 (-⟪v, w⟫) • f v := by
-  have hiw  : ⟪i w, w⟫ = 1 / 2
+  have hiw : ⟪i w, w⟫ = 1 / 2
   rw [inner_smul_left, inner_self_eq_norm_sq_to_K, RCLike.ofReal_real_eq_id, id,
     RCLike.conj_to_real, ← div_div, div_mul_cancel₀]
   rwa [Ne, sq_eq_zero_iff, norm_eq_zero]
@@ -74,7 +74,7 @@ theorem fourierIntegral_half_period_translate {w : V} (hw : w ≠ 0) :
     ext1 v
     simp_rw [inner_add_left, hiw, Submonoid.smul_def, Real.fourierChar_apply, neg_add, mul_add,
       ofReal_add, add_mul, exp_add]
-    have  : 2 * π * -(1 / 2) = -π
+    have : 2 * π * -(1 / 2) = -π
     field_simp; ring
     rw [this, ofReal_neg, neg_mul, exp_neg, exp_pi_mul_I, inv_neg, inv_one, mul_neg_one, neg_smul,
       neg_neg]
@@ -116,13 +116,13 @@ theorem tendsto_integral_exp_inner_smul_cocompact_of_continuous_compact_support 
       ⟨T, fun b hb v hv => hT v (hv.symm ▸ hb)⟩
   obtain ⟨R, -, hR_bd⟩ : ∃ R : ℝ, 0 < R ∧ ∀ x : V, R ≤ ‖x‖ → f x = 0 := hf2.exists_pos_le_norm
   let A := {v : V | ‖v‖ ≤ R + 1}
-  have mA  : MeasurableSet A
+  have mA : MeasurableSet A
   suffices A = Metric.closedBall (0 : V) (R + 1) by
     rw [this]
     exact Metric.isClosed_ball.measurableSet
   simp_rw [Metric.closedBall, dist_eq_norm, sub_zero]
   obtain ⟨B, hB_pos, hB_vol⟩ : ∃ B : ℝ≥0, 0 < B ∧ volume A ≤ B := by
-    have hc  : IsCompact A
+    have hc : IsCompact A
     simpa only [Metric.closedBall, dist_eq_norm, sub_zero] using isCompact_closedBall (0 : V) _
     let B₀ := volume A
     replace hc : B₀ < ⊤ := hc.measure_lt_top
@@ -239,7 +239,7 @@ theorem tendsto_integral_exp_smul_cocompact_of_inner_product (μ : Measure V) [�
   rw [← (smul_zero _ : Measure.addHaarScalarFactor μ volume • (0 : E) = 0)]
   apply Tendsto.const_smul
   let A := (InnerProductSpace.toDual ℝ V).symm
-  have  : (fun w : V →L[ℝ] ℝ ↦ ∫ v, 𝐞 (-w v) • f v) = (fun w : V ↦ ∫ v, 𝐞 (-⟪v, w⟫) • f v) ∘ A
+  have : (fun w : V →L[ℝ] ℝ ↦ ∫ v, 𝐞 (-w v) • f v) = (fun w : V ↦ ∫ v, 𝐞 (-⟪v, w⟫) • f v) ∘ A
   ext1 w
   congr 1 with v : 1
   rw [← inner_conj_symm, RCLike.conj_to_real, InnerProductSpace.toDual_symm_apply]

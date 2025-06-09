@@ -322,7 +322,7 @@ is not empty, then `[a, b] ⊆ s`. -/
 theorem IsClosed.Icc_subset_of_forall_exists_gt {a b : α} {s : Set α} (hs : IsClosed (s ∩ Icc a b))
     (ha : a ∈ s) (hgt : ∀ x ∈ s ∩ Ico a b, ∀ y ∈ Ioi x, (s ∩ Ioc x y).Nonempty) : Icc a b ⊆ s := by
   intro y hy
-  have  : IsClosed (s ∩ Icc a y)
+  have : IsClosed (s ∩ Icc a y)
   suffices s ∩ Icc a y = s ∩ Icc a b ∩ Icc a y by
     rw [this]
     exact IsClosed.inter hs isClosed_Icc
@@ -357,7 +357,7 @@ theorem isPreconnected_Icc_aux (x y : α) (s t : Set α) (hxy : x ≤ y) (hs : I
   apply (IsClosed.inter hs isClosed_Icc).Icc_subset_of_forall_mem_nhdsWithin hx.2
   rintro z ⟨zs, hz⟩
   have zt : z ∈ tᶜ := fun zt => hst ⟨z, xyab <| Ico_subset_Icc_self hz, zs, zt⟩
-  have  : tᶜ ∩ Ioc z y ∈ 𝓝[>] z
+  have : tᶜ ∩ Ioc z y ∈ 𝓝[>] z
   rw [← nhdsWithin_Ioc_eq_nhdsWithin_Ioi hz.2]
   exact mem_nhdsWithin.2 ⟨tᶜ, ht.isOpen_compl, zt, Subset.rfl⟩
   apply mem_of_superset this
@@ -623,12 +623,12 @@ theorem Continuous.strictMonoOn_of_inj_rigidity {f : α → δ}
   have hsa : s ≤ a := min_le_left a x
   have hbt : b ≤ t := le_max_left b y
   have hst : s ≤ t := hsa.trans $ hbt.trans' hab.le
-  have hf_mono_st  : StrictMonoOn f (Icc s t) ∨ StrictAntiOn f (Icc s t)
+  have hf_mono_st : StrictMonoOn f (Icc s t) ∨ StrictAntiOn f (Icc s t)
   letI := Icc.completeLinearOrder hst
   have := Continuous.strictMono_of_inj_boundedOrder' (f := Set.restrict (Icc s t) f)
     hf_c.continuousOn.restrict hf_i.injOn.injective
   exact this.imp strictMono_restrict.mp strictAntiOn_iff_strictAnti.mpr
-  have (h  : StrictAntiOn f (Icc s t)) : False
+  have (h : StrictAntiOn f (Icc s t)) : False
   have : Icc a b ⊆ Icc s t := Icc_subset_Icc hsa hbt
   replace : StrictAntiOn f (Icc a b) := StrictAntiOn.mono h this
   replace : IsAntichain (· ≤ ·) (Icc a b) :=
@@ -650,7 +650,7 @@ theorem ContinuousOn.strictMonoOn_of_injOn_Icc {a b : α} {f : α → δ}
   letI := Icc.completeLinearOrder hab
   refine StrictMono.of_restrict ?_
   set g : Icc a b → δ := Set.restrict (Icc a b) f
-  have hgab  : g ⊥ ≤ g ⊤
+  have hgab : g ⊥ ≤ g ⊤
   aesop
   exact Continuous.strictMono_of_inj_boundedOrder (f := g) hf_c.restrict hgab hf_i.injective
 

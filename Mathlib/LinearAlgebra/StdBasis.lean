@@ -110,7 +110,7 @@ theorem iSup_range_stdBasis_eq_iInf_ker_proj {I J : Set ι} (hd : Disjoint I J)
     (hu : Set.univ ⊆ I ∪ J) (hI : Set.Finite I) :
     ⨆ i ∈ I, range (stdBasis R φ i) = ⨅ i ∈ J, ker (proj i : (∀ i, φ i) →ₗ[R] φ i) := by
   refine le_antisymm (iSup_range_stdBasis_le_iInf_ker_proj _ _ _ _ hd) ?_
-  have  : Set.univ ⊆ ↑hI.toFinset ∪ J
+  have : Set.univ ⊆ ↑hI.toFinset ∪ J
   rwa [hI.coe_toFinset]
   refine le_trans (iInf_ker_proj_le_iSup_range_stdBasis R φ this) (iSup_mono fun i => ?_)
   rw [Set.Finite.mem_toFinset]
@@ -158,7 +158,7 @@ variable {η : Type*} {ιs : η → Type*} {Ms : η → Type*}
 theorem linearIndependent_stdBasis [Ring R] [∀ i, AddCommGroup (Ms i)] [∀ i, Module R (Ms i)]
     [DecidableEq η] (v : ∀ j, ιs j → Ms j) (hs : ∀ i, LinearIndependent R (v i)) :
     LinearIndependent R fun ji : Σj, ιs j => stdBasis R Ms ji.1 (v ji.1 ji.2) := by
-  have hs'  : ∀ j : η, LinearIndependent R fun i : ιs j => stdBasis R Ms j (v j i)
+  have hs' : ∀ j : η, LinearIndependent R fun i : ιs j => stdBasis R Ms j (v j i)
   intro j
   exact (hs j).map' _ (ker_stdBasis _ _ _)
   apply linearIndependent_iUnion_finite hs'

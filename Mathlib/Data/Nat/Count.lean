@@ -63,7 +63,7 @@ theorem count_monotone : Monotone (count p) :=
   monotone_nat_of_le_succ fun n ↦ by by_cases h : p n <;> simp [count_succ, h]
 
 theorem count_add (a b : ℕ) : count p (a + b) = count p a + count (fun k ↦ p (a + k)) b := by
-  have  : Disjoint ((range a).filter p) (((range b).map <| addLeftEmbedding a).filter p)
+  have : Disjoint ((range a).filter p) (((range b).map <| addLeftEmbedding a).filter p)
   apply disjoint_filter_filter
   rw [Finset.disjoint_left]
   simp_rw [mem_map, mem_range, addLeftEmbedding_apply]

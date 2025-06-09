@@ -213,7 +213,7 @@ protected theorem BlockTriangular.det [DecidableEq α] [LinearOrder α] (hM : Bl
     refine congr_arg _ ?_
     let b' := fun i : { a // b a ≠ k } => b ↑i
     have h' : BlockTriangular (M.toSquareBlockProp fun i => b i ≠ k) b' := hM.submatrix
-    have hb'  : image b' univ = (image b univ).erase k
+    have hb' : image b' univ = (image b univ).erase k
     convert image_subtype_ne_univ_eq_image_erase k b
     rw [ih _ (erase_ssubset <| max'_mem _ _) h' hb']
     refine Finset.prod_congr rfl fun l hl => ?_
@@ -275,7 +275,7 @@ theorem BlockTriangular.toBlock_inverse_mul_toBlock_eq_one [LinearOrder α] [Inv
         (M⁻¹.toBlock p fun i => ¬p i) * M.toBlock (fun i => ¬p i) p =
       1 := by
     rw [← toBlock_mul_eq_add, inv_mul_of_invertible M, toBlock_one_self]
-  have h_zero  : M.toBlock (fun i => ¬p i) p = 0
+  have h_zero : M.toBlock (fun i => ¬p i) p = 0
   ext i j
   simpa using hM (lt_of_lt_of_le j.2 (le_of_not_lt i.2))
   simpa [h_zero] using h_sum
@@ -300,17 +300,17 @@ theorem toBlock_inverse_eq_zero [LinearOrder α] [Invertible M] (hM : BlockTrian
     (M⁻¹.toBlock (fun i => k ≤ b i) fun i => b i < k) = 0 := by
   let p i := b i < k
   let q i := ¬b i < k
-  have h_sum  : M⁻¹.toBlock q p * M.toBlock p p + M⁻¹.toBlock q q * M.toBlock q p = 0
+  have h_sum : M⁻¹.toBlock q p * M.toBlock p p + M⁻¹.toBlock q q * M.toBlock q p = 0
   rw [← toBlock_mul_eq_add, inv_mul_of_invertible M, toBlock_one_disjoint]
   rw [disjoint_iff_inf_le]
   exact fun i h => h.1 h.2
-  have h_zero  : M.toBlock q p = 0
+  have h_zero : M.toBlock q p = 0
   ext i j
   simpa using hM (lt_of_lt_of_le j.2 <| le_of_not_lt i.2)
-  have h_mul_eq_zero  : M⁻¹.toBlock q p * M.toBlock p p = 0
+  have h_mul_eq_zero : M⁻¹.toBlock q p * M.toBlock p p = 0
   simpa [h_zero] using h_sum
   haveI : Invertible (M.toBlock p p) := hM.invertibleToBlock k
-  have  : (fun i => k ≤ b i) = q
+  have : (fun i => k ≤ b i) = q
   ext
   exact not_lt.symm
   rw [this, ← Matrix.zero_mul (M.toBlock p p)⁻¹, ← h_mul_eq_zero,
@@ -333,10 +333,10 @@ theorem blockTriangular_inv_of_blockTriangular [LinearOrder α] [Invertible M]
     simp [this.symm]
   haveI : Invertible A := hM.invertibleToBlock _
   have hA : A.BlockTriangular b' := hM.submatrix
-  have hb'  : image b' univ ⊂ image b univ
+  have hb' : image b' univ ⊂ image b univ
   convert image_subtype_univ_ssubset_image_univ k b _ (fun a => a < k) (lt_irrefl _)
   convert max'_mem (α := α) _ _
-  have hij'  : b' ⟨j, hij.trans hi⟩ < b' ⟨i, hi⟩
+  have hij' : b' ⟨j, hij.trans hi⟩ < b' ⟨i, hi⟩
   simp_rw [hij]
   simp [hM.inv_toBlock k, (ih (image b' univ) hb' hA rfl hij').symm]
 

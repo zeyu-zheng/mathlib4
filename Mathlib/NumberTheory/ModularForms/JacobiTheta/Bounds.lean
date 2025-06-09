@@ -75,7 +75,7 @@ lemma f_le_g_nat (k : ℕ) {a t : ℝ} (ha : 0 ≤ a) (ht : 0 < t) (n : ℕ) :
   refine mul_le_mul_of_nonneg_left ?_ (by positivity)
   rw [Real.exp_le_exp, mul_le_mul_right ht,
     mul_le_mul_left_of_neg (neg_lt_zero.mpr pi_pos), ← sub_nonneg]
-  have u  : (n : ℝ) ≤ (n : ℝ) ^ 2
+  have u : (n : ℝ) ≤ (n : ℝ) ^ 2
   simpa only [← Nat.cast_pow, Nat.cast_le] using Nat.le_self_pow two_ne_zero _
   convert add_nonneg (sub_nonneg.mpr u) (by positivity : 0 ≤ 2 * n * a) using 1
   ring
@@ -84,7 +84,7 @@ lemma f_le_g_nat (k : ℕ) {a t : ℝ} (ha : 0 ≤ a) (ht : 0 < t) (n : ℕ) :
 def F_nat (k : ℕ) (a t : ℝ) : ℝ := ∑' n, f_nat k a t n
 
 lemma summable_f_nat (k : ℕ) (a : ℝ) {t : ℝ} (ht : 0 < t) : Summable (f_nat k a t) := by
-  have  : Summable fun n : ℕ ↦ n ^ k * exp (-π * (n + a) ^ 2 * t)
+  have : Summable fun n : ℕ ↦ n ^ k * exp (-π * (n + a) ^ 2 * t)
   refine (((summable_pow_mul_jacobiTheta₂_term_bound (|a| * t) ht k).mul_right
     (rexp (-π * a ^ 2 * t))).comp_injective Nat.cast_injective).of_norm_bounded _ (fun n ↦ ?_)
   simp_rw [mul_assoc, Function.comp_apply, ← Real.exp_add, norm_mul, norm_pow, Int.cast_abs,
@@ -132,14 +132,14 @@ lemma isBigO_atTop_F_nat_zero_sub {a : ℝ} (ha : 0 ≤ a) : ∃ p, 0 < p ∧
     (fun t ↦ F_nat 0 a t - (if a = 0 then 1 else 0)) =O[atTop] fun t ↦ exp (-p * t) := by
   split_ifs with h
   · rw [h]
-    have  : (fun t ↦ F_nat 0 0 t - 1) =O[atTop] fun t ↦ rexp (-π * t) / (1 - rexp (-π * t))
+    have : (fun t ↦ F_nat 0 0 t - 1) =O[atTop] fun t ↦ rexp (-π * t) / (1 - rexp (-π * t))
     apply Eventually.isBigO
     filter_upwards [eventually_gt_atTop 0] with t ht
     exact F_nat_zero_zero_sub_le ht
     refine ⟨_, pi_pos, this.trans ?_⟩
     simpa using (isBigO_refl (fun t ↦ rexp (-π * t)) _).mul isBigO_one_aux
   · simp_rw [sub_zero]
-    have  : (fun t ↦ F_nat 0 a t) =O[atTop] fun t ↦ rexp (-π * a ^ 2 * t) / (1 - rexp (-π * t))
+    have : (fun t ↦ F_nat 0 a t) =O[atTop] fun t ↦ rexp (-π * a ^ 2 * t) / (1 - rexp (-π * t))
     apply Eventually.isBigO
     filter_upwards [eventually_gt_atTop 0] with t ht
     exact F_nat_zero_le ha ht
@@ -183,7 +183,7 @@ lemma isBigO_atTop_F_nat_one {a : ℝ} (ha : 0 ≤ a) : ∃ p, 0 < p ∧
     refine ⟨p, hp, (Eventually.isBigO ?_).trans hp'⟩
     filter_upwards [eventually_gt_atTop 0] with t ht
     exact F_nat_one_le ha ht
-  have aux'  : IsBigO atTop (fun t : ℝ ↦ ((1 - rexp (-π * t)) ^ 2)⁻¹) (fun _ ↦ (1 : ℝ))
+  have aux' : IsBigO atTop (fun t : ℝ ↦ ((1 - rexp (-π * t)) ^ 2)⁻¹) (fun _ ↦ (1 : ℝ))
   simpa only [inv_pow, one_pow] using isBigO_one_aux.pow 2
   rcases eq_or_lt_of_le ha with rfl | ha'
   · exact ⟨_, pi_pos, by simpa only [zero_pow two_ne_zero, zero_add, mul_one, zero_mul, zero_div,
@@ -213,7 +213,7 @@ lemma f_int_ofNat (k : ℕ) {a : ℝ} (ha : 0 ≤ a) (t : ℝ) (n : ℕ) :
 
 lemma f_int_negSucc (k : ℕ) {a : ℝ} (ha : a ≤ 1) (t : ℝ) (n : ℕ) :
     f_int k a t (Int.negSucc n) = f_nat k (1 - a) t n := by
-  have  : (Int.negSucc n) + a = -(n + (1 - a))
+  have : (Int.negSucc n) + a = -(n + (1 - a))
   { push_cast; ring }
   rw [f_int, f_nat, this, abs_neg, neg_sq, abs_of_nonneg (by linarith)]
 
@@ -251,7 +251,7 @@ lemma isBigO_atTop_F_int_zero_sub (a : UnitAddCircle) : ∃ p, 0 < p ∧
   obtain ⟨a, ha, rfl⟩ := a.eq_coe_Ico
   obtain ⟨p, hp, hp'⟩ := isBigO_atTop_F_nat_zero_sub ha.1
   obtain ⟨q, hq, hq'⟩ := isBigO_atTop_F_nat_zero_sub (sub_nonneg.mpr ha.2.le)
-  have ha'  : (a : UnitAddCircle) = 0 ↔ a = 0
+  have ha' : (a : UnitAddCircle) = 0 ↔ a = 0
   rw [← AddCircle.coe_eq_coe_iff_of_mem_Ico (hp := ⟨zero_lt_one' ℝ⟩), QuotientAddGroup.mk_zero]
   · rw [zero_add]; exact ha
   · simp
@@ -273,7 +273,7 @@ lemma isBigO_atTop_F_int_one (a : UnitAddCircle) : ∃ p, 0 < p ∧
   obtain ⟨p, hp, hp'⟩ := isBigO_atTop_F_nat_one ha.1
   obtain ⟨q, hq, hq'⟩ := isBigO_atTop_F_nat_one (sub_nonneg.mpr ha.2.le)
   refine ⟨_, lt_min hp hq, ?_⟩
-  have  : F_int 1 a =ᶠ[atTop] fun t ↦ F_nat 1 a t + F_nat 1 (1 - a) t
+  have : F_int 1 a =ᶠ[atTop] fun t ↦ F_nat 1 a t + F_nat 1 (1 - a) t
   filter_upwards [eventually_gt_atTop 0] with t ht
   exact F_int_eq_of_mem_Icc 1 (Ico_subset_Icc_self ha) ht
   refine this.isBigO.trans ((hp'.trans ?_).add (hq'.trans ?_)) <;>

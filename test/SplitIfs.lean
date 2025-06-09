@@ -75,7 +75,7 @@ example (P Q : Prop) (w : if P then (if Q then true else true) else true = true)
   · trivial
 
 example (u : Nat) : (if u = u then 0 else 1) = 0 := by
-  have h  : u = u
+  have h : u = u
   rfl
   split_ifs
   -- only one goal here

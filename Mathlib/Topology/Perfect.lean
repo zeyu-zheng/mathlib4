@@ -62,7 +62,7 @@ variable {α : Type*} [TopologicalSpace α] {C : Set α}
 then `x` is an accumulation point of `U ∩ C`. -/
 theorem AccPt.nhds_inter {x : α} {U : Set α} (h_acc : AccPt x (𝓟 C)) (hU : U ∈ 𝓝 x) :
     AccPt x (𝓟 (U ∩ C)) := by
-  have  : 𝓝[≠] x ≤ 𝓟 U
+  have : 𝓝[≠] x ≤ 𝓟 U
   rw [le_principal_iff]
   exact mem_nhdsWithin_of_mem_nhds hU
   rw [AccPt, ← inf_principal, ← inf_assoc, inf_of_le_left this]
@@ -118,7 +118,7 @@ theorem Preperfect.perfect_closure (hC : Preperfect C) : Perfect (closure C) := 
   intro x hx
   by_cases h : x ∈ C <;> apply AccPt.mono _ (principal_mono.mpr subset_closure)
   · exact hC _ h
-  have  : {x}ᶜ ∩ C = C
+  have : {x}ᶜ ∩ C = C
   simp [h]
   rw [AccPt, nhdsWithin, inf_assoc, inf_principal, this]
   rw [closure_eq_cluster_pts] at hx
@@ -131,7 +131,7 @@ theorem preperfect_iff_perfect_closure [T1Space α] : Preperfect C ↔ Perfect (
   intro x xC
   have H : AccPt x (𝓟 (closure C)) := h.acc _ (subset_closure xC)
   rw [accPt_iff_frequently] at *
-  have  : ∀ y, y ≠ x ∧ y ∈ closure C → ∃ᶠ z in 𝓝 y, z ≠ x ∧ z ∈ C
+  have : ∀ y, y ≠ x ∧ y ∈ closure C → ∃ᶠ z in 𝓝 y, z ≠ x ∧ z ∈ C
   rintro y ⟨hyx, yC⟩
   simp only [← mem_compl_singleton_iff, and_comm, ← frequently_nhdsWithin_iff,
     hyx.nhdsWithin_compl_singleton, ← mem_closure_iff_frequently]
@@ -201,7 +201,7 @@ theorem exists_countable_union_perfect_of_isClosed [SecondCountableTopology α]
   let v := { U ∈ b | (U ∩ C).Countable }
   let V := ⋃ U ∈ v, U
   let D := C \ V
-  have Vct  : (V ∩ C).Countable
+  have Vct : (V ∩ C).Countable
   simp only [V, iUnion_inter, mem_sep_iff]
   apply Countable.biUnion
   · exact Countable.mono inter_subset_left bct
@@ -211,7 +211,7 @@ theorem exists_countable_union_perfect_of_isClosed [SecondCountableTopology α]
     exact fun ⟨Ub, _⟩ ↦ IsTopologicalBasis.isOpen bbasis Ub
   · rw [preperfect_iff_nhds]
     intro x xD E xE
-    have  : ¬(E ∩ D).Countable
+    have : ¬(E ∩ D).Countable
     intro h
     obtain ⟨U, hUb, xU, hU⟩ : ∃ U ∈ b, x ∈ U ∧ U ⊆ E :=
       (IsTopologicalBasis.mem_nhds_iff bbasis).mp xE

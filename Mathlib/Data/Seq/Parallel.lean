@@ -56,7 +56,7 @@ theorem terminates_parallel.aux :
     ∀ l S, (∃ a : α, parallel.aux2 l = Sum.inl a) → Terminates (corec parallel.aux1 (l, S)) := by
     intro l S e
     cases' e with a e
-    have  : corec parallel.aux1 (l, S) = return a
+    have : corec parallel.aux1 (l, S) = return a
     apply destruct_eq_pure
     simp only [parallel.aux1, rmap, corec_eq]
     rw [e]
@@ -79,7 +79,7 @@ theorem terminates_parallel.aux :
       rw [e]
       exact ⟨a', rfl⟩
   · intro s IH l S m
-    have H1  : ∀ l', parallel.aux2 l = Sum.inr l' → s ∈ l'
+    have H1 : ∀ l', parallel.aux2 l = Sum.inr l' → s ∈ l'
     induction' l with c l IH' <;> intro l' e' <;> simp at m
     cases' m with e m <;> simp [parallel.aux2] at e'
     · rw [← e] at e'
@@ -124,7 +124,7 @@ theorem terminates_parallel {S : WSeq (Computation α)} {c} (h : c ∈ S) [T : T
   intro n; induction' n with n IH <;> intro l S c o T
   · cases' o with a a
     · exact terminates_parallel.aux a T
-    have H  : Seq.destruct S = some (some c, Seq.tail S)
+    have H : Seq.destruct S = some (some c, Seq.tail S)
     simp [Seq.destruct, (· <$> ·), ← a]
     induction' h : parallel.aux2 l with a l'
     · have C : corec parallel.aux1 (l, S) = pure a := by
@@ -158,7 +158,7 @@ theorem terminates_parallel {S : WSeq (Computation α)} {c} (h : c ∈ S) [T : T
         rw [h])
       rw [C]
       refine @Computation.think_terminates _ _ ?_
-      have TT  : ∀ l', Terminates (corec parallel.aux1 (l', S.tail))
+      have TT : ∀ l', Terminates (corec parallel.aux1 (l', S.tail))
       intro
       apply IH _ _ _ (Or.inr _) T
       rw [a]
@@ -192,7 +192,7 @@ theorem exists_of_mem_parallel {S : WSeq (Computation α)} {a} (h : a ∈ parall
     cases' a with a l'
     · exact ∃ c ∈ l, a ∈ c
     · exact ∀ a', (∃ c ∈ l', a' ∈ c) → ∃ c ∈ l, a' ∈ c
-  have lem1  : ∀ l : List (Computation α), F l (parallel.aux2 l)
+  have lem1 : ∀ l : List (Computation α), F l (parallel.aux2 l)
   intro l
   induction' l with c l IH <;> simp only [parallel.aux2, List.foldr]
   · intro a h

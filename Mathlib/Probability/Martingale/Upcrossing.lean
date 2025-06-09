@@ -311,7 +311,7 @@ theorem Adapted.isStoppingTime_crossing (hf : Adapted ℱ f) :
   · refine ⟨isStoppingTime_const _ 0, ?_⟩
     simp [hitting_isStoppingTime hf measurableSet_Iic]
   · obtain ⟨_, ih₂⟩ := ih
-    have  : IsStoppingTime ℱ (upperCrossingTime a b f N (k + 1))
+    have : IsStoppingTime ℱ (upperCrossingTime a b f N (k + 1))
     intro n
     simp_rw [upperCrossingTime_succ_eq]
     exact isStoppingTime_hitting_isStoppingTime ih₂ (fun _ => lowerCrossingTime_le)
@@ -536,7 +536,7 @@ theorem le_sub_of_le_upcrossingsBefore (hN : 0 < N) (hab : a < b)
 theorem sub_eq_zero_of_upcrossingsBefore_lt (hab : a < b) (hn : upcrossingsBefore a b f N ω < n) :
     stoppedValue f (upperCrossingTime a b f N (n + 1)) ω -
       stoppedValue f (lowerCrossingTime a b f N n) ω = 0 := by
-  have  : N ≤ upperCrossingTime a b f N n ω
+  have : N ≤ upperCrossingTime a b f N n ω
   rw [upcrossingsBefore] at hn
   rw [← not_lt]
   exact fun h => not_le.2 hn (le_csSup (upperCrossingTime_lt_bddAbove hab) h)
@@ -616,14 +616,14 @@ theorem crossing_pos_eq (hab : a < b) :
     upperCrossingTime 0 (b - a) (fun n ω => (f n ω - a)⁺) N n = upperCrossingTime a b f N n ∧
       lowerCrossingTime 0 (b - a) (fun n ω => (f n ω - a)⁺) N n = lowerCrossingTime a b f N n := by
   have hab' : 0 < b - a := sub_pos.2 hab
-  have hf  : ∀ ω i, b - a ≤ (f i ω - a)⁺ ↔ b ≤ f i ω
+  have hf : ∀ ω i, b - a ≤ (f i ω - a)⁺ ↔ b ≤ f i ω
   intro i ω
   refine ⟨fun h => ?_, fun h => ?_⟩
   · rwa [← sub_le_sub_iff_right a, ←
       posPart_eq_of_posPart_pos (lt_of_lt_of_le hab' h)]
   · rw [← sub_le_sub_iff_right a] at h
     rwa [posPart_eq_self.2 (le_trans hab'.le h)]
-  have hf' (ω i)  : (f i ω - a)⁺ ≤ 0 ↔ f i ω ≤ a
+  have hf' (ω i) : (f i ω - a)⁺ ≤ 0 ↔ f i ω ≤ a
   rw [posPart_nonpos, sub_nonpos]
   induction' n with k ih
   · refine ⟨rfl, ?_⟩
@@ -771,7 +771,7 @@ theorem Adapted.measurable_upcrossings (hf : Adapted ℱ f) (hab : a < b) :
 
 theorem upcrossings_lt_top_iff :
     upcrossings a b f ω < ∞ ↔ ∃ k, ∀ N, upcrossingsBefore a b f N ω ≤ k := by
-  have  : upcrossings a b f ω < ∞ ↔ ∃ k : ℝ≥0, upcrossings a b f ω ≤ k
+  have : upcrossings a b f ω < ∞ ↔ ∃ k : ℝ≥0, upcrossings a b f ω ≤ k
   constructor
   · intro h
     lift upcrossings a b f ω to ℝ≥0 using h.ne with r hr
@@ -792,7 +792,7 @@ theorem Submartingale.mul_lintegral_upcrossings_le_lintegral_pos_part [IsFiniteM
       ⨆ N, ∫⁻ ω, ENNReal.ofReal ((f N ω - a)⁺) ∂μ := by
   by_cases hab : a < b
   · simp_rw [upcrossings]
-    have  : ∀ N, ∫⁻ ω, ENNReal.ofReal ((f N ω - a)⁺) ∂μ = ENNReal.ofReal (∫ ω, (f N ω - a)⁺ ∂μ)
+    have : ∀ N, ∫⁻ ω, ENNReal.ofReal ((f N ω - a)⁺) ∂μ = ENNReal.ofReal (∫ ω, (f N ω - a)⁺ ∂μ)
     intro N
     rw [ofReal_integral_eq_lintegral_ofReal]
     · exact (hf.sub_martingale (martingale_const _ _ _)).pos.integrable _

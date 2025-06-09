@@ -58,7 +58,7 @@ theorem isFiltered_structuredArrow_of_isFiltered_of_exists [IsFilteredOrEmpty C]
     (h₁ : ∀ d, ∃ c, Nonempty (d ⟶ F.obj c)) (h₂ : ∀ {d : D} {c : C} (s s' : d ⟶ F.obj c),
       ∃ (c' : C) (t : c ⟶ c'), s ≫ F.map t = s' ≫ F.map t) (d : D) :
     IsFiltered (StructuredArrow d F) := by
-  have  : Nonempty (StructuredArrow d F)
+  have : Nonempty (StructuredArrow d F)
   obtain ⟨c, ⟨f⟩⟩ := h₁ d
   exact ⟨.mk f⟩
   suffices IsFilteredOrEmpty (StructuredArrow d F) from IsFiltered.mk
@@ -181,7 +181,7 @@ theorem Functor.final_iff_of_isFiltered [IsFilteredOrEmpty C] :
     obtain ⟨f⟩ : Nonempty (StructuredArrow d F) := IsConnected.is_nonempty
     exact ⟨_, ⟨f.hom⟩⟩
   · intro d c s s'
-    have  : colimit.ι (F ⋙ coyoneda.obj (op d)) c s = colimit.ι (F ⋙ coyoneda.obj (op d)) c s'
+    have : colimit.ι (F ⋙ coyoneda.obj (op d)) c s = colimit.ι (F ⋙ coyoneda.obj (op d)) c s'
     apply (Final.colimitCompCoyonedaIso F d).toEquiv.injective
     subsingleton
     obtain ⟨c', t₁, t₂, h⟩ := (Types.FilteredColimit.colimit_eq_iff.{v₁, v₁, v₁} _).mp this

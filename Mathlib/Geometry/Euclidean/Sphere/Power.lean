@@ -40,7 +40,7 @@ theorem mul_norm_eq_abs_sub_sq_norm {x y z : V} (h₁ : ∃ k : ℝ, k ≠ 1 ∧
     (h₂ : ‖z - y‖ = ‖z + y‖) : ‖x - y‖ * ‖x + y‖ = |‖z + y‖ ^ 2 - ‖z - x‖ ^ 2| := by
   obtain ⟨k, hk_ne_one, hk⟩ := h₁
   let r := (k - 1)⁻¹ * (k + 1)
-  have hxy  : x = r • y
+  have hxy : x = r • y
   rw [← smul_smul, eq_inv_smul_iff₀ (sub_ne_zero.mpr hk_ne_one), ← sub_eq_zero]
   calc
     (k - 1) • x - (k + 1) • y = k • x - x - (k • y + y) := by
@@ -48,10 +48,10 @@ theorem mul_norm_eq_abs_sub_sq_norm {x y z : V} (h₁ : ∃ k : ℝ, k ≠ 1 ∧
     _ = k • x - k • y - (x + y) := by simp_rw [← sub_sub, sub_right_comm]
     _ = k • (x - y) - (x + y) := by rw [← smul_sub k x y]
     _ = 0 := sub_eq_zero.mpr hk.symm
-  have hzy  : ⟪z, y⟫ = 0
+  have hzy : ⟪z, y⟫ = 0
   rwa [inner_eq_zero_iff_angle_eq_pi_div_two, ← norm_add_eq_norm_sub_iff_angle_eq_pi_div_two,
     eq_comm]
-  have hzx  : ⟪z, x⟫ = 0
+  have hzx : ⟪z, x⟫ = 0
   rw [hxy, inner_smul_right, hzy, mul_zero]
   calc
     ‖x - y‖ * ‖x + y‖ = ‖(r - 1) • y‖ * ‖(r + 1) • y‖ := by simp [sub_smul, add_smul, hxy]

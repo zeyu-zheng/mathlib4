@@ -119,7 +119,7 @@ noncomputable def IsVanKampenColimit.isColimit {F : J ⥤ C} {c : Cocone F}
 theorem IsInitial.isVanKampenColimit [HasStrictInitialObjects C] {X : C} (h : IsInitial X) :
     IsVanKampenColimit (asEmptyCocone X) := by
   intro F' c' α f hf hα
-  have  : F' = Functor.empty C
+  have : F' = Functor.empty C
   apply Functor.hext <;> rintro ⟨⟨⟩⟩
   subst this
   haveI := h.isIso_to f
@@ -131,7 +131,7 @@ section Functor
 theorem IsUniversalColimit.of_iso {F : J ⥤ C} {c c' : Cocone F} (hc : IsUniversalColimit c)
     (e : c ≅ c') : IsUniversalColimit c' := by
   intro F' c'' α f h hα H
-  have  : c'.ι ≫ (Functor.const J).map e.inv.hom = c.ι
+  have : c'.ι ≫ (Functor.const J).map e.inv.hom = c.ι
   ext j
   exact e.inv.2 j
   apply hc c'' α (f ≫ e.inv.1) (by rw [Functor.map_comp, ← reassoc_of% h, this]) hα
@@ -143,7 +143,7 @@ theorem IsUniversalColimit.of_iso {F : J ⥤ C} {c c' : Cocone F} (hc : IsUniver
 theorem IsVanKampenColimit.of_iso {F : J ⥤ C} {c c' : Cocone F} (H : IsVanKampenColimit c)
     (e : c ≅ c') : IsVanKampenColimit c' := by
   intro F' c'' α f h hα
-  have  : c'.ι ≫ (Functor.const J).map e.inv.hom = c.ι
+  have : c'.ι ≫ (Functor.const J).map e.inv.hom = c.ι
   ext j
   exact e.inv.2 j
   rw [H c'' α (f ≫ e.inv.1) (by rw [Functor.map_comp, ← reassoc_of% h, this]) hα]
@@ -410,7 +410,7 @@ theorem IsVanKampenColimit.map_reflective [HasColimitsOfShape J C]
   intro ⟨hc'⟩ j
   let α' := α ≫ (Functor.associator _ _ _).hom ≫ whiskerLeft F adj.counit ≫ F.rightUnitor.hom
   have hα' : NatTrans.Equifibered α' := hα.comp (NatTrans.equifibered_of_isIso _)
-  have hα''  : ∀ j, Gl.map (Gr.map <| α'.app j) = adj.counit.app _ ≫ α.app j
+  have hα'' : ∀ j, Gl.map (Gr.map <| α'.app j) = adj.counit.app _ ≫ α.app j
   intro j
   rw [← cancel_mono (adj.counit.app <| F.obj j)]
   dsimp [α']
@@ -419,7 +419,7 @@ theorem IsVanKampenColimit.map_reflective [HasColimitsOfShape J C]
   let β := isoWhiskerLeft F' (asIso adj.counit) ≪≫ F'.rightUnitor
   let hl := (IsColimit.precomposeHomEquiv β c').symm hc'
   let hr := isColimitOfPreserves Gl (colimit.isColimit <| F' ⋙ Gr)
-  have  : α.app j = β.inv.app _ ≫ Gl.map (Gr.map <| α'.app j)
+  have : α.app j = β.inv.app _ ≫ Gl.map (Gr.map <| α'.app j)
   rw [hα'']
   simp [β]
   rw [this]
@@ -472,7 +472,7 @@ theorem hasStrictInitial_of_isUniversal [HasInitial C]
 
 theorem isVanKampenColimit_of_isEmpty [HasStrictInitialObjects C] [IsEmpty J] {F : J ⥤ C}
     (c : Cocone F) (hc : IsColimit c) : IsVanKampenColimit c := by
-  have  : IsInitial c.pt
+  have : IsInitial c.pt
   have := (IsColimit.precomposeInvEquiv (Functor.uniqueFromEmpty _) _).symm
     (hc.whiskerEquivalence (equivalenceOfIsEmpty (Discrete PEmpty.{1}) J))
   exact IsColimit.ofIsoColimit this (Cocones.ext (Iso.refl c.pt) (fun {X} ↦ isEmptyElim X))
@@ -505,7 +505,7 @@ theorem BinaryCofan.isVanKampen_iff (c : BinaryCofan X Y) :
   · introv H F' hα h
     let X' := F'.obj ⟨WalkingPair.left⟩
     let Y' := F'.obj ⟨WalkingPair.right⟩
-    have  : F' = pair X' Y'
+    have : F' = pair X' Y'
     apply Functor.hext
     · rintro ⟨⟨⟩⟩ <;> rfl
     · rintro ⟨⟨⟩⟩ ⟨j⟩ ⟨⟨rfl : _ = j⟩⟩ <;> simp
@@ -539,13 +539,13 @@ theorem BinaryCofan.isVanKampen_mk {X Y : C} (c : BinaryCofan X Y)
     constructor
     · rw [← Category.id_comp αX, ← Iso.hom_inv_id_assoc e f]
       haveI : IsIso (𝟙 X') := inferInstance
-      have  : c'.inl ≫ e.hom = 𝟙 X' ≫ (cofans X' Y').inl
+      have : c'.inl ≫ e.hom = 𝟙 X' ≫ (cofans X' Y').inl
       dsimp [e]
       simp
       exact (IsPullback.of_vert_isIso ⟨this⟩).paste_vert hl
     · rw [← Category.id_comp αY, ← Iso.hom_inv_id_assoc e f]
       haveI : IsIso (𝟙 Y') := inferInstance
-      have  : c'.inr ≫ e.hom = 𝟙 Y' ≫ (cofans X' Y').inr
+      have : c'.inr ≫ e.hom = 𝟙 Y' ≫ (cofans X' Y').inr
       dsimp [e]
       simp
       exact (IsPullback.of_vert_isIso ⟨this⟩).paste_vert hr
@@ -553,9 +553,9 @@ theorem BinaryCofan.isVanKampen_mk {X Y : C} (c : BinaryCofan X Y)
     refine ⟨IsColimit.ofIsoColimit ?_ <| (isoBinaryCofanMk _).symm⟩
     let e₁ : X' ≅ _ := H₁.isLimit.conePointUniqueUpToIso (limits _ _)
     let e₂ : Y' ≅ _ := H₂.isLimit.conePointUniqueUpToIso (limits _ _)
-    have he₁  : c'.inl = e₁.hom ≫ (cones f c.inl).fst
+    have he₁ : c'.inl = e₁.hom ≫ (cones f c.inl).fst
     simp [e₁]
-    have he₂  : c'.inr = e₂.hom ≫ (cones f c.inr).fst
+    have he₂ : c'.inr = e₂.hom ≫ (cones f c.inr).fst
     simp [e₂]
     rw [he₁, he₂]
     exact (BinaryCofan.mk _ _).isColimitCompRightIso e₂.hom
@@ -591,7 +591,7 @@ theorem isUniversalColimit_extendCofan {n : ℕ} (f : Fin (n + 1) → C)
     IsUniversalColimit (extendCofan c₁ c₂) := by
   intro F c α i e hα H
   let F' : Fin (n + 1) → C := F.obj ∘ Discrete.mk
-  have  : F = Discrete.functor F'
+  have : F = Discrete.functor F'
   apply Functor.hext
   · exact fun i ↦ rfl
   · rintro ⟨i⟩ ⟨j⟩ ⟨⟨rfl : i = j⟩⟩
@@ -668,7 +668,7 @@ theorem isVanKampenColimit_extendCofan {n : ℕ} (f : Fin (n + 1) → C)
         Category.assoc, extendCofan_pt, Functor.const_obj_obj, NatTrans.comp_app, extendCofan_ι_app,
         Fin.cases_succ, Functor.const_map_app] using congr_app e ⟨j.succ⟩
   · let F' : Fin (n + 1) → C := F.obj ∘ Discrete.mk
-    have  : F = Discrete.functor F'
+    have : F = Discrete.functor F'
     apply Functor.hext
     · exact fun i ↦ rfl
     · rintro ⟨i⟩ ⟨j⟩ ⟨⟨rfl : i = j⟩⟩

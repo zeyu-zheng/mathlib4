@@ -183,7 +183,7 @@ def denom (g : GL(2, ℝ)⁺) (z : ℍ) : ℂ :=
 
 theorem linear_ne_zero (cd : Fin 2 → ℝ) (z : ℍ) (h : cd ≠ 0) : (cd 0 : ℂ) * z + cd 1 ≠ 0 := by
   contrapose! h
-  have  : cd 0 = 0
+  have : cd 0 = 0
   -- we will need this twice
   apply_fun Complex.im at h
   simpa only [z.im_ne_zero, Complex.add_im, add_zero, coe_im, zero_mul, or_false_iff,
@@ -198,7 +198,7 @@ theorem denom_ne_zero (g : GL(2, ℝ)⁺) (z : ℍ) : denom g z ≠ 0 := by
   have DET := (mem_glpos _).1 g.prop
   have hz := z.prop
   simp only [GeneralLinearGroup.val_det_apply] at DET
-  have H1  : (↑ₘg 1 0 : ℝ) = 0 ∨ z.im = 0
+  have H1 : (↑ₘg 1 0 : ℝ) = 0 ∨ z.im = 0
   simpa [num, denom] using congr_arg Complex.im H
   cases' H1 with H1
   · simp only [H1, Complex.ofReal_zero, denom, zero_mul, zero_add,
@@ -491,7 +491,7 @@ theorem exists_SL2_smul_eq_of_apply_zero_one_ne_zero (g : SL(2, ℝ)) (hc : ↑�
       coe_pos_real_smul, Complex.real_smul, Complex.ofReal_div, coe_mk]
   replace hc : (c : ℂ) ≠ 0 := by norm_cast
   replace h_denom : ↑c * z + d ≠ 0 := by simpa using h_denom ⟨z, hz⟩
-  have h_aux  : (c : ℂ) * d + ↑c * ↑c * z ≠ 0
+  have h_aux : (c : ℂ) * d + ↑c * ↑c * z ≠ 0
   rw [mul_assoc, ← mul_add, add_comm]
   exact mul_ne_zero hc h_denom
   replace h : (a * d - b * c : ℂ) = (1 : ℂ) := by norm_cast

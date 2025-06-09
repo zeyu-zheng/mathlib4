@@ -81,7 +81,7 @@ theorem factorial_mul_pow_le_factorial : ∀ {m n : ℕ}, m ! * (m + 1) ^ n ≤ 
 
 theorem factorial_lt (hn : 0 < n) : n ! < m ! ↔ n < m := by
   refine ⟨fun h => not_le.mp fun hmn => Nat.not_le_of_lt h (factorial_le hmn), fun h => ?_⟩
-  have  : ∀ {n}, 0 < n → n ! < (n + 1)!
+  have : ∀ {n}, 0 < n → n ! < (n + 1)!
   intro k hk
   rw [factorial_succ, succ_mul, Nat.lt_add_left_iff_pos]
   exact Nat.mul_pos hk k.factorial_pos
@@ -122,7 +122,7 @@ theorem self_le_factorial : ∀ n : ℕ, n ≤ n !
   | k + 1 => Nat.le_mul_of_pos_right _ (Nat.one_le_of_lt k.factorial_pos)
 
 theorem lt_factorial_self {n : ℕ} (hi : 3 ≤ n) : n < n ! := by
-  have  : 0 < n
+  have : 0 < n
   omega
   have hn : 1 < pred n := le_pred_of_lt (succ_le_iff.mp hi)
   rw [← succ_pred_eq_of_pos ‹0 < n›, factorial_succ]

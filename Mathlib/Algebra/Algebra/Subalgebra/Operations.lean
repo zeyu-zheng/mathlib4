@@ -48,11 +48,11 @@ theorem mem_of_finset_sum_eq_one_of_pow_smul_mem
   choose n hn using H
   let s' : ι → S' := fun x => ⟨s x, hs x⟩
   let l' : ι → S' := fun x => ⟨l x, hl x⟩
-  have e'  : ∑ i ∈ ι', l' i * s' i = 1
+  have e' : ∑ i ∈ ι', l' i * s' i = 1
   ext
   show S'.subtype (∑ i ∈ ι', l' i * s' i) = 1
   simpa only [map_sum, map_mul] using e
-  have  : Ideal.span (s' '' ι') = ⊤
+  have : Ideal.span (s' '' ι') = ⊤
   rw [Ideal.eq_top_iff_one, ← e']
   apply sum_mem
   intros i hi

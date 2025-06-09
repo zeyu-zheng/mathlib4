@@ -41,9 +41,9 @@ theorem log_div_self_antitoneOn : AntitoneOn (fun x : ℝ => log x / x) { x | ex
   intro x hex y hey hxy
   have x_pos : 0 < x := (exp_pos 1).trans_le hex
   have y_pos : 0 < y := (exp_pos 1).trans_le hey
-  have hlogx  : 1 ≤ log x
+  have hlogx : 1 ≤ log x
   rwa [le_log_iff_exp_le x_pos]
-  have hyx  : 0 ≤ y / x - 1
+  have hyx : 0 ≤ y / x - 1
   rwa [le_sub_iff_add_le, le_div_iff x_pos, zero_add, one_mul]
   rw [div_le_iff y_pos, ← sub_le_sub_iff_right (log x)]
   calc
@@ -57,10 +57,10 @@ theorem log_div_self_rpow_antitoneOn {a : ℝ} (ha : 0 < a) :
   simp only [AntitoneOn, mem_setOf_eq]
   intro x hex y _ hxy
   have x_pos : 0 < x := lt_of_lt_of_le (exp_pos (1 / a)) hex
-  have y_pos  : 0 < y
+  have y_pos : 0 < y
   linarith
   have x_nonneg : 0 ≤ x := le_trans (le_of_lt (exp_pos (1 / a))) hex
-  have y_nonneg  : 0 ≤ y
+  have y_nonneg : 0 ≤ y
   linarith
   nth_rw 1 [← rpow_one y]
   nth_rw 1 [← rpow_one x]

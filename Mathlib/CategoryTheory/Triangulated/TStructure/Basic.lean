@@ -120,7 +120,7 @@ lemma LE_monotone : Monotone t.LE := by
     rw [← t.predicateShift_LE n 1 (n + (1 : ℕ)) rfl, predicateShift_iff]
     rw [← t.predicateShift_LE n 0 n (add_zero n), predicateShift_iff] at hX
     exact t.LE_zero_le _ hX
-  have H_add  : ∀ (a b c : ℕ) (_ : a + b = c) (_ : H a) (_ : H b), H c
+  have H_add : ∀ (a b c : ℕ) (_ : a + b = c) (_ : H a) (_ : H b), H c
   intro a b c h ha hb n
   rw [← h, Nat.cast_add, ← add_assoc]
   exact (ha n).trans (hb (n+a))
@@ -143,7 +143,7 @@ lemma GE_antitone : Antitone t.GE := by
     rw [← t.predicateShift_GE n 1 (n + (1 : ℕ)) (by simp), predicateShift_iff] at hX
     rw [← t.predicateShift_GE n 0 n (add_zero n)]
     exact t.GE_one_le _ hX
-  have H_add  : ∀ (a b c : ℕ) (_ : a + b = c) (_ : H a) (_ : H b), H c
+  have H_add : ∀ (a b c : ℕ) (_ : a + b = c) (_ : H a) (_ : H b), H c
   intro a b c h ha hb n
   rw [← h, Nat.cast_add, ← add_assoc ]
   exact (hb (n + a)).trans (ha n)

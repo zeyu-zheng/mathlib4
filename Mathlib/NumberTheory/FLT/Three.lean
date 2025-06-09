@@ -81,7 +81,7 @@ private lemma three_dvd_b_of_dvd_a_of_gcd_eq_one_of_case2 {a b c : ℤ} (ha : a 
     (Hgcd : Finset.gcd {a, b, c} id = 1) (h3a : 3 ∣ a) (HF : a ^ 3 + b ^ 3 + c ^ 3 = 0)
     (H : ∀ a b c : ℤ, c ≠ 0 → ¬ 3 ∣ a → ¬ 3 ∣ b  → 3 ∣ c → IsCoprime a b → a ^ 3 + b ^ 3 ≠ c ^ 3) :
     3 ∣ b := by
-  have hbc  : IsCoprime (-b) (-c)
+  have hbc : IsCoprime (-b) (-c)
   refine IsCoprime.neg_neg ?_
   rw [add_comm (a ^ 3), add_assoc, add_comm (a ^ 3), ← add_assoc] at HF
   refine isCoprime_of_gcd_eq_one_of_FLT ?_ HF
@@ -107,7 +107,7 @@ private lemma fermatLastTheoremThree_of_dvd_a_of_gcd_eq_one_of_case2 {a b c : �
   rw [← Hgcd]
   refine dvd_gcd (fun x hx ↦ ?_)
   simp only [mem_insert, mem_singleton] at hx
-  have h3b  : 3 ∣ b
+  have h3b : 3 ∣ b
   refine three_dvd_b_of_dvd_a_of_gcd_eq_one_of_case2 ha ?_ h3a HF H
   simp only [← Hgcd, gcd_insert, gcd_singleton, id_eq, ← Int.abs_eq_normalize, abs_neg]
   rcases hx with hx | hx | hx
@@ -634,7 +634,7 @@ private lemma formula2 :
 
 private lemma lambda_sq_div_u₅_mul : λ ^ 2 ∣ S.u₅ * (λ ^ (S.multiplicity - 1) * S.X) ^ 3 := by
   use λ^(3*S.multiplicity-5)*S.u₅*(S.X^3)
-  have  : 3*(S.multiplicity-1) = 2+(3*S.multiplicity-5)
+  have : 3*(S.multiplicity-1) = 2+(3*S.multiplicity-5)
   have := S.two_le_multiplicity; omega
   calc _ = λ^(3*(S.multiplicity-1))*S.u₅*S.X^3 := by ring
   _ = λ^2*λ^(3*S.multiplicity-5)*S.u₅*S.X^3 := by rw [this, pow_add]
@@ -643,7 +643,7 @@ private lemma lambda_sq_div_u₅_mul : λ ^ 2 ∣ S.u₅ * (λ ^ (S.multiplicity
 variable [DecidableEq (𝓞 K)]
 
 private lemma u₄_eq_one_or_neg_one : S.u₄ = 1 ∨ S.u₄ = -1 := by
-  have : λ^2 ∣ λ^4  := ⟨λ^2, by ring⟩
+  have : λ^2 ∣ λ^4 := ⟨λ^2, by ring⟩
   have h := S.lambda_sq_div_u₅_mul
   apply IsCyclotomicExtension.Rat.Three.eq_one_or_neg_one_of_unit_of_congruent hζ
   rcases h with ⟨X, hX⟩

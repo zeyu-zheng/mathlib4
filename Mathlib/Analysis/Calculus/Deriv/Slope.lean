@@ -75,7 +75,7 @@ theorem hasDerivAt_iff_tendsto_slope : HasDerivAt f f' x ↔ Tendsto (slope f x)
 
 theorem hasDerivAt_iff_tendsto_slope_zero :
     HasDerivAt f f' x ↔ Tendsto (fun t ↦ t⁻¹ • (f (x + t) - f x)) (𝓝[≠] 0) (𝓝 f') := by
-  have  : 𝓝[≠] x = Filter.map (fun t ↦ x + t) (𝓝[≠] 0)
+  have : 𝓝[≠] x = Filter.map (fun t ↦ x + t) (𝓝[≠] 0)
   simp [nhdsWithin, map_add_left_nhds_zero x, Filter.map_inf, add_right_injective x]
   simp [hasDerivAt_iff_tendsto_slope, this, slope, Function.comp]
 
@@ -100,14 +100,14 @@ theorem range_derivWithin_subset_closure_span_image
   by_cases H' : DifferentiableWithinAt 𝕜 f s x; swap
   · rw [derivWithin_zero_of_not_differentiableWithinAt H']
     exact subset_closure (zero_mem _)
-  have I  : (𝓝[(s ∩ t) \ {x}] x).NeBot
+  have I : (𝓝[(s ∩ t) \ {x}] x).NeBot
   rw [← mem_closure_iff_nhdsWithin_neBot] at H ⊢
   have A : closure (s \ {x}) ⊆ closure (closure (s ∩ t) \ {x}) :=
     closure_mono (diff_subset_diff_left h)
   have B : closure (s ∩ t) \ {x} ⊆ closure ((s ∩ t) \ {x}) := by
     convert closure_diff; exact closure_singleton.symm
   simpa using A.trans (closure_mono B) H
-  have  : Tendsto (slope f x) (𝓝[(s ∩ t) \ {x}] x) (𝓝 (derivWithin f s x))
+  have : Tendsto (slope f x) (𝓝[(s ∩ t) \ {x}] x) (𝓝 (derivWithin f s x))
   apply Tendsto.mono_left (hasDerivWithinAt_iff_tendsto_slope.1 H'.hasDerivWithinAt)
   rw [inter_comm, inter_diff_assoc]
   exact nhdsWithin_mono _ inter_subset_right

@@ -724,7 +724,7 @@ private theorem toIxxMod_cyclic_left {x₁ x₂ x₃ : α} (h : toIcoMod hp x₁
     toIcoMod hp x₂ x₃ ≤ toIocMod hp x₂ x₁ := by
   let x₂' := toIcoMod hp x₁ x₂
   let x₃' := toIcoMod hp x₂' x₃
-  have h  : x₂' ≤ toIocMod hp x₁ x₃'
+  have h : x₂' ≤ toIocMod hp x₁ x₃'
   simpa [x₃']
   have h₂₁ : x₂' < x₁ + p := toIcoMod_lt_right _ _ _
   have h₃₂ : x₃' - p < x₂' := sub_lt_iff_lt_add.2 (toIcoMod_lt_right _ _ _)
@@ -736,7 +736,7 @@ private theorem toIxxMod_cyclic_left {x₁ x₂ x₃ : α} (h : toIcoMod hp x₁
   · suffices hIoc₂₁ : toIocMod hp x₂' x₁ = x₁ + p from hIoc₂₁.symm.trans_ge h₃₁
     apply (toIocMod_eq_iff hp).2
     exact ⟨⟨h₂₁, by simp [x₂', left_le_toIcoMod]⟩, -1, by simp⟩
-  have hIoc₁₃  : toIocMod hp x₁ x₃' = x₃' - p
+  have hIoc₁₃ : toIocMod hp x₁ x₃' = x₃' - p
   apply (toIocMod_eq_iff hp).2
   exact ⟨⟨lt_sub_iff_add_lt.2 h₁₃, le_of_lt (h₃₂.trans h₂₁)⟩, 1, by simp⟩
   have not_h₃₂ := (h.trans hIoc₁₃.le).not_lt

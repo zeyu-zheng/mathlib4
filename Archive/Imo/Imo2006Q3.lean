@@ -36,7 +36,7 @@ namespace Imo2006Q3
 /-- Replacing `x` and `y` with their average increases the left side. -/
 theorem lhs_ineq {x y : ℝ} (hxy : 0 ≤ x * y) :
     16 * x ^ 2 * y ^ 2 * (x + y) ^ 2 ≤ ((x + y) ^ 2) ^ 3 := by
-  have  : (x - y) ^ 2 * ((x + y) ^ 2 + 4 * (x * y)) ≥ 0
+  have : (x - y) ^ 2 * ((x + y) ^ 2 + 4 * (x * y)) ≥ 0
   positivity
   calc 16 * x ^ 2 * y ^ 2 * (x + y) ^ 2 ≤ ((x + y) ^ 2) ^ 2 * (x + y) ^ 2 := by gcongr; linarith
     _ = ((x + y) ^ 2) ^ 3 := by ring
@@ -45,13 +45,13 @@ theorem four_pow_four_pos : (0 : ℝ) < 4 ^ 4 := by norm_num
 
 theorem mid_ineq {s t : ℝ} : s * t ^ 3 ≤ (3 * t + s) ^ 4 / 4 ^ 4 := by
   rw [le_div_iff four_pow_four_pos]
-  have  : 0 ≤ (s - t) ^ 2 * ((s + 7 * t) ^ 2 + 2 * (4 * t) ^ 2)
+  have : 0 ≤ (s - t) ^ 2 * ((s + 7 * t) ^ 2 + 2 * (4 * t) ^ 2)
   positivity
   linarith
 
 /-- Replacing `x` and `y` with their average decreases the right side. -/
 theorem rhs_ineq {x y : ℝ} : 3 * (x + y) ^ 2 ≤ 2 * (x ^ 2 + y ^ 2 + (x + y) ^ 2) := by
-  have  : 0 ≤ (x - y) ^ 2
+  have : 0 ≤ (x - y) ^ 2
   positivity
   linarith
 
@@ -59,7 +59,7 @@ theorem zero_lt_32 : (0 : ℝ) < 32 := by norm_num
 
 theorem subst_wlog {x y z s : ℝ} (hxy : 0 ≤ x * y) (hxyz : x + y + z = 0) :
     32 * |x * y * z * s| ≤ sqrt 2 * (x ^ 2 + y ^ 2 + z ^ 2 + s ^ 2) ^ 2 := by
-  have hz  : (x + y) ^ 2 = z ^ 2
+  have hz : (x + y) ^ 2 = z ^ 2
   linear_combination (x + y - z) * hxyz
   have this :=
     calc

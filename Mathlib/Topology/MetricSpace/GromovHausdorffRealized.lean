@@ -478,7 +478,7 @@ we need. -/
 theorem hausdorffDist_optimal_le_HD {f} (h : f ∈ candidatesB X Y) :
     hausdorffDist (range (optimalGHInjl X Y)) (range (optimalGHInjr X Y)) ≤ HD f := by
   refine le_trans (le_of_forall_le_of_dense fun r hr => ?_) (HD_optimalGHDist_le X Y f h)
-  have A  : ∀ x ∈ range (optimalGHInjl X Y), ∃ y ∈ range (optimalGHInjr X Y), dist x y ≤ r
+  have A : ∀ x ∈ range (optimalGHInjl X Y), ∃ y ∈ range (optimalGHInjr X Y), dist x y ≤ r
   rintro _ ⟨z, rfl⟩
   have I1 : (⨆ x, ⨅ y, optimalGHDist X Y (inl x, inr y)) < r :=
     lt_of_le_of_lt (le_max_left _ _) hr

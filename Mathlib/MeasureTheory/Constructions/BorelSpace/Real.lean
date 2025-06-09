@@ -45,7 +45,7 @@ theorem borel_eq_generateFrom_Iio_rat : borel ℝ = .generateFrom (⋃ a : ℚ, 
     (generateFrom_le ?_)
     (generateFrom_mono <| iUnion_subset fun q ↦ singleton_subset_iff.mpr <| mem_range_self _)
   rintro _ ⟨a, rfl⟩
-  have  : IsLUB (range ((↑) : ℚ → ℝ) ∩ Iio a) a
+  have : IsLUB (range ((↑) : ℚ → ℝ) ∩ Iio a) a
   simp [isLUB_iff_le_iff, mem_upperBounds, ← le_iff_forall_rat_lt_imp_le]
   rw [← this.biUnion_Iio_eq, ← image_univ, ← image_inter_preimage, univ_inter, biUnion_image]
   exact MeasurableSet.biUnion (to_countable _)
@@ -57,7 +57,7 @@ theorem borel_eq_generateFrom_Ioi_rat : borel ℝ = .generateFrom (⋃ a : ℚ, 
     (generateFrom_le ?_)
     (generateFrom_mono <| iUnion_subset fun q ↦ singleton_subset_iff.mpr <| mem_range_self _)
   rintro _ ⟨a, rfl⟩
-  have  : IsGLB (range ((↑) : ℚ → ℝ) ∩ Ioi a) a
+  have : IsGLB (range ((↑) : ℚ → ℝ) ∩ Ioi a) a
   simp [isGLB_iff_le_iff, mem_lowerBounds, ← le_iff_forall_lt_rat_imp_le]
   rw [← this.biUnion_Ioi_eq, ← image_univ, ← image_inter_preimage, univ_inter, biUnion_image]
   exact MeasurableSet.biUnion (to_countable _)
@@ -275,7 +275,7 @@ theorem measurable_of_tendsto' {ι : Type*} {f : ι → α → ℝ≥0∞} {g : 
     Measurable g := by
   rcases u.exists_seq_tendsto with ⟨x, hx⟩
   rw [tendsto_pi_nhds] at lim
-  have  : (fun y => liminf (fun n => (f (x n) y : ℝ≥0∞)) atTop) = g
+  have : (fun y => liminf (fun n => (f (x n) y : ℝ≥0∞)) atTop) = g
   ext1 y
   exact ((lim y).comp hx).liminf_eq
   rw [← this]
@@ -302,7 +302,7 @@ lemma aemeasurable_of_tendsto' {ι : Type*} {f : ι → α → ℝ≥0∞} {g : 
   rcases u.exists_seq_tendsto with ⟨v, hv⟩
   have h'f : ∀ n, AEMeasurable (f (v n)) μ := fun n ↦ hf (v n)
   set p : α → (ℕ → ℝ≥0∞) → Prop := fun x f' ↦ Tendsto f' atTop (𝓝 (g x))
-  have hp  : ∀ᵐ x ∂μ, p x fun n ↦ f (v n) x
+  have hp : ∀ᵐ x ∂μ, p x fun n ↦ f (v n) x
   filter_upwards [hlim] with x hx using hx.comp hv
   set aeSeqLim := fun x ↦ ite (x ∈ aeSeqSet h'f p) (g x) (⟨f (v 0) x⟩ : Nonempty ℝ≥0∞).some
   refine ⟨aeSeqLim, measurable_of_tendsto' atTop (aeSeq.measurable h'f p)
@@ -474,16 +474,16 @@ theorem exists_spanning_measurableSet_le {m : MeasurableSpace α} {f : α → �
       ⋃ i, s i = Set.univ := by
   let sigma_finite_sets := spanningSets μ
   let norm_sets := fun n : ℕ => { x | f x ≤ n }
-  have norm_sets_spanning  : ⋃ n, norm_sets n = Set.univ
+  have norm_sets_spanning : ⋃ n, norm_sets n = Set.univ
   ext1 x
   simp only [Set.mem_iUnion, Set.mem_setOf_eq, Set.mem_univ, iff_true_iff]
   exact exists_nat_ge (f x)
   let sets n := sigma_finite_sets n ∩ norm_sets n
-  have h_meas  : ∀ n, MeasurableSet (sets n)
+  have h_meas : ∀ n, MeasurableSet (sets n)
   refine fun n => MeasurableSet.inter ?_ ?_
   · exact measurable_spanningSets μ n
   · exact hf measurableSet_Iic
-  have h_finite  : ∀ n, μ (sets n) < ∞
+  have h_finite : ∀ n, μ (sets n) < ∞
   refine fun n => (measure_mono Set.inter_subset_left).trans_lt ?_
   exact measure_spanningSets_lt_top μ n
   refine ⟨sets, fun n => ⟨h_meas n, h_finite n, ?_⟩, ?_⟩

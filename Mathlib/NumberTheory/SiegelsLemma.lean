@@ -147,7 +147,7 @@ private lemma card_S_lt_card_T : (S).card < (T).card := by
         rify at h
         linarith only [h]
       · simp only [mul_neg, sum_neg_distrib, sub_neg_eq_add, add_le_add_iff_right]
-        have h1  : n * max 1 ‖A‖ * B = ∑ _ : β, max 1 ‖A‖ * B
+        have h1 : n * max 1 ‖A‖ * B = ∑ _ : β, max 1 ‖A‖ * B
         simp only [sum_const, card_univ, nsmul_eq_mul]
         ring
         simp_rw [h1, ← Finset.sum_add_distrib, ← mul_add, mul_comm (max 1 ‖A‖), ← Int.cast_add]
@@ -184,7 +184,7 @@ theorem exists_ne_zero_int_vec_norm_le : ∃ t : β → ℤ, t ≠ 0 ∧
   -- Proofs that x - y ≠ 0 and x - y is a solution
   refine ⟨x - y, sub_ne_zero.mpr hneq, by simp only [mulVec_sub, sub_eq_zero, hfeq], ?_⟩
   -- Inequality
-  have n_mul_norm_A_pow_e_nonneg  : 0 ≤ (n * max 1 ‖A‖) ^ e
+  have n_mul_norm_A_pow_e_nonneg : 0 ≤ (n * max 1 ‖A‖) ^ e
   positivity
   rw [← norm_col (ι := Unit), norm_le_iff n_mul_norm_A_pow_e_nonneg]
   intro i j

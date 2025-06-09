@@ -138,7 +138,7 @@ theorem orderEmbeddingOfSet_range [DecidablePred (· ∈ s)] :
 theorem exists_subseq_of_forall_mem_union {s t : Set α} (e : ℕ → α) (he : ∀ n, e n ∈ s ∪ t) :
     ∃ g : ℕ ↪o ℕ, (∀ n, e (g n) ∈ s) ∨ ∀ n, e (g n) ∈ t := by
   classical
-    have  : Infinite (e ⁻¹' s) ∨ Infinite (e ⁻¹' t)
+    have : Infinite (e ⁻¹' s) ∨ Infinite (e ⁻¹' t)
     simp only [Set.infinite_coe_iff, ← Set.infinite_union, ← Set.preimage_union,
       Set.eq_univ_of_forall fun n => Set.mem_preimage.2 (he n), Set.infinite_univ]
     cases this

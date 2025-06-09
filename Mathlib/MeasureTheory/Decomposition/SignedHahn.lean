@@ -271,7 +271,7 @@ theorem exists_subset_restrict_nonpos (hi : s i < 0) :
   swap; · exact exists_subset_restrict_nonpos' hi₁ hi hn
   set A := i \ ⋃ l, restrictNonposSeq s i l with hA
   set bdd : ℕ → ℕ := fun n => findExistsOneDivLT s (i \ ⋃ k ≤ n, restrictNonposSeq s i k)
-  have hn'  : ∀ n : ℕ, ¬s ≤[i \ ⋃ l ≤ n, restrictNonposSeq s i l] 0
+  have hn' : ∀ n : ℕ, ¬s ≤[i \ ⋃ l ≤ n, restrictNonposSeq s i l] 0
   intro n
   convert hn (n + 1) using 5 <;>
     · ext l
@@ -282,11 +282,11 @@ theorem exists_subset_restrict_nonpos (hi : s i < 0) :
     · exact MeasurableSet.iUnion fun _ => restrictNonposSeq_measurableSet _
     exacts [hi₁, Set.iUnion_subset fun _ => restrictNonposSeq_subset _, fun _ =>
       restrictNonposSeq_measurableSet _, restrictNonposSeq_disjoint]
-  have h₂  : s A ≤ s i
+  have h₂ : s A ≤ s i
   rw [h₁]
   apply le_add_of_nonneg_right
   exact tsum_nonneg fun n => le_of_lt (measure_of_restrictNonposSeq h _ (hn n))
-  have h₃'  : Summable fun n => (1 / (bdd n + 1) : ℝ)
+  have h₃' : Summable fun n => (1 / (bdd n + 1) : ℝ)
   have : Summable fun l => s (restrictNonposSeq s i l) :=
     HasSum.summable
       (s.m_iUnion (fun _ => restrictNonposSeq_measurableSet _) restrictNonposSeq_disjoint)
@@ -294,10 +294,10 @@ theorem exists_subset_restrict_nonpos (hi : s i < 0) :
       (this.comp_injective Nat.succ_injective)
   · exact le_of_lt Nat.one_div_pos_of_nat
   · exact le_of_lt (restrictNonposSeq_lt n (hn' n))
-  have h₃  : Tendsto (fun n => (bdd n : ℝ) + 1) atTop atTop
+  have h₃ : Tendsto (fun n => (bdd n : ℝ) + 1) atTop atTop
   simp only [one_div] at h₃'
   exact Summable.tendsto_atTop_of_pos h₃' fun n => Nat.cast_add_one_pos (bdd n)
-  have h₄  : Tendsto (fun n => (bdd n : ℝ)) atTop atTop
+  have h₄ : Tendsto (fun n => (bdd n : ℝ)) atTop atTop
   convert atTop.tendsto_atTop_add_const_right (-1) h₃; simp
   have A_meas : MeasurableSet A :=
     hi₁.diff (MeasurableSet.iUnion fun _ => restrictNonposSeq_measurableSet _)
@@ -341,13 +341,13 @@ theorem bddBelow_measureOfNegatives : BddBelow s.measureOfNegatives := by
   by_contra! h
   have h' : ∀ n : ℕ, ∃ y : ℝ, y ∈ s.measureOfNegatives ∧ y < -n := fun n => h (-n)
   choose f hf using h'
-  have hf'  : ∀ n : ℕ, ∃ B, MeasurableSet B ∧ s ≤[B] 0 ∧ s B < -n
+  have hf' : ∀ n : ℕ, ∃ B, MeasurableSet B ∧ s ≤[B] 0 ∧ s B < -n
   intro n
   rcases hf n with ⟨⟨B, ⟨hB₁, hBr⟩, hB₂⟩, hlt⟩
   exact ⟨B, hB₁, hBr, hB₂.symm ▸ hlt⟩
   choose B hmeas hr h_lt using hf'
   set A := ⋃ n, B n with hA
-  have hfalse  : ∀ n : ℕ, s A ≤ -n
+  have hfalse : ∀ n : ℕ, s A ≤ -n
   intro n
   refine le_trans ?_ (le_of_lt (h_lt _))
   rw [hA, ← Set.diff_union_of_subset (Set.subset_iUnion _ n),

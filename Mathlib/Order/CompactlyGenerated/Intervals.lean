@@ -60,10 +60,10 @@ theorem complementedLattice_of_complementedLattice_Iic
       exact IsAtom.of_isAtom_coe_Iic (hu' _ ha)
   choose t ht ht' using this
   let u : Set α := ⋃ i, ⋃ hi : i ∈ s, t i hi
-  have hu₁  : u ⊆ {a | IsAtom a}
+  have hu₁ : u ⊆ {a | IsAtom a}
   rintro a ⟨-, ⟨i, rfl⟩, ⟨-, ⟨hi, rfl⟩, ha : a ∈ t i hi⟩⟩
   exact ht' i hi a ha
-  have hu₂  : sSup u = ⨆ i ∈ s, f i
+  have hu₂ : sSup u = ⨆ i ∈ s, f i
   simp_rw [u, sSup_iUnion, biSup_congr' ht]
   rw [eq_top_iff, ← h', ← hu₂]
   exact sSup_le_sSup hu₁

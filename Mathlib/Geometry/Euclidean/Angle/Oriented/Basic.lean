@@ -421,7 +421,7 @@ theorem eq_iff_norm_eq_and_oangle_eq_zero (x y : V) : x = y ↔ ‖x‖ = ‖y�
     · simp
     rintro ⟨h₁, h₂⟩
     obtain ⟨r, hr, rfl⟩ := h₂.exists_nonneg_right hy
-    have  : ‖y‖ ≠ 0
+    have : ‖y‖ ≠ 0
     simpa using hy
     obtain rfl : r = 1 := by
       apply mul_right_cancel₀ this
@@ -508,7 +508,7 @@ theorem oangle_eq_pi_sub_two_zsmul_oangle_sub_of_norm_eq {x y : V} (hn : x ≠ y
   rw [two_zsmul]
   nth_rw 1 [← o.oangle_sub_eq_oangle_sub_rev_of_norm_eq h]
   rw [eq_sub_iff_add_eq, ← oangle_neg_neg, ← add_assoc]
-  have hy  : y ≠ 0
+  have hy : y ≠ 0
   rintro rfl
   rw [norm_zero, norm_eq_zero] at h
   exact hn h
@@ -546,9 +546,9 @@ theorem inner_eq_norm_mul_norm_mul_cos_oangle (x y : V) :
     ⟪x, y⟫ = ‖x‖ * ‖y‖ * Real.Angle.cos (o.oangle x y) := by
   by_cases hx : x = 0; · simp [hx]
   by_cases hy : y = 0; · simp [hy]
-  have  : ‖x‖ ≠ 0
+  have : ‖x‖ ≠ 0
   simpa using hx
-  have  : ‖y‖ ≠ 0
+  have : ‖y‖ ≠ 0
   simpa using hy
   rw [oangle, Real.Angle.cos_coe, Complex.cos_arg, o.abs_kahler]
   · simp only [kahler_apply_apply, real_smul, add_re, ofReal_re, mul_re, I_re, ofReal_im]
@@ -610,22 +610,22 @@ theorem oangle_eq_of_angle_eq_of_sign_eq {w x y z : V}
       · simpa using hs
       · simpa using hs
     rcases hs' with ⟨hswx, hsyz⟩
-    have h'  : InnerProductGeometry.angle w x = π / 2 ∧ InnerProductGeometry.angle y z = π / 2
+    have h' : InnerProductGeometry.angle w x = π / 2 ∧ InnerProductGeometry.angle y z = π / 2
     rcases h0 with ((rfl | rfl) | rfl | rfl)
     · simpa using h.symm
     · simpa using h.symm
     · simpa using h
     · simpa using h
     rcases h' with ⟨hwx, hyz⟩
-    have hpi  : π / 2 ≠ π
+    have hpi : π / 2 ≠ π
     intro hpi
     rw [div_eq_iff, eq_comm, ← sub_eq_zero, mul_two, add_sub_cancel_right] at hpi
     · exact Real.pi_pos.ne.symm hpi
     · exact two_ne_zero
-    have h0wx  : w = 0 ∨ x = 0
+    have h0wx : w = 0 ∨ x = 0
     have h0' := o.eq_zero_or_angle_eq_zero_or_pi_of_sign_oangle_eq_zero hswx
     simpa [hwx, Real.pi_pos.ne.symm, hpi] using h0'
-    have h0yz  : y = 0 ∨ z = 0
+    have h0yz : y = 0 ∨ z = 0
     have h0' := o.eq_zero_or_angle_eq_zero_or_pi_of_sign_oangle_eq_zero hsyz
     simpa [hyz, Real.pi_pos.ne.symm, hpi] using h0'
     rcases h0wx with (h0wx | h0wx) <;> rcases h0yz with (h0yz | h0yz) <;> simp [h0wx, h0yz]
@@ -802,7 +802,7 @@ theorem oangle_sign_smul_add_right (x y : V) (r : ℝ) :
   by_cases h : o.oangle x y = 0 ∨ o.oangle x y = π
   · rwa [Real.Angle.sign_eq_zero_iff.2 h, Real.Angle.sign_eq_zero_iff,
       oangle_smul_add_right_eq_zero_or_eq_pi_iff]
-  have h'  : ∀ r' : ℝ, o.oangle x (r' • x + y) ≠ 0 ∧ o.oangle x (r' • x + y) ≠ π
+  have h' : ∀ r' : ℝ, o.oangle x (r' • x + y) ≠ 0 ∧ o.oangle x (r' • x + y) ≠ π
   intro r'
   rwa [← o.oangle_smul_add_right_eq_zero_or_eq_pi_iff r', not_or] at h
   let s : Set (V × V) := (fun r' : ℝ => (x, r' • x + y)) '' Set.univ
@@ -818,12 +818,12 @@ theorem oangle_sign_smul_add_right (x y : V) (r : ℝ) :
       intro hz
     · simpa [hz] using (h' 0).1
     · simpa [hz] using (h' r').1
-  have hs  : ∀ z : V × V, z ∈ s → o.oangle z.1 z.2 ≠ 0 ∧ o.oangle z.1 z.2 ≠ π
+  have hs : ∀ z : V × V, z ∈ s → o.oangle z.1 z.2 ≠ 0 ∧ o.oangle z.1 z.2 ≠ π
   intro z hz
   simp_rw [s, Set.mem_image] at hz
   obtain ⟨r', -, rfl⟩ := hz
   exact h' r'
-  have hx  : (x, y) ∈ s
+  have hx : (x, y) ∈ s
   convert Set.mem_image_of_mem (fun r' : ℝ => (x, r' • x + y)) (Set.mem_univ 0)
   simp
   have hy : (x, r • x + y) ∈ s
@@ -952,7 +952,7 @@ theorem oangle_sign_smul_add_smul_smul_add_smul (x y : V) (r₁ r₂ r₃ r₄ :
 theorem abs_oangle_sub_left_toReal_lt_pi_div_two {x y : V} (h : ‖x‖ = ‖y‖) :
     |(o.oangle (y - x) y).toReal| < π / 2 := by
   by_cases hn : x = y; · simp [hn, div_pos, Real.pi_pos]
-  have hs  : ((2 : ℤ) • o.oangle (y - x) y).sign = (o.oangle (y - x) y).sign
+  have hs : ((2 : ℤ) • o.oangle (y - x) y).sign = (o.oangle (y - x) y).sign
   conv_rhs => rw [oangle_sign_sub_left_swap]
   rw [o.oangle_eq_pi_sub_two_zsmul_oangle_sub_of_norm_eq hn h, Real.Angle.sign_pi_sub]
   rw [Real.Angle.sign_two_zsmul_eq_sign_iff] at hs

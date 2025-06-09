@@ -96,7 +96,7 @@ theorem norm_dslope_le_div_of_mapsTo_ball (hd : DifferentiableOn ℂ f (ball c R
   · rw [hc, norm_zero]; exact div_nonneg hR₂.le hR₁.le
   rcases exists_dual_vector ℂ _ hc with ⟨g, hg, hgf⟩
   have hg' : ‖g‖₊ = 1 := NNReal.eq hg
-  have hg₀  : ‖g‖₊ ≠ 0
+  have hg₀ : ‖g‖₊ ≠ 0
   simpa only [hg'] using one_ne_zero
   calc
     ‖dslope f c z‖ = ‖dslope (g ∘ f) c z‖ := by

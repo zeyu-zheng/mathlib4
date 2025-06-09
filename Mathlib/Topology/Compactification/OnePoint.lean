@@ -467,7 +467,7 @@ Finally, if the original space `X` is *not* compact and is a preconnected space,
 /-- For any topological space `X`, its one point compactification is a compact space. -/
 instance : CompactSpace (OnePoint X) where
   isCompact_univ := by
-    have  : Tendsto ((↑) : X → OnePoint X) (cocompact X) (𝓝 ∞)
+    have : Tendsto ((↑) : X → OnePoint X) (cocompact X) (𝓝 ∞)
     rw [nhds_infty_eq]
     exact (tendsto_map.mono_left cocompact_le_coclosedCompact).mono_right le_sup_left
     rw [← insert_none_range_some X]

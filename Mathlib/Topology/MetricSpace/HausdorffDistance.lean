@@ -139,7 +139,7 @@ theorem continuous_infEdist : Continuous fun x => infEdist x s :=
 theorem infEdist_closure : infEdist x (closure s) = infEdist x s := by
   refine le_antisymm (infEdist_anti subset_closure) ?_
   refine ENNReal.le_of_forall_pos_le_add fun ε εpos h => ?_
-  have ε0  : 0 < (ε / 2 : ℝ≥0∞)
+  have ε0 : 0 < (ε / 2 : ℝ≥0∞)
   simpa [pos_iff_ne_zero] using εpos
   have : infEdist x (closure s) < infEdist x (closure s) + ε / 2 :=
     ENNReal.lt_add_right h.ne ε0.ne'
@@ -210,10 +210,10 @@ theorem _root_.IsOpen.exists_iUnion_isClosed {U : Set α} (hU : IsOpen U) :
   refine ⟨F, fun n => IsClosed.preimage continuous_infEdist isClosed_Ici, F_subset, ?_, ?_⟩
   · show ⋃ n, F n = U
     refine Subset.antisymm (by simp only [iUnion_subset_iff, F_subset, forall_const]) fun x hx => ?_
-    have  : ¬x ∈ Uᶜ
+    have : ¬x ∈ Uᶜ
     simpa using hx
     rw [mem_iff_infEdist_zero_of_closed hU.isClosed_compl] at this
-    have B  : 0 < infEdist x Uᶜ
+    have B : 0 < infEdist x Uᶜ
     simpa [pos_iff_ne_zero] using this
     have : Filter.Tendsto (fun n => a ^ n) atTop (𝓝 0) :=
       ENNReal.tendsto_pow_atTop_nhds_zero_of_lt_one a_lt_one
@@ -631,7 +631,7 @@ theorem hausdorffEdist_ne_top_of_nonempty_of_bounded (hs : s.Nonempty) (ht : t.N
   rcases ht with ⟨ct, hct⟩
   rcases bs.subset_closedBall ct with ⟨rs, hrs⟩
   rcases bt.subset_closedBall cs with ⟨rt, hrt⟩
-  have  : hausdorffEdist s t ≤ ENNReal.ofReal (max rs rt)
+  have : hausdorffEdist s t ≤ ENNReal.ofReal (max rs rt)
   apply hausdorffEdist_le_of_mem_edist
   · intro x xs
     exists ct, hct
@@ -676,7 +676,7 @@ theorem hausdorffDist_le_of_infDist {r : ℝ} (hr : 0 ≤ r) (H1 : ∀ x ∈ s, 
   · rwa [hs, hausdorffDist_empty']
   rcases t.eq_empty_or_nonempty with ht | ht
   · rwa [ht, hausdorffDist_empty]
-  have  : hausdorffEdist s t ≤ ENNReal.ofReal r
+  have : hausdorffEdist s t ≤ ENNReal.ofReal r
   apply hausdorffEdist_le_of_infEdist _ _
   · intro x hx
     have I := H1 x hx
@@ -722,7 +722,7 @@ theorem infDist_le_hausdorffDist_of_mem (hx : x ∈ s) (fin : hausdorffEdist s t
 theorem exists_dist_lt_of_hausdorffDist_lt {r : ℝ} (h : x ∈ s) (H : hausdorffDist s t < r)
     (fin : hausdorffEdist s t ≠ ⊤) : ∃ y ∈ t, dist x y < r := by
   have r0 : 0 < r := lt_of_le_of_lt hausdorffDist_nonneg H
-  have  : hausdorffEdist s t < ENNReal.ofReal r
+  have : hausdorffEdist s t < ENNReal.ofReal r
   rwa [hausdorffDist, ← ENNReal.toReal_ofReal (le_of_lt r0),
     ENNReal.toReal_lt_toReal fin ENNReal.ofReal_ne_top] at H
   rcases exists_edist_lt_of_hausdorffEdist_lt h this with ⟨y, hy, yr⟩

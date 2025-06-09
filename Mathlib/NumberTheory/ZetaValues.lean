@@ -155,7 +155,7 @@ theorem periodizedBernoulli.continuous {k : ℕ} (hk : k ≠ 1) : Continuous (pe
 
 theorem fourierCoeff_bernoulli_eq {k : ℕ} (hk : k ≠ 0) (n : ℤ) :
     fourierCoeff ((↑) ∘ periodizedBernoulli k : 𝕌 → ℂ) n = -k ! / (2 * π * I * n) ^ k := by
-  have  : ((↑) ∘ periodizedBernoulli k : 𝕌 → ℂ) = AddCircle.liftIco 1 0 ((↑) ∘ bernoulliFun k)
+  have : ((↑) ∘ periodizedBernoulli k : 𝕌 → ℂ) = AddCircle.liftIco 1 0 ((↑) ∘ bernoulliFun k)
   ext1 x; rfl
   rw [this, fourierCoeff_liftIco_eq]
   simpa only [zero_add] using bernoulliFourierCoeff_eq hk n
@@ -167,7 +167,7 @@ theorem summable_bernoulli_fourier {k : ℕ} (hk : 2 ≤ k) :
     intro n; rw [mul_one_div, div_div, ← mul_pow]
   simp_rw [this]
   refine Summable.mul_left _ <| .of_norm ?_
-  have  : (fun x : ℤ => ‖1 / (x : ℂ) ^ k‖) = fun x : ℤ => |1 / (x : ℝ) ^ k|
+  have : (fun x : ℤ => ‖1 / (x : ℂ) ^ k‖) = fun x : ℤ => |1 / (x : ℝ) ^ k|
   ext1 x
   rw [norm_eq_abs, ← Complex.abs_ofReal]
   congr 1
@@ -315,7 +315,7 @@ theorem hasSum_zeta_nat {k : ℕ} (hk : k ≠ 0) :
   convert hasSum_one_div_nat_pow_mul_cos hk (left_mem_Icc.mpr zero_le_one) using 1
   · ext1 n; rw [mul_zero, Real.cos_zero, mul_one]
   rw [Polynomial.eval_zero_map, Polynomial.bernoulli_eval_zero, eq_ratCast]
-  have  : (2 : ℝ) ^ (2 * k - 1) = (2 : ℝ) ^ (2 * k) / 2
+  have : (2 : ℝ) ^ (2 * k - 1) = (2 : ℝ) ^ (2 * k) / 2
   rw [eq_div_iff (two_ne_zero' ℝ)]
   conv_lhs =>
     congr

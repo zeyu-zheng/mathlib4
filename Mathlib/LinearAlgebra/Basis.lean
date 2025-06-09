@@ -1387,7 +1387,7 @@ lemma basis_finite_of_finite_spans (w : Set M) (hw : w.Finite) (s : span R w = �
   -- This is a finite set since `w` is finite.
   let S : Finset ι := Finset.univ.sup fun x : w => (b.repr x).support
   let bS : Set M := b '' S
-  have h  : ∀ x ∈ w, x ∈ span R bS
+  have h : ∀ x ∈ w, x ∈ span R bS
   intro x m
   rw [← b.total_repr x, Finsupp.span_image_eq_map_total, Submodule.mem_map]
   use b.repr x
@@ -1399,7 +1399,7 @@ lemma basis_finite_of_finite_spans (w : Set M) (hw : w.Finite) (s : span R w = �
   -- Now there is some `x : ι` not in `S`, since `ι` is infinite.
   obtain ⟨x, nm⟩ := Infinite.exists_not_mem_finset S
   -- However it must be in the span of the finite subset,
-  have k'  : b x ∈ span R bS
+  have k' : b x ∈ span R bS
   rw [k]
   exact mem_top
   -- giving the desire contradiction.
@@ -1422,22 +1422,22 @@ theorem union_support_maximal_linearIndependent_eq_range_basis {ι : Type w} (b 
   -- Using this, we'll construct a linearly independent family strictly larger than `v`,
   -- by also using this `b b'`.
   let v' : Option κ → M := fun o => o.elim (b b') v
-  have r  : range v ⊆ range v'
+  have r : range v ⊆ range v'
   rintro - ⟨k, rfl⟩
   use some k
   simp only [v', Option.elim_some]
-  have r'  : b b' ∉ range v
+  have r' : b b' ∉ range v
   rintro ⟨k, p⟩
   simpa [w] using congr_arg (fun m => (b.repr m) b') p
-  have r''  : range v ≠ range v'
+  have r'' : range v ≠ range v'
   intro e
-  have p  : b b' ∈ range v'
+  have p : b b' ∈ range v'
   use none
   simp only [v', Option.elim_none]
   rw [← e] at p
   exact r' p
   -- The key step in the proof is checking that this strictly larger family is linearly independent.
-  have i'  : LinearIndependent R ((↑) : range v' → M)
+  have i' : LinearIndependent R ((↑) : range v' → M)
   apply LinearIndependent.to_subtype_range
   rw [linearIndependent_iff]
   intro l z
@@ -1447,7 +1447,7 @@ theorem union_support_maximal_linearIndependent_eq_range_basis {ι : Type w} (b 
   -- We have some linear combination of `b b'` and the `v i`, which we want to show is trivial.
   -- We'll first show the coefficient of `b b'` is zero,
   -- by expressing the `v i` in the basis `b`, and using that the `v i` have no `b b'` term.
-  have l₀  : l none = 0
+  have l₀ : l none = 0
   rw [← eq_neg_iff_add_eq_zero] at z
   replace z := neg_eq_iff_eq_neg.mpr z
   apply_fun fun x => b.repr x b' at z
@@ -1456,7 +1456,7 @@ theorem union_support_maximal_linearIndependent_eq_range_basis {ι : Type w} (b 
   erw [DFunLike.congr_fun (Finsupp.apply_total R (b.repr : M →ₗ[R] ι →₀ R) v l.some) b'] at z
   simpa [Finsupp.total_apply, w] using z
   -- Then all the other coefficients are zero, because `v` is linear independent.
-  have l₁  : l.some = 0
+  have l₁ : l.some = 0
   rw [l₀, zero_smul, zero_add] at z
   exact linearIndependent_iff.mp i _ z
   -- Finally we put those facts together to show the linear combination is trivial.
@@ -1476,7 +1476,7 @@ theorem infinite_basis_le_maximal_linearIndependent' {ι : Type w} (b : Basis ι
     {κ : Type w'} (v : κ → M) (i : LinearIndependent R v) (m : i.Maximal) :
     Cardinal.lift.{w'} #ι ≤ Cardinal.lift.{w} #κ := by
   let Φ := fun k : κ => (b.repr (v k)).support
-  have w₁  : #ι ≤ #(Set.range Φ)
+  have w₁ : #ι ≤ #(Set.range Φ)
   apply Cardinal.le_range_of_union_finset_eq_top
   exact union_support_maximal_linearIndependent_eq_range_basis b v i m
   have w₂ : Cardinal.lift.{w'} #(Set.range Φ) ≤ Cardinal.lift.{w} #κ := Cardinal.mk_range_le_lift

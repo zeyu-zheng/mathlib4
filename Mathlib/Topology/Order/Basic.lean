@@ -508,7 +508,7 @@ theorem countable_setOf_covBy_right [OrderTopology α] [SecondCountableTopology 
     H.of_diff (subsingleton_isBot α).countable
   simp only [and_assoc]
   let t := { x | x ∈ s ∧ x ∈ a ∧ y x ∉ a ∧ ¬IsBot x }
-  have  : ∀ x ∈ t, ∃ z < x, Ioc z x ⊆ a
+  have : ∀ x ∈ t, ∃ z < x, Ioc z x ⊆ a
   intro x hx
   apply exists_Ioc_subset_of_mem_nhds (ha.mem_nhds hx.2.1)
   simpa only [IsBot, not_forall, not_le] using hx.right.right.right
@@ -567,7 +567,7 @@ theorem countable_image_lt_image_Ioi [OrderTopology α] [LinearOrder β] (f : β
   have : ∀ x, x ∈ s → ∃ z, f x < z ∧ ∀ y, x < y → z ≤ f y := fun x hx ↦ hx
   -- choose `z x` such that `f` does not take the values in `(f x, z x)`.
   choose! z hz using this
-  have I  : InjOn f s
+  have I : InjOn f s
   apply StrictMonoOn.injOn
   intro x hx y _ hxy
   calc
@@ -575,8 +575,8 @@ theorem countable_image_lt_image_Ioi [OrderTopology α] [LinearOrder β] (f : β
     _ ≤ f y := (hz x hx).2 y hxy
   -- show that `f s` is countable by arguing that a disjoint family of disjoint open intervals
   -- (the intervals `(f x, z x)`) is at most countable.
-  have fs_count  : (f '' s).Countable
-  have A  : (f '' s).PairwiseDisjoint fun x => Ioo x (z (invFunOn f s x))
+  have fs_count : (f '' s).Countable
+  have A : (f '' s).PairwiseDisjoint fun x => Ioo x (z (invFunOn f s x))
   rintro _ ⟨u, us, rfl⟩ _ ⟨v, vs, rfl⟩ huv
   wlog hle : u ≤ v generalizing u v
   · exact (this v vs u us huv.symm (le_of_not_le hle)).symm
@@ -615,18 +615,18 @@ instance instIsCountablyGenerated_atTop [OrderTopology α] [SecondCountableTopol
     rw [atTop_eq_pure_of_isTop hx]
     exact isCountablyGenerated_pure x
   · rcases exists_countable_basis α with ⟨b, b_count, b_ne, hb⟩
-    have  : Countable b
+    have : Countable b
     exact Iff.mpr countable_coe_iff b_count
-    have A  : ∀ (s : b), ∃ (x : α), x ∈ (s : Set α)
+    have A : ∀ (s : b), ∃ (x : α), x ∈ (s : Set α)
     intro s
-    have  : (s : Set α) ≠ ∅
+    have : (s : Set α) ≠ ∅
     intro H
     apply b_ne
     convert s.2
     exact H.symm
     exact Iff.mp nmem_singleton_empty this
     choose a ha using A
-    have  : (atTop : Filter α) = (generate (Ici '' (range a)))
+    have : (atTop : Filter α) = (generate (Ici '' (range a)))
     apply atTop_eq_generate_of_not_bddAbove
     intro ⟨x, hx⟩
     simp only [IsTop, not_exists, not_forall, not_le] at h

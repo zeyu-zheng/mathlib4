@@ -556,7 +556,7 @@ theorem dedupKeys_cons {x : Sigma β} (l : List (Sigma β)) :
 theorem nodupKeys_dedupKeys (l : List (Sigma β)) : NodupKeys (dedupKeys l) := by
   dsimp [dedupKeys]
   generalize hl : nil = l'
-  have  : NodupKeys l'
+  have : NodupKeys l'
   rw [← hl]
   apply nodup_nil
   clear hl

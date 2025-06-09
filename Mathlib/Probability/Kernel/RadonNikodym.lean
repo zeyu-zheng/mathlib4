@@ -366,7 +366,7 @@ lemma withDensity_rnDeriv_of_subset_compl_mutuallySingularSetSlice
   · exact (measurable_const.sub (measurable_rnDerivAux _ _)).real_toNNReal
   · exact measurable_rnDeriv _ _
   simp_rw [rnDeriv]
-  have hs'  : ∀ x ∈ s, rnDerivAux κ (κ + η) a x < 1
+  have hs' : ∀ x ∈ s, rnDerivAux κ (κ + η) a x < 1
   simp_rw [← not_mem_mutuallySingularSetSlice]
   exact fun x hx hx_mem ↦ hs hx hx_mem
   calc
@@ -412,7 +412,7 @@ lemma singularPart_eq_zero_iff_apply_eq_zero (κ η : Kernel α γ) [IsFiniteKer
     [IsFiniteKernel η] (a : α) :
     singularPart κ η a = 0 ↔ singularPart κ η a (mutuallySingularSetSlice κ η a) = 0 := by
   rw [← Measure.measure_univ_eq_zero]
-  have  : univ = (mutuallySingularSetSlice κ η a) ∪ (mutuallySingularSetSlice κ η a)ᶜ
+  have : univ = (mutuallySingularSetSlice κ η a) ∪ (mutuallySingularSetSlice κ η a)ᶜ
   simp
   rw [this, measure_union disjoint_compl_right (measurableSet_mutuallySingularSetSlice κ η a).compl,
     singularPart_compl_mutuallySingularSetSlice, add_zero]
@@ -422,7 +422,7 @@ lemma withDensity_rnDeriv_eq_zero_iff_apply_eq_zero (κ η : Kernel α γ) [IsFi
     withDensity η (rnDeriv κ η) a = 0
       ↔ withDensity η (rnDeriv κ η) a (mutuallySingularSetSlice κ η a)ᶜ = 0 := by
   rw [← Measure.measure_univ_eq_zero]
-  have  : univ = (mutuallySingularSetSlice κ η a) ∪ (mutuallySingularSetSlice κ η a)ᶜ
+  have : univ = (mutuallySingularSetSlice κ η a) ∪ (mutuallySingularSetSlice κ η a)ᶜ
   simp
   rw [this, measure_union disjoint_compl_right (measurableSet_mutuallySingularSetSlice κ η a).compl,
     withDensity_rnDeriv_mutuallySingularSetSlice, zero_add]

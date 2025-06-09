@@ -208,7 +208,7 @@ theorem eq_or_eq_neg_of_isEmpty [IsEmpty ι] (o : Orientation R M ι) :
   rw [sameRay_or_sameRay_neg_iff_not_linearIndependent]
   intro h
   set f : (M [⋀^ι]→ₗ[R] R) ≃ₗ[R] R := AlternatingMap.constLinearEquivOfIsEmpty.symm
-  have H  : LinearIndependent R ![f x, 1]
+  have H : LinearIndependent R ![f x, 1]
   convert h.map' f.toLinearMap f.ker
   ext i
   fin_cases i <;> simp [f]
@@ -378,7 +378,7 @@ theorem map_eq_neg_iff_det_neg (x : Orientation R M ι) (f : M ≃ₗ[R] M)
   cases isEmpty_or_nonempty ι
   · have H : finrank R M = 0 := h.symm.trans Fintype.card_eq_zero
     simp [LinearMap.det_eq_one_of_finrank_eq_zero H, Module.Ray.ne_neg_self x]
-  have H  : 0 < finrank R M
+  have H : 0 < finrank R M
   rw [← h]
   exact Fintype.card_pos
   haveI : FiniteDimensional R M := of_finrank_pos H

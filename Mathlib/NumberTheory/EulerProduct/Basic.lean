@@ -289,7 +289,7 @@ lemma summable_and_hasSum_factoredNumbers_prod_filter_prime_geometric {f : ℕ �
     refine prod_congr rfl fun p hp ↦ ?_
     simp only [map_pow]
     exact tsum_geometric_of_norm_lt_one <| h (mem_filter.mp hp).2
-  have H₂  : ∀ {p : ℕ}, p.Prime → Summable fun n ↦ ‖f (p ^ n)‖
+  have H₂ : ∀ {p : ℕ}, p.Prime → Summable fun n ↦ ‖f (p ^ n)‖
   intro p hp
   simp only [map_pow]
   refine Summable.of_nonneg_of_le (fun _ ↦ norm_nonneg _) (fun _ ↦ norm_pow_le ..) ?_

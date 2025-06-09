@@ -281,7 +281,7 @@ lemma exists_right_transversal (H : Subgroup G) (g : G) :
 lemma exists_left_transversal_of_le {H' H : Subgroup G} (h : H' ≤ H) :
     ∃ S : Set G, S * H' = H ∧ Nat.card S * Nat.card H' = Nat.card H := by
   let H'' : Subgroup H := H'.comap H.subtype
-  have  : H' = H''.map H.subtype
+  have : H' = H''.map H.subtype
   simp [H'', h]
   rw [this]
   obtain ⟨S, cmem, -⟩ := H''.exists_left_transversal 1
@@ -298,7 +298,7 @@ lemma exists_left_transversal_of_le {H' H : Subgroup G} (h : H' ≤ H) :
 lemma exists_right_transversal_of_le {H' H : Subgroup G} (h : H' ≤ H) :
     ∃ S : Set G, H' * S = H ∧ Nat.card H' * Nat.card S = Nat.card H := by
   let H'' : Subgroup H := H'.comap H.subtype
-  have  : H' = H''.map H.subtype
+  have : H' = H''.map H.subtype
   simp [H'', h]
   rw [this]
   obtain ⟨S, cmem, -⟩ := H''.exists_right_transversal 1
@@ -375,13 +375,13 @@ theorem rightCosetEquivalence_equiv_snd (g : G) :
 
 theorem equiv_fst_eq_self_of_mem_of_one_mem {g : G} (h1 : 1 ∈ T) (hg : g ∈ S) :
     (hST.equiv g).fst = ⟨g, hg⟩ := by
-  have  : hST.equiv.symm (⟨g, hg⟩, ⟨1, h1⟩) = g
+  have : hST.equiv.symm (⟨g, hg⟩, ⟨1, h1⟩) = g
   rw [equiv, Equiv.ofBijective]; simp
   conv_lhs => rw [← this, Equiv.apply_symm_apply]
 
 theorem equiv_snd_eq_self_of_mem_of_one_mem {g : G} (h1 : 1 ∈ S) (hg : g ∈ T) :
     (hST.equiv g).snd = ⟨g, hg⟩ := by
-  have  : hST.equiv.symm (⟨1, h1⟩, ⟨g, hg⟩) = g
+  have : hST.equiv.symm (⟨1, h1⟩, ⟨g, hg⟩) = g
   rw [equiv, Equiv.ofBijective]; simp
   conv_lhs => rw [← this, Equiv.apply_symm_apply]
 
@@ -650,7 +650,7 @@ theorem isComplement'_stabilizer {α : Type*} [MulAction G α] (a : α)
     IsComplement' H (MulAction.stabilizer G a) := by
   refine isComplement_iff_existsUnique.mpr fun g => ?_
   obtain ⟨h, hh⟩ := h2 g
-  have hh'  : (↑h * g) • a = a
+  have hh' : (↑h * g) • a = a
   rwa [mul_smul]
   refine ⟨⟨h⁻¹, h * g, hh'⟩, inv_mul_cancel_left ↑h g, ?_⟩
   rintro ⟨h', g, hg : g • a = a⟩ rfl

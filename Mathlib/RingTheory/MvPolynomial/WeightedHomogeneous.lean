@@ -167,7 +167,7 @@ theorem weightedHomogeneousSubmodule_mul (w : σ → M) (m n : M) :
   intro φ hφ ψ hψ c hc
   rw [coeff_mul] at hc
   obtain ⟨⟨d, e⟩, hde, H⟩ := Finset.exists_ne_zero_of_sum_ne_zero hc
-  have aux  : coeff d φ ≠ 0 ∧ coeff e ψ ≠ 0
+  have aux : coeff d φ ≠ 0 ∧ coeff e ψ ≠ 0
   contrapose! H
   by_cases h : coeff d φ = 0 <;>
     simp_all only [Ne, not_false_iff, zero_mul, mul_zero]

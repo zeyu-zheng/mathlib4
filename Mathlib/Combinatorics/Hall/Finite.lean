@@ -106,7 +106,7 @@ theorem hall_hard_inductive_step_A {n : ℕ} (hn : Fintype.card ι = n + 1)
   -- Extend the resulting function.
   refine ⟨fun z => if h : z = x then y else f' ⟨z, h⟩, ?_, ?_⟩
   · rintro z₁ z₂
-    have key  : ∀ {x}, y ≠ f' x
+    have key : ∀ {x}, y ≠ f' x
     intro x h
     simpa [t', ← h] using hfr x
     by_cases h₁ : z₁ = x <;> by_cases h₂ : z₂ = x <;> simp [h₁, h₂, hfinj.eq_iff, key, key.symm]
@@ -132,12 +132,12 @@ theorem hall_cond_of_compl {ι : Type u} {t : ι → Finset α} {s : Finset ι}
     (hus : s.card = (s.biUnion t).card) (ht : ∀ s : Finset ι, s.card ≤ (s.biUnion t).card)
     (s' : Finset (sᶜ : Set ι)) : s'.card ≤ (s'.biUnion fun x' => t x' \ s.biUnion t).card := by
   haveI := Classical.decEq ι
-  have disj  : Disjoint s (s'.image fun z => z.1)
+  have disj : Disjoint s (s'.image fun z => z.1)
   simp only [disjoint_left, not_exists, mem_image, exists_prop, SetCoe.exists, exists_and_right,
     exists_eq_right, Subtype.coe_mk]
   intro x hx hc _
   exact absurd hx hc
-  have  : s'.card = (s ∪ s'.image fun z => z.1).card - s.card
+  have : s'.card = (s ∪ s'.image fun z => z.1).card - s.card
   simp [disj, card_image_of_injective _ Subtype.coe_injective, Nat.add_sub_cancel_left]
   rw [this, hus]
   refine (Nat.sub_le_sub_right (ht _) _).trans ?_

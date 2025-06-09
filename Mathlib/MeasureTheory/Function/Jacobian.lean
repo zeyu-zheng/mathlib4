@@ -396,12 +396,12 @@ theorem mul_le_addHaar_image_of_lt_det (A : E →L[ℝ] E) {m : ℝ≥0}
   rcases eq_or_lt_of_le (zero_le m) with (rfl | mpos)
   · filter_upwards
     simp only [forall_const, zero_mul, imp_true_iff, zero_le, ENNReal.coe_zero]
-  have hA  : A.det ≠ 0
+  have hA : A.det ≠ 0
   intro h; simp only [h, ENNReal.not_lt_zero, ENNReal.ofReal_zero, abs_zero] at hm
   -- let `B` be the continuous linear equiv version of `A`.
   let B := A.toContinuousLinearEquivOfDetNeZero hA
   -- the determinant of `B.symm` is bounded by `m⁻¹`
-  have I  : ENNReal.ofReal |(B.symm : E →L[ℝ] E).det| < (m⁻¹ : ℝ≥0)
+  have I : ENNReal.ofReal |(B.symm : E →L[ℝ] E).det| < (m⁻¹ : ℝ≥0)
   simp only [ENNReal.ofReal, abs_inv, Real.toNNReal_inv, ContinuousLinearEquiv.det_coe_symm,
     ContinuousLinearMap.coe_toContinuousLinearEquivOfDetNeZero, ENNReal.coe_lt_coe] at hm ⊢
   exact NNReal.inv_lt_inv mpos.ne' hm
@@ -884,11 +884,11 @@ theorem addHaar_image_le_lintegral_abs_det_fderiv (hs : MeasurableSet s)
   /- We already know the result for finite-measure sets. We cover `s` by finite-measure sets using
     `spanningSets μ`, and apply the previous result to each of these parts. -/
   let u n := disjointed (spanningSets μ) n
-  have u_meas  : ∀ n, MeasurableSet (u n)
+  have u_meas : ∀ n, MeasurableSet (u n)
   intro n
   apply MeasurableSet.disjointed fun i => ?_
   exact measurable_spanningSets μ i
-  have A  : s = ⋃ n, s ∩ u n
+  have A : s = ⋃ n, s ∩ u n
   rw [← inter_iUnion, iUnion_disjointed, iUnion_spanningSets, inter_univ]
   calc
     μ (f '' s) ≤ ∑' n, μ (f '' (s ∩ u n)) := by
@@ -1036,11 +1036,11 @@ theorem lintegral_abs_det_fderiv_le_addHaar_image (hs : MeasurableSet s)
   /- We already know the result for finite-measure sets. We cover `s` by finite-measure sets using
     `spanningSets μ`, and apply the previous result to each of these parts. -/
   let u n := disjointed (spanningSets μ) n
-  have u_meas  : ∀ n, MeasurableSet (u n)
+  have u_meas : ∀ n, MeasurableSet (u n)
   intro n
   apply MeasurableSet.disjointed fun i => ?_
   exact measurable_spanningSets μ i
-  have A  : s = ⋃ n, s ∩ u n
+  have A : s = ⋃ n, s ∩ u n
   rw [← inter_iUnion, iUnion_disjointed, iUnion_spanningSets, inter_univ]
   calc
     (∫⁻ x in s, ENNReal.ofReal |(f' x).det| ∂μ) =
@@ -1183,7 +1183,7 @@ theorem integral_image_eq_integral_abs_det_fderiv_smul (hs : MeasurableSet s)
 -- Porting note: move this to `Topology.Algebra.Module.Basic` when port is over
 theorem det_one_smulRight {𝕜 : Type*} [NormedField 𝕜] (v : 𝕜) :
     ((1 : 𝕜 →L[𝕜] 𝕜).smulRight v).det = v := by
-  have  : (1 : 𝕜 →L[𝕜] 𝕜).smulRight v = v • (1 : 𝕜 →L[𝕜] 𝕜)
+  have : (1 : 𝕜 →L[𝕜] 𝕜).smulRight v = v • (1 : 𝕜 →L[𝕜] 𝕜)
   ext1
   simp only [ContinuousLinearMap.smulRight_apply, ContinuousLinearMap.one_apply,
     Algebra.id.smul_eq_mul, one_mul, ContinuousLinearMap.coe_smul', Pi.smul_apply, mul_one]

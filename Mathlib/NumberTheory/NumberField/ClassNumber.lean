@@ -81,7 +81,7 @@ theorem _root_.RingOfIntegers.isPrincipalIdealRing_of_abs_discr_lt
   rw [← classNumber_eq_one_iff, classNumber, Fintype.card_eq_one_iff]
   refine ⟨1, fun C ↦ ?_⟩
   obtain ⟨I, rfl, hI⟩ := exists_ideal_in_class_of_norm_le C
-  have  : Ideal.absNorm I.1 = 1
+  have : Ideal.absNorm I.1 = 1
   refine le_antisymm (Nat.lt_succ.mp ?_) (Nat.one_le_iff_ne_zero.mpr
     (Ideal.absNorm_ne_zero_of_nonZeroDivisors I))
   exact Nat.cast_lt.mp <| lt_of_le_of_lt hI h

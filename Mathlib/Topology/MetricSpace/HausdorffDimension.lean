@@ -264,7 +264,7 @@ theorem HolderOnWith.dimH_image_le (h : HolderOnWith C r f s) (hr : 0 < r) :
   refine dimH_le fun d hd => ?_
   have := h.hausdorffMeasure_image_le hr d.coe_nonneg
   rw [hd, ENNReal.coe_rpow_of_nonneg _ d.coe_nonneg, top_le_iff] at this
-  have Hrd  : μH[(r * d : ℝ≥0)] s = ⊤
+  have Hrd : μH[(r * d : ℝ≥0)] s = ⊤
   contrapose this
   exact ENNReal.mul_ne_top ENNReal.coe_ne_top this
   rw [ENNReal.le_div_iff_mul_le, mul_comm, ← ENNReal.coe_mul]
@@ -337,7 +337,7 @@ is Lipschitz in a neighborhood within `s` of every point `x ∈ s`, then the Hau
 the image `f '' s` is at most the Hausdorff dimension of `s`. -/
 theorem dimH_image_le_of_locally_lipschitzOn [SecondCountableTopology X] {f : X → Y} {s : Set X}
     (hf : ∀ x ∈ s, ∃ C : ℝ≥0, ∃ t ∈ 𝓝[s] x, LipschitzOnWith C f t) : dimH (f '' s) ≤ dimH s := by
-  have  : ∀ x ∈ s, ∃ C : ℝ≥0, ∃ t ∈ 𝓝[s] x, HolderOnWith C 1 f t
+  have : ∀ x ∈ s, ∃ C : ℝ≥0, ∃ t ∈ 𝓝[s] x, HolderOnWith C 1 f t
   simpa only [holderOnWith_one] using hf
   simpa only [ENNReal.coe_one, div_one] using dimH_image_le_of_locally_holder_on zero_lt_one this
 
@@ -424,7 +424,7 @@ theorem dimH_ball_pi (x : ι → ℝ) {r : ℝ} (hr : 0 < r) :
   · rwa [dimH_subsingleton, eq_comm, Nat.cast_eq_zero, Fintype.card_eq_zero_iff]
     exact fun x _ y _ => Subsingleton.elim x y
   · rw [← ENNReal.coe_natCast]
-    have  : μH[Fintype.card ι] (Metric.ball x r) = ENNReal.ofReal ((2 * r) ^ Fintype.card ι)
+    have : μH[Fintype.card ι] (Metric.ball x r) = ENNReal.ofReal ((2 * r) ^ Fintype.card ι)
     rw [hausdorffMeasure_pi_real, Real.volume_pi_ball _ hr]
     refine dimH_of_hausdorffMeasure_ne_zero_ne_top ?_ ?_ <;> rw [NNReal.coe_natCast, this]
     · simp [pow_pos (mul_pos (zero_lt_two' ℝ) hr)]

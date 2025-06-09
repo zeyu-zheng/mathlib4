@@ -673,7 +673,7 @@ theorem adjoin_eq_adjoin_pow_expChar_pow_of_isSeparable (S : Set E)
     adjoin F S = adjoin F ((· ^ q ^ n) '' S) := by
   set L := adjoin F S
   set M := adjoin F ((· ^ q ^ n) '' S)
-  have hi  : M ≤ L
+  have hi : M ≤ L
   rw [adjoin_le_iff]
   rintro _ ⟨y, hy, rfl⟩
   exact pow_mem (subset_adjoin F S hy) _
@@ -1007,7 +1007,7 @@ theorem IntermediateField.sepDegree_adjoin_eq_of_isAlgebraic_of_isPurelyInsepara
   set L := adjoin E S
   let E' := (IsScalarTower.toAlgHom F E K).fieldRange
   let j : E ≃ₐ[F] E' := AlgEquiv.ofInjectiveField (IsScalarTower.toAlgHom F E K)
-  have hi  : M ≤ L.restrictScalars F
+  have hi : M ≤ L.restrictScalars F
   rw [restrictScalars_adjoin_of_algEquiv (E := K) j rfl, restrictScalars_adjoin]
   exact adjoin.mono _ _ _ Set.subset_union_right
   let i : M →+* L := Subsemiring.inclusion hi
@@ -1039,7 +1039,7 @@ for any intermediate field `S` of `K / F` such that `S / F` is algebraic, the `E
 theorem IntermediateField.sepDegree_adjoin_eq_of_isAlgebraic_of_isPurelyInseparable'
     (S : IntermediateField F K) [Algebra.IsAlgebraic F S] [IsPurelyInseparable F E] :
     sepDegree E (adjoin E (S : Set K)) = sepDegree F S := by
-  have  : Algebra.IsAlgebraic F (adjoin F (S : Set K))
+  have : Algebra.IsAlgebraic F (adjoin F (S : Set K))
   rwa [adjoin_self]
   have := sepDegree_adjoin_eq_of_isAlgebraic_of_isPurelyInseparable (F := F) E (S : Set K)
   rwa [adjoin_self] at this
@@ -1073,7 +1073,7 @@ theorem Polynomial.Separable.map_irreducible_of_isPurelyInseparable {f : F[X]} (
   let K := AlgebraicClosure E
   obtain ⟨x, hx⟩ := IsAlgClosed.exists_aeval_eq_zero K f
     (natDegree_pos_iff_degree_pos.1 hirr.natDegree_pos).ne'
-  have ha  : Associated f (minpoly F x)
+  have ha : Associated f (minpoly F x)
   have := isUnit_C.2 (leadingCoeff_ne_zero.2 hirr.ne_zero).isUnit.inv
   exact ⟨this.unit, by rw [IsUnit.unit_spec, minpoly.eq_of_irreducible hirr hx]⟩
   have ha' : Associated (f.map (algebraMap F E)) ((minpoly F x).map (algebraMap F E))

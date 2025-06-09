@@ -125,16 +125,16 @@ def comap (N : Matroid β) (f : α → β) : Matroid α :=
 
       obtain ⟨I', hI', hI'inj, hII', hne⟩ := hImax
 
-      have h₁  : ¬(N ↾ range f).Base (f '' I)
+      have h₁ : ¬(N ↾ range f).Base (f '' I)
       refine fun hB ↦ hne ?_
       have h_im := hB.eq_of_subset_indep (by simpa) (image_subset _ hII')
       rwa [hI'inj.image_eq_image_iff hII' Subset.rfl] at h_im
 
-      have h₂  : (N ↾ range f).Base (f '' B)
+      have h₂ : (N ↾ range f).Base (f '' B)
       refine Indep.base_of_forall_insert (by simpa using hBmax.1.1) ?_
       rintro _ ⟨⟨e, heB, rfl⟩, hfe⟩ hi
       rw [restrict_indep_iff, ← image_insert_eq] at hi
-      have hinj  : InjOn f (insert e B)
+      have hinj : InjOn f (insert e B)
       rw [injOn_insert (fun heB ↦ hfe (mem_image_of_mem f heB))]; exact ⟨hBmax.1.2, hfe⟩
       rw [hBmax.2 hi.1 hinj <| subset_insert _ _] at hfe; simp at hfe
 
@@ -208,7 +208,7 @@ lemma comap_indep_iff_of_injOn (hf : InjOn f (f ⁻¹' N.E)) :
     exact h (fun _ ↦ he)
   refine Indep.basis_of_forall_insert ?_ h.2.2 fun e ⟨heX, heI⟩ ↦ ?_
   · simp [comap_indep_iff, h.1.indep, h.2]
-  have hIE  : insert e I ⊆ (N.comap f).E
+  have hIE : insert e I ⊆ (N.comap f).E
   simp_rw [comap_ground_eq, ← image_subset_iff]
   exact (image_subset _ (insert_subset heX h.2.2)).trans h.1.subset_ground
   suffices N.Indep (insert (f e) (f '' I)) → ∃ x ∈ I, f x = f e
@@ -483,7 +483,7 @@ instance [M.Finite] {f : α → β} (hf) : (M.map f hf).Finite :=
 instance [M.Finitary] {f : α → β} (hf) : (M.map f hf).Finitary := by
   refine ⟨fun I hI ↦ ?_⟩
   simp only [map_indep_iff]
-  have h'  : I ⊆ f '' M.E
+  have h' : I ⊆ f '' M.E
   intro e he
   obtain ⟨I₀, hI₀, h_eq⟩ := hI {e} (by simpa) (by simp)
   exact image_subset f hI₀.subset_ground <| h_eq.subset rfl
@@ -713,7 +713,7 @@ instance [M.Nonempty] : (M.restrictSubtype M.E).Nonempty :=
 
 instance [M.RkPos] : (M.restrictSubtype M.E).RkPos := by
   obtain ⟨B, hB⟩ := (M.restrictSubtype M.E).exists_base
-  have hB'  : M.Base ↑B
+  have hB' : M.Base ↑B
   simpa using hB.map Subtype.val_injective.injOn
   exact hB.rkPos_of_nonempty <| by simpa using hB'.nonempty
 

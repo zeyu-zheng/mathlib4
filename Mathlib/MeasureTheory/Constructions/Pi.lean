@@ -338,7 +338,7 @@ theorem pi_eq_generateFrom {C : ∀ i, Set (Set (α i))}
     (h3C : ∀ i, (μ i).FiniteSpanningSetsIn (C i)) {μν : Measure (∀ i, α i)}
     (h₁ : ∀ s : ∀ i, Set (α i), (∀ i, s i ∈ C i) → μν (pi univ s) = ∏ i, μ i (s i)) :
     Measure.pi μ = μν := by
-  have h4C  : ∀ (i) (s : Set (α i)), s ∈ C i → MeasurableSet s
+  have h4C : ∀ (i) (s : Set (α i)), s ∈ C i → MeasurableSet s
   intro i s hs; rw [← hC]; exact measurableSet_generateFrom hs
   refine
     (FiniteSpanningSetsIn.pi h3C).ext
@@ -614,7 +614,7 @@ instance {G : ι → Type*} [∀ i, Group (G i)] [∀ i, MeasureSpace (G i)] [�
 instance pi.isInvInvariant [∀ i, Group (α i)] [∀ i, MeasurableInv (α i)]
     [∀ i, IsInvInvariant (μ i)] : IsInvInvariant (Measure.pi μ) := by
   refine ⟨(Measure.pi_eq fun s hs => ?_).symm⟩
-  have A  : Inv.inv ⁻¹' pi univ s = Set.pi univ fun i => Inv.inv ⁻¹' s i
+  have A : Inv.inv ⁻¹' pi univ s = Set.pi univ fun i => Inv.inv ⁻¹' s i
   ext; simp
   simp_rw [Measure.inv, Measure.map_apply measurable_inv (MeasurableSet.univ_pi hs), A, pi_pi,
     measure_preimage_inv]
@@ -806,7 +806,7 @@ theorem measurePreserving_piUnique {π : ι → Type*} [Unique ι] {m : ∀ i, M
   measurable := (MeasurableEquiv.piUnique π).measurable
   map_eq := by
     set e := MeasurableEquiv.piUnique π
-    have  : (piPremeasure fun i => (μ i).toOuterMeasure) = Measure.map e.symm (μ default)
+    have : (piPremeasure fun i => (μ i).toOuterMeasure) = Measure.map e.symm (μ default)
     ext1 s
     rw [piPremeasure, Fintype.prod_unique, e.symm.map_apply, coe_toOuterMeasure]
     congr 1; exact e.toEquiv.image_eq_preimage s

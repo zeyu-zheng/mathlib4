@@ -101,7 +101,7 @@ theorem isSheaf_pretopology [HasPullbacks C] (K : Pretopology C) :
     rw [isSheafFor_iff_generate]
     apply PJ (Sieve.generate R) ⟨_, hR, le_generate R⟩
   · rintro PK X S ⟨R, hR, RS⟩
-    have gRS  : ⇑(generate R) ≤ S
+    have gRS : ⇑(generate R) ≤ S
     apply giGenerate.gc.monotone_u
     rwa [generate_le_iff]
     apply isSheafFor_subsieve P gRS _
@@ -154,9 +154,9 @@ theorem yonedaFamily_fromCocone_compatible (S : Sieve X) (s : Cocone (diagram S.
   have Hs := s.ι.naturality
   simp only [Functor.id_obj, yoneda_obj_obj, Opposite.unop_op, yoneda_obj_map, Quiver.Hom.unop_op]
   dsimp [yonedaFamilyOfElements_fromCocone]
-  have hgf₁  : S.arrows (g₁ ≫ f₁)
+  have hgf₁ : S.arrows (g₁ ≫ f₁)
   exact Sieve.downward_closed S hf₁ g₁
-  have hgf₂  : S.arrows (g₂ ≫ f₂)
+  have hgf₂ : S.arrows (g₂ ≫ f₂)
   exact Sieve.downward_closed S hf₂ g₂
   let F : (Over.mk (g₁ ≫ f₁) : Over X) ⟶ (Over.mk (g₂ ≫ f₂) : Over X) := Over.homMk (𝟙 Z)
   let F₁ : (Over.mk (g₁ ≫ f₁) : Over X) ⟶ (Over.mk f₁ : Over X) := Over.homMk g₁

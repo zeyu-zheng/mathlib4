@@ -108,7 +108,7 @@ theorem integral_tsum {ι} [Countable ι] {f : ι → α → G} (hf : ∀ i, AES
   by_cases hG : CompleteSpace G; swap
   · simp [integral, hG]
   have hf'' : ∀ i, AEMeasurable (fun x => (‖f i x‖₊ : ℝ≥0∞)) μ := fun i => (hf i).ennnorm
-  have hhh  : ∀ᵐ a : α ∂μ, Summable fun n => (‖f n a‖₊ : ℝ)
+  have hhh : ∀ᵐ a : α ∂μ, Summable fun n => (‖f n a‖₊ : ℝ)
   rw [← lintegral_tsum hf''] at hf'
   refine (ae_lt_top' (AEMeasurable.ennreal_tsum hf'') hf').mono ?_
   intro x hx
@@ -125,7 +125,7 @@ theorem integral_tsum {ι} [Countable ι] {f : ι → α → G} (hf : ∀ i, AES
     apply AEMeasurable.nnreal_tsum
     exact fun i => (hf i).nnnorm.aemeasurable
   · dsimp [HasFiniteIntegral]
-    have  : ∫⁻ a, ∑' n, ‖f n a‖₊ ∂μ < ⊤
+    have : ∫⁻ a, ∑' n, ‖f n a‖₊ ∂μ < ⊤
     rwa [lintegral_tsum hf'', lt_top_iff_ne_top]
     convert this using 1
     apply lintegral_congr_ae
@@ -142,7 +142,7 @@ lemma hasSum_integral_of_summable_integral_norm {ι} [Countable ι] {F : ι → 
   · simp [integral, hE, hasSum_zero]
   rw [integral_tsum (fun i ↦ (hF_int i).1)]
   · exact (hF_sum.of_norm_bounded _ fun i ↦ norm_integral_le_integral_norm _).hasSum
-  have (i  : ι) : ∫⁻ (a : α), ‖F i a‖₊ ∂μ = ‖(∫ a : α, ‖F i a‖ ∂μ)‖₊
+  have (i : ι) : ∫⁻ (a : α), ‖F i a‖₊ ∂μ = ‖(∫ a : α, ‖F i a‖ ∂μ)‖₊
   rw [lintegral_coe_eq_integral _ (hF_int i).norm, coe_nnreal_eq, coe_nnnorm,
     Real.norm_of_nonneg (integral_nonneg (fun a ↦ norm_nonneg (F i a)))]
   simp only [coe_nnnorm]
@@ -314,7 +314,7 @@ theorem continuousWithinAt_primitive (hb₀ : μ {b₀} = 0)
   by_cases h₀ : b₀ ∈ Icc b₁ b₂
   · have h₁₂ : b₁ ≤ b₂ := h₀.1.trans h₀.2
     have min₁₂ : min b₁ b₂ = b₁ := min_eq_left h₁₂
-    have h_int'  : ∀ {x}, x ∈ Icc b₁ b₂ → IntervalIntegrable f μ b₁ x
+    have h_int' : ∀ {x}, x ∈ Icc b₁ b₂ → IntervalIntegrable f μ b₁ x
     rintro x ⟨h₁, h₂⟩
     apply h_int.mono_set
     apply uIcc_subset_uIcc
@@ -465,7 +465,7 @@ theorem continuousOn_primitive (h_int : IntegrableOn f (Icc a b) μ) :
 
 theorem continuousOn_primitive_Icc (h_int : IntegrableOn f (Icc a b) μ) :
     ContinuousOn (fun x => ∫ t in Icc a x, f t ∂μ) (Icc a b) := by
-  have aux  : (fun x => ∫ t in Icc a x, f t ∂μ) = fun x => ∫ t in Ioc a x, f t ∂μ
+  have aux : (fun x => ∫ t in Icc a x, f t ∂μ) = fun x => ∫ t in Ioc a x, f t ∂μ
   ext x
   exact integral_Icc_eq_integral_Ioc
   rw [aux]
@@ -523,7 +523,7 @@ theorem continuous_parametric_primitive_of_continuous
   obtain ⟨δ, δpos, hδ, h'δ, h''δ⟩ : ∃ (δ : ℝ), 0 < δ ∧ δ < 1 ∧ Icc (b₀ - δ) (b₀ + δ) ⊆ Icc a b ∧
       (M + 1) * (μ (Icc (b₀ - δ) (b₀ + δ))).toReal + δ * (μ (Icc a b)).toReal < ε := by
     have A : ∀ᶠ δ in 𝓝[>] (0 : ℝ), δ ∈ Ioo 0 1 := Ioo_mem_nhdsWithin_Ioi (by simp)
-    have B  : ∀ᶠ δ in 𝓝 0, Icc (b₀ - δ) (b₀ + δ) ⊆ Icc a b
+    have B : ∀ᶠ δ in 𝓝 0, Icc (b₀ - δ) (b₀ + δ) ⊆ Icc a b
     have I : Tendsto (fun δ ↦ b₀ - δ) (𝓝 0) (𝓝 (b₀ - 0)) := tendsto_const_nhds.sub tendsto_id
     have J : Tendsto (fun δ ↦ b₀ + δ) (𝓝 0) (𝓝 (b₀ + 0)) := tendsto_const_nhds.add tendsto_id
     simp only [sub_zero, add_zero] at I J

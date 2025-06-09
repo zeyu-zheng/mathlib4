@@ -120,7 +120,7 @@ theorem condexpIndL1Fin_smul' [NormedSpace ℝ F] [SMulCommClass ℝ 𝕜 F] (hs
 
 theorem norm_condexpIndL1Fin_le (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (x : G) :
     ‖condexpIndL1Fin hm hs hμs x‖ ≤ (μ s).toReal * ‖x‖ := by
-  have  : 0 ≤ ∫ a : α, ‖condexpIndL1Fin hm hs hμs x a‖ ∂μ
+  have : 0 ≤ ∫ a : α, ‖condexpIndL1Fin hm hs hμs x a‖ ∂μ
   positivity
   rw [L1.norm_eq_integral_norm, ← ENNReal.toReal_ofReal (norm_nonneg x), ← ENNReal.toReal_mul, ←
     ENNReal.toReal_ofReal this,
@@ -399,14 +399,14 @@ theorem setIntegral_condexpL1CLM (f : α →₁[μ] F') (hs : MeasurableSet[m] s
   let S := spanningSets (μ.trim hm)
   have hS_meas : ∀ i, MeasurableSet[m] (S i) := measurable_spanningSets (μ.trim hm)
   have hS_meas0 : ∀ i, MeasurableSet (S i) := fun i => hm _ (hS_meas i)
-  have hs_eq  : s = ⋃ i, S i ∩ s
+  have hs_eq : s = ⋃ i, S i ∩ s
   simp_rw [Set.inter_comm]
   rw [← Set.inter_iUnion, iUnion_spanningSets (μ.trim hm), Set.inter_univ]
-  have hS_finite  : ∀ i, μ (S i ∩ s) < ∞
+  have hS_finite : ∀ i, μ (S i ∩ s) < ∞
   refine fun i => (measure_mono Set.inter_subset_left).trans_lt ?_
   have hS_finite_trim := measure_spanningSets_lt_top (μ.trim hm) i
   rwa [trim_measurableSet_eq hm (hS_meas i)] at hS_finite_trim
-  have h_mono  : Monotone fun i => S i ∩ s
+  have h_mono : Monotone fun i => S i ∩ s
   intro i j hij x
   simp_rw [Set.mem_inter_iff]
   exact fun h => ⟨monotone_spanningSets (μ.trim hm) hij h.1, h.2⟩
@@ -451,7 +451,7 @@ theorem aestronglyMeasurable'_condexpL1CLM (f : α →₁[μ] F') :
 theorem condexpL1CLM_lpMeas (f : lpMeas F' ℝ m 1 μ) :
     condexpL1CLM F' hm μ (f : α →₁[μ] F') = ↑f := by
   let g := lpMeasToLpTrimLie F' ℝ 1 μ hm f
-  have hfg  : f = (lpMeasToLpTrimLie F' ℝ 1 μ hm).symm g
+  have hfg : f = (lpMeasToLpTrimLie F' ℝ 1 μ hm).symm g
   simp only [g, LinearIsometryEquiv.symm_apply_apply]
   rw [hfg]
   refine @Lp.induction α F' m _ 1 (μ.trim hm) _ ENNReal.coe_ne_top (fun g : α →₁[μ.trim hm] F' =>

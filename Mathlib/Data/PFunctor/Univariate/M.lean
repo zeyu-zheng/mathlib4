@@ -280,7 +280,7 @@ theorem mk_dest (x : M F) : M.mk (dest x) = x := by
   · apply @Subsingleton.elim _ CofixA.instSubsingleton
   dsimp only [Approx.sMk, dest, head]
   cases' h : x.approx (succ n) with _ hd ch
-  have h'  : hd = head' (x.approx 1)
+  have h' : hd = head' (x.approx 1)
   rw [← head_succ' n, h, head']
   · split
     injections
@@ -642,9 +642,9 @@ theorem corec_unique (g : α → P α) (f : α → M P) (hyp : ∀ x, M.dest (f 
   clear x
   intro x _
   cases' gxeq : g x with a f'
-  have h₀  : M.dest (f x) = ⟨a, f ∘ f'⟩
+  have h₀ : M.dest (f x) = ⟨a, f ∘ f'⟩
   rw [hyp, gxeq, PFunctor.map_eq]
-  have h₁  : M.dest (M.corec g x) = ⟨a, M.corec g ∘ f'⟩
+  have h₁ : M.dest (M.corec g x) = ⟨a, M.corec g ∘ f'⟩
   rw [dest_corec, gxeq, PFunctor.map_eq]
   refine ⟨_, _, _, h₀, h₁, ?_⟩
   intro i

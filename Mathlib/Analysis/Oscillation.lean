@@ -102,7 +102,7 @@ such that the oscillation of `f` on `ball x δ ∩ D` is less than `ε` for ever
 theorem uniform_oscillationWithin (hK : ∀ x ∈ K, oscillationWithin f D x < ε) :
     ∃ δ > 0, ∀ x ∈ K, diam (f '' (ball x (ENNReal.ofReal δ) ∩ D)) ≤ ε := by
   let S := fun r ↦ { x : E | ∃ (a : ℝ), (a > r ∧ diam (f '' (ball x (ENNReal.ofReal a) ∩ D)) ≤ ε) }
-  have S_open  : ∀ r > 0, IsOpen (S r)
+  have S_open : ∀ r > 0, IsOpen (S r)
   refine fun r _ ↦ isOpen_iff.mpr fun x ⟨a, ar, ha⟩ ↦
     ⟨ENNReal.ofReal ((a - r) / 2), by simp [ar], ?_⟩
   refine fun y hy ↦ ⟨a - (a - r) / 2, by linarith,
@@ -110,14 +110,14 @@ theorem uniform_oscillationWithin (hK : ∀ x ∈ K, oscillationWithin f D x < �
   refine ⟨lt_of_le_of_lt (edist_triangle z y x) (lt_of_lt_of_eq (add_lt_add hz.1 hy) ?_),
     hz.2⟩
   rw [← ofReal_add (by linarith) (by linarith), sub_add_cancel]
-  have S_cover  : K ⊆ ⋃ r > 0, S r
+  have S_cover : K ⊆ ⋃ r > 0, S r
   intro x hx
   have : oscillationWithin f D x < ε := hK x hx
   simp only [oscillationWithin, Filter.mem_map, iInf_lt_iff] at this
   obtain ⟨n, hn₁, hn₂⟩ := this
   obtain ⟨r, r0, hr⟩ := mem_nhdsWithin_iff.1 hn₁
   simp only [gt_iff_lt, mem_iUnion, exists_prop]
-  have  : ∀ r', (ENNReal.ofReal r') ≤ r → diam (f '' (ball x (ENNReal.ofReal r') ∩ D)) ≤ ε
+  have : ∀ r', (ENNReal.ofReal r') ≤ r → diam (f '' (ball x (ENNReal.ofReal r') ∩ D)) ≤ ε
   intro r' hr'
   refine le_trans (diam_mono (subset_trans ?_ (image_subset_iff.2 hr))) (le_of_lt hn₂)
   exact image_mono (inter_subset_inter_left D (ball_subset_ball hr'))

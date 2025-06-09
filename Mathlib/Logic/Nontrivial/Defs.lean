@@ -97,7 +97,7 @@ protected theorem Function.Surjective.nontrivial [Nontrivial β] {f : α → β}
   rcases exists_pair_ne β with ⟨x, y, h⟩
   rcases hf x with ⟨x', hx'⟩
   rcases hf y with ⟨y', hy'⟩
-  have  : x' ≠ y'
+  have : x' ≠ y'
   refine fun H ↦ h ?_
   rw [← hx', ← hy', H]
   exact ⟨⟨x', y', this⟩⟩

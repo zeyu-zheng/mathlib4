@@ -234,7 +234,7 @@ theorem quadraticChar_card_sqrts (hF : ringChar F ≠ 2) (a : F) :
     · rw [(quadraticChar_one_iff_isSquare h₀).mpr h]
       rcases h with ⟨b, h⟩
       rw [h, mul_self_eq_zero] at h₀
-      have h₁  : s = [b, -b].toFinset
+      have h₁ : s = [b, -b].toFinset
       ext1
       rw [← pow_two] at h
       simp only [Set.toFinset_setOf, h, mem_filter, mem_univ, true_and, List.toFinset_cons,

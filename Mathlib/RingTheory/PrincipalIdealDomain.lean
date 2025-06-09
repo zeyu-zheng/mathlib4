@@ -497,7 +497,7 @@ theorem IsPrincipalIdealRing.of_prime (H : ∀ P : Ideal R, P.IsPrime → P.IsPr
   intro J hJ
   -- We will show a maximal element `I ∈ nonPrincipals R` (which exists by Zorn) is prime.
   obtain ⟨I, Ibad, -, Imax⟩ := zorn_nonempty_partialOrder₀ (nonPrincipals R) nonPrincipals_zorn _ hJ
-  have Imax'  : ∀ {J}, I < J → J.IsPrincipal
+  have Imax' : ∀ {J}, I < J → J.IsPrincipal
   intro J hJ
   by_contra He
   exact hJ.ne (Imax _ ((nonPrincipals_def R).2 He) hJ.le).symm

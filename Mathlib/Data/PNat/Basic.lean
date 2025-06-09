@@ -282,7 +282,7 @@ theorem modDivAux_spec :
 
 theorem mod_add_div (m k : ℕ+) : (mod m k + k * div m k : ℕ) = m := by
   let h₀ := Nat.mod_add_div (m : ℕ) (k : ℕ)
-  have  : ¬((m : ℕ) % (k : ℕ) = 0 ∧ (m : ℕ) / (k : ℕ) = 0)
+  have : ¬((m : ℕ) % (k : ℕ) = 0 ∧ (m : ℕ) / (k : ℕ) = 0)
   rintro ⟨hr, hq⟩
   rw [hr, hq, mul_zero, zero_add] at h₀
   exact (m.ne_zero h₀.symm).elim

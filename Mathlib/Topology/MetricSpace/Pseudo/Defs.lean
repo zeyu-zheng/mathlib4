@@ -961,7 +961,7 @@ theorem exists_closedBall_inter_eq_singleton_of_discrete [DiscreteTopology s] {x
 
 theorem _root_.Dense.exists_dist_lt {s : Set α} (hs : Dense s) (x : α) {ε : ℝ} (hε : 0 < ε) :
     ∃ y ∈ s, dist x y < ε := by
-  have  : (ball x ε).Nonempty
+  have : (ball x ε).Nonempty
   simp [hε]
   simpa only [mem_ball'] using hs.exists_mem_open isOpen_ball this
 

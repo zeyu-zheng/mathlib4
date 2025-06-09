@@ -204,7 +204,7 @@ lemma odd_matches_node_outside {u : Set V} {c : ConnectedComponent (Subgraph.del
     (hM : M.IsPerfectMatching) (codd : Odd (Nat.card c.supp)) :
     ∃ᵉ (w ∈ u) (v : ((⊤ : G.Subgraph).deleteVerts u).verts), M.Adj v w ∧ v ∈ c.supp := by
   by_contra! h
-  have hMmatch  : (M.induce c.supp).IsMatching
+  have hMmatch : (M.induce c.supp).IsMatching
   intro v hv
   obtain ⟨w, hw⟩ := hM.1 (hM.2 v)
   obtain ⟨⟨v', hv'⟩, ⟨hv , rfl⟩⟩ := hv

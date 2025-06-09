@@ -175,7 +175,7 @@ theorem toLieSubmodule_le_rootSpace_zero : H.toLieSubmodule ≤ rootSpace H 0 :=
   use k
   let f : Module.End R H := toEnd R H H y
   let g : Module.End R L := toEnd R H L y
-  have hfg  : g.comp (H : Submodule R L).subtype = (H : Submodule R L).subtype.comp f
+  have hfg : g.comp (H : Submodule R L).subtype = (H : Submodule R L).subtype.comp f
   ext z
   simp only [toEnd_apply_apply, Submodule.subtype_apply,
     LieSubalgebra.coe_bracket_of_module, LieSubalgebra.coe_bracket, Function.comp_apply,

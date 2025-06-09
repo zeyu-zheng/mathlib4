@@ -255,9 +255,9 @@ theorem zeroLocus_empty_of_one_mem {s : Set R} (h : (1 : R) ∈ s) : zeroLocus s
   rw [Set.eq_empty_iff_forall_not_mem]
   intro x hx
   rw [mem_zeroLocus] at hx
-  have x_prime  : x.asIdeal.IsPrime
+  have x_prime : x.asIdeal.IsPrime
   infer_instance
-  have eq_top  : x.asIdeal = ⊤
+  have eq_top : x.asIdeal = ⊤
   rw [Ideal.eq_top_iff_one]
   exact hx h
   apply x_prime.ne_top eq_top
@@ -289,7 +289,7 @@ theorem zeroLocus_eq_top_iff (s : Set R) :
   constructor
   · intro h x hx
     refine nilpotent_iff_mem_prime.mpr (fun J hJ ↦ ?_)
-    have hJz  : ⟨J, hJ⟩ ∈ zeroLocus s
+    have hJz : ⟨J, hJ⟩ ∈ zeroLocus s
     rw [h]
     trivial
     exact (mem_zeroLocus _ _).mpr hJz hx
@@ -418,7 +418,7 @@ theorem exists_primeSpectrum_prod_le (I : Ideal R) :
   by_cases htop : M = ⊤
   · rw [htop]
     exact ⟨0, le_top⟩
-  have lt_add  : ∀ z ∉ M, M < M + span R {z}
+  have lt_add : ∀ z ∉ M, M < M + span R {z}
   intro z hz
   refine lt_of_le_of_ne le_sup_left fun m_eq => hz ?_
   rw [m_eq]
@@ -460,7 +460,7 @@ theorem exists_primeSpectrum_prod_le_and_ne_bot_of_domain (h_fA : ¬IsField A) {
     rw [Multiset.map_singleton, Multiset.prod_singleton]
     exact ⟨le_rfl, h_nzM⟩
   obtain ⟨x, hx, y, hy, h_xy⟩ := (Ideal.not_isPrime_iff.mp h_prM).resolve_left h_topM
-  have lt_add  : ∀ z ∉ M, M < M + span A {z}
+  have lt_add : ∀ z ∉ M, M < M + span A {z}
   intro z hz
   refine lt_of_le_of_ne le_sup_left fun m_eq => hz ?_
   rw [m_eq]

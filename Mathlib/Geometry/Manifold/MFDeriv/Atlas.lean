@@ -105,7 +105,7 @@ theorem mdifferentiableAt_atlas_symm (h : e ∈ atlas H M) {x : H} (hx : x ∈ e
     MDifferentiableAt I I e.symm x := by
   rw [mdifferentiableAt_iff]
   refine ⟨(e.continuousOn_symm x hx).continuousAt (e.open_target.mem_nhds hx), ?_⟩
-  have mem  : I x ∈ I.symm ⁻¹' (e.symm ≫ₕ chartAt H (e.symm x)).source ∩ range I
+  have mem : I x ∈ I.symm ⁻¹' (e.symm ≫ₕ chartAt H (e.symm x)).source ∩ range I
   simp only [hx, mfld_simps]
   have : e.symm.trans (chartAt H (e.symm x)) ∈ contDiffGroupoid ∞ I :=
     HasGroupoid.compatible h (chart_mem_atlas H _)

@@ -40,7 +40,7 @@ theorem strictConvexOn_exp : StrictConvexOn ℝ univ exp := by
   rintro x y z - - hxy hyz
   trans exp y
   · have h1 : 0 < y - x := by linarith
-    have h2  : x - y < 0
+    have h2 : x - y < 0
     linarith
     rw [div_lt_iff h1]
     calc
@@ -69,9 +69,9 @@ theorem strictConcaveOn_log_Ioi : StrictConcaveOn ℝ (Ioi 0) log := by
   trans y⁻¹
   · have h : 0 < z - y := by linarith
     rw [div_lt_iff h]
-    have hyz'  : 0 < z / y
+    have hyz' : 0 < z / y
     positivity
-    have hyz''  : z / y ≠ 1
+    have hyz'' : z / y ≠ 1
     contrapose! h
     rw [div_eq_one_iff_eq hy.ne'] at h
     simp [h]
@@ -81,9 +81,9 @@ theorem strictConcaveOn_log_Ioi : StrictConcaveOn ℝ (Ioi 0) log := by
       _ = y⁻¹ * (z - y) := by field_simp
   · have h : 0 < y - x := by linarith
     rw [lt_div_iff h]
-    have hxy'  : 0 < x / y
+    have hxy' : 0 < x / y
     positivity
-    have hxy''  : x / y ≠ 1
+    have hxy'' : x / y ≠ 1
     contrapose! h
     rw [div_eq_one_iff_eq hy.ne'] at h
     simp [h]
@@ -104,7 +104,7 @@ theorem one_add_mul_self_lt_rpow_one_add {s : ℝ} (hs : -1 ≤ s) (hs' : s ≠ 
   rcases le_or_lt (1 + p * s) 0 with hs2 | hs2
   · exact hs2.trans_lt (rpow_pos_of_pos hs1 _)
   have hs3 : 1 + s ≠ 1 := hs' ∘ add_right_eq_self.mp
-  have hs4  : 1 + p * s ≠ 1
+  have hs4 : 1 + p * s ≠ 1
   contrapose! hs'; rwa [add_right_eq_self, mul_eq_zero, eq_false_intro hp'.ne', false_or] at hs'
   rw [rpow_def_of_pos hs1, ← exp_log hs2]
   apply exp_strictMono
@@ -137,13 +137,13 @@ theorem rpow_one_add_lt_one_add_mul_self {s : ℝ} (hs : -1 ≤ s) (hs' : s ≠ 
   rcases eq_or_lt_of_le hs with rfl | hs
   · rwa [add_right_neg, zero_rpow hp1.ne', mul_neg_one, lt_add_neg_iff_add_lt, zero_add]
   have hs1 : 0 < 1 + s := neg_lt_iff_pos_add'.mp hs
-  have hs2  : 0 < 1 + p * s
+  have hs2 : 0 < 1 + p * s
   rw [← neg_lt_iff_pos_add']
   rcases lt_or_gt_of_ne hs' with h | h
   · exact hs.trans (lt_mul_of_lt_one_left h hp2)
   · exact neg_one_lt_zero.trans (mul_pos hp1 h)
   have hs3 : 1 + s ≠ 1 := hs' ∘ add_right_eq_self.mp
-  have hs4  : 1 + p * s ≠ 1
+  have hs4 : 1 + p * s ≠ 1
   contrapose! hs'; rwa [add_right_eq_self, mul_eq_zero, eq_false_intro hp1.ne', false_or] at hs'
   rw [rpow_def_of_pos hs1, ← exp_log hs2]
   apply exp_strictMono
@@ -207,11 +207,11 @@ theorem convexOn_rpow {p : ℝ} (hp : 1 ≤ p) : ConvexOn ℝ (Ici 0) fun x : �
 theorem strictConcaveOn_log_Iio : StrictConcaveOn ℝ (Iio 0) log := by
   refine ⟨convex_Iio _, ?_⟩
   intro x (hx : x < 0) y (hy : y < 0) hxy a b ha hb hab
-  have hx'  : 0 < -x
+  have hx' : 0 < -x
   linarith
-  have hy'  : 0 < -y
+  have hy' : 0 < -y
   linarith
-  have hxy'  : -x ≠ -y
+  have hxy' : -x ≠ -y
   contrapose! hxy; linarith
   calc
     a • log x + b • log y = a • log (-x) + b • log (-y) := by simp_rw [log_neg_eq_log]

@@ -279,7 +279,7 @@ For a total union version, see `mem_generatePiSystem_iUnion_elim`. -/
 theorem mem_generatePiSystem_iUnion_elim' {α β} {g : β → Set (Set α)} {s : Set β}
     (h_pi : ∀ b ∈ s, IsPiSystem (g b)) (t : Set α) (h_t : t ∈ generatePiSystem (⋃ b ∈ s, g b)) :
     ∃ (T : Finset β) (f : β → Set α), ↑T ⊆ s ∧ (t = ⋂ b ∈ T, f b) ∧ ∀ b ∈ T, f b ∈ g b := by
-  have  : t ∈ generatePiSystem (⋃ b : Subtype s, (g ∘ Subtype.val) b)
+  have : t ∈ generatePiSystem (⋃ b : Subtype s, (g ∘ Subtype.val) b)
   suffices h1 : ⋃ b : Subtype s, (g ∘ Subtype.val) b = ⋃ b ∈ s, g b by rwa [h1]
   ext x
   simp only [exists_prop, Set.mem_iUnion, Function.comp_apply, Subtype.exists, Subtype.coe_mk]
@@ -385,10 +385,10 @@ theorem isPiSystem_piiUnionInter (π : ι → Set (Set α)) (hpi : ∀ x, IsPiSy
   rintro t1 ⟨p1, hp1S, f1, hf1m, ht1_eq⟩ t2 ⟨p2, hp2S, f2, hf2m, ht2_eq⟩ h_nonempty
   simp_rw [piiUnionInter, Set.mem_setOf_eq]
   let g n := ite (n ∈ p1) (f1 n) Set.univ ∩ ite (n ∈ p2) (f2 n) Set.univ
-  have hp_union_ss  : ↑(p1 ∪ p2) ⊆ S
+  have hp_union_ss : ↑(p1 ∪ p2) ⊆ S
   simp only [hp1S, hp2S, Finset.coe_union, union_subset_iff, and_self_iff]
   use p1 ∪ p2, hp_union_ss, g
-  have h_inter_eq  : t1 ∩ t2 = ⋂ i ∈ p1 ∪ p2, g i
+  have h_inter_eq : t1 ∩ t2 = ⋂ i ∈ p1 ∪ p2, g i
   rw [ht1_eq, ht2_eq]
   simp_rw [← Set.inf_eq_inter]
   ext1 x
@@ -435,7 +435,7 @@ theorem generateFrom_piiUnionInter_le {m : MeasurableSpace α} (π : ι → Set 
 
 theorem subset_piiUnionInter {π : ι → Set (Set α)} {S : Set ι} {i : ι} (his : i ∈ S) :
     π i ⊆ piiUnionInter π S := by
-  have h_ss  : {i} ⊆ S
+  have h_ss : {i} ⊆ S
   intro j hj
   rw [mem_singleton_iff] at hj
   rwa [hj]

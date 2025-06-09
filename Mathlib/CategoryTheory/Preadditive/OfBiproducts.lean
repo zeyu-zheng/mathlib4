@@ -49,12 +49,12 @@ local infixr:65 " +ₗ " => leftAdd X Y
 local infixr:65 " +ᵣ " => rightAdd X Y
 
 theorem isUnital_leftAdd : EckmannHilton.IsUnital (· +ₗ ·) 0 := by
-  have hr  : ∀ f : X ⟶ Y, biprod.lift (0 : X ⟶ Y) f = f ≫ biprod.inr
+  have hr : ∀ f : X ⟶ Y, biprod.lift (0 : X ⟶ Y) f = f ≫ biprod.inr
   intro f
   ext
   · aesop_cat
   · simp [biprod.lift_fst, Category.assoc, biprod.inr_fst, comp_zero]
-  have hl  : ∀ f : X ⟶ Y, biprod.lift f (0 : X ⟶ Y) = f ≫ biprod.inl
+  have hl : ∀ f : X ⟶ Y, biprod.lift f (0 : X ⟶ Y) = f ≫ biprod.inl
   intro f
   ext
   · aesop_cat
@@ -65,12 +65,12 @@ theorem isUnital_leftAdd : EckmannHilton.IsUnital (· +ₗ ·) 0 := by
   }
 
 theorem isUnital_rightAdd : EckmannHilton.IsUnital (· +ᵣ ·) 0 := by
-  have h₂  : ∀ f : X ⟶ Y, biprod.desc (0 : X ⟶ Y) f = biprod.snd ≫ f
+  have h₂ : ∀ f : X ⟶ Y, biprod.desc (0 : X ⟶ Y) f = biprod.snd ≫ f
   intro f
   ext
   · aesop_cat
   · simp only [biprod.inr_desc, BinaryBicone.inr_snd_assoc]
-  have h₁  : ∀ f : X ⟶ Y, biprod.desc f (0 : X ⟶ Y) = biprod.fst ≫ f
+  have h₁ : ∀ f : X ⟶ Y, biprod.desc f (0 : X ⟶ Y) = biprod.fst ≫ f
   intro f
   ext
   · aesop_cat
@@ -82,13 +82,13 @@ theorem isUnital_rightAdd : EckmannHilton.IsUnital (· +ᵣ ·) 0 := by
 
 theorem distrib (f g h k : X ⟶ Y) : (f +ᵣ g) +ₗ h +ᵣ k = (f +ₗ h) +ᵣ g +ₗ k := by
   let diag : X ⊞ X ⟶ Y ⊞ Y := biprod.lift (biprod.desc f g) (biprod.desc h k)
-  have hd₁  : biprod.inl ≫ diag = biprod.lift f h
+  have hd₁ : biprod.inl ≫ diag = biprod.lift f h
   ext <;> simp [diag]
-  have hd₂  : biprod.inr ≫ diag = biprod.lift g k
+  have hd₂ : biprod.inr ≫ diag = biprod.lift g k
   ext <;> simp [diag]
-  have h₁  : biprod.lift (f +ᵣ g) (h +ᵣ k) = biprod.lift (𝟙 X) (𝟙 X) ≫ diag
+  have h₁ : biprod.lift (f +ᵣ g) (h +ᵣ k) = biprod.lift (𝟙 X) (𝟙 X) ≫ diag
   ext <;> aesop_cat
-  have h₂  : diag ≫ biprod.desc (𝟙 Y) (𝟙 Y) = biprod.desc (f +ₗ h) (g +ₗ k)
+  have h₂ : diag ≫ biprod.desc (𝟙 Y) (𝟙 Y) = biprod.desc (f +ₗ h) (g +ₗ k)
   ext <;> simp [reassoc_of% hd₁, reassoc_of% hd₂]
   rw [leftAdd, h₁, Category.assoc, h₂, rightAdd]
 

@@ -313,7 +313,7 @@ lemma measurableSet_eq_fun' {β : Type*} [CanonicallyOrderedAddCommMonoid β] [S
     {_ : MeasurableSpace β} [MeasurableSub₂ β] [MeasurableSingletonClass β]
     {f g : α → β} (hf : Measurable f) (hg : Measurable g) :
     MeasurableSet {x | f x = g x} := by
-  have  : {a | f a = g a} = {a | (f - g) a = 0} ∩ {a | (g - f) a = 0}
+  have : {a | f a = g a} = {a | (f - g) a = 0} ∩ {a | (g - f) a = 0}
   ext
   simp only [Set.mem_setOf_eq, Pi.sub_apply, tsub_eq_zero_iff_le, Set.mem_inter_iff]
   exact ⟨fun h ↦ ⟨h.le, h.symm.le⟩, fun h ↦ le_antisymm h.1 h.2⟩
@@ -331,7 +331,7 @@ theorem nullMeasurableSet_eq_fun {E} [MeasurableSpace E] [AddGroup E] [Measurabl
 theorem measurableSet_eq_fun_of_countable {m : MeasurableSpace α} {E} [MeasurableSpace E]
     [MeasurableSingletonClass E] [Countable E] {f g : α → E} (hf : Measurable f)
     (hg : Measurable g) : MeasurableSet { x | f x = g x } := by
-  have  : { x | f x = g x } = ⋃ j, { x | f x = j } ∩ { x | g x = j }
+  have : { x | f x = g x } = ⋃ j, { x | f x = j } ∩ { x | g x = j }
   ext1 x
   simp only [Set.mem_setOf_eq, Set.mem_iUnion, Set.mem_inter_iff, exists_eq_right']
   rw [this]

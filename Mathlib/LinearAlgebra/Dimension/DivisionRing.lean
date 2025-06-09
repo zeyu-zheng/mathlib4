@@ -80,7 +80,7 @@ theorem rank_add_rank_split (db : V₂ →ₗ[K] V) (eb : V₃ →ₗ[K] V) (cd 
     (ce : V₁ →ₗ[K] V₃) (hde : ⊤ ≤ LinearMap.range db ⊔ LinearMap.range eb) (hgd : ker cd = ⊥)
     (eq : db.comp cd = eb.comp ce) (eq₂ : ∀ d e, db d = eb e → ∃ c, cd c = d ∧ ce c = e) :
     Module.rank K V + Module.rank K V₁ = Module.rank K V₂ + Module.rank K V₃ := by
-  have hf  : Surjective (coprod db eb)
+  have hf : Surjective (coprod db eb)
   rwa [← range_eq_top, range_coprod, eq_top_iff]
   conv =>
     rhs
@@ -236,13 +236,13 @@ theorem max_aleph0_card_le_rank_fun_nat : max ℵ₀ #K ≤ Module.rank K (ℕ �
   by_contra!
   obtain ⟨⟨ιK, bK⟩⟩ := Module.Free.exists_basis (R := K) (M := ℕ → K)
   let L := Subfield.closure (Set.range (fun i : ιK × ℕ ↦ bK i.1 i.2))
-  have hLK  : #L < #K
+  have hLK : #L < #K
   refine (Subfield.cardinal_mk_closure_le_max _).trans_lt
     (max_lt_iff.mpr ⟨mk_range_le.trans_lt ?_, card_K⟩)
   rwa [mk_prod, ← aleph0, lift_uzero, bK.mk_eq_rank'', mul_aleph0_eq aleph0_le]
   letI := Module.compHom K (RingHom.op L.subtype)
   obtain ⟨⟨ιL, bL⟩⟩ := Module.Free.exists_basis (R := Lᵐᵒᵖ) (M := K)
-  have card_ιL  : ℵ₀ ≤ #ιL
+  have card_ιL : ℵ₀ ≤ #ιL
   contrapose! hLK
   haveI := @Fintype.ofFinite _ (lt_aleph0_iff_finite.mp hLK)
   rw [bL.repr.toEquiv.cardinal_eq, mk_finsupp_of_fintype,

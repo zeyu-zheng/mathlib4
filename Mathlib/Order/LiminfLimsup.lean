@@ -841,7 +841,7 @@ theorem liminf_le_of_frequently_le' {α β} [CompleteLattice β] {f : Filter α}
     (h : ∃ᶠ a in f, u a ≤ x) : liminf u f ≤ x := by
   rw [liminf_eq]
   refine sSup_le fun b hb => ?_
-  have hbx  : ∃ᶠ _ in f, b ≤ x
+  have hbx : ∃ᶠ _ in f, b ≤ x
   revert h
   rw [← not_imp_not, not_frequently, not_frequently]
   exact fun h => hb.mp (h.mono fun a hbx hba hax => hbx (hba.trans hax))
@@ -1308,7 +1308,7 @@ theorem HasBasis.liminf_eq_ciSup_ciInf {v : Filter ι}
     by_cases Hj : j ∈ m
     · simpa only [liminf_reparam, if_pos Hj] using Hj
     · simp only [liminf_reparam, if_neg Hj]
-      have Z  : ∃ n, (exists_surjective_nat (Subtype p)).choose n ∈ m ∨ ∀ j, j ∉ m
+      have Z : ∃ n, (exists_surjective_nat (Subtype p)).choose n ∈ m ∨ ∀ j, j ∉ m
       rcases (exists_surjective_nat (Subtype p)).choose_spec j0 with ⟨n, rfl⟩
       exact ⟨n, Or.inl hj0⟩
       rcases Nat.find_spec Z with hZ|hZ

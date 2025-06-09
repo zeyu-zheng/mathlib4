@@ -237,7 +237,7 @@ theorem rpow_le_rpow_of_exponent_ge {x : ℝ≥0} {y z : ℝ} (hx0 : 0 < x) (hx1
   Real.rpow_le_rpow_of_exponent_ge hx0 hx1 hyz
 
 theorem rpow_pos {p : ℝ} {x : ℝ≥0} (hx_pos : 0 < x) : 0 < x ^ p := by
-  have rpow_pos_of_nonneg  : ∀ {p : ℝ}, 0 < p → 0 < x ^ p
+  have rpow_pos_of_nonneg : ∀ {p : ℝ}, 0 < p → 0 < x ^ p
   intro p hp_pos
   rw [← zero_rpow hp_pos.ne']
   exact rpow_lt_rpow hx_pos hp_pos

@@ -155,14 +155,14 @@ def reciprocalFactors (n : ℕ) : List ℕ :=
 
 lemma reciprocalFactors_even {n : ℕ} (h0 : n ≠ 0) (h2 : Even n) :
     reciprocalFactors n = 3 :: reciprocalFactors (n / 2) := by
-  have h1  : n ≠ 1
+  have h1 : n ≠ 1
   rintro rfl
   norm_num at h2
   rw [reciprocalFactors, dif_neg h0, dif_neg h1, if_pos h2]
 
 lemma reciprocalFactors_odd {n : ℕ} (h1 : n ≠ 1) (h2 : Odd n) :
     reciprocalFactors n = n % 4 * n :: reciprocalFactors (n / 4 + 1) := by
-  have h0  : n ≠ 0
+  have h0 : n ≠ 0
   rintro rfl
   norm_num at h2
   rw [reciprocalFactors, dif_neg h0, dif_neg h1, if_neg (Nat.odd_iff_not_even.mp h2)]
@@ -195,7 +195,7 @@ theorem commProb_reciprocal (n : ℕ) :
   · have := div_four_lt h0 h1
     rw [reciprocalFactors_odd h1 h2, commProb_cons, commProb_reciprocal (n / 4 + 1)]
     have key : n % 4 = 1 ∨ n % 4 = 3 := Nat.odd_mod_four_iff.mp (Nat.odd_iff.mp h2)
-    have hn  : Odd (n % 4)
+    have hn : Odd (n % 4)
     rcases key with h | h <;> rw [h] <;> decide
     rw [commProb_odd (hn.mul h2), div_mul_div_comm, mul_one, div_eq_div_iff, one_mul] <;> norm_cast
     · have h0 : (n % 4) ^ 2 + 3 = n % 4 * 4 := by rcases key with h | h <;> rw [h] <;> norm_num

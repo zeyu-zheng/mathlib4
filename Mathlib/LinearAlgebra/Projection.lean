@@ -269,7 +269,7 @@ end
 theorem linearProjOfIsCompl_of_proj (f : E →ₗ[R] p) (hf : ∀ x : p, f x = x) :
     p.linearProjOfIsCompl (ker f) (isCompl_of_proj hf) = f := by
   ext x
-  have  : x ∈ p ⊔ (ker f)
+  have : x ∈ p ⊔ (ker f)
   simp only [(isCompl_of_proj hf).sup_eq_top, mem_top]
   rcases mem_sup'.1 this with ⟨x, y, rfl⟩
   simp [hf]

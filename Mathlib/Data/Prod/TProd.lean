@@ -144,7 +144,7 @@ theorem mk_preimage_tprod :
   | [], t => by simp [Set.tprod]
   | i :: l, t => by
     ext f
-    have h  : TProd.mk l f ∈ Set.tprod l t ↔ ∀ i : ι, i ∈ l → f i ∈ t i
+    have h : TProd.mk l f ∈ Set.tprod l t ↔ ∀ i : ι, i ∈ l → f i ∈ t i
     change f ∈ TProd.mk l ⁻¹' Set.tprod l t ↔ f ∈ { x | x ∈ l }.pi t
     rw [mk_preimage_tprod l t]
 
@@ -156,7 +156,7 @@ theorem mk_preimage_tprod :
 
 theorem elim_preimage_pi [DecidableEq ι] {l : List ι} (hnd : l.Nodup) (h : ∀ i, i ∈ l)
     (t : ∀ i, Set (α i)) : TProd.elim' h ⁻¹' pi univ t = Set.tprod l t := by
-  have h2  : { i | i ∈ l } = univ
+  have h2 : { i | i ∈ l } = univ
   ext i
   simp [h]
   rw [← h2, ← mk_preimage_tprod, preimage_preimage]

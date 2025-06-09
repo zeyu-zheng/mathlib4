@@ -145,7 +145,7 @@ theorem sourceAffineLocally_isLocal (h₁ : RingHom.RespectsIso P)
   · intro X Y _ f r H
     rw [sourceAffineLocally_morphismRestrict]
     intro U hU
-    have  : X.basicOpen (f.appLE ⊤ U (by simp) r) = U
+    have : X.basicOpen (f.appLE ⊤ U (by simp) r) = U
     simp only [Scheme.Hom.appLE, Opens.map_top, CommRingCat.coe_comp_of, RingHom.coe_comp,
       Function.comp_apply]
     rw [Scheme.basicOpen_res]

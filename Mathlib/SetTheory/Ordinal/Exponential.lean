@@ -81,7 +81,7 @@ theorem one_opow (a : Ordinal) : (1 : Ordinal) ^ a = 1 := by
     exact ⟨fun H => by simpa only [opow_zero] using H 0 l.pos, fun H b' h => by rwa [IH _ h]⟩
 
 theorem opow_pos {a : Ordinal} (b : Ordinal) (a0 : 0 < a) : 0 < a ^ b := by
-  have h0  : 0 < a ^ (0 : Ordinal)
+  have h0 : 0 < a ^ (0 : Ordinal)
   simp only [opow_zero, zero_lt_one]
   induction b using limitRecOn with
   | H₁ => exact h0

@@ -603,7 +603,7 @@ theorem mul_eq_left_iff {a b : Cardinal} : a * b = a ↔ max ℵ₀ b ≤ a ∧ 
     right
     by_cases h2a : a = 0
     · exact Or.inr h2a
-    have hb  : b ≠ 0
+    have hb : b ≠ 0
     rintro rfl
     apply h2a
     rw [mul_zero] at h

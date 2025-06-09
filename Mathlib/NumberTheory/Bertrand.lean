@@ -155,7 +155,7 @@ theorem centralBinom_le_of_no_bertrand_prime (n : ℕ) (n_large : 2 < n)
   have n2_pos : 1 ≤ 2 * n := mul_pos (zero_lt_two' ℕ) n_pos
   let S := (Finset.range (2 * n / 3 + 1)).filter Nat.Prime
   let f x := x ^ n.centralBinom.factorization x
-  have  : ∏ x ∈ S, f x = ∏ x ∈ Finset.range (2 * n / 3 + 1), f x
+  have : ∏ x ∈ S, f x = ∏ x ∈ Finset.range (2 * n / 3 + 1), f x
   refine Finset.prod_filter_of_ne fun p _ h => ?_
   contrapose! h; dsimp only [f]
   rw [factorization_eq_zero_of_non_prime n.centralBinom h, _root_.pow_zero]
@@ -164,7 +164,7 @@ theorem centralBinom_le_of_no_bertrand_prime (n : ℕ) (n_large : 2 < n)
   apply mul_le_mul'
   · refine (Finset.prod_le_prod' fun p _ => (?_ : f p ≤ 2 * n)).trans ?_
     · exact pow_factorization_choose_le (mul_pos two_pos n_pos)
-    have  : (Finset.Icc 1 (sqrt (2 * n))).card = sqrt (2 * n)
+    have : (Finset.Icc 1 (sqrt (2 * n))).card = sqrt (2 * n)
     rw [card_Icc, Nat.add_sub_cancel]
     rw [Finset.prod_const]
     refine pow_le_pow_right n2_pos ((Finset.card_le_card fun x hx => ?_).trans this.le)

@@ -325,7 +325,7 @@ theorem toList_formPerm_singleton (x y : α) : toList (formPerm [x]) y = [] := b
 theorem toList_formPerm_nontrivial (l : List α) (hl : 2 ≤ l.length) (hn : Nodup l) :
     toList (formPerm l) (l.get ⟨0, (zero_lt_two.trans_le hl)⟩) = l := by
   have hc : l.formPerm.IsCycle := List.isCycle_formPerm hn hl
-  have hs  : l.formPerm.support = l.toFinset
+  have hs : l.formPerm.support = l.toFinset
   refine support_formPerm_of_nodup _ hn ?_
   rintro _ rfl
   simp [Nat.succ_le_succ_iff] at hl
@@ -378,7 +378,7 @@ def toCycle (f : Perm α) (hf : IsCycle f) : Cycle α :=
 
 theorem toCycle_eq_toList (f : Perm α) (hf : IsCycle f) (x : α) (hx : f x ≠ x) :
     toCycle f hf = toList f x := by
-  have key  : (Finset.univ : Finset α).val = x ::ₘ Finset.univ.val.erase x
+  have key : (Finset.univ : Finset α).val = x ::ₘ Finset.univ.val.erase x
   simp
   rw [toCycle, key]
   simp [hx]

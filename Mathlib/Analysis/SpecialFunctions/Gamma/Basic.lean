@@ -195,9 +195,9 @@ theorem partialGamma_add_one {s : ℂ} (hs : 0 < s.re) {X : ℝ} (hX : 0 ≤ X) 
   have F_der_I : ∀ x : ℝ, x ∈ Ioo 0 X → HasDerivAt (fun x => (-x).exp * x ^ s : ℝ → ℂ)
       (-((-x).exp * x ^ s) + (-x).exp * (s * x ^ (s - 1))) x := by
     intro x hx
-    have d1  : HasDerivAt (fun y : ℝ => (-y).exp) (-(-x).exp) x
+    have d1 : HasDerivAt (fun y : ℝ => (-y).exp) (-(-x).exp) x
     simpa using (hasDerivAt_neg x).exp
-    have d2  : HasDerivAt (fun y : ℝ => (y : ℂ) ^ s) (s * x ^ (s - 1)) x
+    have d2 : HasDerivAt (fun y : ℝ => (y : ℂ) ^ s) (s * x ^ (s - 1)) x
     have t := @HasDerivAt.cpow_const _ _ _ s (hasDerivAt_id ↑x) ?_
     · simpa only [mul_one] using t.comp_ofReal
     · exact ofReal_mem_slitPlane.2 hx.1
@@ -264,7 +264,7 @@ theorem GammaAux_recurrence1 (s : ℂ) (n : ℕ) (h1 : -s.re < ↑n) :
     rw [mul_comm, mul_div_cancel_right₀]; contrapose! h1; rw [h1]
     simp
   · dsimp only [GammaAux]
-    have hh1  : -(s + 1).re < n
+    have hh1 : -(s + 1).re < n
     rw [Nat.cast_add, Nat.cast_one] at h1
     rw [add_re, one_re]; linarith
     rw [← hn (s + 1) hh1]
@@ -279,8 +279,8 @@ theorem GammaAux_recurrence2 (s : ℂ) (n : ℕ) (h1 : -s.re < ↑n) :
     rw [zero_re] at h1
     exact h1.false
   · dsimp only [GammaAux]
-    have  : GammaAux n (s + 1 + 1) / (s + 1) = GammaAux n (s + 1)
-    have hh1  : -(s + 1).re < n
+    have : GammaAux n (s + 1 + 1) / (s + 1) = GammaAux n (s + 1)
+    have hh1 : -(s + 1).re < n
     rw [Nat.cast_add, Nat.cast_one] at h1
     rw [add_re, one_re]; linarith
     rw [GammaAux_recurrence1 (s + 1) n hh1]
@@ -292,7 +292,7 @@ irreducible_def Gamma (s : ℂ) : ℂ :=
   GammaAux ⌊1 - s.re⌋₊ s
 
 theorem Gamma_eq_GammaAux (s : ℂ) (n : ℕ) (h1 : -s.re < ↑n) : Gamma s = GammaAux n s := by
-  have u  : ∀ k : ℕ, GammaAux (⌊1 - s.re⌋₊ + k) s = Gamma s
+  have u : ∀ k : ℕ, GammaAux (⌊1 - s.re⌋₊ + k) s = Gamma s
   intro k; induction' k with k hk
   · simp [Gamma]
   · rw [← hk, ← add_assoc]
@@ -313,9 +313,9 @@ theorem Gamma_eq_GammaAux (s : ℂ) (n : ℕ) (h1 : -s.re < ↑n) : Gamma s = Ga
 /-- The recurrence relation for the `Γ` function. -/
 theorem Gamma_add_one (s : ℂ) (h2 : s ≠ 0) : Gamma (s + 1) = s * Gamma s := by
   let n := ⌊1 - s.re⌋₊
-  have t1  : -s.re < n
+  have t1 : -s.re < n
   simpa only [sub_sub_cancel_left] using Nat.sub_one_lt_floor (1 - s.re)
-  have t2  : -(s + 1).re < n
+  have t2 : -(s + 1).re < n
   rw [add_re, one_re]; linarith
   rw [Gamma_eq_GammaAux s n t1, Gamma_eq_GammaAux (s + 1) n t2, GammaAux_recurrence1 s n t1]
   field_simp
@@ -349,7 +349,7 @@ theorem Gamma_neg_nat_eq_zero (n : ℕ) : Gamma (-n) = 0 := by
   · have A : -(n.succ : ℂ) ≠ 0 := by
       rw [neg_ne_zero, Nat.cast_ne_zero]
       apply Nat.succ_ne_zero
-    have  : -(n : ℂ) = -↑n.succ + 1
+    have : -(n : ℂ) = -↑n.succ + 1
     simp
     rw [this, Gamma_add_one _ A] at IH
     contrapose! IH
@@ -372,7 +372,7 @@ theorem Gamma_conj (s : ℂ) : Gamma (conj s) = conj (Gamma s) := by
 function, for complex `a`. -/
 lemma integral_cpow_mul_exp_neg_mul_Ioi {a : ℂ} {r : ℝ} (ha : 0 < a.re) (hr : 0 < r) :
     ∫ (t : ℝ) in Ioi 0, t ^ (a - 1) * exp (-(r * t)) = (1 / r) ^ a * Gamma a := by
-  have aux  : (1 / r : ℂ) ^ a = 1 / r * (1 / r) ^ (a - 1)
+  have aux : (1 / r : ℂ) ^ a = 1 / r * (1 / r) ^ (a - 1)
   nth_rewrite 2 [← cpow_one (1 / r : ℂ)]
   rw [← cpow_add _ _ (one_div_ne_zero <| ofReal_ne_zero.mpr hr.ne'), add_sub_cancel]
   calc
@@ -427,9 +427,9 @@ theorem differentiableAt_GammaAux (s : ℂ) (n : ℕ) (h1 : 1 - s.re < n) (h2 : 
     rw [Nat.cast_zero] at h1; linarith
   · dsimp only [GammaAux]
     specialize hn (s + 1)
-    have a  : 1 - (s + 1).re < ↑n
+    have a : 1 - (s + 1).re < ↑n
     rw [Nat.cast_succ] at h1; rw [Complex.add_re, Complex.one_re]; linarith
-    have b  : ∀ m : ℕ, s + 1 ≠ -m
+    have b : ∀ m : ℕ, s + 1 ≠ -m
     intro m; have := h2 (1 + m)
     contrapose! this
     rw [← eq_sub_iff_add_eq] at this
@@ -444,10 +444,10 @@ theorem differentiableAt_Gamma (s : ℂ) (hs : ∀ m : ℕ, s ≠ -m) : Differen
   have hn : 1 - s.re < n := mod_cast Nat.lt_floor_add_one (1 - s.re)
   apply (differentiableAt_GammaAux s n hn hs).congr_of_eventuallyEq
   let S := {t : ℂ | 1 - t.re < n}
-  have  : S ∈ 𝓝 s
+  have : S ∈ 𝓝 s
   rw [mem_nhds_iff]; use S
   refine ⟨Subset.rfl, ?_, hn⟩
-  have  : S = re ⁻¹' Ioi (1 - n : ℝ)
+  have : S = re ⁻¹' Ioi (1 - n : ℝ)
   ext; rw [preimage, Ioi, mem_setOf_eq, mem_setOf_eq, mem_setOf_eq]; exact sub_lt_comm
   rw [this]
   exact Continuous.isOpen_preimage continuous_re _ isOpen_Ioi
@@ -527,7 +527,7 @@ theorem Gamma_neg_nat_eq_zero (n : ℕ) : Gamma (-n) = 0 := by
 
 theorem Gamma_pos_of_pos {s : ℝ} (hs : 0 < s) : 0 < Gamma s := by
   rw [Gamma_eq_integral hs]
-  have  : (Function.support fun x : ℝ => exp (-x) * x ^ (s - 1)) ∩ Ioi 0 = Ioi 0
+  have : (Function.support fun x : ℝ => exp (-x) * x ^ (s - 1)) ∩ Ioi 0 = Ioi 0
   rw [inter_eq_right]
   intro x hx
   rw [Function.mem_support]
@@ -587,7 +587,7 @@ theorem Gamma_ne_zero {s : ℝ} (hs : ∀ m : ℕ, s ≠ -m) : Gamma s ≠ 0 := 
     refine (Gamma_pos_of_pos ?_).ne'
     rwa [Nat.cast_zero, neg_zero] at hs
   · intro hs'
-    have  : Gamma (s + 1) ≠ 0
+    have : Gamma (s + 1) ≠ 0
     apply n_ih
     · intro m
       specialize hs (1 + m)

@@ -532,16 +532,16 @@ theorem snoc_update : snoc (update p i y) x = update (snoc p x) (castSucc i) y :
     simp only [dif_pos]
     by_cases h' : j = castSucc i
     · have C1 : α (castSucc i) = α j := by rw [h']
-      have E1  : update (snoc p x) (castSucc i) y j = _root_.cast C1 y
-      have  : update (snoc p x) j (_root_.cast C1 y) j = _root_.cast C1 y
+      have E1 : update (snoc p x) (castSucc i) y j = _root_.cast C1 y
+      have : update (snoc p x) j (_root_.cast C1 y) j = _root_.cast C1 y
       simp
       convert this
       · exact h'.symm
       · exact heq_of_cast_eq (congr_arg α (Eq.symm h')) rfl
-      have C2  : α (castSucc i) = α (castSucc (castLT j h))
+      have C2 : α (castSucc i) = α (castSucc (castLT j h))
       rw [castSucc_castLT, h']
-      have E2  : update p i y (castLT j h) = _root_.cast C2 y
-      have  : update p (castLT j h) (_root_.cast C2 y) (castLT j h) = _root_.cast C2 y
+      have E2 : update p i y (castLT j h) = _root_.cast C2 y
+      have : update p (castLT j h) (_root_.cast C2 y) (castLT j h) = _root_.cast C2 y
       simp
       convert this
       · simp [h, h']
@@ -607,12 +607,12 @@ theorem cons_snoc_eq_snoc_cons {β : Type*} (a : β) (q : Fin n → β) (b : β)
     -- Porting note: `refl` finished it here in Lean 3, but I had to add more.
     simp [snoc, castLT]
   set j := pred i h with ji
-  have  : i = j.succ
+  have : i = j.succ
   rw [ji, succ_pred]
   rw [this, cons_succ]
   by_cases h' : j.val < n
   · set k := castLT j h' with jk
-    have  : j = castSucc k
+    have : j = castSucc k
     rw [jk, castSucc_castLT]
     rw [this, ← castSucc_fin_succ, snoc]
     simp [pred, snoc, cons]

@@ -33,12 +33,12 @@ theorem Equiv.Perm.exists_with_cycleType_iff {m : Multiset ℕ} :
       rw [← hg]
       exact Equiv.Perm.two_le_of_mem_cycleType
   · rintro ⟨hc, h2c⟩
-    have hc'  : m.toList.sum ≤ Fintype.card α
+    have hc' : m.toList.sum ≤ Fintype.card α
     simp only [Multiset.sum_toList]
     exact hc
     obtain ⟨p, hp_length, hp_nodup, hp_disj⟩ := List.exists_pw_disjoint_with_card hc'
     use List.prod (List.map (fun l => List.formPerm l) p)
-    have hp2  : ∀ x ∈ p, 2 ≤ x.length
+    have hp2 : ∀ x ∈ p, 2 ≤ x.length
     intro x hx
     apply h2c x.length
     rw [← Multiset.mem_toList, ← hp_length, List.mem_map]

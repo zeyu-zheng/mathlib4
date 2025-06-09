@@ -254,7 +254,7 @@ theorem SemilatticeSup.ext_sup {α} {A B : SemilatticeSup α}
 theorem SemilatticeSup.ext {α} {A B : SemilatticeSup α}
     (H : ∀ x y : α, (haveI := A; x ≤ y) ↔ x ≤ y) :
     A = B := by
-  have ss  : A.toSup = B.toSup
+  have ss : A.toSup = B.toSup
   ext; apply SemilatticeSup.ext_sup H
   cases A
   cases B
@@ -438,7 +438,7 @@ theorem SemilatticeInf.ext_inf {α} {A B : SemilatticeInf α}
 theorem SemilatticeInf.ext {α} {A B : SemilatticeInf α}
     (H : ∀ x y : α, (haveI := A; x ≤ y) ↔ x ≤ y) :
     A = B := by
-  have ss  : A.toInf = B.toInf
+  have ss : A.toInf = B.toInf
   ext; apply SemilatticeInf.ext_inf H
   cases A
   cases B

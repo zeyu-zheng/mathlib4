@@ -189,7 +189,7 @@ def Fix.dest : Fix F α → F (append1 α (Fix F α)) :=
 
 theorem Fix.rec_eq {β : Type u} (g : F (append1 α β) → β) (x : F (append1 α (Fix F α))) :
     Fix.rec g (Fix.mk x) = g (appendFun id (Fix.rec g) <$$> x) := by
-  have  : recF g ∘ fixToW = Fix.rec g
+  have : recF g ∘ fixToW = Fix.rec g
   apply funext
   apply Quotient.ind
   intro x
@@ -205,7 +205,7 @@ theorem Fix.rec_eq {β : Type u} (g : F (append1 α β) → β) (x : F (append1 
 
 theorem Fix.ind_aux (a : q.P.A) (f' : q.P.drop.B a ⟹ α) (f : q.P.last.B a → q.P.W α) :
     Fix.mk (abs ⟨a, q.P.appendContents f' fun x => ⟦f x⟧⟩) = ⟦q.P.wMk a f' f⟧ := by
-  have  : Fix.mk (abs ⟨a, q.P.appendContents f' fun x => ⟦f x⟧⟩) = ⟦wrepr (q.P.wMk a f' f)⟧
+  have : Fix.mk (abs ⟨a, q.P.appendContents f' fun x => ⟦f x⟧⟩) = ⟦wrepr (q.P.wMk a f' f)⟧
   apply Quot.sound; apply wEquiv.abs'
   rw [MvPFunctor.wDest'_wMk', abs_map, abs_repr, ← abs_map, MvPFunctor.map_eq]
   conv =>
@@ -233,7 +233,7 @@ theorem Fix.ind_rec {β : Type u} (g₁ g₂ : Fix F α → β)
   rw [← abs_map, ← abs_map, MvPFunctor.map_eq, MvPFunctor.map_eq]
   congr 2
   rw [MvPFunctor.appendContents, appendFun, appendFun, ← splitFun_comp, ← splitFun_comp]
-  have  : (g₁ ∘ fun x => ⟦f x⟧) = g₂ ∘ fun x => ⟦f x⟧
+  have : (g₁ ∘ fun x => ⟦f x⟧) = g₂ ∘ fun x => ⟦f x⟧
   ext x
   exact ih x
   rw [this]

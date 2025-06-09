@@ -95,7 +95,7 @@ theorem rpow_arith_mean_le_arith_mean_rpow (w z : ι → ℝ) (hw : ∀ i ∈ s,
 theorem arith_mean_le_rpow_mean (w z : ι → ℝ) (hw : ∀ i ∈ s, 0 ≤ w i) (hw' : ∑ i ∈ s, w i = 1)
     (hz : ∀ i ∈ s, 0 ≤ z i) {p : ℝ} (hp : 1 ≤ p) :
     ∑ i ∈ s, w i * z i ≤ (∑ i ∈ s, w i * z i ^ p) ^ (1 / p) := by
-  have  : 0 < p
+  have : 0 < p
   positivity
   rw [← rpow_le_rpow_iff _ _ this, ← rpow_mul, one_div_mul_cancel (ne_of_gt this), rpow_one]
   · exact rpow_arith_mean_le_arith_mean_rpow s w z hw hw' hz hp
@@ -165,20 +165,20 @@ private theorem add_rpow_le_one_of_add_le_one {p : ℝ} (a b : ℝ≥0) (hab : a
   exact (add_le_add (h_le_one a ha) (h_le_one b hb)).trans hab
 
 theorem add_rpow_le_rpow_add {p : ℝ} (a b : ℝ≥0) (hp1 : 1 ≤ p) : a ^ p + b ^ p ≤ (a + b) ^ p := by
-  have hp_pos  : 0 < p
+  have hp_pos : 0 < p
   positivity
   by_cases h_zero : a + b = 0
   · simp [add_eq_zero_iff.mp h_zero, hp_pos.ne']
-  have h_nonzero  : ¬(a = 0 ∧ b = 0)
+  have h_nonzero : ¬(a = 0 ∧ b = 0)
   rwa [add_eq_zero_iff] at h_zero
-  have h_add  : a / (a + b) + b / (a + b) = 1
+  have h_add : a / (a + b) + b / (a + b) = 1
   rw [div_add_div_same, div_self h_zero]
   have h := add_rpow_le_one_of_add_le_one (a / (a + b)) (b / (a + b)) h_add.le hp1
   rw [div_rpow a (a + b), div_rpow b (a + b)] at h
-  have hab_0  : (a + b) ^ p ≠ 0
+  have hab_0 : (a + b) ^ p ≠ 0
   simp [hp_pos, h_nonzero]
   have hab_0' : 0 < (a + b) ^ p := zero_lt_iff.mpr hab_0
-  have h_mul  : (a + b) ^ p * (a ^ p / (a + b) ^ p + b ^ p / (a + b) ^ p) ≤ (a + b) ^ p
+  have h_mul : (a + b) ^ p * (a ^ p / (a + b) ^ p + b ^ p / (a + b) ^ p) ≤ (a + b) ^ p
   nth_rw 4 [← mul_one ((a + b) ^ p)]
   exact (mul_le_mul_left hab_0').mpr h
   rwa [div_eq_mul_inv, div_eq_mul_inv, mul_add, mul_comm (a ^ p), mul_comm (b ^ p), ← mul_assoc, ←
@@ -221,13 +221,13 @@ namespace ENNReal
 functions and real exponents. -/
 theorem rpow_arith_mean_le_arith_mean_rpow (w z : ι → ℝ≥0∞) (hw' : ∑ i ∈ s, w i = 1) {p : ℝ}
     (hp : 1 ≤ p) : (∑ i ∈ s, w i * z i) ^ p ≤ ∑ i ∈ s, w i * z i ^ p := by
-  have hp_pos  : 0 < p
+  have hp_pos : 0 < p
   positivity
-  have hp_nonneg  : 0 ≤ p
+  have hp_nonneg : 0 ≤ p
   positivity
-  have hp_not_neg  : ¬p < 0
+  have hp_not_neg : ¬p < 0
   simp [hp_nonneg]
-  have h_top_iff_rpow_top  : ∀ (i : ι), i ∈ s → (w i * z i = ⊤ ↔ w i * z i ^ p = ⊤)
+  have h_top_iff_rpow_top : ∀ (i : ι), i ∈ s → (w i * z i = ⊤ ↔ w i * z i ^ p = ⊤)
   simp [ENNReal.mul_eq_top, hp_pos, hp_nonneg, hp_not_neg]
   refine le_of_top_imp_top_of_toNNReal_le ?_ ?_
   · -- first, prove `(∑ i ∈ s, w i * z i) ^ p = ⊤ → ∑ i ∈ s, (w i * z i ^ p) = ⊤`
@@ -286,7 +286,7 @@ theorem rpow_add_le_mul_rpow_add_rpow (z₁ z₂ : ℝ≥0∞) {p : ℝ} (hp : 1
     ring
 
 theorem add_rpow_le_rpow_add {p : ℝ} (a b : ℝ≥0∞) (hp1 : 1 ≤ p) : a ^ p + b ^ p ≤ (a + b) ^ p := by
-  have hp_pos  : 0 < p
+  have hp_pos : 0 < p
   positivity
   by_cases h_top : a + b = ⊤
   · rw [← @ENNReal.rpow_eq_top_iff_of_pos (a + b) p hp_pos] at h_top

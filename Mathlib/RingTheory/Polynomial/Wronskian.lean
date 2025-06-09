@@ -106,9 +106,9 @@ as when `a = b = 1` we have `(wronskian a b).natDegree = a.natDegree = b.natDegr
 -/
 theorem natDegree_wronskian_lt_add {a b : R[X]} (hw : wronskian a b ≠ 0) :
     (wronskian a b).natDegree < a.natDegree + b.natDegree := by
-  have ha  : a ≠ 0
+  have ha : a ≠ 0
   intro h; subst h; rw [wronskian_zero_left] at hw; exact hw rfl
-  have hb  : b ≠ 0
+  have hb : b ≠ 0
   intro h; subst h; rw [wronskian_zero_right] at hw; exact hw rfl
   rw [← WithBot.coe_lt_coe, WithBot.coe_add]
   convert ← degree_wronskian_lt_add ha hb

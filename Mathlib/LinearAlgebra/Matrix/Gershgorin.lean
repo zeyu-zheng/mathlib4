@@ -31,7 +31,7 @@ theorem eigenvalue_mem_ball {μ : K} (hμ : Module.End.HasEigenvalue (Matrix.toL
     exact hμ Submodule.eq_bot_of_subsingleton
   · obtain ⟨v, h_eg, h_nz⟩ := hμ.exists_hasEigenvector
     obtain ⟨i, -, h_i⟩ := Finset.exists_mem_eq_sup' Finset.univ_nonempty (fun i => ‖v i‖)
-    have h_nz  : v i ≠ 0
+    have h_nz : v i ≠ 0
     contrapose! h_nz
     ext j
     rw [Pi.zero_apply, ← norm_le_zero_iff]

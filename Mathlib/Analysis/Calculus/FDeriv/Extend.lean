@@ -120,20 +120,20 @@ theorem hasDerivWithinAt_Ici_of_tendsto_deriv {s : Set ℝ} {e : E} {a : ℝ} {f
   have t_conv : Convex ℝ t := convex_Ioo a b
   have t_open : IsOpen t := isOpen_Ioo
   have t_closure : closure t = Icc a b := closure_Ioo ab.ne
-  have t_cont  : ∀ y ∈ closure t, ContinuousWithinAt f t y
+  have t_cont : ∀ y ∈ closure t, ContinuousWithinAt f t y
   rw [t_closure]
   intro y hy
   by_cases h : y = a
   · rw [h]; exact f_lim.mono ts
   · have : y ∈ s := sab ⟨lt_of_le_of_ne hy.1 (Ne.symm h), hy.2⟩
     exact (f_diff.continuousOn y this).mono ts
-  have t_diff'  : Tendsto (fun x => fderiv ℝ f x) (𝓝[t] a) (𝓝 (smulRight (1 : ℝ →L[ℝ] ℝ) e))
+  have t_diff' : Tendsto (fun x => fderiv ℝ f x) (𝓝[t] a) (𝓝 (smulRight (1 : ℝ →L[ℝ] ℝ) e))
   simp only [deriv_fderiv.symm]
   exact Tendsto.comp
     (isBoundedBilinearMap_smulRight : IsBoundedBilinearMap ℝ _).continuous_right.continuousAt
     (tendsto_nhdsWithin_mono_left Ioo_subset_Ioi_self f_lim')
   -- now we can apply `hasFDerivWithinAt_closure_of_tendsto_fderiv`
-  have  : HasDerivWithinAt f e (Icc a b) a
+  have : HasDerivWithinAt f e (Icc a b) a
   rw [hasDerivWithinAt_iff_hasFDerivWithinAt, ← t_closure]
   exact hasFDerivWithinAt_closure_of_tendsto_fderiv t_diff t_conv t_open t_cont t_diff'
   exact this.mono_of_mem (Icc_mem_nhdsWithin_Ici <| left_mem_Ico.2 ab)
@@ -158,20 +158,20 @@ theorem hasDerivWithinAt_Iic_of_tendsto_deriv {s : Set ℝ} {e : E} {a : ℝ}
   have t_conv : Convex ℝ t := convex_Ioo b a
   have t_open : IsOpen t := isOpen_Ioo
   have t_closure : closure t = Icc b a := closure_Ioo (ne_of_lt ba)
-  have t_cont  : ∀ y ∈ closure t, ContinuousWithinAt f t y
+  have t_cont : ∀ y ∈ closure t, ContinuousWithinAt f t y
   rw [t_closure]
   intro y hy
   by_cases h : y = a
   · rw [h]; exact f_lim.mono ts
   · have : y ∈ s := sab ⟨hy.1, lt_of_le_of_ne hy.2 h⟩
     exact (f_diff.continuousOn y this).mono ts
-  have t_diff'  : Tendsto (fun x => fderiv ℝ f x) (𝓝[t] a) (𝓝 (smulRight (1 : ℝ →L[ℝ] ℝ) e))
+  have t_diff' : Tendsto (fun x => fderiv ℝ f x) (𝓝[t] a) (𝓝 (smulRight (1 : ℝ →L[ℝ] ℝ) e))
   simp only [deriv_fderiv.symm]
   exact Tendsto.comp
     (isBoundedBilinearMap_smulRight : IsBoundedBilinearMap ℝ _).continuous_right.continuousAt
     (tendsto_nhdsWithin_mono_left Ioo_subset_Iio_self f_lim')
   -- now we can apply `hasFDerivWithinAt_closure_of_tendsto_fderiv`
-  have  : HasDerivWithinAt f e (Icc b a) a
+  have : HasDerivWithinAt f e (Icc b a) a
   rw [hasDerivWithinAt_iff_hasFDerivWithinAt, ← t_closure]
   exact hasFDerivWithinAt_closure_of_tendsto_fderiv t_diff t_conv t_open t_cont t_diff'
   exact this.mono_of_mem (Icc_mem_nhdsWithin_Iic <| right_mem_Ioc.2 ba)
@@ -184,7 +184,7 @@ continuous at this point, then `g` is also the derivative of `f` at this point. 
 theorem hasDerivAt_of_hasDerivAt_of_ne {f g : ℝ → E} {x : ℝ}
     (f_diff : ∀ y ≠ x, HasDerivAt f (g y) y) (hf : ContinuousAt f x)
     (hg : ContinuousAt g x) : HasDerivAt f (g x) x := by
-  have A  : HasDerivWithinAt f (g x) (Ici x) x
+  have A : HasDerivWithinAt f (g x) (Ici x) x
   have diff : DifferentiableOn ℝ f (Ioi x) := fun y hy =>
     (f_diff y (ne_of_gt hy)).differentiableAt.differentiableWithinAt
   -- next line is the nontrivial bit of this proof, appealing to differentiability
@@ -197,7 +197,7 @@ theorem hasDerivAt_of_hasDerivAt_of_ne {f g : ℝ → E} {x : ℝ}
   apply mem_of_superset self_mem_nhdsWithin fun y hy => _
   intros y hy
   exact (f_diff y (ne_of_gt hy)).deriv.symm
-  have B  : HasDerivWithinAt f (g x) (Iic x) x
+  have B : HasDerivWithinAt f (g x) (Iic x) x
   have diff : DifferentiableOn ℝ f (Iio x) := fun y hy =>
     (f_diff y (ne_of_lt hy)).differentiableAt.differentiableWithinAt
   -- next line is the nontrivial bit of this proof, appealing to differentiability

@@ -1019,7 +1019,7 @@ theorem OrderIso.strictConvexOn_symm (f : α ≃o β) (hf : StrictConcaveOn 𝕜
   refine ⟨convex_univ, fun x _ y _ hxy a b ha hb hab => ?_⟩
   obtain ⟨x', hx''⟩ := f.surjective.exists.mp ⟨x, rfl⟩
   obtain ⟨y', hy''⟩ := f.surjective.exists.mp ⟨y, rfl⟩
-  have hxy'  : x' ≠ y'
+  have hxy' : x' ≠ y'
   rw [← f.injective.ne_iff, ← hx'', ← hy'']; exact hxy
   simp only [hx'', hy'', OrderIso.symm_apply_apply, gt_iff_lt]
   rw [← f.lt_iff_lt, OrderIso.apply_symm_apply]
@@ -1039,7 +1039,7 @@ theorem OrderIso.strictConcaveOn_symm (f : α ≃o β) (hf : StrictConvexOn 𝕜
   refine ⟨convex_univ, fun x _ y _ hxy a b ha hb hab => ?_⟩
   obtain ⟨x', hx''⟩ := f.surjective.exists.mp ⟨x, rfl⟩
   obtain ⟨y', hy''⟩ := f.surjective.exists.mp ⟨y, rfl⟩
-  have hxy'  : x' ≠ y'
+  have hxy' : x' ≠ y'
   rw [← f.injective.ne_iff, ← hx'', ← hy'']; exact hxy
   simp only [hx'', hy'', OrderIso.symm_apply_apply, gt_iff_lt]
   rw [← f.lt_iff_lt, OrderIso.apply_symm_apply]

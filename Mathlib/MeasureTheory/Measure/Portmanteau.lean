@@ -107,9 +107,9 @@ theorem le_measure_compl_liminf_of_limsup_measure_le {ι : Type*} {L : Filter ι
     μ Eᶜ ≤ L.liminf fun i => μs i Eᶜ := by
   rcases L.eq_or_neBot with rfl | hne
   · simp only [liminf_bot, le_top]
-  have meas_Ec  : μ Eᶜ = 1 - μ E
+  have meas_Ec : μ Eᶜ = 1 - μ E
   simpa only [measure_univ] using measure_compl E_mble (measure_lt_top μ E).ne
-  have meas_i_Ec  : ∀ i, μs i Eᶜ = 1 - μs i E
+  have meas_i_Ec : ∀ i, μs i Eᶜ = 1 - μs i E
   intro i
   simpa only [measure_univ] using measure_compl E_mble (measure_lt_top (μs i) E).ne
   simp_rw [meas_Ec, meas_i_Ec]
@@ -133,9 +133,9 @@ theorem limsup_measure_compl_le_of_le_liminf_measure {ι : Type*} {L : Filter ι
     (L.limsup fun i => μs i Eᶜ) ≤ μ Eᶜ := by
   rcases L.eq_or_neBot with rfl | hne
   · simp only [limsup_bot, bot_le]
-  have meas_Ec  : μ Eᶜ = 1 - μ E
+  have meas_Ec : μ Eᶜ = 1 - μ E
   simpa only [measure_univ] using measure_compl E_mble (measure_lt_top μ E).ne
-  have meas_i_Ec  : ∀ i, μs i Eᶜ = 1 - μs i E
+  have meas_i_Ec : ∀ i, μs i Eᶜ = 1 - μs i E
   intro i
   simpa only [measure_univ] using measure_compl E_mble (measure_lt_top (μs i) E).ne
   simp_rw [meas_Ec, meas_i_Ec]
@@ -349,7 +349,7 @@ theorem ProbabilityMeasure.tendsto_measure_of_null_frontier_of_tendsto {Ω ι : 
     [MeasurableSpace Ω] [PseudoEMetricSpace Ω] [OpensMeasurableSpace Ω] [HasOuterApproxClosed Ω]
     {μ : ProbabilityMeasure Ω} {μs : ι → ProbabilityMeasure Ω} (μs_lim : Tendsto μs L (𝓝 μ))
     {E : Set Ω} (E_nullbdry : μ (frontier E) = 0) : Tendsto (fun i => μs i E) L (𝓝 (μ E)) := by
-  have E_nullbdry'  : (μ : Measure Ω) (frontier E) = 0
+  have E_nullbdry' : (μ : Measure Ω) (frontier E) = 0
   rw [← ProbabilityMeasure.ennreal_coeFn_eq_coeFn_toMeasure, E_nullbdry, ENNReal.coe_zero]
   have key := ProbabilityMeasure.tendsto_measure_of_null_frontier_of_tendsto' μs_lim E_nullbdry'
   exact (ENNReal.tendsto_toNNReal (measure_ne_top (↑μ) E)).comp key

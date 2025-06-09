@@ -86,7 +86,7 @@ lemma univ_coeff_card : (univ R n).coeff (Fintype.card n) = 1 := by
 open MvPolynomial in
 lemma optionEquivLeft_symm_univ_isHomogeneous :
     ((optionEquivLeft R (n × n)).symm (univ R n)).IsHomogeneous (Fintype.card n) := by
-  have aux  : Fintype.card n = 0 + ∑ i : n, 1
+  have aux : Fintype.card n = 0 + ∑ i : n, 1
   simp only [zero_add, Finset.sum_const, smul_eq_mul, mul_one, Fintype.card]
   simp only [aux, univ, charpoly, charmatrix, scalar_apply, RingHom.mapMatrix_apply, det_apply',
     sub_apply, map_apply, of_apply, map_sum, _root_.map_mul, map_intCast, map_prod, map_sub,

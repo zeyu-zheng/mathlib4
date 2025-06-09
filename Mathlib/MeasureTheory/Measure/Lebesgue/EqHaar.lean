@@ -233,15 +233,15 @@ theorem map_linearMap_addHaar_eq_smul_addHaar {f : E →ₗ[ℝ] E} (hf : Linear
   -- matrices in `map_linearMap_addHaar_pi_eq_smul_addHaar`.
   let ι := Fin (finrank ℝ E)
   haveI : FiniteDimensional ℝ (ι → ℝ) := by infer_instance
-  have  : finrank ℝ E = finrank ℝ (ι → ℝ)
+  have : finrank ℝ E = finrank ℝ (ι → ℝ)
   simp [ι]
   have e : E ≃ₗ[ℝ] ι → ℝ := LinearEquiv.ofFinrankEq E (ι → ℝ) this
   -- next line is to avoid `g` getting reduced by `simp`.
   obtain ⟨g, hg⟩ : ∃ g, g = (e : E →ₗ[ℝ] ι → ℝ).comp (f.comp (e.symm : (ι → ℝ) →ₗ[ℝ] E)) := ⟨_, rfl⟩
-  have gdet  : LinearMap.det g = LinearMap.det f
+  have gdet : LinearMap.det g = LinearMap.det f
   rw [hg]; exact LinearMap.det_conj f e
   rw [← gdet] at hf ⊢
-  have fg  : f = (e.symm : (ι → ℝ) →ₗ[ℝ] E).comp (g.comp (e : E →ₗ[ℝ] ι → ℝ))
+  have fg : f = (e.symm : (ι → ℝ) →ₗ[ℝ] E).comp (g.comp (e : E →ₗ[ℝ] ι → ℝ))
   ext x
   simp only [LinearEquiv.coe_coe, Function.comp_apply, LinearMap.coe_comp,
     LinearEquiv.symm_apply_apply, hg]
@@ -251,7 +251,7 @@ theorem map_linearMap_addHaar_eq_smul_addHaar {f : E →ₗ[ℝ] E} (hf : Linear
   have Cesymm : Continuous e.symm := (e.symm : (ι → ℝ) →ₗ[ℝ] E).continuous_of_finiteDimensional
   rw [← map_map Cesymm.measurable (Cg.comp Ce).measurable, ← map_map Cg.measurable Ce.measurable]
   haveI : IsAddHaarMeasure (map e μ) := (e : E ≃+ (ι → ℝ)).isAddHaarMeasure_map μ Ce Cesymm
-  have ecomp  : e.symm ∘ e = id
+  have ecomp : e.symm ∘ e = id
   ext x; simp only [id, Function.comp_apply, LinearEquiv.symm_apply_apply]
   rw [map_linearMap_addHaar_pi_eq_smul_addHaar hf (map e μ), Measure.map_smul,
     map_map Cesymm.measurable Ce.measurable, ecomp, Measure.map_id]
@@ -340,7 +340,7 @@ theorem map_addHaar_smul {r : ℝ} (hr : r ≠ 0) :
     Measure.map (r • ·) μ = ENNReal.ofReal (abs (r ^ finrank ℝ E)⁻¹) • μ := by
   let f : E →ₗ[ℝ] E := r • (1 : E →ₗ[ℝ] E)
   change Measure.map f μ = _
-  have hf  : LinearMap.det f ≠ 0
+  have hf : LinearMap.det f ≠ 0
   simp only [f, mul_one, LinearMap.det_smul, Ne, MonoidHom.map_one]
   intro h
   exact hr (pow_eq_zero h)
@@ -416,20 +416,20 @@ general Haar measures on general commutative groups. -/
 
 theorem addHaar_ball_center {E : Type*} [NormedAddCommGroup E] [MeasurableSpace E] [BorelSpace E]
     (μ : Measure E) [IsAddHaarMeasure μ] (x : E) (r : ℝ) : μ (ball x r) = μ (ball (0 : E) r) := by
-  have  : ball (0 : E) r = (x + ·) ⁻¹' ball x r
+  have : ball (0 : E) r = (x + ·) ⁻¹' ball x r
   simp [preimage_add_ball]
   rw [this, measure_preimage_add]
 
 theorem addHaar_closedBall_center {E : Type*} [NormedAddCommGroup E] [MeasurableSpace E]
     [BorelSpace E] (μ : Measure E) [IsAddHaarMeasure μ] (x : E) (r : ℝ) :
     μ (closedBall x r) = μ (closedBall (0 : E) r) := by
-  have  : closedBall (0 : E) r = (x + ·) ⁻¹' closedBall x r
+  have : closedBall (0 : E) r = (x + ·) ⁻¹' closedBall x r
   simp [preimage_add_closedBall]
   rw [this, measure_preimage_add]
 
 theorem addHaar_ball_mul_of_pos (x : E) {r : ℝ} (hr : 0 < r) (s : ℝ) :
     μ (ball x (r * s)) = ENNReal.ofReal (r ^ finrank ℝ E) * μ (ball 0 s) := by
-  have  : ball (0 : E) (r * s) = r • ball (0 : E) s
+  have : ball (0 : E) (r * s) = r • ball (0 : E) s
   simp only [_root_.smul_ball hr.ne' (0 : E) s, Real.norm_eq_abs, abs_of_nonneg hr.le, smul_zero]
   simp only [this, addHaar_smul, abs_of_nonneg hr.le, addHaar_ball_center, abs_pow]
 
@@ -450,13 +450,13 @@ theorem addHaar_ball [Nontrivial E] (x : E) {r : ℝ} (hr : 0 ≤ r) :
 
 theorem addHaar_closedBall_mul_of_pos (x : E) {r : ℝ} (hr : 0 < r) (s : ℝ) :
     μ (closedBall x (r * s)) = ENNReal.ofReal (r ^ finrank ℝ E) * μ (closedBall 0 s) := by
-  have  : closedBall (0 : E) (r * s) = r • closedBall (0 : E) s
+  have : closedBall (0 : E) (r * s) = r • closedBall (0 : E) s
   simp [smul_closedBall' hr.ne' (0 : E), abs_of_nonneg hr.le]
   simp only [this, addHaar_smul, abs_of_nonneg hr.le, addHaar_closedBall_center, abs_pow]
 
 theorem addHaar_closedBall_mul (x : E) {r : ℝ} (hr : 0 ≤ r) {s : ℝ} (hs : 0 ≤ s) :
     μ (closedBall x (r * s)) = ENNReal.ofReal (r ^ finrank ℝ E) * μ (closedBall 0 s) := by
-  have  : closedBall (0 : E) (r * s) = r • closedBall (0 : E) s
+  have : closedBall (0 : E) (r * s) = r • closedBall (0 : E) s
   simp [smul_closedBall r (0 : E) hs, abs_of_nonneg hr]
   simp only [this, addHaar_smul, abs_of_nonneg hr, addHaar_closedBall_center, abs_pow]
 
@@ -543,7 +543,7 @@ variable {ι G : Type*} [Fintype ι] [DecidableEq ι] [NormedAddCommGroup G] [No
 theorem addHaar_parallelepiped (b : Basis ι ℝ G) (v : ι → G) :
     b.addHaar (parallelepiped v) = ENNReal.ofReal |b.det v| := by
   have : FiniteDimensional ℝ G := FiniteDimensional.of_fintype_basis b
-  have A  : parallelepiped v = b.constr ℕ v '' parallelepiped b
+  have A : parallelepiped v = b.constr ℕ v '' parallelepiped b
   rw [image_parallelepiped]
   -- Porting note: was `congr 1 with i` but Lean 4 `congr` applies `ext` first
   refine congr_arg _ <| funext fun i ↦ ?_
@@ -603,7 +603,7 @@ theorem tendsto_addHaar_inter_smul_zero_of_density_zero_aux1 (s : Set E) (x : E)
     (h : Tendsto (fun r => μ (s ∩ closedBall x r) / μ (closedBall x r)) (𝓝[>] 0) (𝓝 0)) (t : Set E)
     (u : Set E) (h'u : μ u ≠ 0) (t_bound : t ⊆ closedBall 0 1) :
     Tendsto (fun r : ℝ => μ (s ∩ ({x} + r • t)) / μ ({x} + r • u)) (𝓝[>] 0) (𝓝 0) := by
-  have A  : Tendsto (fun r : ℝ => μ (s ∩ ({x} + r • t)) / μ (closedBall x r)) (𝓝[>] 0) (𝓝 0)
+  have A : Tendsto (fun r : ℝ => μ (s ∩ ({x} + r • t)) / μ (closedBall x r)) (𝓝[>] 0) (𝓝 0)
   apply
     tendsto_of_tendsto_of_tendsto_of_le_of_le' tendsto_const_nhds h
       (eventually_of_forall fun b => zero_le _)
@@ -618,7 +618,7 @@ theorem tendsto_addHaar_inter_smul_zero_of_density_zero_aux1 (s : Set E) (x : E)
     apply tendsto_const_nhds.congr' _
     filter_upwards [self_mem_nhdsWithin]
     rintro r (rpos : 0 < r)
-    have  : closedBall x r = {x} + r • closedBall (0 : E) 1
+    have : closedBall x r = {x} + r • closedBall (0 : E) 1
     simp only [_root_.smul_closedBall, Real.norm_of_nonneg rpos.le, zero_le_one, add_zero,
       mul_one, singleton_add_closedBall, smul_zero]
     simp only [this, addHaar_singleton_add_smul_div_singleton_add_smul μ rpos.ne']
@@ -652,14 +652,14 @@ theorem tendsto_addHaar_inter_smul_zero_of_density_zero_aux2 (s : Set E) (x : E)
     Tendsto (fun r : ℝ => μ (s ∩ ({x} + r • t)) / μ ({x} + r • u)) (𝓝[>] 0) (𝓝 0) := by
   set t' := R⁻¹ • t with ht'
   set u' := R⁻¹ • u with hu'
-  have A  : Tendsto (fun r : ℝ => μ (s ∩ ({x} + r • t')) / μ ({x} + r • u')) (𝓝[>] 0) (𝓝 0)
+  have A : Tendsto (fun r : ℝ => μ (s ∩ ({x} + r • t')) / μ ({x} + r • u')) (𝓝[>] 0) (𝓝 0)
   apply tendsto_addHaar_inter_smul_zero_of_density_zero_aux1 μ s x h t' u'
   · simp only [u', h'u, (pow_pos Rpos _).ne', abs_nonpos_iff, addHaar_smul, not_false_iff,
       ENNReal.ofReal_eq_zero, inv_eq_zero, inv_pow, Ne, or_self_iff, mul_eq_zero]
   · refine (smul_set_mono t_bound).trans_eq ?_
     rw [smul_closedBall _ _ Rpos.le, smul_zero, Real.norm_of_nonneg (inv_nonneg.2 Rpos.le),
       inv_mul_cancel Rpos.ne']
-  have B  : Tendsto (fun r : ℝ => R * r) (𝓝[>] 0) (𝓝[>] (R * 0))
+  have B : Tendsto (fun r : ℝ => R * r) (𝓝[>] 0) (𝓝[>] (R * 0))
   apply tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within
   · exact (tendsto_const_nhds.mul tendsto_id).mono_left nhdsWithin_le_nhds
   · filter_upwards [self_mem_nhdsWithin]
@@ -670,9 +670,9 @@ theorem tendsto_addHaar_inter_smul_zero_of_density_zero_aux2 (s : Set E) (x : E)
   apply (A.comp B).congr' _
   filter_upwards [self_mem_nhdsWithin]
   rintro r -
-  have T  : (R * r) • t' = r • t
+  have T : (R * r) • t' = r • t
   rw [mul_comm, ht', smul_smul, mul_assoc, mul_inv_cancel Rpos.ne', mul_one]
-  have U  : (R * r) • u' = r • u
+  have U : (R * r) • u' = r • u
   rw [mul_comm, hu', smul_smul, mul_assoc, mul_inv_cancel Rpos.ne', mul_one]
   dsimp
   rw [T, U]

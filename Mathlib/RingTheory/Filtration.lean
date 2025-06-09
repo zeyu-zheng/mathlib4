@@ -303,14 +303,14 @@ theorem submodule_eq_span_le_iff_stable_ge (n₀ : ℕ) :
     rintro ⟨_, _, ⟨n', rfl⟩, _, ⟨hn', rfl⟩, m, hm, rfl⟩ -
     dsimp only [Subtype.coe_mk]
     rw [Subalgebra.smul_def, smul_single_apply, if_pos (show n' ≤ n + 1 by omega)]
-    have e  : n' ≤ n
+    have e : n' ≤ n
     omega
     have := F.pow_smul_le_pow_smul (n - n') n' 1
     rw [tsub_add_cancel_of_le e, pow_one, add_comm _ 1, ← add_tsub_assoc_of_le e, add_comm] at this
     exact this (Submodule.smul_mem_smul ((l _).2 <| n + 1 - n') hm)
   · let F' := Submodule.span (reesAlgebra I) (⋃ i ≤ n₀, single R i '' (F.N i : Set M))
     intro hF i
-    have  : ∀ i ≤ n₀, single R i '' (F.N i : Set M) ⊆ F'
+    have : ∀ i ≤ n₀, single R i '' (F.N i : Set M) ⊆ F'
     -- Porting note: Original proof was
     -- `fun i hi => Set.Subset.trans (Set.subset_iUnion₂ i hi) Submodule.subset_span`
     intro i hi

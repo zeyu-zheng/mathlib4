@@ -1171,7 +1171,7 @@ lemma succ_div : ∀ a b : ℕ, (a + 1) / b = a / b + if b ∣ a + 1 then 1 else
   | a, 0 => by simp
   | 0, 1 => by simp
   | 0, b + 2 => by
-    have hb2  : b + 2 > 1
+    have hb2 : b + 2 > 1
     simp
     simp [ne_of_gt hb2, div_eq_of_lt hb2]
   | a + 1, b + 1 => by
@@ -1183,7 +1183,7 @@ lemma succ_div : ∀ a b : ℕ, (a + 1) / b = a / b + if b ∣ a + 1 then 1 else
     · have hb_le_a : b ≤ a := le_of_lt_succ (lt_of_le_of_ne hb_le_a1 hb_eq_a)
       have h₁ : 0 < b + 1 ∧ b + 1 ≤ a + 1 + 1 := ⟨succ_pos _, Nat.add_le_add_iff_right.2 hb_le_a1⟩
       have h₂ : 0 < b + 1 ∧ b + 1 ≤ a + 1 := ⟨succ_pos _, Nat.add_le_add_iff_right.2 hb_le_a⟩
-      have dvd_iff  : b + 1 ∣ a - b + 1 ↔ b + 1 ∣ a + 1 + 1
+      have dvd_iff : b + 1 ∣ a - b + 1 ↔ b + 1 ∣ a + 1 + 1
       rw [Nat.dvd_add_iff_left (Nat.dvd_refl (b + 1)), ← Nat.add_sub_add_right a 1 b,
         Nat.add_comm (_ - _), Nat.add_assoc, Nat.sub_add_cancel (succ_le_succ hb_le_a),
         Nat.add_comm 1]
@@ -1344,7 +1344,7 @@ lemma sqrt.lt_iter_succ_sq (n guess : ℕ) (hn : n < (guess + 1) * (guess + 1)) 
     refine Nat.mul_self_lt_mul_self (?_ : _ < _ * ((_ / 2) + 1))
     rw [← add_div_right _ (by decide), Nat.mul_comm 2, Nat.mul_assoc,
       show guess + n / guess + 2 = (guess + n / guess + 1) + 1 from rfl]
-    have aux_lemma {a  : ℕ} : a ≤ 2 * ((a + 1) / 2)
+    have aux_lemma {a : ℕ} : a ≤ 2 * ((a + 1) / 2)
     omega
     refine lt_of_lt_of_le ?_ (Nat.mul_le_mul_left _ aux_lemma)
     rw [Nat.add_assoc, Nat.mul_add]

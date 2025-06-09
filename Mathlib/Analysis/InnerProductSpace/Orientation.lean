@@ -53,7 +53,7 @@ determinant 1. -/
 theorem det_to_matrix_orthonormalBasis_of_same_orientation
     (h : e.toBasis.orientation = f.toBasis.orientation) : e.toBasis.det f = 1 := by
   apply (e.det_to_matrix_orthonormalBasis_real f).resolve_right
-  have  : 0 < e.toBasis.det f
+  have : 0 < e.toBasis.det f
   rw [e.toBasis.orientation_eq_iff_det_pos] at h
   simpa using h
   linarith
@@ -206,7 +206,7 @@ theorem volumeForm_robust_neg (b : OrthonormalBasis (Fin n) ℝ E) (hb : b.toBas
     o.volumeForm = -b.toBasis.det := by
   cases' n with n
   · classical
-      have  : positiveOrientation ≠ o
+      have : positiveOrientation ≠ o
       rwa [b.toBasis.orientation_isEmpty] at hb
       simp_rw [volumeForm, Or.by_cases, dif_neg this.symm, Nat.rec_zero, Basis.det_isEmpty]
   let e : OrthonormalBasis (Fin n.succ) ℝ E := o.finOrthonormalBasis n.succ_pos Fact.out
@@ -224,7 +224,7 @@ theorem volumeForm_neg_orientation : (-o).volumeForm = -o.volumeForm := by
       simp [volumeForm_zero_neg]
   let e : OrthonormalBasis (Fin n.succ) ℝ E := o.finOrthonormalBasis n.succ_pos Fact.out
   have h₁ : e.toBasis.orientation = o := o.finOrthonormalBasis_orientation _ _
-  have h₂  : e.toBasis.orientation ≠ -o
+  have h₂ : e.toBasis.orientation ≠ -o
   symm
   rw [e.toBasis.orientation_ne_iff_eq_neg, h₁]
   rw [o.volumeForm_robust e h₁, (-o).volumeForm_robust_neg e h₂]
@@ -243,7 +243,7 @@ theorem abs_volumeForm_apply_le (v : Fin n → E) : |o.volumeForm v| ≤ ∏ i :
   cases' n with n
   · refine o.eq_or_eq_neg_of_isEmpty.elim ?_ ?_ <;> rintro rfl <;> simp
   haveI : FiniteDimensional ℝ E := .of_fact_finrank_eq_succ n
-  have  : finrank ℝ E = Fintype.card (Fin n.succ)
+  have : finrank ℝ E = Fintype.card (Fin n.succ)
   simpa using _i.out
   let b : OrthonormalBasis (Fin n.succ) ℝ E := gramSchmidtOrthonormalBasis this v
   have hb : b.toBasis.det v = ∏ i, ⟪b i, v i⟫ := gramSchmidtOrthonormalBasis_det this v
@@ -266,7 +266,7 @@ theorem abs_volumeForm_apply_of_pairwise_orthogonal {v : Fin n → E}
   cases' n with n
   · refine o.eq_or_eq_neg_of_isEmpty.elim ?_ ?_ <;> rintro rfl <;> simp
   haveI : FiniteDimensional ℝ E := .of_fact_finrank_eq_succ n
-  have hdim  : finrank ℝ E = Fintype.card (Fin n.succ)
+  have hdim : finrank ℝ E = Fintype.card (Fin n.succ)
   simpa using _i.out
   let b : OrthonormalBasis (Fin n.succ) ℝ E := gramSchmidtOrthonormalBasis hdim v
   have hb : b.toBasis.det v = ∏ i, ⟪b i, v i⟫ := gramSchmidtOrthonormalBasis_det hdim v

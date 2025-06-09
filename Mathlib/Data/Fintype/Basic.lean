@@ -1076,13 +1076,13 @@ theorem exists_seq_of_forall_finset_exists {α : Type*} (P : α → Prop) (r : �
     (h : ∀ s : Finset α, (∀ x ∈ s, P x) → ∃ y, P y ∧ ∀ x ∈ s, r x y) :
     ∃ f : ℕ → α, (∀ n, P (f n)) ∧ ∀ m n, m < n → r (f m) (f n) := by
   classical
-    have  : Nonempty α
+    have : Nonempty α
     rcases h ∅ (by simp) with ⟨y, _⟩
     exact ⟨y⟩
     choose! F hF using h
     have h' : ∀ s : Finset α, ∃ y, (∀ x ∈ s, P x) → P y ∧ ∀ x ∈ s, r x y := fun s => ⟨F s, hF s⟩
     set f := seqOfForallFinsetExistsAux P r h' with hf
-    have A  : ∀ n : ℕ, P (f n)
+    have A : ∀ n : ℕ, P (f n)
     intro n
     induction' n using Nat.strong_induction_on with n IH
     have IH' : ∀ x : Fin n, P (f x) := fun n => IH n.1 n.2

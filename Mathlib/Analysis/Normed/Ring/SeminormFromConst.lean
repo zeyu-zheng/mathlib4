@@ -166,7 +166,7 @@ theorem seminormFromConst_isNonarchimedean (hna : IsNonarchimedean f) :
   apply le_of_tendsto_of_tendsto' (seminormFromConst_isLimit hf1 hc hpm (x + y))
     ((seminormFromConst_isLimit hf1 hc hpm x).max (seminormFromConst_isLimit hf1 hc hpm y))
   intro n
-  have hmax  : f ((x + y) * c ^ n) ≤ max (f (x * c ^ n)) (f (y * c ^ n))
+  have hmax : f ((x + y) * c ^ n) ≤ max (f (x * c ^ n)) (f (y * c ^ n))
   simp only [add_mul, hna _ _]
   rw [le_max_iff] at hmax ⊢
   rcases hmax with hmax | hmax <;> [left; right] <;>

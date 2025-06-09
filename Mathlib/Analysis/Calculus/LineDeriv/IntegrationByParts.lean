@@ -110,14 +110,14 @@ theorem integral_bilinear_hasLineDerivAt_right_eq_neg_left_of_integrable
   rcases eq_or_ne v 0 with rfl|hv
   · have Hf' x : f' x = 0 := by
       simpa [(hasLineDerivAt_zero (f := f) (x := x)).lineDeriv] using (hf x).lineDeriv.symm
-    have Hg' x  : g' x = 0
+    have Hg' x : g' x = 0
     simpa [(hasLineDerivAt_zero (f := g) (x := x)).lineDeriv] using (hg x).lineDeriv.symm
     simp [Hf', Hg']
   have : Nontrivial E := nontrivial_iff.2 ⟨v, 0, hv⟩
   let n := finrank ℝ E
   let E' := Fin (n - 1) → ℝ
   obtain ⟨L, hL⟩ : ∃ L : E ≃L[ℝ] (E' × ℝ), L v = (0, 1) := by
-    have  : finrank ℝ (E' × ℝ) = n
+    have : finrank ℝ (E' × ℝ) = n
     simpa [this, E'] using Nat.sub_add_cancel finrank_pos
     have L₀ : E ≃L[ℝ] (E' × ℝ) := (ContinuousLinearEquiv.ofFinrankEq this).symm
     obtain ⟨M, hM⟩ : ∃ M : (E' × ℝ) ≃L[ℝ] (E' × ℝ), M (L₀ v) = (0, 1) := by
@@ -128,7 +128,7 @@ theorem integral_bilinear_hasLineDerivAt_right_eq_neg_left_of_integrable
   let ν := Measure.map L μ
   suffices H : ∫ (x : E' × ℝ), (B (f (L.symm x))) (g' (L.symm x)) ∂ν =
       -∫ (x : E' × ℝ), (B (f' (L.symm x))) (g (L.symm x)) ∂ν by
-    have  : μ = Measure.map L.symm ν
+    have : μ = Measure.map L.symm ν
     simp [Measure.map_map L.symm.continuous.measurable L.continuous.measurable]
     have hL : ClosedEmbedding L.symm := L.symm.toHomeomorph.closedEmbedding
     simpa [this, hL.integral_map] using H
@@ -138,7 +138,7 @@ theorem integral_bilinear_hasLineDerivAt_right_eq_neg_left_of_integrable
   · simpa [L_emb.integrable_map_iff, Function.comp] using hfg'
   · simpa [L_emb.integrable_map_iff, Function.comp] using hfg
   · intro x
-    have  : f = (f ∘ L.symm) ∘ (L : E →ₗ[ℝ] (E' × ℝ))
+    have : f = (f ∘ L.symm) ∘ (L : E →ₗ[ℝ] (E' × ℝ))
     ext y; simp
     specialize hf (L.symm x)
     rw [this] at hf
@@ -146,7 +146,7 @@ theorem integral_bilinear_hasLineDerivAt_right_eq_neg_left_of_integrable
     · simp
     · simp [← hL]
   · intro x
-    have  : g = (g ∘ L.symm) ∘ (L : E →ₗ[ℝ] (E' × ℝ))
+    have : g = (g ∘ L.symm) ∘ (L : E →ₗ[ℝ] (E' × ℝ))
     ext y; simp
     specialize hg (L.symm x)
     rw [this] at hg

@@ -290,9 +290,9 @@ theorem hasLineDerivWithinAt_congr_set (h : s =ᶠ[𝓝 x] t) :
     HasLineDerivWithinAt 𝕜 f f' s x v ↔ HasLineDerivWithinAt 𝕜 f f' t x v := by
   apply hasDerivWithinAt_congr_set
   let F := fun (t : 𝕜) ↦ x + t • v
-  have B  : ContinuousAt F 0
+  have B : ContinuousAt F 0
   apply Continuous.continuousAt; fun_prop
-  have  : s =ᶠ[𝓝 (F 0)] t
+  have : s =ᶠ[𝓝 (F 0)] t
   convert h; simp [F]
   exact B.preimage_mem_nhds this
 
@@ -307,9 +307,9 @@ theorem lineDerivWithin_congr_set (h : s =ᶠ[𝓝 x] t) :
     lineDerivWithin 𝕜 f s x v = lineDerivWithin 𝕜 f t x v := by
   apply derivWithin_congr_set
   let F := fun (t : 𝕜) ↦ x + t • v
-  have B  : ContinuousAt F 0
+  have B : ContinuousAt F 0
   apply Continuous.continuousAt; fun_prop
-  have  : s =ᶠ[𝓝 (F 0)] t
+  have : s =ᶠ[𝓝 (F 0)] t
   convert h; simp [F]
   exact B.preimage_mem_nhds this
 
@@ -317,9 +317,9 @@ theorem Filter.EventuallyEq.hasLineDerivAt_iff (h : f₀ =ᶠ[𝓝 x] f₁) :
     HasLineDerivAt 𝕜 f₀ f' x v ↔ HasLineDerivAt 𝕜 f₁ f' x v := by
   apply hasDerivAt_iff
   let F := fun (t : 𝕜) ↦ x + t • v
-  have B  : ContinuousAt F 0
+  have B : ContinuousAt F 0
   apply Continuous.continuousAt; fun_prop
-  have  : f₀ =ᶠ[𝓝 (F 0)] f₁
+  have : f₀ =ᶠ[𝓝 (F 0)] f₁
   convert h; simp [F]
   exact B.preimage_mem_nhds this
 
@@ -353,7 +353,7 @@ theorem Filter.EventuallyEq.lineDifferentiableWithinAt_iff_of_mem
 lemma HasLineDerivWithinAt.congr_of_eventuallyEq (hf : HasLineDerivWithinAt 𝕜 f f' s x v)
     (h'f : f₁ =ᶠ[𝓝[s] x] f) (hx : f₁ x = f x) : HasLineDerivWithinAt 𝕜 f₁ f' s x v := by
   apply HasDerivWithinAt.congr_of_eventuallyEq hf _ (by simp [hx])
-  have A  : Continuous (fun (t : 𝕜) ↦ x + t • v)
+  have A : Continuous (fun (t : 𝕜) ↦ x + t • v)
   fun_prop
   exact A.continuousWithinAt.preimage_mem_nhdsWithin'' h'f (by simp)
 
@@ -379,7 +379,7 @@ theorem LineDifferentiableAt.congr_of_eventuallyEq
 theorem Filter.EventuallyEq.lineDerivWithin_eq (hs : f₁ =ᶠ[𝓝[s] x] f) (hx : f₁ x = f x) :
     lineDerivWithin 𝕜 f₁ s x v = lineDerivWithin 𝕜 f s x v := by
   apply derivWithin_eq ?_ (by simpa using hx)
-  have A  : Continuous (fun (t : 𝕜) ↦ x + t • v)
+  have A : Continuous (fun (t : 𝕜) ↦ x + t • v)
   fun_prop
   exact A.continuousWithinAt.preimage_mem_nhdsWithin'' hs (by simp)
 
@@ -399,9 +399,9 @@ theorem HasLineDerivAt.le_of_lip' {f : E → F} {f' : F} {x₀ : E} (hf : HasLin
     {C : ℝ} (hC₀ : 0 ≤ C) (hlip : ∀ᶠ x in 𝓝 x₀, ‖f x - f x₀‖ ≤ C * ‖x - x₀‖) :
     ‖f'‖ ≤ C * ‖v‖ := by
   apply HasDerivAt.le_of_lip' hf (by positivity)
-  have A  : Continuous (fun (t : 𝕜) ↦ x₀ + t • v)
+  have A : Continuous (fun (t : 𝕜) ↦ x₀ + t • v)
   fun_prop
-  have  : ∀ᶠ x in 𝓝 (x₀ + (0 : 𝕜) • v), ‖f x - f x₀‖ ≤ C * ‖x - x₀‖
+  have : ∀ᶠ x in 𝓝 (x₀ + (0 : 𝕜) • v), ‖f x - f x₀‖ ≤ C * ‖x - x₀‖
   simpa using hlip
   filter_upwards [(A.continuousAt (x := 0)).preimage_mem_nhds this] with t ht
   simp only [preimage_setOf_eq, add_sub_cancel_left, norm_smul, mem_setOf_eq, mul_comm (‖t‖)] at ht
@@ -436,9 +436,9 @@ theorem norm_lineDeriv_le_of_lip' {f : E → F} {x₀ : E}
     {C : ℝ} (hC₀ : 0 ≤ C) (hlip : ∀ᶠ x in 𝓝 x₀, ‖f x - f x₀‖ ≤ C * ‖x - x₀‖) :
     ‖lineDeriv 𝕜 f x₀ v‖ ≤ C * ‖v‖ := by
   apply norm_deriv_le_of_lip' (by positivity)
-  have A  : Continuous (fun (t : 𝕜) ↦ x₀ + t • v)
+  have A : Continuous (fun (t : 𝕜) ↦ x₀ + t • v)
   fun_prop
-  have  : ∀ᶠ x in 𝓝 (x₀ + (0 : 𝕜) • v), ‖f x - f x₀‖ ≤ C * ‖x - x₀‖
+  have : ∀ᶠ x in 𝓝 (x₀ + (0 : 𝕜) • v), ‖f x - f x₀‖ ≤ C * ‖x - x₀‖
   simpa using hlip
   filter_upwards [(A.continuousAt (x := 0)).preimage_mem_nhds this] with t ht
   simp only [preimage_setOf_eq, add_sub_cancel_left, norm_smul, mem_setOf_eq, mul_comm (‖t‖)] at ht
@@ -509,9 +509,9 @@ theorem HasLineDerivWithinAt.smul (h : HasLineDerivWithinAt 𝕜 f f' s x v) (c 
   simp only [HasLineDerivWithinAt] at h ⊢
   let g := fun (t : 𝕜) ↦ c • t
   let s' := (fun (t : 𝕜) ↦ x + t • v) ⁻¹' s
-  have A  : HasDerivAt g c 0
+  have A : HasDerivAt g c 0
   simpa using (hasDerivAt_id (0 : 𝕜)).const_smul c
-  have B  : HasDerivWithinAt (fun t ↦ f (x + t • v)) f' s' (g 0)
+  have B : HasDerivWithinAt (fun t ↦ f (x + t • v)) f' s' (g 0)
   simpa [g] using h
   have Z := B.scomp (0 : 𝕜) A.hasDerivWithinAt (mapsTo_preimage g s')
   simp only [g, s', Function.comp, smul_eq_mul, mul_comm c, ← smul_smul] at Z

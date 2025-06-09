@@ -70,12 +70,12 @@ theorem sub_apply [IsFiniteMeasure ν] (h₁ : MeasurableSet s) (h₂ : ν ≤ �
       rw [← measure_iUnion h_disj h_meas]
       apply measure_ne_top)
   -- Now, we demonstrate `μ - ν = measure_sub`, and apply it.
-  have h_measure_sub_add  : ν + measure_sub = μ
+  have h_measure_sub_add : ν + measure_sub = μ
   ext1 t h_t_measurable_set
   simp only [Pi.add_apply, coe_add]
   rw [MeasureTheory.Measure.ofMeasurable_apply _ h_t_measurable_set, add_comm,
     tsub_add_cancel_of_le (h₂ t)]
-  have h_measure_sub_eq  : μ - ν = measure_sub
+  have h_measure_sub_eq : μ - ν = measure_sub
   rw [MeasureTheory.Measure.sub_def]
   apply le_antisymm
   · apply sInf_le
@@ -113,7 +113,7 @@ theorem restrict_sub_eq_restrict_sub_restrict (h_meas_s : MeasurableSet s) :
         apply h_ν'_in
       · rw [add_apply, restrict_apply (h_meas_t.diff h_meas_s), diff_eq, inter_assoc, inter_self,
           ← add_apply]
-        have h_mu_le_add_top  : μ ≤ ν' + ν + ⊤
+        have h_mu_le_add_top : μ ≤ ν' + ν + ⊤
         simp only [add_top, le_top]
         exact Measure.le_iff'.1 h_mu_le_add_top _
     · ext1 t h_meas_t

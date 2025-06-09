@@ -325,10 +325,10 @@ private lemma natDegree_coeff_ΨSq_ofNat (n : ℕ) :
   let h {n} := W.natDegree_coeff_preΨ' n
   rcases n with _ | n
   · simp
-  have hd  : (n + 1) ^ 2 - 1 = 2 * expDegree (n + 1) + if Even (n + 1) then 3 else 0
+  have hd : (n + 1) ^ 2 - 1 = 2 * expDegree (n + 1) + if Even (n + 1) then 3 else 0
   push_cast [← @Nat.cast_inj ℤ, add_sq, expDegree_cast (by omega : n + 1 ≠ 0)]
   split_ifs <;> ring1
-  have hc  : (n + 1) ^ 2 = expCoeff (n + 1) ^ 2 * if Even (n + 1) then 4 else 1
+  have hc : (n + 1) ^ 2 = expCoeff (n + 1) ^ 2 * if Even (n + 1) then 4 else 1
   push_cast [← @Int.cast_inj ℚ, expCoeff_cast]
   split_ifs <;> ring1
   rw [ΨSq_ofNat, hd]
@@ -392,7 +392,7 @@ private lemma natDegree_coeff_Φ_ofNat (n : ℕ) :
   rcases n with _ | _ | n
   · simp
   · simp [natDegree_X_le]
-  have hd  : (n + 1 + 1) ^ 2 = 1 + 2 * expDegree (n + 2) + if Even (n + 1) then 0 else 3
+  have hd : (n + 1 + 1) ^ 2 = 1 + 2 * expDegree (n + 2) + if Even (n + 1) then 0 else 3
   push_cast [← @Nat.cast_inj ℤ, expDegree_cast (by omega : n + 2 ≠ 0), Nat.even_add_one, ite_not]
   split_ifs <;> ring1
   have hd' : (n + 1 + 1) ^ 2 =

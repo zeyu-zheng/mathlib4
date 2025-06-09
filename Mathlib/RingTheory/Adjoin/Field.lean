@@ -69,7 +69,7 @@ theorem Polynomial.lift_of_splits {F K L : Type*} [Field F] [Field K] [Field L] 
     letI := fieldOfFiniteDimensional F Ks
     letI := (f : Ks →+* L).toAlgebra
     have H5 : IsIntegral Ks a := H1.tower_top
-    have H6  : (minpoly Ks a).Splits (algebraMap Ks L)
+    have H6 : (minpoly Ks a).Splits (algebraMap Ks L)
     refine splits_of_splits_of_dvd _ ((minpoly.monic H1).map (algebraMap F Ks)).ne_zero
       ((splits_map_iff _ _).2 ?_) (minpoly.dvd _ _ ?_)
     · rw [← IsScalarTower.algebraMap_eq]

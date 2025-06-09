@@ -70,10 +70,10 @@ theorem intervalIntegrable_rpow' {r : ℝ} (h : -1 < r) :
     IntervalIntegrable (fun x => x ^ r) volume a b := by
   suffices ∀ c : ℝ, IntervalIntegrable (fun x => x ^ r) volume 0 c by
     exact IntervalIntegrable.trans (this a).symm (this b)
-  have  : ∀ c : ℝ, 0 ≤ c → IntervalIntegrable (fun x => x ^ r) volume 0 c
+  have : ∀ c : ℝ, 0 ≤ c → IntervalIntegrable (fun x => x ^ r) volume 0 c
   intro c hc
   rw [intervalIntegrable_iff, uIoc_of_le hc]
-  have hderiv  : ∀ x ∈ Ioo 0 c, HasDerivAt (fun x : ℝ => x ^ (r + 1) / (r + 1)) (x ^ r) x
+  have hderiv : ∀ x ∈ Ioo 0 c, HasDerivAt (fun x : ℝ => x ^ (r + 1) / (r + 1)) (x ^ r) x
   intro x hx
   convert (Real.hasDerivAt_rpow_const (p := r + 1) (Or.inl hx.1.ne')).div_const (r + 1) using 1
   field_simp [(by linarith : r + 1 ≠ 0)]
@@ -164,7 +164,7 @@ theorem intervalIntegrable_cpow' {r : ℂ} (h : -1 < r.re) :
     IntervalIntegrable (fun x : ℝ => (x : ℂ) ^ r) volume a b := by
   suffices ∀ c : ℝ, IntervalIntegrable (fun x => (x : ℂ) ^ r) volume 0 c by
     exact IntervalIntegrable.trans (this a).symm (this b)
-  have  : ∀ c : ℝ, 0 ≤ c → IntervalIntegrable (fun x => (x : ℂ) ^ r) volume 0 c
+  have : ∀ c : ℝ, 0 ≤ c → IntervalIntegrable (fun x => (x : ℂ) ^ r) volume 0 c
   intro c hc
   rw [← IntervalIntegrable.intervalIntegrable_norm_iff]
   · rw [intervalIntegrable_iff]
@@ -188,7 +188,7 @@ theorem intervalIntegrable_cpow' {r : ℂ} (h : -1 < r.re) :
     rw [intervalIntegrable_iff, uIoc_of_le (by linarith : 0 ≤ -c)] at m ⊢
     refine m.congr_fun (fun x hx => ?_) measurableSet_Ioc
     dsimp only
-    have  : -x ≤ 0
+    have : -x ≤ 0
     linarith [hx.1]
     rw [Complex.ofReal_cpow_of_nonpos this, mul_comm]
     simp
@@ -198,7 +198,7 @@ theorem integrableOn_Ioo_cpow_iff {s : ℂ} {t : ℝ} (ht : 0 < t) :
     IntegrableOn (fun x : ℝ ↦ (x : ℂ) ^ s) (Ioo (0 : ℝ) t) ↔ -1 < s.re := by
   refine ⟨fun h ↦ ?_, fun h ↦ by simpa [intervalIntegrable_iff_integrableOn_Ioo_of_le ht.le]
     using intervalIntegrable_cpow' h (a := 0) (b := t)⟩
-  have B  : IntegrableOn (fun a ↦ a ^ s.re) (Ioo 0 t)
+  have B : IntegrableOn (fun a ↦ a ^ s.re) (Ioo 0 t)
   apply (integrableOn_congr_fun _ measurableSet_Ioo).1 h.norm
   intro a ha
   simp [Complex.abs_cpow_eq_rpow_re_of_pos ha.1]
@@ -321,7 +321,7 @@ open intervalIntegral
 theorem integral_cpow {r : ℂ} (h : -1 < r.re ∨ r ≠ -1 ∧ (0 : ℝ) ∉ [[a, b]]) :
     (∫ x : ℝ in a..b, (x : ℂ) ^ r) = ((b : ℂ) ^ (r + 1) - (a : ℂ) ^ (r + 1)) / (r + 1) := by
   rw [sub_div]
-  have hr  : r + 1 ≠ 0
+  have hr : r + 1 ≠ 0
   cases' h with h h
   · apply_fun Complex.re
     rw [Complex.add_re, Complex.one_re, Complex.zero_re, Ne, add_eq_zero_iff_eq_neg]
@@ -351,7 +351,7 @@ theorem integral_cpow {r : ℂ} (h : -1 < r.re ∨ r ≠ -1 ∧ (0 : ℝ) ∉ [[
 
 theorem integral_rpow {r : ℝ} (h : -1 < r ∨ r ≠ -1 ∧ (0 : ℝ) ∉ [[a, b]]) :
     ∫ x in a..b, x ^ r = (b ^ (r + 1) - a ^ (r + 1)) / (r + 1) := by
-  have h'  : -1 < (r : ℂ).re ∨ (r : ℂ) ≠ -1 ∧ (0 : ℝ) ∉ [[a, b]]
+  have h' : -1 < (r : ℂ).re ∨ (r : ℂ) ≠ -1 ∧ (0 : ℝ) ∉ [[a, b]]
   cases h
   · left; rwa [Complex.ofReal_re]
   · right; rwa [← Complex.ofReal_one, ← Complex.ofReal_neg, Ne, Complex.ofReal_inj]
@@ -450,7 +450,7 @@ theorem integral_exp : ∫ x in a..b, exp x = exp b - exp a := by
 
 theorem integral_exp_mul_complex {c : ℂ} (hc : c ≠ 0) :
     (∫ x in a..b, Complex.exp (c * x)) = (Complex.exp (c * b) - Complex.exp (c * a)) / c := by
-  have D  : ∀ x : ℝ, HasDerivAt (fun y : ℝ => Complex.exp (c * y) / c) (Complex.exp (c * x)) x
+  have D : ∀ x : ℝ, HasDerivAt (fun y : ℝ => Complex.exp (c * y) / c) (Complex.exp (c * x)) x
   intro x
   conv => congr
   rw [← mul_div_cancel_right₀ (Complex.exp (c * x)) hc]
@@ -537,11 +537,11 @@ theorem integral_mul_cpow_one_add_sq {t : ℂ} (ht : t ≠ -1) :
     (∫ x : ℝ in a..b, (x : ℂ) * ((1 : ℂ) + ↑x ^ 2) ^ t) =
       ((1 : ℂ) + (b : ℂ) ^ 2) ^ (t + 1) / (2 * (t + ↑1)) -
       ((1 : ℂ) + (a : ℂ) ^ 2) ^ (t + 1) / (2 * (t + ↑1)) := by
-  have  : t + 1 ≠ 0
+  have : t + 1 ≠ 0
   contrapose! ht; rwa [add_eq_zero_iff_eq_neg] at ht
   apply integral_eq_sub_of_hasDerivAt
   · intro x _
-    have f  : HasDerivAt (fun y : ℂ => 1 + y ^ 2) (2 * x : ℂ) x
+    have f : HasDerivAt (fun y : ℂ => 1 + y ^ 2) (2 * x : ℂ) x
     convert (hasDerivAt_pow 2 (x : ℂ)).const_add 1
     simp
     have g :
@@ -566,7 +566,7 @@ theorem integral_mul_cpow_one_add_sq {t : ℂ} (ht : t ≠ -1) :
 theorem integral_mul_rpow_one_add_sq {t : ℝ} (ht : t ≠ -1) :
     (∫ x : ℝ in a..b, x * (↑1 + x ^ 2) ^ t) =
       (↑1 + b ^ 2) ^ (t + 1) / (↑2 * (t + ↑1)) - (↑1 + a ^ 2) ^ (t + 1) / (↑2 * (t + ↑1)) := by
-  have  : ∀ x s : ℝ, (((↑1 + x ^ 2) ^ s : ℝ) : ℂ) = (1 + (x : ℂ) ^ 2) ^ (s : ℂ)
+  have : ∀ x s : ℝ, (((↑1 + x ^ 2) ^ s : ℝ) : ℂ) = (1 + (x : ℂ) ^ 2) ^ (s : ℂ)
   intro x s
   norm_cast
   rw [ofReal_cpow, ofReal_add, ofReal_pow, ofReal_one]
@@ -768,9 +768,9 @@ theorem integral_sin_sq_mul_cos_sq :
     ∫ x in a..b, sin x ^ 2 * cos x ^ 2 = (b - a) / 8 - (sin (4 * b) - sin (4 * a)) / 32 := by
   convert integral_sin_pow_even_mul_cos_pow_even 1 1 using 1
   have h1 : ∀ c : ℝ, (↑1 - c) / ↑2 * ((↑1 + c) / ↑2) = (↑1 - c ^ 2) / 4 := fun c => by ring
-  have h2  : Continuous fun x => cos (2 * x) ^ 2
+  have h2 : Continuous fun x => cos (2 * x) ^ 2
   fun_prop
-  have h3  : ∀ x, cos x * sin x = sin (2 * x) / 2
+  have h3 : ∀ x, cos x * sin x = sin (2 * x) / 2
   intro; rw [sin_two_mul]; ring
   have h4 : ∀ d : ℝ, 2 * (2 * d) = 4 * d := fun d => by ring
   simp [h1, h2.intervalIntegrable, integral_comp_mul_left fun x => cos x ^ 2, h3, h4]

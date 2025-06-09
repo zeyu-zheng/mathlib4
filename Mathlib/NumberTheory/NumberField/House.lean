@@ -172,7 +172,7 @@ private theorem lin_1 (l k r) : a k l * (newBasis K) r =
 private theorem ξ_mulVec_eq_0 : a *ᵥ ξ K x = 0 := by
   funext k; simp only [Pi.zero_apply]; rw [eq_comm]
 
-  have lin_0  : ∀ u, ∑ r, ∑ l, (a' K a k l r u * x (l, r) : 𝓞 K) = 0
+  have lin_0 : ∀ u, ∑ r, ∑ l, (a' K a k l r u * x (l, r) : 𝓞 K) = 0
   intros u
   have hξ := ξ_ne_0 K x hxl
   rw [Ne, Function.funext_iff, not_forall] at hξ
@@ -183,10 +183,10 @@ private theorem ξ_mulVec_eq_0 : a *ᵥ ξ K x = 0 := by
   rw [sum_comm] at hmulvec0
   exact mod_cast hmulvec0
 
-  have  : 0 = ∑ u, (∑ r, ∑ l, a' K a k l r u * x (l, r) : 𝓞 K) * (newBasis K) u
+  have : 0 = ∑ u, (∑ r, ∑ l, a' K a k l r u * x (l, r) : 𝓞 K) * (newBasis K) u
   simp only [lin_0, zero_mul, sum_const_zero]
 
-  have  : 0 = ∑ r, ∑ l, x (l, r) * ∑ u, a' K a k l r u * (newBasis K) u
+  have : 0 = ∑ r, ∑ l, x (l, r) * ∑ u, a' K a k l r u * (newBasis K) u
   conv at this => enter [2, 2, u]; rw [sum_mul]
   rw [sum_comm] at this
   rw [this]; congr 1; ext1 r
@@ -291,11 +291,11 @@ theorem exists_ne_zero_int_vec_house_le :
   classical
   let h := finrank ℚ K
   have hphqh : p * h < q * h := mul_lt_mul_of_pos_right hpq finrank_pos
-  have h0ph  : 0 < p * h
+  have h0ph : 0 < p * h
   rw [mul_pos_iff]; constructor; exact ⟨h0p, finrank_pos⟩
-  have hfinp  : Fintype.card (α × (K →+* ℂ)) = p * h
+  have hfinp : Fintype.card (α × (K →+* ℂ)) = p * h
   rw [Fintype.card_prod, cardα, Embeddings.card]
-  have hfinq  : Fintype.card (β × (K →+* ℂ)) = q * h
+  have hfinq : Fintype.card (β × (K →+* ℂ)) = q * h
   rw [Fintype.card_prod, cardβ, Embeddings.card]
   have ⟨x, hxl, hmulvec0, hxbound⟩ :=
     Int.Matrix.exists_ne_zero_int_vec_norm_le' (asiegel K a)

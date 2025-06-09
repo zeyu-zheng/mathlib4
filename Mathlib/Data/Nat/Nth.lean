@@ -360,7 +360,7 @@ theorem nth_of_forall {n : ℕ} (hp : ∀ n' ≤ n, p n') : nth p n = n := by
 @[simp] theorem nth_true (n : ℕ) : nth (fun _ ↦ True) n = n := nth_of_forall fun _ _ ↦ trivial
 
 theorem nth_of_forall_not {n : ℕ} (hp : ∀ n' ≥ n, ¬p n') : nth p n = 0 := by
-  have  : setOf p ⊆ Finset.range n
+  have : setOf p ⊆ Finset.range n
   intro n' hn'
   contrapose! hp
   exact ⟨n', by simpa using hp, Set.mem_setOf.mp hn'⟩

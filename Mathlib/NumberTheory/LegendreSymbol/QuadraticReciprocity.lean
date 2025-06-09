@@ -57,13 +57,13 @@ variable (hp : p ≠ 2)
 
 /-- `legendreSym p 2` is given by `χ₈ p`. -/
 theorem at_two : legendreSym p 2 = χ₈ p := by
-  have  : (2 : ZMod p) = (2 : ℤ)
+  have : (2 : ZMod p) = (2 : ℤ)
   norm_cast
   rw [legendreSym, ← this, quadraticChar_two ((ringChar_zmod_n p).substr hp), card p]
 
 /-- `legendreSym p (-2)` is given by `χ₈' p`. -/
 theorem at_neg_two : legendreSym p (-2) = χ₈' p := by
-  have  : (-2 : ZMod p) = (-2 : ℤ)
+  have : (-2 : ZMod p) = (-2 : ℤ)
   norm_cast
   rw [legendreSym, ← this, quadraticChar_neg_two ((ringChar_zmod_n p).substr hp), card p]
 

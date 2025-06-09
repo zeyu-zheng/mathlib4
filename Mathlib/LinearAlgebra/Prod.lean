@@ -449,7 +449,7 @@ theorem ker_coprod_of_disjoint_range {M₂ : Type*} [AddCommGroup M₂] [Module 
   apply le_antisymm _ (ker_prod_ker_le_ker_coprod f g)
   rintro ⟨y, z⟩ h
   simp only [mem_ker, mem_prod, coprod_apply] at h ⊢
-  have  : f y ∈ (range f) ⊓ (range g)
+  have : f y ∈ (range f) ⊓ (range g)
   simp only [true_and_iff, mem_range, mem_inf, exists_apply_eq_apply]
   use -z
   rwa [eq_comm, map_neg, ← sub_eq_zero, sub_neg_eq_add]
@@ -618,10 +618,10 @@ theorem prod_le_iff {p₁ : Submodule R M} {p₂ : Submodule R M₂} {q : Submod
       apply h
       exact ⟨zero_mem p₁, hx⟩
   · rintro ⟨hH, hK⟩ ⟨x1, x2⟩ ⟨h1, h2⟩
-    have h1'  : (LinearMap.inl R _ _) x1 ∈ q
+    have h1' : (LinearMap.inl R _ _) x1 ∈ q
     apply hH
     simpa using h1
-    have h2'  : (LinearMap.inr R _ _) x2 ∈ q
+    have h2' : (LinearMap.inr R _ _) x2 ∈ q
     apply hK
     simpa using h2
     simpa using add_mem h1' h2'
@@ -763,7 +763,7 @@ theorem range_prod_eq {f : M →ₗ[R] M₂} {g : M →ₗ[R] M₃} (h : ker f �
   rintro _ _ x rfl y rfl
   -- Note: #8386 had to specify `(f := f)`
   simp only [Prod.mk.inj_iff, ← sub_mem_ker_iff (f := f)]
-  have  : y - x ∈ ker f ⊔ ker g
+  have : y - x ∈ ker f ⊔ ker g
   simp only [h, mem_top]
   rcases mem_sup.1 this with ⟨x', hx', y', hy', H⟩
   refine ⟨x' + x, ?_, ?_⟩

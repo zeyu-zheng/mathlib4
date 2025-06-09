@@ -174,7 +174,7 @@ theorem IsSRGWith.param_eq (h : G.IsSRGWith n k ℓ μ) (hn : 0 < n) :
     -- but after leanprover/lean4#3124 it caused a maximum recursion depth error.
     change Finset.card (filter (fun a => Adj G w a) _) = _
     simp_rw [← mem_neighborFinset, filter_mem_eq_inter]
-    have s  : {v} ⊆ G.neighborFinset w \ G.neighborFinset v
+    have s : {v} ⊆ G.neighborFinset w \ G.neighborFinset v
     rw [singleton_subset_iff, mem_sdiff, mem_neighborFinset]
     exact ⟨hw.symm, G.not_mem_neighborFinset_self v⟩
     rw [inter_comm, neighborFinset_compl, ← inter_sdiff_assoc, ← sdiff_eq_inter_compl, card_sdiff s,

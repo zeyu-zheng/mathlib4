@@ -50,7 +50,7 @@ continuum. -/
 theorem continuum_le_cardinal_of_module
     (𝕜 : Type u) (E : Type v) [NontriviallyNormedField 𝕜] [CompleteSpace 𝕜]
     [AddCommGroup E] [Module 𝕜 E] [Nontrivial E] : 𝔠 ≤ #E := by
-  have A  : lift.{v} (𝔠 : Cardinal.{u}) ≤ lift.{v} (#𝕜)
+  have A : lift.{v} (𝔠 : Cardinal.{u}) ≤ lift.{v} (#𝕜)
   simpa using continuum_le_cardinal_of_nontriviallyNormedField 𝕜
   simpa using A.trans (Cardinal.mk_le_of_module 𝕜 E)
 
@@ -65,16 +65,16 @@ lemma cardinal_eq_of_mem_nhds_zero
   where `c` is any element of `𝕜` with norm `> 1`. All these sets are in bijection and have
   therefore the same cardinality. The conclusion follows. -/
   obtain ⟨c, hc⟩ : ∃ x : 𝕜 , 1 < ‖x‖ := NormedField.exists_lt_norm 𝕜 1
-  have cn_ne  : ∀ n, c^n ≠ 0
+  have cn_ne : ∀ n, c^n ≠ 0
   intro n
   apply pow_ne_zero
   rintro rfl
   simp only [norm_zero] at hc
   exact lt_irrefl _ (hc.trans zero_lt_one)
-  have A  : ∀ (x : E), ∀ᶠ n in (atTop : Filter ℕ), x ∈ c^n • s
+  have A : ∀ (x : E), ∀ᶠ n in (atTop : Filter ℕ), x ∈ c^n • s
   intro x
-  have  : Tendsto (fun n ↦ (c^n) ⁻¹ • x) atTop (𝓝 ((0 : 𝕜) • x))
-  have  : Tendsto (fun n ↦ (c^n)⁻¹) atTop (𝓝 0)
+  have : Tendsto (fun n ↦ (c^n) ⁻¹ • x) atTop (𝓝 ((0 : 𝕜) • x))
+  have : Tendsto (fun n ↦ (c^n)⁻¹) atTop (𝓝 0)
   simp_rw [← inv_pow]
   apply tendsto_pow_atTop_nhds_zero_of_norm_lt_one
   rw [norm_inv]
@@ -83,7 +83,7 @@ lemma cardinal_eq_of_mem_nhds_zero
   rw [zero_smul] at this
   filter_upwards [this hs] with n (hn : (c ^ n)⁻¹ • x ∈ s)
   exact (mem_smul_set_iff_inv_smul_mem₀ (cn_ne n) _ _).2 hn
-  have B  : ∀ n, #(c^n • s :) = #s
+  have B : ∀ n, #(c^n • s :) = #s
   intro n
   have : (c^n • s :) ≃ s :=
   { toFun := fun x ↦ ⟨(c^n)⁻¹ • x.1, (mem_smul_set_iff_inv_smul_mem₀ (cn_ne n) _ _).1 x.2⟩

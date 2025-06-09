@@ -136,7 +136,7 @@ lemma δ_apply (x₃ : D.L₀.X₃) (x₂ : D.L₁.X₂) (x₁ : D.L₂.X₁)
     (h₂ : D.L₁.g x₂ = D.v₀₁.τ₃ x₃) (h₁ : D.L₂.f x₁ = D.v₁₂.τ₂ x₂) :
     D.δ x₃ = D.v₂₃.τ₁ x₁ := by
   have := (forget₂ C Ab).preservesFiniteLimitsOfPreservesHomology
-  have  : PreservesFiniteLimits (forget C)
+  have : PreservesFiniteLimits (forget C)
   have : forget₂ C Ab ⋙ forget Ab = forget C := HasForget₂.forget_comp
   simpa only [← this] using compPreservesFiniteLimits _ _
   have eq := congr_fun ((forget C).congr_map D.snd_δ)

@@ -105,7 +105,7 @@ theorem finitePresentation_ofLocalizationSpanTarget :
   of preimages of `s`. But the preimages do not necessarily span `MvPolynomial (Fin n) R`, so
   we quotient out by an ideal and apply `finitePresentation_ofLocalizationSpanTarget_aux`.
   -/
-  have hfintype  : Algebra.FiniteType R S
+  have hfintype : Algebra.FiniteType R S
   apply finiteType_ofLocalizationSpanTarget f s hs
   intro r
   convert_to Algebra.FiniteType R (Localization.Away r.val)
@@ -120,7 +120,7 @@ theorem finitePresentation_ofLocalizationSpanTarget :
   choose h' hh' using (fun g : s ↦ hf (l g))
   let I : Ideal (MvPolynomial (Fin n) R) := Ideal.span { ∑ g : s, g' g * h' g - 1 }
   let A := MvPolynomial (Fin n) R ⧸ I
-  have hfI  : ∀ a ∈ I, f a = 0
+  have hfI : ∀ a ∈ I, f a = 0
   intro p hp
   simp only [Finset.univ_eq_attach, I, Ideal.mem_span_singleton] at hp
   obtain ⟨q, rfl⟩ := hp

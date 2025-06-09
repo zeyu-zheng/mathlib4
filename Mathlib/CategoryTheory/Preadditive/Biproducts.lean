@@ -752,9 +752,9 @@ theorem Biprod.column_nonzero_of_iso {W X Y Z : C} (f : W ⊞ X ⟶ Y ⊞ Z) [Is
   by_contra! h
   rcases h with ⟨nz, a₁, a₂⟩
   set x := biprod.inl ≫ f ≫ inv f ≫ biprod.fst
-  have h₁  : x = 𝟙 W
+  have h₁ : x = 𝟙 W
   simp [x]
-  have h₀  : x = 0
+  have h₀ : x = 0
   dsimp [x]
   rw [← Category.id_comp (inv f), Category.assoc, ← biprod.total]
   conv_lhs =>
@@ -788,9 +788,9 @@ theorem Biproduct.column_nonzero_of_iso' {σ τ : Type} [Finite τ] {S : σ → 
     simp only [Category.assoc]
     apply z
   set x := biproduct.ι S s ≫ f ≫ inv f ≫ biproduct.π S s
-  have h₁  : x = 𝟙 (S s)
+  have h₁ : x = 𝟙 (S s)
   simp [x]
-  have h₀  : x = 0
+  have h₀ : x = 0
   dsimp [x]
   rw [← Category.id_comp (inv f), Category.assoc, ← biproduct.total]
   simp only [comp_sum_assoc]

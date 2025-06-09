@@ -220,7 +220,7 @@ theorem submodule_pow_eq_zero_of_pow_eq_zero {N : Submodule R M} {g : Module.End
     {G : Module.End R M} (h : G.comp N.subtype = N.subtype.comp g) {k : ℕ} (hG : G ^ k = 0) :
     g ^ k = 0 := by
   ext m
-  have hg  : N.subtype.comp (g ^ k) m = 0
+  have hg : N.subtype.comp (g ^ k) m = 0
   rw [← commute_pow_left_of_commute h, hG, zero_comp, zero_apply]
   simpa using hg
 

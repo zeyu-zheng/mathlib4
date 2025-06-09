@@ -112,21 +112,21 @@ theorem contDiffWithinAt_localInvariantProp (n : ℕ∞) :
     (contDiffGroupoid ∞ I).LocalInvariantProp (contDiffGroupoid ∞ I')
       (ContDiffWithinAtProp I I' n) where
   is_local {s x u f} u_open xu := by
-    have  : I.symm ⁻¹' (s ∩ u) ∩ range I = I.symm ⁻¹' s ∩ range I ∩ I.symm ⁻¹' u
+    have : I.symm ⁻¹' (s ∩ u) ∩ range I = I.symm ⁻¹' s ∩ range I ∩ I.symm ⁻¹' u
     simp only [inter_right_comm, preimage_inter]
     rw [ContDiffWithinAtProp, ContDiffWithinAtProp, this]
     symm
     apply contDiffWithinAt_inter
-    have  : u ∈ 𝓝 (I.symm (I x))
+    have : u ∈ 𝓝 (I.symm (I x))
     rw [ModelWithCorners.left_inv]
     exact u_open.mem_nhds xu
     apply ContinuousAt.preimage_mem_nhds I.continuous_symm.continuousAt this
   right_invariance' {s x f e} he hx h := by
     rw [ContDiffWithinAtProp] at h ⊢
-    have  : I x = (I ∘ e.symm ∘ I.symm) (I (e x))
+    have : I x = (I ∘ e.symm ∘ I.symm) (I (e x))
     simp only [hx, mfld_simps]
     rw [this] at h
-    have  : I (e x) ∈ I.symm ⁻¹' e.target ∩ range I
+    have : I (e x) ∈ I.symm ⁻¹' e.target ∩ range I
     simp only [hx, mfld_simps]
     have := (mem_groupoid_of_pregroupoid.2 he).2.contDiffWithinAt this
     convert (h.comp' _ (this.of_le le_top)).mono_of_mem _ using 1
@@ -143,7 +143,7 @@ theorem contDiffWithinAt_localInvariantProp (n : ℕ∞) :
     · simp only [hx, mfld_simps]
   left_invariance' {s x f e'} he' hs hx h := by
     rw [ContDiffWithinAtProp] at h ⊢
-    have A  : (I' ∘ f ∘ I.symm) (I x) ∈ I'.symm ⁻¹' e'.source ∩ range I'
+    have A : (I' ∘ f ∘ I.symm) (I x) ∈ I'.symm ⁻¹' e'.source ∩ range I'
     simp only [hx, mfld_simps]
     have := (mem_groupoid_of_pregroupoid.2 he').1.contDiffWithinAt A
     convert (this.of_le le_top).comp _ h _
@@ -502,12 +502,12 @@ theorem contMDiffOn_iff :
     refine ⟨fun x hx => (h x hx).1, fun x y z hz => ?_⟩
     simp only [mfld_simps] at hz
     let w := (extChartAt I x).symm z
-    have  : w ∈ s
+    have : w ∈ s
     simp only [w, hz, mfld_simps]
     specialize h w this
-    have w1  : w ∈ (chartAt H x).source
+    have w1 : w ∈ (chartAt H x).source
     simp only [w, hz, mfld_simps]
-    have w2  : f w ∈ (chartAt H' y).source
+    have w2 : f w ∈ (chartAt H' y).source
     simp only [w, hz, mfld_simps]
     convert ((contMDiffWithinAt_iff_of_mem_source w1 w2).mp h).2.mono _
     · simp only [w, hz, mfld_simps]

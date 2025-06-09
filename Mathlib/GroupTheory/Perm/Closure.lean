@@ -46,14 +46,14 @@ theorem closure_cycle_adjacent_swap {σ : Perm α} (h1 : IsCycle σ) (h2 : σ.su
   let H := closure ({σ, swap x (σ x)} : Set (Perm α))
   have h3 : σ ∈ H := subset_closure (Set.mem_insert σ _)
   have h4 : swap x (σ x) ∈ H := subset_closure (Set.mem_insert_of_mem _ (Set.mem_singleton _))
-  have step1  : ∀ n : ℕ, swap ((σ ^ n) x) ((σ ^ (n + 1) : Perm α) x) ∈ H
+  have step1 : ∀ n : ℕ, swap ((σ ^ n) x) ((σ ^ (n + 1) : Perm α) x) ∈ H
   intro n
   induction' n with n ih
   · exact subset_closure (Set.mem_insert_of_mem _ (Set.mem_singleton _))
   · convert H.mul_mem (H.mul_mem h3 ih) (H.inv_mem h3)
     simp_rw [mul_swap_eq_swap_mul, mul_inv_cancel_right, pow_succ']
     rfl
-  have step2  : ∀ n : ℕ, swap x ((σ ^ n) x) ∈ H
+  have step2 : ∀ n : ℕ, swap x ((σ ^ n) x) ∈ H
   intro n
   induction' n with n ih
   · simp only [Nat.zero_eq, pow_zero, coe_one, id_eq, swap_self, Set.mem_singleton_iff]
@@ -66,7 +66,7 @@ theorem closure_cycle_adjacent_swap {σ : Perm α} (h1 : IsCycle σ) (h2 : σ.su
       exact H.one_mem
     rw [swap_comm, ← swap_mul_swap_mul_swap h5 h6]
     exact H.mul_mem (H.mul_mem (step1 n) ih) (step1 n)
-  have step3  : ∀ y : α, swap x y ∈ H
+  have step3 : ∀ y : α, swap x y ∈ H
   intro y
   have hx : x ∈ (⊤ : Finset α) := Finset.mem_univ x
   rw [← h2, mem_support] at hx
@@ -75,7 +75,7 @@ theorem closure_cycle_adjacent_swap {σ : Perm α} (h1 : IsCycle σ) (h2 : σ.su
   cases' IsCycle.exists_pow_eq h1 hx hy with n hn
   rw [← hn]
   exact step2 n
-  have step4  : ∀ y z : α, swap y z ∈ H
+  have step4 : ∀ y z : α, swap y z ∈ H
   intro y z
   by_cases h5 : z = x
   · rw [h5, swap_comm]
@@ -96,7 +96,7 @@ theorem closure_cycle_coprime_swap {n : ℕ} {σ : Perm α} (h0 : Nat.Coprime n 
   rw [← Finset.card_univ, ← h2, ← h1.orderOf] at h0
   cases' exists_pow_eq_self_of_coprime h0 with m hm
   have h2' : (σ ^ n).support = ⊤ := Eq.trans (support_pow_coprime h0) h2
-  have h1'  : IsCycle ((σ ^ n) ^ (m : ℤ))
+  have h1' : IsCycle ((σ ^ n) ^ (m : ℤ))
   rwa [← hm] at h1
   replace h1' : IsCycle (σ ^ n) :=
     h1'.of_pow (le_trans (support_pow_le σ n) (ge_of_eq (congr_arg support hm)))

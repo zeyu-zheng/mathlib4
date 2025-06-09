@@ -63,7 +63,7 @@ info: Try this: have : a ∉ M := foo L M w m
 example (_K L M : List α) (w : L.Disjoint M) (m : a ∈ L) : True := by
   have?! using w
   guard_hyp List.disjoint_symm : List.Disjoint M L := _root_.List.disjoint_symm w
-  have  : a ∉ M
+  have : a ∉ M
   assumption
   trivial
 

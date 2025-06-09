@@ -91,7 +91,7 @@ lemma eq_unit_mul_divisor {N : ℕ} (a : ZMod N) :
   obtain ⟨N₀, (hN₀ : _ = d * _)⟩ := a.val.gcd_dvd_right N
   refine ⟨d, ⟨N₀, hN₀⟩, ?_⟩
   -- Show `a` is a unit mod `N / d`.
-  have hu₀  : IsUnit (a₀ : ZMod N₀)
+  have hu₀ : IsUnit (a₀ : ZMod N₀)
   refine (isUnit_iff_coprime _ _).mpr (Nat.isCoprime_iff_coprime.mp ?_)
   obtain ⟨p, q, hpq⟩ : ∃ (p q : ℤ), d = a.val * p + N * q := ⟨_, _, Nat.gcd_eq_gcd_ab _ _⟩
   rw [ha₀, hN₀, Nat.cast_mul, Nat.cast_mul, mul_assoc, mul_assoc, ← mul_add, eq_comm,

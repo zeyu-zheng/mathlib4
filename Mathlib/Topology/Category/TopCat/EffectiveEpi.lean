@@ -71,7 +71,7 @@ theorem effectiveEpi_iff_quotientMap {B X : TopCat.{u}} (π : X ⟶ B) :
   /- The key to proving that the coequalizer has the quotient topology is
     `TopCat.coequalizer_isOpen_iff` which characterises the open sets in a coequalizer. -/
   · ext U
-    have  : π ≫ i.hom = colimit.ι F WalkingParallelPair.one
+    have : π ≫ i.hom = colimit.ι F WalkingParallelPair.one
     simp [i, ← Iso.eq_comp_inv]
     rw [isOpen_coinduced (f := (homeoOfIso i ∘ π)), coequalizer_isOpen_iff _ U, ← this]
     rfl

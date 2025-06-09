@@ -118,7 +118,7 @@ theorem IsGδ.dense_iUnion_interior_of_closed [Countable ι] {s : Set X} (hs : I
     Dense (⋃ i, interior (f i)) := by
   let g i := (frontier (f i))ᶜ
   have hgo : ∀ i, IsOpen (g i) := fun i => isClosed_frontier.isOpen_compl
-  have hgd  : Dense (⋂ i, g i)
+  have hgd : Dense (⋂ i, g i)
   refine dense_iInter_of_isOpen hgo fun i x => ?_
   rw [closure_compl, interior_frontier (hc _)]
   exact id

@@ -257,7 +257,7 @@ theorem order_eq_multiplicity_X {R : Type*} [Semiring R] [@DecidableRel R⟦X⟧
   · simp
   induction' ho : order φ using PartENat.casesOn with n
   · simp [hφ] at ho
-  have hn  : φ.order.get (order_finite_iff_ne_zero.mpr hφ) = n
+  have hn : φ.order.get (order_finite_iff_ne_zero.mpr hφ) = n
   simp [ho]
   rw [← hn]
   refine
@@ -340,10 +340,10 @@ theorem divided_by_X_pow_orderMul {f g : R⟦X⟧} (hf : f ≠ 0) (hg : g ≠ 0)
   set df := f.order.get (order_finite_iff_ne_zero.mpr hf)
   set dg := g.order.get (order_finite_iff_ne_zero.mpr hg)
   set dfg := (f * g).order.get (order_finite_iff_ne_zero.mpr (mul_ne_zero hf hg)) with hdfg
-  have H_add_d  : df + dg = dfg
+  have H_add_d : df + dg = dfg
   simp_all only [PartENat.get_add, order_mul f g]
   have H := self_eq_X_pow_order_mul_divided_by_X_pow_order (mul_ne_zero hf hg)
-  have  : f * g = X ^ dfg * (divided_by_X_pow_order hf * divided_by_X_pow_order hg)
+  have : f * g = X ^ dfg * (divided_by_X_pow_order hf * divided_by_X_pow_order hg)
   calc
     f * g = X ^ df * divided_by_X_pow_order hf * (X ^ dg * divided_by_X_pow_order hg) := by
       rw [self_eq_X_pow_order_mul_divided_by_X_pow_order,

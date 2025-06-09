@@ -167,9 +167,9 @@ variable (ι : Type*) [Fintype ι] {p : ℝ} (hp : 1 ≤ p)
 theorem MeasureTheory.volume_sum_rpow_lt_one :
     volume {x : ι → ℝ | ∑ i, |x i| ^ p < 1} =
       .ofReal ((2 * Gamma (1 / p + 1)) ^ card ι / Gamma (card ι / p + 1)) := by
-  have h₁  : 0 < p
+  have h₁ : 0 < p
   linarith
-  have h₂  : ∀ x : ι → ℝ, 0 ≤ ∑ i, |x i| ^ p
+  have h₂ : ∀ x : ι → ℝ, 0 ≤ ∑ i, |x i| ^ p
   refine fun _ => Finset.sum_nonneg' ?_
   exact fun i => (fun _ => rpow_nonneg (abs_nonneg _) _) _
   -- We collect facts about `Lp` norms that will be used in `measure_lt_one_eq_integral_div_gamma`
@@ -200,7 +200,7 @@ theorem MeasureTheory.volume_sum_rpow_lt_one :
 theorem MeasureTheory.volume_sum_rpow_lt [Nonempty ι] {p : ℝ} (hp : 1 ≤ p) (r : ℝ) :
     volume {x : ι → ℝ | (∑ i, |x i| ^ p) ^ (1 / p) < r} = (.ofReal r) ^ card ι *
       .ofReal ((2 * Gamma (1 / p + 1)) ^ card ι / Gamma (card ι / p + 1)) := by
-  have h₁ (x  : ι → ℝ) : 0 ≤ ∑ i, |x i| ^ p
+  have h₁ (x : ι → ℝ) : 0 ≤ ∑ i, |x i| ^ p
   positivity
   have h₂ : ∀ x : ι → ℝ, 0 ≤ (∑ i, |x i| ^ p) ^ (1 / p) := fun x => rpow_nonneg (h₁ x) _
   obtain hr | hr := le_or_lt r 0
@@ -221,7 +221,7 @@ theorem MeasureTheory.volume_sum_rpow_lt [Nonempty ι] {p : ℝ} (hp : 1 ≤ p) 
 theorem MeasureTheory.volume_sum_rpow_le [Nonempty ι] {p : ℝ} (hp : 1 ≤ p) (r : ℝ) :
     volume {x : ι → ℝ | (∑ i, |x i| ^ p) ^ (1 / p) ≤ r} = (.ofReal r) ^ card ι *
       .ofReal ((2 * Gamma (1 / p + 1)) ^ card ι / Gamma (card ι / p + 1)) := by
-  have h₁  : 0 < p
+  have h₁ : 0 < p
   linarith
   -- We collect facts about `Lp` norms that will be used in `measure_le_one_eq_lt_one`
   have eq_norm := fun x : ι → ℝ => (PiLp.norm_eq_sum (p := .ofReal p) (f := x)
@@ -242,9 +242,9 @@ theorem MeasureTheory.volume_sum_rpow_le [Nonempty ι] {p : ℝ} (hp : 1 ≤ p) 
 theorem Complex.volume_sum_rpow_lt_one {p : ℝ} (hp : 1 ≤ p) :
     volume {x : ι → ℂ | ∑ i, ‖x i‖ ^ p < 1} =
       .ofReal ((π * Real.Gamma (2 / p + 1)) ^ card ι / Real.Gamma (2 * card ι / p + 1)) := by
-  have h₁  : 0 < p
+  have h₁ : 0 < p
   linarith
-  have h₂  : ∀ x : ι → ℂ, 0 ≤ ∑ i, ‖x i‖ ^ p
+  have h₂ : ∀ x : ι → ℂ, 0 ≤ ∑ i, ‖x i‖ ^ p
   refine fun _ => Finset.sum_nonneg' ?_
   exact fun i => (fun _ => rpow_nonneg (norm_nonneg _) _) _
   -- We collect facts about `Lp` norms that will be used in `measure_lt_one_eq_integral_div_gamma`
@@ -276,7 +276,7 @@ theorem Complex.volume_sum_rpow_lt_one {p : ℝ} (hp : 1 ≤ p) :
 theorem Complex.volume_sum_rpow_lt [Nonempty ι] {p : ℝ} (hp : 1 ≤ p) (r : ℝ) :
     volume {x : ι → ℂ | (∑ i, ‖x i‖ ^ p) ^ (1 / p) < r} = (.ofReal r) ^ (2 * card ι) *
       .ofReal ((π * Real.Gamma (2 / p + 1)) ^ card ι / Real.Gamma (2 * card ι / p + 1)) := by
-  have h₁ (x  : ι → ℂ) : 0 ≤ ∑ i, ‖x i‖ ^ p
+  have h₁ (x : ι → ℂ) : 0 ≤ ∑ i, ‖x i‖ ^ p
   positivity
   have h₂ : ∀ x : ι → ℂ, 0 ≤ (∑ i, ‖x i‖ ^ p) ^ (1 / p) := fun x => rpow_nonneg (h₁ x) _
   obtain hr | hr := le_or_lt r 0
@@ -299,7 +299,7 @@ theorem Complex.volume_sum_rpow_lt [Nonempty ι] {p : ℝ} (hp : 1 ≤ p) (r : �
 theorem Complex.volume_sum_rpow_le [Nonempty ι] {p : ℝ} (hp : 1 ≤ p) (r : ℝ) :
     volume {x : ι → ℂ | (∑ i, ‖x i‖ ^ p) ^ (1 / p) ≤ r} = (.ofReal r) ^ (2 * card ι) *
       .ofReal ((π * Real.Gamma (2 / p + 1)) ^ card ι / Real.Gamma (2 * card ι / p + 1)) := by
-  have h₁  : 0 < p
+  have h₁ : 0 < p
   linarith
   -- We collect facts about `Lp` norms that will be used in `measure_lt_one_eq_integral_div_gamma`
   have eq_norm := fun x : ι → ℂ => (PiLp.norm_eq_sum (p := .ofReal p) (f := x)

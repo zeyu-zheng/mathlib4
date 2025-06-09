@@ -330,11 +330,11 @@ protected theorem defn (p : ℕ) [hp : Fact p.Prime] {q : ℚ} {n d : ℤ} (hqz 
 /-- A rewrite lemma for `padicValRat p (q * r)` with conditions `q ≠ 0`, `r ≠ 0`. -/
 protected theorem mul {q r : ℚ} (hq : q ≠ 0) (hr : r ≠ 0) :
     padicValRat p (q * r) = padicValRat p q + padicValRat p r := by
-  have  : q * r = (q.num * r.num) /. (q.den * r.den)
+  have : q * r = (q.num * r.num) /. (q.den * r.den)
   rw [Rat.mul_eq_mkRat, Rat.mkRat_eq_divInt, Nat.cast_mul]
-  have hq'  : q.num /. q.den ≠ 0
+  have hq' : q.num /. q.den ≠ 0
   rwa [Rat.num_divInt_den]
-  have hr'  : r.num /. r.den ≠ 0
+  have hr' : r.num /. r.den ≠ 0
   rwa [Rat.num_divInt_den]
   have hp' : Prime (p : ℤ) := Nat.prime_iff_prime_int.1 hp.1
   rw [padicValRat.defn p (mul_ne_zero hq hr) this]
@@ -704,7 +704,7 @@ digits of `k` plus the sum of the digits of `n` minus the sum of digits of `n + 
 theorem sub_one_mul_padicValNat_choose_eq_sub_sum_digits' {k n : ℕ} [hp : Fact p.Prime] :
     (p - 1) * padicValNat p (choose (n + k) k) =
     (p.digits k).sum + (p.digits n).sum - (p.digits (n + k)).sum := by
-  have h  : k ≤ n + k
+  have h : k ≤ n + k
   exact Nat.le_add_left k n
   simp only [Nat.choose_eq_factorial_div_factorial h]
   rw [padicValNat.div_of_dvd <| factorial_mul_factorial_dvd_factorial h, Nat.mul_sub_left_distrib,

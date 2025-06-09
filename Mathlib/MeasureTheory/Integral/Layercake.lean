@@ -108,7 +108,7 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul_of_measurable_of_sigmaFinite
     (g_nn : ∀ t > 0, 0 ≤ g t) :
     ∫⁻ ω, ENNReal.ofReal (∫ t in (0)..f ω, g t) ∂μ =
       ∫⁻ t in Ioi 0, μ {a : α | t ≤ f a} * ENNReal.ofReal (g t) := by
-  have g_intble'  : ∀ t : ℝ, 0 ≤ t → IntervalIntegrable g volume 0 t
+  have g_intble' : ∀ t : ℝ, 0 ≤ t → IntervalIntegrable g volume 0 t
   intro t ht
   cases' eq_or_lt_of_le ht with h h
   · simp [← h]
@@ -116,7 +116,7 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul_of_measurable_of_sigmaFinite
   have integrand_eq : ∀ ω,
       ENNReal.ofReal (∫ t in (0)..f ω, g t) = ∫⁻ t in Ioc 0 (f ω), ENNReal.ofReal (g t)
   intro ω
-  have g_ae_nn  : 0 ≤ᵐ[volume.restrict (Ioc 0 (f ω))] g
+  have g_ae_nn : 0 ≤ᵐ[volume.restrict (Ioc 0 (f ω))] g
   filter_upwards [self_mem_ae_restrict (measurableSet_Ioc : MeasurableSet (Ioc 0 (f ω)))]
     with x hx using g_nn x hx.1
   rw [← ofReal_integral_eq_lintegral_ofReal (g_intble' (f ω) (f_nn ω)).1 g_ae_nn]
@@ -268,7 +268,7 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul_of_measurable (μ : Measure α)
   sets `{ω | f ω > uₙ}` for `uₙ` a sequence decreasing to `M`. Therefore,
   this case follows from the case where the measure is sigma-finite, applied to `ν`. -/
   push_neg at H2
-  have M_bdd  : BddAbove {s : ℝ | g =ᵐ[volume.restrict (Ioc (0 : ℝ) s)] 0}
+  have M_bdd : BddAbove {s : ℝ | g =ᵐ[volume.restrict (Ioc (0 : ℝ) s)] 0}
   contrapose! H1
   have : ∀ (n : ℕ), g =ᵐ[volume.restrict (Ioc (0 : ℝ) n)] 0
   intro n
@@ -282,11 +282,11 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul_of_measurable (μ : Measure α)
   rwa [this] at Hg
   -- let `M` be the largest number such that `g` vanishes ae on `(0, M]`.
   let M : ℝ := sSup {s : ℝ | g =ᵐ[volume.restrict (Ioc (0 : ℝ) s)] 0}
-  have zero_mem  : 0 ∈ {s : ℝ | g =ᵐ[volume.restrict (Ioc (0 : ℝ) s)] 0}
+  have zero_mem : 0 ∈ {s : ℝ | g =ᵐ[volume.restrict (Ioc (0 : ℝ) s)] 0}
   simpa using trivial
   have M_nonneg : 0 ≤ M := le_csSup M_bdd zero_mem
   -- Then the function `g` indeed vanishes ae on `(0, M]`.
-  have hgM  : g =ᵐ[volume.restrict (Ioc (0 : ℝ) M)] 0
+  have hgM : g =ᵐ[volume.restrict (Ioc (0 : ℝ) M)] 0
   rw [← restrict_Ioo_eq_restrict_Ioc]
   obtain ⟨u, -, uM, ulim⟩ : ∃ u, StrictMono u ∧ (∀ (n : ℕ), u n < M) ∧ Tendsto u atTop (𝓝 M) :=
     exists_seq_strictMono_tendsto M
@@ -303,7 +303,7 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul_of_measurable (μ : Measure α)
   -- Let `ν` be the restriction of `μ` to those points where `f a > M`.
   let ν := μ.restrict {a : α | M < f a}
   -- This measure is sigma-finite (this is the whole point of the argument).
-  have  : SigmaFinite ν
+  have : SigmaFinite ν
   obtain ⟨u, -, uM, ulim⟩ : ∃ u, StrictAnti u ∧ (∀ (n : ℕ), M < u n) ∧ Tendsto u atTop (𝓝 M) :=
     exists_seq_strictAnti_tendsto M
   let s : ν.FiniteSpanningSetsIn univ :=
@@ -349,7 +349,7 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul_of_measurable (μ : Measure α)
     have I : ∫⁻ ω in {a | M < f a}ᶜ, ENNReal.ofReal (∫ t in (0).. f ω, g t) ∂μ
              = ∫⁻ _ in {a | M < f a}ᶜ, 0 ∂μ := by
       apply setLIntegral_congr_fun meas.compl (eventually_of_forall (fun s hs ↦ ?_))
-      have  : ∫ (t : ℝ) in (0)..f s, g t = ∫ (t : ℝ) in (0)..f s, 0
+      have : ∫ (t : ℝ) in (0)..f s, g t = ∫ (t : ℝ) in (0)..f s, 0
       simp_rw [intervalIntegral.integral_of_le (f_nonneg s)]
       apply integral_congr_ae
       apply ae_mono (restrict_mono ?_ le_rfl) hgM
@@ -524,7 +524,7 @@ theorem Integrable.integral_eq_integral_meas_lt
     ∫ ω, f ω ∂μ = ∫ t in Set.Ioi 0, ENNReal.toReal (μ {a : α | t < f a}) := by
   have key := lintegral_eq_lintegral_meas_lt μ f_nn f_intble.aemeasurable
   have lhs_finite : ∫⁻ (ω : α), ENNReal.ofReal (f ω) ∂μ < ∞ := Integrable.lintegral_lt_top f_intble
-  have rhs_finite  : ∫⁻ (t : ℝ) in Set.Ioi 0, μ {a | t < f a} < ∞
+  have rhs_finite : ∫⁻ (t : ℝ) in Set.Ioi 0, μ {a | t < f a} < ∞
   simp only [← key, lhs_finite]
   have rhs_integrand_finite : ∀ (t : ℝ), t > 0 → μ {a | t < f a} < ∞ :=
     fun t ht ↦ measure_gt_lt_top f_intble ht
@@ -556,9 +556,9 @@ lemma Integrable.integral_eq_integral_Ioc_meas_le {f : α → ℝ} {M : ℝ}
   rw [setIntegral_eq_of_subset_of_ae_diff_eq_zero
       measurableSet_Ioi.nullMeasurableSet Ioc_subset_Ioi_self ?_]
   apply eventually_of_forall (fun t ht ↦ ?_)
-  have htM  : M < t
+  have htM : M < t
   simp_all only [mem_diff, mem_Ioi, mem_Ioc, not_and, not_le]
-  have obs  : μ {a | M < f a} = 0
+  have obs : μ {a | M < f a} = 0
   rw [measure_zero_iff_ae_nmem]
   filter_upwards [f_bdd] with a ha using not_lt.mpr ha
   rw [ENNReal.toReal_eq_zero_iff]

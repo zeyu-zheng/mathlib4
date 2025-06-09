@@ -71,7 +71,7 @@ theorem isClosed_subsets_of_isClosed (hs : IsClosed s) :
     IsClosed { t : Closeds α | (t : Set α) ⊆ s } := by
   refine isClosed_of_closure_subset fun
     (t : Closeds α) (ht : t ∈ closure {t : Closeds α | (t : Set α) ⊆ s}) (x : α) (hx : x ∈ t) => ?_
-  have  : x ∈ closure s
+  have : x ∈ closure s
   refine mem_closure_iff.2 fun ε εpos => ?_
   obtain ⟨u : Closeds α, hu : u ∈ {t : Closeds α | (t : Set α) ⊆ s}, Dtu : edist t u < ε⟩ :=
     mem_closure_iff.1 ht ε εpos
@@ -91,9 +91,9 @@ instance Closeds.completeSpace [CompleteSpace α] : CompleteSpace (Closeds α) :
     completeness, by a standard completeness criterion.
     We use the shorthand `B n = 2^{-n}` in ennreal. -/
   let B : ℕ → ℝ≥0∞ := fun n => 2⁻¹ ^ n
-  have B_pos  : ∀ n, (0 : ℝ≥0∞) < B n
+  have B_pos : ∀ n, (0 : ℝ≥0∞) < B n
   simp [B, ENNReal.pow_pos]
-  have B_ne_top  : ∀ n, B n ≠ ⊤
+  have B_ne_top : ∀ n, B n ≠ ⊤
   simp [B, ENNReal.pow_ne_top]
   /- Consider a sequence of closed sets `s n` with `edist (s n) (s (n+1)) < B n`.
     We will show that it converges. The limit set is `t0 = ⋂n, closure (⋃m≥n, s m)`.
@@ -105,7 +105,7 @@ instance Closeds.completeSpace [CompleteSpace α] : CompleteSpace (Closeds α) :
   let t : Closeds α := ⟨t0, isClosed_iInter fun _ => isClosed_closure⟩
   use t
   -- The inequality is written this way to agree with `edist_le_of_edist_le_geometric_of_tendsto₀`
-  have I1  : ∀ n, ∀ x ∈ s n, ∃ y ∈ t0, edist x y ≤ 2 * B n
+  have I1 : ∀ n, ∀ x ∈ s n, ∃ y ∈ t0, edist x y ≤ 2 * B n
   /- This is the main difficulty of the proof. Starting from `x ∈ s n`, we want
          to find a point in `t0` which is close to `x`. Define inductively a sequence of
          points `z m` with `z n = x` and `z m ∈ s m` and `edist (z m) (z (m+1)) ≤ B m`. This is
@@ -116,7 +116,7 @@ instance Closeds.completeSpace [CompleteSpace α] : CompleteSpace (Closeds α) :
   obtain ⟨z, hz₀, hz⟩ :
     ∃ z : ∀ l, s (n + l), (z 0 : α) = x ∧ ∀ k, edist (z k : α) (z (k + 1) : α) ≤ B n / 2 ^ k := by
     -- We prove existence of the sequence by induction.
-    have  : ∀ (l) (z : s (n + l)), ∃ z' : s (n + l + 1), edist (z : α) z' ≤ B n / 2 ^ l
+    have : ∀ (l) (z : s (n + l)), ∃ z' : s (n + l + 1), edist (z : α) z' ≤ B n / 2 ^ l
     intro l z
     obtain ⟨z', z'_mem, hz'⟩ : ∃ z' ∈ s (n + l + 1), edist (z : α) z' < B n / 2 ^ l := by
       refine exists_edist_lt_of_hausdorffEdist_lt (s := s (n + l)) z.2 ?_
@@ -146,7 +146,7 @@ instance Closeds.completeSpace [CompleteSpace α] : CompleteSpace (Closeds α) :
   -- is the limit of `z k`, and the distance between `z n` and `z k` has already been estimated.
   rw [← hz₀]
   exact edist_le_of_edist_le_geometric_two_of_tendsto₀ (B n) hz y_lim
-  have I2  : ∀ n, ∀ x ∈ t0, ∃ y ∈ s n, edist x y ≤ 2 * B n
+  have I2 : ∀ n, ∀ x ∈ t0, ∃ y ∈ s n, edist x y ≤ 2 * B n
   /- For the (much easier) reverse inequality, we start from a point `x ∈ t0` and we want
           to find a point `y ∈ s n` which is close to `x`.
           `x` belongs to `t0`, the intersection of the closures. In particular, it is well

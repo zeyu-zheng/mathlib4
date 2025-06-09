@@ -128,7 +128,7 @@ theorem measure_iUnion_of_tendsto_zero {ι} (μ : F) {s : ι → Set α} (l : Fi
     μ S ≤ μ (S ∩ s k) + μ (S \ s k) := measure_le_inter_add_diff _ _ _
     _ ≤ μ (s k) + μ (S \ s k) := by gcongr; apply inter_subset_right
     _ ≤ M + μ (S \ s k) := by gcongr; exact le_iSup (μ ∘ s) k
-  have B  : Tendsto (fun k ↦ M + μ (S \ s k)) l (𝓝 M)
+  have B : Tendsto (fun k ↦ M + μ (S \ s k)) l (𝓝 M)
   simpa using tendsto_const_nhds.add h0
   exact ge_of_tendsto' B A
 
@@ -238,13 +238,13 @@ theorem iUnion_nat_of_monotone_of_tsum_ne_top (m : OuterMeasure α) {s : ℕ →
   have h' : Monotone s := @monotone_nat_of_le_succ (Set α) _ _ h_mono
   simp only [diff_subset_iff, iUnion_subset_iff]
   intro i x hx
-  have  : ∃i, x ∈ s i
+  have : ∃i, x ∈ s i
   exists i
   rcases Nat.findX this with ⟨j, hj, hlt⟩
   clear hx i
   rcases le_or_lt j n with hjn | hnj
   · exact Or.inl (h' hjn hj)
-  have  : j - (n + 1) + n + 1 = j
+  have : j - (n + 1) + n + 1 = j
   omega
   refine Or.inr (mem_iUnion.2 ⟨j - (n + 1), ?_, hlt _ ?_⟩)
   · rwa [this]

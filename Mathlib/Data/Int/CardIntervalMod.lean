@@ -112,7 +112,7 @@ theorem Ioc_filter_modEq_card (v : ℕ) : ((Ioc a b).filter (· ≡ v [MOD r])).
 /-- There are `⌈(b - v % r) / r⌉` numbers in `[0, b)` congruent to `v` mod `r`. -/
 theorem count_modEq_card_eq_ceil (v : ℕ) :
     b.count (· ≡ v [MOD r]) = ⌈(b - (v % r : ℕ)) / (r : ℚ)⌉ := by
-  have hr'  : 0 < (r : ℚ)
+  have hr' : 0 < (r : ℚ)
   positivity
   rw [count_eq_card_filter_range, ← Ico_zero_eq_range, Ico_filter_modEq_card _ _ hr,
     max_eq_left (sub_nonneg.mpr <| by gcongr <;> positivity)]
@@ -128,7 +128,7 @@ theorem count_modEq_card_eq_ceil (v : ℕ) :
 where `[·]` is the Iverson bracket. -/
 theorem count_modEq_card (v : ℕ) :
     b.count (· ≡ v [MOD r]) = b / r + if v % r < b % r then 1 else 0 := by
-  have hr'  : 0 < (r : ℚ)
+  have hr' : 0 < (r : ℚ)
   positivity
   rw [← ofNat_inj, count_modEq_card_eq_ceil _ hr, cast_add]
   conv_lhs => rw [← div_add_mod b r, cast_add, cast_mul, ← add_sub, _root_.add_div,

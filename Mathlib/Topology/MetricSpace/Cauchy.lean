@@ -152,7 +152,7 @@ lemma Metric.exists_subseq_bounded_of_cauchySeq (u : ℕ → α) (hu : CauchySeq
     (hb : ∀ n, 0 < b n) :
     ∃ f : ℕ → ℕ, StrictMono f ∧ ∀ n, ∀ m ≥ f n, dist (u m) (u (f n)) < b n := by
   rw [cauchySeq_iff] at hu
-  have hu'  : ∀ k, ∀ᶠ (n : ℕ) in atTop, ∀ m ≥ n, dist (u m) (u n) < b k
+  have hu' : ∀ k, ∀ᶠ (n : ℕ) in atTop, ∀ m ≥ n, dist (u m) (u n) < b k
   intro k
   rw [eventually_atTop]
   obtain ⟨N, hN⟩ := hu (b k) (hb k)

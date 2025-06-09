@@ -244,7 +244,7 @@ theorem lift_cof (o) : Cardinal.lift.{u, v} (cof o) = cof (Ordinal.lift.{u, v} o
   intro α r _
   apply le_antisymm
   · refine le_cof_type.2 fun S H => ?_
-    have  : Cardinal.lift.{u, v} #(ULift.up ⁻¹' S) ≤ #(S : Type (max u v))
+    have : Cardinal.lift.{u, v} #(ULift.up ⁻¹' S) ≤ #(S : Type (max u v))
     rw [← Cardinal.lift_umax.{v, u}, ← Cardinal.lift_id'.{v, u} #S]
     exact mk_preimage_of_injective_lift.{v, max u v} ULift.up S (ULift.up_injective.{v, u})
     refine (Cardinal.lift_le.2 <| cof_type_le ?_).trans this
@@ -721,7 +721,7 @@ theorem unbounded_of_unbounded_iUnion {α β : Type u} (r : α → α → Prop) 
 /-- The infinite pigeonhole principle -/
 theorem infinite_pigeonhole {β α : Type u} (f : β → α) (h₁ : ℵ₀ ≤ #β) (h₂ : #α < (#β).ord.cof) :
     ∃ a : α, #(f ⁻¹' {a}) = #β := by
-  have  : ∃ a, #β ≤ #(f ⁻¹' {a})
+  have : ∃ a, #β ≤ #(f ⁻¹' {a})
   by_contra! h
   apply mk_univ.not_lt
   rw [← preimage_univ, ← iUnion_of_singleton, preimage_iUnion]
@@ -931,7 +931,7 @@ must be at least the cardinality of `β`.
 -/
 theorem le_range_of_union_finset_eq_top {α β : Type*} [Infinite β] (f : α → Finset β)
     (w : ⋃ a, (f a : Set β) = ⊤) : #β ≤ #(range f) := by
-  have k  : _root_.Infinite (range f)
+  have k : _root_.Infinite (range f)
   rw [infinite_coe_iff]
   apply mt (union_finset_finite_of_range_finite f)
   rw [w]
@@ -940,7 +940,7 @@ theorem le_range_of_union_finset_eq_top {α β : Type*} [Infinite β] (f : α �
   simp only [not_le] at h
   let u : ∀ b, ∃ a, b ∈ f a := fun b => by simpa using (w.ge : _) (Set.mem_univ b)
   let u' : β → range f := fun b => ⟨f (u b).choose, by simp⟩
-  have v'  : ∀ a, u' ⁻¹' {⟨f a, by simp⟩} ≤ f a
+  have v' : ∀ a, u' ⁻¹' {⟨f a, by simp⟩} ≤ f a
   rintro a p m
   simp? [u']  at m says simp only [mem_preimage, mem_singleton_iff, Subtype.mk.injEq, u'] at m
   rw [← m]
@@ -1061,7 +1061,7 @@ theorem derivFamily_lt_ord_lift {ι} {f : ι → Ordinal → Ordinal} {c} (hc : 
     (hι : Cardinal.lift.{v, u} #ι < c) (hc' : c ≠ ℵ₀)
     (hf : ∀ (i), ∀ b < c.ord, f i b < c.ord) {a} :
     a < c.ord → derivFamily.{u, v} f a < c.ord := by
-  have hω  : ℵ₀ < c.ord.cof
+  have hω : ℵ₀ < c.ord.cof
   rw [hc.cof_eq]
   exact lt_of_le_of_ne hc.1 hc'.symm
   induction a using limitRecOn with

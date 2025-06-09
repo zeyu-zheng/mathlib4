@@ -53,7 +53,7 @@ variable (I)
 theorem contDiffOn_fderiv_coord_change (i j : atlas H M) :
     ContDiffOn 𝕜 ∞ (fderivWithin 𝕜 (j.1.extend I ∘ (i.1.extend I).symm) (range I))
       ((i.1.extend I).symm ≫ j.1.extend I).source := by
-  have h  : ((i.1.extend I).symm ≫ j.1.extend I).source ⊆ range I
+  have h : ((i.1.extend I).symm ≫ j.1.extend I).source ⊆ range I
   rw [i.1.extend_coord_change_source]; apply image_subset_range
   intro x hx
   refine (ContDiffWithinAt.fderivWithin_right ?_ I.unique_diff le_top <| h hx).mono h

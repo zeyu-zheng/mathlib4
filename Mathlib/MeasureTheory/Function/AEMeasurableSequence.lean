@@ -64,7 +64,7 @@ theorem prop_of_mem_aeSeqSet (hf : ∀ i, AEMeasurable (f i) μ) {x : α} (hx : 
     p x fun n => aeSeq hf p n x := by
   simp only [aeSeq, hx, if_true]
   rw [funext fun n => mk_eq_fun_of_mem_aeSeqSet hf hx n]
-  have h_ss  : aeSeqSet hf p ⊆ { x | p x fun n => f n x }
+  have h_ss : aeSeqSet hf p ⊆ { x | p x fun n => f n x }
   rw [← compl_compl { x | p x fun n => f n x }, aeSeqSet, Set.compl_subset_compl]
   refine Set.Subset.trans (Set.compl_subset_compl.mpr ?_) (subset_toMeasurable _ _)
   exact fun x hx => hx.2
@@ -113,7 +113,7 @@ theorem aeSeq_n_eq_fun_n_ae [Countable ι] (hf : ∀ i, AEMeasurable (f i) μ)
 theorem iSup [CompleteLattice β] [Countable ι] (hf : ∀ i, AEMeasurable (f i) μ)
     (hp : ∀ᵐ x ∂μ, p x fun n => f n x) : ⨆ n, aeSeq hf p n =ᵐ[μ] ⨆ n, f n := by
   simp_rw [Filter.EventuallyEq, ae_iff, iSup_apply]
-  have h_ss  : aeSeqSet hf p ⊆ { a : α | ⨆ i : ι, aeSeq hf p i a = ⨆ i : ι, f i a }
+  have h_ss : aeSeqSet hf p ⊆ { a : α | ⨆ i : ι, aeSeq hf p i a = ⨆ i : ι, f i a }
   intro x hx
   congr
   exact funext fun i => aeSeq_eq_fun_of_mem_aeSeqSet hf hx i

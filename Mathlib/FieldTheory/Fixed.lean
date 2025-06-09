@@ -209,9 +209,9 @@ theorem of_eval₂ (f : Polynomial (FixedPoints.subfield G F))
 -- Why is this so slow?
 theorem irreducible_aux (f g : Polynomial (FixedPoints.subfield G F)) (hf : f.Monic) (hg : g.Monic)
     (hfg : f * g = minpoly G F x) : f = 1 ∨ g = 1 := by
-  have hf2  : f ∣ minpoly G F x
+  have hf2 : f ∣ minpoly G F x
   rw [← hfg]; exact dvd_mul_right _ _
-  have hg2  : g ∣ minpoly G F x
+  have hg2 : g ∣ minpoly G F x
   rw [← hfg]; exact dvd_mul_left _ _
   have := eval₂ G F x
   rw [← hfg, Polynomial.eval₂_mul, mul_eq_zero] at this

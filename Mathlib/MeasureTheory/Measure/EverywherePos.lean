@@ -65,7 +65,7 @@ lemma exists_isOpen_everywherePosSubset_eq_diff (μ : Measure α) (s : Set α) :
   intro x ⟨n, ns, hx⟩
   rcases mem_nhdsWithin_iff_exists_mem_nhds_inter.1 ns with ⟨v, vx, hv⟩
   rcases mem_nhds_iff.1 vx with ⟨w, wv, w_open, xw⟩
-  have A  : w ⊆ {x | ∃ n ∈ 𝓝[s] x, μ n = 0}
+  have A : w ⊆ {x | ∃ n ∈ 𝓝[s] x, μ n = 0}
   intro y yw
   refine ⟨s ∩ w, inter_mem_nhdsWithin _ (w_open.mem_nhds yw), measure_mono_null ?_ hx⟩
   rw [inter_comm]
@@ -137,8 +137,8 @@ lemma isEverywherePos_everywherePosSubset
     μ.IsEverywherePos (μ.everywherePosSubset s) := by
   intro x hx n hn
   rcases mem_nhdsWithin_iff_exists_mem_nhds_inter.1 hn with ⟨u, u_mem, hu⟩
-  have A  : 0 < μ (u ∩ s)
-  have  : u ∩ s ∈ 𝓝[s] x
+  have A : 0 < μ (u ∩ s)
+  have : u ∩ s ∈ 𝓝[s] x
   rw [inter_comm]; exact inter_mem_nhdsWithin s u_mem
   exact hx.2 _ this
   have B : (u ∩ μ.everywherePosSubset s : Set α) =ᵐ[μ] (u ∩ s : Set α) :=
@@ -156,8 +156,8 @@ lemma isEverywherePos_everywherePosSubset_of_measure_ne_top
     μ.IsEverywherePos (μ.everywherePosSubset s) := by
   intro x hx n hn
   rcases mem_nhdsWithin_iff_exists_mem_nhds_inter.1 hn with ⟨u, u_mem, hu⟩
-  have A  : 0 < μ (u ∩ s)
-  have  : u ∩ s ∈ 𝓝[s] x
+  have A : 0 < μ (u ∩ s)
+  have : u ∩ s ∈ 𝓝[s] x
   rw [inter_comm]; exact inter_mem_nhdsWithin s u_mem
   exact hx.2 _ this
   have B : (u ∩ μ.everywherePosSubset s : Set α) =ᵐ[μ] (u ∩ s : Set α) :=

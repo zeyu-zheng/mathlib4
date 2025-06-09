@@ -184,7 +184,7 @@ theorem pi_mem_of_mulSingle_mem_aux [DecidableEq η] (I : Finset η) {H : Subgro
           apply h1 j
           simpa [heq] using hj
       · intro j hj
-        have  : j ≠ i
+        have : j ≠ i
         rintro rfl
         contradiction
         simp only [ne_eq, this, not_false_eq_true, Function.update_noteq]

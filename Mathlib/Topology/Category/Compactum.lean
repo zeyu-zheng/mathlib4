@@ -211,19 +211,19 @@ private theorem cl_cl {X : Compactum} (A : Set X) : cl (cl A) ⊆ cl A := by
   let C1 := insert AA C0
   let C2 := finiteInterClosure C1
   -- C0 is closed under intersections.
-  have claim1  : ∀ (B) (_ : B ∈ C0) (C) (_ : C ∈ C0), B ∩ C ∈ C0
+  have claim1 : ∀ (B) (_ : B ∈ C0) (C) (_ : C ∈ C0), B ∩ C ∈ C0
   rintro B ⟨Q, hQ, rfl⟩ C ⟨R, hR, rfl⟩
   use Q ∩ R
   simp only [and_true_iff, eq_self_iff_true, Set.preimage_inter]
   exact inter_sets _ hQ hR
   -- All sets in C0 are nonempty.
-  have claim2  : ∀ B ∈ C0, Set.Nonempty B
+  have claim2 : ∀ B ∈ C0, Set.Nonempty B
   rintro B ⟨Q, hQ, rfl⟩
   obtain ⟨q⟩ := Filter.nonempty_of_mem hQ
   use X.incl q
   simpa
   -- The intersection of AA with every set in C0 is nonempty.
-  have claim3  : ∀ B ∈ C0, (AA ∩ B).Nonempty
+  have claim3 : ∀ B ∈ C0, (AA ∩ B).Nonempty
   rintro B ⟨Q, hQ, rfl⟩
   have : (Q ∩ cl A).Nonempty := Filter.nonempty_of_mem (inter_mem hQ hF)
   rcases this with ⟨q, hq1, P, hq2, hq3⟩
@@ -242,7 +242,7 @@ private theorem cl_cl {X : Compactum} (A : Set X) : cl (cl A) ⊆ cl A := by
   -- C0 is closed under finite intersections by claim1.
   have claim5 : FiniteInter C0 := ⟨⟨_, univ_mem, Set.preimage_univ⟩, claim1⟩
   -- Every element of C2 is nonempty.
-  have claim6  : ∀ P ∈ C2, (P : Set (Ultrafilter X)).Nonempty
+  have claim6 : ∀ P ∈ C2, (P : Set (Ultrafilter X)).Nonempty
   suffices ∀ P ∈ C2, P ∈ C0 ∨ ∃ Q ∈ C0, P = AA ∩ Q by
     intro P hP
     cases' this P hP with h h
@@ -275,7 +275,7 @@ theorem str_eq_of_le_nhds {X : Compactum} (F : Ultrafilter X) (x : X) : ↑F ≤
   let T2 := finiteInterClosure T1
   intro cond
   -- If F contains a closed set A, then x is contained in A.
-  have claim1  : ∀ A : Set X, IsClosed A → A ∈ F → x ∈ A
+  have claim1 : ∀ A : Set X, IsClosed A → A ∈ F → x ∈ A
   intro A hA h
   by_contra H
   rw [le_nhds_iff] at cond
@@ -283,24 +283,24 @@ theorem str_eq_of_le_nhds {X : Compactum} (F : Ultrafilter X) (x : X) : ↑F ≤
   rw [Ultrafilter.mem_coe, Ultrafilter.compl_mem_iff_not_mem] at cond
   contradiction
   -- If A ∈ F, then x ∈ cl A.
-  have claim2  : ∀ A : Set X, A ∈ F → x ∈ cl A
+  have claim2 : ∀ A : Set X, A ∈ F → x ∈ cl A
   intro A hA
   exact claim1 (cl A) (isClosed_cl A) (mem_of_superset hA (subset_cl A))
   -- T0 is closed under intersections.
-  have claim3  : ∀ (S1) (_ : S1 ∈ T0) (S2) (_ : S2 ∈ T0), S1 ∩ S2 ∈ T0
+  have claim3 : ∀ (S1) (_ : S1 ∈ T0) (S2) (_ : S2 ∈ T0), S1 ∩ S2 ∈ T0
   rintro S1 ⟨S1, hS1, rfl⟩ S2 ⟨S2, hS2, rfl⟩
   exact ⟨S1 ∩ S2, inter_mem hS1 hS2, by simp [basic_inter]⟩
   -- For every S ∈ T0, the intersection AA ∩ S is nonempty.
-  have claim4  : ∀ S ∈ T0, (AA ∩ S).Nonempty
+  have claim4 : ∀ S ∈ T0, (AA ∩ S).Nonempty
   rintro S ⟨S, hS, rfl⟩
   rcases claim2 _ hS with ⟨G, hG, hG2⟩
   exact ⟨G, hG2, hG⟩
   -- Every element of T0 is nonempty.
-  have claim5  : ∀ S ∈ T0, Set.Nonempty S
+  have claim5 : ∀ S ∈ T0, Set.Nonempty S
   rintro S ⟨S, hS, rfl⟩
   exact ⟨F, hS⟩
   -- Every element of T2 is nonempty.
-  have claim6  : ∀ S ∈ T2, Set.Nonempty S
+  have claim6 : ∀ S ∈ T2, Set.Nonempty S
   suffices ∀ S ∈ T2, S ∈ T0 ∨ ∃ Q ∈ T0, S = AA ∩ Q by
     intro S hS
     cases' this _ hS with h h
@@ -322,7 +322,7 @@ theorem str_eq_of_le_nhds {X : Compactum} (F : Ultrafilter X) (x : X) : ↑F ≤
   suffices ∀ F : fsu, ↑F ⊆ T1 → (⋂₀ ι F).Nonempty by
     obtain ⟨G, h1⟩ := Ultrafilter.exists_ultrafilter_of_finite_inter_nonempty _ this
     have c1 : X.join G = F := Ultrafilter.coe_le_coe.1 fun P hP => h1 (Or.inr ⟨P, hP, rfl⟩)
-    have c2  : G.map X.str = X.incl x
+    have c2 : G.map X.str = X.incl x
     refine Ultrafilter.coe_le_coe.1 fun P hP => ?_
     apply mem_of_superset (h1 (Or.inl rfl))
     rintro x ⟨rfl⟩

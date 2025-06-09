@@ -141,7 +141,7 @@ theorem sum_subgroup_units_eq_zero [Ring K] [NoZeroDivisors K]
   -- The action of a on G as an embedding
   let a_mul_emb : G ↪ G := mulLeftEmbedding a
   -- ... and leaves G unchanged
-  have h_unchanged  : Finset.univ.map a_mul_emb = Finset.univ
+  have h_unchanged : Finset.univ.map a_mul_emb = Finset.univ
   simp
   -- Therefore the sum of x over a G is the sum of a x over G
   have h_sum_map := Finset.univ.sum_map a_mul_emb fun x => ((x : Kˣ) : K)
@@ -151,7 +151,7 @@ theorem sum_subgroup_units_eq_zero [Ring K] [NoZeroDivisors K]
     mulLeftEmbedding_apply, Submonoid.coe_mul, Subgroup.coe_toSubmonoid, Units.val_mul,
     ← Finset.mul_sum] at h_sum_map
   -- thus one of (a - 1) or ∑ G, x is zero
-  have hzero  : (((a : Kˣ) : K) - 1) = 0 ∨ ∑ x : ↥G, ((x : Kˣ) : K) = 0
+  have hzero : (((a : Kˣ) : K) - 1) = 0 ∨ ∑ x : ↥G, ((x : Kˣ) : K) = 0
   rw [← mul_eq_zero, sub_mul, ← h_sum_map, one_mul, sub_self]
   apply Or.resolve_left hzero
   contrapose! ha
@@ -240,7 +240,7 @@ theorem card (p : ℕ) [CharP K p] : ∃ n : ℕ+, Nat.Prime p ∧ q = p ^ (n : 
   apply Or.resolve_left (Nat.eq_zero_or_pos n)
   rintro rfl
   rw [pow_zero] at h
-  have  : (0 : K) = 1
+  have : (0 : K) = 1
   apply Fintype.card_le_one_iff.mp (le_of_eq h)
   exact absurd this zero_ne_one
 
@@ -292,10 +292,10 @@ theorem sum_pow_lt_card_sub_one (i : ℕ) (h : i < q - 1) : ∑ x : K, x ^ i = 0
   by_cases hi : i = 0
   · simp only [hi, nsmul_one, sum_const, pow_zero, card_univ, cast_card_eq_zero]
   classical
-    have hiq  : ¬q - 1 ∣ i
+    have hiq : ¬q - 1 ∣ i
     contrapose! h; exact Nat.le_of_dvd (Nat.pos_of_ne_zero hi) h
     let φ : Kˣ ↪ K := ⟨fun x ↦ x, Units.ext⟩
-    have  : univ.map φ = univ \ {0}
+    have : univ.map φ = univ \ {0}
     ext x
     simpa only [mem_map, mem_univ, Function.Embedding.coeFn_mk, true_and_iff, mem_sdiff,
       mem_singleton, φ] using isUnit_iff_ne_zero
@@ -312,7 +312,7 @@ section
 variable (K' : Type*) [Field K'] {p n : ℕ}
 
 theorem X_pow_card_sub_X_natDegree_eq (hp : 1 < p) : (X ^ p - X : K'[X]).natDegree = p := by
-  have h1  : (X : K'[X]).degree < (X ^ p : K'[X]).degree
+  have h1 : (X : K'[X]).degree < (X ^ p : K'[X]).degree
   rw [degree_X_pow, degree_X]
   exact mod_cast hp
   rw [natDegree_eq_of_degree_eq (degree_sub_eq_left_of_degree_lt h1), natDegree_X_pow]
@@ -337,7 +337,7 @@ variable (p : ℕ) [Fact p.Prime] [Algebra (ZMod p) K]
 theorem roots_X_pow_card_sub_X : roots (X ^ q - X : K[X]) = Finset.univ.val := by
   classical
     have aux : (X ^ q - X : K[X]) ≠ 0 := X_pow_card_sub_X_ne_zero K Fintype.one_lt_card
-    have  : (roots (X ^ q - X : K[X])).toFinset = Finset.univ
+    have : (roots (X ^ q - X : K[X])).toFinset = Finset.univ
     rw [eq_univ_iff_forall]
     intro x
     rw [Multiset.mem_toFinset, mem_roots aux, IsRoot.def, eval_sub, eval_pow, eval_X,
@@ -523,7 +523,7 @@ end ZMod
 theorem Int.ModEq.pow_card_sub_one_eq_one {p : ℕ} (hp : Nat.Prime p) {n : ℤ} (hpn : IsCoprime n p) :
     n ^ (p - 1) ≡ 1 [ZMOD p] := by
   haveI : Fact p.Prime := ⟨hp⟩
-  have  : ¬(n : ZMod p) = 0
+  have : ¬(n : ZMod p) = 0
   rw [CharP.intCast_eq_zero_iff _ p, ← (Nat.prime_iff_prime_int.mp hp).coprime_iff_not_dvd]
   · exact hpn.symm
   simpa [← ZMod.intCast_eq_intCast_iff] using ZMod.pow_card_sub_one_eq_one this
@@ -589,7 +589,7 @@ theorem unit_isSquare_iff (hF : ringChar F ≠ 2) (a : Fˣ) :
       push_cast
       exact FiniteField.pow_card_sub_one_eq_one (y : F) (Units.ne_zero y)
     · subst a; intro h
-      have key  : 2 * (Fintype.card F / 2) ∣ n * (Fintype.card F / 2)
+      have key : 2 * (Fintype.card F / 2) ∣ n * (Fintype.card F / 2)
       rw [← pow_mul] at h
       rw [hodd, ← Fintype.card_units, ← orderOf_eq_card_of_forall_mem_zpowers hg]
       apply orderOf_dvd_of_pow_eq_one h
@@ -608,7 +608,7 @@ theorem isSquare_iff (hF : ringChar F ≠ 2) {a : F} (ha : a ≠ 0) :
   constructor
   · rintro ⟨y, hy⟩; exact ⟨y, hy⟩
   · rintro ⟨y, rfl⟩
-    have hy  : y ≠ 0
+    have hy : y ≠ 0
     rintro rfl; simp at ha
     refine ⟨Units.mk0 y hy, ?_⟩; simp
 

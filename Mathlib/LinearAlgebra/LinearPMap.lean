@@ -670,7 +670,7 @@ theorem domRestrict_domain (f : E →ₗ.[R] F) {S : Submodule R E} :
 
 theorem domRestrict_apply {f : E →ₗ.[R] F} {S : Submodule R E} ⦃x : ↥(S ⊓ f.domain)⦄ ⦃y : f.domain⦄
     (h : (x : E) = y) : f.domRestrict S x = f y := by
-  have  : Submodule.inclusion (by simp) x = y
+  have : Submodule.inclusion (by simp) x = y
   ext
   simp [h]
   rw [← this]
@@ -877,7 +877,7 @@ theorem existsUnique_from_graph {g : Submodule R (E × F)}
   · convert ha
     simp
   intro y₁ y₂ hy₁ hy₂
-  have hy  : ((0 : E), y₁ - y₂) ∈ g
+  have hy : ((0 : E), y₁ - y₂) ∈ g
   convert g.sub_mem hy₁ hy₂
   exact (sub_self _).symm
   exact sub_eq_zero.mp (hg hy (by simp))
@@ -954,7 +954,7 @@ theorem toLinearPMap_graph_eq (g : Submodule R (E × F))
     exact Prod.ext hx1.symm hx2.symm
   rw [LinearPMap.mem_graph_iff]
   cases' x with x_fst x_snd
-  have hx_fst  : x_fst ∈ g.map (LinearMap.fst R E F)
+  have hx_fst : x_fst ∈ g.map (LinearMap.fst R E F)
   simp only [mem_map, LinearMap.fst_apply, Prod.exists, exists_and_right, exists_eq_right]
   exact ⟨x_snd, hx⟩
   refine ⟨⟨x_fst, hx_fst⟩, Subtype.coe_mk x_fst hx_fst, ?_⟩

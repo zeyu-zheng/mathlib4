@@ -155,7 +155,7 @@ theorem smul_tprodCoeff_aux [DecidableEq ι] (z : R) (f : Π i, s i) (i : ι) (r
 theorem smul_tprodCoeff [DecidableEq ι] (z : R) (f : Π i, s i) (i : ι) (r : R₁) [SMul R₁ R]
     [IsScalarTower R₁ R R] [SMul R₁ (s i)] [IsScalarTower R₁ R (s i)] :
     tprodCoeff R z (update f i (r • f i)) = tprodCoeff R (r • z) f := by
-  have h₁  : r • z = r • (1 : R) * z
+  have h₁ : r • z = r • (1 : R) * z
   rw [smul_mul_assoc, one_mul]
   have h₂ : r • f i = (r • (1 : R)) • f i := (smul_one_smul _ _ _).symm
   rw [h₁, h₂]
@@ -194,7 +194,7 @@ protected theorem induction_on' {motive : (⨂[R] i, s i) → Prop} (z : ⨂[R] 
     (tprodCoeff : ∀ (r : R) (f : Π i, s i), motive (tprodCoeff R r f))
     (add : ∀ x y, motive x → motive y → motive (x + y)) :
     motive z := by
-  have C0  : motive 0
+  have C0 : motive 0
   have h₁ := tprodCoeff 0 0
   rwa [zero_tprodCoeff] at h₁
   refine AddCon.induction_on z fun x ↦ FreeAddMonoid.recOn x C0 ?_
@@ -295,7 +295,7 @@ theorem tprod_eq_tprodCoeff_one :
 
 @[simp]
 theorem tprodCoeff_eq_smul_tprod (z : R) (f : Π i, s i) : tprodCoeff R z f = z • tprod R f := by
-  have  : z = z • (1 : R)
+  have : z = z • (1 : R)
   simp only [mul_one, Algebra.id.smul_eq_mul]
   conv_lhs => rw [this]
   rfl

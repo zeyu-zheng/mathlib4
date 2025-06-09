@@ -369,7 +369,7 @@ lemma leftShift_comp (a n' : ℤ) (hn' : n + a = n') {m t t' : ℤ} (γ' : Cocha
     (γ.comp γ' h).leftShift a t' ht' = (a * m).negOnePow • (γ.leftShift a n' hn').comp γ'
       (by rw [← ht', ← h, ← hn', add_assoc, add_comm a, add_assoc]) := by
   ext p q hpq
-  have h'  : n' + m = t'
+  have h' : n' + m = t'
   linarith
   dsimp
   simp only [Cochain.comp_v _ _ h' p (p + n') q rfl (by omega),

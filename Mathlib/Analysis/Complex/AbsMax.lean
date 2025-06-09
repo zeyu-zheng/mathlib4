@@ -183,9 +183,9 @@ theorem norm_eqOn_closedBall_of_isMaxOn {f : E → F} {z : E} {r : ℝ}
   set e := (lineMap z w : ℂ → E)
   have hde : Differentiable ℂ e := (differentiable_id.smul_const (w - z)).add_const z
   suffices ‖(f ∘ e) (1 : ℂ)‖ = ‖(f ∘ e) (0 : ℂ)‖ by simpa [e]
-  have hr  : dist (1 : ℂ) 0 = 1
+  have hr : dist (1 : ℂ) 0 = 1
   simp
-  have hball  : MapsTo e (ball 0 1) (ball z r)
+  have hball : MapsTo e (ball 0 1) (ball z r)
   refine ((lipschitzWith_lineMap z w).mapsTo_ball (mt nndist_eq_zero.1 hne) 0 1).mono
     Subset.rfl ?_
   simpa only [lineMap_apply_zero, mul_one, coe_nndist] using ball_subset_ball hw
@@ -228,7 +228,7 @@ theorem norm_eqOn_of_isPreconnected_of_isMaxOn {f : E → F} {U : Set E} {c : E}
   set V := U ∩ {z | IsMaxOn (norm ∘ f) U z}
   have hV : ∀ x ∈ V, ‖f x‖ = ‖f c‖ := fun x hx => le_antisymm (hm hx.1) (hx.2 hcU)
   suffices U ⊆ V from fun x hx => hV x (this hx)
-  have hVo  : IsOpen V
+  have hVo : IsOpen V
   simpa only [ho.mem_nhds_iff, setOf_and, setOf_mem_eq]
     using isOpen_setOf_mem_nhds_and_isMaxOn_norm hd
   have hVne : (U ∩ V).Nonempty := ⟨c, hcU, hcU, hm⟩
@@ -332,9 +332,9 @@ theorem eventually_eq_or_eq_zero_of_isLocalMin_norm {f : E → ℂ} {c : E}
   refine or_iff_not_imp_right.mpr fun h => ?_
   have h1 : ∀ᶠ z in 𝓝 c, f z ≠ 0 := hf.self_of_nhds.continuousAt.eventually_ne h
   have h2 : IsLocalMax (norm ∘ f)⁻¹ c := hc.inv (h1.mono fun z => norm_pos_iff.mpr)
-  have h3  : IsLocalMax (norm ∘ f⁻¹) c
+  have h3 : IsLocalMax (norm ∘ f⁻¹) c
   refine h2.congr (eventually_of_forall ?_); simp
-  have h4  : ∀ᶠ z in 𝓝 c, DifferentiableAt ℂ f⁻¹ z
+  have h4 : ∀ᶠ z in 𝓝 c, DifferentiableAt ℂ f⁻¹ z
   filter_upwards [hf, h1] with z h using h.inv
   filter_upwards [eventually_eq_of_isLocalMax_norm h4 h3] with z using inv_inj.mp
 

@@ -59,7 +59,7 @@ theorem ne_zero_of_ne_zero_of_monic (hp : p ≠ 0) (hq : Monic q) : q ≠ 0 := b
 theorem Monic.map [Semiring S] (f : R →+* S) (hp : Monic p) : Monic (p.map f) := by
   unfold Monic
   nontriviality
-  have  : f p.leadingCoeff ≠ 0
+  have : f p.leadingCoeff ≠ 0
   rw [show _ = _ from hp, f.map_one]
   exact one_ne_zero
   rw [Polynomial.leadingCoeff, coeff_map]
@@ -138,7 +138,7 @@ theorem natDegree_eq_zero_iff_eq_one (hp : p.Monic) : p.natDegree = 0 ↔ p = 1 
   swap
   · rw [h]
     exact natDegree_one
-  have  : p = C (p.coeff 0)
+  have : p = C (p.coeff 0)
   rw [← Polynomial.degree_le_zero_iff]
   rwa [Polynomial.natDegree_eq_zero_iff_degree_le_zero] at h
   rw [this]
@@ -197,7 +197,7 @@ theorem nextCoeff_pow (hp : p.Monic) (n : ℕ) : (p ^ n).nextCoeff = n • p.nex
 theorem eq_one_of_map_eq_one {S : Type*} [Semiring S] [Nontrivial S] (f : R →+* S) (hp : p.Monic)
     (map_eq : p.map f = 1) : p = 1 := by
   nontriviality R
-  have hdeg  : p.degree = 0
+  have hdeg : p.degree = 0
   rw [← degree_map_eq_of_leadingCoeff_ne_zero f _, map_eq, degree_one]
   · rw [hp.leadingCoeff, f.map_one]
     exact one_ne_zero
@@ -365,7 +365,7 @@ theorem Monic.sub_of_left {p q : R[X]} (hp : Monic p) (hpq : degree q < degree p
 
 theorem Monic.sub_of_right {p q : R[X]} (hq : q.leadingCoeff = -1) (hpq : degree p < degree q) :
     Monic (p - q) := by
-  have  : (-q).coeff (-q).natDegree = 1
+  have : (-q).coeff (-q).natDegree = 1
   rw [natDegree_neg, coeff_neg, show q.coeff q.natDegree = -1 from hq, neg_neg]
   rw [sub_eq_add_neg]
   apply Monic.add_of_right this
@@ -469,7 +469,7 @@ theorem isUnit_leadingCoeff_mul_right_eq_zero_iff (h : IsUnit p.leadingCoeff) {q
   constructor
   · intro hp
     rw [← smul_eq_zero_iff_eq h.unit⁻¹] at hp
-    have  : h.unit⁻¹ • (p * q) = h.unit⁻¹ • p * q
+    have : h.unit⁻¹ • (p * q) = h.unit⁻¹ • p * q
     ext
     simp only [Units.smul_def, coeff_smul, coeff_mul, smul_eq_mul, mul_sum]
     refine sum_congr rfl fun x _ => ?_

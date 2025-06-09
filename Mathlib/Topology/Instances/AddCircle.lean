@@ -199,7 +199,7 @@ theorem coe_eq_coe_iff_of_mem_Ico {x y : 𝕜} (hx : x ∈ Ico a (a + p)) (hy : 
 
 theorem liftIco_coe_apply {f : 𝕜 → B} {x : 𝕜} (hx : x ∈ Ico a (a + p)) :
     liftIco p a f ↑x = f x := by
-  have  : (equivIco p a) x = ⟨x, hx⟩
+  have : (equivIco p a) x = ⟨x, hx⟩
   rw [Equiv.apply_eq_iff_eq_symm_apply]
   rfl
   rw [liftIco, comp_apply, this]
@@ -207,7 +207,7 @@ theorem liftIco_coe_apply {f : 𝕜 → B} {x : 𝕜} (hx : x ∈ Ico a (a + p))
 
 theorem liftIoc_coe_apply {f : 𝕜 → B} {x : 𝕜} (hx : x ∈ Ioc a (a + p)) :
     liftIoc p a f ↑x = f x := by
-  have  : (equivIoc p a) x = ⟨x, hx⟩
+  have : (equivIoc p a) x = ⟨x, hx⟩
   rw [Equiv.apply_eq_iff_eq_symm_apply]
   rfl
   rw [liftIoc, comp_apply, this]
@@ -220,9 +220,9 @@ lemma eq_coe_Ico (a : AddCircle p) : ∃ b, b ∈ Ico 0 p ∧ ↑b = a := by
 
 lemma coe_eq_zero_iff_of_mem_Ico (ha : a ∈ Ico 0 p) :
     (a : AddCircle p) = 0 ↔ a = 0 := by
-  have h0  : 0 ∈ Ico 0 (0 + p)
+  have h0 : 0 ∈ Ico 0 (0 + p)
   simpa [zero_add, left_mem_Ico] using hp.out
-  have ha'  : a ∈ Ico 0 (0 + p)
+  have ha' : a ∈ Ico 0 (0 + p)
   rwa [zero_add]
   rw [← AddCircle.coe_eq_coe_iff_of_mem_Ico ha' h0, QuotientAddGroup.mk_zero]
 
@@ -404,7 +404,7 @@ theorem addOrderOf_div_of_gcd_eq_one' {m : ℤ} {n : ℕ} (hn : 0 < n) (h : m.na
     exact addOrderOf_div_of_gcd_eq_one hn h
 
 theorem addOrderOf_coe_rat {q : ℚ} : addOrderOf (↑(↑q * p) : AddCircle p) = q.den := by
-  have  : (↑(q.den : ℤ) : 𝕜) ≠ 0
+  have : (↑(q.den : ℤ) : 𝕜) ≠ 0
   norm_cast
   exact q.pos.ne.symm
   rw [← q.num_divInt_den, Rat.cast_divInt_of_ne_zero _ this, Int.cast_natCast, Rat.num_divInt_den,
@@ -423,7 +423,7 @@ theorem addOrderOf_eq_pos_iff {u : AddCircle p} {n : ℕ} (h : 0 < n) :
     zsmul_eq_mul, Int.cast_mul, Int.cast_natCast, mul_assoc, ← mul_div, mul_comm _ p,
     mul_div_cancel_right₀ p h0] at ha
   have han : _ = a % n := Int.toNat_of_nonneg (Int.emod_nonneg _ <| mod_cast h.ne')
-  have he  : (↑(↑((a % n).toNat) / ↑n * p) : AddCircle p) = k
+  have he : (↑(↑((a % n).toNat) / ↑n * p) : AddCircle p) = k
   convert congr_arg (QuotientAddGroup.mk : 𝕜 → (AddCircle p)) ha using 1
   rw [coe_add, ← Int.cast_natCast, han, zsmul_eq_mul, mul_div_right_comm, eq_comm,
     add_left_eq_self, ← zsmul_eq_mul, coe_zsmul, coe_period, smul_zero]

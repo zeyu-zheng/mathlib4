@@ -48,9 +48,9 @@ nonrec def angle (p1 p2 p3 : P) : ℝ :=
 theorem continuousAt_angle {x : P × P × P} (hx12 : x.1 ≠ x.2.1) (hx32 : x.2.2 ≠ x.2.1) :
     ContinuousAt (fun y : P × P × P => ∠ y.1 y.2.1 y.2.2) x := by
   let f : P × P × P → V × V := fun y => (y.1 -ᵥ y.2.1, y.2.2 -ᵥ y.2.1)
-  have hf1  : (f x).1 ≠ 0
+  have hf1 : (f x).1 ≠ 0
   simp [hx12]
-  have hf2  : (f x).2 ≠ 0
+  have hf2 : (f x).2 ≠ 0
   simp [hx32]
   exact (InnerProductGeometry.continuousAt_angle hf1 hf2).comp
     ((continuous_fst.vsub continuous_snd.fst).prod_mk
@@ -239,7 +239,7 @@ theorem angle_left_midpoint_eq_pi_div_two_of_dist_eq {p1 p2 p3 : P} (h : dist p3
     ∠ p3 (midpoint ℝ p1 p2) p1 = π / 2 := by
   let m : P := midpoint ℝ p1 p2
   have h1 : p3 -ᵥ p1 = p3 -ᵥ m - (p1 -ᵥ m) := (vsub_sub_vsub_cancel_right p3 p1 m).symm
-  have h2  : p3 -ᵥ p2 = p3 -ᵥ m + (p1 -ᵥ m)
+  have h2 : p3 -ᵥ p2 = p3 -ᵥ m + (p1 -ᵥ m)
   rw [left_vsub_midpoint, ← midpoint_vsub_right, vsub_add_vsub_cancel]
   rw [dist_eq_norm_vsub V p3 p1, dist_eq_norm_vsub V p3 p2, h1, h2] at h
   exact (norm_add_eq_norm_sub_iff_angle_eq_pi_div_two (p3 -ᵥ m) (p1 -ᵥ m)).mp h.symm
@@ -256,11 +256,11 @@ theorem _root_.Sbtw.angle₁₂₃_eq_pi {p₁ p₂ p₃ : P} (h : Sbtw ℝ p₁
   rw [angle, angle_eq_pi_iff]
   rcases h with ⟨⟨r, ⟨hr0, hr1⟩, hp₂⟩, hp₂p₁, hp₂p₃⟩
   refine ⟨vsub_ne_zero.2 hp₂p₁.symm, -(1 - r) / r, ?_⟩
-  have hr0'  : r ≠ 0
+  have hr0' : r ≠ 0
   rintro rfl
   rw [← hp₂] at hp₂p₁
   simp at hp₂p₁
-  have hr1'  : r ≠ 1
+  have hr1' : r ≠ 1
   rintro rfl
   rw [← hp₂] at hp₂p₃
   simp at hp₂p₃
@@ -300,7 +300,7 @@ theorem _root_.Wbtw.angle₂₁₃_eq_zero_of_ne {p₁ p₂ p₃ : P} (h : Wbtw 
     ∠ p₂ p₁ p₃ = 0 := by
   rw [angle, angle_eq_zero_iff]
   rcases h with ⟨r, ⟨hr0, hr1⟩, rfl⟩
-  have hr0'  : r ≠ 0
+  have hr0' : r ≠ 0
   rintro rfl
   simp at hp₂p₁
   replace hr0 := hr0.lt_of_ne hr0'.symm

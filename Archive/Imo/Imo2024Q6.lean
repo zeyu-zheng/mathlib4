@@ -133,8 +133,8 @@ lemma Aquaesulian.u_eq_zero_or_v_eq_zero {x y u v : G} (huv : u ≠ v) (hx : f x
   · rw [add_comm x y, add_comm (-(f (-x))) (-(f (-y)))] at hxy'
     exact .inr (h.u_eq_zero huv.symm hy hx hxy')
 
+open Classical in
 lemma Aquaesulian.card_le_two : #(Set.range (fun x ↦ f x + f (-x))) ≤ 2 := by
-  classical
   by_cases hf : ∀ x, f x + f (-x) = 0
   · simp [hf]
   · rw [not_forall] at hf
@@ -195,8 +195,8 @@ lemma fExample_of_mem_Ico {x : ℚ} (h : x ∈ Set.Ico 0 1) : fExample x = -x :=
 lemma apply_fExample_add_apply_of_fract_le {x y : ℚ} (h : Int.fract y ≤ Int.fract x) :
     fExample (x + fExample y) = fExample x + y := by
   rw [← sub_nonneg] at h
-  have h₁ : Int.fract x - Int.fract y < 1 :=
-    (sub_le_self (Int.fract x) (Int.fract_nonneg y)).trans_lt (Int.fract_lt_one x)
+  have h₁ : Int.fract x - Int.fract y < 1
+  exact (sub_le_self (Int.fract x) (Int.fract_nonneg y)).trans_lt (Int.fract_lt_one x)
   rw [fExample_add, add_fExample, add_assoc, fExample_int_add, fExample_int_add,
       fExample_of_mem_Ico ⟨h, h₁⟩]
   abel
@@ -227,7 +227,7 @@ lemma floor_fExample (x : ℚ) :
     simp [(Int.fract_nonneg x).lt_of_ne' h, (Int.fract_lt_one x).le]
 
 lemma card_range_fExample : #(Set.range (fun x ↦ fExample x + fExample (-x))) = 2 := by
-  have h  : Set.range (fun x ↦ fExample x + fExample (-x)) = {0, -2}
+  have h : Set.range (fun x ↦ fExample x + fExample (-x)) = {0, -2}
   ext x
   simp only [Set.mem_range, Set.mem_insert_iff, Set.mem_singleton_iff]
   refine ⟨fun h ↦ ?_, fun h ↦ ?_⟩

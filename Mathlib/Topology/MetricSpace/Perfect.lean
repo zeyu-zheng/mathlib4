@@ -41,7 +41,7 @@ variable {α : Type*} [MetricSpace α] {C : Set α} (hC : Perfect C) {ε : ℝ�
 private theorem Perfect.small_diam_aux (ε_pos : 0 < ε) {x : α} (xC : x ∈ C) :
     let D := closure (EMetric.ball x (ε / 2) ∩ C)
     Perfect D ∧ D.Nonempty ∧ D ⊆ C ∧ EMetric.diam D ≤ ε := by
-  have  : x ∈ EMetric.ball x (ε / 2)
+  have : x ∈ EMetric.ball x (ε / 2)
   apply EMetric.mem_ball_self
   rw [ENNReal.div_pos_iff]
   exact ⟨ne_of_gt ε_pos, by norm_num⟩

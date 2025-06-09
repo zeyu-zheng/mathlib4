@@ -610,7 +610,7 @@ theorem _root_.Sbtw.sOppSide_of_not_mem_of_mem {s : AffineSubspace R P} {x y z :
   refine ⟨h.wbtw.wOppSide₁₃ hy, hx, fun hz => hx ?_⟩
   rcases h with ⟨⟨t, ⟨ht0, ht1⟩, rfl⟩, hyx, hyz⟩
   rw [lineMap_apply] at hy
-  have ht  : t ≠ 1
+  have ht : t ≠ 1
   rintro rfl
   simp [lineMap_apply] at hyz
   have hy' := vsub_mem_direction hy hz

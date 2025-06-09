@@ -327,7 +327,7 @@ theorem PartialHomeomorph.contDiffOn_univUnitBall_symm :
     ContDiffOn ℝ n univUnitBall.symm (ball (0 : E) 1) := fun y hy ↦ by
   apply ContDiffAt.contDiffWithinAt
   suffices ContDiffAt ℝ n (fun y : E => (√(1 - ‖y‖ ^ 2 : ℝ))⁻¹) y from this.smul contDiffAt_id
-  have h  : (0 : ℝ) < (1 : ℝ) - ‖(y : E)‖ ^ 2
+  have h : (0 : ℝ) < (1 : ℝ) - ‖(y : E)‖ ^ 2
   rwa [mem_ball_zero_iff, ← _root_.abs_one, ← abs_norm, ← sq_lt_sq, one_pow, ← sub_pos] at hy
   refine ContDiffAt.inv ?_ (Real.sqrt_ne_zero'.mpr h)
   refine (contDiffAt_sqrt h.ne').comp y ?_

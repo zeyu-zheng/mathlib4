@@ -312,7 +312,7 @@ theorem lt_iff_lex_lt (l m : Products I) : l < m ↔ List.Lex (·<·) l.val m.va
   cases l; cases m; rw [Subtype.mk_lt_mk]; exact Iff.rfl
 
 instance : IsWellFounded (Products I) (·<·) := by
-  have  : (· < · : Products I → _ → _) = (fun l m ↦ List.Lex (·<·) l.val m.val)
+  have : (· < · : Products I → _ → _) = (fun l m ↦ List.Lex (·<·) l.val m.val)
   ext; exact lt_iff_lex_lt _ _
   rw [this]
   dsimp [Products]
@@ -591,7 +591,7 @@ theorem GoodProducts.finsupp_sum_mem_span_eval {a : I} {as : List I}
   rw [hsm]
   apply Submodule.smul_mem
   apply Submodule.subset_span
-  have hmas  : m.val ≤ as
+  have hmas : m.val ≤ as
   apply hc
   simpa only [Finset.mem_coe, Finsupp.mem_support_iff] using hm
   refine ⟨⟨a :: m.val, ha.cons_of_le m.prop hmas⟩, ⟨List.cons_le_cons a hmas, ?_⟩⟩
@@ -807,7 +807,7 @@ instance : Unique { l // Products.isGood ({fun _ ↦ false} : Set (I → Bool)) 
     apply (List.Lex.nil_left_or_eq_nil l (r := (·<·))).resolve_left
     intro _
     apply hll
-    have he  : {Products.nil} ⊆ {m | m < ⟨l,hl⟩}
+    have he : {Products.nil} ⊆ {m | m < ⟨l,hl⟩}
     simpa only [Products.nil, Products.lt_iff_lex_lt, Set.singleton_subset_iff, Set.mem_setOf_eq]
     apply Submodule.span_mono (Set.image_subset _ he)
     rw [Products.span_nil_eq_top]
@@ -1046,13 +1046,13 @@ theorem Products.limitOrdinal (l : Products I) : l.isGood (π C (ord I · < o)) 
     ∃ (o' : Ordinal), o' < o ∧ l.isGood (π C (ord I · < o')) := by
   refine ⟨fun h ↦ ?_, fun ⟨o', ⟨ho', hl⟩⟩ ↦ isGood_mono C (le_of_lt ho') hl⟩
   use Finset.sup l.val.toFinset (fun a ↦ Order.succ (ord I a))
-  have ha  : ⊥ < o
+  have ha : ⊥ < o
   rw [Ordinal.bot_eq_zero, Ordinal.pos_iff_ne_zero]; exact ho.1
-  have hslt  : Finset.sup l.val.toFinset (fun a ↦ Order.succ (ord I a)) < o
+  have hslt : Finset.sup l.val.toFinset (fun a ↦ Order.succ (ord I a)) < o
   simp only [Finset.sup_lt_iff ha, List.mem_toFinset]
   exact fun b hb ↦ ho.2 _ (prop_of_isGood C (ord I · < o) h b hb)
   refine ⟨hslt, fun he ↦ h ?_⟩
-  have hlt  : ∀ i ∈ l.val, ord I i < Finset.sup l.val.toFinset (fun a ↦ Order.succ (ord I a))
+  have hlt : ∀ i ∈ l.val, ord I i < Finset.sup l.val.toFinset (fun a ↦ Order.succ (ord I a))
   intro i hi
   simp only [Finset.lt_sup_iff, List.mem_toFinset, Order.lt_succ_iff]
   exact ⟨i, hi, le_rfl⟩
@@ -1371,7 +1371,7 @@ theorem union_succ : GoodProducts C = GoodProducts (π C (ord I · < o)) ∪ Max
       have h' := Products.prop_of_isGood_of_contained C _ h hsC
       simp only [Order.lt_succ_iff] at h'
       simp only [not_imp_not] at hh
-      have hh'  : ∀ a ∈ l.val, ord I a < o
+      have hh' : ∀ a ∈ l.val, ord I a < o
       intro a ha
       refine (h' a ha).lt_of_ne ?_
       rw [ne_eq, ord_term ho a]
@@ -1493,7 +1493,7 @@ theorem GoodProducts.head!_eq_o_of_maxProducts [Inhabited I] (l : ↑(MaxProduct
     (List.head!_mem_self (List.ne_nil_of_mem hm))
   simp only [Order.lt_succ_iff] at this
   refine eq_of_le_of_not_lt this (not_lt.mpr ?_)
-  have h  : ord I (term I ho) ≤ ord I l.val.val.head!
+  have h : ord I (term I ho) ≤ ord I l.val.val.head!
   simp only [← ord_term_aux, ord, Ordinal.typein_le_typein, not_lt]
   exact Products.rel_head!_of_mem hm
   rwa [ord_term_aux] at h
@@ -1512,7 +1512,7 @@ theorem Products.evalCons {l : List I} {a : I}
 theorem Products.max_eq_eval [Inhabited I] (l : Products I) (hl : l.val ≠ [])
     (hlh : l.val.head! = term I ho) :
     Linear_CC' C hsC ho (l.eval C) = l.Tail.eval (C' C ho) := by
-  have hlc  : ((term I ho) :: l.Tail.val).Chain' (·>·)
+  have hlc : ((term I ho) :: l.Tail.val).Chain' (·>·)
   rw [← max_eq_o_cons_tail ho l hl hlh]; exact l.prop
   rw [max_eq_o_cons_tail' ho l hl hlh hlc, Products.evalCons]
   ext x
@@ -1522,7 +1522,7 @@ theorem Products.max_eq_eval [Inhabited I] (l : Products I) (hl : l.val ≠ [])
     Pi.mul_apply]
   rw [CC'₁, CC'₀, Products.eval_eq, Products.eval_eq, Products.eval_eq]
   simp only [mul_ite, mul_one, mul_zero]
-  have hi'  : ∀ i, i ∈ l.Tail.val → (x.val i = SwapTrue o x.val i)
+  have hi' : ∀ i, i ∈ l.Tail.val → (x.val i = SwapTrue o x.val i)
   intro i hi
   simp only [SwapTrue, @eq_comm _ (x.val i), ite_eq_right_iff, ord_term ho]
   rintro rfl

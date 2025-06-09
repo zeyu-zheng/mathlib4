@@ -270,7 +270,7 @@ theorem _root_.Real.tendsto_of_bddBelow_antitone {f : ℕ → ℝ} (h_bdd : BddB
 /-- An antitone sequence `f : ℕ → ℝ≥0` has a finite limit. -/
 theorem tendsto_of_antitone {f : ℕ → ℝ≥0} (h_ant : Antitone f) :
     ∃ r : ℝ≥0, Tendsto f atTop (𝓝 r) := by
-  have h_bdd_0  : (0 : ℝ) ∈ lowerBounds (Set.range fun n : ℕ => (f n : ℝ))
+  have h_bdd_0 : (0 : ℝ) ∈ lowerBounds (Set.range fun n : ℕ => (f n : ℝ))
   rintro r ⟨n, hn⟩
   simp_rw [← hn]
   exact NNReal.coe_nonneg _

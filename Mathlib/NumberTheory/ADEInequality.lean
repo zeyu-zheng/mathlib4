@@ -152,21 +152,21 @@ theorem Admissible.one_lt_sumInv {pqr : Multiset ℕ+} : Admissible pqr → 1 < 
     rfl
 
 theorem lt_three {p q r : ℕ+} (hpq : p ≤ q) (hqr : q ≤ r) (H : 1 < sumInv {p, q, r}) : p < 3 := by
-  have h3  : (0 : ℚ) < 3
+  have h3 : (0 : ℚ) < 3
   norm_num
   contrapose! H
   rw [sumInv_pqr]
   have h3q := H.trans hpq
   have h3r := h3q.trans hqr
-  have hp  : (p : ℚ)⁻¹ ≤ 3⁻¹
+  have hp : (p : ℚ)⁻¹ ≤ 3⁻¹
   rw [inv_le_inv _ h3]
   · assumption_mod_cast
   · norm_num
-  have hq  : (q : ℚ)⁻¹ ≤ 3⁻¹
+  have hq : (q : ℚ)⁻¹ ≤ 3⁻¹
   rw [inv_le_inv _ h3]
   · assumption_mod_cast
   · norm_num
-  have hr  : (r : ℚ)⁻¹ ≤ 3⁻¹
+  have hr : (r : ℚ)⁻¹ ≤ 3⁻¹
   rw [inv_le_inv _ h3]
   · assumption_mod_cast
   · norm_num
@@ -175,16 +175,16 @@ theorem lt_three {p q r : ℕ+} (hpq : p ≤ q) (hqr : q ≤ r) (H : 1 < sumInv 
     _ = 1 := by norm_num
 
 theorem lt_four {q r : ℕ+} (hqr : q ≤ r) (H : 1 < sumInv {2, q, r}) : q < 4 := by
-  have h4  : (0 : ℚ) < 4
+  have h4 : (0 : ℚ) < 4
   norm_num
   contrapose! H
   rw [sumInv_pqr]
   have h4r := H.trans hqr
-  have hq  : (q : ℚ)⁻¹ ≤ 4⁻¹
+  have hq : (q : ℚ)⁻¹ ≤ 4⁻¹
   rw [inv_le_inv _ h4]
   · assumption_mod_cast
   · norm_num
-  have hr  : (r : ℚ)⁻¹ ≤ 4⁻¹
+  have hr : (r : ℚ)⁻¹ ≤ 4⁻¹
   rw [inv_le_inv _ h4]
   · assumption_mod_cast
   · norm_num
@@ -193,11 +193,11 @@ theorem lt_four {q r : ℕ+} (hqr : q ≤ r) (H : 1 < sumInv {2, q, r}) : q < 4 
     _ = 1 := by norm_num
 
 theorem lt_six {r : ℕ+} (H : 1 < sumInv {2, 3, r}) : r < 6 := by
-  have h6  : (0 : ℚ) < 6
+  have h6 : (0 : ℚ) < 6
   norm_num
   contrapose! H
   rw [sumInv_pqr]
-  have hr  : (r : ℚ)⁻¹ ≤ 6⁻¹
+  have hr : (r : ℚ)⁻¹ ≤ 6⁻¹
   rw [inv_le_inv _ h6]
   · assumption_mod_cast
   · norm_num

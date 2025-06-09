@@ -353,7 +353,7 @@ theorem trans_range {a b c : X} (γ₁ : Path a b) (γ₂ : Path b c) :
       · use ⟨(t + 1) / 2, ⟨by linarith, by linarith⟩⟩
         replace h : t ≠ 0 := h
         have ht0 := lt_of_le_of_ne ht0 h.symm
-        have  : ¬(t + 1) / 2 ≤ 1 / 2
+        have : ¬(t + 1) / 2 ≤ 1 / 2
         rw [not_le]
         linarith
         rw [coe_mk_mk, Function.comp_apply, Subtype.coe_mk, if_neg this]
@@ -597,7 +597,7 @@ theorem truncate_continuous_family {a b : X} (γ : Path a b) :
 @[continuity]
 theorem truncate_const_continuous_family {a b : X} (γ : Path a b)
     (t : ℝ) : Continuous ↿(γ.truncate t) := by
-  have key  : Continuous (fun x => (t, x) : ℝ × I → ℝ × ℝ × I)
+  have key : Continuous (fun x => (t, x) : ℝ × I → ℝ × ℝ × I)
   fun_prop
   exact γ.truncate_continuous_family.comp key
 
@@ -654,10 +654,10 @@ theorem reparam_id (γ : Path x y) : γ.reparam id continuous_id rfl rfl = γ :=
 theorem range_reparam (γ : Path x y) {f : I → I} (hfcont : Continuous f) (hf₀ : f 0 = 0)
     (hf₁ : f 1 = 1) : range (γ.reparam f hfcont hf₀ hf₁) = range γ := by
   change range (γ ∘ f) = range γ
-  have  : range f = univ
+  have : range f = univ
   rw [range_iff_surjective]
   intro t
-  have h₁  : Continuous (Set.IccExtend (zero_le_one' ℝ) f)
+  have h₁ : Continuous (Set.IccExtend (zero_le_one' ℝ) f)
   continuity
   have := intermediate_value_Icc (zero_le_one' ℝ) h₁.continuousOn
   · rw [IccExtend_left, IccExtend_right, Icc.mk_zero, Icc.mk_one, hf₀, hf₁] at this
@@ -724,7 +724,7 @@ variable {F : Set X}
 
 theorem JoinedIn.mem (h : JoinedIn F x y) : x ∈ F ∧ y ∈ F := by
   rcases h with ⟨γ, γ_in⟩
-  have  : γ 0 ∈ F ∧ γ 1 ∈ F
+  have : γ 0 ∈ F ∧ γ 1 ∈ F
   constructor <;> apply γ_in
   simpa using this
 
@@ -887,9 +887,9 @@ nonrec theorem Inducing.isPathConnected_iff {f : X → Y} (hf : Inducing f) :
   refine ⟨hF.1, fun x hx y hy ↦ ?_⟩
   rcases hF.2 x hx y hy with ⟨γ, hγ⟩
   choose γ' hγ' hγγ' using hγ
-  have key₁  : Inseparable x (γ' 0)
+  have key₁ : Inseparable x (γ' 0)
   rw [← hf.inseparable_iff, hγγ' 0, γ.source]
-  have key₂  : Inseparable (γ' 1) y
+  have key₂ : Inseparable (γ' 1) y
   rw [← hf.inseparable_iff, hγγ' 1, γ.target]
   refine key₁.joinedIn hx (hγ' 0) |>.trans ⟨⟨⟨γ', ?_⟩, rfl, rfl⟩, hγ'⟩ |>.trans
     (key₂.joinedIn (hγ' 1) hy)
@@ -941,7 +941,7 @@ theorem IsPathConnected.exists_path_through_family {n : ℕ}
     ∃ γ : Path (p 0) (p n), range γ ⊆ s ∧ ∀ i, p i ∈ range γ := by
   let p' : ℕ → X := fun k => if h : k < n + 1 then p ⟨k, h⟩ else p ⟨0, n.zero_lt_succ⟩
   obtain ⟨γ, hγ⟩ : ∃ γ : Path (p' 0) (p' n), (∀ i ≤ n, p' i ∈ range γ) ∧ range γ ⊆ s := by
-    have hp'  : ∀ i ≤ n, p' i ∈ s
+    have hp' : ∀ i ≤ n, p' i ∈ s
     intro i hi
     simp [p', Nat.lt_succ_of_le hi, hp]
     clear_value p'
@@ -976,7 +976,7 @@ theorem IsPathConnected.exists_path_through_family {n : ℕ}
         apply union_subset hγ₀.2
         rw [range_subset_iff]
         exact hγ₁
-  have hpp'  : ∀ k < n + 1, p k = p' k
+  have hpp' : ∀ k < n + 1, p k = p' k
   intro k hk
   simp only [p', hk, dif_pos]
   congr

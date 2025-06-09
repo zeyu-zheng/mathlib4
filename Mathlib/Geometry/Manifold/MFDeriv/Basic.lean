@@ -273,7 +273,7 @@ theorem MDifferentiableAt.mdifferentiableWithinAt (h : MDifferentiableAt I I' f 
 
 theorem MDifferentiableWithinAt.mdifferentiableAt (h : MDifferentiableWithinAt I I' f s x)
     (hs : s ∈ 𝓝 x) : MDifferentiableAt I I' f x := by
-  have  : s = univ ∩ s
+  have : s = univ ∩ s
   rw [univ_inter]
   rwa [this, mdifferentiableWithinAt_inter hs, mdifferentiableWithinAt_univ] at h
 

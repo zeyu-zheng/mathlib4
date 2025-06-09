@@ -527,19 +527,19 @@ abbrev PseudoMetricSpace.ofSeminormedAddCommGroupCore {𝕜 E : Type*} [NormedFi
   dist_self x := by
     show ‖x - x‖ = 0
     simp only [sub_self]
-    have  : (0 : E) = (0 : 𝕜) • (0 : E)
+    have : (0 : E) = (0 : 𝕜) • (0 : E)
     simp
     rw [this, core.norm_smul]
     simp
   dist_comm x y := by
     show ‖x - y‖ = ‖y - x‖
-    have  : y - x = (-1 : 𝕜) • (x - y)
+    have : y - x = (-1 : 𝕜) • (x - y)
     simp
     rw [this, core.norm_smul]
     simp
   dist_triangle x y z := by
     show ‖x - z‖ ≤ ‖x - y‖ + ‖y - z‖
-    have  : x - z = (x - y) + (y - z)
+    have : x - z = (x - y) + (y - z)
     abel
     rw [this]
     exact core.norm_triangle _ _

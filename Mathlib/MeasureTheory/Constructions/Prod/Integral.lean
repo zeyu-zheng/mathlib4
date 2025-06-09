@@ -222,7 +222,7 @@ theorem hasFiniteIntegral_prod_iff ⦃f : α × β → E⦄ (h1f : StronglyMeasu
       (∀ᵐ x ∂μ, HasFiniteIntegral (fun y => f (x, y)) ν) ∧
         HasFiniteIntegral (fun x => ∫ y, ‖f (x, y)‖ ∂ν) μ := by
   simp only [HasFiniteIntegral, lintegral_prod_of_measurable _ h1f.ennnorm]
-  have (x)  : ∀ᵐ y ∂ν, 0 ≤ ‖f (x, y)‖
+  have (x) : ∀ᵐ y ∂ν, 0 ≤ ‖f (x, y)‖
   filter_upwards with y using norm_nonneg _
   simp_rw [integral_eq_lintegral_of_nonneg_ae (this _)
       (h1f.norm.comp_measurable measurable_prod_mk_left).aestronglyMeasurable,
@@ -475,7 +475,7 @@ theorem integral_prod_smul {𝕜 : Type*} [RCLike 𝕜] [NormedSpace 𝕜 E] (f 
   by_cases h : Integrable (fun z : α × β => f z.1 • g z.2) (μ.prod ν)
   · rw [integral_prod _ h]
     simp_rw [integral_smul, integral_smul_const]
-  have H  : ¬Integrable f μ ∨ ¬Integrable g ν
+  have H : ¬Integrable f μ ∨ ¬Integrable g ν
   contrapose! h
   exact h.1.prod_smul h.2
   cases' H with H H <;> simp [integral_undef h, integral_undef H]
@@ -526,7 +526,7 @@ lemma integral_integral_swap_of_hasCompactSupport
     exact mem_image_of_mem _ (subset_tsupport _ this)
   _ = ∫ x in U, (∫ y in V, f x y ∂ν) ∂μ := by
     apply (setIntegral_eq_integral_of_forall_compl_eq_zero (fun x hx ↦ ?_)).symm
-    have  : ∀ y, f x y = 0
+    have : ∀ y, f x y = 0
     intro y
     contrapose! hx
     have : (x, y) ∈ Function.support f.uncurry := hx
@@ -540,7 +540,7 @@ lemma integral_integral_swap_of_hasCompactSupport
     exact hasFiniteIntegral_of_bounded (C := C) (eventually_of_forall hC)
   _ = ∫ y, (∫ x in U, f x y ∂μ) ∂ν := by
     apply setIntegral_eq_integral_of_forall_compl_eq_zero (fun y hy ↦ ?_)
-    have  : ∀ x, f x y = 0
+    have : ∀ x, f x y = 0
     intro x
     contrapose! hy
     have : (x, y) ∈ Function.support f.uncurry := hy

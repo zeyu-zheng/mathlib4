@@ -485,7 +485,7 @@ theorem minpoly_root (hf : f ≠ 0) : minpoly K (root f) = f * C f.leadingCoeff�
   refine (minpoly.unique K _ f'_monic ?_ ?_).symm
   · rw [_root_.map_mul, aeval_eq, mk_self, zero_mul]
   intro q q_monic q_aeval
-  have commutes  : (lift (algebraMap K (AdjoinRoot f)) (root f) q_aeval).comp (mk q) = mk f
+  have commutes : (lift (algebraMap K (AdjoinRoot f)) (root f) q_aeval).comp (mk q) = mk f
   ext
   · simp only [RingHom.comp_apply, mk_C, lift_of]
     rfl

@@ -76,7 +76,7 @@ def commGroupOfInvolutive (hφ : FixedPointFree φ) (h2 : Function.Involutive φ
 theorem orderOf_ne_two_of_involutive (hφ : FixedPointFree φ) (h2 : Function.Involutive φ) (g : G) :
     orderOf g ≠ 2 := by
   intro hg
-  have key  : φ g = g
+  have key : φ g = g
   rw [hφ.coe_eq_inv_of_involutive h2, inv_eq_iff_mul_eq_one, ← sq, ← hg, pow_orderOf_eq_one]
   rw [hφ g key, orderOf_one] at hg
   contradiction

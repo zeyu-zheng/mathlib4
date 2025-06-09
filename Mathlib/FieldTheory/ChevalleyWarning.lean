@@ -105,10 +105,10 @@ Then the number of common solutions of the `f i` is divisible by `p`. -/
 theorem char_dvd_card_solutions_of_sum_lt {s : Finset ι} {f : ι → MvPolynomial σ K}
     (h : (∑ i ∈ s, (f i).totalDegree) < Fintype.card σ) :
     p ∣ Fintype.card { x : σ → K // ∀ i ∈ s, eval x (f i) = 0 } := by
-  have hq  : 0 < q - 1
+  have hq : 0 < q - 1
   rw [← Fintype.card_units, Fintype.card_pos_iff]; exact ⟨1⟩
   let S : Finset (σ → K) := { x ∈ univ | ∀ i ∈ s, eval x (f i) = 0 }.toFinset
-  have hS  : ∀ x : σ → K, x ∈ S ↔ ∀ i : ι, i ∈ s → eval x (f i) = 0
+  have hS : ∀ x : σ → K, x ∈ S ↔ ∀ i : ι, i ∈ s → eval x (f i) = 0
   intro x
   simp only [S, Set.toFinset_setOf, mem_univ, true_and, mem_filter]
   /- The polynomial `F = ∏ i ∈ s, (1 - (f i)^(q - 1))` has the nice property
@@ -117,7 +117,7 @@ theorem char_dvd_card_solutions_of_sum_lt {s : Finset ι} {f : ι → MvPolynomi
     Hence the sum of its values is equal to the cardinality of
     `{x : σ → K // ∀ i ∈ s, (f i).eval x = 0}` modulo `p`. -/
   let F : MvPolynomial σ K := ∏ i ∈ s, (1 - f i ^ (q - 1))
-  have hF  : ∀ x, eval x F = if x ∈ S then 1 else 0
+  have hF : ∀ x, eval x F = if x ∈ S then 1 else 0
   intro x
   calc
     eval x F = ∏ i ∈ s, eval x (1 - f i ^ (q - 1)) := eval_prod s _ x
@@ -133,7 +133,7 @@ theorem char_dvd_card_solutions_of_sum_lt {s : Finset ι} {f : ι → MvPolynomi
     apply Finset.prod_eq_zero hi
     rw [pow_card_sub_one_eq_one (eval x (f i)) hx, sub_self]
   -- In particular, we can now show:
-  have key  : ∑ x, eval x F = Fintype.card { x : σ → K // ∀ i ∈ s, eval x (f i) = 0 }
+  have key : ∑ x, eval x F = Fintype.card { x : σ → K // ∀ i ∈ s, eval x (f i) = 0 }
   rw [Fintype.card_of_subtype S hS, card_eq_sum_ones, Nat.cast_sum, Nat.cast_one, ←
     Fintype.sum_extend_by_zero S, sum_congr rfl fun x _ => hF x]
   -- With these preparations under our belt, we will approach the main goal.

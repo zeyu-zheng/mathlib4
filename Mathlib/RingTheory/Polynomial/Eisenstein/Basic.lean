@@ -83,7 +83,7 @@ theorem exists_mem_adjoin_mul_eq_pow_natDegree {x : S} (hx : aeval x f = 0) (hmo
     sum_insert not_mem_range_self, sum_range, (hmo.map (algebraMap R S)).coeff_natDegree,
     one_mul] at hx
   replace hx := eq_neg_of_add_eq_zero_left hx
-  have  : ∀ n < f.natDegree, p ∣ f.coeff n
+  have : ∀ n < f.natDegree, p ∣ f.coeff n
   intro n hn
   exact mem_span_singleton.1 (by simpa using hf.mem hn)
   choose! φ hφ using this

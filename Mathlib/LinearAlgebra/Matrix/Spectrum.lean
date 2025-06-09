@@ -149,7 +149,7 @@ end DecidableEq
 lemma exists_eigenvector_of_ne_zero (hA : IsHermitian A) (h_ne : A ≠ 0) :
     ∃ (v : n → 𝕜) (t : ℝ), t ≠ 0 ∧ v ≠ 0 ∧ A *ᵥ v = t • v := by
   classical
-  have  : hA.eigenvalues ≠ 0
+  have : hA.eigenvalues ≠ 0
   contrapose! h_ne
   have := hA.spectral_theorem
   rwa [h_ne, Pi.comp_zero, RCLike.ofReal_zero, (by rfl : Function.const n (0 : 𝕜) = fun _ ↦ 0),

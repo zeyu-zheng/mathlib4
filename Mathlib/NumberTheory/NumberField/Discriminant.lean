@@ -90,7 +90,8 @@ theorem _root_.NumberField.mixedEmbedding.volume_fundamentalDomain_latticeBasis 
         rw [← nnnorm_real, ← ofReal_eq_coe, RingHom.map_det, RingHom.mapMatrix_apply, this,
           det_mul, det_transpose, det_reindex_self]
       _ = (2 : ℝ≥0∞)⁻¹ ^ Fintype.card {w : InfinitePlace K // IsComplex w} * sqrt ‖N.det ^ 2‖₊ := by
-        have : ‖Complex.I‖₊ = 1 := by rw [← norm_toNNReal, norm_eq_abs, abs_I, Real.toNNReal_one]
+        have : ‖Complex.I‖₊ = 1
+        rw [← norm_toNNReal, norm_eq_abs, abs_I, Real.toNNReal_one]
         rw [det_matrixToStdBasis, nnnorm_mul, nnnorm_pow, nnnorm_mul, this, mul_one, nnnorm_inv,
           coe_mul, ENNReal.coe_pow, ← norm_toNNReal, RCLike.norm_two, Real.toNNReal_ofNat,
           coe_inv two_ne_zero, coe_ofNat, nnnorm_pow, NNReal.sqrt_sq]
@@ -110,7 +111,7 @@ theorem exists_ne_zero_mem_ideal_of_norm_le_mul_sqrt_discr (I : (FractionalIdeal
         (finrank ℚ K).factorial / (finrank ℚ K) ^ (finrank ℚ K) * Real.sqrt |discr K| := by
   -- The smallest possible value for `exists_ne_zero_mem_ideal_of_norm_le`
   let B := (minkowskiBound K I * (convexBodySumFactor K)⁻¹).toReal ^ (1 / (finrank ℚ K : ℝ))
-  have h_le  : (minkowskiBound K I) ≤ volume (convexBodySum K B)
+  have h_le : (minkowskiBound K I) ≤ volume (convexBodySum K B)
   refine le_of_eq ?_
   rw [convexBodySum_volume, ← ENNReal.ofReal_pow (by positivity), ← Real.rpow_natCast,
     ← Real.rpow_mul toReal_nonneg, div_mul_cancel₀, Real.rpow_one, ofReal_toReal, mul_comm,
@@ -170,7 +171,7 @@ theorem abs_discr_ge (h : 1 < finrank ℚ K) :
   -- algebraic integer `x` of small norm and the fact that `1 ≤ |Norm x|` to get a lower bound
   -- on `sqrt |discr K|`.
   obtain ⟨x, h_nz, h_bd⟩ := exists_ne_zero_mem_ringOfIntegers_of_norm_le_mul_sqrt_discr K
-  have h_nm  : (1 : ℝ) ≤ |Algebra.norm ℚ (x : K)|
+  have h_nm : (1 : ℝ) ≤ |Algebra.norm ℚ (x : K)|
   rw [← Algebra.coe_norm_int, ← Int.cast_one, ← Int.cast_abs, Rat.cast_intCast, Int.cast_le]
   exact Int.one_le_abs (Algebra.norm_ne_zero_iff.mpr h_nz)
   replace h_bd := le_trans h_nm h_bd
@@ -273,10 +274,10 @@ variable {N} (hK : |discr K| ≤ N)
 /-- If `|discr K| ≤ N` then the degree of `K` is at most `rankOfDiscrBdd`. -/
 theorem rank_le_rankOfDiscrBdd :
     finrank ℚ K ≤ rankOfDiscrBdd N := by
-  have h_nz  : N ≠ 0
+  have h_nz : N ≠ 0
   refine fun h ↦ discr_ne_zero K ?_
   rwa [h, Nat.cast_zero, abs_nonpos_iff] at hK
-  have h₂  : 1 < 3 * π / 4
+  have h₂ : 1 < 3 * π / 4
   rw [_root_.lt_div_iff (by positivity), ← _root_.div_lt_iff' (by positivity), one_mul]
   linarith [Real.pi_gt_three]
   obtain h | h := lt_or_le 1 (finrank ℚ K)
@@ -298,7 +299,7 @@ theorem rank_le_rankOfDiscrBdd :
 
 /-- If `|discr K| ≤ N` then the Minkowski bound of `K` is less than `boundOfDiscrBdd`. -/
 theorem minkowskiBound_lt_boundOfDiscBdd : minkowskiBound K ↑1 < boundOfDiscBdd N := by
-  have  : boundOfDiscBdd N - 1 < boundOfDiscBdd N
+  have : boundOfDiscBdd N - 1 < boundOfDiscBdd N
   simp_rw [boundOfDiscBdd, add_tsub_cancel_right, lt_add_iff_pos_right, zero_lt_one]
   refine lt_of_le_of_lt ?_ (coe_lt_coe.mpr this)
   rw [minkowskiBound, volume_fundamentalDomain_fractionalIdealLatticeBasis, boundOfDiscBdd,
@@ -323,7 +324,7 @@ variable (N)
 
 theorem finite_of_discr_bdd_of_isReal :
     {K : { F : IntermediateField ℚ A // FiniteDimensional ℚ F} |
-      haveI :  NumberField K := @NumberField.mk _ _ inferInstance K.prop
+      haveI : NumberField K := @NumberField.mk _ _ inferInstance K.prop
       {w : InfinitePlace K | IsReal w}.Nonempty ∧ |discr K| ≤ N }.Finite := by
   -- The bound on the degree of the generating polynomials
   let D := rankOfDiscrBdd N
@@ -366,7 +367,7 @@ theorem finite_of_discr_bdd_of_isReal :
 
 theorem finite_of_discr_bdd_of_isComplex :
     {K : { F : IntermediateField ℚ A // FiniteDimensional ℚ F} |
-      haveI :  NumberField K := @NumberField.mk _ _ inferInstance K.prop
+      haveI : NumberField K := @NumberField.mk _ _ inferInstance K.prop
       {w : InfinitePlace K | IsComplex w}.Nonempty ∧ |discr K| ≤ N }.Finite := by
   -- The bound on the degree of the generating polynomials
   let D := rankOfDiscrBdd N
@@ -412,7 +413,7 @@ theorem finite_of_discr_bdd_of_isComplex :
 (in some fixed extension of `ℚ`) of discriminant bounded by `N`. -/
 theorem _root_.NumberField.finite_of_discr_bdd :
     {K : { F : IntermediateField ℚ A // FiniteDimensional ℚ F} |
-      haveI :  NumberField K := @NumberField.mk _ _ inferInstance K.prop
+      haveI : NumberField K := @NumberField.mk _ _ inferInstance K.prop
       |discr K| ≤ N }.Finite := by
   refine Set.Finite.subset (Set.Finite.union (finite_of_discr_bdd_of_isReal A N)
     (finite_of_discr_bdd_of_isComplex A N)) ?_
@@ -469,19 +470,19 @@ theorem Algebra.discr_eq_discr_of_toMatrix_coeff_isIntegral [NumberField K]
   rw [← (b.reindex (b.indexEquiv b')).toMatrix_map_vecMul b', discr_of_matrix_vecMul,
     ← one_mul (discr ℚ b), Basis.coe_reindex, discr_reindex]
   congr
-  have hint : IsIntegral ℤ ((b.reindex (b.indexEquiv b')).toMatrix b').det :=
-    IsIntegral.det fun i j => h _ _
+  have hint : IsIntegral ℤ ((b.reindex (b.indexEquiv b')).toMatrix b').det
+  apply IsIntegral.det fun i j => h _ _
   obtain ⟨r, hr⟩ := IsIntegrallyClosed.isIntegral_iff.1 hint
-  have hunit : IsUnit r := by
-    have : IsIntegral ℤ (b'.toMatrix (b.reindex (b.indexEquiv b'))).det :=
-      IsIntegral.det fun i j => h' _ _
-    obtain ⟨r', hr'⟩ := IsIntegrallyClosed.isIntegral_iff.1 this
-    refine isUnit_iff_exists_inv.2 ⟨r', ?_⟩
-    suffices algebraMap ℤ ℚ (r * r') = 1 by
-      rw [← RingHom.map_one (algebraMap ℤ ℚ)] at this
-      exact (IsFractionRing.injective ℤ ℚ) this
-    rw [RingHom.map_mul, hr, hr', ← Matrix.det_mul,
-      Basis.toMatrix_mul_toMatrix_flip, Matrix.det_one]
+  have hunit : IsUnit r
+  have : IsIntegral ℤ (b'.toMatrix (b.reindex (b.indexEquiv b'))).det
+  apply IsIntegral.det fun i j => h' _ _
+  obtain ⟨r', hr'⟩ := IsIntegrallyClosed.isIntegral_iff.1 this
+  refine isUnit_iff_exists_inv.2 ⟨r', ?_⟩
+  suffices algebraMap ℤ ℚ (r * r') = 1 by
+    rw [← RingHom.map_one (algebraMap ℤ ℚ)] at this
+    exact (IsFractionRing.injective ℤ ℚ) this
+  rw [RingHom.map_mul, hr, hr', ← Matrix.det_mul,
+    Basis.toMatrix_mul_toMatrix_flip, Matrix.det_one]
   rw [← RingHom.map_one (algebraMap ℤ ℚ), ← hr]
   cases' Int.isUnit_iff.1 hunit with hp hm
   · simp [hp]

@@ -83,7 +83,7 @@ theorem measurableSet_disc : MeasurableSet (disc r) := by
 theorem area_disc : volume (disc r) = NNReal.pi * r ^ 2 := by
   let f x := sqrt (r ^ 2 - x ^ 2)
   let F x := (r : ℝ) ^ 2 * arcsin (r⁻¹ * x) + x * sqrt (r ^ 2 - x ^ 2)
-  have hf  : Continuous f
+  have hf : Continuous f
   continuity
   suffices ∫ x in -r..r, 2 * f x = NNReal.pi * r ^ 2 by
     have h : IntegrableOn f (Ioc (-r) r) := hf.integrableOn_Icc.mono_set Ioc_subset_Icc_self

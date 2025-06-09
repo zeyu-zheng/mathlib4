@@ -244,7 +244,7 @@ theorem next_get : ∀ (l : List α) (_h : Nodup l) (i : Fin l.length),
     rw [next_cons_cons_eq' _ _ _ _ _ h₁]
     simp
   | x::y::l, hn, ⟨i+1, hi⟩ => by
-    have hx'  : (x :: y :: l).get ⟨i+1, hi⟩ ≠ x
+    have hx' : (x :: y :: l).get ⟨i+1, hi⟩ ≠ x
     intro H
     suffices (i + 1 : ℕ) = 0 by simpa
     rw [nodup_iff_injective_get] at hn
@@ -300,7 +300,7 @@ theorem prev_nthLe (l : List α) (h : Nodup l) (n : ℕ) (hn : n < l.length) :
         List.get]
     · rw [prev_ne_cons_cons]
       · convert hl n.succ y h.of_cons (Nat.le_of_succ_le_succ hn) using 1
-        have  : ∀ k hk, (y :: l).nthLe k hk = (x :: y :: l).nthLe (k + 1) (Nat.succ_lt_succ hk)
+        have : ∀ k hk, (y :: l).nthLe k hk = (x :: y :: l).nthLe (k + 1) (Nat.succ_lt_succ hk)
         simp [List.nthLe]
         rw [this]
         congr
@@ -366,7 +366,7 @@ theorem prev_reverse_eq_next (l : List α) (h : Nodup l) (x : α) (hx : x ∈ l)
     prev l.reverse x (mem_reverse.mpr hx) = next l x hx := by
   obtain ⟨k, hk, rfl⟩ := nthLe_of_mem hx
   have lpos : 0 < l.length := k.zero_le.trans_lt hk
-  have key  : l.length - 1 - k < l.length
+  have key : l.length - 1 - k < l.length
   omega
   rw [← nthLe_pmap l.next (fun _ h => h) (by simpa using hk)]
   simp_rw [← nthLe_reverse l k (key.trans_le (by simp)), pmap_next_eq_rotate_one _ h]
@@ -866,7 +866,7 @@ theorem chain_of_pairwise : (∀ a ∈ s, ∀ b ∈ s, r a b) → Chain r s := b
   induction' s with a l _
   · exact fun _ => Cycle.Chain.nil r
   intro hs
-  have Ha  : a ∈ (a :: l : Cycle α)
+  have Ha : a ∈ (a :: l : Cycle α)
   simp
   have Hl : ∀ {b} (_hb : b ∈ l), b ∈ (a :: l : Cycle α) := @fun b hb => by simp [hb]
   rw [Cycle.chain_coe_cons]

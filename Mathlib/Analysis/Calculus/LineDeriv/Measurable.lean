@@ -35,7 +35,7 @@ theorem measurableSet_lineDifferentiableAt (hf : Continuous f) :
     MeasurableSet {x : E | LineDifferentiableAt 𝕜 f x v} := by
   borelize 𝕜
   let g : E → 𝕜 → F := fun x t ↦ f (x + t • v)
-  have hg  : Continuous g.uncurry
+  have hg : Continuous g.uncurry
   fun_prop
   exact measurable_prod_mk_right (measurableSet_of_differentiableAt_with_param 𝕜 hg)
 
@@ -43,7 +43,7 @@ theorem measurable_lineDeriv [MeasurableSpace F] [BorelSpace F]
     (hf : Continuous f) : Measurable (fun x ↦ lineDeriv 𝕜 f x v) := by
   borelize 𝕜
   let g : E → 𝕜 → F := fun x t ↦ f (x + t • v)
-  have hg  : Continuous g.uncurry
+  have hg : Continuous g.uncurry
   fun_prop
   exact (measurable_deriv_with_param hg).comp measurable_prod_mk_right
 
@@ -51,7 +51,7 @@ theorem stronglyMeasurable_lineDeriv [SecondCountableTopologyEither E F] (hf : C
     StronglyMeasurable (fun x ↦ lineDeriv 𝕜 f x v) := by
   borelize 𝕜
   let g : E → 𝕜 → F := fun x t ↦ f (x + t • v)
-  have hg  : Continuous g.uncurry
+  have hg : Continuous g.uncurry
   fun_prop
   exact (stronglyMeasurable_deriv_with_param hg).comp_measurable measurable_prod_mk_right
 

@@ -48,7 +48,7 @@ theorem Polynomial.Monic.irreducible_of_irreducible_map_of_isPrime_nilradical
   wlog hb : IsUnit (b.map ι) generalizing a b
   · exact (this b a (mul_comm a b ▸ h)
       (hi.2 _ _ (by rw [h, Polynomial.map_mul]) |>.resolve_right hb)).symm
-  have hn (i  : ℕ) (hi : i ≠ 0) : IsNilpotent (b.coeff i)
+  have hn (i : ℕ) (hi : i ≠ 0) : IsNilpotent (b.coeff i)
   obtain ⟨_, _, h⟩ := Polynomial.isUnit_iff.1 hb
   simpa only [coeff_map, coeff_C, hi, ite_false, ← RingHom.mem_ker,
     show RingHom.ker ι = nilradical R from Ideal.mk_ker] using congr(coeff $(h.symm) i)

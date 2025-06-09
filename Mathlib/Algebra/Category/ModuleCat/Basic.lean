@@ -428,7 +428,7 @@ instance : (forget (ModuleCat.{v} R)).ReflectsIsomorphisms where
 
 instance : (forget₂ (ModuleCat.{v} R) AddCommGrp.{v}).ReflectsIsomorphisms where
   reflects f _ := by
-    have  : IsIso ((forget _).map f)
+    have : IsIso ((forget _).map f)
     change IsIso ((forget _).map ((forget₂ _ AddCommGrp).map f))
     infer_instance
     apply isIso_of_reflects_iso _ (forget _)

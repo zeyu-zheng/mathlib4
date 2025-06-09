@@ -201,7 +201,7 @@ theorem irreducible_aux1 {k m n : ℕ} (hkm : k < m) (hmn : m < n) (u v w : Unit
     (hp : p = trinomial k m n (u : ℤ) v w) :
     C (v : ℤ) * (C (u : ℤ) * X ^ (m + n) + C (w : ℤ) * X ^ (n - m + k + n)) =
       ⟨Finsupp.filter (· ∈ Set.Ioo (k + n) (n + n)) (p * p.mirror).toFinsupp⟩ := by
-  have key  : n - m + k < n
+  have key : n - m + k < n
   rwa [← lt_tsub_iff_right, tsub_lt_tsub_iff_left_of_le hmn.le]
   rw [hp, trinomial_mirror hkm hmn u.ne_zero w.ne_zero]
   simp_rw [trinomial_def, C_mul_X_pow_eq_monomial, add_mul, mul_add, monomial_mul_monomial,
@@ -290,11 +290,11 @@ theorem irreducible_of_coprime (hp : p.IsUnitTrinomial)
   have hq : IsUnitTrinomial q := (isUnitTrinomial_iff'' hpq).mp hp
   obtain ⟨k, m, n, hkm, hmn, u, v, w, hp⟩ := hp
   obtain ⟨k', m', n', hkm', hmn', x, y, z, hq⟩ := hq
-  have hk  : k = k'
+  have hk : k = k'
   rw [← mul_right_inj' (show 2 ≠ 0 from two_ne_zero), ←
     trinomial_natTrailingDegree hkm hmn u.ne_zero, ← hp, ← natTrailingDegree_mul_mirror, hpq,
     natTrailingDegree_mul_mirror, hq, trinomial_natTrailingDegree hkm' hmn' x.ne_zero]
-  have hn  : n = n'
+  have hn : n = n'
   rw [← mul_right_inj' (show 2 ≠ 0 from two_ne_zero), ← trinomial_natDegree hkm hmn w.ne_zero, ←
     hp, ← natDegree_mul_mirror, hpq, natDegree_mul_mirror, hq,
     trinomial_natDegree hkm' hmn' z.ne_zero]

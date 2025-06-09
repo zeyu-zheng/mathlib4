@@ -233,7 +233,7 @@ theorem geom_sum₂_comm {α : Type u} [CommSemiring α] (x y : α) (n : ℕ) :
 
 protected theorem Commute.geom_sum₂ [DivisionRing α] {x y : α} (h' : Commute x y) (h : x ≠ y)
     (n : ℕ) : ∑ i ∈ range n, x ^ i * y ^ (n - 1 - i) = (x ^ n - y ^ n) / (x - y) := by
-  have  : x - y ≠ 0
+  have : x - y ≠ 0
   simp_all [sub_eq_iff_eq_add]
   rw [← h'.geom_sum₂_mul, mul_div_cancel_right₀ _ this]
 
@@ -243,7 +243,7 @@ theorem geom₂_sum [Field α] {x y : α} (h : x ≠ y) (n : ℕ) :
 
 theorem geom_sum_eq [DivisionRing α] {x : α} (h : x ≠ 1) (n : ℕ) :
     ∑ i ∈ range n, x ^ i = (x ^ n - 1) / (x - 1) := by
-  have  : x - 1 ≠ 0
+  have : x - 1 ≠ 0
   simp_all [sub_eq_iff_eq_add]
   rw [← geom_sum_mul, mul_div_cancel_right₀ _ this]
 
@@ -313,7 +313,7 @@ theorem geom_sum_Ico_mul_neg [Ring α] (x : α) {m n : ℕ} (hmn : m ≤ n) :
 protected theorem Commute.geom_sum₂_Ico [DivisionRing α] {x y : α} (h : Commute x y) (hxy : x ≠ y)
     {m n : ℕ} (hmn : m ≤ n) :
     (∑ i ∈ Finset.Ico m n, x ^ i * y ^ (n - 1 - i)) = (x ^ n - y ^ (n - m) * x ^ m) / (x - y) := by
-  have  : x - y ≠ 0
+  have : x - y ≠ 0
   simp_all [sub_eq_iff_eq_add]
   rw [← h.geom_sum₂_Ico_mul hmn, mul_div_cancel_right₀ _ this]
 
@@ -343,7 +343,7 @@ theorem geom_sum_Ico_le_of_lt_one [LinearOrderedField α] {x : α} (hx : 0 ≤ x
 
 theorem geom_sum_inv [DivisionRing α] {x : α} (hx1 : x ≠ 1) (hx0 : x ≠ 0) (n : ℕ) :
     ∑ i ∈ range n, x⁻¹ ^ i = (x - 1)⁻¹ * (x - x⁻¹ ^ n * x) := by
-  have h₁  : x⁻¹ ≠ 1
+  have h₁ : x⁻¹ ≠ 1
   rwa [inv_eq_one_div, Ne, div_eq_iff_mul_eq hx0, one_mul]
   have h₂ : x⁻¹ - 1 ≠ 0 := mt sub_eq_zero.1 h₁
   have h₃ : x - 1 ≠ 0 := mt sub_eq_zero.1 hx1

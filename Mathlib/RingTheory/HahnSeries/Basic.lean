@@ -237,7 +237,7 @@ theorem untop_orderTop_of_ne_zero {x : HahnSeries Γ R} (hx : x ≠ 0) :
 
 theorem coeff_orderTop_ne {x : HahnSeries Γ R} {g : Γ} (hg : x.orderTop = g) :
     x.coeff g ≠ 0 := by
-  have h  : orderTop x ≠ ⊤
+  have h : orderTop x ≠ ⊤
   simp_all only [ne_eq, WithTop.coe_ne_top, not_false_eq_true]
   have hx : x ≠ 0 := ne_zero_iff_orderTop.mpr h
   rw [orderTop_of_ne hx, WithTop.coe_eq_coe] at hg

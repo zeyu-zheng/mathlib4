@@ -147,7 +147,7 @@ lemma stronglyMeasurable_needleCrossesIndicator :
     MeasureTheory.StronglyMeasurable (needleCrossesIndicator l) := by
   refine stronglyMeasurable_iff_measurable_separable.mpr
     ⟨measurable_needleCrossesIndicator l, {0, 1}, ?separable⟩
-  have range_finite  : Set.Finite ({0, 1} : Set ℝ)
+  have range_finite : Set.Finite ({0, 1} : Set ℝ)
   simp only [Set.mem_singleton_iff, Set.finite_singleton, Set.Finite.insert]
   refine ⟨range_finite.countable, ?subset_closure⟩
   rw [IsClosed.closure_eq range_finite.isClosed, Set.subset_def, Set.range]
@@ -163,10 +163,10 @@ lemma integrable_needleCrossesIndicator :
       (Measure.prod
         (Measure.restrict ℙ (Set.Icc (-d / 2) (d / 2)))
         (Measure.restrict ℙ (Set.Icc 0 π))) := by
-  have needleCrossesIndicator_nonneg p  : 0 ≤ needleCrossesIndicator l p
+  have needleCrossesIndicator_nonneg p : 0 ≤ needleCrossesIndicator l p
   apply Set.indicator_apply_nonneg
   simp only [Pi.one_apply, zero_le_one, implies_true]
-  have needleCrossesIndicator_le_one p  : needleCrossesIndicator l p ≤ 1
+  have needleCrossesIndicator_le_one p : needleCrossesIndicator l p ≤ 1
   unfold needleCrossesIndicator
   by_cases hp : 0 ∈ needleProjX l p.1 p.2
   · simp_rw [Set.indicator_of_mem hp, Pi.one_apply, le_refl]
@@ -258,7 +258,7 @@ theorem buffon_short (h : l ≤ d) : ℙ[N l B] = (2 * l) * (d * π)⁻¹ := by
     mul_eq_mul_right_iff]
   apply Or.inl
   ring_nf
-  have  : ∀ᵐ θ, θ ∈ Set.Icc 0 π → ENNReal.toReal (ENNReal.ofReal (θ.sin * l)) = θ.sin * l
+  have : ∀ᵐ θ, θ ∈ Set.Icc 0 π → ENNReal.toReal (ENNReal.ofReal (θ.sin * l)) = θ.sin * l
   have (θ : ℝ) (hθ : θ ∈ Set.Icc 0 π) : 0 ≤ θ.sin * l :=
     mul_nonneg (Real.sin_nonneg_of_mem_Icc hθ) hl.le
   simp_rw [ENNReal.toReal_ofReal_eq_iff, MeasureTheory.ae_of_all _ this]
@@ -296,11 +296,11 @@ lemma integral_min_eq_two_mul :
 -/
 lemma integral_zero_to_arcsin_min :
     ∫ θ in (0)..(d / l).arcsin, min d (θ.sin * l) = (1 - √(1 - (d / l) ^ 2)) * l := by
-  have  : Set.EqOn (fun θ => min d (θ.sin * l)) (Real.sin · * l) (Set.uIcc 0 (d / l).arcsin)
+  have : Set.EqOn (fun θ => min d (θ.sin * l)) (Real.sin · * l) (Set.uIcc 0 (d / l).arcsin)
   intro θ ⟨hθ₁, hθ₂⟩
   have : 0 ≤ (d / l).arcsin := Real.arcsin_nonneg.mpr (div_nonneg hd.le hl.le)
   simp only [sup_eq_max, inf_eq_min, min_eq_left this, max_eq_right this] at hθ₁ hθ₂
-  have hθ_mem  : θ ∈ Set.Ioc (-(π / 2)) (π / 2)
+  have hθ_mem : θ ∈ Set.Ioc (-(π / 2)) (π / 2)
   exact ⟨lt_of_lt_of_le (neg_lt_zero.mpr (div_pos Real.pi_pos two_pos)) hθ₁,
     le_trans hθ₂ (d / l).arcsin_mem_Icc.right⟩
   simp_rw [min_eq_right ((le_div_iff hl).mp ((Real.le_arcsin_iff_sin_le' hθ_mem).mp hθ₂))]
@@ -313,14 +313,14 @@ lemma integral_zero_to_arcsin_min :
 -/
 lemma integral_arcsin_to_pi_div_two_min (h : d ≤ l) :
     ∫ θ in (d / l).arcsin..(π / 2), min d (θ.sin * l) = (π / 2 - (d / l).arcsin) * d := by
-  have  : Set.EqOn (fun θ => min d (θ.sin * l)) (fun _ => d) (Set.uIcc (d / l).arcsin (π / 2))
+  have : Set.EqOn (fun θ => min d (θ.sin * l)) (fun _ => d) (Set.uIcc (d / l).arcsin (π / 2))
   intro θ ⟨hθ₁, hθ₂⟩
   wlog hθ_ne_pi_div_two : θ ≠ π / 2
   · simp only [ne_eq, not_not] at hθ_ne_pi_div_two
     simp only [hθ_ne_pi_div_two, Real.sin_pi_div_two, one_mul, min_eq_left h]
   simp only [sup_eq_max, inf_eq_min, min_eq_left (d / l).arcsin_le_pi_div_two,
     max_eq_right (d / l).arcsin_le_pi_div_two] at hθ₁ hθ₂
-  have hθ_mem  : θ ∈ Set.Ico (-(π / 2)) (π / 2)
+  have hθ_mem : θ ∈ Set.Ico (-(π / 2)) (π / 2)
   exact ⟨le_trans (Real.arcsin_mem_Icc (d / l)).left hθ₁, lt_of_le_of_ne hθ₂ hθ_ne_pi_div_two⟩
   simp_rw [min_eq_left ((div_le_iff hl).mp ((Real.arcsin_le_iff_le_sin' hθ_mem).mp hθ₁))]
   rw [intervalIntegral.integral_congr this, intervalIntegral.integral_const, smul_eq_mul]

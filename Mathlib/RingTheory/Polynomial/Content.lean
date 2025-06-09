@@ -95,7 +95,7 @@ theorem content_one : content (1 : R[X]) = 1 := by rw [← C_1, content_C, norma
 theorem content_X_mul {p : R[X]} : content (X * p) = content p := by
   rw [content, content, Finset.gcd_def, Finset.gcd_def]
   refine congr rfl ?_
-  have h  : (X * p).support = p.support.map ⟨Nat.succ, Nat.succ_injective⟩
+  have h : (X * p).support = p.support.map ⟨Nat.succ, Nat.succ_injective⟩
   ext a
   simp only [exists_prop, Finset.mem_map, Function.Embedding.coeFn_mk, Ne, mem_support_iff]
   cases' a with a

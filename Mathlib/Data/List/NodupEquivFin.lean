@@ -164,7 +164,7 @@ theorem sublist_iff_exists_fin_orderEmbedding_get_eq {l l' : List α} :
   rw [sublist_iff_exists_orderEmbedding_get?_eq]
   constructor
   · rintro ⟨f, hf⟩
-    have h  : ∀ {i : ℕ}, i < l.length → f i < l'.length
+    have h : ∀ {i : ℕ}, i < l.length → f i < l'.length
     intro i hi
     specialize hf i
     rw [get?_eq_get hi, eq_comm, get?_eq_some] at hf

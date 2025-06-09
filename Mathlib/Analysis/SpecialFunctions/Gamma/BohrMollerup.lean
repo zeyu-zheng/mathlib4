@@ -56,7 +56,7 @@ theorem Gamma_mul_add_mul_le_rpow_Gamma_mul_rpow_Gamma {s t a b : ℝ} (hs : 0 <
   -- and `q = 1 / b`, to the functions `f a s` and `f b t`, where `f` is as follows:
   let f : ℝ → ℝ → ℝ → ℝ := fun c u x => exp (-c * x) * x ^ (c * (u - 1))
   have e : IsConjExponent (1 / a) (1 / b) := Real.isConjExponent_one_div ha hb hab
-  have hab'  : b = 1 - a
+  have hab' : b = 1 - a
   linarith
   have hst : 0 < a * s + b * t := add_pos (mul_pos ha hs) (mul_pos hb ht)
   -- some properties of f:
@@ -109,7 +109,7 @@ theorem Gamma_mul_add_mul_le_rpow_Gamma_mul_rpow_Gamma {s t a b : ℝ} (hs : 0 <
 
 theorem convexOn_log_Gamma : ConvexOn ℝ (Ioi 0) (log ∘ Gamma) := by
   refine convexOn_iff_forall_pos.mpr ⟨convex_Ioi _, fun x hx y hy a b ha hb hab => ?_⟩
-  have  : b = 1 - a
+  have : b = 1 - a
   linarith
   subst this
   simp_rw [Function.comp_apply, smul_eq_mul]
@@ -168,7 +168,7 @@ theorem f_add_nat_le (hf_conv : ConvexOn ℝ (Ioi 0) f)
     (hf_feq : ∀ {y : ℝ}, 0 < y → f (y + 1) = f y + log y) (hn : n ≠ 0) (hx : 0 < x) (hx' : x ≤ 1) :
     f (n + x) ≤ f n + x * log n := by
   have hn' : 0 < (n : ℝ) := Nat.cast_pos.mpr (Nat.pos_of_ne_zero hn)
-  have  : f n + x * log n = (1 - x) * f n + x * f (n + 1)
+  have : f n + x * log n = (1 - x) * f n + x * f (n + 1)
   rw [hf_feq hn']; ring
   rw [this, (by ring : (n : ℝ) + x = (1 - x) * n + x * (n + 1))]
   simpa only [smul_eq_mul] using
@@ -178,7 +178,7 @@ theorem f_add_nat_le (hf_conv : ConvexOn ℝ (Ioi 0) f)
 theorem f_add_nat_ge (hf_conv : ConvexOn ℝ (Ioi 0) f)
     (hf_feq : ∀ {y : ℝ}, 0 < y → f (y + 1) = f y + log y) (hn : 2 ≤ n) (hx : 0 < x) :
     f n + x * log (n - 1) ≤ f (n + x) := by
-  have npos  : 0 < (n : ℝ) - 1
+  have npos : 0 < (n : ℝ) - 1
   rw [← Nat.cast_one, sub_pos, Nat.cast_lt]; linarith
   have c :=
     (convexOn_iff_slope_mono_adjacent.mp <| hf_conv).2 npos (by linarith : 0 < (n : ℝ) + x)
@@ -294,7 +294,7 @@ theorem tendsto_logGammaSeq (hf_conv : ConvexOn ℝ (Ioi 0) f)
 
 theorem tendsto_log_gamma {x : ℝ} (hx : 0 < x) :
     Tendsto (logGammaSeq x) atTop (𝓝 <| log (Gamma x)) := by
-  have  : log (Gamma x) = (log ∘ Gamma) x - (log ∘ Gamma) 1
+  have : log (Gamma x) = (log ∘ Gamma) x - (log ∘ Gamma) 1
   simp_rw [Function.comp_apply, Gamma_one, log_one, sub_zero]
   rw [this]
   refine BohrMollerup.tendsto_logGammaSeq convexOn_log_Gamma (fun {y} hy => ?_) hx
@@ -330,7 +330,7 @@ theorem Gamma_three_div_two_lt_one : Gamma (3 / 2) < 1 := by
   -- This can also be proved using the closed-form evaluation of `Gamma (1 / 2)` in
   -- `Mathlib/Analysis/SpecialFunctions/Gaussian.lean`, but we give a self-contained proof using
   -- log-convexity to avoid unnecessary imports.
-  have A  : (0 : ℝ) < 3 / 2
+  have A : (0 : ℝ) < 3 / 2
   norm_num
   have :=
     BohrMollerup.f_add_nat_le convexOn_log_Gamma (fun {y} hy => ?_) two_ne_zero one_half_pos

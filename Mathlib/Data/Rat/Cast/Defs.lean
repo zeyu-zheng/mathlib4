@@ -54,14 +54,14 @@ lemma cast_comm (q : ℚ≥0) (a : α) : q * a = a * q := cast_commute _ _
   rcases e : divNat a b with ⟨⟨n, d, h, c⟩, hn⟩
   rw [← Rat.num_nonneg] at hn
   lift n to ℕ using hn
-  have hd  : (d : α) ≠ 0
+  have hd : (d : α) ≠ 0
   refine fun hd ↦ hb ?_
   have : Rat.divInt a b = _ := congr_arg NNRat.cast e
   obtain ⟨k, rfl⟩ : d ∣ b := by simpa [Int.natCast_dvd_natCast, this] using Rat.den_dvd a b
   simp [*]
-  have hb'  : b ≠ 0
+  have hb' : b ≠ 0
   rintro rfl; exact hb Nat.cast_zero
-  have hd'  : d ≠ 0
+  have hd' : d ≠ 0
   rintro rfl; exact hd Nat.cast_zero
   simp_rw [Rat.mk'_eq_divInt, mk_divInt, divNat_inj hb' hd'] at e
   rw [cast_def]
@@ -146,15 +146,15 @@ theorem commute_cast (a : α) (r : ℚ) : Commute a r :=
 
 @[norm_cast]
 lemma cast_divInt_of_ne_zero (a : ℤ) {b : ℤ} (b0 : (b : α) ≠ 0) : (a /. b : α) = a / b := by
-  have b0'  : b ≠ 0
+  have b0' : b ≠ 0
   refine mt ?_ b0
   simp (config := { contextual := true })
   cases' e : a /. b with n d h c
-  have d0  : (d : α) ≠ 0
+  have d0 : (d : α) ≠ 0
   intro d0
   have dd := den_dvd a b
   cases' show (d : ℤ) ∣ b by rwa [e] at dd with k ke
-  have  : (b : α) = (d : α) * (k : α)
+  have : (b : α) = (d : α) * (k : α)
   rw [ke, Int.cast_mul, Int.cast_natCast]
   rw [d0, zero_mul] at this
   contradiction

@@ -236,7 +236,7 @@ theorem subgroup_closure_range_simple : Subgroup.closure (range cs.simple) = ⊤
 
 /-- The simple reflections of `W` generate `W` as a monoid. -/
 theorem submonoid_closure_range_simple : Submonoid.closure (range cs.simple) = ⊤ := by
-  have  : range cs.simple = range cs.simple ∪ (range cs.simple)⁻¹
+  have : range cs.simple = range cs.simple ∪ (range cs.simple)⁻¹
   simp_rw [inv_range, inv_simple, union_self]
   rw [this, ← Subgroup.closure_toSubmonoid, subgroup_closure_range_simple, Subgroup.top_toSubmonoid]
 

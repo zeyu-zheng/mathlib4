@@ -284,7 +284,7 @@ theorem signAux_swap : ∀ {n : ℕ} {x y : Fin n} (_hxy : x ≠ y), signAux (sw
     simp only [eq_iff_true_of_subsingleton, not_true, ite_true, le_refl, prod_const,
                IsEmpty.forall_iff]
   | n + 2, x, y => fun hxy => by
-    have h2n  : 2 ≤ n + 2
+    have h2n : 2 ≤ n + 2
     exact le_add_self
     rw [← isConj_iff_eq, ← signAux_swap_zero_one h2n]
     exact (MonoidHom.mk' signAux signAux_mul).map_isConj
@@ -545,7 +545,7 @@ theorem sign_prodExtendRight (a : α) (σ : Perm β) : sign (prodExtendRight a �
 
 theorem sign_prodCongrRight (σ : α → Perm β) : sign (prodCongrRight σ) = ∏ k, sign (σ k) := by
   obtain ⟨l, hl, mem_l⟩ := Finite.exists_univ_list α
-  have l_to_finset  : l.toFinset = Finset.univ
+  have l_to_finset : l.toFinset = Finset.univ
   apply eq_top_iff.mpr
   intro b _
   exact List.mem_toFinset.mpr (mem_l b)

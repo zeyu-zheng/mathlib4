@@ -100,7 +100,7 @@ theorem isOpenMap_smul_of_sigmaCompact (x : X) : IsOpenMap (fun (g : G) ↦ g �
   point by changing basepoints. -/
   simp_rw [isOpenMap_iff_nhds_le, Filter.le_map_iff]
   intro g U hU
-  have  : (· • x) = (· • (g • x)) ∘ (· * g⁻¹)
+  have : (· • x) = (· • (g • x)) ∘ (· * g⁻¹)
   ext g
   simp [smul_smul]
   rw [this, image_comp, ← smul_singleton]
@@ -117,7 +117,7 @@ theorem MonoidHom.isOpenMap_of_sigmaCompact
   let A : MulAction G H := MulAction.compHom _ f
   have : ContinuousSMul G H := continuousSMul_compHom h'f
   have : IsPretransitive G H := isPretransitive_compHom hf
-  have  : f = (fun (g : G) ↦ g • (1 : H))
+  have : f = (fun (g : G) ↦ g • (1 : H))
   simp [MulAction.compHom_smul_def]
   rw [this]
   exact isOpenMap_smul_of_sigmaCompact _

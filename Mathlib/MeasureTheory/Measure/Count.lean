@@ -99,13 +99,13 @@ theorem count_apply_lt_top [MeasurableSingletonClass α] : count s < ∞ ↔ s.F
     _ ↔ s.Finite := Classical.not_not
 
 theorem empty_of_count_eq_zero' (s_mble : MeasurableSet s) (hsc : count s = 0) : s = ∅ := by
-  have hs  : s.Finite
+  have hs : s.Finite
   rw [← count_apply_lt_top' s_mble, hsc]
   exact WithTop.zero_lt_top
   simpa [count_apply_finite' hs s_mble] using hsc
 
 theorem empty_of_count_eq_zero [MeasurableSingletonClass α] (hsc : count s = 0) : s = ∅ := by
-  have hs  : s.Finite
+  have hs : s.Finite
   rw [← count_apply_lt_top, hsc]
   exact WithTop.zero_lt_top
   simpa [count_apply_finite _ hs] using hsc

@@ -158,7 +158,7 @@ theorem I_isHomogeneous : Ideal.IsHomogeneous (grading R) I := by
 theorem homogeneous_mem_or_mem {x y : R × R} (hx : SetLike.Homogeneous (grading R) x)
     (hy : SetLike.Homogeneous (grading R) y) (hxy : x * y ∈ I) : x ∈ I ∨ y ∈ I := by
   -- Porting note: added `h2` for later use; the proof is hideous
-  have h2  : Prime (2:R)
+  have h2 : Prime (2:R)
   unfold Prime
   refine ⟨by decide, by decide, ?_⟩
   intro a b

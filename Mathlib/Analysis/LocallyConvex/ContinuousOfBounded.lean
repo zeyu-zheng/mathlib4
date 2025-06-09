@@ -97,7 +97,7 @@ theorem LinearMap.continuousAt_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
   -- and reformulate non-continuity in terms of these bases
   rcases (nhds_basis_balanced 𝕜 E).exists_antitone_subbasis with ⟨b, bE1, bE⟩
   simp only [_root_.id] at bE
-  have bE'  : (𝓝 (0 : E)).HasBasis (fun x : ℕ => x ≠ 0) fun n : ℕ => (n : 𝕜)⁻¹ • b n
+  have bE' : (𝓝 (0 : E)).HasBasis (fun x : ℕ => x ≠ 0) fun n : ℕ => (n : 𝕜)⁻¹ • b n
   refine bE.1.to_hasBasis ?_ ?_
   · intro n _
     use n + 1
@@ -129,7 +129,7 @@ theorem LinearMap.continuousAt_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
   -- There exists `u : ℕ → E` such that for all `n : ℕ` we have `u n ∈ n⁻¹ • b n` and `f (u n) ∉ V`
   choose! u hu hu' using h
   -- The sequence `(fun n ↦ n • u n)` converges to `0`
-  have h_tendsto  : Tendsto (fun n : ℕ => (n : 𝕜) • u n) atTop (𝓝 (0 : E))
+  have h_tendsto : Tendsto (fun n : ℕ => (n : 𝕜) • u n) atTop (𝓝 (0 : E))
   apply bE.tendsto
   intro n
   by_cases h : n = 0

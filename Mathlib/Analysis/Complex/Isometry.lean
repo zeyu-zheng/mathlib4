@@ -92,7 +92,7 @@ theorem LinearIsometry.im_apply_eq_im_or_neg_of_re_apply_eq_re {f : ℂ →ₗ�
 
 theorem LinearIsometry.im_apply_eq_im {f : ℂ →ₗᵢ[ℝ] ℂ} (h : f 1 = 1) (z : ℂ) :
     z + conj z = f z + conj (f z) := by
-  have  : ‖f z - 1‖ = ‖z - 1‖
+  have : ‖f z - 1‖ = ‖z - 1‖
   rw [← f.norm_map (z - 1), f.map_sub, h]
   apply_fun fun x => x ^ 2 at this
   simp only [norm_eq_abs, ← normSq_eq_abs] at this
@@ -112,7 +112,7 @@ theorem LinearIsometry.re_apply_eq_re {f : ℂ →ₗᵢ[ℝ] ℂ} (h : f 1 = 1)
 
 theorem linear_isometry_complex_aux {f : ℂ ≃ₗᵢ[ℝ] ℂ} (h : f 1 = 1) :
     f = LinearIsometryEquiv.refl ℝ ℂ ∨ f = conjLIE := by
-  have h0  : f I = I ∨ f I = -I
+  have h0 : f I = I ∨ f I = -I
   simp only [Complex.ext_iff, ← and_or_left, neg_re, I_re, neg_im, neg_zero]
   constructor
   · rw [← I_re]
@@ -130,7 +130,7 @@ theorem linear_isometry_complex (f : ℂ ≃ₗᵢ[ℝ] ℂ) :
     ∃ a : circle, f = rotation a ∨ f = conjLIE.trans (rotation a) := by
   let a : circle := ⟨f 1, by rw [mem_circle_iff_abs, ← Complex.norm_eq_abs, f.norm_map, norm_one]⟩
   use a
-  have  : (f.trans (rotation a).symm) 1 = 1
+  have : (f.trans (rotation a).symm) 1 = 1
   simpa using rotation_apply a⁻¹ (f 1)
   refine (linear_isometry_complex_aux this).imp (fun h₁ => ?_) fun h₂ => ?_
   · simpa using eq_mul_of_inv_mul_eq h₁

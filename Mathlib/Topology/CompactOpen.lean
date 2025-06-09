@@ -328,7 +328,7 @@ theorem image_coev {y : Y} (s : Set X) : coev X Y y '' s = {y} ×ˢ s := by simp
 
 /-- The coevaluation map `Y → C(X, Y × X)` is continuous (always). -/
 theorem continuous_coev : Continuous (coev X Y) := by
-  have  : ∀ {a K U}, MapsTo (coev X Y a) K U ↔ {a} ×ˢ K ⊆ U
+  have : ∀ {a K U}, MapsTo (coev X Y a) K U ↔ {a} ×ˢ K ⊆ U
   simp [mapsTo']
   simp only [continuous_iff_continuousAt, ContinuousAt, tendsto_nhds_compactOpen, this]
   intro x K hK U hU hKU
@@ -453,12 +453,12 @@ variable {X₀ X Y Z : Type*} [TopologicalSpace X₀] [TopologicalSpace X] [Topo
 theorem QuotientMap.continuous_lift_prod_left (hf : QuotientMap f) {g : X × Y → Z}
     (hg : Continuous fun p : X₀ × Y => g (f p.1, p.2)) : Continuous g := by
   let Gf : C(X₀, C(Y, Z)) := ContinuousMap.curry ⟨_, hg⟩
-  have h  : ∀ x : X, Continuous fun y => g (x, y)
+  have h : ∀ x : X, Continuous fun y => g (x, y)
   intro x
   obtain ⟨x₀, rfl⟩ := hf.surjective x
   exact (Gf x₀).continuous
   let G : X → C(Y, Z) := fun x => ⟨_, h x⟩
-  have  : Continuous G
+  have : Continuous G
   rw [hf.continuous_iff]
   exact Gf.continuous
   exact ContinuousMap.continuous_uncurry_of_continuous ⟨G, this⟩

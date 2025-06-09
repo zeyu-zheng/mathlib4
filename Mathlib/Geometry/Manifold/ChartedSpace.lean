@@ -1000,9 +1000,9 @@ theorem StructureGroupoid.compatible_of_mem_maximalAtlas {e e' : PartialHomeomor
   refine G.locality fun x hx ↦ ?_
   set f := chartAt (H := H) (e.symm x)
   let s := e.target ∩ e.symm ⁻¹' f.source
-  have hs  : IsOpen s
+  have hs : IsOpen s
   apply e.symm.continuousOn_toFun.isOpen_inter_preimage <;> apply open_source
-  have xs  : x ∈ s
+  have xs : x ∈ s
   simp only [s, f, mem_inter_iff, mem_preimage, mem_chart_source, and_true]
   exact ((mem_inter_iff _ _ _).1 hx).1
   refine ⟨s, hs, xs, ?_⟩
@@ -1157,7 +1157,7 @@ protected instance instHasGroupoid [ClosedUnderRestriction G] : HasGroupoid s G 
 theorem chartAt_subtype_val_symm_eventuallyEq (U : Opens M) {x : U} :
     (chartAt H x.val).symm =ᶠ[𝓝 (chartAt H x.val x.val)] Subtype.val ∘ (chartAt H x).symm := by
   set e := chartAt H x.val
-  have heUx_nhds  : (e.subtypeRestr ⟨x⟩).target ∈ 𝓝 (e x)
+  have heUx_nhds : (e.subtypeRestr ⟨x⟩).target ∈ 𝓝 (e x)
   apply (e.subtypeRestr ⟨x⟩).open_target.mem_nhds
   exact e.map_subtype_source ⟨x⟩ (mem_chart_source _ _)
   exact Filter.eventuallyEq_of_mem heUx_nhds (e.subtypeRestr_symm_eqOn ⟨x⟩)
@@ -1167,7 +1167,7 @@ theorem chartAt_inclusion_symm_eventuallyEq {U V : Opens M} (hUV : U ≤ V) {x :
     =ᶠ[𝓝 (chartAt H (Set.inclusion hUV x) (Set.inclusion hUV x))]
     Set.inclusion hUV ∘ (chartAt H x).symm := by
   set e := chartAt H (x : M)
-  have heUx_nhds  : (e.subtypeRestr ⟨x⟩).target ∈ 𝓝 (e x)
+  have heUx_nhds : (e.subtypeRestr ⟨x⟩).target ∈ 𝓝 (e x)
   apply (e.subtypeRestr ⟨x⟩).open_target.mem_nhds
   exact e.map_subtype_source ⟨x⟩ (mem_chart_source _ _)
   exact Filter.eventuallyEq_of_mem heUx_nhds <| e.subtypeRestr_symm_eqOn_of_le ⟨x⟩

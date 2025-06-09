@@ -410,7 +410,7 @@ theorem prod_antilipschitzWith_equiv_aux [PseudoEMetricSpace α] [PseudoEMetricS
   rcases p.dichotomy with (rfl | h)
   · simp [edist]
   · have pos : 0 < p.toReal := by positivity
-    have nonneg  : 0 ≤ 1 / p.toReal
+    have nonneg : 0 ≤ 1 / p.toReal
     positivity
     have cancel : p.toReal * (1 / p.toReal) = 1 := mul_div_cancel₀ 1 (ne_of_gt pos)
     rw [prod_edist_eq_add pos, ENNReal.toReal_div 1 p]

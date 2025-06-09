@@ -363,7 +363,7 @@ theorem tendsto_log_mul_rpow_nhds_zero {r : ℝ} (hr : 0 < r) :
 lemma tendsto_log_mul_self_nhds_zero_left : Filter.Tendsto (fun x ↦ log x * x) (𝓝[<] 0) (𝓝 0) := by
   have h := tendsto_log_mul_rpow_nhds_zero zero_lt_one
   simp only [Real.rpow_one] at h
-  have h_eq  : ∀ x ∈ Set.Iio 0, (- (fun x ↦ log x * x) ∘ (fun x ↦ |x|)) x = log x * x
+  have h_eq : ∀ x ∈ Set.Iio 0, (- (fun x ↦ log x * x) ∘ (fun x ↦ |x|)) x = log x * x
   simp only [Set.mem_Iio, Pi.neg_apply, Function.comp_apply, log_abs]
   intro x hx
   simp only [abs_of_nonpos hx.le, mul_neg, neg_neg]

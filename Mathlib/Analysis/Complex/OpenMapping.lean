@@ -119,7 +119,7 @@ theorem AnalyticAt.eventually_constant_or_nhds_le_map_nhds {z₀ : E} (hg : Anal
   let ray : E → ℂ → E := fun z t => z₀ + t • z
   let gray : E → ℂ → ℂ := fun z => g ∘ ray z
   obtain ⟨r, hr, hgr⟩ := isOpen_iff.mp (isOpen_analyticAt ℂ g) z₀ hg
-  have h1  : ∀ z ∈ sphere (0 : E) 1, AnalyticOn ℂ (gray z) (ball 0 r)
+  have h1 : ∀ z ∈ sphere (0 : E) 1, AnalyticOn ℂ (gray z) (ball 0 r)
   refine fun z hz t ht => AnalyticAt.comp ?_ ?_
   · exact hgr (by simpa [ray, norm_smul, mem_sphere_zero_iff_norm.mp hz] using ht)
   · exact analyticAt_const.add
@@ -131,14 +131,14 @@ theorem AnalyticAt.eventually_constant_or_nhds_le_map_nhds {z₀ : E} (hg : Anal
     refine (eq_or_ne z z₀).casesOn (congr_arg g) fun h' => ?_
     replace h' : ‖z - z₀‖ ≠ 0 := by simpa only [Ne, norm_eq_zero, sub_eq_zero]
     let w : E := ‖z - z₀‖⁻¹ • (z - z₀)
-    have h3  : ∀ t ∈ ball (0 : ℂ) r, gray w t = g z₀
+    have h3 : ∀ t ∈ ball (0 : ℂ) r, gray w t = g z₀
     have e1 : IsPreconnected (ball (0 : ℂ) r) := (convex_ball 0 r).isPreconnected
-    have e2  : w ∈ sphere (0 : E) 1
+    have e2 : w ∈ sphere (0 : E) 1
     simp [w, norm_smul, inv_mul_cancel h']
     specialize h1 w e2
     apply h1.eqOn_of_preconnected_of_eventuallyEq analyticOn_const e1 (mem_ball_self hr)
     simpa [ray, gray] using h w e2
-    have h4  : ‖z - z₀‖ < r
+    have h4 : ‖z - z₀‖ < r
     simpa [dist_eq_norm] using mem_ball.mp hz
     replace h4 : ↑‖z - z₀‖ ∈ ball (0 : ℂ) r := by
       simpa only [mem_ball_zero_iff, norm_eq_abs, abs_ofReal, abs_norm]

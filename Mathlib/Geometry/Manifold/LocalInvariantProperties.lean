@@ -317,7 +317,7 @@ theorem liftPropWithinAt_indep_chart' [HasGroupoid M G] [HasGroupoid M' G']
     Iff.comm, and_iff_right_iff_imp]
   intro h
   have h1 := (e.symm.continuousWithinAt_iff_continuousWithinAt_comp_right xe).mp h.1
-  have  : ContinuousAt f ((g ∘ e.symm) (e x))
+  have : ContinuousAt f ((g ∘ e.symm) (e x))
   simp_rw [Function.comp, e.left_inv xe, f.continuousAt xf]
   exact this.comp_continuousWithinAt h1
 
@@ -442,7 +442,7 @@ theorem liftPropAt_symm_of_mem_maximalAtlas [HasGroupoid M G] {x : H}
     (hG : G.LocalInvariantProp G Q) (hQ : ∀ y, Q id univ y) (he : e ∈ maximalAtlas M G)
     (hx : x ∈ e.target) : LiftPropAt Q e.symm x := by
   suffices h : Q (e ∘ e.symm) univ x by
-    have  : e.symm x ∈ e.source
+    have : e.symm x ∈ e.source
     simp only [hx, mfld_simps]
     rw [LiftPropAt, hG.liftPropWithinAt_indep_chart G.id_mem_maximalAtlas (mem_univ _) he this]
     refine ⟨(e.symm.continuousAt hx).continuousWithinAt, ?_⟩

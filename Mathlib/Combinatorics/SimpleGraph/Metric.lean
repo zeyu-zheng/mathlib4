@@ -217,7 +217,7 @@ theorem dist_eq_one_iff_adj : G.dist u v = 1 ↔ G.Adj u v := by
 theorem Walk.isPath_of_length_eq_dist (p : G.Walk u v) (hp : p.length = G.dist u v) :
     p.IsPath := by
   classical
-  have  : p.bypass = p
+  have : p.bypass = p
   apply Walk.bypass_eq_self_of_length_le
   calc p.length
     _ = G.dist u v := hp

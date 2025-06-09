@@ -81,7 +81,7 @@ theorem size_shiftLeft {m} (h : m ≠ 0) (n) : size (m <<< n) = size m + n := by
 
 theorem lt_size_self (n : ℕ) : n < 2 ^ size n := by
   rw [← one_shiftLeft]
-  have  : ∀ {n}, n = 0 → n < 1 <<< (size n)
+  have : ∀ {n}, n = 0 → n < 1 <<< (size n)
   simp
   apply binaryRec _ _ n
   · apply this rfl

@@ -1054,7 +1054,7 @@ namespace Group
 @[to_additive]
 theorem card_pow_eq_card_pow_card_univ_aux {f : ℕ → ℕ} (h1 : Monotone f) {B : ℕ} (h2 : ∀ n, f n ≤ B)
     (h3 : ∀ n, f n = f (n + 1) → f (n + 1) = f (n + 2)) : ∀ k, B ≤ k → f k = f B := by
-  have key  : ∃ n : ℕ, n ≤ B ∧ f n = f (n + 1)
+  have key : ∃ n : ℕ, n ≤ B ∧ f n = f (n + 1)
   contrapose! h2
   suffices ∀ n : ℕ, n ≤ B + 1 → n ≤ f n by exact ⟨B + 1, this (B + 1) (le_refl (B + 1))⟩
   exact fun n =>

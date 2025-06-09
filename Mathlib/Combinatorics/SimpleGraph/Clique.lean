@@ -518,7 +518,7 @@ theorem cliqueSet_map (hn : n ≠ 1) (G : SimpleGraph α) (f : α ↪ β) :
   ext s
   constructor
   · rintro ⟨hs, rfl⟩
-    have hs'  : (s.preimage f f.injective.injOn).map f = s
+    have hs' : (s.preimage f f.injective.injOn).map f = s
     classical
     rw [map_eq_image, image_preimage, filter_true_of_mem]
     rintro a ha

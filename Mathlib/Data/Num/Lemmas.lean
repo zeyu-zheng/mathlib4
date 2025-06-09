@@ -781,7 +781,7 @@ theorem castNum_eq_bitwise {f : Num → Num → Num} {g : Bool → Bool → Bool
   · rw [fn0, Nat.bitwise_zero_right]
     cases g true false <;> rfl
   · rw [fnn]
-    have  : ∀ (b) (n : PosNum), (cond b (↑n) 0 : ℕ) = ↑(cond b (pos n) 0 : Num)
+    have : ∀ (b) (n : PosNum), (cond b (↑n) 0 : ℕ) = ↑(cond b (pos n) 0 : Num)
     intros b _; cases b <;> rfl
     induction' m with m IH m IH generalizing n <;> cases' n with n n
     any_goals simp only [show one = 1 from rfl, show pos 1 = 1 from rfl,
@@ -836,7 +836,7 @@ theorem castNum_shiftRight (m : Num) (n : Nat) : ↑(m >>> n) = (m : ℕ) >>> (n
     apply Nat.zero_shiftRight
   induction' n with n IH generalizing m
   · cases m <;> rfl
-  have hdiv2  : ∀ m, Nat.div2 (m + m) = m
+  have hdiv2 : ∀ m, Nat.div2 (m + m) = m
   intro; rw [Nat.div2_val]; omega
   cases' m with m m <;> dsimp only [PosNum.shiftr, ← PosNum.shiftr_eq_shiftRight]
   · rw [Nat.shiftRight_eq_div_pow]
@@ -976,7 +976,7 @@ theorem cast_bit1 [AddGroupWithOne α] : ∀ n : ZNum, (n.bit1 : α) = ((n : α)
     -- Porting note: `rw [Num.succ']` yields a `match` pattern.
     · dsimp only [Num.succ'] at ep
       subst p
-      have  : (↑(-↑a : ℤ) : α) = -1 + ↑(-↑a + 1 : ℤ)
+      have : (↑(-↑a : ℤ) : α) = -1 + ↑(-↑a + 1 : ℤ)
       simp [add_comm (- ↑a : ℤ) 1]
       simpa using this
 
@@ -1023,22 +1023,22 @@ theorem cast_sub' [AddGroupWithOne α] : ∀ m n : PosNum, (sub' m n : α) = m -
     simp [PosNum.cast_pos]
   | bit0 a, bit0 b => by
     rw [sub', ZNum.cast_bit0, cast_sub' a b]
-    have  : ((a + -b + (a + -b) : ℤ) : α) = a + a + (-b + -b)
+    have : ((a + -b + (a + -b) : ℤ) : α) = a + a + (-b + -b)
     simp [add_left_comm]
     simpa [sub_eq_add_neg] using this
   | bit0 a, bit1 b => by
     rw [sub', ZNum.cast_bitm1, cast_sub' a b]
-    have  : ((-b + (a + (-b + -1)) : ℤ) : α) = (a + -1 + (-b + -b) : ℤ)
+    have : ((-b + (a + (-b + -1)) : ℤ) : α) = (a + -1 + (-b + -b) : ℤ)
     simp [add_comm, add_left_comm]
     simpa [sub_eq_add_neg] using this
   | bit1 a, bit0 b => by
     rw [sub', ZNum.cast_bit1, cast_sub' a b]
-    have  : ((-b + (a + (-b + 1)) : ℤ) : α) = (a + 1 + (-b + -b) : ℤ)
+    have : ((-b + (a + (-b + 1)) : ℤ) : α) = (a + 1 + (-b + -b) : ℤ)
     simp [add_comm, add_left_comm]
     simpa [sub_eq_add_neg] using this
   | bit1 a, bit1 b => by
     rw [sub', ZNum.cast_bit0, cast_sub' a b]
-    have  : ((-b + (a + -b) : ℤ) : α) = a + (-b + -b)
+    have : ((-b + (a + -b) : ℤ) : α) = a + (-b + -b)
     simp [add_left_comm]
     simpa [sub_eq_add_neg] using this
 
@@ -1384,7 +1384,7 @@ theorem divMod_to_nat_aux {n d : PosNum} {q r : Num} (h₁ : (r : ℕ) + d * ((q
     (h₂ : (r : ℕ) < 2 * d) :
     ((divModAux d q r).2 + d * (divModAux d q r).1 : ℕ) = ↑n ∧ ((divModAux d q r).2 : ℕ) < d := by
   unfold divModAux
-  have  : ∀ {r₂}, Num.ofZNum' (Num.sub' r (Num.pos d)) = some r₂ ↔ (r : ℕ) = r₂ + d
+  have : ∀ {r₂}, Num.ofZNum' (Num.sub' r (Num.pos d)) = some r₂ ↔ (r : ℕ) = r₂ + d
   intro r₂
   apply Num.mem_ofZNum'.trans
   rw [← ZNum.to_int_inj, Num.cast_toZNum, Num.cast_sub', sub_eq_iff_eq_add, ← Int.natCast_inj]
@@ -1488,7 +1488,7 @@ theorem gcd_to_nat_aux :
 
 @[simp]
 theorem gcd_to_nat : ∀ a b, (gcd a b : ℕ) = Nat.gcd a b := by
-  have  : ∀ a b : Num, (a * b).natSize ≤ a.natSize + b.natSize
+  have : ∀ a b : Num, (a * b).natSize ≤ a.natSize + b.natSize
   intros
   simp only [natSize_to_nat, cast_mul]
   rw [Nat.size_le, pow_add]

@@ -460,7 +460,7 @@ variable [CommRing R] [IsDomain R]
 theorem unit_aux (x : HahnSeries Γ R) {r : R} (hr : r * x.leadingCoeff = 1) :
     0 < (1 - single (-x.order) r * x).orderTop := by
   by_cases hx : x = 0; · simp_all [hx]
-  have hrz  : r ≠ 0
+  have hrz : r ≠ 0
   intro h
   rw [h, zero_mul] at hr
   exact (zero_ne_one' R) hr

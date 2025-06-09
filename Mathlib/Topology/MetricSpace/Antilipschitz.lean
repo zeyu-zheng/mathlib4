@@ -213,7 +213,7 @@ theorem isBounded_of_image2_left (f : α → β → γ) {K₁ : ℝ≥0}
     (hst : IsBounded (Set.image2 f s t)) : IsBounded s ∨ IsBounded t := by
   contrapose! hst
   obtain ⟨b, hb⟩ : t.Nonempty := nonempty_of_not_isBounded hst.2
-  have  : ¬IsBounded (Set.image2 f s {b})
+  have : ¬IsBounded (Set.image2 f s {b})
   intro h
   apply hst.1
   rw [Set.image2_singleton_right] at h

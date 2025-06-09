@@ -58,7 +58,7 @@ example (x y z : ℤ)
     norm_num
 
 example {x y z : ℕ} : true := by
-  have  : y + x ≤ y + z
+  have : y + x ≤ y + z
   mono
   guard_target = x ≤ z
   exact test_sorry
@@ -71,7 +71,7 @@ example {x y z : ℕ} : true := by
   exact test_sorry
 
 example {x y z w : ℕ} : true := by
-  have  : x + y ≤ z + w
+  have : x + y ≤ z + w
   mono
   guard_target = x ≤ z; exact test_sorry
   guard_target = y ≤ w; exact test_sorry

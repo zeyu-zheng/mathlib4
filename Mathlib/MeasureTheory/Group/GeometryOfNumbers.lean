@@ -64,7 +64,7 @@ theorem exists_ne_zero_mem_lattice_of_measure_mul_two_pow_lt_measure [NormedAddC
     {L : AddSubgroup E} [Countable L] (fund : IsAddFundamentalDomain L F μ)
     (h_symm : ∀ x ∈ s, -x ∈ s) (h_conv : Convex ℝ s) (h : μ F * 2 ^ finrank ℝ E < μ s) :
     ∃ x ≠ 0, ((x : L) : E) ∈ s := by
-  have h_vol  : μ F < μ ((2⁻¹ : ℝ) • s)
+  have h_vol : μ F < μ ((2⁻¹ : ℝ) • s)
   rw [addHaar_smul_of_nonneg μ (by norm_num : 0 ≤ (2 : ℝ)⁻¹) s, ←
     mul_lt_mul_right (pow_ne_zero (finrank ℝ E) (two_ne_zero' _)) (pow_ne_top two_ne_top),
     mul_right_comm, ofReal_pow (by norm_num : 0 ≤ (2 : ℝ)⁻¹), ofReal_inv_of_pos zero_lt_two]
@@ -92,7 +92,7 @@ theorem exists_ne_zero_mem_lattice_of_measure_mul_two_pow_le_measure [NormedAddC
     (h_symm : ∀ x ∈ s, -x ∈ s) (h_conv : Convex ℝ s) (h_cpt : IsCompact s)
     (h : μ F * 2 ^ finrank ℝ E ≤ μ s) :
     ∃ x ≠ 0, ((x : L) : E) ∈ s := by
-  have h_mes  : μ s ≠ 0
+  have h_mes : μ s ≠ 0
   intro hμ
   suffices μ F = 0 from fund.measure_ne_zero (NeZero.ne μ) this
   rw [hμ, le_zero_iff, mul_eq_zero] at h
@@ -124,7 +124,7 @@ theorem exists_ne_zero_mem_lattice_of_measure_mul_two_pow_le_measure [NormedAddC
     rw [add_le_add_iff_left]
     exact le_of_lt <| (exists_seq_strictAnti_tendsto (0 : ℝ≥0)).choose_spec.1 (Nat.lt.base n)
   · suffices μ F * 2 ^ finrank ℝ E < μ (S n : Set E) by
-      have h_symm'  : ∀ x ∈ S n, -x ∈ S n
+      have h_symm' : ∀ x ∈ S n, -x ∈ S n
       rintro _ ⟨y, hy, rfl⟩
       exact ⟨-y, h_symm _ hy, by simp⟩
       obtain ⟨x, hx_nz, hx_mem⟩ := exists_ne_zero_mem_lattice_of_measure_mul_two_pow_lt_measure

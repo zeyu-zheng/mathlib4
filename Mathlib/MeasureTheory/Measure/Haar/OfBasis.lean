@@ -73,7 +73,7 @@ theorem parallelepiped_comp_equiv (v : ι → E) (e : ι' ≃ ι) :
     parallelepiped (v ∘ e) = parallelepiped v := by
   simp only [parallelepiped]
   let K : (ι' → ℝ) ≃ (ι → ℝ) := Equiv.piCongrLeft' (fun _a : ι' => ℝ) e
-  have  : Icc (0 : ι → ℝ) 1 = K '' Icc (0 : ι' → ℝ) 1
+  have : Icc (0 : ι → ℝ) 1 = K '' Icc (0 : ι' → ℝ) 1
   rw [← Equiv.preimage_eq_iff_eq_image]
   ext x
   simp only [K, mem_preimage, mem_Icc, Pi.le_def, Pi.zero_apply, Equiv.piCongrLeft'_apply,
@@ -92,16 +92,16 @@ theorem parallelepiped_comp_equiv (v : ι → E) (e : ι' ≃ ι) :
 -- The parallelepiped associated to an orthonormal basis of `ℝ` is either `[0, 1]` or `[-1, 0]`.
 theorem parallelepiped_orthonormalBasis_one_dim (b : OrthonormalBasis ι ℝ ℝ) :
     parallelepiped b = Icc 0 1 ∨ parallelepiped b = Icc (-1) 0 := by
-  have e  : ι ≃ Fin 1
+  have e : ι ≃ Fin 1
   apply Fintype.equivFinOfCardEq
   simp only [← finrank_eq_card_basis b.toBasis, finrank_self]
-  have B  : parallelepiped (b.reindex e) = parallelepiped b
+  have B : parallelepiped (b.reindex e) = parallelepiped b
   convert parallelepiped_comp_equiv b e.symm
   ext i
   simp only [OrthonormalBasis.coe_reindex]
   rw [← B]
   let F : ℝ → Fin 1 → ℝ := fun t => fun _i => t
-  have A  : Icc (0 : Fin 1 → ℝ) 1 = F '' Icc (0 : ℝ) 1
+  have A : Icc (0 : Fin 1 → ℝ) 1 = F '' Icc (0 : ℝ) 1
   apply Subset.antisymm
   · intro x hx
     refine ⟨x 0, ⟨hx.1 0, hx.2 0⟩, ?_⟩

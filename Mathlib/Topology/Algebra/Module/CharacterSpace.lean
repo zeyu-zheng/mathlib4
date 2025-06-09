@@ -184,7 +184,7 @@ theorem apply_mem_spectrum [Nontrivial 𝕜] (φ : characterSpace 𝕜 A) (a : A
 
 theorem ext_ker {φ ψ : characterSpace 𝕜 A} (h : RingHom.ker φ = RingHom.ker ψ) : φ = ψ := by
   ext x
-  have  : x - algebraMap 𝕜 A (ψ x) ∈ RingHom.ker φ
+  have : x - algebraMap 𝕜 A (ψ x) ∈ RingHom.ker φ
   simpa only [h, RingHom.mem_ker, map_sub, AlgHomClass.commutes] using sub_self (ψ x)
   rwa [RingHom.mem_ker, map_sub, AlgHomClass.commutes, sub_eq_zero] at this
 

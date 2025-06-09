@@ -333,7 +333,7 @@ theorem HasFTaylorSeriesUpToOn.shift_of_succ
   · intro x _
     rfl
   · intro m (hm : (m : ℕ∞) < n) x (hx : x ∈ s)
-    have A  : (m.succ : ℕ∞) < n.succ
+    have A : (m.succ : ℕ∞) < n.succ
     rw [Nat.cast_lt] at hm ⊢
     exact Nat.succ_lt_succ hm
     change HasFDerivWithinAt ((continuousMultilinearCurryRightEquiv' 𝕜 m E F).symm ∘ (p · m.succ))
@@ -963,12 +963,12 @@ protected theorem ContDiffOn.ftaylorSeriesWithin (h : ContDiffOn 𝕜 n f s) (hs
     rw [insert_eq_of_mem hx] at hu
     rcases mem_nhdsWithin.1 hu with ⟨o, o_open, xo, ho⟩
     rw [inter_comm] at ho
-    have  : p x m.succ = ftaylorSeriesWithin 𝕜 f s x m.succ
+    have : p x m.succ = ftaylorSeriesWithin 𝕜 f s x m.succ
     change p x m.succ = iteratedFDerivWithin 𝕜 m.succ f s x
     rw [← iteratedFDerivWithin_inter_open o_open xo]
     exact (Hp.mono ho).eq_iteratedFDerivWithin_of_uniqueDiffOn le_rfl (hs.inter o_open) ⟨hx, xo⟩
     rw [← this, ← hasFDerivWithinAt_inter (IsOpen.mem_nhds o_open xo)]
-    have A  : ∀ y ∈ s ∩ o, p y m = ftaylorSeriesWithin 𝕜 f s y m
+    have A : ∀ y ∈ s ∩ o, p y m = ftaylorSeriesWithin 𝕜 f s y m
     rintro y ⟨hy, yo⟩
     change p y m = iteratedFDerivWithin 𝕜 m f s y
     rw [← iteratedFDerivWithin_inter_open o_open yo]
@@ -986,7 +986,7 @@ protected theorem ContDiffOn.ftaylorSeriesWithin (h : ContDiffOn 𝕜 n f s) (hs
     rw [insert_eq_of_mem hx] at ho
     rw [inter_comm] at ho
     refine ⟨o, o_open, xo, ?_⟩
-    have A  : ∀ y ∈ s ∩ o, p y m = ftaylorSeriesWithin 𝕜 f s y m
+    have A : ∀ y ∈ s ∩ o, p y m = ftaylorSeriesWithin 𝕜 f s y m
     rintro y ⟨hy, yo⟩
     change p y m = iteratedFDerivWithin 𝕜 m f s y
     rw [← iteratedFDerivWithin_inter_open o_open yo]
@@ -1122,7 +1122,7 @@ protected theorem ContDiffOn.fderivWithin (hf : ContDiffOn 𝕜 n f s) (hs : Uni
     (hmn : m + 1 ≤ n) : ContDiffOn 𝕜 m (fun y => fderivWithin 𝕜 f s y) s := by
   cases' m with m
   · change ∞ + 1 ≤ n at hmn
-    have  : n = ∞
+    have : n = ∞
     simpa using hmn
     rw [this] at hf
     exact ((contDiffOn_top_iff_fderivWithin hs).1 hf).2

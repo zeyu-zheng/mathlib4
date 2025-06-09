@@ -58,11 +58,11 @@ theorem affineIndependent_of_toMatrix_right_inv [Fintype ι] [Finite ι'] [Decid
   cases nonempty_fintype ι'
   rw [affineIndependent_iff_eq_of_fintype_affineCombination_eq]
   intro w₁ w₂ hw₁ hw₂ hweq
-  have hweq'  : w₁ ᵥ* b.toMatrix p = w₂ ᵥ* b.toMatrix p
+  have hweq' : w₁ ᵥ* b.toMatrix p = w₂ ᵥ* b.toMatrix p
   ext j
   change (∑ i, w₁ i • b.coord j (p i)) = ∑ i, w₂ i • b.coord j (p i)
   -- Porting note: Added `u` because `∘` was causing trouble
-  have u  : (fun i => b.coord j (p i)) = b.coord j ∘ p
+  have u : (fun i => b.coord j (p i)) = b.coord j ∘ p
   simp only [(· ∘ ·)]
   rw [← Finset.univ.affineCombination_eq_linear_combination _ _ hw₁,
     ← Finset.univ.affineCombination_eq_linear_combination _ _ hw₂, u,
@@ -82,14 +82,14 @@ theorem affineSpan_eq_top_of_toMatrix_left_inv [Finite ι] [Fintype ι'] [Decida
     rintro q ⟨i, rfl⟩
     exact this i
   intro i
-  have hAi  : ∑ j, A i j = 1
+  have hAi : ∑ j, A i j = 1
   calc
     ∑ j, A i j = ∑ j, A i j * ∑ l, b.toMatrix p j l := by simp
     _ = ∑ j, ∑ l, A i j * b.toMatrix p j l := by simp_rw [Finset.mul_sum]
     _ = ∑ l, ∑ j, A i j * b.toMatrix p j l := by rw [Finset.sum_comm]
     _ = ∑ l, (A * b.toMatrix p) i l := rfl
     _ = 1 := by simp [hA, Matrix.one_apply, Finset.filter_eq]
-  have hbi  : b i = Finset.univ.affineCombination k p (A i)
+  have hbi : b i = Finset.univ.affineCombination k p (A i)
   apply b.ext_elem
   intro j
   rw [b.coord_apply, Finset.univ.map_affineCombination _ _ hAi,

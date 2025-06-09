@@ -49,14 +49,14 @@ See `MeasureTheory.lintegral_rpow_eq_lintegral_meas_lt_mul` for a version with s
 theorem lintegral_rpow_eq_lintegral_meas_le_mul :
     ∫⁻ ω, ENNReal.ofReal (f ω ^ p) ∂μ =
       ENNReal.ofReal p * ∫⁻ t in Ioi 0, μ {a : α | t ≤ f a} * ENNReal.ofReal (t ^ (p - 1)) := by
-  have one_lt_p  : -1 < p - 1
+  have one_lt_p : -1 < p - 1
   linarith
-  have obs  : ∀ x : ℝ, ∫ t : ℝ in (0)..x, t ^ (p - 1) = x ^ p / p
+  have obs : ∀ x : ℝ, ∫ t : ℝ in (0)..x, t ^ (p - 1) = x ^ p / p
   intro x
   rw [integral_rpow (Or.inl one_lt_p)]
   simp [Real.zero_rpow p_pos.ne.symm]
   set g := fun t : ℝ => t ^ (p - 1)
-  have g_nn  : ∀ᵐ t ∂volume.restrict (Ioi (0 : ℝ)), 0 ≤ g t
+  have g_nn : ∀ᵐ t ∂volume.restrict (Ioi (0 : ℝ)), 0 ≤ g t
   filter_upwards [self_mem_ae_restrict (measurableSet_Ioi : MeasurableSet (Ioi (0 : ℝ)))]
   intro t t_pos
   exact Real.rpow_nonneg (mem_Ioi.mp t_pos).le (p - 1)

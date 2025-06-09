@@ -62,7 +62,7 @@ lemma NormedAddCommGroup.completeSpace_of_summable_imp_tendsto
   obtain ⟨f, hf₁, hf₂⟩ := Metric.exists_subseq_summable_dist_of_cauchySeq u hu
   simp only [dist_eq_norm] at hf₂
   let v n := u (f (n+1)) - u (f n)
-  have hv_sum  : (fun n => (∑ i ∈ range n, v i)) = fun n => u (f n) - u (f 0)
+  have hv_sum : (fun n => (∑ i ∈ range n, v i)) = fun n => u (f n) - u (f 0)
   ext n
   exact sum_range_sub (u ∘ f) n
   obtain ⟨a, ha⟩ := h v hf₂

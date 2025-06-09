@@ -685,7 +685,7 @@ theorem ImageMap.map_uniq_aux {f g : Arrow C} [HasImage f.hom] [HasImage g.hom] 
     (map_ι : map ≫ image.ι g.hom = image.ι f.hom ≫ sq.right := by aesop_cat)
     (map' : image f.hom ⟶ image g.hom)
     (map_ι' : map' ≫ image.ι g.hom = image.ι f.hom ≫ sq.right) : (map = map') := by
-  have  : map ≫ image.ι g.hom = map' ≫ image.ι g.hom
+  have : map ≫ image.ι g.hom = map' ≫ image.ι g.hom
   rw [map_ι,map_ι']
   apply (cancel_mono (image.ι g.hom)).1 this
 

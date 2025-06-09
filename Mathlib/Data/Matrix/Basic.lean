@@ -2401,7 +2401,7 @@ theorem mul_submatrix_one [Fintype n] [Finite o] [NonAssocSemiring α] [Decidabl
     M * (1 : Matrix o o α).submatrix e₁ e₂ = submatrix M id (e₁.symm ∘ e₂) := by
   cases nonempty_fintype o
   let A := M.submatrix id e₁.symm
-  have  : M = A.submatrix id e₁
+  have : M = A.submatrix id e₁
   simp only [A, submatrix_submatrix, Function.comp_id, submatrix_id_id, Equiv.symm_comp_self]
   rw [this, submatrix_mul_equiv]
   simp only [A, Matrix.mul_one, submatrix_submatrix, Function.comp_id, submatrix_id_id,
@@ -2412,7 +2412,7 @@ theorem one_submatrix_mul [Fintype m] [Finite o] [NonAssocSemiring α] [Decidabl
     ((1 : Matrix o o α).submatrix e₁ e₂) * M = submatrix M (e₂.symm ∘ e₁) id := by
   cases nonempty_fintype o
   let A := M.submatrix e₂.symm id
-  have  : M = A.submatrix e₂ id
+  have : M = A.submatrix e₂ id
   simp only [A, submatrix_submatrix, Function.comp_id, submatrix_id_id, Equiv.symm_comp_self]
   rw [this, submatrix_mul_equiv]
   simp only [A, Matrix.one_mul, submatrix_submatrix, Function.comp_id, submatrix_id_id,

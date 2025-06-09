@@ -237,7 +237,7 @@ lemma schnirelmannDensity_setOf_mod_eq_one {m : ℕ} (hm : m ≠ 1) :
   rw [le_schnirelmannDensity_iff]
   intro n hn
   simp only [Set.mem_setOf_eq]
-  have  : (Icc 0 ((n - 1) / m)).image (· * m + 1) ⊆ (Ioc 0 n).filter (· % m = 1)
+  have : (Icc 0 ((n - 1) / m)).image (· * m + 1) ⊆ (Ioc 0 n).filter (· % m = 1)
   simp only [subset_iff, mem_image, forall_exists_index, mem_filter, mem_Ioc, mem_Icc, and_imp]
   rintro _ y _ hy' rfl
   have hm : 2 ≤ m := hm.lt_of_le' hm'

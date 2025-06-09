@@ -52,7 +52,7 @@ theorem irrational_nrt_of_notint_nrt {x : ℝ} (n : ℕ) (m : ℤ) (hxr : x ^ n 
     (hv : ¬∃ y : ℤ, x = y) (hnpos : 0 < n) : Irrational x := by
   rintro ⟨⟨N, D, P, C⟩, rfl⟩
   rw [← cast_pow] at hxr
-  have c1  : ((D : ℤ) : ℝ) ≠ 0
+  have c1 : ((D : ℤ) : ℝ) ≠ 0
   rw [Int.cast_ne_zero, Int.natCast_ne_zero]
   exact P
   have c2 : ((D : ℤ) : ℝ) ^ n ≠ 0 := pow_ne_zero _ c1
@@ -79,7 +79,7 @@ theorem irrational_nrt_of_n_not_dvd_multiplicity {x : ℝ} (n : ℕ) {m : ℤ} (
   rintro ⟨y, rfl⟩
   rw [← Int.cast_pow, Int.cast_inj] at hxr
   subst m
-  have  : y ≠ 0
+  have : y ≠ 0
   rintro rfl; rw [zero_pow hnpos.ne'] at hm; exact hm rfl
   erw [multiplicity.pow' (Nat.prime_iff_prime_int.1 hp.1) (finite_int_iff.2 ⟨hp.1.ne_one, this⟩),
     Nat.mul_mod_right] at hv
@@ -464,7 +464,7 @@ theorem one_lt_natDegree_of_irrational_root (hx : Irrational x) (p_nonzero : p �
   by_contra rid
   rcases exists_eq_X_add_C_of_natDegree_le_one (not_lt.1 rid) with ⟨a, b, rfl⟩
   clear rid
-  have  : (a : ℝ) * x = -b
+  have : (a : ℝ) * x = -b
   simpa [eq_neg_iff_add_eq_zero] using x_is_root
   rcases em (a = 0) with (rfl | ha)
   · obtain rfl : b = 0 := by simpa

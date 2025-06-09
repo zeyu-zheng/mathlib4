@@ -107,7 +107,7 @@ lemma normalizer_eq_self_of_engel_le [IsArtinian R L]
   apply le_antisymm _ (le_normalizer H)
   calc N.toSubmodule ≤ (engel R x).toSubmodule ⊔ H.toSubmodule := ?_
        _ = H := by rwa [sup_eq_right]
-  have aux₁  : ∀ n ∈ N, ⁅x, n⁆ ∈ H
+  have aux₁ : ∀ n ∈ N, ⁅x, n⁆ ∈ H
   intro n hn
   rw [mem_normalizer_iff] at hn
   specialize hn x (h (self_mem_engel R x))

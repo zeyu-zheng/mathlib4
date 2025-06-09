@@ -216,7 +216,7 @@ theorem hasFiniteIntegral_neg_iff {f : α → β} : HasFiniteIntegral (-f) μ �
 
 theorem HasFiniteIntegral.norm {f : α → β} (hfi : HasFiniteIntegral f μ) :
     HasFiniteIntegral (fun a => ‖f a‖) μ := by
-  have eq  : (fun a => (nnnorm ‖f a‖ : ℝ≥0∞)) = fun a => (‖f a‖₊ : ℝ≥0∞)
+  have eq : (fun a => (nnnorm ‖f a‖ : ℝ≥0∞)) = fun a => (‖f a‖₊ : ℝ≥0∞)
   funext
   rw [nnnorm_norm]
   rwa [HasFiniteIntegral, eq]
@@ -685,7 +685,7 @@ theorem Integrable.bdd_mul {F : Type*} [NormedDivisionRing F] {f g : α → F} (
   · refine ⟨hm.mul hint.1, ?_⟩
     obtain ⟨C, hC⟩ := hfbdd
     have hCnonneg : 0 ≤ C := le_trans (norm_nonneg _) (hC hα.some)
-    have  : (fun x => ‖f x * g x‖₊) ≤ fun x => ⟨C, hCnonneg⟩ * ‖g x‖₊
+    have : (fun x => ‖f x * g x‖₊) ≤ fun x => ⟨C, hCnonneg⟩ * ‖g x‖₊
     intro x
     simp only [nnnorm_mul]
     exact mul_le_mul_of_nonneg_right (hC x) (zero_le _)
@@ -702,9 +702,9 @@ theorem Integrable.essSup_smul {𝕜 : Type*} [NormedField 𝕜] [NormedSpace �
     Integrable (fun x : α => g x • f x) μ := by
   rw [← memℒp_one_iff_integrable] at *
   refine ⟨g_aestronglyMeasurable.smul hf.1, ?_⟩
-  have h  : (1 : ℝ≥0∞) / 1 = 1 / ∞ + 1 / 1
+  have h : (1 : ℝ≥0∞) / 1 = 1 / ∞ + 1 / 1
   norm_num
-  have hg'  : eLpNorm g ∞ μ ≠ ∞
+  have hg' : eLpNorm g ∞ μ ≠ ∞
   rwa [eLpNorm_exponent_top]
   calc
     eLpNorm (fun x : α => g x • f x) 1 μ ≤ _ := by
@@ -720,9 +720,9 @@ theorem Integrable.smul_essSup {𝕜 : Type*} [NormedRing 𝕜] [Module 𝕜 β]
     Integrable (fun x : α => f x • g x) μ := by
   rw [← memℒp_one_iff_integrable] at *
   refine ⟨hf.1.smul g_aestronglyMeasurable, ?_⟩
-  have h  : (1 : ℝ≥0∞) / 1 = 1 / 1 + 1 / ∞
+  have h : (1 : ℝ≥0∞) / 1 = 1 / 1 + 1 / ∞
   norm_num
-  have hg'  : eLpNorm g ∞ μ ≠ ∞
+  have hg' : eLpNorm g ∞ μ ≠ ∞
   rwa [eLpNorm_exponent_top]
   calc
     eLpNorm (fun x : α => f x • g x) 1 μ ≤ _ := by
@@ -854,7 +854,7 @@ lemma integrable_count_iff :
   -- (because summable functions have countable range) but slightly tedious to check.
   rw [Integrable, hasFiniteIntegral_count_iff, and_iff_right_iff_imp]
   intro hs
-  have hs'  : (Function.support f).Countable
+  have hs' : (Function.support f).Countable
   simpa only [Ne, Pi.zero_apply, eq_comm, Function.support, norm_eq_zero]
     using hs.countable_support
   letI : MeasurableSpace β := borel β
@@ -931,7 +931,7 @@ end
 
 theorem integrable_withDensity_iff {f : α → ℝ≥0∞} (hf : Measurable f) (hflt : ∀ᵐ x ∂μ, f x < ∞)
     {g : α → ℝ} : Integrable g (μ.withDensity f) ↔ Integrable (fun x => g x * (f x).toReal) μ := by
-  have  : (fun x => g x * (f x).toReal) = fun x => (f x).toReal • g x
+  have : (fun x => g x * (f x).toReal) = fun x => (f x).toReal • g x
   simp [mul_comm]
   rw [this]
   exact integrable_withDensity_iff_integrable_smul' hf hflt
@@ -1075,7 +1075,7 @@ theorem integrable_smul_const {f : α → 𝕜} {c : E} (hc : c ≠ 0) :
   simp_rw [Integrable, aestronglyMeasurable_smul_const_iff (f := f) hc, and_congr_right_iff,
     HasFiniteIntegral, nnnorm_smul, ENNReal.coe_mul]
   intro _; rw [lintegral_mul_const' _ _ ENNReal.coe_ne_top, ENNReal.mul_lt_top_iff]
-  have  : ∀ x : ℝ≥0∞, x = 0 → x < ∞
+  have : ∀ x : ℝ≥0∞, x = 0 → x < ∞
   simp
   simp [hc, or_iff_left_of_imp (this _)]
 

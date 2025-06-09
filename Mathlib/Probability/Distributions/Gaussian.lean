@@ -79,7 +79,7 @@ lemma integrable_gaussianPDFReal (μ : ℝ) (v : ℝ≥0) :
   by_cases hv : v = 0
   · simp [hv]
   let g : ℝ → ℝ := fun x ↦ (√(2 * π * v))⁻¹ * rexp (- x ^ 2 / (2 * v))
-  have hg  : Integrable g
+  have hg : Integrable g
   suffices g = fun x ↦ (√(2 * π * v))⁻¹ * rexp (- (2 * v)⁻¹ * x ^ 2) by
     rw [this]
     refine (integrable_exp_neg_mul_sq ?_).const_mul (√(2 * π * v))⁻¹
@@ -287,7 +287,7 @@ lemma gaussianReal_map_const_mul (c : ℝ) :
     simp only [ne_eq, zero_pow, mul_eq_zero, hv, or_false, not_false_eq_true]
     rfl
   let e : ℝ ≃ᵐ ℝ := (Homeomorph.mulLeft₀ c hc).symm.toMeasurableEquiv
-  have he'  : ∀ x, HasDerivAt e ((fun _ ↦ c⁻¹) x) x
+  have he' : ∀ x, HasDerivAt e ((fun _ ↦ c⁻¹) x) x
   suffices ∀ x, HasDerivAt (fun x => c⁻¹ * x) (c⁻¹ * 1) x by rwa [mul_one] at this
   exact fun _ ↦ HasDerivAt.const_mul _ (hasDerivAt_id _)
   change (gaussianReal μ v).map e.symm = gaussianReal (c * μ) (⟨c^2, sq_nonneg _⟩ * v)

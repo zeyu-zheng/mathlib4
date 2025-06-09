@@ -508,7 +508,7 @@ theorem add_pow_mem_of_pow_mem_of_le {m n k : ℕ}
   · exact I.mul_mem_right _ (I.pow_mem_of_pow_mem ha h)
   · refine I.mul_mem_left _ (I.pow_mem_of_pow_mem hb ?_)
     simp only [not_le, Nat.lt_iff_add_one_le] at h
-    have hck  : c ≤ k
+    have hck : c ≤ k
     rw [← add_le_add_iff_right 1]
     exact le_trans h (le_trans (Nat.le_add_right _ _) hk)
     rw [Nat.le_sub_iff_add_le hck, ← add_le_add_iff_right 1]
@@ -549,7 +549,7 @@ theorem pow_multiset_sum_mem_span_pow [DecidableEq α] (s : Multiset α) (n : �
     simp_rw [zero_mul, zero_add]
     refine ⟨_, ?_, rfl⟩
     replace h : c ≤ n := Nat.lt_succ_iff.mp (not_le.mp h)
-    have  : (Multiset.card s + 1) * n + 1 - c = Multiset.card s * n + 1 + (n - c)
+    have : (Multiset.card s + 1) * n + 1 - c = Multiset.card s * n + 1 + (n - c)
     rw [add_mul, one_mul, add_assoc, add_comm n 1, ← add_assoc, add_tsub_assoc_of_le h]
     rw [this, pow_add]
     simp_rw [mul_assoc, mul_comm (s.sum ^ (Multiset.card s * n + 1)), ← mul_assoc]
@@ -578,7 +578,7 @@ theorem span_pow_eq_top (s : Set α) (hs : span s = ⊤) (n : ℕ) :
   rintro _ hx
   simp_rw [Set.mem_image] at hx
   rcases hx with ⟨x, _, rfl⟩
-  have  : span ({(x : α) ^ (n + 1)} : Set α) ≤ span ((fun x : α => x ^ (n + 1)) '' s)
+  have : span ({(x : α) ^ (n + 1)} : Set α) ≤ span ((fun x : α => x ^ (n + 1)) '' s)
   rw [span_le, Set.singleton_subset_iff]
   exact subset_span ⟨x, x.prop, rfl⟩
   refine this ?_
@@ -806,7 +806,7 @@ theorem coe_subset_nonunits [Semiring α] {I : Ideal α} (h : I ≠ ⊤) : (I : 
 
 theorem exists_max_ideal_of_mem_nonunits [CommSemiring α] (h : a ∈ nonunits α) :
     ∃ I : Ideal α, I.IsMaximal ∧ a ∈ I := by
-  have  : Ideal.span ({a} : Set α) ≠ ⊤
+  have : Ideal.span ({a} : Set α) ≠ ⊤
   intro H
   rw [Ideal.span_singleton_eq_top] at H
   contradiction

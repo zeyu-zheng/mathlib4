@@ -119,7 +119,7 @@ theorem isClosed_innerDualCone : IsClosed (s.innerDualCone : Set H) := by
   apply isClosed_iInter
   intro x
   -- the dual cone of a singleton `{x}` is the preimage of `[0, ∞)` under `inner x`
-  have h  : ({↑x} : Set H).innerDualCone = (inner x : H → ℝ) ⁻¹' Set.Ici 0
+  have h : ({↑x} : Set H).innerDualCone = (inner x : H → ℝ) ⁻¹' Set.Ici 0
   rw [innerDualCone_singleton, ConvexCone.coe_comap, ConvexCone.coe_positive, innerₛₗ_apply_coe]
   -- the preimage is closed as `inner x` is continuous and `[0, ∞)` is closed
   rw [h]
@@ -130,7 +130,7 @@ theorem ConvexCone.pointed_of_nonempty_of_isClosed (K : ConvexCone ℝ H) (ne : 
   obtain ⟨x, hx⟩ := ne
   let f : ℝ → H := (· • x)
   -- f (0, ∞) is a subset of K
-  have fI  : f '' Set.Ioi 0 ⊆ (K : Set H)
+  have fI : f '' Set.Ioi 0 ⊆ (K : Set H)
   rintro _ ⟨_, h, rfl⟩
   exact K.smul_mem (Set.mem_Ioi.1 h) hx
   -- closure of f (0, ∞) is a subset of K
@@ -169,7 +169,7 @@ theorem ConvexCone.hyperplane_separation_of_nonempty_of_isClosed_of_nmem (K : Co
     have hinner₀ := hinner 0 (K.pointed_of_nonempty_of_isClosed ne hc)
     -- the rest of the proof is a straightforward calculation
     rw [zero_sub, inner_neg_right, Right.neg_nonpos_iff] at hinner₀
-    have hbz  : b - z ≠ 0
+    have hbz : b - z ≠ 0
     rw [sub_ne_zero]
     contrapose! hzK
     rwa [← hzK]

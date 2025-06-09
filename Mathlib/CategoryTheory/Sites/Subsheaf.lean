@@ -207,7 +207,7 @@ theorem Subpresheaf.sheafify_isSheaf (hF : Presieve.IsSheaf J F) :
   choose W i₁ i₂ hi₂ h₁ h₂ using this
   dsimp [-Sieve.bind_apply] at *
   let x'' : Presieve.FamilyOfElements F S' := fun V i hi => F.map (i₁ V i hi).op (x _ (hi₂ V i hi))
-  have H  : ∀ s, x.IsAmalgamation s ↔ x''.IsAmalgamation s.1
+  have H : ∀ s, x.IsAmalgamation s ↔ x''.IsAmalgamation s.1
   intro s
   constructor
   · intro H V i hi
@@ -223,7 +223,7 @@ theorem Subpresheaf.sheafify_isSheaf (hF : Presieve.IsSheaf J F) :
     have := H _ hi''
     rw [op_comp, F.map_comp] at this
     exact this.trans (congr_arg Subtype.val (hx _ _ (hi₂ _ _ hi'') hi (h₂ _ _ hi'')))
-  have  : x''.Compatible
+  have : x''.Compatible
   intro V₁ V₂ V₃ g₁ g₂ g₃ g₄ S₁ S₂ e
   rw [← FunctorToTypes.map_comp_apply, ← FunctorToTypes.map_comp_apply]
   exact
@@ -354,7 +354,7 @@ theorem imagePresheaf_comp_le (f₁ : F ⟶ F') (f₂ : F' ⟶ F'') :
 
 instance isIso_toImagePresheaf {F F' : Cᵒᵖ ⥤ TypeMax.{v, w}} (f : F ⟶ F') [hf : Mono f] :
   IsIso (toImagePresheaf f) := by
-  have  : ∀ (X : Cᵒᵖ), IsIso ((toImagePresheaf f).app X)
+  have : ∀ (X : Cᵒᵖ), IsIso ((toImagePresheaf f).app X)
   intro X
   rw [isIso_iff_bijective]
   constructor

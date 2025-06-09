@@ -90,7 +90,7 @@ theorem gal_X_pow_sub_one_isSolvable (n : ℕ) : IsSolvable (X ^ n - 1 : F[X]).G
   intro σ τ
   ext a ha
   simp only [mem_rootSet_of_ne hn'', map_sub, aeval_X_pow, aeval_one, sub_eq_zero] at ha
-  have key  : ∀ σ : (X ^ n - 1 : F[X]).Gal, ∃ m : ℕ, σ a = a ^ m
+  have key : ∀ σ : (X ^ n - 1 : F[X]).Gal, ∃ m : ℕ, σ a = a ^ m
   intro σ
   lift n to ℕ+ using hn'
   exact map_rootsOfUnity_eq_pow_self σ.toAlgHom (rootsOfUnity.mkOfPowEq a ha)
@@ -278,7 +278,7 @@ def P (α : solvableByRad F E) : Prop :=
 /-- An auxiliary induction lemma, which is generalized by `solvableByRad.isSolvable`. -/
 theorem induction3 {α : solvableByRad F E} {n : ℕ} (hn : n ≠ 0) (hα : P (α ^ n)) : P α := by
   let p := minpoly F (α ^ n)
-  have hp  : p.comp (X ^ n) ≠ 0
+  have hp : p.comp (X ^ n) ≠ 0
   intro h
   cases' comp_eq_zero_iff.mp h with h' h'
   · exact minpoly.ne_zero (isIntegral (α ^ n)) h'
@@ -351,7 +351,7 @@ theorem isSolvable (α : solvableByRad F E) : IsSolvable (minpoly F α).Gal := b
 `IsSolvableByRad` root has solvable Galois group -/
 theorem isSolvable' {α : E} {q : F[X]} (q_irred : Irreducible q) (q_aeval : aeval α q = 0)
     (hα : IsSolvableByRad F α) : IsSolvable q.Gal := by
-  have  : _root_.IsSolvable (q * C q.leadingCoeff⁻¹).Gal
+  have : _root_.IsSolvable (q * C q.leadingCoeff⁻¹).Gal
   rw [minpoly.eq_of_irreducible q_irred q_aeval, ←
     show minpoly F (⟨α, hα⟩ : solvableByRad F E) = minpoly F α from
       (minpoly.algebraMap_eq (RingHom.injective _) _).symm]

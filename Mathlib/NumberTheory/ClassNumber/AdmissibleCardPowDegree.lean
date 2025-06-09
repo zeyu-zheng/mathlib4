@@ -40,7 +40,7 @@ theorem exists_eq_polynomial [Semiring Fq] {d : ℕ} {m : ℕ} (hm : Fintype.car
   -- `0`, ... `degree b - 1` ≤ `d - 1`.
   -- In other words, the following map is not injective:
   set f : Fin m.succ → Fin d → Fq := fun i j => (A i).coeff j
-  have  : Fintype.card (Fin d → Fq) < Fintype.card (Fin m.succ)
+  have : Fintype.card (Fin d → Fq) < Fintype.card (Fin m.succ)
   simpa using lt_of_le_of_lt hm (Nat.lt_succ_self m)
   -- Therefore, the differences have all coefficients higher than `deg b - d` equal.
   obtain ⟨i₀, i₁, i_ne, i_eq⟩ := Fintype.exists_ne_map_eq_of_card_lt f this
@@ -61,7 +61,7 @@ distinct), such that their difference has small degree. -/
 theorem exists_approx_polynomial_aux [Ring Fq] {d : ℕ} {m : ℕ} (hm : Fintype.card Fq ^ d ≤ m)
     (b : Fq[X]) (A : Fin m.succ → Fq[X]) (hA : ∀ i, degree (A i) < degree b) :
     ∃ i₀ i₁, i₀ ≠ i₁ ∧ degree (A i₁ - A i₀) < ↑(natDegree b - d) := by
-  have hb  : b ≠ 0
+  have hb : b ≠ 0
   rintro rfl
   specialize hA 0
   rw [degree_zero] at hA
@@ -71,7 +71,7 @@ theorem exists_approx_polynomial_aux [Ring Fq] {d : ℕ} {m : ℕ} (hm : Fintype
   -- `degree b - 1`, ... `degree b - d`.
   -- In other words, the following map is not injective:
   set f : Fin m.succ → Fin d → Fq := fun i j => (A i).coeff (natDegree b - j.succ)
-  have  : Fintype.card (Fin d → Fq) < Fintype.card (Fin m.succ)
+  have : Fintype.card (Fin d → Fq) < Fintype.card (Fin m.succ)
   simpa using lt_of_le_of_lt hm (Nat.lt_succ_self m)
   -- Therefore, the differences have all coefficients higher than `deg b - d` equal.
   obtain ⟨i₀, i₁, i_ne, i_eq⟩ := Fintype.exists_ne_map_eq_of_card_lt f this
@@ -85,13 +85,13 @@ theorem exists_approx_polynomial_aux [Ring Fq] {d : ℕ} {m : ℕ} (hm : Fintype
   rw [coeff_sub, sub_eq_zero]
   rw [not_le, degree_eq_natDegree hb] at hbj
   have hbj : j < natDegree b := (@WithBot.coe_lt_coe _ _ _).mp hbj
-  have hj  : natDegree b - j.succ < d
+  have hj : natDegree b - j.succ < d
   by_cases hd : natDegree b < d
   · exact lt_of_le_of_lt tsub_le_self hd
   · rw [not_lt] at hd
     have := lt_of_le_of_lt hj (Nat.lt_succ_self j)
     rwa [tsub_lt_iff_tsub_lt hd hbj] at this
-  have  : j = b.natDegree - (natDegree b - j.succ).succ
+  have : j = b.natDegree - (natDegree b - j.succ).succ
   rw [← Nat.succ_sub hbj, Nat.succ_sub_succ, tsub_tsub_cancel_of_le hbj.le]
   convert congr_fun i_eq.symm ⟨natDegree b - j.succ, hj⟩
 
@@ -103,15 +103,15 @@ distinct), such that the difference of their remainders is close together. -/
 theorem exists_approx_polynomial {b : Fq[X]} (hb : b ≠ 0) {ε : ℝ} (hε : 0 < ε)
     (A : Fin (Fintype.card Fq ^ ⌈-log ε / log (Fintype.card Fq)⌉₊).succ → Fq[X]) :
     ∃ i₀ i₁, i₀ ≠ i₁ ∧ (cardPowDegree (A i₁ % b - A i₀ % b) : ℝ) < cardPowDegree b • ε := by
-  have hbε  : 0 < cardPowDegree b • ε
+  have hbε : 0 < cardPowDegree b • ε
   rw [Algebra.smul_def, eq_intCast]
   exact mul_pos (Int.cast_pos.mpr (AbsoluteValue.pos _ hb)) hε
   have one_lt_q : 1 < Fintype.card Fq := Fintype.one_lt_card
-  have one_lt_q'  : (1 : ℝ) < Fintype.card Fq
+  have one_lt_q' : (1 : ℝ) < Fintype.card Fq
   assumption_mod_cast
-  have q_pos  : 0 < Fintype.card Fq
+  have q_pos : 0 < Fintype.card Fq
   omega
-  have q_pos'  : (0 : ℝ) < Fintype.card Fq
+  have q_pos' : (0 : ℝ) < Fintype.card Fq
   assumption_mod_cast
   -- If `b` is already small enough, then the remainders are equal and we are done.
   by_cases le_b : b.natDegree ≤ ⌈-log ε / log (Fintype.card Fq)⌉₊
@@ -177,7 +177,7 @@ theorem exists_partition_polynomial_aux (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b :
     (A : Fin n → Fq[X]) : ∃ t : Fin n → Fin (Fintype.card Fq ^ ⌈-log ε / log (Fintype.card Fq)⌉₊),
       ∀ i₀ i₁ : Fin n, t i₀ = t i₁ ↔
         (cardPowDegree (A i₁ % b - A i₀ % b) : ℝ) < cardPowDegree b • ε := by
-  have hbε  : 0 < cardPowDegree b • ε
+  have hbε : 0 < cardPowDegree b • ε
   rw [Algebra.smul_def, eq_intCast]
   exact mul_pos (Int.cast_pos.mpr (AbsoluteValue.pos _ hb)) hε
   -- We go by induction on the size `A`.

@@ -61,7 +61,7 @@ lemma isClosed_iff_derivedSet_subset (A : Set X) : IsClosed A ↔ derivedSet A �
     rw [isClosed_iff_clusterPt]
     intro a ha
     by_contra! nh
-    have  : A = A \ {a}
+    have : A = A \ {a}
     simp [nh]
     rw [this, ← acc_principal_iff_cluster] at ha
     exact nh (h ha)

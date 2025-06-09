@@ -141,7 +141,7 @@ lemma levyProkhorovEDist_triangle [OpensMeasurableSpace Ω] (μ ν κ : Measure 
   let s := levyProkhorovEDist ν κ + ε / 2
   have lt_r : levyProkhorovEDist μ ν < r := lt_add_right LPμν_finite half_ε_pos.ne'
   have lt_s : levyProkhorovEDist ν κ < s := lt_add_right LPνκ_finite half_ε_pos.ne'
-  have hs_add_r  : s + r = levyProkhorovEDist μ ν + levyProkhorovEDist ν κ + ε
+  have hs_add_r : s + r = levyProkhorovEDist μ ν + levyProkhorovEDist ν κ + ε
   simp_rw [s, r, add_assoc, add_comm (ε / 2), add_assoc, ENNReal.add_halves, ← add_assoc,
     add_comm (levyProkhorovEDist μ ν)]
   have hs_add_r' : s.toReal + r.toReal
@@ -263,7 +263,7 @@ lemma levyProkhorovDist_le_of_forall_le
   apply toReal_le_of_le_ofReal δ_nn
   apply levyProkhorovEDist_le_of_forall_le
   intro ε B ε_gt ε_lt_top B_mble
-  have ε_gt'  : δ < ε.toReal
+  have ε_gt' : δ < ε.toReal
   refine (ofReal_lt_ofReal_iff ?_).mp ?_
   · exact ENNReal.toReal_pos (ne_zero_of_lt ε_gt) ε_lt_top.ne
   · simpa [ofReal_toReal_eq_iff.mpr ε_lt_top.ne] using ε_gt
@@ -330,7 +330,7 @@ lemma BoundedContinuousFunction.integral_le_of_levyProkhorovEDist_lt (μ ν : Me
                 (f.continuous.measurable measurableSet_Ici)
     · rw [ENNReal.toReal_add (measure_ne_top ν _) ofReal_ne_top, ENNReal.toReal_ofReal ε_pos.le]
     · exact ENNReal.add_ne_top.mpr ⟨measure_ne_top ν _, ofReal_ne_top⟩
-  have intble₁  : IntegrableOn (fun t ↦ ENNReal.toReal (μ {a | t ≤ f a})) (Ioc 0 ‖f‖)
+  have intble₁ : IntegrableOn (fun t ↦ ENNReal.toReal (μ {a | t ≤ f a})) (Ioc 0 ‖f‖)
   apply Measure.integrableOn_of_bounded (M := ENNReal.toReal (μ univ)) measure_Ioc_lt_top.ne
   · apply (Measurable.ennreal_toReal (Antitone.measurable ?_)).aestronglyMeasurable
     exact fun _ _ hst ↦ measure_mono (fun _ h ↦ hst.trans h)
@@ -404,7 +404,7 @@ lemma LevyProkhorov.continuous_toProbabilityMeasure :
   apply limsup_le_of_le ?_
   · obtain ⟨εs, ⟨_, ⟨εs_pos, εs_lim⟩⟩⟩ := exists_seq_strictAnti_tendsto (0 : ℝ)
     have ε_of_room := Tendsto.add (tendsto_iff_dist_tendsto_zero.mp hμs) εs_lim
-    have ε_of_room'  : Tendsto (fun n ↦ dist (μs n) ν + εs n) atTop (𝓝[>] 0)
+    have ε_of_room' : Tendsto (fun n ↦ dist (μs n) ν + εs n) atTop (𝓝[>] 0)
     rw [tendsto_nhdsWithin_iff]
     refine ⟨by simpa using ε_of_room, eventually_of_forall fun n ↦ ?_⟩
     · rw [mem_Ioi]
@@ -502,7 +502,7 @@ lemma ProbabilityMeasure.toMeasure_add_pos_gt_mem_nhds (P : ProbabilityMeasure �
   by_cases ε_top : ε = ∞
   · simp [ε_top, measure_lt_top]
   simp only [not_lt] at easy
-  have aux  : P.toMeasure G - ε < liminf (fun Q ↦ Q.toMeasure G) (𝓝 P)
+  have aux : P.toMeasure G - ε < liminf (fun Q ↦ Q.toMeasure G) (𝓝 P)
   apply lt_of_lt_of_le (ENNReal.sub_lt_self (measure_lt_top _ _).ne _ _)
       <| ProbabilityMeasure.le_liminf_measure_open_of_tendsto tendsto_id G_open
   · exact (lt_of_lt_of_le ε_pos easy).ne.symm
@@ -522,7 +522,7 @@ lemma ProbabilityMeasure.continuous_toLevyProkhorov :
   -- To check continuity, fix `ε > 0`. To leave some wiggle room, be ready to use `ε/3 > 0` instead.
   rw [continuousAt_iff']
   intro ε ε_pos
-  have third_ε_pos  : 0 < ε / 3
+  have third_ε_pos : 0 < ε / 3
   linarith
   have third_ε_pos' : 0 < ENNReal.ofReal (ε / 3) := ofReal_pos.mpr third_ε_pos
   -- First use separability to choose a countable partition of `Ω` into measurable

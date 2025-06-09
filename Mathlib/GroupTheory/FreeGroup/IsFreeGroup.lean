@@ -71,9 +71,9 @@ instance instFunLike : FunLike (FreeGroupBasis ι G) ι G where
   coe b := fun i ↦ b.repr.symm (FreeGroup.of i)
   coe_injective' := by
     rintro ⟨b⟩  ⟨b'⟩ hbb'
-    have H  : (b.symm : FreeGroup ι →* G) = (b'.symm : FreeGroup ι →* G)
+    have H : (b.symm : FreeGroup ι →* G) = (b'.symm : FreeGroup ι →* G)
     ext i; exact congr_fun hbb' i
-    have  : b.symm = b'.symm
+    have : b.symm = b'.symm
     ext x; exact DFunLike.congr_fun H x
     rw [ofRepr.injEq, ← MulEquiv.symm_symm b, ← MulEquiv.symm_symm b', this]
 

@@ -223,7 +223,7 @@ lemma cfcₙ_apply_of_not_map_zero {f : R → R} (a : A) (hf : ¬ f 0 = 0) :
 
 lemma cfcₙHom_eq_cfcₙ_extend {a : A} (g : R → R) (ha : p a) (f : C(σₙ R a, R)₀) :
     cfcₙHom ha f = cfcₙ (Function.extend Subtype.val f g) a := by
-  have h  : f = (σₙ R a).restrict (Function.extend Subtype.val f g)
+  have h : f = (σₙ R a).restrict (Function.extend Subtype.val f g)
   ext; simp [Subtype.val_injective.extend_apply]
   have hg : ContinuousOn (Function.extend Subtype.val f g) (σₙ R a) :=
     continuousOn_iff_continuous_restrict.mpr <| h ▸ map_continuous f
@@ -326,7 +326,7 @@ lemma cfcₙ_sum {ι : Type*} (f : ι → R → R) (a : A) (s : Finset ι)
     cfcₙ (∑ i in s, f i) a = ∑ i in s, cfcₙ (f i) a := by
   by_cases ha : p a
   · have hsum : s.sum f = fun z => ∑ i ∈ s, f i z := by ext; simp
-    have hf'  : ContinuousOn (∑ i : s, f i) (σₙ R a)
+    have hf' : ContinuousOn (∑ i : s, f i) (σₙ R a)
     rw [sum_coe_sort s, hsum]
     exact continuousOn_finset_sum s fun i hi => hf i hi
     rw [← sum_coe_sort s, ← sum_coe_sort s]
@@ -671,7 +671,7 @@ instance ContinuousFunctionalCalculus.toNonUnital : NonUnitalContinuousFunctiona
 
 lemma cfcₙHom_eq_cfcₙHom_of_cfcHom [UniqueNonUnitalContinuousFunctionalCalculus R A] {a : A}
     (ha : p a) : cfcₙHom (R := R) ha = cfcₙHom_of_cfcHom R ha := by
-  have h_cpct'  : CompactSpace (σₙ R a)
+  have h_cpct' : CompactSpace (σₙ R a)
   specialize h_cpct a
   simp_rw [← isCompact_iff_compactSpace, quasispectrum_eq_spectrum_union_zero] at h_cpct ⊢
   exact h_cpct.union isCompact_singleton

@@ -511,7 +511,7 @@ theorem mk_of_not_mem (hi : i ∉ s) : (mk s x : ∀ i, β i) i = 0 :=
 theorem mk_injective (s : Finset ι) : Function.Injective (@mk ι β _ _ s) := by
   intro x y H
   ext i
-  have h1  : (mk s x : ∀ i, β i) i = (mk s y : ∀ i, β i) i
+  have h1 : (mk s x : ∀ i, β i) i = (mk s y : ∀ i, β i) i
   rw [H]
   obtain ⟨i, hi : i ∈ s⟩ := i
   dsimp only [mk_apply, Subtype.coe_mk] at h1
@@ -832,10 +832,10 @@ protected theorem induction {p : (Π₀ i, β i) → Prop} (f : Π₀ i, β i) (
   · have : f = 0 := funext fun i => (H i).resolve_left (Multiset.not_mem_zero _)
     subst this
     exact h0
-  have H2  : p (erase i ⟨f, Trunc.mk ⟨i ::ₘ s, H⟩⟩)
+  have H2 : p (erase i ⟨f, Trunc.mk ⟨i ::ₘ s, H⟩⟩)
   dsimp only [erase, Trunc.map, Trunc.bind, Trunc.liftOn, Trunc.lift_mk,
     Function.comp, Subtype.coe_mk]
-  have H2  : ∀ j, j ∈ s ∨ ite (j = i) 0 (f j) = 0
+  have H2 : ∀ j, j ∈ s ∨ ite (j = i) 0 (f j) = 0
   intro j
   cases' H j with H2 H2
   · cases' Multiset.mem_cons.1 H2 with H3 H3

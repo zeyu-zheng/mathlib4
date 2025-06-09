@@ -615,7 +615,7 @@ theorem exists_lt_add_of_lt_add {x y z : ℝ≥0∞} (h : x < y + z) (hy : y ≠
     ∃ y' z', y' < y ∧ z' < z ∧ x < y' + z' := by
   have : NeZero y := ⟨hy⟩
   have : NeZero z := ⟨hz⟩
-  have A  : Tendsto (fun p : ℝ≥0∞ × ℝ≥0∞ => p.1 + p.2) (𝓝[<] y ×ˢ 𝓝[<] z) (𝓝 (y + z))
+  have A : Tendsto (fun p : ℝ≥0∞ × ℝ≥0∞ => p.1 + p.2) (𝓝[<] y ×ˢ 𝓝[<] z) (𝓝 (y + z))
   apply Tendsto.mono_left _ (Filter.prod_mono nhdsWithin_le_nhds nhdsWithin_le_nhds)
   rw [← nhds_prod_eq]
   exact tendsto_add
@@ -794,7 +794,7 @@ protected theorem tsum_top [Nonempty α] : ∑' _ : α, ∞ = ∞ :=
 
 theorem tsum_const_eq_top_of_ne_zero {α : Type*} [Infinite α] {c : ℝ≥0∞} (hc : c ≠ 0) :
     ∑' _ : α, c = ∞ := by
-  have A  : Tendsto (fun n : ℕ => (n : ℝ≥0∞) * c) atTop (𝓝 (∞ * c))
+  have A : Tendsto (fun n : ℕ => (n : ℝ≥0∞) * c) atTop (𝓝 (∞ * c))
   apply ENNReal.Tendsto.mul_const tendsto_nat_nhds_top
   simp only [true_or_iff, top_ne_zero, Ne, not_false_iff]
   have B : ∀ n : ℕ, (n : ℝ≥0∞) * c ≤ ∑' _ : α, c := fun n => by
@@ -809,7 +809,7 @@ protected theorem tsum_mul_left : ∑' i, a * f i = a * ∑' i, f i := by
   by_cases hf : ∀ i, f i = 0
   · simp [hf]
   · rw [← ENNReal.tsum_eq_zero] at hf
-    have  : Tendsto (fun s : Finset α => ∑ j ∈ s, a * f j) atTop (𝓝 (a * ∑' i, f i))
+    have : Tendsto (fun s : Finset α => ∑ j ∈ s, a * f j) atTop (𝓝 (a * ∑' i, f i))
     simp only [← Finset.mul_sum]
     exact ENNReal.Tendsto.const_mul ENNReal.summable.hasSum (Or.inl hf)
     exact HasSum.tsum_eq this
@@ -1416,7 +1416,7 @@ noncomputable def truncateToReal (t x : ℝ≥0∞) : ℝ := (min t x).toReal
 lemma truncateToReal_eq_toReal {t x : ℝ≥0∞} (t_ne_top : t ≠ ∞) (x_le : x ≤ t) :
     truncateToReal t x = x.toReal := by
   have x_lt_top : x < ∞ := lt_of_le_of_lt x_le t_ne_top.lt_top
-  have obs  : min t x ≠ ∞
+  have obs : min t x ≠ ∞
   simp_all only [ne_eq, min_eq_top, false_and, not_false_eq_true]
   exact (ENNReal.toReal_eq_toReal obs x_lt_top.ne).mpr (min_eq_right x_le)
 
@@ -1431,9 +1431,9 @@ lemma truncateToReal_nonneg {t x : ℝ≥0∞} : 0 ≤ truncateToReal t x := toR
 /-- The truncated cast `ENNReal.truncateToReal t : ℝ≥0∞ → ℝ` is monotone when `t ≠ ∞`. -/
 lemma monotone_truncateToReal {t : ℝ≥0∞} (t_ne_top : t ≠ ∞) : Monotone (truncateToReal t) := by
   intro x y x_le_y
-  have obs_x  : min t x ≠ ∞
+  have obs_x : min t x ≠ ∞
   simp_all only [ne_eq, min_eq_top, false_and, not_false_eq_true]
-  have obs_y  : min t y ≠ ∞
+  have obs_y : min t y ≠ ∞
   simp_all only [ne_eq, min_eq_top, false_and, not_false_eq_true]
   exact (ENNReal.toReal_le_toReal obs_x obs_y).mpr (min_le_min_left t x_le_y)
 
@@ -1474,15 +1474,15 @@ lemma liminf_const_sub (F : Filter ι) [NeBot F] (f : ι → ℝ≥0∞)
 lemma liminf_toReal_eq {ι : Type*} {F : Filter ι} [NeBot F] {b : ℝ≥0∞} (b_ne_top : b ≠ ∞)
     {xs : ι → ℝ≥0∞} (le_b : ∀ᶠ i in F, xs i ≤ b) :
     F.liminf (fun i ↦ (xs i).toReal) = (F.liminf xs).toReal := by
-  have liminf_le  : F.liminf xs ≤ b
+  have liminf_le : F.liminf xs ≤ b
   apply liminf_le_of_le ⟨0, by simp⟩
   intro y h
   obtain ⟨i, hi⟩ := (Eventually.and h le_b).exists
   exact hi.1.trans hi.2
-  have aux  : ∀ᶠ i in F, (xs i).toReal = ENNReal.truncateToReal b (xs i)
+  have aux : ∀ᶠ i in F, (xs i).toReal = ENNReal.truncateToReal b (xs i)
   filter_upwards [le_b] with i i_le_b
   simp only [truncateToReal_eq_toReal b_ne_top i_le_b, implies_true]
-  have aux'  : (F.liminf xs).toReal = ENNReal.truncateToReal b (F.liminf xs)
+  have aux' : (F.liminf xs).toReal = ENNReal.truncateToReal b (F.liminf xs)
   rw [truncateToReal_eq_toReal b_ne_top liminf_le]
   simp_rw [liminf_congr aux, aux']
   have key := Monotone.map_liminf_of_continuousAt (F := F) (monotone_truncateToReal b_ne_top) xs
@@ -1496,10 +1496,10 @@ lemma liminf_toReal_eq {ι : Type*} {F : Filter ι} [NeBot F] {b : ℝ≥0∞} (
 lemma limsup_toReal_eq {ι : Type*} {F : Filter ι} [NeBot F] {b : ℝ≥0∞} (b_ne_top : b ≠ ∞)
     {xs : ι → ℝ≥0∞} (le_b : ∀ᶠ i in F, xs i ≤ b) :
     F.limsup (fun i ↦ (xs i).toReal) = (F.limsup xs).toReal := by
-  have aux  : ∀ᶠ i in F, (xs i).toReal = ENNReal.truncateToReal b (xs i)
+  have aux : ∀ᶠ i in F, (xs i).toReal = ENNReal.truncateToReal b (xs i)
   filter_upwards [le_b] with i i_le_b
   simp only [truncateToReal_eq_toReal b_ne_top i_le_b, implies_true]
-  have aux'  : (F.limsup xs).toReal = ENNReal.truncateToReal b (F.limsup xs)
+  have aux' : (F.limsup xs).toReal = ENNReal.truncateToReal b (F.limsup xs)
   rw [truncateToReal_eq_toReal b_ne_top (limsup_le_of_le ⟨0, by simp⟩ le_b)]
   simp_rw [limsup_congr aux, aux']
   have key := Monotone.map_limsup_of_continuousAt (F := F) (monotone_truncateToReal b_ne_top) xs

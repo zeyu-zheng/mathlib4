@@ -180,7 +180,7 @@ theorem RingHom.PropertyIsLocal.respectsIso (hP : RingHom.PropertyIsLocal @P) :
   introv
   letI := e.toRingHom.toAlgebra
   -- Porting note: was `apply_with hP.holds_for_localization_away { instances := ff }`
-  have  : IsLocalization.Away (1 : R) S
+  have : IsLocalization.Away (1 : R) S
   apply IsLocalization.away_of_isUnit_of_bijective _ isUnit_one e.bijective
   exact RingHom.PropertyIsLocal.HoldsForLocalizationAway hP S (1 : R)
 
@@ -188,7 +188,7 @@ theorem RingHom.PropertyIsLocal.respectsIso (hP : RingHom.PropertyIsLocal @P) :
 theorem RingHom.LocalizationPreserves.away (H : RingHom.LocalizationPreserves @P) (r : R)
     [IsLocalization.Away r R'] [IsLocalization.Away (f r) S'] (hf : P f) :
     P (IsLocalization.Away.map R' S' f r) := by
-  have  : IsLocalization ((Submonoid.powers r).map f) S'
+  have : IsLocalization ((Submonoid.powers r).map f) S'
   rw [Submonoid.map_powers]; assumption
   exact H f (Submonoid.powers r) R' S' hf
 
@@ -419,7 +419,7 @@ theorem localization_finite : RingHom.LocalizationPreserves @RingHom.Finite := b
   have : IsScalarTower R R' S' := IsScalarTower.of_algebraMap_eq'
     (IsLocalization.map_comp M.le_comap_map).symm
   have : IsScalarTower R S S' := IsScalarTower.of_algebraMap_eq' rfl
-  have  : IsLocalization (Algebra.algebraMapSubmonoid S M) S'
+  have : IsLocalization (Algebra.algebraMapSubmonoid S M) S'
   rwa [Algebra.algebraMapSubmonoid, RingHom.algebraMap_toAlgebra]
   have : Module.Finite R S := hf
   apply Module.Finite_of_isLocalization R S R' S' M

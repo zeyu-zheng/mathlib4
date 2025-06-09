@@ -327,7 +327,7 @@ theorem zipWith_distrib_reverse (h : l.length = l'.length) :
   · cases' l' with hd' tl'
     · simp
     · simp only [Nat.add_left_inj, length] at h
-      have  : tl.reverse.length = tl'.reverse.length
+      have : tl.reverse.length = tl'.reverse.length
       simp [h]
       simp [hl _ h, zipWith_append _ _ _ _ _ this]
 

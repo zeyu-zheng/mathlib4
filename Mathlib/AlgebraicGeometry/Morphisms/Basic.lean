@@ -534,7 +534,7 @@ instance (priority := 900) : IsLocalAtTarget P := by
     let 𝒰 := Y.openCoverOfISupEqTop U hU
     apply of_openCover 𝒰.affineRefinement.openCover
     rintro ⟨i, j⟩
-    have  : P (𝒰.pullbackHom f i)
+    have : P (𝒰.pullbackHom f i)
     refine (P.arrow_mk_iso_iff
       (morphismRestrictEq _ ?_ ≪≫ morphismRestrictOpensRange f (𝒰.map i))).mp (H i)
     exact (Scheme.Opens.opensRange_ι _).symm
@@ -555,7 +555,7 @@ private theorem pullback_fst_of_right (hP' : Q.StableUnderBaseChange)
   rw [iff_of_openCover (P := P) X.affineCover]
   intro i
   let e := pullbackSymmetry _ _ ≪≫ pullbackRightPullbackFstIso f g (X.affineCover.map i)
-  have  : e.hom ≫ pullback.fst _ _ = X.affineCover.pullbackHom (pullback.fst _ _) i
+  have : e.hom ≫ pullback.fst _ _ = X.affineCover.pullbackHom (pullback.fst _ _) i
   simp [e, Scheme.OpenCover.pullbackHom]
   rw [← this, Q.cancel_left_of_respectsIso]
   apply hP' (.of_hasPullback _ _)

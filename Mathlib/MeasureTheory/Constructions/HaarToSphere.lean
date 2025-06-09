@@ -116,7 +116,7 @@ theorem measurePreserving_homeomorphUnitSphereProd :
     isPiSystem_measurableSet isPiSystem_Iio
     μ.toSphere.toFiniteSpanningSetsIn (finiteSpanningSetsIn_volumeIoiPow_range_Iio _)
     fun s hs ↦ forall_mem_range.2 fun r ↦ ?_
-  have  : Ioo (0 : ℝ) r = r.1 • Ioo (0 : ℝ) 1
+  have : Ioo (0 : ℝ) r = r.1 • Ioo (0 : ℝ) 1
   rw [LinearOrderedField.smul_Ioo r.2.out, smul_zero, smul_eq_mul, mul_one]
   have hpos : 0 < dim E := FiniteDimensional.finrank_pos
   rw [(Homeomorph.measurableEmbedding _).map_apply, toSphere_apply' _ hs, volumeIoiPow_apply_Iio,

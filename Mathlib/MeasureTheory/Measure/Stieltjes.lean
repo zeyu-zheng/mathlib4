@@ -257,14 +257,14 @@ theorem outer_Ioc (a b : ℝ) : f.outer (Ioc a b) = ofReal (f b - f a) := by
         apply outer_le_length)
       (le_iInf₂ fun s hs => ENNReal.le_of_forall_pos_le_add fun ε εpos h => ?_)
   let δ := ε / 2
-  have δpos  : 0 < (δ : ℝ≥0∞)
+  have δpos : 0 < (δ : ℝ≥0∞)
   simpa [δ] using εpos.ne'
   rcases ENNReal.exists_pos_sum_of_countable δpos.ne' ℕ with ⟨ε', ε'0, hε⟩
   obtain ⟨a', ha', aa'⟩ : ∃ a', f a' - f a < δ ∧ a < a' := by
-    have A  : ContinuousWithinAt (fun r => f r - f a) (Ioi a) a
+    have A : ContinuousWithinAt (fun r => f r - f a) (Ioi a) a
     refine ContinuousWithinAt.sub ?_ continuousWithinAt_const
     exact (f.right_continuous a).mono Ioi_subset_Ici_self
-    have B  : f a - f a < δ
+    have B : f a - f a < δ
     rwa [sub_self, NNReal.coe_pos, ← ENNReal.coe_pos]
     exact (((tendsto_order.1 A).2 _ B).and self_mem_nhdsWithin).exists
   have : ∀ i, ∃ p : ℝ × ℝ, s i ⊆ Ioo p.1 p.2 ∧
@@ -408,7 +408,7 @@ theorem measure_Ioo {a b : ℝ} : f.measure (Ioo a b) = ofReal (leftLim f b - f 
     symm
     simp [ENNReal.ofReal_eq_zero, f.mono.leftLim_le hab]
   · have A : Disjoint (Ioo a b) {b} := by simp
-    have D  : f b - f a = f b - leftLim f b + (leftLim f b - f a)
+    have D : f b - f a = f b - leftLim f b + (leftLim f b - f a)
     abel
     have := f.measure_Ioc a b
     simp only [← Ioo_union_Icc_eq_Ioc hab le_rfl, measure_singleton,

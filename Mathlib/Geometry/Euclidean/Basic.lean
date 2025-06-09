@@ -96,7 +96,7 @@ theorem dist_affineCombination {ι : Type*} {s : Finset ι} {w₁ w₂ : ι → 
   dsimp only
   rw [dist_eq_norm_vsub V (s.affineCombination ℝ p w₁) (s.affineCombination ℝ p w₂), ←
     @inner_self_eq_norm_mul_norm ℝ, Finset.affineCombination_vsub]
-  have h  : (∑ i ∈ s, (w₁ - w₂) i) = 0
+  have h : (∑ i ∈ s, (w₁ - w₂) i) = 0
   simp_rw [Pi.sub_apply, Finset.sum_sub_distrib, h₁, h₂, sub_self]
   exact inner_weightedVSub p h p h
 

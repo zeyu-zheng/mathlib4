@@ -276,7 +276,7 @@ theorem ExtensionOfMaxAdjoin.extendIdealTo_is_extension (h : Module.Baer R Q) (y
 
 theorem ExtensionOfMaxAdjoin.extendIdealTo_wd' (h : Module.Baer R Q) {y : N} (r : R)
     (eq1 : r • y = 0) : ExtensionOfMaxAdjoin.extendIdealTo i f h y r = 0 := by
-  have  : r ∈ ideal i f y
+  have : r ∈ ideal i f y
   change (r • y) ∈ (extensionOfMax i f).toLinearPMap.domain
   rw [eq1]
   apply Submodule.zero_mem _

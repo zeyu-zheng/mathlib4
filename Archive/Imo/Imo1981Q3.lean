@@ -52,11 +52,11 @@ variable {N}
 
 theorem m_le_n {m n : ℤ} (h1 : ProblemPredicate N m n) : m ≤ n := by
   by_contra h2
-  have h3  : 1 = (n * (n - m) - m ^ 2) ^ 2
+  have h3 : 1 = (n * (n - m) - m ^ 2) ^ 2
   linear_combination - h1.eq_one
-  have h4  : n * (n - m) - m ^ 2 < -1
+  have h4 : n * (n - m) - m ^ 2 < -1
   nlinarith [h1.n_range.left]
-  have h5  : 1 < (n * (n - m) - m ^ 2) ^ 2
+  have h5 : 1 < (n * (n - m) - m ^ 2) ^ 2
   nlinarith
   exact h5.ne h3
 
@@ -75,7 +75,7 @@ theorem reduction {m n : ℤ} (h1 : ProblemPredicate N m n) (h2 : 1 < n) :
       m_range := by
         have h5 : 0 < n - m
         apply sub_pos.mpr h3
-        have h6  : n - m < N
+        have h6 : n - m < N
         calc
           _ < n := sub_lt_self n h1.m_range.left
           _ ≤ N := h1.n_range.right

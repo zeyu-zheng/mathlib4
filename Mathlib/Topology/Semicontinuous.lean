@@ -451,7 +451,7 @@ theorem LowerSemicontinuousWithinAt.add' {f g : α → γ} (hf : LowerSemicontin
 
     · simp only [not_exists, not_lt] at hx₂
       filter_upwards [hf z₁ z₁lt] with z h₁z
-      have A1  : min (f z) (f x) ∈ u
+      have A1 : min (f z) (f x) ∈ u
       by_cases H : f z ≤ f x
       · simpa [H] using h₁ ⟨h₁z, H⟩
       · simpa [le_of_not_le H]

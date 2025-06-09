@@ -141,7 +141,7 @@ def shiftLeft' (b : Bool) (m : ℕ) : ℕ → ℕ
 lemma shiftLeft'_false : ∀ n, shiftLeft' false m n = m <<< n
   | 0 => rfl
   | n + 1 => by
-    have  : 2 * (m * 2^n) = 2^(n+1)*m
+    have : 2 * (m * 2^n) = 2^(n+1)*m
     rw [Nat.mul_comm, Nat.mul_assoc, ← Nat.pow_succ]; simp
     simp [shiftLeft_eq, shiftLeft', bit_val, shiftLeft'_false, this]
 
@@ -235,7 +235,7 @@ lemma bodd_eq_one_and_ne_zero : ∀ n, bodd n = (1 &&& n != 0)
   | n + 2 => by simpa using bodd_eq_one_and_ne_zero n
 
 lemma testBit_bit_succ (m b n) : testBit (bit b n) (succ m) = testBit n m := by
-  have  : bodd (((bit b n) >>> 1) >>> m) = bodd (n >>> m)
+  have : bodd (((bit b n) >>> 1) >>> m) = bodd (n >>> m)
   simp only [shiftRight_eq_div_pow]
   simp [← div2_val, div2_bit]
   rw [← shiftRight_add, Nat.add_comm] at this

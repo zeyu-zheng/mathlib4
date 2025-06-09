@@ -49,7 +49,7 @@ theorem LinearMap.exists_map_addHaar_eq_smul_addHaar' (h : Function.Surjective L
   projection `P` on a complement `T` to its kernel `S`, together with a linear equivalence. -/
   have : ProperSpace E := .of_locallyCompactSpace 𝕜
   have : FiniteDimensional 𝕜 E := .of_locallyCompactSpace 𝕜
-  have  : ProperSpace F
+  have : ProperSpace F
   rcases subsingleton_or_nontrivial E with hE|hE
   · have : Subsingleton F := Function.Surjective.subsingleton h
     infer_instance
@@ -134,7 +134,7 @@ lemma ae_ae_add_linearMap_mem_iff [LocallyCompactSpace F] {s : Set F} (hs : Meas
   let M : F × E →ₗ[𝕜] F := LinearMap.id.coprod L
   have M_cont : Continuous M := M.continuous_of_finiteDimensional
   -- Note: #8386 had to change `range_eq_top` into `range_eq_top (f := _)`
-  have hM  : Function.Surjective M
+  have hM : Function.Surjective M
   simp [M, ← LinearMap.range_eq_top (f := _), LinearMap.range_coprod]
   have A : ∀ x, M x ∈ s ↔ x ∈ M ⁻¹' s := fun x ↦ Iff.rfl
   simp_rw [← ae_comp_linearMap_mem_iff M (ν.prod μ) ν hM hs, A]

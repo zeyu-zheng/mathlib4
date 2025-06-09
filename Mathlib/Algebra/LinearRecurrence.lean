@@ -100,7 +100,7 @@ theorem eq_mk_of_is_sol_of_eq_init {u : ℕ → α} {init : Fin E.order → α} 
   simp only
   rw [← tsub_add_cancel_of_le (le_of_not_lt h'), h (n - E.order)]
   congr with k
-  have  : n - E.order + k < n
+  have : n - E.order + k < n
   rw [add_comm, ← add_tsub_assoc_of_le (not_lt.mp h'), tsub_lt_iff_left]
   · exact add_lt_add_right k.is_lt n
   · convert add_le_add (zero_le (k : ℕ)) (not_lt.mp h')

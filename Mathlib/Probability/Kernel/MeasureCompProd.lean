@@ -71,7 +71,7 @@ lemma compProd_apply_prod [SFinite μ] [IsSFiniteKernel κ]
 lemma compProd_congr [SFinite μ] [IsSFiniteKernel κ] [IsSFiniteKernel η]
     (h : κ =ᵐ[μ] η) : μ ⊗ₘ κ = μ ⊗ₘ η := by
   ext s hs
-  have  : (fun a ↦ κ a (Prod.mk a ⁻¹' s)) =ᵐ[μ] fun a ↦ η a (Prod.mk a ⁻¹' s)
+  have : (fun a ↦ κ a (Prod.mk a ⁻¹' s)) =ᵐ[μ] fun a ↦ η a (Prod.mk a ⁻¹' s)
   filter_upwards [h] with a ha using by rw [ha]
   rw [compProd_apply hs, lintegral_congr_ae this, compProd_apply hs]
 

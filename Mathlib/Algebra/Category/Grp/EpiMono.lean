@@ -281,7 +281,7 @@ theorem agree : f.range = { x | h x = g x } := by
 theorem comp_eq : (f ≫ show B ⟶ Grp.of SX' from g) = f ≫ show B ⟶ Grp.of SX' from h := by
   ext a
   change g (f a) = h (f a)
-  have  : f a ∈ { b | h b = g b }
+  have : f a ∈ { b | h b = g b }
   rw [← agree]
   use a
   rw [this]
@@ -322,7 +322,7 @@ namespace AddGrp
 variable {A B : AddGrp.{u}} (f : A ⟶ B)
 
 theorem epi_iff_surjective : Epi f ↔ Function.Surjective f := by
-  have i1  : Epi f ↔ Epi (groupAddGroupEquivalence.inverse.map f)
+  have i1 : Epi f ↔ Epi (groupAddGroupEquivalence.inverse.map f)
   refine ⟨?_, groupAddGroupEquivalence.inverse.epi_of_epi_map⟩
   intro e'
   apply groupAddGroupEquivalence.inverse.map_epi

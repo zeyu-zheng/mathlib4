@@ -163,7 +163,7 @@ theorem isDomain_map_C_quotient {P : Ideal R} (_ : IsPrime P) :
 theorem eq_zero_of_polynomial_mem_map_range (I : Ideal R[X]) (x : ((Quotient.mk I).comp C).range)
     (hx : C x ∈ I.map (Polynomial.mapRingHom ((Quotient.mk I).comp C).rangeRestrict)) : x = 0 := by
   let i := ((Quotient.mk I).comp C).rangeRestrict
-  have hi'  : RingHom.ker (Polynomial.mapRingHom i) ≤ I
+  have hi' : RingHom.ker (Polynomial.mapRingHom i) ≤ I
   refine fun f hf => polynomial_mem_ideal_of_coeff_mem_ideal I f fun n => ?_
   rw [mem_comap, ← Quotient.eq_zero_iff_mem, ← RingHom.comp_apply]
   rw [RingHom.mem_ker, coe_mapRingHom] at hf

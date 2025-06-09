@@ -66,7 +66,7 @@ theorem of_finiteType [IsNoetherianRing R] : FiniteType R A ↔ FinitePresentati
   refine ⟨fun h => ?_, fun hfp => Algebra.FiniteType.of_finitePresentation⟩
   obtain ⟨n, f, hf⟩ := Algebra.FiniteType.iff_quotient_mvPolynomial''.1 h
   refine ⟨n, f, hf, ?_⟩
-  have hnoet  : IsNoetherianRing (MvPolynomial (Fin n) R)
+  have hnoet : IsNoetherianRing (MvPolynomial (Fin n) R)
   infer_instance
   -- Porting note: rewrote code to help typeclass inference
   rw [isNoetherianRing_iff] at hnoet
@@ -230,7 +230,7 @@ theorem of_restrict_scalars_finitePresentation [Algebra A B] [IsScalarTower R A 
   · obtain ⟨t, ht⟩ := FiniteType.out (R := R) (A := A)
     have := fun i : t => hf (algebraMap A B i)
     choose t' ht' using this
-    have ht''  : Algebra.adjoin R (algebraMap A AX '' t ∪ Set.range (X : _ → AX)) = ⊤
+    have ht'' : Algebra.adjoin R (algebraMap A AX '' t ∪ Set.range (X : _ → AX)) = ⊤
     rw [adjoin_union_eq_adjoin_adjoin, ← Subalgebra.restrictScalars_top R (A := AX)
       (S := { x // x ∈ adjoin R ((algebraMap A AX) '' t) })]
     refine congrArg (Subalgebra.restrictScalars R) ?_
@@ -318,7 +318,7 @@ theorem ker_fg_of_mvPolynomial {n : ℕ} (f : MvPolynomial (Fin n) R →ₐ[R] A
     let g' : Fin n → RXn := fun i => X i - aeval_h (g i)
     refine ⟨Finset.univ.image g' ∪ s.image aeval_h, ?_⟩
     simp only [Finset.coe_image, Finset.coe_union, Finset.coe_univ, Set.image_univ]
-    have hh'  : ∀ x, f (aeval_h x) = f' x
+    have hh' : ∀ x, f (aeval_h x) = f' x
     intro x
     rw [← f.coe_toRingHom, map_aeval]
     simp_rw [AlgHom.coe_toRingHom, hh]
@@ -327,7 +327,7 @@ theorem ker_fg_of_mvPolynomial {n : ℕ} (f : MvPolynomial (Fin n) R →ₐ[R] A
       ← funext fun i => Function.comp_apply (f := ↑f') (g := MvPolynomial.X),
       ← aeval_unique]
     let s' := Set.range g' ∪ aeval_h '' s
-    have leI  : Ideal.span s' ≤ RingHom.ker f.toRingHom
+    have leI : Ideal.span s' ≤ RingHom.ker f.toRingHom
     rw [Ideal.span_le]
     rintro _ (⟨i, rfl⟩ | ⟨x, hx, rfl⟩)
     · change f (g' i) = 0
@@ -339,8 +339,8 @@ theorem ker_fg_of_mvPolynomial {n : ℕ} (f : MvPolynomial (Fin n) R →ₐ[R] A
       exact Ideal.subset_span hx
     apply leI.antisymm
     intro x hx
-    have  : x ∈ aeval_h.range.toAddSubmonoid ⊔ (Ideal.span s').toAddSubmonoid
-    have  : x ∈ adjoin R (Set.range X : Set RXn)
+    have : x ∈ aeval_h.range.toAddSubmonoid ⊔ (Ideal.span s').toAddSubmonoid
+    have : x ∈ adjoin R (Set.range X : Set RXn)
     rw [adjoin_range_X]
     trivial
     refine adjoin_induction this ?_ ?_ ?_ ?_

@@ -204,7 +204,7 @@ instance : BoundedMul R where
     obtain ⟨x₂, hx₂, y₂, hy₂, w_eq⟩ := Set.mem_mul.mp hw
     rw [← w_eq, ← z_eq, dist_eq_norm]
     have hAf' : 0 ≤ Af := Metric.nonempty_closedBall.mp ⟨_, hAf hx₁⟩
-    have aux  : ∀ {x y}, x ∈ s → y ∈ t → ‖x * y‖ ≤ Af * Ag
+    have aux : ∀ {x y}, x ∈ s → y ∈ t → ‖x * y‖ ≤ Af * Ag
     intro x y x_in_s y_in_t
     apply (norm_mul_le _ _).trans (mul_le_mul _ _ (norm_nonneg _) hAf')
     · exact mem_closedBall_zero_iff.mp (hAf x_in_s)

@@ -162,7 +162,7 @@ theorem chebyshev_T_eq_dickson_one_one [Invertible (2 : R)] (n : ℕ) :
 `n`-th. -/
 theorem dickson_one_one_mul (m n : ℕ) :
     dickson 1 (1 : R) (m * n) = (dickson 1 1 m).comp (dickson 1 1 n) := by
-  have h  : (1 : R) = Int.castRingHom R 1
+  have h : (1 : R) = Int.castRingHom R 1
   simp only [eq_intCast, Int.cast_one]
   rw [h]
   simp only [← map_dickson (Int.castRingHom R), ← map_comp]
@@ -189,7 +189,7 @@ theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : ZMod p)
   obtain ⟨K, _, _, H⟩ : ∃ (K : Type) (_ : Field K), ∃ _ : CharP K p, Infinite K := by
     let K := FractionRing (Polynomial (ZMod p))
     let f : ZMod p →+* K := (algebraMap _ (FractionRing _)).comp C
-    have  : CharP K p
+    have : CharP K p
     rw [← f.charP_iff_charP]
     infer_instance
     haveI : Infinite K :=
@@ -249,7 +249,7 @@ theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : ZMod p)
       exact ⟨_, rfl, hx⟩
 
 theorem dickson_one_one_charP (p : ℕ) [Fact p.Prime] [CharP R p] : dickson 1 (1 : R) p = X ^ p := by
-  have h  : (1 : R) = ZMod.castHom (dvd_refl p) R 1
+  have h : (1 : R) = ZMod.castHom (dvd_refl p) R 1
   simp only [ZMod.castHom_apply, ZMod.cast_one']
   rw [h, ← map_dickson (ZMod.castHom (dvd_refl p) R), dickson_one_one_zmod_p, Polynomial.map_pow,
     map_X]

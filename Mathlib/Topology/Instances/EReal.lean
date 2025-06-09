@@ -205,11 +205,11 @@ lemma limsup_add_le_add_limsup
   apply (le_iff_le_forall_real_gt _ _).1
   intros x hx
   rcases lt_iff_exists_real_btwn.1 hx with ⟨y, ⟨sum_lt_y, y_lt_x⟩⟩
-  have key₁  : limsup u f < (y - limsup v f)
+  have key₁ : limsup u f < (y - limsup v f)
   apply lt_of_eq_of_lt _ (sub_lt_sub_of_lt_of_le sum_lt_y (le_of_eq (Eq.refl (limsup v f)))
     (ne_of_gt v_nbot) (ne_of_lt v_ntop))
   rw [← limsup_v_real, add_sub_cancel_right]
-  have key₂  : limsup v f < limsup v f + x - y
+  have key₂ : limsup v f < limsup v f + x - y
   rw [← limsup_v_real]; norm_cast; norm_cast at y_lt_x; linarith
   apply le_of_le_of_eq (limsup_add_le_of_lt key₁ key₂)
   rw [← limsup_v_real]; norm_cast; linarith
@@ -236,7 +236,7 @@ lemma liminf_add_gt_of_gt (ha : a < liminf u f) (hb : b < liminf v f) :
     a + b < liminf (u + v) f := by
   have ha' : a ≠ ⊤ := ha.ne_top
   have hb' : b ≠ ⊤ := hb.ne_top
-  have h  : limsup (-(u + v)) f = limsup (-u + -v) f
+  have h : limsup (-(u + v)) f = limsup (-u + -v) f
   apply limsup_congr
   filter_upwards [eventually_lt_of_lt_liminf ha, eventually_lt_of_lt_liminf hb] with x hax hbx
   dsimp
@@ -260,7 +260,7 @@ lemma add_liminf_le_liminf_add : (liminf u f) + (liminf v f) ≤ liminf (u + v) 
   · simp_all
   by_cases hv : liminf v f = ⊥
   · simp_all
-  have h'  : limsup (-(u + v)) f = limsup (-u + -v) f
+  have h' : limsup (-(u + v)) f = limsup (-u + -v) f
   apply limsup_congr
   filter_upwards [eventually_lt_of_lt_liminf (bot_lt_iff_ne_bot.mpr hu),
     eventually_lt_of_lt_liminf (bot_lt_iff_ne_bot.mpr hv)] with x hux hvx
@@ -417,12 +417,12 @@ private lemma continuousAt_mul_top_pos {a : ℝ} (h : 0 < a) :
   · intros p p_in_prod
     simp only [Set.mem_prod, Set.mem_Ioi] at p_in_prod
     rcases p_in_prod with ⟨p1_gt, p2_gt⟩
-    have p1_pos  : 0 < p.1
+    have p1_pos : 0 < p.1
     apply lt_of_le_of_lt _ p1_gt
     rw [EReal.coe_nonneg]
     apply mul_nonneg _ (le_of_lt (inv_pos_of_pos h))
     simp only [gt_iff_lt, Nat.ofNat_pos, mul_nonneg_iff_of_pos_left, le_max_iff, le_refl, or_true]
-    have a2_pos  : 0 < ((a/2 : ℝ) : EReal)
+    have a2_pos : 0 < ((a/2 : ℝ) : EReal)
     rw [EReal.coe_pos]; linarith
     have lock := mul_le_mul_of_nonneg_right (le_of_lt p1_gt) (le_of_lt a2_pos)
     have key := mul_le_mul_of_nonneg_left (le_of_lt p2_gt) (le_of_lt p1_pos)

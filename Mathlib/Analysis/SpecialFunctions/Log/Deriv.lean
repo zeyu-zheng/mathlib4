@@ -187,7 +187,7 @@ namespace Real
 /-- The function `x * log (1 + t / x)` tends to `t` at `+∞`. -/
 theorem tendsto_mul_log_one_plus_div_atTop (t : ℝ) :
     Tendsto (fun x => x * log (1 + t / x)) atTop (𝓝 t) := by
-  have h₁  : Tendsto (fun h => h⁻¹ * log (1 + t * h)) (𝓝[≠] 0) (𝓝 t)
+  have h₁ : Tendsto (fun h => h⁻¹ * log (1 + t * h)) (𝓝[≠] 0) (𝓝 t)
   simpa [hasDerivAt_iff_tendsto_slope, slope_fun_def] using
     (((hasDerivAt_id (0 : ℝ)).const_mul t).const_add 1).log (by simp)
   have h₂ : Tendsto (fun x : ℝ => x⁻¹) atTop (𝓝[≠] 0) :=
@@ -301,13 +301,13 @@ set_option maxHeartbeats 400000 in
 theorem hasSum_log_one_add_inv {a : ℝ} (h : 0 < a) :
     HasSum (fun k : ℕ => (2 : ℝ) * (1 / (2 * k + 1)) * (1 / (2 * a + 1)) ^ (2 * k + 1))
       (log (1 + a⁻¹)) := by
-  have h₁  : |1 / (2 * a + 1)| < 1
+  have h₁ : |1 / (2 * a + 1)| < 1
   rw [abs_of_pos, div_lt_one]
   · linarith
   · linarith
   · exact div_pos one_pos (by linarith)
   convert hasSum_log_sub_log_of_abs_lt_one h₁ using 1
-  have h₂  : (2 : ℝ) * a + 1 ≠ 0
+  have h₂ : (2 : ℝ) * a + 1 ≠ 0
   linarith
   have h₃ := h.ne'
   rw [← log_div]

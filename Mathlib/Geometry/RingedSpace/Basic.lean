@@ -80,14 +80,14 @@ theorem isUnit_of_isUnit_germ (U : Opens X) (f : X.presheaf.obj (op U))
     (h : ∀ x : U, IsUnit (X.presheaf.germ x f)) : IsUnit f := by
   -- We pick a cover of `U` by open sets `V x`, such that `f` is a unit on each `V x`.
   choose V iVU m h_unit using fun x : U => X.isUnit_res_of_isUnit_germ U f x (h x)
-  have hcover  : U ≤ iSup V
+  have hcover : U ≤ iSup V
   intro x hxU
   -- Porting note: in Lean3 `rw` is sufficient
   erw [Opens.mem_iSup]
   exact ⟨⟨x, hxU⟩, m ⟨x, hxU⟩⟩
   -- Let `g x` denote the inverse of `f` in `U x`.
   choose g hg using fun x : U => IsUnit.exists_right_inv (h_unit x)
-  have ic  : IsCompatible (sheaf X).val V g
+  have ic : IsCompatible (sheaf X).val V g
   intro x y
   apply section_ext X.sheaf (V x ⊓ V y)
   rintro ⟨z, hzVx, hzVy⟩

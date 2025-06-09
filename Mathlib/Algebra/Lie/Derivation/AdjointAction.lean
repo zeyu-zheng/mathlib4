@@ -90,7 +90,7 @@ lemma mem_ad_idealRange_iff {D : LieDerivation R L L} :
 lemma maxTrivSubmodule_eq_bot_of_center_eq_bot (h : LieAlgebra.center R L = ⊥) :
     LieModule.maxTrivSubmodule R L (LieDerivation R L L) = ⊥ := by
   refine (LieSubmodule.eq_bot_iff _).mpr fun D hD ↦ ext fun x ↦ ?_
-  have  : ad R L (D x) = 0
+  have : ad R L (D x) = 0
   rw [LieModule.mem_maxTrivSubmodule] at hD
   simp [ad_apply_lieDerivation, hD]
   rw [← LieHom.mem_ker, ad_ker_eq_center, h, LieSubmodule.mem_bot] at this

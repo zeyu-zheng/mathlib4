@@ -148,7 +148,7 @@ lemma unique_eventuallyEq_zpow_smul_nonzero {m n : ℤ}
   let ⟨g, hg_an, _, hg_eq⟩ := hm
   let ⟨j, hj_an, hj_ne, hj_eq⟩ := hn
   contrapose! hj_ne
-  have  : ∃ᶠ z in 𝓝[≠] z₀, j z = (z - z₀) ^ (m - n) • g z
+  have : ∃ᶠ z in 𝓝[≠] z₀, j z = (z - z₀) ^ (m - n) • g z
   apply Filter.Eventually.frequently
   rw [eventually_nhdsWithin_iff] at hg_eq hj_eq ⊢
   filter_upwards [hg_eq, hj_eq] with z hfz hfz' hz

@@ -109,7 +109,7 @@ theorem SimpleFunc.exists_le_lowerSemicontinuous_lintegral_ge (f : α →ₛ ℝ
           eq_self_iff_true, SimpleFunc.coe_zero, Set.piecewise_eq_indicator,
           SimpleFunc.coe_piecewise, le_zero_iff]
       · simp only [lintegral_const, zero_mul, zero_le, ENNReal.coe_zero]
-    have ne_top  : μ s ≠ ⊤
+    have ne_top : μ s ≠ ⊤
     classical
     simpa [f, hs, hc, lt_top_iff_ne_top, true_and_iff, SimpleFunc.coe_const,
       Function.const_apply, lintegral_const, ENNReal.coe_indicator, Set.univ_inter,
@@ -117,7 +117,7 @@ theorem SimpleFunc.exists_le_lowerSemicontinuous_lintegral_ge (f : α →ₛ ℝ
       or_false_iff, lintegral_indicator, ENNReal.coe_eq_zero, Ne, not_false_iff,
       SimpleFunc.coe_zero, Set.piecewise_eq_indicator, SimpleFunc.coe_piecewise, false_and_iff,
       restrict_apply] using h
-    have  : μ s < μ s + ε / c
+    have : μ s < μ s + ε / c
     have : (0 : ℝ≥0∞) < ε / c := ENNReal.div_pos_iff.2 ⟨ε0, ENNReal.coe_ne_top⟩
     simpa using ENNReal.add_lt_add_left ne_top this
     obtain ⟨u, su, u_open, μu⟩ : ∃ (u : _), u ⊇ s ∧ IsOpen u ∧ μ u < μ s + ε / c :=
@@ -266,7 +266,7 @@ theorem exists_lt_lowerSemicontinuous_integral_gt_nnreal [SigmaFinite μ] (f : �
       LowerSemicontinuous g ∧
       (∀ᵐ x ∂μ, g x < ⊤) ∧
       Integrable (fun x => (g x).toReal) μ ∧ (∫ x, (g x).toReal ∂μ) < (∫ x, ↑(f x) ∂μ) + ε := by
-  have fmeas  : AEMeasurable f μ
+  have fmeas : AEMeasurable f μ
   convert fint.aestronglyMeasurable.real_toNNReal.aemeasurable
   simp only [Real.toNNReal_coe]
   lift ε to ℝ≥0 using εpos.le
@@ -325,7 +325,7 @@ theorem SimpleFunc.exists_upperSemicontinuous_le_lintegral_le (f : α →ₛ ℝ
         simp only [hc, Set.indicator_zero', lintegral_const, zero_mul, Pi.zero_apply,
           SimpleFunc.const_zero, zero_add, zero_le', SimpleFunc.coe_zero,
           Set.piecewise_eq_indicator, ENNReal.coe_zero, SimpleFunc.coe_piecewise, zero_le]
-    have μs_lt_top  : μ s < ∞
+    have μs_lt_top : μ s < ∞
     classical
     simpa only [hs, hc, lt_top_iff_ne_top, true_and_iff, SimpleFunc.coe_const, or_false_iff,
       lintegral_const, ENNReal.coe_indicator, Set.univ_inter, ENNReal.coe_ne_top,
@@ -389,7 +389,7 @@ theorem exists_upperSemicontinuous_le_lintegral_le (f : α → ℝ≥0) (int_f :
     convert int_fs.le
     rw [← SimpleFunc.lintegral_eq_lintegral]
     simp only [SimpleFunc.coe_map, Function.comp_apply]
-  have int_fs_lt_top  : (∫⁻ x, fs x ∂μ) ≠ ∞
+  have int_fs_lt_top : (∫⁻ x, fs x ∂μ) ≠ ∞
   refine ne_top_of_le_ne_top int_f (lintegral_mono fun x => ?_)
   simpa only [ENNReal.coe_le_coe] using fs_le_f x
   obtain ⟨g, g_le_fs, gcont, gint⟩ :
@@ -416,7 +416,7 @@ theorem exists_upperSemicontinuous_le_integral_le (f : α → ℝ≥0)
   rw [NNReal.coe_pos, ← ENNReal.coe_pos] at εpos
   have If : (∫⁻ x, f x ∂μ) < ∞ := hasFiniteIntegral_iff_ofNNReal.1 fint.hasFiniteIntegral
   rcases exists_upperSemicontinuous_le_lintegral_le f If.ne εpos.ne' with ⟨g, gf, gcont, gint⟩
-  have Ig  : (∫⁻ x, g x ∂μ) < ∞
+  have Ig : (∫⁻ x, g x ∂μ) < ∞
   refine lt_of_le_of_lt (lintegral_mono fun x => ?_) If
   simpa using gf x
   refine ⟨g, gf, gcont, ?_, ?_⟩
@@ -458,7 +458,7 @@ theorem exists_lt_lowerSemicontinuous_integral_lt [SigmaFinite μ] (f : α → �
   rcases exists_upperSemicontinuous_le_integral_le fm int_fm δpos with
     ⟨gm, gm_le_fm, gmcont, gm_integrable, gmint⟩
   let g : α → EReal := fun x => (gp x : EReal) - gm x
-  have ae_g  : ∀ᵐ x ∂μ, (g x).toReal = (gp x : EReal).toReal - (gm x : EReal).toReal
+  have ae_g : ∀ᵐ x ∂μ, (g x).toReal = (gp x : EReal).toReal - (gm x : EReal).toReal
   filter_upwards [gp_lt_top] with _ hx
   rw [EReal.toReal_sub] <;> simp [hx.ne]
   refine ⟨g, ?lt, ?lsc, ?int, ?aelt, ?intlt⟩

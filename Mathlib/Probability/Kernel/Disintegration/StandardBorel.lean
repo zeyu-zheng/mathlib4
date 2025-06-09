@@ -388,10 +388,10 @@ lemma _root_.MeasureTheory.Measure.condKernel_apply (ρ : Measure (α × Ω)) [I
 instance _root_.MeasureTheory.Measure.condKernel.instIsCondKernel (ρ : Measure (α × Ω))
     [IsFiniteMeasure ρ] : ρ.IsCondKernel ρ.condKernel where
   disintegrate := by
-    have h1  : const Unit (Measure.fst ρ) = fst (const Unit ρ)
+    have h1 : const Unit (Measure.fst ρ) = fst (const Unit ρ)
     ext
     simp only [fst_apply, Measure.fst, const_apply]
-    have h2  : prodMkLeft Unit (Measure.condKernel ρ) = condKernelUnitBorel (const Unit ρ)
+    have h2 : prodMkLeft Unit (Measure.condKernel ρ) = condKernelUnitBorel (const Unit ρ)
     ext
     simp only [prodMkLeft_apply, Measure.condKernel_apply]
     rw [Measure.compProd, h1, h2, disintegrate]

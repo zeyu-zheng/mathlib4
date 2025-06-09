@@ -146,7 +146,7 @@ theorem pairwise_disjoint_Ioc_mul_zpow :
   simp_rw [Set.disjoint_iff]
   intro m n hmn x hx
   apply hmn
-  have hb  : 1 < b
+  have hb : 1 < b
   have : a * b ^ m < a * b ^ (m + 1) := hx.1.1.trans_le hx.1.2
   rwa [mul_lt_mul_iff_left, ← mul_one (b ^ m), zpow_add_one, mul_lt_mul_iff_left] at this
   have i1 := hx.1.1.trans_le hx.2.2
@@ -161,7 +161,7 @@ theorem pairwise_disjoint_Ico_mul_zpow :
   simp_rw [Set.disjoint_iff]
   intro m n hmn x hx
   apply hmn
-  have hb  : 1 < b
+  have hb : 1 < b
   have : a * b ^ m < a * b ^ (m + 1) := hx.1.1.trans_lt hx.1.2
   rwa [mul_lt_mul_iff_left, ← mul_one (b ^ m), zpow_add_one, mul_lt_mul_iff_left] at this
   have i1 := hx.1.1.trans_lt hx.2.2

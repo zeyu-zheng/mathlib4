@@ -347,13 +347,13 @@ theorem exists_separable_of_irreducible {f : F[X]} (hf : Irreducible f) (hp : p 
       have hf0 : f ≠ 0 := hf.ne_zero
       rw [h1, C_0] at hn
       exact absurd hn hf0
-    have hg1  : g.natDegree * p = N.succ
+    have hg1 : g.natDegree * p = N.succ
     rwa [← natDegree_expand, hgf]
-    have hg2  : g.natDegree ≠ 0
+    have hg2 : g.natDegree ≠ 0
     intro this
     rw [this, zero_mul] at hg1
     cases hg1
-    have hg3  : g.natDegree < N.succ
+    have hg3 : g.natDegree < N.succ
     rw [← mul_one g.natDegree, ← hg1]
     exact Nat.mul_lt_mul_of_pos_left hp.one_lt hg2.bot_lt
     rcases ih _ hg3 hg rfl with ⟨n, g, hg4, rfl⟩
@@ -364,7 +364,7 @@ theorem isUnit_or_eq_zero_of_separable_expand {f : F[X]} (n : ℕ) (hp : 0 < p)
     (hf : (expand F (p ^ n) f).Separable) : IsUnit f ∨ n = 0 := by
   rw [or_iff_not_imp_right]
   rintro hn : n ≠ 0
-  have hf2  : derivative (expand F (p ^ n) f) = 0
+  have hf2 : derivative (expand F (p ^ n) f) = 0
   rw [derivative_expand, Nat.cast_pow, CharP.cast_eq_zero, zero_pow hn, zero_mul, mul_zero]
   rw [separable_def, hf2, isCoprime_zero_right, isUnit_iff] at hf
   rcases hf with ⟨r, hr, hrf⟩
@@ -448,7 +448,7 @@ variable {i : F →+* K}
 theorem eq_X_sub_C_of_separable_of_root_eq {x : F} {h : F[X]} (h_sep : h.Separable)
     (h_root : h.eval x = 0) (h_splits : Splits i h) (h_roots : ∀ y ∈ (h.map i).roots, y = i x) :
     h = C (leadingCoeff h) * (X - C x) := by
-  have h_ne_zero  : h ≠ 0
+  have h_ne_zero : h ≠ 0
   rintro rfl
   exact not_separable_zero h_sep
   apply Polynomial.eq_X_sub_C_of_splits_of_single_root i h_splits

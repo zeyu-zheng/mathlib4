@@ -54,7 +54,7 @@ theorem measurable_kernel_prod_mk_left_of_finite {t : Set (α × β)} (ht : Meas
     obtain ⟨t₁, ht₁, t₂, ht₂, rfl⟩ := ht'
     classical
     simp_rw [mk_preimage_prod_right_eq_if]
-    have h_eq_ite  : (fun a => κ a (ite (a ∈ t₁) t₂ ∅)) = fun a => ite (a ∈ t₁) (κ a t₂) 0
+    have h_eq_ite : (fun a => κ a (ite (a ∈ t₁) t₂ ∅)) = fun a => ite (a ∈ t₁) (κ a t₂) 0
     ext1 a
     split_ifs
     apply rfl
@@ -63,7 +63,7 @@ theorem measurable_kernel_prod_mk_left_of_finite {t : Set (α × β)} (ht : Meas
     exact Measurable.ite ht₁ (Kernel.measurable_coe κ ht₂) measurable_const
   · -- we assume that the result is true for `t` and we prove it for `tᶜ`
     intro t' ht' h_meas
-    have h_eq_sdiff  : ∀ a, Prod.mk a ⁻¹' t'ᶜ = Set.univ \ Prod.mk a ⁻¹' t'
+    have h_eq_sdiff : ∀ a, Prod.mk a ⁻¹' t'ᶜ = Set.univ \ Prod.mk a ⁻¹' t'
     intro a
     ext1 b
     simp only [mem_compl_iff, mem_preimage, mem_diff, mem_univ, true_and_iff]
@@ -110,7 +110,7 @@ theorem measurable_kernel_prod_mk_left [IsSFiniteKernel κ] {t : Set (α × β)}
 
 theorem measurable_kernel_prod_mk_left' [IsSFiniteKernel η] {s : Set (β × γ)} (hs : MeasurableSet s)
     (a : α) : Measurable fun b => η (a, b) (Prod.mk b ⁻¹' s) := by
-  have  : ∀ b, Prod.mk b ⁻¹' s = {c | ((a, b), c) ∈ {p : (α × β) × γ | (p.1.2, p.2) ∈ s}}
+  have : ∀ b, Prod.mk b ⁻¹' s = {c | ((a, b), c) ∈ {p : (α × β) × γ | (p.1.2, p.2) ∈ s}}
   intro b; rfl
   simp_rw [this]
   refine (measurable_kernel_prod_mk_left ?_).comp measurable_prod_mk_left
@@ -149,7 +149,7 @@ theorem _root_.Measurable.lintegral_kernel_prod_right {f : α → β → ℝ≥0
   have h : ∀ a, ⨆ n, F n a = uncurry f a := SimpleFunc.iSup_eapprox_apply (uncurry f) hf
   simp only [Prod.forall, uncurry_apply_pair] at h
   simp_rw [← h]
-  have  : ∀ a, (∫⁻ b, ⨆ n, F n (a, b) ∂κ a) = ⨆ n, ∫⁻ b, F n (a, b) ∂κ a
+  have : ∀ a, (∫⁻ b, ⨆ n, F n (a, b) ∂κ a) = ⨆ n, ∫⁻ b, F n (a, b) ∂κ a
   intro a
   rw [lintegral_iSup]
   · exact fun n => (F n).measurable.comp measurable_prod_mk_left
@@ -178,7 +178,7 @@ theorem _root_.Measurable.lintegral_kernel_prod_right {f : α → β → ℝ≥0
 theorem _root_.Measurable.lintegral_kernel_prod_right' {f : α × β → ℝ≥0∞} (hf : Measurable f) :
     Measurable fun a => ∫⁻ b, f (a, b) ∂κ a := by
   refine Measurable.lintegral_kernel_prod_right ?_
-  have  : (uncurry fun (a : α) (b : β) => f (a, b)) = f
+  have : (uncurry fun (a : α) (b : β) => f (a, b)) = f
   ext x; rw [uncurry_apply_pair]
   rwa [this]
 

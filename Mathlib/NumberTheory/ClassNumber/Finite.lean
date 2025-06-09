@@ -205,7 +205,7 @@ theorem exists_mem_finsetApprox (a : S) {b} (hb : b ≠ (0 : R)) :
   let qs : Fin (cardM bS adm).succ → ι → R := fun j i => μ j * s i / b
   let rs : Fin (cardM bS adm).succ → ι → R := fun j i => μ j * s i % b
   have r_eq : ∀ j i, rs j i = μ j * s i % b := fun i j => rfl
-  have μ_eq  : ∀ i j, μ j * s i = b * qs j i + rs j i
+  have μ_eq : ∀ i j, μ j * s i = b * qs j i + rs j i
   intro i j
   rw [r_eq, EuclideanDomain.div_add_mod]
   have μ_mul_a_eq : ∀ j, μ j • a = b • ∑ i, qs j i • bS i + ∑ i, rs j i • bS i
@@ -216,13 +216,13 @@ theorem exists_mem_finsetApprox (a : S) {b} (hb : b ≠ (0 : R)) :
 -- Porting note `← hμ, ← r_eq` and the final `← μ_eq` were not needed.
   rw [← hμ, ← r_eq, ← s_eq, ← mul_smul, μ_eq, add_smul, mul_smul, ← μ_eq]
   obtain ⟨j, k, j_ne_k, hjk⟩ := adm.exists_approx hε hb fun j i => μ j * s i
-  have hjk'  : ∀ i, (abv (rs k i - rs j i) : ℝ) < abv b • ε
+  have hjk' : ∀ i, (abv (rs k i - rs j i) : ℝ) < abv b • ε
   simpa only [r_eq] using hjk
   let q := ∑ i, (qs k i - qs j i) • bS i
   set r := μ k - μ j with r_eq
   refine ⟨q, r, (mem_finsetApprox bS adm).mpr ?_, ?_⟩
   · exact ⟨k, j, j_ne_k.symm, rfl⟩
-  have  : r • a - b • q = ∑ x : ι, (rs k x • bS x - rs j x • bS x)
+  have : r • a - b • q = ∑ x : ι, (rs k x • bS x - rs j x • bS x)
   simp only [q, r_eq, sub_smul, μ_mul_a_eq, Finset.smul_sum, ← Finset.sum_add_distrib,
     ← Finset.sum_sub_distrib, smul_sub]
   refine Finset.sum_congr rfl fun x _ => ?_
@@ -240,7 +240,7 @@ theorem exists_mem_finsetApprox (a : S) {b} (hb : b ≠ (0 : R)) :
 theorem exists_mem_finset_approx' [Algebra.IsAlgebraic R L] (a : S) {b : S} (hb : b ≠ 0) :
     ∃ q : S,
       ∃ r ∈ finsetApprox bS adm, abv (Algebra.norm R (r • a - q * b)) < abv (Algebra.norm R b) := by
-  have inj  : Function.Injective (algebraMap R L)
+  have inj : Function.Injective (algebraMap R L)
   rw [IsScalarTower.algebraMap_eq R S L]
   exact (IsIntegralClosure.algebraMap_injective S R L).comp bS.algebraMap_injective
   obtain ⟨a', b', hb', h⟩ := IsIntegralClosure.exists_smul_eq_mul inj a hb

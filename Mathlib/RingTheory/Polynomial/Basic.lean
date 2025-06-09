@@ -226,7 +226,7 @@ theorem not_finite [Nontrivial R] : ¬ Module.Finite R R[X] := by
   push_neg
   intro s hs contra
   rcases span_le_degreeLE_of_finite hs with ⟨n,hn⟩
-  have  : ((X : R[X]) ^ (n + 1)) ∈ Polynomial.degreeLE R ↑n
+  have : ((X : R[X]) ^ (n + 1)) ∈ Polynomial.degreeLE R ↑n
   rw [contra] at hn
   exact hn Submodule.mem_top
   rw [mem_degreeLE, degree_X_pow, Nat.cast_le, add_le_iff_nonpos_right, nonpos_iff_eq_zero] at this
@@ -1003,9 +1003,9 @@ theorem sup_ker_aeval_le_ker_aeval_mul {f : M →ₗ[R] M} {p q : R[X]} :
     LinearMap.ker (aeval f p) ⊔ LinearMap.ker (aeval f q) ≤ LinearMap.ker (aeval f (p * q)) := by
   intro v hv
   rcases Submodule.mem_sup.1 hv with ⟨x, hx, y, hy, hxy⟩
-  have h_eval_x  : aeval f (p * q) x = 0
+  have h_eval_x : aeval f (p * q) x = 0
   rw [mul_comm, aeval_mul, LinearMap.mul_apply, LinearMap.mem_ker.1 hx, LinearMap.map_zero]
-  have h_eval_y  : aeval f (p * q) y = 0
+  have h_eval_y : aeval f (p * q) y = 0
   rw [aeval_mul, LinearMap.mul_apply, LinearMap.mem_ker.1 hy, LinearMap.map_zero]
   rw [LinearMap.mem_ker, ← hxy, LinearMap.map_add, h_eval_x, h_eval_y, add_zero]
 
@@ -1049,7 +1049,7 @@ lemma aeval_natDegree_le {R : Type*} [CommSemiring R] {m n : ℕ}
   simp_rw [Function.comp_apply, ← C_eq_algebraMap]
   apply (Polynomial.natDegree_C_mul_le _ _).trans
   apply (Polynomial.natDegree_prod_le _ _).trans
-  have  : ∑ i ∈ d.support, (d i) * n ≤ m * n
+  have : ∑ i ∈ d.support, (d i) * n ≤ m * n
   rw [← Finset.sum_mul]
   apply mul_le_mul' (.trans _ hF) le_rfl
   rw [MvPolynomial.totalDegree]
@@ -1110,7 +1110,7 @@ instance {R : Type u} [CommSemiring R] [NoZeroDivisors R] {σ : Type v} :
   eq_zero_or_eq_zero_of_mul_eq_zero {p q} h := by
     obtain ⟨s, p, q, rfl, rfl⟩ := exists_finset_rename₂ p q
     let _nzd := MvPolynomial.noZeroDivisors_of_finite R s
-    have  : p * q = 0
+    have : p * q = 0
     apply rename_injective _ Subtype.val_injective
     simpa using h
     rw [mul_eq_zero] at this

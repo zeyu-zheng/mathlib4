@@ -61,7 +61,7 @@ lemma bitwise_zero : bitwise f 0 0 = 0 := by
 lemma bitwise_of_ne_zero {n m : Nat} (hn : n ≠ 0) (hm : m ≠ 0) :
     bitwise f n m = bit (f (bodd n) (bodd m)) (bitwise f (n / 2) (m / 2)) := by
   conv_lhs => unfold bitwise
-  have mod_two_iff_bod x  : (x % 2 = 1 : Bool) = bodd x
+  have mod_two_iff_bod x : (x % 2 = 1 : Bool) = bodd x
   simp only [mod_two_of_bodd, cond]; cases bodd x <;> rfl
   simp only [hn, hm, mod_two_iff_bod, ite_false, bit, two_mul, Bool.cond_eq_ite]
   split_ifs <;> rfl
@@ -81,9 +81,9 @@ lemma bitwise_bit {f : Bool → Bool → Bool} (h : f false false = false := by 
   #adaptation_note /-- nightly-2024-03-16: simp was
   -- simp (config := { unfoldPartialApp := true }) only [bit, bit1, bit0, Bool.cond_eq_ite] -/
   simp only [bit, ite_apply, Bool.cond_eq_ite]
-  have h2 x  : (x + x + 1) % 2 = 1
+  have h2 x : (x + x + 1) % 2 = 1
   rw [← two_mul, add_comm]; apply add_mul_mod_self_left
-  have h4 x  : (x + x + 1) / 2 = x
+  have h4 x : (x + x + 1) / 2 = x
   rw [← two_mul, add_comm]; simp [add_mul_div_left]
   cases a <;> cases b <;> simp [h2, h4] <;> split_ifs
     <;> simp_all (config := {decide := true}) [two_mul]
@@ -374,23 +374,23 @@ theorem xor_trichotomy {a b c : ℕ} (h : a ≠ b ^^^ c) :
     b ^^^ c < a ∨ a ^^^ c < b ∨ a ^^^ b < c := by
   set v := a ^^^ (b ^^^ c) with hv
   -- The xor of any two of `a`, `b`, `c` is the xor of `v` and the third.
-  have hab  : a ^^^ b = c ^^^ v
+  have hab : a ^^^ b = c ^^^ v
   rw [hv]
   conv_rhs =>
     rw [Nat.xor_comm]
     simp [Nat.xor_assoc]
-  have hac  : a ^^^ c = b ^^^ v
+  have hac : a ^^^ c = b ^^^ v
   rw [hv]
   conv_rhs =>
     right
     rw [← Nat.xor_comm]
   rw [← Nat.xor_assoc, ← Nat.xor_assoc, xor_self, zero_xor, Nat.xor_comm]
-  have hbc  : b ^^^ c = a ^^^ v
+  have hbc : b ^^^ c = a ^^^ v
   simp [hv, ← Nat.xor_assoc]
   -- If `i` is the position of the most significant bit of `v`, then at least one of `a`, `b`, `c`
   -- has a one bit at position `i`.
   obtain ⟨i, ⟨hi, hi'⟩⟩ := exists_most_significant_bit (xor_ne_zero.2 h)
-  have  : testBit a i = true ∨ testBit b i = true ∨ testBit c i = true
+  have : testBit a i = true ∨ testBit b i = true ∨ testBit c i = true
   contrapose! hi
   simp only [Bool.eq_false_eq_not_eq_true, Ne, testBit_xor, Bool.bne_eq_xor] at hi ⊢
   rw [hi.1, hi.2.1, hi.2.2, Bool.xor_false, Bool.xor_false]

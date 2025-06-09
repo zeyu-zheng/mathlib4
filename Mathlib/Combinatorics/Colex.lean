@@ -317,7 +317,7 @@ lemma toColex_le_toColex_iff_max'_mem :
   refine ⟨fun h hst ↦ ?_, fun h a has hat ↦ ?_⟩
   · set m := (s ∆ t).max' (symmDiff_nonempty.2 hst)
     by_contra hmt
-    have hms  : m ∈ s
+    have hms : m ∈ s
     simpa [mem_symmDiff, hmt] using max'_mem _ <| symmDiff_nonempty.2 hst
     have ⟨b, hbt, hbs, hmb⟩ := h hms hmt
     exact lt_irrefl _ <| (max'_lt_iff _ _).1 (hmb.lt_of_ne <| ne_of_mem_of_not_mem hms hbs) _ <|
@@ -344,7 +344,7 @@ lemma lt_iff_exists_filter_lt :
   simp only [lt_iff_exists_forall_lt, mem_sdiff, filter_inj, and_assoc]
   refine ⟨fun h ↦ ?_, ?_⟩
   · let u := (t \ s).filter fun w ↦ ∀ a ∈ s, a ∉ t → a < w
-    have mem_u {w  : α} : w ∈ u ↔ w ∈ t ∧ w ∉ s ∧ ∀ a ∈ s, a ∉ t → a < w
+    have mem_u {w : α} : w ∈ u ↔ w ∈ t ∧ w ∉ s ∧ ∀ a ∈ s, a ∉ t → a < w
     simp [u, and_assoc]
     have hu : u.Nonempty := h.imp fun _ ↦ mem_u.2
     let m := max' _ hu

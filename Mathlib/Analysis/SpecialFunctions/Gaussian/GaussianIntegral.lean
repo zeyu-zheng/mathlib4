@@ -130,7 +130,7 @@ theorem integrableOn_Ioi_exp_neg_mul_sq_iff {b : ℝ} :
     IntegrableOn (fun x : ℝ => exp (-b * x ^ 2)) (Ioi 0) ↔ 0 < b := by
   refine ⟨fun h => ?_, fun h => (integrable_exp_neg_mul_sq h).integrableOn⟩
   by_contra! hb
-  have  : ∫⁻ _ : ℝ in Ioi 0, 1 ≤ ∫⁻ x : ℝ in Ioi 0, ‖exp (-b * x ^ 2)‖₊
+  have : ∫⁻ _ : ℝ in Ioi 0, 1 ≤ ∫⁻ x : ℝ in Ioi 0, ‖exp (-b * x ^ 2)‖₊
   apply lintegral_mono (fun x ↦ _)
   simp only [neg_mul, ENNReal.one_le_coe_iff, ← toNNReal_one, toNNReal_le_iff_le_coe,
     Real.norm_of_nonneg (exp_pos _).le, coe_nnnorm, one_le_exp_iff, Right.nonneg_neg_iff]
@@ -170,7 +170,7 @@ theorem integrable_mul_cexp_neg_mul_sq {b : ℂ} (hb : 0 < b.re) :
 
 theorem integral_mul_cexp_neg_mul_sq {b : ℂ} (hb : 0 < b.re) :
     ∫ r : ℝ in Ioi 0, (r : ℂ) * cexp (-b * (r : ℂ) ^ 2) = (2 * b)⁻¹ := by
-  have hb'  : b ≠ 0
+  have hb' : b ≠ 0
   contrapose! hb; rw [hb, zero_re]
   have A : ∀ x : ℂ, HasDerivAt (fun x => -(2 * b)⁻¹ * cexp (-b * x ^ 2))
     (x * cexp (-b * x ^ 2)) x := by
@@ -215,7 +215,7 @@ theorem integral_gaussian_sq_complex {b : ℂ} (hb : 0 < b.re) :
       conv_rhs => rw [← one_mul ((p.1 : ℂ) ^ 2), ← sin_sq_add_cos_sq (p.2 : ℂ)]
       ring
     _ = ↑π / b := by
-      have  : 0 ≤ π + π
+      have : 0 ≤ π + π
       linarith [Real.pi_pos]
       simp only [integral_const, Measure.restrict_apply', measurableSet_Ioo, univ_inter, volume_Ioo,
         sub_neg_eq_add, ENNReal.toReal_ofReal, this]
@@ -257,7 +257,7 @@ theorem continuousAt_gaussian_integral (b : ℂ) (hb : 0 < re b) :
 
 theorem integral_gaussian_complex {b : ℂ} (hb : 0 < re b) :
     ∫ x : ℝ, cexp (-b * (x : ℂ) ^ 2) = (π / b) ^ (1 / 2 : ℂ) := by
-  have nv  : ∀ {b : ℂ}, 0 < re b → b ≠ 0
+  have nv : ∀ {b : ℂ}, 0 < re b → b ≠ 0
   intro b hb; contrapose! hb; rw [hb]; simp
   apply
     (convex_halfspace_re_gt 0).isPreconnected.eq_of_sq_eq ?_ ?_ (fun c hc => ?_) (fun {c} hc => ?_)
@@ -341,7 +341,7 @@ theorem Real.Gamma_one_half_eq : Real.Gamma (1 / 2) = √π := by
   · rw [← integral_mul_left]
     refine setIntegral_congr measurableSet_Ioi fun x hx => ?_
     dsimp only
-    have  : (x ^ (2 : ℝ)) ^ (1 / (2 : ℝ) - 1) = x⁻¹
+    have : (x ^ (2 : ℝ)) ^ (1 / (2 : ℝ) - 1) = x⁻¹
     rw [← rpow_mul (le_of_lt hx)]
     norm_num
     rw [rpow_neg (le_of_lt hx), rpow_one]

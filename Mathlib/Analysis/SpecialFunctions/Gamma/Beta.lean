@@ -109,7 +109,7 @@ theorem betaIntegral_scaled (s t : ℂ) {a : ℝ} (ha : 0 < a) :
     (a : ℂ) ^ (s + t - 1) * betaIntegral s t := by
   have ha' : (a : ℂ) ≠ 0 := ofReal_ne_zero.mpr ha.ne'
   rw [betaIntegral]
-  have A  : (a : ℂ) ^ (s + t - 1) = a * ((a : ℂ) ^ (s - 1) * (a : ℂ) ^ (t - 1))
+  have A : (a : ℂ) ^ (s + t - 1) = a * ((a : ℂ) ^ (s - 1) * (a : ℂ) ^ (t - 1))
   rw [(by abel : s + t - 1 = 1 + (s - 1) + (t - 1)), cpow_add _ _ ha', cpow_add 1 _ ha', cpow_one,
     mul_assoc]
   rw [A, mul_assoc, ← intervalIntegral.integral_const_mul, ← real_smul, ← zero_div a, ←
@@ -132,7 +132,7 @@ theorem Gamma_mul_Gamma_eq_betaIntegral {s t : ℂ} (hs : 0 < re s) (ht : 0 < re
   have conv_int := integral_posConvolution
     (GammaIntegral_convergent hs) (GammaIntegral_convergent ht) (ContinuousLinearMap.mul ℝ ℂ)
   simp_rw [ContinuousLinearMap.mul_apply'] at conv_int
-  have hst  : 0 < re (s + t)
+  have hst : 0 < re (s + t)
   rw [add_re]; exact add_pos hs ht
   rw [Gamma_eq_integral hs, Gamma_eq_integral ht, Gamma_eq_integral hst, GammaIntegral,
     GammaIntegral, GammaIntegral, ← conv_int, ← integral_mul_right (betaIntegral _ _)]
@@ -150,11 +150,11 @@ theorem betaIntegral_recurrence {u v : ℂ} (hu : 0 < re u) (hv : 0 < re v) :
   -- `Gamma_mul_Gamma_eq_betaIntegral`; but we don't know that yet. We will prove it later, but
   -- this lemma is needed in the proof. So we give a (somewhat laborious) direct argument.
   let F : ℝ → ℂ := fun x => (x : ℂ) ^ u * (1 - (x : ℂ)) ^ v
-  have hu'  : 0 < re (u + 1)
+  have hu' : 0 < re (u + 1)
   rw [add_re, one_re]; positivity
-  have hv'  : 0 < re (v + 1)
+  have hv' : 0 < re (v + 1)
   rw [add_re, one_re]; positivity
-  have hc  : ContinuousOn F (Icc 0 1)
+  have hc : ContinuousOn F (Icc 0 1)
   refine (ContinuousAt.continuousOn fun x hx => ?_).mul (ContinuousAt.continuousOn fun x hx => ?_)
   · refine (continuousAt_cpow_const_of_re_pos (Or.inl ?_) hu).comp continuous_ofReal.continuousAt
     rw [ofReal_re]; exact hx.1
@@ -253,7 +253,7 @@ theorem GammaSeq_add_one_left (s : ℂ) {n : ℕ} (hn : n ≠ 0) :
 
 theorem GammaSeq_eq_approx_Gamma_integral {s : ℂ} (hs : 0 < re s) {n : ℕ} (hn : n ≠ 0) :
     GammaSeq s n = ∫ x : ℝ in (0)..n, ↑((1 - x / n) ^ n) * (x : ℂ) ^ (s - 1) := by
-  have  : ∀ x : ℝ, x = x / n * n
+  have : ∀ x : ℝ, x = x / n * n
   intro x; rw [div_mul_cancel₀]; exact Nat.cast_ne_zero.mpr hn
   conv_rhs => enter [1, x, 2, 1]; rw [this x]
   rw [GammaSeq_eq_betaIntegral_of_re_pos hs]
@@ -267,10 +267,10 @@ theorem GammaSeq_eq_approx_Gamma_integral {s : ℂ} (hs : 0 < re s) {n : ℕ} (h
   refine setIntegral_congr measurableSet_Ioc fun x hx => ?_
   push_cast
   have hn' : (n : ℂ) ≠ 0 := Nat.cast_ne_zero.mpr hn
-  have A  : (n : ℂ) ^ s = (n : ℂ) ^ (s - 1) * n
+  have A : (n : ℂ) ^ s = (n : ℂ) ^ (s - 1) * n
   conv_lhs => rw [(by ring : s = s - 1 + 1), cpow_add _ _ hn']
   simp
-  have B  : ((x : ℂ) * ↑n) ^ (s - 1) = (x : ℂ) ^ (s - 1) * (n : ℂ) ^ (s - 1)
+  have B : ((x : ℂ) * ↑n) ^ (s - 1) = (x : ℂ) ^ (s - 1) * (n : ℂ) ^ (s - 1)
   rw [← ofReal_natCast,
     mul_cpow_ofReal_nonneg hx.1.le (Nat.cast_pos.mpr (Nat.pos_of_ne_zero hn)).le]
   rw [A, B, cpow_natCast]; ring
@@ -385,10 +385,10 @@ theorem GammaSeq_mul (z : ℂ) {n : ℕ} (hn : n ≠ 0) :
     GammaSeq z n * GammaSeq (1 - z) n =
       n / (n + ↑1 - z) * (↑1 / (z * ∏ j ∈ Finset.range n, (↑1 - z ^ 2 / ((j : ℂ) + 1) ^ 2))) := by
   -- also true for n = 0 but we don't need it
-  have aux  : ∀ a b c d : ℂ, a * b * (c * d) = a * c * (b * d)
+  have aux : ∀ a b c d : ℂ, a * b * (c * d) = a * c * (b * d)
   intros; ring
   rw [GammaSeq, GammaSeq, div_mul_div_comm, aux, ← pow_two]
-  have  : (n : ℂ) ^ z * (n : ℂ) ^ (1 - z) = n
+  have : (n : ℂ) ^ z * (n : ℂ) ^ (1 - z) = n
   rw [← cpow_add _ _ (Nat.cast_ne_zero.mpr hn), add_sub_cancel, cpow_one]
   rw [this, Finset.prod_range_succ', Finset.prod_range_succ, aux, ← Finset.prod_mul_distrib,
     Nat.cast_zero, add_zero, add_comm (1 - z) n, ← add_sub_assoc]
@@ -396,7 +396,7 @@ theorem GammaSeq_mul (z : ℂ) {n : ℕ} (hn : n ≠ 0) :
       ((j + 1) ^ 2 :) * (↑1 - z ^ 2 / ((j : ℂ) + 1) ^ 2) := by
     intro j
     push_cast
-    have  : (j : ℂ) + 1 ≠ 0
+    have : (j : ℂ) + 1 ≠ 0
     rw [← Nat.cast_succ, Nat.cast_ne_zero]; exact Nat.succ_ne_zero j
     field_simp; ring
   simp_rw [this]
@@ -422,7 +422,7 @@ theorem Gamma_mul_Gamma_one_sub (z : ℂ) : Gamma z * Gamma (1 - z) = π / sin (
     · rw [Int.cast_negSucc, neg_neg, Nat.cast_add, Nat.cast_one, add_comm, sub_add_cancel_left,
         Complex.Gamma_neg_nat_eq_zero, mul_zero]
   refine tendsto_nhds_unique ((GammaSeq_tendsto_Gamma z).mul (GammaSeq_tendsto_Gamma <| 1 - z)) ?_
-  have  : ↑π / sin (↑π * z) = 1 * (π / sin (π * z))
+  have : ↑π / sin (↑π * z) = 1 * (π / sin (π * z))
   rw [one_mul]
   convert Tendsto.congr' ((eventually_ne_atTop 0).mp (eventually_of_forall fun n hn =>
     (GammaSeq_mul z hn).symm)) (Tendsto.mul _ _)

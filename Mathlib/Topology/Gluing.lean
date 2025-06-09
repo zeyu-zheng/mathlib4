@@ -166,7 +166,7 @@ theorem eqvGen_of_π_eq
   replace h := (TopCat.mono_iff_injective (Multicoequalizer.isoCoequalizer 𝖣.diagram).inv).mp
     inferInstance h
   let diagram := parallelPair 𝖣.diagram.fstSigmaMap 𝖣.diagram.sndSigmaMap ⋙ forget _
-  have  : colimit.ι diagram one x = colimit.ι diagram one y
+  have : colimit.ι diagram one x = colimit.ι diagram one y
   dsimp only [coequalizer.π, ContinuousMap.toFun_eq_coe] at h
   -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
   erw [← ι_preservesColimitsIso_hom, forget_map_eq_coe, types_comp_apply, h]
@@ -261,7 +261,7 @@ theorem preimage_range (i j : D.J) : 𝖣.ι j ⁻¹' Set.range (𝖣.ι i) = Se
 
 theorem preimage_image_eq_image (i j : D.J) (U : Set (𝖣.U i)) :
     𝖣.ι j ⁻¹' (𝖣.ι i '' U) = D.f _ _ '' ((D.t j i ≫ D.f _ _) ⁻¹' U) := by
-  have  : D.f _ _ ⁻¹' (𝖣.ι j ⁻¹' (𝖣.ι i '' U)) = (D.t j i ≫ D.f _ _) ⁻¹' U
+  have : D.f _ _ ⁻¹' (𝖣.ι j ⁻¹' (𝖣.ι i '' U)) = (D.t j i ≫ D.f _ _) ⁻¹' U
   ext x
   conv_rhs => rw [← Set.preimage_image_eq U (D.ι_injective _)]
   generalize 𝖣.ι i '' U = U' -- next 4 lines were `simp` before #13170

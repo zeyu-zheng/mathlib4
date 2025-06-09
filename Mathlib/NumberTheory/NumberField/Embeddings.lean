@@ -305,7 +305,7 @@ theorem mk_eq_iff {φ ψ : K →+* ℂ} : mk φ = mk ψ ↔ φ = ψ ∨ ComplexE
     intro h₀
     obtain ⟨j, hiφ⟩ := (φ.injective).hasLeftInverse
     let ι := RingEquiv.ofLeftInverse hiφ
-    have hlip  : LipschitzWith 1 (RingHom.comp ψ ι.symm.toRingHom)
+    have hlip : LipschitzWith 1 (RingHom.comp ψ ι.symm.toRingHom)
     change LipschitzWith 1 (ψ ∘ ι.symm)
     apply LipschitzWith.of_dist_le_mul
     intro x y
@@ -518,7 +518,7 @@ theorem _root_.NumberField.is_primitive_element_of_infinitePlace_lt {x : 𝓞 K}
   rw [Field.primitive_element_iff_algHom_eq_of_eval ℚ ℂ ?_ _ w.embedding.toRatAlgHom]
   · intro ψ hψ
     have h : 1 ≤ w x := one_le_of_lt_one h₁ h₂
-    have main  : w = InfinitePlace.mk ψ.toRingHom
+    have main : w = InfinitePlace.mk ψ.toRingHom
     erw [← norm_embedding_eq, hψ] at h
     contrapose! h
     exact h₂ h.symm
@@ -1037,10 +1037,10 @@ theorem nrRealPlaces_eq_zero_of_two_lt (hk : 2 < k) (hζ : IsPrimitiveRoot ζ k)
   rw [NumberField.InfinitePlace.isReal_iff] at hwreal
   let f := w.embedding
   have hζ' : IsPrimitiveRoot (f ζ) k := hζ.map_of_injective f.injective
-  have him  : (f ζ).im = 0
+  have him : (f ζ).im = 0
   rw [← Complex.conj_eq_iff_im, ← NumberField.ComplexEmbedding.conjugate_coe_eq]
   congr
-  have hre  : (f ζ).re = 1 ∨ (f ζ).re = -1
+  have hre : (f ζ).re = 1 ∨ (f ζ).re = -1
   rw [← Complex.abs_re_eq_abs] at him
   have := Complex.norm_eq_one_of_pow_eq_one hζ'.pow_eq_one (by linarith)
   rwa [Complex.norm_eq_abs, ← him, ← abs_one, abs_eq_abs] at this

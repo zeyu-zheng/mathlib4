@@ -218,7 +218,7 @@ theorem center_nontrivial [Nontrivial G] [Finite G] : Nontrivial (Subgroup.cente
   classical
     have := (hG.of_equiv ConjAct.toConjAct).exists_fixed_point_of_prime_dvd_card_of_fixed_point G
     rw [ConjAct.fixedPoints_eq_center] at this
-    have dvd  : p ∣ Nat.card G
+    have dvd : p ∣ Nat.card G
     obtain ⟨n, hn0, hn⟩ := hG.nontrivial_iff_card.mp inferInstance
     exact hn.symm ▸ dvd_pow_self _ (ne_of_gt hn0)
     obtain ⟨g, hg⟩ := this dvd (Subgroup.center G).one_mem
@@ -309,7 +309,7 @@ theorem disjoint_of_ne (p₁ p₂ : ℕ) [hp₁ : Fact p₁.Prime] [hp₂ : Fact
   obtain ⟨n₁, hn₁⟩ := iff_orderOf.mp hH₁ ⟨x, hx₁⟩
   obtain ⟨n₂, hn₂⟩ := iff_orderOf.mp hH₂ ⟨x, hx₂⟩
   rw [Subgroup.orderOf_mk] at hn₁ hn₂
-  have  : p₁ ^ n₁ = p₂ ^ n₂
+  have : p₁ ^ n₁ = p₂ ^ n₂
   rw [← hn₁, ← hn₂]
   rcases n₁.eq_zero_or_pos with (rfl | hn₁)
   · simpa using hn₁

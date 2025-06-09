@@ -153,7 +153,7 @@ lemma setLIntegral_stieltjesOfMeasurableRat [IsFiniteKernel κ] (hf : IsRatCondK
       exact mod_cast hrr'
     · obtain ⟨q, hq⟩ := exists_rat_gt x
       exact ⟨⟨q, hq⟩, measure_ne_top _ _⟩
-  have h_nonempty  : Nonempty { r' : ℚ // x < ↑r' }
+  have h_nonempty : Nonempty { r' : ℚ // x < ↑r' }
   obtain ⟨r, hrx⟩ := exists_rat_gt x
   exact ⟨⟨r, hrx⟩⟩
   rw [h, lintegral_iInf_directed_of_measurable hρ_zero fun q : { r' : ℚ // x < ↑r' } ↦ ?_]
@@ -311,7 +311,7 @@ lemma IsRatCondKernelCDFAux.tendsto_atBot_zero (hf : IsRatCondKernelCDFAux f κ 
     ∀ᵐ t ∂(ν a), Tendsto (f (a, t)) atBot (𝓝 0) := by
   suffices ∀ᵐ t ∂(ν a), Tendsto (fun q : ℚ ↦ f (a, t) (-q)) atTop (𝓝 0) by
     filter_upwards [this] with t ht
-    have h_eq_neg  : f (a, t) = fun q : ℚ ↦ f (a, t) (- -q)
+    have h_eq_neg : f (a, t) = fun q : ℚ ↦ f (a, t) (- -q)
     simp_rw [neg_neg]
     rw [h_eq_neg]
     convert ht.comp tendsto_neg_atBot_atTop
@@ -544,10 +544,10 @@ lemma setLIntegral_toKernel_univ [IsFiniteKernel κ] (hf : IsCondKernelCDF f κ 
     (a : α) {s : Set β} (hs : MeasurableSet s) :
     ∫⁻ b in s, hf.toKernel f (a, b) univ ∂(ν a) = κ a (s ×ˢ univ) := by
   rw [← Real.iUnion_Iic_rat, prod_iUnion]
-  have h_dir  : Directed (fun x y ↦ x ⊆ y) fun q : ℚ ↦ Iic (q : ℝ)
+  have h_dir : Directed (fun x y ↦ x ⊆ y) fun q : ℚ ↦ Iic (q : ℝ)
   refine Monotone.directed_le fun r r' hrr' ↦ Iic_subset_Iic.mpr ?_
   exact mod_cast hrr'
-  have h_dir_prod  : Directed (fun x y ↦ x ⊆ y) fun q : ℚ ↦ s ×ˢ Iic (q : ℝ)
+  have h_dir_prod : Directed (fun x y ↦ x ⊆ y) fun q : ℚ ↦ s ×ˢ Iic (q : ℝ)
   refine Monotone.directed_le fun i j hij ↦ ?_
   refine prod_subset_prod_iff.mpr (Or.inl ⟨subset_rfl, Iic_subset_Iic.mpr ?_⟩)
   exact mod_cast hij
@@ -620,7 +620,7 @@ lemma lintegral_toKernel_mem [IsFiniteKernel κ] (hf : IsCondKernelCDF f κ ν)
       zero_mul]
   · rintro _ ⟨t₁, ht₁, t₂, ht₂, rfl⟩
     simp only [mem_setOf_eq] at ht₁ ht₂
-    have h_prod_eq_snd  : ∀ a ∈ t₁, {x : ℝ | (a, x) ∈ t₁ ×ˢ t₂} = t₂
+    have h_prod_eq_snd : ∀ a ∈ t₁, {x : ℝ | (a, x) ∈ t₁ ×ˢ t₂} = t₂
     intro a ha
     simp only [ha, prod_mk_mem_set_prod_eq, true_and_iff, setOf_mem_eq]
     rw [← lintegral_add_compl _ ht₁]

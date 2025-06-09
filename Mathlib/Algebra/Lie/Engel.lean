@@ -125,7 +125,7 @@ theorem isNilpotentOfIsNilpotentSpanSupEqTop (hnp : IsNilpotent <| toEnd R L M x
     (hIM : IsNilpotent R I M) : IsNilpotent R L M := by
   obtain ⟨n, hn⟩ := hnp
   obtain ⟨k, hk⟩ := hIM
-  have hk'  : I.lcs M k = ⊥
+  have hk' : I.lcs M k = ⊥
   simp only [← coe_toSubmodule_eq_iff, I.coe_lcs_eq, hk, bot_coeSubmodule]
   suffices ∀ l, lowerCentralSeries R L M (l * n) ≤ I.lcs M l by
     use k * n
@@ -226,19 +226,19 @@ theorem LieAlgebra.isEngelian_of_isNoetherian [IsNoetherian R L] : LieAlgebra.Is
     rw [← isNilpotent_of_top_iff]
     apply this M
     simp [LieSubalgebra.toEnd_eq, h]
-  have  : ∀ K ∈ s, K ≠ ⊤ → ∃ K' ∈ s, K < K'
+  have : ∀ K ∈ s, K ≠ ⊤ → ∃ K' ∈ s, K < K'
   rintro K (hK₁ : LieAlgebra.IsEngelian R K) hK₂
   apply LieAlgebra.exists_engelian_lieSubalgebra_of_lt_normalizer hK₁
   apply lt_of_le_of_ne K.le_normalizer
   rw [Ne, eq_comm, K.normalizer_eq_self_iff, ← Ne, ←
     LieSubmodule.nontrivial_iff_ne_bot R K]
-  have  : Nontrivial (L' ⧸ K.toLieSubmodule)
+  have : Nontrivial (L' ⧸ K.toLieSubmodule)
   replace hK₂ : K.toLieSubmodule ≠ ⊤ := by
     rwa [Ne, ← LieSubmodule.coe_toSubmodule_eq_iff, K.coe_toLieSubmodule,
       LieSubmodule.top_coeSubmodule, ← LieSubalgebra.top_coe_submodule,
       K.coe_to_submodule_eq_iff]
   exact Submodule.Quotient.nontrivial_of_lt_top _ hK₂.lt_top
-  have  : LieModule.IsNilpotent R K (L' ⧸ K.toLieSubmodule)
+  have : LieModule.IsNilpotent R K (L' ⧸ K.toLieSubmodule)
   -- Porting note: was refine' hK₁ _ fun x => _
   apply hK₁
   intro x
@@ -259,7 +259,7 @@ theorem LieAlgebra.isEngelian_of_isNoetherian [IsNoetherian R L] : LieAlgebra.Is
     simp only [LieHom.range_coeSubmodule, LieHom.coe_toLinearMap, LinearMap.range_eq_top]
     exact LieHom.surjective_rangeRestrict (toEnd R L M)
   obtain ⟨K, hK₁, hK₂⟩ := (LieSubalgebra.wellFounded_of_noetherian R L').has_min s hs
-  have hK₃  : K = ⊤
+  have hK₃ : K = ⊤
   by_contra contra
   obtain ⟨K', hK'₁, hK'₂⟩ := this K hK₁ contra
   exact hK₂ K' hK'₁ hK'₂

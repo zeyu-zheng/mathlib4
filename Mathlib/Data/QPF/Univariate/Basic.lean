@@ -242,7 +242,7 @@ def Fix.dest : Fix F → F (Fix F) :=
 
 theorem Fix.rec_eq {α : Type _} (g : F α → α) (x : F (Fix F)) :
     Fix.rec g (Fix.mk x) = g (Fix.rec g <$> x) := by
-  have  : recF g ∘ fixToW = Fix.rec g
+  have : recF g ∘ fixToW = Fix.rec g
   ext ⟨x⟩
   apply recF_eq_of_Wequiv
   rw [fixToW]
@@ -257,7 +257,7 @@ theorem Fix.rec_eq {α : Type _} (g : F α → α) (x : F (Fix F)) :
 
 theorem Fix.ind_aux (a : q.P.A) (f : q.P.B a → q.P.W) :
     Fix.mk (abs ⟨a, fun x => ⟦f x⟧⟩) = ⟦⟨a, f⟩⟧ := by
-  have  : Fix.mk (abs ⟨a, fun x => ⟦f x⟧⟩) = ⟦Wrepr ⟨a, f⟩⟧
+  have : Fix.mk (abs ⟨a, fun x => ⟦f x⟧⟩) = ⟦Wrepr ⟨a, f⟩⟧
   apply Quot.sound; apply Wequiv.abs'
   rw [PFunctor.W.dest_mk, abs_map, abs_repr, ← abs_map, PFunctor.map_eq]
   simp only [Wrepr, recF_eq, PFunctor.W.dest_mk, abs_repr, Function.comp]
@@ -377,7 +377,7 @@ private theorem Cofix.bisim_aux (r : Cofix F → Cofix F → Prop) (h' : ∀ x, 
   rintro ⟨x⟩ ⟨y⟩ rxy
   apply Quot.sound
   let r' x y := r (Quot.mk _ x) (Quot.mk _ y)
-  have  : IsPrecongr r'
+  have : IsPrecongr r'
   intro a b r'ab
   have h₀ :
     Quot.mk r <$> Quot.mk Mcongr <$> abs (PFunctor.M.dest a) =
@@ -535,7 +535,7 @@ theorem mem_supp {α : Type u} (x : F α) (u : α) :
     u ∈ supp x ↔ ∀ a f, abs ⟨a, f⟩ = x → u ∈ f '' univ := by
   rw [supp]; dsimp; constructor
   · intro h a f haf
-    have  : Liftp (fun u => u ∈ f '' univ) x
+    have : Liftp (fun u => u ∈ f '' univ) x
     rw [liftp_iff]
     exact ⟨a, f, haf.symm, fun i => mem_image_of_mem _ (mem_univ _)⟩
     exact h this
@@ -554,14 +554,14 @@ theorem has_good_supp_iff {α : Type u} (x : F α) :
       ∃ a f, abs ⟨a, f⟩ = x ∧ ∀ a' f', abs ⟨a', f'⟩ = x → f '' univ ⊆ f' '' univ := by
   constructor
   · intro h
-    have  : Liftp (supp x) x
+    have : Liftp (supp x) x
     rw [h]; intro u; exact id
     rw [liftp_iff] at this
     rcases this with ⟨a, f, xeq, h'⟩
     refine ⟨a, f, xeq.symm, ?_⟩
     intro a' f' h''
     rintro u ⟨i, _, hfi⟩
-    have  : u ∈ supp x
+    have : u ∈ supp x
     rw [← hfi]; apply h'
     exact (mem_supp x u).mp this _ _ h''
   rintro ⟨a, f, xeq, h⟩ p; rw [liftp_iff]; constructor

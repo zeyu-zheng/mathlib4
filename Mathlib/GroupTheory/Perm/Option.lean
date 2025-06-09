@@ -43,7 +43,7 @@ theorem Equiv.optionCongr_sign {α : Type*} [DecidableEq α] [Fintype α] (e : P
 theorem map_equiv_removeNone {α : Type*} [DecidableEq α] (σ : Perm (Option α)) :
     (removeNone σ).optionCongr = swap none (σ none) * σ := by
   ext1 x
-  have  : Option.map (⇑(removeNone σ)) x = (swap none (σ none)) (σ x)
+  have : Option.map (⇑(removeNone σ)) x = (swap none (σ none)) (σ x)
   cases' x with x
   · simp
   · cases h : σ (some _)

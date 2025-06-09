@@ -171,9 +171,9 @@ theorem injOn_setOf_mem_Icc_setOf_lower_eq (x : ι → ℝ) :
   simp only [Set.ext_iff, mem_setOf] at H
   rcases (hx₁.1 i).eq_or_lt with hi₁ | hi₁
   · have hi₂ : J₂.lower i = x i := (H _).1 hi₁
-    have H₁  : x i < J₁.upper i
+    have H₁ : x i < J₁.upper i
     simpa only [hi₁] using J₁.lower_lt_upper i
-    have H₂  : x i < J₂.upper i
+    have H₂ : x i < J₂.upper i
     simpa only [hi₂] using J₂.lower_lt_upper i
     rw [Ioc_inter_Ioc, hi₁, hi₂, sup_idem, Set.nonempty_Ioc]
     exact lt_min H₁ H₂

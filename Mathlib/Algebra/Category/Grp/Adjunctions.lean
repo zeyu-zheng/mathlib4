@@ -97,7 +97,7 @@ instance : (free.{u}).PreservesMonomorphisms where
       apply (IsInitial.isInitialObj free _
         ((Types.initial_iff_empty X).2 hX).some).isZero.eq_of_tgt
     · simp only [not_isEmpty_iff] at hX
-      have hf  : Function.Injective f
+      have hf : Function.Injective f
       rwa [← mono_iff_injective]
       obtain ⟨g, hg⟩ := hf.hasLeftInverse
       have : IsSplitMono f := IsSplitMono.mk' { retraction := g }

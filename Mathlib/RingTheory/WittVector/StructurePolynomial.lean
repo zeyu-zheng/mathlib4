@@ -351,7 +351,7 @@ theorem constantCoeff_wittStructureRat (Φ : MvPolynomial idx ℚ) (h : constant
 @[simp]
 theorem constantCoeff_wittStructureInt_zero (Φ : MvPolynomial idx ℤ) :
     constantCoeff (wittStructureInt p Φ 0) = constantCoeff Φ := by
-  have inj  : Function.Injective (Int.castRingHom ℚ)
+  have inj : Function.Injective (Int.castRingHom ℚ)
   intro m n; exact Int.cast_inj.mp
   apply inj
   rw [← constantCoeff_map, map_wittStructureInt, constantCoeff_wittStructureRat_zero,
@@ -359,7 +359,7 @@ theorem constantCoeff_wittStructureInt_zero (Φ : MvPolynomial idx ℤ) :
 
 theorem constantCoeff_wittStructureInt (Φ : MvPolynomial idx ℤ) (h : constantCoeff Φ = 0) (n : ℕ) :
     constantCoeff (wittStructureInt p Φ n) = 0 := by
-  have inj  : Function.Injective (Int.castRingHom ℚ)
+  have inj : Function.Injective (Int.castRingHom ℚ)
   intro m n; exact Int.cast_inj.mp
   apply inj
   rw [← constantCoeff_map, map_wittStructureInt, constantCoeff_wittStructureRat, RingHom.map_zero]

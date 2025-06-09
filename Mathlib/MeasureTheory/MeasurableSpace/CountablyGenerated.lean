@@ -112,7 +112,7 @@ instance (priority := 100) [MeasurableSpace α] [Countable α] : CountablyGenera
     refine ⟨⋃ y, {measurableAtom y}, countable_iUnion (fun i ↦ countable_singleton _), ?_⟩
     refine le_antisymm ?_ (generateFrom_le (by simp [MeasurableSet.measurableAtom_of_countable]))
     intro s hs
-    have  : s = ⋃ y ∈ s, measurableAtom y
+    have : s = ⋃ y ∈ s, measurableAtom y
     apply Subset.antisymm
     · intro x hx
       simpa using ⟨x, hx, by simp⟩
@@ -345,7 +345,7 @@ lemma measurableSet_generateFrom_memPartition_iff (t : ℕ → Set α) (n : ℕ)
           rw [← sUnion_memPartition t n, union_comm, ← sUnion_union, union_diff_cancel hS_subset]
     · intro f h
       choose S hS_subset hS_eq using h
-      have  : Fintype (⋃ n, (S n : Set (Set α)))
+      have : Fintype (⋃ n, (S n : Set (Set α)))
       refine (Finite.subset (finite_memPartition t n) ?_).fintype
       simp only [iUnion_subset_iff]
       exact hS_subset
@@ -360,7 +360,7 @@ lemma measurableSet_generateFrom_memPartition_iff (t : ℕ → Set α) (n : ℕ)
 
 lemma measurableSet_generateFrom_memPartition (t : ℕ → Set α) (n : ℕ) :
     MeasurableSet[generateFrom (memPartition t (n + 1))] (t n) := by
-  have  : t n = ⋃ u ∈ memPartition t n, u ∩ t n
+  have : t n = ⋃ u ∈ memPartition t n, u ∩ t n
   simp_rw [← iUnion_inter, ← sUnion_eq_biUnion, sUnion_memPartition, univ_inter]
   rw [this]
   refine MeasurableSet.biUnion (finite_memPartition _ _).countable (fun v hv ↦ ?_)

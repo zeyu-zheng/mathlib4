@@ -195,7 +195,7 @@ theorem blimsup_cthickening_mul_ae_eq (p : ℕ → Prop) (s : ℕ → Set α) {M
       (blimsup (fun i => cthickening (M * r i) (s i)) atTop p : Set α) =ᵐ[μ]
         (blimsup (fun i => cthickening (r i) (s i)) atTop p : Set α) := by
     clear p hr r; intro p r hr
-    have hr'  : Tendsto (fun i => M * r i) atTop (𝓝[>] 0)
+    have hr' : Tendsto (fun i => M * r i) atTop (𝓝[>] 0)
     convert TendstoNhdsWithinIoi.const_mul hM hr <;> simp only [mul_zero]
     refine eventuallyLE_antisymm_iff.mpr ⟨?_, ?_⟩
     · exact blimsup_cthickening_ae_le_of_eventually_mul_le μ p (inv_pos.mpr hM) hr'
@@ -203,21 +203,21 @@ theorem blimsup_cthickening_mul_ae_eq (p : ℕ → Prop) (s : ℕ → Set α) {M
     · exact blimsup_cthickening_ae_le_of_eventually_mul_le μ p hM hr
         (eventually_of_forall fun i => le_refl _)
   let r' : ℕ → ℝ := fun i => if 0 < r i then r i else 1 / ((i : ℝ) + 1)
-  have hr'  : Tendsto r' atTop (𝓝[>] 0)
+  have hr' : Tendsto r' atTop (𝓝[>] 0)
   refine tendsto_nhdsWithin_iff.mpr
     ⟨Tendsto.if' hr tendsto_one_div_add_atTop_nhds_zero_nat, eventually_of_forall fun i => ?_⟩
   by_cases hi : 0 < r i
   · simp [r', hi]
   · simp only [r', hi, one_div, mem_Ioi, if_false, inv_pos]; positivity
-  have h₀  : ∀ i, p i ∧ 0 < r i → cthickening (r i) (s i) = cthickening (r' i) (s i)
+  have h₀ : ∀ i, p i ∧ 0 < r i → cthickening (r i) (s i) = cthickening (r' i) (s i)
   rintro i ⟨-, hi⟩; congr! 1; change r i = ite (0 < r i) (r i) _; simp [hi]
-  have h₁  : ∀ i, p i ∧ 0 < r i → cthickening (M * r i) (s i) = cthickening (M * r' i) (s i)
+  have h₁ : ∀ i, p i ∧ 0 < r i → cthickening (M * r i) (s i) = cthickening (M * r' i) (s i)
   rintro i ⟨-, hi⟩; simp only [r', hi, mul_ite, if_true]
-  have h₂  : ∀ i, p i ∧ r i ≤ 0 → cthickening (M * r i) (s i) = cthickening (r i) (s i)
+  have h₂ : ∀ i, p i ∧ r i ≤ 0 → cthickening (M * r i) (s i) = cthickening (r i) (s i)
   rintro i ⟨-, hi⟩
   have hi' : M * r i ≤ 0 := mul_nonpos_of_nonneg_of_nonpos hM.le hi
   rw [cthickening_of_nonpos hi, cthickening_of_nonpos hi']
-  have hp  : p = fun i => p i ∧ 0 < r i ∨ p i ∧ r i ≤ 0
+  have hp : p = fun i => p i ∧ 0 < r i ∨ p i ∧ r i ≤ 0
   ext i; simp [← and_or_left, lt_or_le 0 (r i)]
   rw [hp, blimsup_or_eq_sup, blimsup_or_eq_sup]
   simp only [sup_eq_union]

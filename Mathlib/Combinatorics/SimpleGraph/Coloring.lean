@@ -406,7 +406,7 @@ theorem CompleteBipartiteGraph.chromaticNumber {V W : Type*} [Nonempty V] [Nonem
   intro C b
   have v := Classical.arbitrary V
   have w := Classical.arbitrary W
-  have h  : (completeBipartiteGraph V W).Adj (Sum.inl v) (Sum.inr w)
+  have h : (completeBipartiteGraph V W).Adj (Sum.inl v) (Sum.inr w)
   simp
   by_cases he : C (Sum.inl v) = b
   · exact ⟨_, he⟩

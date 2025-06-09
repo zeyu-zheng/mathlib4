@@ -198,7 +198,7 @@ theorem differentiable_set_subset_D :
   intro x hx
   rw [D, mem_iInter]
   intro e
-  have  : (0 : ℝ) < (1 / 2) ^ e
+  have : (0 : ℝ) < (1 / 2) ^ e
   positivity
   rcases mem_A_of_differentiable this hx.1 with ⟨R, R_pos, hR⟩
   obtain ⟨n, hn⟩ : ∃ n : ℕ, (1 / 2) ^ n < R :=
@@ -452,7 +452,7 @@ theorem A_mem_nhdsWithin_Ioi {L : F} {r ε x : ℝ} (hx : x ∈ A f L r ε) : A 
   obtain ⟨s, s_gt, s_lt⟩ : ∃ s : ℝ, r / 2 < s ∧ s < r' := exists_between rr'.1
   have : s ∈ Ioc (r / 2) r := ⟨s_gt, le_of_lt (s_lt.trans_le rr'.2)⟩
   refine ⟨x + r' - s, by simp only [mem_Ioi]; linarith, fun x' hx' => ⟨s, this, ?_⟩⟩
-  have A  : Icc x' (x' + s) ⊆ Icc x (x + r')
+  have A : Icc x' (x' + s) ⊆ Icc x (x + r')
   apply Icc_subset_Icc hx'.1.le
   linarith [hx'.2]
   intro y hy z hz
@@ -478,7 +478,7 @@ theorem le_of_mem_A {r ε : ℝ} {L : F} {x : ℝ} (hx : x ∈ A f L r ε) {y z 
     (hy : y ∈ Icc x (x + r / 2)) (hz : z ∈ Icc x (x + r / 2)) :
   ‖f z - f y - (z - y) • L‖ ≤ ε * r := by
   rcases hx with ⟨r', r'mem, hr'⟩
-  have A  : x + r / 2 ≤ x + r'
+  have A : x + r / 2 ≤ x + r'
   linarith [r'mem.1]
   exact hr' _ ((Icc_subset_Icc le_rfl A) hy) _ ((Icc_subset_Icc le_rfl A) hz)
 
@@ -601,7 +601,7 @@ theorem D_subset_differentiable_set {K : Set F} (hK : IsComplete K) :
   /- For definiteness, use `L0 e = L e (n e) (n e)`, to have a single sequence. We claim that this
     is a Cauchy sequence. -/
   let L0 : ℕ → F := fun e => L e (n e) (n e)
-  have  : CauchySeq L0
+  have : CauchySeq L0
   rw [Metric.cauchySeq_iff']
   intro ε εpos
   obtain ⟨e, he⟩ : ∃ e : ℕ, (1 / 2) ^ e < ε / 12 :=
@@ -809,9 +809,9 @@ lemma isOpen_A_with_param {r s : ℝ} (hf : Continuous f.uncurry) (L : E →L[�
   rcases exists_between hrt with ⟨t', hrt', ht't⟩
   obtain ⟨b, b_lt, hb⟩ : ∃ b, b < s * r ∧ ∀ y ∈ closedBall x t, ∀ z ∈ closedBall x t,
       ‖f a z - f a y - (L z - L y)‖ ≤ b := by
-    have B  : Continuous (fun (p : E × E) ↦ ‖f a p.2 - f a p.1 - (L p.2 - L p.1)‖)
+    have B : Continuous (fun (p : E × E) ↦ ‖f a p.2 - f a p.1 - (L p.2 - L p.1)‖)
     fun_prop
-    have C  : (closedBall x t ×ˢ closedBall x t).Nonempty
+    have C : (closedBall x t ×ˢ closedBall x t).Nonempty
     simp; linarith
     rcases ((isCompact_closedBall x t).prod (isCompact_closedBall x t)).exists_isMaxOn
       C B.continuousOn with ⟨p, pt, hp⟩
@@ -943,10 +943,10 @@ theorem stronglyMeasurable_deriv_with_param [LocallyCompactSpace 𝕜] [Measurab
     have : range (fun (p : α × 𝕜) ↦ deriv (f p.1) p.2)
         ⊆ closure (Submodule.span 𝕜 (range f.uncurry)) := by
       rintro - ⟨p, rfl⟩
-      have A  : deriv (f p.1) p.2 ∈ closure (Submodule.span 𝕜 (range (f p.1)))
+      have A : deriv (f p.1) p.2 ∈ closure (Submodule.span 𝕜 (range (f p.1)))
       rw [← image_univ]
       apply range_deriv_subset_closure_span_image _ dense_univ (mem_range_self _)
-      have B  : range (f p.1) ⊆ range (f.uncurry)
+      have B : range (f p.1) ⊆ range (f.uncurry)
       rintro - ⟨x, rfl⟩
       exact mem_range_self (p.1, x)
       exact closure_mono (Submodule.span_mono B) A

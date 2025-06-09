@@ -1811,7 +1811,7 @@ theorem bound_of_isBigO_cofinite (h : f =O[cofinite] g'') :
   rcases h.exists_pos with ⟨C, C₀, hC⟩
   rw [IsBigOWith_def, eventually_cofinite] at hC
   rcases (hC.toFinset.image fun x => ‖f x‖ / ‖g'' x‖).exists_le with ⟨C', hC'⟩
-  have  : ∀ x, C * ‖g'' x‖ < ‖f x‖ → ‖f x‖ / ‖g'' x‖ ≤ C'
+  have : ∀ x, C * ‖g'' x‖ < ‖f x‖ → ‖f x‖ / ‖g'' x‖ ≤ C'
   simpa using hC'
   refine ⟨max C C', lt_max_iff.2 (Or.inl C₀), fun x h₀ => ?_⟩
   rw [max_mul_of_nonneg _ _ (norm_nonneg _), le_max_iff, or_iff_not_imp_left, not_le]

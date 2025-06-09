@@ -105,7 +105,7 @@ variable (𝕜)
 
 @[simp]
 lemma egauge_zero_right (hs : s.Nonempty) : egauge 𝕜 s 0 = 0 := by
-  have  : 0 ∈ (0 : 𝕜) • s
+  have : 0 ∈ (0 : 𝕜) • s
   simp [zero_smul_set hs]
   simpa using egauge_le_of_mem_smul this
 

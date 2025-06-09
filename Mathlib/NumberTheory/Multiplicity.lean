@@ -102,7 +102,7 @@ theorem odd_sq_dvd_geom_sum₂_sub (hp : Odd p) :
             (∑ x ∈ Finset.range p, a ^ (x - 1) * (a ^ (p - 1 - x) * (↑p * (b * ↑x)))) +
           mk (span {s}) (∑ _x ∈ Finset.range p, a ^ (p - 1)) := by
       rw [add_right_inj]
-      have  : ∀ (x : ℕ), (hx : x ∈ range p) → a ^ (x + (p - 1 - x)) = a ^ (p - 1)
+      have : ∀ (x : ℕ), (hx : x ∈ range p) → a ^ (x + (p - 1 - x)) = a ^ (p - 1)
       intro x hx
       rw [← Nat.add_sub_assoc _ x, Nat.add_sub_cancel_left]
       exact Nat.le_sub_one_of_lt (Finset.mem_range.mp hx)
@@ -255,17 +255,17 @@ theorem Int.sq_mod_four_eq_one_of_odd {x : ℤ} : Odd x → x ^ 2 % 4 = 1 := by
 
 theorem Int.two_pow_two_pow_add_two_pow_two_pow {x y : ℤ} (hx : ¬2 ∣ x) (hxy : 4 ∣ x - y) (i : ℕ) :
     multiplicity 2 (x ^ 2 ^ i + y ^ 2 ^ i) = ↑(1 : ℕ) := by
-  have hx_odd  : Odd x
+  have hx_odd : Odd x
   rwa [Int.odd_iff_not_even, even_iff_two_dvd]
   have hxy_even : Even (x - y) := even_iff_two_dvd.mpr (dvd_trans (by decide) hxy)
-  have hy_odd  : Odd y
+  have hy_odd : Odd y
   simpa using hx_odd.sub_even hxy_even
   refine multiplicity.eq_coe_iff.mpr ⟨?_, ?_⟩
   · rw [pow_one, ← even_iff_two_dvd]
     exact hx_odd.pow.add_odd hy_odd.pow
   cases' i with i
   · intro hxy'
-    have  : 2 * 2 ∣ 2 * x
+    have : 2 * 2 ∣ 2 * x
     have := dvd_add hxy hxy'
     norm_num at *
     rw [two_mul]
@@ -287,10 +287,10 @@ theorem Int.two_pow_two_pow_sub_pow_two_pow {x y : ℤ} (n : ℕ) (hxy : 4 ∣ x
 
 theorem Int.two_pow_sub_pow' {x y : ℤ} (n : ℕ) (hxy : 4 ∣ x - y) (hx : ¬2 ∣ x) :
     multiplicity 2 (x ^ n - y ^ n) = multiplicity 2 (x - y) + multiplicity (2 : ℤ) n := by
-  have hx_odd  : Odd x
+  have hx_odd : Odd x
   rwa [Int.odd_iff_not_even, even_iff_two_dvd]
   have hxy_even : Even (x - y) := even_iff_two_dvd.mpr (dvd_trans (by decide) hxy)
-  have hy_odd  : Odd y
+  have hy_odd : Odd y
   simpa using hx_odd.sub_even hxy_even
   cases' n with n
   · simp only [pow_zero, sub_self, multiplicity.zero, Int.ofNat_zero, Nat.zero_eq, add_top]
@@ -314,7 +314,7 @@ theorem Int.two_pow_sub_pow' {x y : ℤ} (n : ℕ) (hxy : 4 ∣ x - y) (hx : ¬2
 theorem Int.two_pow_sub_pow {x y : ℤ} {n : ℕ} (hxy : 2 ∣ x - y) (hx : ¬2 ∣ x) (hn : Even n) :
     multiplicity 2 (x ^ n - y ^ n) + 1 =
       multiplicity 2 (x + y) + multiplicity 2 (x - y) + multiplicity (2 : ℤ) n := by
-  have hy  : Odd y
+  have hy : Odd y
   rw [← even_iff_two_dvd, ← Int.odd_iff_not_even] at hx
   replace hxy := (@even_neg _ _ (x - y)).mpr (even_iff_two_dvd.mpr hxy)
   convert Even.add_odd hxy hx
@@ -322,7 +322,7 @@ theorem Int.two_pow_sub_pow {x y : ℤ} {n : ℕ} (hxy : 2 ∣ x - y) (hx : ¬2 
   cases' hn with d hd
   subst hd
   simp only [← two_mul, pow_mul]
-  have hxy4  : 4 ∣ x ^ 2 - y ^ 2
+  have hxy4 : 4 ∣ x ^ 2 - y ^ 2
   rw [Int.dvd_iff_emod_eq_zero, Int.sub_emod, Int.sq_mod_four_eq_one_of_odd _,
     Int.sq_mod_four_eq_one_of_odd hy]
   · norm_num

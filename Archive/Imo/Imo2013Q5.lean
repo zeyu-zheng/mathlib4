@@ -35,9 +35,9 @@ theorem le_of_all_pow_lt_succ {x y : ℝ} (hx : 1 < x) (hy : 1 < y)
   by_contra! hxy
   have hxmy : 0 < x - y
   apply sub_pos.mpr hxy
-  have hn  : ∀ n : ℕ, 0 < n → (x - y) * (n : ℝ) ≤ x ^ n - y ^ n
+  have hn : ∀ n : ℕ, 0 < n → (x - y) * (n : ℝ) ≤ x ^ n - y ^ n
   intro n _
-  have hterm  : ∀ i : ℕ, i ∈ Finset.range n → 1 ≤ x ^ i * y ^ (n - 1 - i)
+  have hterm : ∀ i : ℕ, i ∈ Finset.range n → 1 ≤ x ^ i * y ^ (n - 1 - i)
   intro i _
   calc
     1 ≤ x ^ i := one_le_pow_of_one_le hx.le i
@@ -130,7 +130,7 @@ theorem pow_f_le_f_pow {f : ℚ → ℝ} {n : ℕ} (hn : 0 < n) {x : ℚ} (hx : 
   · norm_num
   have hpn' := hpn pn.succ_pos
   rw [pow_succ x (pn + 1), pow_succ (f x) (pn + 1)]
-  have hxp  : 0 < x
+  have hxp : 0 < x
   positivity
   calc
     f (x ^ (pn + 1) * x) ≤ f (x ^ (pn + 1)) * f x := H1 (x ^ (pn + 1)) x (pow_pos hxp (pn + 1)) hxp
@@ -181,7 +181,7 @@ theorem imo2013_q5 (f : ℚ → ℝ) (H1 : ∀ x y, 0 < x → 0 < y → f (x * y
     (H2 : ∀ x y, 0 < x → 0 < y → f x + f y ≤ f (x + y)) (H_fixed_point : ∃ a, 1 < a ∧ f a = a) :
     ∀ x, 0 < x → f x = x := by
   obtain ⟨a, ha1, hae⟩ := H_fixed_point
-  have H3  : ∀ x : ℚ, 0 < x → ∀ n : ℕ, 0 < n → ↑n * f x ≤ f (n * x)
+  have H3 : ∀ x : ℚ, 0 < x → ∀ n : ℕ, 0 < n → ↑n * f x ≤ f (n * x)
   intro x hx n hn
   cases' n with n
   · exact (lt_irrefl 0 hn).elim
@@ -194,9 +194,9 @@ theorem imo2013_q5 (f : ℚ → ℝ) (H1 : ∀ x y, 0 < x → 0 < y → f (x * y
     _ ≤ f ((↑pn + 1) * x + x) := by exact_mod_cast H2 _ _ (mul_pos pn.cast_add_one_pos hx) hx
     _ = f ((↑pn + 1 + 1) * x) := by ring_nf
     _ = f (↑(pn + 2) * x) := by norm_cast
-  have H4  : ∀ n : ℕ, 0 < n → (n : ℝ) ≤ f n
+  have H4 : ∀ n : ℕ, 0 < n → (n : ℝ) ≤ f n
   intro n hn
-  have hf1  : 1 ≤ f 1
+  have hf1 : 1 ≤ f 1
   have a_pos : (0 : ℝ) < a
   apply Rat.cast_pos.mpr (zero_lt_one.trans ha1)
   suffices ↑a * 1 ≤ ↑a * f 1 by rwa [← mul_le_mul_left a_pos]
@@ -211,9 +211,9 @@ theorem imo2013_q5 (f : ℚ → ℝ) (H1 : ∀ x y, 0 < x → 0 < y → f (x * y
     _ ≤ (n : ℝ) * f 1 := by gcongr
     _ ≤ f (n * 1) := H3 1 zero_lt_one n hn
     _ = f n := by rw [mul_one]
-  have H5  : ∀ x : ℚ, 1 < x → (x : ℝ) ≤ f x
+  have H5 : ∀ x : ℚ, 1 < x → (x : ℝ) ≤ f x
   intro x hx
-  have hxnm1  : ∀ n : ℕ, 0 < n → (x : ℝ) ^ n - 1 < f x ^ n
+  have hxnm1 : ∀ n : ℕ, 0 < n → (x : ℝ) ^ n - 1 < f x ^ n
   intro n hn
   calc
     (x : ℝ) ^ n - 1 < f (x ^ n) :=
@@ -221,12 +221,12 @@ theorem imo2013_q5 (f : ℚ → ℝ) (H1 : ∀ x y, 0 < x → 0 < y → f (x * y
     _ ≤ f x ^ n := pow_f_le_f_pow hn hx H1 H4
   have hx' : 1 < (x : ℝ)
   exact mod_cast hx
-  have hxp  : 0 < x
+  have hxp : 0 < x
   positivity
   exact le_of_all_pow_lt_succ' hx' (f_pos_of_pos hxp H1 H4) hxnm1
-  have h_f_commutes_with_pos_nat_mul  : ∀ n : ℕ, 0 < n → ∀ x : ℚ, 0 < x → f (n * x) = n * f x
+  have h_f_commutes_with_pos_nat_mul : ∀ n : ℕ, 0 < n → ∀ x : ℚ, 0 < x → f (n * x) = n * f x
   intro n hn x hx
-  have h2  : f (n * x) ≤ n * f x
+  have h2 : f (n * x) ≤ n * f x
   cases' n with n
   · exfalso; exact Nat.lt_asymm hn hn
   cases' n with n
@@ -245,18 +245,18 @@ theorem imo2013_q5 (f : ℚ → ℝ) (H1 : ∀ x y, 0 < x → 0 < y → f (x * y
   intro x hx
   have H₀ : x * x.den = x.num
   apply x.mul_den_eq_num
-  have H  : x * (↑(2 * x.den) : ℚ) = (↑(2 * x.num) : ℚ)
+  have H : x * (↑(2 * x.den) : ℚ) = (↑(2 * x.num) : ℚ)
   push_cast; linear_combination 2 * H₀
   set x2denom := 2 * x.den
   set x2num := 2 * x.num
   have := x.pos
-  have hx2pos  : 0 < 2 * x.den
+  have hx2pos : 0 < 2 * x.den
   positivity
-  have hx2cnezr  : (x2denom : ℝ) ≠ (0 : ℝ)
+  have hx2cnezr : (x2denom : ℝ) ≠ (0 : ℝ)
   positivity
-  have  : 0 < x.num
+  have : 0 < x.num
   rwa [Rat.num_pos]
-  have hx2num_gt_one  : (1 : ℚ) < (2 * x.num : ℤ)
+  have hx2num_gt_one : (1 : ℚ) < (2 * x.num : ℤ)
   norm_cast; linarith
   apply mul_left_cancel₀ hx2cnezr
   calc

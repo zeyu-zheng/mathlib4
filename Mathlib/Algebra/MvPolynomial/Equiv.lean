@@ -357,7 +357,7 @@ theorem finSuccEquiv_coeff_coeff (m : Fin n →₀ ℕ) (f : MvPolynomial (Fin (
     obtain hij | rfl := ne_or_eq i (j 0)
     · simp only [hij, if_false, coeff_zero]
     simp only [eq_self_iff_true, if_true]
-    have hmj  : m ≠ j.tail
+    have hmj : m ≠ j.tail
     rintro rfl
     rw [cons_tail] at hjmi
     contradiction
@@ -406,7 +406,7 @@ the `i`th coefficient of `finSuccEquiv` applied to `p`, if this is nonzero.
 lemma totalDegree_coeff_finSuccEquiv_add_le (f : MvPolynomial (Fin (n + 1)) R) (i : ℕ)
     (hi : (finSuccEquiv R n f).coeff i ≠ 0) :
     totalDegree ((finSuccEquiv R n f).coeff i) + i ≤ totalDegree f := by
-  have hf'_sup  : ((finSuccEquiv R n f).coeff i).support.Nonempty
+  have hf'_sup : ((finSuccEquiv R n f).coeff i).support.Nonempty
   rw [Finset.nonempty_iff_ne_empty, ne_eq, support_eq_empty]
   exact hi
   -- Let σ be a monomial index of ((finSuccEquiv R n p).coeff i) of maximal total degree
@@ -462,7 +462,7 @@ theorem degree_finSuccEquiv {f : MvPolynomial (Fin (n + 1)) R} (h : f ≠ 0) :
   have h₁ : ∀ {α β : Type _} (f : α → β), f ∘ (fun x => x) = f := fun f => rfl
   have h₂ : WithBot.some = Nat.cast := rfl
 
-  have h'  : ((finSuccEquiv R n f).support.sup fun x => x) = degreeOf 0 f
+  have h' : ((finSuccEquiv R n f).support.sup fun x => x) = degreeOf 0 f
   rw [degreeOf_eq_sup, finSuccEquiv_support f, Finset.sup_image, h₀]
   rw [Polynomial.degree, ← h', ← h₂, Finset.coe_sup_of_nonempty (support_finSuccEquiv_nonempty h),
     Finset.max_eq_sup_coe, h₁]

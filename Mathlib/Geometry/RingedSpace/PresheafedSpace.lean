@@ -320,7 +320,7 @@ instance ofRestrict_mono {U : TopCat} (X : PresheafedSpace C) (f : U ⟶ X.1) (h
     rw [cancel_mono] at this
     exact this
   · ext V
-    have hV  : (Opens.map (X.ofRestrict hf).base).obj (hf.isOpenMap.functor.obj V) = V
+    have hV : (Opens.map (X.ofRestrict hf).base).obj (hf.isOpenMap.functor.obj V) = V
     ext1
     exact Set.preimage_image_eq _ hf.inj
     haveI :

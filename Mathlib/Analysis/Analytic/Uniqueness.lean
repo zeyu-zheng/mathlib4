@@ -78,12 +78,12 @@ theorem eqOn_zero_of_preconnected_of_eventuallyEq_zero {f : E → F} {U : Set E}
   let F' := UniformSpace.Completion F
   set e : F →L[𝕜] F' := UniformSpace.Completion.toComplL
   have : AnalyticOn 𝕜 (e ∘ f) U := fun x hx => (e.analyticAt _).comp (hf x hx)
-  have A  : EqOn (e ∘ f) 0 U
+  have A : EqOn (e ∘ f) 0 U
   apply eqOn_zero_of_preconnected_of_eventuallyEq_zero_aux this hU h₀
   filter_upwards [hfz₀] with x hx
   simp only [hx, Function.comp_apply, Pi.zero_apply, map_zero]
   intro z hz
-  have  : e (f z) = e 0
+  have : e (f z) = e 0
   simpa only using A hz
   exact UniformSpace.Completion.coe_injective F this
 

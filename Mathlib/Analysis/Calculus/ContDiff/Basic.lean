@@ -585,18 +585,18 @@ theorem ContDiffOn.comp {s : Set E} {t : Set F} {g : F → G} {f : E → F} (hg 
   have isoG : Gu ≃L[𝕜] G := ContinuousLinearEquiv.ulift
   -- lift the functions to the new spaces, check smoothness there, and then go back.
   let fu : Eu → Fu := (isoF.symm ∘ f) ∘ isoE
-  have fu_diff  : ContDiffOn 𝕜 n fu (isoE ⁻¹' s)
+  have fu_diff : ContDiffOn 𝕜 n fu (isoE ⁻¹' s)
   rwa [isoE.contDiffOn_comp_iff, isoF.symm.comp_contDiffOn_iff]
   let gu : Fu → Gu := (isoG.symm ∘ g) ∘ isoF
-  have gu_diff  : ContDiffOn 𝕜 n gu (isoF ⁻¹' t)
+  have gu_diff : ContDiffOn 𝕜 n gu (isoF ⁻¹' t)
   rwa [isoF.contDiffOn_comp_iff, isoG.symm.comp_contDiffOn_iff]
-  have main  : ContDiffOn 𝕜 n (gu ∘ fu) (isoE ⁻¹' s)
+  have main : ContDiffOn 𝕜 n (gu ∘ fu) (isoE ⁻¹' s)
   apply ContDiffOn.comp_same_univ gu_diff fu_diff
   intro y hy
   simp only [fu, ContinuousLinearEquiv.coe_apply, Function.comp_apply, mem_preimage]
   rw [isoF.apply_symm_apply (f (isoE y))]
   exact st hy
-  have  : gu ∘ fu = (isoG.symm ∘ g ∘ f) ∘ isoE
+  have : gu ∘ fu = (isoG.symm ∘ g ∘ f) ∘ isoE
   ext y
   simp only [fu, gu, Function.comp_apply]
   rw [isoF.apply_symm_apply (f (isoE y))]
@@ -891,7 +891,7 @@ theorem ContDiffWithinAt.hasFDerivWithinAt_nhds {f : E → F → G} {g : E → F
     ∃ v ∈ 𝓝[insert x₀ s] x₀, v ⊆ insert x₀ s ∧ ∃ f' : E → F →L[𝕜] G,
       (∀ x ∈ v, HasFDerivWithinAt (f x) (f' x) t (g x)) ∧
         ContDiffWithinAt 𝕜 n (fun x => f' x) s x₀ := by
-  have hst  : insert x₀ s ×ˢ t ∈ 𝓝[(fun x => (x, g x)) '' s] (x₀, g x₀)
+  have hst : insert x₀ s ×ˢ t ∈ 𝓝[(fun x => (x, g x)) '' s] (x₀, g x₀)
   refine nhdsWithin_mono _ ?_ (nhdsWithin_prod self_mem_nhdsWithin hgt)
   simp_rw [image_subset_iff, mk_preimage_prod, preimage_id', subset_inter_iff, subset_insert,
     true_and_iff, subset_preimage_image]
@@ -1693,7 +1693,7 @@ theorem PartialHomeomorph.contDiffAt_symm [CompleteSpace E] (f : PartialHomeomor
     -- This follows by a bootstrapping formula expressing the derivative as a function of `f` itself
     refine ⟨inverse ∘ f' ∘ f.symm, ?_, ?_⟩
     · -- We first check that the derivative of `f` is that formula
-      have h_nhds  : { y : E | ∃ e : E ≃L[𝕜] F, ↑e = f' y } ∈ 𝓝 (f.symm a)
+      have h_nhds : { y : E | ∃ e : E ≃L[𝕜] F, ↑e = f' y } ∈ 𝓝 (f.symm a)
       have hf₀' := f₀'.nhds
       rw [← eq_f₀'] at hf₀'
       exact hf'.continuousAt.preimage_mem_nhds hf₀'
@@ -1704,17 +1704,17 @@ theorem PartialHomeomorph.contDiffAt_symm [CompleteSpace E] (f : PartialHomeomor
       · exact mem_inter ha (mem_preimage.mpr htf)
       intro x hx
       obtain ⟨hxu, e, he⟩ := htu hx.2
-      have h_deriv  : HasFDerivAt f (e : E →L[𝕜] F) (f.symm x)
+      have h_deriv : HasFDerivAt f (e : E →L[𝕜] F) (f.symm x)
       rw [he]
       exact hff' (f.symm x) hxu
       convert f.hasFDerivAt_symm hx.1 h_deriv
       simp [← he]
     · -- Then we check that the formula, being a composition of `ContDiff` pieces, is
       -- itself `ContDiff`
-      have h_deriv₁  : ContDiffAt 𝕜 n inverse (f' (f.symm a))
+      have h_deriv₁ : ContDiffAt 𝕜 n inverse (f' (f.symm a))
       rw [eq_f₀']
       exact contDiffAt_map_inverse _
-      have h_deriv₂  : ContDiffAt 𝕜 n f.symm a
+      have h_deriv₂ : ContDiffAt 𝕜 n f.symm a
       refine IH (hf.of_le ?_)
       norm_cast
       exact Nat.le_succ n
@@ -1811,13 +1811,13 @@ theorem contDiffOn_succ_iff_derivWithin {n : ℕ} (hs : UniqueDiffOn 𝕜 s₂) 
   intro _
   constructor
   · intro h
-    have  : derivWithin f₂ s₂ = (fun u : 𝕜 →L[𝕜] F => u 1) ∘ fderivWithin 𝕜 f₂ s₂
+    have : derivWithin f₂ s₂ = (fun u : 𝕜 →L[𝕜] F => u 1) ∘ fderivWithin 𝕜 f₂ s₂
     ext x; rfl
     simp_rw [this]
     apply ContDiff.comp_contDiffOn _ h
     exact (isBoundedBilinearMap_apply.isBoundedLinearMap_left _).contDiff
   · intro h
-    have  : fderivWithin 𝕜 f₂ s₂ = smulRight (1 : 𝕜 →L[𝕜] 𝕜) ∘ derivWithin f₂ s₂
+    have : fderivWithin 𝕜 f₂ s₂ = smulRight (1 : 𝕜 →L[𝕜] 𝕜) ∘ derivWithin f₂ s₂
     ext x; simp [derivWithin]
     simp only [this]
     apply ContDiff.comp_contDiffOn _ h
@@ -1857,7 +1857,7 @@ protected theorem ContDiffOn.derivWithin (hf : ContDiffOn 𝕜 n f₂ s₂) (hs 
     (hmn : m + 1 ≤ n) : ContDiffOn 𝕜 m (derivWithin f₂ s₂) s₂ := by
   cases m
   · change ∞ + 1 ≤ n at hmn
-    have  : n = ∞
+    have : n = ∞
     simpa using hmn
     rw [this] at hf
     exact ((contDiffOn_top_iff_derivWithin hs).1 hf).2

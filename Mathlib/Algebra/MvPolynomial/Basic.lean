@@ -355,7 +355,7 @@ theorem induction_on_monomial {M : MvPolynomial σ R → Prop} (h_C : ∀ a, M (
   · show M (monomial 0 a)
     exact h_C a
   · intro n e p _hpn _he ih
-    have  : ∀ e : ℕ, M (monomial p a * X n ^ e)
+    have : ∀ e : ℕ, M (monomial p a * X n ^ e)
     intro e
     induction e with
     | zero => simp [ih]

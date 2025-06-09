@@ -261,13 +261,13 @@ lemma analyticAt_inv {z : 𝕝} (hz : z ≠ 0) : AnalyticAt 𝕜 Inv.inv z := by
   let f1 : 𝕝 → 𝕝 := fun a ↦ 1 / z * a
   let f2 : 𝕝 → 𝕝 := fun b ↦ (1 - b)⁻¹
   let f3 : 𝕝 → 𝕝 := fun c ↦ 1 - c / z
-  have feq  : f1 ∘ f2 ∘ f3 = Inv.inv
+  have feq : f1 ∘ f2 ∘ f3 = Inv.inv
   ext1 x
   dsimp only [f1, f2, f3, Function.comp_apply]
   field_simp
-  have f3val  : f3 z = 0
+  have f3val : f3 z = 0
   simp only [f3, div_self hz, sub_self]
-  have f3an  : AnalyticAt 𝕜 f3 z
+  have f3an : AnalyticAt 𝕜 f3 z
   apply analyticAt_const.sub
   simpa only [div_eq_inv_mul] using analyticAt_const.mul (analyticAt_id 𝕜 z)
   exact feq ▸ (analyticAt_const.mul (analyticAt_id _ _)).comp

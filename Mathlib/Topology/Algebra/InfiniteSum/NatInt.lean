@@ -346,7 +346,7 @@ lemma HasProd.of_nat_of_neg_add_one {f : ℤ → M}
     (hf₁ : HasProd (fun n : ℕ ↦ f n) m) (hf₂ : HasProd (fun n : ℕ ↦ f (-(n + 1))) m') :
     HasProd f (m * m') := by
   have hi₂ : Injective Int.negSucc := @Int.negSucc.inj
-  have  : IsCompl (Set.range ((↑) : ℕ → ℤ)) (Set.range Int.negSucc)
+  have : IsCompl (Set.range ((↑) : ℕ → ℤ)) (Set.range Int.negSucc)
   constructor
   · rw [disjoint_iff_inf_le]
     rintro _ ⟨⟨i, rfl⟩, ⟨j, ⟨⟩⟩⟩
@@ -406,7 +406,7 @@ theorem HasProd.nat_mul_neg {f : ℤ → M} (hf : HasProd f m) :
   refine ⟨u.image Int.natAbs, fun v' hv' ↦ ?_⟩
   let u1 := v'.image fun x : ℕ ↦ (x : ℤ)
   let u2 := v'.image fun x : ℕ ↦ -(x : ℤ)
-  have A  : u ⊆ u1 ∪ u2
+  have A : u ⊆ u1 ∪ u2
   intro x hx
   simp only [u1, u2, mem_union, mem_image, exists_prop]
   rcases le_total 0 x with (h'x | h'x)

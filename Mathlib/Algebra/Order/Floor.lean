@@ -505,7 +505,7 @@ theorem subsingleton_floorSemiring {α} [LinearOrderedSemiring α] :
     Subsingleton (FloorSemiring α) := by
   refine ⟨fun H₁ H₂ => ?_⟩
   have : H₁.ceil = H₂.ceil := funext fun a => (H₁.gc_ceil.l_unique H₂.gc_ceil) fun n => rfl
-  have  : H₁.floor = H₂.floor
+  have : H₁.floor = H₂.floor
   ext a
   cases' lt_or_le a 0 with h h
   · rw [H₁.floor_of_neg, H₂.floor_of_neg] <;> exact h
@@ -988,7 +988,7 @@ theorem sub_floor_div_mul_lt (a : k) (hb : 0 < b) : a - ⌊a / b⌋ * b < b :=
 theorem fract_div_natCast_eq_div_natCast_mod {m n : ℕ} : fract ((m : k) / n) = ↑(m % n) / n := by
   rcases n.eq_zero_or_pos with (rfl | hn)
   · simp
-  have hn'  : 0 < (n : k)
+  have hn' : 0 < (n : k)
   norm_cast
   refine fract_eq_iff.mpr ⟨?_, ?_, m / n, ?_⟩
   · positivity
@@ -1004,7 +1004,7 @@ theorem fract_div_intCast_eq_div_intCast_mod {m : ℤ} {n : ℕ} :
   rcases n.eq_zero_or_pos with (rfl | hn)
   · simp
   replace hn : 0 < (n : k) := by norm_cast
-  have  : ∀ {l : ℤ}, 0 ≤ l → fract ((l : k) / n) = ↑(l % n) / n
+  have : ∀ {l : ℤ}, 0 ≤ l → fract ((l : k) / n) = ↑(l % n) / n
   intros l hl
   obtain ⟨l₀, rfl | rfl⟩ := l.eq_nat_or_neg
   · rw [cast_natCast, ← natCast_mod, cast_natCast, fract_div_natCast_eq_div_natCast_mod]
@@ -1014,7 +1014,7 @@ theorem fract_div_intCast_eq_div_intCast_mod {m : ℤ} {n : ℕ} :
   · exact this (ofNat_nonneg m₀)
   let q := ⌈↑m₀ / (n : k)⌉
   let m₁ := q * ↑n - (↑m₀ : ℤ)
-  have hm₁  : 0 ≤ m₁
+  have hm₁ : 0 ≤ m₁
   simpa [m₁, ← @cast_le k, ← div_le_iff hn] using FloorRing.gc_ceil_coe.le_u_l _
   calc
     fract ((Int.cast (-(m₀ : ℤ)) : k) / (n : k))
@@ -1391,7 +1391,7 @@ theorem abs_sub_round_div_natCast_eq {m n : ℕ} :
     |(m : α) / n - round ((m : α) / n)| = ↑(min (m % n) (n - m % n)) / n := by
   rcases n.eq_zero_or_pos with (rfl | hn)
   · simp
-  have hn'  : 0 < (n : α)
+  have hn' : 0 < (n : α)
   norm_cast
   rw [abs_sub_round_eq_min, Nat.cast_min, ← min_div_div_right hn'.le,
     fract_div_natCast_eq_div_natCast_mod, Nat.cast_sub (m.mod_lt hn).le, sub_div, div_self hn'.ne']
@@ -1414,7 +1414,7 @@ variable [LinearOrderedSemiring α] [LinearOrderedSemiring β] [FloorSemiring α
 variable [FunLike F α β] [RingHomClass F α β] {a : α} {b : β}
 
 theorem floor_congr (h : ∀ n : ℕ, (n : α) ≤ a ↔ (n : β) ≤ b) : ⌊a⌋₊ = ⌊b⌋₊ := by
-  have h₀  : 0 ≤ a ↔ 0 ≤ b
+  have h₀ : 0 ≤ a ↔ 0 ≤ b
   simpa only [cast_zero] using h 0
   obtain ha | ha := lt_or_le a 0
   · rw [floor_of_nonpos ha.le, floor_of_nonpos (le_of_not_le <| h₀.not.mp ha.not_le)]

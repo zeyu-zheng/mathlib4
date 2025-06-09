@@ -227,7 +227,7 @@ variable {p} [hp : Fact (0 < p)]
 
 theorem norm_div_natCast {m n : ℕ} :
     ‖(↑(↑m / ↑n * p) : AddCircle p)‖ = p * (↑(min (m % n) (n - m % n)) / n) := by
-  have  : p⁻¹ * (↑m / ↑n * p) = ↑m / ↑n
+  have : p⁻¹ * (↑m / ↑n * p) = ↑m / ↑n
   rw [mul_comm _ p, inv_mul_cancel_left₀ hp.out.ne.symm]
   rw [norm_eq' p hp.out, this, abs_sub_round_div_natCast_eq]
 

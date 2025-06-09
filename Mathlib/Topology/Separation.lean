@@ -858,11 +858,11 @@ theorem tendsto_const_nhds_iff [T1Space X] {l : Filter Y} [NeBot l] {c d : X} :
 /-- A point with a finite neighborhood has to be isolated. -/
 theorem isOpen_singleton_of_finite_mem_nhds [T1Space X] (x : X)
     {s : Set X} (hs : s ∈ 𝓝 x) (hsf : s.Finite) : IsOpen ({x} : Set X) := by
-  have A  : {x} ⊆ s
+  have A : {x} ⊆ s
   simp only [singleton_subset_iff, mem_of_mem_nhds hs]
   have B : IsClosed (s \ {x}) := (hsf.subset diff_subset).isClosed
   have C : (s \ {x})ᶜ ∈ 𝓝 x := B.isOpen_compl.mem_nhds fun h => h.2 rfl
-  have D  : {x} ∈ 𝓝 x
+  have D : {x} ∈ 𝓝 x
   simpa only [← diff_eq, diff_diff_cancel_left A] using inter_mem hs C
   rwa [← mem_interior_iff_mem_nhds, ← singleton_subset_iff, subset_interior_iff_isOpen] at D
 
@@ -963,7 +963,7 @@ lemma isClosed_singleton_inter [T1Space X] {A : Set X} {a : X} : IsClosed ({a} �
 
 theorem singleton_mem_nhdsWithin_of_mem_discrete {s : Set X} [DiscreteTopology s] {x : X}
     (hx : x ∈ s) : {x} ∈ 𝓝[s] x := by
-  have  : ({⟨x, hx⟩} : Set s) ∈ 𝓝 (⟨x, hx⟩ : s)
+  have : ({⟨x, hx⟩} : Set s) ∈ 𝓝 (⟨x, hx⟩ : s)
   simp [nhds_discrete]
   simpa only [nhdsWithin_eq_map_subtype_coe hx, image_singleton] using
     @image_mem_map _ _ _ ((↑) : s → X) _ this
@@ -1127,7 +1127,7 @@ theorem IsCompact.binary_compact_cover {K U V : Set X}
     (hK : IsCompact K) (hU : IsOpen U) (hV : IsOpen V) (h2K : K ⊆ U ∪ V) :
     ∃ K₁ K₂ : Set X, IsCompact K₁ ∧ IsCompact K₂ ∧ K₁ ⊆ U ∧ K₂ ⊆ V ∧ K = K₁ ∪ K₂ := by
   have hK' : IsCompact (closure K) := hK.closure
-  have  : SeparatedNhds (closure K \ U) (closure K \ V)
+  have : SeparatedNhds (closure K \ U) (closure K \ V)
   apply SeparatedNhds.of_isCompact_isCompact_isClosed (hK'.diff hU) (hK'.diff hV)
     (isClosed_closure.sdiff hV)
   rw [disjoint_iff_inter_eq_empty, diff_inter_diff, diff_eq_empty]
@@ -1871,7 +1871,7 @@ theorem regularSpace_TFAE (X : Type u) [TopologicalSpace X] :
     exact ⟨closure U, mem_of_superset hU subset_closure, isClosed_closure, hUs⟩
   tfae_have 4 → 2
   · intro H s a ha
-    have ha'  : sᶜ ∈ 𝓝 a
+    have ha' : sᶜ ∈ 𝓝 a
     rwa [← mem_interior_iff_mem_nhds, interior_compl]
     rcases H _ _ ha' with ⟨U, hU, hUc, hUs⟩
     refine disjoint_of_disjoint_of_mem disjoint_compl_left ?_ hU
@@ -1949,7 +1949,7 @@ theorem hasBasis_opens_closure (x : X) : (𝓝 x).HasBasis (fun s => x ∈ s ∧
 
 theorem IsCompact.exists_isOpen_closure_subset {K U : Set X} (hK : IsCompact K) (hU : U ∈ 𝓝ˢ K) :
     ∃ V, IsOpen V ∧ K ⊆ V ∧ closure V ⊆ U := by
-  have hd  : Disjoint (𝓝ˢ K) (𝓝ˢ Uᶜ)
+  have hd : Disjoint (𝓝ˢ K) (𝓝ˢ Uᶜ)
   simpa [hK.disjoint_nhdsSet_left, disjoint_nhds_nhdsSet,
     ← subset_interior_iff_mem_nhdsSet] using hU
   rcases ((hasBasis_nhdsSet _).disjoint_iff (hasBasis_nhdsSet _)).1 hd
@@ -2034,7 +2034,7 @@ lemma IsClosed.HasSeparatingCover {s t : Set X} [r : RegularSpace X] [LindelofSp
     exact hasSeparatingCovers_iff_separatedNhds.mpr (SeparatedNhds.empty_left t) |>.1
   -- This is almost `HasSeparatingCover`, but is not countable. We define for all `a : X` for use
   -- with `IsLindelof.indexed_countable_subcover` momentarily.
-  have (a  : X) : ∃ n : Set X, IsOpen n ∧ Disjoint (closure n) t ∧ (a ∈ s → a ∈ n)
+  have (a : X) : ∃ n : Set X, IsOpen n ∧ Disjoint (closure n) t ∧ (a ∈ s → a ∈ n)
   wlog ains : a ∈ s
   · exact ⟨∅, isOpen_empty, SeparatedNhds.empty_left t |>.disjoint_closure_left, fun a ↦ ains a⟩
   obtain ⟨n, nna, ncl, nsubkc⟩ := ((regularSpace_TFAE X).out 0 3 :).mp r a tᶜ <|
@@ -2074,7 +2074,7 @@ theorem exists_open_between_and_isCompact_closure [LocallyCompactSpace X] [Regul
     {K U : Set X} (hK : IsCompact K) (hU : IsOpen U) (hKU : K ⊆ U) :
     ∃ V, IsOpen V ∧ K ⊆ V ∧ closure V ⊆ U ∧ IsCompact (closure V) := by
   rcases exists_compact_closed_between hK hU hKU with ⟨L, L_compact, L_closed, KL, LU⟩
-  have A  : closure (interior L) ⊆ L
+  have A : closure (interior L) ⊆ L
   apply (closure_mono interior_subset).trans (le_of_eq L_closed.closure_eq)
   refine ⟨interior L, isOpen_interior, KL, A.trans LU, ?_⟩
   exact L_compact.closure_of_subset interior_subset
@@ -2376,7 +2376,7 @@ theorem Disjoint.hasSeparatingCover_closed_gdelta_right {s t : Set X} [NormalSpa
     apply normal_exists_closure_subset t_cl (T_open (g n).1 (g n).2)
     rw [T_int]
     exact sInter_subset_of_mem (g n).2
-  have clg'_int  : t = ⋂ i, closure (g' i)
+  have clg'_int : t = ⋂ i, closure (g' i)
   apply (subset_iInter fun n ↦ (clt_sub_g' n).trans subset_closure).antisymm
   rw [T_int]
   refine subset_sInter fun t tinT ↦ ?_
@@ -2553,12 +2553,12 @@ theorem loc_compact_Haus_tot_disc_of_zero_dim [TotallyDisconnectedSpace H] :
   lift x to s using interior_subset xs
   haveI : CompactSpace s := isCompact_iff_compactSpace.1 comp
   obtain ⟨V : Set s, VisClopen, Vx, V_sub⟩ := compact_exists_isClopen_in_isOpen u_open_in_s xs
-  have VisClopen'  : IsClopen (((↑) : s → H) '' V)
+  have VisClopen' : IsClopen (((↑) : s → H) '' V)
   refine ⟨comp.isClosed.closedEmbedding_subtype_val.closed_iff_image_closed.1 VisClopen.1, ?_⟩
   let v : Set u := ((↑) : u → s) ⁻¹' V
   have : ((↑) : u → H) = ((↑) : s → H) ∘ ((↑) : u → s) := rfl
   have f0 : Embedding ((↑) : u → H) := embedding_subtype_val.comp embedding_subtype_val
-  have f1  : OpenEmbedding ((↑) : u → H)
+  have f1 : OpenEmbedding ((↑) : u → H)
   refine ⟨f0, ?_⟩
   · have : Set.range ((↑) : u → H) = interior s := by
       rw [this, Set.range_comp, Subtype.range_coe, Subtype.image_preimage_coe]
@@ -2566,7 +2566,7 @@ theorem loc_compact_Haus_tot_disc_of_zero_dim [TotallyDisconnectedSpace H] :
     rw [this]
     apply isOpen_interior
   have f2 : IsOpen v := VisClopen.2.preimage continuous_subtype_val
-  have f3  : ((↑) : s → H) '' V = ((↑) : u → H) '' v
+  have f3 : ((↑) : s → H) '' V = ((↑) : u → H) '' v
   rw [this, image_comp, Subtype.image_preimage_coe, inter_eq_self_of_subset_right V_sub]
   rw [f3]
   apply f1.isOpenMap v f2

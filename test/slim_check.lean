@@ -33,7 +33,7 @@ example (z : Nat) (h : z ≤ 37) : z ≤ 37 := by
 -- Hopefully Henrik Böving and/or Simon Hudon could look at this.
 
 example : true := by
-  have  : ∀ i j : ℕ, i < j → j < i
+  have : ∀ i j : ℕ, i < j → j < i
   success_if_fail_with_msg "
 ===================
 Found problems!
@@ -49,7 +49,7 @@ issue: 1 < 0 does not hold
   trivial
 
 example : true := by
-  have  : (∀ x : ℕ, 2 ∣ x → x < 100)
+  have : (∀ x : ℕ, 2 ∣ x → x < 100)
   success_if_fail_with_msg "
 ===================
 Found problems!
@@ -82,7 +82,7 @@ issue: 104 < 100 does not hold
 --   trivial
 
 example (x : ℕ) (_h : 2 ∣ x) : true := by
-  have  : x < 100
+  have : x < 100
   success_if_fail_with_msg
   "
 ===================
@@ -98,7 +98,7 @@ issue: 104 < 100 does not hold
   trivial
 
 example (α : Type) (xs ys : List α) : true := by
-  have  : xs ++ ys = ys ++ xs
+  have : xs ++ ys = ys ++ xs
   success_if_fail_with_msg
   "
 ===================
@@ -154,7 +154,7 @@ open Function SlimCheck
 --   trivial
 
 example (f : ℤ → ℤ) (_h : Injective f) (g : ℤ → ℤ) (_h : Injective g) (i : ℤ) : true := by
-  have  : f i = g i
+  have : f i = g i
   success_if_fail_with_msg
 "
 ===================
@@ -173,7 +173,7 @@ issue: 1 = 3 does not hold
   trivial
 
 example (f : ℤ → ℤ) (_h : Injective f) : true := by
-  have  : Monotone f
+  have : Monotone f
   success_if_fail_with_msg
   "
 ===================
@@ -192,7 +192,7 @@ issue: 8 ≤ 0 does not hold
   trivial
 
 example (f : ℤ → ℤ) : true := by
-  have  : Injective f
+  have : Injective f
   success_if_fail_with_msg
   "
 ===================
@@ -210,7 +210,7 @@ issue: 0 = 1 does not hold
   trivial
 
 example (f : ℤ → ℤ) : true := by
-  have  : Monotone f
+  have : Monotone f
   success_if_fail_with_msg
   "
 ===================
@@ -229,7 +229,7 @@ issue: 5 ≤ -1 does not hold
 
 open scoped List in
 example (xs ys : List ℤ) (_h : xs ~ ys) : true := by
-  have  : Array.qsort ⟨xs⟩ (fun x y => x != y) = Array.qsort ⟨ys⟩ (fun x y => x != y)
+  have : Array.qsort ⟨xs⟩ (fun x y => x != y) = Array.qsort ⟨ys⟩ (fun x y => x != y)
   success_if_fail_with_msg
   "
 ===================
@@ -246,7 +246,7 @@ issue: #[0, -2] = #[-2, 0] does not hold
   trivial
 
 example (x y : ℕ) : true := by
-  have  : y ≤ x → x + y < 100
+  have : y ≤ x → x + y < 100
   success_if_fail_with_msg
   "
 ===================
@@ -263,7 +263,7 @@ issue: 113 < 100 does not hold
   trivial
 
 example (x : ℤ) : true := by
-  have  : x ≤ 3 → 3 ≤ x
+  have : x ≤ 3 → 3 ≤ x
   success_if_fail_with_msg
   "
 ===================
@@ -279,7 +279,7 @@ issue: 3 ≤ 0 does not hold
   trivial
 
 example (x y : ℤ) : true := by
-  have  : y ≤ x → x + y < 100
+  have : y ≤ x → x + y < 100
   success_if_fail_with_msg
   "
 ===================
@@ -296,7 +296,7 @@ issue: 106 < 100 does not hold
   trivial
 
 example (x y : Prop) : true := by
-  have  : x ∨ y → y ∧ x
+  have : x ∨ y → y ∧ x
   success_if_fail_with_msg
   "
 ===================
@@ -313,7 +313,7 @@ issue: false does not hold
   trivial
 
 example (x y : Prop) : true := by
-  have  : (¬x ↔ y) → y ∧ x
+  have : (¬x ↔ y) → y ∧ x
   success_if_fail_with_msg
   "
 ===================
@@ -331,7 +331,7 @@ issue: false does not hold
 
 example (x y : Prop) : true := by
   -- deterministic
-  have  : (x ↔ y) → y ∨ x
+  have : (x ↔ y) → y ∨ x
   success_if_fail_with_msg
   "
 ===================
@@ -350,7 +350,7 @@ issue: false does not hold
 
 example (x y : Prop) : true := by
   -- deterministic
-  have  : y ∨ x
+  have : y ∨ x
   success_if_fail_with_msg
   "
 ===================
@@ -367,7 +367,7 @@ issue: false does not hold
   trivial
 
 example (x y : Prop) : true := by
-  have  : x ↔ y
+  have : x ↔ y
   success_if_fail_with_msg
   "
 ===================
@@ -387,7 +387,7 @@ issue: true ≠ true does not hold
 attribute [-instance] Finsupp.instRepr in
 
 example (f : ℕ →₀ ℕ) : true := by
-  have  : f = 0
+  have : f = 0
   success_if_fail_with_msg
   "
 ===================
@@ -402,7 +402,7 @@ issue: ⋯ does not hold
   trivial
 
 example (f : Π₀ _n : ℕ, ℕ) : true := by
-  have  : f.update 0 0 = 0
+  have : f.update 0 0 = 0
   success_if_fail_with_msg
   "
 ===================
@@ -417,7 +417,7 @@ issue: ⋯ does not hold
   trivial
 
 example (n : ℕ) : true := by
-  have  : ∑ f : Unit → Fin (n + 1), f () = 0
+  have : ∑ f : Unit → Fin (n + 1), f () = 0
   success_if_fail_with_msg "
 ===================
 Found problems!

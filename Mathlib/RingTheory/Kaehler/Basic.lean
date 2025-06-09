@@ -116,7 +116,7 @@ theorem KaehlerDifferential.submodule_span_range_eq_ideal :
     refine TensorProduct.induction_on x ?_ ?_ ?_
     · rw [map_zero, TensorProduct.zero_tmul, sub_zero]; exact zero_mem _
     · intro x y
-      have  : x ⊗ₜ[R] y - (x * y) ⊗ₜ[R] (1 : S) = x • ((1 : S) ⊗ₜ y - y ⊗ₜ (1 : S))
+      have : x ⊗ₜ[R] y - (x * y) ⊗ₜ[R] (1 : S) = x • ((1 : S) ⊗ₜ y - y ⊗ₜ (1 : S))
       simp_rw [smul_sub, TensorProduct.smul_tmul', smul_eq_mul, mul_one]
       rw [TensorProduct.lmul'_apply_tmul, this]
       refine Submodule.smul_mem _ x ?_
@@ -290,7 +290,7 @@ theorem Derivation.liftKaehlerDifferential_unique (f f' : Ω[S⁄R] →ₗ[S] M)
     f = f' := by
   apply LinearMap.ext
   intro x
-  have  : x ∈ Submodule.span S (Set.range <| KaehlerDifferential.D R S)
+  have : x ∈ Submodule.span S (Set.range <| KaehlerDifferential.D R S)
   rw [KaehlerDifferential.span_range_derivation]; trivial
   refine Submodule.span_induction this ?_ ?_ ?_ ?_
   · rintro _ ⟨x, rfl⟩; exact congr_arg (fun D : Derivation R S M => D x) hf
@@ -838,7 +838,7 @@ theorem KaehlerDifferential.range_kerCotangentToTensor
     simp only [Finset.filter_congr_decidable, TensorProduct.lid_symm_apply, LinearMap.rTensor_tmul,
       AlgHom.toLinearMap_apply, _root_.map_one, LinearMap.mem_range]
     simp only [map_sum, Finsupp.total_single]
-    have  : (x.support.filter (algebraMap A B · = c)).sum x ∈ RingHom.ker (algebraMap A B)
+    have : (x.support.filter (algebraMap A B · = c)).sum x ∈ RingHom.ker (algebraMap A B)
     simpa [Finsupp.mapDomain, Finsupp.sum, Finsupp.finset_sum_apply, RingHom.mem_ker,
       Finsupp.single_apply, ← Finset.sum_filter] using DFunLike.congr_fun hx c
     obtain ⟨a, ha⟩ := h c

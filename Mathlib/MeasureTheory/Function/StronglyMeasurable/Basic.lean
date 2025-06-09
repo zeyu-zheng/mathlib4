@@ -195,7 +195,7 @@ theorem tendsto_approxBounded_of_norm_le {β} {f : α → β} [NormedAddCommGrou
   by_cases hfx0 : ‖f x‖ = 0
   · rw [norm_eq_zero] at hfx0
     rw [hfx0] at h_tendsto ⊢
-    have h_tendsto_norm  : Tendsto (fun n => ‖hf.approx n x‖) atTop (𝓝 0)
+    have h_tendsto_norm : Tendsto (fun n => ‖hf.approx n x‖) atTop (𝓝 0)
     convert h_tendsto.norm
     rw [norm_zero]
     refine squeeze_zero_norm (fun n => ?_) h_tendsto_norm
@@ -271,7 +271,7 @@ theorem finStronglyMeasurable_of_set_sigmaFinite [TopologicalSpace β] [Zero β]
   have hS_meas : ∀ n, MeasurableSet (S n) := measurable_spanningSets (μ.restrict t)
   let f_approx := hf_meas.approx
   let fs n := SimpleFunc.restrict (f_approx n) (S n ∩ t)
-  have h_fs_t_compl  : ∀ n, ∀ x, x ∉ t → fs n x = 0
+  have h_fs_t_compl : ∀ n, ∀ x, x ∉ t → fs n x = 0
   intro n x hxt
   rw [SimpleFunc.restrict_apply _ ((hS_meas n).inter ht)]
   refine Set.indicator_of_not_mem ?_ _
@@ -841,10 +841,10 @@ theorem stronglyMeasurable_in_set {m : MeasurableSpace α} [TopologicalSpace β]
     ∃ fs : ℕ → α →ₛ β,
       (∀ x, Tendsto (fun n => fs n x) atTop (𝓝 (f x))) ∧ ∀ x ∉ s, ∀ n, fs n x = 0 := by
   let g_seq_s : ℕ → @SimpleFunc α m β := fun n => (hf.approx n).restrict s
-  have hg_eq  : ∀ x ∈ s, ∀ n, g_seq_s n x = hf.approx n x
+  have hg_eq : ∀ x ∈ s, ∀ n, g_seq_s n x = hf.approx n x
   intro x hx n
   rw [SimpleFunc.coe_restrict _ hs, Set.indicator_of_mem hx]
-  have hg_zero  : ∀ x ∉ s, ∀ n, g_seq_s n x = 0
+  have hg_zero : ∀ x ∉ s, ∀ n, g_seq_s n x = 0
   intro x hx n
   rw [SimpleFunc.coe_restrict _ hs, Set.indicator_of_not_mem hx]
   refine ⟨g_seq_s, fun x => ?_, hg_zero⟩
@@ -862,7 +862,7 @@ theorem stronglyMeasurable_of_measurableSpace_le_on {α E} {m m₂ : MeasurableS
     (hs : ∀ t, MeasurableSet[m] (s ∩ t) → MeasurableSet[m₂] (s ∩ t))
     (hf : StronglyMeasurable[m] f) (hf_zero : ∀ x ∉ s, f x = 0) :
     StronglyMeasurable[m₂] f := by
-  have hs_m₂  : MeasurableSet[m₂] s
+  have hs_m₂ : MeasurableSet[m₂] s
   rw [← Set.inter_univ s]
   refine hs Set.univ ?_
   rwa [Set.inter_univ]
@@ -1815,11 +1815,11 @@ theorem measurable_uncurry_of_continuous_of_measurable {α β ι : Type*} [Topol
     refine ⟨h_str_meas.approx, fun j x => ?_⟩
     exact ((hu_cont x).tendsto j).comp (h_str_meas.tendsto_approx j)
   let U (n : ℕ) (p : ι × α) := u (t_sf n p.fst) p.snd
-  have h_tendsto  : Tendsto U atTop (𝓝 fun p => u p.fst p.snd)
+  have h_tendsto : Tendsto U atTop (𝓝 fun p => u p.fst p.snd)
   rw [tendsto_pi_nhds]
   exact fun p => ht_sf p.fst p.snd
   refine measurable_of_tendsto_metrizable (fun n => ?_) h_tendsto
-  have h_meas  : Measurable fun p : (t_sf n).range × α => u (↑p.fst) p.snd
+  have h_meas : Measurable fun p : (t_sf n).range × α => u (↑p.fst) p.snd
   have :
     (fun p : ↥(t_sf n).range × α => u (↑p.fst) p.snd) =
       (fun p : α × (t_sf n).range => u (↑p.snd) p.fst) ∘ Prod.swap :=
@@ -1847,11 +1847,11 @@ theorem stronglyMeasurable_uncurry_of_continuous_of_stronglyMeasurable {α β ι
     refine ⟨h_str_meas.approx, fun j x => ?_⟩
     exact ((hu_cont x).tendsto j).comp (h_str_meas.tendsto_approx j)
   let U (n : ℕ) (p : ι × α) := u (t_sf n p.fst) p.snd
-  have h_tendsto  : Tendsto U atTop (𝓝 fun p => u p.fst p.snd)
+  have h_tendsto : Tendsto U atTop (𝓝 fun p => u p.fst p.snd)
   rw [tendsto_pi_nhds]
   exact fun p => ht_sf p.fst p.snd
   refine stronglyMeasurable_of_tendsto _ (fun n => ?_) h_tendsto
-  have h_str_meas  : StronglyMeasurable fun p : (t_sf n).range × α => u (↑p.fst) p.snd
+  have h_str_meas : StronglyMeasurable fun p : (t_sf n).range × α => u (↑p.fst) p.snd
   refine stronglyMeasurable_iff_measurable_separable.2 ⟨?_, ?_⟩
   · have :
       (fun p : ↥(t_sf n).range × α => u (↑p.fst) p.snd) =

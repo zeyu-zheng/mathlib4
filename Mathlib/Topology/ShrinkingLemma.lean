@@ -157,7 +157,7 @@ theorem le_chainSup {c : Set (PartialRefinement u s)} (hc : IsChain (· ≤ ·) 
 `i ∉ v.carrier`, then there exists a partial refinement that is strictly greater than `v`. -/
 theorem exists_gt (v : PartialRefinement u s) (hs : IsClosed s) (i : ι) (hi : i ∉ v.carrier) :
     ∃ v' : PartialRefinement u s, v < v' := by
-  have I  : (s ∩ ⋂ (j) (_ : j ≠ i), (v j)ᶜ) ⊆ v i
+  have I : (s ∩ ⋂ (j) (_ : j ≠ i), (v j)ᶜ) ⊆ v i
   simp only [subset_def, mem_inter_iff, mem_iInter, and_imp]
   intro x hxs H
   rcases mem_iUnion.1 (v.subset_iUnion hxs) with ⟨j, hj⟩

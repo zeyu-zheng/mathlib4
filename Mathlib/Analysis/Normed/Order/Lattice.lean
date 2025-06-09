@@ -191,7 +191,7 @@ lemma continuous_posPart : Continuous (posPart : α → α) := lipschitzWith_pos
 lemma continuous_negPart : Continuous (negPart : α → α) := lipschitzWith_negPart.continuous
 
 lemma isClosed_nonneg : IsClosed {x : α | 0 ≤ x} := by
-  have  : {x : α | 0 ≤ x} = negPart ⁻¹' {0}
+  have : {x : α | 0 ≤ x} = negPart ⁻¹' {0}
   ext; simp [negPart_eq_zero]
   rw [this]
   exact isClosed_singleton.preimage continuous_negPart

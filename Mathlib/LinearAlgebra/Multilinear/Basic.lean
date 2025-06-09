@@ -158,7 +158,7 @@ protected theorem map_smul [DecidableEq ι] (m : ∀ i, M₁ i) (i : ι) (c : R)
 
 theorem map_coord_zero {m : ∀ i, M₁ i} (i : ι) (h : m i = 0) : f m = 0 := by
   classical
-    have  : (0 : R) • (0 : M₁ i) = 0
+    have : (0 : R) • (0 : M₁ i) = 0
     simp
     rw [← update_eq_self i m, h, ← this, f.map_smul, zero_smul R (M := M₂)]
 
@@ -459,10 +459,10 @@ theorem map_sum_finset_aux [DecidableEq ι] [Fintype ι] {n : ℕ} (h : (∑ i, 
   -- If one of the sets is empty, then all the sums are zero
   by_cases Ai_empty : ∃ i, A i = ∅
   · rcases Ai_empty with ⟨i, hi⟩
-    have  : ∑ j ∈ A i, g i j = 0
+    have : ∑ j ∈ A i, g i j = 0
     rw [hi, Finset.sum_empty]
     rw [f.map_coord_zero i this]
-    have  : piFinset A = ∅
+    have : piFinset A = ∅
     refine Finset.eq_empty_of_forall_not_mem fun r hr => ?_
     have : r i ∈ A i := mem_piFinset.mp hr i
     simp [hi] at this
@@ -473,7 +473,7 @@ theorem map_sum_finset_aux [DecidableEq ι] [Fintype ι] {n : ℕ} (h : (∑ i, 
   by_cases Ai_singleton : ∀ i, (A i).card ≤ 1
   · have Ai_card : ∀ i, (A i).card = 1 := by
       intro i
-      have pos  : Finset.card (A i) ≠ 0
+      have pos : Finset.card (A i) ≠ 0
       simp [Finset.card_eq_zero, Ai_empty i]
       have : Finset.card (A i) ≤ 1 := Ai_singleton i
       exact le_antisymm this (Nat.succ_le_of_lt (_root_.pos_iff_ne_zero.mpr pos))
@@ -481,7 +481,7 @@ theorem map_sum_finset_aux [DecidableEq ι] [Fintype ι] {n : ℕ} (h : (∑ i, 
       ∀ r : ∀ i, α i, r ∈ piFinset A → (f fun i => g i (r i)) = f fun i => ∑ j ∈ A i, g i j := by
       intro r hr
       congr with i
-      have  : ∀ j ∈ A i, g i j = g i (r i)
+      have : ∀ j ∈ A i, g i j = g i (r i)
       intro j hj
       congr
       apply Finset.card_le_one_iff.1 (Ai_singleton i) hj
@@ -1173,7 +1173,7 @@ theorem mkPiRing_apply [Fintype ι] (z : M₂) (m : ι → R) :
 theorem mkPiRing_apply_one_eq_self [Fintype ι] (f : MultilinearMap R (fun _ : ι => R) M₂) :
     MultilinearMap.mkPiRing R ι (f fun _ => 1) = f := by
   ext m
-  have  : m = fun i => m i • (1 : R)
+  have : m = fun i => m i • (1 : R)
   ext j
   simp
   conv_rhs => rw [this, f.map_smul_univ]

@@ -165,9 +165,9 @@ function, then there exists a bounded continuous function `g : Y →ᵇ ℝ` of 
 such that the distance between `g ∘ e` and `f` is at most `(2 / 3) * ‖f‖`. -/
 theorem tietze_extension_step (f : X →ᵇ ℝ) (e : C(X, Y)) (he : ClosedEmbedding e) :
     ∃ g : Y →ᵇ ℝ, ‖g‖ ≤ ‖f‖ / 3 ∧ dist (g.compContinuous e) f ≤ 2 / 3 * ‖f‖ := by
-  have h3  : (0 : ℝ) < 3
+  have h3 : (0 : ℝ) < 3
   norm_num1
-  have h23  : 0 < (2 / 3 : ℝ)
+  have h23 : 0 < (2 / 3 : ℝ)
   norm_num1
   -- In the trivial case `f = 0`, we take `g = 0`
   rcases eq_or_ne f 0 with (rfl | hf)
@@ -324,7 +324,7 @@ theorem exists_extension_forall_exists_le_ge_of_closedEmbedding [Nonempty X] (f 
   set c := (a + b) / 2
   have hac : a < c := left_lt_add_div_two.2 hlt
   have hcb : c < b := add_div_two_lt_right.2 hlt
-  have hsub  : c - a = b - c
+  have hsub : c - a = b - c
   field_simp [c]
   ring
   /- Due to `exists_extension_forall_mem_Icc_of_closedEmbedding`, there exists an extension `g`
@@ -339,7 +339,7 @@ theorem exists_extension_forall_exists_le_ge_of_closedEmbedding [Nonempty X] (f 
     /- Otherwise, `g ⁻¹' {a}` is disjoint with `range e ∪ g ⁻¹' (Ici c)`, hence there exists a
         function `dg : Y → ℝ` such that `dg ∘ e = 0`, `dg y = 0` whenever `c ≤ g y`, `dg y = c - a`
         whenever `g y = a`, and `0 ≤ dg y ≤ c - a` for all `y`.  -/
-    have hd  : Disjoint (range e ∪ g ⁻¹' Ici c) (g ⁻¹' {a})
+    have hd : Disjoint (range e ∪ g ⁻¹' Ici c) (g ⁻¹' {a})
     refine disjoint_union_left.2 ⟨?_, Disjoint.preimage _ ?_⟩
     · rw [Set.disjoint_left]
       rintro _ ⟨x, rfl⟩ (rfl : g (e x) = a)
@@ -353,7 +353,7 @@ theorem exists_extension_forall_exists_le_ge_of_closedEmbedding [Nonempty X] (f 
       intro x
       simp [dg0 (Or.inl <| mem_range_self _), ← hgf]
     refine ⟨g + dg, fun y => ?_, funext hgf⟩
-    have hay  : a < (g + dg) y
+    have hay : a < (g + dg) y
     rcases (hg_mem y).1.eq_or_lt with (rfl | hlt)
     · refine (lt_add_iff_pos_right _).2 ?_
       calc
@@ -372,7 +372,7 @@ theorem exists_extension_forall_exists_le_ge_of_closedEmbedding [Nonempty X] (f 
   choose xl hxl hgb using hg_mem
   rcases em (∃ x, f x = b) with (⟨x, rfl⟩ | hb')
   · exact ⟨g, fun y => ⟨xl y, x, hxl y, hgb y⟩, hgf⟩
-  have hd  : Disjoint (range e ∪ g ⁻¹' Iic c) (g ⁻¹' {b})
+  have hd : Disjoint (range e ∪ g ⁻¹' Iic c) (g ⁻¹' {b})
   refine disjoint_union_left.2 ⟨?_, Disjoint.preimage _ ?_⟩
   · rw [Set.disjoint_left]
     rintro _ ⟨x, rfl⟩ (rfl : g (e x) = b)
@@ -386,7 +386,7 @@ theorem exists_extension_forall_exists_le_ge_of_closedEmbedding [Nonempty X] (f 
     intro x
     simp [dg0 (Or.inl <| mem_range_self _), ← hgf]
   refine ⟨g - dg, fun y => ?_, funext hgf⟩
-  have hyb  : (g - dg) y < b
+  have hyb : (g - dg) y < b
   rcases (hgb y).eq_or_lt with (rfl | hlt)
   · refine (sub_lt_self_iff _).2 ?_
     calc

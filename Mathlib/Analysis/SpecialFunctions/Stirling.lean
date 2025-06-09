@@ -119,13 +119,13 @@ set_option maxHeartbeats 400000 in
 -/
 theorem log_stirlingSeq_sub_log_stirlingSeq_succ (n : ℕ) :
     log (stirlingSeq (n + 1)) - log (stirlingSeq (n + 2)) ≤ 1 / (4 * (↑(n + 1) : ℝ) ^ 2) := by
-  have h₁  : (0 : ℝ) < 4 * ((n : ℝ) + 1) ^ 2
+  have h₁ : (0 : ℝ) < 4 * ((n : ℝ) + 1) ^ 2
   positivity
-  have h₃  : (0 : ℝ) < (2 * ((n : ℝ) + 1) + 1) ^ 2
+  have h₃ : (0 : ℝ) < (2 * ((n : ℝ) + 1) + 1) ^ 2
   positivity
-  have h₂  : (0 : ℝ) < 1 - (1 / (2 * ((n : ℝ) + 1) + 1)) ^ 2
+  have h₂ : (0 : ℝ) < 1 - (1 / (2 * ((n : ℝ) + 1) + 1)) ^ 2
   rw [← mul_lt_mul_right h₃]
-  have H  : 0 < (2 * ((n : ℝ) + 1) + 1) ^ 2 - 1
+  have H : 0 < (2 * ((n : ℝ) + 1) + 1) ^ 2 - 1
   nlinarith [@cast_nonneg ℝ _ n]
   convert H using 1 <;> field_simp [h₃.ne']
   refine (log_stirlingSeq_diff_le_geo_sum n).trans ?_
@@ -144,9 +144,9 @@ theorem log_stirlingSeq_bounded_aux :
   use 1 / 4 * d
   let log_stirlingSeq' : ℕ → ℝ := fun k => log (stirlingSeq (k + 1))
   intro n
-  have h₁ k  : log_stirlingSeq' k - log_stirlingSeq' (k + 1) ≤ 1 / 4 * (1 / (↑(k + 1) : ℝ) ^ 2)
+  have h₁ k : log_stirlingSeq' k - log_stirlingSeq' (k + 1) ≤ 1 / 4 * (1 / (↑(k + 1) : ℝ) ^ 2)
   convert log_stirlingSeq_sub_log_stirlingSeq_succ k using 1; field_simp
-  have h₂  : (∑ k ∈ range n, 1 / (↑(k + 1) : ℝ) ^ 2) ≤ d
+  have h₂ : (∑ k ∈ range n, 1 / (↑(k + 1) : ℝ) ^ 2) ≤ d
   have := (summable_nat_add_iff 1).mpr <| Real.summable_one_div_nat_pow.mpr one_lt_two
   exact sum_le_tsum (range n) (fun k _ => by positivity) this
   calc
@@ -181,7 +181,7 @@ theorem stirlingSeq'_antitone : Antitone (stirlingSeq ∘ succ) := fun n m h =>
 /-- The limit `a` of the sequence `stirlingSeq` satisfies `0 < a` -/
 theorem stirlingSeq_has_pos_limit_a : ∃ a : ℝ, 0 < a ∧ Tendsto stirlingSeq atTop (𝓝 a) := by
   obtain ⟨x, x_pos, hx⟩ := stirlingSeq'_bounded_by_pos_constant
-  have hx'  : x ∈ lowerBounds (Set.range (stirlingSeq ∘ succ))
+  have hx' : x ∈ lowerBounds (Set.range (stirlingSeq ∘ succ))
   simpa [lowerBounds] using hx
   refine ⟨_, lt_of_lt_of_le x_pos (le_csInf (Set.range_nonempty _) hx'), ?_⟩
   rw [← Filter.tendsto_add_atTop_iff_nat 1]
@@ -210,7 +210,7 @@ theorem tendsto_self_div_two_mul_self_add_one :
 `n`-th partial product of Wallis' formula for `π / 2`. -/
 theorem stirlingSeq_pow_four_div_stirlingSeq_pow_two_eq (n : ℕ) (hn : n ≠ 0) :
     stirlingSeq n ^ 4 / stirlingSeq (2 * n) ^ 2 * (n / (2 * n + 1)) = Wallis.W n := by
-  have  : 4 = 2 * 2
+  have : 4 = 2 * 2
   rfl
   rw [stirlingSeq, this, pow_mul, stirlingSeq, Wallis.W_eq_factorial_ratio]
   simp_rw [div_pow, mul_pow]

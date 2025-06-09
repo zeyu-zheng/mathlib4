@@ -135,7 +135,7 @@ theorem mono_iff_injective {A B : NonemptyFinLinOrd.{u}} (f : A ⟶ B) :
   let g₁ : X ⟶ A := ⟨fun _ => a₁, fun _ _ _ => by rfl⟩
   let g₂ : X ⟶ A := ⟨fun _ => a₂, fun _ _ _ => by rfl⟩
   change g₁ (ULift.up (0 : Fin 1)) = g₂ (ULift.up (0 : Fin 1))
-  have eq  : g₁ ≫ f = g₂ ≫ f
+  have eq : g₁ ≫ f = g₂ ≫ f
   ext
   exact h
   rw [cancel_mono] at eq

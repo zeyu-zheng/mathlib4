@@ -155,7 +155,7 @@ theorem mono_iff_injective {X Y : CompHausLike.{u} P} (f : X ⟶ Y) :
   · intro hf x₁ x₂ h
     let g₁ : X ⟶ X := ⟨fun _ => x₁, continuous_const⟩
     let g₂ : X ⟶ X := ⟨fun _ => x₂, continuous_const⟩
-    have  : g₁ ≫ f = g₂ ≫ f
+    have : g₁ ≫ f = g₂ ≫ f
     ext; exact h
     exact ContinuousMap.congr_fun ((cancel_mono _).mp this) x₁
   · rw [← CategoryTheory.mono_iff_injective]
@@ -169,7 +169,7 @@ theorem isClosedMap {X Y : CompHausLike.{u} P} (f : X ⟶ Y) : IsClosedMap f := 
 theorem isIso_of_bijective {X Y : CompHausLike.{u} P} (f : X ⟶ Y) (bij : Function.Bijective f) :
     IsIso f := by
   let E := Equiv.ofBijective _ bij
-  have hE  : Continuous E.symm
+  have hE : Continuous E.symm
   rw [continuous_iff_isClosed]
   intro S hS
   rw [← E.image_eq_preimage]

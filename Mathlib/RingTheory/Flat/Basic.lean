@@ -124,7 +124,7 @@ lemma of_retract [f : Flat R M] (i : N →ₗ[R] M) (r : M →ₗ[R] N) (h : r.c
     Flat R N := by
   rw [iff_rTensor_injective] at *
   intro I hI
-  have h₁  : Function.Injective (lTensor R i)
+  have h₁ : Function.Injective (lTensor R i)
   apply Function.RightInverse.injective (g := (lTensor R r))
   intro x
   rw [← LinearMap.comp_apply, ← lTensor_comp, h]
@@ -139,7 +139,7 @@ lemma of_retract [f : Flat R M] (i : N →ₗ[R] M) (r : M →ₗ[R] N) (h : r.c
 
 /-- A `R`-module linearly equivalent to a flat `R`-module is flat. -/
 lemma of_linearEquiv [f : Flat R M] (e : N ≃ₗ[R] M) : Flat R N := by
-  have h  : e.symm.toLinearMap.comp e.toLinearMap = LinearMap.id
+  have h : e.symm.toLinearMap.comp e.toLinearMap = LinearMap.id
   simp
   exact of_retract _ _ _ e.toLinearMap e.symm.toLinearMap h
 
@@ -164,7 +164,7 @@ instance directSum (ι : Type v) (M : ι → Type w) [(i : ι) → AddCommGroup 
   rw [LinearEquiv.coe_toEquiv, ← LinearEquiv.coe_coe, ← LinearMap.coe_comp]
   rw [LinearEquiv.coe_toEquiv, ← LinearEquiv.coe_coe, ← LinearMap.coe_comp]
   rw [← psi_def, injective_iff_map_eq_zero ((η₁.comp ρ).comp ψ)]
-  have h₁  : ∀ (i : ι), (π i).comp ((η₁.comp ρ).comp ψ) = (η i).comp ((φ i).comp (τ i))
+  have h₁ : ∀ (i : ι), (π i).comp ((η₁.comp ρ).comp ψ) = (η i).comp ((φ i).comp (τ i))
   intro i
   apply DirectSum.linearMap_ext
   intro j

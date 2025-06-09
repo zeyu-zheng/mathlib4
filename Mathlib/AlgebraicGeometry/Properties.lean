@@ -81,7 +81,7 @@ theorem isReduced_of_isOpenImmersion {X Y : Scheme} (f : X ⟶ Y) [H : IsOpenImm
     [IsReduced Y] : IsReduced X := by
   constructor
   intro U
-  have  : U = f ⁻¹ᵁ f ''ᵁ U
+  have : U = f ⁻¹ᵁ f ''ᵁ U
   ext1; exact (Set.preimage_image_eq _ H.base_open.inj).symm
   rw [this]
   exact isReduced_of_injective (inv <| f.app (f ''ᵁ U))
@@ -90,7 +90,7 @@ theorem isReduced_of_isOpenImmersion {X Y : Scheme} (f : X ⟶ Y) [H : IsOpenImm
 instance {R : CommRingCat.{u}} [H : _root_.IsReduced R] : IsReduced (Spec R) := by
   apply (config := { allowSynthFailures := true }) isReduced_of_isReduced_stalk
   intro x; dsimp
-  have  : _root_.IsReduced (CommRingCat.of <| Localization.AtPrime (PrimeSpectrum.asIdeal x))
+  have : _root_.IsReduced (CommRingCat.of <| Localization.AtPrime (PrimeSpectrum.asIdeal x))
   dsimp; infer_instance
   exact isReduced_of_injective (StructureSheaf.stalkIso R x).hom
     (StructureSheaf.stalkIso R x).commRingCatIsoToRingEquiv.injective
@@ -264,10 +264,10 @@ theorem isIntegral_of_isOpenImmersion {X Y : Scheme} (f : X ⟶ Y) [H : IsOpenIm
     [IsIntegral Y] [Nonempty X] : IsIntegral X := by
   constructor; · infer_instance
   intro U hU
-  have  : U = f ⁻¹ᵁ f ''ᵁ U
+  have : U = f ⁻¹ᵁ f ''ᵁ U
   ext1; exact (Set.preimage_image_eq _ H.base_open.inj).symm
   rw [this]
-  have  : IsDomain Γ(Y, f ''ᵁ U)
+  have : IsDomain Γ(Y, f ''ᵁ U)
   apply (config := { allowSynthFailures := true }) IsIntegral.component_integral
   exact ⟨⟨_, _, hU.some.prop, rfl⟩⟩
   exact (asIso <| f.app (f ''ᵁ U) :

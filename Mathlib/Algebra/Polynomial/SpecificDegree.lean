@@ -23,7 +23,7 @@ variable {R : Type*} [CommRing R] [IsDomain R]
 theorem Monic.irreducible_iff_roots_eq_zero_of_degree_le_three {p : R[X]} (hp : p.Monic)
     (hp2 : 2 ≤ p.natDegree) (hp3 : p.natDegree ≤ 3) : Irreducible p ↔ p.roots = 0 := by
   have hp0 : p ≠ 0 := hp.ne_zero
-  have hp1  : p ≠ 1
+  have hp1 : p ≠ 1
   rintro rfl; rw [natDegree_one] at hp2; cases hp2
   rw [hp.irreducible_iff_lt_natDegree_lt hp1]
   simp_rw [show p.natDegree / 2 = 1 from
@@ -44,7 +44,7 @@ variable {K : Type*} [Field K]
 /-- A polynomial of degree 2 or 3 is irreducible iff it doesn't have roots. -/
 theorem irreducible_iff_roots_eq_zero_of_degree_le_three
     {p : K[X]} (hp2 : 2 ≤ p.natDegree) (hp3 : p.natDegree ≤ 3) : Irreducible p ↔ p.roots = 0 := by
-  have hp0  : p ≠ 0
+  have hp0 : p ≠ 0
   rintro rfl; rw [natDegree_zero] at hp2; cases hp2
   rw [← irreducible_mul_leadingCoeff_inv,
       (monic_mul_leadingCoeff_inv hp0).irreducible_iff_roots_eq_zero_of_degree_le_three,

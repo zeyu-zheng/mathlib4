@@ -589,7 +589,7 @@ theorem destruct_map (f : α → β) (s) : destruct (map f s) = lmap f (rmap (ma
 theorem map_id : ∀ s : Computation α, map id s = s
   | ⟨f, al⟩ => by
     apply Subtype.eq; simp only [map, comp_apply, id_eq]
-    have e  : @Option.rec α (fun _ => Option α) none some = id
+    have e : @Option.rec α (fun _ => Option α) none some = id
     ext ⟨⟩ <;> rfl
     have h : ((fun x : Option α => x) = id) := rfl
     simp [e, h, Stream'.map_id]

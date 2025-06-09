@@ -113,11 +113,11 @@ theorem Action.pretransitive_of_isConnected (X : Action FintypeCat (MonCat.of G)
     let T' : Action FintypeCat (MonCat.of G) := Action.FintypeCat.ofMulAction G (FintypeCat.of T)
     let i : T' ⟶ X := ⟨Subtype.val, fun _ ↦ rfl⟩
     have : Mono i := ConcreteCategory.mono_of_injective _ (Subtype.val_injective)
-    have  : IsIso i
+    have : IsIso i
     apply IsConnected.noTrivialComponent T' i
     apply (not_initial_iff_fiber_nonempty (Action.forget _ _) T').mpr
     exact Set.Nonempty.coe_sort (MulAction.orbit_nonempty x)
-    have hb  : Function.Bijective i.hom
+    have hb : Function.Bijective i.hom
     apply (ConcreteCategory.isIso_iff_bijective i.hom).mp
     exact map_isIso (forget₂ _ FintypeCat) i
     obtain ⟨⟨y', ⟨g, (hg : g • x = y')⟩⟩, (hy' : y' = y)⟩ := hb.surjective y
@@ -133,7 +133,7 @@ theorem Action.isConnected_of_transitive (X : FintypeCat) [MulAction G X]
     /- We show that the induced inclusion `i.hom` of finite sets is surjective, using the
     transitivity of the `G`-action. -/
     obtain ⟨(y : Y.V)⟩ := (not_initial_iff_fiber_nonempty (Action.forget _ _) Y).mp hni
-    have  : IsIso i.hom
+    have : IsIso i.hom
     refine (ConcreteCategory.isIso_iff_bijective i.hom).mpr ⟨?_, fun x' ↦ ?_⟩
     · haveI : Mono i.hom := map_mono (forget₂ _ _) i
       exact ConcreteCategory.injective_of_mono_of_preservesPullback i.hom

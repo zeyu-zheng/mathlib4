@@ -101,7 +101,7 @@ theorem FinitaryExtensive.vanKampen [FinitaryExtensive C] {F : Discrete WalkingP
     (c : Cocone F) (hc : IsColimit c) : IsVanKampenColimit c := by
   let X := F.obj ⟨WalkingPair.left⟩
   let Y := F.obj ⟨WalkingPair.right⟩
-  have  : F = pair X Y
+  have : F = pair X Y
   apply Functor.hext
   · rintro ⟨⟨⟩⟩ <;> rfl
   · rintro ⟨⟨⟩⟩ ⟨j⟩ ⟨⟨rfl : _ = j⟩⟩ <;> simp
@@ -218,7 +218,7 @@ instance types.finitaryExtensive : FinitaryExtensive (Type u) := by
     constructor
     · refine ⟨⟨hαX.symm⟩, ⟨PullbackCone.isLimitAux' _ ?_⟩⟩
       intro s
-      have  : ∀ x, ∃! y, s.fst x = Sum.inl y
+      have : ∀ x, ∃! y, s.fst x = Sum.inl y
       intro x
       cases' h : s.fst x with val val
       · simp only [Types.binaryCoproductCocone_pt, Functor.const_obj_obj, Sum.inl.injEq,
@@ -231,7 +231,7 @@ instance types.finitaryExtensive : FinitaryExtensive (Type u) := by
         fun {l'} h₁ _ => funext fun x => hl' x (l' x) (congr_fun h₁ x).symm⟩
     · refine ⟨⟨hαY.symm⟩, ⟨PullbackCone.isLimitAux' _ ?_⟩⟩
       intro s
-      have  : ∀ x, ∃! y, s.fst x = Sum.inr y
+      have : ∀ x, ∃! y, s.fst x = Sum.inr y
       intro x
       cases' h : s.fst x with val val
       · apply_fun f at h
@@ -310,7 +310,7 @@ instance finitaryExtensive_TopCat : FinitaryExtensive TopCat.{u} := by
     constructor
     · refine ⟨⟨hαX.symm⟩, ⟨PullbackCone.isLimitAux' _ ?_⟩⟩
       intro s
-      have  : ∀ x, ∃! y, s.fst x = Sum.inl y
+      have : ∀ x, ∃! y, s.fst x = Sum.inl y
       intro x
       cases' h : s.fst x with val val
       · exact ⟨val, rfl, fun y h => Sum.inl_injective h.symm⟩
@@ -363,7 +363,7 @@ theorem finitaryExtensive_of_reflective
     (isoWhiskerLeft _ (asIso adj.counit) ≪≫ Functor.rightUnitor _).hom).mp
   have : ∀ (Z : C) (i : Discrete WalkingPair) (f : Z ⟶ (colimit.cocone (pair X Y ⋙ Gr)).pt),
         PreservesLimit (cospan f ((colimit.cocone (pair X Y ⋙ Gr)).ι.app i)) Gl := by
-    have  : pair X Y ⋙ Gr = pair (Gr.obj X) (Gr.obj Y)
+    have : pair X Y ⋙ Gr = pair (Gr.obj X) (Gr.obj Y)
     apply Functor.hext
     · rintro ⟨⟨⟩⟩ <;> rfl
     · rintro ⟨⟨⟩⟩ ⟨j⟩ ⟨⟨rfl : _ = j⟩⟩ <;> simp

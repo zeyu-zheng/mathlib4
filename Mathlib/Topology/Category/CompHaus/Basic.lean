@@ -184,7 +184,7 @@ theorem epi_iff_surjective {X Y : CompHaus.{u}} (f : X ⟶ Y) : Epi f ↔ Functi
     have hC : IsClosed C := (isCompact_range f.continuous).isClosed
     let D := ({y} : Set Y)
     have hD : IsClosed D := isClosed_singleton
-    have hCD  : Disjoint C D
+    have hCD : Disjoint C D
     rw [Set.disjoint_singleton_right]
     rintro ⟨y', hy'⟩
     exact hy y' hy'

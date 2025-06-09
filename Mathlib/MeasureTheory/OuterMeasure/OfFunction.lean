@@ -229,7 +229,7 @@ theorem boundedBy_le (s : Set α) : boundedBy m s ≤ m s :=
 
 theorem boundedBy_eq_ofFunction (m_empty : m ∅ = 0) (s : Set α) :
     boundedBy m s = OuterMeasure.ofFunction m m_empty s := by
-  have  : (fun s : Set α => ⨆ _ : s.Nonempty, m s) = m
+  have : (fun s : Set α => ⨆ _ : s.Nonempty, m s) = m
   ext1 t
   rcases t.eq_empty_or_nonempty with h | h <;> simp [h, Set.not_nonempty_empty, m_empty]
   simp [boundedBy, this]

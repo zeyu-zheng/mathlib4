@@ -181,7 +181,7 @@ lemma isLocallyInjective_of_isLocallyInjective_of_isLocallySurjective
     IsLocallyInjective J f₂ where
   equalizerSieve_mem {X} x₁ x₂ h := by
     let S := imageSieve f₁ x₁ ⊓ imageSieve f₁ x₂
-    have hS  : S ∈ J X.unop
+    have hS : S ∈ J X.unop
     apply J.intersection_covering
     apply imageSieve_mem
     apply imageSieve_mem

@@ -89,9 +89,9 @@ theorem discr_zero_of_not_linearIndependent [IsDomain A] {b : ι → B}
     (hli : ¬LinearIndependent A b) : discr A b = 0 := by
   classical
   obtain ⟨g, hg, i, hi⟩ := Fintype.not_linearIndependent_iff.1 hli
-  have  : (traceMatrix A b) *ᵥ g = 0
+  have : (traceMatrix A b) *ᵥ g = 0
   ext i
-  have  : ∀ j, (trace A B) (b i * b j) * g j = (trace A B) (g j • b j * b i)
+  have : ∀ j, (trace A B) (b i * b j) * g j = (trace A B) (g j • b j * b i)
   intro j
   simp [mul_comm]
   simp only [mulVec, dotProduct, traceMatrix_apply, Pi.zero_apply, traceForm_apply, fun j =>
@@ -178,21 +178,21 @@ theorem discr_powerBasis_eq_prod'' [Algebra.IsSeparable K L] (e : Fin pb.dim ≃
   simp only [prod_pow_eq_pow_sum, prod_const]
   congr
   rw [← @Nat.cast_inj ℚ, Nat.cast_sum]
-  have  : ∀ x : Fin pb.dim, ↑x + 1 ≤ pb.dim
+  have : ∀ x : Fin pb.dim, ↑x + 1 ≤ pb.dim
   simp [Nat.succ_le_iff, Fin.is_lt]
   simp_rw [Fin.card_Ioi, Nat.sub_sub, add_comm 1]
   simp only [Nat.cast_sub, this, Finset.card_fin, nsmul_eq_mul, sum_const, sum_sub_distrib,
     Nat.cast_add, Nat.cast_one, sum_add_distrib, mul_one]
   rw [← Nat.cast_sum, ← @Finset.sum_range ℕ _ pb.dim fun i => i, sum_range_id]
-  have hn  : n = pb.dim
+  have hn : n = pb.dim
   rw [← AlgHom.card K L E, ← Fintype.card_fin pb.dim]
   -- FIXME: Without the `Fintype` namespace, why does it complain about `Finset.card_congr` being
   -- deprecated?
   exact Fintype.card_congr e.symm
   have h₂ : 2 ∣ pb.dim * (pb.dim - 1) := pb.dim.even_mul_pred_self.two_dvd
-  have hne  : ((2 : ℕ) : ℚ) ≠ 0
+  have hne : ((2 : ℕ) : ℚ) ≠ 0
   simp
-  have hle  : 1 ≤ pb.dim
+  have hle : 1 ≤ pb.dim
   rw [← hn, Nat.one_le_iff_ne_zero, ← zero_lt_iff, FiniteDimensional.finrank_pos_iff]
   infer_instance
   rw [hn, Nat.cast_div h₂ hne, Nat.cast_mul, Nat.cast_sub hle]
@@ -207,7 +207,7 @@ theorem discr_powerBasis_eq_norm [Algebra.IsSeparable K L] :
       norm K (aeval pb.gen (derivative (R := K) (minpoly K pb.gen))) := by
   let E := AlgebraicClosure L
   letI := fun a b : E => Classical.propDecidable (Eq a b)
-  have e  : Fin pb.dim ≃ (L →ₐ[K] E)
+  have e : Fin pb.dim ≃ (L →ₐ[K] E)
   refine equivOfCardEq ?_
   rw [Fintype.card_fin, AlgHom.card]
   exact (PowerBasis.finrank pb).symm
@@ -264,7 +264,7 @@ Then for all, `z : L` that are integral over `R`, we have
 theorem discr_mul_isIntegral_mem_adjoin [Algebra.IsSeparable K L] [IsIntegrallyClosed R]
     [IsFractionRing R K] {B : PowerBasis K L} (hint : IsIntegral R B.gen) {z : L}
     (hz : IsIntegral R z) : discr K B.basis • z ∈ adjoin R ({B.gen} : Set L) := by
-  have hinv  : IsUnit (traceMatrix K B.basis).det
+  have hinv : IsUnit (traceMatrix K B.basis).det
   simpa [← discr_def] using discr_isUnit_of_basis _ B.basis
   have H :
     (traceMatrix K B.basis).det • (traceMatrix K B.basis) *ᵥ (B.basis.equivFun z) =

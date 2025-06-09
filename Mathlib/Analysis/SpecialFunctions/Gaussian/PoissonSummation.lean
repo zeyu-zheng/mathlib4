@@ -40,7 +40,7 @@ lemma rexp_neg_quadratic_isLittleO_rpow_atTop {a : ℝ} (ha : a < 0) (b s : ℝ)
     refine this.trans ?_
     simpa only [neg_one_mul] using isLittleO_exp_neg_mul_rpow_atTop zero_lt_one s
   rw [isLittleO_exp_comp_exp_comp]
-  have  : (fun x ↦ -x - (a * x ^ 2 + b * x)) = fun x ↦ x * (-a * x - (b + 1))
+  have : (fun x ↦ -x - (a * x ^ 2 + b * x)) = fun x ↦ x * (-a * x - (b + 1))
   ext1 x; ring_nf
   rw [this]
   exact tendsto_id.atTop_mul_atTop <|
@@ -88,7 +88,7 @@ theorem Complex.tsum_exp_neg_quadratic {a : ℂ} (ha : 0 < a.re) (b : ℂ) :
     (∑' n : ℤ, cexp (-π * a * n ^ 2 + 2 * π * b * n)) =
       1 / a ^ (1 / 2 : ℂ) * ∑' n : ℤ, cexp (-π / a * (n + I * b) ^ 2) := by
   let f : ℝ → ℂ := fun x ↦ cexp (-π * a * x ^ 2 + 2 * π * b * x)
-  have hCf  : Continuous f
+  have hCf : Continuous f
   refine Complex.continuous_exp.comp (Continuous.add ?_ ?_)
   · exact continuous_const.mul (Complex.continuous_ofReal.pow 2)
   · exact continuous_const.mul Complex.continuous_ofReal

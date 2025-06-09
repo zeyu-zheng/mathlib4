@@ -199,7 +199,7 @@ instance [hc : IsConnected J] : IsConnected (ULiftHom.{v₂} (ULift.{u₂} J)) :
   apply IsConnected.of_induct
   · rintro p hj₀ h ⟨j⟩
     let p' : Set J := {j : J | p ⟨j⟩}
-    have hj₀'  : Classical.choice hc.is_nonempty ∈ p'
+    have hj₀' : Classical.choice hc.is_nonempty ∈ p'
     simp only [p', (eq_self p')]
     exact hj₀
     apply induct_on_objects p' hj₀' fun f => h ((ULiftHomULiftCategory.equiv J).functor.map f)

@@ -94,7 +94,7 @@ theorem isCompact_basicOpen (X : Scheme) {U : X.Opens} (hU : IsCompact (U : Set 
   let g : s → X.affineOpens := by
     intro V
     use V.1 ⊓ X.basicOpen f
-    have  : V.1.1 ⟶ U
+    have : V.1.1 ⟶ U
     apply homOfLE; change _ ⊆ (U : Set X); rw [e]
     convert Set.subset_iUnion₂ (s := fun (U : X.affineOpens) (_ : U ∈ s) => (U : Set X))
       V V.prop using 1
@@ -164,9 +164,9 @@ theorem quasiCompact_stableUnderBaseChange :
   apply AffineTargetMorphismProperty.StableUnderBaseChange.mk
   intro X Y S _ _ f g h
   let 𝒰 := Scheme.Pullback.openCoverOfRight Y.affineCover.finiteSubcover f g
-  have  : Finite 𝒰.J
+  have : Finite 𝒰.J
   dsimp [𝒰]; infer_instance
-  have  : ∀ i, CompactSpace (𝒰.obj i)
+  have : ∀ i, CompactSpace (𝒰.obj i)
   intro i; dsimp [𝒰]; infer_instance
   exact 𝒰.compactSpace
 
@@ -190,7 +190,7 @@ theorem compact_open_induction_on {P : X.Opens → Prop} (S : X.Opens)
   apply @Set.Finite.induction_on _ _ _ hs
   · convert h₁; rw [iSup_eq_bot]; rintro ⟨_, h⟩; exact h.elim
   · intro x s _ hs h₄
-    have  : IsCompact (⨆ i : s, (i : X.Opens)).1
+    have : IsCompact (⨆ i : s, (i : X.Opens)).1
     refine ((isCompactOpen_iff_eq_finset_affine_union _).mpr ?_).1; exact ⟨s, hs, by simp⟩
     convert h₂ _ this x h₄
     rw [iSup_subtype, sup_comm]
@@ -212,7 +212,7 @@ theorem exists_pow_mul_eq_zero_of_res_basicOpen_eq_zero_of_isCompact (X : Scheme
   obtain ⟨s, hs, e⟩ := (isCompactOpen_iff_eq_finset_affine_union U.1).mp ⟨hU, U.2⟩
   replace e : U = iSup fun i : s => (i : X.Opens) := by
     ext1; simpa using e
-  have h₁  : ∀ i : s, i.1.1 ≤ U
+  have h₁ : ∀ i : s, i.1.1 ≤ U
   intro i
   change (i : X.Opens) ≤ U
   rw [e]
@@ -255,8 +255,8 @@ lemma Scheme.isNilpotent_iff_basicOpen_eq_bot_of_isCompact {X : Scheme.{u}}
     {U : X.Opens} (hU : IsCompact (U : Set X)) (f : Γ(X, U)) :
     IsNilpotent f ↔ X.basicOpen f = ⊥ := by
   refine ⟨X.basicOpen_eq_bot_of_isNilpotent U f, fun hf ↦ ?_⟩
-  have h  : (1 : Γ(X, U)) |_ X.basicOpen f = (0 : Γ(X, X.basicOpen f))
-  have e  : X.basicOpen f ≤ ⊥
+  have h : (1 : Γ(X, U)) |_ X.basicOpen f = (0 : Γ(X, X.basicOpen f))
+  have e : X.basicOpen f ≤ ⊥
   rw [hf]
   rw [← X.presheaf.restrict_restrict e bot_le]
   have : Subsingleton Γ(X, ⊥) :=

@@ -104,7 +104,7 @@ theorem hasSum_expSeries_of_smul_comm
     (x : tsze R M) (hx : MulOpposite.op x.fst • x.snd = x.fst • x.snd)
     {e : R} (h : HasSum (fun n => expSeries 𝕜 R n fun _ => x.fst) e) :
     HasSum (fun n => expSeries 𝕜 (tsze R M) n fun _ => x) (inl e + inr (e • x.snd)) := by
-  have  : HasSum (fun n => fst (expSeries 𝕜 (tsze R M) n fun _ => x)) e
+  have : HasSum (fun n => fst (expSeries 𝕜 (tsze R M) n fun _ => x)) e
   simpa [fst_expSeries] using h
   simpa only [inl_fst_add_inr_snd_eq] using
     (hasSum_inl _ <| this).add (hasSum_inr _ <| hasSum_snd_expSeries_of_smul_comm 𝕜 x hx h)

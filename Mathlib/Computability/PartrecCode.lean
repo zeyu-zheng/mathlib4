@@ -190,13 +190,13 @@ theorem encode_lt_pair (cf cg) :
 
 theorem encode_lt_comp (cf cg) :
     encode cf < encode (comp cf cg) ∧ encode cg < encode (comp cf cg) := by
-  have  : encode (pair cf cg) < encode (comp cf cg)
+  have : encode (pair cf cg) < encode (comp cf cg)
   simp [encodeCode_eq, encodeCode]
   exact (encode_lt_pair cf cg).imp (fun h => lt_trans h this) fun h => lt_trans h this
 
 theorem encode_lt_prec (cf cg) :
     encode cf < encode (prec cf cg) ∧ encode cg < encode (prec cf cg) := by
-  have  : encode (pair cf cg) < encode (prec cf cg)
+  have : encode (pair cf cg) < encode (prec cf cg)
   simp [encodeCode_eq, encodeCode]
   exact (encode_lt_pair cf cg).imp (fun h => lt_trans h this) fun h => lt_trans h this
 

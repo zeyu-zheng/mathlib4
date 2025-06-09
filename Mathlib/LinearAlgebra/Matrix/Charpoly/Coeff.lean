@@ -97,7 +97,7 @@ theorem charpoly_degree_eq_dim [Nontrivial R] (M : Matrix n n R) :
     · assumption
   rw [← sub_add_cancel M.charpoly (∏ i : n, (X - C (M i i)))]
   -- Porting note: added `↑` in front of `Fintype.card n`
-  have h1  : (∏ i : n, (X - C (M i i))).degree = ↑(Fintype.card n)
+  have h1 : (∏ i : n, (X - C (M i i))).degree = ↑(Fintype.card n)
   rw [degree_eq_iff_natDegree_eq_of_pos (Nat.pos_of_ne_zero h), natDegree_prod']
   · simp_rw [natDegree_X_sub_C]
     rw [← Finset.card_univ, sum_const, smul_eq_mul, mul_one]
@@ -121,7 +121,7 @@ theorem charpoly_monic (M : Matrix n n R) : M.charpoly.Monic := by
   by_cases h : Fintype.card n = 0
   · rw [charpoly, det_of_card_zero h]
     apply monic_one
-  have mon  : (∏ i : n, (X - C (M i i))).Monic
+  have mon : (∏ i : n, (X - C (M i i))).Monic
   apply monic_prod_of_monic univ fun i : n => X - C (M i i)
   simp [monic_X_sub_C]
   rw [← sub_add_cancel (∏ i : n, (X - C (M i i))) M.charpoly] at mon
@@ -284,7 +284,7 @@ theorem coeff_charpoly_mem_ideal_pow {I : Ideal R} (h : ∀ i j, M i j ∈ I) (k
   apply sum_mem
   rintro c -
   rw [coeff_smul, Submodule.smul_mem_iff']
-  have  : ∑ x : n, 1 = Fintype.card n
+  have : ∑ x : n, 1 = Fintype.card n
   rw [Finset.sum_const, card_univ, smul_eq_mul, mul_one]
   rw [← this]
   apply coeff_prod_mem_ideal_pow_tsub
@@ -317,11 +317,11 @@ lemma reverse_charpoly (M : Matrix n n R) :
   let t_inv : R[T;T⁻¹] := T (-1)
   let p : R[T;T⁻¹] := det (scalar n t - M.map LaurentPolynomial.C)
   let q : R[T;T⁻¹] := det (1 - scalar n t * M.map LaurentPolynomial.C)
-  have ht  : t_inv * t = 1
+  have ht : t_inv * t = 1
   rw [← T_add, add_left_neg, T_zero]
-  have hp  : toLaurentAlg M.charpoly = p
+  have hp : toLaurentAlg M.charpoly = p
   simp [p, charpoly, charmatrix, AlgHom.map_det, map_sub, map_smul']
-  have hq  : toLaurentAlg M.charpolyRev = q
+  have hq : toLaurentAlg M.charpolyRev = q
   simp [q, charpolyRev, AlgHom.map_det, map_sub, map_smul', smul_eq_diagonal_mul]
   suffices t_inv ^ Fintype.card n * p = invert q by
     apply toLaurent_injective
@@ -335,7 +335,7 @@ lemma reverse_charpoly (M : Matrix n n R) :
 @[simp] lemma eval_charpolyRev :
     eval 0 M.charpolyRev = 1 := by
   rw [charpolyRev, ← coe_evalRingHom, RingHom.map_det, ← det_one (R := R) (n := n)]
-  have  : (1 - (X : R[X]) • M.map C).map (eval 0) = 1
+  have : (1 - (X : R[X]) • M.map C).map (eval 0) = 1
   ext i j; rcases eq_or_ne i j with hij | hij <;> simp [hij, one_apply]
   congr
 
@@ -368,7 +368,7 @@ lemma isNilpotent_charpoly_sub_pow_of_isNilpotent (hM : IsNilpotent M) :
     IsNilpotent (M.charpoly - X ^ (Fintype.card n)) := by
   nontriviality R
   let p : R[X] := M.charpolyRev
-  have hp  : p - 1 = X * (p /ₘ X)
+  have hp : p - 1 = X * (p /ₘ X)
   conv_lhs => rw [← modByMonic_add_div p monic_X]
   simp [p, modByMonic_X]
   have : IsNilpotent (p /ₘ X) :=

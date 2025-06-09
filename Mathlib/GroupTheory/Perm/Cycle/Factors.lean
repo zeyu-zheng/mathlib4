@@ -358,7 +358,7 @@ theorem mem_list_cycles_iff {α : Type*} [Finite α] {l : List (Perm α)}
     · intro h a ha
       exact eq_on_support_mem_disjoint h h2 _ (mem_support.mpr ha)
     · intro h
-      have hσl  : σ.support ⊆ l.prod.support
+      have hσl : σ.support ⊆ l.prod.support
       intro x hx
       rw [mem_support] at hx
       rwa [mem_support, ← h _ hx]
@@ -366,7 +366,7 @@ theorem mem_list_cycles_iff {α : Type*} [Finite α] {l : List (Perm α)}
       rw [← mem_support] at ha
       obtain ⟨τ, hτ, hτa⟩ := exists_mem_support_of_mem_support_prod (hσl ha)
       have hτl : ∀ x ∈ τ.support, τ x = l.prod x := eq_on_support_mem_disjoint hτ h2
-      have key  : ∀ x ∈ σ.support ∩ τ.support, σ x = τ x
+      have key : ∀ x ∈ σ.support ∩ τ.support, σ x = τ x
       intro x hx
       rw [h x (mem_support.mp (mem_of_mem_inter_left hx)), hτl x (mem_of_mem_inter_right hx)]
       convert hτ
@@ -420,7 +420,7 @@ theorem cycleFactorsFinset_eq_list_toFinset {σ : Perm α} {l : List (Perm α)} 
     σ.cycleFactorsFinset = l.toFinset ↔
       (∀ f : Perm α, f ∈ l → f.IsCycle) ∧ l.Pairwise Disjoint ∧ l.prod = σ := by
   obtain ⟨⟨l', hp', hc', hd'⟩, hl⟩ := Trunc.exists_rep σ.truncCycleFactors
-  have ht  : cycleFactorsFinset σ = l'.toFinset
+  have ht : cycleFactorsFinset σ = l'.toFinset
   rw [cycleFactorsFinset, ← hl, Trunc.lift_mk]
   rw [ht]
   constructor

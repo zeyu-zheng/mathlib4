@@ -557,7 +557,7 @@ variable {F} {α}
 theorem adjoin_algebraic_toSubalgebra {S : Set E} (hS : ∀ x ∈ S, IsAlgebraic F x) :
     (IntermediateField.adjoin F S).toSubalgebra = Algebra.adjoin F S := by
   simp only [isAlgebraic_iff_isIntegral] at hS
-  have  : Algebra.IsIntegral F (Algebra.adjoin F S)
+  have : Algebra.IsIntegral F (Algebra.adjoin F S)
   rwa [← le_integralClosure_iff_isIntegral, Algebra.adjoin_le_iff]
   have : IsField (Algebra.adjoin F S) := isField_of_isIntegral_of_isField' (Field.toIsField F)
   rw [← ((Algebra.adjoin F S).toIntermediateField' this).eq_adjoin_of_eq_algebra_adjoin F S] <;> rfl
@@ -716,7 +716,7 @@ theorem adjoin_toSubalgebra_of_isAlgebraic (L : IntermediateField F K)
   let i := IsScalarTower.toAlgHom F E K
   let E' := i.fieldRange
   let i' : E ≃ₐ[F] E' := AlgEquiv.ofInjectiveField i
-  have hi  : algebraMap E K = (algebraMap E' K) ∘ i'
+  have hi : algebraMap E K = (algebraMap E' K) ∘ i'
   ext x; rfl
   apply_fun _ using Subalgebra.restrictScalars_injective F
   erw [← restrictScalars_toSubalgebra, restrictScalars_adjoin_of_algEquiv i' hi,
@@ -1051,17 +1051,17 @@ theorem adjoin_minpoly_coeff_of_exists_primitive_element
     adjoin F ((minpoly K α).map (algebraMap K E)).coeffs = K := by
   set g := (minpoly K α).map (algebraMap K E)
   set K' : IntermediateField F E := adjoin F g.coeffs
-  have hsub  : K' ≤ K
+  have hsub : K' ≤ K
   refine adjoin_le_iff.mpr fun x ↦ ?_
   rw [Finset.mem_coe, mem_coeffs_iff]
   rintro ⟨n, -, rfl⟩
   rw [coeff_map]
   apply Subtype.mem
-  have dvd_g  : minpoly K' α ∣ g.toSubring K'.toSubring (subset_adjoin F _)
+  have dvd_g : minpoly K' α ∣ g.toSubring K'.toSubring (subset_adjoin F _)
   apply minpoly.dvd
   erw [aeval_def, eval₂_eq_eval_map, g.map_toSubring K'.toSubring, eval_map, ← aeval_def]
   exact minpoly.aeval K α
-  have finrank_eq  : ∀ K : IntermediateField F E, finrank K E = natDegree (minpoly K α)
+  have finrank_eq : ∀ K : IntermediateField F E, finrank K E = natDegree (minpoly K α)
   intro K
   have := adjoin.finrank (.of_finite K α)
   erw [adjoin_eq_top_of_adjoin_eq_top F hprim, finrank_top K E] at this

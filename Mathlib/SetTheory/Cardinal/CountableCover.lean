@@ -43,10 +43,10 @@ lemma mk_subtype_le_of_countable_eventually_mem_aux {α ι : Type u} {a : Cardin
     rcases B.exists with ⟨i, hi⟩
     have : ∀ i, Fintype (f i) := fun i ↦ (lt_aleph0_iff_fintype.1 ((h'f i).trans_lt ha)).some
     let u : Finset α := (f i).toFinset
-    have I1  : s.card ≤ u.card
+    have I1 : s.card ≤ u.card
     have : s ⊆ u := fun x hx ↦ by simpa only [u, Set.mem_toFinset] using hi x hx
     exact Finset.card_le_card this
-    have I2  : (u.card : Cardinal) ≤ n
+    have I2 : (u.card : Cardinal) ≤ n
     convert h'f i; simp only [u, Set.toFinset_card, mk_fintype]
     exact I1.trans (Nat.cast_le.1 I2)
   -- case `a` infinite:

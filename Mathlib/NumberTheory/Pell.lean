@@ -328,13 +328,13 @@ to the Pell equation `x^2 - d*y^2 = 1`. -/
 theorem exists_of_not_isSquare (h₀ : 0 < d) (hd : ¬IsSquare d) :
     ∃ x y : ℤ, x ^ 2 - d * y ^ 2 = 1 ∧ y ≠ 0 := by
   let ξ : ℝ := √d
-  have hξ  : Irrational ξ
+  have hξ : Irrational ξ
   refine irrational_nrt_of_notint_nrt 2 d (sq_sqrt <| Int.cast_nonneg.mpr h₀.le) ?_ two_pos
   rintro ⟨x, hx⟩
   refine hd ⟨x, @Int.cast_injective ℝ _ _ d (x * x) ?_⟩
   rw [← sq_sqrt <| Int.cast_nonneg.mpr h₀.le, Int.cast_mul, ← hx, sq]
   obtain ⟨M, hM₁⟩ := exists_int_gt (2 * |ξ| + 1)
-  have hM  : {q : ℚ | |q.1 ^ 2 - d * (q.2 : ℤ) ^ 2| < M}.Infinite
+  have hM : {q : ℚ | |q.1 ^ 2 - d * (q.2 : ℤ) ^ 2| < M}.Infinite
   refine Infinite.mono (fun q h => ?_) (infinite_rat_abs_sub_lt_one_div_den_sq_of_irrational hξ)
   have h0 : 0 < (q.2 : ℝ) ^ 2 := pow_pos (Nat.cast_pos.mpr q.pos) 2
   have h1 : (q.num : ℝ) / (q.den : ℝ) = q := mod_cast q.num_div_den
@@ -353,7 +353,7 @@ theorem exists_of_not_isSquare (h₀ : 0 < d) (hd : ¬IsSquare d) :
     simp only [not_infinite] at hM ⊢
     refine (congr_arg _ (ext fun x => ?_)).mp (Finite.biUnion (finite_Ioo (-M) M) fun m _ => hM m)
     simp only [abs_lt, mem_setOf, mem_Ioo, mem_iUnion, exists_prop, exists_eq_right']
-  have hm₀  : m ≠ 0
+  have hm₀ : m ≠ 0
   rintro rfl
   obtain ⟨q, hq⟩ := hm.nonempty
   rw [mem_setOf, sub_eq_zero, mul_comm] at hq
@@ -461,7 +461,7 @@ theorem d_nonsquare {a : Solution₁ d} (h : IsFundamental a) : ¬IsSquare d :=
 theorem subsingleton {a b : Solution₁ d} (ha : IsFundamental a) (hb : IsFundamental b) : a = b := by
   have hx := le_antisymm (ha.2.2 hb.1) (hb.2.2 ha.1)
   refine Solution₁.ext hx ?_
-  have  : d * a.y ^ 2 = d * b.y ^ 2
+  have : d * a.y ^ 2 = d * b.y ^ 2
   rw [a.prop_y, b.prop_y, hx]
   exact (sq_eq_sq ha.2.1.le hb.2.1.le).mp (Int.eq_of_mul_eq_mul_left ha.d_pos.ne' this)
 
@@ -470,7 +470,7 @@ theorem exists_of_not_isSquare (h₀ : 0 < d) (hd : ¬IsSquare d) :
     ∃ a : Solution₁ d, IsFundamental a := by
   obtain ⟨a, ha₁, ha₂⟩ := exists_pos_of_not_isSquare h₀ hd
   -- convert to `x : ℕ` to be able to use `Nat.find`
-  have P  : ∃ x' : ℕ, 1 < x' ∧ ∃ y' : ℤ, 0 < y' ∧ (x' : ℤ) ^ 2 - d * y' ^ 2 = 1
+  have P : ∃ x' : ℕ, 1 < x' ∧ ∃ y' : ℤ, 0 < y' ∧ (x' : ℤ) ^ 2 - d * y' ^ 2 = 1
   have hax := a.prop
   lift a.x to ℕ using by positivity with ax
   norm_cast at ha₁
@@ -493,7 +493,7 @@ theorem exists_of_not_isSquare (h₀ : 0 < d) (hd : ¬IsSquare d) :
 solution `a` is stritcly increasing. -/
 theorem y_strictMono {a : Solution₁ d} (h : IsFundamental a) :
     StrictMono fun n : ℤ => (a ^ n).y := by
-  have H  : ∀ n : ℤ, 0 ≤ n → (a ^ n).y < (a ^ (n + 1)).y
+  have H : ∀ n : ℤ, 0 ≤ n → (a ^ n).y < (a ^ (n + 1)).y
   intro n hn
   rw [← sub_pos, zpow_add, zpow_one, y_mul, add_sub_assoc]
   rw [show (a ^ n).y * a.x - (a ^ n).y = (a ^ n).y * (a.x - 1) by ring]
@@ -507,7 +507,7 @@ theorem y_strictMono {a : Solution₁ d} (h : IsFundamental a) :
   rcases le_or_lt 0 n with hn | hn
   · exact H n hn
   · let m : ℤ := -n - 1
-    have hm  : n = -m - 1
+    have hm : n = -m - 1
     simp only [m, neg_sub, sub_neg_eq_add, add_tsub_cancel_left]
     rw [hm, sub_add_cancel, ← neg_add', zpow_neg, zpow_neg, y_inv, y_inv, neg_lt_neg_iff]
     exact H _ (by omega)
@@ -543,7 +543,7 @@ theorem x_le_x {a₁ : Solution₁ d} (h : IsFundamental a₁) {a : Solution₁ 
 of any positive solution. -/
 theorem y_le_y {a₁ : Solution₁ d} (h : IsFundamental a₁) {a : Solution₁ d} (hax : 1 < a.x)
     (hay : 0 < a.y) : a₁.y ≤ a.y := by
-  have H  : d * (a₁.y ^ 2 - a.y ^ 2) = a₁.x ^ 2 - a.x ^ 2
+  have H : d * (a₁.y ^ 2 - a.y ^ 2) = a₁.x ^ 2 - a.x ^ 2
   rw [a.prop_x, a₁.prop_x]; ring
   rw [← abs_of_pos hay, ← abs_of_pos h.2.1, ← sq_le_sq, ← mul_le_mul_left h.d_pos, ← sub_nonpos, ←
     mul_sub, H, sub_nonpos, sq_le_sq, abs_of_pos (zero_lt_one.trans h.1),
@@ -621,7 +621,7 @@ theorem eq_pow_of_nonneg {a₁ : Solution₁ d} (h : IsFundamental a₁) {a : So
       norm_num at this
     · exact hy.symm
   · -- case 2: `a ≥ a₁`
-    have hx₁  : 1 < a.x
+    have hx₁ : 1 < a.x
     nlinarith [a.prop, h.d_pos]
     have hxx₁ := h.mul_inv_x_pos hx₁ hy
     have hxx₂ := h.mul_inv_x_lt_x hx₁ hy

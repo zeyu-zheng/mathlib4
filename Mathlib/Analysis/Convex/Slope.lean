@@ -31,7 +31,7 @@ theorem ConvexOn.slope_mono_adjacent (hf : ConvexOn 𝕜 s f) {x y z : 𝕜} (hx
     linarith
   set a := (z - y) / (z - x)
   set b := (y - x) / (z - x)
-  have hy  : a • x + b • z = y
+  have hy : a • x + b • z = y
   field_simp [a, b]; ring
   have key :=
     hf.2 hx hz (show 0 ≤ a by apply div_nonneg <;> linarith)
@@ -66,7 +66,7 @@ theorem StrictConvexOn.slope_strict_mono_adjacent (hf : StrictConvexOn 𝕜 s f)
     linarith
   set a := (z - y) / (z - x)
   set b := (y - x) / (z - x)
-  have hy  : a • x + b • z = y
+  have hy : a • x + b • z = y
   field_simp [a, b]; ring
   have key :=
     hf.2 hx hz hxz' (div_pos hyz hxz) (div_pos hxy hxz)
@@ -221,16 +221,16 @@ theorem strictConcaveOn_iff_slope_strict_anti_adjacent :
 
 theorem ConvexOn.secant_mono_aux1 (hf : ConvexOn 𝕜 s f) {x y z : 𝕜} (hx : x ∈ s) (hz : z ∈ s)
     (hxy : x < y) (hyz : y < z) : (z - x) * f y ≤ (z - y) * f x + (y - x) * f z := by
-  have hxy'  : 0 < y - x
+  have hxy' : 0 < y - x
   linarith
-  have hyz'  : 0 < z - y
+  have hyz' : 0 < z - y
   linarith
-  have hxz'  : 0 < z - x
+  have hxz' : 0 < z - x
   linarith
   rw [← le_div_iff' hxz']
-  have ha  : 0 ≤ (z - y) / (z - x)
+  have ha : 0 ≤ (z - y) / (z - x)
   positivity
-  have hb  : 0 ≤ (y - x) / (z - x)
+  have hb : 0 ≤ (y - x) / (z - x)
   positivity
   calc
     f y = f ((z - y) / (z - x) * x + (y - x) / (z - x) * z) := ?_
@@ -244,18 +244,18 @@ theorem ConvexOn.secant_mono_aux1 (hf : ConvexOn 𝕜 s f) {x y z : 𝕜} (hx : 
 
 theorem ConvexOn.secant_mono_aux2 (hf : ConvexOn 𝕜 s f) {x y z : 𝕜} (hx : x ∈ s) (hz : z ∈ s)
     (hxy : x < y) (hyz : y < z) : (f y - f x) / (y - x) ≤ (f z - f x) / (z - x) := by
-  have hxy'  : 0 < y - x
+  have hxy' : 0 < y - x
   linarith
-  have hxz'  : 0 < z - x
+  have hxz' : 0 < z - x
   linarith
   rw [div_le_div_iff hxy' hxz']
   linarith only [hf.secant_mono_aux1 hx hz hxy hyz]
 
 theorem ConvexOn.secant_mono_aux3 (hf : ConvexOn 𝕜 s f) {x y z : 𝕜} (hx : x ∈ s) (hz : z ∈ s)
     (hxy : x < y) (hyz : y < z) : (f z - f x) / (z - x) ≤ (f z - f y) / (z - y) := by
-  have hyz'  : 0 < z - y
+  have hyz' : 0 < z - y
   linarith
-  have hxz'  : 0 < z - x
+  have hxz' : 0 < z - x
   linarith
   rw [div_le_div_iff hxz' hyz']
   linarith only [hf.secant_mono_aux1 hx hz hxy hyz]
@@ -276,16 +276,16 @@ theorem ConvexOn.secant_mono (hf : ConvexOn 𝕜 s f) {a x y : 𝕜} (ha : a ∈
 
 theorem StrictConvexOn.secant_strict_mono_aux1 (hf : StrictConvexOn 𝕜 s f) {x y z : 𝕜} (hx : x ∈ s)
     (hz : z ∈ s) (hxy : x < y) (hyz : y < z) : (z - x) * f y < (z - y) * f x + (y - x) * f z := by
-  have hxy'  : 0 < y - x
+  have hxy' : 0 < y - x
   linarith
-  have hyz'  : 0 < z - y
+  have hyz' : 0 < z - y
   linarith
-  have hxz'  : 0 < z - x
+  have hxz' : 0 < z - x
   linarith
   rw [← lt_div_iff' hxz']
-  have ha  : 0 < (z - y) / (z - x)
+  have ha : 0 < (z - y) / (z - x)
   positivity
-  have hb  : 0 < (y - x) / (z - x)
+  have hb : 0 < (y - x) / (z - x)
   positivity
   calc
     f y = f ((z - y) / (z - x) * x + (y - x) / (z - x) * z) := ?_
@@ -299,18 +299,18 @@ theorem StrictConvexOn.secant_strict_mono_aux1 (hf : StrictConvexOn 𝕜 s f) {x
 
 theorem StrictConvexOn.secant_strict_mono_aux2 (hf : StrictConvexOn 𝕜 s f) {x y z : 𝕜} (hx : x ∈ s)
     (hz : z ∈ s) (hxy : x < y) (hyz : y < z) : (f y - f x) / (y - x) < (f z - f x) / (z - x) := by
-  have hxy'  : 0 < y - x
+  have hxy' : 0 < y - x
   linarith
-  have hxz'  : 0 < z - x
+  have hxz' : 0 < z - x
   linarith
   rw [div_lt_div_iff hxy' hxz']
   linarith only [hf.secant_strict_mono_aux1 hx hz hxy hyz]
 
 theorem StrictConvexOn.secant_strict_mono_aux3 (hf : StrictConvexOn 𝕜 s f) {x y z : 𝕜} (hx : x ∈ s)
     (hz : z ∈ s) (hxy : x < y) (hyz : y < z) : (f z - f x) / (z - x) < (f z - f y) / (z - y) := by
-  have hyz'  : 0 < z - y
+  have hyz' : 0 < z - y
   linarith
-  have hxz'  : 0 < z - x
+  have hxz' : 0 < z - x
   linarith
   rw [div_lt_div_iff hxz' hyz']
   linarith only [hf.secant_strict_mono_aux1 hx hz hxy hyz]
@@ -343,7 +343,7 @@ theorem StrictConcaveOn.secant_strict_mono (hf : StrictConcaveOn 𝕜 s f) {a x 
 theorem ConvexOn.strict_mono_of_lt (hf : ConvexOn 𝕜 s f) {x y : 𝕜} (hx : x ∈ s) (hxy : x < y)
     (hxy' : f x < f y) : StrictMonoOn f (s ∩ Set.Ici y) := by
   intro u hu v hv huv
-  have step1  : ∀ {z : 𝕜}, z ∈ s ∩ Set.Ioi y → f y < f z
+  have step1 : ∀ {z : 𝕜}, z ∈ s ∩ Set.Ioi y → f y < f z
   intros z hz
   refine hf.lt_right_of_left_lt hx hz.1 ?_ hxy'
   rw [openSegment_eq_Ioo (hxy.trans hz.2)]

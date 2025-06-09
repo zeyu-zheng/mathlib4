@@ -505,7 +505,7 @@ instance : SFinite (0 : Measure α) := ⟨fun _ ↦ 0, inferInstance, by rw [Mea
 @[simp]
 lemma sFiniteSeq_zero (n : ℕ) : sFiniteSeq (0 : Measure α) n = 0 := by
   ext s hs
-  have h  : ∑' n, sFiniteSeq (0 : Measure α) n s = 0
+  have h : ∑' n, sFiniteSeq (0 : Measure α) n s = 0
   simp [← Measure.sum_apply _ hs, sum_sFiniteSeq]
   simp only [ENNReal.tsum_eq_zero] at h
   exact h n
@@ -529,7 +529,7 @@ instance [Countable ι] (m : ι → Measure α) [∀ n, SFinite (m n)] : SFinite
   apply sfinite_sum_of_countable
 
 instance [SFinite μ] [SFinite ν] : SFinite (μ + ν) := by
-  have  : ∀ b : Bool, SFinite (cond b μ ν)
+  have : ∀ b : Bool, SFinite (cond b μ ν)
   simp [*]
   simpa using inferInstanceAs (SFinite (.sum (cond · μ ν)))
 
@@ -546,7 +546,7 @@ theorem exists_absolutelyContinuous_isFiniteMeasure [SFinite μ] :
   refine ⟨.sum fun n ↦ c n • sFiniteSeq μ n, ⟨?_⟩, ?_⟩
   · simpa [mul_comm] using hc
   · refine AbsolutelyContinuous.mk fun s hsm hs ↦ ?_
-    have  : ∀ n, (sFiniteSeq μ n) s = 0
+    have : ∀ n, (sFiniteSeq μ n) s = 0
     simpa [hsm, (hc₀ _).ne'] using hs
     rw [← sum_sFiniteSeq μ, sum_apply _ hsm]
     simp [this]
@@ -704,7 +704,7 @@ theorem countable_meas_pos_of_disjoint_of_meas_iUnion_ne_top₀ {ι : Type*} {_ 
   rcases exists_seq_strictAnti_tendsto' (zero_lt_one : (0 : ℝ≥0∞) < 1) with
     ⟨as, _, as_mem, as_lim⟩
   set fairmeas := fun n : ℕ => { i : ι | as n ≤ μ (As i) }
-  have countable_union  : posmeas = ⋃ n, fairmeas n
+  have countable_union : posmeas = ⋃ n, fairmeas n
   have fairmeas_eq : ∀ n, fairmeas n = (fun i => μ (As i)) ⁻¹' Ici (as n) := fun n => by
     simp only [fairmeas]
     rfl
@@ -810,9 +810,9 @@ theorem measure_toMeasurable_inter_of_cover {s : Set α} (hs : MeasurableSet s) 
   -- measurable set `s`. It is built on each member of a spanning family using `toMeasurable`
   -- (which is well behaved for finite measure sets thanks to `measure_toMeasurable_inter`), and
   -- the desired property passes to the union.
-  have A  : ∃ t', t' ⊇ t ∧ MeasurableSet t' ∧ ∀ u, MeasurableSet u → μ (t' ∩ u) = μ (t ∩ u)
+  have A : ∃ t', t' ⊇ t ∧ MeasurableSet t' ∧ ∀ u, MeasurableSet u → μ (t' ∩ u) = μ (t ∩ u)
   let w n := toMeasurable μ (t ∩ v n)
-  have hw  : ∀ n, μ (w n) < ∞
+  have hw : ∀ n, μ (w n) < ∞
   intro n
   simp_rw [w, measure_toMeasurable]
   exact (h'v n).lt_top
@@ -999,7 +999,7 @@ theorem sigmaFinite_bot_iff (μ : @Measure α ⊥) : SigmaFinite μ ↔ IsFinite
     exact ENNReal.zero_ne_top.lt_top
   obtain ⟨i, hsi⟩ : ∃ i, s i = Set.univ := by
     by_contra! h_not_univ
-    have h_empty  : ∀ i, s i = ∅
+    have h_empty : ∀ i, s i = ∅
     simpa [h_not_univ] using hs_meas
     simp only [h_empty, iUnion_empty] at hs_univ
     exact h_univ_empty hs_univ.symm
@@ -1068,7 +1068,7 @@ theorem _root_.MeasurableEquiv.sigmaFinite_map (f : α ≃ᵐ β) [SigmaFinite �
 theorem ae_of_forall_measure_lt_top_ae_restrict' {μ : Measure α} (ν : Measure α) [SigmaFinite μ]
     [SigmaFinite ν] (P : α → Prop)
     (h : ∀ s, MeasurableSet s → μ s < ∞ → ν s < ∞ → ∀ᵐ x ∂μ.restrict s, P x) : ∀ᵐ x ∂μ, P x := by
-  have  : ∀ n, ∀ᵐ x ∂μ, x ∈ spanningSets (μ + ν) n → P x
+  have : ∀ n, ∀ᵐ x ∂μ, x ∈ spanningSets (μ + ν) n → P x
   intro n
   have := h
     (spanningSets (μ + ν) n) (measurable_spanningSets _ _)

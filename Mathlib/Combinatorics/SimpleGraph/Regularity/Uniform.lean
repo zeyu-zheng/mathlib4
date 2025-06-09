@@ -301,7 +301,7 @@ lemma IsEquipartition.card_interedges_sparsePairs_le (hP : P.IsEquipartition) (h
     _ = _ := by ring
 
 private lemma aux {i j : ℕ} (hj : 0 < j) : j * (j - 1) * (i / j + 1) ^ 2 < (i + j) ^ 2 := by
-  have  : j * (j - 1) < j ^ 2
+  have : j * (j - 1) < j ^ 2
   rw [sq]; exact Nat.mul_lt_mul_of_pos_left (Nat.sub_lt hj zero_lt_one) hj
   apply (Nat.mul_lt_mul_of_pos_right this $ pow_pos Nat.succ_pos' _).trans_le
   rw [← mul_pow]
@@ -331,7 +331,7 @@ lemma IsEquipartition.card_biUnion_offDiag_le (hε : 0 < ε) (hP : P.IsEquiparti
   · simp [Subsingleton.elim P ⊥]
   apply hP.card_biUnion_offDiag_le'.trans
   rw [div_le_iff (Nat.cast_pos.2 (P.parts_nonempty hA.ne_empty).card_pos)]
-  have  : (A.card : 𝕜) + P.parts.card ≤ 2 * A.card
+  have : (A.card : 𝕜) + P.parts.card ≤ 2 * A.card
   rw [two_mul]; exact add_le_add_left (Nat.cast_le.2 P.card_parts_le_card) _
   refine (mul_le_mul_of_nonneg_left this $ by positivity).trans ?_
   suffices 1 ≤ ε/4 * P.parts.card by

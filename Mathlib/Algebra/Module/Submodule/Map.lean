@@ -380,7 +380,7 @@ submodule. -/
 theorem _root_.LinearMap.iInf_invariant {σ : R →+* R} [RingHomSurjective σ] {ι : Sort*}
     (f : M →ₛₗ[σ] M) {p : ι → Submodule R M} (hf : ∀ i, ∀ v ∈ p i, f v ∈ p i) :
     ∀ v ∈ iInf p, f v ∈ iInf p := by
-  have  : ∀ i, (p i).map f ≤ p i
+  have : ∀ i, (p i).map f ≤ p i
   rintro i - ⟨v, hv, rfl⟩
   exact hf i v hv
   suffices (iInf p).map f ≤ iInf p by exact fun v hv => this ⟨v, hv, rfl⟩

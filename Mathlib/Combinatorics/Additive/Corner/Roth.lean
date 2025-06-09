@@ -81,7 +81,7 @@ theorem corners_theorem (ε : ℝ) (hε : 0 < ε) (hG : cornersTheoremBound ε �
     (A : Finset (G × G)) (hAε : ε * card G ^ 2 ≤ A.card) : ¬ IsCornerFree (A : Set (G × G)) := by
   rintro hA
   rw [cornersTheoremBound, Nat.add_one_le_iff] at hG
-  have hε₁  : ε ≤ 1
+  have hε₁ : ε ≤ 1
   have := hAε.trans (Nat.cast_le.2 A.card_le_univ)
   simp only [sq, Nat.cast_mul, Fintype.card_prod, Fintype.card_fin] at this
   rwa [mul_le_iff_le_one_left] at this
@@ -142,7 +142,7 @@ theorem roth_3ap_theorem (ε : ℝ) (hε : 0 < ε) (hG : cornersTheoremBound ε 
   rintro hA
   classical
   let B : Finset (G × G) := univ.filter fun (x, y) ↦ y - x ∈ A
-  have  : ε * card G ^ 2 ≤ B.card
+  have : ε * card G ^ 2 ≤ B.card
   calc
     _ = card G * (ε * card G) := by ring
     _ ≤ card G * A.card := by gcongr
@@ -166,7 +166,7 @@ theorem roth_3ap_theorem_nat (ε : ℝ) (hε : 0 < ε) (hG : cornersTheoremBound
     (A : Finset ℕ) (hAn : A ⊆ range n) (hAε : ε * n ≤ A.card) : ¬ ThreeAPFree (A : Set ℕ) := by
   rintro hA
   rw [← coe_subset, coe_range] at hAn
-  have  : A = Fin.val '' (Nat.cast '' A : Set (Fin (2 * n).succ))
+  have : A = Fin.val '' (Nat.cast '' A : Set (Fin (2 * n).succ))
   rw [Set.image_image, Set.image_congr, Set.image_id]
   simp only [mem_coe, Nat.succ_eq_add_one, Fin.val_natCast, id_eq, Nat.mod_succ_eq_iff_lt]
   rintro a ha

@@ -465,7 +465,7 @@ theorem one_add_le_sup_seminorm_apply {m : ℕ × ℕ} {k n : ℕ} (hk : k ≤ m
   rw [← Nat.sum_range_choose m.1]
   push_cast
   rw [Finset.sum_mul]
-  have hk'  : Finset.range (k + 1) ⊆ Finset.range (m.1 + 1)
+  have hk' : Finset.range (k + 1) ⊆ Finset.range (m.1 + 1)
   rwa [Finset.range_subset, add_le_add_iff_right]
   refine le_trans (Finset.sum_le_sum_of_subset_of_nonneg hk' fun _ _ _ => by positivity) ?_
   gcongr ∑ _i ∈ Finset.range (m.1 + 1), ?_ with i hi
@@ -534,7 +534,7 @@ theorem _root_.Function.HasTemperateGrowth.norm_iteratedFDeriv_le_uniform_aux {f
   choose k C f using hf_temperate.2
   use (Finset.range (n + 1)).sup k
   let C' := max (0 : ℝ) ((Finset.range (n + 1)).sup' (by simp) C)
-  have hC'  : 0 ≤ C'
+  have hC' : 0 ≤ C'
   simp only [C', le_refl, Finset.le_sup'_iff, true_or_iff, le_max_iff]
   use C', hC'
   intro N hN x
@@ -611,7 +611,7 @@ lemma pow_mul_le_of_le_of_pow_mul_le {C₁ C₂ : ℝ} {k l : ℕ} {x f : ℝ} (
     (h₁ : f ≤ C₁) (h₂ : x ^ (k + l) * f ≤ C₂) :
     x ^ k * f ≤ 2 ^ l * (C₁ + C₂) * (1 + x) ^ (- (l : ℝ)) := by
   have : 0 ≤ C₂ := le_trans (by positivity) h₂
-  have  : 2 ^ l * (C₁ + C₂) * (1 + x) ^ (- (l : ℝ)) = ((1 + x) / 2) ^ (-(l : ℝ)) * (C₁ + C₂)
+  have : 2 ^ l * (C₁ + C₂) * (1 + x) ^ (- (l : ℝ)) = ((1 + x) / 2) ^ (-(l : ℝ)) * (C₁ + C₂)
   rw [Real.div_rpow (by linarith) zero_le_two]
   simp [div_eq_inv_mul, ← Real.rpow_neg_one, ← Real.rpow_mul]
   ring
@@ -1003,9 +1003,9 @@ theorem iteratedPDeriv_succ_right {n : ℕ} (m : Fin (n + 1) → E) (f : 𝓢(E,
   · rw [iteratedPDeriv_zero, iteratedPDeriv_one]
     rfl
   -- The proof is `∂^{n + 2} = ∂ ∂^{n + 1} = ∂ ∂^n ∂ = ∂^{n+1} ∂`
-  have hmzero  : Fin.init m 0 = m 0
+  have hmzero : Fin.init m 0 = m 0
   simp only [Fin.init_def, Fin.castSucc_zero]
-  have hmtail  : Fin.tail m (Fin.last n) = m (Fin.last n.succ)
+  have hmtail : Fin.tail m (Fin.last n) = m (Fin.last n.succ)
   simp only [Fin.tail_def, Fin.succ_last]
   calc
     _ = pderivCLM 𝕜 (m 0) (iteratedPDeriv 𝕜 _ f) := iteratedPDeriv_succ_left _ _ _
@@ -1176,7 +1176,7 @@ instance instZeroAtInftyContinuousMapClass : ZeroAtInftyContinuousMapClass 𝓢(
     use (SchwartzMap.seminorm ℝ 1 0) f / ε
     intro x hx
     rw [div_lt_iff hε] at hx
-    have hxpos  : 0 < ‖x‖
+    have hxpos : 0 < ‖x‖
     rw [norm_pos_iff']
     intro hxzero
     simp only [hxzero, norm_zero, zero_mul, ← not_le] at hx

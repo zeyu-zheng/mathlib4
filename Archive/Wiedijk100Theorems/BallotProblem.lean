@@ -337,11 +337,11 @@ theorem ballot_problem' :
     · have h₄ : (p + 1 : ℝ) + (q + 1 : ℝ) ≠ (0 : ℝ)
       apply ne_of_gt
       assumption_mod_cast
-      have h₅  : (p + 1 : ℝ) + ↑q ≠ (0 : ℝ)
+      have h₅ : (p + 1 : ℝ) + ↑q ≠ (0 : ℝ)
       apply ne_of_gt
       norm_cast
       linarith
-      have h₆  : ↑p + (q + 1 : ℝ) ≠ (0 : ℝ)
+      have h₆ : ↑p + (q + 1 : ℝ) ≠ (0 : ℝ)
       apply ne_of_gt
       norm_cast
       linarith

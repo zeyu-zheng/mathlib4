@@ -539,7 +539,7 @@ theorem _root_.IsCompact.cthickening_eq_biUnion_closedBall {α : Type*} [PseudoM
     (iUnion₂_subset fun x hx ↦ closedBall_subset_cthickening hx _)
   obtain ⟨y, yE, hy⟩ : ∃ y ∈ E, infEdist x E = edist x y := hE.exists_infEdist_eq_edist hne _
   have D1 : edist x y ≤ ENNReal.ofReal δ := (le_of_eq hy.symm).trans hx
-  have D2  : dist x y ≤ δ
+  have D2 : dist x y ≤ δ
   rw [edist_dist] at D1
   exact (ENNReal.ofReal_le_ofReal_iff hδ).1 D1
   exact mem_biUnion yE D2

@@ -137,7 +137,7 @@ lemma exists_nat [IsNoetherian R M] [NoZeroSMulDivisors R M] [IsDomain R] [CharZ
     have := lie_e_pow_succ_toEnd_f P n
     rw [hn₂, lie_zero, eq_comm, smul_eq_zero_iff_left hn₁, mul_eq_zero, sub_eq_zero] at this
     exact this.resolve_left <| Nat.cast_add_one_ne_zero n
-  have hs  : (range <| fun (n : ℕ) ↦ μ - 2 * n).Infinite
+  have hs : (range <| fun (n : ℕ) ↦ μ - 2 * n).Infinite
   rw [infinite_range_iff (fun n m ↦ by simp)]; infer_instance
   by_contra! contra
   exact hs ((toEnd R L M h).eigenvectors_linearIndependent

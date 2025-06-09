@@ -126,7 +126,7 @@ section HelperLemmas
 
 private theorem a_id_helper {a b : ℕ} (ha : 2 ≤ a) (hb : 2 ≤ b) : 2 ≤ (a ^ b - 1) / (a - 1) := by
   change 1 < _
-  have h₁  : a - 1 ∣ a ^ b - 1
+  have h₁ : a - 1 ∣ a ^ b - 1
   simpa only [one_pow] using nat_sub_dvd_pow_sub_pow a 1 b
   rw [Nat.lt_div_iff_mul_lt h₁, mul_one, tsub_lt_tsub_iff_right (Nat.le_of_succ_le ha)]
   exact lt_self_pow (Nat.lt_of_succ_le ha) hb
@@ -141,9 +141,9 @@ private theorem b_id_helper {a b : ℕ} (ha : 2 ≤ a) (hb : 2 < b) : 2 ≤ (a ^
 
 private theorem AB_id_helper (b p : ℕ) (_ : 2 ≤ b) (hp : Odd p) :
     (b ^ p - 1) / (b - 1) * ((b ^ p + 1) / (b + 1)) = (b ^ (2 * p) - 1) / (b ^ 2 - 1) := by
-  have q₁  : b - 1 ∣ b ^ p - 1
+  have q₁ : b - 1 ∣ b ^ p - 1
   simpa only [one_pow] using nat_sub_dvd_pow_sub_pow b 1 p
-  have q₂  : b + 1 ∣ b ^ p + 1
+  have q₂ : b + 1 ∣ b ^ p + 1
   simpa only [one_pow] using hp.nat_add_dvd_pow_add_pow b 1
   convert Nat.div_mul_div_comm q₁ q₂ using 2 <;> rw [mul_comm (_ - 1), ← Nat.sq_sub_sq]
   ring_nf
@@ -197,13 +197,13 @@ private theorem psp_from_prime_psp {b : ℕ} (b_ge_two : 2 ≤ b) {p : ℕ} (p_p
   have hi_A : 1 < A := a_id_helper (Nat.succ_le_iff.mp b_ge_two) (Nat.Prime.one_lt p_prime)
   have hi_B : 1 < B := b_id_helper (Nat.succ_le_iff.mp b_ge_two) p_gt_two
   have hi_AB : 1 < A * B := one_lt_mul'' hi_A hi_B
-  have hi_b  : 0 < b
+  have hi_b : 0 < b
   omega
   have hi_p : 1 ≤ p := Nat.one_le_of_lt p_gt_two
-  have hi_bsquared  : 0 < b ^ 2 - 1
+  have hi_bsquared : 0 < b ^ 2 - 1
   -- Porting note: was `by nlinarith [Nat.one_le_pow 2 b hi_b]`
   have h0 := mul_le_mul b_ge_two b_ge_two zero_le_two hi_b.le
-  have h1  : 1 < 2 * 2
+  have h1 : 1 < 2 * 2
   omega
   have := tsub_pos_of_lt (h1.trans_le h0)
   rwa [pow_two]
@@ -213,13 +213,13 @@ private theorem psp_from_prime_psp {b : ℕ} (b_ge_two : 2 ≤ b) {p : ℕ} (p_p
   have p_odd : Odd p := p_prime.odd_of_ne_two p_gt_two.ne.symm
   have AB_not_prime : ¬Nat.Prime (A * B) := Nat.not_prime_mul hi_A.ne' hi_B.ne'
   have AB_id : A * B = (b ^ (2 * p) - 1) / (b ^ 2 - 1) := AB_id_helper _ _ b_ge_two p_odd
-  have hd  : b ^ 2 - 1 ∣ b ^ (2 * p) - 1
+  have hd : b ^ 2 - 1 ∣ b ^ (2 * p) - 1
   simpa only [one_pow, pow_mul] using nat_sub_dvd_pow_sub_pow _ 1 p
   -- We know that `A * B` is not prime, and that `1 < A * B`. Since two conditions of being
   -- pseudoprime are satisfied, we only need to show that `A * B` is probable prime to base `b`
   refine ⟨?_, AB_not_prime, hi_AB⟩
   -- Used to prove that `2 * p * (b ^ 2 - 1) ∣ (b ^ 2 - 1) * (A * B - 1)`.
-  have ha₁  : (b ^ 2 - 1) * (A * B - 1) = b * (b ^ (p - 1) - 1) * (b ^ p + b)
+  have ha₁ : (b ^ 2 - 1) * (A * B - 1) = b * (b ^ (p - 1) - 1) * (b ^ p + b)
   apply_fun fun x => x * (b ^ 2 - 1) at AB_id
   rw [Nat.div_mul_cancel hd] at AB_id
   apply_fun fun x => x - (b ^ 2 - 1) at AB_id
@@ -229,12 +229,12 @@ private theorem psp_from_prime_psp {b : ℕ} (b_ge_two : 2 ≤ b) {p : ℕ} (p_p
   exact bp_helper hi_b hi_p
   -- If `b` is even, then `b^p` is also even, so `2 ∣ b^p + b`
   -- If `b` is odd, then `b^p` is also odd, so `2 ∣ b^p + b`
-  have ha₂  : 2 ∣ b ^ p + b
+  have ha₂ : 2 ∣ b ^ p + b
   -- Porting note: golfed
   rw [← even_iff_two_dvd, Nat.even_add, Nat.even_pow' p_prime.ne_zero]
   -- Since `b` isn't divisible by `p`, `b` is coprime with `p`. we can use Fermat's Little Theorem
   -- to prove this.
-  have ha₃  : p ∣ b ^ (p - 1) - 1
+  have ha₃ : p ∣ b ^ (p - 1) - 1
   have : ¬p ∣ b := mt (fun h : p ∣ b => dvd_mul_of_dvd_left h _) not_dvd
   have : p.Coprime b := Or.resolve_right (Nat.coprime_or_dvd_of_prime p_prime b) this
   have : IsCoprime (b : ℤ) ↑p := this.symm.isCoprime
@@ -243,17 +243,17 @@ private theorem psp_from_prime_psp {b : ℕ} (b_ge_two : 2 ≤ b) {p : ℕ} (p_p
   exact mod_cast this
   -- Because `p - 1` is even, there is a `c` such that `2 * c = p - 1`. `nat_sub_dvd_pow_sub_pow`
   -- implies that `b ^ c - 1 ∣ (b ^ c) ^ 2 - 1`, and `(b ^ c) ^ 2 = b ^ (p - 1)`.
-  have ha₄  : b ^ 2 - 1 ∣ b ^ (p - 1) - 1
+  have ha₄ : b ^ 2 - 1 ∣ b ^ (p - 1) - 1
   cases' p_odd with k hk
   have : 2 ∣ p - 1 := ⟨k, by simp [hk]⟩
   cases' this with c hc
-  have  : b ^ 2 - 1 ∣ (b ^ 2) ^ c - 1
+  have : b ^ 2 - 1 ∣ (b ^ 2) ^ c - 1
   simpa only [one_pow] using nat_sub_dvd_pow_sub_pow _ 1 c
-  have  : b ^ 2 - 1 ∣ b ^ (2 * c) - 1
+  have : b ^ 2 - 1 ∣ b ^ (2 * c) - 1
   rwa [← pow_mul] at this
   rwa [← hc] at this
   -- Used to prove that `2 * p` divides `A * B - 1`
-  have ha₅  : 2 * p * (b ^ 2 - 1) ∣ (b ^ 2 - 1) * (A * B - 1)
+  have ha₅ : 2 * p * (b ^ 2 - 1) ∣ (b ^ 2 - 1) * (A * B - 1)
   suffices q : 2 * p * (b ^ 2 - 1) ∣ b * (b ^ (p - 1) - 1) * (b ^ p + b) by rwa [ha₁]
   -- We already proved that `b ^ 2 - 1 ∣ b ^ (p - 1) - 1`.
   -- Since `2 ∣ b ^ p + b` and `p ∣ b ^ p + b`, if we show that 2 and p are coprime, then we
@@ -268,12 +268,12 @@ private theorem psp_from_prime_psp {b : ℕ} (b_ge_two : 2 ≤ b) {p : ℕ} (p_p
   have q₄ : p * (b ^ 2 - 1) * 2 ∣ b * ((b ^ (p - 1) - 1) * (b ^ p + b)) :=
     dvd_mul_of_dvd_right q₃ _
   rwa [mul_assoc, mul_comm, mul_assoc b]
-  have ha₆  : 2 * p ∣ A * B - 1
+  have ha₆ : 2 * p ∣ A * B - 1
   rw [mul_comm] at ha₅
   exact Nat.dvd_of_mul_dvd_mul_left hi_bsquared ha₅
   -- `A * B` divides `b ^ (2 * p) - 1` because `A * B * (b ^ 2 - 1) = b ^ (2 * p) - 1`.
   -- This can be proven by multiplying both sides of `AB_id` by `b ^ 2 - 1`.
-  have ha₇  : A * B ∣ b ^ (2 * p) - 1
+  have ha₇ : A * B ∣ b ^ (2 * p) - 1
   use b ^ 2 - 1
   have : A * B * (b ^ 2 - 1) = (b ^ (2 * p) - 1) / (b ^ 2 - 1) * (b ^ 2 - 1) :=
     congr_arg (fun x : ℕ => x * (b ^ 2 - 1)) AB_id
@@ -282,7 +282,7 @@ private theorem psp_from_prime_psp {b : ℕ} (b_ge_two : 2 ≤ b) {p : ℕ} (p_p
   -- By `nat_sub_dvd_pow_sub_pow`, we know that `b ^ (2 * p) - 1 ∣ b ^ (2 * p * q) - 1`.
   -- This means that `b ^ (2 * p) - 1 ∣ b ^ (A * B - 1) - 1`.
   cases' ha₆ with q hq
-  have ha₈  : b ^ (2 * p) - 1 ∣ b ^ (A * B - 1) - 1
+  have ha₈ : b ^ (2 * p) - 1 ∣ b ^ (A * B - 1) - 1
   simpa only [one_pow, pow_mul, hq] using nat_sub_dvd_pow_sub_pow _ 1 q
   -- We have proved that `A * B ∣ b ^ (2 * p) - 1` and `b ^ (2 * p) - 1 ∣ b ^ (A * B - 1) - 1`.
   -- Therefore, `A * B ∣ b ^ (A * B - 1) - 1`.
@@ -299,7 +299,7 @@ private theorem psp_from_prime_gt_p {b : ℕ} (b_ge_two : 2 ≤ b) {p : ℕ} (p_
   set B := (b ^ p + 1) / (b + 1)
   rw [show A * B = (b ^ (2 * p) - 1) / (b ^ 2 - 1) from
       AB_id_helper _ _ b_ge_two (p_prime.odd_of_ne_two p_gt_two.ne.symm)]
-  have AB_dvd  : b ^ 2 - 1 ∣ b ^ (2 * p) - 1
+  have AB_dvd : b ^ 2 - 1 ∣ b ^ (2 * p) - 1
   simpa only [one_pow, pow_mul] using nat_sub_dvd_pow_sub_pow _ 1 p
   suffices h : p * (b ^ 2 - 1) < b ^ (2 * p) - 1 by
     have h₁ : p * (b ^ 2 - 1) / (b ^ 2 - 1) < (b ^ (2 * p) - 1) / (b ^ 2 - 1) :=
@@ -345,7 +345,7 @@ theorem exists_infinite_pseudoprimes {b : ℕ} (h : 1 ≤ b) (m : ℕ) :
     have h₂ : 4 ≤ b ^ 2 := pow_le_pow_left' b_ge_two 2
     have h₃ : 0 < b ^ 2 - 1 := tsub_pos_of_lt (gt_of_ge_of_gt h₂ (by norm_num))
     have h₄ : 0 < b * (b ^ 2 - 1) := mul_pos h₁ h₃
-    have h₅  : b * (b ^ 2 - 1) < p
+    have h₅ : b * (b ^ 2 - 1) < p
     omega
     have h₆ : ¬p ∣ b * (b ^ 2 - 1) := Nat.not_dvd_of_pos_of_lt h₄ h₅
     have h₇ : b ≤ b * (b ^ 2 - 1) := Nat.le_mul_of_pos_right _ h₃

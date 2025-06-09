@@ -7,6 +7,7 @@ Skips processing inside def blocks and proof term blocks.
 """
 
 import os
+import re
 import fnmatch
 from pathlib import Path
 from typing import List, Tuple, Optional
@@ -39,27 +40,65 @@ def get_indentation(line: str) -> int:
     return len(line) - len(line.lstrip())
 
 
+def normalize_spaces(text: str) -> str:
+    """Replace multiple spaces with single space."""
+    return re.sub(r'\s+', ' ', text)
+
+
+def strip_trailing_spaces(line: str) -> str:
+    """Remove trailing spaces from a line."""
+    return line.rstrip()
+
+
 def is_have_line(line: str) -> bool:
     """Check if a line starts with 'have' (after stripping indentation)."""
     stripped = line.lstrip()
     return stripped.startswith('have ')
 
 
-def has_colon_assign_by_pattern(line: str) -> bool:
-    """Check if line has pattern: have ... : ... := by ..."""
-    # Must have both ':' before ':=' and ':= by'
-    assign_pos = line.find(':=')
-    if assign_pos == -1:
-        return False
+def parse_have_components(line: str) -> Optional[Tuple[str, str, str, str]]:
+    """
+    Parse a 'have ... : ... := by ...' line.
+    Returns (have_name, type, by_content, indent) or None if not matching pattern.
+    """
+    # Find ':=' position
+    assign_match = re.search(r':=', line)
+    if not assign_match:
+        return None
+
+    assign_pos = assign_match.start()
+    before_assign = line[:assign_pos]
+    after_assign = line[assign_pos+2:]  # Skip ':='
 
     # Check if there's a colon before :=
-    before_assign = line[:assign_pos]
-    if ':' not in before_assign:
-        return False
+    colon_match = re.search(r':', before_assign)
+    if not colon_match:
+        return None
 
-    # Check if := is followed by 'by'
-    after_assign = line[assign_pos+2:].strip()
-    return after_assign.startswith('by')
+    colon_pos = colon_match.start()
+
+    # Check if := is followed by 'by' (with any amount of whitespace)
+    by_match = re.match(r'\s*by\s+(.*)', after_assign)
+    if not by_match:
+        return None
+
+    # Extract components
+    indent = ' ' * get_indentation(line)
+    have_part = line[:colon_pos].strip()  # e.g., 'have hx'
+    type_part = before_assign[colon_pos+1:].strip()  # type between : and :=
+    by_content = by_match.group(1).strip()  # content after 'by'
+
+    # Normalize have_part to ensure single space after 'have'
+    have_match = re.match(r'(have)\s+(.+)', have_part)
+    if have_match:
+        have_part = f"have {have_match.group(2)}"
+
+    return (have_part, type_part, by_content, indent)
+
+
+def has_colon_assign_by_pattern(line: str) -> bool:
+    """Check if line has pattern: have ... : ... := by ..."""
+    return parse_have_components(line) is not None
 
 
 def find_block_end(lines: List[str], start_idx: int) -> int:
@@ -124,24 +163,21 @@ def find_have_environment_end(lines: List[str], start_idx: int) -> int:
     return len(lines) - 1
 
 
-def process_single_line_have_by(line: str, indent: int) -> List[str]:
+def process_single_line_have_by(line: str) -> List[str]:
     """Process a single-line 'have : t := by e' statement."""
-    # Find positions
-    assign_pos = line.find(':=')
-    colon_pos = line[:assign_pos].find(':')
+    components = parse_have_components(line)
+    if not components:
+        return [line]
 
-    # Extract parts
-    have_part = line[:colon_pos]  # 'have hx'
-    type_part = line[colon_pos+1:assign_pos].strip()  # 'type'
-    after_by = line[assign_pos+2:].strip()[2:].strip()  # Remove 'by ' and get rest
+    have_part, type_part, by_content, indent = components
 
-    # Build result
-    new_have = f"{have_part} : {type_part}"
-    result = [new_have]
+    # Build result with normalized spacing
+    new_have = f"{indent}{have_part} : {type_part}"
+    result = [strip_trailing_spaces(new_have)]
 
     # If there's content after 'by', add it on next line
-    if after_by:
-        result.append(' ' * indent + after_by)
+    if by_content:
+        result.append(strip_trailing_spaces(indent + by_content))
 
     return result
 
@@ -157,26 +193,22 @@ def reduce_indentation(line: str, reduction: int) -> str:
 def process_multi_line_have_by(lines: List[str], start_idx: int, end_idx: int) -> List[str]:
     """Process a multi-line 'have : t := by ...' environment."""
     have_line = lines[start_idx]
-    have_indent = get_indentation(have_line)
+    components = parse_have_components(have_line)
+    if not components:
+        return lines[start_idx:end_idx+1]
 
-    # Find positions
-    assign_pos = have_line.find(':=')
-    colon_pos = have_line[:assign_pos].find(':')
+    have_part, type_part, by_content, indent = components
 
-    # Extract parts
-    have_part = have_line[:colon_pos]  # 'have hx'
-    type_part = have_line[colon_pos+1:assign_pos].strip()  # 'type'
-    after_by = have_line[assign_pos+2:].strip()[2:].strip()  # Remove 'by ' and get rest
-
-    # Build result
-    new_have = f"{have_part} : {type_part}"
-    result = [new_have]
+    # Build result with normalized spacing
+    new_have = f"{indent}{have_part} : {type_part}"
+    result = [strip_trailing_spaces(new_have)]
 
     # If there's content after 'by' on same line, add it
-    if after_by:
-        result.append(' ' * have_indent + after_by)
+    if by_content:
+        result.append(strip_trailing_spaces(indent + by_content))
 
     # Determine indentation reduction
+    have_indent = get_indentation(have_line)
     indent_reduction = 0
     for i in range(start_idx + 1, end_idx + 1):
         if lines[i].strip():
@@ -188,7 +220,8 @@ def process_multi_line_have_by(lines: List[str], start_idx: int, end_idx: int) -
 
     # Add subsequent lines with reduced indentation
     for i in range(start_idx + 1, end_idx + 1):
-        result.append(reduce_indentation(lines[i], indent_reduction))
+        reduced_line = reduce_indentation(lines[i], indent_reduction)
+        result.append(strip_trailing_spaces(reduced_line))
 
     return result
 
@@ -217,7 +250,7 @@ def process_lean_file(file_path: Path) -> int:
             # Skip entire block until empty line
             block_end = find_block_end(lines, i)
             for j in range(i, block_end + 1):
-                result.append(lines[j])
+                result.append(strip_trailing_spaces(lines[j]))
             i = block_end
         # Check if we're entering a def block
         elif is_def_line(line):
@@ -225,7 +258,7 @@ def process_lean_file(file_path: Path) -> int:
             block_end = find_block_end(lines, i)
             # Copy all lines in def block without processing
             for j in range(i, block_end + 1):
-                result.append(lines[j])
+                result.append(strip_trailing_spaces(lines[j]))
             i = block_end
         elif is_have_line(line) and has_colon_assign_by_pattern(line):
             # This is a 'have : t := by' line used as a tactic
@@ -234,7 +267,7 @@ def process_lean_file(file_path: Path) -> int:
 
             if env_end == i:
                 # Single-line environment
-                processed = process_single_line_have_by(line, get_indentation(line))
+                processed = process_single_line_have_by(line)
                 result.extend(processed)
             else:
                 # Multi-line environment
@@ -242,8 +275,8 @@ def process_lean_file(file_path: Path) -> int:
                 result.extend(processed)
                 i = env_end  # Skip to end of environment
         else:
-            # Not our target pattern, keep as is
-            result.append(line)
+            # Not our target pattern, keep as is (but strip trailing spaces)
+            result.append(strip_trailing_spaces(line))
 
         i += 1
 

@@ -284,9 +284,9 @@ theorem sum_smul (n : ℕ) :
   -- We'll work in `MvPolynomial Bool R`.
   let x : MvPolynomial Bool R := MvPolynomial.X true
   let y : MvPolynomial Bool R := MvPolynomial.X false
-  have pderiv_true_x  : pderiv true x = 1
+  have pderiv_true_x : pderiv true x = 1
   rw [pderiv_X]; rfl
-  have pderiv_true_y  : pderiv true y = 0
+  have pderiv_true_y : pderiv true y = 0
   rw [pderiv_X]; rfl
   let e : Bool → R[X] := fun i => cond i X (1 - X)
   -- Start with `(x+y)^n = (x+y)^n`,
@@ -323,9 +323,9 @@ theorem sum_mul_smul (n : ℕ) :
   -- We'll work in `MvPolynomial Bool R`.
   let x : MvPolynomial Bool R := MvPolynomial.X true
   let y : MvPolynomial Bool R := MvPolynomial.X false
-  have pderiv_true_x  : pderiv true x = 1
+  have pderiv_true_x : pderiv true x = 1
   rw [pderiv_X]; rfl
-  have pderiv_true_y  : pderiv true y = 0
+  have pderiv_true_y : pderiv true y = 0
   rw [pderiv_X]; rfl
   let e : Bool → R[X] := fun i => cond i X (1 - X)
   -- Start with `(x+y)^n = (x+y)^n`,

@@ -164,7 +164,7 @@ theorem ringEquivOfCardinalEqOfCharZero [CharZero K] [CharZero L] (hK : ℵ₀ <
     (show Function.Injective (algebraMap ℤ K) from Int.cast_injective) with s hs
   cases' exists_isTranscendenceBasis ℤ
     (show Function.Injective (algebraMap ℤ L) from Int.cast_injective) with t ht
-  have  : #s = #t
+  have : #s = #t
   rw [← cardinal_eq_cardinal_transcendence_basis_of_aleph0_lt _ hs (le_of_eq mk_int) hK, ←
     cardinal_eq_cardinal_transcendence_basis_of_aleph0_lt _ ht (le_of_eq mk_int), hKL]
   rwa [← hKL]
@@ -179,7 +179,7 @@ private theorem ringEquivOfCardinalEqOfCharP (p : ℕ) [Fact p.Prime] [CharP K p
     (show Function.Injective (algebraMap (ZMod p) K) from RingHom.injective _) with s hs
   cases' exists_isTranscendenceBasis (ZMod p)
     (show Function.Injective (algebraMap (ZMod p) L) from RingHom.injective _) with t ht
-  have  : #s = #t
+  have : #s = #t
   rw [← cardinal_eq_cardinal_transcendence_basis_of_aleph0_lt _ hs
     (lt_aleph0_of_finite (ZMod p)).le hK,
     ← cardinal_eq_cardinal_transcendence_basis_of_aleph0_lt _ ht

@@ -353,7 +353,7 @@ theorem exists_subset_encard_eq {k : ℕ∞} (hk : k ≤ s.encard) : ∃ t, t �
   refine ENat.nat_induction k (fun _ ↦ ⟨∅, empty_subset _, by simp⟩) (fun n IH hle ↦ ?_) ?_
   · obtain ⟨t₀, ht₀s, ht₀⟩ := IH (le_trans (by simp) hle)
     simp only [Nat.cast_succ] at *
-    have hne  : t₀ ≠ s
+    have hne : t₀ ≠ s
     rintro rfl; rw [ht₀, ← Nat.cast_one, ← Nat.cast_add, Nat.cast_le] at hle; simp at hle
     obtain ⟨x, hx⟩ := exists_of_ssubset (ht₀s.ssubset_of_ne hne)
     exact ⟨insert x t₀, insert_subset hx.1 ht₀s, by rw [encard_insert_of_not_mem hx.2, ht₀]⟩
@@ -367,7 +367,7 @@ theorem exists_superset_subset_encard_eq {k : ℕ∞}
   · rw [hs, top_le_iff] at hsk; subst hsk; exact ⟨s, Subset.rfl, hst, hs⟩
   obtain ⟨k, rfl⟩ := exists_add_of_le hsk
   obtain ⟨k', hk'⟩ := exists_add_of_le hkt
-  have hk  : k ≤ encard (t \ s)
+  have hk : k ≤ encard (t \ s)
   rw [← encard_diff_add_encard_of_subset hst, add_comm] at hkt
   exact WithTop.le_of_add_le_add_right hs hkt
   obtain ⟨r', hr', rfl⟩ := exists_subset_encard_eq hk
@@ -422,7 +422,7 @@ theorem Finite.exists_injOn_of_encard_le [Nonempty β] {s : Set α} {t : Set β}
   · simp
   · exact (encard_ne_top_iff.mpr hs h).elim
   obtain ⟨b, hbt⟩ := encard_pos.1 ((encard_pos.2 ⟨_, has⟩).trans_le hle)
-  have hle'  : (s \ {a}).encard ≤ (t \ {b}).encard
+  have hle' : (s \ {a}).encard ≤ (t \ {b}).encard
   rwa [← WithTop.add_le_add_iff_right WithTop.one_ne_top,
   encard_diff_singleton_add_one has, encard_diff_singleton_add_one hbt]
 
@@ -708,7 +708,7 @@ theorem ncard_congr {t : Set β} (f : ∀ a ∈ s, β) (h₁ : ∀ a ha, f a ha 
     (h₂ : ∀ a b ha hb, f a ha = f b hb → a = b) (h₃ : ∀ b ∈ t, ∃ a ha, f a ha = b) :
     s.ncard = t.ncard := by
   set f' : s → t := fun x ↦ ⟨f x.1 x.2, h₁ _ _⟩
-  have hbij  : f'.Bijective
+  have hbij : f'.Bijective
   constructor
   · rintro ⟨x, hx⟩ ⟨y, hy⟩ hxy
     simp only [f', Subtype.mk.injEq] at hxy ⊢
@@ -745,7 +745,7 @@ theorem surj_on_of_inj_on_of_ncard_le {t : Set β} (f : ∀ a ∈ s, β) (hf : �
     ∀ b ∈ t, ∃ a ha, b = f a ha := by
   intro b hb
   set f' : s → t := fun x ↦ ⟨f x.1 x.2, hf _ _⟩
-  have finj  : f'.Injective
+  have finj : f'.Injective
   rintro ⟨x, hx⟩ ⟨y, hy⟩ hxy
   simp only [f', Subtype.mk.injEq] at hxy ⊢
   apply hinj _ _ hx hy hxy
@@ -766,7 +766,7 @@ theorem inj_on_of_surj_on_of_ncard_le {t : Set β} (f : ∀ a ∈ s, β) (hf : �
     a₁ = a₂ := by
   classical
   set f' : s → t := fun x ↦ ⟨f x.1 x.2, hf _ _⟩
-  have hsurj  : f'.Surjective
+  have hsurj : f'.Surjective
   rintro ⟨y, hy⟩
   obtain ⟨a, ha, rfl⟩ := hsurj y hy
   simp only [Subtype.mk.injEq, Subtype.exists]

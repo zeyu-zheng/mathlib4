@@ -67,7 +67,7 @@ protected theorem lawfulFunctor' [F : Functor t']
     (h₀ : ∀ {α β} (f : α → β), Functor.map f = Equiv.map eqv f)
     (h₁ : ∀ {α β} (f : β), Functor.mapConst f = (Equiv.map eqv ∘ Function.const α) f) :
     LawfulFunctor t' := by
-  have  : F = Equiv.functor eqv
+  have : F = Equiv.functor eqv
   cases F
   dsimp [Equiv.functor]
   congr <;> ext <;> dsimp only <;> [rw [← h₀]; rw [← h₁]] <;> rfl

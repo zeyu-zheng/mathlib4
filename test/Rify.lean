@@ -31,9 +31,9 @@ example {n k : ℕ} (h₁ : 8 ≤ n) (h₂ : 2 * k > n) (h₃: k + 1 < n) :
 
 example {n k : ℕ} (h₁ : 8 ≤ n) (h₂ : 2 * k > n) (h₃: k + 1 < n) :
     n - (n - (k + 1)) = k + 1 := by
-  have f₁  : k + 1 ≤ n
+  have f₁ : k + 1 ≤ n
   linarith
-  have f₂  : n - (k + 1) ≤ n
+  have f₂ : n - (k + 1) ≤ n
   rify [f₁]; linarith
   rify [f₁, f₂] at *
   linarith

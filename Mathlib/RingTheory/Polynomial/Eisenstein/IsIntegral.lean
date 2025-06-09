@@ -138,7 +138,7 @@ theorem dvd_coeff_zero_of_aeval_eq_prime_smul_of_minpoly_isEisensteinAt {B : Pow
   obtain ⟨n, hn⟩ := Nat.exists_eq_succ_of_ne_zero B.dim_pos.ne'
   have finrank_K_L : FiniteDimensional.finrank K L = B.dim := B.finrank
   have deg_K_P : (minpoly K B.gen).natDegree = B.dim := B.natDegree_minpoly
-  have deg_R_P  : P.natDegree = B.dim
+  have deg_R_P : P.natDegree = B.dim
   rw [← deg_K_P, minpoly.isIntegrallyClosed_eq_field_fractions' K hBint,
     (minpoly.monic hBint).natDegree_map (algebraMap R K)]
   choose! f hf using
@@ -159,7 +159,7 @@ theorem dvd_coeff_zero_of_aeval_eq_prime_smul_of_minpoly_isEisensteinAt {B : Pow
     rw [mul_comm _ 2, pow_mul, neg_one_sq, one_pow, mul_one]
 
   -- We claim the quotient of `Q^n * _` by `p^n` is the following `r`:
-  have aux  : ∀ i ∈ (range (Q.natDegree + 1)).erase 0, B.dim ≤ i + n
+  have aux : ∀ i ∈ (range (Q.natDegree + 1)).erase 0, B.dim ≤ i + n
   intro i hi
   simp only [mem_range, mem_erase] at hi
   rw [hn]

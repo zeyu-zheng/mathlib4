@@ -34,7 +34,7 @@ noncomputable def triangleRemovalBound (ε : ℝ) : ℝ :=
   min (2 * ⌈4/ε⌉₊^3)⁻¹ ((1 - ε/4) * (ε/(16 * bound (ε/8) ⌈4/ε⌉₊))^3)
 
 lemma triangleRemovalBound_pos (hε : 0 < ε) (hε₁ : ε ≤ 1) : 0 < triangleRemovalBound ε := by
-  have  : 0 < 1 - ε / 4
+  have : 0 < 1 - ε / 4
   linarith
   unfold triangleRemovalBound
   positivity
@@ -80,9 +80,9 @@ private lemma triangle_removal_aux (hε : 0 < ε) (hP₁ : P.IsEquipartition)
   have dXY := P.disjoint hX hY nXY
   have dXZ := P.disjoint hX hZ nXZ
   have dYZ := P.disjoint hY hZ nYZ
-  have that  : 2 * (ε/8) = ε/4
+  have that : 2 * (ε/8) = ε/4
   ring
-  have  : 0 ≤ 1 - 2 * (ε / 8)
+  have : 0 ≤ 1 - 2 * (ε / 8)
   have : ε / 4 ≤ 1 := ‹ε / 4 ≤ _›.trans (by exact mod_cast G.edgeDensity_le_one _ _); linarith
   calc
     _ ≤ (1 - ε/4) * (ε/(16 * bound (ε/8) ⌈4/ε⌉₊))^3 * card α ^ 3 := by

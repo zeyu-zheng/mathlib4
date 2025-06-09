@@ -144,7 +144,7 @@ theorem lintegral_mul_le_Lp_mul_Lq_of_ne_zero_of_eq_top {p q : ℝ} (hp0_lt : 0 
     {f g : α → ℝ≥0∞} (hf_top : ∫⁻ a, f a ^ p ∂μ = ⊤) (hg_nonzero : (∫⁻ a, g a ^ q ∂μ) ≠ 0) :
     (∫⁻ a, (f * g) a ∂μ) ≤ (∫⁻ a, f a ^ p ∂μ) ^ (1 / p) * (∫⁻ a, g a ^ q ∂μ) ^ (1 / q) := by
   refine le_trans le_top (le_of_eq ?_)
-  have hp0_inv_lt  : 0 < 1 / p
+  have hp0_inv_lt : 0 < 1 / p
   simp [hp0_lt]
   rw [hf_top, ENNReal.top_rpow_of_pos hp0_inv_lt]
   simp [hq0, hg_nonzero]
@@ -182,11 +182,11 @@ theorem lintegral_mul_norm_pow_le {α} [MeasurableSpace α] {μ : Measure α}
   rcases hq.eq_or_lt with rfl|hq
   · rw [add_zero] at hpq
     simp [hpq]
-  have h2p  : 1 < 1 / p
+  have h2p : 1 < 1 / p
   rw [one_div]
   apply one_lt_inv hp
   linarith
-  have h2pq  : (1 / p)⁻¹ + (1 / q)⁻¹ = 1
+  have h2pq : (1 / p)⁻¹ + (1 / q)⁻¹ = 1
   simp [hp.ne', hq.ne', hpq]
   have := ENNReal.lintegral_mul_le_Lp_mul_Lq μ ⟨h2p, h2pq⟩ (hf.pow_const p) (hg.pow_const q)
   simpa [← ENNReal.rpow_mul, hp.ne', hq.ne'] using this
@@ -275,10 +275,10 @@ theorem lintegral_rpow_add_lt_top_of_lintegral_rpow_lt_top {p : ℝ} {f g : α �
         ∫⁻ a, (2 : ℝ≥0∞) ^ (p - 1) * f a ^ p + (2 : ℝ≥0∞) ^ (p - 1) * g a ^ p ∂μ := by
       refine lintegral_mono fun a => ?_
       dsimp only
-      have h_zero_lt_half_rpow  : (0 : ℝ≥0∞) < (1 / 2 : ℝ≥0∞) ^ p
+      have h_zero_lt_half_rpow : (0 : ℝ≥0∞) < (1 / 2 : ℝ≥0∞) ^ p
       rw [← ENNReal.zero_rpow_of_pos hp0_lt]
       exact ENNReal.rpow_lt_rpow (by simp [zero_lt_one]) hp0_lt
-      have h_rw  : (1 / 2 : ℝ≥0∞) ^ p * (2 : ℝ≥0∞) ^ (p - 1) = 1 / 2
+      have h_rw : (1 / 2 : ℝ≥0∞) ^ p * (2 : ℝ≥0∞) ^ (p - 1) = 1 / 2
       rw [sub_eq_add_neg, ENNReal.rpow_add _ _ two_ne_zero ENNReal.coe_ne_top, ← mul_assoc, ←
         ENNReal.mul_rpow_of_nonneg _ _ hp0, one_div,
         ENNReal.inv_mul_cancel two_ne_zero ENNReal.coe_ne_top, ENNReal.one_rpow, one_mul,
@@ -311,7 +311,7 @@ theorem lintegral_Lp_mul_le_Lq_mul_Lr {α} [MeasurableSpace α] {p q r : ℝ} (h
   have hp0 : 0 ≤ p := le_of_lt hp0_lt
   have hq0_lt : 0 < q := lt_of_le_of_lt hp0 hpq
   have hq0_ne : q ≠ 0 := (ne_of_lt hq0_lt).symm
-  have h_one_div_r  : 1 / r = 1 / p - 1 / q
+  have h_one_div_r : 1 / r = 1 / p - 1 / q
   rw [hpqr]; simp
   let p2 := q / p
   let q2 := p2.conjExponent
@@ -345,10 +345,10 @@ theorem lintegral_mul_rpow_le_lintegral_rpow_mul_lintegral_rpow {p q : ℝ}
   by_cases hf_zero_rpow : (∫⁻ a : α, f a ^ p ∂μ) ^ (1 / p) = 0
   · rw [hf_zero_rpow, zero_mul]
     exact zero_le _
-  have hf_top_rpow  : (∫⁻ a : α, f a ^ p ∂μ) ^ (1 / p) ≠ ⊤
+  have hf_top_rpow : (∫⁻ a : α, f a ^ p ∂μ) ^ (1 / p) ≠ ⊤
   by_contra h
   refine hf_top ?_
-  have hp_not_neg  : ¬p < 0
+  have hp_not_neg : ¬p < 0
   simp [hpq.nonneg]
   simpa [hpq.pos, hp_not_neg] using h
   refine (ENNReal.mul_le_mul_left hf_zero_rpow hf_top_rpow).mpr (le_of_eq ?_)
@@ -401,12 +401,12 @@ private theorem lintegral_Lp_add_le_aux {p q : ℝ} (hpq : p.IsConjExponent q) {
     (h_add_top : (∫⁻ a, (f + g) a ^ p ∂μ) ≠ ⊤) :
     (∫⁻ a, (f + g) a ^ p ∂μ) ^ (1 / p) ≤
       (∫⁻ a, f a ^ p ∂μ) ^ (1 / p) + (∫⁻ a, g a ^ p ∂μ) ^ (1 / p) := by
-  have hp_not_nonpos  : ¬p ≤ 0
+  have hp_not_nonpos : ¬p ≤ 0
   simp [hpq.pos]
-  have htop_rpow  : (∫⁻ a, (f + g) a ^ p ∂μ) ^ (1 / p) ≠ ⊤
+  have htop_rpow : (∫⁻ a, (f + g) a ^ p ∂μ) ^ (1 / p) ≠ ⊤
   by_contra h
   exact h_add_top (@ENNReal.rpow_eq_top_of_nonneg _ (1 / p) (by simp [hpq.nonneg]) h)
-  have h0_rpow  : (∫⁻ a, (f + g) a ^ p ∂μ) ^ (1 / p) ≠ 0
+  have h0_rpow : (∫⁻ a, (f + g) a ^ p ∂μ) ^ (1 / p) ≠ 0
   simp [h_add_zero, h_add_top, hpq.nonneg, hp_not_nonpos, -Pi.add_apply]
   suffices h :
     1 ≤
@@ -443,7 +443,7 @@ theorem lintegral_Lp_add_le {p : ℝ} {f g : α → ℝ≥0∞} (hf : AEMeasurab
   · refine le_of_eq ?_
     simp_rw [h1, one_div_one, ENNReal.rpow_one]
     exact lintegral_add_left' hf _
-  have hp1_lt  : 1 < p
+  have hp1_lt : 1 < p
   refine lt_of_le_of_ne hp1 ?_
   symm
   exact h1
@@ -451,7 +451,7 @@ theorem lintegral_Lp_add_le {p : ℝ} {f g : α → ℝ≥0∞} (hf : AEMeasurab
   by_cases h0 : (∫⁻ a, (f + g) a ^ p ∂μ) = 0
   · rw [h0, @ENNReal.zero_rpow_of_pos (1 / p) (by simp [lt_of_lt_of_le zero_lt_one hp1])]
     exact zero_le _
-  have htop  : (∫⁻ a, (f + g) a ^ p ∂μ) ≠ ⊤
+  have htop : (∫⁻ a, (f + g) a ^ p ∂μ) ≠ ⊤
   rw [← Ne] at hf_top hg_top
   rw [← lt_top_iff_ne_top] at hf_top hg_top ⊢
   exact lintegral_rpow_add_lt_top_of_lintegral_rpow_lt_top hf hf_top hg_top hp1

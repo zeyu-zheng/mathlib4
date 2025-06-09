@@ -145,7 +145,7 @@ theorem integral_inv_smul_sub_mul_tendsto_integral_lineDeriv_mul'
         rw [← Function.nmem_support]
         contrapose! hx
         exact self_subset_cthickening _ (subset_tsupport _ hx)
-      have B  : f (x + t • v) = 0
+      have B : f (x + t • v) = 0
       rw [← Function.nmem_support]
       contrapose! hx
       apply mem_cthickening_of_dist_le _ _ (‖v‖) (tsupport f) (subset_tsupport _ hx)
@@ -357,7 +357,7 @@ theorem ae_differentiableWithinAt_of_mem {f : E → F} (hf : LipschitzOnWith C f
   have A := (Basis.ofVectorSpace ℝ F).equivFun.toContinuousLinearEquiv
   suffices H : ∀ᵐ x ∂μ, x ∈ s → DifferentiableWithinAt ℝ (A ∘ f) s x by
     filter_upwards [H] with x hx xs
-    have  : f = (A.symm ∘ A) ∘ f
+    have : f = (A.symm ∘ A) ∘ f
     simp only [ContinuousLinearEquiv.symm_comp_self, Function.id_comp]
     rw [this]
     exact A.symm.differentiableAt.comp_differentiableWithinAt x (hx xs)

@@ -198,14 +198,14 @@ theorem of_split [FormallySmooth R P] (g : A →ₐ[R] P ⧸ (RingHom.ker f.toRi
   intro C _ _ I hI i
   let l : P ⧸ (RingHom.ker f.toRingHom) ^ 2 →ₐ[R] C := by
     refine Ideal.Quotient.liftₐ _ (FormallySmooth.lift I ⟨2, hI⟩ (i.comp f)) ?_
-    have  : RingHom.ker f ≤ I.comap (FormallySmooth.lift I ⟨2, hI⟩ (i.comp f))
+    have : RingHom.ker f ≤ I.comap (FormallySmooth.lift I ⟨2, hI⟩ (i.comp f))
     rintro x (hx : f x = 0)
     have : _ = i (f x) := (FormallySmooth.mk_lift I ⟨2, hI⟩ (i.comp f) x : _)
     rwa [hx, map_zero, ← Ideal.Quotient.mk_eq_mk, Submodule.Quotient.mk_eq_zero] at this
     intro x hx
     have := (Ideal.pow_right_mono this 2).trans (Ideal.le_comap_pow _ 2) hx
     rwa [hI] at this
-  have  : i.comp f.kerSquareLift = (Ideal.Quotient.mkₐ R _).comp l
+  have : i.comp f.kerSquareLift = (Ideal.Quotient.mkₐ R _).comp l
   apply AlgHom.coe_ringHom_injective
   apply Ideal.Quotient.ringHom_ext
   ext x
@@ -289,7 +289,7 @@ variable [IsLocalization M Rₘ] [IsLocalization (M.map (algebraMap R S)) Sₘ]
 theorem of_isLocalization : FormallySmooth R Rₘ := by
   constructor
   intro Q _ _ I e f
-  have  : ∀ x : M, IsUnit (algebraMap R Q x)
+  have : ∀ x : M, IsUnit (algebraMap R Q x)
   intro x
   apply (IsNilpotent.isUnit_quotient_mk_iff ⟨2, e⟩).mp
   convert (IsLocalization.map_units Rₘ x).map f

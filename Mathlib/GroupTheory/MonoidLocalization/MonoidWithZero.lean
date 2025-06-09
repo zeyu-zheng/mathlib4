@@ -128,7 +128,7 @@ theorem leftCancelMulZero_of_le_isLeftRegular
   use 1
   rw [OneMemClass.coe_one, one_mul, one_mul]
   -- The hypothesis `a ≠ 0` in `P` is equivalent to this
-  have b1ne0  : b.1 ≠ 0
+  have b1ne0 : b.1 ≠ 0
   intro hb1
   have m0 : (LocalizationMap.toMap fl) 0 = 0 := f.map_zero'
   have a0 : a * (LocalizationMap.toMap fl) b.2 = 0 ↔ a = 0 :=

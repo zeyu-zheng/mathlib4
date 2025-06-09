@@ -386,12 +386,12 @@ instance Prod.opensMeasurableSpace [h : SecondCountableTopologyEither α β] :
   apply opensMeasurableSpace_iff_forall_measurableSet.2 (fun s hs ↦ ?_)
   rcases h.out with hα|hβ
   · let F : Set α → Set β := fun a ↦ {y | ∃ b, IsOpen b ∧ y ∈ b ∧ a ×ˢ b ⊆ s}
-    have A  : ∀ a, IsOpen (F a)
+    have A : ∀ a, IsOpen (F a)
     intro a
     apply isOpen_iff_forall_mem_open.2
     rintro y ⟨b, b_open, yb, hb⟩
     exact ⟨b, fun z zb ↦ ⟨b, b_open, zb, hb⟩, b_open, yb⟩
-    have  : s = ⋃ a ∈ countableBasis α, a ×ˢ F a
+    have : s = ⋃ a ∈ countableBasis α, a ×ˢ F a
     apply Subset.antisymm
     · rintro ⟨y1, y2⟩ hy
       rcases isOpen_prod_iff.1 hs y1 y2 hy with ⟨u, v, u_open, v_open, yu, yv, huv⟩
@@ -407,12 +407,12 @@ instance Prod.opensMeasurableSpace [h : SecondCountableTopologyEither α β] :
     apply MeasurableSet.biUnion (countable_countableBasis α) (fun a ha ↦ ?_)
     exact (isOpen_of_mem_countableBasis ha).measurableSet.prod (A a).measurableSet
   · let F : Set β → Set α := fun a ↦ {y | ∃ b, IsOpen b ∧ y ∈ b ∧ b ×ˢ a ⊆ s}
-    have A  : ∀ a, IsOpen (F a)
+    have A : ∀ a, IsOpen (F a)
     intro a
     apply isOpen_iff_forall_mem_open.2
     rintro y ⟨b, b_open, yb, hb⟩
     exact ⟨b, fun z zb ↦ ⟨b, b_open, zb, hb⟩, b_open, yb⟩
-    have  : s = ⋃ a ∈ countableBasis β, F a ×ˢ a
+    have : s = ⋃ a ∈ countableBasis β, F a ×ˢ a
     apply Subset.antisymm
     · rintro ⟨y1, y2⟩ hy
       rcases isOpen_prod_iff.1 hs y1 y2 hy with ⟨u, v, u_open, v_open, yu, yv, huv⟩
@@ -617,7 +617,7 @@ lemma MeasurableEmbedding.borelSpace {α β : Type*} [MeasurableSpace α] [Topol
     (h'e : MeasurableEmbedding e) (h''e : Inducing e) :
     BorelSpace α := by
   constructor
-  have  : MeasurableSpace.comap e (borel β) = ‹_›
+  have : MeasurableSpace.comap e (borel β) = ‹_›
   simpa [hβ.measurable_eq] using h'e.comap_eq
   rw [← this, ← borel_comap, h''e.induced]
 

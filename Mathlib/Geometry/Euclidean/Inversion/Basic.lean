@@ -156,7 +156,7 @@ theorem dist_inversion_inversion (hx : x ≠ c) (hy : y ≠ c) (R : ℝ) :
 theorem dist_inversion_mul_dist_center_eq (hx : x ≠ c) (hy : y ≠ c) :
     dist (inversion c R x) y * dist x c = dist x (inversion c R y) * dist y c := by
   rcases eq_or_ne R 0 with rfl | hR; · simp [dist_comm, mul_comm]
-  have hy'  : inversion c R y ≠ c
+  have hy' : inversion c R y ≠ c
   simp [*]
   conv in dist _ y => rw [← inversion_inversion c hR y]
   rw [dist_inversion_inversion hx hy', dist_inversion_center]

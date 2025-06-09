@@ -1177,12 +1177,12 @@ value of `p` on the rescaling element that shows up in applications. -/
 lemma rescale_to_shell_zpow (p : Seminorm 𝕜 E) {c : 𝕜} (hc : 1 < ‖c‖) {ε : ℝ}
     (εpos : 0 < ε) {x : E} (hx : p x ≠ 0) : ∃ n : ℤ, c^n ≠ 0 ∧
     p (c^n • x) < ε ∧ (ε / ‖c‖ ≤ p (c^n • x)) ∧ (‖c^n‖⁻¹ ≤ ε⁻¹ * ‖c‖ * p x) := by
-  have xεpos  : 0 < (p x)/ε
+  have xεpos : 0 < (p x)/ε
   positivity
   rcases exists_mem_Ico_zpow xεpos hc with ⟨n, hn⟩
-  have cpos  : 0 < ‖c‖
+  have cpos : 0 < ‖c‖
   positivity
-  have cnpos  : 0 < ‖c^(n+1)‖
+  have cnpos : 0 < ‖c^(n+1)‖
   rw [norm_zpow]; exact xεpos.trans hn.2
   refine ⟨-(n+1), ?_, ?_, ?_, ?_⟩
   · show c ^ (-(n + 1)) ≠ 0; exact zpow_ne_zero _ (norm_pos_iff.1 cpos)
@@ -1196,7 +1196,7 @@ lemma rescale_to_shell_zpow (p : Seminorm 𝕜 E) {c : 𝕜} (hc : 1 < ‖c‖) 
         one_mul, ← div_eq_inv_mul, le_div_iff (zpow_pos_of_pos cpos _), mul_comm]
     exact (le_div_iff εpos).1 hn.1
   · show ‖(c ^ (-(n + 1)))‖⁻¹ ≤ ε⁻¹ * ‖c‖ * p x
-    have  : ε⁻¹ * ‖c‖ * p x = ε⁻¹ * p x * ‖c‖
+    have : ε⁻¹ * ‖c‖ * p x = ε⁻¹ * p x * ‖c‖
     ring
     rw [zpow_neg, norm_inv, inv_inv, norm_zpow, zpow_add₀ (ne_of_gt cpos), zpow_one, this,
         ← div_eq_inv_mul]

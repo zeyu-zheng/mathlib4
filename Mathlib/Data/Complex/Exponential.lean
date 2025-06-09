@@ -394,21 +394,21 @@ theorem sinh_two_mul : sinh (2 * x) = 2 * sinh x * cosh x := by
   ring
 
 theorem cosh_three_mul : cosh (3 * x) = 4 * cosh x ^ 3 - 3 * cosh x := by
-  have h1  : x + 2 * x = 3 * x
+  have h1 : x + 2 * x = 3 * x
   ring
   rw [← h1, cosh_add x (2 * x)]
   simp only [cosh_two_mul, sinh_two_mul]
-  have h2  : sinh x * (2 * sinh x * cosh x) = 2 * cosh x * sinh x ^ 2
+  have h2 : sinh x * (2 * sinh x * cosh x) = 2 * cosh x * sinh x ^ 2
   ring
   rw [h2, sinh_sq]
   ring
 
 theorem sinh_three_mul : sinh (3 * x) = 4 * sinh x ^ 3 + 3 * sinh x := by
-  have h1  : x + 2 * x = 3 * x
+  have h1 : x + 2 * x = 3 * x
   ring
   rw [← h1, sinh_add x (2 * x)]
   simp only [cosh_two_mul, sinh_two_mul]
-  have h2  : cosh x * (2 * sinh x * cosh x) = 2 * sinh x * cosh x ^ 2
+  have h2 : cosh x * (2 * sinh x * cosh x) = 2 * sinh x * cosh x ^ 2
   ring
   rw [h2, cosh_sq]
   ring
@@ -439,7 +439,7 @@ theorem tanh_mul_I : tanh (x * I) = tan x * I := by
 theorem cos_mul_I : cos (x * I) = cosh x := by rw [← cosh_mul_I]; ring_nf; simp
 
 theorem sin_mul_I : sin (x * I) = sinh x * I := by
-  have h  : I * sin (x * I) = -sinh x
+  have h : I * sin (x * I) = -sinh x
   rw [mul_comm, ← sinh_mul_I]
   ring_nf
   simp
@@ -631,21 +631,21 @@ theorem tan_sq_div_one_add_tan_sq {x : ℂ} (hx : cos x ≠ 0) :
   simp only [← tan_mul_cos hx, mul_pow, ← inv_one_add_tan_sq hx, div_eq_mul_inv, one_mul]
 
 theorem cos_three_mul : cos (3 * x) = 4 * cos x ^ 3 - 3 * cos x := by
-  have h1  : x + 2 * x = 3 * x
+  have h1 : x + 2 * x = 3 * x
   ring
   rw [← h1, cos_add x (2 * x)]
   simp only [cos_two_mul, sin_two_mul, mul_add, mul_sub, mul_one, sq]
-  have h2  : 4 * cos x ^ 3 = 2 * cos x * cos x * cos x + 2 * cos x * cos x ^ 2
+  have h2 : 4 * cos x ^ 3 = 2 * cos x * cos x * cos x + 2 * cos x * cos x ^ 2
   ring
   rw [h2, cos_sq']
   ring
 
 theorem sin_three_mul : sin (3 * x) = 3 * sin x - 4 * sin x ^ 3 := by
-  have h1  : x + 2 * x = 3 * x
+  have h1 : x + 2 * x = 3 * x
   ring
   rw [← h1, sin_add x (2 * x)]
   simp only [cos_two_mul, sin_two_mul, cos_sq']
-  have h2  : cos x * (2 * sin x * cos x) = 2 * sin x * cos x ^ 2
+  have h2 : cos x * (2 * sin x * cos x) = 2 * sin x * cos x ^ 2
   ring
   rw [h2, cos_sq']
   ring
@@ -1187,9 +1187,9 @@ nonrec theorem exp_bound {x : ℝ} (hx : |x| ≤ 1) {n : ℕ} (hn : 0 < n) :
 theorem exp_bound' {x : ℝ} (h1 : 0 ≤ x) (h2 : x ≤ 1) {n : ℕ} (hn : 0 < n) :
     Real.exp x ≤ (∑ m ∈ Finset.range n, x ^ m / m.factorial) +
       x ^ n * (n + 1) / (n.factorial * n) := by
-  have h3  : |x| = x
+  have h3 : |x| = x
   simpa
-  have h4  : |x| ≤ 1
+  have h4 : |x| ≤ 1
   rwa [h3]
   have h' := Real.exp_bound h4 hn
   rw [h3] at h'
@@ -1415,7 +1415,7 @@ theorem add_one_lt_exp {x : ℝ} (hx : x ≠ 0) : x + 1 < Real.exp x := by
   · exact add_one_lt_exp_of_pos hx
   obtain h' | h' := le_or_lt 1 (-x)
   · linarith [x.exp_pos]
-  have hx'  : 0 < x + 1
+  have hx' : 0 < x + 1
   linarith
   simpa [add_comm, exp_neg, inv_lt_inv (exp_pos _) hx']
     using exp_bound_div_one_sub_of_interval' (neg_pos.2 hx) h'

@@ -87,7 +87,7 @@ theorem stoppedValue_ae_eq_condexp_of_le_const_of_countable_range (h : Martingal
     (hτ : IsStoppingTime ℱ τ) (hτ_le : ∀ x, τ x ≤ n) (h_countable_range : (Set.range τ).Countable)
     [SigmaFinite (μ.trim (hτ.measurableSpace_le_of_le hτ_le))] :
     stoppedValue f τ =ᵐ[μ] μ[f n|hτ.measurableSpace] := by
-  have  : Set.univ = ⋃ i ∈ Set.range τ, {x | τ x = i}
+  have : Set.univ = ⋃ i ∈ Set.range τ, {x | τ x = i}
   ext1 x
   simp only [Set.mem_univ, Set.mem_range, true_and_iff, Set.iUnion_exists, Set.iUnion_iUnion_eq',
     Set.mem_iUnion, Set.mem_setOf_eq, exists_apply_eq_apply']

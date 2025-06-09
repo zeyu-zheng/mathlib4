@@ -648,12 +648,12 @@ theorem map_sInf {A : Set (Ideal R)} {f : F} (hf : Function.Surjective f) :
   · intro y hy
     cases' hf y with x hx
     refine hx ▸ mem_map_of_mem f ?_
-    have  : ∀ I ∈ A, y ∈ map f I
+    have : ∀ I ∈ A, y ∈ map f I
     simpa using hy
     rw [Submodule.mem_sInf]
     intro J hJ
     rcases (mem_map_iff_of_surjective f hf).1 (this J hJ) with ⟨x', hx', rfl⟩
-    have  : x - x' ∈ J
+    have : x - x' ∈ J
     apply h J hJ
     rw [RingHom.mem_ker, map_sub, hx, sub_self]
     simpa only [sub_add_cancel] using J.add_mem this hx'
@@ -668,7 +668,7 @@ theorem map_isPrime_of_surjective {f : F} (hf : Function.Surjective f) {I : Idea
     rw [← ha, ← hb, ← _root_.map_mul f, mem_map_iff_of_surjective _ hf] at hxy
     rcases hxy with ⟨c, hc, hc'⟩
     rw [← sub_eq_zero, ← map_sub] at hc'
-    have  : a * b ∈ I
+    have : a * b ∈ I
     convert I.sub_mem hc (hk (hc' : c - a * b ∈ RingHom.ker f)) using 1
     abel
     exact

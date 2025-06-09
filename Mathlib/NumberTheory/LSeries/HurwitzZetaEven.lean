@@ -131,7 +131,7 @@ lemma continuousOn_cosKernel (a : UnitAddCircle) : ContinuousOn (cosKernel a) (I
   apply continuous_re.comp_continuousOn (f := fun x ↦ (cosKernel a' x : ℂ))
   simp only [cosKernel_def]
   refine ContinuousAt.continuousOn (fun x hx ↦ ?_)
-  have  : 0 < im (I * x)
+  have : 0 < im (I * x)
   rwa [mul_im, I_re, I_im, zero_mul, one_mul, zero_add, ofReal_re]
   exact (continuousAt_jacobiTheta₂ a' this).comp (f := fun u : ℝ ↦ (_, I * u)) (by fun_prop)
 
@@ -485,7 +485,7 @@ lemma completedHurwitzZetaEven_residue_zero (a : UnitAddCircle) :
     Tendsto (fun s ↦ s * completedHurwitzZetaEven a s) (𝓝[≠] 0) (𝓝 (if a = 0 then -1 else 0)) := by
   have h1 : Tendsto (fun s : ℂ ↦ s * _) (𝓝[≠] 0)
     (𝓝 (-(if a = 0 then 1 else 0))) := (hurwitzEvenFEPair a).Λ_residue_zero
-  have  : -(if a = 0 then (1 : ℂ) else 0) = (if a = 0 then -1 else 0)
+  have : -(if a = 0 then (1 : ℂ) else 0) = (if a = 0 then -1 else 0)
   { split_ifs <;> simp }
   simp only [this, push_cast, one_mul] at h1
   refine (h1.comp <| zero_div (2 : ℂ) ▸ (tendsto_div_two_punctured_nhds 0)).congr (fun s ↦ ?_)
@@ -533,7 +533,7 @@ lemma hasSum_int_completedCosZeta (a : ℝ) {s : ℂ} (hs : 1 < re s) :
 lemma hasSum_nat_completedCosZeta (a : ℝ) {s : ℂ} (hs : 1 < re s) :
     HasSum (fun n : ℕ ↦ if n = 0 then 0 else Gammaℝ s * Real.cos (2 * π * a * n) / (n : ℂ) ^ s)
     (completedCosZeta a s) := by
-  have aux  : ((|0| : ℤ) : ℂ) ^ s = 0
+  have aux : ((|0| : ℤ) : ℂ) ^ s = 0
   rw [abs_zero, Int.cast_zero, zero_cpow (ne_zero_of_one_lt_re hs)]
   have hint := (hasSum_int_completedCosZeta a hs).nat_add_neg
   rw [aux, div_zero, zero_div, add_zero] at hint
@@ -643,7 +643,7 @@ lemma differentiableAt_hurwitzZetaEven (a : UnitAddCircle) {s : ℂ} (hs' : s �
 
 lemma hurwitzZetaEven_residue_one (a : UnitAddCircle) :
     Tendsto (fun s ↦ (s - 1) * hurwitzZetaEven a s) (𝓝[≠] 1) (𝓝 1) := by
-  have  : Tendsto (fun s ↦ (s - 1) * completedHurwitzZetaEven a s / Gammaℝ s) (𝓝[≠] 1) (𝓝 1)
+  have : Tendsto (fun s ↦ (s - 1) * completedHurwitzZetaEven a s / Gammaℝ s) (𝓝[≠] 1) (𝓝 1)
   simpa only [Gammaℝ_one, inv_one, mul_one] using (completedHurwitzZetaEven_residue_one a).mul
     <| (differentiable_Gammaℝ_inv.continuous.tendsto _).mono_left nhdsWithin_le_nhds
   refine this.congr' ?_
@@ -787,7 +787,7 @@ lemma LSeriesHasSum_cos (a : ℝ) {s : ℂ} (hs : 1 < re s) :
 lemma hurwitzZetaEven_one_sub (a : UnitAddCircle) {s : ℂ}
     (hs : ∀ (n : ℕ), s ≠ -n) (hs' : a ≠ 0 ∨ s ≠ 1) :
     hurwitzZetaEven a (1 - s) = 2 * (2 * π) ^ (-s) * Gamma s * cos (π * s / 2) * cosZeta a s := by
-  have  : hurwitzZetaEven a (1 - s) = completedHurwitzZetaEven a (1 - s) * (Gammaℝ (1 - s))⁻¹
+  have : hurwitzZetaEven a (1 - s) = completedHurwitzZetaEven a (1 - s) * (Gammaℝ (1 - s))⁻¹
   rw [hurwitzZetaEven_def_of_ne_or_ne, div_eq_mul_inv]
   simpa [sub_eq_zero, eq_comm (a := s)] using hs'
   rw [this, completedHurwitzZetaEven_one_sub, inv_Gammaℝ_one_sub hs, cosZeta,
@@ -800,7 +800,7 @@ multiple of `hurwitzZetaEven s`. -/
 lemma cosZeta_one_sub (a : UnitAddCircle) {s : ℂ} (hs : ∀ (n : ℕ), s ≠ 1 - n) :
     cosZeta a (1 - s) = 2 * (2 * π) ^ (-s) * Gamma s * cos (π * s / 2) * hurwitzZetaEven a s := by
   rw [← Gammaℂ]
-  have  : cosZeta a (1 - s) = completedCosZeta a (1 - s) * (Gammaℝ (1 - s))⁻¹
+  have : cosZeta a (1 - s) = completedCosZeta a (1 - s) * (Gammaℝ (1 - s))⁻¹
   rw [cosZeta, Function.update_noteq, div_eq_mul_inv]
   simpa [sub_eq_zero] using (hs 0).symm
   rw [this, completedCosZeta_one_sub, inv_Gammaℝ_one_sub (fun n ↦ by simpa using hs (n + 1)),

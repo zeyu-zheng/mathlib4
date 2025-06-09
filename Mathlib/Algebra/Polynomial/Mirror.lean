@@ -198,17 +198,17 @@ theorem irreducible_of_mirror (h1 : ¬IsUnit f)
   · exact h1
   · intro g h fgh
     let k := g * h.mirror
-    have key  : f * f.mirror = k * k.mirror
+    have key : f * f.mirror = k * k.mirror
     rw [fgh, mirror_mul_of_domain, mirror_mul_of_domain, mirror_mirror, mul_assoc, mul_comm h,
       mul_comm g.mirror, mul_assoc, ← mul_assoc]
-    have g_dvd_f  : g ∣ f
+    have g_dvd_f : g ∣ f
     rw [fgh]
     exact dvd_mul_right g h
-    have h_dvd_f  : h ∣ f
+    have h_dvd_f : h ∣ f
     rw [fgh]
     exact dvd_mul_left h g
     have g_dvd_k : g ∣ k := dvd_mul_right g h.mirror
-    have h_dvd_k_rev  : h ∣ k.mirror
+    have h_dvd_k_rev : h ∣ k.mirror
     rw [mirror_mul_of_domain, mirror_mirror]
     exact dvd_mul_left h g.mirror
     have hk := h2 k key

@@ -28,7 +28,7 @@ theorem exists_prime_gt_modEq_one {k : ℕ} (n : ℕ) (hk0 : k ≠ 0) :
   · rcases exists_infinite_primes (n + 1) with ⟨p, hnp, hp⟩
     exact ⟨p, hp, hnp, modEq_one⟩
   let b := k * (n !)
-  have hgt  : 1 < (eval (↑b) (cyclotomic k ℤ)).natAbs
+  have hgt : 1 < (eval (↑b) (cyclotomic k ℤ)).natAbs
   rcases le_iff_exists_add'.1 hk1.le with ⟨k, rfl⟩
   have hb : 2 ≤ b := le_mul_of_le_of_one_le hk1 n.factorial_pos
   calc
@@ -37,7 +37,7 @@ theorem exists_prime_gt_modEq_one {k : ℕ} (n : ℕ) (hk0 : k ≠ 0) :
       sub_one_lt_natAbs_cyclotomic_eval hk1 (succ_le_iff.1 hb).ne'
   let p := minFac (eval (↑b) (cyclotomic k ℤ)).natAbs
   haveI hprime : Fact p.Prime := ⟨minFac_prime (ne_of_lt hgt).symm⟩
-  have hroot  : IsRoot (cyclotomic k (ZMod p)) (castRingHom (ZMod p) b)
+  have hroot : IsRoot (cyclotomic k (ZMod p)) (castRingHom (ZMod p) b)
   have : ((b : ℤ) : ZMod p) = ↑(Int.castRingHom (ZMod p) b) := by simp
   rw [IsRoot.def, ← map_cyclotomic_int k (ZMod p), eval_map, coe_castRingHom,
     ← Int.cast_natCast, this, eval₂_hom, Int.coe_castRingHom, ZMod.intCast_zmod_eq_zero_iff_dvd]

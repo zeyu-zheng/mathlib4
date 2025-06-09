@@ -129,7 +129,7 @@ theorem isJacobson_of_isIntegral [Algebra R S] [Algebra.IsIntegral R S] (hR : Is
       comap_jacobson]
     refine sInf_le_sInf fun J hJ => ?_
     simp only [true_and_iff, Set.mem_image, bot_le, Set.mem_setOf_eq]
-    have  : J.IsMaximal
+    have : J.IsMaximal
     simpa using hJ
     exact exists_ideal_over_maximal_of_isIntegral J
       (comap_bot_le_of_injective _ algebraMap_quotient_injective)
@@ -221,7 +221,7 @@ theorem isJacobson_localization [H : IsJacobson R] : IsJacobson S := by
   have : sInf { I : Ideal R | comap (algebraMap R S) P' ≤ I ∧ I.IsMaximal ∧ y ∉ I } ≤
       comap (algebraMap R S) P' := by
     intro x hx
-    have hxy  : x * y ∈ (comap (algebraMap R S) P').jacobson
+    have hxy : x * y ∈ (comap (algebraMap R S) P').jacobson
     rw [Ideal.jacobson, mem_sInf]
     intro J hJ
     by_cases h : y ∈ J
@@ -393,7 +393,7 @@ private theorem isJacobson_polynomial_of_domain (R : Type*) [CommRing R] [IsDoma
     haveI hR' : IsJacobson (R ⧸ P') := by infer_instance
     obtain ⟨p, pP, p0⟩ := exists_nonzero_mem_of_ne_bot Pb hP
     let x := (Polynomial.map (Quotient.mk P') p).leadingCoeff
-    have hx  : x ≠ 0
+    have hx : x ≠ 0
     rwa [Ne, leadingCoeff_eq_zero]
     let φ : R ⧸ P' →+* R[X] ⧸ P := Ideal.quotientMap P (C : R →+* R[X]) le_rfl
     let hφ : Function.Injective ↑φ := quotientMap_injective
@@ -409,7 +409,7 @@ theorem isJacobson_polynomial_of_isJacobson (hR : IsJacobson R) : IsJacobson R[X
   let R' : Subring (R[X] ⧸ I) := ((Quotient.mk I).comp C).range
   let i : R →+* R' := ((Quotient.mk I).comp C).rangeRestrict
   have hi : Function.Surjective ↑i := ((Quotient.mk I).comp C).rangeRestrict_surjective
-  have hi'  : RingHom.ker (mapRingHom i) ≤ I
+  have hi' : RingHom.ker (mapRingHom i) ≤ I
   intro f hf
   apply polynomial_mem_ideal_of_coeff_mem_ideal I f
   intro n
@@ -533,7 +533,7 @@ theorem quotient_mk_comp_C_isIntegral_of_jacobson :
   haveI : P'.IsPrime := comap_isPrime C P
   let f : R[X] →+* Polynomial (R ⧸ P') := Polynomial.mapRingHom (Quotient.mk P')
   have hf : Function.Surjective ↑f := map_surjective (Quotient.mk P') Quotient.mk_surjective
-  have hPJ  : P = (P.map f).comap f
+  have hPJ : P = (P.map f).comap f
   rw [comap_map_of_surjective _ hf]
   refine le_antisymm (le_sup_of_le_left le_rfl) (sup_le le_rfl ?_)
   refine fun p hp =>
@@ -664,7 +664,7 @@ theorem comp_C_integral_of_surjective_of_jacobson {R : Type*} [CommRing R] [IsJa
   let f' : MvPolynomial (Fin _) R →+* S := f.comp (renameEquiv R e).toRingEquiv.toRingHom
   have hf' := Function.Surjective.comp hf (renameEquiv R e).surjective
   change Function.Surjective ↑f' at hf'
-  have  : (f'.comp C).IsIntegral
+  have : (f'.comp C).IsIntegral
   haveI : f'.ker.IsMaximal := ker_isMaximal_of_surjective f' hf'
   let g : MvPolynomial _ R ⧸ (RingHom.ker f') →+* S :=
     Ideal.Quotient.lift (RingHom.ker f') f' fun _ h => h

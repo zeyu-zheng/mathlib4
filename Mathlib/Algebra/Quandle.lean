@@ -152,14 +152,14 @@ A monoid is *graphic* if, for all `x` and `y`, the *graphic identity*
 identity holds.
 -/
 lemma act_act_self_eq (x y : S) : (x ◃ y) ◃ x = x ◃ y := by
-  have h  : (x ◃ y) ◃ x = (x ◃ y) ◃ (x ◃ 1)
+  have h : (x ◃ y) ◃ x = (x ◃ y) ◃ (x ◃ 1)
   rw [act_one]
   rw [h, ← Shelf.self_distrib, act_one]
 
 lemma act_idem (x : S) : (x ◃ x) = x := by rw [← act_one x, ← Shelf.self_distrib, act_one]
 
 lemma act_self_act_eq (x y : S) : x ◃ (x ◃ y) = x ◃ y := by
-  have h  : x ◃ (x ◃ y) = (x ◃ 1) ◃ (x ◃ y)
+  have h : x ◃ (x ◃ y) = (x ◃ 1) ◃ (x ◃ y)
   rw [act_one]
   rw [h, ← Shelf.self_distrib, one_act]
 

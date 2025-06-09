@@ -82,7 +82,7 @@ theorem riesz_lemma_of_norm_lt {c : 𝕜} (hc : 1 < ‖c‖) {R : ℝ} (hR : ‖
     (hFc : IsClosed (F : Set E)) (hF : ∃ x : E, x ∉ F) :
     ∃ x₀ : E, ‖x₀‖ ≤ R ∧ ∀ y ∈ F, 1 ≤ ‖x₀ - y‖ := by
   have Rpos : 0 < R := (norm_nonneg _).trans_lt hR
-  have  : ‖c‖ / R < 1
+  have : ‖c‖ / R < 1
   rw [div_lt_iff Rpos]
   simpa using hR
   rcases riesz_lemma hFc hF this with ⟨x, xF, hx⟩

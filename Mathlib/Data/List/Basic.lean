@@ -1007,7 +1007,7 @@ theorem getElem_reverse_aux₂ :
     exact aux _ (zero_lt_succ _)
   | a :: l, r, i + 1, h1, h2 => by
     have aux := getElem_reverse_aux₂ l (a :: r) i
-    have heq  : length (a :: l) - 1 - (i + 1) = length l - 1 - i
+    have heq : length (a :: l) - 1 - (i + 1) = length l - 1 - i
     rw [length]; omega
     rw [← heq] at aux
     apply aux
@@ -2339,7 +2339,7 @@ variable [DecidableEq α]
 
 theorem map_erase [DecidableEq β] {f : α → β} (finj : Injective f) {a : α} (l : List α) :
     map f (l.erase a) = (map f l).erase (f a) := by
-  have this  : (a == ·) = (f a == f ·)
+  have this : (a == ·) = (f a == f ·)
   ext b; simp [beq_eq_decide, finj.eq_iff]
   rw [erase_eq_eraseP, erase_eq_eraseP, eraseP_map, this]; rfl
 

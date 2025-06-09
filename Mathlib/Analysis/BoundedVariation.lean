@@ -229,7 +229,7 @@ theorem add_point (f : α → E) {s : Set α} {x : α} (hx : x ∈ s) (u : ℕ �
       split_ifs
       · exact us i
       · exact hx
-    have hv  : Monotone v
+    have hv : Monotone v
     refine monotone_nat_of_le_succ fun i => ?_
     simp only [v]
     rcases lt_trichotomy i n with (hi | rfl | hi)
@@ -818,7 +818,7 @@ theorem ae_differentiableWithinAt_of_mem {f : ℝ → V} {s : Set ℝ}
   let A := (Basis.ofVectorSpace ℝ V).equivFun.toContinuousLinearEquiv
   suffices H : ∀ᵐ x, x ∈ s → DifferentiableWithinAt ℝ (A ∘ f) s x by
     filter_upwards [H] with x hx xs
-    have  : f = (A.symm ∘ A) ∘ f
+    have : f = (A.symm ∘ A) ∘ f
     simp only [ContinuousLinearEquiv.symm_comp_self, Function.id_comp]
     rw [this]
     exact A.symm.differentiableAt.comp_differentiableWithinAt x (hx xs)

@@ -562,7 +562,7 @@ theorem inner_add_add_self (x y : E) : ⟪x + y, x + y⟫ = ⟪x, x⟫ + ⟪x, y
 /-- Expand `⟪x + y, x + y⟫_ℝ` -/
 theorem real_inner_add_add_self (x y : F) :
     ⟪x + y, x + y⟫_ℝ = ⟪x, x⟫_ℝ + 2 * ⟪x, y⟫_ℝ + ⟪y, y⟫_ℝ := by
-  have  : ⟪y, x⟫_ℝ = ⟪x, y⟫_ℝ
+  have : ⟪y, x⟫_ℝ = ⟪x, y⟫_ℝ
   rw [← inner_conj_symm]; rfl
   simp only [inner_add_add_self, this, add_left_inj]
   ring
@@ -574,7 +574,7 @@ theorem inner_sub_sub_self (x y : E) : ⟪x - y, x - y⟫ = ⟪x, x⟫ - ⟪x, y
 /-- Expand `⟪x - y, x - y⟫_ℝ` -/
 theorem real_inner_sub_sub_self (x y : F) :
     ⟪x - y, x - y⟫_ℝ = ⟪x, x⟫_ℝ - 2 * ⟪x, y⟫_ℝ + ⟪y, y⟫_ℝ := by
-  have  : ⟪y, x⟫_ℝ = ⟪x, y⟫_ℝ
+  have : ⟪y, x⟫_ℝ = ⟪x, y⟫_ℝ
   rw [← inner_conj_symm]; rfl
   simp only [inner_sub_sub_self, this, add_left_inj]
   ring
@@ -613,7 +613,7 @@ theorem linearIndependent_of_ne_zero_of_inner_eq_zero {ι : Type*} {v : ι → E
     (ho : Pairwise fun i j => ⟪v i, v j⟫ = 0) : LinearIndependent 𝕜 v := by
   rw [linearIndependent_iff']
   intro s g hg i hi
-  have h'  : g i * inner (v i) (v i) = inner (v i) (∑ j ∈ s, g j • v j)
+  have h' : g i * inner (v i) (v i) = inner (v i) (∑ j ∈ s, g j • v j)
   rw [inner_sum]
   symm
   convert Finset.sum_eq_single (β := 𝕜) i ?_ ?_
@@ -647,7 +647,7 @@ theorem orthonormal_iff_ite [DecidableEq ι] {v : ι → E} :
   · intro h
     constructor
     · intro i
-      have h'  : ‖v i‖ ^ 2 = 1 ^ 2
+      have h' : ‖v i‖ ^ 2 = 1 ^ 2
       simp [@norm_sq_eq_inner 𝕜, h i i]
       have h₁ : 0 ≤ ‖v i‖ := norm_nonneg _
       have h₂ : (0 : ℝ) ≤ 1 := zero_le_one
@@ -742,7 +742,7 @@ theorem Orthonormal.linearIndependent {v : ι → E} (hv : Orthonormal 𝕜 v) :
   rw [linearIndependent_iff]
   intro l hl
   ext i
-  have key  : ⟪v i, Finsupp.total ι E 𝕜 v l⟫ = ⟪v i, 0⟫
+  have key : ⟪v i, Finsupp.total ι E 𝕜 v l⟫ = ⟪v i, 0⟫
   rw [hl]
   simpa only [hv.inner_right_finsupp, inner_zero_right] using key
 
@@ -832,7 +832,7 @@ theorem exists_maximal_orthonormal {s : Set E} (hs : Orthonormal 𝕜 (Subtype.v
     · exact fun _ => Set.subset_sUnion_of_mem
 
 theorem Orthonormal.ne_zero {v : ι → E} (hv : Orthonormal 𝕜 v) (i : ι) : v i ≠ 0 := by
-  have  : ‖v i‖ ≠ 0
+  have : ‖v i‖ ≠ 0
   rw [hv.1 i]
   norm_num
   simpa using this
@@ -1340,9 +1340,9 @@ itself, divided by the product of their norms, has absolute value
 1. -/
 theorem norm_inner_div_norm_mul_norm_eq_one_of_ne_zero_of_ne_zero_mul {x : E} {r : 𝕜} (hx : x ≠ 0)
     (hr : r ≠ 0) : ‖⟪x, r • x⟫‖ / (‖x‖ * ‖r • x‖) = 1 := by
-  have hx'  : ‖x‖ ≠ 0
+  have hx' : ‖x‖ ≠ 0
   simp [hx]
-  have hr'  : ‖r‖ ≠ 0
+  have hr' : ‖r‖ ≠ 0
   simp [hr]
   rw [inner_smul_right, norm_mul, ← inner_self_re_eq_norm, inner_self_eq_norm_mul_norm, norm_smul]
   rw [← mul_assoc, ← div_div, mul_div_cancel_right₀ _ hx', ← div_div, mul_comm,
@@ -1506,9 +1506,9 @@ theorem inner_lt_one_iff_real_of_norm_one {x y : F} (hx : ‖x‖ = 1) (hy : ‖
 theorem eq_of_norm_le_re_inner_eq_norm_sq {x y : E} (hle : ‖x‖ ≤ ‖y‖) (h : re ⟪x, y⟫ = ‖y‖ ^ 2) :
     x = y := by
   suffices H : re ⟪x - y, x - y⟫ ≤ 0 by rwa [inner_self_nonpos, sub_eq_zero] at H
-  have H₁  : ‖x‖ ^ 2 ≤ ‖y‖ ^ 2
+  have H₁ : ‖x‖ ^ 2 ≤ ‖y‖ ^ 2
   gcongr
-  have H₂  : re ⟪y, x⟫ = ‖y‖ ^ 2
+  have H₂ : re ⟪y, x⟫ = ‖y‖ ^ 2
   rwa [← inner_conj_symm, conj_re]
   simpa [inner_sub_left, inner_sub_right, ← norm_sq_eq_inner, h, H₂] using H₁
 
@@ -1660,7 +1660,7 @@ theorem Orthonormal.sum_inner_products_le {s : Finset ι} (hv : Orthonormal 𝕜
   have h₂ :
     (∑ i ∈ s, ∑ j ∈ s, ⟪v i, x⟫ * ⟪x, v j⟫ * ⟪v j, v i⟫) = (∑ k ∈ s, ⟪v k, x⟫ * ⟪x, v k⟫ : 𝕜) := by
     classical exact hv.inner_left_right_finset
-  have h₃  : ∀ z : 𝕜, re (z * conj z) = ‖z‖ ^ 2
+  have h₃ : ∀ z : 𝕜, re (z * conj z) = ‖z‖ ^ 2
   intro z
   simp only [mul_conj, normSq_eq_def']
   norm_cast
@@ -1811,7 +1811,7 @@ theorem OrthogonalFamily.inner_sum (l₁ l₂ : ∀ i, G i) (s : Finset ι) :
 
 theorem OrthogonalFamily.norm_sum (l : ∀ i, G i) (s : Finset ι) :
     ‖∑ i ∈ s, V i (l i)‖ ^ 2 = ∑ i ∈ s, ‖l i‖ ^ 2 := by
-  have  : ((‖∑ i ∈ s, V i (l i)‖ : ℝ) : 𝕜) ^ 2 = ∑ i ∈ s, ((‖l i‖ : ℝ) : 𝕜) ^ 2
+  have : ((‖∑ i ∈ s, V i (l i)‖ : ℝ) : 𝕜) ^ 2 = ∑ i ∈ s, ((‖l i‖ : ℝ) : 𝕜) ^ 2
   simp only [← inner_self_eq_norm_sq_to_K, hV.inner_sum]
   exact mod_cast this
 
@@ -1843,7 +1843,7 @@ theorem OrthogonalFamily.norm_sq_diff_sum [DecidableEq ι] (f : ∀ i, G i) (s�
   let F : ∀ i, G i := fun i => if i ∈ s₁ then f i else -f i
   have hF₁ : ∀ i ∈ s₁ \ s₂, F i = f i := fun i hi => if_pos (Finset.sdiff_subset hi)
   have hF₂ : ∀ i ∈ s₂ \ s₁, F i = -f i := fun i hi => if_neg (Finset.mem_sdiff.mp hi).2
-  have hF  : ∀ i, ‖F i‖ = ‖f i‖
+  have hF : ∀ i, ‖F i‖ = ‖f i‖
   intro i
   dsimp only [F]
   split_ifs <;> simp only [eq_self_iff_true, norm_neg]
@@ -1875,7 +1875,7 @@ theorem OrthogonalFamily.summable_iff_norm_sq_summable [CompleteSpace E] (f : �
       refine (abs_sub _ _).trans_lt ?_
       have : ∀ i, 0 ≤ ‖f i‖ ^ 2 := fun i : ι => sq_nonneg _
       simp only [Finset.abs_sum_of_nonneg' this]
-      have  : ((∑ i ∈ s₁ \ s₂, ‖f i‖ ^ 2) + ∑ i ∈ s₂ \ s₁, ‖f i‖ ^ 2) < √ε ^ 2
+      have : ((∑ i ∈ s₁ \ s₂, ‖f i‖ ^ 2) + ∑ i ∈ s₂ \ s₁, ‖f i‖ ^ 2) < √ε ^ 2
       rw [← hV.norm_sq_diff_sum, sq_lt_sq, abs_of_nonneg (sqrt_nonneg _),
         abs_of_nonneg (norm_nonneg _)]
       exact H s₁ hs₁ s₂ hs₂
@@ -1889,13 +1889,13 @@ theorem OrthogonalFamily.summable_iff_norm_sq_summable [CompleteSpace E] (f : �
       refine (abs_lt_of_sq_lt_sq' ?_ (le_of_lt hε)).2
       have has : a ≤ s₁ ⊓ s₂ := le_inf hs₁ hs₂
       rw [hV.norm_sq_diff_sum]
-      have Hs₁  : ∑ x ∈ s₁ \ s₂, ‖f x‖ ^ 2 < ε ^ 2 / 2
+      have Hs₁ : ∑ x ∈ s₁ \ s₂, ‖f x‖ ^ 2 < ε ^ 2 / 2
       convert H _ hs₁ _ has
       have : s₁ ⊓ s₂ ⊆ s₁ := Finset.inter_subset_left
       rw [← Finset.sum_sdiff this, add_tsub_cancel_right, Finset.abs_sum_of_nonneg']
       · simp
       · exact fun i => sq_nonneg _
-      have Hs₂  : ∑ x ∈ s₂ \ s₁, ‖f x‖ ^ 2 < ε ^ 2 / 2
+      have Hs₂ : ∑ x ∈ s₂ \ s₁, ‖f x‖ ^ 2 < ε ^ 2 / 2
       convert H _ hs₂ _ has
       have : s₁ ⊓ s₂ ⊆ s₂ := Finset.inter_subset_right
       rw [← Finset.sum_sdiff this, add_tsub_cancel_right, Finset.abs_sum_of_nonneg']

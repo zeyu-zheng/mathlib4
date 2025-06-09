@@ -85,7 +85,7 @@ theorem Ring.DimensionLEOne.localization {R : Type*} (Rₘ : Type*) [CommRing R]
 theorem IsLocalization.isDedekindDomain [IsDedekindDomain A] {M : Submonoid A} (hM : M ≤ A⁰)
     (Aₘ : Type*) [CommRing Aₘ] [IsDomain Aₘ] [Algebra A Aₘ] [IsLocalization M Aₘ] :
     IsDedekindDomain Aₘ := by
-  have h  : ∀ y : M, IsUnit (algebraMap A (FractionRing A) y)
+  have h : ∀ y : M, IsUnit (algebraMap A (FractionRing A) y)
   rintro ⟨y, hy⟩
   exact IsUnit.mk0 _ (mt IsFractionRing.to_map_eq_zero_iff.mp (nonZeroDivisors.ne_zero (hM hy)))
   letI : Algebra Aₘ (FractionRing A) := RingHom.toAlgebra (IsLocalization.lift h)

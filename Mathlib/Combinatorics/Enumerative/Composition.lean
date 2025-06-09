@@ -273,7 +273,7 @@ In the next definition `index` we use `Nat.find` to produce the minimal such ind
 -/
 theorem index_exists {j : ℕ} (h : j < n) : ∃ i : ℕ, j < c.sizeUpTo (i + 1) ∧ i < c.length := by
   have n_pos : 0 < n := lt_of_le_of_lt (zero_le j) h
-  have  : 0 < c.blocks.sum
+  have : 0 < c.blocks.sum
   rwa [← c.blocks_sum] at n_pos
   have length_pos : 0 < c.blocks.length := length_pos_of_sum_pos (blocks c) this
   refine ⟨c.length - 1, ?_, Nat.pred_lt (ne_of_gt length_pos)⟩
@@ -291,7 +291,7 @@ theorem sizeUpTo_index_le (j : Fin n) : c.sizeUpTo (c.index j) ≤ j := by
   by_contra H
   set i := c.index j
   push_neg at H
-  have i_pos  : (0 : ℕ) < i
+  have i_pos : (0 : ℕ) < i
   by_contra! i_pos
   revert H
   simp [nonpos_iff_eq_zero.1 i_pos, c.sizeUpTo_zero]
@@ -408,7 +408,7 @@ theorem sigma_eq_iff_blocks_eq {c : Σn, Composition n} {c' : Σn, Composition n
   refine ⟨fun H => by rw [H], fun H => ?_⟩
   rcases c with ⟨n, c⟩
   rcases c' with ⟨n', c'⟩
-  have  : n = n'
+  have : n = n'
   rw [← c.blocks_sum, ← c'.blocks_sum, H]
   induction this
   congr
@@ -454,7 +454,7 @@ theorem eq_ones_iff {c : Composition n} : c = ones n ↔ ∀ i ∈ c.blocks, i =
   · intro H
     ext1
     have A : c.blocks = replicate c.blocks.length 1 := eq_replicate_of_mem H
-    have  : c.blocks.length = n
+    have : c.blocks.length = n
     conv_rhs => rw [← c.blocks_sum, A]
     simp
     rw [A, this, ones_blocks]
@@ -532,7 +532,7 @@ theorem ne_single_iff {n : ℕ} (hn : 0 < n) {c : Composition n} :
     exact ⟨⟨0, by simp⟩, by simp⟩
   · rintro ⟨i, hi⟩
     rw [eq_single_iff_length]
-    have  : ∀ j : Fin c.length, j = i
+    have : ∀ j : Fin c.length, j = i
     intro j
     by_contra ji
     apply lt_irrefl (∑ k, c.blocksFun k)
@@ -782,7 +782,7 @@ instance compositionAsSetFintype (n : ℕ) : Fintype (CompositionAsSet n) :=
   Fintype.ofEquiv _ (compositionAsSetEquiv n).symm
 
 theorem compositionAsSet_card (n : ℕ) : Fintype.card (CompositionAsSet n) = 2 ^ (n - 1) := by
-  have  : Fintype.card (Finset (Fin (n - 1))) = 2 ^ (n - 1)
+  have : Fintype.card (Finset (Fin (n - 1))) = 2 ^ (n - 1)
   simp
   rw [← this]
   exact Fintype.card_congr (compositionAsSetEquiv n)
@@ -849,7 +849,7 @@ theorem blocks_partial_sum {i : ℕ} (h : i < c.boundaries.card) :
     (c.blocks.take i).sum = c.boundary ⟨i, h⟩ := by
   induction' i with i IH
   · simp
-  have A  : i < c.blocks.length
+  have A : i < c.blocks.length
   rw [c.card_boundaries_eq_succ_length] at h
   simp [blocks, Nat.lt_of_succ_lt_succ h]
   have B : i < c.boundaries.card := lt_of_lt_of_le A (by simp [blocks, length, Nat.sub_le])
@@ -868,7 +868,7 @@ theorem mem_boundaries_iff_exists_blocks_sum_take_eq {j : Fin (n + 1)} :
     rfl
   · rintro ⟨i, hi, H⟩
     convert (c.boundaries.orderIsoOfFin rfl ⟨i, hi⟩).2
-    have  : c.boundary ⟨i, hi⟩ = j
+    have : c.boundary ⟨i, hi⟩ = j
     rwa [Fin.ext_iff, ← c.blocks_partial_sum hi]
     exact this.symm
 
@@ -910,17 +910,17 @@ theorem Composition.toCompositionAsSet_blocks (c : Composition n) :
     c.toCompositionAsSet.blocks = c.blocks := by
   let d := c.toCompositionAsSet
   change d.blocks = c.blocks
-  have length_eq  : d.blocks.length = c.blocks.length
+  have length_eq : d.blocks.length = c.blocks.length
   simp [d, blocks_length]
   suffices H : ∀ i ≤ d.blocks.length, (d.blocks.take i).sum = (c.blocks.take i).sum from
     eq_of_sum_take_eq length_eq H
   intro i hi
-  have i_lt  : i < d.boundaries.card
+  have i_lt : i < d.boundaries.card
   -- Porting note: relied on `convert` unfolding definitions, switched to using a `simpa`
   simpa [CompositionAsSet.blocks, length_ofFn,
     d.card_boundaries_eq_succ_length] using Nat.lt_succ_iff.2 hi
   have i_lt' : i < c.boundaries.card := i_lt
-  have i_lt''  : i < c.length + 1
+  have i_lt'' : i < c.length + 1
   rwa [c.card_boundaries_eq_succ_length] at i_lt'
   have A :
     d.boundaries.orderEmbOfFin rfl ⟨i, i_lt⟩ =

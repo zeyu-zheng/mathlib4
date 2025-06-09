@@ -129,7 +129,7 @@ theorem card_subset_divisors_le_length_of_chain {q : Associates M} {n : ℕ}
     {c : Fin (n + 1) → Associates M} (h₂ : ∀ {r}, r ≤ q ↔ ∃ i, r = c i) {m : Finset (Associates M)}
     (hm : ∀ r, r ∈ m → r ≤ q) : m.card ≤ n + 1 := by
   classical
-    have mem_image  : ∀ r : Associates M, r ≤ q → r ∈ Finset.univ.image c
+    have mem_image : ∀ r : Associates M, r ≤ q → r ∈ Finset.univ.image c
     intro r hr
     obtain ⟨i, hi⟩ := h₂.1 hr
     exact Finset.mem_image.2 ⟨i, Finset.mem_univ _, hi.symm⟩
@@ -143,18 +143,18 @@ theorem element_of_chain_eq_pow_second_of_chain {q r : Associates M} {n : ℕ} (
     (hr : r ∣ q) (hq : q ≠ 0) : ∃ i : Fin (n + 1), r = c 1 ^ (i : ℕ) := by
   classical
     let i := Multiset.card (normalizedFactors r)
-    have hi  : normalizedFactors r = Multiset.replicate i (c 1)
+    have hi : normalizedFactors r = Multiset.replicate i (c 1)
     apply Multiset.eq_replicate_of_mem
     intro b hb
     refine
       eq_second_of_chain_of_prime_dvd hn h₁ (@fun r' => h₂) (prime_of_normalized_factor b hb) hr
         (dvd_of_mem_normalizedFactors hb)
-    have H  : r = c 1 ^ i
+    have H : r = c 1 ^ i
     have := UniqueFactorizationMonoid.normalizedFactors_prod (ne_zero_of_dvd_ne_zero hq hr)
     rw [associated_iff_eq, hi, Multiset.prod_replicate] at this
     rw [this]
     refine ⟨⟨i, ?_⟩, H⟩
-    have  : (Finset.univ.image fun m : Fin (i + 1) => c 1 ^ (m : ℕ)).card = i + 1
+    have : (Finset.univ.image fun m : Fin (i + 1) => c 1 ^ (m : ℕ)).card = i + 1
     conv_rhs => rw [← Finset.card_fin (i + 1)]
     cases n
     · contradiction

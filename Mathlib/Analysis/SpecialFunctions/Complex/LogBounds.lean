@@ -98,7 +98,7 @@ lemma hasDerivAt_logTaylor (n : ℕ) (z : ℂ) :
 lemma hasDerivAt_log_sub_logTaylor (n : ℕ) {z : ℂ} (hz : 1 + z ∈ slitPlane) :
     HasDerivAt (fun z : ℂ ↦ log (1 + z) - logTaylor (n + 1) z) ((-z) ^ n * (1 + z)⁻¹) z := by
   convert ((hasDerivAt_log hz).comp_const_add 1 z).sub (hasDerivAt_logTaylor n z) using 1
-  have hz'  : -z ≠ 1
+  have hz' : -z ≠ 1
   intro H
   rw [neg_eq_iff_eq_neg] at H
   simp only [H, add_right_neg] at hz
@@ -213,7 +213,7 @@ lemma hasSum_taylorSeries_log {z : ℂ} (hz : ‖z‖ < 1) :
     conv => enter [1, x]; rw [← div_one (_ - _), ← logTaylor]
     rw [← isLittleO_iff_tendsto fun _ h ↦ (one_ne_zero h).elim]
     refine IsLittleO.trans_isBigO ?_ <| isBigO_const_one ℂ (1 : ℝ) atTop
-    have H  : (fun n ↦ logTaylor n z - log (1 + z)) =O[atTop] (fun n : ℕ ↦ ‖z‖ ^ n)
+    have H : (fun n ↦ logTaylor n z - log (1 + z)) =O[atTop] (fun n : ℕ ↦ ‖z‖ ^ n)
     have (n : ℕ) : ‖logTaylor n z - log (1 + z)‖
         ≤ (max ‖log (1 + z)‖ (1 - ‖z‖)⁻¹) * ‖(‖z‖ ^ n)‖ := by
       rw [norm_sub_rev, norm_pow, norm_norm]

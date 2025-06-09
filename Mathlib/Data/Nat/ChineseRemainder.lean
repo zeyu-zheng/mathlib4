@@ -97,7 +97,7 @@ theorem chineseRemainderOfList_modEq_unique (l : List ι)
   induction' l with i l ih
   · simp [modEq_one]
   · simp only [List.map_cons, List.prod_cons, chineseRemainderOfList]
-    have  : Coprime (s i) (l.map s).prod
+    have : Coprime (s i) (l.map s).prod
     simp only [coprime_list_prod_right_iff, List.mem_map, forall_exists_index, and_imp,
       forall_apply_eq_imp_iff₂]
     intro j hj
@@ -130,7 +130,7 @@ def chineseRemainderOfMultiset {m : Multiset ι} :
       funext fun nod' : l'.Nodup =>
       have nod : l.Nodup := pp.symm.nodup_iff.mp nod'
       funext fun hs' : ∀ i ∈ l', s i ≠ 0 =>
-      have hs : ∀ i ∈ l, s i ≠ 0  := by simpa [List.Perm.mem_iff pp] using hs'
+      have hs : ∀ i ∈ l, s i ≠ 0 := by simpa [List.Perm.mem_iff pp] using hs'
       funext fun co' : Set.Pairwise {x | x ∈ l'} (Coprime on s) =>
       have co : Set.Pairwise {x | x ∈ l} (Coprime on s) := by simpa [List.Perm.mem_iff pp] using co'
       have lco : l.Pairwise (Coprime on s) := List.Nodup.pairwise_of_forall_ne nod co

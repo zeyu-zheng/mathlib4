@@ -177,7 +177,7 @@ lemma factoredNumbers_compl {N : ℕ} {s : Finset ℕ} (h : primesBelow N ≤ s)
     not_lt, exists_prop, Set.mem_singleton_iff] at hn
   simp only [Set.mem_setOf_eq]
   obtain ⟨p, hp₁, hp₂⟩ := hn.1 hn.2
-  have  : N ≤ p
+  have : N ≤ p
   contrapose! hp₂
   exact h <| mem_primesBelow.mpr ⟨hp₂, prime_of_mem_primeFactorsList hp₁⟩
   exact this.trans <| le_of_mem_primeFactorsList hp₁
@@ -437,7 +437,7 @@ lemma smoothNumbersUpTo_card_add_roughNumbersUpTo_card (N k : ℕ) :
     ← Finset.card_union_of_disjoint <| Finset.disjoint_filter.mpr fun n _ hn₂ h ↦ h.2 hn₂,
     Finset.filter_union_right]
   suffices Finset.card (Finset.filter (fun x ↦ x ≠ 0) (Finset.range (succ N))) = N by
-    have hn' (n)  : n ∈ smoothNumbers k ∨ n ≠ 0 ∧ n ∉ smoothNumbers k ↔ n ≠ 0
+    have hn' (n) : n ∈ smoothNumbers k ∨ n ≠ 0 ∧ n ∉ smoothNumbers k ↔ n ≠ 0
     have : n ∈ smoothNumbers k → n ≠ 0 := ne_zero_of_mem_smoothNumbers
     refine ⟨fun H ↦ Or.elim H this fun H ↦ H.1, fun H ↦ ?_⟩
     simp only [ne_eq, H, not_false_eq_true, true_and, or_not]

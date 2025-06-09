@@ -80,7 +80,7 @@ instance (j : ConnectedComponents J) : IsConnected (Component j) := by
   -- Everything which has a zigzag to j₂ can be lifted to the same component as `j₂`.
   let f : ∀ x, Zigzag x j₂ → Component (Quotient.mk'' j₂) := fun x h => ⟨x, Quotient.sound' h⟩
   -- Everything in our chosen zigzag from `j₁` to `j₂` has a zigzag to `j₂`.
-  have hf  : ∀ a : J, a ∈ l → Zigzag a j₂
+  have hf : ∀ a : J, a ∈ l → Zigzag a j₂
   intro i hi
   apply List.Chain.induction (fun t => Zigzag t j₂) _ hl₁ hl₂ _ _ _ (List.mem_of_mem_tail hi)
   · intro j k
@@ -123,7 +123,7 @@ instance : (decomposedTo J).Full where
   map_surjective := by
     rintro ⟨j', X, hX⟩ ⟨k', Y, hY⟩ f
     dsimp at f
-    have  : j' = k'
+    have : j' = k'
     rw [← hX, ← hY, Quotient.eq'']
     exact Relation.ReflTransGen.single (Or.inl ⟨f⟩)
     subst this

@@ -148,7 +148,7 @@ theorem integral_cexp_neg_mul_sq_add_real_mul_I (hb : 0 < b.re) (c : ℝ) :
   let I₂ := fun T : ℝ => ∫ x : ℝ in -T..T, cexp (-b * (x : ℂ) ^ 2)
   let I₄ := fun T : ℝ => ∫ y : ℝ in (0 : ℝ)..c, cexp (-b * (T + y * I) ^ 2)
   let I₅ := fun T : ℝ => ∫ y : ℝ in (0 : ℝ)..c, cexp (-b * (-T + y * I) ^ 2)
-  have C  : ∀ T : ℝ, I₂ T - I₁ T + I * I₄ T - I * I₅ T = 0
+  have C : ∀ T : ℝ, I₂ T - I₁ T + I * I₄ T - I * I₅ T = 0
   intro T
   have :=
     integral_boundary_rect_eq_zero_of_differentiableOn (fun z => cexp (-b * z ^ 2)) (-T)
@@ -160,7 +160,7 @@ theorem integral_cexp_neg_mul_sq_add_real_mul_I (hb : 0 < b.re) (c : ℝ) :
     ofReal_re, add_re, mul_re, I_re, mul_zero, I_im, tsub_zero, add_im, mul_im,
     mul_one, zero_add, Algebra.id.smul_eq_mul, ofReal_neg] using this
   simp_rw [id, ← HI₁]
-  have  : I₁ = fun T : ℝ => I₂ T + verticalIntegral b c T
+  have : I₁ = fun T : ℝ => I₂ T + verticalIntegral b c T
   ext1 T
   specialize C T
   rw [sub_eq_zero] at C
@@ -180,7 +180,7 @@ theorem integral_cexp_neg_mul_sq_add_real_mul_I (hb : 0 < b.re) (c : ℝ) :
 
 theorem _root_.integral_cexp_quadratic (hb : b.re < 0) (c d : ℂ) :
     ∫ x : ℝ, cexp (b * x ^ 2 + c * x + d) = (π / -b) ^ (1 / 2 : ℂ) * cexp (d - c^2 / (4 * b)) := by
-  have hb'  : b ≠ 0
+  have hb' : b ≠ 0
   contrapose! hb; rw [hb, zero_re]
   have h (x : ℝ) : cexp (b * x ^ 2 + c * x + d) =
       cexp (- -b * (x + c / (2 * b)) ^ 2) * cexp (d - c ^ 2 / (4 * b)) := by
@@ -196,7 +196,7 @@ theorem _root_.integral_cexp_quadratic (hb : b.re < 0) (c d : ℂ) :
 
 lemma _root_.integrable_cexp_quadratic' (hb : b.re < 0) (c d : ℂ) :
     Integrable (fun (x : ℝ) ↦ cexp (b * x ^ 2 + c * x + d)) := by
-  have hb'  : b ≠ 0
+  have hb' : b ≠ 0
   contrapose! hb; rw [hb, zero_re]
   by_contra H
   simpa [hb', pi_ne_zero, Complex.exp_ne_zero, integral_undef H]
@@ -204,7 +204,7 @@ lemma _root_.integrable_cexp_quadratic' (hb : b.re < 0) (c d : ℂ) :
 
 lemma _root_.integrable_cexp_quadratic (hb : 0 < b.re) (c d : ℂ) :
     Integrable (fun (x : ℝ) ↦ cexp (-b * x ^ 2 + c * x + d)) := by
-  have  : (-b).re < 0
+  have : (-b).re < 0
   simpa using hb
   exact integrable_cexp_quadratic' this c d
 
@@ -302,7 +302,7 @@ theorem integral_cexp_neg_sum_mul_add {ι : Type*} [Fintype ι] {b : ι → ℂ}
   simp_rw [← Finset.sum_neg_distrib, ← Finset.sum_add_distrib, Complex.exp_sum, ← neg_mul]
   rw [integral_fintype_prod_eq_prod (f := fun i (v : ℝ) ↦ cexp (-b i * v ^ 2 + c i * v))]
   congr with i
-  have  : (-b i).re < 0
+  have : (-b i).re < 0
   simpa using hb i
   convert integral_cexp_quadratic this (c i) 0 using 1 <;> simp [div_neg]
 

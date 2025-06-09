@@ -56,7 +56,7 @@ theorem IsEquipartition.card_parts_eq_average (hP : P.IsEquipartition) (ht : t �
 theorem IsEquipartition.card_part_eq_average_iff (hP : P.IsEquipartition) (ht : t ∈ P.parts) :
     t.card = s.card / P.parts.card ↔ t.card ≠ s.card / P.parts.card + 1 := by
   have a := hP.card_parts_eq_average ht
-  have b  : ¬(t.card = s.card / P.parts.card ∧ t.card = s.card / P.parts.card + 1)
+  have b : ¬(t.card = s.card / P.parts.card ∧ t.card = s.card / P.parts.card + 1)
   by_contra h; exact absurd (h.1 ▸ h.2) (lt_add_one _).ne
   tauto
 
@@ -144,7 +144,7 @@ theorem IsEquipartition.exists_partPreservingEquiv (hP : P.IsEquipartition) : �
     · rw [← Nat.div_add_mod s.card P.parts.card]
       exact add_lt_add_of_le_of_lt (mul_le_mul_left' (by omega) _) ((hg (f a).1).mp c)
   let z' : s → Fin s.card := fun a ↦ ⟨z a, less a⟩
-  have bij  : z'.Bijective
+  have bij : z'.Bijective
   refine (bijective_iff_injective_and_card z').mpr ⟨fun a b e ↦ ?_, by simp⟩
   simp_rw [z', z, Fin.mk.injEq, mul_comm P.parts.card] at e
   haveI : NeZero P.parts.card := ⟨((Nat.zero_le _).trans_lt (gl a)).ne'⟩

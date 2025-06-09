@@ -106,7 +106,7 @@ lemma disjoint_sdiff_neighborFinset_image :
     Disjoint (G.edgeFinset \ G.incidenceFinset t) ((G.neighborFinset s).image (s(·, t))) := by
   rw [disjoint_iff_ne]
   intro e he
-  have  : t ∉ e
+  have : t ∉ e
   rw [mem_sdiff, mem_incidenceFinset] at he
   obtain ⟨_, h⟩ := he
   contrapose! h
@@ -115,7 +115,7 @@ lemma disjoint_sdiff_neighborFinset_image :
 
 theorem card_edgeFinset_replaceVertex_of_not_adj (hn : ¬G.Adj s t) :
     (G.replaceVertex s t).edgeFinset.card = G.edgeFinset.card + G.degree s - G.degree t := by
-  have inc  : G.incidenceFinset t ⊆ G.edgeFinset
+  have inc : G.incidenceFinset t ⊆ G.edgeFinset
   simp [incidenceFinset, incidenceSet_subset]
   rw [G.edgeFinset_replaceVertex_of_not_adj hn,
     card_union_of_disjoint G.disjoint_sdiff_neighborFinset_image, card_sdiff inc,
@@ -127,7 +127,7 @@ theorem card_edgeFinset_replaceVertex_of_not_adj (hn : ¬G.Adj s t) :
 
 theorem card_edgeFinset_replaceVertex_of_adj (ha : G.Adj s t) :
     (G.replaceVertex s t).edgeFinset.card = G.edgeFinset.card + G.degree s - G.degree t - 1 := by
-  have inc  : G.incidenceFinset t ⊆ G.edgeFinset
+  have inc : G.incidenceFinset t ⊆ G.edgeFinset
   simp [incidenceFinset, incidenceSet_subset]
   rw [G.edgeFinset_replaceVertex_of_adj ha, card_sdiff (by simp [ha]),
     card_union_of_disjoint G.disjoint_sdiff_neighborFinset_image, card_sdiff inc,

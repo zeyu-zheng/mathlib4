@@ -26,7 +26,7 @@ theorem IsCoatomic.of_isChain_bounded {α : Type*} [PartialOrder α] [OrderTop �
         IsChain (· ≤ ·) c → c.Nonempty → ⊤ ∉ c → ∃ x ≠ ⊤, x ∈ upperBounds c) :
     IsCoatomic α := by
   refine ⟨fun x => le_top.eq_or_lt.imp_right fun hx => ?_⟩
-  have  : ∃ y ∈ Ico x ⊤, x ≤ y ∧ ∀ z ∈ Ico x ⊤, y ≤ z → z = y
+  have : ∃ y ∈ Ico x ⊤, x ≤ y ∧ ∀ z ∈ Ico x ⊤, y ≤ z → z = y
   refine zorn_nonempty_partialOrder₀ (Ico x ⊤) (fun c hxc hc y hy => ?_) x (left_mem_Ico.2 hx)
   rcases h c hc ⟨y, hy⟩ fun h => (hxc h).2.ne rfl with ⟨z, hz, hcz⟩
   exact ⟨z, ⟨le_trans (hxc hy).1 (hcz hy), hz.lt_top⟩, hcz⟩

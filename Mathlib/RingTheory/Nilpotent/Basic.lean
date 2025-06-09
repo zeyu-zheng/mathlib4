@@ -196,7 +196,7 @@ lemma NoZeroSMulDivisors.isReduced (R M : Type*)
   · rw [pow_zero] at hk
     exact eq_zero_of_zero_eq_one hk.symm x
   · obtain ⟨m : M, hm : m ≠ 0⟩ := exists_ne (0 : M)
-    have  : x ^ (k + 1) • m = 0
+    have : x ^ (k + 1) • m = 0
     simp only [hk, zero_smul]
     rw [pow_succ', mul_smul] at this
     rcases eq_zero_or_eq_zero_of_smul_eq_zero this with rfl | hx

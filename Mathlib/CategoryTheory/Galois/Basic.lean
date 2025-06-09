@@ -306,7 +306,7 @@ open ConcreteCategory
 /-- A mono between objects with equally sized fibers is an iso. -/
 lemma isIso_of_mono_of_eq_card_fiber {X Y : C} (f : X ⟶ Y) [Mono f]
     (h : Nat.card (F.obj X) = Nat.card (F.obj Y)) : IsIso f := by
-  have  : IsIso (F.map f)
+  have : IsIso (F.map f)
   apply (ConcreteCategory.isIso_iff_bijective (F.map f)).mpr
   apply (Fintype.bijective_iff_injective_and_card (F.map f)).mpr
   refine ⟨injective_of_mono_of_preservesPullback (F.map f), ?_⟩

@@ -139,7 +139,7 @@ theorem Basis.le_span {J : Set M} (v : Basis ι R M) (hJ : span R J = ⊤) : #(r
     simp
   · let S : J → Set ι := fun j => ↑(v.repr j).support
     let S' : J → Set M := fun j => v '' S j
-    have hs  : range v ⊆ ⋃ j, S' j
+    have hs : range v ⊆ ⋃ j, S' j
     intro b hb
     rcases mem_range.1 hb with ⟨i, hi⟩
     have : span R J ≤ comap v.repr.toLinearMap (Finsupp.supported R R (⋃ j, S j)) :=
@@ -238,7 +238,7 @@ theorem linearIndependent_le_infinite_basis {ι : Type w} (b : Basis ι R M) [In
   obtain ⟨s, w : Infinite ↑(Φ ⁻¹' {s})⟩ := Cardinal.exists_infinite_fiber Φ h (by infer_instance)
   let v' := fun k : Φ ⁻¹' {s} => v k
   have i' : LinearIndependent R v' := i.comp _ Subtype.val_injective
-  have w'  : Finite (Φ ⁻¹' {s})
+  have w' : Finite (Φ ⁻¹' {s})
   apply i'.finite_of_le_span_finite v' (s.image b)
   rintro m ⟨⟨p, ⟨rfl⟩⟩, rfl⟩
   simp only [SetLike.mem_coe, Subtype.coe_mk, Finset.coe_image]
@@ -364,7 +364,7 @@ theorem Ideal.rank_eq {R S : Type*} [CommRing R] [StrongRankCondition R] [Ring S
     [Algebra R S] {n m : Type*} [Fintype n] [Fintype m] (b : Basis n R S) {I : Ideal S}
     (hI : I ≠ ⊥) (c : Basis m R I) : Fintype.card m = Fintype.card n := by
   obtain ⟨a, ha⟩ := Submodule.nonzero_mem_of_bot_lt (bot_lt_iff_ne_bot.mpr hI)
-  have  : LinearIndependent R fun i => b i • a
+  have : LinearIndependent R fun i => b i • a
   have hb := b.linearIndependent
   rw [Fintype.linearIndependent_iff] at hb ⊢
   intro g hg

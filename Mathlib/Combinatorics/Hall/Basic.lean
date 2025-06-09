@@ -160,7 +160,7 @@ theorem Finset.all_card_le_biUnion_card_iff_exists_injective {ι : Type u} {α :
 finite set is finite. -/
 instance {α : Type u} {β : Type v} [DecidableEq β] (r : α → β → Prop)
     [∀ a : α, Fintype (Rel.image r {a})] (A : Finset α) : Fintype (Rel.image r A) := by
-  have h  : Rel.image r A = (A.biUnion fun a => (Rel.image r {a}).toFinset : Set β)
+  have h : Rel.image r A = (A.biUnion fun a => (Rel.image r {a}).toFinset : Set β)
   ext
   -- Porting note: added `Set.mem_toFinset`
   simp [Rel.image, (Set.mem_toFinset)]
@@ -182,7 +182,7 @@ theorem Fintype.all_card_le_rel_image_card_iff_exists_injective {α : Type u} {�
     (∀ A : Finset α, A.card ≤ Fintype.card (Rel.image r A)) ↔
       ∃ f : α → β, Function.Injective f ∧ ∀ x, r x (f x) := by
   let r' a := (Rel.image r {a}).toFinset
-  have h  : ∀ A : Finset α, Fintype.card (Rel.image r A) = (A.biUnion r').card
+  have h : ∀ A : Finset α, Fintype.card (Rel.image r A) = (A.biUnion r').card
   intro A
   rw [← Set.toFinset_card]
   apply congr_arg
@@ -190,7 +190,7 @@ theorem Fintype.all_card_le_rel_image_card_iff_exists_injective {α : Type u} {�
   -- Porting note: added `Set.mem_toFinset`
   simp [Rel.image, (Set.mem_toFinset)]
   -- Porting note: added `Set.mem_toFinset`
-  have h'  : ∀ (f : α → β) (x), r x (f x) ↔ f x ∈ r' x
+  have h' : ∀ (f : α → β) (x), r x (f x) ↔ f x ∈ r' x
   simp [Rel.image, (Set.mem_toFinset)]
   simp only [h, h']
   apply Finset.all_card_le_biUnion_card_iff_exists_injective
@@ -209,11 +209,11 @@ theorem Fintype.all_card_le_filter_rel_iff_exists_injective {α : Type u} {β : 
       ∃ f : α → β, Function.Injective f ∧ ∀ x, r x (f x) := by
   haveI := Classical.decEq β
   let r' a := univ.filter fun b => r a b
-  have h  : ∀ A : Finset α, (univ.filter fun b : β => ∃ a ∈ A, r a b) = A.biUnion r'
+  have h : ∀ A : Finset α, (univ.filter fun b : β => ∃ a ∈ A, r a b) = A.biUnion r'
   intro A
   ext b
   simp [r']
-  have h'  : ∀ (f : α → β) (x), r x (f x) ↔ f x ∈ r' x
+  have h' : ∀ (f : α → β) (x), r x (f x) ↔ f x ∈ r' x
   simp [r']
   simp_rw [h, h']
   apply Finset.all_card_le_biUnion_card_iff_exists_injective

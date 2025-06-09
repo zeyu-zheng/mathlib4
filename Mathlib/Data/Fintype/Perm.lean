@@ -74,7 +74,7 @@ theorem mem_of_mem_permsOfList :
     -- Porting note: was `∀ {x}` but need to capture the `x`
     ∀ {l : List α} {f : Perm α}, f ∈ permsOfList l → (x : α ) → f x ≠ x → x ∈ l
   | [], f, h, heq_iff_eq => by
-    have  : f = 1
+    have : f = 1
     simpa [permsOfList] using h
     rw [this]; simp
   | a :: l, f, h, x =>

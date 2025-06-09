@@ -499,7 +499,7 @@ theorem affineBasisCover_is_basis (X : Scheme.{u}) :
   · rintro a U haU hU
     rcases X.affineCover.covers a with ⟨x, e⟩
     let U' := (X.affineCover.map (X.affineCover.f a)).1.base ⁻¹' U
-    have hxU'  : x ∈ U'
+    have hxU' : x ∈ U'
     rw [← e] at haU; exact haU
     rcases PrimeSpectrum.isBasis_basic_opens.exists_subset_of_mem_open hxU'
         ((X.affineCover.map (X.affineCover.f a)).1.base.continuous_toFun.isOpen_preimage _

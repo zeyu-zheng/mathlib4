@@ -39,7 +39,7 @@ theorem closedBall_ae_eq_ball {x : AddCircle T} {ε : ℝ} : closedBall x ε =�
   · suffices volume (closedBall x ε) ≤ volume (ball x ε) by
       exact (ae_eq_of_subset_of_measure_ge ball_subset_closedBall this measurableSet_ball
         (measure_ne_top _ _)).symm
-    have  : Tendsto (fun δ => volume (closedBall x δ)) (𝓝[<] ε) (𝓝 <| volume (closedBall x ε))
+    have : Tendsto (fun δ => volume (closedBall x δ)) (𝓝[<] ε) (𝓝 <| volume (closedBall x ε))
     simp_rw [volume_closedBall]
     refine ENNReal.tendsto_ofReal (Tendsto.min tendsto_const_nhds <| Tendsto.const_mul _ ?_)
     convert (@monotone_id ℝ _).tendsto_nhdsWithin_Iio ε
@@ -56,7 +56,7 @@ theorem isAddFundamentalDomain_of_ae_ball (I : Set <| AddCircle T) (u x : AddCir
   set G := AddSubgroup.zmultiples u
   set n := addOrderOf u
   set B := ball x (T / (2 * n))
-  have hn  : 1 ≤ (n : ℝ)
+  have hn : 1 ≤ (n : ℝ)
   norm_cast; linarith [hu.addOrderOf_pos]
   refine IsAddFundamentalDomain.mk_of_measure_univ_le ?_ ?_ ?_ ?_
   · -- `NullMeasurableSet I volume`
@@ -67,7 +67,7 @@ theorem isAddFundamentalDomain_of_ae_ball (I : Set <| AddCircle T) (u x : AddCir
     change AEDisjoint volume (g +ᵥ I) I
     refine AEDisjoint.congr (Disjoint.aedisjoint ?_)
       ((quasiMeasurePreserving_add_left volume (-g)).vadd_ae_eq_of_ae_eq g hI) hI
-    have hBg  : g +ᵥ B = ball (g + x) (T / (2 * n))
+    have hBg : g +ᵥ B = ball (g + x) (T / (2 * n))
     rw [add_comm g x, ← singleton_add_ball _ x g, add_ball, thickening_singleton]
     rw [hBg]
     apply ball_disjoint_ball
@@ -81,7 +81,7 @@ theorem isAddFundamentalDomain_of_ae_ball (I : Set <| AddCircle T) (u x : AddCir
   · -- `volume univ ≤ ∑' (g : G), volume (g +ᵥ I)`
     replace hI := hI.trans closedBall_ae_eq_ball.symm
     haveI : Fintype G := @Fintype.ofFinite _ hu.finite_zmultiples.to_subtype
-    have hG_card  : (Finset.univ : Finset G).card = n
+    have hG_card : (Finset.univ : Finset G).card = n
     show _ = addOrderOf u
     rw [← Nat.card_zmultiples, Nat.card_eq_fintype_card]; rfl
     simp_rw [measure_vadd]
@@ -97,7 +97,7 @@ theorem volume_of_add_preimage_eq (s I : Set <| AddCircle T) (u x : AddCircle T)
     volume s = addOrderOf u • volume (s ∩ I) := by
   let G := AddSubgroup.zmultiples u
   haveI : Fintype G := @Fintype.ofFinite _ hu.finite_zmultiples.to_subtype
-  have hsG  : ∀ g : G, (g +ᵥ s : Set <| AddCircle T) =ᵐ[volume] s
+  have hsG : ∀ g : G, (g +ᵥ s : Set <| AddCircle T) =ᵐ[volume] s
   rintro ⟨y, hy⟩; exact (vadd_ae_eq_self_of_mem_zmultiples hs hy : _)
   rw [(isAddFundamentalDomain_of_ae_ball I u x hu hI).measure_eq_card_smul_of_vadd_ae_eq_self s hsG,
     ← Nat.card_zmultiples u]

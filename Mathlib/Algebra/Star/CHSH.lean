@@ -118,14 +118,14 @@ theorem CHSH_inequality_of_comm [OrderedCommRing R] [StarRing R] [StarOrderedRin
     [OrderedSMul ℝ R] (A₀ A₁ B₀ B₁ : R) (T : IsCHSHTuple A₀ A₁ B₀ B₁) :
     A₀ * B₀ + A₀ * B₁ + A₁ * B₀ - A₁ * B₁ ≤ 2 := by
   let P := 2 - A₀ * B₀ - A₀ * B₁ - A₁ * B₀ + A₁ * B₁
-  have i₁  : 0 ≤ P
+  have i₁ : 0 ≤ P
   have idem : P * P = 4 * P := CHSH_id T.A₀_inv T.A₁_inv T.B₀_inv T.B₁_inv
-  have idem'  : P = (1 / 4 : ℝ) • (P * P)
-  have h  : 4 * P = (4 : ℝ) • P
+  have idem' : P = (1 / 4 : ℝ) • (P * P)
+  have h : 4 * P = (4 : ℝ) • P
   simp [Algebra.smul_def]
   rw [idem, h, ← mul_smul]
   norm_num
-  have sa  : star P = P
+  have sa : star P = P
   dsimp [P]
   simp only [star_add, star_sub, star_mul, star_ofNat, star_one, T.A₀_sa, T.A₁_sa, T.B₀_sa,
     T.B₁_sa, mul_comm B₀, mul_comm B₁]
@@ -181,7 +181,7 @@ theorem tsirelson_inequality [OrderedRing R] [StarRing R] [StarOrderedRing R] [A
     rw [← Int.cast_smul_eq_nsmul ℝ, ← mul_smul]
   let P := (√2)⁻¹ • (A₁ + A₀) - B₀
   let Q := (√2)⁻¹ • (A₁ - A₀) + B₁
-  have w  : √2 ^ 3 • (1 : R) - A₀ * B₀ - A₀ * B₁ - A₁ * B₀ + A₁ * B₁ = (√2)⁻¹ • (P ^ 2 + Q ^ 2)
+  have w : √2 ^ 3 • (1 : R) - A₀ * B₀ - A₀ * B₁ - A₁ * B₀ + A₁ * B₁ = (√2)⁻¹ • (P ^ 2 + Q ^ 2)
   dsimp [P, Q]
   -- distribute out all the powers and products appearing on the RHS
   simp only [sq, sub_mul, mul_sub, add_mul, mul_add, smul_add, smul_sub]
@@ -201,16 +201,16 @@ theorem tsirelson_inequality [OrderedRing R] [StarRing R] [StarOrderedRing R] [A
   -- just look at the coefficients now:
   congr
   exact mul_left_cancel₀ (by norm_num) tsirelson_inequality_aux
-  have pos  : 0 ≤ (√2)⁻¹ • (P ^ 2 + Q ^ 2)
-  have P_sa  : star P = P
+  have pos : 0 ≤ (√2)⁻¹ • (P ^ 2 + Q ^ 2)
+  have P_sa : star P = P
   simp only [P, star_smul, star_add, star_sub, star_id_of_comm, T.A₀_sa, T.A₁_sa, T.B₀_sa,
     T.B₁_sa]
-  have Q_sa  : star Q = Q
+  have Q_sa : star Q = Q
   simp only [Q, star_smul, star_add, star_sub, star_id_of_comm, T.A₀_sa, T.A₁_sa, T.B₀_sa,
     T.B₁_sa]
-  have P2_nonneg  : 0 ≤ P ^ 2
+  have P2_nonneg : 0 ≤ P ^ 2
   simpa only [P_sa, sq] using star_mul_self_nonneg P
-  have Q2_nonneg  : 0 ≤ Q ^ 2
+  have Q2_nonneg : 0 ≤ Q ^ 2
   simpa only [Q_sa, sq] using star_mul_self_nonneg Q
   exact smul_nonneg (by positivity) (add_nonneg P2_nonneg Q2_nonneg)
   apply le_of_sub_nonneg

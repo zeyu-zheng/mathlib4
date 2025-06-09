@@ -194,7 +194,7 @@ theorem existsUnique_gluing' (V : Opens X) (iUV : ∀ i : ι, U i ⟶ V) (hcover
 theorem eq_of_locally_eq (s t : F.1.obj (op (iSup U)))
     (h : ∀ i, F.1.map (Opens.leSupr U i).op s = F.1.map (Opens.leSupr U i).op t) : s = t := by
   let sf : ∀ i : ι, F.1.obj (op (U i)) := fun i => F.1.map (Opens.leSupr U i).op s
-  have sf_compatible  : IsCompatible _ U sf
+  have sf_compatible : IsCompatible _ U sf
   intro i j
   simp_rw [sf, ← comp_apply, ← F.1.map_comp]
   rfl

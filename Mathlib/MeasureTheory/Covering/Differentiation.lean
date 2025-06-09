@@ -98,7 +98,7 @@ theorem ae_eventually_measure_pos [SecondCountableTopology α] :
   simp (config := { zeta := false }) only [not_lt, not_eventually, nonpos_iff_eq_zero] at hs
   change μ s = 0
   let f : α → Set (Set α) := fun _ => {a | μ a = 0}
-  have h  : v.FineSubfamilyOn f s
+  have h : v.FineSubfamilyOn f s
   intro x hx ε εpos
   rw [hs] at hx
   simp only [frequently_filterAt_iff, exists_prop, gt_iff_lt, mem_setOf_eq] at hx
@@ -154,7 +154,7 @@ variable [SecondCountableTopology α] [BorelSpace α] [IsLocallyFiniteMeasure μ
 as `μ a` is eventually positive by `ae_eventually_measure_pos`. -/
 theorem ae_eventually_measure_zero_of_singular (hρ : ρ ⟂ₘ μ) :
     ∀ᵐ x ∂μ, Tendsto (fun a => ρ a / μ a) (v.filterAt x) (𝓝 0) := by
-  have A  : ∀ ε > (0 : ℝ≥0), ∀ᵐ x ∂μ, ∀ᶠ a in v.filterAt x, ρ a < ε * μ a
+  have A : ∀ ε > (0 : ℝ≥0), ∀ᵐ x ∂μ, ∀ᶠ a in v.filterAt x, ρ a < ε * μ a
   intro ε εpos
   set s := {x | ¬∀ᶠ a in v.filterAt x, ρ a < ε * μ a} with hs
   change μ s = 0
@@ -522,7 +522,7 @@ theorem withDensity_le_mul {s : Set α} (hs : MeasurableSet s) {t : ℝ≥0} (ht
     show that the two measures are comparable up to `t` (in fact `t^2` for technical reasons of
     strict inequalities). -/
   have t_ne_zero' : t ≠ 0 := (zero_lt_one.trans ht).ne'
-  have t_ne_zero  : (t : ℝ≥0∞) ≠ 0
+  have t_ne_zero : (t : ℝ≥0∞) ≠ 0
   simpa only [ENNReal.coe_eq_zero, Ne] using t_ne_zero'
   let ν := μ.withDensity (v.limRatioMeas hρ)
   let f := v.limRatioMeas hρ
@@ -530,13 +530,13 @@ theorem withDensity_le_mul {s : Set α} (hs : MeasurableSet s) {t : ℝ≥0} (ht
   -- Note(kmill): smul elaborator when used for CoeFun fails to get CoeFun instance to trigger
   -- unless you use the `(... :)` notation. Another fix is using `(2 : Nat)`, so this appears
   -- to be an unpleasant interaction with default instances.
-  have A  : ν (s ∩ f ⁻¹' {0}) ≤ ((t : ℝ≥0∞) ^ 2 • ρ :) (s ∩ f ⁻¹' {0})
+  have A : ν (s ∩ f ⁻¹' {0}) ≤ ((t : ℝ≥0∞) ^ 2 • ρ :) (s ∩ f ⁻¹' {0})
   apply le_trans _ (zero_le _)
   have M : MeasurableSet (s ∩ f ⁻¹' {0}) := hs.inter (f_meas (measurableSet_singleton _))
   simp only [ν, nonpos_iff_eq_zero, M, withDensity_apply, lintegral_eq_zero_iff f_meas]
   apply (ae_restrict_iff' M).2
   exact eventually_of_forall fun x hx => hx.2
-  have B  : ν (s ∩ f ⁻¹' {∞}) ≤ ((t : ℝ≥0∞) ^ 2 • ρ :) (s ∩ f ⁻¹' {∞})
+  have B : ν (s ∩ f ⁻¹' {∞}) ≤ ((t : ℝ≥0∞) ^ 2 • ρ :) (s ∩ f ⁻¹' {∞})
   apply le_trans (le_of_eq _) (zero_le _)
   apply withDensity_absolutelyContinuous μ _
   rw [← nonpos_iff_eq_zero]
@@ -592,16 +592,16 @@ theorem le_mul_withDensity {s : Set α} (hs : MeasurableSet s) {t : ℝ≥0} (ht
     `measure_le_mul_of_subset_limRatioMeas_lt` and `mul_measure_le_of_subset_lt_limRatioMeas` to
     show that the two measures are comparable up to `t`. -/
   have t_ne_zero' : t ≠ 0 := (zero_lt_one.trans ht).ne'
-  have t_ne_zero  : (t : ℝ≥0∞) ≠ 0
+  have t_ne_zero : (t : ℝ≥0∞) ≠ 0
   simpa only [ENNReal.coe_eq_zero, Ne] using t_ne_zero'
   let ν := μ.withDensity (v.limRatioMeas hρ)
   let f := v.limRatioMeas hρ
   have f_meas : Measurable f
   apply v.limRatioMeas_measurable hρ
-  have A  : ρ (s ∩ f ⁻¹' {0}) ≤ (t • ν) (s ∩ f ⁻¹' {0})
+  have A : ρ (s ∩ f ⁻¹' {0}) ≤ (t • ν) (s ∩ f ⁻¹' {0})
   refine le_trans (measure_mono inter_subset_right) (le_trans (le_of_eq ?_) (zero_le _))
   exact v.measure_limRatioMeas_zero hρ
-  have B  : ρ (s ∩ f ⁻¹' {∞}) ≤ (t • ν) (s ∩ f ⁻¹' {∞})
+  have B : ρ (s ∩ f ⁻¹' {∞}) ≤ (t • ν) (s ∩ f ⁻¹' {∞})
   apply le_trans (le_of_eq _) (zero_le _)
   apply hρ
   rw [← nonpos_iff_eq_zero]
@@ -733,7 +733,7 @@ theorem ae_tendsto_measure_inter_div (s : Set α) :
   apply ae_mono restrict_le_self
   apply ae_tendsto_measure_inter_div_of_measurableSet
   exact measurableSet_toMeasurable _ _
-  have B  : ∀ᵐ x ∂μ.restrict s, t.indicator 1 x = (1 : ℝ≥0∞)
+  have B : ∀ᵐ x ∂μ.restrict s, t.indicator 1 x = (1 : ℝ≥0∞)
   refine ae_restrict_of_ae_restrict_of_subset (subset_toMeasurable μ s) ?_
   filter_upwards [ae_restrict_mem (measurableSet_toMeasurable μ s)] with _ hx
   simp only [hx, Pi.one_apply, indicator_of_mem]
@@ -758,7 +758,7 @@ theorem ae_tendsto_lintegral_div' {f : α → ℝ≥0∞} (hf : Measurable f) (h
 
 theorem ae_tendsto_lintegral_div {f : α → ℝ≥0∞} (hf : AEMeasurable f μ) (h'f : (∫⁻ y, f y ∂μ) ≠ ∞) :
     ∀ᵐ x ∂μ, Tendsto (fun a => (∫⁻ y in a, f y ∂μ) / μ a) (v.filterAt x) (𝓝 (f x)) := by
-  have A  : (∫⁻ y, hf.mk f y ∂μ) ≠ ∞
+  have A : (∫⁻ y, hf.mk f y ∂μ) ≠ ∞
   convert h'f using 1
   apply lintegral_congr_ae
   exact hf.ae_eq_mk.symm
@@ -894,7 +894,7 @@ theorem ae_tendsto_average_norm_sub {f : α → E} (hf : LocallyIntegrable f μ)
   filter_upwards [v.eventually_measure_lt_top x, v.eventually_filterAt_integrableOn x hf]
     with a h'a h''a
   simp only [Function.comp_apply, ENNReal.toReal_div, setAverage_eq, div_eq_inv_mul]
-  have A  : IntegrableOn (fun y => (‖f y - f x‖₊ : ℝ)) a μ
+  have A : IntegrableOn (fun y => (‖f y - f x‖₊ : ℝ)) a μ
   simp_rw [coe_nnnorm]
   exact (h''a.sub (integrableOn_const.2 (Or.inr h'a))).norm
   rw [lintegral_coe_eq_integral _ A, ENNReal.toReal_ofReal (by positivity)]

@@ -395,7 +395,7 @@ theorem UniformCauchySeqOnFilter.tendstoUniformlyOnFilter_of_tendsto [NeBot p]
   rcases comp_symm_of_uniformity hu with ⟨t, ht, htsymm, htmem⟩
   -- We will choose n, x, and m simultaneously. n and x come from hF. m comes from hF'
   -- But we need to promote hF' to the full product filter to use it
-  have hmc  : ∀ᶠ x in (p ×ˢ p) ×ˢ p', Tendsto (fun n : ι => F n x.snd) p (𝓝 (f x.snd))
+  have hmc : ∀ᶠ x in (p ×ˢ p) ×ˢ p', Tendsto (fun n : ι => F n x.snd) p (𝓝 (f x.snd))
   rw [eventually_prod_iff]
   exact ⟨fun _ => True, by simp, _, hF', by simp⟩
   -- To apply filter operations we'll need to do some order manipulation

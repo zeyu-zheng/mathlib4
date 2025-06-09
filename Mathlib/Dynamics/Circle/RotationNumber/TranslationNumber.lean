@@ -838,10 +838,10 @@ theorem semiconj_of_group_action_of_forall_translationNumber_eq {G : Type*} [Gro
     ∃ F : CircleDeg1Lift, ∀ g, Semiconj F (f₁ g) (f₂ g) := by
   -- Equality of translation number guarantees that for each `x`
   -- the set `{f₂ g⁻¹ (f₁ g x) | g : G}` is bounded above.
-  have  : ∀ x, BddAbove (range fun g => f₂ g⁻¹ (f₁ g x))
+  have : ∀ x, BddAbove (range fun g => f₂ g⁻¹ (f₁ g x))
   refine fun x => ⟨x + 2, ?_⟩
   rintro _ ⟨g, rfl⟩
-  have  : τ (f₂ g⁻¹) = -τ (f₂ g)
+  have : τ (f₂ g⁻¹) = -τ (f₂ g)
   rw [← MonoidHom.coe_toHomUnits, MonoidHom.map_inv, translationNumber_units_inv,
     MonoidHom.coe_toHomUnits]
   calc

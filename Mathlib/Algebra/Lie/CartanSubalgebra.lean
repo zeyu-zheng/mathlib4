@@ -67,7 +67,7 @@ theorem ucs_eq_self_of_isCartanSubalgebra (H : LieSubalgebra R L) [H.IsCartanSub
 theorem isCartanSubalgebra_iff_isUcsLimit : H.IsCartanSubalgebra ↔ H.toLieSubmodule.IsUcsLimit := by
   constructor
   · intro h
-    have h₁  : LieAlgebra.IsNilpotent R H
+    have h₁ : LieAlgebra.IsNilpotent R H
     infer_instance
     obtain ⟨k, hk⟩ := H.toLieSubmodule.isNilpotent_iff_exists_self_le_ucs.mp h₁
     replace hk : H.toLieSubmodule = LieSubmodule.ucs k ⊥ :=
@@ -93,7 +93,7 @@ lemma ne_bot_of_isCartanSubalgebra [Nontrivial L] (H : LieSubalgebra R L) [H.IsC
     H ≠ ⊥ := by
   intro e
   obtain ⟨x, hx⟩ := exists_ne (0 : L)
-  have  : x ∈ H.normalizer
+  have : x ∈ H.normalizer
   simp [LieSubalgebra.mem_normalizer_iff, e]
   exact hx (by rwa [LieSubalgebra.IsCartanSubalgebra.self_normalizing, e] at this)
 

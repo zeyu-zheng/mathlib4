@@ -77,7 +77,7 @@ open Function (update)
 theorem pi_univ_Ioc_update_left {x y : ∀ i, α i} {i₀ : ι} {m : α i₀} (hm : x i₀ ≤ m) :
     (pi univ fun i ↦ Ioc (update x i₀ m i) (y i)) =
       { z | m < z i₀ } ∩ pi univ fun i ↦ Ioc (x i) (y i) := by
-  have  : Ioc m (y i₀) = Ioi m ∩ Ioc (x i₀) (y i₀)
+  have : Ioc m (y i₀) = Ioi m ∩ Ioc (x i₀) (y i₀)
   rw [← Ioi_inter_Iic, ← Ioi_inter_Iic, ← inter_assoc,
     inter_eq_self_of_subset_left (Ioi_subset_Ioi hm)]
   simp_rw [univ_pi_update i₀ _ _ fun i z ↦ Ioc z (y i), ← pi_inter_compl ({i₀} : Set ι),
@@ -87,7 +87,7 @@ theorem pi_univ_Ioc_update_left {x y : ∀ i, α i} {i₀ : ι} {m : α i₀} (h
 theorem pi_univ_Ioc_update_right {x y : ∀ i, α i} {i₀ : ι} {m : α i₀} (hm : m ≤ y i₀) :
     (pi univ fun i ↦ Ioc (x i) (update y i₀ m i)) =
       { z | z i₀ ≤ m } ∩ pi univ fun i ↦ Ioc (x i) (y i) := by
-  have  : Ioc (x i₀) m = Iic m ∩ Ioc (x i₀) (y i₀)
+  have : Ioc (x i₀) m = Iic m ∩ Ioc (x i₀) (y i₀)
   rw [← Ioi_inter_Iic, ← Ioi_inter_Iic, inter_left_comm,
     inter_eq_self_of_subset_left (Iic_subset_Iic.2 hm)]
   simp_rw [univ_pi_update i₀ y m fun i z ↦ Ioc (x i) z, ← pi_inter_compl ({i₀} : Set ι),

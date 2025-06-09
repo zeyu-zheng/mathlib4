@@ -640,7 +640,7 @@ lemma InjOn.image_inter {s t u : Set α} (hf : u.InjOn f) (hs : s ⊆ u) (ht : t
     f '' (s ∩ t) = f '' s ∩ f '' t := by
   apply Subset.antisymm (image_inter_subset _ _ _)
   intro x ⟨⟨y, ys, hy⟩, ⟨z, zt, hz⟩⟩
-  have  : y = z
+  have : y = z
   apply hf (hs ys) (ht zt)
   rwa [← hz] at hy
   rw [← this] at zt

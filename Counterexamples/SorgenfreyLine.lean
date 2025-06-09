@@ -77,7 +77,7 @@ theorem isOpen_Ici (a : ℝₗ) : IsOpen (Ici a) :=
 theorem nhds_basis_Ico (a : ℝₗ) : (𝓝 a).HasBasis (a < ·) (Ico a ·) := by
   rw [TopologicalSpace.nhds_generateFrom]
   haveI : Nonempty { x // x ≤ a } := Set.nonempty_Iic_subtype
-  have  : (⨅ x : { i // i ≤ a }, 𝓟 (Ici ↑x)) = 𝓟 (Ici a)
+  have : (⨅ x : { i // i ≤ a }, 𝓟 (Ici ↑x)) = 𝓟 (Ici a)
   refine (IsLeast.isGLB ?_).iInf_eq
   exact ⟨⟨⟨a, le_rfl⟩, rfl⟩, forall_mem_range.2 fun b => principal_mono.2 <| Ici_subset_Ici.2 b.2⟩
   simp only [mem_setOf_eq, iInf_and, iInf_exists, @iInf_comm _ (_ ∈ _), @iInf_comm _ (Set ℝₗ),

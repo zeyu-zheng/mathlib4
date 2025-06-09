@@ -219,7 +219,7 @@ theorem ker_le_iff [RingHomSurjective τ₁₂] {p : Submodule R M} :
     rw [← SetLike.mem_coe, range_coe, Set.mem_range] at h₁
     obtain ⟨x, hx⟩ := h₁
     have hx' : x ∈ p := h₂ hx
-    have hxz  : z + x ∈ p
+    have hxz : z + x ∈ p
     apply h₂
     simp [hx, hz]
     suffices z + x - x ∈ p by simpa only [this, add_sub_cancel_right]

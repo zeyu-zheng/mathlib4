@@ -75,7 +75,7 @@ theorem isIntegrallyClosed_dvd {s : S} (hs : IsIntegral R s) {p : R[X]}
   let L := FractionRing S
   let _ : Algebra K L := FractionRing.liftAlgebra R L
   have := FractionRing.isScalarTower_liftAlgebra R L
-  have  : minpoly K (algebraMap S L s) ∣ map (algebraMap R K) (p %ₘ minpoly R s)
+  have : minpoly K (algebraMap S L s) ∣ map (algebraMap R K) (p %ₘ minpoly R s)
   rw [map_modByMonic _ (minpoly.monic hs), modByMonic_eq_sub_mul_div]
   · refine dvd_sub (minpoly.dvd K (algebraMap S L s) ?_) ?_
     · rw [← map_aeval_eq_aeval_map, hp, map_zero]

@@ -122,7 +122,7 @@ theorem prime_def_le_sqrt {p : ℕ} : Prime p ↔ 2 ≤ p ∧ ∀ m, 2 ≤ m →
 
 theorem prime_of_coprime (n : ℕ) (h1 : 1 < n) (h : ∀ m < n, m ≠ 0 → n.Coprime m) : Prime n := by
   refine prime_def_lt.mpr ⟨h1, fun m mlt mdvd => ?_⟩
-  have hm  : m ≠ 0
+  have hm : m ≠ 0
   rintro rfl
   rw [zero_dvd_iff] at mdvd
   exact mlt.ne' mdvd
@@ -267,7 +267,7 @@ theorem minFacAux_has_prop {n : ℕ} (n2 : 2 ≤ n) :
 theorem minFac_has_prop {n : ℕ} (n1 : n ≠ 1) : minFacProp n (minFac n) := by
   by_cases n0 : n = 0
   · simp [n0, minFacProp, GE.ge]
-  have n2  : 2 ≤ n
+  have n2 : 2 ≤ n
   revert n0 n1
   rcases n with (_ | _ | _) <;> simp [succ_le_succ]
   simp only [minFac_eq, Nat.isUnit_iff]

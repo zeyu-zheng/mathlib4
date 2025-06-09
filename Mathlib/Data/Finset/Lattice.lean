@@ -225,7 +225,7 @@ theorem sup_le_of_le_directed {α : Type*} [SemilatticeSup α] [OrderBot α] (s 
     · simpa only [forall_prop_of_true, and_true_iff, forall_prop_of_false, bot_le, not_false_iff,
         sup_empty, forall_true_iff, not_mem_empty]
     · intro h
-      have incs  : (r : Set α) ⊆ ↑(insert a r)
+      have incs : (r : Set α) ⊆ ↑(insert a r)
       rw [Finset.coe_subset]
       apply Finset.subset_insert
       -- x ∈ s is above the sup of r
@@ -1560,7 +1560,7 @@ theorem card_le_of_interleaved {s t : Finset α}
     rcases h x hx a has hxa fun z hzs hz => hz.2.not_le <| ha _ hzs hz.1 with ⟨b, hbt, hxb, hba⟩
     exact ⟨b, hbt, hxb, hba.trans_le <| ha _ hy hxy⟩
   set f : α → WithTop α := fun x => (t.filter fun y => x < y).min
-  have f_mono  : StrictMonoOn f s
+  have f_mono : StrictMonoOn f s
   intro x hx y hy hxy
   rcases h x hx y hy hxy with ⟨a, hat, hxa, hay⟩
   calc

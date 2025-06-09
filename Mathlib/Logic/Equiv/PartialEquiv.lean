@@ -468,10 +468,10 @@ theorem target_subset_preimage_source : e.target ⊆ e.symm ⁻¹' e.source :=
 @[ext]
 protected theorem ext {e e' : PartialEquiv α β} (h : ∀ x, e x = e' x)
     (hsymm : ∀ x, e.symm x = e'.symm x) (hs : e.source = e'.source) : e = e' := by
-  have A  : (e : α → β) = e'
+  have A : (e : α → β) = e'
   ext x
   exact h x
-  have B  : (e.symm : β → α) = e'.symm
+  have B : (e.symm : β → α) = e'.symm
   ext x
   exact hsymm x
   have I : e '' e.source = e.target := e.image_source_eq_target
@@ -725,7 +725,7 @@ theorem EqOnSource.source_inter_preimage_eq {e e' : PartialEquiv α β} (he : e 
 /-- Composition of a partial equivlance and its inverse is equivalent to
 the restriction of the identity to the source. -/
 theorem self_trans_symm : e.trans e.symm ≈ ofSet e.source := by
-  have A  : (e.trans e.symm).source = e.source
+  have A : (e.trans e.symm).source = e.source
   mfld_set_tac
   refine ⟨by rw [A, ofSet_source], fun x hx => ?_⟩
   rw [A] at hx

@@ -83,7 +83,7 @@ theorem algebraicIndependent_iff_injective_aeval :
 @[simp]
 theorem algebraicIndependent_empty_type_iff [IsEmpty ι] :
     AlgebraicIndependent R x ↔ Injective (algebraMap R A) := by
-  have  : aeval x = (Algebra.ofId R A).comp (@isEmptyAlgEquiv R ι _ _).toAlgHom
+  have : aeval x = (Algebra.ofId R A).comp (@isEmptyAlgEquiv R ι _ _).toAlgHom
   ext i
   exact IsEmpty.elim' ‹IsEmpty ι› i
   rw [AlgebraicIndependent, this, ← Injective.of_comp_iff' _ (@isEmptyAlgEquiv R ι _ _).bijective]
@@ -124,9 +124,9 @@ theorem coe_range : AlgebraicIndependent R ((↑) : range x → A) := by
 
 theorem map {f : A →ₐ[R] A'} (hf_inj : Set.InjOn f (adjoin R (range x))) :
     AlgebraicIndependent R (f ∘ x) := by
-  have  : aeval (f ∘ x) = f.comp (aeval x)
+  have : aeval (f ∘ x) = f.comp (aeval x)
   ext; simp
-  have h  : ∀ p : MvPolynomial ι R, aeval x p ∈ (@aeval R _ _ _ _ _ ((↑) : range x → A)).range
+  have h : ∀ p : MvPolynomial ι R, aeval x p ∈ (@aeval R _ _ _ _ _ ((↑) : range x → A)).range
   intro p
   rw [AlgHom.mem_range]
   refine ⟨MvPolynomial.rename (codRestrict x (range x) mem_range_self) p, ?_⟩
@@ -141,7 +141,7 @@ theorem map' {f : A →ₐ[R] A'} (hf_inj : Injective f) : AlgebraicIndependent 
 
 theorem of_comp (f : A →ₐ[R] A') (hfv : AlgebraicIndependent R (f ∘ x)) :
     AlgebraicIndependent R x := by
-  have  : aeval (f ∘ x) = f.comp (aeval x)
+  have : aeval (f ∘ x) = f.comp (aeval x)
   ext; simp
   rw [AlgebraicIndependent, this, AlgHom.coe_comp] at hfv
   exact hfv.of_comp
@@ -254,7 +254,7 @@ theorem AlgebraicIndependent.to_subtype_range' {ι} {f : ι → A} (hf : Algebra
 theorem algebraicIndependent_comp_subtype {s : Set ι} :
     AlgebraicIndependent R (x ∘ (↑) : s → A) ↔
       ∀ p ∈ MvPolynomial.supported R s, aeval x p = 0 → p = 0 := by
-  have  : (aeval (x ∘ (↑) : s → A) : _ →ₐ[R] _) = (aeval x).comp (rename (↑))
+  have : (aeval (x ∘ (↑) : s → A) : _ →ₐ[R] _) = (aeval x).comp (rename (↑))
   ext; simp
   have : ∀ p : MvPolynomial s R, rename ((↑) : s → ι) p = 0 ↔ p = 0 :=
     (injective_iff_map_eq_zero' (rename ((↑) : s → ι) : MvPolynomial s R →ₐ[R] _).toRingHom).1
@@ -480,12 +480,12 @@ theorem IsTranscendenceBasis.isAlgebraic [Nontrivial R] (hx : IsTranscendenceBas
   intro a
   rw [← not_iff_comm.1 (hx.1.option_iff _).symm]
   intro ai
-  have h₁  : range x ⊆ range fun o : Option ι => o.elim a x
+  have h₁ : range x ⊆ range fun o : Option ι => o.elim a x
   rintro x ⟨y, rfl⟩
   exact ⟨some y, rfl⟩
-  have h₂  : range x ≠ range fun o : Option ι => o.elim a x
+  have h₂ : range x ≠ range fun o : Option ι => o.elim a x
   intro h
-  have  : a ∈ range x
+  have : a ∈ range x
   rw [h]
   exact ⟨none, rfl⟩
   rcases this with ⟨b, rfl⟩

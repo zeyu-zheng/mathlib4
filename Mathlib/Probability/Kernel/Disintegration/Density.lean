@@ -249,7 +249,7 @@ lemma setIntegral_densityProcess (hκν : fst κ ≤ ν) [IsFiniteKernel ν]
   have : IsFiniteKernel κ := isFiniteKernel_of_isFiniteKernel_fst (h := isFiniteKernel_of_le hκν)
   obtain ⟨S, hS_subset, rfl⟩ := (measurableSet_generateFrom_countablePartition_iff _ _).mp hA
   simp_rw [sUnion_eq_iUnion]
-  have h_disj  : Pairwise (Disjoint on fun i : S ↦ (i : Set γ))
+  have h_disj : Pairwise (Disjoint on fun i : S ↦ (i : Set γ))
   intro u v huv
   #adaptation_note /-- nightly-2024-03-16
   Previously `Function.onFun` unfolded in the following `simp only`,
@@ -583,7 +583,7 @@ lemma setIntegral_density (hκν : fst κ ≤ ν) [IsFiniteKernel ν]
     (a : α) {s : Set β} (hs : MeasurableSet s) {A : Set γ} (hA : MeasurableSet A) :
     ∫ x in A, density κ ν a x s ∂(ν a) = (κ a (A ×ˢ s)).toReal := by
   have : IsFiniteKernel κ := isFiniteKernel_of_isFiniteKernel_fst (h := isFiniteKernel_of_le hκν)
-  have hA'  : MeasurableSet[⨆ n, countableFiltration γ n] A
+  have hA' : MeasurableSet[⨆ n, countableFiltration γ n] A
   rwa [iSup_countableFiltration]
   refine induction_on_inter (m := ⨆ n, countableFiltration γ n)
     (C := fun A ↦ ∫ x in A, density κ ν a x s ∂(ν a) = (κ a (A ×ˢ s)).toReal)
@@ -598,7 +598,7 @@ lemma setIntegral_density (hκν : fst κ ≤ ν) [IsFiniteKernel ν]
     rw [iSup_countableFiltration] at hA
     have h := integral_add_compl hA (integrable_density hκν a hs)
     rw [hA_eq, integral_density hκν a hs] at h
-    have  : Aᶜ ×ˢ s = univ ×ˢ s \ A ×ˢ s
+    have : Aᶜ ×ˢ s = univ ×ˢ s \ A ×ˢ s
     rw [prod_diff_prod, compl_eq_univ_diff]
     simp
     rw [this, measure_diff (by intro x; simp) (hA.prod hs) (measure_ne_top (κ a) _),
@@ -713,7 +713,7 @@ lemma densityProcess_fst_univ [IsFiniteKernel κ] (n : ℕ) (a : α) (x : γ) :
     · rw [ENNReal.div_zero h']
       simp
   · rw [fst_apply' _ _ (measurableSet_countablePartitionSet _ _)]
-    have  : countablePartitionSet n x ×ˢ univ = {p : γ × β | p.1 ∈ countablePartitionSet n x}
+    have : countablePartitionSet n x ×ˢ univ = {p : γ × β | p.1 ∈ countablePartitionSet n x}
     ext x
     simp
     rw [this, ENNReal.div_self]

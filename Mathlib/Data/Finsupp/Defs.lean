@@ -299,7 +299,7 @@ theorem range_single_subset : Set.range (single a b) ⊆ {0, b} :=
 /-- `Finsupp.single a b` is injective in `b`. For the statement that it is injective in `a`, see
 `Finsupp.single_left_injective` -/
 theorem single_injective (a : α) : Function.Injective (single a : M → α →₀ M) := fun b₁ b₂ eq => by
-  have  : (single a b₁ : α →₀ M) a = (single a b₂ : α →₀ M) a
+  have : (single a b₁ : α →₀ M) a = (single a b₂ : α →₀ M) a
   rw [eq]
   rwa [single_eq_same, single_eq_same] at this
 
@@ -808,9 +808,9 @@ theorem embDomain_mapRange (f : α ↪ β) (g : M → N) (p : α →₀ M) (hg :
 theorem single_of_embDomain_single (l : α →₀ M) (f : α ↪ β) (a : β) (b : M) (hb : b ≠ 0)
     (h : l.embDomain f = single a b) : ∃ x, l = single x b ∧ f x = a := by
   classical
-    have h_map_support  : Finset.map f l.support = {a}
+    have h_map_support : Finset.map f l.support = {a}
     rw [← support_embDomain, h, support_single_ne_zero _ hb]
-    have ha  : a ∈ Finset.map f l.support
+    have ha : a ∈ Finset.map f l.support
     simp only [h_map_support, Finset.mem_singleton]
     rcases Finset.mem_map.1 ha with ⟨c, _hc₁, hc₂⟩
     use c

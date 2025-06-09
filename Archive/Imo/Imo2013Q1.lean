@@ -61,7 +61,7 @@ theorem imo2013_q1 (n : ℕ+) (k : ℕ) :
     obtain ⟨pm, hpm⟩ := hpk t_succ
     let m i := if i < pk then pm i else ⟨2 * t + 2 ^ pk.succ, arith_lemma pk t⟩
     use m
-    have hmpk  : (m pk : ℚ) = 2 * t + 2 ^ pk.succ
+    have hmpk : (m pk : ℚ) = 2 * t + 2 ^ pk.succ
     have : m pk = ⟨2 * t + 2 ^ pk.succ, _⟩ := if_neg (irrefl pk); simp [this]
     calc
       ((1 : ℚ) + (2 ^ pk.succ - 1) / (n : ℚ) : ℚ)= 1 + (2 * 2 ^ pk - 1) / (2 * (t + 1) : ℕ) := by
@@ -80,7 +80,7 @@ theorem imo2013_q1 (n : ℕ+) (k : ℕ) :
     obtain ⟨pm, hpm⟩ := hpk t_succ
     let m i := if i < pk then pm i else ⟨2 * t + 1, Nat.succ_pos _⟩
     use m
-    have hmpk  : (m pk : ℚ) = 2 * t + 1
+    have hmpk : (m pk : ℚ) = 2 * t + 1
     have : m pk = ⟨2 * t + 1, _⟩ := if_neg (irrefl pk)
     simp [this]
     calc

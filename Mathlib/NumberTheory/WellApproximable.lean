@@ -140,7 +140,7 @@ theorem smul_eq_of_mul_dvd (hn : 0 < n) (han : orderOf a ^ 2 ∣ n) :
     rwa [(Commute.all a b).orderOf_mul_eq_right_of_forall_prime_mul_dvd (orderOf_pos_iff.mp hn)
       fun p _ hp' => dvd_trans (mul_dvd_mul_right hp' <| orderOf a) han]
   let f : {b : A | orderOf b = n} → {b : A | orderOf b = n} := fun b => ⟨a * b, han b.property⟩
-  have hf  : Surjective f
+  have hf : Surjective f
   rintro ⟨b, hb⟩
   refine ⟨⟨a⁻¹ * b, ?_⟩, ?_⟩
   · rw [mem_setOf_eq, ← orderOf_inv, mul_inv_rev, inv_inv, mul_comm]
@@ -212,9 +212,9 @@ theorem addWellApproximable_ae_empty_or_univ (δ : ℕ → ℝ) (hδ : Tendsto �
   letI : SemilatticeSup Nat.Primes := Nat.Subtype.semilatticeSup _
   set μ : Measure 𝕊 := volume
   set u : Nat.Primes → 𝕊 := fun p => ↑((↑(1 : ℕ) : ℝ) / ((p : ℕ) : ℝ) * T)
-  have hu₀  : ∀ p : Nat.Primes, addOrderOf (u p) = (p : ℕ)
+  have hu₀ : ∀ p : Nat.Primes, addOrderOf (u p) = (p : ℕ)
   rintro ⟨p, hp⟩; exact addOrderOf_div_of_gcd_eq_one hp.pos (gcd_one_left p)
-  have hu  : Tendsto (addOrderOf ∘ u) atTop atTop
+  have hu : Tendsto (addOrderOf ∘ u) atTop atTop
   rw [(funext hu₀ : addOrderOf ∘ u = (↑))]
   have h_mono : Monotone ((↑) : Nat.Primes → ℕ) := fun p q hpq => hpq
   refine h_mono.tendsto_atTop_atTop fun n => ?_
@@ -332,7 +332,7 @@ lemma _root_.NormedAddCommGroup.exists_norm_nsmul_le {A : Type*}
         linarith [mem_closedBall.mp hx.1, mem_closedBall'.mp hx.2])
   by_contra h
   apply hn.ne'
-  have h'  : ⋃ j, B j = univ
+  have h' : ⋃ j, B j = univ
   rw [← (isClosed_iUnion_of_finite hB).measure_eq_univ_iff_eq (μ := μ)]
   refine le_antisymm (μ.mono (subset_univ _)) ?_
   simp_rw [measure_iUnion h (fun _ ↦ measurableSet_closedBall), tsum_fintype,
@@ -346,7 +346,7 @@ lemma _root_.NormedAddCommGroup.exists_norm_nsmul_le {A : Type*}
       simp [this]
     rw [not_le, ← closedBall_eq_empty (x := (0 : A))] at contra
     simp [contra]
-  have h''  : ∀ j, (B j).Nonempty
+  have h'' : ∀ j, (B j).Nonempty
   intro j; rwa [nonempty_closedBall]
   simpa using subsingleton_of_disjoint_isClosed_iUnion_eq_univ h'' h hB h'
 

@@ -53,12 +53,12 @@ theorem Valuation.inversion_estimate {x y : K} {γ : Γ₀ˣ} (y_ne : y ≠ 0)
   have hyp1' : v (x - y) * (v y * v y)⁻¹ < γ := mul_inv_lt_of_lt_mul₀ hyp1
   have hyp2 : v (x - y) < v y := lt_of_lt_of_le h (min_le_right _ _)
   have key : v x = v y := Valuation.map_eq_of_sub_lt v hyp2
-  have x_ne  : x ≠ 0
+  have x_ne : x ≠ 0
   intro h
   apply y_ne
   rw [h, v.map_zero] at key
   exact v.zero_iff.1 key.symm
-  have decomp  : x⁻¹ - y⁻¹ = x⁻¹ * (y - x) * y⁻¹
+  have decomp : x⁻¹ - y⁻¹ = x⁻¹ * (y - x) * y⁻¹
   rw [mul_sub_left_distrib, sub_mul, mul_assoc, show y * y⁻¹ = 1 from mul_inv_cancel y_ne,
     show x⁻¹ * x = 1 from inv_mul_cancel x_ne, mul_one, one_mul]
   calc
@@ -198,7 +198,7 @@ theorem continuous_extension : Continuous (Valued.extension : hat K → Γ₀) :
     erw [← Completion.denseInducing_coe.toInducing.nhds_eq_comap]
     exact Valued.continuous_valuation.tendsto' 0 0 (map_zero v)
   · have preimage_one : v ⁻¹' {(1 : Γ₀)} ∈ 𝓝 (1 : K) := by
-      have  : (v (1 : K) : Γ₀) ≠ 0
+      have : (v (1 : K) : Γ₀) ≠ 0
       rw [Valuation.map_one]
       exact zero_ne_one.symm
       convert Valued.loc_const this
@@ -208,7 +208,7 @@ theorem continuous_extension : Continuous (Valued.extension : hat K → Γ₀) :
       rwa [Completion.denseInducing_coe.nhds_eq_comap, mem_comap] at preimage_one
     have : ∃ V' ∈ 𝓝 (1 : hat K), (0 : hat K) ∉ V' ∧ ∀ (x) (_ : x ∈ V') (y) (_ : y ∈ V'),
       x * y⁻¹ ∈ V := by
-      have  : Tendsto (fun p : hat K × hat K => p.1 * p.2⁻¹) ((𝓝 1) ×ˢ (𝓝 1)) (𝓝 1)
+      have : Tendsto (fun p : hat K × hat K => p.1 * p.2⁻¹) ((𝓝 1) ×ˢ (𝓝 1)) (𝓝 1)
       rw [← nhds_prod_eq]
       conv =>
         congr
@@ -231,7 +231,7 @@ theorem continuous_extension : Continuous (Valued.extension : hat K → Γ₀) :
       · rintro x ⟨hx, _⟩ y ⟨hy, _⟩
         apply hU <;> assumption
     rcases this with ⟨V', V'_in, zeroV', hV'⟩
-    have nhds_right  : (fun x => x * x₀) '' V' ∈ 𝓝 x₀
+    have nhds_right : (fun x => x * x₀) '' V' ∈ 𝓝 x₀
     have l : Function.LeftInverse (fun x : hat K => x * x₀⁻¹) fun x : hat K => x * x₀ := by
       intro x
       simp only [mul_assoc, mul_inv_cancel h, mul_one]
@@ -242,19 +242,19 @@ theorem continuous_extension : Continuous (Valued.extension : hat K → Γ₀) :
     rw [image_eq_preimage_of_inverse l r]
     rw [← mul_inv_cancel h] at V'_in
     exact c.continuousAt V'_in
-    have  : ∃ z₀ : K, ∃ y₀ ∈ V', ↑z₀ = y₀ * x₀ ∧ z₀ ≠ 0
+    have : ∃ z₀ : K, ∃ y₀ ∈ V', ↑z₀ = y₀ * x₀ ∧ z₀ ≠ 0
     rcases Completion.denseRange_coe.mem_nhds nhds_right with ⟨z₀, y₀, y₀_in, H : y₀ * x₀ = z₀⟩
     refine ⟨z₀, y₀, y₀_in, ⟨H.symm, ?_⟩⟩
     rintro rfl
     exact mul_ne_zero (ne_of_mem_of_not_mem y₀_in zeroV') h H
     rcases this with ⟨z₀, y₀, y₀_in, hz₀, z₀_ne⟩
-    have vz₀_ne  : (v z₀ : Γ₀) ≠ 0
+    have vz₀_ne : (v z₀ : Γ₀) ≠ 0
     rwa [Valuation.ne_zero_iff]
     refine ⟨v z₀, ?_⟩
     rw [WithZeroTopology.tendsto_of_ne_zero vz₀_ne, eventually_comap]
     filter_upwards [nhds_right] with x x_in a ha
     rcases x_in with ⟨y, y_in, rfl⟩
-    have  : (v (a * z₀⁻¹) : Γ₀) = 1
+    have : (v (a * z₀⁻¹) : Γ₀) = 1
     apply hV
     have : (z₀⁻¹ : K) = (z₀ : hat K)⁻¹ := map_inv₀ (Completion.coeRingHom : K →+* hat K) z₀
     rw [Completion.coe_mul, this, ha, hz₀, mul_inv, mul_comm y₀⁻¹, ← mul_assoc, mul_assoc y,

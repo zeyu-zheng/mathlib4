@@ -39,14 +39,14 @@ variable [NormedSpace 𝕜 E]
 /-- Lemma to normalize a vector in a normed space `E` over either `ℂ` or `ℝ` to unit length. -/
 @[simp]
 theorem norm_smul_inv_norm {x : E} (hx : x ≠ 0) : ‖(‖x‖⁻¹ : 𝕜) • x‖ = 1 := by
-  have  : ‖x‖ ≠ 0
+  have : ‖x‖ ≠ 0
   simp [hx]
   field_simp [norm_smul]
 
 /-- Lemma to normalize a vector in a normed space `E` over either `ℂ` or `ℝ` to length `r`. -/
 theorem norm_smul_inv_norm' {r : ℝ} (r_nonneg : 0 ≤ r) {x : E} (hx : x ≠ 0) :
     ‖((r : 𝕜) * (‖x‖ : 𝕜)⁻¹) • x‖ = r := by
-  have  : ‖x‖ ≠ 0
+  have : ‖x‖ ≠ 0
   simp [hx]
   field_simp [norm_smul, r_nonneg, rclike_simps]
 
@@ -57,12 +57,12 @@ theorem LinearMap.bound_of_sphere_bound {r : ℝ} (r_pos : 0 < r) (c : ℝ) (f :
     simp only [LinearMap.map_zero, norm_zero, mul_zero]
     exact le_rfl
   set z₁ := ((r : 𝕜) * (‖z‖ : 𝕜)⁻¹) • z with hz₁
-  have norm_f_z₁  : ‖f z₁‖ ≤ c
+  have norm_f_z₁ : ‖f z₁‖ ≤ c
   apply h
   rw [mem_sphere_zero_iff_norm]
   exact norm_smul_inv_norm' r_pos.le z_zero
   have r_ne_zero : (r : 𝕜) ≠ 0 := RCLike.ofReal_ne_zero.mpr r_pos.ne'
-  have eq  : f z = ‖z‖ / r * f z₁
+  have eq : f z = ‖z‖ / r * f z₁
   rw [hz₁, LinearMap.map_smul, smul_eq_mul]
   rw [← mul_assoc, ← mul_assoc, div_mul_cancel₀ _ r_ne_zero, mul_inv_cancel, one_mul]
   simp only [z_zero, RCLike.ofReal_eq_zero, norm_eq_zero, Ne, not_false_iff]

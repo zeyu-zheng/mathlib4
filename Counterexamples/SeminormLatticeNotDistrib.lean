@@ -48,7 +48,7 @@ theorem eq_one : (p ⊔ q1 ⊓ q2) (1, 1) = 1 := by
 /-- This is a counterexample to the distributivity of the lattice `Seminorm ℝ (ℝ × ℝ)`. -/
 theorem not_distrib : ¬(p ⊔ q1) ⊓ (p ⊔ q2) ≤ p ⊔ q1 ⊓ q2 := by
   intro le_sup_inf
-  have c  : ¬4 / 3 ≤ (1 : ℝ)
+  have c : ¬4 / 3 ≤ (1 : ℝ)
   norm_num
   apply c; nth_rw 1 [← eq_one]
   apply le_trans _ (le_sup_inf _)

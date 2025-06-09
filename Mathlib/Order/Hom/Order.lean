@@ -129,7 +129,7 @@ theorem iterate_sup_le_sup_iff {α : Type*} [SemilatticeSup α] (f : α →o α)
   constructor <;> intro h
   · exact h 1 0
   · intro n₁ n₂ a₁ a₂
-    have h'  : ∀ n a₁ a₂, f^[n] (a₁ ⊔ a₂) ≤ f^[n] a₁ ⊔ a₂
+    have h' : ∀ n a₁ a₂, f^[n] (a₁ ⊔ a₂) ≤ f^[n] a₁ ⊔ a₂
     intro n
     induction' n with n ih <;> intro a₁ a₂
     · rfl

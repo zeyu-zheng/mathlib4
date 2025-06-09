@@ -285,7 +285,7 @@ theorem lastStep_nonempty :
   simp only [nonempty_def, not_exists, exists_prop, not_and, not_lt, not_le, mem_setOf_eq,
     not_forall] at h
   specialize h y
-  have A  : p.c (p.index y) ∉ p.iUnionUpTo y
+  have A : p.c (p.index y) ∉ p.iUnionUpTo y
   have :
       p.index y =
         Classical.epsilon fun b : β => p.c b ∉ p.iUnionUpTo y ∧ p.R y ≤ p.τ * p.r b := by
@@ -300,15 +300,15 @@ theorem lastStep_nonempty :
 
 /-- Every point is covered by chosen balls, before `p.lastStep`. -/
 theorem mem_iUnionUpTo_lastStep (x : β) : p.c x ∈ p.iUnionUpTo p.lastStep := by
-  have A  : ∀ z : β, p.c z ∈ p.iUnionUpTo p.lastStep ∨ p.τ * p.r z < p.R p.lastStep
+  have A : ∀ z : β, p.c z ∈ p.iUnionUpTo p.lastStep ∨ p.τ * p.r z < p.R p.lastStep
   have : p.lastStep ∈ {i | ¬∃ b : β, p.c b ∉ p.iUnionUpTo i ∧ p.R i ≤ p.τ * p.r b} :=
     csInf_mem p.lastStep_nonempty
   simpa only [not_exists, mem_setOf_eq, not_and_or, not_le, not_not_mem]
   by_contra h
   rcases A x with (H | H); · exact h H
-  have Rpos  : 0 < p.R p.lastStep
+  have Rpos : 0 < p.R p.lastStep
   apply lt_trans (mul_pos (_root_.zero_lt_one.trans p.one_lt_tau) (p.rpos _)) H
-  have B  : p.τ⁻¹ * p.R p.lastStep < p.R p.lastStep
+  have B : p.τ⁻¹ * p.R p.lastStep < p.R p.lastStep
   conv_rhs => rw [← one_mul (p.R p.lastStep)]
   exact mul_lt_mul (inv_lt_one p.one_lt_tau) le_rfl Rpos zero_le_one
   obtain ⟨y, hy1, hy2⟩ : ∃ y, p.c y ∉ p.iUnionUpTo p.lastStep ∧ p.τ⁻¹ * p.R p.lastStep < p.r y := by
@@ -539,7 +539,7 @@ theorem exist_finset_disjoint_balls_large_measure (μ : Measure α) [IsFiniteMea
   cases isEmpty_or_nonempty α
   · simp only [eq_empty_of_isEmpty s, measure_empty] at hμs
     exact (lt_irrefl _ hμs).elim
-  have Npos  : N ≠ 0
+  have Npos : N ≠ 0
   rintro rfl
   inhabit α
   exact not_isEmpty_of_nonempty _ hN

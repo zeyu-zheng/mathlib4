@@ -529,7 +529,7 @@ theorem gcd_pow_left_dvd_pow_gcd [GCDMonoid α] {a b : α} {k : ℕ} : gcd (a ^ 
 
 theorem pow_dvd_of_mul_eq_pow [GCDMonoid α] {a b c d₁ d₂ : α} (ha : a ≠ 0) (hab : IsUnit (gcd a b))
     {k : ℕ} (h : a * b = c ^ k) (hc : c = d₁ * d₂) (hd₁ : d₁ ∣ a) : d₁ ^ k ≠ 0 ∧ d₁ ^ k ∣ a := by
-  have h1  : IsUnit (gcd (d₁ ^ k) b)
+  have h1 : IsUnit (gcd (d₁ ^ k) b)
   apply isUnit_of_dvd_one
   trans gcd d₁ b ^ k
   · exact gcd_pow_left_dvd_pow_gcd
@@ -538,15 +538,15 @@ theorem pow_dvd_of_mul_eq_pow [GCDMonoid α] {a b c d₁ d₂ : α} (ha : a ≠ 
     apply isUnit_of_dvd_one
     apply dvd_trans _ hab.dvd
     apply gcd_dvd_gcd hd₁ (dvd_refl b)
-  have h2  : d₁ ^ k ∣ a * b
+  have h2 : d₁ ^ k ∣ a * b
   use d₂ ^ k
   rw [h, hc]
   exact mul_pow d₁ d₂ k
   rw [mul_comm] at h2
-  have h3  : d₁ ^ k ∣ a
+  have h3 : d₁ ^ k ∣ a
   apply (dvd_gcd_mul_of_dvd_mul h2).trans
   rw [h1.mul_left_dvd]
-  have h4  : d₁ ^ k ≠ 0
+  have h4 : d₁ ^ k ≠ 0
   intro hdk
   rw [hdk] at h3
   apply absurd (zero_dvd_iff.mp h3) ha
@@ -573,7 +573,7 @@ theorem exists_associated_pow_of_mul_eq_pow [GCDMonoid α] {a b c : α} (hab : I
     rw [pow_zero] at h ⊢
     use Units.mkOfMulEqOne _ _ h
     rw [Units.val_mkOfMulEqOne, one_mul]
-  have hc  : c ∣ a * b
+  have hc : c ∣ a * b
   rw [h]
   exact dvd_pow_self _ hk.ne'
   obtain ⟨d₁, d₂, hd₁, hd₂, hc⟩ := exists_dvd_and_dvd_of_dvd_mul hc
@@ -583,7 +583,7 @@ theorem exists_associated_pow_of_mul_eq_pow [GCDMonoid α] {a b c : α} (hab : I
   rw [(gcd_comm' a b).isUnit_iff] at hab
   obtain ⟨h0₂, ⟨b', hb'⟩⟩ := pow_dvd_of_mul_eq_pow hb hab h hc hd₂
   rw [ha', hb', hc, mul_pow] at h
-  have h'  : a' * b' = 1
+  have h' : a' * b' = 1
   apply (mul_right_inj' h0₁).mp
   rw [mul_one]
   apply (mul_right_inj' h0₂).mp

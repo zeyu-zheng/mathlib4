@@ -163,7 +163,7 @@ theorem IsArtinian.finite_of_linearIndependent [Nontrivial R] [IsArtinian R M] {
   refine by_contradiction fun hf => (RelEmbedding.wellFounded_iff_no_descending_seq.1
     (wellFounded_submodule_lt (R := R) (M := M))).elim' ?_
   have f : ℕ ↪ s := Set.Infinite.natEmbedding s hf
-  have  : ∀ n, (↑) ∘ f '' { m | n ≤ m } ⊆ s
+  have : ∀ n, (↑) ∘ f '' { m | n ≤ m } ⊆ s
   rintro n x ⟨y, _, rfl⟩
   exact (f y).2
   have : ∀ a b : ℕ, a ≤ b ↔

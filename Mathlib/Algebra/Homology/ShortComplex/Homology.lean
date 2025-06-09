@@ -1066,7 +1066,7 @@ lemma homologyι_descOpcycles_eq_zero_of_boundary [S.HasHomology]
 lemma isIso_homologyMap_of_isIso_cyclesMap_of_epi {φ : S₁ ⟶ S₂}
     [S₁.HasHomology] [S₂.HasHomology] (h₁ : IsIso (cyclesMap φ)) (h₂ : Epi φ.τ₁) :
     IsIso (homologyMap φ) := by
-  have h  : S₂.toCycles ≫ inv (cyclesMap φ) ≫ S₁.homologyπ = 0
+  have h : S₂.toCycles ≫ inv (cyclesMap φ) ≫ S₁.homologyπ = 0
   simp only [← cancel_epi φ.τ₁, ← toCycles_naturality_assoc,
     IsIso.hom_inv_id_assoc, toCycles_comp_homologyπ, comp_zero]
   have ⟨z, hz⟩ := CokernelCofork.IsColimit.desc' S₂.homologyIsCokernel _ h
@@ -1080,7 +1080,7 @@ lemma isIso_homologyMap_of_isIso_cyclesMap_of_epi {φ : S₁ ⟶ S₂}
 lemma isIso_homologyMap_of_isIso_opcyclesMap_of_mono {φ : S₁ ⟶ S₂}
     [S₁.HasHomology] [S₂.HasHomology] (h₁ : IsIso (opcyclesMap φ)) (h₂ : Mono φ.τ₃) :
     IsIso (homologyMap φ) := by
-  have h  : (S₂.homologyι ≫ inv (opcyclesMap φ)) ≫ S₁.fromOpcycles = 0
+  have h : (S₂.homologyι ≫ inv (opcyclesMap φ)) ≫ S₁.fromOpcycles = 0
   simp only [← cancel_mono φ.τ₃, zero_comp, assoc, ← fromOpcycles_naturality,
     IsIso.inv_hom_id_assoc, homologyι_comp_fromOpcycles]
   have ⟨z, hz⟩ := KernelFork.IsLimit.lift' S₁.homologyIsKernel _ h
@@ -1141,7 +1141,7 @@ lemma homologyι_comp_asIsoHomologyι_inv (hg : S.g = 0) [S.HasHomology] :
 lemma mono_homologyMap_of_mono_opcyclesMap'
     [S₁.HasHomology] [S₂.HasHomology] (h : Mono (opcyclesMap φ)) :
     Mono (homologyMap φ) := by
-  have  : Mono (homologyMap φ ≫ S₂.homologyι)
+  have : Mono (homologyMap φ ≫ S₂.homologyι)
   rw [homologyι_naturality φ]
   apply mono_comp
   exact mono_of_mono (homologyMap φ) S₂.homologyι
@@ -1154,7 +1154,7 @@ instance mono_homologyMap_of_mono_opcyclesMap
 lemma epi_homologyMap_of_epi_cyclesMap'
     [S₁.HasHomology] [S₂.HasHomology] (h : Epi (cyclesMap φ)) :
     Epi (homologyMap φ) := by
-  have  : Epi (S₁.homologyπ ≫ homologyMap φ)
+  have : Epi (S₁.homologyπ ≫ homologyMap φ)
   rw [homologyπ_naturality φ]
   apply epi_comp
   exact epi_of_epi S₁.homologyπ (homologyMap φ)

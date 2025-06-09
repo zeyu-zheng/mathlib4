@@ -249,7 +249,7 @@ lemma trans {X Y : C} {z₁ z₂ z₃ : W.LeftFraction X Y}
   obtain ⟨⟨v₄, v₅, hv₅⟩, fac⟩ := HasLeftCalculusOfFractions.exists_leftFraction
     (RightFraction.mk (z₁.s ≫ t₁) ht (z₃.s ≫ u₃))
   simp only [Category.assoc] at fac
-  have eq  : z₂.s ≫ u₂ ≫ v₅  = z₂.s ≫ t₂ ≫ v₄
+  have eq : z₂.s ≫ u₂ ≫ v₅  = z₂.s ≫ t₂ ≫ v₄
   simpa only [← reassoc_of% hsu, reassoc_of% hst] using fac
   obtain ⟨Z₇, w, hw, fac'⟩ := HasLeftCalculusOfFractions.ext _ _ _ z₂.hs eq
   simp only [Category.assoc] at fac'
@@ -292,7 +292,7 @@ lemma comp₀_rel {X Y Z : C} (z₁ : W.LeftFraction X Y) (z₂ : W.LeftFraction
     LeftFractionRel (z₁.comp₀ z₂ z₃) (z₁.comp₀ z₂ z₃') := by
   obtain ⟨z₄, fac⟩ := exists_leftFraction (RightFraction.mk z₃.s z₃.hs z₃'.s)
   dsimp at fac
-  have eq  : z₁.s ≫ z₃.f ≫ z₄.f = z₁.s ≫ z₃'.f ≫ z₄.s
+  have eq : z₁.s ≫ z₃.f ≫ z₄.f = z₁.s ≫ z₃'.f ≫ z₄.s
   rw [← reassoc_of% h₃, ← reassoc_of% h₃', fac]
   obtain ⟨Y, t, ht, fac'⟩ := HasLeftCalculusOfFractions.ext _ _ _ z₁.hs eq
   simp only [assoc] at fac'
@@ -701,7 +701,7 @@ lemma map_comp_map_eq_map {X Y Z : C} (z₁ : W.LeftFraction X Y) (z₂ : W.Left
       (z₁.comp₀ z₂ z₃).map L (Localization.inverts L W) := by
   have := Localization.inverts L W _ z₂.hs
   have := Localization.inverts L W _ z₃.hs
-  have  : IsIso (L.map (z₂.s ≫ z₃.s))
+  have : IsIso (L.map (z₂.s ≫ z₃.s))
   rw [L.map_comp]
   infer_instance
   dsimp [LeftFraction.comp₀]

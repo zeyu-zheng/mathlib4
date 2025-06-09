@@ -49,7 +49,7 @@ lemma hfunext {α α' : Sort u} {β : α → Sort v} {β' : α' → Sort v} {f :
     (hα : α = α') (h : ∀a a', HEq a a' → HEq (f a) (f' a')) : HEq f f' := by
   subst hα
   have : ∀a, HEq (f a) (f' a) := fun a ↦ h a a (HEq.refl a)
-  have  : β = β'
+  have : β = β'
   funext a; exact type_eq_of_heq (this a)
   subst this
   apply heq_of_eq

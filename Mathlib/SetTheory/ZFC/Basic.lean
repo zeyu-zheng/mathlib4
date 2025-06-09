@@ -1100,7 +1100,7 @@ theorem pair_injective : Function.Injective2 pair := fun x x' y y' H => by
     · exact singleton_injective h
     · have m : x' ∈ ({x} : ZFSet) := by simp [h]
       rw [mem_singleton.mp m]
-  have he  : x = y → y = y'
+  have he : x = y → y = y'
   rintro rfl
   cases' (ae {x, y'}).2 (by simp only [eq_self_iff_true, or_true_iff]) with xy'x xy'xx
   · rw [eq_comm, ← mem_singleton, ← xy'x, mem_pair]

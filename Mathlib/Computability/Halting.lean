@@ -80,7 +80,7 @@ theorem merge' {f g : α →. σ} (hf : Partrec f) (hg : Partrec g) :
   refine
     ⟨k', ((nat_iff.2 hk).comp Computable.encode).bind (Computable.decode.ofOption.comp snd).to₂,
       fun a => ?_⟩
-  have  : ∀ x ∈ k' a, x ∈ f a ∨ x ∈ g a
+  have : ∀ x ∈ k' a, x ∈ f a ∨ x ∈ g a
   intro x h'
   simp only [k', exists_prop, mem_coe, mem_bind_iff, Option.mem_def] at h'
   obtain ⟨n, hn, hx⟩ := h'

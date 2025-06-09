@@ -490,7 +490,7 @@ theorem det_eq_of_forall_row_eq_smul_add_pred_aux {n : ℕ} (k : Fin (n + 1)) :
     refine Fin.cases (h0 j) (fun i => ?_) i
     rw [hsucc, hc i (Fin.succ_pos _), zero_mul, add_zero]
   set M' := updateRow M k.succ (N k.succ) with hM'
-  have hM  : M = updateRow M' k.succ (M' k.succ + c k • M (Fin.castSucc k))
+  have hM : M = updateRow M' k.succ (M' k.succ + c k • M (Fin.castSucc k))
   ext i j
   by_cases hi : i = k.succ
   · simp [hi, hM', hsucc, updateRow_self]
@@ -679,7 +679,7 @@ theorem det_succ_column_zero {n : ℕ} (A : Matrix (Fin n.succ) (Fin n.succ) R) 
   -- `univ_perm_fin_succ` gives a different embedding of `Perm (Fin n)` into
   -- `Perm (Fin n.succ)` than the determinant of the submatrix we want,
   -- permute `A` so that we get the correct one.
-  have  : (-1 : R) ^ (i : ℕ) = (Perm.sign i.cycleRange)
+  have : (-1 : R) ^ (i : ℕ) = (Perm.sign i.cycleRange)
   simp [Fin.sign_cycleRange]
   rw [Fin.val_succ, pow_succ', this, mul_assoc, mul_assoc, mul_left_comm (ε _),
     ← det_permute, Matrix.det_apply, Finset.mul_sum, Finset.mul_sum]
@@ -710,7 +710,7 @@ theorem det_succ_row {n : ℕ} (A : Matrix (Fin n.succ) (Fin n.succ) R) (i : Fin
     det A =
       ∑ j : Fin n.succ, (-1) ^ (i + j : ℕ) * A i j * det (A.submatrix i.succAbove j.succAbove) := by
   simp_rw [pow_add, mul_assoc, ← mul_sum]
-  have  : det A = (-1 : R) ^ (i : ℕ) * (Perm.sign i.cycleRange⁻¹) * det A
+  have : det A = (-1 : R) ^ (i : ℕ) * (Perm.sign i.cycleRange⁻¹) * det A
   calc
     det A = ↑((-1 : ℤˣ) ^ (i : ℕ) * (-1 : ℤˣ) ^ (i : ℕ) : ℤˣ) * det A := by simp
     _ = (-1 : R) ^ (i : ℕ) * (Perm.sign i.cycleRange⁻¹) * det A := by simp [-Int.units_mul_self]

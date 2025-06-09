@@ -281,13 +281,13 @@ theorem countable_setOf_nonempty_of_disjoint {f : β → Set α}
     (hf : Pairwise (Disjoint on f)) {s : Set α} (h'f : ∀ t, f t ⊆ s) (hs : s.Countable) :
     Set.Countable {t | (f t).Nonempty} := by
   rw [← Set.countable_coe_iff] at hs ⊢
-  have  : ∀ t : {t // (f t).Nonempty}, ∃ x : s, x.1 ∈ f t
+  have : ∀ t : {t // (f t).Nonempty}, ∃ x : s, x.1 ∈ f t
   rintro ⟨t, ⟨x, hx⟩⟩
   exact ⟨⟨x, (h'f t hx)⟩, hx⟩
   choose F hF using this
-  have A  : Injective F
+  have A : Injective F
   rintro ⟨t, ht⟩ ⟨t', ht'⟩ htt'
-  have A  : (f t ∩ f t').Nonempty
+  have A : (f t ∩ f t').Nonempty
   refine ⟨F ⟨t, ht⟩, hF _, ?_⟩
   rw [htt']
   exact hF _

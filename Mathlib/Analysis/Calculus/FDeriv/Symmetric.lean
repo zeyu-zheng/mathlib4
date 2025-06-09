@@ -77,7 +77,7 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ interior s)
   -- good up to `δ`.
   rw [HasFDerivWithinAt, hasFDerivAtFilter_iff_isLittleO, isLittleO_iff] at hx
   rcases Metric.mem_nhdsWithin_iff.1 (hx εpos) with ⟨δ, δpos, sδ⟩
-  have E1  : ∀ᶠ h in 𝓝[>] (0 : ℝ), h * (‖v‖ + ‖w‖) < δ
+  have E1 : ∀ᶠ h in 𝓝[>] (0 : ℝ), h * (‖v‖ + ‖w‖) < δ
   have : Filter.Tendsto (fun h => h * (‖v‖ + ‖w‖)) (𝓝[>] (0 : ℝ)) (𝓝 (0 * (‖v‖ + ‖w‖))) :=
     (continuous_id.mul continuous_const).continuousWithinAt
   apply (tendsto_order.1 this).2 δ
@@ -182,35 +182,35 @@ theorem Convex.isLittleO_alternate_sum_square {v w : E} (h4v : x + (4 : ℝ) •
   have A : (1 : ℝ) / 2 ∈ Ioc (0 : ℝ) 1 := ⟨by norm_num, by norm_num⟩
   have B : (1 : ℝ) / 2 ∈ Icc (0 : ℝ) 1 := ⟨by norm_num, by norm_num⟩
   have C : ∀ w : E, (2 : ℝ) • w = 2 • w := fun w => by simp only [two_smul]
-  have h2v2w  : x + (2 : ℝ) • v + (2 : ℝ) • w ∈ interior s
+  have h2v2w : x + (2 : ℝ) • v + (2 : ℝ) • w ∈ interior s
   convert s_conv.interior.add_smul_sub_mem h4v h4w B using 1
   simp only [smul_sub, smul_smul, one_div, add_sub_add_left_eq_sub, mul_add, add_smul]
   norm_num
   simp only [show (4 : ℝ) = (2 : ℝ) + (2 : ℝ) by norm_num, _root_.add_smul]
   abel
-  have h2vww  : x + (2 • v + w) + w ∈ interior s
+  have h2vww : x + (2 • v + w) + w ∈ interior s
   convert h2v2w using 1
   simp only [two_smul]
   abel
-  have h2v  : x + (2 : ℝ) • v ∈ interior s
+  have h2v : x + (2 : ℝ) • v ∈ interior s
   convert s_conv.add_smul_sub_mem_interior xs h4v A using 1
   simp only [smul_smul, one_div, add_sub_cancel_left, add_right_inj]
   norm_num
-  have h2w  : x + (2 : ℝ) • w ∈ interior s
+  have h2w : x + (2 : ℝ) • w ∈ interior s
   convert s_conv.add_smul_sub_mem_interior xs h4w A using 1
   simp only [smul_smul, one_div, add_sub_cancel_left, add_right_inj]
   norm_num
-  have hvw  : x + (v + w) ∈ interior s
+  have hvw : x + (v + w) ∈ interior s
   convert s_conv.add_smul_sub_mem_interior xs h2v2w A using 1
   simp only [smul_smul, one_div, add_sub_cancel_left, add_right_inj, smul_add, smul_sub]
   norm_num
   abel
-  have h2vw  : x + (2 • v + w) ∈ interior s
+  have h2vw : x + (2 • v + w) ∈ interior s
   convert s_conv.interior.add_smul_sub_mem h2v h2v2w B using 1
   simp only [smul_add, smul_sub, smul_smul, ← C]
   norm_num
   abel
-  have hvww  : x + (v + w) + w ∈ interior s
+  have hvww : x + (v + w) + w ∈ interior s
   convert s_conv.interior.add_smul_sub_mem h2w h2v2w B using 1
   rw [one_div, add_sub_add_right_eq_sub, add_sub_cancel_left, inv_smul_smul₀ two_ne_zero,
     two_smul]
@@ -231,13 +231,13 @@ removes the assumption that `v` and `w` point inside `s`. -/
 theorem Convex.second_derivative_within_at_symmetric_of_mem_interior {v w : E}
     (h4v : x + (4 : ℝ) • v ∈ interior s) (h4w : x + (4 : ℝ) • w ∈ interior s) :
     f'' w v = f'' v w := by
-  have A  : (fun h : ℝ => h ^ 2 • (f'' w v - f'' v w)) =o[𝓝[>] 0] fun h => h ^ 2
+  have A : (fun h : ℝ => h ^ 2 • (f'' w v - f'' v w)) =o[𝓝[>] 0] fun h => h ^ 2
   convert (s_conv.isLittleO_alternate_sum_square hf xs hx h4v h4w).sub
     (s_conv.isLittleO_alternate_sum_square hf xs hx h4w h4v) using 1
   ext h
   simp only [add_comm, smul_add, smul_sub]
   abel
-  have B  : (fun _ : ℝ => f'' w v - f'' v w) =o[𝓝[>] 0] fun _ => (1 : ℝ)
+  have B : (fun _ : ℝ => f'' w v - f'' v w) =o[𝓝[>] 0] fun _ => (1 : ℝ)
   have : (fun h : ℝ => 1 / h ^ 2) =O[𝓝[>] 0] fun h => 1 / h ^ 2 := isBigO_refl _ _
   have C := this.smul_isLittleO A
   apply C.congr' _ _
@@ -262,14 +262,14 @@ theorem Convex.second_derivative_within_at_symmetric {s : Set E} (s_conv : Conve
     that `f''` is symmetric, after cancelling all the contributions due to `z`. -/
   rcases hne with ⟨y, hy⟩
   obtain ⟨z, hz⟩ : ∃ z, z = ((1 : ℝ) / 4) • (y - x) := ⟨((1 : ℝ) / 4) • (y - x), rfl⟩
-  have A  : ∀ m : E, Filter.Tendsto (fun t : ℝ => x + (4 : ℝ) • (z + t • m)) (𝓝 0) (𝓝 y)
+  have A : ∀ m : E, Filter.Tendsto (fun t : ℝ => x + (4 : ℝ) • (z + t • m)) (𝓝 0) (𝓝 y)
   intro m
-  have  : x + (4 : ℝ) • (z + (0 : ℝ) • m) = y
+  have : x + (4 : ℝ) • (z + (0 : ℝ) • m) = y
   simp [hz]
   rw [← this]
   refine tendsto_const_nhds.add <| tendsto_const_nhds.smul <| tendsto_const_nhds.add ?_
   exact continuousAt_id.smul continuousAt_const
-  have B  : ∀ m : E, ∀ᶠ t in 𝓝[>] (0 : ℝ), x + (4 : ℝ) • (z + t • m) ∈ interior s
+  have B : ∀ m : E, ∀ᶠ t in 𝓝[>] (0 : ℝ), x + (4 : ℝ) • (z + t • m) ∈ interior s
   intro m
   apply nhdsWithin_le_nhds
   apply A m
@@ -280,7 +280,7 @@ theorem Convex.second_derivative_within_at_symmetric {s : Set E} (s_conv : Conve
   choose t ts tpos using fun m => ((B m).and self_mem_nhdsWithin).exists
   -- applying `second_derivative_within_at_symmetric_of_mem_interior` to the vectors `z`
   -- and `z + (t m) m`, we deduce that `f'' m z = f'' z m` for all `m`.
-  have C  : ∀ m : E, f'' m z = f'' z m
+  have C : ∀ m : E, f'' m z = f'' z m
   intro m
   have : f'' (z + t m • m) (z + t 0 • (0 : E)) = f'' (z + t 0 • (0 : E)) (z + t m • m) :=
     s_conv.second_derivative_within_at_symmetric_of_mem_interior hf xs hx (ts 0) (ts m)
@@ -306,7 +306,7 @@ theorem second_derivative_symmetric_of_eventually {f : E → F} {f' : E → E �
     {f'' : E →L[ℝ] E →L[ℝ] F} (hf : ∀ᶠ y in 𝓝 x, HasFDerivAt f (f' y) y) (hx : HasFDerivAt f' f'' x)
     (v w : E) : f'' v w = f'' w v := by
   rcases Metric.mem_nhds_iff.1 hf with ⟨ε, εpos, hε⟩
-  have A  : (interior (Metric.ball x ε)).Nonempty
+  have A : (interior (Metric.ball x ε)).Nonempty
   rwa [Metric.isOpen_ball.interior_eq, Metric.nonempty_ball]
   exact
     Convex.second_derivative_within_at_symmetric (convex_ball x ε) A

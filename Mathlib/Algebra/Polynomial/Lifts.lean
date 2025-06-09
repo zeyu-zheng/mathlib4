@@ -130,13 +130,13 @@ theorem monomial_mem_lifts_and_degree_eq {s : S} {n : ℕ} (hl : monomial n s �
   rw [lifts_iff_set_range] at hl
   obtain ⟨q, hq⟩ := hl
   replace hq := (ext_iff.1 hq) n
-  have hcoeff  : f (q.coeff n) = s
+  have hcoeff : f (q.coeff n) = s
   simp? [coeff_monomial] at hq says simp only [coeff_map, coeff_monomial, ↓reduceIte] at hq
   exact hq
   use monomial n (q.coeff n)
   constructor
   · simp only [hcoeff, map_monomial]
-  have hqzero  : q.coeff n ≠ 0
+  have hqzero : q.coeff n ≠ 0
   intro habs
   simp only [habs, RingHom.map_zero] at hcoeff
   exact hzero hcoeff.symm
@@ -157,12 +157,12 @@ theorem mem_lifts_and_degree_eq {p : S[X]} (hlifts : p ∈ lifts f) :
       monomial_mem_lifts_and_degree_eq
         (monomial_mem_lifts p.natDegree ((lifts_iff_coeff_lifts p).1 hlifts p.natDegree))
   have deg_erase := Or.resolve_right (eraseLead_natDegree_lt_or_eraseLead_eq_zero p) erase_zero
-  have pzero  : p ≠ 0
+  have pzero : p ≠ 0
   intro habs
   exfalso
   rw [habs, eraseLead_zero, eq_self_iff_true, not_true] at erase_zero
   exact erase_zero
-  have lead_zero  : p.coeff p.natDegree ≠ 0
+  have lead_zero : p.coeff p.natDegree ≠ 0
   rw [← leadingCoeff, Ne, leadingCoeff_eq_zero]; exact pzero
   obtain ⟨lead, hlead⟩ :=
     monomial_mem_lifts_and_degree_eq
@@ -194,7 +194,7 @@ theorem lifts_and_degree_eq_and_monic [Nontrivial S] {p : S[X]} (hlifts : p ∈ 
   cases' subsingleton_or_nontrivial R with hR hR
   · obtain ⟨q, hq⟩ := mem_lifts_and_degree_eq hlifts
     exact ⟨q, hq.1, hq.2, monic_of_subsingleton _⟩
-  have H  : erase p.natDegree p + X ^ p.natDegree = p
+  have H : erase p.natDegree p + X ^ p.natDegree = p
   simpa only [hp.leadingCoeff, C_1, one_mul, eraseLead] using eraseLead_add_C_mul_X_pow p
   by_cases h0 : erase p.natDegree p = 0
   · rw [← H, h0, zero_add]
@@ -202,9 +202,9 @@ theorem lifts_and_degree_eq_and_monic [Nontrivial S] {p : S[X]} (hlifts : p ∈ 
     · rw [Polynomial.map_pow, map_X]
     · rw [degree_X_pow, degree_X_pow]
   obtain ⟨q, hq⟩ := mem_lifts_and_degree_eq (erase_mem_lifts p.natDegree hlifts)
-  have p_neq_0  : p ≠ 0
+  have p_neq_0 : p ≠ 0
   intro hp; apply h0; rw [hp]; simp only [natDegree_zero, erase_zero]
-  have hdeg  : q.degree < ((X : R[X]) ^ p.natDegree).degree
+  have hdeg : q.degree < ((X : R[X]) ^ p.natDegree).degree
   rw [@degree_X_pow R, hq.2, ← degree_eq_natDegree p_neq_0]
   exact degree_erase_lt p_neq_0
   refine ⟨q + X ^ p.natDegree, ?_, ?_, (monic_X_pow _).add_of_right hdeg⟩

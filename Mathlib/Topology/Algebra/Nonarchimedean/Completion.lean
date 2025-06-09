@@ -47,7 +47,7 @@ instance {G : Type*} [AddGroup G] [UniformSpace G] [UniformAddGroup G] [Nonarchi
 
     The first condition follows directly from the fact that the topological closure of a subgroup
     is a subgroup. Now, let us check that `V` is open. -/
-    have  : IsOpen V
+    have : IsOpen V
     /- Since `V` is a subgroup of `Completion G`, it suffices to show that it is a neighborhood of
     `0` in `Completion G`. This follows from the fact that `toCompl : G → Completion G` is dense
     inducing and `W` is a neighborhood of `0` in `G`. -/

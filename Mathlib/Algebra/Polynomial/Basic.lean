@@ -1054,7 +1054,7 @@ section NonzeroSemiring
 variable [Semiring R]
 
 instance nontrivial [Nontrivial R] : Nontrivial R[X] := by
-  have h  : Nontrivial R[ℕ]
+  have h : Nontrivial R[ℕ]
   infer_instance
   rcases h.exists_pair_ne with ⟨x, y, hxy⟩
   refine ⟨⟨⟨x⟩, ⟨y⟩, ?_⟩⟩

@@ -41,9 +41,9 @@ theorem AddSubgroup.cyclic_of_min {H : AddSubgroup G} {a : G}
   refine le_antisymm ?_ (H.closure_le.mpr <| by simp [a_in])
   intro g g_in
   obtain ⟨k, ⟨nonneg, lt⟩, _⟩ := existsUnique_zsmul_near_of_pos' a_pos g
-  have h_zero  : g - k • a = 0
+  have h_zero : g - k • a = 0
   by_contra h
-  have h  : a ≤ g - k • a
+  have h : a ≤ g - k • a
   refine a_min ⟨?_, ?_⟩
   · exact AddSubgroup.sub_mem H g_in (AddSubgroup.zsmul_mem H a_in k)
   · exact lt_of_le_of_ne nonneg (Ne.symm h)
@@ -65,7 +65,7 @@ theorem AddSubgroup.exists_isLeast_pos {H : AddSubgroup G} (hbot : H ≠ ⊥) {a
       exact hg.trans_le hm
     · simp only [← Nat.cast_succ, natCast_zsmul] at hm hm'
       exact ⟨m, hm', hm⟩
-  have  : ∃ n : ℕ, Set.Nonempty (H ∩ Ioc (n • a) ((n + 1) • a))
+  have : ∃ n : ℕ, Set.Nonempty (H ∩ Ioc (n • a) ((n + 1) • a))
   rcases (bot_or_exists_ne_zero H).resolve_left hbot with ⟨g, hgH, hg₀⟩
   rcases hex |g| (abs_pos.2 hg₀) with ⟨n, hn⟩
   exact ⟨n, _, (@abs_mem_iff (AddSubgroup G) G _ _).2 hgH, hn⟩

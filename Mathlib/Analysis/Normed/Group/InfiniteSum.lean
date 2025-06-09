@@ -54,7 +54,7 @@ theorem cauchySeq_finset_of_norm_bounded_eventually {f : ι → E} {g : ι → �
   rcases summable_iff_vanishing_norm.1 hg ε hε with ⟨s, hs⟩
   classical
   refine ⟨s ∪ h.toFinset, fun t ht => ?_⟩
-  have  : ∀ i ∈ t, ‖f i‖ ≤ g i
+  have : ∀ i ∈ t, ‖f i‖ ≤ g i
   intro i hi
   simp only [disjoint_left, mem_union, not_or, h.mem_toFinset, Set.mem_compl_iff,
     Classical.not_not] at ht

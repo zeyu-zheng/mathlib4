@@ -399,7 +399,7 @@ theorem of_iso {L₁ L₂ : C ⥤ D} (e : L₁ ≅ L₂) [L₁.IsLocalization W]
 the case of a functor obtained by post-composing `L` with an equivalence of categories. -/
 theorem of_equivalence_target {E : Type*} [Category E] (L' : C ⥤ E) (eq : D ≌ E)
     [L.IsLocalization W] (e : L ⋙ eq.functor ≅ L') : L'.IsLocalization W := by
-  have h  : W.IsInvertedBy L'
+  have h : W.IsInvertedBy L'
   rw [← MorphismProperty.IsInvertedBy.iff_of_iso W e]
   exact MorphismProperty.IsInvertedBy.of_comp W L (Localization.inverts L W) eq.functor
   let F₁ := Localization.Construction.lift L (Localization.inverts L W)

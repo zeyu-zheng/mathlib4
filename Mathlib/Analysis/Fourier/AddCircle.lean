@@ -130,7 +130,7 @@ theorem fourier_zero {x : AddCircle T} : fourier 0 x = 1 := by
 
 @[simp]
 theorem fourier_zero' {x : AddCircle T} : @toCircle T 0 = (1 : ℂ) := by
-  have  : fourier 0 x = @toCircle T 0
+  have : fourier 0 x = @toCircle T 0
   rw [fourier_apply, zero_smul]
   rw [← this]; exact fourier_zero
 
@@ -173,9 +173,9 @@ theorem fourier_norm [Fact (0 < T)] (n : ℤ) : ‖@fourier T n‖ = 1 := by
 theorem fourier_add_half_inv_index {n : ℤ} (hn : n ≠ 0) (hT : 0 < T) (x : AddCircle T) :
     @fourier T n (x + ↑(T / 2 / n)) = -fourier n x := by
   rw [fourier_apply, zsmul_add, ← QuotientAddGroup.mk_zsmul, toCircle_add, coe_mul_unitSphere]
-  have  : (n : ℂ) ≠ 0
+  have : (n : ℂ) ≠ 0
   simpa using hn
-  have  : (@toCircle T (n • (T / 2 / n) : ℝ) : ℂ) = -1
+  have : (@toCircle T (n • (T / 2 / n) : ℝ) : ℂ) = -1
   rw [zsmul_eq_mul, toCircle, Function.Periodic.lift_coe, expMapCircle_apply]
   replace hT := Complex.ofReal_ne_zero.mpr hT.ne'
   convert Complex.exp_pi_mul_I using 3
@@ -259,11 +259,11 @@ theorem orthonormal_fourier : Orthonormal ℂ (@fourierLp T _ 2 _) := by
   simp_rw [← fourier_neg, ← fourier_add]
   split_ifs with h
   · simp_rw [h, neg_add_self]
-    have  : ⇑(@fourier T 0) = (fun _ => 1 : AddCircle T → ℂ)
+    have : ⇑(@fourier T 0) = (fun _ => 1 : AddCircle T → ℂ)
     ext1; exact fourier_zero
     rw [this, integral_const, measure_univ, ENNReal.one_toReal, Complex.real_smul,
       Complex.ofReal_one, mul_one]
-  have hij  : -i + j ≠ 0
+  have hij : -i + j ≠ 0
   rw [add_comm]
   exact sub_ne_zero.mpr (Ne.symm h)
   convert integral_eq_zero_of_add_right_eq_neg (μ := haarAddCircle)
@@ -289,7 +289,7 @@ def fourierCoeff (f : AddCircle T → E) (n : ℤ) : E :=
 over `[a, a + T]`, for any real `a`. -/
 theorem fourierCoeff_eq_intervalIntegral (f : AddCircle T → E) (n : ℤ) (a : ℝ) :
     fourierCoeff f n = (1 / T) • ∫ x in a..a + T, @fourier T (-n) x • f x := by
-  have  : ∀ x : ℝ, @fourier T (-n) x • f x = (fun z : AddCircle T => @fourier T (-n) z • f z) x
+  have : ∀ x : ℝ, @fourier T (-n) x • f x = (fun z : AddCircle T => @fourier T (-n) z • f z) x
   intro x; rfl
   -- After leanprover/lean4#3124, we need to add `singlePass := true` to avoid an infinite loop.
   simp_rw (config := {singlePass := true}) [this]
@@ -389,10 +389,10 @@ norms of the Fourier coefficients equals the `L²` norm of `f`. -/
 theorem tsum_sq_fourierCoeff (f : Lp ℂ 2 <| @haarAddCircle T hT) :
     ∑' i : ℤ, ‖fourierCoeff f i‖ ^ 2 = ∫ t : AddCircle T, ‖f t‖ ^ 2 ∂haarAddCircle := by
   simp_rw [← fourierBasis_repr]
-  have H₁  : ‖fourierBasis.repr f‖ ^ 2 = ∑' i, ‖fourierBasis.repr f i‖ ^ 2
+  have H₁ : ‖fourierBasis.repr f‖ ^ 2 = ∑' i, ‖fourierBasis.repr f i‖ ^ 2
   apply_mod_cast lp.norm_rpow_eq_tsum ?_ (fourierBasis.repr f)
   norm_num
-  have H₂  : ‖fourierBasis.repr f‖ ^ 2 = ‖f‖ ^ 2
+  have H₂ : ‖fourierBasis.repr f‖ ^ 2 = ‖f‖ ^ 2
   simp
   have H₃ := congr_arg RCLike.re (@L2.inner_def (AddCircle T) ℂ ℂ _ _ _ _ _ f f)
   rw [← integral_re] at H₃
@@ -481,11 +481,11 @@ theorem fourierCoeffOn_of_hasDeriv_right {a b : ℝ} (hab : a < b) {f f' : ℝ �
     (fun x _ ↦ has_antideriv_at_fourier_neg hT hn x |>.continuousAt |>.continuousWithinAt) hff'
     (fun x _ ↦ has_antideriv_at_fourier_neg hT hn x |>.hasDerivWithinAt) hf'
     (((map_continuous (fourier (-n))).comp (AddCircle.continuous_mk' _)).intervalIntegrable _ _)]
-  have  : ∀ u v w : ℂ, u * ((b - a : ℝ) / v * w) = (b - a : ℝ) / v * (u * w)
+  have : ∀ u v w : ℂ, u * ((b - a : ℝ) / v * w) = (b - a : ℝ) / v * (u * w)
   intros; ring
   conv in intervalIntegral _ _ _ _ => congr; ext; rw [this]
   rw [(by ring : ((b - a : ℝ) : ℂ) / (-2 * π * I * n) = ((b - a : ℝ) : ℂ) * (1 / (-2 * π * I * n)))]
-  have s2  : (b : AddCircle (b - a)) = (a : AddCircle (b - a))
+  have s2 : (b : AddCircle (b - a)) = (a : AddCircle (b - a))
   simpa using coe_add_period (b - a) a
   rw [s2, integral_const_mul, ← sub_mul, mul_sub, mul_sub]
   congr 1

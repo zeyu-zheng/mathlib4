@@ -462,13 +462,13 @@ theorem card_orderOf_eq_totient_aux₂ {d : ℕ} (hd : d ∣ Fintype.card α) :
     _ = ∑ m ∈ c.divisors.erase d, (univ.filter fun a : α => orderOf a = m).card := by
       rw [eq_comm]
       refine sum_subset (erase_subset _ _) fun m hm₁ hm₂ => ?_
-      have  : m = d
+      have : m = d
       contrapose! hm₂
       exact mem_erase_of_ne_of_mem hm₂ hm₁
       simp [this, h0]
     _ ≤ ∑ m ∈ c.divisors.erase d, φ m := by
       refine sum_le_sum fun m hm => ?_
-      have hmc  : m ∣ c
+      have hmc : m ∣ c
       simp only [mem_erase, mem_divisors] at hm
       tauto
       rcases (filter (fun a : α => orderOf a = m) univ).card.eq_zero_or_pos with (h1 | h1)
@@ -505,7 +505,7 @@ alias IsAddCyclic.card_orderOf_eq_totient := IsAddCyclic.card_addOrderOf_eq_toti
 theorem isSimpleGroup_of_prime_card {α : Type u} [Group α] [Fintype α] {p : ℕ} [hp : Fact p.Prime]
     (h : Fintype.card α = p) : IsSimpleGroup α := by
   subst h
-  have  : Nontrivial α
+  have : Nontrivial α
   have h' := Nat.Prime.one_lt hp.out
   exact Fintype.one_lt_card_iff_nontrivial.1 h'
   exact ⟨fun H _ => H.eq_bot_or_eq_top_of_prime_card⟩
@@ -667,7 +667,7 @@ lemma not_isCyclic_iff_exponent_eq_prime [Group α] {p : ℕ} (hp : p.Prime)
     (hα : Nat.card α = p ^ 2) : ¬ IsCyclic α ↔ Monoid.exponent α = p := by
   -- G is a nontrivial fintype of cardinality `p ^ 2`
   let _inst : Fintype α := @Fintype.ofFinite α <| Nat.finite_of_card_ne_zero <| by aesop
-  have hα'  : Fintype.card α = p ^ 2
+  have hα' : Fintype.card α = p ^ 2
   simpa using hα
   have := (Fintype.one_lt_card_iff_nontrivial (α := α)).mp <|
     hα' ▸ one_lt_pow hp.one_lt two_ne_zero

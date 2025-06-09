@@ -221,7 +221,7 @@ theorem lt_radius_of_isBigO (h₀ : r ≠ 0) {a : ℝ} (ha : a ∈ Ioo (-1 : ℝ
   rcases this.mp ⟨a, ha, hp⟩ with ⟨a, ha, C, hC, hp⟩
   rw [← pos_iff_ne_zero, ← NNReal.coe_pos] at h₀
   lift a to ℝ≥0 using ha.1.le
-  have  : (r : ℝ) < r / a
+  have : (r : ℝ) < r / a
   simpa only [div_one] using (div_lt_div_left h₀ zero_lt_one ha.1).2 ha.2
   norm_cast at this
   rw [← ENNReal.coe_lt_coe] at this
@@ -302,7 +302,7 @@ theorem radius_eq_top_iff_summable_norm (p : FormalMultilinearSeries 𝕜 E F) :
 theorem le_mul_pow_of_radius_pos (p : FormalMultilinearSeries 𝕜 E F) (h : 0 < p.radius) :
     ∃ (C r : _) (hC : 0 < C) (_ : 0 < r), ∀ n, ‖p n‖ ≤ C * r ^ n := by
   rcases ENNReal.lt_iff_exists_nnreal_btwn.1 h with ⟨r, r0, rlt⟩
-  have rpos  : 0 < (r : ℝ)
+  have rpos : 0 < (r : ℝ)
   simp [ENNReal.coe_pos.1 r0]
   rcases norm_le_div_pow_of_pos_of_lt_radius p rpos rlt with ⟨C, Cpos, hCp⟩
   refine ⟨C, r⁻¹, Cpos, by simp only [inv_pos, rpos], fun n => ?_⟩
@@ -432,7 +432,7 @@ theorem HasFPowerSeriesOnBall.comp_sub (hf : HasFPowerSeriesOnBall f p x r) (y :
 
 theorem HasFPowerSeriesOnBall.hasSum_sub (hf : HasFPowerSeriesOnBall f p x r) {y : E}
     (hy : y ∈ EMetric.ball x r) : HasSum (fun n : ℕ => p n fun _ => y - x) (f y) := by
-  have  : y - x ∈ EMetric.ball (0 : E) r
+  have : y - x ∈ EMetric.ball (0 : E) r
   simpa [edist_eq_coe_nnnorm_sub] using hy
   simpa only [add_sub_cancel] using hf.hasSum this
 
@@ -587,9 +587,9 @@ theorem AnalyticOn.sub {s : Set E} (hf : AnalyticOn 𝕜 f s) (hg : AnalyticOn �
 theorem HasFPowerSeriesOnBall.coeff_zero (hf : HasFPowerSeriesOnBall f pf x r) (v : Fin 0 → E) :
     pf 0 v = f x := by
   have v_eq : v = fun i => 0 := Subsingleton.elim _ _
-  have zero_mem  : (0 : E) ∈ EMetric.ball (0 : E) r
+  have zero_mem : (0 : E) ∈ EMetric.ball (0 : E) r
   simp [hf.r_pos]
-  have  : ∀ i, i ≠ 0 → (pf i fun j => 0) = 0
+  have : ∀ i, i ≠ 0 → (pf i fun j => 0) = 0
   intro i hi
   have : 0 < i := pos_iff_ne_zero.2 hi
   exact ContinuousMultilinearMap.map_coord_zero _ (⟨0, this⟩ : Fin i) rfl
@@ -911,7 +911,7 @@ theorem Asymptotics.IsBigO.continuousMultilinearMap_apply_eq_zero {n : ℕ} {p :
     have h₀ := _root_.mul_pos c_pos (pow_pos hy (n.succ + 1))
     obtain ⟨k, k_pos, k_norm⟩ := NormedField.exists_norm_lt 𝕜
       (lt_min (mul_pos δ_pos (inv_pos.mpr hy)) (mul_pos ε_pos (inv_pos.mpr h₀)))
-    have h₁  : ‖k • y‖ < δ
+    have h₁ : ‖k • y‖ < δ
     rw [norm_smul]
     exact inv_mul_cancel_right₀ hy.ne.symm δ ▸
       mul_lt_mul_of_pos_right (lt_of_lt_of_le k_norm (min_le_left _ _)) hy
@@ -947,7 +947,7 @@ terms `p n (fun i ↦ y)` appearing in the sum are zero for any `n : ℕ`, `y : 
 theorem HasFPowerSeriesAt.apply_eq_zero {p : FormalMultilinearSeries 𝕜 E F} {x : E}
     (h : HasFPowerSeriesAt 0 p x) (n : ℕ) : ∀ y : E, (p n fun _ => y) = 0 := by
   refine Nat.strong_induction_on n fun k hk => ?_
-  have psum_eq  : p.partialSum (k + 1) = fun y => p k fun _ => y
+  have psum_eq : p.partialSum (k + 1) = fun y => p k fun _ => y
   funext z
   refine Finset.sum_eq_single _ (fun b hb hnb => ?_) fun hn => ?_
   · have := Finset.mem_range_succ_iff.mp hb
@@ -1299,7 +1299,7 @@ theorem HasFPowerSeriesOnBall.changeOrigin (hf : HasFPowerSeriesOnBall f p x r)
 it is analytic at every point of this ball. -/
 theorem HasFPowerSeriesOnBall.analyticAt_of_mem (hf : HasFPowerSeriesOnBall f p x r)
     (h : y ∈ EMetric.ball x r) : AnalyticAt 𝕜 f y := by
-  have  : (‖y - x‖₊ : ℝ≥0∞) < r
+  have : (‖y - x‖₊ : ℝ≥0∞) < r
   simpa [edist_eq_coe_nnnorm_sub] using h
   have := hf.changeOrigin this
   rw [add_sub_cancel] at this

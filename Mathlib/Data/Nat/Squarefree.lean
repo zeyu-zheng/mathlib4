@@ -163,10 +163,10 @@ theorem minSqFacAux_has_prop {n : ℕ} (k) (n0 : 0 < n) (i) (e : k = 2 * i + 3)
     have := ih p pp (dvd_trans ⟨_, rfl⟩ d)
     have := Nat.mul_le_mul this this
     exact not_le_of_lt h (le_trans this (le_of_dvd n0 d))
-  have k2  : 2 ≤ k
+  have k2 : 2 ≤ k
   omega
   have k0 : 0 < k := lt_of_lt_of_le (by decide) k2
-  have IH  : ∀ n', n' ∣ n → ¬k ∣ n' → MinSqFacProp n' (n'.minSqFacAux (k + 2))
+  have IH : ∀ n', n' ∣ n → ¬k ∣ n' → MinSqFacProp n' (n'.minSqFacAux (k + 2))
   intro n' nd' nk
   have hn' := le_of_dvd n0 nd'
   refine
@@ -184,7 +184,7 @@ theorem minSqFacAux_has_prop {n : ℕ} (k) (n0 : 0 < n) (i) (e : k = 2 * i + 3)
   have := ih _ prime_two (dvd_trans (dvd_of_mul_right_dvd d) nd')
   rw [e] at this
   exact absurd this (by omega)
-  have pk  : k ∣ n → Prime k
+  have pk : k ∣ n → Prime k
   refine fun dk => prime_def_minFac.2 ⟨k2, le_antisymm (minFac_le k0) ?_⟩
   exact ih _ (minFac_prime (ne_of_gt k2)) (dvd_trans (minFac_dvd _) dk)
   split_ifs with dk dkk
@@ -315,7 +315,7 @@ theorem sq_mul_squarefree_of_pos {n : ℕ} (hn : 0 < n) :
     ∃ a b : ℕ, 0 < a ∧ 0 < b ∧ b ^ 2 * a = n ∧ Squarefree a := by
   classical -- Porting note: This line is not needed in Lean 3
   set S := (Finset.range (n + 1)).filter (fun s => s ∣ n ∧ ∃ x, s = x ^ 2)
-  have hSne  : S.Nonempty
+  have hSne : S.Nonempty
   use 1
   have h1 : 0 < n ∧ ∃ x : ℕ, 1 = x ^ 2 := ⟨hn, ⟨1, (one_pow 2).symm⟩⟩
   simp [S, h1]

@@ -208,12 +208,12 @@ instance toPerfectRing (p : ℕ) [ExpChar K p] : PerfectRing K p := by
   let f : K[X] := X ^ p - C y
   let L := f.SplittingField
   let ι := algebraMap K L
-  have hf_deg  : f.degree ≠ 0
+  have hf_deg : f.degree ≠ 0
   rw [degree_X_pow_sub_C (expChar_pos K p) y, p.cast_ne_zero]; exact (expChar_pos K p).ne'
   let a : L := f.rootOfSplits ι (SplittingField.splits f) hf_deg
-  have hfa  : aeval a f = 0
+  have hfa : aeval a f = 0
   rw [aeval_def, map_rootOfSplits _ (SplittingField.splits f) hf_deg]
-  have ha_pow  : a ^ p = ι y
+  have ha_pow : a ^ p = ι y
   rwa [map_sub, aeval_X_pow, aeval_C, sub_eq_zero] at hfa
   let g : K[X] := minpoly K a
   suffices (g.map ι).natDegree = 1 by
@@ -221,11 +221,11 @@ instance toPerfectRing (p : ℕ) [ExpChar K p] : PerfectRing K p := by
     obtain ⟨a' : K, ha' : ι a' = a⟩ := minpoly.mem_range_of_degree_eq_one K a this
     refine ⟨a', NoZeroSMulDivisors.algebraMap_injective K L ?_⟩
     rw [RingHom.map_frobenius, ha', frobenius_def, ha_pow]
-  have hg_dvd  : g.map ι ∣ (X - C a) ^ p
+  have hg_dvd : g.map ι ∣ (X - C a) ^ p
   convert Polynomial.map_dvd ι (minpoly.dvd K a hfa)
   rw [sub_pow_expChar, Polynomial.map_sub, Polynomial.map_pow, map_X, map_C, ← ha_pow, map_pow]
   have ha : IsIntegral K a := .of_finite K a
-  have hg_pow  : g.map ι = (X - C a) ^ (g.map ι).natDegree
+  have hg_pow : g.map ι = (X - C a) ^ (g.map ι).natDegree
   obtain ⟨q, -, hq⟩ := (dvd_prime_pow (prime_X_sub_C a) p).mp hg_dvd
   rw [eq_of_monic_of_associated ((minpoly.monic ha).map ι) ((monic_X_sub_C a).pow q) hq,
     natDegree_pow, natDegree_X_sub_C, mul_one]

@@ -245,7 +245,7 @@ lemma inductionOn'_add_one (hz : b ≤ z) :
   apply cast_eq_iff_heq.mpr
   lift z - b to ℕ using Int.sub_nonneg.mpr hz with zb hzb
   rw [show z + 1 - b = zb + 1 by omega]
-  have  : b + zb = z
+  have : b + zb = z
   omega
   subst this
   convert cast_heq _ _
@@ -258,7 +258,7 @@ lemma inductionOn'_sub_one (hz : z ≤ b) :
   rw [hn]
   obtain _|n := n
   · change _ = -1 at hn
-    have  : z = b
+    have : z = b
     omega
     subst this; rw [inductionOn'_self]; exact heq_of_eq rfl
   · have : z = b + -[n+1] := by rw [Int.negSucc_eq] at hn ⊢; omega
@@ -537,7 +537,7 @@ lemma le_add_iff_lt_of_dvd_sub (ha : 0 < a) (hab : a ∣ c - b) : a + b ≤ c �
 lemma sign_natCast_of_ne_zero {n : ℕ} (hn : n ≠ 0) : Int.sign n = 1 := sign_ofNat_of_nonzero hn
 
 lemma sign_add_eq_of_sign_eq : ∀ {m n : ℤ}, m.sign = n.sign → (m + n).sign = n.sign := by
-  have  : (1 : ℤ) ≠ -1
+  have : (1 : ℤ) ≠ -1
   decide
   rintro ((_ | m) | m) ((_ | n) | n) <;> simp [this, this.symm, Int.negSucc_add_negSucc]
   rw [Int.sign_eq_one_iff_pos]

@@ -277,7 +277,7 @@ theorem prime_factors_irreducible [CancelCommMonoidWithZero α] {a : α} {f : Mu
   · intro h; exact (ha.not_unit (associated_one_iff_isUnit.1 (Associated.symm h))).elim
   · rintro p s _ ⟨u, hu⟩ hs
     use p
-    have hs0  : s = 0
+    have hs0 : s = 0
     by_contra hs0
     obtain ⟨q, hq⟩ := Multiset.exists_mem_of_ne_zero hs0
     apply (hs q (by simp [hq])).2.1
@@ -651,7 +651,7 @@ theorem normalizedFactors_one : normalizedFactors (1 : α) = 0 := by
 @[simp]
 theorem normalizedFactors_mul {x y : α} (hx : x ≠ 0) (hy : y ≠ 0) :
     normalizedFactors (x * y) = normalizedFactors x + normalizedFactors y := by
-  have h  : (normalize : α → α) = Associates.out ∘ Associates.mk
+  have h : (normalize : α → α) = Associates.out ∘ Associates.mk
   ext
   rw [Function.comp_apply, Associates.out_mk]
   rw [← Multiset.map_id' (normalizedFactors (x * y)), ← Multiset.map_id' (normalizedFactors x), ←
@@ -1041,7 +1041,7 @@ theorem induction_on_coprime {P : α → Prop} (a : α) (h0 : P 0) (h1 : ∀ {x}
     (hpr : ∀ {p} (i : ℕ), Prime p → P (p ^ i))
     (hcp : ∀ {x y}, IsRelPrime x y → P x → P y → P (x * y)) : P a := by
   letI := Classical.decEq α
-  have P_of_associated  : ∀ {x y}, Associated x y → P x → P y
+  have P_of_associated : ∀ {x y}, Associated x y → P x → P y
   rintro x y ⟨u, rfl⟩ hx
   exact hcp (fun p _ hpx => isUnit_of_dvd_unit hpx u.isUnit) hx (h1 u.isUnit)
   by_cases ha0 : a = 0
@@ -1329,7 +1329,7 @@ theorem factors'_cong {a b : α} (h : a ~ᵤ b) : factors' a = factors' b := by
   obtain rfl | hb := eq_or_ne b 0
   · rw [associated_zero_iff_eq_zero] at h
     rw [h]
-  have ha  : a ≠ 0
+  have ha : a ≠ 0
   contrapose! hb with ha
   rw [← associated_zero_iff_eq_zero, ← ha]
   exact h.symm
@@ -1391,12 +1391,12 @@ theorem factors_eq_some_iff_ne_zero {a : Associates α} :
   exact factors_eq_top_iff_zero.not
 
 theorem eq_of_factors_eq_factors {a b : Associates α} (h : a.factors = b.factors) : a = b := by
-  have  : a.factors.prod = b.factors.prod
+  have : a.factors.prod = b.factors.prod
   rw [h]
   rwa [factors_prod, factors_prod] at this
 
 theorem eq_of_prod_eq_prod [Nontrivial α] {a b : FactorSet α} (h : a.prod = b.prod) : a = b := by
-  have  : a.prod.factors = b.prod.factors
+  have : a.prod.factors = b.prod.factors
   rw [h]
   rwa [prod_factors, prod_factors] at this
 
@@ -1537,7 +1537,7 @@ theorem mem_factors_iff_dvd {a p : α} (ha0 : a ≠ 0) (hp : Irreducible p) :
 open Classical in
 theorem exists_prime_dvd_of_not_inf_one {a b : α} (ha : a ≠ 0) (hb : b ≠ 0)
     (h : Associates.mk a ⊓ Associates.mk b ≠ 1) : ∃ p : α, Prime p ∧ p ∣ a ∧ p ∣ b := by
-  have hz  : factors (Associates.mk a) ⊓ factors (Associates.mk b) ≠ 0
+  have hz : factors (Associates.mk a) ⊓ factors (Associates.mk b) ≠ 0
   contrapose! h with hf
   change (factors (Associates.mk a) ⊓ factors (Associates.mk b)).prod = 1
   rw [hf]
@@ -1711,9 +1711,9 @@ theorem is_pow_of_dvd_count [DecidableEq (Associates α)] {a : Associates α}
   nontriviality α
   obtain ⟨a0, hz, rfl⟩ := exists_non_zero_rep ha
   rw [factors_mk a0 hz] at hk
-  have hk'  : ∀ p, p ∈ factors' a0 → k ∣ (factors' a0).count p
+  have hk' : ∀ p, p ∈ factors' a0 → k ∣ (factors' a0).count p
   rintro p -
-  have pp  : p = ⟨p.val, p.2⟩
+  have pp : p = ⟨p.val, p.2⟩
   simp only [Subtype.coe_eta]
   rw [pp, ← count_some p.2]
   exact hk p.val p.2

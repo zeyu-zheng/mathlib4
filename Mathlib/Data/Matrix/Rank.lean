@@ -108,7 +108,7 @@ lemma rank_mul_eq_right_of_isUnit_det [Fintype m] [DecidableEq m]
   let b : Basis m R (m → R) := Pi.basisFun R m
   replace hA : IsUnit (LinearMap.toMatrix b b A.mulVecLin).det := by
     convert hA; rw [← LinearEquiv.eq_symm_apply]; rfl
-  have hAB  : mulVecLin (A * B) = (LinearEquiv.ofIsUnitDet hA).comp (mulVecLin B)
+  have hAB : mulVecLin (A * B) = (LinearEquiv.ofIsUnitDet hA).comp (mulVecLin B)
   ext; simp
   rw [rank, rank, hAB, LinearMap.range_comp, LinearEquiv.finrank_map_eq]
 
@@ -136,7 +136,7 @@ theorem rank_eq_finrank_range_toLin [Finite m] [DecidableEq n] {M₁ M₂ : Type
   cases nonempty_fintype m
   let e₁ := (Pi.basisFun R m).equiv v₁ (Equiv.refl _)
   let e₂ := (Pi.basisFun R n).equiv v₂ (Equiv.refl _)
-  have range_e₂  : LinearMap.range e₂ = ⊤
+  have range_e₂ : LinearMap.range e₂ = ⊤
   rw [LinearMap.range_eq_top]
   exact e₂.surjective
   refine LinearEquiv.finrank_eq (e₁.ofSubmodules _ _ ?_)

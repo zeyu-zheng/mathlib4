@@ -376,7 +376,7 @@ theorem mulRothNumber_map_mul_left :
     rw [← hcard, card_map]
     exact (threeGPFree_smul_set.1 hu).le_mulRothNumber hus
   · obtain ⟨u, hus, hcard, hu⟩ := mulRothNumber_spec s
-    have h  : ThreeGPFree (u.map <| mulLeftEmbedding a : Set α)
+    have h : ThreeGPFree (u.map <| mulLeftEmbedding a : Set α)
     rw [coe_map]; exact hu.smul_set
     convert h.le_mulRothNumber (map_subset_map.2 hus) using 1
     rw [card_map, hcard]

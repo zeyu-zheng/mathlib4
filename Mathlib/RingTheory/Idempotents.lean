@@ -44,11 +44,11 @@ theorem isIdempotentElem_one_sub_one_sub_pow_pow
     (x : R) (n : ℕ) (hx : (x - x ^ 2) ^ n = 0) :
     IsIdempotentElem (1 - (1 - x ^ n) ^ n) := by
   let P : Polynomial ℤ := 1 - (1 - .X ^ n) ^ n
-  have  : (.X - .X ^ 2) ^ n ∣ P - P ^ 2
-  have H₁  : .X ^ n ∣ P
+  have : (.X - .X ^ 2) ^ n ∣ P - P ^ 2
+  have H₁ : .X ^ n ∣ P
   have := sub_dvd_pow_sub_pow 1 ((1 : Polynomial ℤ) - Polynomial.X ^ n) n
   rwa [sub_sub_cancel, one_pow] at this
-  have H₂  : (1 - .X) ^ n ∣ 1 - P
+  have H₂ : (1 - .X) ^ n ∣ 1 - P
   simp only [sub_sub_cancel, P]
   simpa using pow_dvd_pow_of_dvd (sub_dvd_pow_sub_pow (α := Polynomial ℤ) 1 Polynomial.X n) n
   have := mul_dvd_mul H₁ H₂
@@ -66,11 +66,11 @@ theorem exists_isIdempotentElem_mul_eq_zero_of_ker_isNilpotent_aux
   cases subsingleton_or_nontrivial R
   · exact ⟨_, Subsingleton.elim _ _, rfl, Subsingleton.elim _ _⟩
   let a := e₁ - e₁ * e₂
-  have ha  : f a = f e₁
+  have ha : f a = f e₁
   rw [map_sub, map_mul, he₁e₂, sub_zero]
-  have ha'  : a * e₂ = 0
+  have ha' : a * e₂ = 0
   rw [sub_mul, mul_assoc, he₂.eq, sub_self]
-  have hx'  : a - a ^ 2 ∈ RingHom.ker f
+  have hx' : a - a ^ 2 ∈ RingHom.ker f
   simp [RingHom.mem_ker, mul_sub, pow_two, ha, he₁.eq]
   obtain ⟨n, hn⟩ := h _ hx'
   refine ⟨_, isIdempotentElem_one_sub_one_sub_pow_pow _ _ hn, ?_, ?_⟩
@@ -80,7 +80,7 @@ theorem exists_isIdempotentElem_mul_eq_zero_of_ker_isNilpotent_aux
       he₁.one_sub.pow_succ_eq, sub_sub_cancel]
   · obtain ⟨k, hk⟩ := (Commute.one_left (MulOpposite.op <| 1 - a ^ n)).sub_dvd_pow_sub_pow n
     apply_fun MulOpposite.unop at hk
-    have  : 1 - (1 - a ^ n) ^ n = MulOpposite.unop k * a ^ n
+    have : 1 - (1 - a ^ n) ^ n = MulOpposite.unop k * a ^ n
     simpa using hk
     rw [this, mul_assoc]
     cases' n with n
@@ -308,13 +308,13 @@ theorem eq_of_isNilpotent_sub_of_isIdempotentElem_of_commute {e₁ e₂ : R}
     (he₁ : IsIdempotentElem e₁) (he₂ : IsIdempotentElem e₂) (H : IsNilpotent (e₁ - e₂))
     (H' : Commute e₁ e₂) :
     e₁ = e₂ := by
-  have  : (e₁ - e₂) ^ 3 = (e₁ - e₂)
+  have : (e₁ - e₂) ^ 3 = (e₁ - e₂)
   simp only [pow_succ, pow_zero, mul_sub, one_mul, sub_mul, he₁.eq, he₂.eq,
     H'.eq, mul_assoc]
   simp only [← mul_assoc, he₁.eq, he₂.eq]
   abel
   obtain ⟨n, hn⟩ := H
-  have  : (e₁ - e₂) ^ (2 * n + 1) = (e₁ - e₂)
+  have : (e₁ - e₂) ^ (2 * n + 1) = (e₁ - e₂)
   clear hn; induction n <;> simp [mul_add, add_assoc, pow_add _ (2 * _) 3, this, ← pow_succ, *]
   rwa [pow_succ, two_mul, pow_add, hn, zero_mul, zero_mul, eq_comm, sub_eq_zero] at this
 
@@ -379,7 +379,7 @@ lemma OrthogonalIdempotents.prod_one_sub (he : OrthogonalIdempotents e) :
   induction' (@Finset.univ I _) using Finset.induction_on with a s has ih
   · simp
   · suffices (1 - e a) * (1 - ∑ i in s, e i) = 1 - (e a + ∑ i in s, e i) by simp [*]
-    have  : e a * ∑ i in s, e i = 0
+    have : e a * ∑ i in s, e i = 0
     rw [Finset.mul_sum, ← Finset.sum_const_zero (s := s)]
     exact Finset.sum_congr rfl fun j hj ↦ he.ortho a j (fun e ↦ has (e ▸ hj))
     rw [sub_mul, mul_sub, mul_sub, one_mul, mul_one, one_mul, this, sub_zero, sub_sub, add_comm]

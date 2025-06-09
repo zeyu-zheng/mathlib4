@@ -62,7 +62,7 @@ theorem eLpNorm_add_le {f g : α → E} (hf : AEStronglyMeasurable f μ) (hg : A
   · simp [hp0]
   by_cases hp_top : p = ∞
   · simp [hp_top, eLpNormEssSup_add_le]
-  have hp1_real  : 1 ≤ p.toReal
+  have hp1_real : 1 ≤ p.toReal
   rwa [← ENNReal.one_toReal, ENNReal.toReal_le_toReal ENNReal.one_ne_top hp_top]
   repeat rw [eLpNorm_eq_eLpNorm' hp0 hp_top]
   exact eLpNorm'_add_le hf hg hp1_real

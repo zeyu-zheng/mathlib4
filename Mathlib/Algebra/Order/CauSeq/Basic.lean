@@ -108,7 +108,7 @@ theorem cauchy₃ (hf : IsCauSeq abv f) {ε : α} (ε0 : 0 < ε) :
 lemma bounded (hf : IsCauSeq abv f) : ∃ r, ∀ i, abv (f i) < r := by
   obtain ⟨i, h⟩ := hf _ zero_lt_one
   set R : ℕ → α := @Nat.rec (fun _ => α) (abv (f 0)) fun i c => max c (abv (f i.succ)) with hR
-  have  : ∀ i, ∀ j ≤ i, abv (f j) ≤ R i
+  have : ∀ i, ∀ j ≤ i, abv (f j) ≤ R i
   refine Nat.rec (by simp [hR]) ?_
   rintro i hi j (rfl | hj)
   · simp [R]
@@ -464,7 +464,7 @@ theorem of_near (f : ℕ → β) (g : CauSeq β abv) (h : ∀ ε > 0, ∃ i, ∀
 
 theorem not_limZero_of_not_congr_zero {f : CauSeq _ abv} (hf : ¬f ≈ 0) : ¬LimZero f := by
   intro h
-  have  : LimZero (f - 0)
+  have : LimZero (f - 0)
   simp [h]
   exact hf this
 

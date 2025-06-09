@@ -56,9 +56,9 @@ protected theorem oldMapIdxCore_eq (l : List α) (f : ℕ → α → β) (n : �
 theorem list_reverse_induction (p : List α → Prop) (base : p [])
     (ind : ∀ (l : List α) (e : α), p l → p (l ++ [e])) : (∀ (l : List α), p l) := by
   let q := fun l ↦ p (reverse l)
-  have pq  : ∀ l, p (reverse l) → q l
+  have pq : ∀ l, p (reverse l) → q l
   simp only [q, reverse_reverse]; intro; exact id
-  have qp  : ∀ l, q (reverse l) → p l
+  have qp : ∀ l, q (reverse l) → p l
   simp only [q, reverse_reverse]; intro; exact id
   intro l
   apply qp
@@ -78,7 +78,7 @@ protected theorem oldMapIdxCore_append : ∀ (f : ℕ → α → β) (n : ℕ) (
       cases l₁
       · rfl
       · contradiction
-    have l₂_nil  : l₂ = []
+    have l₂_nil : l₂ = []
     cases l₂
     · rfl
     · rw [List.length_append] at h; contradiction
@@ -110,7 +110,7 @@ theorem mapIdxGo_append : ∀ (f : ℕ → α → β) (l₁ l₂ : List α) (arr
       cases l₁
       · rfl
       · contradiction
-    have l₂_nil  : l₂ = []
+    have l₂_nil : l₂ = []
     cases l₂
     · rfl
     · rw [List.length_append] at h; contradiction

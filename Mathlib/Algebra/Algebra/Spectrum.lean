@@ -180,11 +180,11 @@ theorem inv_mem_resolventSet {r : Rˣ} {a : Aˣ} (h : (r : R) ∈ resolventSet R
     (↑r⁻¹ : R) ∈ resolventSet R (↑a⁻¹ : A) := by
   rw [mem_resolventSet_iff, Algebra.algebraMap_eq_smul_one, ← Units.smul_def] at h ⊢
   rw [IsUnit.smul_sub_iff_sub_inv_smul, inv_inv, IsUnit.sub_iff]
-  have h₁  : (a : A) * (r • (↑a⁻¹ : A) - 1) = r • (1 : A) - a
+  have h₁ : (a : A) * (r • (↑a⁻¹ : A) - 1) = r • (1 : A) - a
   rw [mul_sub, mul_smul_comm, a.mul_inv, mul_one]
-  have h₂  : (r • (↑a⁻¹ : A) - 1) * a = r • (1 : A) - a
+  have h₂ : (r • (↑a⁻¹ : A) - 1) * a = r • (1 : A) - a
   rw [sub_mul, smul_mul_assoc, a.inv_mul, one_mul]
-  have hcomm  : Commute (a : A) (r • (↑a⁻¹ : A) - 1)
+  have hcomm : Commute (a : A) (r • (↑a⁻¹ : A) - 1)
   rwa [← h₂] at h₁
   exact (hcomm.isUnit_mul_iff.mp (h₁.symm ▸ h)).2
 
@@ -209,7 +209,7 @@ theorem smul_mem_smul_iff {a : A} {s : R} {r : Rˣ} : r • s ∈ σ (r • a) �
 
 theorem unit_smul_eq_smul (a : A) (r : Rˣ) : σ (r • a) = r • σ a := by
   ext x
-  have x_eq  : x = r • r⁻¹ • x
+  have x_eq : x = r • r⁻¹ • x
   simp
   nth_rw 1 [x_eq]
   rw [smul_mem_smul_iff]
@@ -220,7 +220,7 @@ theorem unit_smul_eq_smul (a : A) (r : Rˣ) : σ (r • a) = r • σ a := by
 
 -- `r ∈ σ(a*b) ↔ r ∈ σ(b*a)` for any `r : Rˣ`
 theorem unit_mem_mul_iff_mem_swap_mul {a b : A} {r : Rˣ} : ↑r ∈ σ (a * b) ↔ ↑r ∈ σ (b * a) := by
-  have h₁  : ∀ x y : A, IsUnit (1 - x * y) → IsUnit (1 - y * x)
+  have h₁ : ∀ x y : A, IsUnit (1 - x * y) → IsUnit (1 - y * x)
   refine fun x y h => ⟨⟨1 - y * x, 1 + y * h.unit.inv * x, ?_, ?_⟩, rfl⟩
   · calc
       (1 - y * x) * (1 + y * (IsUnit.unit h).inv * x) =
@@ -345,7 +345,7 @@ theorem nonzero_mul_eq_swap_mul (a b : A) : σ (a * b) \ {0} = σ (b * a) \ {0} 
 protected theorem map_inv (a : Aˣ) : (σ (a : A))⁻¹ = σ (↑a⁻¹ : A) := by
   refine Set.eq_of_subset_of_subset (fun k hk => ?_) fun k hk => ?_
   · rw [Set.mem_inv] at hk
-    have  : k ≠ 0
+    have : k ≠ 0
     simpa only [inv_inv] using inv_ne_zero (ne_zero_of_mem_of_unit hk)
     lift k to 𝕜ˣ using isUnit_iff_ne_zero.mpr this
     rw [← Units.val_inv_eq_inv_val k] at hk
@@ -387,7 +387,7 @@ local notation "σ" => spectrum R
 local notation "↑ₐ" => algebraMap R A
 
 theorem apply_mem_spectrum [Nontrivial R] (φ : F) (a : A) : φ a ∈ σ a := by
-  have h  : ↑ₐ (φ a) - a ∈ RingHom.ker (φ : A →+* R)
+  have h : ↑ₐ (φ a) - a ∈ RingHom.ker (φ : A →+* R)
   simp only [RingHom.mem_ker, map_sub, RingHom.coe_coe, AlgHomClass.commutes,
     Algebra.id.map_eq_id, RingHom.id_apply, sub_self]
   simp only [spectrum.mem_iff, ← mem_nonunits_iff,

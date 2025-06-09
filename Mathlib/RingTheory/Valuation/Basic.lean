@@ -554,7 +554,7 @@ instance [Nontrivial Γ₀] [NoZeroDivisors Γ₀] : Ideal.IsPrime (supp v) :=
     exact eq_zero_or_eq_zero_of_mul_eq_zero hxy⟩
 
 theorem map_add_supp (a : R) {s : R} (h : s ∈ supp v) : v (a + s) = v a := by
-  have aux  : ∀ a s, v s = 0 → v (a + s) ≤ v a
+  have aux : ∀ a s, v s = 0 → v (a + s) ≤ v a
   intro a' s' h'
   refine le_trans (v.map_add a' s') (max_le le_rfl ?_)
   simp [h']

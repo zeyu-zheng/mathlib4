@@ -307,7 +307,7 @@ theorem mem_span_mul_finite_of_mem_span_mul {R A} [Semiring R] [AddCommMonoid A]
   obtain ⟨U, h, hU⟩ := mem_span_finite_of_mem_span hx
   obtain ⟨T, T', hS, hS', h⟩ := Finset.subset_mul h
   use T, T', hS, hS'
-  have h'  : (U : Set A) ⊆ T * T'
+  have h' : (U : Set A) ⊆ T * T'
   assumption_mod_cast
   have h'' := span_mono h' hU
   assumption

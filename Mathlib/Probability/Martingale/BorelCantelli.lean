@@ -158,10 +158,10 @@ theorem Submartingale.exists_tendsto_of_abs_bddAbove_aux [IsFiniteMeasure μ]
   filter_upwards [ht] with ω hω hωb
   rw [BddAbove] at hωb
   obtain ⟨i, hi⟩ := exists_nat_gt hωb.some
-  have hib  : ∀ n, f n ω < i
+  have hib : ∀ n, f n ω < i
   intro n
   exact lt_of_le_of_lt ((mem_upperBounds.1 hωb.some_mem) _ ⟨n, rfl⟩) hi
-  have heq  : ∀ n, stoppedValue f (leastGE f i n) ω = f n ω
+  have heq : ∀ n, stoppedValue f (leastGE f i n) ω = f n ω
   intro n
   rw [leastGE]; unfold hitting; rw [stoppedValue]
   rw [if_neg]
@@ -228,7 +228,7 @@ almost everywhere, the result follows.
 theorem Martingale.bddAbove_range_iff_bddBelow_range [IsFiniteMeasure μ] (hf : Martingale f ℱ μ)
     (hbdd : ∀ᵐ ω ∂μ, ∀ i, |f (i + 1) ω - f i ω| ≤ R) :
     ∀ᵐ ω ∂μ, BddAbove (Set.range fun n => f n ω) ↔ BddBelow (Set.range fun n => f n ω) := by
-  have hbdd'  : ∀ᵐ ω ∂μ, ∀ i, |(-f) (i + 1) ω - (-f) i ω| ≤ R
+  have hbdd' : ∀ᵐ ω ∂μ, ∀ i, |(-f) (i + 1) ω - (-f) i ω| ≤ R
   filter_upwards [hbdd] with ω hω i
   erw [← abs_neg, neg_sub, sub_neg_eq_add, neg_add_eq_sub]
   exact hω i
@@ -321,7 +321,7 @@ theorem tendsto_sum_indicator_atTop_iff [IsFiniteMeasure μ]
     (martingalePart_bdd_difference ℱ hbdd)
   have h₂ := (martingale_martingalePart hf hint).ae_not_tendsto_atTop_atBot
     (martingalePart_bdd_difference ℱ hbdd)
-  have h₃  : ∀ᵐ ω ∂μ, ∀ n, 0 ≤ (μ[f (n + 1) - f n|ℱ n]) ω
+  have h₃ : ∀ᵐ ω ∂μ, ∀ n, 0 ≤ (μ[f (n + 1) - f n|ℱ n]) ω
   refine ae_all_iff.2 fun n => condexp_nonneg ?_
   filter_upwards [ae_all_iff.1 hfmono n] with ω hω using sub_nonneg.2 hω
   filter_upwards [h₁, h₂, h₃, hfmono] with ω hω₁ hω₂ hω₃ hω₄

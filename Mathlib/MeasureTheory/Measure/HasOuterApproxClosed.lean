@@ -206,7 +206,7 @@ theorem measure_isClosed_eq_of_forall_lintegral_eq_of_isFiniteMeasure {Ω : Type
     [OpensMeasurableSpace Ω] {μ ν : Measure Ω} [IsFiniteMeasure μ]
     (h : ∀ (f : Ω →ᵇ ℝ≥0), ∫⁻ x, f x ∂μ = ∫⁻ x, f x ∂ν) {F : Set Ω} (F_closed : IsClosed F) :
     μ F = ν F := by
-  have ν_finite  : IsFiniteMeasure ν
+  have ν_finite : IsFiniteMeasure ν
   constructor
   have whole := h 1
   simp only [BoundedContinuousFunction.coe_one, Pi.one_apply, ENNReal.coe_one, lintegral_const,

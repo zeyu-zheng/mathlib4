@@ -101,16 +101,16 @@ lemma isCompatible_map_smul : ((r₀.smul m₀).map (whiskerRight φ (forget _))
   apply (hm₀ f₁ h₁).symm
   have hb₂ : (φ.app (Opposite.op Y₂)) b₂ = (A.map f₂.op) m
   apply (hm₀ f₂ h₂).symm
-  have ha₀  : (α.app (Opposite.op Z)) a₀ = (R.map (f₁.op ≫ g₁.op)) r
+  have ha₀ : (α.app (Opposite.op Z)) a₀ = (R.map (f₁.op ≫ g₁.op)) r
   dsimp [a₀]
   rw [NatTrans.naturality_apply, ha₁, Functor.map_comp, comp_apply]
-  have hb₀  : (φ.app (Opposite.op Z)) b₀ = (A.map (f₁.op ≫ g₁.op)) m
+  have hb₀ : (φ.app (Opposite.op Z)) b₀ = (A.map (f₁.op ≫ g₁.op)) m
   dsimp [b₀]
   erw [NatTrans.naturality_apply, hb₁, Functor.map_comp, comp_apply]
   rfl
-  have ha₀'  : (α.app (Opposite.op Z)) a₀ = (R.map (f₂.op ≫ g₂.op)) r
+  have ha₀' : (α.app (Opposite.op Z)) a₀ = (R.map (f₂.op ≫ g₂.op)) r
   rw [ha₀, ← op_comp, fac, op_comp]
-  have hb₀'  : (φ.app (Opposite.op Z)) b₀ = (A.map (f₂.op ≫ g₂.op)) m
+  have hb₀' : (φ.app (Opposite.op Z)) b₀ = (A.map (f₂.op ≫ g₂.op)) m
   rw [hb₀, ← op_comp, fac, op_comp]
   dsimp
   erw [← NatTrans.naturality_apply, ← NatTrans.naturality_apply]
@@ -184,7 +184,7 @@ instance : Nonempty (SMulCandidate α φ r m) := ⟨by
   have h₂ : S ≤ Presheaf.imageSieve φ m := fun _ _ h => h.2
   let r₀ := (Presieve.FamilyOfElements.localPreimage (whiskerRight α (forget _)) r).restrict h₁
   let m₀ := (Presieve.FamilyOfElements.localPreimage (whiskerRight φ (forget _)) m).restrict h₂
-  have hr₀  : (r₀.map (whiskerRight α (forget _))).IsAmalgamation r
+  have hr₀ : (r₀.map (whiskerRight α (forget _))).IsAmalgamation r
   rw [Presieve.FamilyOfElements.restrict_map]
   apply Presieve.isAmalgamation_restrict
   apply Presieve.FamilyOfElements.isAmalgamation_map_localPreimage
@@ -201,7 +201,7 @@ instance : Subsingleton (SMulCandidate α φ r m) where
     rintro ⟨x₁, h₁⟩ ⟨x₂, h₂⟩
     simp only [SMulCandidate.mk.injEq]
     let S := (Presheaf.imageSieve α r ⊓ Presheaf.imageSieve φ m)
-    have hS  : S ∈ J _
+    have hS : S ∈ J _
     apply J.intersection_covering
     apply Presheaf.imageSieve_mem
     apply Presheaf.imageSieve_mem
@@ -244,7 +244,7 @@ protected lemma smul_zero : smul α φ r 0 = 0 := by
 
 protected lemma smul_add : smul α φ r (m + m') = smul α φ r m + smul α φ r m' := by
   let S := Presheaf.imageSieve α r ⊓ Presheaf.imageSieve φ m ⊓ Presheaf.imageSieve φ m'
-  have hS  : S ∈ J X.unop
+  have hS : S ∈ J X.unop
   refine J.intersection_covering (J.intersection_covering ?_ ?_) ?_
   apply Presheaf.imageSieve_mem
   apply Presheaf.imageSieve_mem
@@ -259,7 +259,7 @@ protected lemma smul_add : smul α φ r (m + m') = smul α φ r m + smul α φ r
 
 protected lemma add_smul : smul α φ (r + r') m = smul α φ r m + smul α φ r' m := by
   let S := Presheaf.imageSieve α r ⊓ Presheaf.imageSieve α r' ⊓ Presheaf.imageSieve φ m
-  have hS  : S ∈ J X.unop
+  have hS : S ∈ J X.unop
   refine J.intersection_covering (J.intersection_covering ?_ ?_) ?_
   apply Presheaf.imageSieve_mem
   apply Presheaf.imageSieve_mem
@@ -273,7 +273,7 @@ protected lemma add_smul : smul α φ (r + r') m = smul α φ r m + smul α φ r
 
 protected lemma mul_smul : smul α φ (r * r') m = smul α φ r (smul α φ r' m) := by
   let S := Presheaf.imageSieve α r ⊓ Presheaf.imageSieve α r' ⊓ Presheaf.imageSieve φ m
-  have hS  : S ∈ J X.unop
+  have hS : S ∈ J X.unop
   refine J.intersection_covering (J.intersection_covering ?_ ?_) ?_
   apply Presheaf.imageSieve_mem
   apply Presheaf.imageSieve_mem
@@ -301,7 +301,7 @@ noncomputable def module : Module (R.val.obj X) (A.val.obj X) where
 lemma map_smul :
     A.val.map π (smul α φ r m) = smul α φ (R.val.map π r) (A.val.map π m) := by
   let S := Presheaf.imageSieve α (R.val.map π r) ⊓ Presheaf.imageSieve φ (A.val.map π m)
-  have hS  : S ∈ J Y.unop
+  have hS : S ∈ J Y.unop
   apply J.intersection_covering
   apply Presheaf.imageSieve_mem
   apply Presheaf.imageSieve_mem

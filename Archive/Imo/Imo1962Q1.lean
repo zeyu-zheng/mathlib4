@@ -55,49 +55,49 @@ Now we can eliminate possibilities for `(digits 10 c).length` until we get to th
 
 theorem case_0_digit {c n : ℕ} (h1 : (digits 10 c).length = 0) : ¬ProblemPredicate' c n := by
   intro h2
-  have h3  : 6 * 10 ^ 0 + c = 6 * 10 ^ (digits 10 c).length + c
+  have h3 : 6 * 10 ^ 0 + c = 6 * 10 ^ (digits 10 c).length + c
   rw [h1]
-  have h4  : 6 * 10 ^ 0 + c = 4 * (10 * c + 6)
+  have h4 : 6 * 10 ^ 0 + c = 4 * (10 * c + 6)
   rw [h3, h2.right, h2.left]
   linarith
 
 theorem case_1_digit {c n : ℕ} (h1 : (digits 10 c).length = 1) : ¬ProblemPredicate' c n := by
   intro h2
-  have h3  : 6 * 10 ^ 1 + c = 6 * 10 ^ (digits 10 c).length + c
+  have h3 : 6 * 10 ^ 1 + c = 6 * 10 ^ (digits 10 c).length + c
   rw [h1]
-  have h4  : 6 * 10 ^ 1 + c = 4 * (10 * c + 6)
+  have h4 : 6 * 10 ^ 1 + c = 4 * (10 * c + 6)
   rw [h3, h2.right, h2.left]
-  have h6  : c > 0
+  have h6 : c > 0
   linarith
   linarith
 
 theorem case_2_digit {c n : ℕ} (h1 : (digits 10 c).length = 2) : ¬ProblemPredicate' c n := by
   intro h2
-  have h3  : 6 * 10 ^ 2 + c = 6 * 10 ^ (digits 10 c).length + c
+  have h3 : 6 * 10 ^ 2 + c = 6 * 10 ^ (digits 10 c).length + c
   rw [h1]
-  have h4  : 6 * 10 ^ 2 + c = 4 * (10 * c + 6)
+  have h4 : 6 * 10 ^ 2 + c = 4 * (10 * c + 6)
   rw [h3, h2.right, h2.left]
-  have h5  : c > 14
+  have h5 : c > 14
   linarith
   linarith
 
 theorem case_3_digit {c n : ℕ} (h1 : (digits 10 c).length = 3) : ¬ProblemPredicate' c n := by
   intro h2
-  have h3  : 6 * 10 ^ 3 + c = 6 * 10 ^ (digits 10 c).length + c
+  have h3 : 6 * 10 ^ 3 + c = 6 * 10 ^ (digits 10 c).length + c
   rw [h1]
-  have h4  : 6 * 10 ^ 3 + c = 4 * (10 * c + 6)
+  have h4 : 6 * 10 ^ 3 + c = 4 * (10 * c + 6)
   rw [h3, h2.right, h2.left]
-  have h5  : c > 153
+  have h5 : c > 153
   linarith
   linarith
 
 theorem case_4_digit {c n : ℕ} (h1 : (digits 10 c).length = 4) : ¬ProblemPredicate' c n := by
   intro h2
-  have h3  : 6 * 10 ^ 4 + c = 6 * 10 ^ (digits 10 c).length + c
+  have h3 : 6 * 10 ^ 4 + c = 6 * 10 ^ (digits 10 c).length + c
   rw [h1]
-  have h4  : 6 * 10 ^ 4 + c = 4 * (10 * c + 6)
+  have h4 : 6 * 10 ^ 4 + c = 4 * (10 * c + 6)
   rw [h3, h2.right, h2.left]
-  have h5  : c > 1537
+  have h5 : c > 1537
   linarith
   linarith
 
@@ -106,9 +106,9 @@ theorem helper_5_digit {c : ℤ} (h : 6 * 10 ^ 5 + c = 4 * (10 * c + 6)) : c = 1
 
 theorem case_5_digit {c n : ℕ} (h1 : (digits 10 c).length = 5) (h2 : ProblemPredicate' c n) :
     c = 15384 := by
-  have h3  : 6 * 10 ^ 5 + c = 6 * 10 ^ (digits 10 c).length + c
+  have h3 : 6 * 10 ^ 5 + c = 6 * 10 ^ (digits 10 c).length + c
   rw [h1]
-  have h4  : 6 * 10 ^ 5 + c = 4 * (10 * c + 6)
+  have h4 : 6 * 10 ^ 5 + c = 4 * (10 * c + 6)
   rw [h3, h2.right, h2.left]
   zify at *
   exact helper_5_digit h4
@@ -118,9 +118,9 @@ that normally would be automated.
 -/
 theorem case_more_digits {c n : ℕ} (h1 : (digits 10 c).length ≥ 6) (h2 : ProblemPredicate' c n) :
     n ≥ 153846 := by
-  have h3  : c ≠ 0
+  have h3 : c ≠ 0
   intro h4
-  have h5  : (digits 10 c).length = 0
+  have h5 : (digits 10 c).length = 0
   simp [h4]
   exact case_0_digit h5 h2
   calc
@@ -140,7 +140,7 @@ theorem satisfied_by_153846 : ProblemPredicate 153846 := by
 
 theorem no_smaller_solutions (n : ℕ) (h1 : ProblemPredicate n) : n ≥ 153846 := by
   have ⟨c, h2⟩ := without_digits h1
-  have h3  : (digits 10 c).length < 6 ∨ (digits 10 c).length ≥ 6
+  have h3 : (digits 10 c).length < 6 ∨ (digits 10 c).length ≥ 6
   apply lt_or_ge
   cases h3 with
   | inr h3 => exact case_more_digits h3 h2

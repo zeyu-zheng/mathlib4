@@ -131,7 +131,7 @@ theorem transpose_mem (hA : A ∈ symplecticGroup l R) : Aᵀ ∈ symplecticGrou
   rw [mem_iff] at hA ⊢
   rw [transpose_transpose]
   have huA := symplectic_det hA
-  have huAT  : IsUnit Aᵀ.det
+  have huAT : IsUnit Aᵀ.det
   rw [Matrix.det_transpose]
   exact huA
   calc

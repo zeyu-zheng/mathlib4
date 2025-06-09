@@ -92,7 +92,7 @@ theorem eq_condKernel_of_measure_eq_compProd (κ : Kernel α Ω) [IsFiniteKernel
     rw [hρ'def, Measure.fst_apply, Measure.fst_apply, Measure.map_apply]
     exacts [rfl, Measurable.prod measurable_fst <| hf.measurable.comp measurable_snd,
       measurable_fst hs, hs, hs]
-  have hρ''  : ∀ᵐ x ∂ρ.fst, Kernel.map κ f hf.measurable x = ρ'.condKernel x
+  have hρ'' : ∀ᵐ x ∂ρ.fst, Kernel.map κ f hf.measurable x = ρ'.condKernel x
   rw [← hρ']
   refine eq_condKernel_of_measure_eq_compProd_real (Kernel.map κ f hf.measurable) ?_
   ext s hs
@@ -133,7 +133,7 @@ lemma Kernel.apply_eq_measure_condKernel_of_compProd_eq
     {ρ : Kernel α (β × Ω)} [IsFiniteKernel ρ] {κ : Kernel (α × β) Ω} [IsFiniteKernel κ]
     (hκ : Kernel.fst ρ ⊗ₖ κ = ρ) (a : α) :
     (fun b ↦ κ (a, b)) =ᵐ[Kernel.fst ρ a] (ρ a).condKernel := by
-  have  : ρ a = (ρ a).fst ⊗ₘ Kernel.comap κ (fun b ↦ (a, b)) measurable_prod_mk_left
+  have : ρ a = (ρ a).fst ⊗ₘ Kernel.comap κ (fun b ↦ (a, b)) measurable_prod_mk_left
   ext s hs
   conv_lhs => rw [← hκ]
   rw [Measure.compProd_apply hs, Kernel.compProd_apply _ _ _ hs]

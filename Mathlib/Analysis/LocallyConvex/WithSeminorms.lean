@@ -242,7 +242,7 @@ theorem isBounded_sup {p : ι → Seminorm 𝕜 E} {q : ι' → Seminorm 𝕜₂
     · exact ⟨1, ∅, by simp [Seminorm.bot_eq_zero]⟩
     choose fₛ fC hf using hf
     use s'.card • s'.sup fC, Finset.biUnion s' fₛ
-    have hs  : ∀ i : ι', i ∈ s' → (q i).comp f ≤ s'.sup fC • (Finset.biUnion s' fₛ).sup p
+    have hs : ∀ i : ι', i ∈ s' → (q i).comp f ≤ s'.sup fC • (Finset.biUnion s' fₛ).sup p
     intro i hi
     refine (hf i).trans (smul_le_smul ?_ (Finset.le_sup hi))
     exact Finset.sup_mono (Finset.subset_biUnion_of_mem fₛ hi)
@@ -515,7 +515,7 @@ theorem WithSeminorms.isVonNBounded_iff_seminorm_bounded {s : Set E} (hp : WithS
   intro hi I
   by_cases hI : I.Nonempty
   · choose r hr h using hi
-    have h'  : 0 < I.sup' hI r
+    have h' : 0 < I.sup' hI r
     rcases hI with ⟨i, hi⟩
     exact lt_of_lt_of_le (hr i) (Finset.le_sup' r hi)
     refine ⟨I.sup' hI r, h', fun x hx => finset_sup_apply_lt h' fun i hi => ?_⟩
@@ -632,7 +632,7 @@ protected theorem _root_.WithSeminorms.equicontinuous_TFAE {κ : Type*}
   · exact fun H ↦ H 0
   tfae_have 3 → 5
   · intro H
-    have  : ∀ᶠ x in 𝓝 0, ∀ k, q i (f k x) ≤ 1
+    have : ∀ᶠ x in 𝓝 0, ∀ k, q i (f k x) ≤ 1
     filter_upwards [Metric.equicontinuousAt_iff_right.mp (H.equicontinuous 0) 1 one_pos]
       with x hx k
     simpa using (hx k).le
@@ -760,7 +760,7 @@ lemma bound_of_continuous_normedSpace (q : Seminorm 𝕜 F)
   rcases NormedAddCommGroup.nhds_zero_basis_norm_lt.mem_iff.mp (hq' <| Iio_mem_nhds one_pos)
     with ⟨ε, ε_pos, hε⟩
   rcases NormedField.exists_one_lt_norm 𝕜 with ⟨c, hc⟩
-  have  : 0 < ‖c‖ / ε
+  have : 0 < ‖c‖ / ε
   positivity
   refine ⟨‖c‖ / ε, this, fun x ↦ ?_⟩
   by_cases hx : ‖x‖ = 0
@@ -905,7 +905,7 @@ theorem WithSeminorms.first_countable (hp : WithSeminorms p) :
   have := hp.topologicalAddGroup
   let _ : UniformSpace E := TopologicalAddGroup.toUniformSpace E
   have : UniformAddGroup E := comm_topologicalAddGroup_is_uniform
-  have  : (𝓝 (0 : E)).IsCountablyGenerated
+  have : (𝓝 (0 : E)).IsCountablyGenerated
   rw [p.withSeminorms_iff_nhds_eq_iInf.mp hp]
   exact Filter.iInf.isCountablyGenerated _
   have : (uniformity E).IsCountablyGenerated := UniformAddGroup.uniformity_countably_generated

@@ -65,7 +65,7 @@ lemma LSeries.abscissaOfAbsConv_le_of_forall_lt_LSeriesSummable {f : ℕ → ℂ
   refine sInf_le_iff.mpr fun y hy ↦ ?_
   simp only [mem_lowerBounds, Set.mem_image, Set.mem_setOf_eq, forall_exists_index, and_imp,
     forall_apply_eq_imp_iff₂] at hy
-  have H (a  : EReal) : x < a → y ≤ a
+  have H (a : EReal) : x < a → y ≤ a
   induction' a with a₀
   · simp only [not_lt_bot, le_bot_iff, IsEmpty.forall_iff]
   · exact_mod_cast fun ha ↦ hy a₀ (h a₀ ha)

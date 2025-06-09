@@ -320,7 +320,7 @@ first set is empty. -/
 theorem prod_subset_prod_iff : s ×ˢ t ⊆ s₁ ×ˢ t₁ ↔ s ⊆ s₁ ∧ t ⊆ t₁ ∨ s = ∅ ∨ t = ∅ := by
   rcases (s ×ˢ t).eq_empty_or_nonempty with h | h
   · simp [h, prod_eq_empty_iff.1 h]
-  have st  : s.Nonempty ∧ t.Nonempty
+  have st : s.Nonempty ∧ t.Nonempty
   rwa [prod_nonempty_iff] at h
   refine ⟨fun H => Or.inl ⟨?_, ?_⟩, ?_⟩
   · have := image_subset (Prod.fst : α × β → α) H
@@ -335,7 +335,7 @@ theorem prod_eq_prod_iff_of_nonempty (h : (s ×ˢ t).Nonempty) :
     s ×ˢ t = s₁ ×ˢ t₁ ↔ s = s₁ ∧ t = t₁ := by
   constructor
   · intro heq
-    have h₁  : (s₁ ×ˢ t₁ : Set _).Nonempty
+    have h₁ : (s₁ ×ˢ t₁ : Set _).Nonempty
     rwa [← heq]
     rw [prod_nonempty_iff] at h h₁
     rw [← fst_image_prod s h.2, ← fst_image_prod s₁ h₁.2, heq, eq_self_iff_true, true_and_iff, ←

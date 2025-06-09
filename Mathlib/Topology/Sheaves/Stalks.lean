@@ -510,7 +510,7 @@ theorem app_surjective_of_injective_of_locally_surjective {F G : Sheaf C X} (f :
   -- preimage under `f` on `V`.
   choose V mV iVU sf heq using hsurj t
   -- These neighborhoods clearly cover all of `U`.
-  have V_cover  : U ≤ iSup V
+  have V_cover : U ≤ iSup V
   intro x hxU
   simp only [Opens.coe_iSup, Set.mem_iUnion, SetLike.mem_coe]
   exact ⟨⟨x, hxU⟩, mV ⟨x, hxU⟩⟩

@@ -130,12 +130,12 @@ theorem eq_comp : (· = ·) ∘r r = r :=
   Iff.intro (fun ⟨_, Eq, h⟩ ↦ Eq.symm ▸ h) fun h ↦ ⟨a, rfl, h⟩
 
 theorem iff_comp {r : Prop → α → Prop} : (· ↔ ·) ∘r r = r := by
-  have  : (· ↔ ·) = (· = ·)
+  have : (· ↔ ·) = (· = ·)
   funext a b; exact iff_eq_eq
   rw [this, eq_comp]
 
 theorem comp_iff {r : α → Prop → Prop} : r ∘r (· ↔ ·) = r := by
-  have  : (· ↔ ·) = (· = ·)
+  have : (· ↔ ·) = (· = ·)
   funext a b; exact iff_eq_eq
   rw [this, comp_eq]
 

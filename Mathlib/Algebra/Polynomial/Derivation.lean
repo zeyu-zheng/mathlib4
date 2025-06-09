@@ -43,7 +43,7 @@ theorem derivation_C (D : Derivation R R[X] A) (a : R) : D (C a) = 0 :=
 @[simp]
 theorem C_smul_derivation_apply (D : Derivation R R[X] A) (a : R) (f : R[X]) :
     C a • D f = a • D f := by
-  have  : C a • D f = D (C a * f)
+  have : C a • D f = D (C a * f)
   simp
   rw [this, C_mul', D.map_smul]
 

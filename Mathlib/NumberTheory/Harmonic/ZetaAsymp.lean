@@ -72,7 +72,7 @@ section s_eq_one
 
 lemma term_one {n : ℕ} (hn : 0 < n) :
     term n 1 = (log (n + 1) - log n) -  1 / (n + 1) := by
-  have hv  : ∀ x ∈ uIcc (n : ℝ) (n + 1), 0 < x
+  have hv : ∀ x ∈ uIcc (n : ℝ) (n + 1), 0 < x
   intro x hx
   rw [uIcc_of_le (by simp only [le_add_iff_nonneg_right, zero_le_one])] at hx
   exact (Nat.cast_pos.mpr hn).trans_le hx.1
@@ -144,7 +144,7 @@ section s_gt_one
 lemma term_of_lt {n : ℕ} (hn : 0 < n) {s : ℝ} (hs : 1 < s) :
     term n s = 1 / (s - 1) * (1 / n ^ (s - 1) - 1 / (n + 1) ^ (s - 1))
     - n / s * (1 / n ^ s - 1 / (n + 1) ^ s) := by
-  have hv  : ∀ x ∈ uIcc (n : ℝ) (n + 1), 0 < x
+  have hv : ∀ x ∈ uIcc (n : ℝ) (n + 1), 0 < x
   intro x hx
   rw [uIcc_of_le (by simp only [le_add_iff_nonneg_right, zero_le_one])] at hx
   exact (Nat.cast_pos.mpr hn).trans_le hx.1
@@ -364,7 +364,7 @@ lemma tendsto_Gamma_term_aux : Tendsto (fun s ↦ 1 / (s - 1) - 1 / Gammaℝ s /
     (Gammaℝ_one.trans_ne one_ne_zero)
   rw [Gammaℝ_one, div_one] at this
   refine this.congr' ?_
-  have  : {z | 0 < re z} ∈ 𝓝 (1 : ℂ)
+  have : {z | 0 < re z} ∈ 𝓝 (1 : ℂ)
   apply (continuous_re.isOpen_preimage _ isOpen_Ioi).mem_nhds
   simp only [mem_preimage, one_re, mem_Ioi, zero_lt_one]
   rw [EventuallyEq, eventually_nhdsWithin_iff]

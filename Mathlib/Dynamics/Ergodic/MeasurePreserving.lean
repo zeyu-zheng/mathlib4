@@ -153,7 +153,7 @@ theorem exists_mem_iterate_mem_of_volume_lt_mul_volume (hf : MeasurePreserving f
   have A : ∀ m, NullMeasurableSet (f^[m] ⁻¹' s) μ := fun m ↦
     hs.preimage (hf.iterate m).quasiMeasurePreserving
   have B : ∀ m, μ (f^[m] ⁻¹' s) = μ s := fun m ↦ (hf.iterate m).measure_preimage hs
-  have  : μ (univ : Set α) < ∑ m ∈ Finset.range n, μ (f^[m] ⁻¹' s)
+  have : μ (univ : Set α) < ∑ m ∈ Finset.range n, μ (f^[m] ⁻¹' s)
   simpa [B]
   obtain ⟨i, hi, j, hj, hij, x, hxi : f^[i] x ∈ s, hxj : f^[j] x ∈ s⟩ :
       ∃ i < n, ∃ j < n, i ≠ j ∧ (f^[i] ⁻¹' s ∩ f^[j] ⁻¹' s).Nonempty := by

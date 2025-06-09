@@ -71,7 +71,7 @@ theorem iInf_localization_eq_bot : (⨅ v : MaximalSpectrum R,
   · contrapose
     intro hrange hlocal
     let denom : Ideal R := (Submodule.span R {1} : Submodule R K).colon (Submodule.span R {x})
-    have hdenom  : (1 : R) ∉ denom
+    have hdenom : (1 : R) ∉ denom
     intro hdenom
     rcases Submodule.mem_span_singleton.mp
       (Submodule.mem_colon.mp hdenom x <| Submodule.mem_span_singleton_self x) with ⟨y, hy⟩

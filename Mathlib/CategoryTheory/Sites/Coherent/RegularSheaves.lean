@@ -71,7 +71,7 @@ theorem equalizerCondition_precomp_of_preservesPullback (P : Cᵒᵖ ⥤ D) (F :
     [∀ {X B} (π : X ⟶ B) [EffectiveEpi π], PreservesLimit (cospan π π) F]
     [F.PreservesEffectiveEpis] (hP : EqualizerCondition P) : EqualizerCondition (F.op ⋙ P) := by
   intro X B π _ c hc
-  have h  : P.map (F.map π).op = (F.op ⋙ P).map π.op
+  have h : P.map (F.map π).op = (F.op ⋙ P).map π.op
   simp
   refine ⟨(IsLimit.equivIsoLimit (ForkOfι.ext ?_ _ h)) ?_⟩
   · simp only [Functor.comp_map, op_map, Quiver.Hom.unop_op, ← map_comp, ← op_comp, c.condition]
@@ -112,7 +112,7 @@ theorem EqualizerCondition.mk (P : Cᵒᵖ ⥤ Type*)
   intro b hb
   have h₁ : ((pullbackIsPullback π π).conePointUniqueUpToIso hc).hom ≫ c.fst =
     pullback.fst π π := by simp
-  have hb'  : P.map (pullback.fst π π).op b = P.map (pullback.snd _ _).op b
+  have hb' : P.map (pullback.fst π π).op b = P.map (pullback.snd _ _).op b
   rw [← h₁, op_comp, FunctorToTypes.map_comp_apply, hb]
   simp [← FunctorToTypes.map_comp_apply, ← op_comp]
   obtain ⟨a, ha₁, ha₂⟩ := hP ⟨b, hb'⟩

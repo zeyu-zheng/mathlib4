@@ -190,7 +190,7 @@ lemma away_of_isIdempotentElem {R S} [CommRing R] [CommRing S] [Algebra R S]
     (H' : Function.Surjective (algebraMap R S)) :
     IsLocalization.Away e S where
   map_units' r := by
-    have  : algebraMap R S e = 1
+    have : algebraMap R S e = 1
     rw [← (algebraMap R S).map_one, eq_comm, ← sub_eq_zero, ← map_sub, ← RingHom.mem_ker,
       H, Ideal.mem_span_singleton]
     obtain ⟨r, n, rfl⟩ := r
@@ -373,7 +373,7 @@ theorem exists_reduced_fraction' {b : B} (hb : b ≠ 0) (hx : Irreducible x) :
     ∃ (a : R) (n : ℤ), ¬x ∣ a ∧ selfZPow x B n * algebraMap R B a = b := by
   obtain ⟨⟨a₀, y⟩, H⟩ := surj (Submonoid.powers x) b
   obtain ⟨d, hy⟩ := (Submonoid.mem_powers_iff y.1 x).mp y.2
-  have ha₀  : a₀ ≠ 0
+  have ha₀ : a₀ ≠ 0
   haveI :=
     @isDomain_of_le_nonZeroDivisors B _ R _ _ _ (Submonoid.powers x) _
       (powers_le_nonZeroDivisors_of_noZeroDivisors hx.ne_zero)

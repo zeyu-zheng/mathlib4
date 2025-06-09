@@ -46,13 +46,13 @@ theorem hasInitial_of_weakly_initial_and_hasWideEqualizers [HasWideEqualizers.{v
   let endos := T ⟶ T
   let i := wideEqualizer.ι (id : endos → endos)
   haveI : Nonempty endos := ⟨𝟙 _⟩
-  have  : ∀ X : C, Unique (wideEqualizer (id : endos → endos) ⟶ X)
+  have : ∀ X : C, Unique (wideEqualizer (id : endos → endos) ⟶ X)
   intro X
   refine ⟨⟨i ≫ Classical.choice (hT X)⟩, fun a => ?_⟩
   let E := equalizer a (i ≫ Classical.choice (hT _))
   let e : E ⟶ wideEqualizer id := equalizer.ι _ _
   let h : T ⟶ E := Classical.choice (hT E)
-  have  : ((i ≫ h) ≫ e) ≫ i = i ≫ 𝟙 _
+  have : ((i ≫ h) ≫ e) ≫ i = i ≫ 𝟙 _
   rw [Category.assoc, Category.assoc]
   apply wideEqualizer.condition (id : endos → endos) (h ≫ e ≫ i)
   rw [Category.comp_id, cancel_mono_id i] at this

@@ -749,11 +749,11 @@ theorem normalizerCondition_of_isNilpotent [h : IsNilpotent G] : NormalizerCondi
     exact @Subsingleton.elim _ Unique.instSubsingleton _ _
   · intro G _ _ ih H hH
     have hch : center G ≤ H := Subgroup.center_le_normalizer.trans (le_of_eq hH)
-    have hkh  : (mk' (center G)).ker ≤ H
+    have hkh : (mk' (center G)).ker ≤ H
     simpa using hch
     have hsur : Function.Surjective (mk' (center G)) := surjective_quot_mk _
     let H' := H.map (mk' (center G))
-    have hH'  : H'.normalizer = H'
+    have hH' : H'.normalizer = H'
     apply comap_injective hsur
     rw [comap_normalizer_eq_of_surjective _ hsur, comap_map_eq_self hkh]
     exact hH
@@ -778,7 +778,7 @@ theorem IsPGroup.isNilpotent [Finite G] {p : ℕ} [hp : Fact (Nat.Prime p)] (h :
     · intro _ _ _ _
       infer_instance
     · intro G _ _ ih _ h
-      have hcq  : Fintype.card (G ⧸ center G) < Fintype.card G
+      have hcq : Fintype.card (G ⧸ center G) < Fintype.card G
       simp only [← Nat.card_eq_fintype_card]
       rw [card_eq_card_quotient_mul_card_subgroup (center G)]
       simp only [Nat.card_eq_fintype_card]
@@ -797,7 +797,7 @@ theorem isNilpotent_of_product_of_sylow_group
     IsNilpotent G := by
   classical
     let ps := (Nat.card G).primeFactors
-    have  : ∀ (p : ps) (P : Sylow p G), IsNilpotent (↑P : Subgroup G)
+    have : ∀ (p : ps) (P : Sylow p G), IsNilpotent (↑P : Subgroup G)
     intro p P
     haveI : Fact (Nat.Prime ↑p) := Fact.mk <| Nat.prime_of_mem_primeFactors p.2
     exact P.isPGroup'.isNilpotent

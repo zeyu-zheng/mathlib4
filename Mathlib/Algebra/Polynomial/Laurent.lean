@@ -204,7 +204,7 @@ theorem _root_.Polynomial.toLaurent_comp_C : toLaurent (R := R) ∘ Polynomial.C
 
 @[simp]
 theorem _root_.Polynomial.toLaurent_X : (toLaurent Polynomial.X : R[T;T⁻¹]) = T 1 := by
-  have  : (Polynomial.X : R[X]) = monomial 1 1
+  have : (Polynomial.X : R[X]) = monomial 1 1
   simp [← C_mul_X_pow_eq_monomial]
   simp [this, Polynomial.toLaurent_C_mul_T]
 
@@ -243,13 +243,13 @@ protected theorem induction_on {M : R[T;T⁻¹] → Prop} (p : R[T;T⁻¹]) (h_C
     (h_add : ∀ {p q}, M p → M q → M (p + q))
     (h_C_mul_T : ∀ (n : ℕ) (a : R), M (C a * T n) → M (C a * T (n + 1)))
     (h_C_mul_T_Z : ∀ (n : ℕ) (a : R), M (C a * T (-n)) → M (C a * T (-n - 1))) : M p := by
-  have A  : ∀ {n : ℤ} {a : R}, M (C a * T n)
+  have A : ∀ {n : ℤ} {a : R}, M (C a * T n)
   intro n a
   refine Int.induction_on n ?_ ?_ ?_
   · simpa only [T_zero, mul_one] using h_C a
   · exact fun m => h_C_mul_T m a
   · exact fun m => h_C_mul_T_Z m a
-  have B  : ∀ s : Finset ℤ, M (s.sum fun n : ℤ => C (p.toFun n) * T n)
+  have B : ∀ s : Finset ℤ, M (s.sum fun n : ℤ => C (p.toFun n) * T n)
   apply Finset.induction
   · convert h_C 0
     simp only [Finset.sum_empty, _root_.map_zero]
@@ -396,7 +396,7 @@ theorem toLaurent_support (f : R[X]) : f.toLaurent.support = f.support.map Nat.c
       Finsupp.support_zero, eq_self_iff_true, imp_true_iff, Finset.map_empty,
       Finsupp.support_eq_empty]
   · intro a s as hf f fs
-    have  : (erase a f).toLaurent.support = s.map Nat.castEmbedding
+    have : (erase a f).toLaurent.support = s.map Nat.castEmbedding
     refine hf (f.erase a) ?_
     simp only [fs, Finset.erase_eq_of_not_mem as, Polynomial.support_erase,
       Finset.erase_insert_eq_erase]
@@ -436,7 +436,7 @@ section ExactDegrees
 theorem degree_C_mul_T (n : ℤ) (a : R) (a0 : a ≠ 0) : degree (C a * T n) = n := by
   rw [degree]
   -- Porting note: was `convert Finset.max_singleton`
-  have  : Finsupp.support (C a * T n) = {n}
+  have : Finsupp.support (C a * T n) = {n}
   refine support_eq_singleton.mpr ?_
   rw [← single_eq_C_mul_T]
   simp only [single_eq_same, a0, Ne, not_false_iff, eq_self_iff_true, and_self_iff]

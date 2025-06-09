@@ -44,7 +44,7 @@ theorem to_product_injective_of_isLimit {D : Cone F} (hD : IsLimit D) :
   let hG := Types.limitConeIsLimit.{w, v} (F ⋙ forget C)
   let T : E.pt ≅ G.pt := hE.conePointUniqueUpToIso hG
   change Function.Injective (T.hom ≫ fun x j => G.π.app j x)
-  have h  : Function.Injective T.hom
+  have h : Function.Injective T.hom
   intro a b h
   suffices T.inv (T.hom a) = T.inv (T.hom b) by simpa
   rw [h]

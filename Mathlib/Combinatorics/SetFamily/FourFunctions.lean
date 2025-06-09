@@ -247,9 +247,9 @@ protected lemma Finset.four_functions_theorem (u : Finset α)
     obtain rfl | rfl := h𝒜 <;> obtain rfl | rfl := hℬ <;> simp; exact h (subset_refl ∅) subset_rfl
   specialize ih (collapse_nonneg h₁) (collapse_nonneg h₂) (collapse_nonneg h₃) (collapse_nonneg h₄)
     (collapse_modular hu h₁ h₂ h₃ h₄ h 𝒜 ℬ) Subset.rfl Subset.rfl
-  have  : 𝒜 ⊼ ℬ ⊆ powerset (insert a u)
+  have : 𝒜 ⊼ ℬ ⊆ powerset (insert a u)
   simpa using infs_subset h𝒜 hℬ
-  have  : 𝒜 ⊻ ℬ ⊆ powerset (insert a u)
+  have : 𝒜 ⊻ ℬ ⊆ powerset (insert a u)
   simpa using sups_subset h𝒜 hℬ
   simpa only [powerset_sups_powerset_self, powerset_infs_powerset_self, sum_collapse,
     not_false_eq_true, *] using ih
@@ -277,10 +277,10 @@ lemma four_functions_theorem [DecidableEq α] (h₁ : 0 ≤ f₁) (h₂ : 0 ≤ 
   have : Finite L := (s.finite_toSet.union t.finite_toSet).latticeClosure.to_subtype
   set s' : Finset L := s.preimage (↑) Subtype.coe_injective.injOn
   set t' : Finset L := t.preimage (↑) Subtype.coe_injective.injOn
-  have hs'  : s'.map ⟨L.subtype, Subtype.coe_injective⟩ = s
+  have hs' : s'.map ⟨L.subtype, Subtype.coe_injective⟩ = s
   simp [s', map_eq_image, image_preimage, filter_eq_self]
   exact fun a ha ↦ subset_latticeClosure <| Set.subset_union_left ha
-  have ht'  : t'.map ⟨L.subtype, Subtype.coe_injective⟩ = t
+  have ht' : t'.map ⟨L.subtype, Subtype.coe_injective⟩ = t
   simp [t', map_eq_image, image_preimage, filter_eq_self]
   exact fun a ha ↦ subset_latticeClosure <| Set.subset_union_right ha
   clear_value s' t'

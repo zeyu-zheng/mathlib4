@@ -237,7 +237,7 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
   -- extract a disjoint subfamily `u` of `t'` thanks to the abstract Vitali covering theorem.
   obtain ⟨u, ut', u_disj, hu⟩ : ∃ u ⊆ t',
       u.PairwiseDisjoint B ∧ ∀ a ∈ t', ∃ b ∈ u, (B a ∩ B b).Nonempty ∧ r a ≤ 2 * r b := by
-    have A  : ∀ a ∈ t', r a ≤ 1
+    have A : ∀ a ∈ t', r a ≤ 1
     intro a ha
     apply ha.2.trans (hR1 (c a))
     have A' : ∀ a ∈ t', (B a).Nonempty

@@ -248,7 +248,7 @@ theorem isNoetherian_iff_of_finite_iSup_eq_top {ι} [Finite ι] {S : ι → X.af
       intro i
       apply isCompact_iff_isCompact_univ.mpr
       convert CompactSpace.isCompact_univ
-      have  : NoetherianSpace (S i)
+      have : NoetherianSpace (S i)
       apply noetherianSpace_of_isAffineOpen (S i).1 (S i).2
       apply NoetherianSpace.compactSpace (S i)
 
@@ -277,7 +277,7 @@ instance (priority := 100) IsNoetherian.noetherianSpace [IsNoetherian X] :
   suffices ∀ i : 𝒰.J, NoetherianSpace (Set.range <| (𝒰.map i).val.base) by
     apply NoetherianSpace.iUnion
   intro i
-  have  : IsAffine (𝒰.obj i)
+  have : IsAffine (𝒰.obj i)
   rw [X.affineCover.finiteSubcover_obj]
   apply Scheme.isAffine_affineCover
   let U : X.affineOpens := ⟨Scheme.Hom.opensRange (𝒰.map i), isAffineOpen_opensRange _⟩

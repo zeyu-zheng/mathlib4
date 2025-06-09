@@ -220,7 +220,7 @@ theorem epi_iff_surjective {X Y : Profinite.{u}} (f : X ⟶ Y) : Epi f ↔ Funct
     let C := Set.range f
     have hC : IsClosed C := (isCompact_range f.continuous).isClosed
     let U := Cᶜ
-    have hyU  : y ∈ U
+    have hyU : y ∈ U
     refine Set.mem_compl ?_
     rintro ⟨y', hy'⟩
     exact hy y' hy'
@@ -230,7 +230,7 @@ theorem epi_iff_surjective {X Y : Profinite.{u}} (f : X ⟶ Y) : Epi f ↔ Funct
       let Z := of (ULift.{u} <| Fin 2)
       let g : Y ⟶ Z := ⟨(LocallyConstant.ofIsClopen hV).map ULift.up, LocallyConstant.continuous _⟩
       let h : Y ⟶ Z := ⟨fun _ => ⟨1⟩, continuous_const⟩
-      have H  : h = g
+      have H : h = g
       rw [← cancel_epi f]
       ext x
       apply ULift.ext

@@ -186,7 +186,7 @@ theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
   -- For each `x y`, we define `U x y` to be `{z | f z - ε < g x y z}`,
   -- and observe this is a neighbourhood of `y`.
   let U : X → X → Set X := fun x y => {z | f z - ε < g x y z}
-  have U_nhd_y  : ∀ x y, U x y ∈ 𝓝 y
+  have U_nhd_y : ∀ x y, U x y ∈ 𝓝 y
   intro x y
   refine IsOpen.mem_nhds ?_ ?_
   · apply isOpen_lt <;> continuity
@@ -342,7 +342,7 @@ theorem Subalgebra.SeparatesPoints.rclike_to_real {A : StarSubalgebra 𝕜 C(X, 
   obtain ⟨_, ⟨f, hfA, rfl⟩, hf⟩ := hA hx
   let F : C(X, 𝕜) := f - const _ (f x₂)
   -- Subtract the constant `f x₂` from `f`; this is still an element of the subalgebra
-  have hFA  : F ∈ A
+  have hFA : F ∈ A
   refine A.sub_mem hfA (@Eq.subst _ (· ∈ A) _ _ ?_ <| A.smul_mem A.one_mem <| f x₂)
   ext1
   simp only [coe_smul, coe_one, smul_apply, one_apply, Algebra.id.smul_eq_mul, mul_one,
@@ -369,7 +369,7 @@ theorem ContinuousMap.starSubalgebra_topologicalClosure_eq_top_of_separatesPoint
   let I : C(X, ℝ) →ₗ[ℝ] C(X, 𝕜) := ofRealCLM.compLeftContinuous ℝ X
   -- The main point of the proof is that its range (i.e., every real-valued function) is contained
   -- in the closure of `A`
-  have key  : LinearMap.range I ≤ (A.toSubmodule.restrictScalars ℝ).topologicalClosure
+  have key : LinearMap.range I ≤ (A.toSubmodule.restrictScalars ℝ).topologicalClosure
   -- Let `A₀` be the subalgebra of `C(X, ℝ)` consisting of `A`'s purely real elements; it is the
   -- preimage of `A` under `I`.  In this argument we only need its submodule structure.
   let A₀ : Submodule ℝ C(X, ℝ) := (A.toSubmodule.restrictScalars ℝ).comap I
@@ -532,7 +532,7 @@ theorem AlgHom.closure_ker_inter {F S K A : Type*} [CommRing K] [Ring A] [Algebr
       using closure_inter_subset_inter_closure s (ker φ : Set A)
   · intro x ⟨hxs, (hxφ : φ x = 0)⟩
     rw [mem_closure_iff_clusterPt, ClusterPt] at hxs
-    have  : Tendsto (fun y ↦ y - φ y • 1) (𝓝 x ⊓ 𝓟 s) (𝓝 x)
+    have : Tendsto (fun y ↦ y - φ y • 1) (𝓝 x ⊓ 𝓟 s) (𝓝 x)
     conv => congr; rfl; rfl; rw [← sub_zero x, ← zero_smul K 1, ← hxφ]
     exact Filter.tendsto_inf_left (Continuous.tendsto (by fun_prop) x)
     refine mem_closure_of_tendsto this <| eventually_inf_principal.mpr ?_

@@ -2857,10 +2857,10 @@ theorem normalClosure_eq_top_of {N : Subgroup G} [hn : N.Normal] {g g' : G} {hg 
     {hg' : g' ∈ N} (hc : IsConj g g') (ht : normalClosure ({⟨g, hg⟩} : Set N) = ⊤) :
     normalClosure ({⟨g', hg'⟩} : Set N) = ⊤ := by
   obtain ⟨c, rfl⟩ := isConj_iff.1 hc
-  have h  : ∀ x : N, (MulAut.conj c) x ∈ N
+  have h : ∀ x : N, (MulAut.conj c) x ∈ N
   rintro ⟨x, hx⟩
   exact hn.conj_mem _ hx c
-  have hs  : Function.Surjective (((MulAut.conj c).toMonoidHom.restrict N).codRestrict _ h)
+  have hs : Function.Surjective (((MulAut.conj c).toMonoidHom.restrict N).codRestrict _ h)
   rintro ⟨x, hx⟩
   refine ⟨⟨c⁻¹ * x * c, ?_⟩, ?_⟩
   · have h := hn.conj_mem _ hx c⁻¹

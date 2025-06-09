@@ -42,7 +42,7 @@ theorem isPrimePow_iff_factorization_eq_single {n : ℕ} :
   · rintro ⟨hp, hk, hn⟩
     exact ⟨hk, by rw [← hn, Nat.Prime.factorization_pow hp]⟩
   · rintro ⟨hk, hn⟩
-    have hn0  : n ≠ 0
+    have hn0 : n ≠ 0
     rintro rfl
     simp_all only [Finsupp.single_eq_zero, eq_comm, Nat.factorization_zero, hk.ne']
     rw [Nat.eq_pow_of_factorization_eq_single hn0 hn]

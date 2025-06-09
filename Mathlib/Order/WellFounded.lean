@@ -108,7 +108,7 @@ protected theorem lt_succ_iff {r : α → α → Prop} [wo : IsWellOrder α r] {
     (y : α) : r y (wo.wf.succ x) ↔ r y x ∨ y = x := by
   constructor
   · intro h'
-    have  : ¬r x y
+    have : ¬r x y
     intro hy
     rw [WellFounded.succ, dif_pos] at h'
     exact wo.wf.not_lt_min _ h hy h'

@@ -44,8 +44,8 @@ theorem tendsto_apply_add_mul_sq_div_sub {f : ℝ → ℝ} {x a c d : ℝ} {l : 
     (hf : Tendsto (fun y => (f y - d) / (y - x)) l (𝓝 a))
     (h' : Tendsto (fun y => y + c * (y - x) ^ 2) l l) :
     Tendsto (fun y => (f (y + c * (y - x) ^ 2) - d) / (y - x)) l (𝓝 a) := by
-  have L  : Tendsto (fun y => (y + c * (y - x) ^ 2 - x) / (y - x)) l (𝓝 1)
-  have  : Tendsto (fun y => 1 + c * (y - x)) l (𝓝 (1 + c * (x - x)))
+  have L : Tendsto (fun y => (y + c * (y - x) ^ 2 - x) / (y - x)) l (𝓝 1)
+  have : Tendsto (fun y => 1 + c * (y - x)) l (𝓝 (1 + c * (x - x)))
   apply Tendsto.mono_left _ (hl.trans nhdsWithin_le_nhds)
   exact ((tendsto_id.sub_const x).const_mul c).const_add 1
   simp only [_root_.sub_self, add_zero, mul_zero] at this
@@ -56,7 +56,7 @@ theorem tendsto_apply_add_mul_sq_div_sub {f : ℝ → ℝ} {x a c d : ℝ} {l : 
   have Z := (hf.comp h').mul L
   rw [mul_one] at Z
   apply Tendsto.congr' _ Z
-  have  : ∀ᶠ y in l, y + c * (y - x) ^ 2 ≠ x
+  have : ∀ᶠ y in l, y + c * (y - x) ^ 2 ≠ x
   apply Tendsto.mono_right h' hl self_mem_nhdsWithin
   filter_upwards [this] with y hy
   field_simp [sub_ne_zero.2 hy]
@@ -139,7 +139,7 @@ theorem Monotone.ae_hasDerivAt {f : ℝ → ℝ} (hf : Monotone f) :
     scale `y - x`.)-/
   filter_upwards [hf.stieltjesFunction.ae_hasDerivAt,
     hf.countable_not_continuousAt.ae_not_mem volume] with x hx h'x
-  have A  : hf.stieltjesFunction x = f x
+  have A : hf.stieltjesFunction x = f x
   rw [Classical.not_not, hf.continuousAt_iff_leftLim_eq_rightLim] at h'x
   apply le_antisymm _ (hf.le_rightLim (le_refl _))
   rw [← h'x]

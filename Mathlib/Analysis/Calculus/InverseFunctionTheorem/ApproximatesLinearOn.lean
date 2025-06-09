@@ -162,10 +162,10 @@ theorem surjOn_closedBall_of_nonlinearRightInverse (hf : ApproximatesLinearOn f 
     -/
   set g := fun x => x + f'symm (y - f x) with hg
   set u := fun n : ℕ => g^[n] b with hu
-  have usucc  : ∀ n, u (n + 1) = g (u n)
+  have usucc : ∀ n, u (n + 1) = g (u n)
   simp [hu, ← iterate_succ_apply' g _ b]
   -- First bound: if `f z` is close to `y`, then `g z` is close to `z` (i.e., almost a fixed point).
-  have A  : ∀ z, dist (g z) z ≤ f'symm.nnnorm * dist (f z) y
+  have A : ∀ z, dist (g z) z ≤ f'symm.nnnorm * dist (f z) y
   intro z
   rw [dist_eq_norm, hg, add_sub_cancel_left, dist_eq_norm']
   exact f'symm.bound _
@@ -326,10 +326,10 @@ protected theorem surjective [CompleteSpace E] (hf : ApproximatesLinearOn f (f' 
   · haveI : Subsingleton F := (Equiv.subsingleton_congr f'.toEquiv).1 hE
     exact surjective_to_subsingleton _
   · apply forall_of_forall_mem_closedBall (fun y : F => ∃ a, f a = y) (f 0) _
-    have hc'  : (0 : ℝ) < N⁻¹ - c
+    have hc' : (0 : ℝ) < N⁻¹ - c
     rw [sub_pos]; exact hc
     let p : ℝ → Prop := fun R => closedBall (f 0) R ⊆ Set.range f
-    have hp  : ∀ᶠ r : ℝ in atTop, p ((N⁻¹ - c) * r)
+    have hp : ∀ᶠ r : ℝ in atTop, p ((N⁻¹ - c) * r)
     have hr : ∀ᶠ r : ℝ in atTop, 0 ≤ r := eventually_ge_atTop 0
     refine hr.mono fun r hr => Subset.trans ?_ (image_subset_range f (closedBall 0 r))
     refine hf.surjOn_closedBall_of_nonlinearRightInverse f'.toNonlinearRightInverse hr ?_

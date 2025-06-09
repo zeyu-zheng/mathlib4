@@ -235,7 +235,7 @@ private theorem unifTight_of_tendsto_Lp_zero (hp' : p ≠ ∞) (hf : ∀ n, Mem�
 private theorem unifTight_of_tendsto_Lp (hp' : p ≠ ∞) (hf : ∀ n, Memℒp (f n) p μ)
     (hg : Memℒp g p μ) (hfg : Tendsto (fun n => eLpNorm (f n - g) p μ) atTop (𝓝 0)) :
     UnifTight f p μ := by
-  have  : f = (fun _ => g) + fun n => f n - g
+  have : f = (fun _ => g) + fun n => f n - g
   ext1 n; simp
   rw [this]
   refine UnifTight.add ?_ ?_ (fun _ => hg.aestronglyMeasurable)

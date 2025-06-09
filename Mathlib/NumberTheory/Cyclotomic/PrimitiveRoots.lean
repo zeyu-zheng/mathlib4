@@ -222,7 +222,7 @@ theorem dvd_of_isCyclotomicExtension [NumberField K] [IsCyclotomicExtension {n} 
   have ineq := Nat.totient_super_multiplicative n r
   rw [← hr] at ineq
   replace key := (mul_le_iff_le_one_right (Nat.totient_pos.2 n.2)).mp (le_trans ineq key)
-  have rpos  : 0 < r
+  have rpos : 0 < r
   refine Nat.pos_of_ne_zero (fun h ↦ ?_)
   simp only [h, mul_zero, _root_.lcm_eq_zero_iff, PNat.ne_zero, or_false] at hr
   exact hl.1 hr
@@ -240,7 +240,7 @@ such that `x = (-ζ)^r`. -/
 theorem exists_neg_pow_of_isOfFinOrder [NumberField K] [IsCyclotomicExtension {n} ℚ K]
     (hno : Odd (n : ℕ)) {ζ x : K} (hζ : IsPrimitiveRoot ζ n) (hx : IsOfFinOrder x) :
     ∃ r : ℕ, x = (-ζ) ^ r :=  by
-  have hnegζ  : IsPrimitiveRoot (-ζ) (2 * n)
+  have hnegζ : IsPrimitiveRoot (-ζ) (2 * n)
   convert IsPrimitiveRoot.orderOf (-ζ)
   rw [neg_eq_neg_one_mul, (Commute.all _ _).orderOf_mul_eq_mul_orderOf_of_coprime]
   · simp [hζ.eq_orderOf]
@@ -450,7 +450,7 @@ theorem norm_pow_sub_one_of_prime_ne_two {k : ℕ} (hζ : IsPrimitiveRoot ζ ↑
     (hirr : Irreducible (cyclotomic (↑(p ^ (k + 1)) : ℕ) K)) {s : ℕ} (hs : s ≤ k) (hodd : p ≠ 2) :
     norm K (ζ ^ (p : ℕ) ^ s - 1) = (p : K) ^ (p : ℕ) ^ s := by
   refine hζ.norm_pow_sub_one_of_prime_pow_ne_two hirr hs fun h => ?_
-  have coe_two  : ((2 : ℕ+) : ℕ) = 2
+  have coe_two : ((2 : ℕ+) : ℕ) = 2
   norm_cast
   rw [← PNat.coe_inj, coe_two, PNat.pow_coe, ← pow_one 2] at h
 -- Porting note: the proof is slightly different because of coercions.
@@ -484,7 +484,7 @@ theorem norm_pow_sub_one_two {k : ℕ} (hζ : IsPrimitiveRoot ζ (2 ^ (k + 1)))
     norm K (ζ ^ 2 ^ k - 1) = (-2 : K) ^ 2 ^ k := by
   have := hζ.pow_of_dvd (fun h => two_ne_zero (pow_eq_zero h)) (pow_dvd_pow 2 (le_succ k))
   rw [Nat.pow_div (le_succ k) zero_lt_two, Nat.succ_sub (le_refl k), Nat.sub_self, pow_one] at this
-  have H  : (-1 : L) - (1 : L) = algebraMap K L (-2)
+  have H : (-1 : L) - (1 : L) = algebraMap K L (-2)
   simp only [map_neg, map_ofNat]
   ring
 -- Porting note: `simpa using hirr` was `simp [hirr]`.
@@ -500,7 +500,7 @@ then the norm of `ζ - 1` is `2`. -/
 theorem norm_sub_one_two {k : ℕ} (hζ : IsPrimitiveRoot ζ (2 ^ k)) (hk : 2 ≤ k)
     [H : IsCyclotomicExtension {(2 : ℕ+) ^ k} K L] (hirr : Irreducible (cyclotomic (2 ^ k) K)) :
     norm K (ζ - 1) = 2 := by
-  have  : 2 < (2 : ℕ+) ^ k
+  have : 2 < (2 : ℕ+) ^ k
   simp only [← coe_lt_coe, one_coe, pow_coe]
   nth_rw 1 [← pow_one 2]
   exact pow_lt_pow_right one_lt_two (lt_of_lt_of_le one_lt_two hk)

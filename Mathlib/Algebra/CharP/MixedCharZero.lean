@@ -90,7 +90,7 @@ theorem reduce_to_p_prime {P : Prop} :
     -- Krull's Thm: There exists a prime ideal `P` such that `I ≤ P`
     rcases Ideal.exists_le_maximal I hI_ne_top with ⟨M, hM_max, h_IM⟩
     let r := ringChar (R ⧸ M)
-    have r_pos  : r ≠ 0
+    have r_pos : r ≠ 0
     have q_zero :=
       congr_arg (Ideal.Quotient.factor I M h_IM) (CharP.cast_eq_zero (R ⧸ I) q)
     simp only [map_natCast, map_zero] at q_zero

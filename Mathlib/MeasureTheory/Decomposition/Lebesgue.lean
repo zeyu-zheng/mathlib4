@@ -136,7 +136,7 @@ instance HaveLebesgueDecomposition.sum_left {ι : Type*} [Countable ι] (μ : ι
 
 instance HaveLebesgueDecomposition.add_left {μ' : Measure α} [HaveLebesgueDecomposition μ ν]
     [HaveLebesgueDecomposition μ' ν] : HaveLebesgueDecomposition (μ + μ') ν := by
-  have  : ∀ b, HaveLebesgueDecomposition (cond b μ μ') ν
+  have : ∀ b, HaveLebesgueDecomposition (cond b μ μ') ν
   simp [*]
   simpa using sum_left (cond · μ μ')
 
@@ -161,7 +161,7 @@ instance haveLebesgueDecompositionSMulRight (μ ν : Measure α) [HaveLebesgueDe
     · exact ⟨⟨μ, 0⟩, measurable_const, by simp [hr], by simp⟩
     refine ⟨⟨μ.singularPart ν, r⁻¹ • μ.rnDeriv ν⟩, hmeas.const_smul _,
       hsing.mono_ac AbsolutelyContinuous.rfl smul_absolutelyContinuous, ?_⟩
-    have  : r⁻¹ • rnDeriv μ ν = ((r⁻¹ : ℝ≥0) : ℝ≥0∞) • rnDeriv μ ν
+    have : r⁻¹ • rnDeriv μ ν = ((r⁻¹ : ℝ≥0) : ℝ≥0∞) • rnDeriv μ ν
     simp [ENNReal.smul_def]
     rw [this, withDensity_smul _ hmeas, ENNReal.smul_def r, withDensity_smul_measure,
       ← smul_assoc, smul_eq_mul, ENNReal.coe_inv hr, ENNReal.inv_mul_cancel, one_smul]
@@ -294,7 +294,7 @@ lemma singularPart_self (μ : Measure α) : μ.singularPart μ = 0 :=
 lemma rnDeriv_self (μ : Measure α) [SigmaFinite μ] : μ.rnDeriv μ =ᵐ[μ] fun _ ↦ 1 := by
   have h := rnDeriv_add_singularPart μ μ
   rw [singularPart_self, add_zero] at h
-  have h_one  : μ = μ.withDensity 1
+  have h_one : μ = μ.withDensity 1
   simp
   conv_rhs at h => rw [h_one]
   rwa [withDensity_eq_iff_of_sigmaFinite (measurable_rnDeriv _ _).aemeasurable] at h
@@ -389,30 +389,30 @@ theorem eq_singularPart {s : Measure α} {f : α → ℝ≥0∞} (hf : Measurabl
   obtain ⟨hmeas, hsing, hadd'⟩ := haveLebesgueDecomposition_spec μ ν
   obtain ⟨⟨S, hS₁, hS₂, hS₃⟩, ⟨T, hT₁, hT₂, hT₃⟩⟩ := hs, hsing
   rw [hadd'] at hadd
-  have hνinter  : ν (S ∩ T)ᶜ = 0
+  have hνinter : ν (S ∩ T)ᶜ = 0
   rw [compl_inter]
   refine nonpos_iff_eq_zero.1 (le_trans (measure_union_le _ _) ?_)
   rw [hT₃, hS₃, add_zero]
-  have heq  : s.restrict (S ∩ T)ᶜ = (μ.singularPart ν).restrict (S ∩ T)ᶜ
+  have heq : s.restrict (S ∩ T)ᶜ = (μ.singularPart ν).restrict (S ∩ T)ᶜ
   ext1 A hA
-  have hf  : ν.withDensity f (A ∩ (S ∩ T)ᶜ) = 0
+  have hf : ν.withDensity f (A ∩ (S ∩ T)ᶜ) = 0
   refine withDensity_absolutelyContinuous ν _ ?_
   rw [← nonpos_iff_eq_zero]
   exact hνinter ▸ measure_mono inter_subset_right
-  have hrn  : ν.withDensity (μ.rnDeriv ν) (A ∩ (S ∩ T)ᶜ) = 0
+  have hrn : ν.withDensity (μ.rnDeriv ν) (A ∩ (S ∩ T)ᶜ) = 0
   refine withDensity_absolutelyContinuous ν _ ?_
   rw [← nonpos_iff_eq_zero]
   exact hνinter ▸ measure_mono inter_subset_right
   rw [restrict_apply hA, restrict_apply hA, ← add_zero (s (A ∩ (S ∩ T)ᶜ)), ← hf, ← add_apply, ←
     hadd, add_apply, hrn, add_zero]
-  have heq'  : ∀ A : Set α, MeasurableSet A → s A = s.restrict (S ∩ T)ᶜ A
+  have heq' : ∀ A : Set α, MeasurableSet A → s A = s.restrict (S ∩ T)ᶜ A
   intro A hA
-  have hsinter  : s (A ∩ (S ∩ T)) = 0
+  have hsinter : s (A ∩ (S ∩ T)) = 0
   rw [← nonpos_iff_eq_zero]
   exact hS₂ ▸ measure_mono (inter_subset_right.trans inter_subset_left)
   rw [restrict_apply hA, ← diff_eq, AEDisjoint.measure_diff_left hsinter]
   ext1 A hA
-  have hμinter  : μ.singularPart ν (A ∩ (S ∩ T)) = 0
+  have hμinter : μ.singularPart ν (A ∩ (S ∩ T)) = 0
   rw [← nonpos_iff_eq_zero]
   exact hT₂ ▸ measure_mono (inter_subset_right.trans inter_subset_right)
   rw [heq' A hA, heq, restrict_apply hA, ← diff_eq, AEDisjoint.measure_diff_left hμinter]
@@ -481,17 +481,17 @@ theorem eq_withDensity_rnDeriv {s : Measure α} {f : α → ℝ≥0∞} (hf : Me
   obtain ⟨hmeas, hsing, hadd'⟩ := haveLebesgueDecomposition_spec μ ν
   obtain ⟨⟨S, hS₁, hS₂, hS₃⟩, ⟨T, hT₁, hT₂, hT₃⟩⟩ := hs, hsing
   rw [hadd'] at hadd
-  have hνinter  : ν (S ∩ T)ᶜ = 0
+  have hνinter : ν (S ∩ T)ᶜ = 0
   rw [compl_inter]
   refine nonpos_iff_eq_zero.1 (le_trans (measure_union_le _ _) ?_)
   rw [hT₃, hS₃, add_zero]
   have heq :
     (ν.withDensity f).restrict (S ∩ T) = (ν.withDensity (μ.rnDeriv ν)).restrict (S ∩ T) := by
     ext1 A hA
-    have hs  : s (A ∩ (S ∩ T)) = 0
+    have hs : s (A ∩ (S ∩ T)) = 0
     rw [← nonpos_iff_eq_zero]
     exact hS₂ ▸ measure_mono (inter_subset_right.trans inter_subset_left)
-    have hsing  : μ.singularPart ν (A ∩ (S ∩ T)) = 0
+    have hsing : μ.singularPart ν (A ∩ (S ∩ T)) = 0
     rw [← nonpos_iff_eq_zero]
     exact hT₂ ▸ measure_mono (inter_subset_right.trans inter_subset_right)
     rw [restrict_apply hA, restrict_apply hA, ← add_zero (ν.withDensity f (A ∩ (S ∩ T))), ← hs, ←
@@ -499,13 +499,13 @@ theorem eq_withDensity_rnDeriv {s : Measure α} {f : α → ℝ≥0∞} (hf : Me
   have heq' :
     ∀ A : Set α, MeasurableSet A → ν.withDensity f A = (ν.withDensity f).restrict (S ∩ T) A := by
     intro A hA
-    have hνfinter  : ν.withDensity f (A ∩ (S ∩ T)ᶜ) = 0
+    have hνfinter : ν.withDensity f (A ∩ (S ∩ T)ᶜ) = 0
     rw [← nonpos_iff_eq_zero]
     exact withDensity_absolutelyContinuous ν f hνinter ▸ measure_mono inter_subset_right
     rw [restrict_apply hA, ← add_zero (ν.withDensity f (A ∩ (S ∩ T))), ← hνfinter, ← diff_eq,
       measure_inter_add_diff _ (hS₁.inter hT₁)]
   ext1 A hA
-  have hνrn  : ν.withDensity (μ.rnDeriv ν) (A ∩ (S ∩ T)ᶜ) = 0
+  have hνrn : ν.withDensity (μ.rnDeriv ν) (A ∩ (S ∩ T)ᶜ) = 0
   rw [← nonpos_iff_eq_zero]
   exact
     withDensity_absolutelyContinuous ν (μ.rnDeriv ν) hνinter ▸
@@ -616,11 +616,11 @@ See also `rnDeriv_smul_right_of_ne_top'`, which requires sigma-finite `ν` and `
 theorem rnDeriv_smul_right_of_ne_top (ν μ : Measure α) [IsFiniteMeasure ν]
     [ν.HaveLebesgueDecomposition μ] {r : ℝ≥0∞} (hr : r ≠ 0) (hr_ne_top : r ≠ ∞) :
     ν.rnDeriv (r • μ) =ᵐ[μ] r⁻¹ • ν.rnDeriv μ := by
-  have h  : ν.rnDeriv (r.toNNReal • μ) =ᵐ[μ] r.toNNReal⁻¹ • ν.rnDeriv μ
+  have h : ν.rnDeriv (r.toNNReal • μ) =ᵐ[μ] r.toNNReal⁻¹ • ν.rnDeriv μ
   refine rnDeriv_smul_right ν μ ?_
   rw [ne_eq, ENNReal.toNNReal_eq_zero_iff]
   simp [hr, hr_ne_top]
-  have  : (r.toNNReal)⁻¹ • rnDeriv ν μ = r⁻¹ • rnDeriv ν μ
+  have : (r.toNNReal)⁻¹ • rnDeriv ν μ = r⁻¹ • rnDeriv ν μ
   ext x
   simp only [Pi.smul_apply, ENNReal.smul_def, ne_eq, smul_eq_mul]
   rw [ENNReal.coe_inv, ENNReal.coe_toNNReal hr_ne_top]
@@ -670,15 +670,15 @@ theorem exists_positive_of_not_mutuallySingular (μ ν : Measure α) [IsFiniteMe
   -- and we show that `μ A = 0`
   let A := ⋂ n, (f n)ᶜ
   have hAmeas : MeasurableSet A := MeasurableSet.iInter fun n ↦ (hf₁ n).compl
-  have hA₂  : ∀ n : ℕ, μ.toSignedMeasure - ((1 / (n + 1) : ℝ≥0) • ν).toSignedMeasure ≤[A] 0
+  have hA₂ : ∀ n : ℕ, μ.toSignedMeasure - ((1 / (n + 1) : ℝ≥0) • ν).toSignedMeasure ≤[A] 0
   intro n; exact restrict_le_restrict_subset _ _ (hf₁ n).compl (hf₃ n) (iInter_subset _ _)
-  have hA₃  : ∀ n : ℕ, μ A ≤ (1 / (n + 1) : ℝ≥0) * ν A
+  have hA₃ : ∀ n : ℕ, μ A ≤ (1 / (n + 1) : ℝ≥0) * ν A
   intro n
   have := nonpos_of_restrict_le_zero _ (hA₂ n)
   rwa [toSignedMeasure_sub_apply hAmeas, sub_nonpos, ENNReal.toReal_le_toReal] at this
   apply measure_ne_top _ _
   apply measure_ne_top _ _
-  have hμ  : μ A = 0
+  have hμ : μ A = 0
   lift μ A to ℝ≥0 using measure_ne_top _ _ with μA
   lift ν A to ℝ≥0 using measure_ne_top _ _ with νA
   rw [ENNReal.coe_eq_zero]
@@ -689,13 +689,13 @@ theorem exists_positive_of_not_mutuallySingular (μ ν : Measure α) [IsFiniteMe
       rw [← @Classical.not_not (μA ≤ μA / 2)] at h'
       exact h' (not_le.2 (NNReal.half_lt_self h))
     intro c hc
-    have  : ∃ n : ℕ, 1 / (n + 1 : ℝ) < c * (νA : ℝ)⁻¹
+    have : ∃ n : ℕ, 1 / (n + 1 : ℝ) < c * (νA : ℝ)⁻¹
     refine exists_nat_one_div_lt ?_
     positivity
     rcases this with ⟨n, hn⟩
-    have hb₁  : (0 : ℝ) < (νA : ℝ)⁻¹
+    have hb₁ : (0 : ℝ) < (νA : ℝ)⁻¹
     rw [_root_.inv_pos]; exact hb
-    have h'  : 1 / (↑n + 1) * νA < c
+    have h' : 1 / (↑n + 1) * νA < c
     rw [← NNReal.coe_lt_coe, ← mul_lt_mul_right hb₁, NNReal.coe_mul, mul_assoc, ←
       NNReal.coe_inv, ← NNReal.coe_mul, _root_.mul_inv_cancel, ← NNReal.coe_mul, mul_one,
       NNReal.coe_inv]
@@ -938,11 +938,11 @@ nonrec instance (priority := 100) haveLebesgueDecomposition_of_sigmaFinite
   -- of these restrictions.
   set ξ : ℕ → Measure α := fun n : ℕ ↦ singularPart (.restrict μ (s n)) (.restrict ν (s n))
   set f : ℕ → α → ℝ≥0∞ := fun n ↦ (s n).indicator (rnDeriv (.restrict μ (s n)) (.restrict ν (s n)))
-  have hfm (n  : ℕ) : Measurable (f n)
+  have hfm (n : ℕ) : Measurable (f n)
   measurability
   -- Each `ξ n` is supported on `s n` and is mutually singular with the restriction of `ν` to `s n`.
   -- Therefore, `ξ n` is mutually singular with `ν`, hence their sum is mutually singular with `ν`.
-  have hξ  : .sum ξ ⟂ₘ ν
+  have hξ : .sum ξ ⟂ₘ ν
   refine MutuallySingular.sum_left.2 fun n ↦ ?_
   rw [← ν.restrict_add_restrict_compl (hsm n)]
   refine (mutuallySingular_singularPart ..).add_right (.singularPart ?_ _)
@@ -1010,7 +1010,7 @@ See also `rnDeriv_smul_right_of_ne_top`, which has no hypothesis on `μ` but req
 theorem rnDeriv_smul_right_of_ne_top' (ν μ : Measure α) [SigmaFinite ν] [SigmaFinite μ]
     {r : ℝ≥0∞} (hr : r ≠ 0) (hr_ne_top : r ≠ ∞) :
     ν.rnDeriv (r • μ) =ᵐ[μ] r⁻¹ • ν.rnDeriv μ := by
-  have h  : ν.rnDeriv (r.toNNReal • μ) =ᵐ[μ] r.toNNReal⁻¹ • ν.rnDeriv μ
+  have h : ν.rnDeriv (r.toNNReal • μ) =ᵐ[μ] r.toNNReal⁻¹ • ν.rnDeriv μ
   refine rnDeriv_smul_right' ν μ ?_
   rw [ne_eq, ENNReal.toNNReal_eq_zero_iff]
   simp [hr, hr_ne_top]

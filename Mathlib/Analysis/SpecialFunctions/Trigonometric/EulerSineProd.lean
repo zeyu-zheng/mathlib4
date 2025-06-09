@@ -148,7 +148,7 @@ theorem integral_cos_mul_cos_pow (hn : 2 ≤ n) (hz : z ≠ 0) :
       ∫ x in (0 : ℝ)..π / 2, Complex.cos (2 * z * x) * (cos x : ℂ) ^ n) =
       (n - 1 : ℂ) / n *
         ∫ x in (0 : ℝ)..π / 2, Complex.cos (2 * z * x) * (cos x : ℂ) ^ (n - 2) := by
-  have nne  : (n : ℂ) ≠ 0
+  have nne : (n : ℂ) ≠ 0
   contrapose! hn; rw [Nat.cast_eq_zero] at hn; rw [hn]; exact zero_lt_two
   have := integral_cos_mul_cos_pow_aux hn hz
   rw [integral_sin_mul_sin_mul_cos_pow_eq hn hz, sub_eq_neg_add, mul_add, ← sub_eq_iff_eq_add]
@@ -214,9 +214,9 @@ theorem sin_pi_mul_eq (z : ℂ) (n : ℕ) :
     set A := ∏ j ∈ Finset.range n, ((1 : ℂ) - z ^ 2 / ((j : ℂ) + 1) ^ 2)
     set B := ∫ x in (0 : ℝ)..π / 2, Complex.cos (2 * z * x) * (cos x : ℂ) ^ (2 * n)
     set C := ∫ x in (0 : ℝ)..π / 2, cos x ^ (2 * n)
-    have aux'  : 2 * n.succ = 2 * n + 2
+    have aux' : 2 * n.succ = 2 * n + 2
     rw [Nat.succ_eq_add_one, mul_add, mul_one]
-    have  : (∫ x in (0 : ℝ)..π / 2, cos x ^ (2 * n.succ)) = (2 * (n : ℝ) + 1) / (2 * n + 2) * C
+    have : (∫ x in (0 : ℝ)..π / 2, cos x ^ (2 * n.succ)) = (2 * (n : ℝ) + 1) / (2 * n + 2) * C
     rw [integral_cos_pow_eq]
     dsimp only [C]
     rw [integral_cos_pow_eq, aux', integral_sin_pow, sin_zero, sin_pi, pow_succ',
@@ -244,10 +244,10 @@ theorem sin_pi_mul_eq (z : ℂ) (n : ℕ) :
         (2 * n + 1) / (2 * n + 2) * B by
       rw [this, Complex.ofReal_mul, Complex.ofReal_div]
       have : (C : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr (integral_cos_pow_pos _).ne'
-      have  : 2 * (n : ℂ) + 1 ≠ 0
+      have : 2 * (n : ℂ) + 1 ≠ 0
       convert (Nat.cast_add_one_ne_zero (2 * n) : (↑(2 * n) + 1 : ℂ) ≠ 0)
       simp
-      have  : 2 * (n : ℂ) + 2 ≠ 0
+      have : 2 * (n : ℂ) + 2 ≠ 0
       convert (Nat.cast_add_one_ne_zero (2 * n + 1) : (↑(2 * n + 1) + 1 : ℂ) ≠ 0) using 1
       push_cast; ring
       field_simp; ring

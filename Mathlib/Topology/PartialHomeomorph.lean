@@ -411,7 +411,7 @@ lemma isOpen_image_symm_of_subset_target {t : Set Y} (ht : IsOpen t) (hte : t �
 lemma isOpen_symm_image_iff_of_subset_target {t : Set Y} (hs : t ⊆ e.target) :
     IsOpen (e.symm '' t) ↔ IsOpen t := by
   refine ⟨fun h ↦ ?_, fun h ↦ e.symm.isOpen_image_of_subset_source h hs⟩
-  have hs'  : e.symm '' t ⊆ e.source
+  have hs' : e.symm '' t ⊆ e.source
   rw [e.symm_image_eq_source_inter_preimage hs]
   apply Set.inter_subset_left
   rw [← e.image_symm_image_of_subset_target hs]
@@ -1031,7 +1031,7 @@ neighborhood of the initial point is sent to the source of the partial homeomorp
 theorem continuousAt_iff_continuousAt_comp_left {f : Z → X} {x : Z} (h : f ⁻¹' e.source ∈ 𝓝 x) :
     ContinuousAt f x ↔ ContinuousAt (e ∘ f) x := by
   have hx : f x ∈ e.source := (mem_of_mem_nhds h : _)
-  have h'  : f ⁻¹' e.source ∈ 𝓝[univ] x
+  have h' : f ⁻¹' e.source ∈ 𝓝[univ] x
   rwa [nhdsWithin_univ]
   rw [← continuousWithinAt_univ, ← continuousWithinAt_univ,
     e.continuousWithinAt_iff_continuousWithinAt_comp_left hx h']
@@ -1294,7 +1294,7 @@ theorem subtypeRestr_symm_trans_subtypeRestr (f f' : PartialHomeomorph X Y) :
   rw [← ofSet_trans _ openness₁, ← trans_assoc, ← trans_assoc]
   refine EqOnSource.trans' ?_ (eqOnSource_refl _)
   -- f' has been eliminated !!!
-  have set_identity  : f.symm.source ∩ (f.target ∩ f.symm ⁻¹' s) = f.symm.source ∩ f.symm ⁻¹' s
+  have set_identity : f.symm.source ∩ (f.target ∩ f.symm ⁻¹' s) = f.symm.source ∩ f.symm ⁻¹' s
   mfld_set_tac
   have openness₂ : IsOpen (s : Set X) := s.2
   rw [ofSet_trans', set_identity, ← trans_of_set' _ openness₂, trans_assoc]
@@ -1317,7 +1317,7 @@ theorem subtypeRestr_symm_eqOn_of_le {U V : Opens X} (hU : Nonempty U) (hV : Non
   set i := Set.inclusion hUV
   intro y hy
   dsimp [PartialHomeomorph.subtypeRestr_def] at hy ⊢
-  have hyV  : e.symm y ∈ (V.partialHomeomorphSubtypeCoe hV).target
+  have hyV : e.symm y ∈ (V.partialHomeomorphSubtypeCoe hV).target
   rw [Opens.partialHomeomorphSubtypeCoe_target] at hy ⊢
   exact hUV hy.2
   refine (V.partialHomeomorphSubtypeCoe hV).injOn ?_ trivial ?_

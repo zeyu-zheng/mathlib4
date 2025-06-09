@@ -80,7 +80,7 @@ theorem ZMod.isSquare_neg_one_of_dvd {m n : ℕ} (hd : m ∣ n) (hs : IsSquare (
 a square modulo `m*n`. -/
 theorem ZMod.isSquare_neg_one_mul {m n : ℕ} (hc : m.Coprime n) (hm : IsSquare (-1 : ZMod m))
     (hn : IsSquare (-1 : ZMod n)) : IsSquare (-1 : ZMod (m * n)) := by
-  have  : IsSquare (-1 : ZMod m × ZMod n)
+  have : IsSquare (-1 : ZMod m × ZMod n)
   rw [show (-1 : ZMod m × ZMod n) = ((-1 : ZMod m), (-1 : ZMod n)) from rfl]
   obtain ⟨x, hx⟩ := hm
   obtain ⟨y, hy⟩ := hn
@@ -105,7 +105,7 @@ theorem ZMod.isSquare_neg_one_iff {n : ℕ} (hn : Squarefree n) :
   · exact False.elim (hn.ne_zero rfl)
   · exact ⟨0, by simp only [mul_zero, eq_iff_true_of_subsingleton]⟩
   · haveI : Fact p.Prime := ⟨hpp⟩
-    have hcp  : p.Coprime n
+    have hcp : p.Coprime n
     by_contra hc
     exact hpp.not_unit (hn p <| mul_dvd_mul_left p <| hpp.dvd_iff_not_coprime.mpr hc)
     have hp₁ := ZMod.exists_sq_eq_neg_one_iff.mpr (H hpp (dvd_mul_right p n))
@@ -116,7 +116,7 @@ theorem ZMod.isSquare_neg_one_iff {n : ℕ} (hn : Squarefree n) :
 `n` has no divisor `q` that is `≡ 3 mod 4`. -/
 theorem ZMod.isSquare_neg_one_iff' {n : ℕ} (hn : Squarefree n) :
     IsSquare (-1 : ZMod n) ↔ ∀ {q : ℕ}, q ∣ n → q % 4 ≠ 3 := by
-  have help  : ∀ a b : ZMod 4, a ≠ 3 → b ≠ 3 → a * b ≠ 3
+  have help : ∀ a b : ZMod 4, a ≠ 3 → b ≠ 3 → a * b ≠ 3
   decide
   rw [ZMod.isSquare_neg_one_iff hn]
   refine ⟨?_, fun H q _ => H⟩
@@ -155,7 +155,7 @@ theorem ZMod.isSquare_neg_one_of_eq_sq_add_sq_of_isCoprime {n x y : ℤ} (h : n 
     have hc2 : IsCoprime (x ^ 2) (y ^ 2) := hc.pow
     rw [show y ^ 2 = n + -1 * x ^ 2 by rw [h]; ring] at hc2
     exact (IsCoprime.pow_left_iff zero_lt_two).mp hc2.of_add_mul_right_right
-  have H  : u * y * (u * y) - -1 = n * (-v ^ 2 * n + u ^ 2 + 2 * v)
+  have H : u * y * (u * y) - -1 = n * (-v ^ 2 * n + u ^ 2 + 2 * v)
   linear_combination -u ^ 2 * h + (n * v - u * x - 1) * huv
   refine ⟨u * y, ?_⟩
   conv_rhs => tactic => norm_cast

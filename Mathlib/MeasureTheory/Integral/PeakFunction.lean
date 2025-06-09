@@ -68,12 +68,12 @@ theorem integrableOn_peak_smul_of_integrableOn_of_tendsto
   filter_upwards [tendstoUniformlyOn_iff.1 (hlφ u u_open x₀u) 1 zero_lt_one,
     (tendsto_order.1 hiφ).2 1 zero_lt_one, h'iφ] with i hi h'i h''i
   have I : IntegrableOn (φ i) t μ := .of_integral_ne_zero (fun h ↦ by simp [h] at h'i)
-  have A  : IntegrableOn (fun x => φ i x • g x) (s \ u) μ
+  have A : IntegrableOn (fun x => φ i x • g x) (s \ u) μ
   refine Integrable.smul_of_top_right (hmg.mono diff_subset le_rfl) ?_
   apply memℒp_top_of_bound (h''i.mono_set diff_subset) 1
   filter_upwards [self_mem_ae_restrict (hs.diff u_open.measurableSet)] with x hx
   simpa only [Pi.zero_apply, dist_zero_left] using (hi x hx).le
-  have B  : IntegrableOn (fun x => φ i x • g x) (s ∩ u) μ
+  have B : IntegrableOn (fun x => φ i x • g x) (s ∩ u) μ
   apply Integrable.smul_of_top_left
   · exact IntegrableOn.mono_set I ut
   · apply
@@ -128,7 +128,7 @@ theorem tendsto_setIntegral_peak_smul_of_integrableOn_of_tendsto_aux
     (tendsto_order.1 (tendsto_iff_norm_sub_tendsto_zero.1 hiφ)).2 δ δpos, hnφ,
     integrableOn_peak_smul_of_integrableOn_of_tendsto hs h'ts hlφ hiφ h'iφ hmg hcg]
     with i hi h'i hφpos h''i
-  have I  : IntegrableOn (φ i) t μ
+  have I : IntegrableOn (φ i) t μ
   apply Integrable.of_integral_ne_zero (fun h ↦ ?_)
   simp [h] at h'i
   linarith
@@ -271,7 +271,7 @@ theorem tendsto_setIntegral_pow_smul_of_unique_maximum_of_isCompact_of_measure_n
     It follows that, on `s \ u`, then `φₙ x ≤ t ^ n / (t' ^ n μ v)`,
     which tends (exponentially fast) to zero with `n`. -/
   let φ : ℕ → α → ℝ := fun n x => (∫ x in s, c x ^ n ∂μ)⁻¹ * c x ^ n
-  have hnφ  : ∀ n, ∀ x ∈ s, 0 ≤ φ n x
+  have hnφ : ∀ n, ∀ x ∈ s, 0 ≤ φ n x
   intro n x hx
   apply mul_nonneg (inv_nonneg.2 _) (pow_nonneg (hnc x hx) _)
   exact setIntegral_nonneg hs.measurableSet fun x hx => pow_nonneg (hnc x hx) _
@@ -365,7 +365,7 @@ theorem tendsto_setIntegral_pow_smul_of_unique_maximum_of_isCompact_of_integrabl
     (hmg : IntegrableOn g s μ) (hcg : ContinuousWithinAt g s x₀) :
     Tendsto (fun n : ℕ => (∫ x in s, c x ^ n ∂μ)⁻¹ • ∫ x in s, c x ^ n • g x ∂μ) atTop
       (𝓝 (g x₀)) := by
-  have  : x₀ ∈ s
+  have : x₀ ∈ s
   rw [← hs.isClosed.closure_eq]; exact closure_mono interior_subset h₀
   apply
     tendsto_setIntegral_pow_smul_of_unique_maximum_of_isCompact_of_measure_nhdsWithin_pos hs _ hc
@@ -468,12 +468,12 @@ theorem tendsto_integral_comp_smul_smul_of_integrable'
     Tendsto (fun (c : ℝ) ↦ ∫ x, (c ^ (finrank ℝ F) * φ (c • (x₀ - x))) • g x ∂μ)
       atTop (𝓝 (g x₀)) := by
   let f := fun x ↦ g (x₀ - x)
-  have If  : Integrable f μ
+  have If : Integrable f μ
   simpa [f, sub_eq_add_neg] using (hg.comp_add_left x₀).comp_neg
   have : Tendsto (fun (c : ℝ) ↦ ∫ x, (c ^ (finrank ℝ F) * φ (c • x)) • f x ∂μ)
       atTop (𝓝 (f 0)) := by
     apply tendsto_integral_comp_smul_smul_of_integrable hφ h'φ h If
-    have A  : ContinuousAt g (x₀ - 0)
+    have A : ContinuousAt g (x₀ - 0)
     simpa using h'g
     exact A.comp <| by fun_prop
   simp only [f, sub_zero] at this

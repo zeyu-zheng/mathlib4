@@ -186,7 +186,7 @@ theorem Equiv.Perm.fin_5_not_solvable : ¬IsSolvable (Equiv.Perm (Fin 5)) := by
   let x : Equiv.Perm (Fin 5) := ⟨![1, 2, 0, 3, 4], ![2, 0, 1, 3, 4], by decide, by decide⟩
   let y : Equiv.Perm (Fin 5) := ⟨![3, 4, 2, 0, 1], ![3, 4, 2, 0, 1], by decide, by decide⟩
   let z : Equiv.Perm (Fin 5) := ⟨![0, 3, 2, 1, 4], ![0, 3, 2, 1, 4], by decide, by decide⟩
-  have key  : x = z * ⁅x, y * x * y⁻¹⁆ * z⁻¹
+  have key : x = z * ⁅x, y * x * y⁻¹⁆ * z⁻¹
   unfold_let; decide
   refine not_solvable_of_mem_derivedSeries (show x ≠ 1 by decide) fun n => ?_
   induction' n with n ih
@@ -197,7 +197,7 @@ theorem Equiv.Perm.fin_5_not_solvable : ¬IsSolvable (Equiv.Perm (Fin 5)) := by
 theorem Equiv.Perm.not_solvable (X : Type*) (hX : 5 ≤ Cardinal.mk X) :
     ¬IsSolvable (Equiv.Perm X) := by
   intro h
-  have key  : Nonempty (Fin 5 ↪ X)
+  have key : Nonempty (Fin 5 ↪ X)
   rwa [← Cardinal.lift_mk_le, Cardinal.mk_fin, Cardinal.lift_natCast, Cardinal.lift_id]
   exact
     Equiv.Perm.fin_5_not_solvable

@@ -144,7 +144,7 @@ theorem FiniteDimensional.exists_is_basis_integral :
   let s' := IsNoetherian.finsetBasisIndex K L
   let bs' := IsNoetherian.finsetBasis K L
   obtain ⟨y, hy, his'⟩ := exists_integral_multiples A K (Finset.univ.image bs')
-  have hy'  : algebraMap A L y ≠ 0
+  have hy' : algebraMap A L y ≠ 0
   refine mt ((injective_iff_map_eq_zero (algebraMap A L)).mp ?_ _) hy
   rw [IsScalarTower.algebraMap_eq A K L]
   exact (algebraMap K L).injective.comp (IsFractionRing.injective A K)

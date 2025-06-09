@@ -228,7 +228,7 @@ lemma hasSum_int_oddKernel (a : ℝ) {x : ℝ} (hx : 0 < x) :
 
 lemma hasSum_int_sinKernel (a : ℝ) {t : ℝ} (ht : 0 < t) : HasSum
     (fun n : ℤ ↦ -I * n * cexp (2 * π * I * a * n) * rexp (-π * n ^ 2 * t)) ↑(sinKernel a t) := by
-  have h  : -2 * (π : ℂ) ≠ (0 : ℂ)
+  have h : -2 * (π : ℂ) ≠ (0 : ℂ)
   simp only [neg_mul, ne_eq, neg_eq_zero, mul_eq_zero,
     OfNat.ofNat_ne_zero, ofReal_eq_zero, pi_ne_zero, or_self, not_false_eq_true]
   rw [sinKernel_def]
@@ -400,14 +400,14 @@ lemma hasSum_int_completedSinZeta (a : ℝ) {s : ℂ} (hs : 1 < re s) :
     HasSum (fun n : ℤ ↦ Gammaℝ (s + 1) * (-I) * Int.sign n *
     cexp (2 * π * I * a * n) / (↑|n| : ℂ) ^ s / 2) (completedSinZeta a s) := by
   let c (n : ℤ) : ℂ := -I * cexp (2 * π * I * a * n) / 2
-  have hc (n  : ℤ) : ‖c n‖ = 1 / 2
+  have hc (n : ℤ) : ‖c n‖ = 1 / 2
   simp_rw [c, (by { push_cast; ring } : 2 * π * I * a * n = ↑(2 * π * a * n) * I), norm_div,
     RCLike.norm_ofNat, norm_mul, norm_neg, norm_I, one_mul, norm_exp_ofReal_mul_I]
   have hF t (ht : 0 < t) :
       HasSum (fun n ↦ c n * n * rexp (-π * n ^ 2 * t)) (sinKernel a t / 2) := by
     refine ((hasSum_int_sinKernel a ht).div_const 2).congr_fun fun n ↦ ?_
     rw [div_mul_eq_mul_div, div_mul_eq_mul_div, mul_right_comm (-I)]
-  have h_sum  : Summable fun i ↦ ‖c i‖ / |↑i| ^ s.re
+  have h_sum : Summable fun i ↦ ‖c i‖ / |↑i| ^ s.re
   simp_rw [hc, div_right_comm]
   apply Summable.div_const
   apply Summable.of_nat_of_neg <;>
@@ -448,7 +448,7 @@ lemma hasSum_int_completedHurwitzZetaOdd (a : ℝ) {s : ℂ} (hs : 1 < re s) :
       (oddKernel a t / 2) := by
     refine ((hasSum_ofReal.mpr (hasSum_int_oddKernel a ht)).div_const 2).congr_fun fun n ↦ ?_
     simp only [r, c, push_cast, div_mul_eq_mul_div, one_mul]
-  have h_sum  : Summable fun i ↦ ‖c i‖ / |r i| ^ s.re
+  have h_sum : Summable fun i ↦ ‖c i‖ / |r i| ^ s.re
   simp_rw [c, ← mul_one_div ‖_‖]
   apply Summable.mul_left
   rwa [summable_one_div_int_add_rpow]
@@ -494,7 +494,7 @@ lemma differentiableAt_sinZeta (a : UnitAddCircle) :
 theorem hasSum_int_hurwitzZetaOdd (a : ℝ) {s : ℂ} (hs : 1 < re s) :
     HasSum (fun n : ℤ ↦ SignType.sign (n + a) / (↑|n + a| : ℂ) ^ s / 2) (hurwitzZetaOdd a s) := by
   refine ((hasSum_int_completedHurwitzZetaOdd a hs).div_const (Gammaℝ _)).congr_fun fun n ↦ ?_
-  have  : 0 < re (s + 1)
+  have : 0 < re (s + 1)
   rw [add_re, one_re]; positivity
   simp only [div_right_comm _ _ (Gammaℝ _), mul_div_cancel_left₀ _ (Gammaℝ_ne_zero_of_re_pos this)]
 
@@ -505,7 +505,7 @@ lemma hasSum_nat_hurwitzZetaOdd (a : ℝ) {s : ℂ} (hs : 1 < re s) :
       - SignType.sign (n + 1 - a) / (↑|n + 1 - a| : ℂ) ^ s) / 2) (hurwitzZetaOdd a s) := by
   refine (hasSum_int_hurwitzZetaOdd a hs).nat_add_neg_add_one.congr_fun fun n ↦ ?_
   rw [Int.cast_neg, Int.cast_add, Int.cast_one, sub_div, sub_eq_add_neg, Int.cast_natCast]
-  have  : -(n + 1) + a = -(n + 1 - a)
+  have : -(n + 1) + a = -(n + 1 - a)
   ring_nf
   rw [this, Left.sign_neg, abs_neg, SignType.coe_neg, neg_div, neg_div]
 
@@ -529,7 +529,7 @@ theorem hasSum_int_sinZeta (a : ℝ) {s : ℂ} (hs : 1 < re s) :
     HasSum (fun n : ℤ ↦ -I * n.sign * cexp (2 * π * I * a * n) / ↑|n| ^ s / 2) (sinZeta a s) := by
   rw [sinZeta]
   refine ((hasSum_int_completedSinZeta a hs).div_const (Gammaℝ (s + 1))).congr_fun fun n ↦ ?_
-  have  : 0 < re (s + 1)
+  have : 0 < re (s + 1)
   rw [add_re, one_re]; positivity
   simp only [mul_assoc, div_right_comm _ _ (Gammaℝ _),
     mul_div_cancel_left₀ _ (Gammaℝ_ne_zero_of_re_pos this)]

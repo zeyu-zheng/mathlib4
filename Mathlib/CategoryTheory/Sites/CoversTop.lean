@@ -132,7 +132,7 @@ lemma exists_unique_section (hx : x.IsCompatible) (hY : J.CoversTop Y) (hF : IsS
           (hx.familyOfElements_isCompatible _) (𝟙 _) ⟨i, ⟨f⟩⟩
       simp only [op_id, F.map_id, types_id_apply] at h
       exact h.trans (hx.familyOfElements_apply _ _ _)
-    have hs'  : ∀ {W X : C} (a : W ⟶ X) (i : I) (_ : W ⟶ Y i), F.map a.op (s X) = s W
+    have hs' : ∀ {W X : C} (a : W ⟶ X) (i : I) (_ : W ⟶ Y i), F.map a.op (s X) = s W
     intro W X a i b
     rw [hs i b]
     exact (Presieve.IsSheafFor.valid_glue (H _ (hY X))

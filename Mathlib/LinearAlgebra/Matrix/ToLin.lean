@@ -88,7 +88,7 @@ variable [Fintype m] [DecidableEq m]
 @[simp]
 theorem Matrix.vecMul_stdBasis (M : Matrix m n R) (i j) :
     (LinearMap.stdBasis R (fun _ ↦ R) i 1 ᵥ* M) j = M i j := by
-  have  : (∑ i', (if i = i' then 1 else 0) * M i' j) = M i j
+  have : (∑ i', (if i = i' then 1 else 0) * M i' j) = M i j
   simp_rw [boole_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
   simp only [vecMul, dotProduct]
   convert this

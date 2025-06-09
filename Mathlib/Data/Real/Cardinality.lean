@@ -112,26 +112,26 @@ explicitly write out what it means. -/
 theorem increasing_cantorFunction (h1 : 0 < c) (h2 : c < 1 / 2) {n : ℕ} {f g : ℕ → Bool}
     (hn : ∀ k < n, f k = g k) (fn : f n = false) (gn : g n = true) :
     cantorFunction c f < cantorFunction c g := by
-  have h3  : c < 1
+  have h3 : c < 1
   apply h2.trans
   norm_num
   induction' n with n ih generalizing f g
   · let f_max : ℕ → Bool := fun n => Nat.rec false (fun _ _ => true) n
-    have hf_max  : ∀ n, f n → f_max n
+    have hf_max : ∀ n, f n → f_max n
     intro n hn
     cases n
     · rw [fn] at hn
       contradiction
     apply rfl
     let g_min : ℕ → Bool := fun n => Nat.rec true (fun _ _ => false) n
-    have hg_min  : ∀ n, g_min n → g n
+    have hg_min : ∀ n, g_min n → g n
     intro n hn
     cases n
     · rw [gn]
     simp at hn
     apply (cantorFunction_le (le_of_lt h1) h3 hf_max).trans_lt
     refine lt_of_lt_of_le ?_ (cantorFunction_le (le_of_lt h1) h3 hg_min)
-    have  : c / (1 - c) < 1
+    have : c / (1 - c) < 1
     rw [div_lt_one, lt_sub_iff_add_lt]
     · convert _root_.add_lt_add h2 h2
       norm_num
@@ -159,14 +159,14 @@ theorem cantorFunction_injective (h1 : 0 < c) (h2 : c < 1 / 2) :
   classical
     by_contra h
     revert hfg
-    have  : ∃ n, f n ≠ g n
+    have : ∃ n, f n ≠ g n
     rw [← not_forall]
     intro h'
     apply h
     ext
     apply h'
     let n := Nat.find this
-    have hn  : ∀ k : ℕ, k < n → f k = g k
+    have hn : ∀ k : ℕ, k < n → f k = g k
     intro k hk
     apply of_not_not
     exact Nat.find_min this hk
@@ -211,13 +211,13 @@ theorem mk_Ioi_real (a : ℝ) : #(Ioi a) = 𝔠 := by
   rw [← not_lt]
   intro h
   refine _root_.ne_of_lt ?_ mk_univ_real
-  have hu  : Iio a ∪ {a} ∪ Ioi a = Set.univ
+  have hu : Iio a ∪ {a} ∪ Ioi a = Set.univ
   convert @Iic_union_Ioi ℝ _ _
   exact Iio_union_right
   rw [← hu]
   refine lt_of_le_of_lt (mk_union_le _ _) ?_
   refine lt_of_le_of_lt (add_le_add_right (mk_union_le _ _) _) ?_
-  have h2  : (fun x => a + a - x) '' Ioi a = Iio a
+  have h2 : (fun x => a + a - x) '' Ioi a = Iio a
   convert @image_const_sub_Ioi ℝ _ _ _
   simp
   rw [← h2]
@@ -233,7 +233,7 @@ theorem mk_Ici_real (a : ℝ) : #(Ici a) = 𝔠 :=
 /-- The cardinality of the interval (-∞, a). -/
 theorem mk_Iio_real (a : ℝ) : #(Iio a) = 𝔠 := by
   refine le_antisymm (mk_real ▸ mk_set_le _) ?_
-  have h2  : (fun x => a + a - x) '' Iio a = Ioi a
+  have h2 : (fun x => a + a - x) '' Iio a = Ioi a
   simp only [image_const_sub_Iio, add_sub_cancel_right]
   exact mk_Ioi_real a ▸ h2 ▸ mk_image_le
 

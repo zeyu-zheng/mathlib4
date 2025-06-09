@@ -78,16 +78,16 @@ theorem card_complex_roots_eq_card_real_add_card_not_gal_inv (p : ℚ[X]) :
   -- Porting note: was
   --   change a.card = b.card + c.card
   suffices a.card = b.card + c.card by exact this
-  have ha  : ∀ z : ℂ, z ∈ a ↔ aeval z p = 0
+  have ha : ∀ z : ℂ, z ∈ a ↔ aeval z p = 0
   intro z; rw [Set.mem_toFinset, mem_rootSet_of_ne hp]
-  have hb  : ∀ z : ℂ, z ∈ b ↔ aeval z p = 0 ∧ z.im = 0
+  have hb : ∀ z : ℂ, z ∈ b ↔ aeval z p = 0 ∧ z.im = 0
   intro z
   simp_rw [b, Finset.mem_image, Set.mem_toFinset, mem_rootSet_of_ne hp]
   constructor
   · rintro ⟨w, hw, rfl⟩
     exact ⟨by rw [aeval_algHom_apply, hw, map_zero], rfl⟩
   · rintro ⟨hz1, hz2⟩
-    have key  : IsScalarTower.toAlgHom ℚ ℝ ℂ z.re = z
+    have key : IsScalarTower.toAlgHom ℚ ℝ ℂ z.re = z
     ext
     · rfl
     · rw [hz2]; rfl
@@ -98,7 +98,7 @@ theorem card_complex_roots_eq_card_real_add_card_not_gal_inv (p : ℚ[X]) :
     intro w
     rw [Subtype.ext_iff, galActionHom_restrict]
     exact Complex.conj_eq_iff_im
-  have hc  : ∀ z : ℂ, z ∈ c ↔ aeval z p = 0 ∧ z.im ≠ 0
+  have hc : ∀ z : ℂ, z ∈ c ↔ aeval z p = 0 ∧ z.im ≠ 0
   intro z
   simp_rw [c, Finset.mem_image]
   constructor
@@ -121,7 +121,7 @@ theorem galActionHom_bijective_of_prime_degree {p : ℚ[X]} (p_irr : Irreducible
     (p_roots : Fintype.card (p.rootSet ℂ) = Fintype.card (p.rootSet ℝ) + 2) :
     Function.Bijective (galActionHom p ℂ) := by
   classical
-  have h1  : Fintype.card (p.rootSet ℂ) = p.natDegree
+  have h1 : Fintype.card (p.rootSet ℂ) = p.natDegree
   simp_rw [rootSet_def, Finset.coe_sort_coe, Fintype.card_coe]
   rw [Multiset.toFinset_card_of_nodup, ← natDegree_eq_card_roots]
   · exact IsAlgClosed.splits_codomain p

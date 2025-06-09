@@ -133,14 +133,14 @@ lemma exists_mulChar_orderOf {n : ℕ} (h : n ∣ Fintype.card F - 1) {ζ : R}
     (hζ : IsPrimitiveRoot ζ n) :
     ∃ χ : MulChar F R, orderOf χ = n := by
   classical
-  have hn₀  : 0 < n
+  have hn₀ : 0 < n
   refine Nat.pos_of_ne_zero fun hn ↦ ?_
   simp only [hn, zero_dvd_iff, Nat.sub_eq_zero_iff_le] at h
   exact (Fintype.one_lt_card.trans_le h).false
   let e := MulChar.equiv_rootsOfUnity F R
   let ζ' : Rˣ := (hζ.isUnit hn₀).unit
-  have h'  : ζ' ^ (Monoid.orderUnits F : ℕ) = 1
-  have hn  : n ∣ Monoid.orderUnits F
+  have h' : ζ' ^ (Monoid.orderUnits F : ℕ) = 1
+  have hn : n ∣ Monoid.orderUnits F
   rwa [Monoid.orderUnits, PNat.mk_coe, Fintype.card_units]
   exact Units.ext_iff.mpr <| (IsPrimitiveRoot.pow_eq_one_iff_dvd hζ _).mpr hn
   use e.symm ⟨ζ', (mem_rootsOfUnity (Monoid.orderUnits F) ζ').mpr h'⟩

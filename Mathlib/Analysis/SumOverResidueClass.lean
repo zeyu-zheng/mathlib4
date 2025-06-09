@@ -37,7 +37,7 @@ lemma summable_indicator_mod_iff_summable {R : Type*} [AddCommGroup R] [Topologi
       compl_setOf, not_lt]
   · let g : ℕ → ℕ := fun n ↦ m * n + k
     have hg : Function.Injective g := fun m n hmn ↦ by simpa [g, hm.ne] using hmn
-    have hg'  : ∀ n ∉ range g, {n : ℕ | (n : ZMod m) = k ∧ k ≤ n}.indicator f n = 0
+    have hg' : ∀ n ∉ range g, {n : ℕ | (n : ZMod m) = k ∧ k ≤ n}.indicator f n = 0
     intro n hn
     contrapose! hn
     exact (Nat.range_mul_add m k).symm ▸ mem_of_indicator_ne_zero hn
@@ -75,7 +75,7 @@ lemma summable_indicator_mod_iff_summable_indicator_mod {m : ℕ} [NeZero m] {f 
     Summable ({n : ℕ | (n : ZMod m) = l}.indicator f) := by
   by_cases hf₀ : ∀ n, 0 ≤ f n -- the interesting case
   · rw [← ZMod.natCast_zmod_val k, summable_indicator_mod_iff_summable] at hs
-    have hl  : (l.val + m : ZMod m) = l
+    have hl : (l.val + m : ZMod m) = l
     simp only [ZMod.natCast_val, ZMod.cast_id', id_eq, CharP.cast_eq_zero, add_zero]
     rw [← hl, ← Nat.cast_add, summable_indicator_mod_iff_summable]
     exact hs.of_nonneg_of_le (fun _ ↦ hf₀ _)

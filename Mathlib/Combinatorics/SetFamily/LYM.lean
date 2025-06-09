@@ -75,7 +75,7 @@ theorem card_mul_le_card_shadow_mul (h𝒜 : (𝒜 : Set (Finset α)).Sized r) :
   -- Porting note: commented out the following line
   -- infer_instance
   rw [mem_bipartiteAbove] at ht
-  have  : ∅ ∉ 𝒜
+  have : ∅ ∉ 𝒜
   rw [← mem_coe, h𝒜.empty_mem_iff, coe_eq_singleton]
   rintro rfl
   rw [shadow_singleton_empty] at hs

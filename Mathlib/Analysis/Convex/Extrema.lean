@@ -56,12 +56,12 @@ theorem IsMinOn.of_isLocalMinOn_of_convexOn {f : E → β} {a : E} (a_in_s : a �
   have hg0 : g 0 = a := AffineMap.lineMap_apply_zero a x
   have hg1 : g 1 = x := AffineMap.lineMap_apply_one a x
   have hgc : Continuous g := AffineMap.lineMap_continuous
-  have h_maps  : MapsTo g (Icc 0 1) s
+  have h_maps : MapsTo g (Icc 0 1) s
   simpa only [g, mapsTo', ← segment_eq_image_lineMap] using h_conv.1.segment_subset a_in_s x_in_s
-  have fg_local_min_on  : IsLocalMinOn (f ∘ g) (Icc 0 1) 0
+  have fg_local_min_on : IsLocalMinOn (f ∘ g) (Icc 0 1) 0
   rw [← hg0] at h_localmin
   exact h_localmin.comp_continuousOn h_maps hgc.continuousOn (left_mem_Icc.2 zero_le_one)
-  have fg_min_on  : IsMinOn (f ∘ g) (Icc 0 1 : Set ℝ) 0
+  have fg_min_on : IsMinOn (f ∘ g) (Icc 0 1 : Set ℝ) 0
   refine IsMinOn.of_isLocalMinOn_of_convexOn_Icc one_pos fg_local_min_on ?_
   exact (h_conv.comp_affineMap g).subset h_maps (convex_Icc 0 1)
   simpa only [hg0, hg1, comp_apply, mem_setOf_eq] using fg_min_on (right_mem_Icc.2 zero_le_one)

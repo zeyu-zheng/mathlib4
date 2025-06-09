@@ -94,9 +94,9 @@ theorem maximalIdeal_isPrincipal_of_isDedekindDomain [LocalRing R] [IsDomain R]
   · rw [ne_bot]; infer_instance
   obtain ⟨a, ha₁, ha₂⟩ : ∃ a ∈ maximalIdeal R, a ≠ (0 : R) := by
     by_contra! h'; apply ne_bot; rwa [eq_bot_iff]
-  have hle  : Ideal.span {a} ≤ maximalIdeal R
+  have hle : Ideal.span {a} ≤ maximalIdeal R
   rwa [Ideal.span_le, Set.singleton_subset_iff]
-  have  : (Ideal.span {a}).radical = maximalIdeal R
+  have : (Ideal.span {a}).radical = maximalIdeal R
   rw [Ideal.radical_eq_sInf]
   apply le_antisymm
   · exact sInf_le ⟨hle, inferInstance⟩
@@ -104,7 +104,7 @@ theorem maximalIdeal_isPrincipal_of_isDedekindDomain [LocalRing R] [IsDomain R]
       le_sInf fun I hI =>
         (eq_maximalIdeal <| hI.2.isMaximal (fun e => ha₂ ?_)).ge
     rw [← Ideal.span_singleton_eq_bot, eq_bot_iff, ← e]; exact hI.1
-  have  : ∃ n, maximalIdeal R ^ n ≤ Ideal.span {a}
+  have : ∃ n, maximalIdeal R ^ n ≤ Ideal.span {a}
   rw [← this]; apply Ideal.exists_radical_pow_le_of_fg; exact IsNoetherian.noetherian _
   cases' hn : Nat.find this with n
   · have := Nat.find_spec this
@@ -112,10 +112,10 @@ theorem maximalIdeal_isPrincipal_of_isDedekindDomain [LocalRing R] [IsDomain R]
     exact (Ideal.IsMaximal.ne_top inferInstance (eq_top_iff.mpr <| this.trans hle)).elim
   obtain ⟨b, hb₁, hb₂⟩ : ∃ b ∈ maximalIdeal R ^ n, ¬b ∈ Ideal.span {a} := by
     by_contra! h'; rw [Nat.find_eq_iff] at hn; exact hn.2 n n.lt_succ_self fun x hx => h' x hx
-  have hb₃  : ∀ m ∈ maximalIdeal R, ∃ k : R, k * a = b * m
+  have hb₃ : ∀ m ∈ maximalIdeal R, ∃ k : R, k * a = b * m
   intro m hm; rw [← Ideal.mem_span_singleton']; apply Nat.find_spec this
   rw [hn, pow_succ]; exact Ideal.mul_mem_mul hb₁ hm
-  have hb₄  : b ≠ 0
+  have hb₄ : b ≠ 0
   rintro rfl; apply hb₂; exact zero_mem _
   let K := FractionRing R
   let x : K := algebraMap R K b / algebraMap R K a
@@ -135,7 +135,7 @@ theorem maximalIdeal_isPrincipal_of_isDedekindDomain [LocalRing R] [IsDomain R]
       by_contra h; apply hx
       rintro m' ⟨m, hm, rfl : algebraMap R K m = m'⟩
       obtain ⟨k, hk⟩ := hb₃ m hm
-      have hk'  : x * algebraMap R K m = algebraMap R K k
+      have hk' : x * algebraMap R K m = algebraMap R K k
       rw [← mul_div_right_comm, ← map_mul, ← hk, map_mul, mul_div_cancel_right₀ _ ha₃]
       exact ⟨k, le_maximalIdeal h ⟨_, ⟨_, hm, rfl⟩, hk'⟩, hk'.symm⟩
     obtain ⟨y, hy₁, hy₂⟩ : ∃ y ∈ maximalIdeal R, b * y = a := by

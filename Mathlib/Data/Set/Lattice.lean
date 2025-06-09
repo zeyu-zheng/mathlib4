@@ -1764,7 +1764,7 @@ lemma biUnion_compl_eq_of_pairwise_disjoint_of_iUnion_eq_univ {ι : Type*} {Es :
     (⋃ i ∈ I, Es i)ᶜ = ⋃ i ∈ Iᶜ, Es i := by
   ext x
   obtain ⟨i, hix⟩ : ∃ i, x ∈ Es i := by simp [← mem_iUnion, Es_union]
-  have obs  : ∀ (J : Set ι), x ∈ ⋃ j ∈ J, Es j ↔ i ∈ J
+  have obs : ∀ (J : Set ι), x ∈ ⋃ j ∈ J, Es j ↔ i ∈ J
   refine fun J ↦ ⟨?_, fun i_in_J ↦ by simpa only [mem_iUnion, exists_prop] using ⟨i, i_in_J, hix⟩⟩
   intro x_in_U
   simp only [mem_iUnion, exists_prop] at x_in_U
@@ -1784,7 +1784,7 @@ namespace Set
 
 lemma nonempty_iInter_Iic_iff [Preorder α] {f : ι → α} :
     (⋂ i, Iic (f i)).Nonempty ↔ BddBelow (range f) := by
-  have  : (⋂ (i : ι), Iic (f i)) = lowerBounds (range f)
+  have : (⋂ (i : ι), Iic (f i)) = lowerBounds (range f)
   ext c; simp [lowerBounds]
   simp [this, BddBelow]
 

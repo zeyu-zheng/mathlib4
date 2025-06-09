@@ -48,7 +48,7 @@ theorem midpoint_fixed {x y : PE} :
   set s := { e : PE ≃ᵢ PE | e x = x ∧ e y = y }
   haveI : Nonempty s := ⟨⟨IsometryEquiv.refl PE, rfl, rfl⟩⟩
   -- On the one hand, `e` cannot send the midpoint `z` of `[x, y]` too far
-  have h_bdd  : BddAbove (range fun e : s => dist ((e : PE ≃ᵢ PE) z) z)
+  have h_bdd : BddAbove (range fun e : s => dist ((e : PE ≃ᵢ PE) z) z)
   refine ⟨dist x z + dist x z, forall_mem_range.2 <| Subtype.forall.2 ?_⟩
   rintro e ⟨hx, _⟩
   calc
@@ -61,18 +61,18 @@ theorem midpoint_fixed {x y : PE} :
   set R : PE ≃ᵢ PE := (pointReflection ℝ z).toIsometryEquiv
   set f : PE ≃ᵢ PE → PE ≃ᵢ PE := fun e => ((e.trans R).trans e.symm).trans R
   -- Note that `f` doubles the value of `dist (e z) z`
-  have hf_dist  : ∀ e, dist (f e z) z = 2 * dist (e z) z
+  have hf_dist : ∀ e, dist (f e z) z = 2 * dist (e z) z
   intro e
   dsimp only [trans_apply, coe_toIsometryEquiv, f, R]
   rw [dist_pointReflection_fixed, ← e.dist_eq, e.apply_symm_apply,
     dist_pointReflection_self_real, dist_comm]
   -- Also note that `f` maps `s` to itself
-  have hf_maps_to  : MapsTo f s s
+  have hf_maps_to : MapsTo f s s
   rintro e ⟨hx, hy⟩
   constructor <;> simp [f, R, z, hx, hy, e.symm_apply_eq.2 hx.symm, e.symm_apply_eq.2 hy.symm]
   -- Therefore, `dist (e z) z = 0` for all `e ∈ s`.
   set c := ⨆ e : s, dist ((e : PE ≃ᵢ PE) z) z
-  have  : c ≤ c / 2
+  have : c ≤ c / 2
   apply ciSup_le
   rintro ⟨e, he⟩
   simp only [Subtype.coe_mk, le_div_iff' (zero_lt_two' ℝ), ← hf_dist]

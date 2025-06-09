@@ -109,7 +109,7 @@ lemma Inducing.isSigmaCompact_iff {f : X → Y} {s : Set X}
     -- Since f is inducing, each K n is compact iff L n is.
     refine ⟨fun n ↦ f ⁻¹' (L n) ∩ s, ?_, ?_⟩
     · intro n
-      have  : f '' (f ⁻¹' (L n) ∩ s) = L n
+      have : f '' (f ⁻¹' (L n) ∩ s) = L n
       rw [image_preimage_inter, inter_eq_left.mpr]
       exact (subset_iUnion _ n).trans hcov.le
       apply hf.isCompact_iff.mpr (this.symm ▸ (hcomp n))

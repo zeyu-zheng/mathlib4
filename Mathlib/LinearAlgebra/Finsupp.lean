@@ -715,7 +715,7 @@ theorem span_image_eq_map_total (s : Set α) :
     intro i hi
     exact ⟨_, Finsupp.single_mem_supported R 1 hi.1, by simp [hi.2]⟩
   · refine map_le_iff_le_comap.2 fun z hz => ?_
-    have  : ∀ i, z i • v i ∈ span R (v '' s)
+    have : ∀ i, z i • v i ∈ span R (v '' s)
     intro c
     haveI := Classical.decPred fun x => x ∈ s
     by_cases h : c ∈ s

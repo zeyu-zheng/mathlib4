@@ -104,7 +104,7 @@ protected theorem CompactT2.Projective.extremallyDisconnected [CompactSpace X] [
   have hZ : IsClosed Z := hZ₁.union hZ₂
   let f : Z → X := Prod.fst ∘ Subtype.val
   have f_cont : Continuous f := continuous_fst.comp continuous_subtype_val
-  have f_sur  : Surjective f
+  have f_sur : Surjective f
   intro x
   by_cases hx : x ∈ U
   · exact ⟨⟨(x, false), Or.inr ⟨subset_closure hx, mem_singleton _⟩⟩, rfl⟩
@@ -222,7 +222,7 @@ private lemma ExtremallyDisconnected.homeoCompactToT2_injective [ExtremallyDisco
   have G₂_comp : IsCompact G₂ᶜ := IsClosed.isCompact G₂_open.isClosed_compl
   have G₁_open' : IsOpen (ρ '' G₁ᶜ)ᶜ := (G₁_comp.image ρ_cont).isClosed.isOpen_compl
   have G₂_open' : IsOpen (ρ '' G₂ᶜ)ᶜ := (G₂_comp.image ρ_cont).isClosed.isOpen_compl
-  have disj'  : Disjoint (ρ '' G₁ᶜ)ᶜ (ρ '' G₂ᶜ)ᶜ
+  have disj' : Disjoint (ρ '' G₁ᶜ)ᶜ (ρ '' G₂ᶜ)ᶜ
   rw [disjoint_iff_inter_eq_empty, ← compl_union, ← image_union, ← compl_inter,
     disjoint_iff_inter_eq_empty.mp disj, compl_empty, compl_empty_iff,
     image_univ_of_surjective ρ_surj]

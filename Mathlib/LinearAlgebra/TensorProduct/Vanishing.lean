@@ -104,9 +104,9 @@ theorem vanishesTrivially_of_sum_tmul_eq_zero (hm : Submodule.span R (Set.range 
     (hmn : ∑ i, m i ⊗ₜ n i = (0 : M ⊗[R] N)) : VanishesTrivially R m n := by
   -- Define a map $G \colon R^\iota \to M$ whose matrix entries are the $m_i$. It is surjective.
   set G : (ι →₀ R) →ₗ[R] M := Finsupp.total ι M R m with hG
-  have G_basis_eq (i  : ι) : G (Finsupp.single i 1) = m i
+  have G_basis_eq (i : ι) : G (Finsupp.single i 1) = m i
   simp [hG, toModule_lof]
-  have G_surjective  : Surjective G
+  have G_surjective : Surjective G
   apply LinearMap.range_eq_top.mp
   apply top_le_iff.mp
   rw [← hm]
@@ -116,7 +116,7 @@ theorem vanishesTrivially_of_sum_tmul_eq_zero (hm : Submodule.span R (Set.range 
   /- Consider the element $\sum_i e_i \otimes n_i$ of $R^\iota \otimes N$. It is in the kernel of
   $R^\iota \otimes N \to M \otimes N$. -/
   set en : (ι →₀ R) ⊗[R] N := ∑ i, Finsupp.single i 1 ⊗ₜ n i with hen
-  have en_mem_ker  : en ∈ ker (rTensor N G)
+  have en_mem_ker : en ∈ ker (rTensor N G)
   simp [hen, G_basis_eq, hmn]
   -- We have an exact sequence $\ker G \to R^\iota \to M \to 0$.
   have exact_ker_subtype : Exact (ker G).subtype G := G.exact_subtype_ker_map
@@ -181,11 +181,11 @@ theorem vanishesTrivially_of_sum_tmul_eq_zero_of_rTensor_injective
   -- Restrict `m` on the codomain to $M'$, then apply `vanishesTrivially_of_sum_tmul_eq_zero`.
   have mem_M' i : m i ∈ span R (Set.range m) := subset_span ⟨i, rfl⟩
   set m' : ι → span R (Set.range m) := Subtype.coind m mem_M' with m'_eq
-  have hm'  : span R (Set.range m') = ⊤
+  have hm' : span R (Set.range m') = ⊤
   apply map_injective_of_injective (injective_subtype (span R (Set.range m)))
   rw [Submodule.map_span, Submodule.map_top, range_subtype, coeSubtype, ← Set.range_comp]
   rfl
-  have hm'n  : ∑ i, m' i ⊗ₜ n i = (0 : span R (Set.range m) ⊗[R] N)
+  have hm'n : ∑ i, m' i ⊗ₜ n i = (0 : span R (Set.range m) ⊗[R] N)
   apply hm
   simp only [m'_eq, map_sum, rTensor_tmul, coeSubtype, Subtype.coind_coe, _root_.map_zero, hmn]
   have : VanishesTrivially R m' n := vanishesTrivially_of_sum_tmul_eq_zero R hm' hm'n

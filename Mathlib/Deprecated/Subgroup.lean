@@ -291,14 +291,14 @@ theorem one_ker_inv' {f : G → H} (hf : IsGroupHom f) {a b : G} (h : f (a⁻¹ 
 @[to_additive]
 theorem inv_ker_one {f : G → H} (hf : IsGroupHom f) {a b : G} (h : f a = f b) :
     f (a * b⁻¹) = 1 := by
-  have  : f a * (f b)⁻¹ = 1
+  have : f a * (f b)⁻¹ = 1
   rw [h, mul_right_inv]
   rwa [← hf.map_inv, ← hf.map_mul] at this
 
 @[to_additive]
 theorem inv_ker_one' {f : G → H} (hf : IsGroupHom f) {a b : G} (h : f a = f b) :
     f (a⁻¹ * b) = 1 := by
-  have  : (f a)⁻¹ * f b = 1
+  have : (f a)⁻¹ * f b = 1
   rw [h, mul_left_inv]
   rwa [← hf.map_inv, ← hf.map_mul] at this
 
@@ -360,7 +360,7 @@ theorem injective_of_trivial_ker {f : G → H} (hf : IsGroupHom f) (h : ker f = 
     Function.Injective f := by
   intro a₁ a₂ hfa
   simp [Set.ext_iff, ker, IsSubgroup.trivial] at h
-  have ha  : a₁ * a₂⁻¹ = 1
+  have ha : a₁ * a₂⁻¹ = 1
   rw [← h]; exact hf.inv_ker_one hfa
   rw [eq_inv_of_mul_eq_one_left ha, inv_inv a₂]
 

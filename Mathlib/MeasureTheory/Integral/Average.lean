@@ -605,7 +605,7 @@ theorem measure_setLaverage_le_pos (hμ : μ s ≠ 0) (hs : NullMeasurableSet s 
   obtain hμ₁ | hμ₁ := eq_or_ne (μ s) ∞
   · simp [setLaverage_eq, hμ₁]
   obtain ⟨g, hg, hgf, hfg⟩ := exists_measurable_le_lintegral_eq (μ.restrict s) f
-  have hfg'  : ⨍⁻ a in s, f a ∂μ = ⨍⁻ a in s, g a ∂μ
+  have hfg' : ⨍⁻ a in s, f a ∂μ = ⨍⁻ a in s, g a ∂μ
   simp_rw [laverage_eq, hfg]
   rw [hfg] at hint
   have :=
@@ -734,11 +734,11 @@ theorem tendsto_integral_smul_of_tendsto_average_norm_sub
     (g_supp : ∀ᶠ i in l, Function.support (g i) ⊆ a i)
     (g_bound : ∀ᶠ i in l, ∀ x, |g i x| ≤ K / (μ (a i)).toReal) :
     Tendsto (fun i ↦ ∫ y, g i y • f y ∂μ) l (𝓝 c) := by
-  have g_int  : ∀ᶠ i in l, Integrable (g i) μ
+  have g_int : ∀ᶠ i in l, Integrable (g i) μ
   filter_upwards [(tendsto_order.1 hg).1 _ zero_lt_one] with i hi
   contrapose hi
   simp only [integral_undef hi, lt_self_iff_false, not_false_eq_true]
-  have I  : ∀ᶠ i in l, ∫ y, g i y • (f y - c) ∂μ + (∫ y, g i y ∂μ) • c = ∫ y, g i y • f y ∂μ
+  have I : ∀ᶠ i in l, ∫ y, g i y • (f y - c) ∂μ + (∫ y, g i y ∂μ) • c = ∫ y, g i y • f y ∂μ
   filter_upwards [f_int, g_int, g_supp, g_bound] with i hif hig hisupp hibound
   rw [← integral_smul_const, ← integral_add]
   · simp only [smul_sub, sub_add_cancel]
@@ -752,7 +752,7 @@ theorem tendsto_integral_smul_of_tendsto_average_norm_sub
     exact memℒp_top_of_bound hig.aestronglyMeasurable.restrict
       (K / (μ (a i)).toReal) (eventually_of_forall hibound)
   · exact hig.smul_const _
-  have L0  : Tendsto (fun i ↦ ∫ y, g i y • (f y - c) ∂μ) l (𝓝 0)
+  have L0 : Tendsto (fun i ↦ ∫ y, g i y • (f y - c) ∂μ) l (𝓝 0)
   have := hf.const_mul K
   simp only [mul_zero] at this
   refine squeeze_zero_norm' ?_ this

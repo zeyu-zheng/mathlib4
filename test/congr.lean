@@ -188,9 +188,9 @@ example (w : walk α x y) (w' : walk α x' y') (f : α → β) : HEq (w.map f) (
   guard_target = y = y'
   exact test_sorry
   -- get x = y and y = y' in context for `HEq w w'` goal.
-  have  : x = x'
+  have : x = x'
   assumption
-  have  : y = y'
+  have : y = y'
   assumption
   guard_target = HEq w w'
   exact test_sorry

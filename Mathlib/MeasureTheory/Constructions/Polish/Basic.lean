@@ -206,7 +206,7 @@ theorem analyticSet_iff_exists_polishSpace_range {s : Set α} :
 theorem AnalyticSet.image_of_continuousOn {β : Type*} [TopologicalSpace β] {s : Set α}
     (hs : AnalyticSet s) {f : α → β} (hf : ContinuousOn f s) : AnalyticSet (f '' s) := by
   rcases analyticSet_iff_exists_polishSpace_range.1 hs with ⟨γ, γtop, γpolish, g, g_cont, gs⟩
-  have  : f '' s = range (f ∘ g)
+  have : f '' s = range (f ∘ g)
   rw [range_comp, gs]
   rw [this]
   apply analyticSet_range_of_polishSpace

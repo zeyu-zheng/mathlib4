@@ -143,7 +143,7 @@ theorem IsLindelof.elim_countable_subcover {ι : Type v} (hs : IsLindelof s) (U 
   refine sUnion_subset ?h.right.h
   simp only [mem_iUnion, exists_prop, iUnion_exists, biUnion_and']
   exact fun i is x hx ↦ mem_biUnion is ((hr i is).2 hx)
-  have h_nhds  : ∀ x ∈ s, ∃ t ∈ 𝓝[s] x, ∃ r : Set ι, r.Countable ∧ (t ⊆ ⋃ i ∈ r, U i)
+  have h_nhds : ∀ x ∈ s, ∃ t ∈ 𝓝[s] x, ∃ r : Set ι, r.Countable ∧ (t ⊆ ⋃ i ∈ r, U i)
   intro x hx
   let ⟨i, hi⟩ := mem_iUnion.1 (hsU hx)
   refine ⟨U i, mem_nhdsWithin_of_mem_nhds ((hUo i).mem_nhds hi), {i}, by simp, ?_⟩
@@ -219,9 +219,9 @@ theorem IsLindelof.elim_countable_subfamily_closed {ι : Type v} (hs : IsLindelo
     (t : ι → Set X) (htc : ∀ i, IsClosed (t i)) (hst : (s ∩ ⋂ i, t i) = ∅) :
     ∃ u : Set ι, u.Countable ∧ (s ∩ ⋂ i ∈ u, t i) = ∅ := by
   let U := tᶜ
-  have hUo  : ∀ i, IsOpen (U i)
+  have hUo : ∀ i, IsOpen (U i)
   simp only [U, Pi.compl_apply, isOpen_compl_iff]; exact htc
-  have hsU  : s ⊆ ⋃ i, U i
+  have hsU : s ⊆ ⋃ i, U i
   simp only [U, Pi.compl_apply]
   rw [← compl_iInter]
   apply disjoint_compl_left_iff_subset.mp
@@ -365,7 +365,7 @@ theorem Set.Finite.isLindelof (hs : s.Finite) : IsLindelof s :=
 
 theorem IsLindelof.countable_of_discrete [DiscreteTopology X] (hs : IsLindelof s) :
     s.Countable := by
-  have  : ∀ x : X, ({x} : Set X) ∈ 𝓝 x
+  have : ∀ x : X, ({x} : Set X) ∈ 𝓝 x
   simp [nhds_discrete]
   rcases hs.elim_nhds_subcover (fun x => {x}) fun x _ => this x with ⟨t, ht, _, hssubt⟩
   rw [biUnion_of_singleton] at hssubt

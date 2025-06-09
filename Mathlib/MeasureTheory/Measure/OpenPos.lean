@@ -107,7 +107,7 @@ theorem eqOn_open_of_ae_eq {f g : X → Y} (h : f =ᵐ[μ.restrict U] g) (hU : I
     (hf : ContinuousOn f U) (hg : ContinuousOn g U) : EqOn f g U := by
   replace h := ae_imp_of_ae_restrict h
   simp only [EventuallyEq, ae_iff, Classical.not_imp] at h
-  have  : IsOpen (U ∩ { a | f a ≠ g a })
+  have : IsOpen (U ∩ { a | f a ≠ g a })
   refine isOpen_iff_mem_nhds.mpr fun a ha => inter_mem (hU.mem_nhds ha.1) ?_
   rcases ha with ⟨ha : a ∈ U, ha' : (f a, g a) ∈ (diagonal Y)ᶜ⟩
   exact
@@ -252,7 +252,7 @@ lemma IsNowhereDense.of_isClosed_null (h₁s : IsClosed s) (h₂s : μ s = 0) :
 lemma IsMeagre.of_isSigmaCompact_null [T2Space X] (h₁s : IsSigmaCompact s) (h₂s : μ s = 0) :
     IsMeagre s := by
   rcases h₁s with ⟨K, hcompact, hcover⟩
-  have h (n  : ℕ) : IsNowhereDense (K n)
+  have h (n : ℕ) : IsNowhereDense (K n)
   have : μ (K n) = 0 := measure_mono_null (hcover ▸ subset_iUnion K n) h₂s
   exact .of_isClosed_null (hcompact n).isClosed this
   rw [isMeagre_iff_countable_union_isNowhereDense]

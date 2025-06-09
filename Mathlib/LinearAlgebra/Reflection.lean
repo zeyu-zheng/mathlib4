@@ -162,7 +162,7 @@ lemma Dual.eq_of_preReflection_mapsTo' [CharZero R] [NoZeroSMulDivisors R M]
   set Φ' : Set (span R Φ) := range (inclusion <| Submodule.subset_span (R := R) (s := Φ))
   rw [← finite_coe_iff] at hΦ₁
   have hΦ'₁ : Φ'.Finite := finite_range (inclusion Submodule.subset_span)
-  have hΦ'₂  : span R Φ' = ⊤
+  have hΦ'₂ : span R Φ' = ⊤
   simp [Φ']
   let x' : span R Φ := ⟨x, hx'⟩
   have hx' : x' ≠ 0 := Subtype.coe_ne_coe.1 hx

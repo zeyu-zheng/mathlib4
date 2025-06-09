@@ -80,7 +80,7 @@ lemma congr_cylinder_of_subset (hP : IsProjectiveMeasureFamily P)
     have : (univ : Set ((j : {x // x ∈ ({i} : Finset ι)}) → α j)) = ∅ := by simp [hi_empty]
     simp [this]
   | inr h =>
-    have : S = (fun f : ∀ i  : I, α i ↦ fun j : J ↦ f ⟨j, hJI j.prop⟩) ⁻¹' T
+    have : S = (fun f : ∀ i : I, α i ↦ fun j : J ↦ f ⟨j, hJI j.prop⟩) ⁻¹' T
     apply eq_of_cylinder_eq_of_subset h_eq hJI
     rw [hP I J hJI, Measure.map_apply _ hT, this]
     exact measurable_pi_lambda _ (fun _ ↦ measurable_pi_apply _)

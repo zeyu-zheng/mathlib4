@@ -49,7 +49,7 @@ theorem euler_criterion_units (x : (ZMod p)ˣ) : (∃ y : (ZMod p)ˣ, y ^ 2 = x)
   · subst hc
     simp only [eq_iff_true_of_subsingleton, exists_const]
   · have h₀ := FiniteField.unit_isSquare_iff (by rwa [ringChar_zmod_n]) x
-    have hs  : (∃ y : (ZMod p)ˣ, y ^ 2 = x) ↔ IsSquare x
+    have hs : (∃ y : (ZMod p)ˣ, y ^ 2 = x) ↔ IsSquare x
     rw [isSquare_iff_exists_sq x]
     simp_rw [eq_comm]
     rw [hs]
@@ -62,7 +62,7 @@ theorem euler_criterion {a : ZMod p} (ha : a ≠ 0) : IsSquare (a : ZMod p) ↔ 
   constructor
   · rintro ⟨y, hy⟩; exact ⟨y, hy.symm⟩
   · rintro ⟨y, rfl⟩
-    have hy  : y ≠ 0
+    have hy : y ≠ 0
     rintro rfl
     simp [zero_pow, mul_zero, ne_eq, not_true] at ha
     refine ⟨Units.mk0 y hy, ?_⟩; simp
@@ -230,7 +230,7 @@ theorem eq_one_of_sq_sub_mul_sq_eq_zero' {p : ℕ} [Fact p.Prime] {a : ℤ} (ha 
 is the trivial one. -/
 theorem eq_zero_mod_of_eq_neg_one {p : ℕ} [Fact p.Prime] {a : ℤ} (h : legendreSym p a = -1)
     {x y : ZMod p} (hxy : x ^ 2 - a * y ^ 2 = 0) : x = 0 ∧ y = 0 := by
-  have ha  : (a : ZMod p) ≠ 0
+  have ha : (a : ZMod p) ≠ 0
   intro hf
   rw [(eq_zero_iff p a).mpr hf] at h
   simp at h

@@ -151,7 +151,7 @@ theorem compProdFun_eq_tsum (κ : Kernel α β) [IsSFiniteKernel κ] (η : Kerne
 theorem measurable_compProdFun_of_finite (κ : Kernel α β) [IsFiniteKernel κ] (η : Kernel (α × β) γ)
     [IsFiniteKernel η] (hs : MeasurableSet s) : Measurable fun a => compProdFun κ η a s := by
   simp only [compProdFun]
-  have h_meas  : Measurable (Function.uncurry fun a b => η (a, b) {c : γ | (b, c) ∈ s})
+  have h_meas : Measurable (Function.uncurry fun a b => η (a, b) {c : γ | (b, c) ∈ s})
   have :
     (Function.uncurry fun a b => η (a, b) {c : γ | (b, c) ∈ s}) = fun p =>
       η p {c : γ | (p.2, c) ∈ s} := by
@@ -166,7 +166,7 @@ theorem measurable_compProdFun (κ : Kernel α β) [IsSFiniteKernel κ] (η : Ke
   simp_rw [compProdFun_tsum_right κ η _ hs]
   refine Measurable.ennreal_tsum fun n => ?_
   simp only [compProdFun]
-  have h_meas  : Measurable (Function.uncurry fun a b => seq η n (a, b) {c : γ | (b, c) ∈ s})
+  have h_meas : Measurable (Function.uncurry fun a b => seq η n (a, b) {c : γ | (b, c) ∈ s})
   have :
     (Function.uncurry fun a b => seq η n (a, b) {c : γ | (b, c) ∈ s}) = fun p =>
       seq η n p {c : γ | (p.2, c) ∈ s} := by
@@ -434,7 +434,7 @@ theorem lintegral_compProd₀ (κ : Kernel α β) [IsSFiniteKernel κ] (η : Ker
     [IsSFiniteKernel η] (a : α) {f : β × γ → ℝ≥0∞} (hf : AEMeasurable f ((κ ⊗ₖ η) a)) :
     ∫⁻ z, f z ∂(κ ⊗ₖ η) a = ∫⁻ x, ∫⁻ y, f (x, y) ∂η (a, x) ∂κ a := by
   have A : ∫⁻ z, f z ∂(κ ⊗ₖ η) a = ∫⁻ z, hf.mk f z ∂(κ ⊗ₖ η) a := lintegral_congr_ae hf.ae_eq_mk
-  have B  : ∫⁻ x, ∫⁻ y, f (x, y) ∂η (a, x) ∂κ a = ∫⁻ x, ∫⁻ y, hf.mk f (x, y) ∂η (a, x) ∂κ a
+  have B : ∫⁻ x, ∫⁻ y, f (x, y) ∂η (a, x) ∂κ a = ∫⁻ x, ∫⁻ y, hf.mk f (x, y) ∂η (a, x) ∂κ a
   apply lintegral_congr_ae
   filter_upwards [ae_ae_of_ae_compProd hf.ae_eq_mk] with _ ha using lintegral_congr_ae ha
   rw [A, B, lintegral_compProd]
@@ -894,7 +894,7 @@ lemma fst_compProd (κ : Kernel α β) (η : Kernel (α × β) γ) [IsSFiniteKer
   swap; · exact measurable_fst hs
   simp only [Set.mem_setOf_eq]
   classical
-  have  : ∀ b : β, η (x, b) {_c | b ∈ s} = s.indicator (fun _ ↦ 1) b
+  have : ∀ b : β, η (x, b) {_c | b ∈ s} = s.indicator (fun _ ↦ 1) b
   intro b
   by_cases hb : b ∈ s <;> simp [hb]
   simp_rw [this]

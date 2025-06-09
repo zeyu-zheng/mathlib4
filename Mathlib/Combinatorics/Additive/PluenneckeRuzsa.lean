@@ -79,9 +79,9 @@ theorem pluennecke_petridis_inequality_mul (C : Finset α)
   · simp
   set A' := A ∩ (A * C / {x}) with hA'
   set C' := insert x C with hC'
-  have h₀  : A' * {x} = A * {x} ∩ (A * C)
+  have h₀ : A' * {x} = A * {x} ∩ (A * C)
   rw [hA', inter_mul_singleton, (isUnit_singleton x).div_mul_cancel]
-  have h₁  : A * B * C' = A * B * C ∪ (A * B * {x}) \ (A' * B * {x})
+  have h₁ : A * B * C' = A * B * C ∪ (A * B * {x}) \ (A' * B * {x})
   rw [hC', insert_eq, union_comm, mul_union]
   refine (sup_sdiff_eq_sup ?_).symm
   rw [mul_right_comm, mul_right_comm A, h₀]

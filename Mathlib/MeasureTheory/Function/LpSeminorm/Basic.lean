@@ -777,7 +777,7 @@ theorem eLpNorm_restrict_eq_of_support_subset {s : Set α} {f : α → F} (hsf :
   · simp_rw [eLpNorm_eq_eLpNorm' hp0 hp_top, eLpNorm']
     congr 1
     apply setLIntegral_eq_of_support_subset
-    have  : ¬(p.toReal ≤ 0)
+    have : ¬(p.toReal ≤ 0)
     simpa only [not_le] using ENNReal.toReal_pos hp0 hp_top
     simpa [this] using hsf
 
@@ -1278,7 +1278,7 @@ section RCLike
 variable {𝕜 : Type*} [RCLike 𝕜] {f : α → 𝕜}
 
 theorem Memℒp.re (hf : Memℒp f p μ) : Memℒp (fun x => RCLike.re (f x)) p μ := by
-  have  : ∀ x, ‖RCLike.re (f x)‖ ≤ 1 * ‖f x‖
+  have : ∀ x, ‖RCLike.re (f x)‖ ≤ 1 * ‖f x‖
   intro x
   rw [one_mul]
   exact RCLike.norm_re_le_norm (f x)
@@ -1286,7 +1286,7 @@ theorem Memℒp.re (hf : Memℒp f p μ) : Memℒp (fun x => RCLike.re (f x)) p 
   exact RCLike.continuous_re.comp_aestronglyMeasurable hf.1
 
 theorem Memℒp.im (hf : Memℒp f p μ) : Memℒp (fun x => RCLike.im (f x)) p μ := by
-  have  : ∀ x, ‖RCLike.im (f x)‖ ≤ 1 * ‖f x‖
+  have : ∀ x, ‖RCLike.im (f x)‖ ≤ 1 * ‖f x‖
   intro x
   rw [one_mul]
   exact RCLike.norm_im_le_norm (f x)

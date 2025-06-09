@@ -222,7 +222,7 @@ lemma D₂_D₁ (i₁₂ i₁₂' i₁₂'' : I₁₂) :
         by_cases h₄ : c₂.Rel i₂ (c₂.next i₂)
         · have h₅ : ComplexShape.π c₁ c₂ c₁₂ (i₁, c₂.next i₂) = i₁₂' := by
             rw [← c₁₂.next_eq' h₁, ← h, ComplexShape.next_π₂ c₁ c₁₂ i₁ h₄]
-          have h₆  : ComplexShape.π c₁ c₂ c₁₂ (c₁.next i₁, c₂.next i₂) = i₁₂''
+          have h₆ : ComplexShape.π c₁ c₂ c₁₂ (c₁.next i₁, c₂.next i₂) = i₁₂''
           rw [← c₁₂.next_eq' h₂, ← ComplexShape.next_π₁ c₂ c₁₂ h₃, h₅]
           simp only [totalAux.d₂_eq K c₁₂ _ h₄ _ h₅, totalAux.d₂_eq K c₁₂ _ h₄ _ h₆,
             Linear.units_smul_comp, assoc, totalAux.ιMapObj_D₁, Linear.comp_units_smul,

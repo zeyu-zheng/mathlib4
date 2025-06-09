@@ -168,7 +168,7 @@ theorem integralBasis_repr_apply [NumberField K] (x : K) (i : Free.ChooseBasisIn
   suffices ((latticeBasis K).restrictScalars ℚ).repr.toLinearMap ∘ₗ f =
     (integralBasis K).repr.toLinearMap from DFunLike.congr_fun (LinearMap.congr_fun this x) i
   refine Basis.ext (integralBasis K) (fun i ↦ ?_)
-  have  : f (integralBasis K i) = ((latticeBasis K).restrictScalars ℚ) i
+  have : f (integralBasis K i) = ((latticeBasis K).restrictScalars ℚ) i
   apply Subtype.val_injective
   rw [LinearMap.codRestrict_apply, AlgHom.toLinearMap_apply, Basis.restrictScalars_apply,
     latticeBasis_apply]
@@ -600,7 +600,7 @@ theorem latticeBasis_repr_apply (x : K) (i : ChooseBasisIndex ℤ (𝓞 K)) :
   suffices ((latticeBasis K).restrictScalars ℚ).repr.toLinearMap ∘ₗ f =
     (integralBasis K).repr.toLinearMap from DFunLike.congr_fun (LinearMap.congr_fun this x) i
   refine Basis.ext (integralBasis K) (fun i ↦ ?_)
-  have  : f (integralBasis K i) = ((latticeBasis K).restrictScalars ℚ) i
+  have : f (integralBasis K i) = ((latticeBasis K).restrictScalars ℚ) i
   apply Subtype.val_injective
   rw [LinearMap.codRestrict_apply, AlgHom.toLinearMap_apply, Basis.restrictScalars_apply,
     latticeBasis_apply]

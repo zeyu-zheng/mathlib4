@@ -186,7 +186,7 @@ variable {𝕜₁ 𝕜₂ : Type*} [NormedDivisionRing 𝕜₁] [NormedDivisionR
 theorem IsVonNBounded.image {σ : 𝕜₁ →+* 𝕜₂} [RingHomSurjective σ] [RingHomIsometric σ] {s : Set E}
     (hs : IsVonNBounded 𝕜₁ s) (f : E →SL[σ] F) : IsVonNBounded 𝕜₂ (f '' s) := by
   have σ_iso : Isometry σ := AddMonoidHomClass.isometry_of_norm σ fun x => RingHomIsometric.is_iso
-  have  : map σ (𝓝 0) = 𝓝 0
+  have : map σ (𝓝 0) = 𝓝 0
   rw [σ_iso.embedding.map_nhds_eq, σ.surjective.range_eq, nhdsWithin_univ, map_zero]
   have hf₀ : Tendsto f (𝓝 0) (𝓝 0) := f.continuous.tendsto' 0 0 (map_zero f)
   simp only [isVonNBounded_iff_tendsto_smallSets_nhds, ← this, tendsto_map'_iff] at hs ⊢
@@ -212,7 +212,7 @@ theorem isVonNBounded_of_smul_tendsto_zero {ε : ι → 𝕜} {l : Filter ι} [l
   rw [(nhds_basis_balanced 𝕜 E).isVonNBounded_iff]
   by_contra! H'
   rcases H' with ⟨V, ⟨hV, hVb⟩, hVS⟩
-  have  : ∀ᶠ n in l, ∃ x : S, ε n • (x : E) ∉ V
+  have : ∀ᶠ n in l, ∃ x : S, ε n • (x : E) ∉ V
   filter_upwards [hε] with n hn
   rw [absorbs_iff_norm] at hVS
   push_neg at hVS

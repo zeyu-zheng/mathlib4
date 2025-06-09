@@ -306,7 +306,7 @@ theorem wbtw_swap_left_iff [NoZeroSMulDivisors R V] {x y : P} (z : P) :
     rcases hx with (h | h)
     · nth_rw 1 [← mul_one tx] at h
       rw [← mul_sub, add_eq_zero_iff_neg_eq] at h
-      have h'  : ty = 0
+      have h' : ty = 0
       refine le_antisymm ?_ hty.1
       rw [← h, Left.neg_nonpos_iff]
       exact mul_nonneg htx.1 (sub_nonneg.2 hty.2)
@@ -455,7 +455,7 @@ theorem Sbtw.affineCombination_of_mem_affineSpan_pair [NoZeroDivisors R] [NoZero
     ← s.affineCombination_vsub, ← lineMap_apply, sbtw_lineMap_iff, and_iff_left hs.2,
     ← @vsub_ne_zero V, s.affineCombination_vsub]
   intro hz
-  have hw₁w₂  : (∑ i ∈ s, (w₁ - w₂) i) = 0
+  have hw₁w₂ : (∑ i ∈ s, (w₁ - w₂) i) = 0
   simp_rw [Pi.sub_apply, Finset.sum_sub_distrib, hw₁, hw₂, sub_self]
   refine hs.1 ?_
   have ha' := ha s (w₁ - w₂) hw₁w₂ hz i his
@@ -503,26 +503,26 @@ theorem sbtw_of_sbtw_of_sbtw_of_mem_affineSpan_pair [NoZeroSMulDivisors R V]
     Sbtw R (t.points i₁) p p₁ := by
   -- Should not be needed; see comments on local instances in `Data.Sign`.
   letI : DecidableRel ((· < ·) : R → R → Prop) := LinearOrderedRing.decidableLT
-  have h₁₃  : i₁ ≠ i₃
+  have h₁₃ : i₁ ≠ i₃
   rintro rfl
   simp at h₂
-  have h₂₃  : i₂ ≠ i₃
+  have h₂₃ : i₂ ≠ i₃
   rintro rfl
   simp at h₁
-  have h3  : ∀ i : Fin 3, i = i₁ ∨ i = i₂ ∨ i = i₃
+  have h3 : ∀ i : Fin 3, i = i₁ ∨ i = i₂ ∨ i = i₃
   clear h₁ h₂ h₁' h₂'
   -- Porting note: Originally `decide!`
   intro i
   fin_cases i <;> fin_cases i₁ <;> fin_cases i₂ <;> fin_cases i₃ <;> simp at h₁₂ h₁₃ h₂₃ ⊢
-  have hu  : (Finset.univ : Finset (Fin 3)) = {i₁, i₂, i₃}
+  have hu : (Finset.univ : Finset (Fin 3)) = {i₁, i₂, i₃}
   clear h₁ h₂ h₁' h₂'
   -- Porting note: Originally `decide!`
   fin_cases i₁ <;> fin_cases i₂ <;> fin_cases i₃
     <;> simp (config := {decide := true}) at h₁₂ h₁₃ h₂₃ ⊢
-  have hp  : p ∈ affineSpan R (Set.range t.points)
-  have hle  : line[R, t.points i₁, p₁] ≤ affineSpan R (Set.range t.points)
+  have hp : p ∈ affineSpan R (Set.range t.points)
+  have hle : line[R, t.points i₁, p₁] ≤ affineSpan R (Set.range t.points)
   refine affineSpan_pair_le_of_mem_of_mem (mem_affineSpan R (Set.mem_range_self _)) ?_
-  have hle  : line[R, t.points i₂, t.points i₃] ≤ affineSpan R (Set.range t.points)
+  have hle : line[R, t.points i₂, t.points i₃] ≤ affineSpan R (Set.range t.points)
   refine affineSpan_mono R ?_
   simp [Set.insert_subset_iff]
   rw [AffineSubspace.le_def'] at hle
@@ -775,7 +775,7 @@ theorem wbtw_iff_sameRay_vsub {x y z : P} : Wbtw R x y z ↔ SameRay R (y -ᵥ x
         ⟨div_nonneg hr₂.le (add_nonneg hr₁.le hr₂.le),
           div_le_one_of_le (le_add_of_nonneg_left hr₁.le) (add_nonneg hr₁.le hr₂.le)⟩,
         ?_⟩
-    have h'  : z = r₂⁻¹ • r₁ • (y -ᵥ x) +ᵥ y
+    have h' : z = r₂⁻¹ • r₁ • (y -ᵥ x) +ᵥ y
     simp [h, hr₂.ne']
     rw [eq_comm]
     simp only [lineMap_apply, h', vadd_vsub_assoc, smul_smul, ← add_smul, eq_vadd_iff_vsub_eq,
@@ -801,7 +801,7 @@ theorem wbtw_midpoint (x y : P) : Wbtw R x (midpoint R x y) y := by
   rw [pointReflection_midpoint_left]
 
 theorem sbtw_midpoint_of_ne {x y : P} (h : x ≠ y) : Sbtw R x (midpoint R x y) y := by
-  have h  : midpoint R x y ≠ x
+  have h : midpoint R x y ≠ x
   simp [h]
   convert sbtw_pointReflection_of_ne R h
   rw [pointReflection_midpoint_left]

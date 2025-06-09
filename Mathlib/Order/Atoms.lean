@@ -547,7 +547,7 @@ instance {α} [CompleteAtomicBooleanAlgebra α] : IsAtomistic α where
     inhabit α
     refine ⟨{ a | IsAtom a ∧ a ≤ b }, ?_, fun a ha => ha.1⟩
     refine le_antisymm ?_ (sSup_le fun c hc => hc.2)
-    have  : (⨅ c : α, ⨆ x, b ⊓ cond x c (cᶜ)) = b
+    have : (⨅ c : α, ⨆ x, b ⊓ cond x c (cᶜ)) = b
     simp [iSup_bool_eq, iInf_const]
     rw [← this]; clear this
     simp_rw [iInf_iSup_eq, iSup_le_iff]; intro g

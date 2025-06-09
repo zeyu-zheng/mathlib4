@@ -482,7 +482,7 @@ theorem valAux_eq {f : PreTilt K v O hv p} {n : ℕ} (hfn : coeff _ _ n f ≠ 0)
   · rfl
   obtain ⟨x, hx⟩ := Ideal.Quotient.mk_surjective (coeff (ModP K v O hv p) p (Nat.find h + k + 1) f)
   have h1 : (Ideal.Quotient.mk _ x : ModP K v O hv p) ≠ 0 := hx.symm ▸ hfn
-  have h2  : (Ideal.Quotient.mk _ (x ^ p) : ModP K v O hv p) ≠ 0
+  have h2 : (Ideal.Quotient.mk _ (x ^ p) : ModP K v O hv p) ≠ 0
   erw [RingHom.map_pow, hx, ← RingHom.map_pow, coeff_pow_p]
   exact coeff_nat_find_add_ne_zero k
   erw [ih (coeff_nat_find_add_ne_zero k), ← hx, ← coeff_pow_p, RingHom.map_pow, ← hx,
@@ -510,7 +510,7 @@ theorem valAux_mul (f g : PreTilt K v O hv p) :
   obtain ⟨n, hn⟩ : ∃ n, coeff _ _ n g ≠ 0 := not_forall.1 fun h => hg <| Perfection.ext h
   replace hm := coeff_ne_zero_of_le hm (le_max_left m n)
   replace hn := coeff_ne_zero_of_le hn (le_max_right m n)
-  have hfg  : coeff _ _ (max m n + 1) (f * g) ≠ 0
+  have hfg : coeff _ _ (max m n + 1) (f * g) ≠ 0
   rw [RingHom.map_mul]
   refine ModP.mul_ne_zero_of_pow_p_ne_zero ?_ ?_
   · rw [← RingHom.map_pow, coeff_pow_p f]; assumption

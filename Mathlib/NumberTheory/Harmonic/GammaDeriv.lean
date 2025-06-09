@@ -40,19 +40,19 @@ lemma deriv_Gamma_nat (n : ℕ) :
       (by positivity), Gamma_nat_eq_factorial, div_eq_iff_mul_eq (by positivity),
       mul_comm, Eq.comm] at this
   have hc : ConvexOn ℝ (Ioi 0) f := convexOn_log_Gamma
-  have h_rec (x  : ℝ) (hx : 0 < x) : f (x + 1) = f x + log x
+  have h_rec (x : ℝ) (hx : 0 < x) : f (x + 1) = f x + log x
   simp only [f, Function.comp_apply,
   Gamma_add_one hx.ne', log_mul hx.ne' (Gamma_pos_of_pos hx).ne', add_comm]
-  have hder {x  : ℝ} (hx : 0 < x) : DifferentiableAt ℝ f x
+  have hder {x : ℝ} (hx : 0 < x) : DifferentiableAt ℝ f x
   refine ((differentiableAt_Gamma ?_).log (Gamma_ne_zero ?_)) <;>
   exact fun m ↦ ne_of_gt (by linarith)
   -- Express derivative at general `n` in terms of value at `1` using recurrence relation
-  have hder_rec (x  : ℝ) (hx : 0 < x) : deriv f (x + 1) = deriv f x + 1 / x
+  have hder_rec (x : ℝ) (hx : 0 < x) : deriv f (x + 1) = deriv f x + 1 / x
   rw [← deriv_comp_add_const _ _ (hder <| by positivity), one_div, ← deriv_log,
     ← deriv_add (hder <| by positivity) (differentiableAt_log hx.ne')]
   apply EventuallyEq.deriv_eq
   filter_upwards [eventually_gt_nhds hx] using h_rec
-  have hder_nat (n  : ℕ) : deriv f (n + 1) = deriv f 1 + harmonic n
+  have hder_nat (n : ℕ) : deriv f (n + 1) = deriv f 1 + harmonic n
   induction' n with n hn
   · simp
   · rw [cast_succ, hder_rec (n + 1) (by positivity), hn, harmonic_succ]
@@ -60,12 +60,12 @@ lemma deriv_Gamma_nat (n : ℕ) :
     ring
   suffices -deriv f 1 = γ by rw [hder_nat n, ← this, neg_neg]
   -- Use convexity to show derivative of `f` at `n + 1` is between `log n` and `log (n + 1)`
-  have derivLB (n  : ℕ) (hn : 0 < n) : log n ≤ deriv f (n + 1)
+  have derivLB (n : ℕ) (hn : 0 < n) : log n ≤ deriv f (n + 1)
   refine (le_of_eq ?_).trans <| hc.slope_le_deriv (mem_Ioi.mpr <| Nat.cast_pos.mpr hn)
     (by positivity : _ < (_ : ℝ)) (by linarith) (hder <| by positivity)
   rw [slope_def_field, show n + 1 - n = (1 : ℝ) by ring, div_one, h_rec n (by positivity),
     add_sub_cancel_left]
-  have derivUB (n  : ℕ) : deriv f (n + 1) ≤ log (n + 1)
+  have derivUB (n : ℕ) : deriv f (n + 1) ≤ log (n + 1)
   refine (hc.deriv_le_slope (by positivity : (0 : ℝ) < n + 1) (by positivity : (0 : ℝ) < n + 2)
       (by linarith) (hder <| by positivity)).trans (le_of_eq ?_)
   rw [slope_def_field, show n + 2 - (n + 1) = (1 : ℝ) by ring, div_one,
@@ -194,7 +194,7 @@ lemma hasDerivAt_Gamma_one_half : HasDerivAt Gamma (-√π * (γ + 2 * log 2)) (
 
 lemma hasDerivAt_Gammaℂ_one : HasDerivAt Gammaℂ (-(γ + log (2 * π)) / π) 1 := by
   let f (s : ℂ) : ℂ := 2 * (2 * π) ^ (-s)
-  have  : HasDerivAt (fun s : ℂ ↦ 2 * (2 * π : ℂ) ^ (-s)) (-log (2 * π) / π) 1
+  have : HasDerivAt (fun s : ℂ ↦ 2 * (2 * π : ℂ) ^ (-s)) (-log (2 * π) / π) 1
   have := (hasDerivAt_neg' (1 : ℂ)).const_cpow (c := 2 * π)
     (Or.inl (by exact_mod_cast Real.two_pi_pos.ne'))
   refine (this.const_mul 2).congr_deriv ?_
@@ -208,15 +208,15 @@ lemma hasDerivAt_Gammaℂ_one : HasDerivAt Gammaℂ (-(γ + log (2 * π)) / π) 
 lemma hasDerivAt_Gammaℝ_one : HasDerivAt Gammaℝ (-(γ + log (4 * π)) / 2) 1 := by
   let f (s : ℂ) : ℂ := π ^ (-s / 2)
   let g (s : ℂ) : ℂ := Gamma (s / 2)
-  have aux  : (π : ℂ) ^ (1 / 2 : ℂ) = ↑√π
+  have aux : (π : ℂ) ^ (1 / 2 : ℂ) = ↑√π
   rw [Real.sqrt_eq_rpow, ofReal_cpow Real.pi_pos.le, ofReal_div, ofReal_one, ofReal_ofNat]
-  have aux2  : (√π : ℂ) ≠ 0
+  have aux2 : (√π : ℂ) ≠ 0
   rw [ofReal_ne_zero]; positivity
-  have hf  : HasDerivAt f (-log π / 2 / √π) 1
+  have hf : HasDerivAt f (-log π / 2 / √π) 1
   have := ((hasDerivAt_neg (1 : ℂ)).div_const 2).const_cpow (c := π) (Or.inr (by norm_num))
   refine this.congr_deriv ?_
   rw [mul_assoc, ← mul_div_assoc, mul_neg_one, neg_div, cpow_neg, ← div_eq_inv_mul, aux]
-  have hg  : HasDerivAt g (-√π * (γ + 2 * log 2) / 2) 1
+  have hg : HasDerivAt g (-√π * (γ + 2 * log 2) / 2) 1
   have := hasDerivAt_Gamma_one_half.comp 1 (?_ : HasDerivAt (fun s : ℂ ↦ s / 2) (1 / 2) 1)
   · rwa [mul_one_div] at this
   · exact (hasDerivAt_id _).div_const _

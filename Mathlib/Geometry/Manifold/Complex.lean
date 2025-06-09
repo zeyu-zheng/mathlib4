@@ -54,15 +54,15 @@ theorem Complex.norm_eventually_eq_of_mdifferentiableAt_of_isLocalMax {f : M →
     ∀ᶠ y in 𝓝 c, ‖f y‖ = ‖f c‖ := by
   set e := extChartAt I c
   have hI : range I = univ := ModelWithCorners.Boundaryless.range_eq_univ
-  have H₁  : 𝓝[range I] (e c) = 𝓝 (e c)
+  have H₁ : 𝓝[range I] (e c) = 𝓝 (e c)
   rw [hI, nhdsWithin_univ]
-  have H₂  : map e.symm (𝓝 (e c)) = 𝓝 c
+  have H₂ : map e.symm (𝓝 (e c)) = 𝓝 c
   rw [← map_extChartAt_symm_nhdsWithin_range I c, H₁]
   rw [← H₂, eventually_map]
   replace hd : ∀ᶠ y in 𝓝 (e c), DifferentiableAt ℂ (f ∘ e.symm) y := by
     have : e.target ∈ 𝓝 (e c) := H₁ ▸ extChartAt_target_mem_nhdsWithin I c
     filter_upwards [this, Tendsto.eventually H₂.le hd] with y hyt hy₂
-    have hys  : e.symm y ∈ (chartAt H c).source
+    have hys : e.symm y ∈ (chartAt H c).source
     rw [← extChartAt_source I c]
     exact (extChartAt I c).map_target hyt
     have hfy : f (e.symm y) ∈ (chartAt F (0 : F)).source := mem_univ _
@@ -87,7 +87,7 @@ theorem norm_eqOn_of_isPreconnected_of_isMaxOn {f : M → F} {U : Set M} {c : M}
     (hcU : c ∈ U) (hm : IsMaxOn (norm ∘ f) U c) : EqOn (norm ∘ f) (const M ‖f c‖) U := by
   set V := {z ∈ U | ‖f z‖ = ‖f c‖}
   suffices U ⊆ V from fun x hx ↦ (this hx).2
-  have hVo  : IsOpen V
+  have hVo : IsOpen V
   refine isOpen_iff_mem_nhds.2 fun x hx ↦ inter_mem (ho.mem_nhds hx.1) ?_
   replace hm : IsLocalMax (‖f ·‖) x :=
     mem_of_superset (ho.mem_nhds hx.1) fun z hz ↦ (hm hz).out.trans_eq hx.2.symm

@@ -144,7 +144,7 @@ instance (priority := 100) strongRankCondition_of_orzechProperty
     map_add' := fun _ _ ↦ rfl
     map_smul' := fun _ _ ↦ rfl
   }
-  have h  : (0 : Fin (n + 1) → R) = update (0 : Fin (n + 1) → R) (Fin.last n) 1
+  have h : (0 : Fin (n + 1) → R) = update (0 : Fin (n + 1) → R) (Fin.last n) 1
   apply OrzechProperty.injective_of_surjective_of_injective i f hi
     (Fin.castSucc_injective _).surjective_comp_right
   ext m

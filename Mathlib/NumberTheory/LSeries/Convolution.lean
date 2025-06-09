@@ -121,11 +121,11 @@ lemma term_convolution' (f g : ℕ → ℂ) (s : ℂ) :
   · -- show that both sides vanish when `n = 0`; this is the hardest part of the proof!
     refine (term_zero ..).trans ?_
     -- the right hand sum is over the union below, but in each term, one factor is always zero
-    have hS  : (fun p ↦ p.1 * p.2) ⁻¹' {0} = {0} ×ˢ univ ∪ univ ×ˢ {0}
+    have hS : (fun p ↦ p.1 * p.2) ⁻¹' {0} = {0} ×ˢ univ ∪ univ ×ˢ {0}
     ext
     simp only [mem_preimage, mem_singleton_iff, Nat.mul_eq_zero, mem_union, mem_prod, mem_univ,
       and_true, true_and]
-    have  : ∀ p : (fun p : ℕ × ℕ ↦ p.1 * p.2) ⁻¹' {0}, term f s p.val.1 * term g s p.val.2 = 0
+    have : ∀ p : (fun p : ℕ × ℕ ↦ p.1 * p.2) ⁻¹' {0}, term f s p.val.1 * term g s p.val.2 = 0
     rintro ⟨⟨p₁, p₂⟩, hp⟩
     rcases hS ▸ hp with ⟨rfl, -⟩ | ⟨-, rfl⟩ <;> simp only [term_zero, zero_mul, mul_zero]
     simp only [this, tsum_zero]

@@ -506,7 +506,7 @@ it is continuously polynomial at every point of this ball. -/
 theorem HasFiniteFPowerSeriesOnBall.cPolynomialAt_of_mem
     (hf : HasFiniteFPowerSeriesOnBall f p x n r) (h : y ∈ EMetric.ball x r) :
     CPolynomialAt 𝕜 f y := by
-  have  : (‖y - x‖₊ : ℝ≥0∞) < r
+  have : (‖y - x‖₊ : ℝ≥0∞) < r
   simpa [edist_eq_coe_nnnorm_sub] using h
   have := hf.changeOrigin this
   rw [add_sub_cancel] at this

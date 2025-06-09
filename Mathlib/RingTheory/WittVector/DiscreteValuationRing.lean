@@ -88,7 +88,7 @@ theorem isUnit_of_coeff_zero_ne_zero (x : 𝕎 k) (hx : x.coeff 0 ≠ 0) : IsUni
 variable (p)
 
 theorem irreducible : Irreducible (p : 𝕎 k) := by
-  have hp  : ¬IsUnit (p : 𝕎 k)
+  have hp : ¬IsUnit (p : 𝕎 k)
   intro hp
   simpa only [constantCoeff_apply, coeff_p_zero, not_isUnit_zero] using
     (constantCoeff : WittVector p k →+* _).isUnit_map hp

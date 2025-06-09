@@ -144,7 +144,7 @@ theorem differentiable_tsum (hu : Summable u) (hf : ∀ n x, HasFDerivAt (f n) (
     intro x
     exact (hasFDerivAt_tsum hu hf hf' hf0 x).differentiableAt
   · push_neg at h
-    have  : (fun x => ∑' n, f n x) = 0
+    have : (fun x => ∑' n, f n x) = 0
     ext1 x; exact tsum_eq_zero_of_not_summable (h x)
     rw [this]
     exact differentiable_const 0
@@ -231,7 +231,7 @@ theorem contDiff_tsum (hf : ∀ i, ContDiff 𝕜 N (f i)) (hv : ∀ k : ℕ, (k 
     · intro n x
       exact h'f _ _ _ hm
   · intro m hm
-    have h'm  : ((m + 1 : ℕ) : ℕ∞) ≤ N
+    have h'm : ((m + 1 : ℕ) : ℕ∞) ≤ N
     simpa only [ENat.coe_add, ENat.coe_one] using ENat.add_one_le_of_lt hm
     rw [iteratedFDeriv_tsum hf hv h'f hm.le]
     have A :

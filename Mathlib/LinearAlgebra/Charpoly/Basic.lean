@@ -93,12 +93,12 @@ theorem minpoly_coeff_zero_of_injective (hf : Function.Injective f) :
     (minpoly R f).coeff 0 ≠ 0 := by
   intro h
   obtain ⟨P, hP⟩ := X_dvd_iff.2 h
-  have hdegP  : P.degree < (minpoly R f).degree
+  have hdegP : P.degree < (minpoly R f).degree
   rw [hP, mul_comm]
   refine degree_lt_degree_mul_X fun h => ?_
   rw [h, mul_zero] at hP
   exact minpoly.ne_zero (isIntegral f) hP
-  have hPmonic  : P.Monic
+  have hPmonic : P.Monic
   suffices (minpoly R f).Monic by
     rwa [Monic.def, hP, mul_comm, leadingCoeff_mul_X, ← Monic.def] at this
   exact minpoly.monic (isIntegral f)

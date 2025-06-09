@@ -305,7 +305,7 @@ theorem dvd_of_dvd_mul_left_of_gcd_one {a b c : ℤ} (habc : a ∣ b * c) (hab :
     a ∣ b := by
   have := gcd_eq_gcd_ab a c
   simp only [hab, Int.ofNat_zero, Int.ofNat_succ, zero_add] at this
-  have  : b * a * gcdA a c + b * c * gcdB a c = b
+  have : b * a * gcdA a c + b * c * gcdB a c = b
   simp [mul_assoc, ← Int.mul_add, ← this]
   rw [← this]
   exact Int.dvd_add (dvd_mul_of_dvd_left (dvd_mul_left a b) _) (dvd_mul_of_dvd_left habc _)

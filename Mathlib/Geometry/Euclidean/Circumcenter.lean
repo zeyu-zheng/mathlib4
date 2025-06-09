@@ -203,7 +203,7 @@ theorem _root_.AffineIndependent.existsUnique_dist_eq {ι : Type*} [hne : Nonemp
         rw [hi default, hdist]
     · have i := hne.some
       let ι2 := { x // x ≠ i }
-      have hc  : Fintype.card ι2 = m + 1
+      have hc : Fintype.card ι2 = m + 1
       rw [Fintype.card_of_subtype (Finset.univ.filter fun x => x ≠ i)]
       · rw [Finset.filter_not]
         -- Porting note: removed `simp_rw [eq_comm]` and used `filter_eq'` instead of `filter_eq`
@@ -214,7 +214,7 @@ theorem _root_.AffineIndependent.existsUnique_dist_eq {ι : Type*} [hne : Nonemp
       haveI : Nonempty ι2 := Fintype.card_pos_iff.1 (hc.symm ▸ Nat.zero_lt_succ _)
       have ha2 : AffineIndependent ℝ fun i2 : ι2 => p i2 := ha.subtype _
       replace hm := hm ha2 _ hc
-      have hr  : Set.range p = insert (p i) (Set.range fun i2 : ι2 => p i2)
+      have hr : Set.range p = insert (p i) (Set.range fun i2 : ι2 => p i2)
       change _ = insert _ (Set.range fun i2 : { x | x ≠ i } => p i2)
       rw [← Set.image_eq_range, ← Set.image_univ, ← Set.image_insert_eq]
       congr with j
@@ -496,7 +496,7 @@ def pointIndexEmbedding (n : ℕ) : Fin (n + 1) ↪ PointsWithCircumcenterIndex 
 theorem sum_pointsWithCircumcenter {α : Type*} [AddCommMonoid α] {n : ℕ}
     (f : PointsWithCircumcenterIndex n → α) :
     ∑ i, f i = (∑ i : Fin (n + 1), f (pointIndex i)) + f circumcenterIndex := by
-  have h  : univ = insert circumcenterIndex (univ.map (pointIndexEmbedding n))
+  have h : univ = insert circumcenterIndex (univ.map (pointIndexEmbedding n))
   ext x
   refine ⟨fun h => ?_, fun _ => mem_univ _⟩
   cases' x with i
@@ -635,7 +635,7 @@ theorem reflection_circumcenter_eq_affineCombination_of_pointsWithCircumcenter {
     reflection (affineSpan ℝ (s.points '' {i₁, i₂})) s.circumcenter =
       (univ : Finset (PointsWithCircumcenterIndex n)).affineCombination ℝ s.pointsWithCircumcenter
         (reflectionCircumcenterWeightsWithCircumcenter i₁ i₂) := by
-  have hc  : card ({i₁, i₂} : Finset (Fin (n + 1))) = 2
+  have hc : card ({i₁, i₂} : Finset (Fin (n + 1))) = 2
   simp [h]
   -- Making the next line a separate definition helps the elaborator:
   set W : AffineSubspace ℝ P := affineSpan ℝ (s.points '' {i₁, i₂})
@@ -701,7 +701,7 @@ theorem exists_circumradius_eq_of_cospherical_subset {s : AffineSubspace ℝ P} 
   rcases hc with ⟨c, hc, r, hcr⟩
   use r
   intro sx hsxps
-  have hsx  : affineSpan ℝ (Set.range sx.points) = s
+  have hsx : affineSpan ℝ (Set.range sx.points) = s
   refine
     sx.independent.affineSpan_eq_of_le_of_card_eq_finrank_add_one
       (spanPoints_subset_coe_of_subset_coe (hsxps.trans h)) ?_
@@ -749,7 +749,7 @@ theorem exists_circumcenter_eq_of_cospherical_subset {s : AffineSubspace ℝ P} 
   rcases hc with ⟨c, hc, r, hcr⟩
   use c
   intro sx hsxps
-  have hsx  : affineSpan ℝ (Set.range sx.points) = s
+  have hsx : affineSpan ℝ (Set.range sx.points) = s
   refine
     sx.independent.affineSpan_eq_of_le_of_card_eq_finrank_add_one
       (spanPoints_subset_coe_of_subset_coe (hsxps.trans h)) ?_

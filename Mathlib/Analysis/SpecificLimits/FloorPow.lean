@@ -36,14 +36,14 @@ theorem tendsto_div_of_monotone_of_exists_subseq_tendsto_div (u : ℕ → ℝ) (
     to the limit `l` up to `1 + ε`.
     We give a version of this proof by clearing out denominators first, to avoid discussing the sign
     of different quantities. -/
-  have lnonneg  : 0 ≤ l
+  have lnonneg : 0 ≤ l
   rcases hlim 2 one_lt_two with ⟨c, _, ctop, clim⟩
   have : Tendsto (fun n => u 0 / c n) atTop (𝓝 0) :=
     tendsto_const_nhds.div_atTop (tendsto_natCast_atTop_iff.2 ctop)
   apply le_of_tendsto_of_tendsto' this clim fun n => ?_
   gcongr
   exact hmono (zero_le _)
-  have A  : ∀ ε : ℝ, 0 < ε → ∀ᶠ n in atTop, u n - n * l ≤ ε * (1 + ε + l) * n
+  have A : ∀ ε : ℝ, 0 < ε → ∀ᶠ n in atTop, u n - n * l ≤ ε * (1 + ε + l) * n
   intro ε εpos
   rcases hlim (1 + ε) ((lt_add_iff_pos_right _).2 εpos) with ⟨c, cgrowth, ctop, clim⟩
   have L : ∀ᶠ n in atTop, u (c n) - c n * l ≤ ε * c n := by
@@ -97,7 +97,7 @@ theorem tendsto_div_of_monotone_of_exists_subseq_tendsto_div (u : ℕ → ℝ) (
     _ ≤ ε * ((1 + ε) * c (N - 1)) + ε * c (N - 1) * l := by gcongr
     _ = ε * (1 + ε + l) * c (N - 1) := by ring
     _ ≤ ε * (1 + ε + l) * n := by gcongr
-  have B  : ∀ ε : ℝ, 0 < ε → ∀ᶠ n : ℕ in atTop, (n : ℝ) * l - u n ≤ ε * (1 + l) * n
+  have B : ∀ ε : ℝ, 0 < ε → ∀ᶠ n : ℕ in atTop, (n : ℝ) * l - u n ≤ ε * (1 + l) * n
   intro ε εpos
   rcases hlim (1 + ε) ((lt_add_iff_pos_right _).2 εpos) with ⟨c, cgrowth, ctop, clim⟩
   have L : ∀ᶠ n : ℕ in atTop, (c n : ℝ) * l - u (c n) ≤ ε * c n := by
@@ -152,7 +152,7 @@ theorem tendsto_div_of_monotone_of_exists_subseq_tendsto_div (u : ℕ → ℝ) (
     _ ≤ ε * (1 + l) * n := by gcongr
   refine tendsto_order.2 ⟨fun d hd => ?_, fun d hd => ?_⟩
   · obtain ⟨ε, hε, εpos⟩ : ∃ ε : ℝ, d + ε * (1 + l) < l ∧ 0 < ε := by
-      have L  : Tendsto (fun ε => d + ε * (1 + l)) (𝓝[>] 0) (𝓝 (d + 0 * (1 + l)))
+      have L : Tendsto (fun ε => d + ε * (1 + l)) (𝓝[>] 0) (𝓝 (d + 0 * (1 + l)))
       apply Tendsto.mono_left _ nhdsWithin_le_nhds
       exact tendsto_const_nhds.add (tendsto_id.mul tendsto_const_nhds)
       simp only [zero_mul, add_zero] at L
@@ -167,7 +167,7 @@ theorem tendsto_div_of_monotone_of_exists_subseq_tendsto_div (u : ℕ → ℝ) (
       _ = (n : ℝ)⁻¹ * (n * l - ε * (1 + l) * n) := by ring
       _ ≤ (n : ℝ)⁻¹ * u n := by gcongr; linarith only [hn]
   · obtain ⟨ε, hε, εpos⟩ : ∃ ε : ℝ, l + ε * (1 + ε + l) < d ∧ 0 < ε := by
-      have L  : Tendsto (fun ε => l + ε * (1 + ε + l)) (𝓝[>] 0) (𝓝 (l + 0 * (1 + 0 + l)))
+      have L : Tendsto (fun ε => l + ε * (1 + ε + l)) (𝓝[>] 0) (𝓝 (l + 0 * (1 + 0 + l)))
       apply Tendsto.mono_left _ nhdsWithin_le_nhds
       exact
         tendsto_const_nhds.add
@@ -193,7 +193,7 @@ theorem tendsto_div_of_monotone_of_tendsto_div_floor_pow (u : ℕ → ℝ) (l : 
   refine
     ⟨fun n => ⌊c k ^ n⌋₊, ?_,
       (tendsto_nat_floor_atTop (α := ℝ)).comp (tendsto_pow_atTop_atTop_of_one_lt (cone k)), hc k⟩
-  have H  : ∀ n : ℕ, (0 : ℝ) < ⌊c k ^ n⌋₊
+  have H : ∀ n : ℕ, (0 : ℝ) < ⌊c k ^ n⌋₊
   intro n
   refine zero_lt_one.trans_le ?_
   simp only [Real.rpow_natCast, Nat.one_le_cast, Nat.one_le_floor_iff,
@@ -206,7 +206,7 @@ theorem tendsto_div_of_monotone_of_tendsto_div_floor_pow (u : ℕ → ℝ) (l : 
       exact (tendsto_pow_atTop_atTop_of_one_lt (cone k)).comp (tendsto_add_atTop_nat 1)
     · refine tendsto_nat_floor_div_atTop.comp ?_
       exact tendsto_pow_atTop_atTop_of_one_lt (cone k)
-  have B  : Tendsto (fun n : ℕ => (⌊c k ^ (n + 1)⌋₊ : ℝ) / ⌊c k ^ n⌋₊) atTop (𝓝 (c k))
+  have B : Tendsto (fun n : ℕ => (⌊c k ^ (n + 1)⌋₊ : ℝ) / ⌊c k ^ n⌋₊) atTop (𝓝 (c k))
   simp only [one_mul, div_one] at A
   convert A using 1
   ext1 n
@@ -221,11 +221,11 @@ theorem sum_div_pow_sq_le_div_sq (N : ℕ) {j : ℝ} (hj : 0 < j) {c : ℝ} (hc 
     (∑ i ∈ (range N).filter (j < c ^ ·), (1 : ℝ) / (c ^ i) ^ 2) ≤ c ^ 3 * (c - 1)⁻¹ / j ^ 2 := by
   have cpos : 0 < c := zero_lt_one.trans hc
   have A : (0 : ℝ) < c⁻¹ ^ 2 := sq_pos_of_pos (inv_pos.2 cpos)
-  have B  : c ^ 2 * ((1 : ℝ) - c⁻¹ ^ 2)⁻¹ ≤ c ^ 3 * (c - 1)⁻¹
+  have B : c ^ 2 * ((1 : ℝ) - c⁻¹ ^ 2)⁻¹ ≤ c ^ 3 * (c - 1)⁻¹
   rw [← div_eq_mul_inv, ← div_eq_mul_inv, div_le_div_iff _ (sub_pos.2 hc)]
   swap
   · exact sub_pos.2 (pow_lt_one (inv_nonneg.2 cpos.le) (inv_lt_one hc) two_ne_zero)
-  have  : c ^ 3 = c ^ 2 * c
+  have : c ^ 3 = c ^ 2 * c
   ring
   simp only [mul_sub, this, mul_one, inv_pow, sub_le_sub_iff_left]
   rw [mul_assoc, mul_comm c, ← mul_assoc, mul_inv_cancel (sq_pos_of_pos cpos).ne', one_mul]

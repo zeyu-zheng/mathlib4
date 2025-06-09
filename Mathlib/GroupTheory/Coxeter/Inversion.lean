@@ -398,7 +398,7 @@ theorem IsReduced.nodup_rightInvSeq {ω : List B} (rω : cs.IsReduced ω) : List
   rw [← getD_eq_get _ 1, ← getD_eq_get _ 1] at dup
   set! t := (ris ω).getD j 1 with h₁
   set! t' := (ris (ω.eraseIdx j)).getD (j' - 1) 1 with h₂
-  have h₃  : t' = (ris ω).getD j' 1
+  have h₃ : t' = (ris ω).getD j' 1
   rw [h₂, cs.getD_rightInvSeq, cs.getD_rightInvSeq,
     (Nat.sub_add_cancel (by omega) : j' - 1 + 1 = j'), eraseIdx_eq_take_drop_succ,
     drop_append_eq_append_drop, drop_length_le (by simp [j_lt_j'.le]), length_take,
@@ -412,7 +412,7 @@ theorem IsReduced.nodup_rightInvSeq {ω : List B} (rω : cs.IsReduced ω) : List
   show j + 1 + (j' - 1 - List.length (take j ω)) = j'
   rw [length_take]
   omega
-  have h₄  : t * t' = 1
+  have h₄ : t * t' = 1
   rw [h₁, h₃, dup]
   exact cs.getD_rightInvSeq_mul_self _ _
   have h₅ := calc
@@ -426,7 +426,7 @@ theorem IsReduced.nodup_rightInvSeq {ω : List B} (rω : cs.IsReduced ω) : List
     _        = ℓ (π ((ω.eraseIdx j).eraseIdx (j' - 1)))   := congrArg cs.length h₅
     _        ≤ ((ω.eraseIdx j).eraseIdx (j' - 1)).length  := cs.length_wordProd_le _
   have h₇ := add_le_add_right (add_le_add_right h₆ 1) 1
-  have h₈ : j' - 1 < List.length (eraseIdx ω j)           := by
+  have h₈ : j' - 1 < List.length (eraseIdx ω j) := by
     apply (@Nat.add_lt_add_iff_right 1).mp
     rw [Nat.sub_add_cancel (by omega)]
     rw [length_eraseIdx_add_one (by omega)]

@@ -75,7 +75,7 @@ theorem mk_mem_enumFrom_iff_le_and_get?_sub {n i : ℕ} {x : α} {l : List α} :
     rcases Nat.exists_eq_add_of_le h with ⟨i, rfl⟩
     simp [mk_add_mem_enumFrom_iff_get?, Nat.add_sub_cancel_left]
   else
-    have  : ∀ k, n + k ≠ i
+    have : ∀ k, n + k ≠ i
     rintro k rfl; simp at h
     simp [h, mem_iff_get?, this]
 

@@ -31,7 +31,7 @@ theorem exists_partition_int (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b : ℤ} (hb :
     ∃ t : Fin n → Fin ⌈1 / ε⌉₊,
     ∀ i₀ i₁, t i₀ = t i₁ → ↑(abs (A i₁ % b - A i₀ % b)) < abs b • ε := by
   have hb' : (0 : ℝ) < ↑(abs b) := Int.cast_pos.mpr (abs_pos.mpr hb)
-  have hbε  : 0 < abs b • ε
+  have hbε : 0 < abs b • ε
   rw [Algebra.smul_def]
   exact mul_pos hb' hε
   have hfloor : ∀ i, 0 ≤ floor ((A i % b : ℤ) / abs b • ε : ℝ) :=

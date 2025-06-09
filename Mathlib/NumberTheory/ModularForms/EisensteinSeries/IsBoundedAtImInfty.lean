@@ -35,7 +35,7 @@ namespace EisensteinSeries
 
 lemma summable_norm_eisSummand {k : ℤ} (hk : 3 ≤ k) (z : ℍ) :
     Summable fun (x : Fin 2 → ℤ) ↦ ‖(eisSummand k x z)‖ := by
-  have hk'  : (2 : ℝ) < k
+  have hk' : (2 : ℝ) < k
   norm_cast
   apply ((summable_one_div_norm_rpow hk').mul_left <| r z ^ (-k : ℝ)).of_nonneg_of_le
     (fun _ => Complex.abs.nonneg _)
@@ -61,7 +61,7 @@ theorem isBoundedAtImInfty_eisensteinSeries_SIF {N : ℕ+} (a : Fin 2 → ZMod N
   rw [eisensteinSeries_slash_apply, ← eisensteinSeries_SIF_apply,
     ← T_zpow_width_invariant N k n (eisensteinSeries_SIF (a ᵥ* A) k) z]
   apply le_trans (abs_le_tsum_abs N (a ᵥ* A) k hk _)
-  have hk'  : (2 : ℝ) < k
+  have hk' : (2 : ℝ) < k
   norm_cast
   apply tsum_le_tsum _ (summable_norm_eisSummand hk _)
   · exact_mod_cast (summable_one_div_norm_rpow hk').mul_left <| r ⟨⟨N, 2⟩, Nat.ofNat_pos⟩ ^ (-k)

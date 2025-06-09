@@ -103,7 +103,7 @@ theorem le_gronwallBound_of_liminf_deriv_right_le {f f' : ℝ → ℝ} {δ K ε 
     (hf' : ∀ x ∈ Ico a b, ∀ r, f' x < r → ∃ᶠ z in 𝓝[>] x, (z - x)⁻¹ * (f z - f x) < r)
     (ha : f a ≤ δ) (bound : ∀ x ∈ Ico a b, f' x ≤ K * f x + ε) :
     ∀ x ∈ Icc a b, f x ≤ gronwallBound δ K ε (x - a) := by
-  have H  : ∀ x ∈ Icc a b, ∀ ε' ∈ Ioi ε, f x ≤ gronwallBound δ K ε' (x - a)
+  have H : ∀ x ∈ Icc a b, ∀ ε' ∈ Ioi ε, f x ≤ gronwallBound δ K ε' (x - a)
   intro x hx ε' hε'
   apply image_le_of_liminf_slope_right_lt_deriv_boundary hf hf'
   · rwa [sub_self, gronwallBound_x0]
@@ -193,9 +193,9 @@ theorem dist_le_of_trajectories_ODE_of_mem
     (hg : ContinuousOn g (Icc a b)) (hg' : ∀ t ∈ Ico a b, HasDerivWithinAt g (v t (g t)) (Ici t) t)
     (hgs : ∀ t ∈ Ico a b, g t ∈ s t) (ha : dist (f a) (g a) ≤ δ) :
     ∀ t ∈ Icc a b, dist (f t) (g t) ≤ δ * exp (K * (t - a)) := by
-  have f_bound  : ∀ t ∈ Ico a b, dist (v t (f t)) (v t (f t)) ≤ 0
+  have f_bound : ∀ t ∈ Ico a b, dist (v t (f t)) (v t (f t)) ≤ 0
   intros; rw [dist_self]
-  have g_bound  : ∀ t ∈ Ico a b, dist (v t (g t)) (v t (g t)) ≤ 0
+  have g_bound : ∀ t ∈ Ico a b, dist (v t (g t)) (v t (g t)) ≤ 0
   intros; rw [dist_self]
   intro t ht
   have :=
@@ -247,7 +247,7 @@ theorem ODE_solution_unique_of_mem_Icc_left
     (hgs : ∀ t ∈ Ioc a b, g t ∈ s t)
     (hb : f b = g b) :
     EqOn f g (Icc a b) := by
-  have hv' t  : LipschitzOnWith K (Neg.neg ∘ (v (-t))) (s (-t))
+  have hv' t : LipschitzOnWith K (Neg.neg ∘ (v (-t))) (s (-t))
   rw [← one_mul K]
   exact LipschitzWith.id.neg.comp_lipschitzOnWith (hv _)
   have hmt1 : MapsTo Neg.neg (Icc (-b) (-a)) (Icc a b) :=

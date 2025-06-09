@@ -231,7 +231,7 @@ instance ofRestrict {X : TopCat} (Y : PresheafedSpace C) {f : X ⟶ Y.carrier}
   base_open := hf
   c_iso U := by
     dsimp
-    have  : (Opens.map f).obj (hf.isOpenMap.functor.obj U) = U
+    have : (Opens.map f).obj (hf.isOpenMap.functor.obj U) = U
     ext1
     exact Set.preimage_image_eq _ hf.inj
     convert_to IsIso (Y.presheaf.map (𝟙 _))
@@ -256,9 +256,9 @@ theorem ofRestrict_invApp {C : Type*} [Category C] (X : PresheafedSpace C) {Y : 
 
 /-- An open immersion is an iso if the underlying continuous map is epi. -/
 theorem to_iso [h' : Epi f.base] : IsIso f := by
-  have  : ∀ (U : (Opens Y)ᵒᵖ), IsIso (f.c.app U)
+  have : ∀ (U : (Opens Y)ᵒᵖ), IsIso (f.c.app U)
   intro U
-  have  : U = op (opensFunctor f |>.obj ((Opens.map f.base).obj (unop U)))
+  have : U = op (opensFunctor f |>.obj ((Opens.map f.base).obj (unop U)))
   induction U using Opposite.rec' with | h U => ?_
   cases U
   dsimp only [Functor.op, Opens.map]
@@ -481,7 +481,7 @@ instance forgetPreservesLimitsOfRight : PreservesLimit (cospan g f) (forget C) :
 theorem pullback_snd_isIso_of_range_subset (H : Set.range g.base ⊆ Set.range f.base) :
     IsIso (pullback.snd f g) := by
   haveI := TopCat.snd_iso_of_left_embedding_range_subset hf.base_open.toEmbedding g.base H
-  have  : IsIso (pullback.snd f g).base
+  have : IsIso (pullback.snd f g).base
   delta pullback.snd
   rw [← limit.isoLimitCone_hom_π ⟨_, pullbackConeOfLeftIsLimit f g⟩ WalkingCospan.right]
   change IsIso (_ ≫ pullback.snd _ _)
@@ -597,7 +597,7 @@ end ToLocallyRingedSpace
 theorem isIso_of_subset {X Y : PresheafedSpace C} (f : X ⟶ Y)
     [H : PresheafedSpace.IsOpenImmersion f] (U : Opens Y.carrier)
     (hU : (U : Set Y.carrier) ⊆ Set.range f.base) : IsIso (f.c.app <| op U) := by
-  have  : U = H.base_open.isOpenMap.functor.obj ((Opens.map f.base).obj U)
+  have : U = H.base_open.isOpenMap.functor.obj ((Opens.map f.base).obj U)
   ext1
   exact (Set.inter_eq_left.mpr hU).symm.trans Set.image_preimage_eq_inter_range.symm
   convert H.c_iso ((Opens.map f.base).obj U)

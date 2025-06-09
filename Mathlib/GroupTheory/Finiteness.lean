@@ -356,7 +356,7 @@ theorem rank_congr {H K : Subgroup G} [Group.FG H] [Group.FG K] (h : H = K) :
 theorem rank_closure_finset_le_card (s : Finset G) : Group.rank (closure (s : Set G)) ≤ s.card := by
   classical
   let t : Finset (closure (s : Set G)) := s.preimage Subtype.val Subtype.coe_injective.injOn
-  have ht  : closure (t : Set (closure (s : Set G))) = ⊤
+  have ht : closure (t : Set (closure (s : Set G))) = ⊤
   rw [Finset.coe_preimage]
   exact closure_preimage_eq_top (s : Set G)
   apply (Group.rank_le (closure (s : Set G)) ht).trans

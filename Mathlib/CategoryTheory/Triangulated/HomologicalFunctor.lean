@@ -124,11 +124,11 @@ noncomputable instance (priority := 100) [F.IsHomological] :
     ⟨fun {X} => preservesLimitOfIsoDiagram F (diagramIsoPair X).symm⟩
   intro X₁ X₂
   have : HasBinaryBiproduct (F.obj X₁) (F.obj X₂) := HasBinaryBiproducts.has_binary_biproduct _ _
-  have  : Mono (F.biprodComparison X₁ X₂)
+  have : Mono (F.biprodComparison X₁ X₂)
   rw [mono_iff_cancel_zero]
   intro Z f hf
   let S := (ShortComplex.mk _ _ (biprod.inl_snd (X := X₁) (Y := X₂))).map F
-  have  : Mono S.f
+  have : Mono S.f
   dsimp [S]; infer_instance
   have ex : S.Exact := F.map_distinguished_exact _ (binaryBiproductTriangle_distinguished X₁ X₂)
   obtain ⟨g, rfl⟩ := ex.lift' f (by simpa using hf =≫ biprod.snd)

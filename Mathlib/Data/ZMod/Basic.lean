@@ -705,7 +705,7 @@ theorem val_add {n : ℕ} [NeZero n] (a b : ZMod n) : (a + b).val = (a.val + b.v
 
 theorem val_add_of_lt {n : ℕ} {a b : ZMod n} (h : a.val + b.val < n) :
     (a + b).val = a.val + b.val := by
-  have  : NeZero n
+  have : NeZero n
   constructor; rintro rfl; simp at h
   rw [ZMod.val_add, Nat.mod_eq_of_lt h]
 
@@ -860,7 +860,7 @@ theorem inv_coe_unit {n : ℕ} (u : (ZMod n)ˣ) : (u : ZMod n)⁻¹ = (u⁻¹ : 
   have := congr_arg ((↑) : ℕ → ZMod n) (val_coe_unit_coprime u)
   rw [← mul_inv_eq_gcd, Nat.cast_one] at this
   let u' : (ZMod n)ˣ := ⟨u, (u : ZMod n)⁻¹, this, by rwa [mul_comm]⟩
-  have h  : u = u'
+  have h : u = u'
   apply Units.ext
   rfl
   rw [h]
@@ -1045,7 +1045,7 @@ theorem val_sub {n : ℕ} [NeZero n] {a b : ZMod n} (h : b.val ≤ a.val) :
 
 theorem val_cast_eq_val_of_lt {m n : ℕ} [nzm : NeZero m] {a : ZMod m}
     (h : a.val < n) : (a.cast : ZMod n).val = a.val := by
-  have nzn  : NeZero n
+  have nzn : NeZero n
   constructor; rintro rfl; simp at h
   cases m with
   | zero => cases nzm; simp_all
@@ -1155,7 +1155,7 @@ theorem valMinAbs_eq_zero {n : ℕ} (x : ZMod n) : x.valMinAbs = 0 ↔ x = 0 := 
 
 theorem natCast_natAbs_valMinAbs {n : ℕ} [NeZero n] (a : ZMod n) :
     (a.valMinAbs.natAbs : ZMod n) = if a.val ≤ (n : ℕ) / 2 then a else -a := by
-  have  : (a.val : ℤ) - n ≤ 0
+  have : (a.val : ℤ) - n ≤ 0
   erw [sub_nonpos, Int.ofNat_le]
   exact a.val_le
   rw [valMinAbs_def_pos]

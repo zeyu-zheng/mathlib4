@@ -233,7 +233,7 @@ theorem pow_dvd_pow_iff {n : ℕ} (hn : n ≠ 0) {a b : R} : a ^ n ∣ b ^ n ↔
   replace ha : algebraMap R K a ≠ 0 := fun h ↦
     ha <| (injective_iff_map_eq_zero _).1 (IsFractionRing.injective R K) _ h
   let y := (algebraMap R K b) / (algebraMap R K a)
-  have hy  : IsIntegral R y
+  have hy : IsIntegral R y
   refine ⟨X ^ n - C x, monic_X_pow_sub_C _ hn, ?_⟩
   simp only [y, map_pow, eval₂_sub, eval₂_X_pow, div_pow, eval₂_pow', eval₂_C]
   replace hx := congr_arg (algebraMap R K) hx

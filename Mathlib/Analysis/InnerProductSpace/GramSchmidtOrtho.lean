@@ -115,7 +115,7 @@ theorem gramSchmidt_inv_triangular (v : ι → E) {i j : ι} (hij : i < j) :
   · exact gramSchmidt_orthogonal 𝕜 v hij.ne'
   apply Finset.sum_eq_zero
   rintro k hki'
-  have hki  : k < i
+  have hki : k < i
   simpa using hki'
   have : ⟪b j, b k⟫ = 0 := gramSchmidt_orthogonal 𝕜 v (hki.trans hij).ne'
   simp [this]
@@ -186,7 +186,7 @@ variable {𝕜}
 theorem gramSchmidt_ne_zero_coe {f : ι → E} (n : ι)
     (h₀ : LinearIndependent 𝕜 (f ∘ ((↑) : Set.Iic n → ι))) : gramSchmidt 𝕜 f n ≠ 0 := by
   by_contra h
-  have h₁  : f n ∈ span 𝕜 (f '' Set.Iio n)
+  have h₁ : f n ∈ span 𝕜 (f '' Set.Iio n)
   rw [← span_gramSchmidt_Iio 𝕜 f n, gramSchmidt_def' 𝕜 f, h, zero_add]
   apply Submodule.sum_mem _ _
   intro a ha
@@ -315,7 +315,7 @@ theorem gramSchmidtOrthonormalBasis_apply {f : ι → E} {i : ι} (hi : gramSchm
 theorem gramSchmidtOrthonormalBasis_apply_of_orthogonal {f : ι → E}
     (hf : Pairwise fun i j => ⟪f i, f j⟫ = 0) {i : ι} (hi : f i ≠ 0) :
     gramSchmidtOrthonormalBasis h f i = (‖f i‖⁻¹ : 𝕜) • f i := by
-  have H  : gramSchmidtNormed 𝕜 f i = (‖f i‖⁻¹ : 𝕜) • f i
+  have H : gramSchmidtNormed 𝕜 f i = (‖f i‖⁻¹ : 𝕜) • f i
   rw [gramSchmidtNormed, gramSchmidt_of_orthogonal 𝕜 hf]
   rw [gramSchmidtOrthonormalBasis_apply h, H]
   simpa [H] using hi
@@ -332,7 +332,7 @@ theorem inner_gramSchmidtOrthonormalBasis_eq_zero {f : ι → E} {i : ι}
   by_cases hk : gramSchmidtNormed 𝕜 f k = 0
   · rw [hk, inner_zero_left]
   rw [← gramSchmidtOrthonormalBasis_apply h hk]
-  have  : k ≠ i
+  have : k ≠ i
   rintro rfl
   exact hk hi
   exact (gramSchmidtOrthonormalBasis h f).orthonormal.2 this

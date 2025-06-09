@@ -731,7 +731,7 @@ theorem exists_msmooth_support_eq_eq_one_iff
   satisfies the conclusion of the theorem. -/
   rcases hs.exists_msmooth_support_eq I with ⟨f, f_supp, f_diff, f_pos⟩
   rcases ht.isOpen_compl.exists_msmooth_support_eq I with ⟨g, g_supp, g_diff, g_pos⟩
-  have A  : ∀ x, 0 < f x + g x
+  have A : ∀ x, 0 < f x + g x
   intro x
   by_cases xs : x ∈ support f
   · have : 0 < f x := lt_of_le_of_ne (f_pos x) (Ne.symm xs)

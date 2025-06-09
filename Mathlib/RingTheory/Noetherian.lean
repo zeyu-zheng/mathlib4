@@ -196,7 +196,7 @@ instance isNoetherian_pi {R ι : Type*} {M : ι → Type*}
   intro s
   induction' s using Finset.induction with a s has ih
   · exact ⟨fun s => by
-      have  : s = ⊥
+      have : s = ⊥
       simp only [eq_iff_true_of_subsingleton]
       rw [this]
       apply Submodule.fg_bot⟩

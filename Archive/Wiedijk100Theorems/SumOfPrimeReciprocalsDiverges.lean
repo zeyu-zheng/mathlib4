@@ -138,7 +138,7 @@ theorem card_le_two_pow {x k : ℕ} :
   let K := powerset (image Nat.succ (range k))
   -- Take `e` in `M x k`. If `e + 1` is squarefree, then it is the product of a subset of `[1, k]`.
   -- It follows that `e` is one less than such a product.
-  have h  : M₁ ⊆ image f K
+  have h : M₁ ⊆ image f K
   intro m hm
   simp only [f, K, M₁, M, mem_filter, mem_range, mem_powerset, mem_image, exists_prop] at hm ⊢
   obtain ⟨⟨-, hmp⟩, hms⟩ := hm
@@ -173,7 +173,7 @@ theorem card_le_two_pow_mul_sqrt {x k : ℕ} : card (M x k) ≤ 2 ^ k * Nat.sqrt
   -- Every element of `M x k` is one less than the product `(m + 1)² * (r + 1)` with `r + 1`
   -- squarefree and `m + 1 ≤ √x`, and both `m + 1` and `r + 1` still only have prime powers
   -- smaller than or equal to `k`.
-  have h1  : M x k ⊆ image f K
+  have h1 : M x k ⊆ image f K
   intro m hm
   simp only [f, K, M, M₁, M₂, mem_image, exists_prop, Prod.exists, mem_product,
              mem_filter, mem_range] at hm ⊢
@@ -189,7 +189,7 @@ theorem card_le_two_pow_mul_sqrt {x k : ℕ} : card (M x k) ≤ 2 ^ k * Nat.sqrt
       _ ≤ (m + 1).sqrt := by simpa only [Nat.le_sqrt, pow_two] using Nat.le_of_dvd hm' hbm
       _ ≤ x.sqrt := Nat.sqrt_le_sqrt (Nat.succ_le_iff.mpr hm.1)
   · exact hm.2 p ⟨hp.1, hp.2.trans (Nat.dvd_of_pow_dvd one_le_two hbm)⟩
-  have h2  : card M₂ ≤ Nat.sqrt x
+  have h2 : card M₂ ≤ Nat.sqrt x
   rw [← card_range (Nat.sqrt x)]; apply card_le_card; simp [M, M₂]
   calc
     card (M x k) ≤ card (image f K) := card_le_card h1
@@ -216,7 +216,7 @@ theorem Real.tendsto_sum_one_div_prime_atTop :
   let P := Finset.filter (fun p => k < p ∧ Nat.Prime p) (range (x + 1))
   set U' := U x k with hU'
   -- This is indeed a partition, so `|U| + |M| = |range x| = x`.
-  have h2  : x = card U' + card M'
+  have h2 : x = card U' + card M'
   rw [← card_range x, hU', hM', ← range_sdiff_eq_biUnion]
   exact (card_sdiff_add_card_eq_card (Finset.filter_subset _ _)).symm
   -- But for the `x` we have chosen above, both `|U|` and `|M|` are less than or equal to `x / 2`,

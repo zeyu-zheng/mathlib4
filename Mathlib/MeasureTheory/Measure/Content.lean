@@ -134,7 +134,7 @@ theorem innerContent_bot : μ.innerContent ⊥ = 0 := by
   refine le_antisymm ?_ (zero_le _)
   rw [← μ.empty]
   refine iSup₂_le fun K hK => ?_
-  have  : K = ⊥
+  have : K = ⊥
   ext1
   rw [subset_empty_iff.mp hK, Compacts.coe_bot]
   rw [this]
@@ -158,7 +158,7 @@ theorem innerContent_exists_compact {U : Opens G} (hU : μ.innerContent U ≠ �
 /-- The inner content of a supremum of opens is at most the sum of the individual inner contents. -/
 theorem innerContent_iSup_nat [R1Space G] (U : ℕ → Opens G) :
     μ.innerContent (⨆ i : ℕ, U i) ≤ ∑' i : ℕ, μ.innerContent (U i) := by
-  have h3  : ∀ (t : Finset ℕ) (K : ℕ → Compacts G), μ (t.sup K) ≤ t.sum fun i => μ (K i)
+  have h3 : ∀ (t : Finset ℕ) (K : ℕ → Compacts G), μ (t.sup K) ≤ t.sum fun i => μ (K i)
   intro t K
   refine Finset.induction_on t ?_ ?_
   · simp only [μ.empty, nonpos_iff_eq_zero, Finset.sum_empty, Finset.sup_empty]
@@ -208,12 +208,12 @@ theorem is_mul_left_invariant_innerContent [Group G] [TopologicalGroup G]
 theorem innerContent_pos_of_is_mul_left_invariant [Group G] [TopologicalGroup G]
     (h3 : ∀ (g : G) {K : Compacts G}, μ (K.map _ <| continuous_mul_left g) = μ K) (K : Compacts G)
     (hK : μ K ≠ 0) (U : Opens G) (hU : (U : Set G).Nonempty) : 0 < μ.innerContent U := by
-  have  : (interior (U : Set G)).Nonempty
+  have : (interior (U : Set G)).Nonempty
   rwa [U.isOpen.interior_eq]
   rcases compact_covered_by_mul_left_translates K.2 this with ⟨s, hs⟩
   suffices μ K ≤ s.card * μ.innerContent U by
     exact (ENNReal.mul_pos_iff.mp <| hK.bot_lt.trans_le this).2
-  have  : (K : Set G) ⊆ ↑(⨆ g ∈ s, Opens.comap (Homeomorph.mulLeft g).toContinuousMap U)
+  have : (K : Set G) ⊆ ↑(⨆ g ∈ s, Opens.comap (Homeomorph.mulLeft g).toContinuousMap U)
   simpa only [Opens.iSup_def, Opens.coe_comap, Subtype.coe_mk]
   refine (μ.le_innerContent _ _ this).trans ?_
   refine
@@ -370,7 +370,7 @@ instance outerRegular : μ.measure.OuterRegular := by
 
 /-- In a locally compact space, any measure constructed from a content is regular. -/
 instance regular [WeaklyLocallyCompactSpace G] : μ.measure.Regular := by
-  have  : IsFiniteMeasureOnCompacts μ.measure
+  have : IsFiniteMeasureOnCompacts μ.measure
   refine ⟨fun K hK => ?_⟩
   apply (measure_mono subset_closure).trans_lt _
   rw [measure_apply _ isClosed_closure.measurableSet]

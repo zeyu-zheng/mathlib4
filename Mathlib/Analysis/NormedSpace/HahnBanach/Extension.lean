@@ -81,7 +81,7 @@ theorem exists_extension_norm_eq (p : Subspace 𝕜 E) (f : p →L[𝕜] 𝕜) :
   -- Now `g` can be extended to the `E →L[𝕜] 𝕜` we need.
   refine ⟨g.extendTo𝕜, ?_⟩
   -- It is an extension of `f`.
-  have h  : ∀ x : p, g.extendTo𝕜 x = f x
+  have h : ∀ x : p, g.extendTo𝕜 x = f x
   intro x
   -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
   erw [ContinuousLinearMap.extendTo𝕜_apply, ← Submodule.coe_smul, hextends, hextends]

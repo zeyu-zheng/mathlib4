@@ -72,7 +72,7 @@ theorem map_pow_ne_zero (f_nonneg : 0 ≤ f) {x : R} (hx : IsUnit x) (hfx : f x 
     (f_mul : ∀ x y : R, f (x * y) ≤ c * f x * f y) : f (x ^ n) ≠ 0 := by
   have h1 : f 1 ≠ 0 := map_one_ne_zero (Function.ne_iff.mpr ⟨x, hfx⟩) f_nonneg f_mul
   intro hxn
-  have  : f 1 ≤ 0
+  have : f 1 ≤ 0
   simpa [← mul_pow, hxn] using f_mul (x ^ n) (hx.unit⁻¹ ^ n)
   exact h1 <| this.antisymm (f_nonneg 1)
 
@@ -93,7 +93,7 @@ theorem seminormFromBounded_aux (f_nonneg : 0 ≤ f)
   rcases (f_nonneg x).eq_or_gt with hx | hx
   · simp [hx]
   · change 0 < f x at hx
-    have hc  : 0 ≤ c
+    have hc : 0 ≤ c
     specialize f_mul x 1
     rw [mul_one, show c * f x * f 1 = c * f 1 * f x by ring, le_mul_iff_one_le_left hx] at f_mul
     replace f_nonneg : 0 ≤ f 1 := f_nonneg 1
@@ -211,7 +211,7 @@ theorem seminormFromBounded_one (f_ne_zero : f ≠ 0) (f_nonneg : 0 ≤ f)
     · rw [hx, div_zero]; exact zero_le_one
     · rw [div_self hx]
   · rw [← div_self (map_one_ne_zero f_ne_zero f_nonneg f_mul)]
-    have h_bdd  : BddAbove (Set.range fun y ↦ f y / f y)
+    have h_bdd : BddAbove (Set.range fun y ↦ f y / f y)
     use (1 : ℝ)
     rintro r ⟨y, rfl⟩
     by_cases hy : f y = 0
@@ -288,7 +288,7 @@ theorem seminormFromBounded_of_mul_apply (f_nonneg : 0 ≤ f)
   · by_cases f_ne_zero : f ≠ 0
     · conv_lhs => rw [← mul_one (f x)]
       rw [← div_self (map_one_ne_zero f_ne_zero f_nonneg f_mul)]
-      have h_bdd  : BddAbove (Set.range fun y ↦ f x * (f y / f y))
+      have h_bdd : BddAbove (Set.range fun y ↦ f x * (f y / f y))
       use f x
       rintro r ⟨y, rfl⟩
       by_cases hy0 : f y = 0

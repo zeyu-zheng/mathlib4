@@ -193,7 +193,7 @@ then `M[1/f] = 0` for some `p ∈ D(f)`. -/
 lemma LocalizedModule.exists_subsingleton_away [Module.Finite R M] (p : Ideal R) [p.IsPrime]
     [Subsingleton (LocalizedModule p.primeCompl M)] :
     ∃ f ∉ p, Subsingleton (LocalizedModule (.powers f) M) := by
-  have  : ⟨p, inferInstance⟩ ∈ (Module.support R M)ᶜ
+  have : ⟨p, inferInstance⟩ ∈ (Module.support R M)ᶜ
   simpa [Module.not_mem_support_iff]
   rw [Module.support_eq_zeroLocus, ← Set.biUnion_of_singleton (Module.annihilator R M : Set R),
     PrimeSpectrum.zeroLocus_iUnion₂, Set.compl_iInter₂, Set.mem_iUnion₂] at this

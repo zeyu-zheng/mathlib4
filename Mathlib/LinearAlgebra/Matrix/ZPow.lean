@@ -174,10 +174,10 @@ theorem SemiconjBy.zpow_right {A X Y : M} (hx : IsUnit X.det) (hy : IsUnit Y.det
     (h : SemiconjBy A X Y) : ∀ m : ℤ, SemiconjBy A (X ^ m) (Y ^ m)
   | (n : ℕ) => by simp [h.pow_right n]
   | -[n+1] => by
-    have hx'  : IsUnit (X ^ n.succ).det
+    have hx' : IsUnit (X ^ n.succ).det
     rw [det_pow]
     exact hx.pow n.succ
-    have hy'  : IsUnit (Y ^ n.succ).det
+    have hy' : IsUnit (Y ^ n.succ).det
     rw [det_pow]
     exact hy.pow n.succ
     rw [zpow_negSucc, zpow_negSucc, nonsing_inv_apply _ hx', nonsing_inv_apply _ hy', SemiconjBy]

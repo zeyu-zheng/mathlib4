@@ -62,7 +62,7 @@ theorem rotate'_eq_drop_append_take :
   | l, 0, h => by simp [take_append_of_le_length h]
   | a :: l, n + 1, h => by
     have hnl : n ≤ l.length := le_of_succ_le_succ h
-    have hnl'  : n ≤ (l ++ [a]).length
+    have hnl' : n ≤ (l ++ [a]).length
     rw [length_append, length_cons, List.length]; exact le_of_succ_le h
     rw [rotate'_cons_succ, rotate'_eq_drop_append_take hnl', drop, take,
         drop_append_of_le_length hnl, take_append_of_le_length hnl]; simp
@@ -205,7 +205,7 @@ theorem getElem?_rotate {l : List α} {n m : ℕ} (hml : m < l.length) :
     · congr 1
       rw [length_drop] at hm
       have hm' := Nat.sub_le_iff_le_add'.1 hm
-      have  : n % length l + m - length l < length l
+      have : n % length l + m - length l < length l
       rw [Nat.sub_lt_iff_lt_add' hm']
       exact Nat.add_lt_add hlt hml
       conv_rhs => rw [Nat.add_comm m, ← mod_add_mod, mod_eq_sub_mod hm', mod_eq_of_lt this]
@@ -559,7 +559,7 @@ theorem mem_cyclicPermutations_self (l : List α) : l ∈ cyclicPermutations l :
 @[simp]
 theorem cyclicPermutations_rotate (l : List α) (k : ℕ) :
     (l.rotate k).cyclicPermutations = l.cyclicPermutations.rotate k := by
-  have  : (l.rotate k).cyclicPermutations.length = length (l.cyclicPermutations.rotate k)
+  have : (l.rotate k).cyclicPermutations.length = length (l.cyclicPermutations.rotate k)
   cases l
   · simp
   · rw [length_cyclicPermutations_of_ne_nil] <;> simp

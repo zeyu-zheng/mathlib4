@@ -92,7 +92,7 @@ theorem of_restrictScalars_finiteType [Algebra S A] [IsScalarTower R S A] [hA : 
     FiniteType S A := by
   obtain ⟨s, hS⟩ := hA.out
   refine ⟨⟨s, eq_top_iff.2 fun b => ?_⟩⟩
-  have le  : adjoin R (s : Set A) ≤ Subalgebra.restrictScalars R (adjoin S s)
+  have le : adjoin R (s : Set A) ≤ Subalgebra.restrictScalars R (adjoin S s)
   apply (Algebra.adjoin_le _ : adjoin R (s : Set A) ≤ Subalgebra.restrictScalars R (adjoin S ↑s))
   simp only [Subalgebra.coe_restrictScalars]
   exact Algebra.subset_adjoin
@@ -372,7 +372,7 @@ theorem exists_finset_adjoin_eq_top [h : FiniteType R R[M]] :
   obtain ⟨S, hS⟩ := h
   letI : DecidableEq M := Classical.decEq M
   use Finset.biUnion S fun f => f.support
-  have  : (Finset.biUnion S fun f => f.support : Set M) = ⋃ f ∈ S, (f.support : Set M)
+  have : (Finset.biUnion S fun f => f.support : Set M) = ⋃ f ∈ S, (f.support : Set M)
   simp only [Finset.set_biUnion_coe, Finset.coe_biUnion]
   rw [this]
   exact support_gen_of_gen' hS
@@ -472,7 +472,7 @@ theorem finiteType_iff_fg [CommRing R] [Nontrivial R] :
   refine ⟨fun h => ?_, fun h => @AddMonoidAlgebra.finiteType_of_fg _ _ _ _ h⟩
   obtain ⟨S, hS⟩ := @exists_finset_adjoin_eq_top R M _ _ h
   refine AddMonoid.fg_def.2 ⟨S, (eq_top_iff' _).2 fun m => ?_⟩
-  have hm  : of' R M m ∈ Subalgebra.toSubmodule (adjoin R (of' R M '' ↑S))
+  have hm : of' R M m ∈ Subalgebra.toSubmodule (adjoin R (of' R M '' ↑S))
   simp only [hS, top_toSubmodule, Submodule.mem_top]
   rw [adjoin_eq_span] at hm
   exact mem_closure_of_mem_span_closure hm
@@ -545,7 +545,7 @@ theorem exists_finset_adjoin_eq_top [h : FiniteType R (MonoidAlgebra R M)] :
   obtain ⟨S, hS⟩ := h
   letI : DecidableEq M := Classical.decEq M
   use Finset.biUnion S fun f => f.support
-  have  : (Finset.biUnion S fun f => f.support : Set M) = ⋃ f ∈ S, (f.support : Set M)
+  have : (Finset.biUnion S fun f => f.support : Set M) = ⋃ f ∈ S, (f.support : Set M)
   simp only [Finset.set_biUnion_coe, Finset.coe_biUnion]
   rw [this]
   exact support_gen_of_gen' hS

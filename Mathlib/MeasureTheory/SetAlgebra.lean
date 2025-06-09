@@ -216,9 +216,9 @@ theorem mem_generateSetAlgebra_elim (s_mem : s ∈ generateSetAlgebra 𝒜) :
 theorem countable_generateSetAlgebra (h : 𝒜.Countable) :
     (generateSetAlgebra 𝒜).Countable := by
   let ℬ := {s | s ∈ 𝒜} ∪ {s | sᶜ ∈ 𝒜}
-  have count_ℬ  : ℬ.Countable
+  have count_ℬ : ℬ.Countable
   apply h.union
-  have  : compl '' 𝒜 = {s | sᶜ ∈ 𝒜}
+  have : compl '' 𝒜 = {s | sᶜ ∈ 𝒜}
   ext s
   simpa using ⟨fun ⟨x, x_mem, hx⟩ ↦ by simp [← hx, x_mem], fun hs ↦ ⟨sᶜ, hs, by simp⟩⟩
   exact this ▸ h.image compl
@@ -227,7 +227,7 @@ theorem countable_generateSetAlgebra (h : 𝒜.Countable) :
   have count_𝒞 : 𝒞.Countable := countable_setOf_finite_subset (countable_coe_iff.1 count_ℬ)
   let 𝒟 := {A | A.Finite ∧ A ⊆ 𝒞}
   have count_𝒟 : 𝒟.Countable := countable_setOf_finite_subset (countable_coe_iff.1 count_𝒞)
-  have  : generateSetAlgebra 𝒜 ⊆ f '' 𝒟
+  have : generateSetAlgebra 𝒜 ⊆ f '' 𝒟
   intro s s_mem
   rcases mem_generateSetAlgebra_elim s_mem with ⟨A, A_fin, mem_A, hA, rfl⟩
   exact ⟨A, ⟨A_fin, fun a ha ↦ ⟨mem_A a ha, hA a ha⟩⟩, rfl⟩

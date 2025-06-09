@@ -188,7 +188,7 @@ theorem LipschitzOnWith.extend_finite_dimension {α : Type*} [PseudoMetricSpace 
     `E'` and such a space to transfer the result to `E'`. -/
   let ι : Type _ := Basis.ofVectorSpaceIndex ℝ E'
   let A := (Basis.ofVectorSpace ℝ E').equivFun.toContinuousLinearEquiv
-  have LA  : LipschitzWith ‖A.toContinuousLinearMap‖₊ A
+  have LA : LipschitzWith ‖A.toContinuousLinearMap‖₊ A
   apply A.lipschitz
   have L : LipschitzOnWith (‖A.toContinuousLinearMap‖₊ * K) (A ∘ f) s :=
     LA.comp_lipschitzOnWith hf
@@ -405,7 +405,7 @@ bounded by `R` and at distance at least `1`. For a version not assuming `c` and 
 theorem exists_seq_norm_le_one_le_norm_sub' {c : 𝕜} (hc : 1 < ‖c‖) {R : ℝ} (hR : ‖c‖ < R)
     (h : ¬FiniteDimensional 𝕜 E) :
     ∃ f : ℕ → E, (∀ n, ‖f n‖ ≤ R) ∧ Pairwise fun m n => 1 ≤ ‖f m - f n‖ := by
-  have  : IsSymm E fun x y : E => 1 ≤ ‖x - y‖
+  have : IsSymm E fun x y : E => 1 ≤ ‖x - y‖
   constructor
   intro x y hxy
   rw [← norm_neg]
@@ -418,7 +418,7 @@ theorem exists_seq_norm_le_one_le_norm_sub' {c : 𝕜} (hc : 1 < ‖c‖) {R : �
 theorem exists_seq_norm_le_one_le_norm_sub (h : ¬FiniteDimensional 𝕜 E) :
     ∃ (R : ℝ) (f : ℕ → E), 1 < R ∧ (∀ n, ‖f n‖ ≤ R) ∧ Pairwise fun m n => 1 ≤ ‖f m - f n‖ := by
   obtain ⟨c, hc⟩ : ∃ c : 𝕜, 1 < ‖c‖ := NormedField.exists_one_lt_norm 𝕜
-  have A  : ‖c‖ < ‖c‖ + 1
+  have A : ‖c‖ < ‖c‖ + 1
   linarith
   rcases exists_seq_norm_le_one_le_norm_sub' hc A h with ⟨f, hf⟩
   exact ⟨‖c‖ + 1, f, hc.trans A, hf.1, hf.2⟩

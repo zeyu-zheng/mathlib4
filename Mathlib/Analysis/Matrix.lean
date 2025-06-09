@@ -427,7 +427,7 @@ lemma linfty_opNNNorm_eq_opNNNorm (A : Matrix m n α) :
   · simp
   classical
   let x : n → α := fun j => unitOf (A i j)
-  have hxn  : ‖x‖₊ = 1
+  have hxn : ‖x‖₊ = 1
   simp_rw [x, Pi.nnnorm_def, norm_unitOf, Finset.sup_const Finset.univ_nonempty]
   specialize hN x
   rw [hxn, mul_one, Pi.nnnorm_def, Finset.sup_le_iff] at hN

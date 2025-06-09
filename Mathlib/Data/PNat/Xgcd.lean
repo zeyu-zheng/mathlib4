@@ -413,7 +413,7 @@ theorem gcd_props :
   have hdet : w * z = succPNat (x * y) := u.reduce_isSpecial' rfl
   constructor
   · exact hdet
-  have hdet'  : (w * z : ℕ) = x * y + 1
+  have hdet' : (w * z : ℕ) = x * y + 1
   rw [← mul_coe, hdet, succPNat_coe]
   have _ : u.v = ⟨a, b⟩ := XgcdType.start_v a b
   let hv : Prod.mk (w * d + x * ur.b : ℕ) (y * d + z * ur.b : ℕ) = ⟨a, b⟩ :=

@@ -128,7 +128,7 @@ namespace Multiset
     replace h : s.filter (·.1 = a) ⊆ {a} ×ˢ .range (card (s.1.filter fun x ↦ a = x.1) - 1) := by
       simpa (config := { contextual := true }) [forall_swap (β := _ = a), Finset.subset_iff,
         imp_not_comm, not_le, Nat.lt_sub_iff_add_lt] using h
-    have  : card (s.1.filter fun x ↦ a = x.1) ≤ card (s.1.filter fun x ↦ a = x.1) - 1
+    have : card (s.1.filter fun x ↦ a = x.1) ≤ card (s.1.filter fun x ↦ a = x.1) - 1
     simpa [Finset.card, eq_comm] using Finset.card_mono h
     omega
   exact Nat.le_of_pred_lt (han.trans_lt $ by simpa using hsm hn)

@@ -250,10 +250,10 @@ theorem tendsto_setIntegral_of_antitone {ι : Type*} [Countable ι] [Semilattice
   refine Metric.nhds_basis_closedBall.tendsto_right_iff.2 fun ε ε0 => ?_
   lift ε to ℝ≥0 using ε0.le
   rcases hfi with ⟨i₀, hi₀⟩
-  have νi₀  : ν (s i₀) ≠ ∞
+  have νi₀ : ν (s i₀) ≠ ∞
   simpa [hsm i₀, ν, ENNReal.ofReal, norm_toNNReal] using hi₀.norm.lintegral_lt_top.ne
   have νS : ν S ≠ ∞ := ((measure_mono (hsub i₀)).trans_lt νi₀.lt_top).ne
-  have  : ∀ᶠ i in atTop, ν (s i) ∈ Icc (ν S - ε) (ν S + ε)
+  have : ∀ᶠ i in atTop, ν (s i) ∈ Icc (ν S - ε) (ν S + ε)
   apply tendsto_measure_iInter hsm h_anti ⟨i₀, νi₀⟩
   apply ENNReal.Icc_mem_nhds νS (ENNReal.coe_pos.2 ε0).ne'
   filter_upwards [this, Ici_mem_atTop i₀] with i hi h'i
@@ -296,7 +296,7 @@ theorem setIntegral_eq_zero_of_ae_eq_zero (ht_eq : ∀ᵐ x ∂μ, x ∈ t → f
   · rw [integral_undef]
     contrapose! hf
     exact hf.1
-  have  : ∫ x in t, hf.mk f x ∂μ = 0
+  have : ∫ x in t, hf.mk f x ∂μ = 0
   refine integral_eq_zero_of_ae ?_
   rw [EventuallyEq,
     ae_restrict_iff (hf.stronglyMeasurable_mk.measurableSet_eq_fun stronglyMeasurable_zero)]
@@ -320,7 +320,7 @@ theorem integral_union_eq_left_of_ae_aux (ht_eq : ∀ᵐ x ∂μ.restrict t, f x
     (haux : StronglyMeasurable f) (H : IntegrableOn f (s ∪ t) μ) :
     ∫ x in s ∪ t, f x ∂μ = ∫ x in s, f x ∂μ := by
   let k := f ⁻¹' {0}
-  have hk  : MeasurableSet k
+  have hk : MeasurableSet k
   borelize E; exact haux.measurable (measurableSet_singleton _)
   have h's : IntegrableOn f s μ := H.mono subset_union_left le_rfl
   have A : ∀ u : Set X, ∫ x in u ∩ k, f x ∂μ = 0 := fun u =>
@@ -335,7 +335,7 @@ theorem integral_union_eq_left_of_ae_aux (ht_eq : ∀ᵐ x ∂μ.restrict t, f x
 
 theorem integral_union_eq_left_of_ae (ht_eq : ∀ᵐ x ∂μ.restrict t, f x = 0) :
     ∫ x in s ∪ t, f x ∂μ = ∫ x in s, f x ∂μ := by
-  have ht  : IntegrableOn f t μ
+  have ht : IntegrableOn f t μ
   apply integrableOn_zero.congr_fun_ae; symm; exact ht_eq
   by_cases H : IntegrableOn f (s ∪ t) μ; swap
   · rw [integral_undef H, integral_undef]; simpa [integrableOn_union, ht] using H
@@ -364,7 +364,7 @@ theorem setIntegral_eq_of_subset_of_ae_diff_eq_zero_aux (hts : s ⊆ t)
     (h't : ∀ᵐ x ∂μ, x ∈ t \ s → f x = 0) (haux : StronglyMeasurable f)
     (h'aux : IntegrableOn f t μ) : ∫ x in t, f x ∂μ = ∫ x in s, f x ∂μ := by
   let k := f ⁻¹' {0}
-  have hk  : MeasurableSet k
+  have hk : MeasurableSet k
   borelize E; exact haux.measurable (measurableSet_singleton _)
   calc
     ∫ x in t, f x ∂μ = ∫ x in t ∩ k, f x ∂μ + ∫ x in t \ k, f x ∂μ := by
@@ -451,7 +451,7 @@ alias set_integral_eq_integral_of_forall_compl_eq_zero :=
 theorem setIntegral_neg_eq_setIntegral_nonpos [LinearOrder E] {f : X → E}
     (hf : AEStronglyMeasurable f μ) :
     ∫ x in {x | f x < 0}, f x ∂μ = ∫ x in {x | f x ≤ 0}, f x ∂μ := by
-  have h_union  : {x | f x ≤ 0} = {x | f x < 0} ∪ {x | f x = 0}
+  have h_union : {x | f x ≤ 0} = {x | f x < 0} ∪ {x | f x = 0}
   simp_rw [le_iff_lt_or_eq, setOf_or]
   rw [h_union]
   have B : NullMeasurableSet {x | f x = 0} μ :=
@@ -585,7 +585,7 @@ theorem norm_setIntegral_le_of_norm_le_const_ae' {C : ℝ} (hs : μ s < ∞)
     (hC : ∀ᵐ x ∂μ, x ∈ s → ‖f x‖ ≤ C) (hfm : AEStronglyMeasurable f (μ.restrict s)) :
     ‖∫ x in s, f x ∂μ‖ ≤ C * (μ s).toReal := by
   apply norm_setIntegral_le_of_norm_le_const_ae hs
-  have A  : ∀ᵐ x : X ∂μ, x ∈ s → ‖AEStronglyMeasurable.mk f hfm x‖ ≤ C
+  have A : ∀ᵐ x : X ∂μ, x ∈ s → ‖AEStronglyMeasurable.mk f hfm x‖ ≤ C
   filter_upwards [hC, hfm.ae_mem_imp_eq_mk] with _ h1 h2 h3
   rw [← h2 h3]
   exact h1 h3
@@ -638,7 +638,7 @@ alias set_integral_pos_iff_support_of_nonneg_ae := setIntegral_pos_iff_support_o
 theorem setIntegral_gt_gt {R : ℝ} {f : X → ℝ} (hR : 0 ≤ R)
     (hfint : IntegrableOn f {x | ↑R < f x} μ) (hμ : μ {x | ↑R < f x} ≠ 0) :
     (μ {x | ↑R < f x}).toReal * R < ∫ x in {x | ↑R < f x}, f x ∂μ := by
-  have  : IntegrableOn (fun _ => R) {x | ↑R < f x} μ
+  have : IntegrableOn (fun _ => R) {x | ↑R < f x} μ
   refine ⟨aestronglyMeasurable_const, lt_of_le_of_lt ?_ hfint.2⟩
   refine setLIntegral_mono_ae hfint.1.ennnorm <| ae_of_all _ fun x hx => ?_
   simp only [ENNReal.coe_le_coe, Real.nnnorm_of_nonneg hR,
@@ -1227,7 +1227,7 @@ theorem integral_comp_comm' (L : E →L[𝕜] F) {K} (hL : AntilipschitzWith K L
     ∫ x, L (φ x) ∂μ = L (∫ x, φ x ∂μ) := by
   by_cases h : Integrable φ μ
   · exact integral_comp_comm L h
-  have  : ¬Integrable (fun x => L (φ x)) μ
+  have : ¬Integrable (fun x => L (φ x)) μ
   rwa [← Function.comp_def,
     LipschitzWith.integrable_comp_iff_of_antilipschitz L.lipschitz hL L.map_zero]
   simp [integral_undef, h, this]

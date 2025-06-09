@@ -344,14 +344,14 @@ theorem card_support_eq {n : ℕ} :
   · exact fun hf => ⟨0, 0, fun x => x.elim0, fun x => x.elim0, card_support_eq_zero.mp hf⟩
   · intro h
     obtain ⟨k, x, hk, hx, hf⟩ := hn (card_support_eraseLead' h)
-    have H  : ¬∃ k : Fin n, Fin.castSucc k = Fin.last n
+    have H : ¬∃ k : Fin n, Fin.castSucc k = Fin.last n
     rintro ⟨i, hi⟩
     exact i.castSucc_lt_last.ne hi
     refine
       ⟨Function.extend Fin.castSucc k fun _ => f.natDegree,
         Function.extend Fin.castSucc x fun _ => f.leadingCoeff, ?_, ?_, ?_⟩
     · intro i j hij
-      have hi  : i ∈ Set.range (Fin.castSucc : Fin n → Fin (n + 1))
+      have hi : i ∈ Set.range (Fin.castSucc : Fin n → Fin (n + 1))
       rw [Fin.range_castSucc, Set.mem_def]
       exact lt_of_lt_of_le hij (Nat.lt_succ_iff.mp j.2)
       obtain ⟨i, rfl⟩ := hi

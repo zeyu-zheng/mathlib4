@@ -31,7 +31,7 @@ theorem imo1972_q5 (f g : ℝ → ℝ) (hf1 : ∀ x, ∀ y, f (x + y) + f (x - y
   -- Introduce `k`, the supremum of `f`.
   let k : ℝ := sSup S
   -- Show that `‖f x‖ ≤ k`.
-  have hk₁  : ∀ x, ‖f x‖ ≤ k
+  have hk₁ : ∀ x, ‖f x‖ ≤ k
   have h : BddAbove S := ⟨1, Set.forall_mem_range.mpr hf2⟩
   intro x
   exact le_csSup h (Set.mem_range_self x)
@@ -45,8 +45,8 @@ theorem imo1972_q5 (f g : ℝ → ℝ) (hf1 : ∀ x, ∀ y, f (x + y) + f (x - y
       _ = 2 * k := (two_mul _).symm
   set k' := k / ‖g y‖
   -- Demonstrate that `k' < k` using `hneg`.
-  have H₁  : k' < k
-  have h₁  : 0 < k
+  have H₁ : k' < k
+  have h₁ : 0 < k
   obtain ⟨x, hx⟩ := hf3
   calc
     0 < ‖f x‖ := norm_pos_iff.mpr hx
@@ -55,10 +55,10 @@ theorem imo1972_q5 (f g : ℝ → ℝ) (hf1 : ∀ x, ∀ y, f (x + y) + f (x - y
   · apply lt_mul_of_one_lt_right h₁ hneg
   · exact zero_lt_one.trans hneg
   -- Demonstrate that `k ≤ k'` using `hk₂`.
-  have H₂  : k ≤ k'
-  have h₁  : ∃ x : ℝ, x ∈ S
+  have H₂ : k ≤ k'
+  have h₁ : ∃ x : ℝ, x ∈ S
   use ‖f 0‖; exact Set.mem_range_self 0
-  have h₂  : ∀ x, ‖f x‖ ≤ k'
+  have h₂ : ∀ x, ‖f x‖ ≤ k'
   intro x
   rw [le_div_iff]
   · apply (mul_le_mul_left zero_lt_two).mp (hk₂ x)
@@ -87,11 +87,11 @@ theorem imo1972_q5' (f g : ℝ → ℝ) (hf1 : ∀ x, ∀ y, f (x + y) + f (x - 
   obtain ⟨x, hx⟩ := hf3
   set k := ⨆ x, ‖f x‖
   have h : ∀ x, ‖f x‖ ≤ k := le_ciSup hf2
-  have hgy  : 0 < ‖g y‖
+  have hgy : 0 < ‖g y‖
   linarith
   have k_pos : 0 < k := lt_of_lt_of_le (norm_pos_iff.mpr hx) (h x)
   have : k / ‖g y‖ < k := (div_lt_iff hgy).mpr (lt_mul_of_one_lt_right k_pos H)
-  have  : k ≤ k / ‖g y‖
+  have : k ≤ k / ‖g y‖
   suffices ∀ x, ‖f x‖ ≤ k / ‖g y‖ from ciSup_le this
   intro x
   suffices 2 * (‖f x‖ * ‖g y‖) ≤ 2 * k by

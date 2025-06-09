@@ -36,7 +36,7 @@ example (α β : Type) (h : α = β) (b : β) : Nat × Nat × Nat × α := by
   congr!
 
 example {f : β → α} {x y : α} (h : x ≠ y) : f ⁻¹' {x} ∩ f ⁻¹' {y} = ∅ := by
-  have  : {x} ∩ {y} = (∅ : Set α)
+  have : {x} ∩ {y} = (∅ : Set α)
   simpa [ne_comm] using h
   convert Set.preimage_empty
   rw [← Set.preimage_inter, this]

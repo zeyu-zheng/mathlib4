@@ -23,14 +23,14 @@ variable {a b c d : ℤ}
 theorem imo2001_q6 (hd : 0 < d) (hdc : d < c) (hcb : c < b) (hba : b < a)
     (h : a * c + b * d = (a + b - c + d) * (-a + b + c + d)) : ¬Prime (a * b + c * d) := by
   intro (h0 : Prime (a * b + c * d))
-  have ha  : 0 < a
+  have ha : 0 < a
   linarith
-  have hb  : 0 < b
+  have hb : 0 < b
   linarith
-  have hc  : 0 < c
+  have hc : 0 < c
   linarith
   -- the key step is to show that `a*c + b*d` divides the product `(a*b + c*d) * (a*d + b*c)`
-  have dvd_mul  : a * c + b * d ∣ (a * b + c * d) * (a * d + b * c)
+  have dvd_mul : a * c + b * d ∣ (a * b + c * d) * (a * d + b * c)
   use b ^ 2 + b * d + d ^ 2
   linear_combination b * d * h
   -- since `a*b + c*d` is prime (by assumption), it must divide `a*c + b*d` or `a*d + b*c`

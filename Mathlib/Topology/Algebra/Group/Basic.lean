@@ -654,7 +654,7 @@ theorem mul_mem_connectedComponent_one {G : Type*} [TopologicalSpace G] [MulOneC
     [ContinuousMul G] {g h : G} (hg : g ∈ connectedComponent (1 : G))
     (hh : h ∈ connectedComponent (1 : G)) : g * h ∈ connectedComponent (1 : G) := by
   rw [connectedComponent_eq hg]
-  have hmul  : g ∈ connectedComponent (g * h)
+  have hmul : g ∈ connectedComponent (g * h)
   apply Continuous.image_connectedComponent_subset (continuous_mul_left g)
   rw [← connectedComponent_eq hh]
   exact ⟨(1 : G), mem_connectedComponent, by simp only [mul_one]⟩
@@ -1079,7 +1079,7 @@ variable [TopologicalSpace α] [TopologicalSpace β] [Group α] [MulAction α β
 @[to_additive]
 theorem IsClosed.smul_left_of_isCompact (ht : IsClosed t) (hs : IsCompact s) :
     IsClosed (s • t) := by
-  have  : ∀ x ∈ s • t, ∃ g ∈ s, g⁻¹ • x ∈ t
+  have : ∀ x ∈ s • t, ∃ g ∈ s, g⁻¹ • x ∈ t
   rintro x ⟨g, hgs, y, hyt, rfl⟩
   refine ⟨g, hgs, ?_⟩
   rwa [inv_smul_smul]
@@ -1246,7 +1246,7 @@ theorem QuotientGroup.isClosedMap_coe {H : Subgroup G} (hH : IsCompact (H : Set 
 
 @[to_additive]
 lemma subset_mul_closure_one (s : Set G) : s ⊆ s * (closure {1} : Set G) := by
-  have  : s ⊆ s * ({1} : Set G)
+  have : s ⊆ s * ({1} : Set G)
   simp
   exact this.trans (smul_subset_smul_left subset_closure)
 
@@ -1279,7 +1279,7 @@ lemma compl_mul_closure_one_eq {t : Set G} (ht : t * (closure {1} : Set G) = t) 
   refine Subset.antisymm ?_ (subset_mul_closure_one tᶜ)
   rintro - ⟨x, hx, g, hg, rfl⟩
   by_contra H
-  have  : x ∈ t * (closure {1} : Set G)
+  have : x ∈ t * (closure {1} : Set G)
   rw [← Subgroup.coe_topologicalClosure_bot G] at hg ⊢
   simp only [smul_eq_mul, mem_compl_iff, not_not] at H
   exact ⟨x * g, H, g⁻¹, Subgroup.inv_mem _ hg, by simp⟩

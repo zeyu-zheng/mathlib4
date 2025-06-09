@@ -368,7 +368,7 @@ theorem gauge_lt_one_of_mem_of_isOpen (hs₂ : IsOpen s) {x : E} (hx : x ∈ s) 
 -- Porting note: droped unneeded assumptions
 theorem gauge_lt_of_mem_smul (x : E) (ε : ℝ) (hε : 0 < ε) (hs₂ : IsOpen s) (hx : x ∈ ε • s) :
     gauge s x < ε := by
-  have  : ε⁻¹ • x ∈ s
+  have : ε⁻¹ • x ∈ s
   rwa [← mem_smul_set_iff_inv_smul_mem₀ hε.ne']
   have h_gauge_lt := gauge_lt_one_of_mem_of_isOpen hs₂ this
   rwa [gauge_smul_of_nonneg (inv_nonneg.2 hε.le), smul_eq_mul, inv_mul_lt_iff hε, mul_one]
@@ -376,7 +376,7 @@ theorem gauge_lt_of_mem_smul (x : E) (ε : ℝ) (hε : 0 < ε) (hs₂ : IsOpen s
 
 theorem mem_closure_of_gauge_le_one (hc : Convex ℝ s) (hs₀ : 0 ∈ s) (ha : Absorbent ℝ s)
     (h : gauge s x ≤ 1) : x ∈ closure s := by
-  have  : ∀ᶠ r : ℝ in 𝓝[<] 1, r • x ∈ s
+  have : ∀ᶠ r : ℝ in 𝓝[<] 1, r • x ∈ s
   filter_upwards [Ico_mem_nhdsWithin_Iio' one_pos] with r ⟨hr₀, hr₁⟩
   apply gauge_lt_one_subset_self hc hs₀ ha
   rw [mem_setOf_eq, gauge_smul_of_nonneg hr₀]

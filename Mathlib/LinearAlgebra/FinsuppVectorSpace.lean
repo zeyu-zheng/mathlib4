@@ -35,7 +35,7 @@ theorem linearIndependent_single {φ : ι → Type*} {f : ∀ ι, φ ι → M}
     LinearIndependent R fun ix : Σi, φ i => single ix.1 (f ix.1 ix.2) := by
   apply @linearIndependent_iUnion_finite R _ _ _ _ ι φ fun i x => single i (f i x)
   · intro i
-    have h_disjoint  : Disjoint (span R (range (f i))) (ker (lsingle i))
+    have h_disjoint : Disjoint (span R (range (f i))) (ker (lsingle i))
     rw [ker_lsingle]
     exact disjoint_bot_right
     apply (hf i).map h_disjoint

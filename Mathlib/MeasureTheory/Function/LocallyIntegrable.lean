@@ -76,7 +76,7 @@ set `u ∩ s`. -/
 theorem LocallyIntegrableOn.exists_countable_integrableOn [SecondCountableTopology X]
     (hf : LocallyIntegrableOn f s μ) : ∃ T : Set (Set X), T.Countable ∧
     (∀ u ∈ T, IsOpen u) ∧ (s ⊆ ⋃ u ∈ T, u) ∧ (∀ u ∈ T, IntegrableOn f (u ∩ s) μ) := by
-  have  : ∀ x : s, ∃ u, IsOpen u ∧ x.1 ∈ u ∧ IntegrableOn f (u ∩ s) μ
+  have : ∀ x : s, ∃ u, IsOpen u ∧ x.1 ∈ u ∧ IntegrableOn f (u ∩ s) μ
   rintro ⟨x, hx⟩
   rcases hf x hx with ⟨t, ht, h't⟩
   rcases mem_nhdsWithin.1 ht with ⟨u, u_open, x_mem, u_sub⟩
@@ -101,12 +101,12 @@ theorem LocallyIntegrableOn.exists_nat_integrableOn [SecondCountableTopology X]
   rcases hf.exists_countable_integrableOn with ⟨T, T_count, T_open, sT, hT⟩
   let T' : Set (Set X) := insert ∅ T
   have T'_count : T'.Countable := Countable.insert ∅ T_count
-  have T'_ne  : T'.Nonempty
+  have T'_ne : T'.Nonempty
   simp only [T', insert_nonempty]
   rcases T'_count.exists_eq_range T'_ne with ⟨u, hu⟩
   refine ⟨u, ?_, ?_, ?_⟩
   · intro n
-    have  : u n ∈ T'
+    have : u n ∈ T'
     rw [hu]; exact mem_range_self n
     rcases mem_insert_iff.1 this with h|h
     · rw [h]
@@ -114,12 +114,12 @@ theorem LocallyIntegrableOn.exists_nat_integrableOn [SecondCountableTopology X]
     · exact T_open _ h
   · intro x hx
     obtain ⟨v, hv, h'v⟩ : ∃ v, v ∈ T ∧ x ∈ v := by simpa only [mem_iUnion, exists_prop] using sT hx
-    have  : v ∈ range u
+    have : v ∈ range u
     rw [← hu]; exact subset_insert ∅ T hv
     obtain ⟨n, rfl⟩ : ∃ n, u n = v := by simpa only [mem_range] using this
     exact mem_iUnion_of_mem _ h'v
   · intro n
-    have  : u n ∈ T'
+    have : u n ∈ T'
     rw [hu]; exact mem_range_self n
     rcases mem_insert_iff.1 this with h|h
     · simp only [h, empty_inter, integrableOn_empty]
@@ -128,7 +128,7 @@ theorem LocallyIntegrableOn.exists_nat_integrableOn [SecondCountableTopology X]
 theorem LocallyIntegrableOn.aestronglyMeasurable [SecondCountableTopology X]
     (hf : LocallyIntegrableOn f s μ) : AEStronglyMeasurable f (μ.restrict s) := by
   rcases hf.exists_nat_integrableOn with ⟨u, -, su, hu⟩
-  have  : s = ⋃ n, u n ∩ s
+  have : s = ⋃ n, u n ∩ s
   rw [← iUnion_inter]; exact (inter_eq_right.mpr su).symm
   rw [this, aestronglyMeasurable_iUnion_iff]
   exact fun i : ℕ => (hu i).aestronglyMeasurable
@@ -332,7 +332,7 @@ theorem LocallyIntegrable.integrable_smul_left_of_hasCompactSupport
     Integrable (fun x ↦ g x • f x) μ := by
   let K := tsupport g
   have hK : IsCompact K := h'g
-  have  : K.indicator (fun x ↦ g x • f x) = (fun x ↦ g x • f x)
+  have : K.indicator (fun x ↦ g x • f x) = (fun x ↦ g x • f x)
   apply indicator_eq_self.2
   apply support_subset_iff'.2
   intros x hx
@@ -351,7 +351,7 @@ theorem LocallyIntegrable.integrable_smul_right_of_hasCompactSupport
     Integrable (fun x ↦ f x • g x) μ := by
   let K := tsupport g
   have hK : IsCompact K := h'g
-  have  : K.indicator (fun x ↦ f x • g x) = (fun x ↦ f x • g x)
+  have : K.indicator (fun x ↦ f x • g x) = (fun x ↦ f x • g x)
   apply indicator_eq_self.2
   apply support_subset_iff'.2
   intros x hx
@@ -511,7 +511,7 @@ theorem MonotoneOn.integrableOn_of_measure_ne_top (hmono : MonotoneOn f s) {a b 
   have habove : BddAbove (f '' s) := ⟨f b, fun x ⟨y, hy, hyx⟩ => hyx ▸ hmono hy hb.1 (hb.2 hy)⟩
   have : IsBounded (f '' s) := Metric.isBounded_of_bddAbove_of_bddBelow habove hbelow
   rcases isBounded_iff_forall_norm_le.mp this with ⟨C, hC⟩
-  have A  : IntegrableOn (fun _ => C) s μ
+  have A : IntegrableOn (fun _ => C) s μ
   simp only [hs.lt_top, integrableOn_const, or_true_iff]
   exact
     Integrable.mono' A (aemeasurable_restrict_of_monotoneOn h's hmono).aestronglyMeasurable
@@ -565,7 +565,7 @@ theorem IntegrableOn.mul_continuousOn_of_subset (hg : IntegrableOn g A μ) (hg' 
     IntegrableOn (fun x => g x * g' x) A μ := by
   rcases IsCompact.exists_bound_of_continuousOn hK hg' with ⟨C, hC⟩
   rw [IntegrableOn, ← memℒp_one_iff_integrable] at hg ⊢
-  have  : ∀ᵐ x ∂μ.restrict A, ‖g x * g' x‖ ≤ C * ‖g x‖
+  have : ∀ᵐ x ∂μ.restrict A, ‖g x * g' x‖ ≤ C * ‖g x‖
   filter_upwards [ae_restrict_mem hA] with x hx
   refine (norm_mul_le _ _).trans ?_
   rw [mul_comm]
@@ -583,7 +583,7 @@ theorem IntegrableOn.continuousOn_mul_of_subset (hg : ContinuousOn g K) (hg' : I
     IntegrableOn (fun x => g x * g' x) A μ := by
   rcases IsCompact.exists_bound_of_continuousOn hK hg with ⟨C, hC⟩
   rw [IntegrableOn, ← memℒp_one_iff_integrable] at hg' ⊢
-  have  : ∀ᵐ x ∂μ.restrict A, ‖g x * g' x‖ ≤ C * ‖g' x‖
+  have : ∀ᵐ x ∂μ.restrict A, ‖g x * g' x‖ ≤ C * ‖g' x‖
   filter_upwards [ae_restrict_mem hA] with x hx
   refine (norm_mul_le _ _).trans ?_
   gcongr

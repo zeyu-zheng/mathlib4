@@ -57,10 +57,10 @@ theorem ContMDiffWithinAt.comp {t : Set M'} {g : M' → M''} (x : M)
   refine ⟨hg.1.comp hf.1 st, ?_⟩
   set e := extChartAt I x
   set e' := extChartAt I' (f x)
-  have  : e' (f x) = (writtenInExtChartAt I I' x f) (e x)
+  have : e' (f x) = (writtenInExtChartAt I I' x f) (e x)
   simp only [e, e', mfld_simps]
   rw [this] at hg
-  have A  : ∀ᶠ y in 𝓝[e.symm ⁻¹' s ∩ range I] e x, f (e.symm y) ∈ t ∧ f (e.symm y) ∈ e'.source
+  have A : ∀ᶠ y in 𝓝[e.symm ⁻¹' s ∩ range I] e x, f (e.symm y) ∈ t ∧ f (e.symm y) ∈ e'.source
   simp only [e, ← map_extChartAt_nhdsWithin, eventually_map]
   filter_upwards [hf.1.tendsto (extChartAt_source_mem_nhds I' (f x)),
     inter_mem_nhdsWithin s (extChartAt_source_mem_nhds I x)]
@@ -402,7 +402,7 @@ lemma contMDiffOn_openEmbedding_symm :
     intros z hz
     -- factorise into the chart `e` and the model `id`
     simp only [mfld_simps]
-    have  : I.symm z ∈ range e
+    have : I.symm z ∈ range e
     rw [ModelWithCorners.symm, ← mem_preimage]
     exact hz.2.1
     rw [h.toPartialHomeomorph_right_inv e this]
@@ -415,7 +415,7 @@ space `H'`. Then the smoothness of `e' ∘ f : M → H'` implies the smoothness 
 This is useful, for example, when `e' ∘ f = g ∘ e` for smooth maps `e : M → X` and `g : X → H'`. -/
 lemma ContMDiff.of_comp_openEmbedding {f : M → M'} (hf : ContMDiff I I' n (e' ∘ f)) :
     haveI := h'.singletonChartedSpace; ContMDiff I I' n f := by
-  have  : f = (h'.toPartialHomeomorph e').symm ∘ e' ∘ f
+  have : f = (h'.toPartialHomeomorph e').symm ∘ e' ∘ f
   ext
   rw [Function.comp_apply, Function.comp_apply, OpenEmbedding.toPartialHomeomorph_left_inv]
   rw [this]

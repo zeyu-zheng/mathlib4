@@ -99,7 +99,7 @@ theorem Ideal.exists_comap_eq_of_mem_minimalPrimes_of_injective {f : R →+* S}
     (hf : Function.Injective f) (p) (H : p ∈ minimalPrimes R) :
     ∃ p' : Ideal S, p'.IsPrime ∧ p'.comap f = p := by
   have := H.1.1
-  have  : Nontrivial (Localization (Submonoid.map f p.primeCompl))
+  have : Nontrivial (Localization (Submonoid.map f p.primeCompl))
   refine ⟨⟨1, 0, ?_⟩⟩
   convert (IsLocalization.map_injective_of_injective p.primeCompl (Localization.AtPrime p)
       (Localization <| p.primeCompl.map f) hf).ne one_ne_zero
@@ -128,10 +128,10 @@ theorem Ideal.exists_comap_eq_of_mem_minimalPrimes {I : Ideal S} (f : R →+* S)
     (H : p ∈ (I.comap f).minimalPrimes) : ∃ p' : Ideal S, p'.IsPrime ∧ I ≤ p' ∧ p'.comap f = p := by
   have := H.1.1
   let f' := (Ideal.Quotient.mk I).comp f
-  have e  : RingHom.ker f' = I.comap f
+  have e : RingHom.ker f' = I.comap f
   ext1
   exact Submodule.Quotient.mk_eq_zero _
-  have  : RingHom.ker (Ideal.Quotient.mk <| RingHom.ker f') ≤ p
+  have : RingHom.ker (Ideal.Quotient.mk <| RingHom.ker f') ≤ p
   rw [Ideal.mk_ker, e]
   exact H.1.2
   suffices _ by

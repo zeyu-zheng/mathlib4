@@ -145,7 +145,7 @@ theorem Prime.dvd_of_pow_dvd_pow_mul_pow_of_square_not_dvd [CancelCommMonoidWith
   obtain ⟨x, rfl⟩ := hp.dvd_of_dvd_pow hbdiv
   obtain ⟨y, hy⟩ := hpow
   -- Then we can divide out a common factor of `p ^ n` from the equation `hy`.
-  have  : a ^ n.succ * x ^ n = p * y
+  have : a ^ n.succ * x ^ n = p * y
   refine mul_left_cancel₀ (pow_ne_zero n hp.ne_zero) ?_
   rw [← mul_assoc _ p, ← pow_succ, ← hy, mul_pow, ← mul_assoc (a ^ n.succ), mul_comm _ (p ^ n),
     mul_assoc]
@@ -513,14 +513,14 @@ theorem associated_of_dvd_dvd [CancelMonoidWithZero α] {a b : α} (hab : a ∣ 
   rcases hba with ⟨d, a_eq⟩
   by_cases ha0 : a = 0
   · simp_all
-  have hac0  : a * c ≠ 0
+  have hac0 : a * c ≠ 0
   intro con
   rw [con, zero_mul] at a_eq
   apply ha0 a_eq
-  have  : a * (c * d) = a * 1
+  have : a * (c * d) = a * 1
   rw [← mul_assoc, ← a_eq, mul_one]
   have hcd : c * d = 1 := mul_left_cancel₀ ha0 this
-  have  : a * c * (d * c) = a * c * 1
+  have : a * c * (d * c) = a * c * 1
   rw [← mul_assoc, ← a_eq, mul_one]
   have hdc : d * c = 1 := mul_left_cancel₀ hac0 this
   exact ⟨⟨c, d, hcd, hdc⟩, rfl⟩
@@ -668,7 +668,7 @@ theorem Associated.of_mul_right [CancelCommMonoidWithZero α] {a b c d : α} :
 
 theorem Associated.of_pow_associated_of_prime [CancelCommMonoidWithZero α] {p₁ p₂ : α} {k₁ k₂ : ℕ}
     (hp₁ : Prime p₁) (hp₂ : Prime p₂) (hk₁ : 0 < k₁) (h : p₁ ^ k₁ ~ᵤ p₂ ^ k₂) : p₁ ~ᵤ p₂ := by
-  have  : p₁ ∣ p₂ ^ k₂
+  have : p₁ ∣ p₂ ^ k₂
   rw [← h.dvd_iff_dvd_right]
   apply dvd_pow_self _ hk₁.ne'
   rw [← hp₁.dvd_prime_iff_associated hp₂]

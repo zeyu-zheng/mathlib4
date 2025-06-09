@@ -671,7 +671,7 @@ lemma surjective_π_app_zero_of_surjective_map
     (hF : ∀ n, Function.Surjective (F.map (homOfLE (Nat.le_succ n)).op)) :
     Function.Surjective (c.π.app ⟨0⟩) := by
   let i := hc.conePointUniqueUpToIso (limitConeIsLimit F)
-  have  : c.π.app ⟨0⟩ = i.hom ≫ (limitCone F).π.app ⟨0⟩
+  have : c.π.app ⟨0⟩ = i.hom ≫ (limitCone F).π.app ⟨0⟩
   simp [i]
   rw [this]
   apply Function.Surjective.comp

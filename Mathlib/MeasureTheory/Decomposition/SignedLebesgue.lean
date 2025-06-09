@@ -386,7 +386,7 @@ theorem eq_rnDeriv (t : SignedMeasure α) (f : α → ℝ) (hfi : Integrable f �
     (htμ : t ⟂ᵥ μ.toENNRealVectorMeasure) (hadd : s = t + μ.withDensityᵥ f) :
     f =ᵐ[μ] s.rnDeriv μ := by
   set f' := hfi.1.mk f
-  have hadd'  : s = t + μ.withDensityᵥ f'
+  have hadd' : s = t + μ.withDensityᵥ f'
   convert hadd using 2
   exact WithDensityᵥEq.congr_ae hfi.1.ae_eq_mk.symm
   have := haveLebesgueDecomposition_mk μ hfi.1.measurable_mk htμ hadd'

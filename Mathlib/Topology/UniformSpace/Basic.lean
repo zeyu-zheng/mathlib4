@@ -317,7 +317,7 @@ abbrev UniformSpace.toCore (u : UniformSpace α) : UniformSpace.Core α where
   __ := u
   refl := by
     rintro U hU ⟨x, y⟩ (rfl : x = y)
-    have  : Prod.mk x ⁻¹' U ∈ 𝓝 x
+    have : Prod.mk x ⁻¹' U ∈ 𝓝 x
     rw [UniformSpace.nhds_eq_comap_uniformity]
     exact preimage_mem_comap hU
     convert mem_of_mem_nhds this
@@ -783,7 +783,7 @@ theorem nhdset_of_mem_uniformity {d : Set (α × α)} (s : Set (α × α)) (hd :
 theorem nhds_le_uniformity (x : α) : 𝓝 (x, x) ≤ 𝓤 α := by
   intro V V_in
   rcases comp_symm_mem_uniformity_sets V_in with ⟨w, w_in, w_symm, w_sub⟩
-  have  : ball x w ×ˢ ball x w ∈ 𝓝 (x, x)
+  have : ball x w ×ˢ ball x w ∈ 𝓝 (x, x)
   rw [nhds_prod_eq]
   exact prod_mem_prod (ball_mem_nhds x w_in) (ball_mem_nhds x w_in)
   apply mem_of_superset this
@@ -1627,7 +1627,7 @@ theorem IsCompact.nhdsSet_basis_uniformity {p : ι → Prop} {V : ι → Set (α
   mem_iff' U := by
     constructor
     · intro H
-      have HKU  : K ⊆ ⋃ _ : Unit, interior U
+      have HKU : K ⊆ ⋃ _ : Unit, interior U
       simpa only [iUnion_const, subset_interior_iff_mem_nhdsSet] using H
       obtain ⟨i, hpi, hi⟩ : ∃ i, p i ∧ ⋃ x ∈ K, ball x (V i) ⊆ interior U := by
         simpa using hbasis.lebesgue_number_lemma hK (fun _ ↦ isOpen_interior) HKU
@@ -1740,7 +1740,7 @@ lemma exists_is_open_mem_uniformity_of_forall_mem_eq
     {f g : β → α} (hf : ∀ x ∈ s, ContinuousAt f x) (hg : ∀ x ∈ s, ContinuousAt g x)
     (hfg : s.EqOn f g) (hr : r ∈ 𝓤 α) :
     ∃ t, IsOpen t ∧ s ⊆ t ∧ ∀ x ∈ t, (f x, g x) ∈ r := by
-  have A  : ∀ x ∈ s, ∃ t, IsOpen t ∧ x ∈ t ∧ ∀ z ∈ t, (f z, g z) ∈ r
+  have A : ∀ x ∈ s, ∃ t, IsOpen t ∧ x ∈ t ∧ ∀ z ∈ t, (f z, g z) ∈ r
   intro x hx
   obtain ⟨t, ht, htsymm, htr⟩ := comp_symm_mem_uniformity_sets hr
   have A : {z | (f x, f z) ∈ t} ∈ 𝓝 x := (hf x hx).preimage_mem_nhds (mem_nhds_left (f x) ht)

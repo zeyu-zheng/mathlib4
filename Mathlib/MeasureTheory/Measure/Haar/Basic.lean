@@ -321,12 +321,12 @@ theorem prehaar_mem_haarProduct (K₀ : PositiveCompacts G) {U : Set G} (hU : (i
 @[to_additive]
 theorem nonempty_iInter_clPrehaar (K₀ : PositiveCompacts G) :
     (haarProduct (K₀ : Set G) ∩ ⋂ V : OpenNhdsOf (1 : G), clPrehaar K₀ V).Nonempty := by
-  have  : IsCompact (haarProduct (K₀ : Set G))
+  have : IsCompact (haarProduct (K₀ : Set G))
   apply isCompact_univ_pi; intro K; apply isCompact_Icc
   refine this.inter_iInter_nonempty (clPrehaar K₀) (fun s => isClosed_closure) fun t => ?_
   let V₀ := ⋂ V ∈ t, (V : OpenNhdsOf (1 : G)).carrier
   have h1V₀ : IsOpen V₀ := isOpen_biInter_finset <| by rintro ⟨⟨V, hV₁⟩, hV₂⟩ _; exact hV₁
-  have h2V₀  : (1 : G) ∈ V₀
+  have h2V₀ : (1 : G) ∈ V₀
   simp only [V₀, mem_iInter]; rintro ⟨⟨V, hV₁⟩, hV₂⟩ _; exact hV₂
   refine ⟨prehaar K₀ V₀, ?_⟩
   constructor
@@ -402,7 +402,7 @@ theorem chaar_mono {K₀ : PositiveCompacts G} {K₁ K₂ : Compacts G} (h : (K�
 theorem chaar_sup_le {K₀ : PositiveCompacts G} (K₁ K₂ : Compacts G) :
     chaar K₀ (K₁ ⊔ K₂) ≤ chaar K₀ K₁ + chaar K₀ K₂ := by
   let eval : (Compacts G → ℝ) → ℝ := fun f => f K₁ + f K₂ - f (K₁ ⊔ K₂)
-  have  : Continuous eval
+  have : Continuous eval
   exact ((continuous_apply K₁).add (continuous_apply K₂)).sub (continuous_apply (K₁ ⊔ K₂))
   rw [← sub_nonneg]; show chaar K₀ ∈ eval ⁻¹' Ici (0 : ℝ)
   apply mem_of_subset_of_mem _ (chaar_mem_clPrehaar K₀ ⊤)

@@ -108,9 +108,9 @@ theorem linearIndependent_of_iIsOrtho {n : Type w} {B : BilinForm K V} {v : n �
   classical
     rw [linearIndependent_iff']
     intro s w hs i hi
-    have  : B (s.sum fun i : n => w i • v i) (v i) = 0
+    have : B (s.sum fun i : n => w i • v i) (v i) = 0
     rw [hs, zero_left]
-    have hsum  : (s.sum fun j : n => w j * B (v j) (v i)) = w i * B (v i) (v i)
+    have hsum : (s.sum fun j : n => w j * B (v j) (v i)) = w i * B (v i) (v i)
     apply Finset.sum_eq_single_of_mem i hi
     intro j _ hij
     rw [iIsOrtho_def.1 hv₁ _ _ hij, mul_zero]
@@ -340,7 +340,7 @@ lemma isCompl_orthogonal_iff_disjoint (hB₀ : B.IsRefl) :
 reflexive bilinear form if that bilinear form restricted on to the subspace is nondegenerate. -/
 theorem isCompl_orthogonal_of_restrict_nondegenerate
     (b₁ : B.IsRefl) (b₂ : (B.restrict W).Nondegenerate) : IsCompl W (B.orthogonal W) := by
-  have  : W ⊓ B.orthogonal W = ⊥
+  have : W ⊓ B.orthogonal W = ⊥
   rw [eq_bot_iff]
   intro x hx
   obtain ⟨hx₁, hx₂⟩ := mem_inf.1 hx

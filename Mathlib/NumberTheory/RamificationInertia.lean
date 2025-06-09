@@ -79,7 +79,7 @@ theorem ramificationIdx_eq_zero (h : ∀ n : ℕ, ∃ k, map f p ≤ P ^ k ∧ n
 theorem ramificationIdx_spec {n : ℕ} (hle : map f p ≤ P ^ n) (hgt : ¬map f p ≤ P ^ (n + 1)) :
     ramificationIdx f p P = n := by
   let Q : ℕ → Prop := fun m => ∀ k : ℕ, map f p ≤ P ^ k → k ≤ m
-  have  : Q n
+  have : Q n
   intro k hk
   refine le_of_not_lt fun hnk => ?_
   exact hgt (hk.trans (Ideal.pow_le_pow_right hnk))
@@ -92,7 +92,7 @@ theorem ramificationIdx_lt {n : ℕ} (hgt : ¬map f p ≤ P ^ n) : ramificationI
   cases' n with n n
   · simp at hgt
   · rw [Nat.lt_succ_iff]
-    have  : ∀ k, map f p ≤ P ^ k → k ≤ n
+    have : ∀ k, map f p ≤ P ^ k → k ≤ n
     refine fun k hk => le_of_not_lt fun hnk => ?_
     exact hgt (hk.trans (Ideal.pow_le_pow_right hnk))
     rw [ramificationIdx_eq_find ⟨n, this⟩]
@@ -144,7 +144,7 @@ theorem ramificationIdx_eq_factors_count (hp0 : map f p ≠ ⊥) (hP : P.IsPrime
 
 theorem ramificationIdx_ne_zero (hp0 : map f p ≠ ⊥) (hP : P.IsPrime) (le : map f p ≤ P) :
     ramificationIdx f p P ≠ 0 := by
-  have hP0  : P ≠ ⊥
+  have hP0 : P ≠ ⊥
   rintro rfl
   have := le_bot_iff.mp le
   contradiction
@@ -237,14 +237,14 @@ theorem FinrankQuotientMap.linearIndependent_of_nontrivial [IsDedekindDomain R]
   choose g'' hg'' using hag
   letI := Classical.propDecidable
   let g' i := if h : i ∈ s then g'' i h else 0
-  have hg'  : ∀ i ∈ s, algebraMap _ _ (g' i) = a * g i
+  have hg' : ∀ i ∈ s, algebraMap _ _ (g' i) = a * g i
   intro i hi; exact (congr_arg _ (dif_pos hi)).trans (hg'' i hi)
   -- Because `R/I` is nontrivial, we can lift `g` to a nontrivial linear dependence in `S`.
-  have hgI  : algebraMap R S (g' j) ≠ 0
+  have hgI : algebraMap R S (g' j) ≠ 0
   simp only [FractionalIdeal.mem_coeIdeal, not_exists, not_and'] at hgI
   exact hgI _ (hg' j hjs)
   refine ⟨fun i => algebraMap R S (g' i), ?_, j, hjs, hgI⟩
-  have eq  : f (∑ i ∈ s, g' i • b i) = 0
+  have eq : f (∑ i ∈ s, g' i • b i) = 0
   rw [map_sum, ← smul_zero a, ← eq, Finset.smul_sum]
   refine Finset.sum_congr rfl ?_
   intro i hi
@@ -272,7 +272,7 @@ theorem FinrankQuotientMap.span_eq_top [IsDomain R] [IsDomain S] [Algebra K L] [
     [NoZeroSMulDivisors R K] (hp : p ≠ ⊤) (b : Set S)
     (hb' : Submodule.span R b ⊔ (p.map (algebraMap R S)).restrictScalars R = ⊤) :
     Submodule.span K (algebraMap S L '' b) = ⊤ := by
-  have hRL  : Function.Injective (algebraMap R L)
+  have hRL : Function.Injective (algebraMap R L)
   rw [IsScalarTower.algebraMap_eq R K L]
   exact (algebraMap K L).injective.comp (NoZeroSMulDivisors.algebraMap_injective R K)
   -- Let `M` be the `R`-module spanned by the proposed basis elements.
@@ -755,10 +755,10 @@ theorem sum_ramification_inertia (K L : Type*) [Field K] [Field L] [IsDedekindDo
       finrank K L := by
   set e := ramificationIdx (algebraMap R S) p
   set f := inertiaDeg (algebraMap R S) p
-  have inj_RL  : Function.Injective (algebraMap R L)
+  have inj_RL : Function.Injective (algebraMap R L)
   rw [IsScalarTower.algebraMap_eq R K L, RingHom.coe_comp]
   exact (RingHom.injective _).comp (IsFractionRing.injective R K)
-  have inj_RS  : Function.Injective (algebraMap R S)
+  have inj_RS : Function.Injective (algebraMap R S)
   refine Function.Injective.of_comp (show Function.Injective (algebraMap S L ∘ _) from ?_)
   rw [← RingHom.coe_comp, ← IsScalarTower.algebraMap_eq]
   exact inj_RL

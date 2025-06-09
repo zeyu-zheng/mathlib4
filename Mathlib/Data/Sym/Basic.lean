@@ -276,7 +276,7 @@ theorem exists_mem (s : Sym α n.succ) : ∃ a, a ∈ s :=
 
 theorem exists_cons_of_mem {s : Sym α (n + 1)} {a : α} (h : a ∈ s) : ∃ t, s = a ::ₛ t := by
   obtain ⟨m, h⟩ := Multiset.exists_cons_of_mem h
-  have  : Multiset.card m = n
+  have : Multiset.card m = n
   apply_fun Multiset.card at h
   rw [s.2, Multiset.card_cons, add_left_inj] at h
   exact h.symm

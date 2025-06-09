@@ -135,7 +135,7 @@ theorem drop_take_succ_eq_cons_nthLe (L : List α) {i : ℕ} (hi : i < L.length)
   cases' i with i hi
   · simp
     rfl
-  have  : i < tail.length
+  have : i < tail.length
   simpa using hi
   simp [*]
   rfl
@@ -148,7 +148,7 @@ See `List.drop_take_succ_join_eq_getElem` for the corresponding statement using 
 theorem drop_take_succ_join_eq_getElem' (L : List (List α)) (i : Nat) (h : i <  L.length) :
     (L.join.take (Nat.sum ((L.map length).take (i + 1)))).drop (Nat.sum ((L.map length).take i)) =
       L[i] := by
-  have  : (L.map length).take i = ((L.take (i + 1)).map length).take i
+  have : (L.map length).take i = ((L.take (i + 1)).map length).take i
   simp [map_take, take_take, Nat.min_eq_left]
   simp only [this, length_map, take_sum_join', drop_sum_join', drop_take_succ_eq_cons_getElem, h,
     join, append_nil]

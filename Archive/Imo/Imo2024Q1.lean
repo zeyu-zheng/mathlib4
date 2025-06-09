@@ -66,7 +66,7 @@ lemma mem_Ico_one_of_mem_Ioo (h : α ∈ Set.Ioo 0 2) : α ∈ Set.Ico 1 2 := by
   rcases h with ⟨h0, h2⟩
   refine ⟨?_, h2⟩
   by_contra! hn
-  have hr  : 1 < ⌈α⁻¹⌉₊
+  have hr : 1 < ⌈α⁻¹⌉₊
   rw [Nat.lt_ceil]
   exact_mod_cast one_lt_inv h0 hn
   replace hc := hc ⌈α⁻¹⌉₊ (zero_lt_one.trans hr)
@@ -103,13 +103,13 @@ lemma mem_Ico_n_of_mem_Ioo (h : α ∈ Set.Ioo 0 2)
   · rcases hk with ⟨hks, hkl, hk2⟩
     have hs : (∑ i ∈ Finset.Icc 1 (k + 1), ⌊i * α⌋) =
          ⌊(k + 1 : ℕ) * α⌋ + ((k : ℕ) : ℤ) ^ 2 := by
-      have hn11  : k + 1 ∉ Finset.Icc 1 k
+      have hn11 : k + 1 ∉ Finset.Icc 1 k
       rw [Finset.mem_Icc]
       omega
       rw [← Nat.Icc_insert_succ_right (Nat.le_add_left 1 k), Finset.sum_insert hn11, hks]
     replace hc := hc (k + 1) k.succ_pos
     rw [hs] at hc ⊢
-    have hkl'  : 2 * k ≤ ⌊(k + 1 : ℕ) * α⌋
+    have hkl' : 2 * k ≤ ⌊(k + 1 : ℕ) * α⌋
     rw [Int.le_floor]
     calc ((2 * k : ℤ) : ℝ) = ((2 * k : ℤ) : ℝ) + 0 := (add_zero _).symm
       _ ≤ ((2 * k : ℤ) : ℝ) + (k - 1) / k := by gcongr; norm_cast; positivity
@@ -117,16 +117,16 @@ lemma mem_Ico_n_of_mem_Ioo (h : α ∈ Set.Ioo 0 2)
         field_simp
         ring
       _ ≤ (k + 1 : ℕ) * α := by gcongr
-    have hk2'  : ⌊(k + 1 : ℕ) * α⌋ < (k + 1 : ℕ) * 2
+    have hk2' : ⌊(k + 1 : ℕ) * α⌋ < (k + 1 : ℕ) * 2
     rw [Int.floor_lt]
     push_cast
     gcongr
-    have hk  : ⌊(k + 1 : ℕ) * α⌋ = 2 * k  ∨ ⌊(k + 1 : ℕ) * α⌋ = 2 * k + 1
+    have hk : ⌊(k + 1 : ℕ) * α⌋ = 2 * k  ∨ ⌊(k + 1 : ℕ) * α⌋ = 2 * k + 1
     omega
-    have hk'  : ⌊(k + 1 : ℕ) * α⌋ = 2 * k + 1
+    have hk' : ⌊(k + 1 : ℕ) * α⌋ = 2 * k + 1
     rcases hk with hk | hk
     · rw [hk] at hc
-      have hc'  : ((k + 1 : ℕ) : ℤ) ∣ ((k + 1 : ℕ) : ℤ) * ((k + 1 : ℕ) : ℤ) - 1
+      have hc' : ((k + 1 : ℕ) : ℤ) ∣ ((k + 1 : ℕ) : ℤ) * ((k + 1 : ℕ) : ℤ) - 1
       convert hc using 1
       push_cast
       ring
@@ -148,11 +148,11 @@ end Condition
 lemma not_condition_of_mem_Ioo {α : ℝ} (h : α ∈ Set.Ioo 0 2) : ¬Condition α := by
   intro hc
   let n : ℕ := ⌊(2 - α)⁻¹⌋₊ + 1
-  have hn  : 0 < n
+  have hn : 0 < n
   omega
   have hna := (hc.mem_Ico_n_of_mem_Ioo h hn).1
   rcases h with ⟨-, h2⟩
-  have hna'  : 2 - (n : ℝ)⁻¹ ≤ α
+  have hna' : 2 - (n : ℝ)⁻¹ ≤ α
   convert hna using 1
   field_simp
   rw [sub_eq_add_neg, ← le_sub_iff_add_le', neg_le, neg_sub] at hna'

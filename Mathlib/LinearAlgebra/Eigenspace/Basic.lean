@@ -327,7 +327,7 @@ lemma disjoint_genEigenspace [NoZeroSMulDivisors R M]
     apply Commute.isNilpotent_sub (x := f₂) (y := f₁) _ ⟨l, ?_⟩ ⟨k, ?_⟩
     · ext; simp [f₁, f₂, smul_sub, sub_sub, smul_comm μ₁, add_sub_left_comm]
     all_goals ext ⟨x, _, _⟩; simpa [LinearMap.restrict_apply, LinearMap.pow_restrict _] using ‹_›
-  have hf₁₂  : f₂ - f₁ = algebraMap R (End R p) (μ₁ - μ₂)
+  have hf₁₂ : f₂ - f₁ = algebraMap R (End R p) (μ₁ - μ₂)
   ext; simp [f₁, f₂, sub_smul]
   rw [hf₁₂, IsNilpotent.map_iff (NoZeroSMulDivisors.algebraMap_injective R (End R p)),
     isNilpotent_iff_eq_zero, sub_eq_zero] at this
@@ -495,7 +495,7 @@ lemma iSup_genEigenspace_inf_le_add
     mem_genEigenspace] at hm ⊢
   obtain ⟨⟨k₁, hk₁⟩, ⟨k₂, hk₂⟩⟩ := hm
   use k₁ + k₂ - 1
-  have  : f₁ + f₂ - (μ₁ + μ₂) • 1 = (f₁ - μ₁ • 1) + (f₂ - μ₂ • 1)
+  have : f₁ + f₂ - (μ₁ + μ₂) • 1 = (f₁ - μ₁ • 1) + (f₂ - μ₂ • 1)
   rw [add_smul]; exact add_sub_add_comm f₁ f₂ (μ₁ • 1) (μ₂ • 1)
   replace h : Commute (f₁ - μ₁ • 1) (f₂ - μ₂ • 1) :=
     (h.sub_right <| Algebra.commute_algebraMap_right μ₂ f₁).sub_left

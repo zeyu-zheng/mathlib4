@@ -162,11 +162,11 @@ theorem orderTop_add_eq_left {Γ} [LinearOrder Γ] {x y : HahnSeries Γ R}
     (hxy : x.orderTop < y.orderTop) : (x + y).orderTop = x.orderTop := by
   have hx : x ≠ 0 := ne_zero_iff_orderTop.mpr hxy.ne_top
   let g : Γ := Set.IsWF.min x.isWF_support (support_nonempty_iff.2 hx)
-  have hcxyne  : (x + y).coeff g ≠ 0
+  have hcxyne : (x + y).coeff g ≠ 0
   rw [add_coeff, coeff_eq_zero_of_lt_orderTop (lt_of_eq_of_lt (orderTop_of_ne hx).symm hxy),
     add_zero]
   exact coeff_orderTop_ne (orderTop_of_ne hx)
-  have hxyx  : (x + y).orderTop ≤ x.orderTop
+  have hxyx : (x + y).orderTop ≤ x.orderTop
   rw [orderTop_of_ne hx]
   exact orderTop_le_of_coeff_ne_zero hcxyne
   exact le_antisymm hxyx (le_of_eq_of_le (min_eq_left_of_lt hxy).symm min_orderTop_le_orderTop_add)

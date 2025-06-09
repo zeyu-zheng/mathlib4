@@ -93,7 +93,7 @@ theorem gcd_sub_self_right {m n : ℕ} (h : m ≤ n) : gcd m (n - m) = gcd m n :
 theorem gcd_self_sub_left {m n : ℕ} (h : m ≤ n) : gcd (n - m) n = gcd m n := by
   have := Nat.sub_add_cancel h
   rw [gcd_comm m n, ← this, gcd_add_self_left (n - m) m]
-  have  : gcd (n - m) n = gcd (n - m) m
+  have : gcd (n - m) n = gcd (n - m) m
   nth_rw 2 [← Nat.add_sub_cancel' h]
   rw [gcd_add_self_right, gcd_comm]
   convert this

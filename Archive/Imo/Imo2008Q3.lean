@@ -35,42 +35,42 @@ namespace Imo2008Q3
 theorem p_lemma (p : ℕ) (hpp : Nat.Prime p) (hp_mod_4_eq_1 : p ≡ 1 [MOD 4]) (hp_gt_20 : p > 20) :
     ∃ n : ℕ, p ∣ n ^ 2 + 1 ∧ (p : ℝ) > 2 * n + sqrt (2 * n) := by
   haveI := Fact.mk hpp
-  have hp_mod_4_ne_3  : p % 4 ≠ 3
+  have hp_mod_4_ne_3 : p % 4 ≠ 3
   linarith [show p % 4 = 1 from hp_mod_4_eq_1]
   obtain ⟨y, hy⟩ := ZMod.exists_sq_eq_neg_one_iff.mpr hp_mod_4_ne_3
   let m := ZMod.valMinAbs y
   let n := Int.natAbs m
-  have hnat₁  : p ∣ n ^ 2 + 1
+  have hnat₁ : p ∣ n ^ 2 + 1
   refine Int.natCast_dvd_natCast.mp ?_
   simp only [n, Int.natAbs_sq, Int.natCast_pow, Int.ofNat_succ, Int.natCast_dvd_natCast.mp]
   refine (ZMod.intCast_zmod_eq_zero_iff_dvd (m ^ 2 + 1) p).mp ?_
   simp only [m, Int.cast_pow, Int.cast_add, Int.cast_one, ZMod.coe_valMinAbs]
   rw [pow_two, ← hy]; exact add_left_neg 1
   have hnat₂ : n ≤ p / 2 := ZMod.natAbs_valMinAbs_le y
-  have hnat₃  : p ≥ 2 * n
+  have hnat₃ : p ≥ 2 * n
   linarith [Nat.div_mul_le_self p 2]
   set k : ℕ := p - 2 * n with hnat₄
-  have hnat₅  : p ∣ k ^ 2 + 4
+  have hnat₅ : p ∣ k ^ 2 + 4
   cases' hnat₁ with x hx
-  have  : (p : ℤ) ∣ (k : ℤ) ^ 2 + 4
+  have : (p : ℤ) ∣ (k : ℤ) ^ 2 + 4
   use (p : ℤ) - 4 * n + 4 * x
-  have hcast₁  : (k : ℤ) = p - 2 * n
+  have hcast₁ : (k : ℤ) = p - 2 * n
   assumption_mod_cast
-  have hcast₂  : (n : ℤ) ^ 2 + 1 = p * x
+  have hcast₂ : (n : ℤ) ^ 2 + 1 = p * x
   assumption_mod_cast
   linear_combination ((k : ℤ) + p - 2 * n) * hcast₁ + 4 * hcast₂
   assumption_mod_cast
   have hnat₆ : k ^ 2 + 4 ≥ p := Nat.le_of_dvd (k ^ 2 + 3).succ_pos hnat₅
-  have hreal₁  : (k : ℝ) = p - 2 * n
+  have hreal₁ : (k : ℝ) = p - 2 * n
   assumption_mod_cast
-  have hreal₂  : (p : ℝ) > 20
+  have hreal₂ : (p : ℝ) > 20
   assumption_mod_cast
-  have hreal₃  : (k : ℝ) ^ 2 + 4 ≥ p
+  have hreal₃ : (k : ℝ) ^ 2 + 4 ≥ p
   assumption_mod_cast
-  have hreal₅  : (k : ℝ) > 4
+  have hreal₅ : (k : ℝ) > 4
   refine lt_of_pow_lt_pow_left 2 k.cast_nonneg ?_
   linarith only [hreal₂, hreal₃]
-  have hreal₆  : (k : ℝ) > sqrt (2 * n)
+  have hreal₆ : (k : ℝ) > sqrt (2 * n)
   refine lt_of_pow_lt_pow_left 2 k.cast_nonneg ?_
   rw [sq_sqrt (mul_nonneg zero_le_two n.cast_nonneg)]
   linarith only [hreal₁, hreal₃, hreal₅]
@@ -86,7 +86,7 @@ theorem imo2008_q3 : ∀ N : ℕ, ∃ n : ℕ, n ≥ N ∧
   obtain ⟨p, hpp, hineq₁, hpmod4⟩ := Nat.exists_prime_gt_modEq_one (N ^ 2 + 20) four_ne_zero
   obtain ⟨n, hnat, hreal⟩ := p_lemma p hpp hpmod4 (by linarith [hineq₁, Nat.zero_le (N ^ 2)])
   have hineq₂ : n ^ 2 + 1 ≥ p := Nat.le_of_dvd (n ^ 2).succ_pos hnat
-  have hineq₃  : n * n ≥ N * N
+  have hineq₃ : n * n ≥ N * N
   linarith [hineq₁, hineq₂]
   have hn_ge_N : n ≥ N := Nat.mul_self_le_mul_self_iff.1 hineq₃
   exact ⟨n, hn_ge_N, p, hpp, hnat, hreal⟩

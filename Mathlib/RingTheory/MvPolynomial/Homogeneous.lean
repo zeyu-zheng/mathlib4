@@ -279,7 +279,7 @@ lemma finSuccEquiv_coeff_isHomogeneous {N : ℕ} {φ : MvPolynomial (Fin (N+1)) 
     ((finSuccEquiv _ _ φ).coeff i).IsHomogeneous j := by
   intro d hd
   rw [finSuccEquiv_coeff_coeff] at hd
-  have h'  : (weight 1) (Finsupp.cons i d) = i + j
+  have h' : (weight 1) (Finsupp.cons i d) = i + j
   simpa [Finset.sum_subset_zero_on_sdiff (g := d.cons i)
    (d.cons_support (y := i)) (by simp) (fun _ _ ↦ rfl), ← h] using hφ hd
   simp only [weight_apply, Pi.one_apply, smul_eq_mul, mul_one, Finsupp.sum_cons,
@@ -310,12 +310,12 @@ lemma exists_eval_ne_zero_of_coeff_finSuccEquiv_ne_zero_aux
     {N : ℕ} {F : MvPolynomial (Fin (Nat.succ N)) R} {n : ℕ} (hF : IsHomogeneous F n)
     (hFn : ((finSuccEquiv R N) F).coeff n ≠ 0) :
     ∃ r, eval r F ≠ 0 := by
-  have hF₀  : F ≠ 0
+  have hF₀ : F ≠ 0
   contrapose! hFn; simp [hFn]
-  have hdeg  : natDegree (finSuccEquiv R N F) < n + 1
+  have hdeg : natDegree (finSuccEquiv R N F) < n + 1
   linarith [natDegree_finSuccEquiv F, degreeOf_le_totalDegree F 0, hF.totalDegree hF₀]
   use Fin.cons 1 0
-  have aux  : ∀ i ∈ Finset.range n, constantCoeff ((finSuccEquiv R N F).coeff i) = 0
+  have aux : ∀ i ∈ Finset.range n, constantCoeff ((finSuccEquiv R N F).coeff i) = 0
   intro i hi
   rw [Finset.mem_range] at hi
   apply (hF.finSuccEquiv_coeff_isHomogeneous i (n-i) (by omega)).coeff_eq_zero
@@ -395,9 +395,9 @@ lemma eq_zero_of_forall_eval_eq_zero_of_le_card
   contrapose! h
   -- reduce to the case where σ is finite
   obtain ⟨k, f, hf, F, rfl⟩ := exists_fin_rename F
-  have hF₀  : F ≠ 0
+  have hF₀ : F ≠ 0
   rintro rfl; simp at h
-  have hF  : F.IsHomogeneous n
+  have hF : F.IsHomogeneous n
   rwa [rename_isHomogeneous_iff hf] at hF
   obtain ⟨r, hr⟩ := exists_eval_ne_zero_of_totalDegree_le_card_aux hF hF₀ hnR
   obtain ⟨r, rfl⟩ := (Function.factorsThrough_iff _).mp <| (hf.factorsThrough r)

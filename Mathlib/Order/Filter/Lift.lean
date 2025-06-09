@@ -173,7 +173,7 @@ theorem lift_iInf_le {f : ι → Filter α} {g : Set α → Filter β} :
 theorem lift_iInf [Nonempty ι] {f : ι → Filter α} {g : Set α → Filter β}
     (hg : ∀ s t, g (s ∩ t) = g s ⊓ g t) : (iInf f).lift g = ⨅ i, (f i).lift g := by
   refine lift_iInf_le.antisymm fun s => ?_
-  have H  : ∀ t ∈ iInf f, ⨅ i, (f i).lift g ≤ g t
+  have H : ∀ t ∈ iInf f, ⨅ i, (f i).lift g ≤ g t
   intro t ht
   refine iInf_sets_induct ht ?_ fun hs ht => ?_
   · inhabit ι

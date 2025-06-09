@@ -65,7 +65,7 @@ theorem isLocalRingHom_of_le_jacobson_bot {R : Type*} [CommRing R] (I : Ideal R)
     (h : I ≤ Ideal.jacobson ⊥) : IsLocalRingHom (Ideal.Quotient.mk I) := by
   constructor
   intro a h
-  have  : IsUnit (Ideal.Quotient.mk (Ideal.jacobson ⊥) a)
+  have : IsUnit (Ideal.Quotient.mk (Ideal.jacobson ⊥) a)
   rw [isUnit_iff_exists_inv] at *
   obtain ⟨b, hb⟩ := h
   obtain ⟨b, rfl⟩ := Ideal.Quotient.mk_surjective b
@@ -176,14 +176,14 @@ instance (priority := 100) IsAdicComplete.henselianRing (R : Type*) [CommRing R]
       -- applying the function sending `b` to `b - f(b)/f'(b)` (Newton's method).
       -- Note that `f'.eval b` is a unit, because `b` has the same residue as `a₀` modulo `I`.
       let c : ℕ → R := fun n => Nat.recOn n a₀ fun _ b => b - f.eval b * Ring.inverse (f'.eval b)
-      have hc  : ∀ n, c (n + 1) = c n - f.eval (c n) * Ring.inverse (f'.eval (c n))
+      have hc : ∀ n, c (n + 1) = c n - f.eval (c n) * Ring.inverse (f'.eval (c n))
       intro n
       simp only [c, Nat.rec_add_one]
       -- we now spend some time determining properties of the sequence `c : ℕ → R`
       -- `hc_mod`: for every `n`, we have `c n ≡ a₀ [SMOD I]`
       -- `hf'c`  : for every `n`, `f'.eval (c n)` is a unit
       -- `hfcI`  : for every `n`, `f.eval (c n)` is contained in `I ^ (n+1)`
-      have hc_mod  : ∀ n, c n ≡ a₀ [SMOD I]
+      have hc_mod : ∀ n, c n ≡ a₀ [SMOD I]
       intro n
       induction' n with n ih
       · rfl
@@ -193,13 +193,13 @@ instance (priority := 100) IsAdicComplete.henselianRing (R : Type*) [CommRing R]
       refine I.mul_mem_right _ ?_
       rw [← SModEq.zero] at h₁ ⊢
       exact (ih.eval f).trans h₁
-      have hf'c  : ∀ n, IsUnit (f'.eval (c n))
+      have hf'c : ∀ n, IsUnit (f'.eval (c n))
       intro n
       haveI := isLocalRingHom_of_le_jacobson_bot I (IsAdicComplete.le_jacobson_bot I)
       apply isUnit_of_map_unit (Ideal.Quotient.mk I)
       convert h₂ using 1
       exact SModEq.def.mp ((hc_mod n).eval _)
-      have hfcI  : ∀ n, f.eval (c n) ∈ I ^ (n + 1)
+      have hfcI : ∀ n, f.eval (c n) ∈ I ^ (n + 1)
       intro n
       induction' n with n ih
       · simpa only [Nat.zero_eq, Nat.rec_zero, zero_add, pow_one] using h₁
@@ -219,13 +219,13 @@ instance (priority := 100) IsAdicComplete.henselianRing (R : Type*) [CommRing R]
       · refine Submodule.sum_mem _ ?_
         simp only [Finset.mem_Ico]
         rintro i ⟨h2i, _⟩
-        have aux  : n + 2 ≤ i * (n + 1)
+        have aux : n + 2 ≤ i * (n + 1)
         trans 2 * (n + 1) <;> nlinarith only [h2i]
         refine Ideal.mul_mem_left _ _ (Ideal.pow_le_pow_right aux ?_)
         rw [pow_mul']
         exact Ideal.pow_mem_pow ((Ideal.neg_mem_iff _).2 <| Ideal.mul_mem_right _ _ ih) _
       -- we are now in the position to show that `c : ℕ → R` is a Cauchy sequence
-      have aux  : ∀ m n, m ≤ n → c m ≡ c n [SMOD (I ^ m • ⊤ : Ideal R)]
+      have aux : ∀ m n, m ≤ n → c m ≡ c n [SMOD (I ^ m • ⊤ : Ideal R)]
       intro m n hmn
       rw [← Ideal.one_eq_top, Ideal.smul_eq_mul, mul_one]
       obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_le hmn

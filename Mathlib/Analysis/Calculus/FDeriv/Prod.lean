@@ -356,7 +356,7 @@ theorem hasStrictFDerivAt_apply (i : ι) (f : ∀ i, F' i) :
   let id' := ContinuousLinearMap.id 𝕜 (∀ i, F' i)
   have h := ((hasStrictFDerivAt_pi'
              (Φ := fun (f : ∀ i, F' i) (i' : ι) => f i') (Φ' := id') (x := f))).1
-  have h'  : comp (proj i) id' = proj i
+  have h' : comp (proj i) id' = proj i
   rfl
   rw [← h']; apply h; apply hasStrictFDerivAt_id
 
@@ -414,7 +414,7 @@ theorem hasFDerivWithinAt_apply (i : ι) (f : ∀ i, F' i) (s' : Set (∀ i, F' 
   let id' := ContinuousLinearMap.id 𝕜 (∀ i, F' i)
   have h := ((hasFDerivWithinAt_pi'
              (Φ := fun (f : ∀ i, F' i) (i' : ι) => f i') (Φ' := id') (x := f) (s := s'))).1
-  have h'  : comp (proj i) id' = proj i
+  have h' : comp (proj i) id' = proj i
   rfl
   rw [← h']; apply h; apply hasFDerivWithinAt_id
 

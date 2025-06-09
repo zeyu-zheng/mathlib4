@@ -51,11 +51,11 @@ theorem MeasureTheory.aemeasurable_of_exist_almost_disjoint_supersets {α : Type
       exact (H ps qs pq).elim
   choose! u v huv using h'
   let u' : β → Set α := fun p => ⋂ q ∈ s ∩ Ioi p, u p q
-  have u'_meas  : ∀ i, MeasurableSet (u' i)
+  have u'_meas : ∀ i, MeasurableSet (u' i)
   intro i
   exact MeasurableSet.biInter (s_count.mono inter_subset_left) fun b _ => (huv i b).1
   let f' : α → β := fun x => ⨅ i : s, piecewise (u' i) (fun _ => (i : β)) (fun _ => (⊤ : β)) x
-  have f'_meas  : Measurable f'
+  have f'_meas : Measurable f'
   apply measurable_iInf
   exact fun i => Measurable.piecewise (u'_meas i) measurable_const measurable_const
   let t := ⋃ (p : s) (q : ↥(s ∩ Ioi p)), u' p ∩ v p q

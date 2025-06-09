@@ -113,10 +113,10 @@ theorem succ_nth_stream_b_le_nth_stream_fr_inv {ifp_n ifp_succ_n : IntFractPair 
     (ifp_succ_n.b : K) ≤ ifp_n.fr⁻¹ := by
   suffices (⌊ifp_n.fr⁻¹⌋ : K) ≤ ifp_n.fr⁻¹ by
     cases' ifp_n with _ ifp_n_fr
-    have  : ifp_n_fr ≠ 0
+    have : ifp_n_fr ≠ 0
     intro h
     simp [h, IntFractPair.stream, nth_stream_eq] at succ_nth_stream_eq
-    have  : IntFractPair.of ifp_n_fr⁻¹ = ifp_succ_n
+    have : IntFractPair.of ifp_n_fr⁻¹ = ifp_succ_n
     simpa [this, IntFractPair.stream, nth_stream_eq, Option.coe_def] using succ_nth_stream_eq
     rwa [← this]
   exact floor_le ifp_n.fr⁻¹
@@ -251,7 +251,7 @@ that is `Nat.fib (n + 1) ≤ Bₙ`. -/
 theorem succ_nth_fib_le_of_nth_den (hyp : n = 0 ∨ ¬(of v).TerminatedAt (n - 1)) :
     (fib (n + 1) : K) ≤ (of v).dens n := by
   rw [den_eq_conts_b, nth_cont_eq_succ_nth_contAux]
-  have  : n + 1 ≤ 1 ∨ ¬(of v).TerminatedAt (n - 1)
+  have : n + 1 ≤ 1 ∨ ¬(of v).TerminatedAt (n - 1)
   cases n with
   | zero => exact Or.inl <| le_refl 1
   | succ n => exact Or.inr (Or.resolve_left hyp n.succ_ne_zero)
@@ -486,7 +486,7 @@ sufficient for one's use case.
 theorem abs_sub_convergents_le' {b : K}
     (nth_partDen_eq : (of v).partDens.get? n = some b) :
     |v - (of v).convs n| ≤ 1 / (b * (of v).dens n * (of v).dens n) := by
-  have not_terminatedAt_n  : ¬(of v).TerminatedAt n
+  have not_terminatedAt_n : ¬(of v).TerminatedAt n
   simp [terminatedAt_iff_partDen_none, nth_partDen_eq]
   refine (abs_sub_convs_le not_terminatedAt_n).trans ?_
   -- One can show that `0 < (GenContFract.of v).dens n` but it's easier

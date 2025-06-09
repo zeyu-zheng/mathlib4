@@ -36,9 +36,9 @@ discriminant of the power basis given by `ζ - 1`. -/
 theorem discr_zeta_eq_discr_zeta_sub_one (hζ : IsPrimitiveRoot ζ n) :
     discr ℚ (hζ.powerBasis ℚ).basis = discr ℚ (hζ.subOnePowerBasis ℚ).basis := by
   haveI : NumberField K := @NumberField.mk _ _ _ (IsCyclotomicExtension.finiteDimensional {n} ℚ K)
-  have H₁  : (aeval (hζ.powerBasis ℚ).gen) (X - 1 : ℤ[X]) = (hζ.subOnePowerBasis ℚ).gen
+  have H₁ : (aeval (hζ.powerBasis ℚ).gen) (X - 1 : ℤ[X]) = (hζ.subOnePowerBasis ℚ).gen
   simp
-  have H₂  : (aeval (hζ.subOnePowerBasis ℚ).gen) (X + 1 : ℤ[X]) = (hζ.powerBasis ℚ).gen
+  have H₂ : (aeval (hζ.subOnePowerBasis ℚ).gen) (X + 1 : ℤ[X]) = (hζ.powerBasis ℚ).gen
   simp
   refine discr_eq_discr_of_toMatrix_coeff_isIntegral _ (fun i j => toMatrix_isIntegral H₁ ?_ ?_ _ _)
     fun i j => toMatrix_isIntegral H₂ ?_ ?_ _ _
@@ -71,7 +71,7 @@ theorem discr_prime_pow_ne_two [IsCyclotomicExtension {p ^ (k + 1)} K L] [hp : F
     hζ.minpoly_eq_cyclotomic_of_irreducible hirr, PNat.pow_coe,
     totient_prime_pow hp.out (succ_pos k), Nat.add_one_sub_one]
   have coe_two : ((2 : ℕ+) : ℕ) = 2 := rfl
-  have hp2  : p = 2 → k ≠ 0
+  have hp2 : p = 2 → k ≠ 0
   rintro rfl rfl
   exact absurd rfl hk
   congr 1
@@ -100,7 +100,7 @@ theorem discr_prime_pow_ne_two [IsCyclotomicExtension {p ^ (k + 1)} K L] [hp : F
     simp only [aeval_add, aeval_mul, minpoly.aeval, zero_mul, add_zero, aeval_natCast,
       _root_.map_sub, aeval_one, aeval_X_pow] at H
     replace H := congr_arg (Algebra.norm K) H
-    have hnorm  : (norm K) (ζ ^ (p : ℕ) ^ k - 1) = (p : K) ^ (p : ℕ) ^ k
+    have hnorm : (norm K) (ζ ^ (p : ℕ) ^ k - 1) = (p : K) ^ (p : ℕ) ^ k
     by_cases hp : p = 2
     · exact mod_cast hζ.norm_pow_sub_one_eq_prime_pow_of_ne_zero hirr le_rfl (hp2 hp)
     · exact mod_cast hζ.norm_pow_sub_one_of_prime_ne_two hirr le_rfl hp
@@ -143,7 +143,7 @@ theorem discr_prime_pow [hcycl : IsCyclotomicExtension {p ^ k} K L] [hp : Fact (
   cases' k with k k
   · simp only [coe_basis, _root_.pow_zero, powerBasis_gen _ hζ, totient_one, mul_zero, mul_one,
       show 1 / 2 = 0 by rfl, discr, traceMatrix]
-    have hζone  : ζ = 1
+    have hζone : ζ = 1
     simpa using hζ
     rw [hζ.powerBasis_dim _, hζone, ← (algebraMap K L).map_one,
       minpoly.eq_X_sub_C_of_algebraMap_inj _ (algebraMap K L).injective, natDegree_X_sub_C]
@@ -152,7 +152,7 @@ theorem discr_prime_pow [hcycl : IsCyclotomicExtension {p ^ k} K L] [hp : Fact (
     norm_num
   · by_cases hk : p ^ (k + 1) = 2
     · have coe_two : 2 = ((2 : ℕ+) : ℕ) := rfl
-      have hp  : p = 2
+      have hp : p = 2
       rw [← PNat.coe_inj, PNat.pow_coe, ← pow_one 2] at hk
       replace hk :=
         eq_of_prime_pow_eq (prime_iff.1 hp.out) (prime_iff.1 Nat.prime_two) (succ_pos _) hk
@@ -164,7 +164,7 @@ theorem discr_prime_pow [hcycl : IsCyclotomicExtension {p ^ k} K L] [hp : Fact (
       rw [add_left_eq_self] at hk
       subst hk
       rw [pow_one] at hζ hcycl
-      have  : natDegree (minpoly K ζ) = 1
+      have : natDegree (minpoly K ζ) = 1
       rw [hζ.eq_neg_one_of_two_right, show (-1 : L) = algebraMap K L (-1) by simp,
         minpoly.eq_X_sub_C_of_algebraMap_inj _ (NoZeroSMulDivisors.algebraMap_injective K L)]
       exact natDegree_X_sub_C (-1)
@@ -204,10 +204,10 @@ theorem discr_prime_pow_eq_unit_mul_pow [IsCyclotomicExtension {p ^ k} K L]
 theorem discr_odd_prime [IsCyclotomicExtension {p} K L] [hp : Fact (p : ℕ).Prime]
     (hζ : IsPrimitiveRoot ζ p) (hirr : Irreducible (cyclotomic p K)) (hodd : p ≠ 2) :
     discr K (hζ.powerBasis K).basis = (-1) ^ (((p : ℕ) - 1) / 2) * p ^ ((p : ℕ) - 2) := by
-  have  : IsCyclotomicExtension {p ^ (0 + 1)} K L
+  have : IsCyclotomicExtension {p ^ (0 + 1)} K L
   rw [zero_add, pow_one]
   infer_instance
-  have hζ'  : IsPrimitiveRoot ζ (p ^ (0 + 1):)
+  have hζ' : IsPrimitiveRoot ζ (p ^ (0 + 1):)
   simpa using hζ
   convert discr_prime_pow_ne_two hζ' (by simpa [hirr]) (by simp [hodd]) using 2
   · rw [zero_add, pow_one, totient_prime hp.out]

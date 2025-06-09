@@ -71,7 +71,7 @@ theorem wittPolyProdRemainder_vars (n : ℕ) :
   apply Subset.trans (vars_mul _ _)
   refine union_subset ?_ ?_
   · apply Subset.trans (vars_pow _ _)
-    have  : (p : 𝕄) = C (p : ℤ)
+    have : (p : 𝕄) = C (p : ℤ)
     simp only [Int.cast_natCast, eq_intCast]
     rw [this, vars_C]
     apply empty_subset
@@ -118,7 +118,7 @@ theorem mul_polyOfInterest_aux1 (n : ℕ) :
     rw [map_sum]
     congr 1 with i
     congr 1
-    have hsupp  : (Finsupp.single i (p ^ (n - i))).support = {i}
+    have hsupp : (Finsupp.single i (p ^ (n - i))).support = {i}
     rw [Finsupp.support_eq_singleton]
     simp only [and_true_iff, Finsupp.single_eq_same, eq_self_iff_true, Ne]
     exact pow_ne_zero _ hp.out.ne_zero
@@ -139,7 +139,7 @@ theorem mul_polyOfInterest_aux3 (n : ℕ) : wittPolyProd p (n + 1) =
     (p : 𝕄) ^ (n + 1) * X (1, n + 1) * rename (Prod.mk (0 : Fin 2)) (wittPolynomial p ℤ (n + 1)) +
     remainder p n := by
   -- a useful auxiliary fact
-  have mvpz  : (p : 𝕄) ^ (n + 1) = MvPolynomial.C ((p : ℤ) ^ (n + 1))
+  have mvpz : (p : 𝕄) ^ (n + 1) = MvPolynomial.C ((p : ℤ) ^ (n + 1))
   norm_cast
   -- Porting note: the original proof applies `sum_range_succ` through a non-`conv` rewrite,
   -- but this does not work in Lean 4; the whole proof also times out very badly. The proof has been
@@ -194,7 +194,7 @@ theorem polyOfInterest_vars_eq (n : ℕ) : (polyOfInterest p n).vars =
     ((p : 𝕄) ^ (n + 1) * (wittMul p (n + 1) + (p : 𝕄) ^ (n + 1) * X (0, n + 1) * X (1, n + 1) -
       X (0, n + 1) * rename (Prod.mk (1 : Fin 2)) (wittPolynomial p ℤ (n + 1)) -
       X (1, n + 1) * rename (Prod.mk (0 : Fin 2)) (wittPolynomial p ℤ (n + 1)))).vars := by
-  have  : (p : 𝕄) ^ (n + 1) = C ((p : ℤ) ^ (n + 1))
+  have : (p : 𝕄) ^ (n + 1) = C ((p : ℤ) ^ (n + 1))
   norm_cast
   rw [polyOfInterest, this, vars_C_mul]
   apply pow_ne_zero

@@ -239,7 +239,7 @@ instance : CompleteLattice (Subsemigroup M) :=
 @[to_additive]
 theorem subsingleton_of_subsingleton [Subsingleton (Subsemigroup M)] : Subsingleton M := by
   constructor; intro x y
-  have  : ∀ a : M, a ∈ (⊥ : Subsemigroup M)
+  have : ∀ a : M, a ∈ (⊥ : Subsemigroup M)
   simp [Subsingleton.elim (⊥ : Subsemigroup M) ⊤]
   exact absurd (this x) not_mem_bot
 

@@ -46,9 +46,9 @@ theorem LinearMap.BilinForm.isSkewAdjoint_bracket {f g : Module.End R M}
     (hf : f ∈ B.skewAdjointSubmodule) (hg : g ∈ B.skewAdjointSubmodule) :
     ⁅f, g⁆ ∈ B.skewAdjointSubmodule := by
   rw [mem_skewAdjointSubmodule] at *
-  have hfg  : IsAdjointPair B B (f * g) (g * f)
+  have hfg : IsAdjointPair B B (f * g) (g * f)
   rw [← neg_mul_neg g f]; exact hf.mul hg
-  have hgf  : IsAdjointPair B B (g * f) (f * g)
+  have hgf : IsAdjointPair B B (g * f) (f * g)
   rw [← neg_mul_neg f g]; exact hg.mul hf
   change IsAdjointPair B B (f * g - g * f) (-(f * g - g * f)); rw [neg_sub]
   exact hfg.sub hgf

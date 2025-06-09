@@ -52,15 +52,15 @@ theorem Set.Countable.isPathConnected_compl_of_one_lt_rank
   -/
   let c := (2 : ℝ)⁻¹ • (a + b)
   let x := (2 : ℝ)⁻¹ • (b - a)
-  have Ia  : c - x = a
+  have Ia : c - x = a
   simp only [c, x, smul_add, smul_sub]
   abel_nf
   simp [← Int.cast_smul_eq_nsmul ℝ 2]
-  have Ib  : c + x = b
+  have Ib : c + x = b
   simp only [c, x, smul_add, smul_sub]
   abel_nf
   simp [← Int.cast_smul_eq_nsmul ℝ 2]
-  have x_ne_zero  : x ≠ 0
+  have x_ne_zero : x ≠ 0
   simpa [x] using sub_ne_zero.2 hab.symm
   obtain ⟨y, hy⟩ : ∃ y, LinearIndependent ℝ ![x, y] :=
     exists_linearIndependent_pair_of_one_lt_rank h x_ne_zero
@@ -136,17 +136,17 @@ theorem isPathConnected_sphere (h : 1 < Module.rank ℝ E) (x : E) {r : ℝ} (hr
   rcases hr.eq_or_lt with rfl|rpos
   · simpa using isPathConnected_singleton x
   let f : E → E := fun y ↦ x + (r * ‖y‖⁻¹) • y
-  have A  : ContinuousOn f {0}ᶜ
+  have A : ContinuousOn f {0}ᶜ
   intro y hy
   apply (continuousAt_const.add _).continuousWithinAt
   apply (continuousAt_const.mul (ContinuousAt.inv₀ continuousAt_id.norm ?_)).smul continuousAt_id
   simpa using hy
   have B : IsPathConnected ({0}ᶜ : Set E) := isPathConnected_compl_singleton_of_one_lt_rank h 0
   have C : IsPathConnected (f '' {0}ᶜ) := B.image' A
-  have  : f '' {0}ᶜ = sphere x r
+  have : f '' {0}ᶜ = sphere x r
   apply Subset.antisymm
   · rintro - ⟨y, hy, rfl⟩
-    have  : ‖y‖ ≠ 0
+    have : ‖y‖ ≠ 0
     simpa using hy
     simp [f, norm_smul, abs_of_nonneg hr, mul_assoc, inv_mul_cancel this]
   · intro y hy

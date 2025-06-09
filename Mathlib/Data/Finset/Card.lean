@@ -235,7 +235,7 @@ theorem card_image_of_injOn [DecidableEq β] (H : Set.InjOn f s) : (s.image f).c
 theorem injOn_of_card_image_eq [DecidableEq β] (H : (s.image f).card = s.card) : Set.InjOn f s := by
   rw [card_def, card_def, image, toFinset] at H
   dsimp only at H
-  have  : (s.1.map f).dedup = s.1.map f
+  have : (s.1.map f).dedup = s.1.map f
   refine Multiset.eq_of_le_of_card_le (Multiset.dedup_le _) ?_
   simp only [H, Multiset.card_map, le_rfl]
   rw [Multiset.dedup_eq_self] at this
@@ -294,7 +294,7 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
     (hf' : ∀ i (h : i < n), f i h ∈ s)
     (f_inj : ∀ i j (hi : i < n) (hj : j < n), f i hi = f j hj → i = j) : s.card = n := by
   classical
-  have  : s = (range n).attach.image fun i => f i.1 (mem_range.1 i.2)
+  have : s = (range n).attach.image fun i => f i.1 (mem_range.1 i.2)
   ext a
   suffices _ : a ∈ s ↔ ∃ (i : _) (hi : i ∈ range n), f i (mem_range.1 hi) = a by
     simpa only [mem_image, mem_attach, true_and_iff, Subtype.exists]
@@ -422,7 +422,7 @@ lemma surj_on_of_inj_on_of_card_le (f : ∀ a ∈ s, β) (hf : ∀ a ha, f a ha 
     (hinj : ∀ a₁ a₂ ha₁ ha₂, f a₁ ha₁ = f a₂ ha₂ → a₁ = a₂) (hst : t.card ≤ s.card) :
     ∀ b ∈ t, ∃ a ha, b = f a ha := by
   classical
-  have h  : (s.attach.image fun a : { a // a ∈ s } => f a a.prop).card = s.card
+  have h : (s.attach.image fun a : { a // a ∈ s } => f a a.prop).card = s.card
   rw [← @card_attach _ s, card_image_of_injective]
   intro ⟨_, _⟩ ⟨_, _⟩ h
   exact Subtype.eq <| hinj _ _ _ _ h
@@ -584,7 +584,7 @@ theorem le_card_iff_exists_subset_card : n ≤ s.card ↔ ∃ t ⊆ s, t.card = 
 theorem exists_subset_or_subset_of_two_mul_lt_card [DecidableEq α] {X Y : Finset α} {n : ℕ}
     (hXY : 2 * n < (X ∪ Y).card) : ∃ C : Finset α, n < C.card ∧ (C ⊆ X ∨ C ⊆ Y) := by
   have h₁ : (X ∩ (Y \ X)).card = 0 := Finset.card_eq_zero.mpr (Finset.inter_sdiff_self X Y)
-  have h₂  : (X ∪ Y).card = X.card + (Y \ X).card
+  have h₂ : (X ∪ Y).card = X.card + (Y \ X).card
   rw [← card_union_add_card_inter X (Y \ X), Finset.union_sdiff_self_eq_union, h₁, add_zero]
   rw [h₂, Nat.two_mul] at hXY
   obtain h | h : n < X.card ∨ n < (Y \ X).card := by contrapose! hXY; omega

@@ -368,7 +368,7 @@ protected theorem MemBaseSet.filter (hπ : l.MemBaseSet I c r π) (p : Box ι �
     fun hD => (distortion_filter_le _ _).trans (hπ.3 hD), fun hD => ?_⟩
   rcases hπ.4 hD with ⟨π₁, hπ₁U, hc⟩
   set π₂ := π.filter fun J => ¬p J
-  have  : Disjoint π₁.iUnion π₂.iUnion
+  have : Disjoint π₁.iUnion π₂.iUnion
   simpa [π₂, hπ₁U] using disjoint_sdiff_self_left.mono_right sdiff_le
   refine ⟨π₁.disjUnion π₂.toPrepartition this, ?_, ?_⟩
   · suffices ↑I \ π.iUnion ∪ π.iUnion \ (π.filter p).iUnion = ↑I \ (π.filter p).iUnion by
@@ -484,7 +484,7 @@ theorem exists_memBaseSet_le_iUnion_eq (l : IntegrationParams) (π₀ : Preparti
 theorem exists_memBaseSet_isPartition (l : IntegrationParams) (I : Box ι) (hc : I.distortion ≤ c)
     (r : (ι → ℝ) → Ioi (0 : ℝ)) : ∃ π, l.MemBaseSet I c r π ∧ π.IsPartition := by
   rw [← Prepartition.distortion_top] at hc
-  have hc'  : (⊤ : Prepartition I).compl.distortion ≤ c
+  have hc' : (⊤ : Prepartition I).compl.distortion ≤ c
   simp
   simpa [isPartition_iff_iUnion_eq] using l.exists_memBaseSet_le_iUnion_eq ⊤ hc hc' r
 

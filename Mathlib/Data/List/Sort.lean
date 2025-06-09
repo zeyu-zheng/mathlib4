@@ -451,7 +451,7 @@ theorem Sorted.merge : ∀ {l l' : List α}, Sorted r l → Sorted r l' → Sort
         simpa [h, h₁.merge h₂.of_cons]
       intro b' bm
       have ba : b ≼ a := (total_of r _ _).resolve_left h
-      have  : b' = a ∨ b' ∈ l ∨ b' ∈ l'
+      have : b' = a ∨ b' ∈ l ∨ b' ∈ l'
       simpa using (perm_merge _ _ _).subset bm
       rcases this with (be | bl | bl')
       · subst b'

@@ -376,7 +376,7 @@ open MulOpposite in
     obtain ⟨a, ha, b, hb, hu⟩ := uniqueMul_of_nonempty hc.1 hc.2.1
     let C := A.map ⟨_, mul_right_injective a⁻¹⟩ -- C = a⁻¹A
     let D := B.map ⟨_, mul_left_injective b⁻¹⟩  -- D = Bb⁻¹
-    have hcard  : 1 < C.card ∨ 1 < D.card
+    have hcard : 1 < C.card ∨ 1 < D.card
     simp_rw [C, D, card_map]; exact hc.2.2
     have hC : 1 ∈ C := mem_map.mpr ⟨a, ha, inv_mul_self a⟩
     have hD : 1 ∈ D := mem_map.mpr ⟨b, hb, mul_inv_self b⟩
@@ -576,7 +576,7 @@ instance (priority := 100) of_covariant_right [IsRightCancelMul G]
     rw [← card_product] at hc
     obtain ⟨a0, ha0, b0, hb0, he0⟩ := mem_mul.mp (max'_mem _ <| hA.mul hB)
     obtain ⟨a1, ha1, b1, hb1, he1⟩ := mem_mul.mp (min'_mem _ <| hA.mul hB)
-    have  : UniqueMul A B a0 b0
+    have : UniqueMul A B a0 b0
     intro a b ha hb he
     obtain hl | rfl | hl := lt_trichotomy b b0
     · exact ((he0 ▸ he ▸ mul_lt_mul_left' hl a).not_le <| le_max' _ _ <| mul_mem_mul ha hb0).elim

@@ -133,7 +133,7 @@ theorem sum_moebius_mul_log_eq {n : ℕ} : (∑ d ∈ n.divisors, (μ d : ℝ) *
     apply sum_congr rfl
     simp only [and_imp, Int.cast_eq_zero, mul_eq_mul_left_iff, Ne, neg_inj, mem_divisors]
     intro m mn hn
-    have  : (m : ℝ) ≠ 0
+    have : (m : ℝ) ≠ 0
     rw [cast_ne_zero]
     rintro rfl
     exact hn (by simpa using mn)

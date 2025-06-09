@@ -386,7 +386,7 @@ lemma mul_nonZeroDivisor_mem_finiteIntegralAdeles (a : FiniteAdeleRing R K) :
   by_cases hv : a v ∈ adicCompletionIntegers K v
   · exact mul_mem hv <| coe_mem_adicCompletionIntegers _ _
   · dsimp only
-    have pprod  : p = b v (a v) * ∏ᶠ w ∈ S \ {v}, b w (a w)
+    have pprod : p = b v (a v) * ∏ᶠ w ∈ S \ {v}, b w (a w)
     rw [← finprod_mem_singleton (a := v) (f := fun v ↦ b v (a v)),
       finprod_mem_mul_diff (singleton_subset_iff.2 ‹v ∈ S›) a.2]
     rw [pprod]

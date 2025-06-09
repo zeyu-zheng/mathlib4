@@ -159,7 +159,7 @@ theorem inf_iSup_genEigenspace [FiniteDimensional K V] (h : ∀ x ∈ p, f x ∈
   let g : End K V := (m.support.erase μ).noncommProd _ fun μ₁ _ μ₂ _ _ ↦ h_comm μ₁ μ₂
   have hfg : Commute f g := Finset.noncommProd_commute _ _ _ _ fun μ' _ ↦
     (Commute.sub_right rfl <| Algebra.commute_algebraMap_right _ _).pow_right _
-  have hg₀  : g (m.sum fun _μ mμ ↦ mμ) = g (m μ)
+  have hg₀ : g (m.sum fun _μ mμ ↦ mμ) = g (m μ)
   suffices ∀ μ' ∈ m.support, g (m μ') = if μ' = μ then g (m μ) else 0 by
     rw [map_finsupp_sum, Finsupp.sum_congr (g2 := fun μ' _ ↦ if μ' = μ then g (m μ) else 0) this,
       Finsupp.sum_ite_eq', if_pos hμ]

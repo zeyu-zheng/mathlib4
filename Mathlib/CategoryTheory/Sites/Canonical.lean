@@ -125,7 +125,7 @@ theorem isSheafFor_trans (P : Cᵒᵖ ⥤ Type v) (R S : Sieve X)
     (hR' : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄ (_ : S f), Presieve.IsSeparatedFor P (R.pullback f : Presieve Y))
     (hS : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄ (_ : R f), Presieve.IsSheafFor P (S.pullback f : Presieve Y)) :
     Presieve.IsSheafFor P (S : Presieve X) := by
-  have  : (bind R fun Y f _ => S.pullback f : Presieve X) ≤ S
+  have : (bind R fun Y f _ => S.pullback f : Presieve X) ≤ S
   rintro Z f ⟨W, f, g, hg, hf : S _, rfl⟩
   apply hf
   apply Presieve.isSheafFor_subsieve_aux P this

@@ -107,7 +107,7 @@ section id
 theorem hasMFDerivAt_id (x : M) :
     HasMFDerivAt I I (@id M) x (ContinuousLinearMap.id 𝕜 (TangentSpace I x)) := by
   refine ⟨continuousAt_id, ?_⟩
-  have  : ∀ᶠ y in 𝓝[range I] (extChartAt I x) x, (extChartAt I x ∘ (extChartAt I x).symm) y = y
+  have : ∀ᶠ y in 𝓝[range I] (extChartAt I x) x, (extChartAt I x ∘ (extChartAt I x).symm) y = y
   apply Filter.mem_of_superset (extChartAt_target_mem_nhdsWithin I x)
   mfld_set_tac
   apply HasFDerivWithinAt.congr_of_eventuallyEq (hasFDerivWithinAt_id _ _) this

@@ -110,7 +110,7 @@ theorem HasIntegral.of_aeEq_zero {l : IntegrationParams} {I : Box ι} {f : (ι �
   haveI := Fact.mk (I.measure_coe_lt_top μ)
   change μ.restrict I {x | f x ≠ 0} = 0 at hf
   set N : (ι → ℝ) → ℕ := fun x => ⌈‖f x‖⌉₊
-  have N0  : ∀ {x}, N x = 0 ↔ f x = 0
+  have N0 : ∀ {x}, N x = 0 ↔ f x = 0
   simp [N]
   have : ∀ n, ∃ U, N ⁻¹' {n} ⊆ U ∧ IsOpen U ∧ μ.restrict I U < δ n / n := fun n ↦ by
     refine (N ⁻¹' {n}).exists_isOpen_lt_of_lt _ ?_
@@ -141,7 +141,7 @@ theorem HasIntegral.of_aeEq_zero {l : IntegrationParams} {I : Box ι} {f : (ι �
   rw [← sum_mul, ← Prepartition.measure_iUnion_toReal]
   let m := μ (π.filter fun J => N (π.tag J) = n).iUnion
   show m.toReal * ↑n ≤ ↑(δ n)
-  have  : m < δ n / n
+  have : m < δ n / n
   simp only [Measure.restrict_apply (hUo _).measurableSet] at hμU
   refine (measure_mono ?_).trans_lt (hμU _)
   simp only [Set.subset_def, TaggedPrepartition.mem_iUnion, TaggedPrepartition.mem_filter]

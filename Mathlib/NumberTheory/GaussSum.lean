@@ -189,7 +189,7 @@ theorem Char.card_pow_char_pow {χ : MulChar R R'} (hχ : IsQuadratic χ) (ψ : 
     [fp : Fact p.Prime] [hch : CharP R' p] (hp : IsUnit (p : R)) (hp' : p ≠ 2)
     (hg : gaussSum χ ψ ^ 2 = χ (-1) * Fintype.card R) :
     (χ (-1) * Fintype.card R) ^ (p ^ n / 2) = χ ((p : R) ^ n) := by
-  have  : gaussSum χ ψ ≠ 0
+  have : gaussSum χ ψ ≠ 0
   intro hf
   rw [hf, zero_pow two_ne_zero, eq_comm, mul_eq_zero] at hg
   exact not_isUnit_prime_of_dvd_card p
@@ -251,7 +251,7 @@ theorem FiniteField.two_pow_card {F : Type*} [Fintype F] [Field F] (hF : ringCha
   have FFp := hchar.subst hp
   have := Fact.mk FFp
   have hFF := hchar ▸ hF -- `ringChar FF ≠ 2`
-  have hu  : IsUnit (ringChar FF : ZMod 8)
+  have hu : IsUnit (ringChar FF : ZMod 8)
   rw [isUnit_iff_not_dvd_char, ringChar_zmod_n]
   rw [Ne, ← Nat.prime_dvd_prime_iff_eq FFp Nat.prime_two] at hFF
   change ¬_ ∣ 2 ^ 3
@@ -264,7 +264,7 @@ theorem FiniteField.two_pow_card {F : Type*} [Fintype F] [Field F] (hF : ringCha
   -- This is needed to make `simp_rw [← h₁]` below work.
   let ψ₈char : AddChar (ZMod 8) FF := ψ₈.char
   let τ : FF := ψ₈char 1
-  have τ_spec  : τ ^ 4 = -1
+  have τ_spec : τ ^ 4 = -1
   rw [show τ = ψ₈.char 1 from rfl] -- to make `rw [ψ₈.prim.zmod_char_eq_one_iff]` work
   refine (sq_eq_one_iff.1 ?_).resolve_left ?_
   · rw [← pow_mul, ← map_nsmul_eq_pow ψ₈.char, ψ₈.prim.zmod_char_eq_one_iff]
@@ -278,9 +278,9 @@ theorem FiniteField.two_pow_card {F : Type*} [Fintype F] [Field F] (hF : ringCha
   have hq : IsQuadratic χ := isQuadratic_χ₈.comp _
 
   -- we now show that the Gauss sum of `χ` and `ψ₈` has the relevant property
-  have h₁  : (fun (a : Fin 8) ↦ ↑(χ₈ a) * τ ^ (a : ℕ)) = fun a ↦ χ a * ↑(ψ₈char a)
+  have h₁ : (fun (a : Fin 8) ↦ ↑(χ₈ a) * τ ^ (a : ℕ)) = fun a ↦ χ a * ↑(ψ₈char a)
   ext1; congr; apply pow_one
-  have hg₁  : gaussSum χ ψ₈char = 2 * (τ - τ ^ 3)
+  have hg₁ : gaussSum χ ψ₈char = 2 * (τ - τ ^ 3)
   rw [gaussSum, ← h₁, Fin.sum_univ_eight,
     -- evaluate `χ₈`
     show χ₈ 0 = 0 from rfl, show χ₈ 1 = 1 from rfl, show χ₈ 2 = 0 from rfl,
@@ -292,7 +292,7 @@ theorem FiniteField.two_pow_card {F : Type*} [Fintype F] [Field F] (hF : ringCha
   simp only [Int.cast_zero, zero_mul, Int.cast_one, Fin.val_one, pow_one, one_mul, zero_add,
     Fin.val_two, add_zero, Int.reduceNeg, Int.cast_neg, neg_mul]
   linear_combination (τ ^ 3 - τ) * τ_spec
-  have hg  : gaussSum χ ψ₈char ^ 2 = χ (-1) * Fintype.card (ZMod 8)
+  have hg : gaussSum χ ψ₈char ^ 2 = χ (-1) * Fintype.card (ZMod 8)
   rw [hχ, one_mul, ZMod.card, Nat.cast_ofNat, hg₁]
   linear_combination (4 * τ ^ 2 - 8) * τ_spec
 

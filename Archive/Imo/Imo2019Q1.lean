@@ -34,9 +34,9 @@ theorem imo2019_q1 (f : ℤ → ℤ) :
   obtain ⟨m, H⟩ : ∃ m, ∀ b, f (b + 1) = f b + m := by
     refine ⟨(f 0 - f (-2)) / 2, fun b => ?_⟩
     refine sub_eq_iff_eq_add'.1 (Int.eq_ediv_of_mul_eq_right two_ne_zero ?_)
-    have h1  : f 0 + 2 * f b = f (f b)
+    have h1 : f 0 + 2 * f b = f (f b)
     simpa using hf 0 b
-    have h2  : f (-2) + 2 * f (b + 1) = f (f b)
+    have h2 : f (-2) + 2 * f (b + 1) = f (f b)
     simpa using hf (-1) (b + 1)
     linarith
   -- Hence, `f` is an affine map, `f b = f 0 + m * b`
@@ -48,7 +48,7 @@ theorem imo2019_q1 (f : ℤ → ℤ) :
     · rw [← sub_eq_of_eq_add (H _)]
       simp [ihb]; ring
   -- Now use `hf 0 0` and `hf 0 1` to show that `m ∈ {0, 2}`
-  have H3  : 2 * c = m * c
+  have H3 : 2 * c = m * c
   simpa [H, mul_add] using hf 0 0
   obtain rfl | rfl : 2 = m ∨ m = 0 := by simpa [H, mul_add, H3] using hf 0 1
   · right; use c; ext b; simp [H, add_comm]

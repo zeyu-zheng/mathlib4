@@ -248,9 +248,9 @@ variable (X Y n) in
 @[simp]
 lemma zero_hom : (0 : Ext X Y n).hom = 0 := by
   let β : Ext 0 Y n := 0
-  have hβ  : β.hom = 0
+  have hβ : β.hom = 0
   apply (Functor.map_isZero _ (isZero_zero C)).eq_of_src
-  have  : (0 : Ext X Y n) = (0 : Ext X 0 0).comp β (zero_add n)
+  have : (0 : Ext X Y n) = (0 : Ext X 0 0).comp β (zero_add n)
   simp [β]
   rw [this, comp_hom, hβ, ShiftedHom.comp_zero]
 
@@ -272,7 +272,7 @@ lemma biprod_ext {X₁ X₂ : C} {α β : Ext (X₁ ⊞ X₂) Y n}
 lemma add_hom (α β : Ext X Y n) : (α + β).hom = α.hom + β.hom := by
   let α' : Ext (X ⊞ X) Y n := (mk₀ biprod.fst).comp α (zero_add n)
   let β' : Ext (X ⊞ X) Y n := (mk₀ biprod.snd).comp β (zero_add n)
-  have eq₁  : α + β = (mk₀ (biprod.lift (𝟙 X) (𝟙 X))).comp (α' + β') (zero_add n)
+  have eq₁ : α + β = (mk₀ (biprod.lift (𝟙 X) (𝟙 X))).comp (α' + β') (zero_add n)
   simp [α', β']
   have eq₂ : α' + β' = homEquiv.symm (α'.hom + β'.hom) := by
     apply biprod_ext

@@ -380,7 +380,7 @@ lemma norm_le_interp_of_mem_verticalClosedStrip' (f : ℂ → E) {z : ℂ} {a b 
     (hB : BddAbove ((norm ∘ f) '' (verticalClosedStrip 0 1)))
     (ha : ∀ z ∈ re ⁻¹' {0}, ‖f z‖ ≤ a) (hb : ∀ z ∈ re ⁻¹' {1}, ‖f z‖ ≤ b) :
     ‖f z‖ ≤ a ^ (1 - z.re) * b ^ z.re := by
-  have  : ‖interpStrip f z‖ ≤ (sSupNormIm f 0) ^ (1 - z.re) * (sSupNormIm f 1) ^ z.re
+  have : ‖interpStrip f z‖ ≤ (sSupNormIm f 0) ^ (1 - z.re) * (sSupNormIm f 1) ^ z.re
   by_cases h : sSupNormIm f 0 = 0 ∨ sSupNormIm f 1 = 0
   · rw [interpStrip_eq_of_zero f z h, norm_zero, mul_nonneg_iff]
     left

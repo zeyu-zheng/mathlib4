@@ -341,10 +341,10 @@ open CategoryTheory.Limits
     this for diagrams whose shape lives in any one fixed universe. -/
 theorem of_cocone_nonempty (h : ∀ {J : Type w} [SmallCategory J] [FinCategory J] (F : J ⥤ C),
     Nonempty (Cocone F)) : IsFiltered C := by
-  have  : Nonempty C
+  have : Nonempty C
   obtain ⟨c⟩ := h (Functor.empty _)
   exact ⟨c.pt⟩
-  have  : IsFilteredOrEmpty C
+  have : IsFilteredOrEmpty C
   refine ⟨?_, ?_⟩
   · intros X Y
     obtain ⟨c⟩ := h (ULiftHom.down ⋙ ULift.downFunctor ⋙ pair X Y)
@@ -791,10 +791,10 @@ open CategoryTheory.Limits
     verify this for diagrams whose shape lives in any one fixed universe. -/
 theorem of_cone_nonempty (h : ∀ {J : Type w} [SmallCategory J] [FinCategory J] (F : J ⥤ C),
     Nonempty (Cone F)) : IsCofiltered C := by
-  have  : Nonempty C
+  have : Nonempty C
   obtain ⟨c⟩ := h (Functor.empty _)
   exact ⟨c.pt⟩
-  have  : IsCofilteredOrEmpty C
+  have : IsCofilteredOrEmpty C
   refine ⟨?_, ?_⟩
   · intros X Y
     obtain ⟨c⟩ := h (ULiftHom.down ⋙ ULift.downFunctor ⋙ pair X Y)

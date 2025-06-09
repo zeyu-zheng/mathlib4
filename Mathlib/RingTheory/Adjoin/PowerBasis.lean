@@ -95,12 +95,12 @@ theorem repr_gen_pow_isIntegral [IsDomain S]
     ∀ i, IsIntegral R (B.basis.repr (B.gen ^ n) i) := by
   intro i
   let Q := X ^ n %ₘ minpoly R B.gen
-  have  : B.gen ^ n = aeval B.gen Q
+  have : B.gen ^ n = aeval B.gen Q
   rw [← @aeval_X_pow R _ _ _ _ B.gen, ← modByMonic_add_div (X ^ n) (minpoly.monic hB)]
   simp
   by_cases hQ : Q = 0
   · simp [this, hQ, isIntegral_zero]
-  have hlt  : Q.natDegree < B.dim
+  have hlt : Q.natDegree < B.dim
   rw [← B.natDegree_minpoly, hmin, (minpoly.monic hB).natDegree_map,
     natDegree_lt_natDegree_iff hQ]
   letI : Nontrivial R := Nontrivial.of_polynomial_ne hQ

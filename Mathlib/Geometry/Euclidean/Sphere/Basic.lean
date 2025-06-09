@@ -214,34 +214,34 @@ theorem Cospherical.affineIndependent {s : Set P} (hs : Cospherical s) {p : Fin 
   rw [collinear_iff_of_mem (Set.mem_range_self (0 : Fin 3))] at hc
   rcases hc with ⟨v, hv⟩
   rw [Set.forall_mem_range] at hv
-  have hv0  : v ≠ 0
+  have hv0 : v ≠ 0
   intro h
-  have he  : p 1 = p 0
+  have he : p 1 = p 0
   simpa [h] using hv 1
   exact (by decide : (1 : Fin 3) ≠ 0) (hpi he)
   rcases hs with ⟨c, r, hs⟩
   have hs' := fun i => hs (p i) (Set.mem_of_mem_of_subset (Set.mem_range_self _) hps)
   choose f hf using hv
-  have hsd  : ∀ i, dist (f i • v +ᵥ p 0) c = r
+  have hsd : ∀ i, dist (f i • v +ᵥ p 0) c = r
   intro i
   rw [← hf]
   exact hs' i
-  have hf0  : f 0 = 0
+  have hf0 : f 0 = 0
   have hf0' := hf 0
   rw [eq_comm, ← @vsub_eq_zero_iff_eq V, vadd_vsub, smul_eq_zero] at hf0'
   simpa [hv0] using hf0'
-  have hfi  : Function.Injective f
+  have hfi : Function.Injective f
   intro i j h
   have hi := hf i
   rw [h, ← hf j] at hi
   exact hpi hi
   simp_rw [← hsd 0, hf0, zero_smul, zero_vadd, dist_smul_vadd_eq_dist (p 0) c hv0] at hsd
   have hfn0 : ∀ i, i ≠ 0 → f i ≠ 0 := fun i => (hfi.ne_iff' hf0).2
-  have hfn0'  : ∀ i, i ≠ 0 → f i = -2 * ⟪v, p 0 -ᵥ c⟫ / ⟪v, v⟫
+  have hfn0' : ∀ i, i ≠ 0 → f i = -2 * ⟪v, p 0 -ᵥ c⟫ / ⟪v, v⟫
   intro i hi
   have hsdi := hsd i
   simpa [hfn0, hi] using hsdi
-  have hf12  : f 1 = f 2
+  have hf12 : f 1 = f 2
   rw [hfn0' 1 (by decide), hfn0' 2 (by decide)]
   exact (by decide : (1 : Fin 3) ≠ 2) (hfi hf12)
 

@@ -308,8 +308,8 @@ theorem lintegral_pow_le_pow_lintegral_fderiv_aux
   By taking the product over these `n` factors, raising them to the power `(n-1)⁻¹` and integrating,
   we get the inequality `∫ |u| ^ (n/(n-1)) ≤ ∫ x, ∏ i, (∫ xᵢ, |Du(update x i xᵢ)|)^(n-1)⁻¹`.
   The result then follows from the grid-lines lemma. -/
-  have  : (1 : ℝ) ≤ ↑#ι - 1
-  have hι  : (2 : ℝ) ≤ #ι
+  have : (1 : ℝ) ≤ ↑#ι - 1
+  have hι : (2 : ℝ) ≤ #ι
   exact_mod_cast hp.one_lt
   linarith
   calc ∫⁻ x, (‖u x‖₊ : ℝ≥0∞) ^ p
@@ -382,7 +382,7 @@ theorem lintegral_pow_le_pow_lintegral_fderiv {u : E → F}
   set C := lintegralPowLePowLIntegralFDerivConst μ p
   let ι := Fin (finrank ℝ E)
   have hιcard : #ι = finrank ℝ E := Fintype.card_fin (finrank ℝ E)
-  have  : finrank ℝ E = finrank ℝ (ι → ℝ)
+  have : finrank ℝ E = finrank ℝ (ι → ℝ)
   simp [hιcard]
   let e : E ≃L[ℝ] ι → ℝ := ContinuousLinearEquiv.ofFinrankEq this
   have : IsAddHaarMeasure ((volume : Measure (ι → ℝ)).map e.symm) :=
@@ -487,7 +487,7 @@ theorem eLpNorm_le_eLpNorm_fderiv_of_eq_inner  {u : E → F'}
   · simp [hp'0]
   set n := finrank ℝ E
   let n' := NNReal.conjExponent n
-  have h2p  : (p : ℝ) < n
+  have h2p : (p : ℝ) < n
   have : 0 < p⁻¹ - (n : ℝ)⁻¹ :=
     NNReal.coe_lt_coe.mpr (pos_iff_ne_zero.mpr (inv_ne_zero hp'0)) |>.trans_eq hp'
   rwa [NNReal.coe_inv, sub_pos,
@@ -496,9 +496,9 @@ theorem eLpNorm_le_eLpNorm_fderiv_of_eq_inner  {u : E → F'}
   have h0n : 2 ≤ n := Nat.succ_le_of_lt <| Nat.one_lt_cast.mp <| hp.trans_lt h2p
   have hn : NNReal.IsConjExponent n n' := .conjExponent (by norm_cast)
   have h1n : 1 ≤ (n : ℝ≥0) := hn.one_le
-  have h2n  : (0 : ℝ) < n - 1
+  have h2n : (0 : ℝ) < n - 1
   simp_rw [sub_pos]; exact hn.coe.one_lt
-  have hnp  : (0 : ℝ) < n - p
+  have hnp : (0 : ℝ) < n - p
   simp_rw [sub_pos]; exact h2p
   rcases hp.eq_or_lt with rfl|hp
   -- the case `p = 1`
@@ -515,30 +515,30 @@ theorem eLpNorm_le_eLpNorm_fderiv_of_eq_inner  {u : E → F'}
   have h0p : p ≠ 0 := zero_lt_one.trans hp |>.ne'
   have h1p : (p : ℝ) ≠ 1 := hq.one_lt.ne'
   have h3p : (p : ℝ) - 1 ≠ 0 := sub_ne_zero_of_ne h1p
-  have h0p'  : p' ≠ 0
+  have h0p' : p' ≠ 0
   suffices 0 < (p' : ℝ) from (show 0 < p' from this) |>.ne'
   rw [← inv_pos, hp', sub_pos]
   exact inv_lt_inv_of_lt hq.pos h2p
-  have h2q  : 1 / n' - 1 / q = 1 / p'
+  have h2q : 1 / n' - 1 / q = 1 / p'
   simp_rw (config := {zeta := false}) [one_div, hp']
   rw [← hq.one_sub_inv, ← hn.coe.one_sub_inv, sub_sub_sub_cancel_left]
   simp only [NNReal.coe_natCast, NNReal.coe_inv]
   let γ : ℝ≥0 := ⟨p * (n - 1) / (n - p), by positivity⟩
   have h0γ : (γ : ℝ) = p * (n - 1) / (n - p) := rfl
-  have h1γ  : 1 < (γ : ℝ)
+  have h1γ : 1 < (γ : ℝ)
   rwa [h0γ, one_lt_div hnp, mul_sub, mul_one, sub_lt_sub_iff_right, lt_mul_iff_one_lt_left]
   exact hn.coe.pos
-  have h2γ  : γ * n' = p'
+  have h2γ : γ * n' = p'
   rw [← NNReal.coe_inj, ← inv_inj, hp', NNReal.coe_mul, h0γ, hn.coe.conj_eq]
   field_simp; ring
-  have h3γ  : (γ - 1) * q = p'
+  have h3γ : (γ - 1) * q = p'
   rw [← inv_inj, hp', h0γ, hq.conj_eq]
   have : (p : ℝ) * (n - 1) - (n - p) = n * (p - 1) := by ring
   field_simp [this]; ring
   have h4γ : (γ : ℝ) ≠ 0 := (zero_lt_one.trans h1γ).ne'
   by_cases h3u : ∫⁻ x, ‖u x‖₊ ^ (p' : ℝ) ∂μ = 0
   · rw [eLpNorm_nnreal_eq_lintegral h0p', h3u, ENNReal.zero_rpow_of_pos] <;> positivity
-  have h4u  : ∫⁻ x, ‖u x‖₊ ^ (p' : ℝ) ∂μ ≠ ∞
+  have h4u : ∫⁻ x, ‖u x‖₊ ^ (p' : ℝ) ∂μ ≠ ∞
   refine lintegral_rpow_nnnorm_lt_top_of_eLpNorm'_lt_top (pos_iff_ne_zero.mpr h0p') ?_ |>.ne
   dsimp only
   rw [NNReal.val_eq_coe, ← eLpNorm_nnreal_eq_eLpNorm' h0p']
@@ -681,16 +681,16 @@ theorem eLpNorm_le_eLpNorm_fderiv_of_le [FiniteDimensional ℝ F]
   by_cases hq0 : q = 0
   · simp [hq0]
   let p' : ℝ≥0 := (p⁻¹ - (finrank ℝ E : ℝ≥0)⁻¹)⁻¹
-  have hp'  : p'⁻¹ = p⁻¹ - (finrank ℝ E : ℝ)⁻¹
+  have hp' : p'⁻¹ = p⁻¹ - (finrank ℝ E : ℝ)⁻¹
   rw [inv_inv, NNReal.coe_sub]
   · simp
   · gcongr
-  have  : (q : ℝ≥0∞) ≤ p'
+  have : (q : ℝ≥0∞) ≤ p'
   have H : (p' : ℝ)⁻¹ ≤ (↑q)⁻¹ := trans hp' hpq
   norm_cast at H ⊢
   rwa [inv_le_inv] at H
   · dsimp
-    have  : 0 < p⁻¹ - (finrank ℝ E : ℝ≥0)⁻¹
+    have : 0 < p⁻¹ - (finrank ℝ E : ℝ≥0)⁻¹
     simp only [tsub_pos_iff_lt]
     gcongr
     positivity
@@ -709,7 +709,7 @@ theorem eLpNorm_le_eLpNorm_fderiv_of_le [FiniteDimensional ℝ F]
           simpa using hpq
     _ = eLpNorm u p' μ * t := by rw [eLpNorm_restrict_eq_of_support_subset h2u]
     _ ≤ (C * eLpNorm (fderiv ℝ u) p μ) * t := by
-        have h2u'  : HasCompactSupport u
+        have h2u' : HasCompactSupport u
         apply HasCompactSupport.of_support_subset_isCompact hs.isCompact_closure
         exact h2u.trans subset_closure
         rel [eLpNorm_le_eLpNorm_fderiv_of_eq μ hu h2u' hp (mod_cast (zero_le p).trans_lt h2p) hp']

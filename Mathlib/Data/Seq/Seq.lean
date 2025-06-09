@@ -256,7 +256,7 @@ theorem mem_rec_on {C : Seq α → Prop} {a s} (M : a ∈ s)
   revert e; apply s.recOn _ fun b s' => _
   · intro e; injection e
   · intro b s' e
-    have h_eq  : (cons b s').val (Nat.succ k) = s'.val k
+    have h_eq : (cons b s').val (Nat.succ k) = s'.val k
     cases s'; rfl
     rw [h_eq] at e
     apply h1 _ _ (Or.inr (IH e))

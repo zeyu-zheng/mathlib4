@@ -296,7 +296,7 @@ lemma hom_ext {n : ℕ} {i : Fin (n+2)} {S : SSet} (σ₁ σ₂ : Λ[n+1, i] ⟶
     obtain ⟨f, hf'⟩ := f
     subst hf
     simpa [← Set.univ_subset_iff, Set.subset_def, asOrderHom, not_or] using hf'
-  have H  : f = (Λ[n+1, i].map (factor_δ f' j).op) (face i j hji)
+  have H : f = (Λ[n+1, i].map (factor_δ f' j).op) (face i j hji)
   apply Subtype.ext
   apply (standardSimplex.objEquiv _ _).injective
   rw [← hf]

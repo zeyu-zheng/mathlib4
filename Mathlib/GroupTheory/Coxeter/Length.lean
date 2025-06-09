@@ -144,7 +144,7 @@ theorem length_simple (i : B) : ℓ (s i) = 1 := by
   apply Nat.le_antisymm
   · simpa using cs.length_wordProd_le [i]
   · by_contra! length_lt_one
-    have  : cs.lengthParity (s i) = Multiplicative.ofAdd 0
+    have : cs.lengthParity (s i) = Multiplicative.ofAdd 0
     rw [lengthParity_eq_ofAdd_length, Nat.lt_one_iff.mp length_lt_one, Nat.cast_zero]
     have : Multiplicative.ofAdd (0 : ZMod 2) = Multiplicative.ofAdd 1 :=
       this.symm.trans (cs.lengthParity_simple i)
@@ -213,8 +213,8 @@ theorem exists_reduced_word' (w : W) : ∃ ω : List B, cs.IsReduced ω ∧ w = 
 
 private theorem isReduced_take_and_drop {ω : List B} (hω : cs.IsReduced ω) (j : ℕ) :
     cs.IsReduced (ω.take j) ∧ cs.IsReduced (ω.drop j) := by
-  have h₁ : ℓ (π (ω.take j)) ≤ (ω.take j).length    := cs.length_wordProd_le (ω.take j)
-  have h₂ : ℓ (π (ω.drop j)) ≤ (ω.drop j).length    := cs.length_wordProd_le (ω.drop j)
+  have h₁ : ℓ (π (ω.take j)) ≤ (ω.take j).length := cs.length_wordProd_le (ω.take j)
+  have h₂ : ℓ (π (ω.drop j)) ≤ (ω.drop j).length := cs.length_wordProd_le (ω.drop j)
   have h₃ := calc
     (ω.take j).length + (ω.drop j).length
     _ = ω.length                             := by rw [← List.length_append, ω.take_append_drop j]
@@ -238,10 +238,10 @@ theorem not_isReduced_alternatingWord (i i' : B) {m : ℕ} (hM : M i i' ≠ 0) (
       unfold IsReduced
       rw [Nat.succ_eq_add_one, length_alternatingWord]
       linarith
-    have  : M i i' + 1 ≤ M i i' * 2
+    have : M i i' + 1 ≤ M i i' * 2
     linarith [Nat.one_le_iff_ne_zero.mpr hM]
     rw [cs.prod_alternatingWord_eq_prod_alternatingWord_sub i i' _ this]
-    have  : M i i' * 2 - (M i i' + 1) = M i i' - 1
+    have : M i i' * 2 - (M i i' + 1) = M i i' - 1
     apply (Nat.sub_eq_iff_eq_add' this).mpr
     rw [add_assoc, add_comm 1, Nat.sub_add_cancel (Nat.one_le_iff_ne_zero.mpr hM)]
     exact mul_two _
@@ -282,7 +282,7 @@ theorem isRightDescent_inv_iff {w : W} {i : B} :
 
 theorem exists_leftDescent_of_ne_one {w : W} (hw : w ≠ 1) : ∃ i : B, cs.IsLeftDescent w i := by
   rcases cs.exists_reduced_word w with ⟨ω, h, rfl⟩
-  have h₁  : ω ≠ []
+  have h₁ : ω ≠ []
   rintro rfl; simp at hw
   rcases List.exists_cons_of_ne_nil h₁ with ⟨i, ω', rfl⟩
   use i

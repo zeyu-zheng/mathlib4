@@ -50,7 +50,7 @@ theorem separate_convex_open_set [TopologicalSpace E] [AddCommGroup E] [Topologi
   have := exists_extension_of_le_sublinear f (gauge s) (fun c hc => gauge_smul_of_nonneg hc.le)
     (gauge_add_le hs₁ <| absorbent_nhds_zero <| hs₂.mem_nhds hs₀) ?_
   · obtain ⟨φ, hφ₁, hφ₂⟩ := this
-    have hφ₃  : φ x₀ = 1
+    have hφ₃ : φ x₀ = 1
     rw [← f.domain.coe_mk x₀ (Submodule.mem_span_singleton_self _), hφ₁,
       LinearPMap.mkSpanSingleton'_apply_self]
     have hφ₄ : ∀ x ∈ s, φ x < 1 := fun x hx =>
@@ -128,7 +128,7 @@ theorem geometric_hahn_banach_open_open (hs₁ : Convex ℝ s) (hs₂ : IsOpen s
   obtain rfl | ⟨b₀, hb₀⟩ := t.eq_empty_or_nonempty
   · exact ⟨0, 1, fun a _ha => by norm_num, by simp⟩
   obtain ⟨f, s, hf₁, hf₂⟩ := geometric_hahn_banach_open hs₁ hs₂ ht₁ disj
-  have hf  : IsOpenMap f
+  have hf : IsOpenMap f
   refine f.isOpenMap_of_ne_zero ?_
   rintro rfl
   simp_rw [ContinuousLinearMap.zero_apply] at hf₁ hf₂

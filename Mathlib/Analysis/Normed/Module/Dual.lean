@@ -184,11 +184,11 @@ theorem smul_mem_polar {s : Set E} {x' : Dual 𝕜 E} {c : 𝕜} (hc : ∀ z, z 
   · simp only [c_zero, inv_zero, zero_smul]
     exact (dualPairing 𝕜 E).flip.zero_mem_polar _
   have eq : ∀ z, ‖c⁻¹ • x' z‖ = ‖c⁻¹‖ * ‖x' z‖ := fun z => norm_smul c⁻¹ _
-  have le  : ∀ z, z ∈ s → ‖c⁻¹ • x' z‖ ≤ ‖c⁻¹‖ * ‖c‖
+  have le : ∀ z, z ∈ s → ‖c⁻¹ • x' z‖ ≤ ‖c⁻¹‖ * ‖c‖
   intro z hzs
   rw [eq z]
   apply mul_le_mul (le_of_eq rfl) (hc z hzs) (norm_nonneg _) (norm_nonneg _)
-  have cancel  : ‖c⁻¹‖ * ‖c‖ = 1
+  have cancel : ‖c⁻¹‖ * ‖c‖ = 1
   simp only [c_zero, norm_eq_zero, Ne, not_false_iff, inv_mul_cancel, norm_inv]
   rwa [cancel] at le
 

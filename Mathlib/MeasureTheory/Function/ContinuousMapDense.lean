@@ -203,9 +203,9 @@ theorem Memℒp.exists_hasCompactSupport_integral_rpow_sub_le
       HasCompactSupport g ∧
         (∫ x, ‖f x - g x‖ ^ p ∂μ) ≤ ε ∧ Continuous g ∧ Memℒp g (ENNReal.ofReal p) μ := by
   have I : 0 < ε ^ (1 / p) := Real.rpow_pos_of_pos hε _
-  have A  : ENNReal.ofReal (ε ^ (1 / p)) ≠ 0
+  have A : ENNReal.ofReal (ε ^ (1 / p)) ≠ 0
   simp only [Ne, ENNReal.ofReal_eq_zero, not_le, I]
-  have B  : ENNReal.ofReal p ≠ 0
+  have B : ENNReal.ofReal p ≠ 0
   simpa only [Ne, ENNReal.ofReal_eq_zero, not_le] using hp
   rcases hf.exists_hasCompactSupport_eLpNorm_sub_le ENNReal.coe_ne_top A with
     ⟨g, g_support, hg, g_cont, g_mem⟩
@@ -297,9 +297,9 @@ theorem Memℒp.exists_boundedContinuous_integral_rpow_sub_le [μ.WeaklyRegular]
     {f : α → E} (hf : Memℒp f (ENNReal.ofReal p) μ) {ε : ℝ} (hε : 0 < ε) :
     ∃ g : α →ᵇ E, (∫ x, ‖f x - g x‖ ^ p ∂μ) ≤ ε ∧ Memℒp g (ENNReal.ofReal p) μ := by
   have I : 0 < ε ^ (1 / p) := Real.rpow_pos_of_pos hε _
-  have A  : ENNReal.ofReal (ε ^ (1 / p)) ≠ 0
+  have A : ENNReal.ofReal (ε ^ (1 / p)) ≠ 0
   simp only [Ne, ENNReal.ofReal_eq_zero, not_le, I]
-  have B  : ENNReal.ofReal p ≠ 0
+  have B : ENNReal.ofReal p ≠ 0
   simpa only [Ne, ENNReal.ofReal_eq_zero, not_le] using hp
   rcases hf.exists_boundedContinuous_eLpNorm_sub_le ENNReal.coe_ne_top A with ⟨g, hg, g_mem⟩
   change eLpNorm _ (ENNReal.ofReal p) _ ≤ _ at hg

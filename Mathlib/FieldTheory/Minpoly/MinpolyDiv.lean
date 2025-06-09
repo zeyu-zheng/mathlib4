@@ -111,7 +111,7 @@ lemma natDegree_minpolyDiv_lt [Nontrivial S] :
 lemma coeff_minpolyDiv_mem_adjoin (x : S) (i) :
     coeff (minpolyDiv R x) i ∈ Algebra.adjoin R {x} := by
   by_contra H
-  have  : ∀ j, coeff (minpolyDiv R x) (i + j) ∉ Algebra.adjoin R {x}
+  have : ∀ j, coeff (minpolyDiv R x) (i + j) ∉ Algebra.adjoin R {x}
   intro j; induction j with
   | zero => exact H
   | succ j IH =>

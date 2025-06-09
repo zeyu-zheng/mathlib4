@@ -818,7 +818,7 @@ theorem eq_or_mem_iff_mem {s : WSeq α} {a a' s'} :
     rw [i1, i2]
     cases' s' with f al
     dsimp only [cons, (· ∈ ·), WSeq.Mem, Seq.Mem, Seq.cons]
-    have h_a_eq_a'  : a = a' ↔ some (some a) = some (some a')
+    have h_a_eq_a' : a = a' ↔ some (some a) = some (some a')
     simp
     rw [h_a_eq_a']
     refine ⟨Stream'.eq_or_mem_of_mem_cons, fun o => ?_⟩

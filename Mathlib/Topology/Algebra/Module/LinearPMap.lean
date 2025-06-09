@@ -73,7 +73,7 @@ theorem IsClosed.isClosable {f : E →ₗ.[R] F} (hf : f.IsClosed) : f.IsClosabl
 theorem IsClosable.leIsClosable {f g : E →ₗ.[R] F} (hf : f.IsClosable) (hfg : g ≤ f) :
     g.IsClosable := by
   cases' hf with f' hf
-  have  : g.graph.topologicalClosure ≤ f'.graph
+  have : g.graph.topologicalClosure ≤ f'.graph
   rw [← hf]
   exact Submodule.topologicalClosure_mono (le_graph_of_le hfg)
   use g.graph.topologicalClosure.toLinearPMap
@@ -157,7 +157,7 @@ theorem closureHasCore (f : E →ₗ.[R] F) : f.closure.HasCore f.domain := by
     intro hx
     exact f.le_closure.1 hx
   let z : f.closure.domain := ⟨y.1, f.le_closure.1 y.2⟩
-  have hyz  : (y : E) = z
+  have hyz : (y : E) = z
   simp
   rw [f.le_closure.2 hyz]
   exact domRestrict_apply (hxy.trans hyz)
@@ -195,7 +195,7 @@ theorem inverse_isClosable_iff (hf : LinearMap.ker f.toFun = ⊥) (hf' : f.IsClo
     intro ⟨x, hx⟩ hx'
     simp only [Submodule.mk_eq_zero]
     rw [toFun_eq_coe, eq_comm, image_iff] at hx'
-    have  : (0, x) ∈ graph f'
+    have : (0, x) ∈ graph f'
     rw [← h, inverse_graph hf]
     rw [← hf'.graph_closure_eq_closure_graph, ← SetLike.mem_coe,
       Submodule.topologicalClosure_coe] at hx'

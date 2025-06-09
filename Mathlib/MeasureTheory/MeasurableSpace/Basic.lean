@@ -310,11 +310,11 @@ measurable. -/
 theorem Measurable.measurable_of_countable_ne [MeasurableSingletonClass α] (hf : Measurable f)
     (h : Set.Countable { x | f x ≠ g x }) : Measurable g := by
   intro t ht
-  have  : g ⁻¹' t = g ⁻¹' t ∩ { x | f x = g x }ᶜ ∪ g ⁻¹' t ∩ { x | f x = g x }
+  have : g ⁻¹' t = g ⁻¹' t ∩ { x | f x = g x }ᶜ ∪ g ⁻¹' t ∩ { x | f x = g x }
   simp [← inter_union_distrib_left]
   rw [this]
   refine (h.mono inter_subset_right).measurableSet.union ?_
-  have  : g ⁻¹' t ∩ { x : α | f x = g x } = f ⁻¹' t ∩ { x : α | f x = g x }
+  have : g ⁻¹' t ∩ { x : α | f x = g x } = f ⁻¹' t ∩ { x : α | f x = g x }
   ext x
   simp (config := { contextual := true })
   rw [this]
@@ -709,7 +709,7 @@ theorem measurable_from_prod_countable' [Countable β]
     {_ : MeasurableSpace γ} {f : α × β → γ} (hf : ∀ y, Measurable fun x => f (x, y))
     (h'f : ∀ y y' x, y' ∈ measurableAtom y → f (x, y') = f (x, y)) :
     Measurable f := fun s hs => by
-  have  : f ⁻¹' s = ⋃ y, ((fun x => f (x, y)) ⁻¹' s) ×ˢ (measurableAtom y : Set β)
+  have : f ⁻¹' s = ⋃ y, ((fun x => f (x, y)) ⁻¹' s) ×ˢ (measurableAtom y : Set β)
   ext1 ⟨x, y⟩
   simp only [mem_preimage, mem_iUnion, mem_prod]
   refine ⟨fun h ↦ ⟨y, h, mem_measurableAtom_self y⟩, ?_⟩
@@ -764,7 +764,7 @@ theorem exists_measurable_piecewise {ι} [Countable ι] [Nonempty ι] (t : ι �
   inhabit ι
   set g' : (i : ι) → t i → β := fun i => g i ∘ (↑)
   -- see #2184
-  have ht'  : ∀ (i j) (x : α) (hxi : x ∈ t i) (hxj : x ∈ t j), g' i ⟨x, hxi⟩ = g' j ⟨x, hxj⟩
+  have ht' : ∀ (i j) (x : α) (hxi : x ∈ t i) (hxj : x ∈ t j), g' i ⟨x, hxi⟩ = g' j ⟨x, hxj⟩
   intro i j x hxi hxj
   rcases eq_or_ne i j with rfl | hij
   · rfl

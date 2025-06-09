@@ -68,7 +68,7 @@ private theorem isRoot_cyclotomic_iff' {n : ℕ} {K : Type*} [Field K] {μ : K} 
   -- in this proof, `o` stands for `orderOf μ`
   have hnpos : 0 < n := (NeZero.of_neZero_natCast K).out.bot_lt
   refine ⟨fun hμ => ?_, IsPrimitiveRoot.isRoot_cyclotomic hnpos⟩
-  have hμn  : μ ^ n = 1
+  have hμn : μ ^ n = 1
   rw [isRoot_of_unity_iff hnpos _]
   exact ⟨n, n.mem_divisors_self hnpos.ne', hμ⟩
   by_contra hnμ
@@ -82,7 +82,7 @@ private theorem isRoot_cyclotomic_iff' {n : ℕ} {K : Type*} [Field K] {μ : K} 
   have key : i < n := (Nat.le_of_dvd ho hio).trans_lt ((Nat.le_of_dvd hnpos hμn).lt_of_ne hnμ)
   have key' : i ∣ n := hio.trans hμn
   rw [← Polynomial.dvd_iff_isRoot] at hμ hiμ
-  have hni  : {i, n} ⊆ n.divisors
+  have hni : {i, n} ⊆ n.divisors
   simpa [Finset.insert_subset_iff, key'] using hnpos.ne'
   obtain ⟨k, hk⟩ := hiμ
   obtain ⟨j, hj⟩ := hμ

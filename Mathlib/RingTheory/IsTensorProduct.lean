@@ -273,7 +273,7 @@ theorem IsBaseChange.iff_lift_unique :
 theorem IsBaseChange.ofEquiv (e : M ≃ₗ[R] N) : IsBaseChange R e.toLinearMap := by
   apply IsBaseChange.of_lift_unique
   intro Q I₁ I₂ I₃ I₄ g
-  have  : I₂ = I₃
+  have : I₂ = I₃
   ext r q
   show (by let _ := I₂; exact r • q) = (by let _ := I₃; exact r • q)
   dsimp

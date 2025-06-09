@@ -836,7 +836,7 @@ theorem lift_word_ping_pong {i j k} (w : NeWord H i j) (hk : j ≠ k) :
 theorem lift_word_prod_nontrivial_of_other_i {i j k} (w : NeWord H i j) (hhead : k ≠ i)
     (hlast : k ≠ j) : lift f w.prod ≠ 1 := by
   intro heq1
-  have  : X k ⊆ X i
+  have : X k ⊆ X i
   simpa [heq1] using lift_word_ping_pong f X hpp w hlast.symm
   obtain ⟨x, hx⟩ := hXnonempty k
   exact (hXdisj hhead).le_bot ⟨hx, this hx⟩
@@ -848,7 +848,7 @@ theorem lift_word_prod_nontrivial_of_head_eq_last {i} (w : NeWord H i i) : lift 
 theorem lift_word_prod_nontrivial_of_head_card {i j} (w : NeWord H i j) (hcard : 3 ≤ #(H i))
     (hheadtail : i ≠ j) : lift f w.prod ≠ 1 := by
   obtain ⟨h, hn1, hnh⟩ := Cardinal.three_le hcard 1 w.head⁻¹
-  have hnot1  : h * w.head ≠ 1
+  have hnot1 : h * w.head ≠ 1
   rw [← div_inv_eq_mul]
   exact div_ne_one_of_ne hnh
   let w' : NeWord H i i :=
@@ -1011,7 +1011,7 @@ theorem _root_.FreeGroup.injective_lift_of_ping_pong : Function.Injective (FreeG
     change FreeGroup.lift (fun _ => a i) (FreeGroup.of () ^ n) • X' j ⊆ X' i
     simp only [map_zpow, FreeGroup.lift.of]
     change a i ^ n • X' j ⊆ X' i
-    have hnne0  : n ≠ 0
+    have hnne0 : n ≠ 0
     rintro rfl
     apply hne1
     simp [H, FreeGroup.freeGroupUnitEquivInt]

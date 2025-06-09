@@ -54,11 +54,11 @@ theorem cube_root_of_unity_sum (hω : IsPrimitiveRoot ω 3) : 1 + ω + ω ^ 2 = 
 theorem cubic_basic_eq_zero_iff (hω : IsPrimitiveRoot ω 3) (hp_nonzero : p ≠ 0)
     (hr : r ^ 2 = q ^ 2 + p ^ 3) (hs3 : s ^ 3 = q + r) (ht : t * s = p) (x : K) :
     x ^ 3 + 3 * p * x - 2 * q = 0 ↔ x = s - t ∨ x = s * ω - t * ω ^ 2 ∨ x = s * ω ^ 2 - t * ω := by
-  have h₁  : ∀ x a₁ a₂ a₃ : K, x = a₁ ∨ x = a₂ ∨ x = a₃ ↔ (x - a₁) * (x - a₂) * (x - a₃) = 0
+  have h₁ : ∀ x a₁ a₂ a₃ : K, x = a₁ ∨ x = a₂ ∨ x = a₃ ↔ (x - a₁) * (x - a₂) * (x - a₃) = 0
   intros; simp only [mul_eq_zero, sub_eq_zero, or_assoc]
   rw [h₁]
   refine Eq.congr ?_ rfl
-  have hs_nonzero  : s ≠ 0
+  have hs_nonzero : s ≠ 0
   contrapose! hp_nonzero with hs_nonzero
   linear_combination -1 * ht + t * hs_nonzero
   rw [← mul_left_inj' (pow_ne_zero 3 hs_nonzero)]
@@ -77,11 +77,11 @@ theorem cubic_monic_eq_zero_iff (hω : IsPrimitiveRoot ω 3) (hp : p = (3 * c - 
   let y := x + b / 3
   have hi2 : (2 : K) ≠ 0 := nonzero_of_invertible _
   have hi3 : (3 : K) ≠ 0 := nonzero_of_invertible _
-  have h9  : (9 : K) = 3 ^ 2
+  have h9 : (9 : K) = 3 ^ 2
   norm_num
-  have h54  : (54 : K) = 2 * 3 ^ 3
+  have h54 : (54 : K) = 2 * 3 ^ 3
   norm_num
-  have h₁  : x ^ 3 + b * x ^ 2 + c * x + d = y ^ 3 + 3 * p * y - 2 * q
+  have h₁ : x ^ 3 + b * x ^ 2 + c * x + d = y ^ 3 + 3 * p * y - 2 * q
   rw [hp, hq]
   field_simp [y, h9, h54]; ring
   rw [h₁, cubic_basic_eq_zero_iff hω hp_nonzero hr hs3 ht y]
@@ -97,17 +97,17 @@ theorem cubic_eq_zero_iff (ha : a ≠ 0) (hω : IsPrimitiveRoot ω 3)
       x = s - t - b / (3 * a) ∨
         x = s * ω - t * ω ^ 2 - b / (3 * a) ∨ x = s * ω ^ 2 - t * ω - b / (3 * a) := by
   have hi3 : (3 : K) ≠ 0 := nonzero_of_invertible _
-  have h9  : (9 : K) = 3 ^ 2
+  have h9 : (9 : K) = 3 ^ 2
   norm_num
-  have h54  : (54 : K) = 2 * 3 ^ 3
+  have h54 : (54 : K) = 2 * 3 ^ 3
   norm_num
   have h₁ : a * x ^ 3 + b * x ^ 2 + c * x + d
     = a * (x ^ 3 + b / a * x ^ 2 + c / a * x + d / a) := by field_simp; ring
-  have h₂  : ∀ x, a * x = 0 ↔ x = 0
+  have h₂ : ∀ x, a * x = 0 ↔ x = 0
   intro x; simp [ha]
-  have hp'  : p = (3 * (c / a) - (b / a) ^ 2) / 9
+  have hp' : p = (3 * (c / a) - (b / a) ^ 2) / 9
   field_simp [hp, h9]; ring_nf
-  have hq'  : q = (9 * (b / a) * (c / a) - 2 * (b / a) ^ 3 - 27 * (d / a)) / 54
+  have hq' : q = (9 * (b / a) * (c / a) - 2 * (b / a) ^ 3 - 27 * (d / a)) / 54
   rw [hq, h54]
   simp [field_simps, ha]
   ring_nf
@@ -125,15 +125,15 @@ theorem cubic_eq_zero_iff_of_p_eq_zero (ha : a ≠ 0) (hω : IsPrimitiveRoot ω 
     (x : K) :
     a * x ^ 3 + b * x ^ 2 + c * x + d = 0 ↔
       x = s - b / (3 * a) ∨ x = s * ω - b / (3 * a) ∨ x = s * ω ^ 2 - b / (3 * a) := by
-  have h₁  : ∀ x a₁ a₂ a₃ : K, x = a₁ ∨ x = a₂ ∨ x = a₃ ↔ (x - a₁) * (x - a₂) * (x - a₃) = 0
+  have h₁ : ∀ x a₁ a₂ a₃ : K, x = a₁ ∨ x = a₂ ∨ x = a₃ ↔ (x - a₁) * (x - a₂) * (x - a₃) = 0
   intros; simp only [mul_eq_zero, sub_eq_zero, or_assoc]
   have hi2 : (2 : K) ≠ 0 := nonzero_of_invertible _
   have hi3 : (3 : K) ≠ 0 := nonzero_of_invertible _
-  have h54  : (54 : K) = 2 * 3 ^ 3
+  have h54 : (54 : K) = 2 * 3 ^ 3
   norm_num
-  have hb2  : b ^ 2 = 3 * a * c
+  have hb2 : b ^ 2 = 3 * a * c
   rw [sub_eq_zero] at hpz; rw [hpz]
-  have hb3  : b ^ 3 = 3 * a * b * c
+  have hb3 : b ^ 3 = 3 * a * b * c
   rw [pow_succ, hb2]; ring
   have h₂ :=
     calc

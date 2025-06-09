@@ -223,7 +223,7 @@ section PullOut
 /-- Auxiliary lemma for `condexp_stronglyMeasurable_mul`. -/
 theorem condexp_stronglyMeasurable_simpleFunc_mul (hm : m ≤ m0) (f : @SimpleFunc α m ℝ) {g : α → ℝ}
     (hg : Integrable g μ) : μ[(f * g : α → ℝ)|m] =ᵐ[μ] f * μ[g|m] := by
-  have  : ∀ (s c) (f : α → ℝ), Set.indicator s (Function.const α c) * f = s.indicator (c • f)
+  have : ∀ (s c) (f : α → ℝ), Set.indicator s (Function.const α c) * f = s.indicator (c • f)
   intro s c f
   ext1 x
   by_cases hx : x ∈ s
@@ -318,7 +318,7 @@ theorem condexp_stronglyMeasurable_mul {f g : α → ℝ} (hf : StronglyMeasurab
     rw [← ae_all_iff] at this
     filter_upwards [this] with x hx
     obtain ⟨i, hi⟩ : ∃ i, x ∈ sets i := by
-      have h_mem  : x ∈ ⋃ i, sets i
+      have h_mem : x ∈ ⋃ i, sets i
       rw [h_univ]; exact Set.mem_univ _
       simpa using h_mem
     exact hx i hi
@@ -332,7 +332,7 @@ theorem condexp_stronglyMeasurable_mul {f g : α → ℝ} (hf : StronglyMeasurab
     · exact
         condexp_congr_ae ((indicator_ae_eq_restrict <| hm _ <| h_meas n).symm.mul EventuallyEq.rfl)
     · exact (indicator_ae_eq_restrict <| hm _ <| h_meas n).mul EventuallyEq.rfl
-  have  : IsFiniteMeasure (μ.restrict (sets n))
+  have : IsFiniteMeasure (μ.restrict (sets n))
   constructor
   rw [Measure.restrict_apply_univ]
   exact h_finite n

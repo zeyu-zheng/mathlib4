@@ -138,7 +138,7 @@ theorem _root_.StarAlgHom.ext_topologicalClosure [T2Space B] {S : StarSubalgebra
       φ.comp (inclusion (le_topologicalClosure S)) = ψ.comp (inclusion (le_topologicalClosure S))) :
     φ = ψ := by
   rw [DFunLike.ext'_iff]
-  have  : Dense (Set.range <| inclusion (le_topologicalClosure S))
+  have : Dense (Set.range <| inclusion (le_topologicalClosure S))
   refine embedding_subtype_val.toInducing.dense_iff.2 fun x => ?_
   convert show ↑x ∈ closure (S : Set A) from x.prop
   rw [← Set.range_comp]
@@ -158,7 +158,7 @@ theorem _root_.StarAlgHomClass.ext_topologicalClosure [T2Space B] {F : Type*}
         φ (inclusion (le_topologicalClosure S) x) = ψ ((inclusion (le_topologicalClosure S)) x)) :
     φ = ψ := by
   -- Porting note: an intervening coercion seems to have appeared since ML3
-  have  : (φ : S.topologicalClosure →⋆ₐ[R] B) = (ψ : S.topologicalClosure →⋆ₐ[R] B)
+  have : (φ : S.topologicalClosure →⋆ₐ[R] B) = (ψ : S.topologicalClosure →⋆ₐ[R] B)
   refine StarAlgHom.ext_topologicalClosure (R := R) (A := A) (B := B) hφ hψ (StarAlgHom.ext ?_)
   simpa only [StarAlgHom.coe_comp, StarAlgHom.coe_coe] using h
   rw [DFunLike.ext'_iff, ← StarAlgHom.coe_coe]

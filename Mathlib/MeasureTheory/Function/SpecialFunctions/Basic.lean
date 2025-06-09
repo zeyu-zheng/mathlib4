@@ -37,7 +37,7 @@ theorem measurable_log : Measurable log :=
 lemma measurable_of_measurable_exp {α : Type*} {_ : MeasurableSpace α} {f : α → ℝ}
     (hf : Measurable (fun x ↦ exp (f x))) :
     Measurable f := by
-  have  : f = fun x ↦ log (exp (f x))
+  have : f = fun x ↦ log (exp (f x))
   ext; rw [log_exp]
   rw [this]
   exact measurable_log.comp hf
@@ -45,7 +45,7 @@ lemma measurable_of_measurable_exp {α : Type*} {_ : MeasurableSpace α} {f : α
 lemma aemeasurable_of_aemeasurable_exp {α : Type*} {_ : MeasurableSpace α} {f : α → ℝ}
     {μ : MeasureTheory.Measure α} (hf : AEMeasurable (fun x ↦ exp (f x)) μ) :
     AEMeasurable f μ := by
-  have  : f = fun x ↦ log (exp (f x))
+  have : f = fun x ↦ log (exp (f x))
   ext; rw [log_exp]
   rw [this]
   exact measurable_log.comp_aemeasurable hf

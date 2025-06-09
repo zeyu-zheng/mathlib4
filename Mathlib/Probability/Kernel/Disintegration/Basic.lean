@@ -69,13 +69,13 @@ private lemma IsCondKernel.apply_of_ne_zero_of_measurableSet [MeasurableSingleto
   nth_rewrite 2 [← ρ.disintegrate ρCond]
   rw [Measure.compProd_apply (measurableSet_prod.mpr (Or.inl ⟨measurableSet_singleton x, hs⟩))]
   classical
-  have (a)  : ρCond a (Prod.mk a ⁻¹' {x} ×ˢ s) = ({x} : Set α).indicator (ρCond · s) a
+  have (a) : ρCond a (Prod.mk a ⁻¹' {x} ×ˢ s) = ({x} : Set α).indicator (ρCond · s) a
   obtain rfl | hax := eq_or_ne a x
   · simp only [singleton_prod, mem_singleton_iff, indicator_of_mem]
     congr with y
     simp
   · simp only [singleton_prod, mem_singleton_iff, hax, not_false_eq_true, indicator_of_not_mem]
-    have  : Prod.mk a ⁻¹' (Prod.mk x '' s) = ∅
+    have : Prod.mk a ⁻¹' (Prod.mk x '' s) = ∅
     ext y; simp [Ne.symm hax]
     simp only [this, measure_empty]
   simp_rw [this]
@@ -87,7 +87,7 @@ private lemma IsCondKernel.apply_of_ne_zero_of_measurableSet [MeasurableSingleto
 `ρCond x s = (ρ.fst {x})⁻¹ * ρ ({x} ×ˢ s)` . -/
 lemma IsCondKernel.apply_of_ne_zero [MeasurableSingletonClass α] {x : α}
     (hx : ρ.fst {x} ≠ 0) (s : Set Ω) : ρCond x s = (ρ.fst {x})⁻¹ * ρ ({x} ×ˢ s) := by
-  have  : ρCond x s = ((ρ.fst {x})⁻¹ • ρ).comap (fun (y : Ω) ↦ (x, y)) s
+  have : ρCond x s = ((ρ.fst {x})⁻¹ • ρ).comap (fun (y : Ω) ↦ (x, y)) s
   congr 2 with s hs
   simp [IsCondKernel.apply_of_ne_zero_of_measurableSet _ _ hx hs,
     (measurableEmbedding_prod_mk_left x).comap_apply]

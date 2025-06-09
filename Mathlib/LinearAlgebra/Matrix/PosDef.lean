@@ -170,7 +170,7 @@ lemma sq_sqrt : hA.sqrt ^ 2 = A := by
   suffices C * (E * (star C * C) * E) * star C = A by
     rw [Matrix.PosSemidef.sqrt, pow_two]
     simpa only [← mul_assoc] using this
-  have  : E * E = diagonal ((↑) ∘ hA.1.eigenvalues)
+  have : E * E = diagonal ((↑) ∘ hA.1.eigenvalues)
   rw [diagonal_mul_diagonal]
   congr! with v
   simp [← pow_two, ← RCLike.ofReal_pow, Real.sq_sqrt (hA.eigenvalues_nonneg v)]

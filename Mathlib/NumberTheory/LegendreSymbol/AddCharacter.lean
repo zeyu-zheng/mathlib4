@@ -157,7 +157,7 @@ theorem zmod_char_ne_one_iff (n : ℕ) [NeZero n] (ψ : AddChar (ZMod n) C) : ψ
   refine ⟨?_, fun h => ⟨_, h⟩⟩
   contrapose!
   rintro h₁ a
-  have ha₁  : a = a.val • (1 : ZMod ↑n)
+  have ha₁ : a = a.val • (1 : ZMod ↑n)
   rw [nsmul_eq_mul, mul_one]; exact (ZMod.natCast_zmod_val a).symm
   rw [ha₁, map_nsmul_eq_pow, h₁, one_pow]
 

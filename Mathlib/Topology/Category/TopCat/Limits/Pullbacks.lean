@@ -203,7 +203,7 @@ theorem range_pullback_map {W X Y Z S T : TopCat} (f₁ : W ⟶ S) (f₂ : X ⟶
     simp only [limit.lift_π, PullbackCone.mk_pt, PullbackCone.mk_π_app, comp_apply]
     exact ⟨exists_apply_eq_apply _ _, exists_apply_eq_apply _ _⟩
   rintro ⟨⟨x₁, hx₁⟩, ⟨x₂, hx₂⟩⟩
-  have  : f₁ x₁ = f₂ x₂
+  have : f₁ x₁ = f₂ x₂
   apply (TopCat.mono_iff_injective _).mp H₃
   erw [← comp_apply, eq₁, ← comp_apply, eq₂, -- now `erw` after #13170
     comp_apply, comp_apply, hx₁, hx₂, ← comp_apply, pullback.condition]

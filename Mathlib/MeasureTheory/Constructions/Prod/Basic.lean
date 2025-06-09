@@ -194,7 +194,7 @@ theorem MeasurableEmbedding.prod_mk {α β γ δ : Type*} {mα : MeasurableSpace
     {mβ : MeasurableSpace β} {mγ : MeasurableSpace γ} {mδ : MeasurableSpace δ} {f : α → β}
     {g : γ → δ} (hg : MeasurableEmbedding g) (hf : MeasurableEmbedding f) :
     MeasurableEmbedding fun x : γ × α => (g x.1, f x.2) := by
-  have h_inj  : Function.Injective fun x : γ × α => (g x.fst, f x.snd)
+  have h_inj : Function.Injective fun x : γ × α => (g x.fst, f x.snd)
   intro x y hxy
   rw [← @Prod.mk.eta _ _ x, ← @Prod.mk.eta _ _ y]
   simp only [Prod.mk.inj_iff] at hxy ⊢
@@ -409,7 +409,7 @@ instance prod.instIsFiniteMeasureOnCompacts {α β : Type*} [TopologicalSpace α
     IsFiniteMeasureOnCompacts (μ.prod ν) := by
   refine ⟨fun K hK => ?_⟩
   set L := (Prod.fst '' K) ×ˢ (Prod.snd '' K) with hL
-  have  : K ⊆ L
+  have : K ⊆ L
   rintro ⟨x, y⟩ hxy
   simp only [L, prod_mk_mem_set_prod_eq, mem_image, Prod.exists, exists_and_right,
     exists_eq_right]
@@ -790,7 +790,7 @@ theorem skew_product [SFinite μa] [SFinite μc] {f : α → β} (hf : MeasurePr
   rcases eq_or_ne μa 0 with (rfl | ha)
   · rw [← hf.map_eq, zero_prod, Measure.map_zero, zero_prod]
     exact ⟨this, by simp only [Measure.map_zero]⟩
-  have sf  : SFinite μd
+  have sf : SFinite μd
   rcases (ae_neBot.2 ha).nonempty_of_mem hg with ⟨x, hx : map (g x) μc = μd⟩
   rw [← hx]
   infer_instance
@@ -905,7 +905,7 @@ theorem lintegral_prod_of_measurable :
 theorem lintegral_prod (f : α × β → ℝ≥0∞) (hf : AEMeasurable f (μ.prod ν)) :
     ∫⁻ z, f z ∂μ.prod ν = ∫⁻ x, ∫⁻ y, f (x, y) ∂ν ∂μ := by
   have A : ∫⁻ z, f z ∂μ.prod ν = ∫⁻ z, hf.mk f z ∂μ.prod ν := lintegral_congr_ae hf.ae_eq_mk
-  have B  : (∫⁻ x, ∫⁻ y, f (x, y) ∂ν ∂μ) = ∫⁻ x, ∫⁻ y, hf.mk f (x, y) ∂ν ∂μ
+  have B : (∫⁻ x, ∫⁻ y, f (x, y) ∂ν ∂μ) = ∫⁻ x, ∫⁻ y, hf.mk f (x, y) ∂ν ∂μ
   apply lintegral_congr_ae
   filter_upwards [ae_ae_of_ae_prod hf.ae_eq_mk] with _ ha using lintegral_congr_ae ha
   rw [A, B, lintegral_prod_of_measurable _ hf.measurable_mk]

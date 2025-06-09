@@ -99,7 +99,7 @@ protected lemma ext [CharZero R] [NoZeroSMulDivisors R M]
     (hr : P₁.root = P₂.root)
     (hc : range P₁.coroot = range P₂.coroot) :
     P₁ = P₂ := by
-  have hp (hc'  : P₁.coroot = P₂.coroot) : P₁.reflection_perm = P₂.reflection_perm
+  have hp (hc' : P₁.coroot = P₂.coroot) : P₁.reflection_perm = P₂.reflection_perm
   ext i j
   refine P₁.root.injective ?_
   conv_rhs => rw [hr]
@@ -134,16 +134,16 @@ private lemma coroot_eq_coreflection_of_root_eq' [CharZero R] [NoZeroSMulDivisor
   set sα := preReflection α (p.toLin.flip α')
   set sβ := preReflection β (p.toLin.flip β')
   let sα' := preReflection α' (p.toLin α)
-  have hij  : preReflection (sα β) (p.toLin.flip (sα' β')) = sα ∘ₗ sβ ∘ₗ sα
+  have hij : preReflection (sα β) (p.toLin.flip (sα' β')) = sα ∘ₗ sβ ∘ₗ sα
   ext
-  have hpi  : (p.toLin.flip (coroot i)) (root i) = 2
+  have hpi : (p.toLin.flip (coroot i)) (root i) = 2
   rw [LinearMap.flip_apply, hp i]
   simp [α, β, α', β', sα, sβ, sα', ← preReflection_preReflection β (p.toLin.flip β') hpi,
     preReflection_apply]
   have hk₀ : root k ≠ 0 := fun h ↦ by simpa [h] using hp k
   obtain ⟨l, hl⟩ := hc i (mem_range_self j)
   rw [← hl]
-  have hkl  : (p.toLin.flip (coroot l)) (root k) = 2
+  have hkl : (p.toLin.flip (coroot l)) (root k) = 2
   simp [hl, hk, preReflection_apply, mul_sub, mul_two, β', α, α', β, sα, hp i, hp j]
   rw [mul_comm (p.toLin (root i) (coroot j))]
   abel
@@ -229,9 +229,9 @@ private lemma coroot_eq_coreflection_of_root_eq_of_span_eq_top [CharZero R] [NoZ
   set sα := preReflection α (p.toLin.flip α')
   set sβ := preReflection β (p.toLin.flip β')
   let sα' := preReflection α' (p.toLin α)
-  have hij  : preReflection (sα β) (p.toLin.flip (sα' β')) = sα ∘ₗ sβ ∘ₗ sα
+  have hij : preReflection (sα β) (p.toLin.flip (sα' β')) = sα ∘ₗ sβ ∘ₗ sα
   ext
-  have hpi  : (p.toLin.flip (coroot i)) (root i) = 2
+  have hpi : (p.toLin.flip (coroot i)) (root i) = 2
   rw [LinearMap.flip_apply, hp i]
   simp [α, β, α', β', sα, sβ, sα', ← preReflection_preReflection β (p.toLin.flip β') hpi,
     preReflection_apply] -- v4.7.0-rc1 issues

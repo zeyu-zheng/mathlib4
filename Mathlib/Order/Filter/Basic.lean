@@ -550,9 +550,9 @@ theorem mem_iInf {ι} {s : ι → Filter α} {U : Set α} :
     rcases eq_finite_iUnion_of_finite_subset_iUnion tfin tsub with ⟨I, Ifin, σ, σfin, σsub, rfl⟩
     rw [sInter_iUnion] at tinter
     set V := fun i => U ∪ ⋂₀ σ i with hV
-    have V_in  : ∀ i, V i ∈ s i
+    have V_in : ∀ i, V i ∈ s i
     rintro i
-    have  : ⋂₀ σ i ∈ s i
+    have : ⋂₀ σ i ∈ s i
     rw [sInter_mem (σfin _)]
     apply σsub
     exact mem_of_superset this subset_union_right
@@ -656,7 +656,7 @@ theorem inf_eq_bot_iff {f g : Filter α} : f ⊓ g = ⊥ ↔ ∃ U ∈ f, ∃ V 
 theorem _root_.Pairwise.exists_mem_filter_of_disjoint {ι : Type*} [Finite ι] {l : ι → Filter α}
     (hd : Pairwise (Disjoint on l)) :
     ∃ s : ι → Set α, (∀ i, s i ∈ l i) ∧ Pairwise (Disjoint on s) := by
-  have  : Pairwise fun i j => ∃ (s : {s // s ∈ l i}) (t : {t // t ∈ l j}), Disjoint s.1 t.1
+  have : Pairwise fun i j => ∃ (s : {s // s ∈ l i}) (t : {t // t ∈ l j}), Disjoint s.1 t.1
   simpa only [Pairwise, Function.onFun, Filter.disjoint_iff, exists_prop, Subtype.exists] using hd
   choose! s t hst using this
   refine ⟨fun i => ⋂ j, @s i j ∩ @t j i, fun i => ?_, fun i j hij => ?_⟩
@@ -1999,7 +1999,7 @@ nonrec theorem _root_.Function.RightInverse.filter_comap {f : α → β} {g : β
 
 theorem _root_.Set.LeftInvOn.filter_map_Iic {f : α → β} {g : β → α} (hfg : LeftInvOn g f s) :
     LeftInvOn (map g) (map f) (Iic <| 𝓟 s) := fun F (hF : F ≤ 𝓟 s) ↦ by
-  have  : (g ∘ f) =ᶠ[𝓟 s] id
+  have : (g ∘ f) =ᶠ[𝓟 s] id
   simpa only [eventuallyEq_principal] using hfg
   rw [map_map, map_congr (this.filter_mono hF), map_id]
 

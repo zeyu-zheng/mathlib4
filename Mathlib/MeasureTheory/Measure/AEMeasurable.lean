@@ -76,7 +76,7 @@ theorem sum_measure [Countable ι] {μ : ι → Measure α} (h : ∀ i, AEMeasur
   nontriviality β
   inhabit β
   set s : ι → Set α := fun i => toMeasurable (μ i) { x | f x ≠ (h i).mk f x }
-  have hsμ  : ∀ i, μ i (s i) = 0
+  have hsμ : ∀ i, μ i (s i) = 0
   intro i
   rw [measure_toMeasurable]
   exact (h i).ae_eq_mk
@@ -281,7 +281,7 @@ theorem aemeasurable_Ioi_of_forall_Ioc {β} {mβ : MeasurableSpace β} [LinearOr
     AEMeasurable g (μ.restrict (Ioi x)) := by
   haveI : Nonempty α := ⟨x⟩
   obtain ⟨u, hu_tendsto⟩ := exists_seq_tendsto (atTop : Filter α)
-  have Ioi_eq_iUnion  : Ioi x = ⋃ n : ℕ, Ioc x (u n)
+  have Ioi_eq_iUnion : Ioi x = ⋃ n : ℕ, Ioc x (u n)
   rw [iUnion_Ioc_eq_Ioi_self_iff.mpr _]
   exact fun y _ => (hu_tendsto.eventually (eventually_ge_atTop y)).exists
   rw [Ioi_eq_iUnion, aemeasurable_iUnion_iff]

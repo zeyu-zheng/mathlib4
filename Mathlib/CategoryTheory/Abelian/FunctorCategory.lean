@@ -80,7 +80,7 @@ theorem coimageImageComparison_app' :
 
 instance functor_category_isIso_coimageImageComparison :
     IsIso (Abelian.coimageImageComparison α) := by
-  have  : ∀ X : C, IsIso ((Abelian.coimageImageComparison α).app X)
+  have : ∀ X : C, IsIso ((Abelian.coimageImageComparison α).app X)
   intros
   rw [coimageImageComparison_app']
   infer_instance

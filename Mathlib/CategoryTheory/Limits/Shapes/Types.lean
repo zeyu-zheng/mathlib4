@@ -300,7 +300,7 @@ theorem binaryCofan_isColimit_iff {X Y : Type u} (c : BinaryCofan X Y) :
           (h.coconePointUniqueUpToIso (binaryCoproductColimit X Y)).symm.toEquiv.bijective]
       simp
     · rintro ⟨h₁, h₂, h₃⟩
-      have  : ∀ x, x ∈ Set.range c.inl ∨ x ∈ Set.range c.inr
+      have : ∀ x, x ∈ Set.range c.inl ∨ x ∈ Set.range c.inr
       rw [eq_compl_iff_isCompl.mpr h₃.symm]
       exact fun _ => or_not
       refine ⟨BinaryCofan.IsColimit.mk _ ?_ ?_ ?_ ?_⟩
@@ -532,7 +532,7 @@ then `π ⁻¹' (π '' U) = U`.
 -/
 theorem coequalizer_preimage_image_eq_of_preimage_eq (π : Y ⟶ Z) (e : f ≫ π = g ≫ π)
     (h : IsColimit (Cofork.ofπ π e)) (U : Set Y) (H : f ⁻¹' U = g ⁻¹' U) : π ⁻¹' (π '' U) = U := by
-  have lem  : ∀ x y, CoequalizerRel f g x y → (x ∈ U ↔ y ∈ U)
+  have lem : ∀ x y, CoequalizerRel f g x y → (x ∈ U ↔ y ∈ U)
   rintro _ _ ⟨x⟩
   change x ∈ f ⁻¹' U ↔ x ∈ g ⁻¹' U
   rw [H]

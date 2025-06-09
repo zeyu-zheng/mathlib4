@@ -648,7 +648,7 @@ theorem of_affine_open_cover {X : Scheme} {P : X.affineOpens → Prop}
         (∀ f : s, P (X.affineBasicOpen f.1)) → P U)
     (hU : ∀ i, P (U i)) : P V := by
   classical
-  have  : ∀ (x : V.1), ∃ f : Γ(X, V), ↑x ∈ X.basicOpen f ∧ P (X.affineBasicOpen f)
+  have : ∀ (x : V.1), ∃ f : Γ(X, V), ↑x ∈ X.basicOpen f ∧ P (X.affineBasicOpen f)
   intro x
   obtain ⟨i, hi⟩ := Opens.mem_iSup.mp (show x.1 ∈ (⨆ i, U i : X.Opens) from iSup_U ▸ trivial)
   obtain ⟨f, g, e, hf⟩ := exists_basicOpen_le_affine_inter V.prop (U i).prop x ⟨x.prop, hi⟩

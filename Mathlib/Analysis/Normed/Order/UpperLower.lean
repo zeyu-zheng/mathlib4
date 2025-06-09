@@ -83,7 +83,7 @@ theorem IsUpperSet.mem_interior_of_forall_lt (hs : IsUpperSet s) (hx : x ∈ clo
   obtain ⟨ε, hε, hxy⟩ := Pi.exists_forall_pos_add_lt h
   obtain ⟨z, hz, hxz⟩ := Metric.mem_closure_iff.1 hx _ hε
   rw [dist_pi_lt_iff hε] at hxz
-  have hyz  : ∀ i, z i < y i
+  have hyz : ∀ i, z i < y i
   refine fun i => (hxy _).trans_le' (sub_le_iff_le_add'.1 <| (le_abs_self _).trans ?_)
   rw [← Real.norm_eq_abs, ← dist_eq_norm']
   exact (hxz _).le
@@ -100,7 +100,7 @@ theorem IsLowerSet.mem_interior_of_forall_lt (hs : IsLowerSet s) (hx : x ∈ clo
   obtain ⟨ε, hε, hxy⟩ := Pi.exists_forall_pos_add_lt h
   obtain ⟨z, hz, hxz⟩ := Metric.mem_closure_iff.1 hx _ hε
   rw [dist_pi_lt_iff hε] at hxz
-  have hyz  : ∀ i, y i < z i
+  have hyz : ∀ i, y i < z i
   refine fun i =>
     (lt_sub_iff_add_lt.2 <| hxy _).trans_le (sub_le_comm.1 <| (le_abs_self _).trans ?_)
   rw [← Real.norm_eq_abs, ← dist_eq_norm]

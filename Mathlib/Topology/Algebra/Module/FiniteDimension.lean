@@ -182,7 +182,7 @@ theorem LinearMap.continuous_of_nonzero_on_open (l : E →ₗ[𝕜] 𝕜) (s : S
     (hs₂ : s.Nonempty) (hs₃ : ∀ x ∈ s, l x ≠ 0) : Continuous l := by
   refine l.continuous_of_isClosed_ker (l.isClosed_or_dense_ker.resolve_right fun hl => ?_)
   rcases hs₂ with ⟨x, hx⟩
-  have  : x ∈ interior (LinearMap.ker l : Set E)ᶜ
+  have : x ∈ interior (LinearMap.ker l : Set E)ᶜ
   rw [mem_interior_iff_mem_nhds]
   exact mem_of_superset (hs₁.mem_nhds hx) hs₃
   rwa [hl.interior_compl] at this
@@ -201,12 +201,12 @@ private theorem continuous_equivFun_basis_aux [T2Space E] {ι : Type v} [Fintype
   · haveI : FiniteDimensional 𝕜 E := of_fintype_basis ξ
     -- first step: thanks to the induction hypothesis, any n-dimensional subspace is equivalent
     -- to a standard space of dimension n, hence it is complete and therefore closed.
-    have H₁  : ∀ s : Submodule 𝕜 E, finrank 𝕜 s = n → IsClosed (s : Set E)
+    have H₁ : ∀ s : Submodule 𝕜 E, finrank 𝕜 s = n → IsClosed (s : Set E)
     intro s s_dim
     letI : UniformAddGroup s := s.toAddSubgroup.uniformAddGroup
     let b := Basis.ofVectorSpace 𝕜 s
-    have U  : UniformEmbedding b.equivFun.symm.toEquiv
-    have  : Fintype.card (Basis.ofVectorSpaceIndex 𝕜 s) = n
+    have U : UniformEmbedding b.equivFun.symm.toEquiv
+    have : Fintype.card (Basis.ofVectorSpaceIndex 𝕜 s) = n
     rw [← s_dim]
     exact (finrank_eq_card_basis b).symm
     have : Continuous b.equivFun := IH b this
@@ -216,7 +216,7 @@ private theorem continuous_equivFun_basis_aux [T2Space E] {ι : Type v} [Fintype
       completeSpace_coe_iff_isComplete.1 ((completeSpace_congr U).1 (by infer_instance))
     exact this.isClosed
     -- second step: any linear form is continuous, as its kernel is closed by the first step
-    have H₂  : ∀ f : E →ₗ[𝕜] 𝕜, Continuous f
+    have H₂ : ∀ f : E →ₗ[𝕜] 𝕜, Continuous f
     intro f
     by_cases H : finrank 𝕜 (LinearMap.range f) = 0
     · rw [Submodule.finrank_eq_zero, LinearMap.range_eq_bot] at H

@@ -180,7 +180,7 @@ theorem coord_apply_combination_of_not_mem (hi : i ∉ s) {w : ι → k} (hw : s
 
 @[simp]
 theorem sum_coord_apply_eq_one [Fintype ι] (q : P) : ∑ i, b.coord i q = 1 := by
-  have hq  : q ∈ affineSpan k (range b)
+  have hq : q ∈ affineSpan k (range b)
   rw [b.tot]
   exact AffineSubspace.mem_top k V q
   obtain ⟨w, hw, rfl⟩ := eq_affineCombination_of_mem_affineSpan_of_fintype hq
@@ -190,7 +190,7 @@ theorem sum_coord_apply_eq_one [Fintype ι] (q : P) : ∑ i, b.coord i q = 1 := 
 @[simp]
 theorem affineCombination_coord_eq_self [Fintype ι] (q : P) :
     (Finset.univ.affineCombination k b fun i => b.coord i q) = q := by
-  have hq  : q ∈ affineSpan k (range b)
+  have hq : q ∈ affineSpan k (range b)
   rw [b.tot]
   exact AffineSubspace.mem_top k V q
   obtain ⟨w, hw, rfl⟩ := eq_affineCombination_of_mem_affineSpan_of_fintype hq
@@ -214,17 +214,17 @@ theorem ext_elem [Finite ι] {q₁ q₂ : P} (h : ∀ i, b.coord i q₁ = b.coor
 @[simp]
 theorem coe_coord_of_subsingleton_eq_one [Subsingleton ι] (i : ι) : (b.coord i : P → k) = 1 := by
   ext q
-  have hp  : (range b).Subsingleton
+  have hp : (range b).Subsingleton
   rw [← image_univ]
   apply Subsingleton.image
   apply subsingleton_of_subsingleton
   haveI := AffineSubspace.subsingleton_of_subsingleton_span_eq_top hp b.tot
   let s : Finset ι := {i}
-  have hi  : i ∈ s
+  have hi : i ∈ s
   simp [s]
-  have hw  : s.sum (Function.const ι (1 : k)) = 1
+  have hw : s.sum (Function.const ι (1 : k)) = 1
   simp [s]
-  have hq  : q = s.affineCombination k b (Function.const ι (1 : k))
+  have hq : q = s.affineCombination k b (Function.const ι (1 : k))
   simp [eq_iff_true_of_subsingleton]
   rw [Pi.one_apply, hq, b.coord_apply_combination_of_mem hi hw, Function.const_apply]
 
@@ -233,10 +233,10 @@ theorem surjective_coord [Nontrivial ι] (i : ι) : Function.Surjective <| b.coo
     intro x
     obtain ⟨j, hij⟩ := exists_ne i
     let s : Finset ι := {i, j}
-    have hi  : i ∈ s
+    have hi : i ∈ s
     simp [s]
     let w : ι → k := fun j' => if j' = i then x else 1 - x
-    have hw  : s.sum w = 1
+    have hw : s.sum w = 1
     simp [s, w, Finset.sum_ite, Finset.filter_insert, hij,
     Finset.filter_true_of_mem, Finset.filter_false_of_mem]
     use s.affineCombination k b w

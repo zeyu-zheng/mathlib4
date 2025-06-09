@@ -73,7 +73,7 @@ private theorem glueDist_self (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ) : ∀ x, 
 
 theorem glueDist_glued_points [Nonempty Z] (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ) (p : Z) :
     glueDist Φ Ψ ε (.inl (Φ p)) (.inr (Ψ p)) = ε := by
-  have  : ⨅ q, dist (Φ p) (Φ q) + dist (Ψ p) (Ψ q) = 0
+  have : ⨅ q, dist (Φ p) (Φ q) + dist (Ψ p) (Ψ q) = 0
   have A : ∀ q, 0 ≤ dist (Φ p) (Φ q) + dist (Ψ p) (Ψ q) := fun _ =>
     add_nonneg dist_nonneg dist_nonneg
   refine le_antisymm ?_ (le_ciInf A)
@@ -542,7 +542,7 @@ theorem inductiveLimitDist_eq_dist (I : ∀ n, Isometry (f n)) (x y : Σn, X n) 
       subst m'
       rfl
     · have : max x.1 y.1 ≤ succ m := by simp [hx, hy]
-      have  : max x.1 y.1 ≤ m
+      have : max x.1 y.1 ≤ m
       simpa [h] using of_le_succ this
       have xm : x.1 ≤ m := le_trans (le_max_left _ _) this
       have ym : y.1 ≤ m := le_trans (le_max_right _ _) this

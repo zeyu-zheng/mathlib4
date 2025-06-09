@@ -23,7 +23,7 @@ section DivisionRing
 variable [DivisionRing α] {n : ℤ}
 
 theorem Odd.neg_zpow (h : Odd n) (a : α) : (-a) ^ n = -a ^ n := by
-  have hn  : n ≠ 0
+  have hn : n ≠ 0
   rintro rfl; exact Int.odd_iff_not_even.1 h even_zero
   obtain ⟨k, rfl⟩ := h
   simp_rw [zpow_add' (.inr (.inl hn)), zpow_one, zpow_mul, zpow_two, neg_mul_neg,

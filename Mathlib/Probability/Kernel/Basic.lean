@@ -327,7 +327,7 @@ theorem isSFiniteKernel_sum_of_denumerable [Denumerable ι] {κs : ι → Kernel
     (hκs : ∀ n, IsSFiniteKernel (κs n)) : IsSFiniteKernel (Kernel.sum κs) := by
   let e : ℕ ≃ ι × ℕ := (Denumerable.eqv (ι × ℕ)).symm
   refine ⟨⟨fun n => seq (κs (e n).1) (e n).2, inferInstance, ?_⟩⟩
-  have hκ_eq  : Kernel.sum κs = Kernel.sum fun n => Kernel.sum (seq (κs n))
+  have hκ_eq : Kernel.sum κs = Kernel.sum fun n => Kernel.sum (seq (κs n))
   simp_rw [kernel_sum_seq]
   ext a s hs
   rw [hκ_eq]

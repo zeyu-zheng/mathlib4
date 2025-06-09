@@ -289,7 +289,7 @@ theorem plusLift_unique {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (hQ : Presheaf.IsSh
 
 theorem plus_hom_ext {P Q : Cᵒᵖ ⥤ D} (η γ : J.plusObj P ⟶ Q) (hQ : Presheaf.IsSheaf J Q)
     (h : J.toPlus P ≫ η = J.toPlus P ≫ γ) : η = γ := by
-  have  : γ = J.plusLift (J.toPlus P ≫ γ) hQ
+  have : γ = J.plusLift (J.toPlus P ≫ γ) hQ
   apply plusLift_unique
   rfl
   rw [this]

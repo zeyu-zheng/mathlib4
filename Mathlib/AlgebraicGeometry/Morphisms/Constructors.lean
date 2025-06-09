@@ -116,7 +116,7 @@ theorem HasAffineProperty.diagonal_iff
   rw [← Q.diagonal.cancel_left_of_respectsIso
     (pullback.fst (f := f) (g := 𝟙 Y)), pullback.condition, Category.comp_id] at hf
   let 𝒰 := X.affineCover.pushforwardIso (inv (pullback.fst (f := f) (g := 𝟙 Y)))
-  have (i)  : IsAffine (𝒰.obj i)
+  have (i) : IsAffine (𝒰.obj i)
   dsimp [𝒰]; infer_instance
   exact HasAffineProperty.diagonal_of_openCover P f (Scheme.openCoverOfIsIso (𝟙 _))
     (fun _ ↦ 𝒰) (fun _ _ _ ↦ hf _ _)

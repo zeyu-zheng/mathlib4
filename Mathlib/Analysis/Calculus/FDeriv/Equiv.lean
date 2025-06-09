@@ -107,10 +107,10 @@ theorem comp_differentiable_iff {f : G → E} : Differentiable 𝕜 (iso ∘ f) 
 theorem comp_hasFDerivWithinAt_iff {f : G → E} {s : Set G} {x : G} {f' : G →L[𝕜] E} :
     HasFDerivWithinAt (iso ∘ f) ((iso : E →L[𝕜] F).comp f') s x ↔ HasFDerivWithinAt f f' s x := by
   refine ⟨fun H => ?_, fun H => iso.hasFDerivAt.comp_hasFDerivWithinAt x H⟩
-  have A  : f = iso.symm ∘ iso ∘ f
+  have A : f = iso.symm ∘ iso ∘ f
   rw [← Function.comp.assoc, iso.symm_comp_self]
   rfl
-  have B  : f' = (iso.symm : F →L[𝕜] E).comp ((iso : E →L[𝕜] F).comp f')
+  have B : f' = (iso.symm : F →L[𝕜] E).comp ((iso : E →L[𝕜] F).comp f')
   rw [← ContinuousLinearMap.comp_assoc, iso.coe_symm_comp_coe, ContinuousLinearMap.id_comp]
   rw [A, B]
   exact iso.symm.hasFDerivAt.comp_hasFDerivWithinAt x H
@@ -170,7 +170,7 @@ lemma _root_.fderiv_continuousLinearEquiv_comp' (L : G ≃L[𝕜] G') (f : E →
 theorem comp_right_differentiableWithinAt_iff {f : F → G} {s : Set F} {x : E} :
     DifferentiableWithinAt 𝕜 (f ∘ iso) (iso ⁻¹' s) x ↔ DifferentiableWithinAt 𝕜 f s (iso x) := by
   refine ⟨fun H => ?_, fun H => H.comp x iso.differentiableWithinAt (mapsTo_preimage _ s)⟩
-  have  : DifferentiableWithinAt 𝕜 ((f ∘ iso) ∘ iso.symm) s (iso x)
+  have : DifferentiableWithinAt 𝕜 ((f ∘ iso) ∘ iso.symm) s (iso x)
   rw [← iso.symm_apply_apply x] at H
   apply H.comp (iso x) iso.symm.differentiableWithinAt
   intro y hy
@@ -198,10 +198,10 @@ theorem comp_right_hasFDerivWithinAt_iff {f : F → G} {s : Set F} {x : E} {f' :
       HasFDerivWithinAt f f' s (iso x) := by
   refine ⟨fun H => ?_, fun H => H.comp x iso.hasFDerivWithinAt (mapsTo_preimage _ s)⟩
   rw [← iso.symm_apply_apply x] at H
-  have A  : f = (f ∘ iso) ∘ iso.symm
+  have A : f = (f ∘ iso) ∘ iso.symm
   rw [Function.comp.assoc, iso.self_comp_symm]
   rfl
-  have B  : f' = (f'.comp (iso : E →L[𝕜] F)).comp (iso.symm : F →L[𝕜] E)
+  have B : f' = (f'.comp (iso : E →L[𝕜] F)).comp (iso.symm : F →L[𝕜] E)
   rw [ContinuousLinearMap.comp_assoc, iso.coe_comp_coe_symm, ContinuousLinearMap.comp_id]
   rw [A, B]
   apply H.comp (iso x) iso.symm.hasFDerivWithinAt

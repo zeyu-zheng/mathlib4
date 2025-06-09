@@ -84,7 +84,7 @@ namespace List
 
 theorem tendsto_cons_iff {β : Type*} {f : List α → β} {b : Filter β} {a : α} {l : List α} :
     Tendsto f (𝓝 (a::l)) b ↔ Tendsto (fun p : α × List α => f (p.1::p.2)) (𝓝 a ×ˢ 𝓝 l) b := by
-  have  : 𝓝 (a::l) = (𝓝 a ×ˢ 𝓝 l).map fun p : α × List α => p.1::p.2
+  have : 𝓝 (a::l) = (𝓝 a ×ˢ 𝓝 l).map fun p : α × List α => p.1::p.2
   simp only [nhds_cons, Filter.prod_eq, (Filter.map_def _ _).symm,
     (Filter.seq_eq_filter_seq _ _).symm]
   simp [-Filter.map_def, (· ∘ ·), functor_norm]

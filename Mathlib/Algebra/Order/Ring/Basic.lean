@@ -309,7 +309,7 @@ alias ⟨_, Odd.pow_nonpos⟩ := Odd.pow_nonpos_iff
 alias ⟨_, Odd.pow_neg⟩ := Odd.pow_neg_iff
 
 lemma Odd.strictMono_pow (hn : Odd n) : StrictMono fun a : R => a ^ n := by
-  have hn₀  : n ≠ 0
+  have hn₀ : n ≠ 0
   rintro rfl; simp [Odd, eq_comm (a := 0)] at hn
   intro a b hab
   obtain ha | ha := le_total 0 a

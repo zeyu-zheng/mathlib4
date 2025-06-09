@@ -311,7 +311,7 @@ instance hasLimits : HasLimits CommGrp.{u} :=
 noncomputable instance forget₂GroupPreservesLimit :
     PreservesLimit F (forget₂ CommGrp.{u} Grp.{u}) where
   preserves {c} hc := by
-    have  : HasLimit (F ⋙ forget₂ CommGrp Grp)
+    have : HasLimit (F ⋙ forget₂ CommGrp Grp)
     rw [Grp.hasLimit_iff_small_sections]
     change Small.{u} (F ⋙ forget CommGrp).sections
     rw [← CommGrp.hasLimit_iff_small_sections]

@@ -214,7 +214,7 @@ lemma baseChange_top : (⊤ : LieSubmodule R L M).baseChange A = ⊤ := by
 lemma lie_baseChange {I : LieIdeal R L} {N : LieSubmodule R L M} :
     ⁅I, N⁆.baseChange A = ⁅I.baseChange A, N.baseChange A⁆ := by
   set s : Set (A ⊗[R] M) := { m | ∃ x ∈ I, ∃ n ∈ N, 1 ⊗ₜ ⁅x, n⁆ = m}
-  have  : (TensorProduct.mk R A M 1) '' {m | ∃ x ∈ I, ∃ n ∈ N, ⁅x, n⁆ = m} = s
+  have : (TensorProduct.mk R A M 1) '' {m | ∃ x ∈ I, ∃ n ∈ N, ⁅x, n⁆ = m} = s
   ext; simp [s]
   rw [← coe_toSubmodule_eq_iff, coe_baseChange, lieIdeal_oper_eq_linear_span',
     Submodule.baseChange_span, this, lieIdeal_oper_eq_linear_span']

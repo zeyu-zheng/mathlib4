@@ -448,7 +448,7 @@ theorem distortion_eq_of_sub_eq_div {I J : Box ι} {r : ℝ}
     distortion I = distortion J := by
   simp only [distortion, nndist_pi_def, Real.nndist_eq', h, map_div₀]
   congr 1 with i
-  have  : 0 < r
+  have : 0 < r
   by_contra hr
   have := div_nonpos_of_nonneg_of_nonpos (sub_nonneg.2 <| J.lower_le_upper i) (not_lt.1 hr)
   rw [← h] at this

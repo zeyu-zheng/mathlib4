@@ -98,7 +98,7 @@ instance sfinite_mconv_of_sfinite (μ : Measure M) (ν : Measure M) [SFinite μ]
 @[to_additive finite_of_finite_conv]
 instance finite_of_finite_mconv (μ : Measure M) (ν : Measure M) [IsFiniteMeasure μ]
     [IsFiniteMeasure ν] : IsFiniteMeasure (μ ∗ ν) := by
-  have h  : (μ ∗ ν) Set.univ < ⊤
+  have h : (μ ∗ ν) Set.univ < ⊤
   unfold mconv
   exact IsFiniteMeasure.measure_univ_lt_top
   exact {measure_univ_lt_top := h}

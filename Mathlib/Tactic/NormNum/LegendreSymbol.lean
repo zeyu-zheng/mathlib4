@@ -108,7 +108,7 @@ theorem jacobiSymNat.even_even (a b : ℕ) (hb₀ : Nat.beq (b / 2) 0 = false) (
 /-- When `a` is odd and `b` is even, we can replace `b` by `b / 2`. -/
 theorem jacobiSymNat.odd_even (a b c : ℕ) (r : ℤ) (ha : a % 2 = 1) (hb : b % 2 = 0) (hc : b / 2 = c)
     (hr : jacobiSymNat a c = r) : jacobiSymNat a b = r := by
-  have ha'  : legendreSym 2 a = 1
+  have ha' : legendreSym 2 a = 1
   simp only [legendreSym.mod 2 a, Int.ofNat_mod_ofNat, ha]
   decide
   rcases eq_or_ne c 0 with (rfl | hc')

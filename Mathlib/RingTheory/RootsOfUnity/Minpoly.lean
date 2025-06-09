@@ -58,7 +58,7 @@ theorem minpoly_dvd_x_pow_sub_one : minpoly ℤ μ ∣ X ^ n - 1 := by
 /-- The reduction modulo `p` of the minimal polynomial of a root of unity `μ` is separable. -/
 theorem separable_minpoly_mod {p : ℕ} [Fact p.Prime] (hdiv : ¬p ∣ n) :
     Separable (map (Int.castRingHom (ZMod p)) (minpoly ℤ μ)) := by
-  have hdvd  : map (Int.castRingHom (ZMod p)) (minpoly ℤ μ) ∣ X ^ n - 1
+  have hdvd : map (Int.castRingHom (ZMod p)) (minpoly ℤ μ) ∣ X ^ n - 1
   convert RingHom.map_dvd (mapRingHom (Int.castRingHom (ZMod p)))
       (minpoly_dvd_x_pow_sub_one h)
   simp only [map_sub, map_pow, coe_mapRingHom, map_X, map_one]
@@ -120,7 +120,7 @@ theorem minpoly_eq_pow {p : ℕ} [hprime : Fact p.Prime] (hdiv : ¬p ∣ n) :
   have Pirr : Irreducible P := minpoly.irreducible (h.isIntegral hpos)
   have Qirr : Irreducible Q := minpoly.irreducible ((h.pow_of_prime hprime.1 hdiv).isIntegral hpos)
   have PQprim : IsPrimitive (P * Q) := Pmonic.isPrimitive.mul Qmonic.isPrimitive
-  have prod  : P * Q ∣ X ^ n - 1
+  have prod : P * Q ∣ X ^ n - 1
   rw [IsPrimitive.Int.dvd_iff_map_cast_dvd_map_cast (P * Q) (X ^ n - 1) PQprim
       (monic_X_pow_sub_C (1 : ℤ) (ne_of_gt hpos)).isPrimitive,
     Polynomial.map_mul]
@@ -140,7 +140,7 @@ theorem minpoly_eq_pow {p : ℕ} [hprime : Fact p.Prime] (hdiv : ¬p ∣ n) :
     Polynomial.map_pow, map_X] at prod
   obtain ⟨R, hR⟩ := minpoly_dvd_mod_p h hdiv
   rw [hR, ← mul_assoc, ← Polynomial.map_mul, ← sq, Polynomial.map_pow] at prod
-  have habs  : map (Int.castRingHom (ZMod p)) P ^ 2 ∣ map (Int.castRingHom (ZMod p)) P ^ 2 * R
+  have habs : map (Int.castRingHom (ZMod p)) P ^ 2 ∣ map (Int.castRingHom (ZMod p)) P ^ 2 * R
   use R
   replace habs :=
     lt_of_lt_of_le (PartENat.coe_lt_coe.2 one_lt_two)

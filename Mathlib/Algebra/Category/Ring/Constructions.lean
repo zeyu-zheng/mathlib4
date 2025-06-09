@@ -120,7 +120,7 @@ instance commRingCat_hasStrictTerminalObjects : HasStrictTerminalObjects CommRin
   intro X f
   refine ⟨⟨⟨1, rfl, fun _ _ => rfl⟩, by ext; rfl, ?_⟩⟩
   ext x
-  have e  : (0 : X) = 1
+  have e : (0 : X) = 1
   rw [← f.map_one, ← f.map_zero]
   congr
   replace e : 0 * x = 1 * x := congr_arg (· * x) e
@@ -228,7 +228,7 @@ def equalizerForkIsLimit : IsLimit (equalizerFork f g) := by
 instance : IsLocalRingHom (equalizerFork f g).ι := by
   constructor
   rintro ⟨a, h₁ : _ = _⟩ (⟨⟨x, y, h₃, h₄⟩, rfl : x = _⟩ : IsUnit a)
-  have  : y ∈ RingHom.eqLocus f g
+  have : y ∈ RingHom.eqLocus f g
   apply (f.isUnit_map ⟨⟨x, y, h₃, h₄⟩, rfl⟩ : IsUnit (f x)).mul_left_inj.mp
   conv_rhs => rw [h₁]
   rw [← f.map_mul, ← g.map_mul, h₄, f.map_one, g.map_one]

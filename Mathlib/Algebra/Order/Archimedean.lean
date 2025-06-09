@@ -64,13 +64,13 @@ theorem existsUnique_zsmul_near_of_pos {a : α} (ha : 0 < a) (g : α) :
   obtain ⟨k, hk : -g ≤ k • a⟩ := Archimedean.arch (-g) ha
   have h_ne : s.Nonempty := ⟨-k, by simpa [s] using neg_le_neg hk⟩
   obtain ⟨k, hk⟩ := Archimedean.arch g ha
-  have h_bdd  : ∀ n ∈ s, n ≤ (k : ℤ)
+  have h_bdd : ∀ n ∈ s, n ≤ (k : ℤ)
   intro n hn
   apply (zsmul_le_zsmul_iff ha).mp
   rw [← natCast_zsmul] at hk
   exact le_trans hn hk
   obtain ⟨m, hm, hm'⟩ := Int.exists_greatest_of_bdd ⟨k, h_bdd⟩ h_ne
-  have hm''  : g < (m + 1) • a
+  have hm'' : g < (m + 1) • a
   contrapose! hm'
   exact ⟨m + 1, hm', lt_add_one _⟩
   refine ⟨m, ⟨hm, hm''⟩, fun n hn => (hm' n hn.1).antisymm <| Int.le_of_lt_add_one ?_⟩

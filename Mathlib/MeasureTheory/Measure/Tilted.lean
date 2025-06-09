@@ -80,7 +80,7 @@ lemma tilted_zero (μ : Measure α) [IsProbabilityMeasure μ] : μ.tilted 0 = μ
 
 lemma tilted_congr {g : α → ℝ} (hfg : f =ᵐ[μ] g) :
     μ.tilted f = μ.tilted g := by
-  have h_int_eq  : ∫ x, exp (f x) ∂μ = ∫ x, exp (g x) ∂μ
+  have h_int_eq : ∫ x, exp (f x) ∂μ = ∫ x, exp (g x) ∂μ
   refine integral_congr_ae ?_
   filter_upwards [hfg] with x hx
   rw [hx]

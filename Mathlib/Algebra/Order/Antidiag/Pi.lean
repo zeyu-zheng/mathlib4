@@ -217,7 +217,7 @@ lemma nsmul_piAntidiag [DecidableEq (ι → ℕ)] (s : Finset ι) (m : ℕ) {n :
   · rintro ⟨f, rfl, hf, rfl⟩
     simpa [← mul_sum, hn] using hf
   rintro ⟨hfsum, hfsup, hfdvd⟩
-  have (i)  : n ∣ f i
+  have (i) : n ∣ f i
   by_cases hi : i ∈ s
   · exact hfdvd _ hi
   · rw [not_imp_comm.1 (hfsup _) hi]
