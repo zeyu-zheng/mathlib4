@@ -121,9 +121,9 @@ protected noncomputable def basis : Basis (Fin 2) R[X] W.CoordinateRing := by
   classical exact (subsingleton_or_nontrivial R).by_cases (fun _ => default) fun _ =>
     (AdjoinRoot.powerBasis' W.monic_polynomial).basis.reindex <| finCongr W.natDegree_polynomial
 
+open Classical in
 lemma basis_apply (n : Fin 2) :
     CoordinateRing.basis W n = (AdjoinRoot.powerBasis' W.monic_polynomial).gen ^ (n : ℕ) := by
-  classical
   nontriviality R
   rw [CoordinateRing.basis, Or.by_cases, dif_neg <| not_subsingleton R, Basis.reindex_apply,
     PowerBasis.basis_eq_pow]

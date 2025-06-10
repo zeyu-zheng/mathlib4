@@ -42,12 +42,12 @@ section Semiring
 
 variable [Semiring R]
 
+open Classical in
 /-- A multivariate power series is not a zero divisor
   when its constant coefficient is not a zero divisor -/
 theorem mem_nonZeroDivisors_of_constantCoeff {φ : MvPowerSeries σ R}
     (hφ : constantCoeff σ R φ ∈ nonZeroDivisors R) :
     φ ∈ nonZeroDivisors (MvPowerSeries σ R) := by
-  classical
   intro x hx
   ext d
   apply WellFoundedLT.induction d

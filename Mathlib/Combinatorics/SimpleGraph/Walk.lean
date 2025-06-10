@@ -868,9 +868,9 @@ theorem take_spec {u v w : V} (p : G.Walk v w) (h : u ∈ p.support) :
     · simp! only
       split_ifs with h' <;> subst_vars <;> simp [*]
 
+open Classical in
 theorem mem_support_iff_exists_append {V : Type u} {G : SimpleGraph V} {u v w : V}
     {p : G.Walk u v} : w ∈ p.support ↔ ∃ (q : G.Walk u w) (r : G.Walk w v), p = q.append r := by
-  classical
   constructor
   · exact fun h => ⟨_, _, (p.take_spec h).symm⟩
   · rintro ⟨q, r, rfl⟩

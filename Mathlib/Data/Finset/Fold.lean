@@ -75,9 +75,9 @@ theorem fold_op_distrib {f g : α → β} {b₁ b₂ : β} :
     (s.fold op (b₁ * b₂) fun x => f x * g x) = s.fold op b₁ f * s.fold op b₂ g := by
   simp only [fold, fold_distrib]
 
+open Classical in
 theorem fold_const [hd : Decidable (s = ∅)] (c : β) (h : op c (op b c) = op b c) :
     Finset.fold op b (fun _ => c) s = if s = ∅ then b else op b c := by
-  classical
     induction' s using Finset.induction_on with x s hx IH generalizing hd
     · simp
     · simp only [Finset.fold_insert hx, IH, if_false, Finset.insert_ne_empty]
@@ -121,13 +121,13 @@ theorem fold_image_idem [DecidableEq α] {g : γ → α} {s : Finset γ} [hi : S
     rw [fold_cons, cons_eq_insert, image_insert, fold_insert_idem, ih]
     simp only [Function.comp_apply]
 
+open Classical in
 /-- A stronger version of `Finset.fold_ite`, but relies on
 an explicit proof of idempotency on the seed element, rather
 than relying on typeclass idempotency over the whole type. -/
 theorem fold_ite' {g : α → β} (hb : op b b = b) (p : α → Prop) [DecidablePred p] :
     Finset.fold op b (fun i => ite (p i) (f i) (g i)) s =
       op (Finset.fold op b f (s.filter p)) (Finset.fold op b g (s.filter fun i => ¬p i)) := by
-  classical
     induction' s using Finset.induction_on with x s hx IH
     · simp [hb]
     · simp only [Finset.fold_insert hx]
@@ -146,9 +146,9 @@ theorem fold_ite [Std.IdempotentOp op] {g : α → β} (p : α → Prop) [Decida
       op (Finset.fold op b f (s.filter p)) (Finset.fold op b g (s.filter fun i => ¬p i)) :=
   fold_ite' (Std.IdempotentOp.idempotent _) _
 
+open Classical in
 theorem fold_op_rel_iff_and {r : β → β → Prop} (hr : ∀ {x y z}, r x (op y z) ↔ r x y ∧ r x z)
     {c : β} : r c (s.fold op b f) ↔ r c b ∧ ∀ x ∈ s, r c (f x) := by
-  classical
     induction' s using Finset.induction_on with a s ha IH
     · simp
     rw [Finset.fold_insert ha, hr, IH, ← and_assoc, @and_comm (r c (f a)), and_assoc]
@@ -163,9 +163,9 @@ theorem fold_op_rel_iff_and {r : β → β → Prop} (hr : ∀ {x y z}, r x (op 
       · exact h a (Finset.mem_insert_self _ _)
       · exact fun b hb => h b <| Finset.mem_insert_of_mem hb
 
+open Classical in
 theorem fold_op_rel_iff_or {r : β → β → Prop} (hr : ∀ {x y z}, r x (op y z) ↔ r x y ∨ r x z)
     {c : β} : r c (s.fold op b f) ↔ r c b ∨ ∃ x ∈ s, r c (f x) := by
-  classical
     induction' s using Finset.induction_on with a s ha IH
     · simp
     rw [Finset.fold_insert ha, hr, IH, ← or_assoc, @or_comm (r c (f a)), or_assoc]
@@ -233,9 +233,9 @@ theorem fold_max_lt : s.fold max b f < c ↔ b < c ∧ ∀ x ∈ s, f x < c := b
 theorem lt_fold_max : c < s.fold max b f ↔ c < b ∨ ∃ x ∈ s, c < f x :=
   fold_op_rel_iff_or lt_max_iff
 
+open Classical in
 theorem fold_max_add [Add β] [CovariantClass β β (Function.swap (· + ·)) (· ≤ ·)] (n : WithBot β)
     (s : Finset α) : (s.fold max ⊥ fun x : α => ↑(f x) + n) = s.fold max ⊥ ((↑) ∘ f) + n := by
-  classical
     induction' s using Finset.induction_on with a s _ ih <;> simp [*, max_add_add_right]
 
 end Order

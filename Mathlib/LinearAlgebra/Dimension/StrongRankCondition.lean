@@ -52,11 +52,11 @@ section InvariantBasisNumber
 
 variable [InvariantBasisNumber R]
 
+open Classical in
 /-- The dimension theorem: if `v` and `v'` are two bases, their index types
 have the same cardinalities. -/
 theorem mk_eq_mk_of_basis (v : Basis ι R M) (v' : Basis ι' R M) :
     Cardinal.lift.{w'} #ι = Cardinal.lift.{w} #ι' := by
-  classical
   haveI := nontrivial_of_invariantBasisNumber R
   cases fintypeOrInfinite ι
   · -- `v` is a finite basis, so by `basis_finite_of_finite_spans` so is `v'`.
@@ -226,12 +226,12 @@ theorem linearIndependent_le_span_finset {ι : Type*} (v : ι → M) (i : Linear
     (w : Finset M) (s : span R (w : Set M) = ⊤) : #ι ≤ w.card := by
   simpa only [Finset.coe_sort_coe, Fintype.card_coe] using linearIndependent_le_span v i w s
 
+open Classical in
 /-- An auxiliary lemma for `linearIndependent_le_basis`:
 we handle the case where the basis `b` is infinite.
 -/
 theorem linearIndependent_le_infinite_basis {ι : Type w} (b : Basis ι R M) [Infinite ι] {κ : Type w}
     (v : κ → M) (i : LinearIndependent R v) : #κ ≤ #ι := by
-  classical
   by_contra h
   rw [not_le, ← Cardinal.mk_finset_of_infinite ι] at h
   let Φ := fun k : κ => (b.repr (v k)).support
@@ -245,6 +245,7 @@ theorem linearIndependent_le_infinite_basis {ι : Type w} (b : Basis ι R M) [In
   apply Basis.mem_span_repr_support
   exact w.false
 
+open Classical in
 /-- Over any ring `R` satisfying the strong rank condition,
 if `b` is a basis for a module `M`,
 and `s` is a linearly independent set,
@@ -252,7 +253,6 @@ then the cardinality of `s` is bounded by the cardinality of `b`.
 -/
 theorem linearIndependent_le_basis {ι : Type w} (b : Basis ι R M) {κ : Type w} (v : κ → M)
     (i : LinearIndependent R v) : #κ ≤ #ι := by
-  classical
   -- We split into cases depending on whether `ι` is infinite.
   cases fintypeOrInfinite ι
   · rw [Cardinal.mk_fintype ι] -- When `ι` is finite, we have `linearIndependent_le_span`,
@@ -303,11 +303,11 @@ theorem Basis.mk_eq_rank'' {ι : Type v} (v : Basis ι R M) : #ι = Module.rank 
 theorem Basis.mk_range_eq_rank (v : Basis ι R M) : #(range v) = Module.rank R M :=
   v.reindexRange.mk_eq_rank''
 
+open Classical in
 /-- If a vector space has a finite basis, then its dimension (seen as a cardinal) is equal to the
 cardinality of the basis. -/
 theorem rank_eq_card_basis {ι : Type w} [Fintype ι] (h : Basis ι R M) :
     Module.rank R M = Fintype.card ι := by
-  classical
   haveI := nontrivial_of_invariantBasisNumber R
   rw [← h.mk_range_eq_rank, Cardinal.mk_fintype, Set.card_range_of_injective h.injective]
 

@@ -84,10 +84,10 @@ section Basic
 theorem discr_reindex (b : Basis ι A B) (f : ι ≃ ι') : discr A (b ∘ ⇑f.symm) = discr A b := by
   classical rw [← Basis.coe_reindex, discr_def, traceMatrix_reindex, det_reindex_self, ← discr_def]
 
+open Classical in
 /-- If `b` is not linear independent, then `Algebra.discr A b = 0`. -/
 theorem discr_zero_of_not_linearIndependent [IsDomain A] {b : ι → B}
     (hli : ¬LinearIndependent A b) : discr A b = 0 := by
-  classical
   obtain ⟨g, hg, i, hi⟩ := Fintype.not_linearIndependent_iff.1 hli
   have : (traceMatrix A b) *ᵥ g = 0
   ext i
@@ -250,10 +250,10 @@ section Integral
 
 variable {R : Type z} [CommRing R] [Algebra R K] [Algebra R L] [IsScalarTower R K L]
 
+open Classical in
 /-- If `K` and `L` are fields and `IsScalarTower R K L`, and `b : ι → L` satisfies
 ` ∀ i, IsIntegral R (b i)`, then `IsIntegral R (discr K b)`. -/
 theorem discr_isIntegral {b : ι → L} (h : ∀ i, IsIntegral R (b i)) : IsIntegral R (discr K b) := by
-  classical
   rw [discr_def]
   exact IsIntegral.det fun i j ↦ isIntegral_trace ((h i).mul (h j))
 

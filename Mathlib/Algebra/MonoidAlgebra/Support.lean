@@ -56,18 +56,18 @@ theorem support_mul_single_eq_image [DecidableEq G] [Mul G] (f : MonoidAlgebra k
   simp only [mul_apply, mem_support_iff.mp yf, hr, mem_support_iff, sum_single_index,
     Finsupp.sum_ite_eq', Ne, not_false_iff, if_true, mul_zero, ite_self, sum_zero, rx.eq_iff]
 
+open Classical in
 theorem support_mul_single [Mul G] [IsRightCancelMul G] (f : MonoidAlgebra k G) (r : k)
     (hr : ∀ y, y * r = 0 ↔ y = 0) (x : G) :
     (f * single x r).support = f.support.map (mulRightEmbedding x) := by
-  classical
     ext
     simp only [support_mul_single_eq_image f hr (IsRightRegular.all x),
       mem_image, mem_map, mulRightEmbedding_apply]
 
+open Classical in
 theorem support_single_mul [Mul G] [IsLeftCancelMul G] (f : MonoidAlgebra k G) (r : k)
     (hr : ∀ y, r * y = 0 ↔ y = 0) (x : G) :
     (single x r * f : MonoidAlgebra k G).support = f.support.map (mulLeftEmbedding x) := by
-  classical
     ext
     simp only [support_single_mul_eq_image f hr (IsLeftRegular.all x), mem_image,
       mem_map, mulLeftEmbedding_apply]

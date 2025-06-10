@@ -1048,11 +1048,11 @@ theorem reachable_deleteEdges_iff_exists_cycle.aux [DecidableEq V] {u v w : V}
     ← List.append_assoc, ← Walk.edges_append] at hc
   exact List.disjoint_of_nodup_append hc hbq hpq'
 
+open Classical in
 -- Porting note: the unused variable checker helped eliminate a good amount of this proof (!)
 theorem adj_and_reachable_delete_edges_iff_exists_cycle {v w : V} :
     G.Adj v w ∧ (G \ fromEdgeSet {s(v, w)}).Reachable v w ↔
       ∃ (u : V) (p : G.Walk u u), p.IsCycle ∧ s(v, w) ∈ p.edges := by
-  classical
   rw [reachable_delete_edges_iff_exists_walk]
   constructor
   · rintro ⟨h, p, hp⟩

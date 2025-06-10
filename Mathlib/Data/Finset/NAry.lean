@@ -420,12 +420,12 @@ theorem image₂_left_identity {f : α → γ → γ} {a : α} (h : ∀ b, f a b
 theorem image₂_right_identity {f : γ → β → γ} {b : β} (h : ∀ a, f a b = a) (s : Finset γ) :
     image₂ f s {b} = s := by rw [image₂_singleton_right, funext h, image_id']
 
+open Classical in
 /-- If each partial application of `f` is injective, and images of `s` under those partial
 applications are disjoint (but not necessarily distinct!), then the size of `t` divides the size of
 `finset.image₂ f s t`. -/
 theorem card_dvd_card_image₂_right (hf : ∀ a ∈ s, Injective (f a))
     (hs : ((fun a => t.image <| f a) '' s).PairwiseDisjoint id) : t.card ∣ (image₂ f s t).card := by
-  classical
   induction' s using Finset.induction with a s _ ih
   · simp
   specialize ih (forall_of_forall_insert hf)
@@ -448,13 +448,13 @@ theorem card_dvd_card_image₂_left (hf : ∀ b ∈ t, Injective fun a => f a b)
     (ht : ((fun b => s.image fun a => f a b) '' t).PairwiseDisjoint id) :
     s.card ∣ (image₂ f s t).card := by rw [← image₂_swap]; exact card_dvd_card_image₂_right hf ht
 
+open Classical in
 /-- If a `Finset` is a subset of the image of two `Set`s under a binary operation,
 then it is a subset of the `Finset.image₂` of two `Finset` subsets of these `Set`s. -/
 theorem subset_image₂ {s : Set α} {t : Set β} (hu : ↑u ⊆ image2 f s t) :
     ∃ (s' : Finset α) (t' : Finset β), ↑s' ⊆ s ∧ ↑t' ⊆ t ∧ u ⊆ image₂ f s' t' := by
   rw [← Set.image_prod, subset_image_iff] at hu
   rcases hu with ⟨u, hu, rfl⟩
-  classical
   use u.image Prod.fst, u.image Prod.snd
   simp only [coe_image, Set.image_subset_iff, image₂_image_left, image₂_image_right,
     image_subset_iff]

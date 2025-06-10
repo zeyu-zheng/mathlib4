@@ -111,10 +111,10 @@ theorem MonoidHom.map_cyclic {G : Type*} [Group G] [h : IsCyclic G] (σ : G →*
 @[deprecated (since := "2024-02-21")] alias
 MonoidAddHom.map_add_cyclic := AddMonoidHom.map_addCyclic
 
+open Classical in
 @[to_additive]
 theorem isCyclic_of_orderOf_eq_card [Fintype α] (x : α) (hx : orderOf x = Fintype.card α) :
     IsCyclic α := by
-  classical
     use x
     simp_rw [← SetLike.mem_coe, ← Set.eq_univ_iff_forall]
     rw [← Fintype.card_congr (Equiv.Set.univ α), ← Fintype.card_zpowers] at hx
@@ -122,10 +122,10 @@ theorem isCyclic_of_orderOf_eq_card [Fintype α] (x : α) (hx : orderOf x = Fint
 @[deprecated (since := "2024-02-21")]
 alias isAddCyclic_of_orderOf_eq_card := isAddCyclic_of_addOrderOf_eq_card
 
+open Classical in
 @[to_additive]
 theorem Subgroup.eq_bot_or_eq_top_of_prime_card {G : Type*} [Group G] {_ : Fintype G}
     (H : Subgroup G) [hp : Fact (Fintype.card G).Prime] : H = ⊥ ∨ H = ⊤ := by
-  classical
   have := card_subgroup_dvd_card H
   rwa [Nat.card_eq_fintype_card (α := G), Nat.dvd_prime hp.1, ← Nat.card_eq_fintype_card,
     ← eq_bot_iff_card, card_eq_iff_eq_top] at this
@@ -183,10 +183,10 @@ theorem isCyclic_of_surjective {H G F : Type*} [Group H] [Group G] [hH : IsCycli
   obtain ⟨n, rfl⟩ := hx a
   exact ⟨n, (map_zpow _ _ _).symm⟩
 
+open Classical in
 @[to_additive]
 theorem orderOf_eq_card_of_forall_mem_zpowers [Fintype α] {g : α} (hx : ∀ x, x ∈ zpowers g) :
     orderOf g = Fintype.card α := by
-  classical
     rw [← Fintype.card_zpowers]
     apply Fintype.card_of_finset'
     simpa using hx
@@ -205,10 +205,10 @@ theorem exists_pow_ne_one_of_isCyclic {G : Type*} [Group G] [Fintype G] [G_cycli
   rw [← Nat.card_eq_fintype_card, ← Nat.card_zpowers, eq_comm, card_eq_iff_eq_top, eq_top_iff]
   exact fun x _ ↦ ha x
 
+open Classical in
 @[to_additive]
 theorem Infinite.orderOf_eq_zero_of_forall_mem_zpowers [Infinite α] {g : α}
     (h : ∀ x, x ∈ zpowers g) : orderOf g = 0 := by
-  classical
     rw [orderOf_eq_zero_iff']
     refine fun n hn hgn => ?_
     have ho := isOfFinOrder_iff_pow_eq_one.mpr ⟨n, hn, hgn⟩

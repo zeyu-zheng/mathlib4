@@ -107,9 +107,9 @@ theorem not_cliqueFree_of_isTuranMaximal (hn : r ≤ Fintype.card V) (hG : G.IsT
   exact hGab <| le_sup_right.trans_eq ((hG.le_iff_eq <| h.sup_edge _ _).1 le_sup_left).symm <|
     (edge_adj ..).2 ⟨Or.inl ⟨rfl, rfl⟩, hab⟩
 
+open Classical in
 lemma exists_isTuranMaximal :
     ∃ H : SimpleGraph V, ∃ _ : DecidableRel H.Adj, H.IsTuranMaximal r := by
-  classical
   let c := {H : SimpleGraph V | H.CliqueFree (r + 1)}
   have cn : c.toFinset.Nonempty := ⟨⊥, by
     simp only [Set.toFinset_setOf, mem_filter, mem_univ, true_and, c]

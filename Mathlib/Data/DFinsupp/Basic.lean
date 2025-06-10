@@ -1716,10 +1716,10 @@ theorem sumAddHom_apply [∀ i, AddZeroClass (β i)] [∀ (i) (x : β i), Decida
   · rfl
   · rw [not_not.mp h, AddMonoidHom.map_zero]
 
+open Classical in
 theorem _root_.dfinsupp_sumAddHom_mem [∀ i, AddZeroClass (β i)] [AddCommMonoid γ] {S : Type*}
     [SetLike S γ] [AddSubmonoidClass S γ] (s : S) (f : Π₀ i, β i) (g : ∀ i, β i →+ γ)
     (h : ∀ c, f c ≠ 0 → g c (f c) ∈ s) : DFinsupp.sumAddHom g f ∈ s := by
-  classical
     rw [DFinsupp.sumAddHom_apply]
     exact dfinsupp_sum_mem s f (g ·) h
 
@@ -1844,13 +1844,13 @@ theorem sum_sub_index [∀ i, AddGroup (β i)] [∀ (i) (x : β i), Decidable (x
   rw [liftAddHom_apply, sumAddHom_apply, sumAddHom_apply, sumAddHom_apply] at this
   exact this
 
+open Classical in
 @[to_additive]
 theorem prod_finset_sum_index {γ : Type w} {α : Type x} [∀ i, AddCommMonoid (β i)]
     [∀ (i) (x : β i), Decidable (x ≠ 0)] [CommMonoid γ] {s : Finset α} {g : α → Π₀ i, β i}
     {h : ∀ i, β i → γ} (h_zero : ∀ i, h i 0 = 1)
     (h_add : ∀ i b₁ b₂, h i (b₁ + b₂) = h i b₁ * h i b₂) :
     (∏ i ∈ s, (g i).prod h) = (∑ i ∈ s, g i).prod h := by
-  classical
   exact Finset.induction_on s (by simp [prod_zero_index])
         (by simp (config := { contextual := true }) [prod_add_index, h_zero, h_add])
 

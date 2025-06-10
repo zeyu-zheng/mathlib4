@@ -132,10 +132,10 @@ theorem isNilpotent_add (h_comm : Commute x y) (hx : IsNilpotent x) (hy : IsNilp
   obtain ⟨m, hm⟩ := hy
   exact ⟨_, add_pow_add_eq_zero_of_pow_eq_zero h_comm hn hm⟩
 
+open Classical in
 protected lemma isNilpotent_sum {ι : Type*} {s : Finset ι} {f : ι → R}
     (hnp : ∀ i ∈ s, IsNilpotent (f i)) (h_comm : ∀ i j, i ∈ s → j ∈ s → Commute (f i) (f j)) :
     IsNilpotent (∑ i ∈ s, f i) := by
-  classical
   induction s using Finset.induction with
   | empty => simp
   | @insert j s hj ih => ?_

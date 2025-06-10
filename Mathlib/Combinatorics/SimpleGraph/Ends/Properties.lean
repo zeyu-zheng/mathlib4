@@ -40,10 +40,10 @@ instance compononentComplFunctor_nonempty_of_infinite [Infinite V] (K : (Finset 
 instance componentComplFunctor_finite [LocallyFinite G] [Fact G.Preconnected]
     (K : (Finset V)ᵒᵖ) : Finite (G.componentComplFunctor.obj K) := G.componentCompl_finite K.unop
 
+open Classical in
 /-- A locally finite preconnected infinite graph has at least one end. -/
 lemma nonempty_ends_of_infinite [LocallyFinite G] [Fact G.Preconnected] [Infinite V] :
     G.end.Nonempty := by
-  classical
   apply nonempty_sections_of_finite_inverse_system G.componentComplFunctor
 
 end SimpleGraph

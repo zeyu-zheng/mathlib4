@@ -242,9 +242,9 @@ theorem restrictDvd_def [Decidable (q = 0)] (hpq : p ∣ q) :
   unfold restrictDvd
   convert rfl
 
+open Classical in
 theorem restrictDvd_surjective (hpq : p ∣ q) (hq : q ≠ 0) :
     Function.Surjective (restrictDvd hpq) := by
-  classical
     -- Porting note: was `simp only [restrictDvd_def, dif_neg hq, restrict_surjective]`
     haveI := Fact.mk <|
       splits_of_splits_of_dvd (algebraMap F q.SplittingField) hq (SplittingField.splits q) hpq
@@ -257,13 +257,13 @@ variable (p q)
 def restrictProd : (p * q).Gal →* p.Gal × q.Gal :=
   MonoidHom.prod (restrictDvd (dvd_mul_right p q)) (restrictDvd (dvd_mul_left q p))
 
+open Classical in
 /-- `Polynomial.Gal.restrictProd` is actually a subgroup embedding. -/
 theorem restrictProd_injective : Function.Injective (restrictProd p q) := by
   by_cases hpq : p * q = 0
   · have : Unique (p * q).Gal := by rw [hpq]; infer_instance
     exact fun f g _ => Eq.trans (Unique.eq_default f) (Unique.eq_default g).symm
   intro f g hfg
-  classical
   simp only [restrictProd, restrictDvd_def] at hfg
   simp only [dif_neg hpq, MonoidHom.prod_apply, Prod.mk.inj_iff] at hfg
   ext (x hx)

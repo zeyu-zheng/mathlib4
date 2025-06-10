@@ -82,9 +82,9 @@ theorem isSatisfiable_of_isSatisfiable_onTheory {L' : Language.{w, w'}} (φ : L 
     (h : (φ.onTheory T).IsSatisfiable) : T.IsSatisfiable :=
   Model.isSatisfiable (h.some.reduct φ)
 
+open Classical in
 theorem isSatisfiable_onTheory_iff {L' : Language.{w, w'}} {φ : L →ᴸ L'} (h : φ.Injective) :
     (φ.onTheory T).IsSatisfiable ↔ T.IsSatisfiable := by
-  classical
     refine ⟨isSatisfiable_of_isSatisfiable_onTheory φ, fun h' => ?_⟩
     haveI : Inhabited h'.some := Classical.inhabited_of_nonempty'
     exact Model.isSatisfiable (h'.some.defaultExpansion h)
@@ -92,12 +92,12 @@ theorem isSatisfiable_onTheory_iff {L' : Language.{w, w'}} {φ : L →ᴸ L'} (h
 theorem IsSatisfiable.isFinitelySatisfiable (h : T.IsSatisfiable) : T.IsFinitelySatisfiable :=
   fun _ => h.mono
 
+open Classical in
 /-- The **Compactness Theorem of first-order logic**: A theory is satisfiable if and only if it is
 finitely satisfiable. -/
 theorem isSatisfiable_iff_isFinitelySatisfiable {T : L.Theory} :
     T.IsSatisfiable ↔ T.IsFinitelySatisfiable :=
   ⟨Theory.IsSatisfiable.isFinitelySatisfiable, fun h => by
-    classical
       set M : Finset T → Type max u v := fun T0 : Finset T =>
         (h (T0.map (Function.Embedding.subtype fun x => x ∈ T)) T0.map_subtype_subset).some.Carrier
       let M' := Filter.Product (Ultrafilter.of (Filter.atTop : Filter (Finset T))) M
@@ -141,10 +141,10 @@ theorem isSatisfiable_union_distinctConstantsTheory_of_card_le (T : L.Theory) (s
         (ab.trans (Subtype.coe_injective.extend_apply h.some default ⟨b, bs⟩)))
   exact Model.isSatisfiable M
 
+open Classical in
 theorem isSatisfiable_union_distinctConstantsTheory_of_infinite (T : L.Theory) (s : Set α)
     (M : Type w') [L.Structure M] [M ⊨ T] [Infinite M] :
     ((L.lhomWithConstants α).onTheory T ∪ L.distinctConstantsTheory s).IsSatisfiable := by
-  classical
     rw [distinctConstantsTheory_eq_iUnion, Set.union_iUnion, isSatisfiable_directed_union_iff]
     · exact fun t =>
         isSatisfiable_union_distinctConstantsTheory_of_card_le T _ M
@@ -171,9 +171,9 @@ theorem exists_large_model_of_infinite_model (T : L.Theory) (κ : Cardinal.{w}) 
     (card_le_of_model_distinctConstantsTheory L Set.univ N).trans (lift_le.{max u v w}.1 ?_)
   rw [lift_lift]
 
+open Classical in
 theorem isSatisfiable_iUnion_iff_isSatisfiable_iUnion_finset {ι : Type*} (T : ι → L.Theory) :
     IsSatisfiable (⋃ i, T i) ↔ ∀ s : Finset ι, IsSatisfiable (⋃ i ∈ s, T i) := by
-  classical
     refine
       ⟨fun h s => h.mono (Set.iUnion_mono fun _ => Set.iUnion_subset_iff.2 fun _ => refl _),
         fun h => ?_⟩

@@ -63,9 +63,9 @@ def partialSections {J : Type u} [SmallCategory J] (F : J ⥤ TopCat.{v}) {G : F
     (H : Finset (FiniteDiagramArrow G)) : Set (∀ j, F.obj j) :=
   {u | ∀ {f : FiniteDiagramArrow G} (_ : f ∈ H), F.map f.2.2.2.2 (u f.1) = u f.2.1}
 
+open Classical in
 theorem partialSections.nonempty [IsCofilteredOrEmpty J] [h : ∀ j : J, Nonempty (F.obj j)]
     {G : Finset J} (H : Finset (FiniteDiagramArrow G)) : (partialSections F H).Nonempty := by
-  classical
   cases isEmpty_or_nonempty J
   · exact ⟨isEmptyElim, fun {j} => IsEmpty.elim' inferInstance j.1⟩
   haveI : IsCofiltered J := ⟨⟩
@@ -76,9 +76,9 @@ theorem partialSections.nonempty [IsCofilteredOrEmpty J] [h : ∀ j : J, Nonempt
   dsimp only
   rwa [dif_pos hX, dif_pos hY, ← comp_app, ← F.map_comp, @IsCofiltered.infTo_commutes _ _ _ G H]
 
+open Classical in
 theorem partialSections.directed :
     Directed Superset fun G : FiniteDiagram J => partialSections F G.2 := by
-  classical
   intro A B
   let ιA : FiniteDiagramArrow A.1 → FiniteDiagramArrow (A.1 ⊔ B.1) := fun f =>
     ⟨f.1, f.2.1, Finset.mem_union_left _ f.2.2.1, Finset.mem_union_left _ f.2.2.2.1, f.2.2.2.2⟩
@@ -117,6 +117,7 @@ theorem partialSections.closed [∀ j : J, T2Space (F.obj j)] {G : Finset J}
   · exact (F.map f.snd.snd.snd.snd).continuous.comp (continuous_apply f.fst)
   · continuity
 
+open Classical in
 /-- Cofiltered limits of nonempty compact Hausdorff spaces are nonempty topological spaces.
 -/
 -- Porting note: generalized from `TopCat.{u}` to `TopCat.{max v u}`
@@ -124,7 +125,6 @@ theorem nonempty_limitCone_of_compact_t2_cofiltered_system (F : J ⥤ TopCat.{ma
     [IsCofilteredOrEmpty J]
     [∀ j : J, Nonempty (F.obj j)] [∀ j : J, CompactSpace (F.obj j)] [∀ j : J, T2Space (F.obj j)] :
     Nonempty (TopCat.limitCone F).pt := by
-  classical
   obtain ⟨u, hu⟩ :=
     IsCompact.nonempty_iInter_of_directed_nonempty_isCompact_isClosed (fun G => partialSections F _)
       (partialSections.directed F) (fun G => partialSections.nonempty F _)

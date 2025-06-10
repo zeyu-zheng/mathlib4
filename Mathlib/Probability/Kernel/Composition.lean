@@ -320,6 +320,7 @@ section Restrict
 
 variable {κ : Kernel α β} [IsSFiniteKernel κ] {η : Kernel (α × β) γ} [IsSFiniteKernel η] {a : α}
 
+open Classical in
 theorem compProd_restrict {s : Set β} {t : Set γ} (hs : MeasurableSet s) (ht : MeasurableSet t) :
     Kernel.restrict κ hs ⊗ₖ Kernel.restrict η ht = Kernel.restrict (κ ⊗ₖ η) (hs.prod ht) := by
   ext a u hu
@@ -332,7 +333,6 @@ theorem compProd_restrict {s : Set β} {t : Set γ} (hs : MeasurableSet s) (ht :
       η (a, b) {c : γ | (b, c) ∈ u ∧ b ∈ s ∧ c ∈ t} =
         s.indicator (fun b => η (a, b) ({c : γ | (b, c) ∈ u} ∩ t)) b := by
     intro b
-    classical
     rw [Set.indicator_apply]
     split_ifs with h
     · simp only [h, true_and_iff]
@@ -886,6 +886,7 @@ lemma fst_map_id_prod (κ : Kernel α β) {γ : Type*} {mγ : MeasurableSpace γ
     fst (map κ (fun a ↦ (a, f a)) (measurable_id.prod_mk hf)) = κ := by
   rw [fst_map_prod _ measurable_id' hf, Kernel.map_id']
 
+open Classical in
 @[simp]
 lemma fst_compProd (κ : Kernel α β) (η : Kernel (α × β) γ) [IsSFiniteKernel κ] [IsMarkovKernel η] :
     fst (κ ⊗ₖ η) = κ := by
@@ -893,7 +894,6 @@ lemma fst_compProd (κ : Kernel α β) (η : Kernel (α × β) γ) [IsSFiniteKer
   rw [fst_apply' _ _ hs, compProd_apply]
   swap; · exact measurable_fst hs
   simp only [Set.mem_setOf_eq]
-  classical
   have : ∀ b : β, η (x, b) {_c | b ∈ s} = s.indicator (fun _ ↦ 1) b
   intro b
   by_cases hb : b ∈ s <;> simp [hb]

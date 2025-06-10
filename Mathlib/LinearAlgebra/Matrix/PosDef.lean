@@ -76,9 +76,9 @@ lemma mul_mul_conjTranspose_same {A : Matrix n n R} (hA : PosSemidef A)
     PosSemidef (B * A * Bᴴ) := by
   simpa only [conjTranspose_conjTranspose] using hA.conjTranspose_mul_mul_same Bᴴ
 
+open Classical in
 theorem submatrix {M : Matrix n n R} (hM : M.PosSemidef) (e : m → n) :
     (M.submatrix e e).PosSemidef := by
-  classical
   rw [(by simp : M = 1 * M * 1), submatrix_mul (he₂ := Function.bijective_id),
     submatrix_mul (he₂ := Function.bijective_id), submatrix_id_id]
   simpa only [conjTranspose_submatrix, conjTranspose_one] using
@@ -249,10 +249,10 @@ lemma eigenvalues_self_mul_conjTranspose_nonneg (A : Matrix m n 𝕜) [Decidable
     0 ≤ (isHermitian_mul_conjTranspose_self A).eigenvalues i :=
   (posSemidef_self_mul_conjTranspose _).eigenvalues_nonneg _
 
+open Classical in
 /-- A matrix is positive semidefinite if and only if it has the form `Bᴴ * B` for some `B`. -/
 lemma posSemidef_iff_eq_transpose_mul_self {A : Matrix n n 𝕜} :
     PosSemidef A ↔ ∃ (B : Matrix n n 𝕜), A = Bᴴ * B := by
-  classical
   refine ⟨fun hA ↦ ⟨hA.sqrt, ?_⟩, fun ⟨B, hB⟩ ↦ (hB ▸ posSemidef_conjTranspose_mul_self B)⟩
   simp_rw [← PosSemidef.sq_sqrt hA, pow_two]
   rw [hA.posSemidef_sqrt.1]

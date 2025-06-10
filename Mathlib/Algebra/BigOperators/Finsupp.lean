@@ -87,6 +87,7 @@ theorem prod_ite_eq [DecidableEq α] (f : α →₀ M) (a : α) (b : α → M �
   dsimp [Finsupp.prod]
   rw [f.support.prod_ite_eq]
 
+open Classical in
 /- Porting note: simpnf linter, added aux lemma below
 Left-hand side simplifies from
   Finsupp.sum f fun x v => if a = x then v else 0
@@ -96,7 +97,6 @@ to
 -- @[simp]
 theorem sum_ite_self_eq [DecidableEq α] {N : Type*} [AddCommMonoid N] (f : α →₀ N) (a : α) :
     (f.sum fun x v => ite (a = x) v 0) = f a := by
-  classical
     convert f.sum_ite_eq a fun _ => id
     simp [ite_eq_right_iff.2 Eq.symm]
 
@@ -114,11 +114,11 @@ theorem prod_ite_eq' [DecidableEq α] (f : α →₀ M) (a : α) (b : α → M �
   dsimp [Finsupp.prod]
   rw [f.support.prod_ite_eq']
 
+open Classical in
 -- Porting note (#10618): simp can prove this
 -- @[simp]
 theorem sum_ite_self_eq' [DecidableEq α] {N : Type*} [AddCommMonoid N] (f : α →₀ N) (a : α) :
     (f.sum fun x v => ite (x = a) v 0) = f a := by
-  classical
     convert f.sum_ite_eq' a fun _ => id
     simp [ite_eq_right_iff.2 Eq.symm]
 
@@ -136,6 +136,7 @@ theorem onFinset_prod {s : Finset α} {f : α → M} {g : α → M → N} (hf : 
     (hg : ∀ a, g a 0 = 1) : (onFinset s f hf).prod g = ∏ a ∈ s, g a (f a) :=
   Finset.prod_subset support_onFinset_subset <| by simp (config := { contextual := true }) [*]
 
+open Classical in
 /-- Taking a product over `f : α →₀ M` is the same as multiplying the value on a single element
 `y ∈ f.support` by the product over `erase y f`. -/
 @[to_additive
@@ -143,12 +144,12 @@ theorem onFinset_prod {s : Finset α} {f : α → M} {g : α → M → N} (hf : 
       single element `y ∈ f.support` to the sum over `erase y f`. "]
 theorem mul_prod_erase (f : α →₀ M) (y : α) (g : α → M → N) (hyf : y ∈ f.support) :
     g y (f y) * (erase y f).prod g = f.prod g := by
-  classical
     rw [Finsupp.prod, Finsupp.prod, ← Finset.mul_prod_erase _ _ hyf, Finsupp.support_erase,
       Finset.prod_congr rfl]
     intro h hx
     rw [Finsupp.erase_ne (ne_of_mem_erase hx)]
 
+open Classical in
 /-- Generalization of `Finsupp.mul_prod_erase`: if `g` maps a second argument of 0 to 1,
 then its product over `f : α →₀ M` is the same as multiplying the value on any element
 `y : α` by the product over `erase y f`. -/
@@ -158,7 +159,6 @@ then its product over `f : α →₀ M` is the same as multiplying the value on 
       `y : α` to the sum over `erase y f`. "]
 theorem mul_prod_erase' (f : α →₀ M) (y : α) (g : α → M → N) (hg : ∀ i : α, g i 0 = 1) :
     g y (f y) * (erase y f).prod g = f.prod g := by
-  classical
     by_cases hyf : y ∈ f.support
     · exact Finsupp.mul_prod_erase f y g hyf
     · rw [not_mem_support_iff.mp hyf, hg y, erase_of_not_mem_support hyf, one_mul]
@@ -377,11 +377,11 @@ theorem liftAddHom_singleAddHom [AddCommMonoid M] :
 theorem sum_single [AddCommMonoid M] (f : α →₀ M) : f.sum single = f :=
   DFunLike.congr_fun liftAddHom_singleAddHom f
 
+open Classical in
 /-- The `Finsupp` version of `Finset.univ_sum_single` -/
 @[simp]
 theorem univ_sum_single [Fintype α] [AddCommMonoid M] (f : α →₀ M) :
     ∑ a : α, single a (f a) = f := by
-  classical
   refine DFunLike.coe_injective ?_
   simp_rw [coe_finset_sum, single_eq_pi_single, Finset.univ_sum_single]
 
@@ -458,11 +458,11 @@ theorem multiset_sum_sum_index [AddCommMonoid M] [AddCommMonoid N] (f : Multiset
   Multiset.induction_on f rfl fun a s ih => by
     rw [Multiset.sum_cons, Multiset.map_cons, Multiset.sum_cons, sum_add_index' h₀ h₁, ih]
 
+open Classical in
 theorem support_sum_eq_biUnion {α : Type*} {ι : Type*} {M : Type*} [DecidableEq α]
     [AddCommMonoid M] {g : ι → α →₀ M} (s : Finset ι)
     (h : ∀ i₁ i₂, i₁ ≠ i₂ → Disjoint (g i₁).support (g i₂).support) :
     (∑ i ∈ s, g i).support = s.biUnion fun i => (g i).support := by
-  classical
   -- Porting note: apply Finset.induction_on s was not working; refine does.
   refine Finset.induction_on s ?_ ?_
   · simp
@@ -499,10 +499,10 @@ theorem prod_add_index_of_disjoint [AddCommMonoid M] {f1 f2 : α →₀ M}
   classical simp_rw [← this hd, ← this hd.symm, add_comm (f2 _), Finsupp.prod, support_add_eq hd,
       prod_union hd, add_apply]
 
+open Classical in
 theorem prod_dvd_prod_of_subset_of_dvd [AddCommMonoid M] [CommMonoid N] {f1 f2 : α →₀ M}
     {g1 g2 : α → M → N} (h1 : f1.support ⊆ f2.support)
     (h2 : ∀ a : α, a ∈ f1.support → g1 a (f1 a) ∣ g2 a (f2 a)) : f1.prod g1 ∣ f2.prod g2 := by
-  classical
     simp only [Finsupp.prod, Finsupp.prod_mul]
     rw [← sdiff_union_of_subset h1, prod_union sdiff_disjoint]
     apply dvd_mul_of_dvd_right
@@ -547,13 +547,13 @@ lemma sum_cons' [AddCommMonoid M] [AddCommMonoid N] (n : ℕ) (σ : Fin n →₀
   simp_rw [Fin.sum_univ_succ, cons_zero, cons_succ]
   congr
 
+open Classical in
 @[to_additive]
 lemma prod_mul_eq_prod_mul_of_exists [Zero M] [CommMonoid N]
     {f : α →₀ M} {g : α → M → N} {n₁ n₂ : N}
     (a : α) (ha : a ∈ f.support)
     (h : g a (f a) * n₁ = g a (f a) * n₂) :
     f.prod g * n₁ = f.prod g * n₂ := by
-  classical
   exact Finset.prod_mul_eq_prod_mul_of_exists a ha h
 
 end Finsupp
@@ -566,8 +566,8 @@ theorem Finsupp.sum_apply' : g.sum k x = g.sum fun i b => k i b x :=
 
 section
 
+open Classical in
 theorem Finsupp.sum_sum_index' : (∑ x ∈ s, f x).sum t = ∑ x ∈ s, (f x).sum t := by
-  classical
   exact Finset.induction_on s rfl fun a s has ih => by
     simp_rw [Finset.sum_insert has, Finsupp.sum_add_index' h0 h1, ih]
 

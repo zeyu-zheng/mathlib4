@@ -189,11 +189,11 @@ theorem gcd_eq_zero_iff : s.gcd f = 0 ↔ ∀ x : β, x ∈ s → f x = 0 := by
     rcases as with ⟨b, ⟨bs, rfl⟩⟩
     apply h b (mem_def.1 bs)
 
+open Classical in
 /- Porting note: The change from `p : α → Prop` to `p : α → Bool` made this slightly less nice with
 all the `decide`s around. -/
 theorem gcd_eq_gcd_filter_ne_zero [DecidablePred fun x : β ↦ f x = 0] :
     s.gcd f = (s.filter fun x ↦ f x ≠ 0).gcd f := by
-  classical
     trans ((s.filter fun x ↦ f x = 0) ∪ s.filter fun x ↦ (f x ≠ 0)).gcd f
     · rw [filter_union_filter_neg_eq]
     rw [gcd_union]
@@ -206,16 +206,16 @@ theorem gcd_eq_gcd_filter_ne_zero [DecidablePred fun x : β ↦ f x = 0] :
         split_ifs with h1 <;> simp [h, h1]
     simp only [gcd_zero_left, normalize_gcd]
 
+open Classical in
 nonrec theorem gcd_mul_left {a : α} : (s.gcd fun x ↦ a * f x) = normalize a * s.gcd f := by
-  classical
     refine s.induction_on ?_ ?_
     · simp
     · intro b t _ h
       rw [gcd_insert, gcd_insert, h, ← gcd_mul_left]
       apply ((normalize_associated a).mul_right _).gcd_eq_right
 
+open Classical in
 nonrec theorem gcd_mul_right {a : α} : (s.gcd fun x ↦ f x * a) = s.gcd f * normalize a := by
-  classical
     refine s.induction_on ?_ ?_
     · simp
     · intro b t _ h
@@ -229,9 +229,9 @@ theorem extract_gcd' (f g : β → α) (hs : ∃ x, x ∈ s ∧ f x ≠ 0)
     contrapose! hs
     exact gcd_eq_zero_iff.1 hs
 
+open Classical in
 theorem extract_gcd (f : β → α) (hs : s.Nonempty) :
     ∃ g : β → α, (∀ b ∈ s, f b = s.gcd f * g b) ∧ s.gcd g = 1 := by
-  classical
     by_cases h : ∀ x ∈ s, f x = (0 : α)
     · refine ⟨fun _ ↦ 1, fun b hb ↦ by rw [h b hb, gcd_eq_zero_iff.2 h, mul_one], ?_⟩
       rw [gcd_eq_gcd_image, image_const hs, gcd_singleton, id, normalize_one]
@@ -265,10 +265,10 @@ section IsDomain
 
 variable [CommRing α] [IsDomain α] [NormalizedGCDMonoid α]
 
+open Classical in
 theorem gcd_eq_of_dvd_sub {s : Finset β} {f g : β → α} {a : α}
     (h : ∀ x : β, x ∈ s → a ∣ f x - g x) :
     GCDMonoid.gcd a (s.gcd f) = GCDMonoid.gcd a (s.gcd g) := by
-  classical
     revert h
     refine s.induction_on ?_ ?_
     · simp

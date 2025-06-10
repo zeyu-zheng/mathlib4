@@ -48,6 +48,7 @@ private lemma totalDegree_f₁_add_totalDegree_f₂ {a : ι → ZMod p} :
       · exact (totalDegree_smul_le ..).trans (totalDegree_X_pow ..).le
     _ < 2 * p - 1 := by have := (Fact.out : p.Prime).two_le; omega
 
+open Classical in
 /-- The prime case of the **Erdős–Ginzburg–Ziv theorem** for `ℤ/pℤ`.
 
 Any sequence of `2 * p - 1` elements of `ZMod p` contains a subsequence of `p` elements whose sum is
@@ -55,7 +56,6 @@ zero. -/
 private theorem ZMod.erdos_ginzburg_ziv_prime (a : ι → ZMod p) (hs : s.card = 2 * p - 1) :
     ∃ t ⊆ s, t.card = p ∧ ∑ i ∈ t, a i = 0 := by
   haveI : NeZero p := inferInstance
-  classical
   -- Let `N` be the number of common roots of our polynomials `f₁` and `f₂` (`f s ff` and `f s tt`).
   set N := Fintype.card {x // eval x (f₁ s a) = 0 ∧ eval x (f₂ s a) = 0}
   -- Zero is a common root to `f₁` and `f₂`, so `N` is nonzero
@@ -102,13 +102,13 @@ end prime
 section composite
 variable {n : ℕ} {s : Finset ι}
 
+open Classical in
 /-- The **Erdős–Ginzburg–Ziv theorem** for `ℤ`.
 
 Any sequence of at least `2 * n - 1` elements of `ℤ` contains a subsequence of `n` elements whose
 sum is divisible by `n`. -/
 theorem Int.erdos_ginzburg_ziv (a : ι → ℤ) (hs : 2 * n - 1 ≤ s.card) :
     ∃ t ⊆ s, t.card = n ∧ ↑n ∣ ∑ i ∈ t, a i := by
-  classical
   -- Do induction on the prime factorisation of `n`. Note that we will apply the induction
   -- hypothesis with `ι := Finset ι`, so we need to generalise.
   induction n using Nat.prime_composite_induction generalizing ι

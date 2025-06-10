@@ -1059,9 +1059,9 @@ variable {ι : Type*} {π : ι → Type u}
 protected theorem eq_bot_iff [∀ i, Bot (π i)] {f : ∀ i, π i} : f = ⊥ ↔ ∀ i, f i = ⊥ :=
   ⟨(· ▸ by simp), fun h => funext fun i => by simp [h]⟩
 
+open Classical in
 theorem isAtom_iff {f : ∀ i, π i} [∀ i, PartialOrder (π i)] [∀ i, OrderBot (π i)] :
     IsAtom f ↔ ∃ i, IsAtom (f i) ∧ ∀ j, j ≠ i → f j = ⊥ := by
-  classical
   constructor
   case mpr =>
     rintro ⟨i, ⟨hfi, hlt⟩, hbot⟩
@@ -1118,10 +1118,10 @@ instance isCoatomic [∀ i, PartialOrder (π i)] [∀ i, OrderTop (π i)] [∀ i
   isAtomic_dual_iff_isCoatomic.1 <|
     show IsAtomic (∀ i, (π i)ᵒᵈ) from inferInstance
 
+open Classical in
 instance isAtomistic [∀ i, CompleteLattice (π i)] [∀ i, IsAtomistic (π i)] :
     IsAtomistic (∀ i, π i) where
   eq_sSup_atoms s := by
-    classical
     refine ⟨{ f | IsAtom f ∧ f ≤ s }, ?_, by simp; tauto⟩
     ext i
     rw [← sSup_atoms_le_eq (s i)]

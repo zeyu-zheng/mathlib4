@@ -184,10 +184,10 @@ noncomputable def lapMatrix_ker_basis :=
 
 end
 
+open Classical in
 /-- The number of connected components in `G` is the dimension of the nullspace its Laplacian. -/
 theorem card_ConnectedComponent_eq_rank_ker_lapMatrix : Fintype.card G.ConnectedComponent =
     FiniteDimensional.finrank ℝ (LinearMap.ker (Matrix.toLin' (G.lapMatrix ℝ))) := by
-  classical
   rw [FiniteDimensional.finrank_eq_card_basis (lapMatrix_ker_basis G)]
 
 end SimpleGraph

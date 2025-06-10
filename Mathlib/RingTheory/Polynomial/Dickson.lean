@@ -180,6 +180,7 @@ theorem dickson_one_one_comp_comm (m n : ℕ) :
     (dickson 1 (1 : R) m).comp (dickson 1 1 n) = (dickson 1 1 n).comp (dickson 1 1 m) := by
   rw [← dickson_one_one_mul, mul_comm, dickson_one_one_mul]
 
+open Classical in
 theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : ZMod p) p = X ^ p := by
   -- Recall that `dickson_one_one_eval_add_inv` characterises `dickson 1 1 p`
   -- as a polynomial that maps `x + x⁻¹` to `x ^ p + (x⁻¹) ^ p`.
@@ -226,18 +227,17 @@ theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : ZMod p)
         have : φ.eval 0 = 0 := by rw [H, eval_zero]
         simpa [φ, eval_X, eval_one, eval_pow, eval_sub, sub_zero, eval_add, eval_mul,
           mul_zero, sq, zero_add, one_ne_zero]
-      classical
-        convert (φ.roots ∪ {0}).toFinset.finite_toSet using 1
-        ext1 y
-        simp only [φ, Multiset.mem_toFinset, Set.mem_setOf_eq, Finset.mem_coe, Multiset.mem_union,
-          mem_roots hφ, IsRoot, eval_add, eval_sub, eval_pow, eval_mul, eval_X, eval_C, eval_one,
-          Multiset.mem_singleton]
-        by_cases hy : y = 0
-        · simp only [hy, eq_self_iff_true, or_true_iff]
-        apply or_congr _ Iff.rfl
-        rw [← mul_left_inj' hy, eq_comm, ← sub_eq_zero, add_mul, inv_mul_cancel hy]
-        apply eq_iff_eq_cancel_right.mpr
-        ring
+      convert (φ.roots ∪ {0}).toFinset.finite_toSet using 1
+      ext1 y
+      simp only [φ, Multiset.mem_toFinset, Set.mem_setOf_eq, Finset.mem_coe, Multiset.mem_union,
+        mem_roots hφ, IsRoot, eval_add, eval_sub, eval_pow, eval_mul, eval_X, eval_C, eval_one,
+        Multiset.mem_singleton]
+      by_cases hy : y = 0
+      · simp only [hy, eq_self_iff_true, or_true_iff]
+      apply or_congr _ Iff.rfl
+      rw [← mul_left_inj' hy, eq_comm, ← sub_eq_zero, add_mul, inv_mul_cancel hy]
+      apply eq_iff_eq_cancel_right.mpr
+      ring
     -- Finally, we prove the claim that our finite union of finite sets covers all of `K`.
     apply (Set.eq_univ_of_forall _).symm
     intro x

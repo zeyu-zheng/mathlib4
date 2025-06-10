@@ -193,11 +193,11 @@ theorem IsTerminal.subsingleton_to (hI : IsTerminal I) {A : C} : Subsingleton (I
 
 variable {J : Type v} [SmallCategory J]
 
+open Classical in
 /-- If all but one object in a diagram is strict terminal, then the limit is isomorphic to the
 said object via `limit.π`. -/
 theorem limit_π_isIso_of_is_strict_terminal (F : J ⥤ C) [HasLimit F] (i : J)
     (H : ∀ (j) (_ : j ≠ i), IsTerminal (F.obj j)) [Subsingleton (i ⟶ i)] : IsIso (limit.π F i) := by
-  classical
     refine ⟨⟨limit.lift _ ⟨_, ⟨?_, ?_⟩⟩, ?_, ?_⟩⟩
     · exact fun j =>
         dite (j = i)

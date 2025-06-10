@@ -167,13 +167,13 @@ theorem toList_sorted (s : CompositionSeries X) : s.toList.Sorted (· < ·) :=
 theorem toList_nodup (s : CompositionSeries X) : s.toList.Nodup :=
   s.toList_sorted.nodup
 
+open Classical in
 /-- Two `CompositionSeries` are equal if they have the same elements. See also `ext_fun`. -/
 @[ext]
 theorem ext {s₁ s₂ : CompositionSeries X} (h : ∀ x, x ∈ s₁ ↔ x ∈ s₂) : s₁ = s₂ :=
   toList_injective <|
     List.eq_of_perm_of_sorted
       (by
-        classical
         exact List.perm_of_nodup_nodup_toFinset_eq s₁.toList_nodup s₂.toList_nodup
           (Finset.ext <| by simpa only [List.mem_toFinset, RelSeries.mem_toList]))
       s₁.toList_sorted s₂.toList_sorted

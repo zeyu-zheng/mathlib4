@@ -340,17 +340,17 @@ theorem noncommProd_commute (s : Finset α) (f : α → β) (comm) (y : β)
   rintro ⟨x, ⟨hx, rfl⟩⟩
   exact h x hx
 
+open Classical in
 theorem mul_noncommProd_erase [DecidableEq α] (s : Finset α) {a : α} (h : a ∈ s) (f : α → β) (comm)
     (comm' := fun x hx y hy hxy ↦ comm (s.mem_of_mem_erase hx) (s.mem_of_mem_erase hy) hxy) :
     f a * (s.erase a).noncommProd f comm' = s.noncommProd f comm := by
-  classical
   simpa only [← Multiset.map_erase_of_mem _ _ h] using
     Multiset.mul_noncommProd_erase (s.1.map f) (Multiset.mem_map_of_mem f h) _
 
+open Classical in
 theorem noncommProd_erase_mul [DecidableEq α] (s : Finset α) {a : α} (h : a ∈ s) (f : α → β) (comm)
     (comm' := fun x hx y hy hxy ↦ comm (s.mem_of_mem_erase hx) (s.mem_of_mem_erase hy) hxy) :
     (s.erase a).noncommProd f comm' * f a = s.noncommProd f comm := by
-  classical
   simpa only [← Multiset.map_erase_of_mem _ _ h] using
     Multiset.noncommProd_erase_mul (s.1.map f) (Multiset.mem_map_of_mem f h) _
 

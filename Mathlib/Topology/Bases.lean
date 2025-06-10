@@ -368,24 +368,24 @@ instance [TopologicalSpace β] [SeparableSpace α] [SeparableSpace β] : Separab
   rcases exists_countable_dense β with ⟨t, htc, htd⟩
   exact ⟨⟨s ×ˢ t, hsc.prod htc, hsd.prod htd⟩⟩
 
+open Classical in
 /-- The product of a countable family of separable spaces is a separable space. -/
 instance {ι : Type*} {X : ι → Type*} [∀ i, TopologicalSpace (X i)] [∀ i, SeparableSpace (X i)]
     [Countable ι] : SeparableSpace (∀ i, X i) := by
   choose t htc htd using (exists_countable_dense <| X ·)
   haveI := fun i ↦ (htc i).to_subtype
   nontriviality ∀ i, X i; inhabit ∀ i, X i
-  classical
-    set f : (Σ I : Finset ι, ∀ i : I, t i) → ∀ i, X i := fun ⟨I, g⟩ i ↦
-      if hi : i ∈ I then g ⟨i, hi⟩ else (default : ∀ i, X i) i
-    refine ⟨⟨range f, countable_range f, dense_iff_inter_open.2 fun U hU ⟨g, hg⟩ ↦ ?_⟩⟩
-    rcases isOpen_pi_iff.1 hU g hg with ⟨I, u, huo, huU⟩
-    have : ∀ i : I, ∃ y ∈ t i, y ∈ u i := fun i ↦
-      (htd i).exists_mem_open (huo i i.2).1 ⟨_, (huo i i.2).2⟩
-    choose y hyt hyu using this
-    lift y to ∀ i : I, t i using hyt
-    refine ⟨f ⟨I, y⟩, huU fun i (hi : i ∈ I) ↦ ?_, mem_range_self _⟩
-    simp only [f, dif_pos hi]
-    exact hyu _
+  set f : (Σ I : Finset ι, ∀ i : I, t i) → ∀ i, X i := fun ⟨I, g⟩ i ↦
+    if hi : i ∈ I then g ⟨i, hi⟩ else (default : ∀ i, X i) i
+  refine ⟨⟨range f, countable_range f, dense_iff_inter_open.2 fun U hU ⟨g, hg⟩ ↦ ?_⟩⟩
+  rcases isOpen_pi_iff.1 hU g hg with ⟨I, u, huo, huU⟩
+  have : ∀ i : I, ∃ y ∈ t i, y ∈ u i := fun i ↦
+    (htd i).exists_mem_open (huo i i.2).1 ⟨_, (huo i i.2).2⟩
+  choose y hyt hyu using this
+  lift y to ∀ i : I, t i using hyt
+  refine ⟨f ⟨I, y⟩, huU fun i (hi : i ∈ I) ↦ ?_, mem_range_self _⟩
+  simp only [f, dif_pos hi]
+  exact hyu _
 
 instance [SeparableSpace α] {r : α → α → Prop} : SeparableSpace (Quot r) :=
   quotientMap_quot_mk.separableSpace
@@ -463,10 +463,10 @@ theorem _root_.Set.Countable.isSeparable {s : Set α} (hs : s.Countable) : IsSep
 theorem _root_.Set.Finite.isSeparable {s : Set α} (hs : s.Finite) : IsSeparable s :=
   hs.countable.isSeparable
 
+open Classical in
 theorem IsSeparable.univ_pi {ι : Type*} [Countable ι] {X : ι → Type*} {s : ∀ i, Set (X i)}
     [∀ i, TopologicalSpace (X i)] (h : ∀ i, IsSeparable (s i)) :
     IsSeparable (univ.pi s) := by
-  classical
   rcases eq_empty_or_nonempty (univ.pi s) with he | ⟨f₀, -⟩
   · rw [he]
     exact countable_empty.isSeparable
@@ -584,8 +584,8 @@ theorem isTopologicalBasis_subtype
 section
 variable {ι : Type*} {π : ι → Type*} [∀ i, TopologicalSpace (π i)]
 
+open Classical in
 lemma isOpenMap_eval (i : ι) : IsOpenMap (Function.eval i : (∀ i, π i) → π i) := by
-  classical
   refine (isTopologicalBasis_pi fun _ ↦ isTopologicalBasis_opens).isOpenMap_iff.2 ?_
   rintro _ ⟨U, s, hU, rfl⟩
   obtain h | h := ((s : Set ι).pi U).eq_empty_or_nonempty

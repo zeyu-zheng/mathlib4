@@ -53,10 +53,10 @@ theorem hammingDist_nonneg {x y : ∀ i, β i} : 0 ≤ hammingDist x y :=
 theorem hammingDist_comm (x y : ∀ i, β i) : hammingDist x y = hammingDist y x := by
   simp_rw [hammingDist, ne_comm]
 
+open Classical in
 /-- Corresponds to `dist_triangle`. -/
 theorem hammingDist_triangle (x y z : ∀ i, β i) :
     hammingDist x z ≤ hammingDist x y + hammingDist y z := by
-  classical
     unfold hammingDist
     refine le_trans (card_mono ?_) (card_union_le _ _)
     rw [← filter_or]

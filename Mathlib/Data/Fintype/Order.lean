@@ -179,8 +179,8 @@ theorem Directed.finite_set_le (D : Directed r f) {s : Set γ} (hs : s.Finite) :
     ∃ z, ∀ i ∈ s, r (f i) (f z) := by
   convert D.finset_le hs.toFinset; rw [Set.Finite.mem_toFinset]
 
+open Classical in
 theorem Directed.finite_le (D : Directed r f) (g : β → γ) : ∃ z, ∀ i, r (f (g i)) (f z) := by
-  classical
     obtain ⟨z, hz⟩ := D.finite_set_le (Set.finite_range g)
     exact ⟨z, fun i => hz (g i) ⟨i, rfl⟩⟩
 

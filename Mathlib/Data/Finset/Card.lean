@@ -290,10 +290,10 @@ nonrec lemma card_lt_card (h : s ⊂ t) : s.card < t.card := card_lt_card <| val
 
 lemma card_strictMono : StrictMono (card : Finset α → ℕ) := fun _ _ ↦ card_lt_card
 
+open Classical in
 theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i, ∃ h : i < n, f i h = a)
     (hf' : ∀ i (h : i < n), f i h ∈ s)
     (f_inj : ∀ i j (hi : i < n) (hj : j < n), f i hi = f j hj → i = j) : s.card = n := by
-  classical
   have : s = (range n).attach.image fun i => f i.1 (mem_range.1 i.2)
   ext a
   suffices _ : a ∈ s ↔ ∃ (i : _) (hi : i ∈ range n), f i (mem_range.1 hi) = a by
@@ -313,6 +313,7 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
 section bij
 variable {t : Finset β}
 
+open Classical in
 /-- Reorder a finset.
 
 The difference with `Finset.card_bij'` is that the bijection is specified as a surjective injection,
@@ -323,7 +324,6 @@ domain, rather than being a non-dependent function. -/
 lemma card_bij (i : ∀ a ∈ s, β) (hi : ∀ a ha, i a ha ∈ t)
     (i_inj : ∀ a₁ ha₁ a₂ ha₂, i a₁ ha₁ = i a₂ ha₂ → a₁ = a₂)
     (i_surj : ∀ b ∈ t, ∃ a ha, i a ha = b) : s.card = t.card := by
-  classical
   calc
     s.card = s.attach.card := card_attach.symm
     _      = (s.attach.image fun a : { a // a ∈ s } => i a.1 a.2).card := Eq.symm ?_
@@ -390,9 +390,9 @@ See `Fintype.card_bijective` for the version where `s` and `t` are `univ`. -/
 lemma card_bijective (e : α → β) (he : e.Bijective) (hst : ∀ i, i ∈ s ↔ e i ∈ t) :
     s.card = t.card := card_equiv (.ofBijective e he) hst
 
+open Classical in
 lemma card_le_card_of_injOn (f : α → β) (hf : ∀ a ∈ s, f a ∈ t) (f_inj : (s : Set α).InjOn f) :
     s.card ≤ t.card := by
-  classical
   calc
     s.card = (s.image f).card := (card_image_of_injOn f_inj).symm
     _      ≤ t.card           := card_le_card <| image_subset_iff.2 hf
@@ -401,11 +401,11 @@ lemma card_le_card_of_injOn (f : α → β) (hf : ∀ a ∈ s, f a ∈ t) (f_inj
 lemma card_le_card_of_surjOn (f : α → β) (hf : Set.SurjOn f s t) : t.card ≤ s.card := by
   classical unfold Set.SurjOn at hf; exact (card_le_card (mod_cast hf)).trans card_image_le
 
+open Classical in
 /-- If there are more pigeons than pigeonholes, then there are two pigeons in the same pigeonhole.
 -/
 theorem exists_ne_map_eq_of_card_lt_of_maps_to {t : Finset β} (hc : t.card < s.card) {f : α → β}
     (hf : ∀ a ∈ s, f a ∈ t) : ∃ x ∈ s, ∃ y ∈ s, x ≠ y ∧ f x = f y := by
-  classical
   by_contra! hz
   refine hc.not_le (card_le_card_of_injOn f hf ?_)
   intro x hx y hy
@@ -418,10 +418,10 @@ lemma le_card_of_inj_on_range (f : ℕ → α) (hf : ∀ i < n, f i ∈ s)
     n = card (range n) := (card_range n).symm
     _ ≤ s.card := card_le_card_of_injOn f (by simpa only [mem_range]) (by simpa)
 
+open Classical in
 lemma surj_on_of_inj_on_of_card_le (f : ∀ a ∈ s, β) (hf : ∀ a ha, f a ha ∈ t)
     (hinj : ∀ a₁ a₂ ha₁ ha₂, f a₁ ha₁ = f a₂ ha₂ → a₁ = a₂) (hst : t.card ≤ s.card) :
     ∀ b ∈ t, ∃ a ha, b = f a ha := by
-  classical
   have h : (s.attach.image fun a : { a // a ∈ s } => f a a.prop).card = s.card
   rw [← @card_attach _ s, card_image_of_injective]
   intro ⟨_, _⟩ ⟨_, _⟩ h
@@ -544,17 +544,17 @@ theorem inter_nonempty_of_card_lt_card_add_card (hts : t ⊆ s) (hus : u ⊆ s)
 
 end Lattice
 
+open Classical in
 theorem filter_card_add_filter_neg_card_eq_card
     (p : α → Prop) [DecidablePred p] [∀ x, Decidable (¬p x)] :
     (s.filter p).card + (s.filter (fun a => ¬ p a)).card = s.card := by
-  classical
   rw [← card_union_of_disjoint (disjoint_filter_filter_neg _ _ _), filter_union_filter_neg_eq]
 
+open Classical in
 /-- Given a subset `s` of a set `t`, of sizes at most and at least `n` respectively, there exists a
 set `u` of size `n` which is both a superset of `s` and a subset of `t`. -/
 lemma exists_subsuperset_card_eq (hst : s ⊆ t) (hsn : s.card ≤ n) (hnt : n ≤ t.card) :
     ∃ u, s ⊆ u ∧ u ⊆ t ∧ card u = n := by
-  classical
   refine Nat.decreasingInduction' ?_ hnt ⟨t, by simp [hst]⟩
   intro k _ hnk ⟨u, hu₁, hu₂, hu₃⟩
   obtain ⟨a, ha⟩ : (u \ s).Nonempty := by rw [← card_pos, card_sdiff hu₁]; omega
@@ -716,8 +716,8 @@ theorem card_eq_three : s.card = 3 ↔ ∃ x y z, x ≠ y ∧ x ≠ z ∧ y ≠ 
 
 end DecidableEq
 
+open Classical in
 theorem two_lt_card_iff : 2 < s.card ↔ ∃ a b c, a ∈ s ∧ b ∈ s ∧ c ∈ s ∧ a ≠ b ∧ a ≠ c ∧ b ≠ c := by
-  classical
     simp_rw [lt_iff_add_one_le, le_card_iff_exists_subset_card, reduceAdd, card_eq_three,
       ← exists_and_left, exists_comm (α := Finset α)]
     constructor

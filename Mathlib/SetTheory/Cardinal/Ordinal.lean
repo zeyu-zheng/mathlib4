@@ -1191,6 +1191,7 @@ theorem mk_compl_eq_mk_compl_infinite {α : Type*} [Infinite α] {s t : Set α} 
     (ht : #t < #α) : #(sᶜ : Set α) = #(tᶜ : Set α) := by
   rw [mk_compl_of_infinite s hs, mk_compl_of_infinite t ht]
 
+open Classical in
 theorem mk_compl_eq_mk_compl_finite_lift {α : Type u} {β : Type v} [Finite α] {s : Set α}
     {t : Set β} (h1 : (lift.{max v w, u} #α) = (lift.{max u w, v} #β))
     (h2 : lift.{max v w, u} #s = lift.{max u w, v} #t) :
@@ -1198,12 +1199,11 @@ theorem mk_compl_eq_mk_compl_finite_lift {α : Type u} {β : Type v} [Finite α]
   cases nonempty_fintype α
   rcases lift_mk_eq.{u, v, w}.1 h1 with ⟨e⟩; letI : Fintype β := Fintype.ofEquiv α e
   replace h1 : Fintype.card α = Fintype.card β := (Fintype.ofEquiv_card _).symm
-  classical
-    lift s to Finset α using s.toFinite
-    lift t to Finset β using t.toFinite
-    simp only [Finset.coe_sort_coe, mk_fintype, Fintype.card_coe, lift_natCast, Nat.cast_inj] at h2
-    simp only [← Finset.coe_compl, Finset.coe_sort_coe, mk_coe_finset, Finset.card_compl,
-      lift_natCast, Nat.cast_inj, h1, h2]
+  lift s to Finset α using s.toFinite
+  lift t to Finset β using t.toFinite
+  simp only [Finset.coe_sort_coe, mk_fintype, Fintype.card_coe, lift_natCast, Nat.cast_inj] at h2
+  simp only [← Finset.coe_compl, Finset.coe_sort_coe, mk_coe_finset, Finset.card_compl,
+    lift_natCast, Nat.cast_inj, h1, h2]
 
 theorem mk_compl_eq_mk_compl_finite {α β : Type u} [Finite α] {s : Set α} {t : Set β}
     (h1 : #α = #β) (h : #s = #t) : #(sᶜ : Set α) = #(tᶜ : Set β) := by

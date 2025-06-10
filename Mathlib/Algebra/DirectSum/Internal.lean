@@ -177,10 +177,10 @@ theorem coe_mul_apply_eq_dfinsupp_sum [AddMonoid ι] [SetLike.GradedMonoid A]
   · rw [of_eq_of_ne _ _ _ h]
     rfl
 
+open Classical in
 theorem coe_of_mul_apply_aux [AddMonoid ι] [SetLike.GradedMonoid A] {i : ι} (r : A i)
     (r' : ⨁ i, A i) {j n : ι} (H : ∀ x : ι, i + x = n ↔ x = j) :
     ((of (fun i => A i) i r * r') n : R) = r * r' j := by
-  classical
     rw [coe_mul_apply_eq_dfinsupp_sum]
     apply (DFinsupp.sum_single_index _).trans
     swap
@@ -191,10 +191,10 @@ theorem coe_of_mul_apply_aux [AddMonoid ι] [SetLike.GradedMonoid A] {i : ι} (r
     · rfl
     rw [DFinsupp.not_mem_support_iff.mp h, ZeroMemClass.coe_zero, mul_zero]
 
+open Classical in
 theorem coe_mul_of_apply_aux [AddMonoid ι] [SetLike.GradedMonoid A] (r : ⨁ i, A i) {i : ι}
     (r' : A i) {j n : ι} (H : ∀ x : ι, x + i = n ↔ x = j) :
     ((r * of (fun i => A i) i r') n : R) = r j * r' := by
-  classical
     rw [coe_mul_apply_eq_dfinsupp_sum, DFinsupp.sum_comm]
     apply (DFinsupp.sum_single_index _).trans
     swap
@@ -220,9 +220,9 @@ section CanonicallyOrderedAddCommMonoid
 variable [Semiring R] [SetLike σ R] [AddSubmonoidClass σ R] (A : ι → σ)
 variable [CanonicallyOrderedAddCommMonoid ι] [SetLike.GradedMonoid A]
 
+open Classical in
 theorem coe_of_mul_apply_of_not_le {i : ι} (r : A i) (r' : ⨁ i, A i) (n : ι) (h : ¬i ≤ n) :
     ((of (fun i => A i) i r * r') n : R) = 0 := by
-  classical
     rw [coe_mul_apply_eq_dfinsupp_sum]
     apply (DFinsupp.sum_single_index _).trans
     swap
@@ -231,9 +231,9 @@ theorem coe_of_mul_apply_of_not_le {i : ι} (r : A i) (r' : ⨁ i, A i) (n : ι)
     · rw [DFinsupp.sum, Finset.sum_ite_of_false, Finset.sum_const_zero]
       exact fun x _ H => h ((self_le_add_right i x).trans_eq H)
 
+open Classical in
 theorem coe_mul_of_apply_of_not_le (r : ⨁ i, A i) {i : ι} (r' : A i) (n : ι) (h : ¬i ≤ n) :
     ((r * of (fun i => A i) i r') n : R) = 0 := by
-  classical
     rw [coe_mul_apply_eq_dfinsupp_sum, DFinsupp.sum_comm]
     apply (DFinsupp.sum_single_index _).trans
     swap

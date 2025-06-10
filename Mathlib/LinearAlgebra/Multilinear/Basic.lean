@@ -156,8 +156,8 @@ protected theorem map_smul [DecidableEq ι] (m : ∀ i, M₁ i) (i : ι) (c : R)
     f (update m i (c • x)) = c • f (update m i x) :=
   f.map_smul' m i c x
 
+open Classical in
 theorem map_coord_zero {m : ∀ i, M₁ i} (i : ι) (h : m i = 0) : f m = 0 := by
-  classical
     have : (0 : R) • (0 : M₁ i) = 0
     simp
     rw [← update_eq_self i m, h, ← this, f.map_smul, zero_smul R (M := M₂)]
@@ -606,9 +606,9 @@ theorem map_sum [DecidableEq ι] [Fintype ι] [∀ i, Fintype (α i)] :
     (f fun i => ∑ j, g i j) = ∑ r : ∀ i, α i, f fun i => g i (r i) :=
   f.map_sum_finset g fun _ => Finset.univ
 
+open Classical in
 theorem map_update_sum {α : Type*} [DecidableEq ι] (t : Finset α) (i : ι) (g : α → M₁ i)
     (m : ∀ i, M₁ i) : f (update m i (∑ a ∈ t, g a)) = ∑ a ∈ t, f (update m i (g a)) := by
-  classical
     induction' t using Finset.induction with a t has ih h
     · simp
     · simp [Finset.sum_insert has, ih]
@@ -730,6 +730,8 @@ lemma domDomRestrict_aux_right [DecidableEq ι] (P : ι → Prop) [DecidablePred
     Function.update (fun j => if h : P j then x ⟨j, h⟩ else z ⟨j, h⟩) i c := by
   simpa only [dite_not] using domDomRestrict_aux _ z (fun j ↦ x ⟨j.1, not_not.mp j.2⟩) i c
 
+
+open Classical in
 /-- Given a multilinear map `f` on `(i : ι) → M i`, a (decidable) predicate `P` on `ι` and
 an element `z` of `(i : {a // ¬ P a}) → M₁ i`, construct a multilinear map on
 `(i : {a // P a}) → M₁ i)` whose value at `x` is `f` evaluated at the vector with `i`th coordinate
@@ -745,12 +747,10 @@ def domDomRestrict (f : MultilinearMap R M₁ M₂) (P : ι → Prop) [Decidable
     MultilinearMap R (fun (i : {a : ι // P a}) => M₁ i) M₂ where
   toFun x := f (fun j ↦ if h : P j then x ⟨j, h⟩ else z ⟨j, h⟩)
   map_add' x i a b := by
-    classical
     simp only
     repeat (rw [domDomRestrict_aux])
     simp only [MultilinearMap.map_add]
   map_smul' z i c a := by
-    classical
     simp only
     repeat (rw [domDomRestrict_aux])
     simp only [MultilinearMap.map_smul]
@@ -941,6 +941,8 @@ variable [CommSemiring R] [∀ i, AddCommMonoid (M₁ i)] [∀ i, AddCommMonoid 
 section
 variable {M₁' : ι → Type*} [Π i, AddCommMonoid (M₁' i)] [Π i, Module R (M₁' i)]
 
+open Classical in
+open Classical in
 /-- Given a predicate `P`, one may associate to a multilinear map `f` a multilinear map
 from the elements satisfying `P` to the multilinear maps on elements not satisfying `P`.
 In other words, splitting the variables into two subsets one gets a multilinear map into
@@ -952,12 +954,10 @@ def domDomRestrictₗ (f : MultilinearMap R M₁ M₂) (P : ι → Prop) [Decida
   toFun := fun z ↦ domDomRestrict f P z
   map_add' := by
     intro h m i x y
-    classical
     ext v
     simp [domDomRestrict_aux_right]
   map_smul' := by
     intro h m i c x
-    classical
     ext v
     simp [domDomRestrict_aux_right]
 

@@ -26,9 +26,9 @@ variable {R : Type u} [CommRing R]
 
 namespace IsBezout
 
+open Classical in
 theorem iff_span_pair_isPrincipal :
     IsBezout R ↔ ∀ x y : R, (Ideal.span {x, y} : Ideal R).IsPrincipal := by
-  classical
     constructor
     · intro H x y; infer_instance
     · intro H
@@ -47,10 +47,10 @@ theorem _root_.Function.Surjective.isBezout {S : Type v} [CommRing S] (f : R →
   · rw [span_gcd, Ideal.map_span, Set.image_insert_eq, Set.image_singleton]
   · rw [Ideal.map_span, Set.image_singleton]; rfl
 
+open Classical in
 theorem TFAE [IsBezout R] [IsDomain R] :
     List.TFAE
     [IsNoetherianRing R, IsPrincipalIdealRing R, UniqueFactorizationMonoid R, WfDvdMonoid R] := by
-  classical
     tfae_have 1 → 2
     · intro H; exact ⟨fun I => isPrincipal_of_FG _ (IsNoetherian.noetherian _)⟩
     tfae_have 2 → 3

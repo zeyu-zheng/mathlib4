@@ -93,23 +93,23 @@ end NonAssocSemiring
 section CommSemiring
 variable [CommSemiring α]
 
+open Classical in
 /-- If `f = g = h` everywhere but at `i`, where `f i = g i + h i`, then the product of `f` over `s`
   is the sum of the products of `g` and `h`. -/
 theorem prod_add_prod_eq {s : Finset ι} {i : ι} {f g h : ι → α} (hi : i ∈ s)
     (h1 : g i + h i = f i) (h2 : ∀ j ∈ s, j ≠ i → g j = f j) (h3 : ∀ j ∈ s, j ≠ i → h j = f j) :
     (∏ i ∈ s, g i) + ∏ i ∈ s, h i = ∏ i ∈ s, f i := by
-  classical
     simp_rw [prod_eq_mul_prod_diff_singleton hi, ← h1, right_distrib]
     congr 2 <;> apply prod_congr rfl <;> simpa
 
 section DecidableEq
 variable [DecidableEq ι]
 
+open Classical in
 /-- The product over a sum can be written as a sum over the product of sets, `Finset.Pi`.
   `Finset.prod_univ_sum` is an alternative statement when the product is over `univ`. -/
 lemma prod_sum (s : Finset ι) (t : ∀ i, Finset (κ i)) (f : ∀ i, κ i → α) :
     ∏ a ∈ s, ∑ b ∈ t a, f a b = ∑ p ∈ s.pi t, ∏ x ∈ s.attach, f x.1 (p x.1 x.2) := by
-  classical
   induction' s using Finset.induction with a s ha ih
   · rw [pi_empty, sum_singleton]
     rfl
@@ -152,11 +152,11 @@ lemma sum_pow' (s : Finset ι) (f : ι → α) (n : ℕ) :
     (∑ a ∈ s, f a) ^ n = ∑ p ∈ piFinset fun _i : Fin n ↦ s, ∏ i, f (p i) := by
   convert @prod_univ_sum (Fin n) _ _ _ _ _ (fun _i ↦ s) fun _i d ↦ f d; simp
 
+open Classical in
 /-- The product of `f a + g a` over all of `s` is the sum over the powerset of `s` of the product of
 `f` over a subset `t` times the product of `g` over the complement of `t`  -/
 theorem prod_add (f g : ι → α) (s : Finset ι) :
     ∏ i ∈ s, (f i + g i) = ∑ t ∈ s.powerset, (∏ i ∈ t, f i) * ∏ i ∈ s \ t, g i := by
-  classical
   calc
     ∏ i ∈ s, (f i + g i) =
         ∏ i ∈ s, ∑ p ∈ ({True, False} : Finset Prop), if p then f i else g i := by simp
@@ -202,11 +202,11 @@ theorem prod_add_ordered [LinearOrder ι] [CommSemiring α] (s : Finset ι) (f g
       mul_left_comm]
     exact mt (fun ha => (mem_filter.1 ha).1) ha'
 
+open Classical in
 /-- Summing `a^s.card * b^(n-s.card)` over all finite subsets `s` of a `Finset`
 gives `(a + b)^s.card`. -/
 theorem sum_pow_mul_eq_add_pow (a b : α) (s : Finset ι) :
     (∑ t ∈ s.powerset, a ^ t.card * b ^ (s.card - t.card)) = (a + b) ^ s.card := by
-  classical
   rw [← prod_const, prod_add]
   refine Finset.sum_congr rfl fun t ht => ?_
   rw [prod_const, prod_const, ← card_sdiff (mem_powerset.1 ht)]

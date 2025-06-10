@@ -291,16 +291,16 @@ namespace IntermediateField
 instance toField : Field S :=
   S.toSubfield.toField
 
+open Classical in
 @[simp, norm_cast]
 theorem coe_sum {ι : Type*} [Fintype ι] (f : ι → S) : (↑(∑ i, f i) : L) = ∑ i, (f i : L) := by
-  classical
     induction' (Finset.univ : Finset ι) using Finset.induction_on with i s hi H
     · simp
     · rw [Finset.sum_insert hi, AddMemClass.coe_add, H, Finset.sum_insert hi]
 
+open Classical in
 @[norm_cast] --Porting note (#10618): `simp` can prove it
 theorem coe_prod {ι : Type*} [Fintype ι] (f : ι → S) : (↑(∏ i, f i) : L) = ∏ i, (f i : L) := by
-  classical
     induction' (Finset.univ : Finset ι) using Finset.induction_on with i s hi H
     · simp
     · rw [Finset.prod_insert hi, MulMemClass.coe_mul, H, Finset.prod_insert hi]

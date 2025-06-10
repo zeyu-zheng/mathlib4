@@ -193,12 +193,12 @@ def borelMarkovFromReal (Ω : Type*) [Nonempty Ω] [MeasurableSpace Ω] [Standar
         MeasurableSet {a | η a (range (embeddingReal Ω))ᶜ = 0})
       η (deterministic (fun _ ↦ x₀) measurable_const)) he
 
+open Classical in
 lemma borelMarkovFromReal_apply (Ω : Type*) [Nonempty Ω] [MeasurableSpace Ω] [StandardBorelSpace Ω]
     (η : Kernel α ℝ) (a : α) :
     borelMarkovFromReal Ω η a
       = if η a (range (embeddingReal Ω))ᶜ = 0 then (η a).comap (embeddingReal Ω)
         else (Measure.dirac (range_nonempty (embeddingReal Ω)).choose).comap (embeddingReal Ω) := by
-  classical
   rw [borelMarkovFromReal, comapRight_apply, piecewise_apply, deterministic_apply]
   simp only [mem_preimage, mem_singleton_iff]
   split_ifs <;> rfl
@@ -224,17 +224,18 @@ instance instIsFiniteKernelBorelMarkovFromReal (η : Kernel α ℝ) [IsFiniteKer
     IsFiniteKernel (borelMarkovFromReal Ω η) :=
   IsFiniteKernel.comapRight _ (measurableEmbedding_embeddingReal Ω)
 
+open Classical in
 /-- When `η` is a Markov kernel, `borelMarkovFromReal Ω η` is a Markov kernel. -/
 instance instIsMarkovKernelBorelMarkovFromReal (η : Kernel α ℝ) [IsMarkovKernel η] :
     IsMarkovKernel (borelMarkovFromReal Ω η) := by
   refine IsMarkovKernel.comapRight _ (measurableEmbedding_embeddingReal Ω) (fun a ↦ ?_)
-  classical
   rw [piecewise_apply]
   split_ifs with h
   · rwa [← prob_compl_eq_zero_iff (measurableEmbedding_embeddingReal Ω).measurableSet_range]
   · rw [deterministic_apply]
     simp [(range_nonempty (embeddingReal Ω)).choose_spec]
 
+open Classical in
 /-- For `κ' := map κ (Prod.map (id : β → β) e) (measurable_id.prod_map he.measurable)`, the
 hypothesis `hη` is `fst κ' ⊗ₖ η = κ'`. The conclusion of the lemma is
 `fst κ ⊗ₖ borelMarkovFromReal Ω η = comapRight (fst κ' ⊗ₖ η) _`. -/
@@ -283,7 +284,6 @@ lemma compProd_fst_borelMarkovFromReal_eq_comapRight_compProd
   rotate_left
   · exact measurable_prod_mk_left ht
   · exact measurable_prod_mk_left ht
-  classical
   rw [piecewise_apply, if_pos]
   exact ha
 

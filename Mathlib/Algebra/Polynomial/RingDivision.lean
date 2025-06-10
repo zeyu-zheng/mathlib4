@@ -126,16 +126,16 @@ theorem trailingDegree_mul : (p * q).trailingDegree = p.trailingDegree + q.trail
     trailingDegree_eq_natTrailingDegree (mul_ne_zero hp hq), natTrailingDegree_mul hp hq]
     apply WithTop.coe_add
 
+open Classical in
 @[simp]
 theorem natDegree_pow (p : R[X]) (n : ℕ) : natDegree (p ^ n) = n * natDegree p := by
-  classical
   obtain rfl | hp := eq_or_ne p 0
   · obtain rfl | hn := eq_or_ne n 0 <;> simp [*]
   exact natDegree_pow' $ by
     rw [← leadingCoeff_pow, Ne, leadingCoeff_eq_zero]; exact pow_ne_zero _ hp
 
+open Classical in
 theorem degree_le_mul_left (p : R[X]) (hq : q ≠ 0) : degree p ≤ degree (p * q) := by
-  classical
   exact if hp : p = 0 then by simp only [hp, zero_mul, le_refl]
   else by
     rw [degree_mul, degree_eq_natDegree hp, degree_eq_natDegree hq]
@@ -391,6 +391,7 @@ section CommRing
 
 variable [CommRing R]
 
+open Classical in
 /- Porting note: the ML3 proof no longer worked because of a conflict in the
 inferred type and synthesized type for `DecidableRel` when using `Nat.le_find_iff` from
 `Mathlib.Algebra.Polynomial.Div` After some discussion on [Zulip]
@@ -401,7 +402,6 @@ introduced `Polynomial.rootMultiplicity_eq_nat_find_of_nonzero` to contain the i
   `(X - a) ^ n` divides `p`. -/
 theorem le_rootMultiplicity_iff {p : R[X]} (p0 : p ≠ 0) {a : R} {n : ℕ} :
     n ≤ rootMultiplicity a p ↔ (X - C a) ^ n ∣ p := by
-  classical
   rw [rootMultiplicity_eq_nat_find_of_nonzero p0, @Nat.le_find_iff _ (_)]
   simp_rw [Classical.not_not]
   refine ⟨fun h => ?_, fun h m hm => (pow_dvd_pow _ hm).trans h⟩
@@ -428,9 +428,9 @@ theorem comp_X_add_C_eq_zero_iff {p : R[X]} (t : R) :
 theorem comp_X_add_C_ne_zero_iff {p : R[X]} (t : R) :
     p.comp (X + C t) ≠ 0 ↔ p ≠ 0 := Iff.not <| comp_X_add_C_eq_zero_iff t
 
+open Classical in
 theorem rootMultiplicity_eq_rootMultiplicity {p : R[X]} {t : R} :
     p.rootMultiplicity t = (p.comp (X + C t)).rootMultiplicity 0 := by
-  classical
   simp_rw [rootMultiplicity_eq_multiplicity, comp_X_add_C_eq_zero_iff]
   congr; ext; congr 1
   rw [C_0, sub_zero]
@@ -701,9 +701,9 @@ theorem pairwise_coprime_X_sub_C {K} [Field K] {I : Type v} {s : I → K} (H : F
     Pairwise (IsCoprime on fun i : I => X - C (s i)) := fun _ _ hij =>
   isCoprime_X_sub_C_of_isUnit_sub (sub_ne_zero_of_ne <| H.ne hij).isUnit
 
+open Classical in
 theorem rootMultiplicity_mul {p q : R[X]} {x : R} (hpq : p * q ≠ 0) :
     rootMultiplicity x (p * q) = rootMultiplicity x p + rootMultiplicity x q := by
-  classical
   have hp : p ≠ 0 := left_ne_zero_of_mul hpq
   have hq : q ≠ 0 := right_ne_zero_of_mul hpq
   rw [rootMultiplicity_eq_multiplicity (p * q), dif_neg hpq, rootMultiplicity_eq_multiplicity p,

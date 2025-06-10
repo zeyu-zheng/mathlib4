@@ -90,9 +90,9 @@ theorem basisSets_nonempty [Nonempty ι] : p.basisSets.Nonempty := by
   refine nonempty_def.mpr ⟨(p i).ball 0 1, ?_⟩
   exact p.basisSets_singleton_mem i zero_lt_one
 
+open Classical in
 theorem basisSets_intersect (U V : Set E) (hU : U ∈ p.basisSets) (hV : V ∈ p.basisSets) :
     ∃ z ∈ p.basisSets, z ⊆ U ∩ V := by
-  classical
     rcases p.basisSets_iff.mp hU with ⟨s, r₁, hr₁, hU⟩
     rcases p.basisSets_iff.mp hV with ⟨t, r₂, hr₂, hV⟩
     use ((s ∪ t).sup p).ball 0 (min r₁ r₂)
@@ -190,6 +190,7 @@ theorem filter_eq_iInf (p : SeminormFamily 𝕜 E ι) :
         ⟨Metric.ball 0 r, Metric.ball_mem_nhds 0 hr,
           Eq.subset (p i).ball_zero_eq_preimage_ball.symm⟩
 
+open Classical in
 /-- If a family of seminorms is continuous, then their basis sets are neighborhoods of zero. -/
 lemma basisSets_mem_nhds {𝕜 E ι : Type*} [NormedField 𝕜]
     [AddCommGroup E] [Module 𝕜 E] [TopologicalSpace E] (p : SeminormFamily 𝕜 E ι)
@@ -197,7 +198,6 @@ lemma basisSets_mem_nhds {𝕜 E ι : Type*} [NormedField 𝕜]
   obtain ⟨s, r, hr, rfl⟩ := p.basisSets_iff.mp hU
   clear hU
   refine Seminorm.ball_mem_nhds ?_ hr
-  classical
   induction s using Finset.induction_on
   case empty => simpa using continuous_zero
   case insert a s _ hs =>
@@ -234,10 +234,10 @@ theorem const_isBounded (ι : Type*) [Nonempty ι] {p : Seminorm 𝕜 E} {q : ι
   use {Classical.arbitrary ι}
   simp only [h, Finset.sup_singleton]
 
+open Classical in
 theorem isBounded_sup {p : ι → Seminorm 𝕜 E} {q : ι' → Seminorm 𝕜₂ F} {f : E →ₛₗ[σ₁₂] F}
     (hf : IsBounded p q f) (s' : Finset ι') :
     ∃ (C : ℝ≥0) (s : Finset ι), (s'.sup q).comp f ≤ C • s.sup p := by
-  classical
     obtain rfl | _ := s'.eq_empty_or_nonempty
     · exact ⟨1, ∅, by simp [Seminorm.bot_eq_zero]⟩
     choose fₛ fC hf using hf

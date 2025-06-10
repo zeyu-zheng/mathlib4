@@ -802,13 +802,13 @@ theorem Biproduct.column_nonzero_of_iso' {σ τ : Type} [Finite τ] {S : σ → 
   simp
   exact h₁.symm.trans h₀
 
+open Classical in
 /-- If `f : ⨁ S ⟶ ⨁ T` is an isomorphism, and `s` is a non-trivial summand of the source,
 then there is some `t` in the target so that the `s, t` matrix entry of `f` is nonzero.
 -/
 def Biproduct.columnNonzeroOfIso {σ τ : Type} [Fintype τ] {S : σ → C} [HasBiproduct S] {T : τ → C}
     [HasBiproduct T] (s : σ) (nz : 𝟙 (S s) ≠ 0) (f : ⨁ S ⟶ ⨁ T) [IsIso f] :
     Trunc (Σ't : τ, biproduct.ι S s ≫ f ≫ biproduct.π T t ≠ 0) := by
-  classical
     apply truncSigmaOfExists
     have t := Biproduct.column_nonzero_of_iso'.{v} s f
     by_contra h

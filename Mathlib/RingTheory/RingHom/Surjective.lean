@@ -30,9 +30,9 @@ theorem surjective_respectsIso : RespectsIso surjective := by
   intros _ _ _ _ e
   exact e.surjective
 
+open Classical in
 theorem surjective_stableUnderBaseChange : StableUnderBaseChange surjective := by
   refine StableUnderBaseChange.mk _ surjective_respectsIso ?_
-  classical
   introv h x
   induction x with
   | zero => exact ⟨0, map_zero _⟩

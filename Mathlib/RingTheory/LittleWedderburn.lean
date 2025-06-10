@@ -58,9 +58,9 @@ private def field (hD : InductionHyp D) {R : Subring D} (hR : R < ⊤)
   { show DivisionRing R from Fintype.divisionRingOfIsDomain R with
     mul_comm := fun x y ↦ Subtype.ext <| hD hR x.2 y.2 }
 
+open Classical in
 /-- We prove that if every subring of `D` is central, then so is `D`. -/
 private theorem center_eq_top [Finite D] (hD : InductionHyp D) : Subring.center D = ⊤ := by
-  classical
   cases nonempty_fintype D
   set Z := Subring.center D
   -- We proceed by contradiction; that is, we assume the center is strictly smaller than `D`.
@@ -139,8 +139,8 @@ private theorem center_eq_top [Finite D] (hD : InductionHyp D) : Subring.center 
 
 end InductionHyp
 
+open Classical in
 private theorem center_eq_top [Finite D] : Subring.center D = ⊤ := by
-  classical
   cases nonempty_fintype D
   induction' hn : Fintype.card D using Nat.strong_induction_on with n IH generalizing D
   apply InductionHyp.center_eq_top
@@ -167,9 +167,9 @@ instance (priority := 100) littleWedderburn (D : Type*) [DivisionRing D] [Finite
 
 alias Finite.divisionRing_to_field := littleWedderburn
 
+open Classical in
 /-- A finite domain is a field. See also `littleWedderburn` and `Fintype.divisionRingOfIsDomain`. -/
 theorem Finite.isDomain_to_isField (D : Type*) [Finite D] [Ring D] [IsDomain D] : IsField D := by
-  classical
   cases nonempty_fintype D
   let _ := Fintype.divisionRingOfIsDomain D
   let _ := littleWedderburn D

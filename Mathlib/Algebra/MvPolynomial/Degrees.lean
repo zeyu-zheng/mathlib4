@@ -81,15 +81,15 @@ def degrees (p : MvPolynomial σ R) : Multiset σ :=
 theorem degrees_def [DecidableEq σ] (p : MvPolynomial σ R) :
     p.degrees = p.support.sup fun s : σ →₀ ℕ => Finsupp.toMultiset s := by rw [degrees]; convert rfl
 
+open Classical in
 theorem degrees_monomial (s : σ →₀ ℕ) (a : R) : degrees (monomial s a) ≤ toMultiset s := by
-  classical
     refine (supDegree_single s a).trans_le ?_
     split_ifs
     exacts [bot_le, le_rfl]
 
+open Classical in
 theorem degrees_monomial_eq (s : σ →₀ ℕ) (a : R) (ha : a ≠ 0) :
     degrees (monomial s a) = toMultiset s := by
-  classical
     exact (supDegree_single s a).trans (if_neg ha)
 
 theorem degrees_C (a : R) : degrees (C a : MvPolynomial σ R) = 0 :=
@@ -119,8 +119,8 @@ theorem degrees_sum {ι : Type*} [DecidableEq σ] (s : Finset ι) (f : ι → Mv
     (∑ i ∈ s, f i).degrees ≤ s.sup fun i => (f i).degrees := by
   simp_rw [degrees_def]; exact supDegree_sum_le
 
+open Classical in
 theorem degrees_mul (p q : MvPolynomial σ R) : (p * q).degrees ≤ p.degrees + q.degrees := by
-  classical
   simp_rw [degrees_def]
   exact supDegree_mul_le (map_add _)
 
@@ -131,14 +131,14 @@ theorem degrees_prod {ι : Type*} (s : Finset ι) (f : ι → MvPolynomial σ R)
 theorem degrees_pow (p : MvPolynomial σ R) (n : ℕ) : (p ^ n).degrees ≤ n • p.degrees := by
   simpa using degrees_prod (Finset.range n) fun _ ↦ p
 
+open Classical in
 theorem mem_degrees {p : MvPolynomial σ R} {i : σ} :
     i ∈ p.degrees ↔ ∃ d, p.coeff d ≠ 0 ∧ i ∈ d.support := by
-  classical
   simp only [degrees_def, Multiset.mem_sup, ← mem_support_iff, Finsupp.mem_toMultiset, exists_prop]
 
+open Classical in
 theorem le_degrees_add {p q : MvPolynomial σ R} (h : p.degrees.Disjoint q.degrees) :
     p.degrees ≤ (p + q).degrees := by
-  classical
   apply Finset.sup_le
   intro d hd
   rw [Multiset.disjoint_iff_ne] at h
@@ -163,17 +163,17 @@ theorem degrees_add_of_disjoint [DecidableEq σ] {p q : MvPolynomial σ R}
     · rw [add_comm]
       apply le_degrees_add h.symm
 
+open Classical in
 theorem degrees_map [CommSemiring S] (p : MvPolynomial σ R) (f : R →+* S) :
     (map f p).degrees ⊆ p.degrees := by
-  classical
   dsimp only [degrees]
   apply Multiset.subset_of_le
   apply Finset.sup_mono
   apply MvPolynomial.support_map_subset
 
+open Classical in
 theorem degrees_rename (f : σ → τ) (φ : MvPolynomial σ R) :
     (rename f φ).degrees ⊆ φ.degrees.map f := by
-  classical
   intro i
   rw [mem_degrees, Multiset.mem_map]
   rintro ⟨d, hd, hi⟩
@@ -191,9 +191,9 @@ theorem degrees_map_of_injective [CommSemiring S] (p : MvPolynomial σ R) {f : R
     (hf : Injective f) : (map f p).degrees = p.degrees := by
   simp only [degrees, MvPolynomial.support_map_of_injective _ hf]
 
+open Classical in
 theorem degrees_rename_of_injective {p : MvPolynomial σ R} {f : σ → τ} (h : Function.Injective f) :
     degrees (rename f p) = (degrees p).map f := by
-  classical
   simp only [degrees, Multiset.map_finset_sup p.support Finsupp.toMultiset f h,
     support_rename_of_injective h, Finset.sup_image]
   refine Finset.sup_congr rfl fun x _ => ?_
@@ -214,9 +214,9 @@ def degreeOf (n : σ) (p : MvPolynomial σ R) : ℕ :=
 theorem degreeOf_def [DecidableEq σ] (n : σ) (p : MvPolynomial σ R) :
     p.degreeOf n = p.degrees.count n := by rw [degreeOf]; convert rfl
 
+open Classical in
 theorem degreeOf_eq_sup (n : σ) (f : MvPolynomial σ R) :
     degreeOf n f = f.support.sup fun m => m n := by
-  classical
   rw [degreeOf_def, degrees, Multiset.count_finset_sup]
   congr
   ext
@@ -238,9 +238,9 @@ theorem degreeOf_zero (n : σ) : degreeOf n (0 : MvPolynomial σ R) = 0 := by
 theorem degreeOf_C (a : R) (x : σ) : degreeOf x (C a : MvPolynomial σ R) = 0 := by
   classical simp [degreeOf_def, degrees_C]
 
+open Classical in
 theorem degreeOf_X [DecidableEq σ] (i j : σ) [Nontrivial R] :
     degreeOf i (X j : MvPolynomial σ R) = if i = j then 1 else 0 := by
-  classical
   by_cases c : i = j
   · simp only [c, if_true, eq_self_iff_true, degreeOf_def, degrees_X, Multiset.count_singleton]
   simp [c, if_false, degreeOf_def, degrees_X]
@@ -254,17 +254,17 @@ theorem monomial_le_degreeOf (i : σ) {f : MvPolynomial σ R} {m : σ →₀ ℕ
   rw [degreeOf_eq_sup i]
   apply Finset.le_sup h_m
 
+open Classical in
 -- TODO we can prove equality here if R is a domain
 theorem degreeOf_mul_le (i : σ) (f g : MvPolynomial σ R) :
     degreeOf i (f * g) ≤ degreeOf i f + degreeOf i g := by
-  classical
   repeat' rw [degreeOf]
   convert Multiset.count_le_of_le i (degrees_mul f g)
   rw [Multiset.count_add]
 
+open Classical in
 theorem degreeOf_mul_X_ne {i j : σ} (f : MvPolynomial σ R) (h : i ≠ j) :
     degreeOf i (f * X j) = degreeOf i f := by
-  classical
   repeat' rw [degreeOf_eq_sup (R := R) i]
   rw [support_mul_X]
   simp only [Finset.sup_map]
@@ -273,10 +273,10 @@ theorem degreeOf_mul_X_ne {i j : σ} (f : MvPolynomial σ R) (h : i ≠ j) :
   simp only [Finsupp.single, Nat.one_ne_zero, add_right_eq_self, addRightEmbedding_apply, coe_mk,
     Pi.add_apply, comp_apply, ite_eq_right_iff, Finsupp.coe_add, Pi.single_eq_of_ne h]
 
+open Classical in
 -- TODO in the following we have equality iff f ≠ 0
 theorem degreeOf_mul_X_eq (j : σ) (f : MvPolynomial σ R) :
     degreeOf j (f * X j) ≤ degreeOf j f + 1 := by
-  classical
   repeat' rw [degreeOf]
   apply (Multiset.count_le_of_le j (degrees_mul f (X j))).trans
   simp only [Multiset.count_add, add_le_add_iff_left]
@@ -295,9 +295,9 @@ theorem degreeOf_mul_C_le (p : MvPolynomial σ R) (i : σ) (c : R) :
   convert Multiset.count_le_of_le i <| degrees_mul p (C c)
   simp [degrees_C]
 
+open Classical in
 theorem degreeOf_rename_of_injective {p : MvPolynomial σ R} {f : σ → τ} (h : Function.Injective f)
     (i : σ) : degreeOf (f i) (rename f p) = degreeOf i p := by
-  classical
   simp only [degreeOf, degrees_rename_of_injective h, Multiset.count_map_eq_count' f p.degrees h]
 
 end DegreeOf
@@ -321,9 +321,9 @@ theorem le_totalDegree {p : MvPolynomial σ R} {s : σ →₀ ℕ} (h : s ∈ p.
     (s.sum fun _ e => e) ≤ totalDegree p :=
   Finset.le_sup (α := ℕ) (f := fun s => sum s fun _ e => e) h
 
+open Classical in
 theorem totalDegree_le_degrees_card (p : MvPolynomial σ R) :
     p.totalDegree ≤ Multiset.card p.degrees := by
-  classical
   rw [totalDegree_eq]
   exact Finset.sup_le fun s hs => Multiset.card_le_card <| Finset.le_sup hs
 
@@ -353,9 +353,9 @@ theorem totalDegree_add (a b : MvPolynomial σ R) :
     (a + b).totalDegree ≤ max a.totalDegree b.totalDegree :=
   sup_support_add_le _ _ _
 
+open Classical in
 theorem totalDegree_add_eq_left_of_totalDegree_lt {p q : MvPolynomial σ R}
     (h : q.totalDegree < p.totalDegree) : (p + q).totalDegree = p.totalDegree := by
-  classical
     apply le_antisymm
     · rw [← max_eq_left_of_lt h]
       exact totalDegree_add p q
@@ -458,9 +458,9 @@ theorem exists_degree_lt [Fintype σ] (f : MvPolynomial σ R) (n : ℕ)
       rfl
     _ ≤ f.totalDegree := le_totalDegree hd
 
+open Classical in
 theorem coeff_eq_zero_of_totalDegree_lt {f : MvPolynomial σ R} {d : σ →₀ ℕ}
     (h : f.totalDegree < ∑ i ∈ d.support, d i) : coeff d f = 0 := by
-  classical
     rw [totalDegree, Finset.sup_lt_iff] at h
     · specialize h d
       rw [mem_support_iff] at h
@@ -468,10 +468,10 @@ theorem coeff_eq_zero_of_totalDegree_lt {f : MvPolynomial σ R} {d : σ →₀ �
       exact lt_irrefl _
     · exact lt_of_le_of_lt (Nat.zero_le _) h
 
+open Classical in
 theorem totalDegree_rename_le (f : σ → τ) (p : MvPolynomial σ R) :
     (rename f p).totalDegree ≤ p.totalDegree :=
   Finset.sup_le fun b => by
-    classical
     intro h
     rw [rename_eq] at h
     have h' := Finsupp.mapDomain_support h

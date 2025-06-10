@@ -788,6 +788,7 @@ theorem isPrimitiveRoot_iff {k : ℕ} {ζ ξ : R} (h : IsPrimitiveRoot ζ k) (h0
     exact ⟨i, hik, hξ, rfl⟩
   · rintro ⟨i, -, hi, rfl⟩; exact h.pow_of_coprime i hi
 
+open Classical in
 theorem nthRoots_eq {n : ℕ} {ζ : R} (hζ : IsPrimitiveRoot ζ n)
     {α a : R} (e : α ^ n = a) :
     nthRoots n a = (Multiset.range n).map (ζ ^ · * α) := by
@@ -796,7 +797,6 @@ theorem nthRoots_eq {n : ℕ} {ζ : R} (hζ : IsPrimitiveRoot ζ n)
   · rw [hα, zero_pow hn.ne'] at e
     simp only [hα, e.symm, nthRoots_zero_right, mul_zero,
       Finset.range_val, Multiset.map_const', Multiset.card_range]
-  classical
   symm; apply Multiset.eq_of_le_of_card_le
   · rw [← Finset.range_val,
       ← Finset.image_val_of_injOn (hζ.injOn_pow_mul hα), Finset.val_le_iff_val_subset]

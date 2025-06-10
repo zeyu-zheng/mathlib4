@@ -41,8 +41,8 @@ lemma support_prod_subset (s : Finset ι) (f : ι → κ → M₀) :
 
 variable [Nontrivial M₀] [NoZeroDivisors M₀]
 
+open Classical in
 lemma prod_eq_zero_iff : ∏ x ∈ s, f x = 0 ↔ ∃ a ∈ s, f a = 0 := by
-  classical
     induction' s using Finset.induction_on with a s ha ih
     · exact ⟨Not.elim one_ne_zero, fun ⟨_, H, _⟩ => by simp at H⟩
     · rw [prod_insert ha, mul_eq_zero, exists_mem_insert, ih]

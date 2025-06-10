@@ -60,12 +60,12 @@ theorem tendstoUniformly_tsum_nat {f : ℕ → β → F} {u : ℕ → ℝ} (hu :
       atTop :=
   fun v hv => tendsto_finset_range.eventually (tendstoUniformly_tsum hu hfu v hv)
 
+open Classical in
 /-- An infinite sum of functions with summable sup norm is continuous on a set if each individual
 function is. -/
 theorem continuousOn_tsum [TopologicalSpace β] {f : α → β → F} {s : Set β}
     (hf : ∀ i, ContinuousOn (f i) s) (hu : Summable u) (hfu : ∀ n x, x ∈ s → ‖f n x‖ ≤ u n) :
     ContinuousOn (fun x => ∑' n, f n x) s := by
-  classical
     refine (tendstoUniformlyOn_tsum hu hfu).continuousOn (eventually_of_forall ?_)
     intro t
     exact continuousOn_finset_sum _ fun i _ => hf i

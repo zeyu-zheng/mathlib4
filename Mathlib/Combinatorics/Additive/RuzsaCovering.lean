@@ -56,6 +56,7 @@ end Finset
 namespace Set
 variable {α : Type*} [CommGroup α] {s t : Set α}
 
+open Classical in
 /-- **Ruzsa's covering lemma** for sets. See also `Finset.exists_subset_mul_div`. -/
 @[to_additive "**Ruzsa's covering lemma**. Version for sets. For finsets,
 see `Finset.exists_subset_add_sub`."]
@@ -63,7 +64,6 @@ lemma exists_subset_mul_div (hs : s.Finite) (ht' : t.Finite) (ht : t.Nonempty) :
     ∃ u : Set α, Nat.card u * Nat.card t ≤ Nat.card (s * t) ∧ s ⊆ u * t / t ∧ u.Finite := by
   lift s to Finset α using hs
   lift t to Finset α using ht'
-  classical
   obtain ⟨u, hu, hsut⟩ := Finset.exists_subset_mul_div s ht
   refine ⟨u, ?_⟩
   -- `norm_cast` would find these automatically, but breaks `to_additive` when it does so

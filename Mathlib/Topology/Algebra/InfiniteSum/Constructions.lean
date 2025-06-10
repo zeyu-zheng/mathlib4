@@ -77,10 +77,10 @@ section RegularSpace
 
 variable [RegularSpace α]
 
+open Classical in
 @[to_additive]
 theorem HasProd.sigma {γ : β → Type*} {f : (Σ b : β, γ b) → α} {g : β → α} {a : α}
     (ha : HasProd f a) (hf : ∀ b, HasProd (fun c ↦ f ⟨b, c⟩) (g b)) : HasProd g a := by
-  classical
   refine (atTop_basis.tendsto_iff (closed_nhds_basis a)).mpr ?_
   rintro s ⟨hs, hsc⟩
   rcases mem_atTop_sets.mp (ha hs) with ⟨u, hu⟩

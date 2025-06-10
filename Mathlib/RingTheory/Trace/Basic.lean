@@ -165,10 +165,10 @@ lemma Algebra.trace_eq_of_algEquiv {A B C : Type*} [CommRing A] [CommRing B] [Co
   simp_rw [Algebra.trace_apply, ← LinearMap.trace_conj' _ e.toLinearEquiv]
   congr; ext; simp [LinearEquiv.conj_apply]
 
+open Classical in
 lemma Algebra.trace_eq_of_ringEquiv {A B C : Type*} [CommRing A] [CommRing B] [CommRing C]
     [Algebra A C] [Algebra B C] (e : A ≃+* B) (he : (algebraMap B C).comp e = algebraMap A C) (x) :
     e (Algebra.trace A C x) = Algebra.trace B C x := by
-  classical
   by_cases h : ∃ s : Finset C, Nonempty (Basis s B C)
   · obtain ⟨s, ⟨b⟩⟩ := h
     letI : Algebra A B := RingHom.toAlgebra e
@@ -466,6 +466,7 @@ theorem Algebra.trace_surjective [FiniteDimensional K L] [Algebra.IsSeparable K 
 
 variable {K L}
 
+open Classical in
 /--
 The dual basis of a powerbasis `{1, x, x²...}` under the trace form is `aᵢ / f'(x)`,
 with `f` being the minimal polynomial of `x` and `f / (X - x) = ∑ aᵢxⁱ`.
@@ -474,7 +475,6 @@ lemma traceForm_dualBasis_powerBasis_eq [FiniteDimensional K L] [Algebra.IsSepar
     (pb : PowerBasis K L) (i) :
     (Algebra.traceForm K L).dualBasis (traceForm_nondegenerate K L) pb.basis i =
       (minpolyDiv K pb.gen).coeff i / aeval pb.gen (derivative <| minpoly K pb.gen) := by
-  classical
   apply ((Algebra.traceForm K L).toDual (traceForm_nondegenerate K L)).injective
   apply pb.basis.ext
   intro j

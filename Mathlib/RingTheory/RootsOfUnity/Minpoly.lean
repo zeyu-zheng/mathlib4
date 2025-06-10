@@ -103,12 +103,12 @@ theorem minpoly_dvd_mod_p {p : ℕ} [Fact p.Prime] (hdiv : ¬p ∣ n) :
       map (Int.castRingHom (ZMod p)) (minpoly ℤ (μ ^ p)) :=
   (squarefree_minpoly_mod h hdiv).isRadical _ _ (minpoly_dvd_pow_mod h hdiv)
 
+open Classical in
 /-- If `p` is a prime that does not divide `n`,
 then the minimal polynomials of a primitive `n`-th root of unity `μ`
 and of `μ ^ p` are the same. -/
 theorem minpoly_eq_pow {p : ℕ} [hprime : Fact p.Prime] (hdiv : ¬p ∣ n) :
     minpoly ℤ μ = minpoly ℤ (μ ^ p) := by
-  classical
   by_cases hn : n = 0
   · simp_all
   have hpos := Nat.pos_of_ne_zero hn
@@ -203,9 +203,9 @@ theorem is_roots_of_minpoly [DecidableEq K] :
   rw [← mem_roots]
   exact map_monic_ne_zero <| minpoly.monic <| isIntegral h hpos
 
+open Classical in
 /-- The degree of the minimal polynomial of `μ` is at least `totient n`. -/
 theorem totient_le_degree_minpoly : Nat.totient n ≤ (minpoly ℤ μ).natDegree := by
-  classical
   let P : ℤ[X] := minpoly ℤ μ
   -- minimal polynomial of `μ`
   let P_K : K[X] := map (Int.castRingHom K) P

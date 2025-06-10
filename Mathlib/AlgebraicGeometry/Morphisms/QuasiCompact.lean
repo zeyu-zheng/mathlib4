@@ -86,9 +86,9 @@ theorem quasiCompact_iff_forall_affine :
   simp only [Set.preimage_iUnion]
   exact Set.Finite.isCompact_biUnion hS (fun i _ => H i i.prop)
 
+open Classical in
 theorem isCompact_basicOpen (X : Scheme) {U : X.Opens} (hU : IsCompact (U : Set X))
     (f : Γ(X, U)) : IsCompact (X.basicOpen f : Set X) := by
-  classical
   refine ((isCompactOpen_iff_eq_finset_affine_union _).mpr ?_).1
   obtain ⟨s, hs, e⟩ := (isCompactOpen_iff_eq_finset_affine_union _).mp ⟨hU, U.isOpen⟩
   let g : s → X.affineOpens := by
@@ -178,12 +178,12 @@ instance (f : X ⟶ Z) (g : Y ⟶ Z) [QuasiCompact g] : QuasiCompact (pullback.f
 instance (f : X ⟶ Z) (g : Y ⟶ Z) [QuasiCompact f] : QuasiCompact (pullback.snd f g) :=
   quasiCompact_stableUnderBaseChange.snd f g inferInstance
 
+open Classical in
 @[elab_as_elim]
 theorem compact_open_induction_on {P : X.Opens → Prop} (S : X.Opens)
     (hS : IsCompact S.1) (h₁ : P ⊥)
     (h₂ : ∀ (S : X.Opens) (_ : IsCompact S.1) (U : X.affineOpens), P S → P (S ⊔ U)) :
     P S := by
-  classical
   obtain ⟨s, hs, hs'⟩ := (isCompactOpen_iff_eq_finset_affine_union S.1).mp ⟨hS, S.2⟩
   replace hs' : S = iSup fun i : s => (i : X.Opens) := by ext1; simpa using hs'
   subst hs'

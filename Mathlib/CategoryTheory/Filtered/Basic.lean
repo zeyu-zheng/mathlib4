@@ -218,10 +218,10 @@ open CategoryTheory.Limits
 variable {C}
 variable [IsFiltered C]
 
+open Classical in
 /-- Any finite collection of objects in a filtered category has an object "to the right".
 -/
 theorem sup_objs_exists (O : Finset C) : ∃ S : C, ∀ {X}, X ∈ O → Nonempty (X ⟶ S) := by
-  classical
   induction' O using Finset.induction with X O' nm h
   · exact ⟨Classical.choice IsFiltered.nonempty, by intro; simp⟩
   · obtain ⟨S', w'⟩ := h
@@ -233,6 +233,7 @@ theorem sup_objs_exists (O : Finset C) : ∃ S : C, ∀ {X}, X ∈ O → Nonempt
 
 variable (O : Finset C) (H : Finset (Σ' (X Y : C) (_ : X ∈ O) (_ : Y ∈ O), X ⟶ Y))
 
+open Classical in
 /-- Given any `Finset` of objects `{X, ...}` and
 indexed collection of `Finset`s of morphisms `{f, ...}` in `C`,
 there exists an object `S`, with a morphism `T X : X ⟶ S` from each `X`,
@@ -243,7 +244,6 @@ theorem sup_exists :
       ∀ {X Y : C} (mX : X ∈ O) (mY : Y ∈ O) {f : X ⟶ Y},
         (⟨X, Y, mX, mY, f⟩ : Σ' (X Y : C) (_ : X ∈ O) (_ : Y ∈ O), X ⟶ Y) ∈ H →
           f ≫ T mY = T mX := by
-  classical
   induction' H using Finset.induction with h' H' nmf h''
   · obtain ⟨S, f⟩ := sup_objs_exists O
     exact ⟨S, fun mX => (f mX).some, by rintro - - - - - ⟨⟩⟩
@@ -290,11 +290,11 @@ theorem toSup_commutes {X Y : C} (mX : X ∈ O) (mY : Y ∈ O) {f : X ⟶ Y}
 
 variable {J : Type w} [SmallCategory J] [FinCategory J]
 
+open Classical in
 /-- If we have `IsFiltered C`, then for any functor `F : J ⥤ C` with `FinCategory J`,
 there exists a cocone over `F`.
 -/
 theorem cocone_nonempty (F : J ⥤ C) : Nonempty (Cocone F) := by
-  classical
   let O := Finset.univ.image F.obj
   let H : Finset (Σ' (X Y : C) (_ : X ∈ O) (_ : Y ∈ O), X ⟶ Y) :=
     Finset.univ.biUnion   fun X : J =>
@@ -665,10 +665,10 @@ open CategoryTheory.Limits
 variable {C}
 variable [IsCofiltered C]
 
+open Classical in
 /-- Any finite collection of objects in a cofiltered category has an object "to the left".
 -/
 theorem inf_objs_exists (O : Finset C) : ∃ S : C, ∀ {X}, X ∈ O → Nonempty (S ⟶ X) := by
-  classical
   induction' O using Finset.induction with X O' nm h
   · exact ⟨Classical.choice IsCofiltered.nonempty, by intro; simp⟩
   · obtain ⟨S', w'⟩ := h
@@ -680,6 +680,7 @@ theorem inf_objs_exists (O : Finset C) : ∃ S : C, ∀ {X}, X ∈ O → Nonempt
 
 variable (O : Finset C) (H : Finset (Σ' (X Y : C) (_ : X ∈ O) (_ : Y ∈ O), X ⟶ Y))
 
+open Classical in
 /-- Given any `Finset` of objects `{X, ...}` and
 indexed collection of `Finset`s of morphisms `{f, ...}` in `C`,
 there exists an object `S`, with a morphism `T X : S ⟶ X` from each `X`,
@@ -690,7 +691,6 @@ theorem inf_exists :
       ∀ {X Y : C} (mX : X ∈ O) (mY : Y ∈ O) {f : X ⟶ Y},
         (⟨X, Y, mX, mY, f⟩ : Σ' (X Y : C) (_ : X ∈ O) (_ : Y ∈ O), X ⟶ Y) ∈ H →
           T mX ≫ f = T mY := by
-  classical
   induction' H using Finset.induction with h' H' nmf h''
   · obtain ⟨S, f⟩ := inf_objs_exists O
     exact ⟨S, fun mX => (f mX).some, by rintro - - - - - ⟨⟩⟩
@@ -737,11 +737,11 @@ theorem infTo_commutes {X Y : C} (mX : X ∈ O) (mY : Y ∈ O) {f : X ⟶ Y}
 
 variable {J : Type w} [SmallCategory J] [FinCategory J]
 
+open Classical in
 /-- If we have `IsCofiltered C`, then for any functor `F : J ⥤ C` with `FinCategory J`,
 there exists a cone over `F`.
 -/
 theorem cone_nonempty (F : J ⥤ C) : Nonempty (Cone F) := by
-  classical
   let O := Finset.univ.image F.obj
   let H : Finset (Σ' (X Y : C) (_ : X ∈ O) (_ : Y ∈ O), X ⟶ Y) :=
     Finset.univ.biUnion fun X : J =>

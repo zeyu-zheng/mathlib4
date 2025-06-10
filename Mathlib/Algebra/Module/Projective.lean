@@ -132,9 +132,9 @@ instance [Projective R P] [Projective R Q] : Projective R (P × Q) := by
 
 variable {ι : Type*} (A : ι → Type*) [∀ i : ι, AddCommMonoid (A i)] [∀ i : ι, Module R (A i)]
 
+open Classical in
 instance [h : ∀ i : ι, Projective R (A i)] : Projective R (Π₀ i, A i) :=
   .of_lifting_property'' fun f hf ↦ by
-    classical
       choose g hg using fun i ↦ projective_lifting_property f (DFinsupp.lsingle i) hf
       replace hg : ∀ i x, f (g i x) = DFinsupp.single i x := fun i ↦ DFunLike.congr_fun (hg i)
       refine ⟨DFinsupp.coprodMap g, ?_⟩

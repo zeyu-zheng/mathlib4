@@ -1607,6 +1607,7 @@ theorem tendsto_atBot_of_monotone_of_subseq [Preorder ι] [Preorder α] {u : ι 
     Tendsto u atBot atBot :=
   tendsto_atBot_of_monotone_of_filter h (tendsto_map' H)
 
+open Classical in
 /-- Let `f` and `g` be two maps to the same commutative monoid. This lemma gives a sufficient
 condition for comparison of the filter `atTop.map (fun s ↦ ∏ b ∈ s, f b)` with
 `atTop.map (fun s ↦ ∏ b ∈ s, g b)`. This is useful to compare the set of limit points of
@@ -1620,7 +1621,6 @@ theorem map_atTop_finset_prod_le_of_prod_eq [CommMonoid α] {f : β → α} {g :
       ∃ v : Finset β, ∀ v', v ⊆ v' → ∃ u', u ⊆ u' ∧ ∏ x ∈ u', g x = ∏ b ∈ v', f b) :
     (atTop.map fun s : Finset β => ∏ b ∈ s, f b) ≤
       atTop.map fun s : Finset γ => ∏ x ∈ s, g x := by
-  classical
     refine ((atTop_basis.map _).le_basis_iff (atTop_basis.map _)).2 fun b _ => ?_
     let ⟨v, hv⟩ := h_eq b
     refine ⟨v, trivial, ?_⟩
@@ -1788,11 +1788,11 @@ theorem Monotone.piecewise_eventually_eq_iUnion {β : α → Type*} [Preorder ι
     simp only [Set.piecewise_eq_of_not_mem, not_exists.1 ha i, mt mem_iUnion.1 ha,
       not_false_eq_true, exists_false]
 
+open Classical in
 theorem Antitone.piecewise_eventually_eq_iInter {β : α → Type*} [Preorder ι] {s : ι → Set α}
     [∀ i, DecidablePred (· ∈ s i)] [DecidablePred (· ∈ ⋂ i, s i)]
     (hs : Antitone s) (f g : (a : α) → β a) (a : α) :
     ∀ᶠ i in atTop, (s i).piecewise f g a = (⋂ i, s i).piecewise f g a := by
-  classical
   convert ← (compl_anti.comp hs).piecewise_eventually_eq_iUnion g f a using 3
   · convert congr_fun (Set.piecewise_compl (s _) g f) a
   · simp only [(· ∘ ·), ← compl_iInter, Set.piecewise_compl]

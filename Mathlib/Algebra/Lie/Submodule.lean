@@ -424,6 +424,7 @@ instance : Sup (LieSubmodule R L M) where
         obtain ⟨y, hy, z, hz, rfl⟩ := hm
         exact ⟨⁅x, y⁆, N.lie_mem hy, ⁅x, z⁆, N'.lie_mem hz, (lie_add _ _ _).symm⟩ }
 
+open Classical in
 instance : SupSet (LieSubmodule R L M) where
   sSup S :=
     { toSubmodule := sSup {(p : Submodule R M) | p ∈ S}
@@ -432,7 +433,6 @@ instance : SupSet (LieSubmodule R L M) where
         change ⁅x, m⁆ ∈ sSup {(p : Submodule R M) | p ∈ S}
         obtain ⟨s, hs, hsm⟩ := Submodule.mem_sSup_iff_exists_finset.mp hm
         clear hm
-        classical
         induction' s using Finset.induction_on with q t hqt ih generalizing m
         · replace hsm : m = 0 := by simpa using hsm
           simp [hsm]

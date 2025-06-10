@@ -298,11 +298,11 @@ namespace UniqueProds
 
 open Finset
 
+open Classical in
 @[to_additive] theorem of_mulHom (f : H →ₙ* G)
     (hf : ∀ ⦃a b c d : H⦄, a * b = c * d → f a = f c ∧ f b = f d → a = c ∧ b = d)
     [UniqueProds G] : UniqueProds H where
   uniqueMul_of_nonempty {A B} A0 B0 := by
-    classical
     obtain ⟨a0, ha0, b0, hb0, h⟩ := uniqueMul_of_nonempty (A0.image f) (B0.image f)
     obtain ⟨a', ha', rfl⟩ := mem_image.mp ha0
     obtain ⟨b', hb', rfl⟩ := mem_image.mp hb0
@@ -328,9 +328,9 @@ theorem of_mulOpposite (h : UniqueProds Gᵐᵒᵖ) : UniqueProds G where
 @[to_additive] instance [h : UniqueProds G] : UniqueProds Gᵐᵒᵖ :=
   of_mulOpposite <| (MulEquiv.opOp G).uniqueProds_iff.mp h
 
+open Classical in
 @[to_additive] private theorem toIsLeftCancelMul [UniqueProds G] : IsLeftCancelMul G where
   mul_left_cancel a b1 b2 he := by
-    classical
     have := mem_insert_self b1 {b2}
     obtain ⟨a, ha, b, hb, hu⟩ := uniqueMul_of_nonempty ⟨a, mem_singleton_self a⟩ ⟨b1, this⟩
     cases mem_singleton.mp ha
@@ -347,6 +347,7 @@ open MulOpposite in
 
 /-! Two theorems in [Andrzej Strojnowski, *A note on u.p. groups*][Strojnowski1980] -/
 
+open Classical in
 /-- `UniqueProds G` says that for any two nonempty `Finset`s `A` and `B` in `G`, `A × B`
   contains a unique pair with the `UniqueMul` property. Strojnowski showed that if `G` is
   a group, then we only need to check this when `A = B`.
@@ -356,7 +357,6 @@ open MulOpposite in
     (h : ∀ {A : Finset G}, A.Nonempty → ∃ a1 ∈ A, ∃ a2 ∈ A, UniqueMul A A a1 a2) :
     UniqueProds G where
   uniqueMul_of_nonempty {A B} hA hB := by
-    classical
     obtain ⟨g1, h1, g2, h2, hu⟩ := h (hB.mul hA)
     obtain ⟨b1, hb1, a1, ha1, rfl⟩ := mem_mul.mp h1
     obtain ⟨b2, hb2, a2, ha2, rfl⟩ := mem_mul.mp h2
@@ -365,6 +365,7 @@ open MulOpposite in
     · rw [mul_assoc b1, ← mul_assoc a, he, mul_assoc a1, ← mul_assoc b1]
     exact ⟨mul_left_cancel hu.1, mul_right_cancel hu.2⟩
 
+open Classical in
 /-- If a group has `UniqueProds`, then it actually has `TwoUniqueProds`.
   For an example of a semigroup `G` embeddable into a group that has `UniqueProds`
   but not `TwoUniqueProds`, see Example 10.13 in
@@ -392,7 +393,6 @@ open MulOpposite in
       simp_rw [Function.Embedding.coeFn_mk, mul_left_cancel_iff, mul_right_cancel_iff] at hu'
       rw [mul_assoc, ← mul_assoc a', he, mul_assoc, mul_assoc] at hu'
       exact hu' rfl
-    classical
     let _ := Finset.mul (α := G)              -- E = D⁻¹C, F = DC⁻¹
     have := uniqueMul_of_nonempty (A := D.image (·⁻¹) * C) (B := D * C.image (·⁻¹)) ?_ ?_
     · obtain ⟨e, he, f, hf, hu⟩ := this
@@ -420,11 +420,11 @@ open MulOpposite in
         simpa using hu ⟨_, ⟨_, hd, rfl⟩, _, hC, rfl⟩ ⟨_, hd, _, ⟨_, hC, rfl⟩, rfl⟩
     all_goals apply_rules [Nonempty.mul, Nonempty.image, Finset.Nonempty.map, hc.1, hc.2.1]
 
+open Classical in
 open UniqueMul in
 @[to_additive] instance instForall {ι} (G : ι → Type*) [∀ i, Mul (G i)] [∀ i, UniqueProds (G i)] :
     UniqueProds (∀ i, G i) where
   uniqueMul_of_nonempty {A} := by
-    classical
     let _ := isWellFounded_ssubset (α := ∀ i, G i) -- why need this?
     apply IsWellFounded.induction (· ⊂ ·) A; intro A ihA B hA
     apply IsWellFounded.induction (· ⊂ ·) B; intro B ihB hB
@@ -468,11 +468,11 @@ namespace TwoUniqueProds
 
 open Finset
 
+open Classical in
 @[to_additive] theorem of_mulHom (f : H →ₙ* G)
     (hf : ∀ ⦃a b c d : H⦄, a * b = c * d → f a = f c ∧ f b = f d → a = c ∧ b = d)
     [TwoUniqueProds G] : TwoUniqueProds H where
   uniqueMul_of_one_lt_card {A B} hc := by
-    classical
     obtain hc' | hc' := lt_or_le 1 ((A.image f).card * (B.image f).card)
     · obtain ⟨⟨a1, b1⟩, h1, ⟨a2, b2⟩, h2, hne, hu1, hu2⟩ := uniqueMul_of_one_lt_card hc'
       simp_rw [mem_product, mem_image] at h1 h2 ⊢
@@ -498,11 +498,11 @@ theorem of_injective_mulHom (f : H →ₙ* G) (hf : Function.Injective f)
 theorem _root_.MulEquiv.twoUniqueProds_iff (f : G ≃* H) : TwoUniqueProds G ↔ TwoUniqueProds H :=
   ⟨of_injective_mulHom f.symm f.symm.injective, of_injective_mulHom f f.injective⟩
 
+open Classical in
 @[to_additive]
 instance instForall {ι} (G : ι → Type*) [∀ i, Mul (G i)] [∀ i, TwoUniqueProds (G i)] :
     TwoUniqueProds (∀ i, G i) where
   uniqueMul_of_one_lt_card {A} := by
-    classical
     let _ := isWellFounded_ssubset (α := ∀ i, G i) -- why need this?
     apply IsWellFounded.induction (· ⊂ ·) A; intro A ihA B
     apply IsWellFounded.induction (· ⊂ ·) B; intro B ihB hc

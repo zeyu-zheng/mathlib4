@@ -44,10 +44,10 @@ theorem lex_def {r : ι → ι → Prop} {s : ∀ i, α i → α i → Prop} {a 
 instance [LT ι] [∀ i, LT (α i)] : LT (Lex (Π₀ i, α i)) :=
   ⟨fun f g ↦ DFinsupp.Lex (· < ·) (fun _ ↦ (· < ·)) (ofLex f) (ofLex g)⟩
 
+open Classical in
 theorem lex_lt_of_lt_of_preorder [∀ i, Preorder (α i)] (r) [IsStrictOrder ι r] {x y : Π₀ i, α i}
     (hlt : x < y) : ∃ i, (∀ j, r j i → x j ≤ y j ∧ y j ≤ x j) ∧ x i < y i := by
   obtain ⟨hle, j, hlt⟩ := Pi.lt_def.1 hlt
-  classical
   have : (x.neLocus y : Set ι).WellFoundedOn r := (x.neLocus y).finite_toSet.wellFoundedOn
   obtain ⟨i, hi, hl⟩ := this.has_min { i | x i < y i } ⟨⟨j, mem_neLocus.2 hlt.ne⟩, hlt⟩
   refine ⟨i, fun k hk ↦ ⟨hle k, ?_⟩, hi⟩
@@ -119,10 +119,10 @@ end LinearOrder
 
 variable [∀ i, PartialOrder (α i)]
 
+open Classical in
 theorem toLex_monotone : Monotone (@toLex (Π₀ i, α i)) := by
   intro a b h
   refine le_of_lt_or_eq (or_iff_not_imp_right.2 fun hne ↦ ?_)
-  classical
   exact ⟨Finset.min' _ (nonempty_neLocus_iff.2 hne),
     fun j hj ↦ not_mem_neLocus.1 fun h ↦ (Finset.min'_le _ _ h).not_lt hj,
     (h _).lt_of_ne (mem_neLocus.1 <| Finset.min'_mem _ _)⟩

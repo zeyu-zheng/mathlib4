@@ -145,10 +145,10 @@ lemma rank_eq_card_non_zero_eigs : A.rank = Fintype.card {i // hA.eigenvalues i 
 
 end DecidableEq
 
+open Classical in
 /-- A nonzero Hermitian matrix has an eigenvector with nonzero eigenvalue. -/
 lemma exists_eigenvector_of_ne_zero (hA : IsHermitian A) (h_ne : A ≠ 0) :
     ∃ (v : n → 𝕜) (t : ℝ), t ≠ 0 ∧ v ≠ 0 ∧ A *ᵥ v = t • v := by
-  classical
   have : hA.eigenvalues ≠ 0
   contrapose! h_ne
   have := hA.spectral_theorem

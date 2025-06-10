@@ -196,6 +196,7 @@ theorem sublist_iff_exists_fin_orderEmbedding_get_eq {l l' : List α} :
         · simp
         · simpa using hi
 
+open Classical in
 /-- An element `x : α` of `l : List α` is a duplicate iff it can be found
 at two distinct indices `n m : ℕ` inside the list `l`.
 -/
@@ -203,7 +204,6 @@ theorem duplicate_iff_exists_distinct_get {l : List α} {x : α} :
     l.Duplicate x ↔
       ∃ (n m : Fin l.length) (_ : n < m),
         x = l.get n ∧ x = l.get m := by
-  classical
     rw [duplicate_iff_two_le_count, le_count_iff_replicate_sublist,
       sublist_iff_exists_fin_orderEmbedding_get_eq]
     constructor

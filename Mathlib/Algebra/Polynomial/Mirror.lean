@@ -41,8 +41,8 @@ noncomputable def mirror :=
 @[simp]
 theorem mirror_zero : (0 : R[X]).mirror = 0 := by simp [mirror]
 
+open Classical in
 theorem mirror_monomial (n : ℕ) (a : R) : (monomial n a).mirror = monomial n a := by
-  classical
     by_cases ha : a = 0
     · rw [ha, monomial_zero_right, mirror_zero]
     · rw [mirror, reverse, natDegree_monomial n a, if_neg ha, natTrailingDegree_monomial ha, ←

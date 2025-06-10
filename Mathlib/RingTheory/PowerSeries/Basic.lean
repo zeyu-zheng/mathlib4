@@ -659,9 +659,9 @@ section Domain
 
 variable [Ring R]
 
+open Classical in
 theorem eq_zero_or_eq_zero_of_mul_eq_zero [NoZeroDivisors R] (φ ψ : R⟦X⟧) (h : φ * ψ = 0) :
     φ = 0 ∨ ψ = 0 := by
-  classical
   rw [or_iff_not_imp_left]
   intro H
   have ex : ∃ m, coeff R m φ ≠ 0

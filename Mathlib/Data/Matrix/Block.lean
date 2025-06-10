@@ -823,10 +823,10 @@ theorem toBlock_mul_eq_mul {m n k : Type*} [Fintype n] (p : m → Prop) (q : k �
   rw [Finset.sum_subtype]
   simp [Pi.top_apply, Prop.top_eq_true]
 
+open Classical in
 theorem toBlock_mul_eq_add {m n k : Type*} [Fintype n] (p : m → Prop) (q : n → Prop)
     [DecidablePred q] (r : k → Prop) (A : Matrix m n R) (B : Matrix n k R) : (A * B).toBlock p r =
     A.toBlock p q * B.toBlock q r + (A.toBlock p fun i => ¬q i) * B.toBlock (fun i => ¬q i) r := by
-  classical
     ext i k
     simp only [toBlock_apply, mul_apply, Pi.add_apply]
     exact (Fintype.sum_subtype_add_sum_subtype q fun x => A (↑i) x * B x ↑k).symm

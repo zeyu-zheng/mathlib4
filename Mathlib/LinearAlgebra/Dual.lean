@@ -434,10 +434,10 @@ theorem eval_ker {ι : Type*} (b : Basis ι R M) :
   simp_rw [LinearMap.ext_iff, Dual.eval_apply, zero_apply] at hm
   exact (Basis.forall_coord_eq_zero_iff _).mp fun i => hm (b.coord i)
 
+open Classical in
 -- Porting note (#11036): broken dot notation lean4#1910 LinearMap.range
 theorem eval_range {ι : Type*} [Finite ι] (b : Basis ι R M) :
     LinearMap.range (Dual.eval R M) = ⊤ := by
-  classical
     cases nonempty_fintype ι
     rw [← b.toDual_toDual, range_comp, b.toDual_range, Submodule.map_top, toDual_range _]
 
@@ -532,12 +532,12 @@ theorem nontrivial_dual_iff :
 instance instNontrivialDual [Nontrivial V] : Nontrivial (Dual K V) :=
   (nontrivial_dual_iff K).mpr inferInstance
 
+open Classical in
 theorem finite_dual_iff : Finite K (Dual K V) ↔ Finite K V := by
   constructor <;> intro h
   · obtain ⟨⟨ι, b⟩⟩ := Module.Free.exists_basis (R := K) (M := V)
     nontriviality K
     obtain ⟨⟨s, span_s⟩⟩ := h
-    classical
     haveI := (b.linearIndependent.map' _ b.toDual_ker).finite_of_le_span_finite _ s ?_
     · exact Finite.of_basis b
     · rw [span_s]; apply le_top

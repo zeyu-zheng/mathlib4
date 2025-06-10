@@ -191,12 +191,12 @@ end Falling
 
 variable {𝒜 : Finset (Finset α)} {s : Finset α} {k : ℕ}
 
+open Classical in
 /-- The **Lubell-Yamamoto-Meshalkin inequality**. If `𝒜` is an antichain, then the sum of the
 proportion of elements it takes from each layer is less than `1`. -/
 theorem sum_card_slice_div_choose_le_one [Fintype α]
     (h𝒜 : IsAntichain (· ⊆ ·) (𝒜 : Set (Finset α))) :
     (∑ r ∈ range (Fintype.card α + 1), ((𝒜 # r).card : 𝕜) / (Fintype.card α).choose r) ≤ 1 := by
-  classical
     rw [← sum_flip]
     refine (le_card_falling_div_choose le_rfl h𝒜).trans ?_
     rw [div_le_iff] <;> norm_cast
@@ -210,12 +210,12 @@ end LYM
 /-! ### Sperner's theorem -/
 
 
+open Classical in
 /-- **Sperner's theorem**. The size of an antichain in `Finset α` is bounded by the size of the
 maximal layer in `Finset α`. This precisely means that `Finset α` is a Sperner order. -/
 theorem IsAntichain.sperner [Fintype α] {𝒜 : Finset (Finset α)}
     (h𝒜 : IsAntichain (· ⊆ ·) (𝒜 : Set (Finset α))) :
     𝒜.card ≤ (Fintype.card α).choose (Fintype.card α / 2) := by
-  classical
     suffices (∑ r ∈ Iic (Fintype.card α),
         ((𝒜 # r).card : ℚ) / (Fintype.card α).choose (Fintype.card α / 2)) ≤ 1 by
       rw [← sum_div, ← Nat.cast_sum, div_le_one] at this

@@ -59,12 +59,12 @@ lemma compProd_apply [SFinite μ] [IsSFiniteKernel κ] {s : Set (α × β)} (hs 
   simp_rw [compProd, Kernel.compProd_apply _ _ _ hs, Kernel.const_apply, Kernel.prodMkLeft_apply']
   rfl
 
+open Classical in
 lemma compProd_apply_prod [SFinite μ] [IsSFiniteKernel κ]
     {s : Set α} {t : Set β} (hs : MeasurableSet s) (ht : MeasurableSet t) :
     (μ ⊗ₘ κ) (s ×ˢ t) = ∫⁻ a in s, κ a t ∂μ := by
   rw [compProd_apply (hs.prod ht), ← lintegral_indicator _ hs]
   congr with a
-  classical
   rw [Set.indicator_apply]
   split_ifs with ha <;> simp [ha]
 

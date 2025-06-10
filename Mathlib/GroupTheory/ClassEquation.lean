@@ -35,19 +35,19 @@ theorem sum_conjClasses_card_eq_card [Fintype <| ConjClasses G] [Fintype G]
   suffices (Σ x : ConjClasses G, x.carrier) ≃ G by simpa using (Fintype.card_congr this)
   simpa [carrier_eq_preimage_mk] using Equiv.sigmaFiberEquiv ConjClasses.mk
 
+open Classical in
 /-- Conjugacy classes form a partition of G, stated in terms of cardinality. -/
 theorem Group.sum_card_conj_classes_eq_card [Finite G] :
     ∑ᶠ x : ConjClasses G, x.carrier.ncard = Nat.card G := by
-  classical
   cases nonempty_fintype G
   rw [Nat.card_eq_fintype_card, ← sum_conjClasses_card_eq_card, finsum_eq_sum_of_fintype]
   simp [Set.ncard_eq_toFinset_card']
 
+open Classical in
 /-- The **class equation** for finite groups. The cardinality of a group is equal to the size
 of its center plus the sum of the size of all its nontrivial conjugacy classes. -/
 theorem Group.nat_card_center_add_sum_card_noncenter_eq_card [Finite G] :
     Nat.card (Subgroup.center G) + ∑ᶠ x ∈ noncenter G, Nat.card x.carrier = Nat.card G := by
-  classical
   cases nonempty_fintype G
   rw [@Nat.card_eq_fintype_card G, ← sum_conjClasses_card_eq_card, ←
     Finset.sum_sdiff (ConjClasses.noncenter G).toFinset.subset_univ]

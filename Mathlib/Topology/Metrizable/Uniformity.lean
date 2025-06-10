@@ -177,13 +177,13 @@ theorem le_two_mul_dist_ofPreNNDist (d : X → X → ℝ≥0) (dist_self : ∀ x
 
 end PseudoMetricSpace
 
+open Classical in
 -- Porting note (#11083): this is slower than in Lean3 for some reason...
 /-- If `X` is a uniform space with countably generated uniformity filter, there exists a
 `PseudoMetricSpace` structure compatible with the `UniformSpace` structure. Use
 `UniformSpace.pseudoMetricSpace` or `UniformSpace.metricSpace` instead. -/
 protected theorem UniformSpace.metrizable_uniformity (X : Type*) [UniformSpace X]
     [IsCountablyGenerated (𝓤 X)] : ∃ I : PseudoMetricSpace X, I.toUniformSpace = ‹_› := by
-  classical
   /- Choose a fast decreasing antitone basis `U : ℕ → set (X × X)` of the uniformity filter `𝓤 X`.
     Define `d x y : ℝ≥0` to be `(1 / 2) ^ n`, where `n` is the minimal index of `U n` that
     separates `x` and `y`: `(x, y) ∉ U n`, or `0` if `x` is not separated from `y`. This function

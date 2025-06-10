@@ -59,9 +59,9 @@ variable (I : Ideal A)
 def Ideal.IsHomogeneous : Prop :=
   ∀ (i : ι) ⦃r : A⦄, r ∈ I → (DirectSum.decompose 𝒜 r i : A) ∈ I
 
+open Classical in
 theorem Ideal.IsHomogeneous.mem_iff {I} (hI : Ideal.IsHomogeneous 𝒜 I) {x} :
     x ∈ I ↔ ∀ i, (decompose 𝒜 x i : A) ∈ I := by
-  classical
   refine ⟨fun hx i ↦ hI i hx, fun hx ↦ ?_⟩
   rw [← DirectSum.sum_support_decompose 𝒜 x]
   exact Ideal.sum_mem _ (fun i _ ↦ hx i)
@@ -138,9 +138,9 @@ theorem Ideal.isHomogeneous_iff_subset_iInter :
     I.IsHomogeneous 𝒜 ↔ (I : Set A) ⊆ ⋂ i, GradedRing.proj 𝒜 i ⁻¹' ↑I :=
   subset_iInter_iff.symm
 
+open Classical in
 theorem Ideal.mul_homogeneous_element_mem_of_mem {I : Ideal A} (r x : A) (hx₁ : Homogeneous 𝒜 x)
     (hx₂ : x ∈ I) (j : ι) : GradedRing.proj 𝒜 j (r * x) ∈ I := by
-  classical
   rw [← DirectSum.sum_support_decompose 𝒜 r, Finset.sum_mul, map_sum]
   apply Ideal.sum_mem
   intro k _
@@ -188,11 +188,11 @@ theorem Ideal.mem_homogeneousCore_of_homogeneous_of_mem {x : A} (h : SetLike.Hom
     (hmem : x ∈ I) : x ∈ I.homogeneousCore 𝒜 :=
   Ideal.subset_span ⟨⟨x, h⟩, hmem, rfl⟩
 
+open Classical in
 theorem Ideal.IsHomogeneous.toIdeal_homogeneousCore_eq_self (h : I.IsHomogeneous 𝒜) :
     (I.homogeneousCore 𝒜).toIdeal = I := by
   apply le_antisymm (I.homogeneousCore'_le 𝒜) _
   intro x hx
-  classical
   rw [← DirectSum.sum_support_decompose 𝒜 x]
   exact Ideal.sum_mem _ fun j _ => Ideal.subset_span ⟨⟨_, homogeneous_coe _⟩, h _ hx, rfl⟩
 
@@ -485,9 +485,9 @@ def Ideal.homogeneousHull : HomogeneousIdeal 𝒜 :=
     obtain ⟨i, x, rfl⟩ := hx
     apply SetLike.homogeneous_coe⟩
 
+open Classical in
 theorem Ideal.le_toIdeal_homogeneousHull : I ≤ (Ideal.homogeneousHull 𝒜 I).toIdeal := by
   intro r hr
-  classical
   rw [← DirectSum.sum_support_decompose 𝒜 r]
   refine Ideal.sum_mem _ ?_
   intro j _

@@ -1679,6 +1679,7 @@ theorem _root_.IsFiniteMeasure.lintegral_lt_top_of_bounded_to_ennreal {α : Type
   refine setLIntegral_lt_top_of_le_nnreal (measure_ne_top _ _) ?_
   simpa using f_bdd
 
+open Classical in
 /-- If a monotone sequence of functions has an upper bound and the sequence of integrals of these
 functions tends to the integral of the upper bound, then the sequence of functions converges
 almost everywhere to the upper bound. Auxiliary version assuming moreover that the
@@ -1702,7 +1703,6 @@ lemma tendsto_of_lintegral_tendsto_of_monotone_aux {α : Type*} {mα : Measurabl
     refine absurd (hi.trans (h_le _)) (not_le.mpr ?_)
     exact ENNReal.lt_add_right h_fin one_ne_zero
   · exact h_tendsto
-  classical
   let F' : α → ℝ≥0∞ := fun a ↦ if h : ∃ l, Tendsto (fun i ↦ f i a) atTop (𝓝 l)
     then h.choose else ∞
   have hF'_tendsto : ∀ᵐ a ∂μ, Tendsto (fun i ↦ f i a) atTop (𝓝 (F' a))
@@ -1761,6 +1761,7 @@ lemma tendsto_of_lintegral_tendsto_of_monotone {α : Type*} {mα : MeasurableSpa
   filter_upwards [this, I', h_bound] with x hx h'x h''x
   exact tendsto_of_tendsto_of_tendsto_of_le_of_le hx tendsto_const_nhds h'x h''x
 
+open Classical in
 /-- If an antitone sequence of functions has a lower bound and the sequence of integrals of these
 functions tends to the integral of the lower bound, then the sequence of functions converges
 almost everywhere to the lower bound. -/
@@ -1781,7 +1782,6 @@ lemma tendsto_of_lintegral_tendsto_of_antitone {α : Type*} {mα : MeasurableSpa
     rw [OrderBot.atBot_eq]
     exact pure_le_nhds _
   · exact h
-  classical
   let F' : α → ℝ≥0∞ := fun a ↦ if h : ∃ l, Tendsto (fun i ↦ f i a) atTop (𝓝 l)
     then h.choose else ∞
   have hF'_tendsto : ∀ᵐ a ∂μ, Tendsto (fun i ↦ f i a) atTop (𝓝 (F' a))

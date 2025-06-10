@@ -329,10 +329,10 @@ theorem restrict_union_congr :
     _ = ν (US ∪ u ∩ t) := measure_add_diff hm _
     _ = ν (u ∩ s ∪ u ∩ t) := Eq.symm <| measure_union_congr_of_subset hsub hν.le Subset.rfl le_rfl
 
+open Classical in
 theorem restrict_finset_biUnion_congr {s : Finset ι} {t : ι → Set α} :
     μ.restrict (⋃ i ∈ s, t i) = ν.restrict (⋃ i ∈ s, t i) ↔
       ∀ i ∈ s, μ.restrict (t i) = ν.restrict (t i) := by
-  classical
   induction' s using Finset.induction_on with i s _ hs; · simp
   simp only [forall_eq_or_imp, iUnion_iUnion_eq_or_left, Finset.mem_insert]
   rw [restrict_union_congr, ← hs]
@@ -884,10 +884,10 @@ section IndicatorFunction
 
 variable [MeasurableSpace α] {μ : Measure α} {s t : Set α} {f : α → β}
 
+open Classical in
 theorem mem_map_indicator_ae_iff_mem_map_restrict_ae_of_zero_mem [Zero β] {t : Set β}
     (ht : (0 : β) ∈ t) (hs : MeasurableSet s) :
     t ∈ Filter.map (s.indicator f) (ae μ) ↔ t ∈ Filter.map f (ae <| μ.restrict s) := by
-  classical
   simp_rw [mem_map, mem_ae_iff]
   rw [Measure.restrict_apply' hs, Set.indicator_preimage, Set.ite]
   simp_rw [Set.compl_union, Set.compl_inter]
@@ -896,9 +896,9 @@ theorem mem_map_indicator_ae_iff_mem_map_restrict_ae_of_zero_mem [Zero β] {t : 
     Set.preimage_const]
   simp_rw [Set.union_inter_distrib_right, Set.compl_inter_self s, Set.union_empty]
 
+open Classical in
 theorem mem_map_indicator_ae_iff_of_zero_nmem [Zero β] {t : Set β} (ht : (0 : β) ∉ t) :
     t ∈ Filter.map (s.indicator f) (ae μ) ↔ μ ((f ⁻¹' t)ᶜ ∪ sᶜ) = 0 := by
-  classical
   rw [mem_map, mem_ae_iff, Set.indicator_preimage, Set.ite, Set.compl_union, Set.compl_inter]
   change μ (((f ⁻¹' t)ᶜ ∪ sᶜ) ∩ ((fun _ => (0 : β)) ⁻¹' t \ s)ᶜ) = 0 ↔ μ ((f ⁻¹' t)ᶜ ∪ sᶜ) = 0
   simp only [ht, if_false, Set.compl_empty, Set.empty_diff, Set.inter_univ, Set.preimage_const]

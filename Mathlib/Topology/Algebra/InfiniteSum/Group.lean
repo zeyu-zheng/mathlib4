@@ -174,11 +174,11 @@ theorem multipliable_iff_cauchySeq_finset [CompleteSpace α] {f : β → α} :
 
 variable [UniformGroup α] {f g : β → α} {a a₁ a₂ : α}
 
+open Classical in
 @[to_additive]
 theorem cauchySeq_finset_iff_prod_vanishing :
     (CauchySeq fun s : Finset β ↦ ∏ b ∈ s, f b) ↔
       ∀ e ∈ 𝓝 (1 : α), ∃ s : Finset β, ∀ t, Disjoint t s → (∏ b ∈ t, f b) ∈ e := by
-  classical
   simp only [CauchySeq, cauchy_map_iff, and_iff_right atTop_neBot, prod_atTop_atTop_eq,
     uniformity_eq_comap_nhds_one α, tendsto_comap_iff, (· ∘ ·), atTop_neBot, true_and]
   rw [tendsto_atTop']
@@ -199,6 +199,7 @@ theorem cauchySeq_finset_iff_prod_vanishing :
     simp only [this]
     exact hde _ (h _ Finset.sdiff_disjoint) _ (h _ Finset.sdiff_disjoint)
 
+open Classical in
 @[to_additive]
 theorem cauchySeq_finset_iff_tprod_vanishing :
     (CauchySeq fun s : Finset β ↦ ∏ b ∈ s, f b) ↔
@@ -209,13 +210,12 @@ theorem cauchySeq_finset_iff_tprod_vanishing :
     obtain ⟨s, hs⟩ := vanish o ho
     refine ⟨s, fun t hts ↦ oe ?_⟩
     by_cases ht : Multipliable fun a : t ↦ f a
-    · classical
-      refine o_closed.mem_of_tendsto ht.hasProd (eventually_of_forall fun t' ↦ ?_)
-      rw [← prod_subtype_map_embedding fun _ _ ↦ by rfl]
-      apply hs
-      simp_rw [Finset.mem_map]
-      rintro _ ⟨b, -, rfl⟩
-      exact hts b.prop
+    refine o_closed.mem_of_tendsto ht.hasProd (eventually_of_forall fun t' ↦ ?_)
+    rw [← prod_subtype_map_embedding fun _ _ ↦ by rfl]
+    apply hs
+    simp_rw [Finset.mem_map]
+    rintro _ ⟨b, -, rfl⟩
+    exact hts b.prop
     · exact tprod_eq_one_of_not_multipliable ht ▸ mem_of_mem_nhds ho
   · obtain ⟨s, hs⟩ := vanish _ he
     exact ⟨s, fun t hts ↦ (t.tprod_subtype f).symm ▸ hs _ hts⟩
@@ -233,11 +233,11 @@ theorem multipliable_iff_tprod_vanishing : Multipliable f ↔
     ∀ e ∈ 𝓝 (1 : α), ∃ s : Finset β, ∀ t : Set β, Disjoint t s → (∏' b : t, f b) ∈ e := by
   rw [multipliable_iff_cauchySeq_finset, cauchySeq_finset_iff_tprod_vanishing]
 
+open Classical in
 -- TODO: generalize to monoid with a uniform continuous subtraction operator: `(a + b) - b = a`
 @[to_additive]
 theorem Multipliable.multipliable_of_eq_one_or_self (hf : Multipliable f)
     (h : ∀ b, g b = 1 ∨ g b = f b) : Multipliable g := by
-  classical
   exact multipliable_iff_vanishing.2 fun e he ↦
     let ⟨s, hs⟩ := multipliable_iff_vanishing.1 hf e he
     ⟨s, fun t ht ↦
@@ -291,22 +291,23 @@ section TopologicalGroup
 
 variable {G : Type*} [TopologicalSpace G] [CommGroup G] [TopologicalGroup G] {f : α → G}
 
+open Classical in
 @[to_additive]
 theorem Multipliable.vanishing (hf : Multipliable f) ⦃e : Set G⦄ (he : e ∈ 𝓝 (1 : G)) :
     ∃ s : Finset α, ∀ t, Disjoint t s → (∏ k ∈ t, f k) ∈ e := by
-  classical
   letI : UniformSpace G := TopologicalGroup.toUniformSpace G
   have : UniformGroup G := comm_topologicalGroup_is_uniform
   exact cauchySeq_finset_iff_prod_vanishing.1 hf.hasProd.cauchySeq e he
 
+open Classical in
 @[to_additive]
 theorem Multipliable.tprod_vanishing (hf : Multipliable f) ⦃e : Set G⦄ (he : e ∈ 𝓝 1) :
     ∃ s : Finset α, ∀ t : Set α, Disjoint t s → (∏' b : t, f b) ∈ e := by
-  classical
   letI : UniformSpace G := TopologicalGroup.toUniformSpace G
   have : UniformGroup G := comm_topologicalGroup_is_uniform
   exact cauchySeq_finset_iff_tprod_vanishing.1 hf.hasProd.cauchySeq e he
 
+open Classical in
 /-- The product over the complement of a finset tends to `1` when the finset grows to cover the
 whole space. This does not need a multipliability assumption, as otherwise all such products are
 one. -/
@@ -314,7 +315,6 @@ one. -/
 the whole space. This does not need a summability assumption, as otherwise all such sums are zero."]
 theorem tendsto_tprod_compl_atTop_one (f : α → G) :
     Tendsto (fun s : Finset α ↦ ∏' a : { x // x ∉ s }, f a) atTop (𝓝 1) := by
-  classical
   by_cases H : Multipliable f
   · intro e he
     obtain ⟨s, hs⟩ := H.tprod_vanishing he

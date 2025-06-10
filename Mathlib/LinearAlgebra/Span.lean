@@ -696,11 +696,11 @@ theorem mem_sSup {s : Set (Submodule R M)} {m : M} :
 
 section
 
+open Classical in
 /-- For every element in the span of a set, there exists a finite subset of the set
 such that the element is contained in the span of the subset. -/
 theorem mem_span_finite_of_mem_span {S : Set M} {x : M} (hx : x ∈ span R S) :
     ∃ T : Finset M, ↑T ⊆ S ∧ x ∈ span R (T : Set M) := by
-  classical
   refine span_induction hx (fun x hx => ?_) ?_ ?_ ?_
   · refine ⟨{x}, ?_, ?_⟩
     · rwa [Finset.coe_singleton, Set.singleton_subset_iff]

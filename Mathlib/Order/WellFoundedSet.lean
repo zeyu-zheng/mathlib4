@@ -650,13 +650,13 @@ theorem iff_forall_not_isBadSeq (r : α → α → Prop) (s : Set α) :
 def IsMinBadSeq (r : α → α → Prop) (rk : α → ℕ) (s : Set α) (n : ℕ) (f : ℕ → α) : Prop :=
   ∀ g : ℕ → α, (∀ m : ℕ, m < n → f m = g m) → rk (g n) < rk (f n) → ¬IsBadSeq r s g
 
+open Classical in
 /-- Given a bad sequence `f`, this constructs a bad sequence that agrees with `f` on the first `n`
   terms and is minimal at `n`.
 -/
 noncomputable def minBadSeqOfBadSeq (r : α → α → Prop) (rk : α → ℕ) (s : Set α) (n : ℕ) (f : ℕ → α)
     (hf : IsBadSeq r s f) :
     { g : ℕ → α // (∀ m : ℕ, m < n → f m = g m) ∧ IsBadSeq r s g ∧ IsMinBadSeq r rk s n g } := by
-  classical
     have h : ∃ (k : ℕ) (g : ℕ → α), (∀ m, m < n → f m = g m) ∧ IsBadSeq r s g ∧ rk (g n) = k :=
       ⟨_, f, fun _ _ => rfl, hf, rfl⟩
     obtain ⟨h1, h2, h3⟩ := Classical.choose_spec (Nat.find_spec h)

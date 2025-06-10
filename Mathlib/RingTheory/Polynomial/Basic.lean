@@ -249,15 +249,15 @@ theorem mem_coeffs_iff {p : R[X]} {c : R} : c ∈ p.coeffs ↔ ∃ n ∈ p.suppo
 
 @[deprecated (since := "2024-05-17")] alias mem_frange_iff := mem_coeffs_iff
 
+open Classical in
 theorem coeffs_one : coeffs (1 : R[X]) ⊆ {1} := by
-  classical
     simp_rw [coeffs, Finset.image_subset_iff]
     simp_all [coeff_one]
 
 @[deprecated (since := "2024-05-17")] alias frange_one := coeffs_one
 
+open Classical in
 theorem coeff_mem_coeffs (p : R[X]) (n : ℕ) (h : p.coeff n ≠ 0) : p.coeff n ∈ p.coeffs := by
-  classical
   simp only [coeffs, exists_prop, mem_support_iff, Finset.mem_image, Ne]
   exact ⟨n, h, rfl⟩
 
@@ -320,9 +320,9 @@ def restriction (p : R[X]) : Polynomial (Subring.closure (↑p.coeffs : Set R)) 
           else Subring.subset_closure (p.coeff_mem_coeffs _ H)⟩ :
         Subring.closure (↑p.coeffs : Set R))
 
+open Classical in
 @[simp]
 theorem coeff_restriction {p : R[X]} {n : ℕ} : ↑(coeff (restriction p) n) = coeff p n := by
-  classical
   simp only [restriction, coeff_monomial, finset_sum_coeff, mem_support_iff, Finset.sum_ite_eq',
     Ne, ite_not]
   split_ifs with h
@@ -390,9 +390,9 @@ def toSubring (hp : (↑p.coeffs : Set R) ⊆ T) : T[X] :=
 
 variable (hp : (↑p.coeffs : Set R) ⊆ T)
 
+open Classical in
 @[simp]
 theorem coeff_toSubring {n : ℕ} : ↑(coeff (toSubring p T hp) n) = coeff p n := by
-  classical
   simp only [toSubring, coeff_monomial, finset_sum_coeff, mem_support_iff, Finset.sum_ite_eq',
     Ne, ite_not]
   split_ifs with h
@@ -456,9 +456,9 @@ theorem coeff_ofSubring (p : T[X]) (n : ℕ) : coeff (ofSubring T p) n = (coeff 
   intro h
   rw [h, ZeroMemClass.coe_zero]
 
+open Classical in
 @[simp]
 theorem coeffs_ofSubring {p : T[X]} : (↑(p.ofSubring T).coeffs : Set R) ⊆ T := by
-  classical
   intro i hi
   simp only [coeffs, Set.mem_image, mem_support_iff, Ne, Finset.mem_coe,
     (Finset.coe_image)] at hi
@@ -628,13 +628,13 @@ theorem mem_leadingCoeff (x) : x ∈ I.leadingCoeff ↔ ∃ p ∈ I, Polynomial.
     ⟨i + j, I.leadingCoeffNth_mono (Nat.le_add_right _ _),
       I.leadingCoeffNth_mono (Nat.le_add_left _ _)⟩
 
+open Classical in
 /-- If `I` is an ideal, and `pᵢ` is a finite family of polynomials each satisfying
 `∀ k, (pᵢ)ₖ ∈ Iⁿⁱ⁻ᵏ` for some `nᵢ`, then `p = ∏ pᵢ` also satisfies `∀ k, pₖ ∈ Iⁿ⁻ᵏ` with `n = ∑ nᵢ`.
 -/
 theorem _root_.Polynomial.coeff_prod_mem_ideal_pow_tsub {ι : Type*} (s : Finset ι) (f : ι → R[X])
     (I : Ideal R) (n : ι → ℕ) (h : ∀ i ∈ s, ∀ (k), (f i).coeff k ∈ I ^ (n i - k)) (k : ℕ) :
     (s.prod f).coeff k ∈ I ^ (s.sum n - k) := by
-  classical
     induction' s using Finset.induction with a s ha hs generalizing k
     · rw [sum_empty, prod_empty, coeff_one, zero_tsub, pow_zero, Ideal.one_eq_top]
       exact Submodule.mem_top
@@ -678,6 +678,7 @@ section CommRing
 
 variable [CommRing R]
 
+open Classical in
 /-- If `P` is a prime ideal of `R`, then `P.R[x]` is a prime ideal of `R[x]`. -/
 theorem isPrime_map_C_iff_isPrime (P : Ideal R) :
     IsPrime (map (C : R →+* R[X]) P : Ideal R[X]) ↔ IsPrime P := by
@@ -706,32 +707,31 @@ theorem isPrime_map_C_iff_isPrime (P : Ideal R) :
       simp only [mem_map_C_iff]
       contrapose!
       rintro ⟨hf, hg⟩
-      classical
-        let m := Nat.find hf
-        let n := Nat.find hg
-        refine ⟨m + n, ?_⟩
-        rw [coeff_mul, ← Finset.insert_erase ((Finset.mem_antidiagonal (a := (m,n))).mpr rfl),
-          Finset.sum_insert (Finset.not_mem_erase _ _), (P.add_mem_iff_left _).not]
-        · apply mt h.2
-          rw [not_or]
-          exact ⟨Nat.find_spec hf, Nat.find_spec hg⟩
-        apply P.sum_mem
-        rintro ⟨i, j⟩ hij
-        rw [Finset.mem_erase, Finset.mem_antidiagonal] at hij
-        simp only [Ne, Prod.mk.inj_iff, not_and_or] at hij
-        obtain hi | hj : i < m ∨ j < n := by
-          rw [or_iff_not_imp_left, not_lt, le_iff_lt_or_eq]
-          rintro (hmi | rfl)
-          · rw [← not_le]
-            intro hnj
-            exact (add_lt_add_of_lt_of_le hmi hnj).ne hij.2.symm
-          · simp only [eq_self_iff_true, not_true, false_or_iff, add_right_inj,
-              not_and_self_iff] at hij
-        · rw [mul_comm]
-          apply P.mul_mem_left
-          exact Classical.not_not.1 (Nat.find_min hf hi)
-        · apply P.mul_mem_left
-          exact Classical.not_not.1 (Nat.find_min hg hj)
+      let m := Nat.find hf
+      let n := Nat.find hg
+      refine ⟨m + n, ?_⟩
+      rw [coeff_mul, ← Finset.insert_erase ((Finset.mem_antidiagonal (a := (m,n))).mpr rfl),
+        Finset.sum_insert (Finset.not_mem_erase _ _), (P.add_mem_iff_left _).not]
+      · apply mt h.2
+        rw [not_or]
+        exact ⟨Nat.find_spec hf, Nat.find_spec hg⟩
+      apply P.sum_mem
+      rintro ⟨i, j⟩ hij
+      rw [Finset.mem_erase, Finset.mem_antidiagonal] at hij
+      simp only [Ne, Prod.mk.inj_iff, not_and_or] at hij
+      obtain hi | hj : i < m ∨ j < n := by
+        rw [or_iff_not_imp_left, not_lt, le_iff_lt_or_eq]
+        rintro (hmi | rfl)
+        · rw [← not_le]
+          intro hnj
+          exact (add_lt_add_of_lt_of_le hmi hnj).ne hij.2.symm
+        · simp only [eq_self_iff_true, not_true, false_or_iff, add_right_inj,
+            not_and_self_iff] at hij
+      · rw [mul_comm]
+        apply P.mul_mem_left
+        exact Classical.not_not.1 (Nat.find_min hf hi)
+      · apply P.mul_mem_left
+        exact Classical.not_not.1 (Nat.find_min hg hj)
 
 /-- If `P` is a prime ideal of `R`, then `P.R[x]` is a prime ideal of `R[x]`. -/
 theorem isPrime_map_C_of_isPrime {P : Ideal R} (H : IsPrime P) :
@@ -805,9 +805,9 @@ theorem prime_C_iff : Prime (C r : MvPolynomial σ R) ↔ Prime r :=
 
 variable {σ}
 
+open Classical in
 theorem prime_rename_iff (s : Set σ) {p : MvPolynomial s R} :
     Prime (rename ((↑) : s → σ) p) ↔ Prime (p : MvPolynomial s R) := by
-  classical
     symm
     let eqv :=
       (sumAlgEquiv R (↥sᶜ) s).symm.trans
@@ -839,10 +839,10 @@ end Prime
 
 namespace Polynomial
 
+open Classical in
 instance (priority := 100) wfDvdMonoid {R : Type*} [CommRing R] [IsDomain R] [WfDvdMonoid R] :
     WfDvdMonoid R[X] where
   wellFounded_dvdNotUnit := by
-    classical
       refine
         RelHomClass.wellFounded
           (⟨fun p : R[X] =>
@@ -1147,12 +1147,12 @@ theorem mem_ideal_of_coeff_mem_ideal (I : Ideal (MvPolynomial σ R)) (p : MvPoly
   suffices C (coeff m p) ∈ I by exact I.mul_mem_right (monomial m 1) this
   simpa [Ideal.mem_comap] using hcoe m
 
+open Classical in
 /-- The push-forward of an ideal `I` of `R` to `MvPolynomial σ R` via inclusion
  is exactly the set of polynomials whose coefficients are in `I` -/
 theorem mem_map_C_iff {I : Ideal R} {f : MvPolynomial σ R} :
     f ∈ (Ideal.map (C : R →+* MvPolynomial σ R) I : Ideal (MvPolynomial σ R)) ↔
       ∀ m : σ →₀ ℕ, f.coeff m ∈ I := by
-  classical
   constructor
   · intro hf
     apply @Submodule.span_induction _ _ _ _ Semiring.toModule f _ _ hf

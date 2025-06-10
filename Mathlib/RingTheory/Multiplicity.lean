@@ -524,9 +524,9 @@ protected theorem mul {p a b : α} (hp : Prime p) :
     rw [eq_top_iff_not_finite.2 (mt (finite_mul_iff hp).1 h)]
     cases' not_and_or.1 h with h h <;> simp [eq_top_iff_not_finite.2 h]
 
+open Classical in
 theorem Finset.prod {β : Type*} {p : α} (hp : Prime p) (s : Finset β) (f : β → α) :
     multiplicity p (∏ x ∈ s, f x) = ∑ x ∈ s, multiplicity p (f x) := by
-  classical
     induction' s using Finset.induction with a s has ih h
     · simp only [Finset.sum_empty, Finset.prod_empty]
       convert one_right hp.not_unit

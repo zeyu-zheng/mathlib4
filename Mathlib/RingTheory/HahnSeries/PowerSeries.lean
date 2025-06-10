@@ -43,6 +43,7 @@ section Semiring
 
 variable [Semiring R]
 
+open Classical in
 /-- The ring `HahnSeries ℕ R` is isomorphic to `PowerSeries R`. -/
 @[simps]
 def toPowerSeries : HahnSeries ℕ R ≃+* PowerSeries R where
@@ -60,7 +61,6 @@ def toPowerSeries : HahnSeries ℕ R ≃+* PowerSeries R where
   map_mul' f g := by
     ext n
     simp only [PowerSeries.coeff_mul, PowerSeries.coeff_mk, mul_coeff, isPWO_support]
-    classical
     refine (sum_filter_ne_zero _).symm.trans <| (sum_congr ?_ fun _ _ ↦ rfl).trans <|
       sum_filter_ne_zero _
     ext m
@@ -135,6 +135,7 @@ theorem ofPowerSeries_X_pow {R} [Semiring R] (n : ℕ) :
     ofPowerSeries Γ R (PowerSeries.X ^ n) = single (n : Γ) 1 := by
   simp
 
+open Classical in
 -- Lemmas about converting hahn_series over fintype to and from mv_power_series
 /-- The ring `HahnSeries (σ →₀ ℕ) R` is isomorphic to `MvPowerSeries σ R` for a `Finite` `σ`.
 We take the index set of the hahn series to be `Finsupp` rather than `pi`,
@@ -157,16 +158,15 @@ def toMvPowerSeries {σ : Type*} [Finite σ] : HahnSeries (σ →₀ ℕ) R ≃+
   map_mul' f g := by
     ext n
     simp only [MvPowerSeries.coeff_mul]
-    classical
-      change (f * g).coeff n = _
-      simp_rw [mul_coeff]
-      refine (sum_filter_ne_zero _).symm.trans <| (sum_congr ?_ fun _ _ ↦ rfl).trans <|
-        sum_filter_ne_zero _
-      ext m
-      simp only [and_congr_left_iff, mem_addAntidiagonal, mem_filter, mem_support,
-        Finset.mem_antidiagonal]
-      rintro h
-      rw [and_iff_right (left_ne_zero_of_mul h), and_iff_right (right_ne_zero_of_mul h)]
+    change (f * g).coeff n = _
+    simp_rw [mul_coeff]
+    refine (sum_filter_ne_zero _).symm.trans <| (sum_congr ?_ fun _ _ ↦ rfl).trans <|
+      sum_filter_ne_zero _
+    ext m
+    simp only [and_congr_left_iff, mem_addAntidiagonal, mem_filter, mem_support,
+      Finset.mem_antidiagonal]
+    rintro h
+    rw [and_iff_right (left_ne_zero_of_mul h), and_iff_right (right_ne_zero_of_mul h)]
 
 variable {σ : Type*} [Finite σ]
 

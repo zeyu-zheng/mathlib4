@@ -33,9 +33,9 @@ namespace IsLocalization
 variable {R : Type u} [CommRing R] (S : Submonoid R) {L : Type u} [CommRing L] [Algebra R L]
   [IsLocalization S L]
 
+open Classical in
 /-- A localization always has cardinality less than or equal to the base ring. -/
 theorem card_le : #L ≤ #R := by
-  classical
     cases fintypeOrInfinite R
     · exact Cardinal.mk_le_of_surjective (IsArtinianRing.localization_surjective S _)
     erw [← Cardinal.mul_eq_self <| Cardinal.aleph0_le_mk R]

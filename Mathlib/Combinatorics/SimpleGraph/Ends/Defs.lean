@@ -196,9 +196,9 @@ theorem hom_infinite (C : G.ComponentCompl L) (h : K ⊆ L) (Cinf : (C : Set V).
     (C.hom h : Set V).Infinite :=
   Set.Infinite.mono (C.subset_hom h) Cinf
 
+open Classical in
 theorem infinite_iff_in_all_ranges {K : Finset V} (C : G.ComponentCompl K) :
     C.supp.Infinite ↔ ∀ (L) (h : K ⊆ L), ∃ D : G.ComponentCompl L, D.hom h = C := by
-  classical
     constructor
     · rintro Cinf L h
       obtain ⟨v, ⟨vK, rfl⟩, vL⟩ := Set.Infinite.nonempty (Set.Infinite.diff Cinf L.finite_toSet)
@@ -213,11 +213,11 @@ theorem infinite_iff_in_all_ranges {K : Finset V} (C : G.ComponentCompl K) :
 
 end ComponentCompl
 
+open Classical in
 /-- For a locally finite preconnected graph, the number of components outside of any finite set
 is finite. -/
 instance componentCompl_finite [LocallyFinite G] [Gpc : Fact G.Preconnected] (K : Finset V) :
     Finite (G.ComponentCompl K) := by
-  classical
   rcases K.eq_empty_or_nonempty with rfl | h
   -- If K is empty, then removing K doesn't change the graph, which is connected, hence has a
   -- single connected component

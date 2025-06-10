@@ -528,9 +528,9 @@ theorem coe_inf : ∀ s t : Interval α, (↑(s ⊓ t) : Set α) = ↑s ∩ ↑t
 
 end Decidable
 
+open Classical in
 @[simp, norm_cast]
 theorem disjoint_coe (s t : Interval α) : Disjoint (s : Set α) t ↔ Disjoint s t := by
-  classical
     rw [disjoint_iff_inf_le, disjoint_iff_inf_le, ← coe_subset_coe, coe_inf]
     rfl
 
@@ -576,9 +576,9 @@ section CompleteLattice
 
 variable [CompleteLattice α]
 
+open Classical in
 noncomputable instance completeLattice [@DecidableRel α (· ≤ ·)] :
     CompleteLattice (Interval α) := by
-  classical
   exact
       { Interval.lattice, Interval.boundedOrder with
         sSup := fun S =>

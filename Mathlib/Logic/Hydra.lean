@@ -57,11 +57,11 @@ def CutExpand (r : α → α → Prop) (s' s : Multiset α) : Prop :=
 
 variable {r : α → α → Prop}
 
+open Classical in
 theorem cutExpand_le_invImage_lex [DecidableEq α] [IsIrrefl α r] :
     CutExpand r ≤ InvImage (Finsupp.Lex (rᶜ ⊓ (· ≠ ·)) (· < ·)) toFinsupp := by
   rintro s t ⟨u, a, hr, he⟩
   replace hr := fun a' ↦ mt (hr a')
-  classical
   refine ⟨a, fun b h ↦ ?_, ?_⟩ <;> simp_rw [toFinsupp_apply]
   · apply_fun count b at he
     simpa only [count_add, count_singleton, if_neg h.2, add_zero, count_eq_zero.2 (hr b h.1)]
@@ -94,19 +94,19 @@ theorem cutExpand_iff [DecidableEq α] [IsIrrefl α r] {s' s : Multiset α} :
   · rintro ⟨ht, h, rfl⟩
     exact ⟨ht, mem_add.2 (Or.inl h), (erase_add_left_pos t h).symm⟩
 
+open Classical in
 theorem not_cutExpand_zero [IsIrrefl α r] (s) : ¬CutExpand r s 0 := by
-  classical
   rw [cutExpand_iff]
   rintro ⟨_, _, _, ⟨⟩, _⟩
 
 lemma cutExpand_zero {x} : CutExpand r 0 {x} := ⟨0, x, nofun, add_comm 0 _⟩
 
+open Classical in
 /-- For any relation `r` on `α`, multiset addition `Multiset α × Multiset α → Multiset α` is a
   fibration between the game sum of `CutExpand r` with itself and `CutExpand r` itself. -/
 theorem cutExpand_fibration (r : α → α → Prop) :
     Fibration (GameAdd (CutExpand r) (CutExpand r)) (CutExpand r) fun s ↦ s.1 + s.2 := by
   rintro ⟨s₁, s₂⟩ s ⟨t, a, hr, he⟩; dsimp at he ⊢
-  classical
   obtain ⟨ha, rfl⟩ := add_singleton_eq_iff.1 he
   rw [add_assoc, mem_add] at ha
   obtain h | h := ha
@@ -117,12 +117,12 @@ theorem cutExpand_fibration (r : α → α → Prop) :
     · rw [add_comm, singleton_add, cons_erase h]
     · rw [add_assoc, erase_add_right_pos _ h]
 
+open Classical in
 /-- `CutExpand` preserves leftward-closedness under a relation. -/
 lemma cutExpand_closed [IsIrrefl α r] (p : α → Prop)
     (h : ∀ {a' a}, r a' a → p a → p a') :
     ∀ {s' s}, CutExpand r s' s → (∀ a ∈ s, p a) → ∀ a ∈ s', p a := by
   intros s' s
-  classical
   rw [cutExpand_iff]
   rintro ⟨t, a, hr, ha, rfl⟩ hsp a' h'
   obtain (h'|h') := mem_add.1 h'
@@ -154,12 +154,12 @@ theorem acc_of_singleton [IsIrrefl α r] {s : Multiset α} (hs : ∀ a ∈ s, Ac
     rw [forall_mem_cons] at hs
     exact (hs.1.prod_gameAdd <| ihs fun a ha ↦ hs.2 a ha).of_fibration _ (cutExpand_fibration r)
 
+open Classical in
 /-- A singleton `{a}` is accessible under `CutExpand r` if `a` is accessible under `r`,
   assuming `r` is irreflexive. -/
 theorem _root_.Acc.cutExpand [IsIrrefl α r] {a : α} (hacc : Acc r a) : Acc (CutExpand r) {a} := by
   induction' hacc with a h ih
   refine Acc.intro _ fun s ↦ ?_
-  classical
   simp only [cutExpand_iff, mem_singleton]
   rintro ⟨t, a, hr, rfl, rfl⟩
   refine acc_of_singleton fun a' ↦ ?_

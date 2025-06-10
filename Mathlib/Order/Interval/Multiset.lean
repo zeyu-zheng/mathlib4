@@ -233,13 +233,13 @@ variable [PartialOrder α] [LocallyFiniteOrder α] {a b : α}
 @[simp]
 theorem Icc_self (a : α) : Icc a a = {a} := by rw [Icc, Finset.Icc_self, Finset.singleton_val]
 
+open Classical in
 theorem Ico_cons_right (h : a ≤ b) : b ::ₘ Ico a b = Icc a b := by
-  classical
     rw [Ico, ← Finset.insert_val_of_not_mem right_not_mem_Ico, Finset.Ico_insert_right h]
     rfl
 
+open Classical in
 theorem Ioo_cons_left (h : a < b) : a ::ₘ Ioo a b = Ico a b := by
-  classical
     rw [Ioo, ← Finset.insert_val_of_not_mem left_not_mem_Ioo, Finset.Ioo_insert_left h]
     rfl
 

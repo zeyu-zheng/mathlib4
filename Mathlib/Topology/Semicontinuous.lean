@@ -539,10 +539,10 @@ theorem LowerSemicontinuous.add {f g : α → γ} (hf : LowerSemicontinuous f)
     (hg : LowerSemicontinuous g) : LowerSemicontinuous fun z => f z + g z :=
   hf.add' hg fun _x => continuous_add.continuousAt
 
+open Classical in
 theorem lowerSemicontinuousWithinAt_sum {f : ι → α → γ} {a : Finset ι}
     (ha : ∀ i ∈ a, LowerSemicontinuousWithinAt (f i) s x) :
     LowerSemicontinuousWithinAt (fun z => ∑ i ∈ a, f i z) s x := by
-  classical
     induction' a using Finset.induction_on with i a ia IH
     · exact lowerSemicontinuousWithinAt_const
     · simp only [ia, Finset.sum_insert, not_false_iff]

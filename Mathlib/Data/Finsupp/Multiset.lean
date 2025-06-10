@@ -112,9 +112,9 @@ theorem toMultiset_inf [DecidableEq α] (f g : α →₀ ℕ) :
   ext
   simp_rw [Multiset.count_inter, Finsupp.count_toMultiset, Finsupp.inf_apply, inf_eq_min]
 
+open Classical in
 @[simp]
 theorem mem_toMultiset (f : α →₀ ℕ) (i : α) : i ∈ toMultiset f ↔ i ∈ f.support := by
-  classical
   rw [← Multiset.count_ne_zero, Finsupp.count_toMultiset, Finsupp.mem_support_iff]
 
 end Finsupp

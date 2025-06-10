@@ -320,6 +320,7 @@ lemma generateFrom_memPartition_le_succ (t : ℕ → Set α) (n : ℕ) :
     generateFrom (memPartition t n) ≤ generateFrom (memPartition t (n + 1)) :=
   generateFrom_le (fun _ hs ↦ measurableSet_succ_memPartition t n hs)
 
+open Classical in
 lemma measurableSet_generateFrom_memPartition_iff (t : ℕ → Set α) (n : ℕ) (s : Set α) :
     MeasurableSet[generateFrom (memPartition t n)] s
       ↔ ∃ S : Finset (Set α), ↑S ⊆ memPartition t n ∧ s = ⋃₀ S := by
@@ -330,7 +331,6 @@ lemma measurableSet_generateFrom_memPartition_iff (t : ℕ → Set α) (n : ℕ)
     · exact fun u hu ↦ ⟨{u}, by simp [hu], by simp⟩
     · exact ⟨∅, by simp, by simp⟩
     · rintro u ⟨S, hS_subset, rfl⟩
-      classical
       refine ⟨(memPartition t n).toFinset \ S, ?_, ?_⟩
       · simp only [Finset.coe_sdiff, coe_toFinset]
         exact diff_subset

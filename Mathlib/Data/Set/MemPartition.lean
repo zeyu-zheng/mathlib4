@@ -121,21 +121,21 @@ lemma memPartitionSet_succ (f : ℕ → Set α) (n : ℕ) (a : α) [Decidable (a
   simp [memPartitionSet]
   congr
 
+open Classical in
 lemma memPartitionSet_mem (f : ℕ → Set α) (n : ℕ) (a : α) :
     memPartitionSet f n a ∈ memPartition f n := by
   induction n with
   | zero => simp [memPartitionSet]
   | succ n ih =>
-    classical
     rw [memPartitionSet_succ, memPartition_succ]
     refine ⟨memPartitionSet f n a, ?_⟩
     split_ifs <;> simp [ih]
 
+open Classical in
 lemma mem_memPartitionSet (f : ℕ → Set α) (n : ℕ) (a : α) : a ∈ memPartitionSet f n a := by
   induction n with
   | zero => simp [memPartitionSet]
   | succ n ih =>
-    classical
     rw [memPartitionSet_succ]
     split_ifs with h <;> exact ⟨ih, h⟩
 

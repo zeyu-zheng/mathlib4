@@ -36,10 +36,10 @@ theorem quadraticChar_two [DecidableEq F] (hF : ringChar F ≠ 2) :
   IsQuadratic.eq_of_eq_coe (quadraticChar_isQuadratic F) isQuadratic_χ₈ hF
     ((quadraticChar_eq_pow_of_char_ne_two' hF 2).trans (FiniteField.two_pow_card hF))
 
+open Classical in
 /-- `2` is a square in `F` iff `#F` is not congruent to `3` or `5` mod `8`. -/
 theorem FiniteField.isSquare_two_iff :
     IsSquare (2 : F) ↔ Fintype.card F % 8 ≠ 3 ∧ Fintype.card F % 8 ≠ 5 := by
-  classical
   by_cases hF : ringChar F = 2
   · have h := FiniteField.even_card_of_char_two hF
     simp only [FiniteField.isSquare_of_char_two hF, true_iff_iff]
@@ -55,10 +55,10 @@ theorem quadraticChar_neg_two [DecidableEq F] (hF : ringChar F ≠ 2) :
   rw [(by norm_num : (-2 : F) = -1 * 2), map_mul, χ₈'_eq_χ₄_mul_χ₈, quadraticChar_neg_one hF,
     quadraticChar_two hF, @cast_natCast _ (ZMod 4) _ _ _ (by decide : 4 ∣ 8)]
 
+open Classical in
 /-- `-2` is a square in `F` iff `#F` is not congruent to `5` or `7` mod `8`. -/
 theorem FiniteField.isSquare_neg_two_iff :
     IsSquare (-2 : F) ↔ Fintype.card F % 8 ≠ 5 ∧ Fintype.card F % 8 ≠ 7 := by
-  classical
   by_cases hF : ringChar F = 2
   · have h := FiniteField.even_card_of_char_two hF
     simp only [FiniteField.isSquare_of_char_two hF, true_iff_iff]
@@ -95,12 +95,12 @@ theorem quadraticChar_odd_prime [DecidableEq F] (hF : ringChar F ≠ 2) {p : ℕ
     (ne_of_eq_of_ne (ringChar_zmod_n p) hp₂.symm)
   rwa [card p] at h
 
+open Classical in
 /-- An odd prime `p` is a square in `F` iff the quadratic character of `ZMod p` does not
 take the value `-1` on `χ₄#F * #F`. -/
 theorem FiniteField.isSquare_odd_prime_iff (hF : ringChar F ≠ 2) {p : ℕ} [Fact p.Prime]
     (hp : p ≠ 2) :
     IsSquare (p : F) ↔ quadraticChar (ZMod p) (χ₄ (Fintype.card F) * Fintype.card F) ≠ -1 := by
-  classical
   by_cases hFp : ringChar F = p
   · rw [show (p : F) = 0 by rw [← hFp]; exact ringChar.Nat.cast_ringChar]
     simp only [isSquare_zero, Ne, true_iff_iff, map_mul]

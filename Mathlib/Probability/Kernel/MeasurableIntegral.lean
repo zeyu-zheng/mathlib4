@@ -37,6 +37,7 @@ namespace ProbabilityTheory
 
 namespace Kernel
 
+open Classical in
 /-- This is an auxiliary lemma for `measurable_kernel_prod_mk_left`. -/
 theorem measurable_kernel_prod_mk_left_of_finite {t : Set (α × β)} (ht : MeasurableSet t)
     (hκs : ∀ a, IsFiniteMeasure (κ a)) : Measurable fun a => κ a (Prod.mk a ⁻¹' t) := by
@@ -52,7 +53,6 @@ theorem measurable_kernel_prod_mk_left_of_finite {t : Set (α × β)} (ht : Meas
     intro t' ht'
     simp only [Set.mem_image2, Set.mem_setOf_eq, exists_and_left] at ht'
     obtain ⟨t₁, ht₁, t₂, ht₂, rfl⟩ := ht'
-    classical
     simp_rw [mk_preimage_prod_right_eq_if]
     have h_eq_ite : (fun a => κ a (ite (a ∈ t₁) t₂ ∅)) = fun a => ite (a ∈ t₁) (κ a t₂) 0
     ext1 a
@@ -250,9 +250,9 @@ namespace MeasureTheory
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [IsSFiniteKernel κ]
   [IsSFiniteKernel η]
 
+open Classical in
 theorem StronglyMeasurable.integral_kernel_prod_right ⦃f : α → β → E⦄
     (hf : StronglyMeasurable (uncurry f)) : StronglyMeasurable fun x => ∫ y, f x y ∂κ x := by
-  classical
   by_cases hE : CompleteSpace E; swap
   · simp [integral, hE, stronglyMeasurable_const]
   borelize E

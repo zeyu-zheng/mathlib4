@@ -97,13 +97,13 @@ theorem convexHull_inter_convexHull (hs : s ∈ K.faces) (ht : t ∈ K.faces) :
     subset_inter (convexHull_mono Set.inter_subset_left) <|
       convexHull_mono Set.inter_subset_right
 
+open Classical in
 /-- The conclusion is the usual meaning of "glue nicely" in textbooks. It turns out to be quite
 unusable, as it's about faces as sets in space rather than simplices. Further, additional structure
 on `𝕜` means the only choice of `u` is `s ∩ t` (but it's hard to prove). -/
 theorem disjoint_or_exists_inter_eq_convexHull (hs : s ∈ K.faces) (ht : t ∈ K.faces) :
     Disjoint (convexHull 𝕜 (s : Set E)) (convexHull 𝕜 ↑t) ∨
       ∃ u ∈ K.faces, convexHull 𝕜 (s : Set E) ∩ convexHull 𝕜 ↑t = convexHull 𝕜 ↑u := by
-  classical
   by_contra! h
   refine h.2 (s ∩ t) (K.down_closed hs inter_subset_left fun hst => h.1 <|
     disjoint_iff_inf_le.mpr <| (K.inter_subset_convexHull hs ht).trans ?_) ?_
@@ -152,10 +152,10 @@ theorem vertices_eq : K.vertices = ⋃ k ∈ K.faces, (k : Set E) := by
 theorem vertices_subset_space : K.vertices ⊆ K.space :=
   vertices_eq.subset.trans <| iUnion₂_mono fun x _ => subset_convexHull 𝕜 (x : Set E)
 
+open Classical in
 theorem vertex_mem_convexHull_iff (hx : x ∈ K.vertices) (hs : s ∈ K.faces) :
     x ∈ convexHull 𝕜 (s : Set E) ↔ x ∈ s := by
   refine ⟨fun h => ?_, fun h => subset_convexHull 𝕜 _ h⟩
-  classical
   have h := K.inter_subset_convexHull hx hs ⟨by simp, h⟩
   by_contra H
   rwa [← coe_inter, Finset.disjoint_iff_inter_eq_empty.1 (Finset.disjoint_singleton_right.2 H).symm,

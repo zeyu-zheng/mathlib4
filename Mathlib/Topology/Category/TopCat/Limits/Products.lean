@@ -282,10 +282,10 @@ def binaryCofanIsColimit (X Y : TopCat.{u}) : IsColimit (TopCat.binaryCofan X Y)
     ext (x | x)
     exacts [(ConcreteCategory.congr_hom h₁ x : _), (ConcreteCategory.congr_hom h₂ x : _)]
 
+open Classical in
 theorem binaryCofan_isColimit_iff {X Y : TopCat} (c : BinaryCofan X Y) :
     Nonempty (IsColimit c) ↔
       OpenEmbedding c.inl ∧ OpenEmbedding c.inr ∧ IsCompl (Set.range c.inl) (Set.range c.inr) := by
-  classical
     constructor
     · rintro ⟨h⟩
       rw [← show _ = c.inl from

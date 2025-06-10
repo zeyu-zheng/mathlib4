@@ -534,8 +534,8 @@ theorem Ico_filter_le_left {a b : α} [DecidablePred (· ≤ a)] (hab : a < b) :
   rw [mem_filter, mem_Ico, mem_singleton, and_right_comm, ← le_antisymm_iff, eq_comm]
   exact and_iff_left_of_imp fun h => h.le.trans_lt hab
 
+open Classical in
 theorem card_Ico_eq_card_Icc_sub_one (a b : α) : (Ico a b).card = (Icc a b).card - 1 := by
-  classical
     by_cases h : a ≤ b
     · rw [Icc_eq_cons_Ico h, card_cons]
       exact (Nat.add_sub_cancel _ _).symm
@@ -544,8 +544,8 @@ theorem card_Ico_eq_card_Icc_sub_one (a b : α) : (Ico a b).card = (Icc a b).car
 theorem card_Ioc_eq_card_Icc_sub_one (a b : α) : (Ioc a b).card = (Icc a b).card - 1 :=
   @card_Ico_eq_card_Icc_sub_one αᵒᵈ _ _ _ _
 
+open Classical in
 theorem card_Ioo_eq_card_Ico_sub_one (a b : α) : (Ioo a b).card = (Ico a b).card - 1 := by
-  classical
     by_cases h : a < b
     · rw [Ico_eq_cons_Ioo h, card_cons]
       exact (Nat.add_sub_cancel _ _).symm

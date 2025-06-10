@@ -31,6 +31,7 @@ open QuadraticMap
 
 variable {ι : Type*} [Fintype ι]
 
+open Classical in
 /-- The isometry between a weighted sum of squares with weights `u` on the
 (non-zero) real numbers and the weighted sum of squares with weights `sign ∘ u`. -/
 noncomputable def isometryEquivSignWeightedSumSquares (w : ι → ℝ) :
@@ -45,7 +46,6 @@ noncomputable def isometryEquivSignWeightedSumSquares (w : ι → ℝ) :
   convert QuadraticMap.isometryEquivBasisRepr (weightedSumSquares ℝ w)
     ((Pi.basisFun ℝ ι).unitsSMul fun i => .mk0 _ (hu i))
   ext1 v
-  classical
   suffices ∑ i, (w i / |(u i : ℝ)|) * v i ^ 2 = ∑ i, w i * (v i ^ 2 * |(u i : ℝ)|⁻¹) by
     simpa [basisRepr_apply, Basis.unitsSMul_apply, ← _root_.sq, mul_pow, ← hwu]
   exact sum_congr rfl fun j _ ↦ by ring

@@ -105,9 +105,9 @@ end AddCommMonoid
 
 section OrderedAddCommMonoid
 
+open Classical in
 theorem le_weight (w : σ → ℕ) {s : σ} (hs : w s ≠ 0) (f : σ →₀ ℕ) :
     f s ≤ weight w f := by
-  classical
   simp only [weight_apply, Finsupp.sum]
   by_cases h : s ∈ f.support
   · rw [Finset.sum_eq_add_sum_diff_singleton h]
@@ -125,10 +125,10 @@ instance : SMulPosMono ℕ M :=
     rw [← Nat.add_sub_of_le h, add_smul]
     exact le_add_of_nonneg_right (nsmul_nonneg hb (m' - m))⟩
 
+open Classical in
 variable {w} in
 theorem le_weight_of_ne_zero (hw : ∀ s, 0 ≤ w s) {s : σ} {f : σ →₀ ℕ} (hs : f s ≠ 0) :
     w s ≤ weight w f := by
-  classical
   simp only [weight_apply, Finsupp.sum]
   trans f s • w s
   · apply le_smul_of_one_le_left (hw s)
@@ -148,11 +148,11 @@ theorem le_weight_of_ne_zero' {s : σ} {f : σ →₀ ℕ} (hs : f s ≠ 0) :
     w s ≤ weight w f :=
   le_weight_of_ne_zero w (fun _ ↦ zero_le _) hs
 
+open Classical in
 /-- If `M` is a `CanonicallyOrderedAddCommMonoid`, then `weight f` is zero iff `f=0. -/
 theorem weight_eq_zero_iff_eq_zero
     (w : σ → M) [NonTorsionWeight w] {f : σ →₀ ℕ} :
     weight w f = 0 ↔ f = 0 := by
-  classical
   constructor
   · intro h
     ext s

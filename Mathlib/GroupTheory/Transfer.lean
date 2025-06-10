@@ -98,6 +98,7 @@ variable (T : leftTransversals (H : Set G))
 theorem transfer_def [FiniteIndex H] (g : G) : transfer ϕ g = diff ϕ T (g • T) := by
   rw [transfer, ← diff_mul_diff, ← smul_diff_smul, mul_comm, diff_mul_diff] <;> rfl
 
+open Classical in
 /-- Explicit computation of the transfer homomorphism. -/
 theorem transfer_eq_prod_quotient_orbitRel_zpowers_quot [FiniteIndex H] (g : G)
     [Fintype (Quotient (orbitRel (zpowers g) (G ⧸ H)))] :
@@ -106,7 +107,6 @@ theorem transfer_eq_prod_quotient_orbitRel_zpowers_quot [FiniteIndex H] (g : G)
         ϕ
           ⟨q.out'.out'⁻¹ * g ^ Function.minimalPeriod (g • ·) q.out' * q.out'.out',
             QuotientGroup.out'_conj_pow_minimalPeriod_mem H g q.out'⟩ := by
-  classical
     letI := H.fintypeQuotientOfFiniteIndex
     calc
       transfer ϕ g = ∏ q : G ⧸ H, _ := transfer_def ϕ (transferTransversal H g) g
@@ -122,6 +122,7 @@ theorem transfer_eq_prod_quotient_orbitRel_zpowers_quot [FiniteIndex H] (g : G)
           simp only [if_neg hk, inv_mul_self]
           exact map_one ϕ
 
+open Classical in
 /-- Auxiliary lemma in order to state `transfer_eq_pow`. -/
 theorem transfer_eq_pow_aux (g : G)
     (key : ∀ (k : ℕ) (g₀ : G), g₀⁻¹ * g ^ k * g₀ ∈ H → g₀⁻¹ * g ^ k * g₀ = g ^ k) :
@@ -130,25 +131,24 @@ theorem transfer_eq_pow_aux (g : G)
   · rw [hH, pow_zero]
     exact H.one_mem
   letI := fintypeOfIndexNeZero hH
-  classical
-    replace key : ∀ (k : ℕ) (g₀ : G), g₀⁻¹ * g ^ k * g₀ ∈ H → g ^ k ∈ H := fun k g₀ hk =>
-      (congr_arg (· ∈ H) (key k g₀ hk)).mp hk
-    replace key : ∀ q : G ⧸ H, g ^ Function.minimalPeriod (g • ·) q ∈ H := fun q =>
-      key (Function.minimalPeriod (g • ·) q) q.out'
-        (QuotientGroup.out'_conj_pow_minimalPeriod_mem H g q)
-    let f : Quotient (orbitRel (zpowers g) (G ⧸ H)) → zpowers g := fun q =>
-      (⟨g, mem_zpowers g⟩ : zpowers g) ^ Function.minimalPeriod (g • ·) q.out'
-    have hf : ∀ q, f q ∈ H.subgroupOf (zpowers g) := fun q => key q.out'
-    replace key :=
-      Subgroup.prod_mem (H.subgroupOf (zpowers g)) fun q (_ : q ∈ Finset.univ) => hf q
-    simpa only [f, minimalPeriod_eq_card, Finset.prod_pow_eq_pow_sum, Fintype.card_sigma,
-      Fintype.card_congr (selfEquivSigmaOrbits (zpowers g) (G ⧸ H)), index_eq_card,
-      Nat.card_eq_fintype_card] using key
+  replace key : ∀ (k : ℕ) (g₀ : G), g₀⁻¹ * g ^ k * g₀ ∈ H → g ^ k ∈ H := fun k g₀ hk =>
+    (congr_arg (· ∈ H) (key k g₀ hk)).mp hk
+  replace key : ∀ q : G ⧸ H, g ^ Function.minimalPeriod (g • ·) q ∈ H := fun q =>
+    key (Function.minimalPeriod (g • ·) q) q.out'
+      (QuotientGroup.out'_conj_pow_minimalPeriod_mem H g q)
+  let f : Quotient (orbitRel (zpowers g) (G ⧸ H)) → zpowers g := fun q =>
+    (⟨g, mem_zpowers g⟩ : zpowers g) ^ Function.minimalPeriod (g • ·) q.out'
+  have hf : ∀ q, f q ∈ H.subgroupOf (zpowers g) := fun q => key q.out'
+  replace key :=
+    Subgroup.prod_mem (H.subgroupOf (zpowers g)) fun q (_ : q ∈ Finset.univ) => hf q
+  simpa only [f, minimalPeriod_eq_card, Finset.prod_pow_eq_pow_sum, Fintype.card_sigma,
+    Fintype.card_congr (selfEquivSigmaOrbits (zpowers g) (G ⧸ H)), index_eq_card,
+    Nat.card_eq_fintype_card] using key
 
+open Classical in
 theorem transfer_eq_pow [FiniteIndex H] (g : G)
     (key : ∀ (k : ℕ) (g₀ : G), g₀⁻¹ * g ^ k * g₀ ∈ H → g₀⁻¹ * g ^ k * g₀ = g ^ k) :
     transfer ϕ g = ϕ ⟨g ^ H.index, transfer_eq_pow_aux g key⟩ := by
-  classical
     letI := H.fintypeQuotientOfFiniteIndex
     change ∀ (k g₀) (hk : g₀⁻¹ * g ^ k * g₀ ∈ H), ↑(⟨g₀⁻¹ * g ^ k * g₀, hk⟩ : H) = g ^ k at key
     rw [transfer_eq_prod_quotient_orbitRel_zpowers_quot, ← Finset.prod_to_list]

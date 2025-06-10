@@ -86,12 +86,12 @@ theorem finite_set_of_fin_dim_affineIndependent [FiniteDimensional k V] {s : Set
 
 variable {k}
 
+open Classical in
 /-- The `vectorSpan` of a finite subset of an affinely independent
 family has dimension one less than its cardinality. -/
 theorem AffineIndependent.finrank_vectorSpan_image_finset [DecidableEq P]
     {p : ι → P} (hi : AffineIndependent k p) {s : Finset ι} {n : ℕ} (hc : Finset.card s = n + 1) :
     finrank k (vectorSpan k (s.image p : Set P)) = n := by
-  classical
   have hi' := hi.range.mono (Set.image_subset_range p ↑s)
   have hc' : (s.image p).card = n + 1
   rwa [s.card_image_of_injective hi.injective]
@@ -108,11 +108,11 @@ theorem AffineIndependent.finrank_vectorSpan_image_finset [DecidableEq P]
   exact Nat.pred_eq_of_eq_succ hc'
   rwa [vectorSpan_eq_span_vsub_finset_right_ne k hp₁, finrank_span_finset_eq_card, hc]
 
+open Classical in
 /-- The `vectorSpan` of a finite affinely independent family has
 dimension one less than its cardinality. -/
 theorem AffineIndependent.finrank_vectorSpan [Fintype ι] {p : ι → P} (hi : AffineIndependent k p)
     {n : ℕ} (hc : Fintype.card ι = n + 1) : finrank k (vectorSpan k (Set.range p)) = n := by
-  classical
   rw [← Finset.card_univ] at hc
   rw [← Set.image_univ, ← Finset.coe_univ, ← Finset.coe_image]
   exact hi.finrank_vectorSpan_image_finset hc
@@ -134,11 +134,11 @@ theorem AffineIndependent.vectorSpan_eq_top_of_card_eq_finrank_add_one [FiniteDi
 
 variable (k)
 
+open Classical in
 /-- The `vectorSpan` of `n + 1` points in an indexed family has
 dimension at most `n`. -/
 theorem finrank_vectorSpan_image_finset_le [DecidableEq P] (p : ι → P) (s : Finset ι) {n : ℕ}
     (hc : Finset.card s = n + 1) : finrank k (vectorSpan k (s.image p : Set P)) ≤ n := by
-  classical
   have hn : (s.image p).Nonempty
   rw [Finset.image_nonempty, ← Finset.card_pos, hc]
   apply Nat.succ_pos
@@ -149,11 +149,11 @@ theorem finrank_vectorSpan_image_finset_le [DecidableEq P] (p : ι → P) (s : F
     tsub_le_iff_right, ← hc]
   apply Finset.card_image_le
 
+open Classical in
 /-- The `vectorSpan` of an indexed family of `n + 1` points has
 dimension at most `n`. -/
 theorem finrank_vectorSpan_range_le [Fintype ι] (p : ι → P) {n : ℕ} (hc : Fintype.card ι = n + 1) :
     finrank k (vectorSpan k (Set.range p)) ≤ n := by
-  classical
   rw [← Set.image_univ, ← Finset.coe_univ, ← Finset.coe_image]
   rw [← Finset.card_univ] at hc
   exact finrank_vectorSpan_image_finset_le _ _ _ hc
@@ -164,12 +164,12 @@ lemma finrank_vectorSpan_range_add_one_le [Fintype ι] [Nonempty ι] (p : ι →
   (le_tsub_iff_right $ Nat.succ_le_iff.2 Fintype.card_pos).1 $ finrank_vectorSpan_range_le _ _
     (tsub_add_cancel_of_le $ Nat.succ_le_iff.2 Fintype.card_pos).symm
 
+open Classical in
 /-- `n + 1` points are affinely independent if and only if their
 `vectorSpan` has dimension `n`. -/
 theorem affineIndependent_iff_finrank_vectorSpan_eq [Fintype ι] (p : ι → P) {n : ℕ}
     (hc : Fintype.card ι = n + 1) :
     AffineIndependent k p ↔ finrank k (vectorSpan k (Set.range p)) = n := by
-  classical
   have hn : Nonempty ι
   simp [← Fintype.card_pos_iff, hc]
   cases' hn with i₁
@@ -290,6 +290,7 @@ theorem AffineIndependent.affineSpan_image_finset_eq_of_le_of_card_eq_finrank_ad
   rw [direction_affineSpan] at hd ⊢
   exact hi.vectorSpan_image_finset_eq_of_le_of_card_eq_finrank_add_one hd hc
 
+open Classical in
 /-- If the `affineSpan` of a finite affinely independent family lies
 in an affine subspace whose direction has dimension one less than its
 cardinality, it equals that subspace. -/
@@ -297,7 +298,6 @@ theorem AffineIndependent.affineSpan_eq_of_le_of_card_eq_finrank_add_one [Fintyp
     (hi : AffineIndependent k p) {sp : AffineSubspace k P} [FiniteDimensional k sp.direction]
     (hle : affineSpan k (Set.range p) ≤ sp) (hc : Fintype.card ι = finrank k sp.direction + 1) :
     affineSpan k (Set.range p) = sp := by
-  classical
   rw [← Finset.card_univ] at hc
   rw [← Set.image_univ, ← Finset.coe_univ, ← Finset.coe_image] at hle ⊢
   exact hi.affineSpan_image_finset_eq_of_le_of_card_eq_finrank_add_one hle hc

@@ -510,14 +510,14 @@ lemma sFiniteSeq_zero (n : ℕ) : sFiniteSeq (0 : Measure α) n = 0 := by
   simp only [ENNReal.tsum_eq_zero] at h
   exact h n
 
+open Classical in
 /-- A countable sum of finite measures is s-finite.
 This lemma is superseeded by the instance below. -/
 lemma sfinite_sum_of_countable [Countable ι]
     (m : ι → Measure α) [∀ n, IsFiniteMeasure (m n)] : SFinite (Measure.sum m) := by
-  classical
   obtain ⟨f, hf⟩ : ∃ f : ι → ℕ, Function.Injective f := Countable.exists_injective_nat ι
   refine ⟨_, fun n ↦ ?_, (sum_extend_zero hf m).symm⟩
-  rcases em (n ∈ range f) with ⟨i, rfl⟩ | hn
+  rcases Classical.em (n ∈ range f) with ⟨i, rfl⟩ | hn
   · rw [hf.extend_apply]
     infer_instance
   · rw [Function.extend_apply' _ _ _ hn, Pi.zero_apply]

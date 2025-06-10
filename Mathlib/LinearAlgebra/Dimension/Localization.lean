@@ -44,6 +44,7 @@ lemma IsLocalizedModule.linearIndependent_lift {ι} {v : ι → N} (hf : LinearI
   simp only [map_mul, mul_smul, algebraMap_smul, ← Submonoid.smul_def,
     hsec, ← map_smul, ← map_sum, hg, map_zero]
 
+open Classical in
 lemma IsLocalizedModule.lift_rank_eq :
     Cardinal.lift.{v} (Module.rank S N) = Cardinal.lift.{v'} (Module.rank R M) := by
   cases' subsingleton_or_nontrivial R
@@ -62,7 +63,6 @@ lemma IsLocalizedModule.lift_rank_eq :
     rw [linearIndependent_iff'] at hs ⊢
     intro t g hg i hit
     apply (IsLocalization.map_units S (sec (g i)).2).mul_left_injective
-    classical
     let u := fun (i : s) ↦ (t.erase i).prod (fun j ↦ (sec (g j)).2)
     have : f (t.sum fun i ↦ u i • (sec (g i)).1 • i) = f 0
     convert congr_arg (t.prod (fun j ↦ (sec (g j)).2) • ·) hg
@@ -113,11 +113,11 @@ section Ring
 
 variable {R} [Ring R] [IsDomain R] (S : Submonoid R)
 
+open Classical in
 /-- A domain that is not (left) Ore is of infinite rank.
 See [cohn_1995] Proposition 1.3.6 -/
 lemma aleph0_le_rank_of_isEmpty_oreSet (hS : IsEmpty (OreLocalization.OreSet R⁰)) :
     ℵ₀ ≤ Module.rank R R := by
-  classical
   rw [← not_nonempty_iff, OreLocalization.nonempty_oreSet_iff_of_noZeroDivisors] at hS
   push_neg at hS
   obtain ⟨r, s, h⟩ := hS

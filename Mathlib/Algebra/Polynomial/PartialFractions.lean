@@ -84,6 +84,7 @@ section NDenominators
 -- Porting note: added for scoped `Algebra.cast` instance
 open algebraMap
 
+open Classical in
 /-- Let R be an integral domain and f ∈ R[X]. Let s be a finite index set.
 Then, a fraction of the form f / ∏ (g i) can be rewritten as q + ∑ (r i) / (g i), where
 deg(r i) < deg(g i), provided that the g i are monic and pairwise coprime.
@@ -93,7 +94,6 @@ theorem div_eq_quo_add_sum_rem_div (f : R[X]) {ι : Type*} {g : ι → R[X]} {s 
     ∃ (q : R[X]) (r : ι → R[X]),
       (∀ i ∈ s, (r i).degree < (g i).degree) ∧
         ((↑f : K) / ∏ i ∈ s, ↑(g i)) = ↑q + ∑ i ∈ s, (r i : K) / (g i : K) := by
-  classical
   induction' s using Finset.induction_on with a b hab Hind f generalizing f
   · refine ⟨f, fun _ : ι => (0 : R[X]), fun i => ?_, by simp⟩
     rintro ⟨⟩

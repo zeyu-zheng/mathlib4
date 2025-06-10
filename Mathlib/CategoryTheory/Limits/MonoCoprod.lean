@@ -160,11 +160,11 @@ section
 
 variable [MonoCoprod C] {I J : Type*} (X : I → C) (ι : J → I)
 
+open Classical in
 lemma mono_of_injective_aux (hι : Function.Injective ι) (c : Cofan X) (c₁ : Cofan (X ∘ ι))
     (hc : IsColimit c) (hc₁ : IsColimit c₁)
     (c₂ : Cofan (fun (k : ((Set.range ι)ᶜ : Set I)) => X k.1))
     (hc₂ : IsColimit c₂) : Mono (Cofan.IsColimit.desc hc₁ (fun i => c.inj (ι i))) := by
-  classical
   let e := ((Equiv.ofInjective ι hι).sumCongr (Equiv.refl _)).trans (Equiv.Set.sumCompl _)
   refine mono_binaryCofanSum_inl' (Cofan.mk c.pt (fun i' => c.inj (e i'))) _ _ ?_
     hc₁ hc₂ _ (by simp [e])

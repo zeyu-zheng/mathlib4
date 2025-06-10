@@ -248,9 +248,9 @@ theorem support_esymm (n : ℕ) [DecidableEq σ] [Nontrivial R] :
   rw [support_esymm']
   exact biUnion_singleton
 
+open Classical in
 theorem degrees_esymm [Nontrivial R] (n : ℕ) (hpos : 0 < n) (hn : n ≤ Fintype.card σ) :
     (esymm σ R n).degrees = (univ : Finset σ).val := by
-  classical
     have :
       (Finsupp.toMultiset ∘ fun t : Finset σ => ∑ i ∈ t, Finsupp.single i 1) = val := by
       funext

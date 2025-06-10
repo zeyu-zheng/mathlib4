@@ -156,17 +156,17 @@ def multinomial (f : α →₀ ℕ) : ℕ :=
 theorem multinomial_eq (f : α →₀ ℕ) : f.multinomial = Nat.multinomial f.support f :=
   rfl
 
+open Classical in
 theorem multinomial_update (a : α) (f : α →₀ ℕ) :
     f.multinomial = (f.sum fun _ => id).choose (f a) * (f.update a 0).multinomial := by
   simp only [multinomial_eq]
-  classical
-    by_cases h : a ∈ f.support
-    · rw [← Finset.insert_erase h, Nat.multinomial_insert (Finset.not_mem_erase a _),
-        Finset.add_sum_erase _ f h, support_update_zero]
-      congr 1
-      exact Nat.multinomial_congr fun _ h ↦ (Function.update_noteq (mem_erase.1 h).1 0 f).symm
-    rw [not_mem_support_iff] at h
-    rw [h, Nat.choose_zero_right, one_mul, ← h, update_self]
+  by_cases h : a ∈ f.support
+  · rw [← Finset.insert_erase h, Nat.multinomial_insert (Finset.not_mem_erase a _),
+      Finset.add_sum_erase _ f h, support_update_zero]
+    congr 1
+    exact Nat.multinomial_congr fun _ h ↦ (Function.update_noteq (mem_erase.1 h).1 0 f).symm
+  rw [not_mem_support_iff] at h
+  rw [h, Nat.choose_zero_right, one_mul, ← h, update_self]
 
 end Finsupp
 
@@ -207,13 +207,13 @@ variable {α R : Type*} [DecidableEq α]
 section Semiring
 variable [Semiring R]
 
+open Classical in
 -- TODO: Can we prove one of the following two from the other one?
 /-- The **multinomial theorem**. -/
 lemma sum_pow_eq_sum_piAntidiag_of_commute (s : Finset α) (f : α → R)
     (hc : (s : Set α).Pairwise fun i j ↦ Commute (f i) (f j)) (n : ℕ) :
     (∑ i in s, f i) ^ n = ∑ k in piAntidiag s n, multinomial s k *
       s.noncommProd (fun i ↦ f i ^ k i) (hc.mono' fun i j h ↦ h.pow_pow ..) := by
-  classical
   induction' s using Finset.cons_induction with a s has ih generalizing n
   · cases n <;> simp
   rw [Finset.sum_cons, piAntidiag_cons, sum_disjiUnion]

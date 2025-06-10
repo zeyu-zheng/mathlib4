@@ -128,40 +128,40 @@ lemma OrthogonalIdempotents.iff_mul_eq [DecidableEq I] :
     OrthogonalIdempotents e ↔ ∀ i j, e i * e j = if i = j then e i else 0 :=
   ⟨mul_eq, fun H ↦ ⟨fun i ↦ by simpa using H i i, fun i j e ↦ by simpa [e] using H i j⟩⟩
 
+open Classical in
 lemma OrthogonalIdempotents.isIdempotentElem_sum [Fintype I] : IsIdempotentElem (∑ i, e i) := by
-  classical
   simp [IsIdempotentElem, Finset.sum_mul, Finset.mul_sum, he.mul_eq]
 
+open Classical in
 lemma OrthogonalIdempotents.map :
     OrthogonalIdempotents (f ∘ e) := by
-  classical
   simp [iff_mul_eq, he.mul_eq, ← map_mul f, apply_ite f]
 
+open Classical in
 lemma OrthogonalIdempotents.map_injective_iff (hf : Function.Injective f) :
     OrthogonalIdempotents (f ∘ e) ↔ OrthogonalIdempotents e := by
-  classical
   simp [iff_mul_eq, ← hf.eq_iff, apply_ite]
 
+open Classical in
 lemma OrthogonalIdempotents.embedding {J} (i : J ↪ I) :
     OrthogonalIdempotents (e ∘ i) := by
-  classical
   simp [iff_mul_eq, he.mul_eq]
 
+open Classical in
 lemma OrthogonalIdempotents.equiv {J} (i : J ≃ I) :
     OrthogonalIdempotents (e ∘ i) ↔ OrthogonalIdempotents e := by
-  classical
   simp [iff_mul_eq, i.forall_congr_left]
 
 lemma OrthogonalIdempotents.unique [Unique I] :
     OrthogonalIdempotents e ↔ IsIdempotentElem (e default) := by
   simp [orthogonalIdempotents_iff, Unique.forall_iff]
 
+open Classical in
 lemma OrthogonalIdempotents.option [Fintype I] (x)
     (hx : IsIdempotentElem x) (hx₁ : x * ∑ i, e i = 0) (hx₂ : (∑ i, e i) * x = 0) :
     OrthogonalIdempotents (Option.elim · x e) where
   idem i := i.rec hx he.idem
   ortho i j ne := by
-    classical
     cases' i with i <;> cases' j with j
     · cases ne rfl
     · simpa only [mul_assoc, Finset.sum_mul, he.mul_eq, Finset.sum_ite_eq', Finset.mem_univ,
@@ -373,9 +373,9 @@ theorem CompleteOrthogonalIdempotents.of_ker_isNilpotent (h : ∀ x ∈ RingHom.
   of_ker_isNilpotent_of_isMulCentral f h he
     (fun _ ↦ Semigroup.mem_center_iff.mpr (mul_comm · _)) he'
 
+open Classical in
 lemma OrthogonalIdempotents.prod_one_sub (he : OrthogonalIdempotents e) :
     ∏ i, (1 - e i) = 1 - ∑ i, e i := by
-  classical
   induction' (@Finset.univ I _) using Finset.induction_on with a s has ih
   · simp
   · suffices (1 - e a) * (1 - ∑ i in s, e i) = 1 - (e a + ∑ i in s, e i) by simp [*]
@@ -394,10 +394,10 @@ lemma CompleteOrthogonalIdempotents.of_prod_one_sub
   __ := he
   complete := by rwa [he.prod_one_sub, sub_eq_zero, eq_comm] at he'
 
+open Classical in
 /-- A family of complete orthogonal idempotents induces an isomorphism `R ≃+* ∏ R ⧸ ⟨1 - eᵢ⟩` -/
 lemma CompleteOrthogonalIdempotents.bijective_pi (he : CompleteOrthogonalIdempotents e) :
     Function.Bijective (Pi.ringHom fun i ↦ Ideal.Quotient.mk (Ideal.span {1 - e i})) := by
-  classical
   refine ⟨?_, he.1.surjective_pi⟩
   rw [injective_iff_map_eq_zero]
   intro x hx

@@ -300,6 +300,7 @@ noncomputable def haarScalarFactor
   if ¬ LocallyCompactSpace G then 1
   else (exists_integral_isMulLeftInvariant_eq_smul_of_hasCompactSupport μ' μ).choose
 
+open Classical in
 /-- Two left invariant measures integrate in the same way continuous compactly supported functions,
 up to the scalar `haarScalarFactor μ' μ`. See also
 `measure_isMulInvariant_eq_smul_of_isCompact_closure`, which gives the same result for compact
@@ -313,7 +314,6 @@ theorem integral_isMulLeftInvariant_eq_smul_of_hasCompactSupport
     (μ' μ : Measure G) [IsHaarMeasure μ] [IsFiniteMeasureOnCompacts μ'] [IsMulLeftInvariant μ']
     {f : G → ℝ} (hf : Continuous f) (h'f : HasCompactSupport f) :
     ∫ x, f x ∂μ' = ∫ x, f x ∂(haarScalarFactor μ' μ • μ) := by
-  classical
   rcases h'f.eq_zero_or_locallyCompactSpace_of_group hf with Hf|Hf
   · simp [Hf]
   · simp only [haarScalarFactor, Hf, not_true_eq_false, ite_false]

@@ -97,9 +97,9 @@ theorem exists_root_sum_quadratic [Fintype R] {f g : R[X]} (hf2 : degree f = 2) 
 
 end Polynomial
 
+open Classical in
 theorem prod_univ_units_id_eq_neg_one [CommRing K] [IsDomain K] [Fintype Kˣ] :
     ∏ x : Kˣ, x = (-1 : Kˣ) := by
-  classical
     have : (∏ x ∈ (@univ Kˣ _).erase (-1), x) = 1 :=
       prod_involution (fun x _ => x⁻¹) (by simp)
         (fun a => by simp (config := { contextual := true }) [Units.inv_eq_self_iff])
@@ -208,12 +208,12 @@ section
 
 variable [GroupWithZero K] [Fintype K]
 
+open Classical in
 theorem pow_card_sub_one_eq_one (a : K) (ha : a ≠ 0) : a ^ (q - 1) = 1 := by
   calc
     a ^ (Fintype.card K - 1) = (Units.mk0 a ha ^ (Fintype.card K - 1) : Kˣ).1 := by
       rw [Units.val_pow_eq_pow_val, Units.val_mk0]
     _ = 1 := by
-      classical
         rw [← Fintype.card_units, pow_card_eq_one]
         rfl
 
@@ -253,8 +253,8 @@ theorem card' : ∃ (p : ℕ) (n : ℕ+), Nat.Prime p ∧ Fintype.card K = p ^ (
 theorem cast_card_eq_zero : (q : K) = 0 := by
   simp
 
+open Classical in
 theorem forall_pow_eq_one_iff (i : ℕ) : (∀ x : Kˣ, x ^ i = 1) ↔ q - 1 ∣ i := by
-  classical
     obtain ⟨x, hx⟩ := IsCyclic.exists_generator (α := Kˣ)
     rw [← Fintype.card_units, ← orderOf_eq_card_of_forall_mem_zpowers hx,
       orderOf_dvd_iff_pow_eq_one]
@@ -286,24 +286,24 @@ theorem sum_pow_units [DecidableEq K] (i : ℕ) :
         rw [← forall_pow_eq_one_iff, DFunLike.ext_iff]
         apply forall_congr'; intro x; simp [φ, Units.ext_iff]
 
+open Classical in
 /-- The sum of `x ^ i` as `x` ranges over a finite field of cardinality `q`
 is equal to `0` if `i < q - 1`. -/
 theorem sum_pow_lt_card_sub_one (i : ℕ) (h : i < q - 1) : ∑ x : K, x ^ i = 0 := by
   by_cases hi : i = 0
   · simp only [hi, nsmul_one, sum_const, pow_zero, card_univ, cast_card_eq_zero]
-  classical
-    have hiq : ¬q - 1 ∣ i
-    contrapose! h; exact Nat.le_of_dvd (Nat.pos_of_ne_zero hi) h
-    let φ : Kˣ ↪ K := ⟨fun x ↦ x, Units.ext⟩
-    have : univ.map φ = univ \ {0}
-    ext x
-    simpa only [mem_map, mem_univ, Function.Embedding.coeFn_mk, true_and_iff, mem_sdiff,
-      mem_singleton, φ] using isUnit_iff_ne_zero
-    calc
-      ∑ x : K, x ^ i = ∑ x ∈ univ \ {(0 : K)}, x ^ i := by
-        rw [← sum_sdiff ({0} : Finset K).subset_univ, sum_singleton, zero_pow hi, add_zero]
-      _ = ∑ x : Kˣ, (x ^ i : K) := by simp [φ, ← this, univ.sum_map φ]
-      _ = 0 := by rw [sum_pow_units K i, if_neg]; exact hiq
+  have hiq : ¬q - 1 ∣ i
+  contrapose! h; exact Nat.le_of_dvd (Nat.pos_of_ne_zero hi) h
+  let φ : Kˣ ↪ K := ⟨fun x ↦ x, Units.ext⟩
+  have : univ.map φ = univ \ {0}
+  ext x
+  simpa only [mem_map, mem_univ, Function.Embedding.coeFn_mk, true_and_iff, mem_sdiff,
+    mem_singleton, φ] using isUnit_iff_ne_zero
+  calc
+    ∑ x : K, x ^ i = ∑ x ∈ univ \ {(0 : K)}, x ^ i := by
+      rw [← sum_sdiff ({0} : Finset K).subset_univ, sum_singleton, zero_pow hi, add_zero]
+    _ = ∑ x : Kˣ, (x ^ i : K) := by simp [φ, ← this, univ.sum_map φ]
+    _ = 0 := by rw [sum_pow_units K i, if_neg]; exact hiq
 
 open Polynomial
 
@@ -334,8 +334,8 @@ end
 
 variable (p : ℕ) [Fact p.Prime] [Algebra (ZMod p) K]
 
+open Classical in
 theorem roots_X_pow_card_sub_X : roots (X ^ q - X : K[X]) = Finset.univ.val := by
-  classical
     have aux : (X ^ q - X : K[X]) ≠ 0 := X_pow_card_sub_X_ne_zero K Fintype.one_lt_card
     have : (roots (X ^ q - X : K[X])).toFinset = Finset.univ
     rw [eq_univ_iff_forall]
@@ -574,11 +574,11 @@ theorem pow_dichotomy (hF : ringChar F ≠ 2) {a : F} (ha : a ≠ 0) :
     pow_two] at h₁
   exact mul_self_eq_one_iff.mp h₁
 
+open Classical in
 /-- A unit `a` of a finite field `F` of odd characteristic is a square
 if and only if `a ^ (#F / 2) = 1`. -/
 theorem unit_isSquare_iff (hF : ringChar F ≠ 2) (a : Fˣ) :
     IsSquare a ↔ a ^ (Fintype.card F / 2) = 1 := by
-  classical
     obtain ⟨g, hg⟩ := IsCyclic.exists_generator (α := Fˣ)
     obtain ⟨n, hn⟩ : a ∈ Submonoid.powers g := by rw [mem_powers_iff_mem_zpowers]; apply hg
     have hodd := Nat.two_mul_odd_div_two (FiniteField.odd_card_of_char_ne_two hF)

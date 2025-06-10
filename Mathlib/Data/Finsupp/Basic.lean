@@ -87,13 +87,13 @@ theorem not_mem_graph_snd_zero (a : α) (f : α →₀ M) : (a, (0 : M)) ∉ f.g
 theorem image_fst_graph [DecidableEq α] (f : α →₀ M) : f.graph.image Prod.fst = f.support := by
   classical simp only [graph, map_eq_image, image_image, Embedding.coeFn_mk, (· ∘ ·), image_id']
 
+open Classical in
 theorem graph_injective (α M) [Zero M] : Injective (@graph α M _) := by
   intro f g h
-  classical
-    have hsup : f.support = g.support
-    rw [← image_fst_graph, h, image_fst_graph]
-    refine ext_iff'.2 ⟨hsup, fun x hx => apply_eq_of_mem_graph <| h.symm ▸ ?_⟩
-    exact mk_mem_graph _ (hsup ▸ hx)
+  have hsup : f.support = g.support
+  rw [← image_fst_graph, h, image_fst_graph]
+  refine ext_iff'.2 ⟨hsup, fun x hx => apply_eq_of_mem_graph <| h.symm ▸ ?_⟩
+  exact mk_mem_graph _ (hsup ▸ hx)
 
 @[simp]
 theorem graph_inj {f g : α →₀ M} : f.graph = g.graph ↔ f = g :=
@@ -295,10 +295,10 @@ theorem equivMapDomain_trans (f : α ≃ β) (g : β ≃ γ) (l : α →₀ M) :
 theorem equivMapDomain_trans' (f : α ≃ β) (g : β ≃ γ) :
     @equivMapDomain _ _ M _ (f.trans g) = equivMapDomain g ∘ equivMapDomain f := by ext x; rfl
 
+open Classical in
 @[simp]
 theorem equivMapDomain_single (f : α ≃ β) (a : α) (b : M) :
     equivMapDomain f (single a b) = single (f a) b := by
-  classical
     ext x
     simp only [single_apply, Equiv.apply_eq_iff_eq_symm_apply, equivMapDomain_apply]
 
@@ -474,9 +474,9 @@ theorem mapDomain_support [DecidableEq β] {f : α → β} {s : α →₀ M} :
     Finset.Subset.trans (Finset.biUnion_mono fun a _ => support_single_subset) <| by
       rw [Finset.biUnion_singleton]
 
+open Classical in
 theorem mapDomain_apply' (S : Set α) {f : α → β} (x : α →₀ M) (hS : (x.support : Set α) ⊆ S)
     (hf : Set.InjOn f S) {a : α} (ha : a ∈ S) : mapDomain f x (f a) = x a := by
-  classical
     rw [mapDomain, sum_apply, sum]
     simp_rw [single_apply]
     by_cases hax : a ∈ x.support
@@ -574,17 +574,17 @@ theorem sum_update_add [AddCommMonoid α] [AddCommMonoid β] (f : ι →₀ α) 
   congr 1
   rw [add_comm, sum_single_index (hg _), sum_single_index (hg _)]
 
+open Classical in
 theorem mapDomain_injOn (S : Set α) {f : α → β} (hf : Set.InjOn f S) :
     Set.InjOn (mapDomain f : (α →₀ M) → β →₀ M) { w | (w.support : Set α) ⊆ S } := by
   intro v₁ hv₁ v₂ hv₂ eq
   ext a
-  classical
-    by_cases h : a ∈ v₁.support ∪ v₂.support
-    · rw [← mapDomain_apply' S _ hv₁ hf _, ← mapDomain_apply' S _ hv₂ hf _, eq] <;>
-        · apply Set.union_subset hv₁ hv₂
-          exact mod_cast h
-    · simp only [not_or, mem_union, not_not, mem_support_iff] at h
-      simp [h]
+  by_cases h : a ∈ v₁.support ∪ v₂.support
+  · rw [← mapDomain_apply' S _ hv₁ hf _, ← mapDomain_apply' S _ hv₂ hf _, eq] <;>
+      · apply Set.union_subset hv₁ hv₂
+        exact mod_cast h
+  · simp only [not_or, mem_union, not_not, mem_support_iff] at h
+    simp [h]
 
 theorem equivMapDomain_eq_mapDomain {M} [AddCommMonoid M] (f : α ≃ β) (l : α →₀ M) :
     equivMapDomain f l = mapDomain f l := by ext x; simp [mapDomain_equiv_apply]
@@ -729,19 +729,19 @@ theorem some_single_none [Zero M] (m : M) : (single none m : Option α →₀ M)
   ext
   simp
 
+open Classical in
 @[simp]
 theorem some_single_some [Zero M] (a : α) (m : M) :
     (single (Option.some a) m : Option α →₀ M).some = single a m := by
-  classical
     ext b
     simp [single_apply]
 
+open Classical in
 @[to_additive]
 theorem prod_option_index [AddCommMonoid M] [CommMonoid N] (f : Option α →₀ M)
     (b : Option α → M → N) (h_zero : ∀ o, b o 0 = 1)
     (h_add : ∀ o m₁ m₂, b o (m₁ + m₂) = b o m₁ * b o m₂) :
     f.prod b = b none (f none) * f.some.prod fun a => b (Option.some a) := by
-  classical
     apply induction_linear f
     · simp [some_zero, h_zero]
     · intro f₁ f₂ h₁ h₂
@@ -814,10 +814,10 @@ theorem filter_single_of_neg {a : α} {b : M} (h : ¬p a) : (single a b).filter 
   (filter_eq_zero_iff _ _).2 fun _ hpx =>
     single_apply_eq_zero.2 fun hxa => absurd hpx (hxa.symm ▸ h)
 
+open Classical in
 @[to_additive]
 theorem prod_filter_index [CommMonoid N] (g : α → M → N) :
     (f.filter p).prod g = ∏ x ∈ (f.filter p).support, g x (f x) := by
-  classical
     refine Finset.prod_congr rfl fun x hx => ?_
     rw [support_filter, Finset.mem_filter] at hx
     rw [filter_apply_pos _ _ hx.2]
@@ -864,10 +864,10 @@ theorem mem_frange {f : α →₀ M} {y : M} : y ∈ f.frange ↔ y ≠ 0 ∧ �
 
 theorem zero_not_mem_frange {f : α →₀ M} : (0 : M) ∉ f.frange := fun H => (mem_frange.1 H).1 rfl
 
+open Classical in
 theorem frange_single {x : α} {y : M} : frange (single x y) ⊆ {y} := fun r hr =>
   let ⟨t, ht1, ht2⟩ := mem_frange.1 hr
   ht2 ▸ by
-    classical
       rw [single_apply] at ht2 ⊢
       split_ifs at ht2 ⊢
       · exact Finset.mem_singleton_self _
@@ -1050,9 +1050,9 @@ finitely supported functions from `β` to `γ`. -/
 protected def curry (f : α × β →₀ M) : α →₀ β →₀ M :=
   f.sum fun p c => single p.1 (single p.2 c)
 
+open Classical in
 @[simp]
 theorem curry_apply (f : α × β →₀ M) (x : α) (y : β) : f.curry x y = f (x, y) := by
-  classical
     have : ∀ b : α × β, single b.fst (single b.snd (f b)) x y = if b = (x, y) then f b else 0
     rintro ⟨b₁, b₂⟩
     simp only [ne_eq, single_apply, Prod.ext_iff, ite_and]
@@ -1099,9 +1099,9 @@ def finsuppProdEquiv : (α × β →₀ M) ≃ (α →₀ β →₀ M) where
       sum_single_index, single_zero, single_add, eq_self_iff_true, forall_true_iff,
       forall₃_true_iff, (single_sum _ _ _).symm, sum_single]
 
+open Classical in
 theorem filter_curry (f : α × β →₀ M) (p : α → Prop) [DecidablePred p] :
     (f.filter fun a : α × β => p a.1).curry = f.curry.filter p := by
-  classical
     rw [Finsupp.curry, Finsupp.curry, Finsupp.sum, Finsupp.sum, filter_sum, support_filter,
       sum_filter]
     refine Finset.sum_congr rfl ?_

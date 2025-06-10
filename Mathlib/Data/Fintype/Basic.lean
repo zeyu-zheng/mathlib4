@@ -1065,6 +1065,7 @@ noncomputable def seqOfForallFinsetExistsAux {α : Type*} [DecidableEq α] (P : 
         (Finset.image (fun i : Fin n => seqOfForallFinsetExistsAux P r h i)
           (Finset.univ : Finset (Fin n))))
 
+open Classical in
 /-- Induction principle to build a sequence, by adding one point at a time satisfying a given
 relation with respect to all the previously chosen points.
 
@@ -1075,7 +1076,6 @@ We also ensure that all constructed points satisfy a given predicate `P`. -/
 theorem exists_seq_of_forall_finset_exists {α : Type*} (P : α → Prop) (r : α → α → Prop)
     (h : ∀ s : Finset α, (∀ x ∈ s, P x) → ∃ y, P y ∧ ∀ x ∈ s, r x y) :
     ∃ f : ℕ → α, (∀ n, P (f n)) ∧ ∀ m n, m < n → r (f m) (f n) := by
-  classical
     have : Nonempty α
     rcases h ∅ (by simp) with ⟨y, _⟩
     exact ⟨y⟩

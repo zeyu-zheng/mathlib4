@@ -112,9 +112,9 @@ theorem card_edgeFinset_top_eq_card_choose_two [DecidableEq V] :
     (⊤ : SimpleGraph V).edgeFinset.card = (Fintype.card V).choose 2 := by
   simp_rw [Set.toFinset_card, edgeSet_top, Set.coe_setOf, ← Sym2.card_subtype_not_diag]
 
+open Classical in
 /-- Any graph on `n` vertices has at most `n.choose 2` edges. -/
 theorem card_edgeFinset_le_card_choose_two : G.edgeFinset.card ≤ (Fintype.card V).choose 2 := by
-  classical
   rw [← card_edgeFinset_top_eq_card_choose_two]
   exact card_le_card (edgeFinset_mono le_top)
 
@@ -139,17 +139,16 @@ def DeleteFar (p : SimpleGraph V → Prop) (r : 𝕜) : Prop :=
 
 variable {G}
 
+open Classical in
 theorem deleteFar_iff :
     G.DeleteFar p r ↔ ∀ ⦃H : SimpleGraph _⦄ [DecidableRel H.Adj],
       H ≤ G → p H → r ≤ G.edgeFinset.card - H.edgeFinset.card := by
-  classical
   refine ⟨fun h H _ hHG hH ↦ ?_, fun h s hs hG ↦ ?_⟩
   · have := h (sdiff_subset (t := H.edgeFinset))
     simp only [deleteEdges_sdiff_eq_of_le hHG, edgeFinset_mono hHG, card_sdiff,
       card_le_card, coe_sdiff, coe_edgeFinset, Nat.cast_sub] at this
     exact this hH
-  · classical
-    simpa [card_sdiff hs, edgeFinset_deleteEdges, -Set.toFinset_card, Nat.cast_sub,
+  · simpa [card_sdiff hs, edgeFinset_deleteEdges, -Set.toFinset_card, Nat.cast_sub,
       card_le_card hs] using h (G.deleteEdges_le s) hG
 
 alias ⟨DeleteFar.le_card_sub_card, _⟩ := deleteFar_iff
@@ -212,9 +211,9 @@ theorem card_neighborSet_eq_degree : Fintype.card (G.neighborSet v) = G.degree v
 theorem degree_pos_iff_exists_adj : 0 < G.degree v ↔ ∃ w, G.Adj v w := by
   simp only [degree, card_pos, Finset.Nonempty, mem_neighborFinset]
 
+open Classical in
 theorem degree_compl [Fintype (Gᶜ.neighborSet v)] [Fintype V] :
     Gᶜ.degree v = Fintype.card V - 1 - G.degree v := by
-  classical
     rw [← card_neighborSet_union_compl_neighborSet G v, Set.toFinset_union]
     simp [card_union_of_disjoint (Set.disjoint_toFinset.mpr (compl_neighborSet_disjoint G v))]
 
@@ -375,8 +374,8 @@ theorem maxDegree_le_of_forall_degree_le [DecidableRel G.Adj] (k : ℕ) (h : ∀
     rw [maxDegree, hV, image_empty]
     exact k.zero_le
 
+open Classical in
 theorem degree_lt_card_verts [DecidableRel G.Adj] (v : V) : G.degree v < Fintype.card V := by
-  classical
   apply Finset.card_lt_card
   rw [Finset.ssubset_iff]
   exact ⟨v, by simp, Finset.subset_univ _⟩
@@ -404,11 +403,11 @@ theorem card_commonNeighbors_lt_card_verts [DecidableRel G.Adj] (v w : V) :
     Fintype.card (G.commonNeighbors v w) < Fintype.card V :=
   Nat.lt_of_le_of_lt (G.card_commonNeighbors_le_degree_left _ _) (G.degree_lt_card_verts v)
 
+open Classical in
 /-- If the condition `G.Adj v w` fails, then `card_commonNeighbors_le_degree` is
 the best we can do in general. -/
 theorem Adj.card_commonNeighbors_lt_degree {G : SimpleGraph V} [DecidableRel G.Adj] {v w : V}
     (h : G.Adj v w) : Fintype.card (G.commonNeighbors v w) < G.degree v := by
-  classical
   erw [← Set.toFinset_card]
   apply Finset.card_lt_card
   rw [Finset.ssubset_iff]

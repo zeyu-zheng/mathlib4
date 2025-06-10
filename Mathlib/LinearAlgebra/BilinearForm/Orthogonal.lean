@@ -101,11 +101,11 @@ theorem isOrtho_smul_right {x y : M₄} {a : R₄} (ha : a ≠ 0) :
   simp only [smul_eq_mul, mul_eq_zero, or_iff_right_iff_imp]
   exact fun a ↦ (ha a).elim
 
+open Classical in
 /-- A set of orthogonal vectors `v` with respect to some bilinear form `B` is linearly independent
   if for all `i`, `B (v i) (v i) ≠ 0`. -/
 theorem linearIndependent_of_iIsOrtho {n : Type w} {B : BilinForm K V} {v : n → V}
     (hv₁ : B.iIsOrtho v) (hv₂ : ∀ i, ¬B.IsOrtho (v i) (v i)) : LinearIndependent K v := by
-  classical
     rw [linearIndependent_iff']
     intro s w hs i hi
     have : B (s.sum fun i : n => w i • v i) (v i) = 0

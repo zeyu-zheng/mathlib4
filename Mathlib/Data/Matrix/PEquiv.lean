@@ -109,9 +109,9 @@ theorem toMatrix_bot [DecidableEq n] [Zero α] [One α] :
     ((⊥ : PEquiv m n).toMatrix : Matrix m n α) = 0 :=
   rfl
 
+open Classical in
 theorem toMatrix_injective [DecidableEq n] [MonoidWithZero α] [Nontrivial α] :
     Function.Injective (@toMatrix m n α _ _ _) := by
-  classical
     intro f g
     refine not_imp_not.1 ?_
     simp only [Matrix.ext_iff.symm, toMatrix_apply, PEquiv.ext_iff, not_forall, exists_imp]

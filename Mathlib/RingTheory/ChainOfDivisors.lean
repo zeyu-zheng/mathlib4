@@ -125,10 +125,10 @@ theorem eq_second_of_chain_of_prime_dvd {p q r : Associates M} {n : ℕ} (hn : n
   · refine Associates.dvdNotUnit_iff_lt.2 (h₁ ?_)
     simpa only [Fin.coe_eq_castSucc] using Fin.lt_succ
 
+open Classical in
 theorem card_subset_divisors_le_length_of_chain {q : Associates M} {n : ℕ}
     {c : Fin (n + 1) → Associates M} (h₂ : ∀ {r}, r ≤ q ↔ ∃ i, r = c i) {m : Finset (Associates M)}
     (hm : ∀ r, r ∈ m → r ≤ q) : m.card ≤ n + 1 := by
-  classical
     have mem_image : ∀ r : Associates M, r ≤ q → r ∈ Finset.univ.image c
     intro r hr
     obtain ⟨i, hi⟩ := h₂.1 hr
@@ -138,10 +138,10 @@ theorem card_subset_divisors_le_length_of_chain {q : Associates M} {n : ℕ}
 
 variable [UniqueFactorizationMonoid M]
 
+open Classical in
 theorem element_of_chain_eq_pow_second_of_chain {q r : Associates M} {n : ℕ} (hn : n ≠ 0)
     {c : Fin (n + 1) → Associates M} (h₁ : StrictMono c) (h₂ : ∀ {r}, r ≤ q ↔ ∃ i, r = c i)
     (hr : r ∣ q) (hq : q ≠ 0) : ∃ i : Fin (n + 1), r = c 1 ^ (i : ℕ) := by
-  classical
     let i := Multiset.card (normalizedFactors r)
     have hi : normalizedFactors r = Multiset.replicate i (c 1)
     apply Multiset.eq_replicate_of_mem
@@ -174,10 +174,10 @@ theorem element_of_chain_eq_pow_second_of_chain {q r : Associates M} {n : ℕ} (
     · exact H
     · exact Nat.succ_le_succ_iff.mp a.2
 
+open Classical in
 theorem eq_pow_second_of_chain_of_has_chain {q : Associates M} {n : ℕ} (hn : n ≠ 0)
     {c : Fin (n + 1) → Associates M} (h₁ : StrictMono c)
     (h₂ : ∀ {r : Associates M}, r ≤ q ↔ ∃ i, r = c i) (hq : q ≠ 0) : q = c 1 ^ n := by
-  classical
     obtain ⟨i, hi'⟩ := element_of_chain_eq_pow_second_of_chain hn h₁ (@fun r => h₂) (dvd_refl q) hq
     convert hi'
     refine (Nat.lt_succ_iff.1 i.prop).antisymm' (Nat.le_of_succ_le_succ ?_)

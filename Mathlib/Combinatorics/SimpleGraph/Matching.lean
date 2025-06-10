@@ -148,8 +148,8 @@ theorem isMatching_iff_forall_degree [∀ v, Fintype (M.neighborSet v)] :
     M.IsMatching ↔ ∀ v : V, v ∈ M.verts → M.degree v = 1 := by
   simp only [degree_eq_one_iff_unique_adj, IsMatching]
 
+open Classical in
 theorem IsMatching.even_card [Fintype M.verts] (h : M.IsMatching) : Even M.verts.toFinset.card := by
-  classical
   rw [isMatching_iff_forall_degree] at h
   use M.coe.edgeFinset.card
   rw [← two_mul, ← M.coe.sum_degrees_eq_twice_card_edges]
@@ -170,9 +170,9 @@ theorem isPerfectMatching_iff_forall_degree [∀ v, Fintype (M.neighborSet v)] :
     M.IsPerfectMatching ↔ ∀ v, M.degree v = 1 := by
   simp [degree_eq_one_iff_unique_adj, isPerfectMatching_iff]
 
+open Classical in
 theorem IsPerfectMatching.even_card [Fintype V] (h : M.IsPerfectMatching) :
     Even (Fintype.card V) := by
-  classical
   simpa only [h.2.card_verts] using IsMatching.even_card h.1
 
 lemma IsMatching.induce_connectedComponent (h : M.IsMatching) (c : ConnectedComponent G) :
@@ -200,6 +200,7 @@ lemma even_card_of_isPerfectMatching [DecidableEq V]
     Even (Fintype.card c.supp) := by
   classical simpa using (hM.induce_connectedComponent_isMatching c).even_card
 
+open Classical in
 lemma odd_matches_node_outside {u : Set V} {c : ConnectedComponent (Subgraph.deleteVerts ⊤ u).coe}
     (hM : M.IsPerfectMatching) (codd : Odd (Nat.card c.supp)) :
     ∃ᵉ (w ∈ u) (v : ((⊤ : G.Subgraph).deleteVerts u).verts), M.Adj v w ∧ v ∈ c.supp := by
@@ -216,10 +217,8 @@ lemma odd_matches_node_outside {u : Set V} {c : ConnectedComponent (Subgraph.del
     Subgraph.induce_adj, hwnu, not_false_eq_true, and_self, Subgraph.top_adj, M.adj_sub hw.1,
     and_true] at hv' ⊢
   trivial
-
   apply Nat.odd_iff_not_even.mp codd
   haveI : Fintype ↑(Subgraph.induce M (Subtype.val '' supp c)).verts := Fintype.ofFinite _
-  classical
   have hMeven := Subgraph.IsMatching.even_card hMmatch
   haveI : Fintype (c.supp) := Fintype.ofFinite _
   simp only [Subgraph.induce_verts, Subgraph.verts_top, Set.toFinset_image,

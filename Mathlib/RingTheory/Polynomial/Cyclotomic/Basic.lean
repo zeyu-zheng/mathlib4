@@ -116,11 +116,11 @@ theorem roots_of_cyclotomic (n : ℕ) (R : Type*) [CommRing R] [IsDomain R] :
     (cyclotomic' n R).roots = (primitiveRoots n R).val := by
   rw [cyclotomic']; exact roots_prod_X_sub_C (primitiveRoots n R)
 
+open Classical in
 /-- If there is a primitive `n`th root of unity in `K`, then `X ^ n - 1 = ∏ (X - μ)`, where `μ`
 varies over the `n`-th roots of unity. -/
 theorem X_pow_sub_one_eq_prod {ζ : R} {n : ℕ} (hpos : 0 < n) (h : IsPrimitiveRoot ζ n) :
     X ^ n - 1 = ∏ ζ ∈ nthRootsFinset n R, (X - C ζ) := by
-  classical
   rw [nthRootsFinset, ← Multiset.toFinset_eq (IsPrimitiveRoot.nthRoots_one_nodup h)]
   simp only [Finset.prod_mk, RingHom.map_one]
   rw [nthRoots]
@@ -147,12 +147,12 @@ theorem X_pow_sub_one_splits {ζ : K} {n : ℕ} (h : IsPrimitiveRoot ζ n) :
     Splits (RingHom.id K) (X ^ n - C (1 : K)) := by
   rw [splits_iff_card_roots, ← nthRoots, IsPrimitiveRoot.card_nthRoots_one h, natDegree_X_pow_sub_C]
 
+open Classical in
 /-- If there is a primitive `n`-th root of unity in `K`, then
 `∏ i ∈ Nat.divisors n, cyclotomic' i K = X ^ n - 1`. -/
 theorem prod_cyclotomic'_eq_X_pow_sub_one {K : Type*} [CommRing K] [IsDomain K] {ζ : K} {n : ℕ}
     (hpos : 0 < n) (h : IsPrimitiveRoot ζ n) :
     ∏ i ∈ Nat.divisors n, cyclotomic' i K = X ^ n - 1 := by
-  classical
   have hd : (n.divisors : Set ℕ).PairwiseDisjoint fun k => primitiveRoots k K :=
     fun x _ y _ hne => IsPrimitiveRoot.disjoint hne
   simp only [X_pow_sub_one_eq_prod hpos h, cyclotomic', ← Finset.prod_biUnion hd,

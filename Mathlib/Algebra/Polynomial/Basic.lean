@@ -960,9 +960,9 @@ theorem update_zero_eq_erase (p : R[X]) (n : ℕ) : p.update n 0 = p.erase n := 
   ext
   rw [coeff_update_apply, coeff_erase]
 
+open Classical in
 theorem support_update (p : R[X]) (n : ℕ) (a : R) [Decidable (a = 0)] :
     support (p.update n a) = if a = 0 then p.support.erase n else insert n p.support := by
-  classical
     cases p
     simp only [support, update, Finsupp.support_update]
     congr

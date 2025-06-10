@@ -267,11 +267,11 @@ section DistribLattice
 variable [DistribLattice α] [LinearOrderedCommSemiring β] [ExistsAddOfLE β]
   (f f₁ f₂ f₃ f₄ g μ : α → β)
 
+open Classical in
 /-- The **Four Functions Theorem**, aka **Ahlswede-Daykin Inequality**. -/
 lemma four_functions_theorem [DecidableEq α] (h₁ : 0 ≤ f₁) (h₂ : 0 ≤ f₂) (h₃ : 0 ≤ f₃) (h₄ : 0 ≤ f₄)
     (h : ∀ a b, f₁ a * f₂ b ≤ f₃ (a ⊓ b) * f₄ (a ⊔ b)) (s t : Finset α) :
     (∑ a ∈ s, f₁ a) * ∑ a ∈ t, f₂ a ≤ (∑ a ∈ s ⊼ t, f₃ a) * ∑ a ∈ s ⊻ t, f₄ a := by
-  classical
   set L : Sublattice α := ⟨latticeClosure (s ∪ t), isSublattice_latticeClosure.1,
     isSublattice_latticeClosure.2⟩
   have : Finite L := (s.finite_toSet.union t.finite_toSet).latticeClosure.to_subtype
@@ -292,9 +292,8 @@ lemma four_functions_theorem [DecidableEq α] (h₁ : 0 ≤ f₁) (h₂ : 0 ≤ 
   · simpa only [← hs', ← ht', ← map_sups, ← map_infs, sum_map, Embedding.coeFn_mk, hg.extend_apply]
       using this
   rintro s t
-  classical
-  obtain ⟨a, rfl⟩ | hs := em (∃ a, g a = s)
-  · obtain ⟨b, rfl⟩ | ht := em (∃ b, g b = t)
+  obtain ⟨a, rfl⟩ | hs := Classical.em (∃ a, g a = s)
+  · obtain ⟨b, rfl⟩ | ht := Classical.em (∃ b, g b = t)
     · simp_rw [← sup_eq_union, ← inf_eq_inter, ← map_sup, ← map_inf, hg.extend_apply]
       exact h _ _
     · simpa [extend_apply' _ _ _ ht] using mul_nonneg
@@ -317,11 +316,11 @@ lemma four_functions_theorem_univ (h₁ : 0 ≤ f₁) (h₂ : 0 ≤ f₂) (h₃ 
     (∑ a, f₁ a) * ∑ a, f₂ a ≤ (∑ a, f₃ a) * ∑ a, f₄ a := by
   classical simpa using four_functions_theorem f₁ f₂ f₃ f₄ h₁ h₂ h₃ h₄ h univ univ
 
+open Classical in
 /-- The **Holley Inequality**. -/
 lemma holley (hμ₀ : 0 ≤ μ) (hf : 0 ≤ f) (hg : 0 ≤ g) (hμ : Monotone μ)
     (hfg : ∑ a, f a = ∑ a, g a) (h : ∀ a b, f a * g b ≤ f (a ⊓ b) * g (a ⊔ b)) :
     ∑ a, μ a * f a ≤ ∑ a, μ a * g a := by
-  classical
   obtain rfl | hf := hf.eq_or_lt
   · simp only [Pi.zero_apply, sum_const_zero, eq_comm, Fintype.sum_eq_zero_iff_of_nonneg hg] at hfg
     simp [hfg]

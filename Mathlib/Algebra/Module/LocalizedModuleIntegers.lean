@@ -56,10 +56,10 @@ theorem exists_integer_multiple (x : M') : ∃ a : S, IsInteger f (a.val • x) 
   let ⟨⟨Num, denom⟩, h⟩ := IsLocalizedModule.surj S f x
   ⟨denom, Set.mem_range.mpr ⟨Num, h.symm⟩⟩
 
+open Classical in
 /-- We can clear the denominators of a `Finset`-indexed family of fractions. -/
 theorem exist_integer_multiples {ι : Type*} (s : Finset ι) (g : ι → M') :
     ∃ b : S, ∀ i ∈ s, IsInteger f (b.val • g i) := by
-  classical
   choose sec hsec using (fun i ↦ IsLocalizedModule.surj S f (g i))
   refine ⟨∏ i ∈ s, (sec i).2, fun i hi => ⟨?_, ?_⟩⟩
   · exact (∏ j ∈ s.erase i, (sec j).2) • (sec i).1

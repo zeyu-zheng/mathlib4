@@ -49,6 +49,7 @@ instance Set.instTietzeExtensionUnitBall {𝕜 : Type v} [RCLike 𝕜] {E : Type
   have : NormedSpace ℝ E := NormedSpace.restrictScalars ℝ 𝕜 E
   .of_homeo Homeomorph.unitBall.symm
 
+open Classical in
 instance Set.instTietzeExtensionUnitClosedBall {𝕜 : Type v} [RCLike 𝕜] {E : Type w}
     [NormedAddCommGroup E] [NormedSpace 𝕜 E] [FiniteDimensional 𝕜 E] :
     TietzeExtension.{u, w} (Metric.closedBall (0 : E) 1) := by
@@ -56,7 +57,6 @@ instance Set.instTietzeExtensionUnitClosedBall {𝕜 : Type v} [RCLike 𝕜] {E 
   have : IsScalarTower ℝ 𝕜 E := Real.isScalarTower
   -- I didn't find this retract in Mathlib.
   let g : E → E := fun x ↦ ‖x‖⁻¹ • x
-  classical
   suffices this : Continuous (piecewise (Metric.closedBall 0 1) id g) by
     refine .of_retract ⟨Subtype.val, by fun_prop⟩ ⟨_, this.codRestrict fun x ↦ ?_⟩ ?_
     · by_cases hx : x ∈ Metric.closedBall 0 1

@@ -70,10 +70,10 @@ lemma KaehlerDifferential.mvPolynomialBasis_repr_D_X (σ) (i) :
     (mvPolynomialBasis R σ).repr (D _ _ (.X i)) = Finsupp.single i 1 := by
   simp [mvPolynomialBasis_repr_D]
 
+open Classical in
 @[simp]
 lemma KaehlerDifferential.mvPolynomialBasis_repr_apply (σ) (x) (i) :
     (mvPolynomialBasis R σ).repr (D _ _ x) i = MvPolynomial.pderiv i x := by
-  classical
   suffices ((Finsupp.lapply i).comp
     (mvPolynomialBasis R σ).repr.toLinearMap).compDer (D _ _) = MvPolynomial.pderiv i by
     rw [← this]; rfl

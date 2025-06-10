@@ -210,6 +210,7 @@ noncomputable def selfEquivSigmaOrbitsQuotientStabilizer' {φ : Ω → β}
         (Equiv.Set.ofEq <| orbitRel.Quotient.orbit_eq_orbit_out _ hφ).trans <|
           orbitEquivQuotientStabilizer α (φ ω)
 
+open Classical in
 /-- **Class formula** for a finite group acting on a finite type. See
 `MulAction.card_eq_sum_card_group_div_card_stabilizer` for a specialized version using
 `Quotient.out'`. -/
@@ -220,7 +221,6 @@ noncomputable def selfEquivSigmaOrbitsQuotientStabilizer' {φ : Ω → β}
 theorem card_eq_sum_card_group_div_card_stabilizer' [Fintype α] [Fintype β] [Fintype Ω]
     [∀ b : β, Fintype <| stabilizer α b] {φ : Ω → β} (hφ : LeftInverse Quotient.mk'' φ) :
     Fintype.card β = ∑ ω : Ω, Fintype.card α / Fintype.card (stabilizer α (φ ω)) := by
-  classical
     have : ∀ ω : Ω, Fintype.card α / Fintype.card (stabilizer α (φ ω)) =
         Fintype.card (α ⧸ stabilizer α (φ ω)) := by
       intro ω
@@ -367,11 +367,11 @@ instance finite_quotient_of_finite_quotient_of_finite_quotient {H : Subgroup α}
 
 end MulAction
 
+open Classical in
 theorem ConjClasses.card_carrier {G : Type*} [Group G] [Fintype G] (g : G)
     [Fintype (ConjClasses.mk g).carrier] [Fintype <| MulAction.stabilizer (ConjAct G) g] :
     Fintype.card (ConjClasses.mk g).carrier =
       Fintype.card G / Fintype.card (MulAction.stabilizer (ConjAct G) g) := by
-  classical
   rw [Fintype.card_congr <| ConjAct.toConjAct (G := G) |>.toEquiv]
   rw [← MulAction.card_orbit_mul_card_stabilizer_eq_card_group (ConjAct G) g, Nat.mul_div_cancel]
   · simp_rw [ConjAct.orbit_eq_carrier_conjClasses]
@@ -428,9 +428,9 @@ section conjClasses
 
 open Fintype
 
+open Classical in
 theorem card_comm_eq_card_conjClasses_mul_card (G : Type*) [Group G] :
     Nat.card { p : G × G // Commute p.1 p.2 } = Nat.card (ConjClasses G) * Nat.card G := by
-  classical
   rcases fintypeOrInfinite G; swap
   · rw [mul_comm, Nat.card_eq_zero_of_infinite, Nat.card_eq_zero_of_infinite, zero_mul]
   simp only [Nat.card_eq_fintype_card]

@@ -122,9 +122,9 @@ theorem splits_X_sub_C {x : K} : (X - C x).Splits i :=
 theorem splits_X : X.Splits i :=
   splits_of_degree_le_one _ degree_X_le
 
+open Classical in
 theorem splits_prod {ι : Type u} {s : ι → K[X]} {t : Finset ι} :
     (∀ j ∈ t, (s j).Splits i) → (∏ x ∈ t, s x).Splits i := by
-  classical
   refine Finset.induction_on t (fun _ => splits_one i) fun a t hat ih ht => ?_
   rw [Finset.forall_mem_insert] at ht; rw [Finset.prod_insert hat]
   exact splits_mul i ht.1 (ih ht.2)
@@ -226,9 +226,9 @@ theorem splits_mul_iff {f g : K[X]} (hf : f ≠ 0) (hg : g ≠ 0) :
     (f * g).Splits i ↔ f.Splits i ∧ g.Splits i :=
   ⟨splits_of_splits_mul i (mul_ne_zero hf hg), fun ⟨hfs, hgs⟩ => splits_mul i hfs hgs⟩
 
+open Classical in
 theorem splits_prod_iff {ι : Type u} {s : ι → K[X]} {t : Finset ι} :
     (∀ j ∈ t, s j ≠ 0) → ((∏ x ∈ t, s x).Splits i ↔ ∀ j ∈ t, (s j).Splits i) := by
-  classical
   refine
     Finset.induction_on t (fun _ =>
         ⟨fun _ _ h => by simp only [Finset.not_mem_empty] at h, fun _ => splits_one i⟩)
@@ -279,9 +279,9 @@ theorem roots_map {f : K[X]} (hf : f.Splits <| RingHom.id K) : (f.map i).roots =
       convert (natDegree_eq_card_roots hf).symm
       rw [map_id]).symm
 
+open Classical in
 theorem image_rootSet [Algebra R K] [Algebra R L] {p : R[X]} (h : p.Splits (algebraMap R K))
     (f : K →ₐ[R] L) : f '' p.rootSet K = p.rootSet L := by
-  classical
     rw [rootSet, ← Finset.coe_image, ← Multiset.toFinset_map, ← f.coe_toRingHom,
       ← roots_map _ ((splits_id_iff_splits (algebraMap R K)).mpr h), map_map, f.comp_algebraMap,
       ← rootSet]

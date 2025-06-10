@@ -271,14 +271,14 @@ section
 variable {R : Type*} [CommRing R] [IsDomain R] {K : Type*}
 variable [Field K] [Algebra R K] [IsFractionRing R K]
 
+open Classical in
 theorem iff_dvd_total : ValuationRing R ↔ IsTotal R (· ∣ ·) := by
-  classical
   refine ⟨fun H => ⟨fun a b => ?_⟩, fun H => ⟨fun a b => ?_⟩⟩
   · obtain ⟨c, rfl | rfl⟩ := ValuationRing.cond a b <;> simp
   · obtain ⟨c, rfl⟩ | ⟨c, rfl⟩ := @IsTotal.total _ _ H a b <;> use c <;> simp
 
+open Classical in
 theorem iff_ideal_total : ValuationRing R ↔ IsTotal (Ideal R) (· ≤ ·) := by
-  classical
   refine ⟨fun _ => ⟨le_total⟩, fun H => iff_dvd_total.mpr ⟨fun a b => ?_⟩⟩
   have := @IsTotal.total _ _ H (Ideal.span {a}) (Ideal.span {b})
   simp_rw [Ideal.span_singleton_le_span_singleton] at this
@@ -328,9 +328,9 @@ theorem isInteger_or_isInteger [h : ValuationRing R] (x : K) :
 
 variable {R}
 
+open Classical in
 -- This implies that valuation rings are integrally closed through typeclass search.
 instance (priority := 100) [ValuationRing R] : IsBezout R := by
-  classical
   rw [IsBezout.iff_span_pair_isPrincipal]
   intro x y
   rw [Ideal.span_insert]
@@ -338,8 +338,8 @@ instance (priority := 100) [ValuationRing R] : IsBezout R := by
   · erw [sup_eq_right.mpr h]; exact ⟨⟨_, rfl⟩⟩
   · erw [sup_eq_left.mpr h]; exact ⟨⟨_, rfl⟩⟩
 
+open Classical in
 instance (priority := 100) [LocalRing R] [IsBezout R] : ValuationRing R := by
-  classical
   refine iff_dvd_total.mpr ⟨fun a b => ?_⟩
   obtain ⟨g, e : _ = Ideal.span _⟩ := IsBezout.span_pair_isPrincipal a b
   obtain ⟨a, rfl⟩ := Ideal.mem_span_singleton'.mp

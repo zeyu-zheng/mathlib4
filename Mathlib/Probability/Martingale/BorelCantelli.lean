@@ -67,9 +67,9 @@ theorem leastGE_le {i : ℕ} {r : ℝ} (ω : Ω) : leastGE f r i ω ≤ i :=
 theorem leastGE_mono {n m : ℕ} (hnm : n ≤ m) (r : ℝ) (ω : Ω) : leastGE f r n ω ≤ leastGE f r m ω :=
   hitting_mono hnm
 
+open Classical in
 theorem leastGE_eq_min (π : Ω → ℕ) (r : ℝ) (ω : Ω) {n : ℕ} (hπn : ∀ ω, π ω ≤ n) :
     leastGE f r (π ω) ω = min (π ω) (leastGE f r n ω) := by
-  classical
   refine le_antisymm (le_min (leastGE_le _) (leastGE_mono (hπn ω) r ω)) ?_
   by_cases hle : π ω ≤ leastGE f r n ω
   · rw [min_eq_left hle, leastGE]

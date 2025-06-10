@@ -346,39 +346,39 @@ def cycleFactorsAux [DecidableEq α] [Fintype α] :
                     inv_eq_iff_eq, eq_comm],
             hm₃⟩⟩
 
+open Classical in
 theorem mem_list_cycles_iff {α : Type*} [Finite α] {l : List (Perm α)}
     (h1 : ∀ σ : Perm α, σ ∈ l → σ.IsCycle) (h2 : l.Pairwise Disjoint) {σ : Perm α} :
     σ ∈ l ↔ σ.IsCycle ∧ ∀ a, σ a ≠ a → σ a = l.prod a := by
   suffices σ.IsCycle → (σ ∈ l ↔ ∀ a, σ a ≠ a → σ a = l.prod a) by
     exact ⟨fun hσ => ⟨h1 σ hσ, (this (h1 σ hσ)).mp hσ⟩, fun hσ => (this hσ.1).mpr hσ.2⟩
   intro h3
-  classical
-    cases nonempty_fintype α
-    constructor
-    · intro h a ha
-      exact eq_on_support_mem_disjoint h h2 _ (mem_support.mpr ha)
-    · intro h
-      have hσl : σ.support ⊆ l.prod.support
-      intro x hx
-      rw [mem_support] at hx
-      rwa [mem_support, ← h _ hx]
-      obtain ⟨a, ha, -⟩ := id h3
-      rw [← mem_support] at ha
-      obtain ⟨τ, hτ, hτa⟩ := exists_mem_support_of_mem_support_prod (hσl ha)
-      have hτl : ∀ x ∈ τ.support, τ x = l.prod x := eq_on_support_mem_disjoint hτ h2
-      have key : ∀ x ∈ σ.support ∩ τ.support, σ x = τ x
-      intro x hx
-      rw [h x (mem_support.mp (mem_of_mem_inter_left hx)), hτl x (mem_of_mem_inter_right hx)]
-      convert hτ
-      refine h3.eq_on_support_inter_nonempty_congr (h1 _ hτ) key ?_ ha
-      exact key a (mem_inter_of_mem ha hτa)
+  cases nonempty_fintype α
+  constructor
+  · intro h a ha
+    exact eq_on_support_mem_disjoint h h2 _ (mem_support.mpr ha)
+  · intro h
+    have hσl : σ.support ⊆ l.prod.support
+    intro x hx
+    rw [mem_support] at hx
+    rwa [mem_support, ← h _ hx]
+    obtain ⟨a, ha, -⟩ := id h3
+    rw [← mem_support] at ha
+    obtain ⟨τ, hτ, hτa⟩ := exists_mem_support_of_mem_support_prod (hσl ha)
+    have hτl : ∀ x ∈ τ.support, τ x = l.prod x := eq_on_support_mem_disjoint hτ h2
+    have key : ∀ x ∈ σ.support ∩ τ.support, σ x = τ x
+    intro x hx
+    rw [h x (mem_support.mp (mem_of_mem_inter_left hx)), hτl x (mem_of_mem_inter_right hx)]
+    convert hτ
+    refine h3.eq_on_support_inter_nonempty_congr (h1 _ hτ) key ?_ ha
+    exact key a (mem_inter_of_mem ha hτa)
 
+open Classical in
 open scoped List in
 theorem list_cycles_perm_list_cycles {α : Type*} [Finite α] {l₁ l₂ : List (Perm α)}
     (h₀ : l₁.prod = l₂.prod) (h₁l₁ : ∀ σ : Perm α, σ ∈ l₁ → σ.IsCycle)
     (h₁l₂ : ∀ σ : Perm α, σ ∈ l₂ → σ.IsCycle) (h₂l₁ : l₁.Pairwise Disjoint)
     (h₂l₂ : l₂.Pairwise Disjoint) : l₁ ~ l₂ := by
-  classical
     refine
       (List.perm_ext_iff_of_nodup (nodup_of_pairwise_disjoint_cycles h₁l₁ h₂l₁)
             (nodup_of_pairwise_disjoint_cycles h₁l₂ h₂l₂)).mpr
@@ -575,6 +575,7 @@ theorem cycle_is_cycleOf {f c : Equiv.Perm α} {a : α} (ha : a ∈ c.support)
 
 end CycleFactorsFinset
 
+open Classical in
 @[elab_as_elim]
 theorem cycle_induction_on [Finite β] (P : Perm β → Prop) (σ : Perm β) (base_one : P 1)
     (base_cycles : ∀ σ : Perm β, σ.IsCycle → P σ)
@@ -583,7 +584,6 @@ theorem cycle_induction_on [Finite β] (P : Perm β → Prop) (σ : Perm β) (ba
   cases nonempty_fintype β
   suffices ∀ l : List (Perm β),
       (∀ τ : Perm β, τ ∈ l → τ.IsCycle) → l.Pairwise Disjoint → P l.prod by
-    classical
       let x := σ.truncCycleFactors.out
       exact (congr_arg P x.2.1).mp (this x.1 x.2.2.1 x.2.2.2)
   intro l

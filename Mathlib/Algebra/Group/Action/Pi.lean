@@ -69,6 +69,7 @@ instance isCentralScalar [∀ i, SMul M (α i)] [∀ i, SMul Mᵐᵒᵖ (α i)] 
     IsCentralScalar M (∀ i, α i) where
   op_smul_eq_smul _ _ := funext fun _ ↦ op_smul_eq_smul _ _
 
+open Classical in
 /-- If `α i` has a faithful scalar action for a given `i`, then so does `Π i, α i`. This is
 not an instance as `i` cannot be inferred. -/
 @[to_additive
@@ -77,7 +78,6 @@ so does `Π i, α i`. This is not an instance as `i` cannot be inferred"]
 lemma faithfulSMul_at [∀ i, SMul M (α i)] [∀ i, Nonempty (α i)] (i : ι) [FaithfulSMul M (α i)] :
     FaithfulSMul M (∀ i, α i) where
   eq_of_smul_eq_smul h := eq_of_smul_eq_smul fun a : α i => by
-    classical
     simpa using
       congr_fun (h <| Function.update (fun j => Classical.choice (‹∀ i, Nonempty (α i)› j)) i a) i
 
@@ -125,11 +125,11 @@ lemma update_smul [∀ i, SMul M (α i)] [DecidableEq ι] (c : M) (f₁ : ∀ i,
     (i : ι) (x₁ : α i) : update (c • f₁) i (c • x₁) = c • update f₁ i x₁ :=
   funext fun j => (apply_update (β := α) (fun _ ↦ (c • ·)) f₁ i x₁ j).symm
 
+open Classical in
 @[to_additive]
 lemma extend_smul {M α β : Type*} [SMul M β] (r : M) (f : ι → α) (g : ι → β) (e : α → β) :
     extend f (r • g) (r • e) = r • extend f g e := by
   funext x
-  classical
   simp only [extend_def, Pi.smul_apply]
   split_ifs <;> rfl
 

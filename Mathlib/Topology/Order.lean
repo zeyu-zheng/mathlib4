@@ -570,9 +570,9 @@ theorem nhds_nhdsAdjoint [DecidableEq α] (a : α) (f : Filter α) :
     @nhds α (nhdsAdjoint a f) = update pure a (pure a ⊔ f) :=
   eq_update_iff.2 ⟨nhds_nhdsAdjoint_same .., fun _ ↦ nhds_nhdsAdjoint_of_ne _⟩
 
+open Classical in
 theorem le_nhdsAdjoint_iff' {a : α} {f : Filter α} {t : TopologicalSpace α} :
     t ≤ nhdsAdjoint a f ↔ @nhds α t a ≤ pure a ⊔ f ∧ ∀ b ≠ a, @nhds α t b = pure b := by
-  classical
   simp_rw [le_iff_nhds, nhds_nhdsAdjoint, forall_update_iff, (pure_le_nhds _).le_iff_eq]
 
 theorem le_nhdsAdjoint_iff {α : Type*} (a : α) (f : Filter α) (t : TopologicalSpace α) :

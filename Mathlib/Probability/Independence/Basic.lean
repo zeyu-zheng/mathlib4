@@ -614,11 +614,11 @@ lemma iIndepFun.indepFun_prod_mk (hf_Indep : iIndepFun m f μ) (hf_meas : ∀ i,
   have := hf_Indep.isProbabilityMeasure
   Kernel.iIndepFun.indepFun_prod_mk hf_Indep hf_meas i j k hik hjk
 
+open Classical in
 open Finset in
 lemma iIndepFun.indepFun_prod_mk_prod_mk (h_indep : iIndepFun m f μ) (hf : ∀ i, Measurable (f i))
     (i j k l : ι) (hik : i ≠ k) (hil : i ≠ l) (hjk : j ≠ k) (hjl : j ≠ l) :
     IndepFun (fun a ↦ (f i a, f j a)) (fun a ↦ (f k a, f l a)) μ := by
-  classical
   let g (i j : ι) (v : Π x : ({i, j} : Finset ι), β x) : β i × β j :=
     ⟨v ⟨i, mem_insert_self _ _⟩, v ⟨j, mem_insert_of_mem <| mem_singleton_self _⟩⟩
   have hg (i j : ι) : Measurable (g i j) := by fun_prop

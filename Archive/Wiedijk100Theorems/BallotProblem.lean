@@ -310,9 +310,9 @@ theorem ballot_neg (p q : ℕ) (qp : q < p) :
   rw [this, count_injective_image]
   exact List.cons_injective
 
+open Classical in
 theorem ballot_problem' :
     ∀ q p, q < p → (condCount (countedSequence p q) staysPositive).toReal = (p - q) / (p + q) := by
-  classical
   apply Nat.diag_induction
   · intro p
     rw [ballot_same]

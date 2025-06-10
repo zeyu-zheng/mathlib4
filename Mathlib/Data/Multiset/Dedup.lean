@@ -133,8 +133,8 @@ theorem _root_.List.Subset.dedup_append_left {s t : List α} (h : t ⊆ s) :
 
 end Multiset
 
+open Classical in
 theorem Multiset.Nodup.le_nsmul_iff_le {α : Type*} {s t : Multiset α} {n : ℕ} (h : s.Nodup)
     (hn : n ≠ 0) : s ≤ n • t ↔ s ≤ t := by
-  classical
     rw [← h.le_dedup_iff_le, Iff.comm, ← h.le_dedup_iff_le]
     simp [hn]

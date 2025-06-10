@@ -220,10 +220,10 @@ theorem FG.prod {sb : Submodule R M} {sc : Submodule R P} (hsb : sb.FG) (hsc : s
     ⟨LinearMap.inl R M P '' tb ∪ LinearMap.inr R M P '' tc, (htb.1.image _).union (htc.1.image _),
       by rw [LinearMap.span_inl_union_inr, htb.2, htc.2]⟩
 
+open Classical in
 theorem fg_pi {ι : Type*} {M : ι → Type*} [Finite ι] [∀ i, AddCommMonoid (M i)]
     [∀ i, Module R (M i)] {p : ∀ i, Submodule R (M i)} (hsb : ∀ i, (p i).FG) :
     (Submodule.pi Set.univ p).FG := by
-  classical
     simp_rw [fg_def] at hsb ⊢
     choose t htf hts using hsb
     refine
@@ -306,10 +306,10 @@ theorem fg_of_fg_map_of_fg_inf_ker {R M P : Type*} [Ring R] [AddCommGroup M] [Mo
     · exact zero_smul _
     · exact fun _ _ _ => add_smul _ _ _
 
+open Classical in
 theorem fg_induction (R M : Type*) [Semiring R] [AddCommMonoid M] [Module R M]
     (P : Submodule R M → Prop) (h₁ : ∀ x, P (Submodule.span R {x}))
     (h₂ : ∀ M₁ M₂, P M₁ → P M₂ → P (M₁ ⊔ M₂)) (N : Submodule R M) (hN : N.FG) : P N := by
-  classical
     obtain ⟨s, rfl⟩ := hN
     induction s using Finset.induction
     · rw [Finset.coe_empty, Submodule.span_empty, ← Submodule.span_zero_singleton]
@@ -355,9 +355,9 @@ theorem FG.stabilizes_of_iSup_eq {M' : Submodule R M} (hM' : M'.FG) (N : ℕ →
   · rw [← H]
     exact le_iSup _ _
 
+open Classical in
 /-- Finitely generated submodules are precisely compact elements in the submodule lattice. -/
 theorem fg_iff_compact (s : Submodule R M) : s.FG ↔ CompleteLattice.IsCompactElement s := by
-  classical
     -- Introduce shorthand for span of an element
     let sp : M → Submodule R M := fun a => span R {a}
     -- Trivial rewrite lemma; a small hack since simp (only) & rw can't accomplish this smoothly.
@@ -450,15 +450,15 @@ This is defeq to `Submodule.FG`, but unfolds more nicely. -/
 def FG (I : Ideal R) : Prop :=
   ∃ S : Finset R, Ideal.span ↑S = I
 
+open Classical in
 /-- The image of a finitely generated ideal is finitely generated.
 
 This is the `Ideal` version of `Submodule.FG.map`. -/
 theorem FG.map {R S : Type*} [Semiring R] [Semiring S] {I : Ideal R} (h : I.FG) (f : R →+* S) :
     (I.map f).FG := by
-  classical
-    obtain ⟨s, hs⟩ := h
-    refine ⟨s.image f, ?_⟩
-    rw [Finset.coe_image, ← Ideal.map_span, hs]
+  obtain ⟨s, hs⟩ := h
+  refine ⟨s.image f, ?_⟩
+  rw [Finset.coe_image, ← Ideal.map_span, hs]
 
 theorem fg_ker_comp {R S A : Type*} [CommRing R] [CommRing S] [CommRing A] (f : R →+* S)
     (g : S →+* A) (hf : f.ker.FG) (hg : g.ker.FG) (hsur : Function.Surjective f) :
@@ -676,9 +676,9 @@ noncomputable local instance
   haveI : SMulCommClass R A A := IsScalarTower.to_smulCommClass
   TensorProduct.leftModule
 
+open Classical in
 instance Module.Finite.base_change [CommSemiring R] [Semiring A] [Algebra R A] [AddCommMonoid M]
     [Module R M] [h : Module.Finite R M] : Module.Finite A (TensorProduct R A M) := by
-  classical
     obtain ⟨s, hs⟩ := h.out
     refine ⟨⟨s.image (TensorProduct.mk R A M 1), eq_top_iff.mpr ?_⟩⟩
     rintro x -

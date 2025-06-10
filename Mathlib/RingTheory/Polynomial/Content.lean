@@ -303,9 +303,9 @@ theorem content_mul_aux {p q : R[X]} :
     sub_sub_cancel, leadingCoeff_mul, RingHom.map_mul, mul_assoc, mul_assoc]
   apply dvd_sub (Dvd.intro _ rfl) (Dvd.intro _ rfl)
 
+open Classical in
 @[simp]
 theorem content_mul {p q : R[X]} : (p * q).content = p.content * q.content := by
-  classical
     suffices h :
         ∀ (n : ℕ) (p q : R[X]), (p * q).degree < n → (p * q).content = p.content * q.content by
       apply h
@@ -371,9 +371,9 @@ theorem IsPrimitive.dvd_primPart_iff_dvd {p q : R[X]} (hp : p.IsPrimitive) (hq :
   apply Dvd.intro _
   rw [primPart_mul hq, hp.primPart_eq]
 
+open Classical in
 theorem exists_primitive_lcm_of_isPrimitive {p q : R[X]} (hp : p.IsPrimitive) (hq : q.IsPrimitive) :
     ∃ r : R[X], r.IsPrimitive ∧ ∀ s : R[X], p ∣ s ∧ q ∣ s ↔ r ∣ s := by
-  classical
     have h : ∃ (n : ℕ) (r : R[X]), r.natDegree = n ∧ r.IsPrimitive ∧ p ∣ r ∧ q ∣ r :=
       ⟨(p * q).natDegree, p * q, rfl, hp.mul hq, dvd_mul_right _ _, dvd_mul_left _ _⟩
     rcases Nat.find_spec h with ⟨r, rdeg, rprim, pr, qr⟩

@@ -433,11 +433,11 @@ theorem add_le_union (f : α → E) {s t : Set α} (h : ∀ x ∈ s, ∀ y ∈ t
         exact hi.not_lt (Nat.lt_of_succ_le h'i.left)
     _ ≤ eVariationOn f (s ∪ t) := sum_le f _ hw wst
 
+open Classical in
 /-- If a set `s` is to the left of a set `t`, and both contain the boundary point `x`, then
 the variation of `f` along `s ∪ t` is the sum of the variations. -/
 theorem union (f : α → E) {s t : Set α} {x : α} (hs : IsGreatest s x) (ht : IsLeast t x) :
     eVariationOn f (s ∪ t) = eVariationOn f s + eVariationOn f t := by
-  classical
   apply le_antisymm _ (eVariationOn.add_le_union f fun a ha b hb => le_trans (hs.2 ha) (ht.2 hb))
   apply iSup_le _
   rintro ⟨n, ⟨u, hu, ust⟩⟩

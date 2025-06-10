@@ -69,10 +69,10 @@ variable [PosMulStrictMono R] [Nontrivial R] {f g : ι → R} {s t : Finset ι}
 lemma prod_pos (h0 : ∀ i ∈ s, 0 < f i) : 0 < ∏ i ∈ s, f i :=
   prod_induction f (fun x ↦ 0 < x) (fun _ _ ha hb ↦ mul_pos ha hb) zero_lt_one h0
 
+open Classical in
 lemma prod_lt_prod (hf : ∀ i ∈ s, 0 < f i) (hfg : ∀ i ∈ s, f i ≤ g i)
     (hlt : ∃ i ∈ s, f i < g i) :
     ∏ i ∈ s, f i < ∏ i ∈ s, g i := by
-  classical
   obtain ⟨i, hi, hilt⟩ := hlt
   rw [← insert_erase hi, prod_insert (not_mem_erase _ _), prod_insert (not_mem_erase _ _)]
   have := posMulStrictMono_iff_mulPosStrictMono.1 ‹PosMulStrictMono R›
@@ -95,12 +95,12 @@ end CommMonoidWithZero
 section OrderedCommSemiring
 variable [OrderedCommSemiring R] {f g : ι → R} {s t : Finset ι}
 
+open Classical in
 /-- If `g, h ≤ f` and `g i + h i ≤ f i`, then the product of `f` over `s` is at least the
   sum of the products of `g` and `h`. This is the version for `OrderedCommSemiring`. -/
 lemma prod_add_prod_le {i : ι} {f g h : ι → R} (hi : i ∈ s) (h2i : g i + h i ≤ f i)
     (hgf : ∀ j ∈ s, j ≠ i → g j ≤ f j) (hhf : ∀ j ∈ s, j ≠ i → h j ≤ f j) (hg : ∀ i ∈ s, 0 ≤ g i)
     (hh : ∀ i ∈ s, 0 ≤ h i) : ((∏ i ∈ s, g i) + ∏ i ∈ s, h i) ≤ ∏ i ∈ s, f i := by
-  classical
   simp_rw [prod_eq_mul_prod_diff_singleton hi]
   refine le_trans ?_ (mul_le_mul_of_nonneg_right h2i ?_)
   · rw [right_distrib]
@@ -150,12 +150,12 @@ variable [CanonicallyOrderedCommSemiring R] {f g h : ι → R} {s : Finset ι} {
     0 < ∏ i ∈ s, f i ↔ (∀ i ∈ s, (0 : R) < f i) :=
   CanonicallyOrderedCommSemiring.multiset_prod_pos.trans Multiset.forall_mem_map_iff
 
+open Classical in
 /-- If `g, h ≤ f` and `g i + h i ≤ f i`, then the product of `f` over `s` is at least the
   sum of the products of `g` and `h`. This is the version for `CanonicallyOrderedCommSemiring`.
 -/
 lemma prod_add_prod_le' (hi : i ∈ s) (h2i : g i + h i ≤ f i) (hgf : ∀ j ∈ s, j ≠ i → g j ≤ f j)
     (hhf : ∀ j ∈ s, j ≠ i → h j ≤ f j) : ((∏ i ∈ s, g i) + ∏ i ∈ s, h i) ≤ ∏ i ∈ s, f i := by
-  classical
     simp_rw [prod_eq_mul_prod_diff_singleton hi]
     refine le_trans ?_ (mul_le_mul_right' h2i _)
     rw [right_distrib]

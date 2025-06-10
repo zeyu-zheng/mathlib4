@@ -53,6 +53,7 @@ variable {α M : Type*} [Zero M]
 
 open List
 
+open Classical in
 /-- Converts an association list into a finitely supported function via `AList.lookup`, sending
 absent keys to zero. -/
 noncomputable def lookupFinsupp (l : AList fun _x : α => M) : α →₀ M where
@@ -63,7 +64,6 @@ noncomputable def lookupFinsupp (l : AList fun _x : α => M) : α →₀ M where
     haveI := Classical.decEq α
     (l.lookup a).getD 0
   mem_support_toFun a := by
-    classical
       simp_rw [@mem_toFinset _ _, List.mem_keys, List.mem_filter, ← mem_lookup_iff]
       cases lookup a l <;> simp
 
@@ -88,9 +88,9 @@ theorem lookupFinsupp_eq_zero_iff [DecidableEq α] {l : AList fun _x : α => M} 
   rw [lookupFinsupp_apply, ← lookup_eq_none]
   cases' lookup a l with m <;> simp
 
+open Classical in
 @[simp]
 theorem empty_lookupFinsupp : lookupFinsupp (∅ : AList fun _x : α => M) = 0 := by
-  classical
     ext
     simp
 
@@ -100,23 +100,23 @@ theorem insert_lookupFinsupp [DecidableEq α] (l : AList fun _x : α => M) (a : 
   ext b
   by_cases h : b = a <;> simp [h]
 
+open Classical in
 @[simp]
 theorem singleton_lookupFinsupp (a : α) (m : M) :
     (singleton a m).lookupFinsupp = Finsupp.single a m := by
-  classical
   -- porting note (#10745): was `simp [← AList.insert_empty]` but timeout issues
   simp only [← AList.insert_empty, insert_lookupFinsupp, empty_lookupFinsupp, Finsupp.zero_update]
 
+open Classical in
 @[simp]
 theorem _root_.Finsupp.toAList_lookupFinsupp (f : α →₀ M) : f.toAList.lookupFinsupp = f := by
   ext a
-  classical
-    by_cases h : f a = 0
-    · suffices f.toAList.lookup a = none by simp [h, this]
-      simp [lookup_eq_none, h]
-    · suffices f.toAList.lookup a = some (f a) by simp [h, this]
-      apply mem_lookup_iff.2
-      simpa using h
+  by_cases h : f a = 0
+  · suffices f.toAList.lookup a = none by simp [h, this]
+    simp [lookup_eq_none, h]
+  · suffices f.toAList.lookup a = some (f a) by simp [h, this]
+    apply mem_lookup_iff.2
+    simpa using h
 
 theorem lookupFinsupp_surjective : Function.Surjective (@lookupFinsupp α M _) := fun f =>
   ⟨_, Finsupp.toAList_lookupFinsupp f⟩

@@ -168,25 +168,25 @@ instance [LinearOrder ι] [IsWellOrder ι (· < ·)] [∀ a, PartialOrder (β a)
     [∀ a, BoundedOrder (β a)] : BoundedOrder (Lex (∀ a, β a)) :=
   { }
 
+open Classical in
 instance [Preorder ι] [∀ i, LT (β i)] [∀ i, DenselyOrdered (β i)] :
     DenselyOrdered (Lex (∀ i, β i)) :=
   ⟨by
     rintro _ a₂ ⟨i, h, hi⟩
     obtain ⟨a, ha₁, ha₂⟩ := exists_between hi
-    classical
-      refine ⟨Function.update a₂ _ a, ⟨i, fun j hj => ?_, ?_⟩, i, fun j hj => ?_, ?_⟩
-      · rw [h j hj]
-        dsimp only at hj
-        rw [Function.update_noteq hj.ne a]
-      · rwa [Function.update_same i a]
-      · rw [Function.update_noteq hj.ne a]
-      · rwa [Function.update_same i a]⟩
+    refine ⟨Function.update a₂ _ a, ⟨i, fun j hj => ?_, ?_⟩, i, fun j hj => ?_, ?_⟩
+    · rw [h j hj]
+      dsimp only at hj
+      rw [Function.update_noteq hj.ne a]
+    · rwa [Function.update_same i a]
+    · rw [Function.update_noteq hj.ne a]
+    · rwa [Function.update_same i a]⟩
 
+open Classical in
 theorem Lex.noMaxOrder' [Preorder ι] [∀ i, LT (β i)] (i : ι) [NoMaxOrder (β i)] :
     NoMaxOrder (Lex (∀ i, β i)) :=
   ⟨fun a => by
     let ⟨b, hb⟩ := exists_gt (a i)
-    classical
     exact ⟨Function.update a i b, i, fun j hj =>
       (Function.update_noteq hj.ne b a).symm, by rwa [Function.update_same i b]⟩⟩
 

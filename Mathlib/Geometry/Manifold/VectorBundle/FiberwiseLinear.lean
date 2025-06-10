@@ -141,6 +141,7 @@ theorem SmoothFiberwiseLinear.locality_aux₁ (e : PartialHomeomorph (B × F) (B
   · intro y hy; exact ⟨(y, 0), heu ⟨p, hp⟩ ⟨_, _⟩ hy, rfl⟩
   · rw [← hesu, e.restr_source_inter]; exact heφ ⟨p, hp⟩
 
+open Classical in
 /-- Let `e` be a partial homeomorphism of `B × F` whose source is `U ×ˢ univ`, for some set `U` in
 `B`, and which, at any point `x` in `U`, admits a neighbourhood `u` of `x` such that `e` is equal
 on `u ×ˢ univ` to some bi-smooth fiberwise linear partial homeomorphism.  Then `e` itself
@@ -164,7 +165,6 @@ theorem SmoothFiberwiseLinear.locality_aux₂ (e : PartialHomeomorph (B × F) (B
       SmoothOn IB 𝓘(𝕜, F →L[𝕜] F) (fun x => (Φ x : F →L[𝕜] F)) U) (h2Φ :
       SmoothOn IB 𝓘(𝕜, F →L[𝕜] F) (fun x => ((Φ x).symm : F →L[𝕜] F)) U),
       e.EqOnSource (FiberwiseLinear.partialHomeomorph Φ hU₀ hΦ.continuousOn h2Φ.continuousOn) := by
-  classical
   rw [SetCoe.forall'] at h
   choose! φ u hu hUu hux hφ h2φ heφ using h
   have heuφ : ∀ x : U, EqOn e (fun q => (q.1, φ x q.1 q.2)) (u x ×ˢ univ) := fun x p hp ↦ by

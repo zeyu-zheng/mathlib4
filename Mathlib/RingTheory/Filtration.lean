@@ -331,10 +331,10 @@ theorem submodule_eq_span_le_iff_stable_ge (n₀ : ℕ) :
     · rw [map_add]
       exact F'.add_mem hx hy
 
+open Classical in
 /-- If the components of a filtration are finitely generated, then the filtration is stable iff
 its associated submodule of is finitely generated. -/
 theorem submodule_fg_iff_stable (hF' : ∀ i, (F.N i).FG) : F.submodule.FG ↔ F.Stable := by
-  classical
   delta Ideal.Filtration.Stable
   simp_rw [← F.submodule_eq_span_le_iff_stable_ge]
   constructor

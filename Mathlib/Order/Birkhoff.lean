@@ -152,9 +152,9 @@ namespace OrderIso
 section SemilatticeSup
 variable [SemilatticeSup α] [OrderBot α] [Finite α]
 
+open Classical in
 @[simp] lemma supIrredLowerSet_symm_apply (s : {s : LowerSet α // SupIrred s}) [Fintype s] :
     supIrredLowerSet.symm s = (s.1 : Set α).toFinset.sup id := by
-  classical
   obtain ⟨s, hs⟩ := s
   obtain ⟨a, rfl⟩ := supIrred_iff_of_finite.1 hs
   cases nonempty_fintype α
@@ -166,9 +166,9 @@ end SemilatticeSup
 section SemilatticeInf
 variable [SemilatticeInf α] [OrderTop α] [Finite α]
 
+open Classical in
 @[simp] lemma infIrredUpperSet_symm_apply (s : {s : UpperSet α // InfIrred s}) [Fintype s] :
     infIrredUpperSet.symm s = (s.1 : Set α).toFinset.inf id := by
-  classical
   obtain ⟨s, hs⟩ := s
   obtain ⟨a, rfl⟩ := infIrred_iff_of_finite.1 hs
   cases nonempty_fintype α
@@ -220,8 +220,8 @@ powerset lattice. -/
 noncomputable def birkhoffFinset : α ↪o Finset {a : α // SupIrred a} := by
   exact birkhoffSet.trans Fintype.finsetOrderIsoSet.symm.toOrderEmbedding
 
+open Classical in
 @[simp] lemma coe_birkhoffFinset (a : α) : birkhoffFinset a = birkhoffSet a := by
-  classical
   -- TODO: This should be a single `simp` call but `simp` refuses to use
   -- `OrderIso.coe_toOrderEmbedding` and `Fintype.coe_finsetOrderIsoSet_symm`
   simp [birkhoffFinset]
@@ -275,10 +275,10 @@ lemma birkhoffFinset_injective : Injective (birkhoffFinset (α := α)) :=
 
 end LatticeHom
 
+open Classical in
 lemma exists_birkhoff_representation.{u} (α : Type u) [Finite α] [DistribLattice α] :
     ∃ (β : Type u) (_ : DecidableEq β) (_ : Fintype β) (f : LatticeHom α (Finset β)),
       Injective f := by
-  classical
   cases nonempty_fintype α
   exact ⟨{a : α // SupIrred a}, _, inferInstance, _, LatticeHom.birkhoffFinset_injective⟩
 

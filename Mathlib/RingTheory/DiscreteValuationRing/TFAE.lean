@@ -33,12 +33,12 @@ open scoped DiscreteValuation
 
 open LocalRing FiniteDimensional
 
+open Classical in
 theorem exists_maximalIdeal_pow_eq_of_principal [IsNoetherianRing R] [LocalRing R] [IsDomain R]
     (h' : (maximalIdeal R).IsPrincipal) (I : Ideal R) (hI : I ≠ ⊥) :
     ∃ n : ℕ, I = maximalIdeal R ^ n := by
   by_cases h : IsField R
   · exact ⟨0, by simp [letI := h.toField; (eq_bot_or_eq_top I).resolve_left hI]⟩
-  classical
   obtain ⟨x, hx : _ = Ideal.span _⟩ := h'
   by_cases hI' : I = ⊤
   · use 0; rw [pow_zero, hI', Ideal.one_eq_top]
@@ -87,9 +87,9 @@ theorem exists_maximalIdeal_pow_eq_of_principal [IsNoetherianRing R] [LocalRing 
   · rw [hx, Ideal.span_singleton_pow, Ideal.span_le, Set.singleton_subset_iff]
     exact Nat.find_spec this
 
+open Classical in
 theorem maximalIdeal_isPrincipal_of_isDedekindDomain [LocalRing R] [IsDomain R]
     [IsDedekindDomain R] : (maximalIdeal R).IsPrincipal := by
-  classical
   by_cases ne_bot : maximalIdeal R = ⊥
   · rw [ne_bot]; infer_instance
   obtain ⟨a, ha₁, ha₂⟩ : ∃ a ∈ maximalIdeal R, a ≠ (0 : R) := by

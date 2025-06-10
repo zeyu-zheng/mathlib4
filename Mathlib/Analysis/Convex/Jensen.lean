@@ -98,11 +98,11 @@ lemma ConcaveOn.map_add_sum_le (hf : ConcaveOn 𝕜 s f) (h₀ : ∀ i ∈ t, 0 
 If the function is strictly convex, the weights are strictly positive and the indexed family of
 points is non-constant, then Jensen's inequality is strict.
 
+open Classical in
 See also `StrictConvexOn.map_sum_eq_iff`. -/
 lemma StrictConvexOn.map_sum_lt (hf : StrictConvexOn 𝕜 s f) (h₀ : ∀ i ∈ t, 0 < w i)
     (h₁ : ∑ i ∈ t, w i = 1) (hmem : ∀ i ∈ t, p i ∈ s) (hp : ∃ j ∈ t, ∃ k ∈ t, p j ≠ p k) :
     f (∑ i ∈ t, w i • p i) < ∑ i ∈ t, w i • f (p i) := by
-  classical
   obtain ⟨j, hj, k, hk, hjk⟩ := hp
   -- We replace `t` by `t \ {j, k}`
   have : k ∈ t.erase j := mem_erase.2 ⟨ne_of_apply_ne _ hjk.symm, hk⟩

@@ -232,6 +232,7 @@ theorem isUnit_or_eq_zero_of_isUnit_integerNormalization_primPart {p : K[X]} (h0
   · apply h0 con
   · apply Units.ne_zero _ con
 
+open Classical in
 /-- **Gauss's Lemma** for GCD domains states that a primitive polynomial is irreducible iff it is
   irreducible in the fraction field. -/
 theorem IsPrimitive.irreducible_iff_irreducible_map_fraction_map {p : R[X]} (hp : p.IsPrimitive) :
@@ -262,7 +263,6 @@ theorem IsPrimitive.irreducible_iff_irreducible_map_fraction_map {p : R[X]} (hp 
     mul_assoc, ← mul_assoc, ← RingHom.map_mul, ← hu, RingHom.map_mul, mul_assoc, mul_assoc, ←
     mul_assoc (C (u : R))] at h1
   have h0 : a ≠ 0 ∧ b ≠ 0
-  classical
   rw [Ne, Ne, ← not_or, ← mul_eq_zero, ← hab]
   intro con
   apply hp.ne_zero (map_injective (algebraMap R K) (IsFractionRing.injective _ _) _)

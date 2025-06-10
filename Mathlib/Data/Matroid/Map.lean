@@ -296,12 +296,12 @@ instance comapOn_finiteRk [N.FiniteRk] : (N.comapOn E f).FiniteRk := by
 end comapOn
 section mapSetEmbedding
 
+open Classical in
 /-- Map a matroid `M` to an isomorphic copy in `β` using an embedding `M.E ↪ β`. -/
 def mapSetEmbedding (M : Matroid α) (f : M.E ↪ β) : Matroid β := Matroid.ofExistsMatroid
   (E := range f)
   (Indep := fun I ↦ M.Indep ↑(f ⁻¹' I) ∧ I ⊆ range f)
   (hM := by
-    classical
     obtain (rfl | ⟨⟨e,he⟩⟩) := eq_emptyOn_or_nonempty M
     · refine ⟨emptyOn β, ?_⟩
       simp only [emptyOn_ground] at f

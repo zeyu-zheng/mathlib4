@@ -765,11 +765,11 @@ theorem Fintype.card_subtype [Fintype α] (p : α → Prop) [DecidablePred p] :
   refine Fintype.card_of_subtype _ ?_
   simp
 
+open Classical in
 @[simp]
 theorem Fintype.card_subtype_compl [Fintype α] (p : α → Prop) [Fintype { x // p x }]
     [Fintype { x // ¬p x }] :
     Fintype.card { x // ¬p x } = Fintype.card α - Fintype.card { x // p x } := by
-  classical
     rw [Fintype.card_of_subtype (Set.toFinset { x | p x }ᶜ), Set.toFinset_compl,
       Finset.card_compl, Fintype.card_of_subtype] <;>
     · intro
@@ -807,9 +807,9 @@ namespace Finite
 
 variable [Finite α]
 
+open Classical in
 theorem wellFounded_of_trans_of_irrefl (r : α → α → Prop) [IsTrans α r] [IsIrrefl α r] :
     WellFounded r := by
-  classical
   cases nonempty_fintype α
   have :
     ∀ x y, r x y → (univ.filter fun z => r z x).card < (univ.filter fun z => r z y).card :=
@@ -877,11 +877,11 @@ namespace Infinite
 theorem of_not_fintype (h : Fintype α → False) : Infinite α :=
   isEmpty_fintype.mp ⟨h⟩
 
+open Classical in
 /-- If `s : Set α` is a proper subset of `α` and `f : α → s` is injective, then `α` is infinite. -/
 theorem of_injective_to_set {s : Set α} (hs : s ≠ Set.univ) {f : α → s} (hf : Injective f) :
     Infinite α :=
   of_not_fintype fun h => by
-    classical
       refine lt_irrefl (Fintype.card α) ?_
       calc
         Fintype.card α ≤ Fintype.card s := Fintype.card_le_of_injective f hf
@@ -1033,6 +1033,7 @@ theorem Finite.exists_ne_map_eq_of_infinite {α β} [Infinite α] [Finite β] (f
 instance Function.Embedding.is_empty {α β} [Infinite α] [Finite β] : IsEmpty (α ↪ β) :=
   ⟨fun f => not_injective_infinite_finite f f.2⟩
 
+open Classical in
 /-- The strong pigeonhole principle for infinitely many pigeons in
 finitely many pigeonholes.  If there are infinitely many pigeons in
 finitely many pigeonholes, then there is a pigeonhole with infinitely
@@ -1042,7 +1043,6 @@ See also: `Finite.exists_ne_map_eq_of_infinite`
 -/
 theorem Finite.exists_infinite_fiber [Infinite α] [Finite β] (f : α → β) :
     ∃ y : β, Infinite (f ⁻¹' {y}) := by
-  classical
     by_contra! hf
     cases nonempty_fintype β
     haveI := fun y => fintypeOfNotInfinite <| hf y

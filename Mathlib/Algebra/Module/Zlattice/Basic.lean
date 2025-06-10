@@ -138,10 +138,10 @@ theorem repr_fract_apply (m : E) (i : ι) : b.repr (fract b m) i = Int.fract (b.
 theorem fract_fract (m : E) : fract b (fract b m) = fract b m :=
   Basis.ext_elem b fun _ => by classical simp only [repr_fract_apply, Int.fract_fract]
 
+open Classical in
 @[simp]
 theorem fract_zspan_add (m : E) {v : E} (h : v ∈ span ℤ (Set.range b)) :
     fract b (v + m) = fract b m := by
-  classical
   refine (Basis.ext_elem_iff b).mpr fun i => ?_
   simp_rw [repr_fract_apply, Int.fract_eq_fract]
   use (b.restrictScalars ℤ).repr ⟨v, h⟩ i
@@ -172,15 +172,15 @@ theorem fractRestrict_surjective : Function.Surjective (fractRestrict b) :=
 @[simp]
 theorem fractRestrict_apply (x : E) : (fractRestrict b x : E) = fract b x := rfl
 
+open Classical in
 theorem fract_eq_fract (m n : E) : fract b m = fract b n ↔ -m + n ∈ span ℤ (Set.range b) := by
-  classical
   rw [eq_comm, Basis.ext_elem_iff b]
   simp_rw [repr_fract_apply, Int.fract_eq_fract, eq_comm, Basis.mem_span_iff_repr_mem,
     sub_eq_neg_add, map_add, map_neg, Finsupp.coe_add, Finsupp.coe_neg, Pi.add_apply,
     Pi.neg_apply, ← eq_intCast (algebraMap ℤ K) _, Set.mem_range]
 
+open Classical in
 theorem norm_fract_le [HasSolidNorm K] (m : E) : ‖fract b m‖ ≤ ∑ i, ‖b i‖ := by
-  classical
   calc
     ‖fract b m‖ = ‖∑ i, b.repr (fract b m) i • b i‖ := by rw [b.sum_repr]
     _ = ‖∑ i, Int.fract (b.repr m i) • b i‖ := by simp_rw [repr_fract_apply]
@@ -341,10 +341,10 @@ theorem volume_fundamentalDomain [Fintype ι] [DecidableEq ι] (b : Basis ι ℝ
     mul_one, ← Matrix.det_transpose]
   rfl
 
+open Classical in
 theorem fundamentalDomain_ae_parallelepiped [Fintype ι] [MeasurableSpace E] (μ : Measure E)
     [BorelSpace E] [Measure.IsAddHaarMeasure μ] :
     fundamentalDomain b =ᵐ[μ] parallelepiped b := by
-  classical
   have : FiniteDimensional ℝ E := FiniteDimensional.of_fintype_basis b
   rw [← measure_symmDiff_eq_zero_iff, symmDiff_of_le (fundamentalDomain_subset_parallelepiped b)]
   suffices (parallelepiped b \ fundamentalDomain b) ⊆ ⋃ i,
@@ -468,8 +468,8 @@ instance instModuleFree_of_discrete_addSubgroup {E : Type*} [NormedAddCommGroup 
   exact noZeroSMulDivisors _
   infer_instance
 
+open Classical in
 theorem Zlattice.rank [hs : IsZlattice K L] : finrank ℤ L = finrank K E := by
-  classical
   have : Module.Finite ℤ L := module_finite K L
   have : Module.Free ℤ L := module_free K L
   have : Module ℚ E := Module.compHom E (algebraMap ℚ K)

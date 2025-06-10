@@ -33,8 +33,8 @@ variable [Finite β]
 
 open Subgroup
 
+open Classical in
 theorem closure_isCycle : closure { σ : Perm β | IsCycle σ } = ⊤ := by
-  classical
     cases nonempty_fintype β
     exact
       top_le_iff.mp (le_trans (ge_of_eq closure_isSwap) (closure_mono fun _ => IsSwap.isCycle))

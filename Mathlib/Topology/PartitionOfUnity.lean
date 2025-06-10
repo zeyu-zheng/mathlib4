@@ -199,9 +199,9 @@ variable {x₀ : X}
 theorem sum_finsupport (hx₀ : x₀ ∈ s) : ∑ i ∈ ρ.finsupport x₀, ρ i x₀ = 1 := by
   rw [← ρ.sum_eq_one hx₀, finsum_eq_sum_of_support_subset _ (ρ.coe_finsupport x₀).superset]
 
+open Classical in
 theorem sum_finsupport' (hx₀ : x₀ ∈ s) {I : Finset ι} (hI : ρ.finsupport x₀ ⊆ I) :
     ∑ i ∈ I, ρ i x₀ = 1 := by
-  classical
   rw [← Finset.sum_sdiff hI, ρ.sum_finsupport hx₀]
   suffices ∑ i ∈ I \ ρ.finsupport x₀, (ρ i) x₀ = ∑ i ∈ I \ ρ.finsupport x₀, 0 by
     rw [this, add_left_eq_self, Finset.sum_const_zero]

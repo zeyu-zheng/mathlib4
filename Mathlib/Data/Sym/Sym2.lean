@@ -641,9 +641,9 @@ theorem other_invol' [DecidableEq α] {a : α} {z : Sym2 α} (ha : a ∈ z) (hb 
   induction z
   aesop (rule_sets := [Sym2]) (add norm unfold [Sym2.rec, Quot.rec])
 
+open Classical in
 theorem other_invol {a : α} {z : Sym2 α} (ha : a ∈ z) (hb : Mem.other ha ∈ z) :
     Mem.other hb = a := by
-  classical
     rw [other_eq_other'] at hb ⊢
     convert other_invol' ha hb using 2
     apply other_eq_other'

@@ -602,13 +602,13 @@ theorem det_blockDiagonal {o : Type*} [Fintype o] [DecidableEq o] (M : o → Mat
     rw [blockDiagonal_apply_ne]
     exact hkx
 
+open Classical in
 /-- The determinant of a 2×2 block matrix with the lower-left block equal to zero is the product of
 the determinants of the diagonal blocks. For the generalization to any number of blocks, see
 `Matrix.det_of_upper_triangular`. -/
 @[simp]
 theorem det_fromBlocks_zero₂₁ (A : Matrix m m R) (B : Matrix m n R) (D : Matrix n n R) :
     (Matrix.fromBlocks A B 0 D).det = A.det * D.det := by
-  classical
     simp_rw [det_apply']
     convert Eq.symm <|
       sum_subset (β := R) (subset_univ ((sumCongrHom m n).range : Set (Perm (m ⊕ n))).toFinset) ?_

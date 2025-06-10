@@ -668,18 +668,18 @@ theorem orthonormal_subtype_iff_ite [DecidableEq E] {s : Set E} :
     convert h v hv w hw using 1
     simp
 
+open Classical in
 /-- The inner product of a linear combination of a set of orthonormal vectors with one of those
 vectors picks out the coefficient of that vector. -/
 theorem Orthonormal.inner_right_finsupp {v : ι → E} (hv : Orthonormal 𝕜 v) (l : ι →₀ 𝕜) (i : ι) :
     ⟪v i, Finsupp.total ι E 𝕜 v l⟫ = l i := by
-  classical
   simpa [Finsupp.total_apply, Finsupp.inner_sum, orthonormal_iff_ite.mp hv] using Eq.symm
 
+open Classical in
 /-- The inner product of a linear combination of a set of orthonormal vectors with one of those
 vectors picks out the coefficient of that vector. -/
 theorem Orthonormal.inner_right_sum {v : ι → E} (hv : Orthonormal 𝕜 v) (l : ι → 𝕜) {s : Finset ι}
     {i : ι} (hi : i ∈ s) : ⟪v i, ∑ i ∈ s, l i • v i⟫ = l i := by
-  classical
   simp [inner_sum, inner_smul_right, orthonormal_iff_ite.mp hv, hi]
 
 /-- The inner product of a linear combination of a set of orthonormal vectors with one of those
@@ -693,11 +693,11 @@ vectors picks out the coefficient of that vector. -/
 theorem Orthonormal.inner_left_finsupp {v : ι → E} (hv : Orthonormal 𝕜 v) (l : ι →₀ 𝕜) (i : ι) :
     ⟪Finsupp.total ι E 𝕜 v l, v i⟫ = conj (l i) := by rw [← inner_conj_symm, hv.inner_right_finsupp]
 
+open Classical in
 /-- The inner product of a linear combination of a set of orthonormal vectors with one of those
 vectors picks out the coefficient of that vector. -/
 theorem Orthonormal.inner_left_sum {v : ι → E} (hv : Orthonormal 𝕜 v) (l : ι → 𝕜) {s : Finset ι}
     {i : ι} (hi : i ∈ s) : ⟪∑ i ∈ s, l i • v i, v i⟫ = conj (l i) := by
-  classical
   simp only [sum_inner, inner_smul_left, orthonormal_iff_ite.mp hv, hi, mul_boole,
     Finset.sum_ite_eq', if_true]
 
@@ -727,13 +727,13 @@ theorem Orthonormal.inner_sum {v : ι → E} (hv : Orthonormal 𝕜 v) (l₁ l�
   refine Finset.sum_congr rfl fun i hi => ?_
   rw [hv.inner_right_sum l₂ hi]
 
+open Classical in
 /--
 The double sum of weighted inner products of pairs of vectors from an orthonormal sequence is the
 sum of the weights.
 -/
 theorem Orthonormal.inner_left_right_finset {s : Finset ι} {v : ι → E} (hv : Orthonormal 𝕜 v)
     {a : ι → ι → 𝕜} : (∑ i ∈ s, ∑ j ∈ s, a i j • ⟪v j, v i⟫) = ∑ k ∈ s, a k k := by
-  classical
   simp [orthonormal_iff_ite.mp hv, Finset.sum_ite_of_true]
 
 /-- An orthonormal set is linearly independent. -/
@@ -746,11 +746,11 @@ theorem Orthonormal.linearIndependent {v : ι → E} (hv : Orthonormal 𝕜 v) :
   rw [hl]
   simpa only [hv.inner_right_finsupp, inner_zero_right] using key
 
+open Classical in
 /-- A subfamily of an orthonormal family (i.e., a composition with an injective map) is an
 orthonormal family. -/
 theorem Orthonormal.comp {ι' : Type*} {v : ι → E} (hv : Orthonormal 𝕜 v) (f : ι' → ι)
     (hf : Function.Injective f) : Orthonormal 𝕜 (v ∘ f) := by
-  classical
   rw [orthonormal_iff_ite] at hv ⊢
   intro i j
   convert hv (f i) (f j) using 1
@@ -779,11 +779,11 @@ theorem Orthonormal.inner_finsupp_eq_zero {v : ι → E} (hv : Orthonormal 𝕜 
   rw [Finsupp.mem_supported'] at hl
   simp only [hv.inner_left_finsupp, hl i hi, map_zero]
 
+open Classical in
 /-- Given an orthonormal family, a second family of vectors is orthonormal if every vector equals
 the corresponding vector in the original family or its negation. -/
 theorem Orthonormal.orthonormal_of_forall_eq_or_eq_neg {v w : ι → E} (hv : Orthonormal 𝕜 v)
     (hw : ∀ i, w i = v i ∨ w i = -v i) : Orthonormal 𝕜 w := by
-  classical
   rw [orthonormal_iff_ite] at *
   intro i j
   cases' hw i with hi hi <;> cases' hw j with hj hj <;>
@@ -796,16 +796,16 @@ adapted from the corresponding development of the theory of linearly independent
 `exists_linearIndependent` in particular. -/
 variable (𝕜 E)
 
+open Classical in
 theorem orthonormal_empty : Orthonormal 𝕜 (fun x => x : (∅ : Set E) → E) := by
-  classical
   simp [orthonormal_subtype_iff_ite]
 
 variable {𝕜 E}
 
+open Classical in
 theorem orthonormal_iUnion_of_directed {η : Type*} {s : η → Set E} (hs : Directed (· ⊆ ·) s)
     (h : ∀ i, Orthonormal 𝕜 (fun x => x : s i → E)) :
     Orthonormal 𝕜 (fun x => x : (⋃ i, s i) → E) := by
-  classical
   rw [orthonormal_subtype_iff_ite]
   rintro x ⟨_, ⟨i, rfl⟩, hxi⟩ y ⟨_, ⟨j, rfl⟩, hyj⟩
   obtain ⟨k, hik, hjk⟩ := hs i j
@@ -1785,9 +1785,9 @@ theorem OrthogonalFamily.inner_right_dfinsupp [DecidableEq ι] (l : ⨁ i, G i) 
       · simp only [LinearIsometry.inner_map_map]
       · simp only [of_not_not h, inner_zero_right]
 
+open Classical in
 theorem OrthogonalFamily.inner_right_fintype [Fintype ι] (l : ∀ i, G i) (i : ι) (v : G i) :
     ⟪V i v, ∑ j : ι, V j (l j)⟫ = ⟪v, l i⟫ := by
-  classical
   calc
     ⟪V i v, ∑ j : ι, V j (l j)⟫ = ∑ j : ι, ⟪V i v, V j (l j)⟫ := by rw [inner_sum]
     _ = ∑ j, ite (i = j) ⟪V i v, V j (l j)⟫ 0 :=
@@ -1795,9 +1795,9 @@ theorem OrthogonalFamily.inner_right_fintype [Fintype ι] (l : ∀ i, G i) (i : 
     _ = ⟪v, l i⟫ := by
       simp only [Finset.sum_ite_eq, Finset.mem_univ, (V i).inner_map_map, if_true]
 
+open Classical in
 theorem OrthogonalFamily.inner_sum (l₁ l₂ : ∀ i, G i) (s : Finset ι) :
     ⟪∑ i ∈ s, V i (l₁ i), ∑ j ∈ s, V j (l₂ j)⟫ = ∑ i ∈ s, ⟪l₁ i, l₂ i⟫ := by
-  classical
   calc
     ⟪∑ i ∈ s, V i (l₁ i), ∑ j ∈ s, V j (l₂ j)⟫ = ∑ j ∈ s, ∑ i ∈ s, ⟪V i (l₁ i), V j (l₂ j)⟫ := by
       simp only [_root_.sum_inner, _root_.inner_sum]
@@ -1860,11 +1860,11 @@ theorem OrthogonalFamily.norm_sq_diff_sum [DecidableEq ι] (f : ∀ i, G i) (s�
   · simp only [hF]
   · simp only [hF]
 
+open Classical in
 /-- A family `f` of mutually-orthogonal elements of `E` is summable, if and only if
 `(fun i ↦ ‖f i‖ ^ 2)` is summable. -/
 theorem OrthogonalFamily.summable_iff_norm_sq_summable [CompleteSpace E] (f : ∀ i, G i) :
     (Summable fun i => V i (f i)) ↔ Summable fun i => ‖f i‖ ^ 2 := by
-  classical
     simp only [summable_iff_cauchySeq_finset, NormedAddCommGroup.cauchySeq_iff, Real.norm_eq_abs]
     constructor
     · intro hf ε hε
@@ -1903,13 +1903,13 @@ theorem OrthogonalFamily.summable_iff_norm_sq_summable [CompleteSpace E] (f : �
       · exact fun i => sq_nonneg _
       linarith
 
+open Classical in
 /-- An orthogonal family forms an independent family of subspaces; that is, any collection of
 elements each from a different subspace in the family is linearly independent. In particular, the
 pairwise intersections of elements of the family are 0. -/
 theorem OrthogonalFamily.independent {V : ι → Submodule 𝕜 E}
     (hV : OrthogonalFamily 𝕜 (fun i => V i) fun i => (V i).subtypeₗᵢ) :
     CompleteLattice.Independent V := by
-  classical
   apply CompleteLattice.independent_of_dfinsupp_lsum_injective
   refine LinearMap.ker_eq_bot.mp ?_
   rw [Submodule.eq_bot_iff]

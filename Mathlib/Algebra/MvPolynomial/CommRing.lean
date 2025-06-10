@@ -159,11 +159,11 @@ end Eval
 
 section DegreeOf
 
+open Classical in
 theorem degreeOf_sub_lt {x : σ} {f g : MvPolynomial σ R} {k : ℕ} (h : 0 < k)
     (hf : ∀ m : σ →₀ ℕ, m ∈ f.support → k ≤ m x → coeff m f = coeff m g)
     (hg : ∀ m : σ →₀ ℕ, m ∈ g.support → k ≤ m x → coeff m f = coeff m g) :
     degreeOf x (f - g) < k := by
-  classical
   rw [degreeOf_lt_iff h]
   intro m hm
   by_contra! hc

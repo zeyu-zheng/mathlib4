@@ -103,16 +103,16 @@ theorem exists_factors (a : α) :
       rw [s.prod_cons i]
       exact hs.2.mul_left i⟩
 
+open Classical in
 theorem not_unit_iff_exists_factors_eq (a : α) (hn0 : a ≠ 0) :
     ¬IsUnit a ↔ ∃ f : Multiset α, (∀ b ∈ f, Irreducible b) ∧ f.prod = a ∧ f ≠ ∅ :=
   ⟨fun hnu => by
     obtain ⟨f, hi, u, rfl⟩ := exists_factors a hn0
     obtain ⟨b, h⟩ := Multiset.exists_mem_of_ne_zero fun h : f = 0 => hnu <| by simp [h]
-    classical
-      refine ⟨(f.erase b).cons (b * u), fun a ha => ?_, ?_, Multiset.cons_ne_zero⟩
-      · obtain rfl | ha := Multiset.mem_cons.1 ha
-        exacts [Associated.irreducible ⟨u, rfl⟩ (hi b h), hi a (Multiset.mem_of_mem_erase ha)]
-      · rw [Multiset.prod_cons, mul_comm b, mul_assoc, Multiset.prod_erase h, mul_comm],
+    refine ⟨(f.erase b).cons (b * u), fun a ha => ?_, ?_, Multiset.cons_ne_zero⟩
+    · obtain rfl | ha := Multiset.mem_cons.1 ha
+      exacts [Associated.irreducible ⟨u, rfl⟩ (hi b h), hi a (Multiset.mem_of_mem_erase ha)]
+    · rw [Multiset.prod_cons, mul_comm b, mul_assoc, Multiset.prod_erase h, mul_comm],
     fun ⟨f, hi, he, hne⟩ =>
     let ⟨b, h⟩ := Multiset.exists_mem_of_ne_zero hne
     not_isUnit_of_not_isUnit_dvd (hi b h).not_unit <| he ▸ Multiset.dvd_prod h⟩
@@ -230,10 +230,10 @@ theorem induction_on_prime {P : α → Prop} (a : α) (h₁ : P 0) (h₂ : ∀ x
 
 end UniqueFactorizationMonoid
 
+open Classical in
 theorem prime_factors_unique [CancelCommMonoidWithZero α] :
     ∀ {f g : Multiset α},
       (∀ x ∈ f, Prime x) → (∀ x ∈ g, Prime x) → f.prod ~ᵤ g.prod → Multiset.Rel Associated f g := by
-  classical
   intro f
   induction' f using Multiset.induction_on with p f ih
   · intros g _ hg h
@@ -295,9 +295,9 @@ section ExistsPrimeFactors
 variable [CancelCommMonoidWithZero α]
 variable (pf : ∀ a : α, a ≠ 0 → ∃ f : Multiset α, (∀ b ∈ f, Prime b) ∧ f.prod ~ᵤ a)
 
+open Classical in
 theorem WfDvdMonoid.of_exists_prime_factors : WfDvdMonoid α :=
   ⟨by
-    classical
       refine RelHomClass.wellFounded
         (RelHom.mk ?_ ?_ : (DvdNotUnit : α → α → Prop) →r ((· < ·) : ℕ∞ → ℕ∞ → Prop)) wellFounded_lt
       · intro a
@@ -1356,9 +1356,9 @@ theorem factors_zero : (0 : Associates α).factors = ⊤ :=
 
 @[deprecated (since := "2024-03-16")] alias factors_0 := factors_zero
 
+open Classical in
 @[simp]
 theorem factors_mk (a : α) (h : a ≠ 0) : (Associates.mk a).factors = factors' a := by
-  classical
     apply dif_neg
     apply mt mk_eq_zero.1 h
 
@@ -1758,10 +1758,10 @@ theorem count_factors_eq_find_of_dvd_pow [DecidableEq (Associates α)] {a p : As
 
 end count
 
+open Classical in
 theorem eq_pow_of_mul_eq_pow {a b c : Associates α} (ha : a ≠ 0) (hb : b ≠ 0)
     (hab : ∀ d, d ∣ a → d ∣ b → ¬Prime d) {k : ℕ} (h : a * b = c ^ k) :
     ∃ d : Associates α, a = d ^ k := by
-  classical
   nontriviality α
   by_cases hk0 : k = 0
   · use 1
@@ -1918,12 +1918,12 @@ theorem associated_of_factorization_eq (a b : α) (ha : a ≠ 0) (hb : b ≠ 0)
 
 end Finsupp
 
+open Classical in
 open UniqueFactorizationMonoid in
 /-- Every non-zero prime ideal in a unique factorization domain contains a prime element. -/
 theorem Ideal.IsPrime.exists_mem_prime_of_ne_bot {R : Type*} [CommSemiring R] [IsDomain R]
     [UniqueFactorizationMonoid R] {I : Ideal R} (hI₂ : I.IsPrime) (hI : I ≠ ⊥) :
     ∃ x ∈ I, Prime x := by
-  classical
   obtain ⟨a : R, ha₁ : a ∈ I, ha₂ : a ≠ 0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hI
   replace ha₁ : (factors a).prod ∈ I := by
     obtain ⟨u : Rˣ, hu : (factors a).prod * u = a⟩ := factors_prod ha₂

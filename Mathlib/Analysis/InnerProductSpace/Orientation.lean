@@ -161,11 +161,11 @@ section VolumeForm
 
 variable [_i : Fact (finrank ℝ E = n)] (o : Orientation ℝ E (Fin n))
 
+open Classical in
 /-- The volume form on an oriented real inner product space, a nonvanishing top-dimensional
 alternating form uniquely defined by compatibility with the orientation and inner product structure.
 -/
 irreducible_def volumeForm : E [⋀^Fin n]→ₗ[ℝ] ℝ := by
-  classical
     cases' n with n
     · let opos : E [⋀^Fin 0]→ₗ[ℝ] ℝ := .constOfIsEmpty ℝ E (Fin 0) (1 : ℝ)
       exact o.eq_or_eq_neg_of_isEmpty.by_cases (fun _ => opos) fun _ => -opos
@@ -188,27 +188,27 @@ theorem volumeForm_zero_neg [_i : Fact (finrank ℝ E = 0)] :
   simpa using
     congr_arg AlternatingMap.constLinearEquivOfIsEmpty.symm (eq_zero_of_sameRay_self_neg h)
 
+open Classical in
 /-- The volume form on an oriented real inner product space can be evaluated as the determinant with
 respect to any orthonormal basis of the space compatible with the orientation. -/
 theorem volumeForm_robust (b : OrthonormalBasis (Fin n) ℝ E) (hb : b.toBasis.orientation = o) :
     o.volumeForm = b.toBasis.det := by
   cases n
-  · classical
-      have : o = positiveOrientation := hb.symm.trans b.toBasis.orientation_isEmpty
-      simp_rw [volumeForm, Or.by_cases, dif_pos this, Nat.rec_zero, Basis.det_isEmpty]
+  · have : o = positiveOrientation := hb.symm.trans b.toBasis.orientation_isEmpty
+    simp_rw [volumeForm, Or.by_cases, dif_pos this, Nat.rec_zero, Basis.det_isEmpty]
   · simp_rw [volumeForm]
     rw [same_orientation_iff_det_eq_det, hb]
     exact o.finOrthonormalBasis_orientation _ _
 
+open Classical in
 /-- The volume form on an oriented real inner product space can be evaluated as the determinant with
 respect to any orthonormal basis of the space compatible with the orientation. -/
 theorem volumeForm_robust_neg (b : OrthonormalBasis (Fin n) ℝ E) (hb : b.toBasis.orientation ≠ o) :
     o.volumeForm = -b.toBasis.det := by
   cases' n with n
-  · classical
-      have : positiveOrientation ≠ o
-      rwa [b.toBasis.orientation_isEmpty] at hb
-      simp_rw [volumeForm, Or.by_cases, dif_neg this.symm, Nat.rec_zero, Basis.det_isEmpty]
+  · have : positiveOrientation ≠ o
+    rwa [b.toBasis.orientation_isEmpty] at hb
+    simp_rw [volumeForm, Or.by_cases, dif_neg this.symm, Nat.rec_zero, Basis.det_isEmpty]
   let e : OrthonormalBasis (Fin n.succ) ℝ E := o.finOrthonormalBasis n.succ_pos Fact.out
   simp_rw [volumeForm]
   apply e.det_eq_neg_det_of_opposite_orientation b

@@ -74,6 +74,7 @@ Note that this depends on `SzemerediRegularity.bound`, which is a tower-type exp
 `cornersTheoremBound` is in practice absolutely tiny. -/
 noncomputable def cornersTheoremBound (ε : ℝ) : ℕ := ⌊(triangleRemovalBound (ε / 9) * 27)⁻¹⌋₊ + 1
 
+open Classical in
 /-- The **corners theorem** for finite abelian groups.
 
 The maximum density of a corner-free set in `G × G` goes to zero as `|G|` tends to infinity. -/
@@ -92,7 +93,6 @@ theorem corners_theorem (ε : ℝ) (hε : 0 < ε) (hG : cornersTheoremBound ε �
   · have : ε / 9 ≤ 1 := by linarith
     positivity
   refine hG.not_le (le_of_mul_le_mul_right ?_ (by positivity : (0 : ℝ) < card G ^ 2))
-  classical
   have h₁ := (farFromTriangleFree_graph hAε).le_card_cliqueFinset
   rw [card_triangles, card_triangleIndices] at h₁
   convert h₁.trans (Nat.cast_le.2 $ card_le_univ _) using 1 <;> simp <;> ring
@@ -134,13 +134,13 @@ theorem corners_theorem_nat (hε : 0 < ε) (hn : cornersTheoremBound (ε / 9) �
         (CharP.natCast_injOn_Iio (Fin (2 * n).succ) (2 * n).succ).mono (by simp; omega)
       exact (this.prodMap this).mono hAn
 
+open Classical in
 /-- **Roth's theorem** for finite abelian groups.
 
 The maximum density of a 3AP-free set in `G` goes to zero as `|G|` tends to infinity. -/
 theorem roth_3ap_theorem (ε : ℝ) (hε : 0 < ε) (hG : cornersTheoremBound ε ≤ card G)
     (A : Finset G) (hAε : ε * card G ≤ A.card) : ¬ ThreeAPFree (A : Set G) := by
   rintro hA
-  classical
   let B : Finset (G × G) := univ.filter fun (x, y) ↦ y - x ∈ A
   have : ε * card G ^ 2 ≤ B.card
   calc

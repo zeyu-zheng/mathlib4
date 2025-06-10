@@ -108,12 +108,12 @@ theorem SupIndep.image [DecidableEq ι] {s : Finset ι'} {g : ι' → ι} (hs : 
   obtain ⟨j, hj, rfl⟩ := mem_image.1 (ht hjt)
   exact mem_image_of_mem _ (mem_erase.2 ⟨ne_of_apply_ne g (ne_of_mem_of_not_mem hjt hit), hj⟩)
 
+open Classical in
 theorem supIndep_map {s : Finset ι'} {g : ι' ↪ ι} : (s.map g).SupIndep f ↔ s.SupIndep (f ∘ g) := by
   refine ⟨fun hs t ht i hi hit => ?_, fun hs => ?_⟩
   · rw [← sup_map]
     exact hs (map_subset_map.2 ht) ((mem_map' _).2 hi) (by rwa [mem_map'])
-  · classical
-    rw [map_eq_image]
+  · rw [map_eq_image]
     exact hs.image
 
 @[simp]
@@ -148,16 +148,17 @@ theorem supIndep_univ_fin_two (f : Fin 2 → α) :
   haveI : (0 : Fin 2) ≠ 1 := by simp
   supIndep_pair this
 
+open Classical in
 theorem SupIndep.attach (hs : s.SupIndep f) : s.attach.SupIndep fun a => f a := by
   intro t _ i _ hi
-  classical
-    have : (fun (a : { x // x ∈ s }) => f ↑a) = f ∘ (fun a : { x // x ∈ s } => ↑a) := rfl
-    rw [this, ← Finset.sup_image]
-    refine hs (image_subset_iff.2 fun (j : { x // x ∈ s }) _ => j.2) i.2 fun hi' => hi ?_
-    rw [mem_image] at hi'
-    obtain ⟨j, hj, hji⟩ := hi'
-    rwa [Subtype.ext hji] at hj
+  have : (fun (a : { x // x ∈ s }) => f ↑a) = f ∘ (fun a : { x // x ∈ s } => ↑a) := rfl
+  rw [this, ← Finset.sup_image]
+  refine hs (image_subset_iff.2 fun (j : { x // x ∈ s }) _ => j.2) i.2 fun hi' => hi ?_
+  rw [mem_image] at hi'
+  obtain ⟨j, hj, hji⟩ := hi'
+  rwa [Subtype.ext hji] at hj
 
+open Classical in
 /-
 Porting note: simpNF linter returns
 
@@ -171,7 +172,6 @@ example {α ι} [Lattice α] [OrderBot α] (s : Finset ι) (f : ι → α) :
 @[simp, nolint simpNF]
 theorem supIndep_attach : (s.attach.SupIndep fun a => f a) ↔ s.SupIndep f := by
   refine ⟨fun h t ht i his hit => ?_, SupIndep.attach⟩
-  classical
   convert h (filter_subset (fun (i : { x // x ∈ s }) => (i : ι) ∈ t) _) (mem_attach _ ⟨i, ‹_›⟩)
     fun hi => hit <| by simpa using hi using 1
   refine eq_of_forall_ge_iff ?_
@@ -441,9 +441,9 @@ lemma independent_of_independent_coe_Iic_comp {ι : Sort*} {a : α} {t : ι → 
 
 end CompleteLattice
 
+open Classical in
 theorem CompleteLattice.independent_iff_supIndep [CompleteLattice α] {s : Finset ι} {f : ι → α} :
     CompleteLattice.Independent (f ∘ ((↑) : s → ι)) ↔ s.SupIndep f := by
-  classical
     rw [Finset.supIndep_iff_disjoint_erase]
     refine Subtype.forall.trans (forall₂_congr fun a b => ?_)
     rw [Finset.sup_eq_iSup]
@@ -459,10 +459,10 @@ theorem CompleteLattice.Independent.supIndep' [CompleteLattice α] {f : ι → �
     (h : CompleteLattice.Independent f) : s.SupIndep f :=
   CompleteLattice.Independent.supIndep (h.comp Subtype.coe_injective)
 
+open Classical in
 /-- A variant of `CompleteLattice.independent_iff_supIndep` for `Fintype`s. -/
 theorem CompleteLattice.independent_iff_supIndep_univ [CompleteLattice α] [Fintype ι] {f : ι → α} :
     CompleteLattice.Independent f ↔ Finset.univ.SupIndep f := by
-  classical
     simp [Finset.supIndep_iff_disjoint_erase, CompleteLattice.Independent, Finset.sup_eq_iSup]
 
 alias ⟨CompleteLattice.Independent.sup_indep_univ, Finset.SupIndep.independent_of_univ⟩ :=

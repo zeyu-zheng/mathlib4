@@ -304,6 +304,7 @@ theorem Module.exists_nontrivial_relation_of_finrank_lt_card {t : Finset M}
   refine ⟨Subtype.val.extend g 0, ?_, z, z.2, by rwa [Subtype.val_injective.extend_apply]⟩
   rw [← Finset.sum_finset_coe]; convert sum; apply Subtype.val_injective.extend_apply
 
+open Classical in
 /-- If a finset has cardinality larger than `finrank + 1`,
 then there is a nontrivial linear relation amongst its elements,
 such that the coefficients of the relation sum to zero. -/
@@ -314,7 +315,6 @@ theorem Module.exists_nontrivial_relation_sum_zero_of_finrank_succ_lt_card
   obtain ⟨x₀, x₀_mem⟩ := card_pos.1 ((Nat.succ_pos _).trans h)
   -- and apply the previous lemma to the {xᵢ - x₀}
   let shift : M ↪ M := ⟨(· - x₀), sub_left_injective⟩
-  classical
   let t' := (t.erase x₀).map shift
   have h' : finrank R M < t'.card
   rw [card_map, card_erase_of_mem x₀_mem]

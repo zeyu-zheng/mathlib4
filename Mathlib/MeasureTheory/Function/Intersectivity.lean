@@ -34,6 +34,7 @@ open scoped ENNReal
 
 variable {ι α : Type*} [MeasurableSpace α] {μ : Measure α} [IsFiniteMeasure μ] {r : ℝ≥0∞}
 
+open Classical in
 /-- **Bergelson Intersectivity Lemma**: In a finite measure space, a sequence of events that have
 measure at least `r` has an infinite subset whose finite intersections all have positive volume.
 
@@ -106,8 +107,7 @@ lemma bergelson' {s : ℕ → Set α} (hs : ∀ n, MeasurableSet (s n)) (hr₀ :
         (h := fun n ↦ (n.succ : ℝ≥0∞)⁻¹ * hxs.toFinset.card) ?_ bot_le fun n ↦ mul_le_mul_left' ?_ _
       · simpa using ENNReal.Tendsto.mul_const (ENNReal.tendsto_inv_nat_nhds_zero.comp $
           tendsto_add_atTop_nat 1) (.inr $ ENNReal.natCast_ne_top _)
-      · classical
-        simpa only [Finset.sum_apply, indicator_apply, Pi.one_apply, Finset.sum_boole, Nat.cast_le]
+      · simpa only [Finset.sum_apply, indicator_apply, Pi.one_apply, Finset.sum_boole, Nat.cast_le]
           using Finset.card_le_card fun m hm ↦ hxs.mem_toFinset.2 (Finset.mem_filter.1 hm).2
     · simp_rw [← hu.mem_toFinset]
       exact hN₁ _ ⟨x, mem_iInter₂.2 fun n hn ↦ hux $ hu.mem_toFinset.1 hn, hxN⟩

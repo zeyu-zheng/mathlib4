@@ -122,6 +122,7 @@ theorem iSup_range_stdBasis [Finite ι] : ⨆ i, range (stdBasis R φ i) = ⊤ :
     exact ((@iSup_pos _ _ _ fun _ => range <| stdBasis R φ i) <| Finset.mem_univ i).symm
   · rw [Finset.coe_univ, Set.union_empty]
 
+open Classical in
 theorem disjoint_stdBasis_stdBasis (I J : Set ι) (h : Disjoint I J) :
     Disjoint (⨆ i ∈ I, range (stdBasis R φ i)) (⨆ i ∈ J, range (stdBasis R φ i)) := by
   refine
@@ -130,12 +131,11 @@ theorem disjoint_stdBasis_stdBasis (I J : Set ι) (h : Disjoint I J) :
   simp only [disjoint_iff_inf_le, SetLike.le_def, mem_iInf, mem_inf, mem_ker, mem_bot, proj_apply,
     funext_iff]
   rintro b ⟨hI, hJ⟩ i
-  classical
-    by_cases hiI : i ∈ I
-    · by_cases hiJ : i ∈ J
-      · exact (h.le_bot ⟨hiI, hiJ⟩).elim
-      · exact hJ i hiJ
-    · exact hI i hiI
+  by_cases hiI : i ∈ I
+  · by_cases hiJ : i ∈ J
+    · exact (h.le_bot ⟨hiI, hiJ⟩).elim
+    · exact hJ i hiJ
+  · exact hI i hiI
 
 theorem stdBasis_eq_single {a : R} :
     (fun i : ι => (stdBasis R (fun _ : ι => R) i) a) = fun i : ι => ↑(Finsupp.single i a) :=

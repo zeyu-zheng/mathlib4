@@ -442,6 +442,7 @@ theorem mi_not_onBoundary' (j : Fin n) :
   apply ((Ico_subset_Ico_iff _).mp (tail_sub mi_mem_bcubes j)).2
   simp [hw]
 
+open Classical in
 /-- The top of `mi` gives rise to a new valley, since the neighbouring cubes extend further upward
   than `mi`. -/
 theorem valley_mi : Valley cs (cs (mi h v)).shiftUp := by
@@ -449,7 +450,6 @@ theorem valley_mi : Valley cs (cs (mi h v)).shiftUp := by
   refine ⟨?_, ?_, ?_⟩
   · intro p; apply h.shiftUp_bottom_subset_bottoms mi_xm_ne_one
   · rintro i' hi' ⟨p2, hp2, h2p2⟩; simp only [head_shiftUp] at hi'
-    classical
     by_contra h2i'
     rw [tail_shiftUp] at h2p2
     simp only [not_subset, tail_shiftUp] at h2i'

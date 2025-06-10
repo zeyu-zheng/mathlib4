@@ -635,14 +635,14 @@ theorem toWithTop_ofENat (n : ℕ∞) {_ : Decidable (n : PartENat).Dom} : toWit
 theorem ofENat_toWithTop (x : PartENat) {_ : Decidable (x : PartENat).Dom} : toWithTop x = x := by
   induction x using PartENat.casesOn <;> simp
 
+open Classical in
 @[simp, norm_cast]
 theorem ofENat_le {x y : ℕ∞} : ofENat x ≤ ofENat y ↔ x ≤ y := by
-  classical
   rw [← toWithTop_le, toWithTop_ofENat, toWithTop_ofENat]
 
+open Classical in
 @[simp, norm_cast]
 theorem ofENat_lt {x y : ℕ∞} : ofENat x < ofENat y ↔ x < y := by
-  classical
   rw [← toWithTop_lt, toWithTop_ofENat, toWithTop_ofENat]
 
 section WithTopEquiv
@@ -724,8 +724,8 @@ noncomputable def withTopAddEquiv : PartENat ≃+ ℕ∞ :=
 
 end WithTopEquiv
 
+open Classical in
 theorem lt_wf : @WellFounded PartENat (· < ·) := by
-  classical
     change WellFounded fun a b : PartENat => a < b
     simp_rw [← withTopEquiv_lt]
     exact InvImage.wf _ wellFounded_lt

@@ -348,11 +348,11 @@ private lemma _root_.Equiv.succ_embeddingFinSucc_fst_symm_apply {ι : Type*} [De
   simp_rw [this]
   simp [-Equiv.embeddingFinSucc_fst]
 
+open Classical in
 /-- A continuous multilinear function `f` admits a Taylor series, whose successive terms are given
 by `f.iteratedFDeriv n`. This is the point of the definition of `f.iteratedFDeriv`. -/
 theorem hasFTaylorSeriesUpTo_iteratedFDeriv :
     HasFTaylorSeriesUpTo ⊤ f (fun v n ↦ f.iteratedFDeriv n v) := by
-  classical
   constructor
   · simp [ContinuousMultilinearMap.iteratedFDeriv]
   · rintro n - x

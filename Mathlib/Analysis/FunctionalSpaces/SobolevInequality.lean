@@ -289,6 +289,7 @@ end DecidableEq
 
 variable {F : Type*} [NormedAddCommGroup F] [NormedSpace ℝ F]
 
+open Classical in
 /-- The **Gagliardo-Nirenberg-Sobolev inequality**.  Let `u` be a continuously differentiable
 compactly-supported function `u` on `ℝⁿ`, for `n ≥ 2`.  (More literally we encode `ℝⁿ` as
 `ι → ℝ` where `n := #ι` is finite and at least 2.)  Then the Lebesgue integral of the pointwise
@@ -301,7 +302,6 @@ theorem lintegral_pow_le_pow_lintegral_fderiv_aux
     {u : (ι → ℝ) → F} (hu : ContDiff ℝ 1 u)
     (h2u : HasCompactSupport u) :
     ∫⁻ x, (‖u x‖₊ : ℝ≥0∞) ^ p ≤ (∫⁻ x, ‖fderiv ℝ u x‖₊) ^ p := by
-  classical
   /- For a function `f` in one variable and `t ∈ ℝ` we have
   `|f(t)| = `|∫_{-∞}^t Df(s)∂s| ≤ ∫_ℝ |Df(s)| ∂s` where we use the fundamental theorem of calculus.
   For each `x ∈ ℝⁿ` we let `u` vary in one of the `n` coordinates and apply the inequality above.

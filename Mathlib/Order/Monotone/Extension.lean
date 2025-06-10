@@ -19,11 +19,11 @@ open Set
 variable {α β : Type*} [LinearOrder α] [ConditionallyCompleteLinearOrder β] {f : α → β} {s : Set α}
   {a b : α}
 
+open Classical in
 /-- If a function is monotone and is bounded on a set `s`, then it admits a monotone extension to
 the whole space. -/
 theorem MonotoneOn.exists_monotone_extension (h : MonotoneOn f s) (hl : BddBelow (f '' s))
     (hu : BddAbove (f '' s)) : ∃ g : α → β, Monotone g ∧ EqOn f g s := by
-  classical
     /- The extension is defined by `f x = f a` for `x ≤ a`, and `f x` is the supremum of the values
       of `f` to the left of `x` for `x ≥ a`. -/
     rcases hl with ⟨a, ha⟩

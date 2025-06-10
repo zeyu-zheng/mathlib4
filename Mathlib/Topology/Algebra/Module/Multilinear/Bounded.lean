@@ -35,6 +35,7 @@ variable {ι 𝕜 F : Type*} {E : ι → Type*} [NormedField 𝕜]
   [∀ i, AddCommGroup (E i)] [∀ i, Module 𝕜 (E i)] [∀ i, TopologicalSpace (E i)]
   [AddCommGroup F] [Module 𝕜 F] [TopologicalSpace F]
 
+open Classical in
 /-- The image of a von Neumann bounded set under a continuous multilinear map
 is von Neumann bounded.
 
@@ -44,7 +45,6 @@ but it assumes that `ι` is nonempty.
 -/
 theorem image_multilinear' [Nonempty ι] {s : Set (∀ i, E i)} (hs : IsVonNBounded 𝕜 s)
     (f : ContinuousMultilinearMap 𝕜 E F) : IsVonNBounded 𝕜 (f '' s) := fun V hV ↦ by
-  classical
   if h₁ : ∀ c : 𝕜, ‖c‖ ≤ 1 then
     exact absorbs_iff_norm.2 ⟨2, fun c hc ↦ by linarith [h₁ c]⟩
   else

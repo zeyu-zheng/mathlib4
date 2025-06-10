@@ -374,12 +374,12 @@ end Surjective
 
 section Finite
 
+open Classical in
 lemma Module.Finite_of_isLocalization (R S Rₚ Sₚ) [CommSemiring R] [CommRing S] [CommRing Rₚ]
     [CommRing Sₚ] [Algebra R S] [Algebra R Rₚ] [Algebra R Sₚ] [Algebra S Sₚ] [Algebra Rₚ Sₚ]
     [IsScalarTower R S Sₚ] [IsScalarTower R Rₚ Sₚ] (M : Submonoid R) [IsLocalization M Rₚ]
     [IsLocalization (Algebra.algebraMapSubmonoid S M) Sₚ] [hRS : Module.Finite R S] :
     Module.Finite Rₚ Sₚ := by
-  classical
   have : algebraMap Rₚ Sₚ = IsLocalization.map (T := Algebra.algebraMapSubmonoid S M) Sₚ
       (algebraMap R S) (Submonoid.le_comap_map M) := by
     apply IsLocalization.ringHom_ext M
@@ -469,13 +469,13 @@ theorem IsLocalization.smul_mem_finsetIntegerMultiple_span [Algebra R S] [Algebr
     exact Algebra.smul_def _ _
   · exact Algebra.smul_def _ _
 
+open Classical in
 /-- If `M` is an `R' = S⁻¹R` module, and `x ∈ span R' s`,
 then `t • x ∈ span R s` for some `t : S`. -/
 theorem multiple_mem_span_of_mem_localization_span
     {N : Type*} [AddCommMonoid N] [Module R N] [Module R' N]
     [IsScalarTower R R' N] [IsLocalization M R'] (s : Set N) (x : N)
     (hx : x ∈ Submodule.span R' s) : ∃ (t : M), t • x ∈ Submodule.span R s := by
-  classical
   obtain ⟨s', hss', hs'⟩ := Submodule.mem_span_finite_of_mem_span hx
   rsuffices ⟨t, ht⟩ : ∃ t : M, t • x ∈ Submodule.span R (s' : Set N)
   · exact ⟨t, Submodule.span_mono hss' ht⟩

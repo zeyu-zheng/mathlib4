@@ -63,6 +63,7 @@ theorem summable_of_summable_hasDerivAt_of_isPreconnected (hu : Summable u) (ht 
   refine summable_of_summable_hasFDerivAt_of_isPreconnected hu ht h't hg ?_ hy₀ hg0 hy
   simpa? says simpa only [ContinuousLinearMap.norm_smulRight_apply, norm_one, one_mul]
 
+open Classical in
 /-- Consider a series of functions `∑' n, f n x` on a preconnected open set. If the series converges
 at a point, and all functions in the series are differentiable with a summable bound on the
 derivatives, then the series is differentiable on the set and its derivative is the sum of the
@@ -71,7 +72,6 @@ theorem hasFDerivAt_tsum_of_isPreconnected (hu : Summable u) (hs : IsOpen s)
     (h's : IsPreconnected s) (hf : ∀ n x, x ∈ s → HasFDerivAt (f n) (f' n x) x)
     (hf' : ∀ n x, x ∈ s → ‖f' n x‖ ≤ u n) (hx₀ : x₀ ∈ s) (hf0 : Summable fun n => f n x₀)
     (hx : x ∈ s) : HasFDerivAt (fun y => ∑' n, f n y) (∑' n, f' n x) x := by
-  classical
     have A :
       ∀ x : E, x ∈ s → Tendsto (fun t : Finset α => ∑ n ∈ t, f n x) atTop (𝓝 (∑' n, f n x)) := by
       intro y hy
@@ -241,6 +241,7 @@ theorem contDiff_tsum (hf : ∀ i, ContDiff 𝕜 N (f i)) (hv : ∀ k : ℕ, (k 
     rw [fderiv_iteratedFDeriv, comp_apply, LinearIsometryEquiv.norm_map]
     exact h'f _ _ _ h'm
 
+open Classical in
 /-- Consider a series of functions `∑' i, f i x`. Assume that each individual function `f i` is of
 class `C^N`, and moreover there is a uniform summable upper bound on the `k`-th derivative
 for each `k ≤ N` (except maybe for finitely many `i`s). Then the series is also `C^N`. -/
@@ -251,7 +252,6 @@ theorem contDiff_tsum_of_eventually (hf : ∀ i, ContDiff 𝕜 N (f i))
         (k : ℕ∞) ≤ N →
           ∀ᶠ i in (Filter.cofinite : Filter α), ∀ x : E, ‖iteratedFDeriv 𝕜 k (f i) x‖ ≤ v k i) :
     ContDiff 𝕜 N fun x => ∑' i, f i x := by
-  classical
     refine contDiff_iff_forall_nat_le.2 fun m hm => ?_
     let t : Set α :=
       { i : α | ¬∀ k : ℕ, k ∈ Finset.range (m + 1) → ∀ x, ‖iteratedFDeriv 𝕜 k (f i) x‖ ≤ v k i }

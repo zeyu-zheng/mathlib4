@@ -61,6 +61,7 @@ lemma disintegrate : ρ.fst ⊗ₘ ρCond = ρ := IsCondKernel.disintegrate
 lemma IsCondKernel.isSFiniteKernel (hρ : ρ ≠ 0) : IsSFiniteKernel ρCond := by
   contrapose! hρ; rwa [← ρ.disintegrate ρCond, Measure.compProd_of_not_isSFiniteKernel]
 
+open Classical in
 /-- Auxiliary lemma for `IsCondKernel.apply_of_ne_zero`. -/
 private lemma IsCondKernel.apply_of_ne_zero_of_measurableSet [MeasurableSingletonClass α] {x : α}
     (hx : ρ.fst {x} ≠ 0) {s : Set Ω} (hs : MeasurableSet s) :
@@ -68,7 +69,6 @@ private lemma IsCondKernel.apply_of_ne_zero_of_measurableSet [MeasurableSingleto
   have := isSFiniteKernel ρ ρCond (by rintro rfl; simp at hx)
   nth_rewrite 2 [← ρ.disintegrate ρCond]
   rw [Measure.compProd_apply (measurableSet_prod.mpr (Or.inl ⟨measurableSet_singleton x, hs⟩))]
-  classical
   have (a) : ρCond a (Prod.mk a ⁻¹' {x} ×ˢ s) = ({x} : Set α).indicator (ρCond · s) a
   obtain rfl | hax := eq_or_ne a x
   · simp only [singleton_prod, mem_singleton_iff, indicator_of_mem]

@@ -120,12 +120,12 @@ theorem minCardFinsetOfMemConvexHull_card_le_card {t : Finset E} (ht₁ : ↑t �
     (ht₂ : x ∈ convexHull 𝕜 (t : Set E)) : (minCardFinsetOfMemConvexHull hx).card ≤ t.card :=
   Function.argminOn_le _ _ _ (by exact ⟨ht₁, ht₂⟩)
 
+open Classical in
 theorem affineIndependent_minCardFinsetOfMemConvexHull :
     AffineIndependent 𝕜 ((↑) : minCardFinsetOfMemConvexHull hx → E) := by
   let k := (minCardFinsetOfMemConvexHull hx).card - 1
   have hk : (minCardFinsetOfMemConvexHull hx).card = k + 1 :=
     (Nat.succ_pred_eq_of_pos (Finset.card_pos.mpr (minCardFinsetOfMemConvexHull_nonempty hx))).symm
-  classical
   by_contra h
   obtain ⟨p, hp⟩ := mem_convexHull_erase h (mem_minCardFinsetOfMemConvexHull hx)
   have contra := minCardFinsetOfMemConvexHull_card_le_card hx (Set.Subset.trans

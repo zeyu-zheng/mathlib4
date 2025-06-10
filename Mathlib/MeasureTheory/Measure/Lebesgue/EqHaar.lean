@@ -76,12 +76,12 @@ theorem Basis.parallelepiped_basisFun (ι : Type*) [Fintype ι] :
     · classical convert parallelepiped_single (ι := ι) 1
     · exact zero_le_one
 
+open Classical in
 /-- A parallelepiped can be expressed on the standard basis. -/
 theorem Basis.parallelepiped_eq_map  {ι E : Type*} [Fintype ι] [NormedAddCommGroup E]
     [NormedSpace ℝ E] (b : Basis ι ℝ E) :
     b.parallelepiped = (PositiveCompacts.piIcc01 ι).map b.equivFun.symm
       b.equivFunL.symm.continuous b.equivFunL.symm.isOpenMap := by
-  classical
   rw [← Basis.parallelepiped_basisFun, ← Basis.parallelepiped_map]
   congr with x
   simp

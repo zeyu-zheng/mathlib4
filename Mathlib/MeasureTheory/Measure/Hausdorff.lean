@@ -137,11 +137,11 @@ namespace IsMetric
 
 variable {μ : OuterMeasure X}
 
+open Classical in
 /-- A metric outer measure is additive on a finite set of pairwise metric separated sets. -/
 theorem finset_iUnion_of_pairwise_separated (hm : IsMetric μ) {I : Finset ι} {s : ι → Set X}
     (hI : ∀ i ∈ I, ∀ j ∈ I, i ≠ j → IsMetricSeparated (s i) (s j)) :
     μ (⋃ i ∈ I, s i) = ∑ i ∈ I, μ (s i) := by
-  classical
   induction' I using Finset.induction_on with i I hiI ihI hI
   · simp
   simp only [Finset.mem_insert] at hI
@@ -314,11 +314,11 @@ theorem mkMetric'_isMetric (m : Set X → ℝ≥0∞) : (mkMetric' m).IsMetric :
   have : ε < diam u := εr.trans_le ((hr x hxs y hyt).trans <| edist_le_diam_of_mem hxu hyu)
   exact iInf_eq_top.2 fun h => (this.not_le h).elim
 
+open Classical in
 /-- If `c ∉ {0, ∞}` and `m₁ d ≤ c * m₂ d` for `d < ε` for some `ε > 0`
 (we use `≤ᶠ[𝓝[≥] 0]` to state this), then `mkMetric m₁ hm₁ ≤ c • mkMetric m₂ hm₂`. -/
 theorem mkMetric_mono_smul {m₁ m₂ : ℝ≥0∞ → ℝ≥0∞} {c : ℝ≥0∞} (hc : c ≠ ∞) (h0 : c ≠ 0)
     (hle : m₁ ≤ᶠ[𝓝[≥] 0] c • m₂) : (mkMetric m₁ : OuterMeasure X) ≤ c • mkMetric m₂ := by
-  classical
   rcases (mem_nhdsWithin_Ici_iff_exists_Ico_subset' zero_lt_one).1 hle with ⟨r, hr0, hr⟩
   refine fun s =>
     le_of_tendsto_of_tendsto (mkMetric'.tendsto_pre _ s)
@@ -460,13 +460,13 @@ theorem mkMetric_mono {m₁ m₂ : ℝ≥0∞ → ℝ≥0∞} (hle : m₁ ≤ᶠ
     (mkMetric m₁ : Measure X) ≤ mkMetric m₂ := by
   convert @mkMetric_mono_smul X _ _ _ _ m₂ _ ENNReal.one_ne_top one_ne_zero _ <;> simp [*]
 
+open Classical in
 /-- A formula for `MeasureTheory.Measure.mkMetric`. -/
 theorem mkMetric_apply (m : ℝ≥0∞ → ℝ≥0∞) (s : Set X) :
     mkMetric m s =
       ⨆ (r : ℝ≥0∞) (_ : 0 < r),
         ⨅ (t : ℕ → Set X) (_ : s ⊆ iUnion t) (_ : ∀ n, diam (t n) ≤ r),
           ∑' n, ⨆ _ : (t n).Nonempty, m (diam (t n)) := by
-  classical
   -- We mostly unfold the definitions but we need to switch the order of `∑'` and `⨅`
   simp only [← OuterMeasure.coe_mkMetric, OuterMeasure.mkMetric, OuterMeasure.mkMetric',
     OuterMeasure.iSup_apply, OuterMeasure.mkMetric'.pre, OuterMeasure.boundedBy_apply, extend]
@@ -869,11 +869,11 @@ instance {d : ℝ} [Group X] [IsometricSMul Xᵐᵒᵖ X] : IsMulRightInvariant 
 -/
 
 
+open Classical in
 /-- In the space `ι → ℝ`, the Hausdorff measure coincides exactly with the Lebesgue measure. -/
 @[simp]
 theorem hausdorffMeasure_pi_real {ι : Type*} [Fintype ι] :
     (μH[Fintype.card ι] : Measure (ι → ℝ)) = volume := by
-  classical
   -- it suffices to check that the two measures coincide on products of rational intervals
   refine (pi_eq_generateFrom (fun _ => Real.borel_eq_generateFrom_Ioo_rat.symm)
     (fun _ => Real.isPiSystem_Ioo_rat) (fun _ => Real.finiteSpanningSetsInIooRat _) ?_).symm

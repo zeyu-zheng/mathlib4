@@ -58,11 +58,11 @@ theorem dirac_apply [MeasurableSingletonClass α] (a : α) (s : Set α) :
 theorem map_dirac {f : α → β} (hf : Measurable f) (a : α) : (dirac a).map f = dirac (f a) :=
   ext fun s hs => by simp [hs, map_apply hf hs, hf hs, indicator_apply]
 
+open Classical in
 lemma map_const (μ : Measure α) (c : β) : μ.map (fun _ ↦ c) = (μ Set.univ) • dirac c := by
   ext s hs
   simp only [aemeasurable_const, measurable_const, Measure.coe_smul, Pi.smul_apply,
     dirac_apply' _ hs, smul_eq_mul]
-  classical
   rw [Measure.map_apply measurable_const hs, Set.preimage_const]
   by_cases hsc : c ∈ s
   · rw [(Set.indicator_eq_one_iff_mem _).mpr hsc, mul_one, if_pos hsc]

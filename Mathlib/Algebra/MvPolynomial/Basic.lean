@@ -485,9 +485,9 @@ theorem support_add [DecidableEq σ] : (p + q).support ⊆ p.support ∪ q.suppo
 theorem support_X [Nontrivial R] : (X n : MvPolynomial σ R).support = {Finsupp.single n 1} := by
   classical rw [X, support_monomial, if_neg]; exact one_ne_zero
 
+open Classical in
 theorem support_X_pow [Nontrivial R] (s : σ) (n : ℕ) :
     (X s ^ n : MvPolynomial σ R).support = {Finsupp.single s n} := by
-  classical
     rw [X_pow_eq_monomial, support_monomial, if_neg (one_ne_zero' R)]
 
 @[simp]
@@ -613,9 +613,9 @@ theorem coeff_X' [DecidableEq σ] (i : σ) (m) :
 theorem coeff_X (i : σ) : coeff (Finsupp.single i 1) (X i : MvPolynomial σ R) = 1 := by
   classical rw [coeff_X', if_pos rfl]
 
+open Classical in
 @[simp]
 theorem coeff_C_mul (m) (a : R) (p : MvPolynomial σ R) : coeff m (C a * p) = a * coeff m p := by
-  classical
   rw [mul_def, sum_C]
   · simp (config := { contextual := true }) [sum_def, coeff_sum]
   simp
@@ -684,9 +684,9 @@ theorem support_symmDiff_support_subset_support_add [DecidableEq σ] (p q : MvPo
   · rw [add_comm]
     exact support_sdiff_support_subset_support_add q p
 
+open Classical in
 theorem coeff_mul_monomial' (m) (s : σ →₀ ℕ) (r : R) (p : MvPolynomial σ R) :
     coeff m (p * monomial s r) = if s ≤ m then coeff (m - s) p * r else 0 := by
-  classical
   split_ifs with h
   · conv_rhs => rw [← coeff_mul_monomial _ s]
     congr with t
@@ -743,6 +743,7 @@ lemma support_nonempty {p : MvPolynomial σ R} : p.support.Nonempty ↔ p ≠ 0 
 theorem exists_coeff_ne_zero {p : MvPolynomial σ R} (h : p ≠ 0) : ∃ d, coeff d p ≠ 0 :=
   ne_zero_iff.mp h
 
+open Classical in
 theorem C_dvd_iff_dvd_coeff (r : R) (φ : MvPolynomial σ R) : C r ∣ φ ↔ ∀ i, r ∣ φ.coeff i := by
   constructor
   · rintro ⟨φ, rfl⟩ c
@@ -750,17 +751,16 @@ theorem C_dvd_iff_dvd_coeff (r : R) (φ : MvPolynomial σ R) : C r ∣ φ ↔ �
     apply dvd_mul_right
   · intro h
     choose C hc using h
-    classical
-      let c' : (σ →₀ ℕ) → R := fun i => if i ∈ φ.support then C i else 0
-      let ψ : MvPolynomial σ R := ∑ i ∈ φ.support, monomial i (c' i)
-      use ψ
-      apply MvPolynomial.ext
-      intro i
-      simp only [ψ, c', coeff_C_mul, coeff_sum, coeff_monomial, Finset.sum_ite_eq']
-      split_ifs with hi
-      · rw [hc]
-      · rw [not_mem_support_iff] at hi
-        rwa [mul_zero]
+    let c' : (σ →₀ ℕ) → R := fun i => if i ∈ φ.support then C i else 0
+    let ψ : MvPolynomial σ R := ∑ i ∈ φ.support, monomial i (c' i)
+    use ψ
+    apply MvPolynomial.ext
+    intro i
+    simp only [ψ, c', coeff_C_mul, coeff_sum, coeff_monomial, Finset.sum_ite_eq']
+    split_ifs with hi
+    · rw [hc]
+    · rw [not_mem_support_iff] at hi
+      rwa [mul_zero]
 
 @[simp] lemma isRegular_X : IsRegular (X n : MvPolynomial σ R) := by
   suffices IsLeftRegular (X n : MvPolynomial σ R) from
@@ -784,8 +784,8 @@ def coeffs (p : MvPolynomial σ R) : Finset R :=
 lemma coeffs_zero : coeffs (0 : MvPolynomial σ R) = ∅ :=
   rfl
 
+open Classical in
 lemma coeffs_one : coeffs (1 : MvPolynomial σ R) ⊆ {1} := by
-  classical
     rw [coeffs, Finset.image_subset_iff]
     simp_all [coeff_one]
 
@@ -924,9 +924,9 @@ theorem eval₂_one : (1 : MvPolynomial σ R).eval₂ f g = 1 :=
 theorem eval₂_X (n) : (X n).eval₂ f g = g n := by
   simp [eval₂_monomial, f.map_one, X, prod_single_index, pow_one]
 
+open Classical in
 theorem eval₂_mul_monomial :
     ∀ {s a}, (p * monomial s a).eval₂ f g = p.eval₂ f g * f a * s.prod fun n e => g n ^ e := by
-  classical
   apply MvPolynomial.induction_on p
   · intro a' s a
     simp [C_mul_monomial, eval₂_monomial, f.map_mul]
@@ -1182,8 +1182,8 @@ theorem map_eval₂ (f : R →+* S₁) (g : S₂ → MvPolynomial S₃ R) (p : M
     rw [eval₂_mul, (map f).map_mul, hp, (map f).map_mul, map_X, eval₂_mul, eval₂_X, eval₂_X]
     rfl
 
+open Classical in
 theorem coeff_map (p : MvPolynomial σ R) : ∀ m : σ →₀ ℕ, coeff m (map f p) = f (coeff m p) := by
-  classical
   apply MvPolynomial.induction_on p <;> clear p
   · intro r m
     rw [map_C]
@@ -1509,10 +1509,10 @@ section EvalMem
 
 variable {S subS : Type*} [CommSemiring S] [SetLike subS S] [SubsemiringClass subS S]
 
+open Classical in
 theorem eval₂_mem {f : R →+* S} {p : MvPolynomial σ R} {s : subS}
     (hs : ∀ i ∈ p.support, f (p.coeff i) ∈ s) {v : σ → S} (hv : ∀ i, v i ∈ s) :
     MvPolynomial.eval₂ f v p ∈ s := by
-  classical
   replace hs : ∀ i, f (p.coeff i) ∈ s := by
     intro i
     by_cases hi : i ∈ p.support

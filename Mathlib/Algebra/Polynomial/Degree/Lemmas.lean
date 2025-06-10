@@ -171,10 +171,10 @@ theorem coeff_add_eq_right_of_lt (pn : p.natDegree < n) : (p + q).coeff n = q.co
   rw [add_comm]
   exact coeff_add_eq_left_of_lt pn
 
+open Classical in
 theorem degree_sum_eq_of_disjoint (f : S → R[X]) (s : Finset S)
     (h : Set.Pairwise { i | i ∈ s ∧ f i ≠ 0 } (Ne on degree ∘ f)) :
     degree (s.sum f) = s.sup fun i => degree (f i) := by
-  classical
   induction' s using Finset.induction_on with x s hx IH
   · simp
   · simp only [hx, Finset.sum_insert, not_false_iff, Finset.sup_insert]

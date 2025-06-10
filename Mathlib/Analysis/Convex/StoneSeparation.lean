@@ -23,6 +23,7 @@ open Set
 
 variable {𝕜 E ι : Type*} [LinearOrderedField 𝕜] [AddCommGroup E] [Module 𝕜 E] {s t : Set E}
 
+open Classical in
 /-- In a tetrahedron with vertices `x`, `y`, `p`, `q`, any segment `[u, v]` joining the opposite
 edges `[x, p]` and `[y, q]` passes through any triangle of vertices `p`, `q`, `z` where
 `z ∈ [x, y]`. -/
@@ -49,32 +50,31 @@ theorem not_disjoint_segment_convexHull_triple {p q u v x y z : E} (hz : z ∈ s
   · positivity
   · rw [← add_div, div_self]; positivity
   rw [smul_add, smul_add, add_add_add_comm, add_comm, ← mul_smul, ← mul_smul]
-  classical
-    let w : Fin 3 → 𝕜 := ![az * av * bu, bz * au * bv, au * av]
-    let z : Fin 3 → E := ![p, q, az • x + bz • y]
-    have hw₀ : ∀ i, 0 ≤ w i
-    rintro i
-    fin_cases i
-    · exact mul_nonneg (mul_nonneg haz hav) hbu
-    · exact mul_nonneg (mul_nonneg hbz hau) hbv
-    · exact mul_nonneg hau hav
-    have hw : ∑ i, w i = az * av + bz * au
-    trans az * av * bu + (bz * au * bv + au * av)
-    · simp [w, Fin.sum_univ_succ, Fin.sum_univ_zero]
-    rw [← one_mul (au * av), ← habz, add_mul, ← add_assoc, add_add_add_comm, mul_assoc, ← mul_add,
-      mul_assoc, ← mul_add, mul_comm av, ← add_mul, ← mul_add, add_comm bu, add_comm bv, habu,
-      habv, one_mul, mul_one]
-    have hz : ∀ i, z i ∈ ({p, q, az • x + bz • y} : Set E) := fun i => by fin_cases i <;> simp [z]
-    convert Finset.centerMass_mem_convexHull (Finset.univ : Finset (Fin 3)) (fun i _ => hw₀ i)
-        (by rwa [hw]) fun i _ => hz i
-    rw [Finset.centerMass]
-    simp_rw [div_eq_inv_mul, hw, mul_assoc, mul_smul (az * av + bz * au)⁻¹, ← smul_add, add_assoc, ←
-      mul_assoc]
-    congr 3
-    rw [← mul_smul, ← mul_rotate, mul_right_comm, mul_smul, ← mul_smul _ av, mul_rotate,
-      mul_smul _ bz, ← smul_add]
-    simp only [w, z, smul_add, List.foldr, Matrix.cons_val_succ', Fin.mk_one,
-      Matrix.cons_val_one, Matrix.head_cons, add_zero]
+  let w : Fin 3 → 𝕜 := ![az * av * bu, bz * au * bv, au * av]
+  let z : Fin 3 → E := ![p, q, az • x + bz • y]
+  have hw₀ : ∀ i, 0 ≤ w i
+  rintro i
+  fin_cases i
+  · exact mul_nonneg (mul_nonneg haz hav) hbu
+  · exact mul_nonneg (mul_nonneg hbz hau) hbv
+  · exact mul_nonneg hau hav
+  have hw : ∑ i, w i = az * av + bz * au
+  trans az * av * bu + (bz * au * bv + au * av)
+  · simp [w, Fin.sum_univ_succ, Fin.sum_univ_zero]
+  rw [← one_mul (au * av), ← habz, add_mul, ← add_assoc, add_add_add_comm, mul_assoc, ← mul_add,
+    mul_assoc, ← mul_add, mul_comm av, ← add_mul, ← mul_add, add_comm bu, add_comm bv, habu,
+    habv, one_mul, mul_one]
+  have hz : ∀ i, z i ∈ ({p, q, az • x + bz • y} : Set E) := fun i => by fin_cases i <;> simp [z]
+  convert Finset.centerMass_mem_convexHull (Finset.univ : Finset (Fin 3)) (fun i _ => hw₀ i)
+      (by rwa [hw]) fun i _ => hz i
+  rw [Finset.centerMass]
+  simp_rw [div_eq_inv_mul, hw, mul_assoc, mul_smul (az * av + bz * au)⁻¹, ← smul_add, add_assoc, ←
+    mul_assoc]
+  congr 3
+  rw [← mul_smul, ← mul_rotate, mul_right_comm, mul_smul, ← mul_smul _ av, mul_rotate,
+    mul_smul _ bz, ← smul_add]
+  simp only [w, z, smul_add, List.foldr, Matrix.cons_val_succ', Fin.mk_one,
+    Matrix.cons_val_one, Matrix.head_cons, add_zero]
 
 /-- **Stone's Separation Theorem** -/
 theorem exists_convex_convex_compl_subset (hs : Convex 𝕜 s) (ht : Convex 𝕜 t) (hst : Disjoint s t) :

@@ -2208,10 +2208,10 @@ lemma map_filter' {f : α → β} (hf : Injective f) (l : List α)
     (l.filter p).map f = (l.map f).filter fun b => ∃ a, p a ∧ f a = b := by
   simp [(· ∘ ·), filter_map, hf.eq_iff]
 
+open Classical in
 lemma filter_attach' (l : List α) (p : {a // a ∈ l} → Bool) [DecidableEq α] :
     l.attach.filter p =
       (l.filter fun x => ∃ h, p ⟨x, h⟩).attach.map (Subtype.map id fun x => mem_of_mem_filter) := by
-  classical
   refine map_injective_iff.2 Subtype.coe_injective ?_
   simp [(· ∘ ·), map_filter' _ Subtype.coe_injective]
 

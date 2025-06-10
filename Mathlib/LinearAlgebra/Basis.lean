@@ -828,9 +828,9 @@ def Module.fintypeOfFintype [Fintype ι] (b : Basis ι R M) [Fintype R] : Fintyp
   haveI := Classical.decEq ι
   Fintype.ofEquiv _ b.equivFun.toEquiv.symm
 
+open Classical in
 theorem Module.card_fintype [Fintype ι] (b : Basis ι R M) [Fintype R] [Fintype M] :
     card M = card R ^ card ι := by
-  classical
     calc
       card M = card (ι → R) := card_congr b.equivFun.toEquiv
       _ = card R ^ card ι := card_fun
@@ -1124,10 +1124,10 @@ theorem unitsSMul_apply {v : Basis ι R M} {w : ι → Rˣ} (i : ι) : unitsSMul
   mk_apply (LinearIndependent.units_smul v.linearIndependent w)
     (units_smul_span_eq_top v.span_eq).ge i
 
+open Classical in
 @[simp]
 theorem coord_unitsSMul (e : Basis ι R₂ M) (w : ι → R₂ˣ) (i : ι) :
     (unitsSMul e w).coord i = (w i)⁻¹ • e.coord i := by
-  classical
     apply e.ext
     intro j
     trans ((unitsSMul e w).coord i) ((w j)⁻¹ • (unitsSMul e w) j)
@@ -1360,6 +1360,7 @@ variable {R : Type u} {M M₁ : Type v} {M' : Type v'} {ι : Type w}
 variable [Ring R] [AddCommGroup M] [AddCommGroup M'] [AddCommGroup M₁] [Nontrivial R]
 variable [Module R M] [Module R M'] [Module R M₁]
 
+open Classical in
 -- One might hope that a finite spanning set implies that any linearly independent set is finite.
 -- While this is true over a division ring
 -- (simply because any linearly independent set can be extended to a basis),
@@ -1377,7 +1378,6 @@ Over any nontrivial ring, the existence of a finite spanning set implies that an
 -/
 lemma basis_finite_of_finite_spans (w : Set M) (hw : w.Finite) (s : span R w = ⊤) {ι : Type w}
     (b : Basis ι R M) : Finite ι := by
-  classical
   haveI := hw.to_subtype
   cases nonempty_fintype w
   -- We'll work by contradiction, assuming `ι` is infinite.

@@ -263,9 +263,9 @@ variable {R : Type*} [CommRing R] [IsDomain R] (p n : ℕ) [ExpChar R p] (f : R[
 
 open Multiset
 
+open Classical in
 theorem roots_expand_pow_map_iterateFrobenius_le :
     (expand R (p ^ n) f).roots.map (iterateFrobenius R p n) ≤ p ^ n • f.roots := by
-  classical
   refine le_iff_count.2 fun r ↦ ?_
   by_cases h : ∃ s, r = s ^ p ^ n
   · obtain ⟨s, rfl⟩ := h
@@ -296,9 +296,9 @@ theorem roots_expand_image_frobenius_subset [DecidableEq R] :
 variable {p n f}
 variable [PerfectRing R p]
 
+open Classical in
 theorem roots_expand_pow :
     (expand R (p ^ n) f).roots = p ^ n • f.roots.map (iterateFrobeniusEquiv R p n).symm := by
-  classical
   refine ext' fun r ↦ ?_
   rw [count_roots, rootMultiplicity_expand_pow, ← count_roots, count_nsmul, count_map,
     count_eq_card_filter_eq]; congr; ext

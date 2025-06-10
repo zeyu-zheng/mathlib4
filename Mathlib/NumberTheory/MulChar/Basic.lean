@@ -90,6 +90,7 @@ variable {R : Type*} [CommMonoid R]
 -- The target
 variable {R' : Type*} [CommMonoidWithZero R']
 
+open Classical in
 variable (R R') in
 /-- The trivial multiplicative character. It takes the value `0` on non-units and
 the value `1` on units. -/
@@ -102,9 +103,8 @@ noncomputable def trivial : MulChar R R' where
   map_one' := by simp only [isUnit_one, if_true]
   map_mul' := by
     intro x y
-    classical
-      simp only [IsUnit.mul_iff, boole_mul]
-      split_ifs <;> tauto
+    simp only [IsUnit.mul_iff, boole_mul]
+    split_ifs <;> tauto
 
 @[simp]
 theorem coe_mk (f : R →* R') (hf) : (MulChar.mk f hf : R → R') = f :=
@@ -155,6 +155,7 @@ def toUnitHom (χ : MulChar R R') : Rˣ →* R'ˣ :=
 theorem coe_toUnitHom (χ : MulChar R R') (a : Rˣ) : ↑(χ.toUnitHom a) = χ a :=
   rfl
 
+open Classical in
 /-- Turn a homomorphism between unit groups into a `MulChar`. -/
 noncomputable def ofUnitHom (f : Rˣ →* R'ˣ) : MulChar R R' where
   toFun := by classical exact fun x => if hx : IsUnit x then f hx.unit else 0
@@ -162,7 +163,6 @@ noncomputable def ofUnitHom (f : Rˣ →* R'ˣ) : MulChar R R' where
     have h1 : (isUnit_one.unit : Rˣ) = 1 := Units.eq_iff.mp rfl
     simp only [h1, dif_pos, Units.val_eq_one, map_one, isUnit_one]
   map_mul' := by
-    classical
       intro x y
       by_cases hx : IsUnit x
       · simp only [hx, IsUnit.mul_iff, true_and_iff, dif_pos]

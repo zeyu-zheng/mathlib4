@@ -1454,9 +1454,9 @@ theorem mulSingle_mem_pi [DecidableEq η] {I : Set η} {H : ∀ i, Subgroup (f i
       simpa using h hj
     · simp [heq, one_mem]
 
+open Classical in
 @[to_additive]
 theorem pi_eq_bot_iff (H : ∀ i, Subgroup (f i)) : pi Set.univ H = ⊥ ↔ ∀ i, H i = ⊥ := by
-  classical
     simp only [eq_bot_iff_forall]
     constructor
     · intro h i x hx

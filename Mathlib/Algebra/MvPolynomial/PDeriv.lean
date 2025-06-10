@@ -62,10 +62,10 @@ def pderiv (i : σ) : Derivation R (MvPolynomial σ R) (MvPolynomial σ R) :=
 theorem pderiv_def [DecidableEq σ] (i : σ) : pderiv i = mkDerivation R (Pi.single i 1) := by
   unfold pderiv; congr!
 
+open Classical in
 @[simp]
 theorem pderiv_monomial {i : σ} :
     pderiv i (monomial s a) = monomial (s - single i 1) (a * s i) := by
-  classical
     simp only [pderiv_def, mkDerivation_monomial, Finsupp.smul_sum, smul_eq_mul, ← smul_mul_assoc,
       ← (monomial _).map_smul]
     refine (Finset.sum_eq_single i (fun j _ hne => ?_) fun hi => ?_).trans ?_

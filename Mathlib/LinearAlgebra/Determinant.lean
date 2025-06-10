@@ -228,6 +228,7 @@ theorem det_comp (f g : M →ₗ[A] M) :
 theorem det_id : LinearMap.det (LinearMap.id : M →ₗ[A] M) = 1 :=
   LinearMap.det.map_one
 
+open Classical in
 /-- Multiplying a map by a scalar `c` multiplies its determinant by `c ^ dim M`. -/
 @[simp]
 theorem det_smul {𝕜 : Type*} [Field 𝕜] {M : Type*} [AddCommGroup M] [Module 𝕜 M] (c : 𝕜)
@@ -239,9 +240,8 @@ theorem det_smul {𝕜 : Type*} [Field 𝕜] {M : Type*} [AddCommGroup M] [Modul
       exact FiniteDimensional.of_fintype_basis hs
     simp only [← det_toMatrix (FiniteDimensional.finBasis 𝕜 M), LinearEquiv.map_smul,
       Fintype.card_fin, Matrix.det_smul]
-  · classical
-      have : FiniteDimensional.finrank 𝕜 M = 0 := finrank_eq_zero_of_not_exists_basis H
-      simp [coe_det, H, this]
+  · have : FiniteDimensional.finrank 𝕜 M = 0 := finrank_eq_zero_of_not_exists_basis H
+    simp [coe_det, H, this]
 
 theorem det_zero' {ι : Type*} [Finite ι] [Nonempty ι] (b : Basis ι A M) :
     LinearMap.det (0 : M →ₗ[A] M) = 0 := by
@@ -263,10 +263,10 @@ theorem det_eq_one_of_subsingleton [Subsingleton M] (f : M →ₗ[R] M) :
   rw [← f.det_toMatrix b]
   exact Matrix.det_isEmpty
 
+open Classical in
 theorem det_eq_one_of_finrank_eq_zero {𝕜 : Type*} [Field 𝕜] {M : Type*} [AddCommGroup M]
     [Module 𝕜 M] (h : FiniteDimensional.finrank 𝕜 M = 0) (f : M →ₗ[𝕜] M) :
     LinearMap.det (f : M →ₗ[𝕜] M) = 1 := by
-  classical
     refine @LinearMap.det_cases M _ 𝕜 _ _ _ (fun t => t = 1) f ?_ rfl
     intro s b
     have : IsEmpty s
@@ -274,11 +274,11 @@ theorem det_eq_one_of_finrank_eq_zero {𝕜 : Type*} [Field 𝕜] {M : Type*} [A
     exact (FiniteDimensional.finrank_eq_card_basis b).symm.trans h
     exact Matrix.det_isEmpty
 
+open Classical in
 /-- Conjugating a linear map by a linear equiv does not change its determinant. -/
 @[simp]
 theorem det_conj {N : Type*} [AddCommGroup N] [Module A N] (f : M →ₗ[A] M) (e : M ≃ₗ[A] N) :
     LinearMap.det ((e : M →ₗ[A] N) ∘ₗ f ∘ₗ (e.symm : N →ₗ[A] M)) = LinearMap.det f := by
-  classical
     by_cases H : ∃ s : Finset M, Nonempty (Basis s A M)
     · rcases H with ⟨s, ⟨b⟩⟩
       rw [← det_toMatrix b f, ← det_toMatrix (b.map e), toMatrix_comp (b.map e) b (b.map e),

@@ -56,11 +56,11 @@ section SMul
 variable [LinearOrderedRing α] [LinearOrderedAddCommGroup β] [Module α β] [OrderedSMul α β]
   {s : Finset ι} {σ : Perm ι} {f : ι → α} {g : ι → β}
 
+open Classical in
 /-- **Rearrangement Inequality**: Pointwise scalar multiplication of `f` and `g` is maximized when
 `f` and `g` monovary together. Stated by permuting the entries of `g`. -/
 theorem MonovaryOn.sum_smul_comp_perm_le_sum_smul (hfg : MonovaryOn f g s)
     (hσ : {x | σ x ≠ x} ⊆ s) : ∑ i ∈ s, f i • g (σ i) ≤ ∑ i ∈ s, f i • g i := by
-  classical
   revert hσ σ hfg
   -- Porting note: Specify `p` to get around `∀ {σ}` in the current goal.
   apply Finset.induction_on_max_value (fun i ↦ toLex (g i, f i))
@@ -106,13 +106,13 @@ theorem MonovaryOn.sum_smul_comp_perm_le_sum_smul (hfg : MonovaryOn f g s)
     rintro rfl
     exact has hx.2
 
+open Classical in
 /-- **Equality case of the Rearrangement Inequality**: Pointwise scalar multiplication of `f` and
 `g`, which monovary together, is unchanged by a permutation if and only if `f` and `g ∘ σ` monovary
 together. Stated by permuting the entries of `g`. -/
 theorem MonovaryOn.sum_smul_comp_perm_eq_sum_smul_iff (hfg : MonovaryOn f g s)
     (hσ : {x | σ x ≠ x} ⊆ s) :
     ∑ i ∈ s, f i • g (σ i) = ∑ i ∈ s, f i • g i ↔ MonovaryOn f (g ∘ σ) s := by
-  classical
   refine ⟨not_imp_not.1 fun h ↦ ?_, fun h ↦ (hfg.sum_smul_comp_perm_le_sum_smul hσ).antisymm ?_⟩
   · rw [MonovaryOn] at h
     push_neg at h

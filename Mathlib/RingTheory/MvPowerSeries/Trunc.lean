@@ -40,22 +40,22 @@ variable [CommSemiring R] (n : σ →₀ ℕ)
 def truncFun (φ : MvPowerSeries σ R) : MvPolynomial σ R :=
   ∑ m ∈ Finset.Iio n, MvPolynomial.monomial m (coeff R m φ)
 
+open Classical in
 theorem coeff_truncFun (m : σ →₀ ℕ) (φ : MvPowerSeries σ R) :
     (truncFun n φ).coeff m = if m < n then coeff R m φ else 0 := by
-  classical
   simp [truncFun, MvPolynomial.coeff_sum]
 
 variable (R)
 
+open Classical in
+open Classical in
 /-- The `n`th truncation of a multivariate formal power series to a multivariate polynomial -/
 def trunc : MvPowerSeries σ R →+ MvPolynomial σ R where
   toFun := truncFun n
   map_zero' := by
-    classical
     ext
     simp [coeff_truncFun]
   map_add' := by
-    classical
     intros x y
     ext m
     simp only [coeff_truncFun, MvPolynomial.coeff_add]
@@ -69,10 +69,10 @@ theorem coeff_trunc (m : σ →₀ ℕ) (φ : MvPowerSeries σ R) :
     (trunc R n φ).coeff m = if m < n then coeff R m φ else 0 := by
   classical simp [trunc, coeff_truncFun]
 
+open Classical in
 @[simp]
 theorem trunc_one (n : σ →₀ ℕ) (hnn : n ≠ 0) : trunc R n 1 = 1 :=
   MvPolynomial.ext _ _ fun m => by
-    classical
     rw [coeff_trunc, coeff_one]
     split_ifs with H H'
     · subst m
@@ -87,10 +87,10 @@ theorem trunc_one (n : σ →₀ ℕ) (hnn : n ≠ 0) : trunc R n 1 = 1 :=
       apply H
       exact Ne.bot_lt hnn
 
+open Classical in
 @[simp]
 theorem trunc_c (n : σ →₀ ℕ) (hnn : n ≠ 0) (a : R) : trunc R n (C σ R a) = MvPolynomial.C a :=
   MvPolynomial.ext _ _ fun m => by
-    classical
     rw [coeff_trunc, coeff_C, MvPolynomial.coeff_C]
     split_ifs with H <;> first |rfl|try simp_all
     exfalso; apply H; subst m; exact Ne.bot_lt hnn

@@ -165,9 +165,9 @@ theorem prev (α : Type*) [AddRightCancelSemigroup α] [One α] (i : α) :
 theorem next (α : Type*) [AddGroup α] [One α] (i : α) : (ComplexShape.down α).next i = i - 1 :=
   (ComplexShape.down α).next_eq' <| sub_add_cancel _ _
 
+open Classical in
 @[simp]
 theorem next_nat_zero : (ComplexShape.down ℕ).next 0 = 0 := by
-  classical
     refine dif_neg ?_
     push_neg
     intro
@@ -190,9 +190,9 @@ theorem next (α : Type*) [AddRightCancelSemigroup α] [One α] (i : α) :
     (ComplexShape.up α).next i = i + 1 :=
   (ComplexShape.up α).next_eq' rfl
 
+open Classical in
 @[simp]
 theorem prev_nat_zero : (ComplexShape.up ℕ).prev 0 = 0 := by
-  classical
     refine dif_neg ?_
     push_neg
     intro

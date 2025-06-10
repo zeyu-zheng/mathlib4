@@ -225,6 +225,7 @@ theorem tmul_one_mul_one_tmul (a₁ : A) (b₂ : B) :
   · rw [SetLike.coe_gOne, mul_one]
   · rw [SetLike.coe_gOne, one_mul]
 
+open Classical in
 /-- The ring morphism `A →+* A ⊗[R] B` sending `a` to `a ⊗ₜ 1`. -/
 @[simps]
 def includeLeftRingHom : A →+* 𝒜 ᵍ⊗[R] ℬ where
@@ -234,7 +235,6 @@ def includeLeftRingHom : A →+* 𝒜 ᵍ⊗[R] ℬ where
   map_one' := rfl
   map_mul' a₁ a₂ := by
     dsimp
-    classical
     rw [← DirectSum.sum_support_decompose 𝒜 a₂, Finset.mul_sum]
     simp_rw [tmul, sum_tmul, map_sum, Finset.mul_sum]
     congr

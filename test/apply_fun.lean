@@ -207,16 +207,16 @@ example (f : {i : Nat} → Fin i → ℕ) (a b : Fin 37) (h : a = b) : True := b
   guard_hyp h : f a = f b
   trivial
 
+open Classical in
 example (f : (p : Prop) → [Decidable p] → Nat) (p q : Prop) (h : p = q)
     (h' : {n m : Nat} → n = m → True) : True := by
-  classical
   apply_fun f at h
   apply h'
   exact h
 
+open Classical in
 example (f : (p : Prop) → [Decidable p] → Nat) (p q : Prop) (h : p = q)
     (h' : {n m : Nat} → n = m → True) : True := by
-  classical
   apply_fun (fun x [Decidable x] => f x) at h
   apply h'
   exact h

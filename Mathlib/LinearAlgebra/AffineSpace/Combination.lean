@@ -483,12 +483,12 @@ theorem affineCombination_sdiff_sub [DecidableEq ι] {s₂ : Finset ι} (h : s�
   simp_rw [affineCombination_apply, vadd_vsub_vadd_cancel_right]
   exact s.weightedVSub_sdiff_sub h _ _
 
+open Classical in
 /-- If a weighted sum is zero and one of the weights is `-1`, the corresponding point is
 the affine combination of the other points with the given weights. -/
 theorem affineCombination_eq_of_weightedVSub_eq_zero_of_eq_neg_one {w : ι → k} {p : ι → P}
     (hw : s.weightedVSub p w = (0 : V)) {i : ι} [DecidablePred (· ≠ i)] (his : i ∈ s)
     (hwi : w i = -1) : (s.filter (· ≠ i)).affineCombination k p w = p i := by
-  classical
     rw [← @vsub_eq_zero_iff_eq V, ← hw,
       ← s.affineCombination_sdiff_sub (singleton_subset_iff.2 his), sdiff_singleton_eq_erase,
       ← filter_ne']
@@ -512,6 +512,7 @@ theorem affineCombination_filter_of_ne (w : ι → k) (p : ι → P) {pred : ι 
   rw [affineCombination_apply, affineCombination_apply,
     s.weightedVSubOfPoint_filter_of_ne _ _ _ h]
 
+open Classical in
 /-- Suppose an indexed family of points is given, along with a subset
 of the index type.  A vector can be expressed as
 `weightedVSubOfPoint` using a `Finset` lying within that subset and
@@ -525,7 +526,6 @@ theorem eq_weightedVSubOfPoint_subset_iff_eq_weightedVSubOfPoint_subtype {v : V}
         v = fs.weightedVSubOfPoint p b w) ↔
       ∃ (fs : Finset s) (w : s → k), ∑ i ∈ fs, w i = x ∧
         v = fs.weightedVSubOfPoint (fun i : s => p i) b w := by
-  classical
     simp_rw [weightedVSubOfPoint_apply]
     constructor
     · rintro ⟨fs, hfs, w, rfl, rfl⟩
@@ -885,11 +885,11 @@ section AffineSpace'
 
 variable {ι k V P : Type*} [Ring k] [AddCommGroup V] [Module k V] [AffineSpace V P]
 
+open Classical in
 /-- A `weightedVSub` with sum of weights 0 is in the `vectorSpan` of
 an indexed family. -/
 theorem weightedVSub_mem_vectorSpan {s : Finset ι} {w : ι → k} (h : ∑ i ∈ s, w i = 0)
     (p : ι → P) : s.weightedVSub p w ∈ vectorSpan k (Set.range p) := by
-  classical
     rcases isEmpty_or_nonempty ι with (hι | ⟨⟨i0⟩⟩)
     · simp [Finset.eq_empty_of_isEmpty s]
     · rw [vectorSpan_range_eq_span_range_vsub_right k p i0, ← Set.image_univ,
@@ -905,13 +905,13 @@ theorem weightedVSub_mem_vectorSpan {s : Finset ι} {w : ι → k} (h : ∑ i �
         simp [w', Set.indicator_apply, if_pos hi]
       · exact fun _ => zero_smul k _
 
+open Classical in
 /-- An `affineCombination` with sum of weights 1 is in the
 `affineSpan` of an indexed family, if the underlying ring is
 nontrivial. -/
 theorem affineCombination_mem_affineSpan [Nontrivial k] {s : Finset ι} {w : ι → k}
     (h : ∑ i ∈ s, w i = 1) (p : ι → P) :
     s.affineCombination k p w ∈ affineSpan k (Set.range p) := by
-  classical
     have hnz : ∑ i ∈ s, w i ≠ 0 := h.symm ▸ one_ne_zero
     have hn : s.Nonempty := Finset.nonempty_of_sum_ne_zero hnz
     cases' hn with i1 hi1
@@ -934,12 +934,12 @@ theorem affineCombination_mem_affineSpan [Nontrivial k] {s : Finset ι} {w : ι 
 
 variable (k)
 
+open Classical in
 /-- A vector is in the `vectorSpan` of an indexed family if and only
 if it is a `weightedVSub` with sum of weights 0. -/
 theorem mem_vectorSpan_iff_eq_weightedVSub {v : V} {p : ι → P} :
     v ∈ vectorSpan k (Set.range p) ↔
       ∃ (s : Finset ι) (w : ι → k), ∑ i ∈ s, w i = 0 ∧ v = s.weightedVSub p w := by
-  classical
     constructor
     · rcases isEmpty_or_nonempty ι with (hι | ⟨⟨i0⟩⟩)
       swap
@@ -978,13 +978,13 @@ theorem mem_vectorSpan_iff_eq_weightedVSub {v : V} {p : ι → P} :
 
 variable {k}
 
+open Classical in
 /-- A point in the `affineSpan` of an indexed family is an
 `affineCombination` with sum of weights 1. See also
 `eq_affineCombination_of_mem_affineSpan_of_fintype`. -/
 theorem eq_affineCombination_of_mem_affineSpan {p1 : P} {p : ι → P}
     (h : p1 ∈ affineSpan k (Set.range p)) :
     ∃ (s : Finset ι) (w : ι → k), ∑ i ∈ s, w i = 1 ∧ p1 = s.affineCombination k p w := by
-  classical
     have hn : (affineSpan k (Set.range p) : Set P).Nonempty := ⟨p1, h⟩
     rw [affineSpan_nonempty, Set.range_nonempty_iff_nonempty] at hn
     cases' hn with i0
@@ -1013,10 +1013,10 @@ theorem eq_affineCombination_of_mem_affineSpan {p1 : P} {p : ι → P}
       simp only [Pi.add_apply, Finset.sum_add_distrib, hw0, h', add_zero]
     · rw [add_comm, ← Finset.weightedVSub_vadd_affineCombination, hw0s, hs', vsub_vadd]
 
+open Classical in
 theorem eq_affineCombination_of_mem_affineSpan_of_fintype [Fintype ι] {p1 : P} {p : ι → P}
     (h : p1 ∈ affineSpan k (Set.range p)) :
     ∃ w : ι → k, ∑ i, w i = 1 ∧ p1 = Finset.univ.affineCombination k p w := by
-  classical
     obtain ⟨s, w, hw, rfl⟩ := eq_affineCombination_of_mem_affineSpan h
     refine
       ⟨(s : Set ι).indicator w, ?_, Finset.affineCombination_indicator_subset w p s.subset_univ⟩
@@ -1036,6 +1036,7 @@ theorem mem_affineSpan_iff_eq_affineCombination [Nontrivial k] {p1 : P} {p : ι 
   · rintro ⟨s, w, hw, rfl⟩
     exact affineCombination_mem_affineSpan hw p
 
+open Classical in
 /-- Given a family of points together with a chosen base point in that family, membership of the
 affine span of this family corresponds to an identity in terms of `weightedVSubOfPoint`, with
 weights that are not required to sum to 1. -/
@@ -1047,19 +1048,18 @@ theorem mem_affineSpan_iff_eq_weightedVSubOfPoint_vadd [Nontrivial k] (p : ι �
     obtain ⟨s, w, hw, rfl⟩ := eq_affineCombination_of_mem_affineSpan hq
     exact ⟨s, w, s.affineCombination_eq_weightedVSubOfPoint_vadd_of_sum_eq_one w p hw (p j)⟩
   · rintro ⟨s, w, rfl⟩
-    classical
-      let w' : ι → k := Function.update w j (1 - (s \ {j}).sum w)
-      have h₁ : (insert j s).sum w' = 1
-      by_cases hj : j ∈ s
-      · simp [Finset.sum_update_of_mem hj, Finset.insert_eq_of_mem hj]
-      · simp [Finset.sum_insert hj, Finset.sum_update_of_not_mem hj, hj]
-      have hww : ∀ i, i ≠ j → w i = w' i
-      intro i hij
-      simp [w', hij]
-      rw [s.weightedVSubOfPoint_eq_of_weights_eq p j w w' hww, ←
-        s.weightedVSubOfPoint_insert w' p j, ←
-        (insert j s).affineCombination_eq_weightedVSubOfPoint_vadd_of_sum_eq_one w' p h₁ (p j)]
-      exact affineCombination_mem_affineSpan h₁ p
+    let w' : ι → k := Function.update w j (1 - (s \ {j}).sum w)
+    have h₁ : (insert j s).sum w' = 1
+    by_cases hj : j ∈ s
+    · simp [Finset.sum_update_of_mem hj, Finset.insert_eq_of_mem hj]
+    · simp [Finset.sum_insert hj, Finset.sum_update_of_not_mem hj, hj]
+    have hww : ∀ i, i ≠ j → w i = w' i
+    intro i hij
+    simp [w', hij]
+    rw [s.weightedVSubOfPoint_eq_of_weights_eq p j w w' hww, ←
+      s.weightedVSubOfPoint_insert w' p j, ←
+      (insert j s).affineCombination_eq_weightedVSubOfPoint_vadd_of_sum_eq_one w' p h₁ (p j)]
+    exact affineCombination_mem_affineSpan h₁ p
 
 variable {k V}
 

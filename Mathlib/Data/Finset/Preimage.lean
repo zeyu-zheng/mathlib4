@@ -94,9 +94,9 @@ theorem image_preimage_of_bij [DecidableEq β] (f : α → β) (s : Finset β)
 theorem preimage_subset {f : α ↪ β} {s : Finset β} {t : Finset α} (hs : s ⊆ t.map f) :
     s.preimage f f.injective.injOn ⊆ t := fun _ h => (mem_map' f).1 (hs (mem_preimage.1 h))
 
+open Classical in
 theorem subset_map_iff {f : α ↪ β} {s : Finset β} {t : Finset α} :
     s ⊆ t.map f ↔ ∃ u ⊆ t, s = u.map f := by
-  classical
   simp_rw [← coe_subset, coe_map, subset_image_iff, map_eq_image, eq_comm]
 
 theorem sigma_preimage_mk {β : α → Type*} [DecidableEq α] (s : Finset (Σa, β a)) (t : Finset α) :

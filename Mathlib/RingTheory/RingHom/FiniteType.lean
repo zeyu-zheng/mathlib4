@@ -33,11 +33,11 @@ theorem finiteType_holdsForLocalizationAway : HoldsForLocalizationAway @FiniteTy
     rw [Algebra.smul_def]; rfl
   exact IsLocalization.finiteType_of_monoid_fg (Submonoid.powers r) S
 
+open Classical in
 theorem finiteType_ofLocalizationSpanTarget : OfLocalizationSpanTarget @FiniteType := by
   -- Setup algebra intances.
   rw [ofLocalizationSpanTarget_iff_finite]
   introv R hs H
-  classical
   letI := f.toAlgebra
   replace H : ∀ r : s, Algebra.FiniteType R (Localization.Away (r : S)) := by
     intro r; simp_rw [RingHom.FiniteType] at H; convert H r; ext; simp_rw [Algebra.smul_def]; rfl

@@ -66,11 +66,11 @@ lemma tendsto_ite {β : Type*} {p : ι → Prop} [DecidablePred p] {q : Prop} [D
       simp only [principal_singleton, le_pure_iff, mem_map, Set.mem_singleton_iff,
         Set.preimage_const_of_mem, univ_mem]
 
+open Classical in
 lemma tendsto_indicator_const_apply_iff_eventually' (b : β)
     (nhd_b : {0}ᶜ ∈ 𝓝 b) (nhd_o : {b}ᶜ ∈ 𝓝 0) (x : α) :
     Tendsto (fun i ↦ (As i).indicator (fun (_ : α) ↦ b) x) L (𝓝 (A.indicator (fun (_ : α) ↦ b) x))
       ↔ ∀ᶠ i in L, (x ∈ As i ↔ x ∈ A) := by
-  classical
   have heart := @tendsto_ite ι L β (fun i ↦ x ∈ As i) _ (x ∈ A) _ b 0 (𝓝 b) (𝓝 (0 : β))
                 nhd_o nhd_b ?_ ?_
   · convert heart

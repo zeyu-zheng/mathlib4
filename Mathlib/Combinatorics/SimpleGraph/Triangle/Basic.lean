@@ -60,11 +60,11 @@ nonrec lemma EdgeDisjointTriangles.mono (h : G ≤ H) (hH : H.EdgeDisjointTriang
 
 @[simp] lemma locallyLinear_bot : (⊥ : SimpleGraph α).LocallyLinear := by simp [LocallyLinear]
 
+open Classical in
 lemma EdgeDisjointTriangles.map (f : α ↪ β) (hG : G.EdgeDisjointTriangles) :
     (G.map f).EdgeDisjointTriangles := by
   rw [EdgeDisjointTriangles, cliqueSet_map (by norm_num : 3 ≠ 1),
     (Finset.map_injective f).injOn.pairwise_image]
-  classical
   rintro s hs t ht hst
   dsimp [Function.onFun]
   rw [← coe_inter, ← map_inter, coe_map, coe_inter]
@@ -84,10 +84,10 @@ lemma LocallyLinear.map (f : α ↪ β) (hG : G.LocallyLinear) : (G.map f).Local
   · rw [← Equiv.coe_toEmbedding, ← map_symm]
     exact LocallyLinear.map _
 
+open Classical in
 lemma edgeDisjointTriangles_iff_mem_sym2_subsingleton :
     G.EdgeDisjointTriangles ↔
       ∀ ⦃e : Sym2 α⦄, ¬ e.IsDiag → {s ∈ G.cliqueSet 3 | e ∈ (s : Finset α).sym2}.Subsingleton := by
-  classical
   have (a b) (hab : a ≠ b) : {s ∈ (G.cliqueSet 3 : Set (Finset α)) | s(a, b) ∈ (s : Finset α).sym2}
     = {s | G.Adj a b ∧ ∃ c, G.Adj a c ∧ G.Adj b c ∧ s = {a, b, c}} := by
     ext s
@@ -251,8 +251,8 @@ end DecidableEq
 
 variable [Nonempty α]
 
+open Classical in
 lemma FarFromTriangleFree.lt_half (hG : G.FarFromTriangleFree ε) : ε < 2⁻¹ := by
-  classical
   by_contra! hε
   refine lt_irrefl (ε * card α ^ 2) ?_
   have hε₀ : 0 < ε := hε.trans_lt' (by norm_num)

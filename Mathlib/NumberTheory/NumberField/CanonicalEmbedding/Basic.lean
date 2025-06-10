@@ -105,10 +105,10 @@ theorem integerLattice.inter_ball_finite [NumberField K] (r : ℝ) :
 
 open Module Fintype FiniteDimensional
 
+open Classical in
 /-- A `ℂ`-basis of `ℂ^n` that is also a `ℤ`-basis of the `integerLattice`. -/
 noncomputable def latticeBasis [NumberField K] :
     Basis (Free.ChooseBasisIndex ℤ (𝓞 K)) ℂ ((K →+* ℂ) → ℂ) := by
-  classical
   -- Let `B` be the canonical basis of `(K →+* ℂ) → ℂ`. We prove that the determinant of
   -- the image by `canonicalEmbedding` of the integral basis of `K` is nonzero. This
   -- will imply the result.
@@ -198,8 +198,8 @@ instance [NumberField K] : Nontrivial (E K) := by
   · have : Nonempty {w : InfinitePlace K // IsComplex w} := ⟨⟨w, hw⟩⟩
     exact nontrivial_prod_right
 
+open Classical in
 protected theorem finrank [NumberField K] : finrank ℝ (E K) = finrank ℚ K := by
-  classical
   rw [finrank_prod, finrank_pi, finrank_pi_fintype, Complex.finrank_real_complex, sum_const,
     card_univ, ← NrRealPlaces, ← NrComplexPlaces, ← card_real_embeddings, Algebra.id.smul_eq_mul,
     mul_comm, ← card_complex_embeddings, ← NumberField.Embeddings.card K ℂ,
@@ -548,10 +548,10 @@ open Module.Free
 
 open scoped nonZeroDivisors
 
+open Classical in
 /-- A `ℝ`-basis of `ℝ^r₁ × ℂ^r₂` that is also a `ℤ`-basis of the image of `𝓞 K`. -/
 def latticeBasis :
     Basis (ChooseBasisIndex ℤ (𝓞 K)) ℝ (E K) := by
-  classical
     -- We construct an `ℝ`-linear independent family from the image of
     -- `canonicalEmbedding.lattice_basis` by `commMap`
     have := LinearIndependent.map (LinearIndependent.restrict_scalars

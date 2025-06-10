@@ -393,9 +393,9 @@ theorem mul_mem_mul_rev {r s} (hr : r ∈ I) (hs : s ∈ J) : s * r ∈ I * J :=
 theorem pow_mem_pow {x : R} (hx : x ∈ I) (n : ℕ) : x ^ n ∈ I ^ n :=
   Submodule.pow_mem_pow _ hx _
 
+open Classical in
 theorem prod_mem_prod {ι : Type*} {s : Finset ι} {I : ι → Ideal R} {x : ι → R} :
     (∀ i ∈ s, x i ∈ I i) → (∏ i ∈ s, x i) ∈ ∏ i ∈ s, I i := by
-  classical
     refine Finset.induction_on s ?_ ?_
     · intro
       rw [Finset.prod_empty, Finset.prod_empty, one_eq_top]
@@ -564,8 +564,8 @@ theorem sup_eq_top_iff_isCoprime {R : Type*} [CommSemiring R] (x y : R) :
 theorem mul_le_inf : I * J ≤ I ⊓ J :=
   mul_le.2 fun r hri s hsj => ⟨I.mul_mem_right s hri, J.mul_mem_left r hsj⟩
 
+open Classical in
 theorem multiset_prod_le_inf {s : Multiset (Ideal R)} : s.prod ≤ s.inf := by
-  classical
     refine s.induction_on ?_ ?_
     · rw [Multiset.inf_zero]
       exact le_top
@@ -770,9 +770,9 @@ theorem isCoprime_span_singleton_iff (x y : R) :
   · rintro ⟨a, _, ⟨b, rfl⟩, e⟩; exact ⟨a, b, mul_comm b y ▸ e⟩
   · rintro ⟨a, b, e⟩; exact ⟨a, _, ⟨b, rfl⟩, mul_comm y b ▸ e⟩
 
+open Classical in
 theorem isCoprime_biInf {J : ι → Ideal R} {s : Finset ι}
     (hf : ∀ j ∈ s, IsCoprime I (J j)) : IsCoprime I (⨅ j ∈ s, J j) := by
-  classical
   simp_rw [isCoprime_iff_add] at *
   induction s using Finset.induction with
   | empty =>
@@ -993,6 +993,7 @@ theorem subset_union {R : Type u} [Ring R] {I J K : Ideal R} :
     (I : Set R) ⊆ J ∪ K ↔ I ≤ J ∨ I ≤ K :=
   AddSubgroupClass.subset_union
 
+open Classical in
 theorem subset_union_prime' {R : Type u} [CommRing R] {s : Finset ι} {f : ι → Ideal R} {a b : ι}
     (hp : ∀ i ∈ s, IsPrime (f i)) {I : Ideal R} :
     ((I : Set R) ⊆ f a ∪ f b ∪ ⋃ i ∈ (↑s : Set ι), f i) ↔ I ≤ f a ∨ I ≤ f b ∨ ∃ i ∈ s, I ≤ f i := by
@@ -1018,8 +1019,7 @@ theorem subset_union_prime' {R : Type u} [CommRing R] {s : Finset ι} {f : ι �
     subst hn
     rw [Finset.coe_empty, Set.biUnion_empty, Set.union_empty, subset_union] at h
     simpa only [exists_prop, Finset.not_mem_empty, false_and_iff, exists_false, or_false_iff]
-  classical
-    replace hn : ∃ (i : ι) (t : Finset ι), i ∉ t ∧ insert i t = s ∧ t.card = n :=
+  · replace hn : ∃ (i : ι) (t : Finset ι), i ∉ t ∧ insert i t = s ∧ t.card = n :=
       Finset.card_eq_succ.1 hn
     rcases hn with ⟨i, t, hit, rfl, hn⟩
     replace hp : IsPrime (f i) ∧ ∀ x ∈ t, IsPrime (f x) := (t.forall_mem_insert _ _).1 hp
@@ -1098,6 +1098,7 @@ theorem subset_union_prime' {R : Type u} [CommRing R] {s : Finset ι} {f : ι �
       exact hs $ Or.inr $ Set.mem_biUnion hjt <|
         add_sub_cancel_left r s ▸ (f j).sub_mem hj <| hr j hjt
 
+open Classical in
 /-- Prime avoidance. Atiyah-Macdonald 1.11, Eisenbud 3.3, Stacks 00DS, Matsumura Ex.1.6. -/
 theorem subset_union_prime {R : Type u} [CommRing R] {s : Finset ι} {f : ι → Ideal R} (a b : ι)
     (hp : ∀ i ∈ s, i ≠ a → i ≠ b → IsPrime (f i)) {I : Ideal R} :
@@ -1108,7 +1109,6 @@ theorem subset_union_prime {R : Type u} [CommRing R] {s : Finset ι} {f : ι →
     refine ⟨aux, fun ⟨i, his, hi⟩ ↦ Set.Subset.trans hi ?_⟩
     apply Set.subset_biUnion_of_mem (show i ∈ (↑s : Set ι) from his)
   fun h : (I : Set R) ⊆ ⋃ i ∈ (↑s : Set ι), f i => by
-  classical
     by_cases has : a ∈ s
     · obtain ⟨t, hat, rfl⟩ : ∃ t, a ∉ t ∧ insert a t = s :=
         ⟨s.erase a, Finset.not_mem_erase a s, Finset.insert_erase has⟩
@@ -1204,14 +1204,14 @@ theorem finsuppTotal_apply_eq_of_fintype [Fintype ι] (f : ι →₀ I) :
   rw [finsuppTotal_apply, Finsupp.sum_fintype]
   exact fun _ => zero_smul _ _
 
+open Classical in
 theorem range_finsuppTotal :
     LinearMap.range (finsuppTotal ι M I v) = I • Submodule.span R (Set.range v) := by
   ext
   rw [Submodule.mem_ideal_smul_span_iff_exists_sum]
   refine ⟨fun ⟨f, h⟩ => ⟨Finsupp.mapRange.linearMap I.subtype f, fun i => (f i).2, h⟩, ?_⟩
   rintro ⟨a, ha, rfl⟩
-  classical
-    refine ⟨a.mapRange (fun r => if h : r ∈ I then ⟨r, h⟩ else 0) (by simp), ?_⟩
+  · refine ⟨a.mapRange (fun r => if h : r ∈ I then ⟨r, h⟩ else 0) (by simp), ?_⟩
     rw [finsuppTotal_apply, Finsupp.sum_mapRange_index]
     · apply Finsupp.sum_congr
       intro i _

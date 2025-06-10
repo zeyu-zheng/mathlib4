@@ -86,9 +86,9 @@ open Finset
 
 variable {ι : Type*} {v : ι → R} (s : Finset ι)
 
+open Classical in
 theorem eq_zero_of_degree_lt_of_eval_index_eq_zero (hvs : Set.InjOn v s)
     (degree_f_lt : f.degree < s.card) (eval_f : ∀ i ∈ s, f.eval (v i) = 0) : f = 0 := by
-  classical
     rw [← card_image_of_injOn hvs] at degree_f_lt
     refine eq_zero_of_degree_lt_of_eval_finset_eq_zero _ degree_f_lt ?_
     intro x hx
@@ -265,9 +265,9 @@ theorem sum_basis (hvs : Set.InjOn v s) (hs : s.Nonempty) :
     rcases mem_erase.mp hj with ⟨hij, _⟩
     rw [eval_basis_of_ne hij hi]
 
+open Classical in
 theorem basisDivisor_add_symm {x y : F} (hxy : x ≠ y) :
     basisDivisor x y + basisDivisor y x = 1 := by
-  classical
   rw [← sum_basis Function.injective_id.injOn ⟨x, mem_insert_self _ {y}⟩,
     sum_insert (not_mem_singleton.mpr hxy), sum_singleton, basis_pair_left hxy,
     basis_pair_right hxy, id, id]

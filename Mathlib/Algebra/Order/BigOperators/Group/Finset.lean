@@ -152,11 +152,11 @@ theorem prod_le_univ_prod_of_one_le' [Fintype ι] {s : Finset ι} (w : ∀ x, 1 
     ∏ x ∈ s, f x ≤ ∏ x, f x :=
   prod_le_prod_of_subset_of_one_le' (subset_univ s) fun a _ _ ↦ w a
 
+open Classical in
 -- Porting note (#11215): TODO -- The two next lemmas give the same lemma in additive version
 @[to_additive sum_eq_zero_iff_of_nonneg]
 theorem prod_eq_one_iff_of_one_le' :
     (∀ i ∈ s, 1 ≤ f i) → ((∏ i ∈ s, f i) = 1 ↔ ∀ i ∈ s, f i = 1) := by
-  classical
     refine Finset.induction_on s
       (fun _ ↦ ⟨fun _ _ h ↦ False.elim (Finset.not_mem_empty _ h), fun _ ↦ rfl⟩) ?_
     intro a s ha ih H
@@ -450,10 +450,10 @@ theorem one_lt_prod' (h : ∀ i ∈ s, 1 ≤ f i) (hs : ∃ i ∈ s, 1 < f i) : 
 theorem prod_lt_one' (h : ∀ i ∈ s, f i ≤ 1) (hs : ∃ i ∈ s, f i < 1) : ∏ i ∈ s, f i < 1 :=
   prod_const_one.le.trans_lt' <| prod_lt_prod' h hs
 
+open Classical in
 @[to_additive]
 theorem prod_eq_prod_iff_of_le {f g : ι → M} (h : ∀ i ∈ s, f i ≤ g i) :
     ((∏ i ∈ s, f i) = ∏ i ∈ s, g i) ↔ ∀ i ∈ s, f i = g i := by
-  classical
     revert h
     refine Finset.induction_on s (fun _ ↦ ⟨fun _ _ h ↦ False.elim (Finset.not_mem_empty _ h),
       fun _ ↦ rfl⟩) fun a s ha ih H ↦ ?_

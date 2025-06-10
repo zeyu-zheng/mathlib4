@@ -350,13 +350,13 @@ theorem divisors_injective : Function.Injective divisors :=
 theorem divisors_inj {a b : ℕ} : a.divisors = b.divisors ↔ a = b :=
   divisors_injective.eq_iff
 
+open Classical in
 theorem eq_properDivisors_of_subset_of_sum_eq_sum {s : Finset ℕ} (hsub : s ⊆ n.properDivisors) :
     ((∑ x ∈ s, x) = ∑ x ∈ n.properDivisors, x) → s = n.properDivisors := by
   cases n
   · rw [properDivisors_zero, subset_empty] at hsub
     simp [hsub]
-  classical
-    rw [← sum_sdiff hsub]
+  · rw [← sum_sdiff hsub]
     intro h
     apply Subset.antisymm hsub
     rw [← sdiff_eq_empty_iff_subset]

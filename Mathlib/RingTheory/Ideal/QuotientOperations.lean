@@ -197,9 +197,9 @@ rfl
 lemma quotientInfToPiQuotient_inj (I : ι → Ideal R) : Injective (quotientInfToPiQuotient I) := by
   rw [quotientInfToPiQuotient, injective_lift_iff, ker_Pi_Quotient_mk]
 
+open Classical in
 lemma quotientInfToPiQuotient_surj [Finite ι] {I : ι → Ideal R}
     (hI : Pairwise fun i j => IsCoprime (I i) (I j)) : Surjective (quotientInfToPiQuotient I) := by
-  classical
   cases nonempty_fintype ι
   intro g
   choose f hf using fun i ↦ mk_surjective (g i)

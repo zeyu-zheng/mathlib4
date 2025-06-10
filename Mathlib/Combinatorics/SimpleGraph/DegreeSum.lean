@@ -89,8 +89,8 @@ theorem dart_edge_fiber_card [DecidableEq V] (e : Sym2 V) (h : e ∈ G.edgeSet) 
   rw [mem_singleton]
   exact d.symm_ne.symm
 
+open Classical in
 theorem dart_card_eq_twice_card_edges : Fintype.card G.Dart = 2 * G.edgeFinset.card := by
-  classical
   rw [← card_univ]
   rw [@card_eq_sum_card_fiberwise _ _ _ Dart.edge _ G.edgeFinset fun d _h =>
       by rw [mem_edgeFinset]; apply Dart.edge_mem]
@@ -112,10 +112,10 @@ lemma two_mul_card_edgeFinset :
 
 end DegreeSum
 
+open Classical in
 /-- The handshaking lemma.  See also `SimpleGraph.sum_degrees_eq_twice_card_edges`. -/
 theorem even_card_odd_degree_vertices [Fintype V] [DecidableRel G.Adj] :
     Even (univ.filter fun v => Odd (G.degree v)).card := by
-  classical
     have h := congr_arg (fun n => ↑n : ℕ → ZMod 2) G.sum_degrees_eq_twice_card_edges
     simp only [ZMod.natCast_self, zero_mul, Nat.cast_mul] at h
     rw [Nat.cast_sum, ← sum_filter_ne_zero] at h

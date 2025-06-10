@@ -283,6 +283,7 @@ theorem IndepFun.variance_add [@IsProbabilityMeasure Ω _ ℙ] {X Y : Ω → ℝ
       exact h.integral_mul_of_integrable (hX.integrable one_le_two) (hY.integrable one_le_two)
     _ = Var[X] + Var[Y] := by simp only [variance_def', hX, hY, Pi.pow_apply]; ring
 
+open Classical in
 -- Porting note: supplied `MeasurableSpace Ω` argument of `hs`, `h` by unification
 /-- The variance of a finite sum of pairwise independent random variables is the sum of the
 variances. -/
@@ -290,7 +291,6 @@ theorem IndepFun.variance_sum [@IsProbabilityMeasure Ω _ ℙ] {ι : Type*} {X :
     {s : Finset ι} (hs : ∀ i ∈ s, @Memℒp _ _ _ (_) (X i) 2 ℙ)
     (h : Set.Pairwise ↑s fun i j => @IndepFun _ _ _ (_) _ _ (X i) (X j) ℙ) :
     Var[∑ i ∈ s, X i] = ∑ i ∈ s, Var[X i] := by
-  classical
   induction' s using Finset.induction_on with k s ks IH
   · simp only [Finset.sum_empty, variance_zero]
   rw [variance_def' (memℒp_finset_sum' _ hs), sum_insert ks, sum_insert ks]

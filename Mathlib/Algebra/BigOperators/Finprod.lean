@@ -498,6 +498,7 @@ theorem one_lt_finprod' {M : Type*} [OrderedCancelCommMonoid M] {f : ι → M}
 -/
 
 
+open Classical in
 /-- If the multiplicative supports of `f` and `g` are finite, then the product of `f i * g i` equals
 the product of `f i` multiplied by the product of `g i`. -/
 @[to_additive
@@ -505,7 +506,6 @@ the product of `f i` multiplied by the product of `g i`. -/
       equals the sum of `f i` plus the sum of `g i`."]
 theorem finprod_mul_distrib (hf : (mulSupport f).Finite) (hg : (mulSupport g).Finite) :
     ∏ᶠ i, f i * g i = (∏ᶠ i, f i) * ∏ᶠ i, g i := by
-  classical
     rw [finprod_eq_prod_of_mulSupport_toFinset_subset f hf Finset.subset_union_left,
       finprod_eq_prod_of_mulSupport_toFinset_subset g hg Finset.subset_union_right, ←
       Finset.prod_mul_distrib]
@@ -641,6 +641,7 @@ theorem finprod_mem_empty : (∏ᶠ i ∈ (∅ : Set α), f i) = 1 := by simp
 theorem nonempty_of_finprod_mem_ne_one (h : ∏ᶠ i ∈ s, f i ≠ 1) : s.Nonempty :=
   nonempty_iff_ne_empty.2 fun h' => h <| h'.symm ▸ finprod_mem_empty
 
+open Classical in
 /-- Given finite sets `s` and `t`, the product of `f i` over `i ∈ s ∪ t` times the product of
 `f i` over `i ∈ s ∩ t` equals the product of `f i` over `i ∈ s` times the product of `f i`
 over `i ∈ t`. -/
@@ -650,10 +651,10 @@ over `i ∈ t`. -/
       over `i ∈ t`."]
 theorem finprod_mem_union_inter (hs : s.Finite) (ht : t.Finite) :
     ((∏ᶠ i ∈ s ∪ t, f i) * ∏ᶠ i ∈ s ∩ t, f i) = (∏ᶠ i ∈ s, f i) * ∏ᶠ i ∈ t, f i := by
-  lift s to Finset α using hs; lift t to Finset α using ht
-  classical
-    rw [← Finset.coe_union, ← Finset.coe_inter]
-    simp only [finprod_mem_coe_finset, Finset.prod_union_inter]
+  lift s to Finset α using hs
+  lift t to Finset α using ht
+  rw [← Finset.coe_union, ← Finset.coe_inter]
+  simp only [finprod_mem_coe_finset, Finset.prod_union_inter]
 
 /-- A more general version of `finprod_mem_union_inter` that requires `s ∩ mulSupport f` and
 `t ∩ mulSupport f` rather than `s` and `t` to be finite. -/
@@ -764,6 +765,7 @@ theorem finprod_mem_pair (h : a ≠ b) : (∏ᶠ i ∈ ({a, b} : Set α), f i) =
   rw [finprod_mem_insert, finprod_mem_singleton]
   exacts [h, finite_singleton b]
 
+open Classical in
 /-- The product of `f y` over `y ∈ g '' s` equals the product of `f (g i)` over `s`
 provided that `g` is injective on `s ∩ mulSupport (f ∘ g)`. -/
 @[to_additive
@@ -771,7 +773,6 @@ provided that `g` is injective on `s ∩ mulSupport (f ∘ g)`. -/
       `g` is injective on `s ∩ support (f ∘ g)`."]
 theorem finprod_mem_image' {s : Set β} {g : β → α} (hg : (s ∩ mulSupport (f ∘ g)).InjOn g) :
     ∏ᶠ i ∈ g '' s, f i = ∏ᶠ j ∈ s, f (g j) := by
-  classical
     by_cases hs : (s ∩ mulSupport (f ∘ g)).Finite
     · have hg : ∀ x ∈ hs.toFinset, ∀ y ∈ hs.toFinset, g x = g y → x = y := by
         simpa only [hs.mem_toFinset]
@@ -876,6 +877,7 @@ theorem finprod_mem_mul_diff (hst : s ⊆ t) (ht : t.Finite) :
     ((∏ᶠ i ∈ s, f i) * ∏ᶠ i ∈ t \ s, f i) = ∏ᶠ i ∈ t, f i :=
   finprod_mem_mul_diff' hst (ht.inter_of_left _)
 
+open Classical in
 /-- Given a family of pairwise disjoint finite sets `t i` indexed by a finite type, the product of
 `f a` over the union `⋃ i, t i` is equal to the product over all indexes `i` of the products of
 `f a` over `a ∈ t i`. -/
@@ -887,11 +889,10 @@ theorem finprod_mem_iUnion [Finite ι] {t : ι → Set α} (h : Pairwise (Disjoi
     (ht : ∀ i, (t i).Finite) : ∏ᶠ a ∈ ⋃ i : ι, t i, f a = ∏ᶠ i, ∏ᶠ a ∈ t i, f a := by
   cases nonempty_fintype ι
   lift t to ι → Finset α using ht
-  classical
-    rw [← biUnion_univ, ← Finset.coe_univ, ← Finset.coe_biUnion, finprod_mem_coe_finset,
-      Finset.prod_biUnion]
-    · simp only [finprod_mem_coe_finset, finprod_eq_prod_of_fintype]
-    · exact fun x _ y _ hxy => Finset.disjoint_coe.1 (h hxy)
+  rw [← biUnion_univ, ← Finset.coe_univ, ← Finset.coe_biUnion, finprod_mem_coe_finset,
+    Finset.prod_biUnion]
+  · simp only [finprod_mem_coe_finset, finprod_eq_prod_of_fintype]
+  · exact fun x _ y _ hxy => Finset.disjoint_coe.1 (h hxy)
 
 /-- Given a family of sets `t : ι → Set α`, a finite set `I` in the index type such that all sets
 `t i`, `i ∈ I`, are finite, if all `t i`, `i ∈ I`, are pairwise disjoint, then the product of `f a`
@@ -918,10 +919,10 @@ theorem finprod_mem_sUnion {t : Set (Set α)} (h : t.PairwiseDisjoint id) (ht₀
   rw [Set.sUnion_eq_biUnion]
   exact finprod_mem_biUnion h ht₀ ht₁
 
+open Classical in
 @[to_additive]
 theorem mul_finprod_cond_ne (a : α) (hf : (mulSupport f).Finite) :
     (f a * ∏ᶠ (i) (_ : i ≠ a), f i) = ∏ᶠ i, f i := by
-  classical
     rw [finprod_eq_prod _ hf]
     have h : ∀ x : α, f x ≠ 1 → (x ≠ a ↔ x ∈ hf.toFinset \ {a})
     intro x hx
@@ -1038,18 +1039,18 @@ theorem finprod_mem_finset_product' [DecidableEq α] [DecidableEq β] (s : Finse
   simp only [Finset.mem_image]
   exact fun x hx => ⟨x, hx, rfl⟩
 
+open Classical in
 /-- See also `finprod_mem_finset_product'`. -/
 @[to_additive "See also `finsum_mem_finset_product'`."]
 theorem finprod_mem_finset_product (s : Finset (α × β)) (f : α × β → M) :
     (∏ᶠ (ab) (_ : ab ∈ s), f ab) = ∏ᶠ (a) (b) (_ : (a, b) ∈ s), f (a, b) := by
-  classical
     rw [finprod_mem_finset_product']
     simp
 
+open Classical in
 @[to_additive]
 theorem finprod_mem_finset_product₃ {γ : Type*} (s : Finset (α × β × γ)) (f : α × β × γ → M) :
     (∏ᶠ (abc) (_ : abc ∈ s), f abc) = ∏ᶠ (a) (b) (c) (_ : (a, b, c) ∈ s), f (a, b, c) := by
-  classical
     rw [finprod_mem_finset_product']
     simp_rw [finprod_mem_finset_product']
     simp

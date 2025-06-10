@@ -860,8 +860,8 @@ theorem lift_word_prod_nontrivial_of_head_card {i j} (w : NeWord H i j) (hcard :
   apply hw'
   simp [w', heq1]
 
+open Classical in
 theorem lift_word_prod_nontrivial_of_not_empty {i j} (w : NeWord H i j) : lift f w.prod ≠ 1 := by
-  classical
     cases' hcard with hcard hcard
     · obtain ⟨i, h1, h2⟩ := Cardinal.three_le hcard i j
       exact lift_word_prod_nontrivial_of_other_i f X hXnonempty hXdisj hpp w h1 h2
@@ -897,6 +897,7 @@ theorem empty_of_word_prod_eq_one {w : Word H} (h : lift f w.prod = 1) : w = Wor
   obtain ⟨i, j, w, rfl⟩ := NeWord.of_word w hnotempty
   exact lift_word_prod_nontrivial_of_not_empty f hcard X hXnonempty hXdisj hpp w h
 
+open Classical in
 /-- The **Ping-Pong-Lemma**.
 
 Given a group action of `G` on `X` so that the `H i` acts in a specific way on disjoint subsets
@@ -911,12 +912,11 @@ Usually the Ping-Pong-Lemma requires that one group `H i` has at least three ele
 condition is only needed if `# ι = 2`, and we accept `3 ≤ # ι` as an alternative.
 -/
 theorem lift_injective_of_ping_pong : Function.Injective (lift f) := by
-  classical
-    apply (injective_iff_map_eq_one (lift f)).mpr
-    rw [(CoprodI.Word.equiv).forall_congr_left]
-    intro w Heq
-    dsimp [Word.equiv] at *
-    rw [empty_of_word_prod_eq_one f hcard X hXnonempty hXdisj hpp Heq, Word.prod_empty]
+  apply (injective_iff_map_eq_one (lift f)).mpr
+  rw [(CoprodI.Word.equiv).forall_congr_left]
+  intro w Heq
+  dsimp [Word.equiv] at *
+  rw [empty_of_word_prod_eq_one f hcard X hXnonempty hXdisj hpp Heq, Word.prod_empty]
 
 end PingPongLemma
 

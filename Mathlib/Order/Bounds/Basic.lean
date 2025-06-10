@@ -1372,9 +1372,9 @@ lemma bddBelow_range_pi {F : ι → ∀ a, π a} :
     BddBelow (range F) ↔ ∀ a, BddBelow (range fun i ↦ F i a) :=
   bddAbove_range_pi (π := fun a ↦ (π a)ᵒᵈ)
 
+open Classical in
 theorem isLUB_pi {s : Set (∀ a, π a)} {f : ∀ a, π a} :
     IsLUB s f ↔ ∀ a, IsLUB (Function.eval a '' s) (f a) := by
-  classical
     refine
       ⟨fun H a => ⟨(Function.monotone_eval a).mem_upperBounds_image H.1, fun b hb => ?_⟩, fun H =>
         ⟨?_, ?_⟩⟩

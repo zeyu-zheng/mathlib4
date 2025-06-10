@@ -368,6 +368,7 @@ theorem basicOpen_mul_le_right (f g : A) : basicOpen 𝒜 (f * g) ≤ basicOpen 
 theorem basicOpen_pow (f : A) (n : ℕ) (hn : 0 < n) : basicOpen 𝒜 (f ^ n) = basicOpen 𝒜 f :=
   TopologicalSpace.Opens.ext <| by simpa using zeroLocus_singleton_pow 𝒜 f n hn
 
+open Classical in
 theorem basicOpen_eq_union_of_projection (f : A) :
     basicOpen 𝒜 f = ⨆ i : ℕ, basicOpen 𝒜 (GradedAlgebra.proj 𝒜 i f) :=
   TopologicalSpace.Opens.ext <|
@@ -376,7 +377,6 @@ theorem basicOpen_eq_union_of_projection (f : A) :
       constructor <;> intro hz
       · rcases show ∃ i, GradedAlgebra.proj 𝒜 i f ∉ z.asHomogeneousIdeal by
           contrapose! hz with H
-          classical
           rw [← DirectSum.sum_support_decompose 𝒜 f]
           apply Ideal.sum_mem _ fun i _ => H i with ⟨i, hi⟩
         exact ⟨basicOpen 𝒜 (GradedAlgebra.proj 𝒜 i f), ⟨i, rfl⟩, by rwa [mem_basicOpen]⟩

@@ -149,6 +149,7 @@ section Finsupp
 
 open Finsupp
 
+open Classical in
 /-- `Finsupp.comapSMul` can form a non-equal diamond with `Finsupp.smulZeroClass` -/
 example {k : Type _} [Semiring k] [Nontrivial k] :
     (Finsupp.comapSMul : SMul k (k →₀ k)) ≠ Finsupp.smulZeroClass.toSMul := by
@@ -156,11 +157,11 @@ example {k : Type _} [Semiring k] [Nontrivial k] :
   intro h
   simp only [SMul.ext_iff, @SMul.smul_eq_hSMul _ _ (_), Function.funext_iff, DFunLike.ext_iff] at h
   replace h := h u (Finsupp.single 1 1) u
-  classical
   rw [comapSMul_single, smul_apply, smul_eq_mul, mul_one, single_eq_same, smul_eq_mul,
     single_eq_of_ne hu.symm, MulZeroClass.mul_zero] at h
   exact one_ne_zero h
 
+open Classical in
 /-- `Finsupp.comapSMul` can form a non-equal diamond with `Finsupp.smulZeroClass` even when
 the domain is a group. -/
 example {k : Type _} [Semiring k] [Nontrivial kˣ] :
@@ -170,7 +171,6 @@ example {k : Type _} [Semiring k] [Nontrivial kˣ] :
   intro h
   simp only [SMul.ext_iff, @SMul.smul_eq_hSMul _ _ (_), Function.funext_iff, DFunLike.ext_iff] at h
   replace h := h u (Finsupp.single 1 1) u
-  classical
   rw [comapSMul_single, smul_apply, Units.smul_def, smul_eq_mul, mul_one, single_eq_same,
     smul_eq_mul, single_eq_of_ne hu.symm, MulZeroClass.mul_zero] at h
   exact one_ne_zero h

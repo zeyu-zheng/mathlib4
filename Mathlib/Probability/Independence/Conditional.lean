@@ -654,6 +654,7 @@ theorem condIndepFun_iff_condexp_inter_preimage_eq_mul {mβ : MeasurableSpace β
   · rintro ⟨s, hs, rfl⟩ ⟨t, ht, rfl⟩
     exact h s t hs ht
 
+open Classical in
 theorem iCondIndepFun_iff_condexp_inter_preimage_eq_mul {β : ι → Type*}
     (m : ∀ x, MeasurableSpace (β x)) (f : ∀ i, Ω → β i) (hf : ∀ i, Measurable (f i)) :
     iCondIndepFun m' hm' m f μ ↔
@@ -665,8 +666,7 @@ theorem iCondIndepFun_iff_condexp_inter_preimage_eq_mul {β : ι → Type*}
   refine ⟨fun h s sets h_sets ↦ ?_, fun h s sets h_sets ↦ ?_⟩
   · refine h s (g := fun i ↦ f i ⁻¹' (sets i)) (fun i hi ↦ ?_)
     exact ⟨sets i, h_sets i hi, rfl⟩
-  · classical
-    let g := fun i ↦ if hi : i ∈ s then (h_sets i hi).choose else Set.univ
+  · let g := fun i ↦ if hi : i ∈ s then (h_sets i hi).choose else Set.univ
     specialize h s (sets := g) (fun i hi ↦ ?_)
     · simp only [g, dif_pos hi]
       exact (h_sets i hi).choose_spec.1
@@ -724,12 +724,12 @@ theorem iCondIndepFun.condIndepFun_prod_mk {β : ι → Type*}
     CondIndepFun m' hm' (fun a => (f i a, f j a)) (f k) μ :=
   Kernel.iIndepFun.indepFun_prod_mk hf_Indep hf_meas i j k hik hjk
 
+open Classical in
 open Finset in
 lemma iCondIndepFun.condIndepFun_prod_mk_prod_mk (h_indep : iCondIndepFun m' hm' m f μ)
     (hf : ∀ i, Measurable (f i))
     (i j k l : ι) (hik : i ≠ k) (hil : i ≠ l) (hjk : j ≠ k) (hjl : j ≠ l) :
     CondIndepFun m' hm' (fun a ↦ (f i a, f j a)) (fun a ↦ (f k a, f l a)) μ := by
-  classical
   let g (i j : ι) (v : Π x : ({i, j} : Finset ι), β x) : β i × β j :=
     ⟨v ⟨i, mem_insert_self _ _⟩, v ⟨j, mem_insert_of_mem <| mem_singleton_self _⟩⟩
   have hg (i j : ι) : Measurable (g i j) := by fun_prop

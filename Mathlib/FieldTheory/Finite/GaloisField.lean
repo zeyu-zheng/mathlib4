@@ -37,6 +37,7 @@ open Polynomial Finset
 
 open scoped Polynomial
 
+open Classical in
 instance FiniteField.isSplittingField_sub (K F : Type*) [Field K] [Fintype K]
     [Field F] [Algebra F K] : IsSplittingField F K (X ^ Fintype.card K - X) where
   splits' := by
@@ -45,7 +46,6 @@ instance FiniteField.isSplittingField_sub (K F : Type*) [Field K] [Fintype K]
     rw [← splits_id_iff_splits, splits_iff_card_roots, Polynomial.map_sub, Polynomial.map_pow,
       map_X, h, FiniteField.roots_X_pow_card_sub_X K, ← Finset.card_def, Finset.card_univ]
   adjoin_rootSet' := by
-    classical
     trans Algebra.adjoin F ((roots (X ^ Fintype.card K - X : K[X])).toFinset : Set K)
     · simp only [rootSet, aroots, Polynomial.map_pow, map_X, Polynomial.map_sub]
     · rw [FiniteField.roots_X_pow_card_sub_X, val_toFinset, coe_univ, Algebra.adjoin_univ]

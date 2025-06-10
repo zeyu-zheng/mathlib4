@@ -283,9 +283,9 @@ theorem not_int_of_not_padic_int (p : ℕ) {a : ℚ} [hp : Fact (Nat.Prime p)]
   rw [Rat.eq_num_of_isInt H]
   apply padicNorm.of_int
 
+open Classical in
 theorem sum_lt {α : Type*} {F : α → ℚ} {t : ℚ} {s : Finset α} :
     s.Nonempty → (∀ i ∈ s, padicNorm p (F i) < t) → padicNorm p (∑ i ∈ s, F i) < t := by
-  classical
     refine s.induction_on (by rintro ⟨-, ⟨⟩⟩) ?_
     rintro a S haS IH - ht
     by_cases hs : S.Nonempty
@@ -296,9 +296,9 @@ theorem sum_lt {α : Type*} {F : α → ℚ} {t : ℚ} {s : Finset α} :
             (IH hs fun b hb ↦ ht b (Finset.mem_insert_of_mem hb)))
     · simp_all
 
+open Classical in
 theorem sum_le {α : Type*} {F : α → ℚ} {t : ℚ} {s : Finset α} :
     s.Nonempty → (∀ i ∈ s, padicNorm p (F i) ≤ t) → padicNorm p (∑ i ∈ s, F i) ≤ t := by
-  classical
     refine s.induction_on (by rintro ⟨-, ⟨⟩⟩) ?_
     rintro a S haS IH - ht
     by_cases hs : S.Nonempty

@@ -98,9 +98,9 @@ lemma lieCharpoly_map_eval (r : R) :
     map_add, map_mul, aeval_C, Algebra.id.map_eq_id, RingHom.id_apply, aeval_X, aux,
     MvPolynomial.coe_aeval_eq_eval, polyCharpoly_map_eq_charpoly, LieHom.coe_toLinearMap]
 
+open Classical in
 lemma lieCharpoly_coeff_natDegree (i j : ℕ) (hij : i + j = finrank R M) :
     ((lieCharpoly R M x y).coeff i).natDegree ≤ j := by
-  classical
   rw [← mul_one j, lieCharpoly, coeff_map]
   apply MvPolynomial.aeval_natDegree_le
   · apply (polyCharpoly_coeff_isHomogeneous φ (chooseBasis R L) _ _ hij).totalDegree_le
@@ -122,6 +122,7 @@ open FiniteDimensional LieSubalgebra LieSubmodule Polynomial Cardinal LieModule 
 
 #adaptation_note /-- otherwise there is a spurious warning on `contrapose!` below. -/
 set_option linter.unusedVariables false in
+open Classical in
 /-- Let `L` be a Lie algebra of dimension `n` over a field `K` with at least `n` elements.
 Given a Lie subalgebra `U` of `L`, and an element `x ∈ U` such that `U ≤ engel K x`.
 Suppose that `engel K x` is minimal amongst the Engel subalgebras `engel K y` for `y ∈ U`.
@@ -257,7 +258,6 @@ lemma engel_isBot_of_isMin (hLK : finrank K L ≤ #K) (U : LieSubalgebra K L)
   -- such that `constantCoeff ψ` takes non-zero values on all of `s`.
   -- This turns out to be the subset that we alluded to earlier.
   obtain ⟨s, hs, hsψ⟩ : ∃ s : Finset K, r ≤ s.card ∧ ∀ α ∈ s, (constantCoeff ψ).eval α ≠ 0 := by
-    classical
     -- Let `t` denote the set of roots of `constantCoeff ψ`.
     let t := (constantCoeff ψ).roots.toFinset
     -- We show that `t` has cardinality at most `finrank K L - r`.
@@ -323,7 +323,6 @@ lemma engel_isBot_of_isMin (hLK : finrank K L ≤ #K) (U : LieSubalgebra K L)
   induction n with
   | zero => simp only [Nat.zero_eq, pow_zero, LinearMap.one_apply]
   | succ n ih => rw [pow_succ', pow_succ', LinearMap.mul_apply, ih]; rfl
-  classical
   -- Now let `n` be the smallest power such that `⁅v, _⁆ ^ n` kills `z'`.
   set n := Nat.find hz' with _hn
   have hn : (toEnd K U Q v ^ n) z' = 0

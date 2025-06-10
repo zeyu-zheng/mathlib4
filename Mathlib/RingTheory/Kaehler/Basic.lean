@@ -437,9 +437,9 @@ noncomputable def KaehlerDifferential.endEquiv :
 
 section Finiteness
 
+open Classical in
 theorem KaehlerDifferential.ideal_fg [EssFiniteType R S] :
     (KaehlerDifferential.ideal R S).FG := by
-  classical
   use (EssFiniteType.finset R S).image (fun s ↦ (1 : S) ⊗ₜ[R] s - s ⊗ₜ[R] (1 : S))
   apply le_antisymm
   · rw [Finset.coe_image, Ideal.span_le]
@@ -462,9 +462,9 @@ theorem KaehlerDifferential.ideal_fg [EssFiniteType R S] :
       exact ⟨a, ha, rfl⟩
     simpa [Ideal.Quotient.mk_eq_mk_iff_sub_mem] using AlgHom.congr_fun this x
 
+open Classical in
 instance KaehlerDifferential.finite [EssFiniteType R S] :
     Module.Finite S (Ω[S⁄R]) := by
-  classical
   let s := (EssFiniteType.finset R S).image (fun s ↦ D R S s)
   refine ⟨⟨s, top_le_iff.mp ?_⟩⟩
   rw [← span_range_derivation, Submodule.span_le]
@@ -811,11 +811,11 @@ def KaehlerDifferential.kerCotangentToTensor :
 lemma KaehlerDifferential.kerCotangentToTensor_toCotangent (x) :
     kerCotangentToTensor R A B (Ideal.toCotangent _ x) = 1 ⊗ₜ D _ _ x.1 := rfl
 
+open Classical in
 theorem KaehlerDifferential.range_kerCotangentToTensor
     (h : Function.Surjective (algebraMap A B)) :
     LinearMap.range (kerCotangentToTensor R A B) =
       (LinearMap.ker (KaehlerDifferential.mapBaseChange R A B)).restrictScalars A := by
-  classical
   ext x
   constructor
   · rintro ⟨x, rfl⟩

@@ -121,12 +121,12 @@ section
 variable {ι : Type*} {H : ι → Subgroup G} {g : ι → G} {s : Finset ι}
     (hcovers : ⋃ i ∈ s, (g i) • (H i : Set G) = Set.univ)
 
+open Classical in
 -- Inductive inner part of `Subgroup.exists_finiteIndex_of_leftCoset_cover`
 @[to_additive]
 theorem exists_finiteIndex_of_leftCoset_cover_aux [DecidableEq (Subgroup G)]
     (j : ι) (hj : j ∈ s) (hcovers' : ⋃ i ∈ s.filter (H · = H j), g i • (H i : Set G) ≠ Set.univ) :
     ∃ i ∈ s, H i ≠ H j ∧ (H i).FiniteIndex := by
-  classical
   have ⟨n, hn⟩ : ∃ n, n = (s.image H).card := exists_eq
   induction n using Nat.strongRec generalizing ι with
   | ind n ih =>
@@ -186,11 +186,11 @@ theorem exists_finiteIndex_of_leftCoset_cover_aux [DecidableEq (Subgroup G)]
     have ⟨k', hk'⟩ := ih _ hn' hcovers k (Finset.mem_univ k) hcovers' rfl
     exact ⟨k'.1.1, Finset.mem_of_mem_filter k'.1.1 k'.1.2, hK k', hk'.2.2⟩
 
+open Classical in
 /-- Let the group `G` be the union of finitely many left cosets `g i • H i`.
 Then at least one subgroup `H i` has finite index in `G`. -/
 @[to_additive]
 theorem exists_finiteIndex_of_leftCoset_cover : ∃ k ∈ s, (H k).FiniteIndex := by
-  classical
   have ⟨j, hj⟩ : s.Nonempty := Finset.nonempty_iff_ne_empty.mpr fun hempty => by
     rw [hempty, ← Finset.set_biUnion_coe, Finset.coe_empty, Set.biUnion_empty] at hcovers
     exact Set.empty_ne_univ hcovers
@@ -201,6 +201,7 @@ theorem exists_finiteIndex_of_leftCoset_cover : ∃ k ∈ s, (H k).FiniteIndex :
       exists_finiteIndex_of_leftCoset_cover_aux hcovers j hj hcovers'
     exact ⟨i, hi, hfi⟩
 
+open Classical in
 -- Auxiliary to `leftCoset_cover_filter_FiniteIndex` and `one_le_sum_inv_index_of_leftCoset_cover`.
 @[to_additive]
 theorem leftCoset_cover_filter_FiniteIndex_aux
@@ -209,7 +210,6 @@ theorem leftCoset_cover_filter_FiniteIndex_aux
       (1 ≤ ∑ i ∈ s, ((H i).index : ℚ)⁻¹) ∧
       (∑ i ∈ s, ((H i).index : ℚ)⁻¹ = 1 → Set.PairwiseDisjoint
         (s.filter (fun i => (H i).FiniteIndex)) (fun i ↦ g i • (H i : Set G))) := by
-  classical
   let D := ⨅ k ∈ s.filter (fun i => (H i).FiniteIndex), H k
   -- `D`, as the finite intersection of subgroups of finite index, also has finite index.
   have hD : D.FiniteIndex := finiteIndex_iInf' _ <| by simp

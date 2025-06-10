@@ -116,6 +116,7 @@ def mkFinite (X : Type*) [Finite X] [TopologicalSpace X] [DiscreteTopology X] : 
     intro U _
     apply isOpen_discrete (closure U)
 
+open Classical in
 /--
 A morphism in `Stonean` is an epi iff it is surjective.
 -/
@@ -131,7 +132,6 @@ lemma epi_iff_surjective {X Y : Stonean} (f : X ⟶ Y) :
   have hUy : U ∈ 𝓝 y
   simp only [C, Set.mem_range, hy, exists_false, not_false_eq_true, hC.compl_mem_nhds]
   obtain ⟨V, hV, hyV, hVU⟩ := isTopologicalBasis_isClopen.mem_nhds_iff.mp hUy
-  classical
   let g : Y ⟶ mkFinite (ULift (Fin 2)) :=
     ⟨(LocallyConstant.ofIsClopen hV).map ULift.up, LocallyConstant.continuous _⟩
   let h : Y ⟶ mkFinite (ULift (Fin 2)) := ⟨fun _ => ⟨1⟩, continuous_const⟩

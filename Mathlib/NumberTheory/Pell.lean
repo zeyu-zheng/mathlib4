@@ -465,6 +465,7 @@ theorem subsingleton {a b : Solution₁ d} (ha : IsFundamental a) (hb : IsFundam
   rw [a.prop_y, b.prop_y, hx]
   exact (sq_eq_sq ha.2.1.le hb.2.1.le).mp (Int.eq_of_mul_eq_mul_left ha.d_pos.ne' this)
 
+open Classical in
 /-- If `d` is positive and not a square, then a fundamental solution exists. -/
 theorem exists_of_not_isSquare (h₀ : 0 < d) (hd : ¬IsSquare d) :
     ∃ a : Solution₁ d, IsFundamental a := by
@@ -475,7 +476,6 @@ theorem exists_of_not_isSquare (h₀ : 0 < d) (hd : ¬IsSquare d) :
   lift a.x to ℕ using by positivity with ax
   norm_cast at ha₁
   exact ⟨ax, ha₁, a.y, ha₂, hax⟩
-  classical
   -- to avoid having to show that the predicate is decidable
   let x₁ := Nat.find P
   obtain ⟨hx, y₁, hy₀, hy₁⟩ := Nat.find_spec P

@@ -127,10 +127,10 @@ lemma EssFiniteType.aux (σ : Subalgebra R S)
     rw [mul_smul, ← smul_eq_mul, smul_comm sy x, ← smul_assoc, smul_eq_mul]
     exact mul_mem hsx'' hsy''
 
+open Classical in
 lemma EssFiniteType.comp [h₁ : EssFiniteType R S] [h₂ : EssFiniteType S T] :
     EssFiniteType R T := by
   rw [essFiniteType_iff] at h₁ h₂ ⊢
-  classical
   obtain ⟨s, hs⟩ := h₁
   obtain ⟨t, ht⟩ := h₂
   use s.image (IsScalarTower.toAlgHom R S T) ∪ t
@@ -155,8 +155,8 @@ lemma essFiniteType_iff_exists_subalgebra : EssFiniteType R S ↔
   letI := of_isLocalization S M
   exact comp R S₀ S
 
+open Classical in
 instance EssFiniteType.baseChange [h : EssFiniteType R S] : EssFiniteType T (T ⊗[R] S) := by
-  classical
   rw [essFiniteType_iff] at h ⊢
   obtain ⟨σ, hσ⟩ := h
   use σ.image Algebra.TensorProduct.includeRight
@@ -185,9 +185,9 @@ instance EssFiniteType.baseChange [h : EssFiniteType R S] : EssFiniteType T (T �
     rw [add_mul, ← mul_assoc, mul_comm tx ty, ← mul_assoc]
     exact add_mem (mul_mem hx₃ hy₁) (mul_mem hy₃ hx₁)
 
+open Classical in
 lemma EssFiniteType.of_comp [h : EssFiniteType R T] : EssFiniteType S T := by
   rw [essFiniteType_iff] at h ⊢
-  classical
   obtain ⟨σ, hσ⟩ := h
   use σ
   intro x

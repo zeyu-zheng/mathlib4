@@ -347,6 +347,7 @@ theorem one_mem_inv_coe_ideal [IsDomain A] {I : Ideal A} (hI : I ≠ ⊥) :
   rw [one_mul]
   exact FractionalIdeal.coeIdeal_le_one hy
 
+open Classical in
 /-- Specialization of `exists_primeSpectrum_prod_le_and_ne_bot_of_domain` to Dedekind domains:
 Let `I : Ideal A` be a nonzero ideal, where `A` is a Dedekind domain that is not a field.
 Then `exists_primeSpectrum_prod_le_and_ne_bot_of_domain` states we can find a product of prime
@@ -367,20 +368,19 @@ theorem exists_multiset_prod_cons_le_and_prod_not_le [IsDedekindDomain A] (hNF :
   obtain ⟨_, hPZ', hPM⟩ := hM.isPrime.multiset_prod_le.mp (hZI.trans hIM)
   -- Then in fact there is a `P ∈ Z` with `P ≤ M`.
   obtain ⟨P, hPZ, rfl⟩ := Multiset.mem_map.mp hPZ'
-  classical
-    have := Multiset.map_erase PrimeSpectrum.asIdeal PrimeSpectrum.ext P Z
-    obtain ⟨hP0, hZP0⟩ : P.asIdeal ≠ ⊥ ∧ ((Z.erase P).map PrimeSpectrum.asIdeal).prod ≠ ⊥ := by
-      rwa [Ne, ← Multiset.cons_erase hPZ', Multiset.prod_cons, Ideal.mul_eq_bot, not_or, ←
-        this] at hprodZ
-    -- By maximality of `P` and `M`, we have that `P ≤ M` implies `P = M`.
-    have hPM' := (P.isPrime.isMaximal hP0).eq_of_le hM.ne_top hPM
-    subst hPM'
-    -- By minimality of `Z`, erasing `P` from `Z` is exactly what we need.
-    refine ⟨Z.erase P, ?_, ?_⟩
-    · convert hZI
-      rw [this, Multiset.cons_erase hPZ']
-    · refine fun h => h_eraseZ (Z.erase P) ⟨h, ?_⟩ (Multiset.erase_lt.mpr hPZ)
-      exact hZP0
+  have := Multiset.map_erase PrimeSpectrum.asIdeal PrimeSpectrum.ext P Z
+  obtain ⟨hP0, hZP0⟩ : P.asIdeal ≠ ⊥ ∧ ((Z.erase P).map PrimeSpectrum.asIdeal).prod ≠ ⊥ := by
+    rwa [Ne, ← Multiset.cons_erase hPZ', Multiset.prod_cons, Ideal.mul_eq_bot, not_or, ←
+      this] at hprodZ
+  -- By maximality of `P` and `M`, we have that `P ≤ M` implies `P = M`.
+  have hPM' := (P.isPrime.isMaximal hP0).eq_of_le hM.ne_top hPM
+  subst hPM'
+  -- By minimality of `Z`, erasing `P` from `Z` is exactly what we need.
+  refine ⟨Z.erase P, ?_, ?_⟩
+  · convert hZI
+    rw [this, Multiset.cons_erase hPZ']
+  · refine fun h => h_eraseZ (Z.erase P) ⟨h, ?_⟩ (Multiset.erase_lt.mpr hPZ)
+    exact hZP0
 namespace FractionalIdeal
 
 open Ideal

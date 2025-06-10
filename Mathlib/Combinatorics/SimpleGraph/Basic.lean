@@ -110,12 +110,12 @@ def SimpleGraph.mk' {V : Type u} :
     funext v w
     simpa [Bool.coe_iff_coe] using congr_fun₂ h v w
 
+open Classical in
 /-- We can enumerate simple graphs by enumerating all functions `V → V → Bool`
 and filtering on whether they are symmetric and irreflexive. -/
 instance {V : Type u} [Fintype V] [DecidableEq V] : Fintype (SimpleGraph V) where
   elems := Finset.univ.map SimpleGraph.mk'
   complete := by
-    classical
     rintro ⟨Adj, hs, hi⟩
     simp only [mem_map, mem_univ, true_and, Subtype.exists, Bool.not_eq_true]
     refine ⟨fun v w ↦ Adj v w, ⟨?_, ?_⟩, ?_⟩

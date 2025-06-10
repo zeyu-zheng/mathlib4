@@ -229,6 +229,7 @@ theorem torsion_by_prime_power_decomposition (hN : Module.IsTorsion' N (Submonoi
 
 end PTorsion
 
+open Classical in
 /-- A finitely generated torsion module over a PID is isomorphic to a direct sum of some
   `R ⧸ R ∙ (p i ^ e i)` where the `p i ^ e i` are prime powers. -/
 theorem equiv_directSum_of_isTorsion [h' : Module.Finite R N] (hN : Module.IsTorsion R N) :
@@ -244,7 +245,6 @@ theorem equiv_directSum_of_isTorsion [h' : Module.Finite R N] (hN : Module.IsTor
     exact fun i =>
       torsion_by_prime_power_decomposition.{u, v} (hp i)
         ((isTorsion'_powers_iff <| p i).mpr fun x => ⟨e i, smul_torsionBy _ _⟩)
-  classical
   refine
     ⟨Σ i, Fin (this i).choose, inferInstance, fun ⟨i, _⟩ => p i, fun ⟨i, _⟩ => hp i, fun ⟨i, j⟩ =>
       (this i).choose_spec.choose j,

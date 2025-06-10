@@ -154,11 +154,11 @@ lemma coeff_minpolyDiv_sub_pow_mem_span {i} (hi : i ≤ natDegree (minpolyDiv R 
       rw [Set.mem_Iio] at hj
       exact ⟨j + 1, Nat.add_lt_of_lt_sub hj, pow_succ x j⟩
 
+open Classical in
 lemma span_coeff_minpolyDiv :
     Submodule.span R (Set.range (coeff (minpolyDiv R x))) =
       Subalgebra.toSubmodule (Algebra.adjoin R {x}) := by
   nontriviality S
-  classical
   apply le_antisymm
   · rw [Submodule.span_le]
     rintro _ ⟨i, rfl⟩
@@ -183,12 +183,12 @@ section PowerBasis
 
 variable {K}
 
+open Classical in
 lemma sum_smul_minpolyDiv_eq_X_pow (E) [Field E] [Algebra K E] [IsAlgClosed E]
     [FiniteDimensional K L] [Algebra.IsSeparable K L]
     {x : L} (hxL : Algebra.adjoin K {x} = ⊤) {r : ℕ} (hr : r < finrank K L) :
     ∑ σ : L →ₐ[K] E, ((x ^ r / aeval x (derivative <| minpoly K x)) •
       minpolyDiv K x).map σ = (X ^ r : E[X]) := by
-  classical
   rw [← sub_eq_zero]
   have : Function.Injective (fun σ : L →ₐ[K] E ↦ σ x) := fun _ _ h =>
     AlgHom.ext_of_adjoin_eq_top hxL (fun _ hx ↦ hx ▸ h)

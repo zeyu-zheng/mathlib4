@@ -177,6 +177,7 @@ lemma isSimple_of_isAtom (I : LieIdeal R L) (hI : IsAtom I) : IsSimple R I where
     rcases hx with ⟨y, hy, rfl⟩
     exact hy
 
+open Classical in
 /--
 In a semisimple Lie algebra,
 Lie ideals that are contained in the supremum of a finite collection of atoms
@@ -199,7 +200,6 @@ lemma finitelyAtomistic : ∀ s : Finset (LieIdeal R L), ↑s ⊆ {I : LieIdeal 
   obtain ⟨J, hJs, hJI⟩ : ∃ J ∈ s, ¬ J ≤ I := by
     by_contra! H
     exact hI.ne (le_antisymm hI.le (s.sup_le H))
-  classical
   let s' := s.erase J
   have hs' : s' ⊂ s := Finset.erase_ssubset hJs
   have hs'S : ↑s' ⊆ S := Set.Subset.trans (Finset.coe_subset.mpr hs'.subset) hs

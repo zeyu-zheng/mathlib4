@@ -48,11 +48,11 @@ theorem summable_iff_vanishing_norm [CompleteSpace E] {f : ι → E} :
     Summable f ↔ ∀ ε > (0 : ℝ), ∃ s : Finset ι, ∀ t, Disjoint t s → ‖∑ i ∈ t, f i‖ < ε := by
   rw [summable_iff_cauchySeq_finset, cauchySeq_finset_iff_vanishing_norm]
 
+open Classical in
 theorem cauchySeq_finset_of_norm_bounded_eventually {f : ι → E} {g : ι → ℝ} (hg : Summable g)
     (h : ∀ᶠ i in cofinite, ‖f i‖ ≤ g i) : CauchySeq fun s => ∑ i ∈ s, f i := by
   refine cauchySeq_finset_iff_vanishing_norm.2 fun ε hε => ?_
   rcases summable_iff_vanishing_norm.1 hg ε hε with ⟨s, hs⟩
-  classical
   refine ⟨s ∪ h.toFinset, fun t ht => ?_⟩
   have : ∀ i ∈ t, ‖f i‖ ≤ g i
   intro i hi

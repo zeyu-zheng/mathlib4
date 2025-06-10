@@ -198,10 +198,10 @@ theorem eval_rename_prod_mk (g : σ × τ → R) (i : σ) (p : MvPolynomial τ R
 
 end
 
+open Classical in
 /-- Every polynomial is a polynomial in finitely many variables. -/
 theorem exists_finset_rename (p : MvPolynomial σ R) :
     ∃ (s : Finset σ) (q : MvPolynomial { x // x ∈ s } R), p = rename (↑) q := by
-  classical
   apply induction_on p
   · intro r
     exact ⟨∅, C r, by rw [rename_C]⟩
@@ -220,6 +220,7 @@ theorem exists_finset_rename (p : MvPolynomial σ R) :
     · simp only [rename_rename, rename_X, Subtype.coe_mk, map_mul]
       rfl
 
+open Classical in
 /-- `exists_finset_rename` for two polynomials at once: for any two polynomials `p₁`, `p₂` in a
   polynomial semiring `R[σ]` of possibly infinitely many variables, `exists_finset_rename₂` yields
   a finite subset `s` of `σ` such that both `p₁` and `p₂` are contained in the polynomial semiring
@@ -228,17 +229,16 @@ theorem exists_finset_rename₂ (p₁ p₂ : MvPolynomial σ R) :
     ∃ (s : Finset σ) (q₁ q₂ : MvPolynomial s R), p₁ = rename (↑) q₁ ∧ p₂ = rename (↑) q₂ := by
   obtain ⟨s₁, q₁, rfl⟩ := exists_finset_rename p₁
   obtain ⟨s₂, q₂, rfl⟩ := exists_finset_rename p₂
-  classical
-    use s₁ ∪ s₂
-    use rename (Set.inclusion s₁.subset_union_left) q₁
-    use rename (Set.inclusion s₁.subset_union_right) q₂
-    constructor -- Porting note: was `<;> simp <;> rfl` but Lean couldn't infer the arguments
-    · -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
-      erw [rename_rename (Set.inclusion s₁.subset_union_left)]
-      rfl
-    · -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
-      erw [rename_rename (Set.inclusion s₁.subset_union_right)]
-      rfl
+  use s₁ ∪ s₂
+  use rename (Set.inclusion s₁.subset_union_left) q₁
+  use rename (Set.inclusion s₁.subset_union_right) q₂
+  constructor -- Porting note: was `<;> simp <;> rfl` but Lean couldn't infer the arguments
+  · -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
+    erw [rename_rename (Set.inclusion s₁.subset_union_left)]
+    rfl
+  · -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
+    erw [rename_rename (Set.inclusion s₁.subset_union_right)]
+    rfl
 
 /-- Every polynomial is a polynomial in finitely many variables. -/
 theorem exists_fin_rename (p : MvPolynomial σ R) :
@@ -260,10 +260,10 @@ theorem eval₂_cast_comp (f : σ → τ) (c : ℤ →+* R) (g : τ → R) (p : 
 
 section Coeff
 
+open Classical in
 @[simp]
 theorem coeff_rename_mapDomain (f : σ → τ) (hf : Injective f) (φ : MvPolynomial σ R) (d : σ →₀ ℕ) :
     (rename f φ).coeff (d.mapDomain f) = φ.coeff d := by
-  classical
   apply φ.induction_on' (P := fun ψ => coeff (Finsupp.mapDomain f d) ((rename f) ψ) = coeff d ψ)
   -- Lean could no longer infer the motive
   · intro u r
@@ -277,9 +277,9 @@ theorem coeff_rename_embDomain (f : σ ↪ τ) (φ : MvPolynomial σ R) (d : σ 
     (rename f φ).coeff (d.embDomain f) = φ.coeff d := by
   rw [Finsupp.embDomain_eq_mapDomain f, coeff_rename_mapDomain f f.injective]
 
+open Classical in
 theorem coeff_rename_eq_zero (f : σ → τ) (φ : MvPolynomial σ R) (d : τ →₀ ℕ)
     (h : ∀ u : σ →₀ ℕ, u.mapDomain f = d → φ.coeff u = 0) : (rename f φ).coeff d = 0 := by
-  classical
   rw [rename_eq, ← not_mem_support_iff]
   intro H
   replace H := mapDomain_support H

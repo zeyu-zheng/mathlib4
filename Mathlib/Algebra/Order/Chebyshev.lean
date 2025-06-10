@@ -50,12 +50,12 @@ section SMul
 variable [LinearOrderedRing α] [LinearOrderedAddCommGroup β] [Module α β] [OrderedSMul α β]
   {s : Finset ι} {σ : Perm ι} {f : ι → α} {g : ι → β}
 
+open Classical in
 /-- **Chebyshev's Sum Inequality**: When `f` and `g` monovary together (eg they are both
 monotone/antitone), the scalar product of their sum is less than the size of the set times their
 scalar product. -/
 theorem MonovaryOn.sum_smul_sum_le_card_smul_sum (hfg : MonovaryOn f g s) :
     ((∑ i ∈ s, f i) • ∑ i ∈ s, g i) ≤ s.card • ∑ i ∈ s, f i • g i := by
-  classical
     obtain ⟨σ, hσ, hs⟩ := s.countable_toSet.exists_cycleOn
     rw [← card_range s.card, sum_smul_sum_eq_sum_perm hσ]
     exact

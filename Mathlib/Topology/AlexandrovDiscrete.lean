@@ -211,8 +211,8 @@ lemma isOpen_iff_forall_specializes : IsOpen s ↔ ∀ x y, x ⤳ y → y ∈ s 
   refine ⟨_, fun b hb ↦ hs _ _ ?_ ha, isOpen_exterior, subset_exterior <| mem_singleton _⟩
   rwa [isOpen_exterior.exterior_subset, singleton_subset_iff]
 
+open Classical in
 lemma Set.Finite.isCompact_exterior (hs : s.Finite) : IsCompact (exterior s) := by
-  classical
   refine isCompact_of_finite_subcover fun f hf hsf ↦ ?_
   choose g hg using fun a (ha : a ∈ exterior s) ↦ mem_iUnion.1 (hsf ha)
   refine ⟨hs.toFinset.attach.image fun a ↦

@@ -89,12 +89,12 @@ lemma finitePresentation_ofLocalizationSpanTarget_aux
   apply Algebra.FinitePresentation.ker_fG_of_surjective f'
   exact IsLocalization.Away.mapₐ_surjective_of_surjective _ hf
 
+open Classical in
 /-- Finite-presentation can be checked on a standard covering of the target. -/
 theorem finitePresentation_ofLocalizationSpanTarget :
     OfLocalizationSpanTarget @FinitePresentation := by
   rw [ofLocalizationSpanTarget_iff_finite]
   introv R hs H
-  classical
   letI := f.toAlgebra
   replace H : ∀ r : s, Algebra.FinitePresentation R (Localization.Away (r : S)) := by
     intro r; simp_rw [RingHom.FinitePresentation] at H;

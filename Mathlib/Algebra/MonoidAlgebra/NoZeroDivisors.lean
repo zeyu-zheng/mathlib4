@@ -62,12 +62,12 @@ variable {R A : Type*} [Semiring R]
 
 namespace MonoidAlgebra
 
+open Classical in
 /-- The coefficient of a monomial in a product `f * g` that can be reached in at most one way
 as a product of monomials in the supports of `f` and `g` is a product. -/
 theorem mul_apply_mul_eq_mul_of_uniqueMul [Mul A] {f g : MonoidAlgebra R A} {a0 b0 : A}
     (h : UniqueMul f.support g.support a0 b0) :
     (f * g) (a0 * b0) = f a0 * g b0 := by
-  classical
   simp_rw [mul_apply, sum, ← Finset.sum_product']
   refine (Finset.sum_eq_single (a0, b0) ?_ ?_).trans (if_pos rfl) <;> simp_rw [Finset.mem_product]
   · refine fun ab hab hne => if_neg (fun he => hne <| Prod.ext ?_ ?_)

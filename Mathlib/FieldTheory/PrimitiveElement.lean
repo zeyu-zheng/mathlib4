@@ -386,9 +386,9 @@ theorem primitive_element_iff_minpoly_degree_eq (α : E) :
 variable [Algebra.IsSeparable F E] (A : Type*) [Field A] [Algebra F A]
   (hA : ∀ x : E, (minpoly F x).Splits (algebraMap F A))
 
+open Classical in
 theorem primitive_element_iff_algHom_eq_of_eval' (α : E) :
     F⟮α⟯ = ⊤ ↔ Function.Injective fun φ : E →ₐ[F] A ↦ φ α := by
-  classical
   simp_rw [primitive_element_iff_minpoly_natDegree_eq, ← card_rootSet_eq_natDegree (K := A)
     (Algebra.IsSeparable.isSeparable F α) (hA _), ← toFinset_card,
     ← (Algebra.IsAlgebraic.of_finite F E).range_eval_eq_rootSet_minpoly_of_splits _ hA α,

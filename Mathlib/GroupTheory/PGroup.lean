@@ -149,45 +149,45 @@ theorem card_orbit (a : α) [Finite (orbit G a)] : ∃ n : ℕ, Nat.card (orbit 
 
 variable (α) [Finite α]
 
+open Classical in
 /-- If `G` is a `p`-group acting on a finite set `α`, then the number of fixed points
   of the action is congruent mod `p` to the cardinality of `α` -/
 theorem card_modEq_card_fixedPoints : Nat.card α ≡ Nat.card (fixedPoints G α) [MOD p] := by
   have := Fintype.ofFinite α
   have := Fintype.ofFinite (fixedPoints G α)
   rw [Nat.card_eq_fintype_card, Nat.card_eq_fintype_card]
-  classical
-    calc
-      card α = card (Σy : Quotient (orbitRel G α), { x // Quotient.mk'' x = y }) :=
-        card_congr (Equiv.sigmaFiberEquiv (@Quotient.mk'' _ (orbitRel G α))).symm
-      _ = ∑ a : Quotient (orbitRel G α), card { x // Quotient.mk'' x = a } := card_sigma
-      _ ≡ ∑ _a : fixedPoints G α, 1 [MOD p] := ?_
-      _ = _ := by simp
-    rw [← ZMod.eq_iff_modEq_nat p, Nat.cast_sum, Nat.cast_sum]
-    have key :
-      ∀ x,
-        card { y // (Quotient.mk'' y : Quotient (orbitRel G α)) = Quotient.mk'' x } =
-          card (orbit G x) :=
-      fun x => by simp only [Quotient.eq'']; congr
-    refine
-      Eq.symm
-        (Finset.sum_bij_ne_zero (fun a _ _ => Quotient.mk'' a.1) (fun _ _ _ => Finset.mem_univ _)
-          (fun a₁ _ _ a₂ _ _ h =>
-            Subtype.eq (mem_fixedPoints'.mp a₂.2 a₁.1 (Quotient.exact' h)))
-          (fun b => Quotient.inductionOn' b fun b _ hb => ?_) fun a ha _ => by
-          rw [key, mem_fixedPoints_iff_card_orbit_eq_one.mp a.2])
-    obtain ⟨k, hk⟩ := hG.card_orbit b
-    rw [Nat.card_eq_fintype_card] at hk
-    have : k = 0 :=
-      Nat.le_zero.1
-        (Nat.le_of_lt_succ
-          (lt_of_not_ge
-            (mt (pow_dvd_pow p)
-              (by
-                rwa [pow_one, ← hk, ← Nat.modEq_zero_iff_dvd, ← ZMod.eq_iff_modEq_nat, ← key,
-                  Nat.cast_zero]))))
-    exact
-      ⟨⟨b, mem_fixedPoints_iff_card_orbit_eq_one.2 <| by rw [hk, this, pow_zero]⟩,
-        Finset.mem_univ _, ne_of_eq_of_ne Nat.cast_one one_ne_zero, rfl⟩
+  calc
+    card α = card (Σy : Quotient (orbitRel G α), { x // Quotient.mk'' x = y }) :=
+      card_congr (Equiv.sigmaFiberEquiv (@Quotient.mk'' _ (orbitRel G α))).symm
+    _ = ∑ a : Quotient (orbitRel G α), card { x // Quotient.mk'' x = a } := card_sigma
+    _ ≡ ∑ _a : fixedPoints G α, 1 [MOD p] := ?_
+    _ = _ := by simp
+  rw [← ZMod.eq_iff_modEq_nat p, Nat.cast_sum, Nat.cast_sum]
+  have key :
+    ∀ x,
+      card { y // (Quotient.mk'' y : Quotient (orbitRel G α)) = Quotient.mk'' x } =
+        card (orbit G x) :=
+    fun x => by simp only [Quotient.eq'']; congr
+  refine
+    Eq.symm
+      (Finset.sum_bij_ne_zero (fun a _ _ => Quotient.mk'' a.1) (fun _ _ _ => Finset.mem_univ _)
+        (fun a₁ _ _ a₂ _ _ h =>
+          Subtype.eq (mem_fixedPoints'.mp a₂.2 a₁.1 (Quotient.exact' h)))
+        (fun b => Quotient.inductionOn' b fun b _ hb => ?_) fun a ha _ => by
+        rw [key, mem_fixedPoints_iff_card_orbit_eq_one.mp a.2])
+  obtain ⟨k, hk⟩ := hG.card_orbit b
+  rw [Nat.card_eq_fintype_card] at hk
+  have : k = 0 :=
+    Nat.le_zero.1
+      (Nat.le_of_lt_succ
+        (lt_of_not_ge
+          (mt (pow_dvd_pow p)
+            (by
+              rwa [pow_one, ← hk, ← Nat.modEq_zero_iff_dvd, ← ZMod.eq_iff_modEq_nat, ← key,
+                Nat.cast_zero]))))
+  exact
+    ⟨⟨b, mem_fixedPoints_iff_card_orbit_eq_one.2 <| by rw [hk, this, pow_zero]⟩,
+      Finset.mem_univ _, ne_of_eq_of_ne Nat.cast_one one_ne_zero, rfl⟩
 
 /-- If a p-group acts on `α` and the cardinality of `α` is not a multiple
   of `p` then the action has a fixed point. -/
@@ -214,8 +214,8 @@ theorem exists_fixed_point_of_prime_dvd_card_of_fixed_point (hpα : p ∣ Nat.ca
     let ⟨⟨b, hb⟩, hba⟩ := exists_ne (⟨a, ha⟩ : fixedPoints G α)
     ⟨b, hb, fun hab => hba (by simp_rw [hab])⟩
 
+open Classical in
 theorem center_nontrivial [Nontrivial G] [Finite G] : Nontrivial (Subgroup.center G) := by
-  classical
     have := (hG.of_equiv ConjAct.toConjAct).exists_fixed_point_of_prime_dvd_card_of_fixed_point G
     rw [ConjAct.fixedPoints_eq_center] at this
     have dvd : p ∣ Nat.card G

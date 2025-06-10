@@ -69,12 +69,12 @@ def hallMatchingsOn.restrict {ι : Type u} {α : Type v} (t : ι → Finset α) 
   rintro ⟨i, hi⟩ ⟨j, hj⟩ hh
   simpa only [Subtype.mk_eq_mk] using hinj hh
 
+open Classical in
 /-- When the Hall condition is satisfied, the set of matchings on a finite set is nonempty.
 This is where `Finset.all_card_le_biUnion_card_iff_existsInjective'` comes into the argument. -/
 theorem hallMatchingsOn.nonempty {ι : Type u} {α : Type v} [DecidableEq α] (t : ι → Finset α)
     (h : ∀ s : Finset ι, s.card ≤ (s.biUnion t).card) (ι' : Finset ι) :
     Nonempty (hallMatchingsOn t ι') := by
-  classical
     refine ⟨Classical.indefiniteDescription _ ?_⟩
     apply (all_card_le_biUnion_card_iff_existsInjective' fun i : ι' => t i).mp
     intro s'
@@ -89,9 +89,9 @@ def hallMatchingsFunctor {ι : Type u} {α : Type v} (t : ι → Finset α) :
   obj ι' := hallMatchingsOn t ι'.unop
   map {ι' ι''} g f := hallMatchingsOn.restrict t (CategoryTheory.leOfHom g.unop) f
 
+open Classical in
 instance hallMatchingsOn.finite {ι : Type u} {α : Type v} (t : ι → Finset α) (ι' : Finset ι) :
     Finite (hallMatchingsOn t ι') := by
-  classical
     rw [hallMatchingsOn]
     let g : hallMatchingsOn t ι' → ι' → ι'.biUnion t := by
       rintro f i
@@ -104,6 +104,8 @@ instance hallMatchingsOn.finite {ι : Type u} {α : Type v} (t : ι → Finset �
     rw [Function.funext_iff] at h
     simpa [g] using h a
 
+
+open Classical in
 /-- This is the version of **Hall's Marriage Theorem** in terms of indexed
 families of finite sets `t : ι → Finset α`.  It states that there is a
 set of distinct representatives if and only if every union of `k` of the
@@ -123,30 +125,29 @@ theorem Finset.all_card_le_biUnion_card_iff_exists_injective {ι : Type u} {α :
     -- Set up the functor
     haveI : ∀ ι' : (Finset ι)ᵒᵖ, Nonempty ((hallMatchingsFunctor t).obj ι') := fun ι' =>
       hallMatchingsOn.nonempty t h ι'.unop
-    classical
-      haveI : ∀ ι' : (Finset ι)ᵒᵖ, Finite ((hallMatchingsFunctor t).obj ι') := by
-        intro ι'
-        rw [hallMatchingsFunctor]
-        infer_instance
-      -- Apply the compactness argument
-      obtain ⟨u, hu⟩ := nonempty_sections_of_finite_inverse_system (hallMatchingsFunctor t)
-      -- Interpret the resulting section of the inverse limit
-      refine ⟨?_, ?_, ?_⟩
-      ·-- Build the matching function from the section
-        exact fun i =>
-          (u (Opposite.op ({i} : Finset ι))).val ⟨i, by simp only [Opposite.unop_op, mem_singleton]⟩
-      · -- Show that it is injective
-        intro i i'
-        have subi : ({i} : Finset ι) ⊆ {i, i'} := by simp
-        have subi' : ({i'} : Finset ι) ⊆ {i, i'} := by simp
-        rw [← Finset.le_iff_subset] at subi subi'
-        simp only
-        rw [← hu (CategoryTheory.homOfLE subi).op, ← hu (CategoryTheory.homOfLE subi').op]
-        let uii' := u (Opposite.op ({i, i'} : Finset ι))
-        exact fun h => Subtype.mk_eq_mk.mp (uii'.property.1 h)
-      · -- Show that it maps each index to the corresponding finite set
-        intro i
-        apply (u (Opposite.op ({i} : Finset ι))).property.2
+    haveI : ∀ ι' : (Finset ι)ᵒᵖ, Finite ((hallMatchingsFunctor t).obj ι') := by
+      intro ι'
+      rw [hallMatchingsFunctor]
+      infer_instance
+    -- Apply the compactness argument
+    obtain ⟨u, hu⟩ := nonempty_sections_of_finite_inverse_system (hallMatchingsFunctor t)
+    -- Interpret the resulting section of the inverse limit
+    refine ⟨?_, ?_, ?_⟩
+    ·-- Build the matching function from the section
+      exact fun i =>
+        (u (Opposite.op ({i} : Finset ι))).val ⟨i, by simp only [Opposite.unop_op, mem_singleton]⟩
+    · -- Show that it is injective
+      intro i i'
+      have subi : ({i} : Finset ι) ⊆ {i, i'} := by simp
+      have subi' : ({i'} : Finset ι) ⊆ {i, i'} := by simp
+      rw [← Finset.le_iff_subset] at subi subi'
+      simp only
+      rw [← hu (CategoryTheory.homOfLE subi).op, ← hu (CategoryTheory.homOfLE subi').op]
+      let uii' := u (Opposite.op ({i, i'} : Finset ι))
+      exact fun h => Subtype.mk_eq_mk.mp (uii'.property.1 h)
+    · -- Show that it maps each index to the corresponding finite set
+      intro i
+      apply (u (Opposite.op ({i} : Finset ι))).property.2
   · -- The reverse direction is a straightforward cardinality argument
     rintro ⟨f, hf₁, hf₂⟩ s
     rw [← Finset.card_image_of_injective s hf₁]

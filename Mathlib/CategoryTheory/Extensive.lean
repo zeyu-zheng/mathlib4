@@ -208,8 +208,8 @@ theorem finitaryExtensive_iff_of_isTerminal (C : Type u) [Category.{v} C] [HasFi
   obtain ⟨hl, hr⟩ := (H c (HT.from _) (HT.from _) d hd.symm hd'.symm).mp ⟨hc⟩
   rw [hl.paste_vert_iff hX.symm, hr.paste_vert_iff hY.symm]
 
+open Classical in
 instance types.finitaryExtensive : FinitaryExtensive (Type u) := by
-  classical
   rw [finitaryExtensive_iff_of_isTerminal (Type u) PUnit Types.isTerminalPunit _
       (Types.binaryCoproductColimit _ _)]
   apply BinaryCofan.isVanKampen_mk _ _ (fun X Y => Types.binaryCoproductColimit X Y) _
@@ -472,10 +472,10 @@ theorem FinitaryExtensive.isVanKampen_finiteCoproducts [FinitaryExtensive C] {ι
   apply FinitaryExtensive.isVanKampen_finiteCoproducts_Fin
   exact (IsColimit.whiskerEquivalenceEquiv (Discrete.equivalence e).symm) hc
 
+open Classical in
 lemma FinitaryPreExtensive.hasPullbacks_of_is_coproduct [FinitaryPreExtensive C] {ι : Type*}
     [Finite ι] {F : Discrete ι ⥤ C} {c : Cocone F} (hc : IsColimit c) (i : Discrete ι) {X : C}
     (g : X ⟶ _) : HasPullback g (c.ι.app i) := by
-  classical
   let f : ι → C := F.obj ∘ Discrete.mk
   have : F = Discrete.functor f :=
     Functor.hext (fun i ↦ rfl) (by rintro ⟨i⟩ ⟨j⟩ ⟨⟨rfl : i = j⟩⟩; simp [f])

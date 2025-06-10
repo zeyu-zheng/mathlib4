@@ -85,6 +85,7 @@ local infixr:25 " →ₛ " => SimpleFunc
 /-! ### Lower semicontinuous upper bound for nonnegative functions -/
 
 
+open Classical in
 /-- Given a simple function `f` with values in `ℝ≥0`, there exists a lower semicontinuous
 function `g ≥ f` with integral arbitrarily close to that of `f`. Formulation in terms of
 `lintegral`.
@@ -104,13 +105,11 @@ theorem SimpleFunc.exists_le_lowerSemicontinuous_lintegral_ge (f : α →ₛ ℝ
       exact Set.indicator_le_self _ _ _
     by_cases hc : c = 0
     · refine ⟨fun _ => 0, ?_, lowerSemicontinuous_const, ?_⟩
-      · classical
-        simp only [hc, Set.indicator_zero', Pi.zero_apply, SimpleFunc.const_zero, imp_true_iff,
+      · simp only [hc, Set.indicator_zero', Pi.zero_apply, SimpleFunc.const_zero, imp_true_iff,
           eq_self_iff_true, SimpleFunc.coe_zero, Set.piecewise_eq_indicator,
           SimpleFunc.coe_piecewise, le_zero_iff]
       · simp only [lintegral_const, zero_mul, zero_le, ENNReal.coe_zero]
     have ne_top : μ s ≠ ⊤
-    classical
     simpa [f, hs, hc, lt_top_iff_ne_top, true_and_iff, SimpleFunc.coe_const,
       Function.const_apply, lintegral_const, ENNReal.coe_indicator, Set.univ_inter,
       ENNReal.coe_ne_top, MeasurableSet.univ, ENNReal.mul_eq_top, SimpleFunc.const_zero,
@@ -128,7 +127,6 @@ theorem SimpleFunc.exists_le_lowerSemicontinuous_lintegral_ge (f : α →ₛ ℝ
         Set.piecewise_eq_indicator, SimpleFunc.coe_piecewise]
       exact Set.indicator_le_indicator_of_subset su (fun x => zero_le _) _
     · suffices (c : ℝ≥0∞) * μ u ≤ c * μ s + ε by
-        classical
         simpa only [ENNReal.coe_indicator, u_open.measurableSet, lintegral_indicator,
           lintegral_const, MeasurableSet.univ, Measure.restrict_apply, Set.univ_inter, const_zero,
           coe_piecewise, coe_const, coe_zero, Set.piecewise_eq_indicator, Function.const_apply, hs]
@@ -306,6 +304,10 @@ theorem exists_lt_lowerSemicontinuous_integral_gt_nnreal [SigmaFinite μ] (f : �
 /-! ### Upper semicontinuous lower bound for nonnegative functions -/
 
 
+open Classical in
+open Classical in
+open Classical in
+open Classical in
 /-- Given a simple function `f` with values in `ℝ≥0`, there exists an upper semicontinuous
 function `g ≤ f` with integral arbitrarily close to that of `f`. Formulation in terms of
 `lintegral`.
@@ -317,16 +319,13 @@ theorem SimpleFunc.exists_upperSemicontinuous_le_lintegral_le (f : α →ₛ ℝ
   induction' f using MeasureTheory.SimpleFunc.induction with c s hs f₁ f₂ _ h₁ h₂ generalizing ε
   · by_cases hc : c = 0
     · refine ⟨fun _ => 0, ?_, upperSemicontinuous_const, ?_⟩
-      · classical
-        simp only [hc, Set.indicator_zero', Pi.zero_apply, SimpleFunc.const_zero, imp_true_iff,
+      · simp only [hc, Set.indicator_zero', Pi.zero_apply, SimpleFunc.const_zero, imp_true_iff,
           eq_self_iff_true, SimpleFunc.coe_zero, Set.piecewise_eq_indicator,
           SimpleFunc.coe_piecewise, le_zero_iff]
-      · classical
-        simp only [hc, Set.indicator_zero', lintegral_const, zero_mul, Pi.zero_apply,
+      · simp only [hc, Set.indicator_zero', lintegral_const, zero_mul, Pi.zero_apply,
           SimpleFunc.const_zero, zero_add, zero_le', SimpleFunc.coe_zero,
           Set.piecewise_eq_indicator, ENNReal.coe_zero, SimpleFunc.coe_piecewise, zero_le]
     have μs_lt_top : μ s < ∞
-    classical
     simpa only [hs, hc, lt_top_iff_ne_top, true_and_iff, SimpleFunc.coe_const, or_false_iff,
       lintegral_const, ENNReal.coe_indicator, Set.univ_inter, ENNReal.coe_ne_top,
       Measure.restrict_apply MeasurableSet.univ, ENNReal.mul_eq_top, SimpleFunc.const_zero,
@@ -343,7 +342,6 @@ theorem SimpleFunc.exists_upperSemicontinuous_le_lintegral_le (f : α →ₛ ℝ
         Set.piecewise_eq_indicator, SimpleFunc.coe_piecewise]
       exact Set.indicator_le_indicator_of_subset Fs (fun x => zero_le _) _
     · suffices (c : ℝ≥0∞) * μ s ≤ c * μ F + ε by
-        classical
         simpa only [hs, F_closed.measurableSet, SimpleFunc.coe_const, Function.const_apply,
           lintegral_const, ENNReal.coe_indicator, Set.univ_inter, MeasurableSet.univ,
           SimpleFunc.const_zero, lintegral_indicator, SimpleFunc.coe_zero,

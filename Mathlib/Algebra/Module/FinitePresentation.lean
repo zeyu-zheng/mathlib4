@@ -96,11 +96,11 @@ lemma Module.finitePresentation_iff_finite [IsNoetherianRing R] :
 
 variable {R M N}
 
+open Classical in
 lemma Module.finitePresentation_of_free_of_surjective [Module.Free R M] [Module.Finite R M]
     (l : M →ₗ[R] N)
     (hl : Function.Surjective l) (hl' : (LinearMap.ker l).FG) :
     Module.FinitePresentation R N := by
-  classical
   let b := Module.Free.chooseBasis R M
   let π : Free.ChooseBasisIndex R M → (Set.finite_range (l ∘ b)).toFinset :=
     fun i ↦ ⟨l (b i), by simp⟩
@@ -140,10 +140,10 @@ instance : Module.FinitePresentation R R := Module.finitePresentation_of_free _ 
 instance : Module.FinitePresentation R (ι →₀ R) := Module.finitePresentation_of_free _ _
 instance : Module.FinitePresentation R (ι → R) := Module.finitePresentation_of_free _ _
 
+open Classical in
 lemma Module.finitePresentation_of_surjective [h : Module.FinitePresentation R M] (l : M →ₗ[R] N)
     (hl : Function.Surjective l) (hl' : (LinearMap.ker l).FG) :
     Module.FinitePresentation R N := by
-  classical
   obtain ⟨s, hs, hs'⟩ := h
   obtain ⟨t, ht⟩ := hl'
   have H : Function.Surjective (Finsupp.total s M R Subtype.val) :=
@@ -157,10 +157,10 @@ lemma Module.finitePresentation_of_surjective [h : Module.FinitePresentation R M
     ← Finset.coe_image]
   exact Submodule.FG.sup ⟨_, rfl⟩ hs'
 
+open Classical in
 lemma Module.FinitePresentation.fg_ker [Module.Finite R M]
     [h : Module.FinitePresentation R N] (l : M →ₗ[R] N) (hl : Function.Surjective l) :
     (LinearMap.ker l).FG := by
-  classical
   obtain ⟨s, hs, hs'⟩ := h
   have H : Function.Surjective (Finsupp.total s N R Subtype.val) :=
     LinearMap.range_eq_top.mp (by rw [Finsupp.range_total, Subtype.range_val, ← hs]; rfl)
@@ -224,6 +224,7 @@ variable {R M N N'} [CommRing R] [AddCommGroup M] [Module R M] [AddCommGroup N] 
 variable [AddCommGroup N'] [Module R N'] (S : Submonoid R) (f : N →ₗ[R] N') [IsLocalizedModule S f]
 
 
+open Classical in
 lemma Module.FinitePresentation.exists_lift_of_isLocalizedModule
     [h : Module.FinitePresentation R M] (g : M →ₗ[R] N') :
     ∃ (h : M →ₗ[R] N) (s : S), f ∘ₗ h = s • g := by
@@ -231,7 +232,6 @@ lemma Module.FinitePresentation.exists_lift_of_isLocalizedModule
   let π := Finsupp.total σ M R Subtype.val
   have hπ : Function.Surjective π :=
     LinearMap.range_eq_top.mp (by rw [Finsupp.range_total, Subtype.range_val, ← hσ]; rfl)
-  classical
   choose s hs using IsLocalizedModule.surj S f
   let i : σ → N :=
     fun x ↦ (∏ j ∈ σ.erase x.1, (s (g j)).2) • (s (g x)).1
@@ -273,10 +273,10 @@ lemma Module.FinitePresentation.exists_lift_of_isLocalizedModule
   apply (LinearMap.quotKerEquivOfSurjective _ hπ).injective
   simp [LinearMap.quotKerEquivOfSurjective]
 
+open Classical in
 lemma Module.Finite.exists_smul_of_comp_eq_of_isLocalizedModule
     [hM : Module.Finite R M] (g₁ g₂ : M →ₗ[R] N) (h : f.comp g₁ = f.comp g₂) :
     ∃ (s : S), s • g₁ = s • g₂ := by
-  classical
   have : ∀ x, ∃ s : S, s • g₁ x = s • g₂ x := fun x ↦
     IsLocalizedModule.exists_of_eq (S := S) (f := f) (LinearMap.congr_fun h x)
   choose s hs using this

@@ -92,27 +92,27 @@ theorem SupIrred.ne_bot (ha : SupIrred a) : a ≠ ⊥ := by rintro rfl; exact no
 
 theorem SupPrime.ne_bot (ha : SupPrime a) : a ≠ ⊥ := by rintro rfl; exact not_supPrime_bot ha
 
+open Classical in
 theorem SupIrred.finset_sup_eq (ha : SupIrred a) (h : s.sup f = a) : ∃ i ∈ s, f i = a := by
-  classical
   induction' s using Finset.induction with i s _ ih
   · simpa [ha.ne_bot] using h.symm
   simp only [exists_prop, exists_mem_insert] at ih ⊢
   rw [sup_insert] at h
   exact (ha.2 h).imp_right ih
 
+open Classical in
 theorem SupPrime.le_finset_sup (ha : SupPrime a) : a ≤ s.sup f ↔ ∃ i ∈ s, a ≤ f i := by
-  classical
   induction' s using Finset.induction with i s _ ih
   · simp [ha.ne_bot]
   · simp only [exists_prop, exists_mem_insert, sup_insert, ha.le_sup, ih]
 
 variable [WellFoundedLT α]
 
+open Classical in
 /-- In a well-founded lattice, any element is the supremum of finitely many sup-irreducible
 elements. This is the order-theoretic analogue of prime factorisation. -/
 theorem exists_supIrred_decomposition (a : α) :
     ∃ s : Finset α, s.sup id = a ∧ ∀ ⦃b⦄, b ∈ s → SupIrred b := by
-  classical
   apply WellFoundedLT.induction a _
   clear a
   rintro a ih

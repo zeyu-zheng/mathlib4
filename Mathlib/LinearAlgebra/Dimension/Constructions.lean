@@ -432,9 +432,9 @@ theorem finrank_span_finset_le_card (s : Finset M) : (s : Set M).finrank R ≤ s
     (s : Set M).finrank R ≤ (s : Set M).toFinset.card := finrank_span_le_card (M := M) s
     _ = s.card := by simp
 
+open Classical in
 theorem finrank_range_le_card {ι : Type*} [Fintype ι] (b : ι → M) :
     (Set.range b).finrank R ≤ Fintype.card ι := by
-  classical
   refine (finrank_span_le_card _).trans ?_
   rw [Set.toFinset_range]
   exact Finset.card_image_le

@@ -87,6 +87,7 @@ end
 
 open DirectSum
 
+open Classical in
 instance gradeBy.gradedMonoid [AddMonoid M] [AddMonoid ι] [CommSemiring R] (f : M →+ ι) :
     SetLike.GradedMonoid (gradeBy R f : ι → Submodule R R[M]) where
   one_mem m h := by
@@ -94,7 +95,6 @@ instance gradeBy.gradedMonoid [AddMonoid M] [AddMonoid ι] [CommSemiring R] (f :
     obtain rfl : m = 0 := Finset.mem_singleton.1 <| Finsupp.support_single_subset h
     apply map_zero
   mul_mem i j a b ha hb c hc := by
-    classical
     obtain ⟨ma, hma, mb, hmb, rfl⟩ : ∃ y ∈ a.support, ∃ z ∈ b.support, y + z = c :=
       Finset.mem_add.1 <| support_mul a b hc
     rw [map_add, ha ma hma, hb mb hmb]
@@ -136,9 +136,9 @@ theorem decomposeAux_single (m : M) (r : R) :
   rw [mul_one]
   rfl
 
+open Classical in
 theorem decomposeAux_coe {i : ι} (x : gradeBy R f i) :
     decomposeAux f ↑x = DirectSum.of (fun i => gradeBy R f i) i x := by
-  classical
   obtain ⟨x, hx⟩ := x
   revert hx
   refine Finsupp.induction x ?_ ?_

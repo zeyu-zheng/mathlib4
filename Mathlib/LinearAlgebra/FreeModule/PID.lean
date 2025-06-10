@@ -325,10 +325,10 @@ noncomputable def Submodule.basisOfPidOfLESpan {ι : Type*} [Finite ι] {b : ι 
     Σn : ℕ, Basis (Fin n) R N :=
   Submodule.basisOfPidOfLE le (Basis.span hb)
 
+open Classical in
 /-- A finite type torsion free module over a PID admits a basis. -/
 noncomputable def Module.basisOfFiniteTypeTorsionFree [Fintype ι] {s : ι → M}
     (hs : span R (range s) = ⊤) [NoZeroSMulDivisors R M] : Σn : ℕ, Basis (Fin n) R M := by
-  classical
     -- We define `N` as the submodule spanned by a maximal linear independent subfamily of `s`
     have := exists_maximal_independent R s
     let I : Set ι := this.choose
@@ -435,6 +435,7 @@ lemma le_ker_coord_of_nmem_range {i : ι} (hi : i ∉ Set.range snf.f) :
     N ≤ LinearMap.ker (snf.bM.coord i) :=
   fun m hm ↦ snf.repr_eq_zero_of_nmem_range ⟨m, hm⟩ hi
 
+open Classical in
 @[simp] lemma repr_apply_embedding_eq_repr_smul {i : Fin n} :
     snf.bM.repr m (snf.f i) = snf.bN.repr (snf.a i • m) i := by
   obtain ⟨m, hm⟩ := m
@@ -442,7 +443,6 @@ lemma le_ker_coord_of_nmem_range {i : ι} (hi : i ∉ Set.range snf.f) :
   replace hm : (⟨Finsupp.sum c fun i t ↦ t • (↑(snf.bN i) : M), hm⟩ : N) =
       Finsupp.sum c fun i t ↦ t • ⟨snf.bN i, (snf.bN i).2⟩ := by
     ext; change _ = N.subtype _; simp [map_finsupp_sum]
-  classical
   simp_rw [hm, map_smul, map_finsupp_sum, map_smul, Subtype.coe_eta, repr_self,
     Finsupp.smul_single, smul_eq_mul, mul_one, Finsupp.sum_single, Finsupp.smul_apply, snf.snf,
     map_smul, repr_self, Finsupp.smul_single, smul_eq_mul, mul_one, Finsupp.sum_apply,

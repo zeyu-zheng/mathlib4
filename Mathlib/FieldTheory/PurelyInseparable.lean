@@ -747,12 +747,12 @@ private theorem LinearIndependent.map_pow_expChar_pow_of_fd_isSeparable
   convert H.comp f fun _ _ heq ↦ h.injective (by simpa only [f, Subtype.mk.injEq] using heq)
   simp_rw [Function.comp_apply, b, Basis.extend_apply_self]
 
+open Classical in
 /-- If `E / F` is a separable extension of exponential characteristic `q`, if `{ u_i }` is a
 family of elements of `E` which is `F`-linearly independent, then `{ u_i ^ (q ^ n) }` is also
 `F`-linearly independent for any natural number `n`. -/
 theorem LinearIndependent.map_pow_expChar_pow_of_isSeparable [Algebra.IsSeparable F E]
     (h : LinearIndependent F v) : LinearIndependent F (v · ^ q ^ n) := by
-  classical
   have halg := Algebra.IsSeparable.isAlgebraic F E
   rw [linearIndependent_iff_finset_linearIndependent] at h ⊢
   intro s

@@ -335,9 +335,9 @@ theorem mem_biSup_iff_exists_dfinsupp (p : ι → Prop) [DecidablePred p] (S : �
 
 end DecidableEq
 
+open Classical in
 lemma mem_iSup_iff_exists_finsupp (p : ι → Submodule R N) (x : N) :
     x ∈ iSup p ↔ ∃ (f : ι →₀ N), (∀ i, f i ∈ p i) ∧ (f.sum fun _i xi ↦ xi) = x := by
-  classical
   rw [mem_iSup_iff_exists_dfinsupp']
   refine ⟨fun ⟨f, hf⟩ ↦ ⟨⟨f.support, fun i ↦ (f i : N), by simp⟩, by simp, hf⟩, ?_⟩
   rintro ⟨f, hf, rfl⟩
@@ -345,9 +345,9 @@ lemma mem_iSup_iff_exists_finsupp (p : ι → Submodule R N) (x : N) :
   · ext; simp
   · simp [Finsupp.mem_support_iff.mp hi]
 
+open Classical in
 theorem mem_iSup_finset_iff_exists_sum {s : Finset ι} (p : ι → Submodule R N) (a : N) :
     (a ∈ ⨆ i ∈ s, p i) ↔ ∃ μ : ∀ i, p i, (∑ i ∈ s, (μ i : N)) = a := by
-  classical
     rw [Submodule.mem_iSup_iff_exists_dfinsupp']
     constructor <;> rintro ⟨μ, hμ⟩
     · use fun i => ⟨μ i, (iSup_const_le : _ ≤ p i) (coe_mem <| μ i)⟩

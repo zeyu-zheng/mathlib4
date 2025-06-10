@@ -113,17 +113,17 @@ instance noMinOrder_of_right [Preorder α] [Preorder β] [NoMinOrder β] : NoMin
     obtain ⟨c, h⟩ := exists_lt b
     exact ⟨(a, c), Prod.mk_lt_mk_iff_right.2 h⟩⟩
 
+open Classical in
 instance {ι : Type u} {π : ι → Type*} [Nonempty ι] [∀ i, Preorder (π i)] [∀ i, NoMaxOrder (π i)] :
     NoMaxOrder (∀ i, π i) :=
   ⟨fun a => by
-    classical
     obtain ⟨b, hb⟩ := exists_gt (a <| Classical.arbitrary _)
     exact ⟨_, lt_update_self_iff.2 hb⟩⟩
 
+open Classical in
 instance {ι : Type u} {π : ι → Type*} [Nonempty ι] [∀ i, Preorder (π i)] [∀ i, NoMinOrder (π i)] :
     NoMinOrder (∀ i, π i) :=
   ⟨fun a => by
-     classical
       obtain ⟨b, hb⟩ := exists_lt (a <| Classical.arbitrary _)
       exact ⟨_, update_lt_self_iff.2 hb⟩⟩
 

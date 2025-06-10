@@ -469,13 +469,13 @@ instance (priority := 900) : P.RespectsIso := by
   rw [eq_targetAffineLocally P]
   infer_instance
 
+open Classical in
 theorem of_iSup_eq_top
     {ι} (U : ι → Y.affineOpens) (hU : ⨆ i, (U i : Y.Opens) = ⊤)
     (hU' : ∀ i, Q (f ∣_ U i)) :
     P f := by
   letI := isLocal_affineProperty P
   rw [eq_targetAffineLocally P]
-  classical
   intro V
   induction V using of_affine_open_cover U hU  with
   | basicOpen U r h =>

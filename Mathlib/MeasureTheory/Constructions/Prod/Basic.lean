@@ -780,10 +780,10 @@ namespace MeasurePreserving
 variable {δ : Type*} [MeasurableSpace δ] {μa : Measure α} {μb : Measure β} {μc : Measure γ}
   {μd : Measure δ}
 
+open Classical in
 theorem skew_product [SFinite μa] [SFinite μc] {f : α → β} (hf : MeasurePreserving f μa μb)
     {g : α → γ → δ} (hgm : Measurable (uncurry g)) (hg : ∀ᵐ x ∂μa, map (g x) μc = μd) :
     MeasurePreserving (fun p : α × γ => (f p.1, g p.1 p.2)) (μa.prod μc) (μb.prod μd) := by
-  classical
   have : Measurable fun p : α × γ => (f p.1, g p.1 p.2) := (hf.1.comp measurable_fst).prod_mk hgm
   /- if `μa = 0`, then the lemma is trivial, otherwise we can use `hg`
     to deduce `SFinite μd`. -/

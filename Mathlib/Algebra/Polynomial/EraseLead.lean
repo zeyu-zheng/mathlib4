@@ -124,9 +124,9 @@ theorem card_support_le_one_of_eraseLead_eq_zero (h : f.eraseLead = 0) : f.suppo
   case pos => simp [hpz]
   case neg => exact le_of_eq (card_support_eq_one_of_eraseLead_eq_zero hpz h)
 
+open Classical in
 @[simp]
 theorem eraseLead_monomial (i : ℕ) (r : R) : eraseLead (monomial i r) = 0 := by
-  classical
   by_cases hr : r = 0
   · subst r
     simp only [monomial_zero_right, eraseLead_zero]

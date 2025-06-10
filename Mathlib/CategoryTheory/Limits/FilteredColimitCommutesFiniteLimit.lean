@@ -65,12 +65,12 @@ only that there are finitely many objects.
 
 variable [Finite J]
 
+open Classical in
 /-- This follows this proof from
 * Borceux, Handbook of categorical algebra 1, Theorem 2.13.4
 -/
 theorem colimitLimitToLimitColimit_injective :
     Function.Injective (colimitLimitToLimitColimit F) := by
-  classical
     cases nonempty_fintype J
     -- Suppose we have two terms `x y` in the colimit (over `K`) of the limits (over `J`),
     -- and that these have the same image under `colimitLimitToLimitColimit F`.
@@ -156,13 +156,13 @@ open CategoryTheory.Prod
 
 variable [IsFiltered K]
 
+open Classical in
 /-- This follows this proof from
 * Borceux, Handbook of categorical algebra 1, Theorem 2.13.4
 although with different names.
 -/
 theorem colimitLimitToLimitColimit_surjective :
     Function.Surjective (colimitLimitToLimitColimit F) := by
-  classical
     -- We begin with some element `x` in the limit (over J) over the colimits (over K),
     intro x
     -- This consists of some coherent family of elements in the various colimits,

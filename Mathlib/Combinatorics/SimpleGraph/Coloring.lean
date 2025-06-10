@@ -116,9 +116,9 @@ theorem Coloring.not_adj_of_mem_colorClass {c : α} {v w : V} (hv : v ∈ C.colo
 theorem Coloring.color_classes_independent (c : α) : IsAntichain G.Adj (C.colorClass c) :=
   fun _ hv _ hw _ => C.not_adj_of_mem_colorClass hv hw
 
+open Classical in
 -- TODO make this computable
 noncomputable instance [Fintype V] [Fintype α] : Fintype (Coloring G α) := by
-  classical
   change Fintype (RelHom G.Adj (⊤ : SimpleGraph α).Adj)
   apply Fintype.ofInjective _ RelHom.coe_fn_injective
 
@@ -272,9 +272,9 @@ theorem chromaticNumber_le_iff_colorable {n : ℕ} : G.chromaticNumber ≤ n ↔
 theorem chromaticNumber_le_card [Fintype α] (C : G.Coloring α) :
     G.chromaticNumber ≤ Fintype.card α := C.colorable.chromaticNumber_le
 
+open Classical in
 theorem colorable_chromaticNumber {m : ℕ} (hc : G.Colorable m) :
     G.Colorable (ENat.toNat G.chromaticNumber) := by
-  classical
   rw [hc.chromaticNumber_eq_sInf, Nat.sInf_def]
   · apply Nat.find_spec
   · exact colorable_set_nonempty_of_colorable hc
@@ -341,6 +341,7 @@ theorem chromaticNumber_mono_of_embedding {V' : Type*} {G' : SimpleGraph V'}
     (f : G ↪g G') : G.chromaticNumber ≤ G'.chromaticNumber :=
   chromaticNumber_le_of_forall_imp fun _ => Colorable.of_embedding f
 
+open Classical in
 lemma card_le_chromaticNumber_iff_forall_surjective [Fintype α] :
     card α ≤ G.chromaticNumber ↔ ∀ C : G.Coloring α, Surjective C := by
   refine ⟨fun h C ↦ ?_, fun h ↦ ?_⟩
@@ -348,7 +349,6 @@ lemma card_le_chromaticNumber_iff_forall_surjective [Fintype α] :
     intro i
     by_contra! hi
     let D : G.Coloring {a // a ≠ i} := ⟨fun v ↦ ⟨C v, hi v⟩, (C.valid · <| congr_arg Subtype.val ·)⟩
-    classical
     exact Nat.not_mem_of_lt_sInf ((Nat.sub_one_lt_of_lt <| card_pos_iff.2 ⟨i⟩).trans_le h)
       ⟨G.recolorOfEquiv (equivOfCardEq <| by simp [Nat.pred_eq_sub_one]) D⟩
   · simp only [chromaticNumber, Set.mem_setOf_eq, le_iInf_iff, Nat.cast_le, exists_prop]

@@ -99,11 +99,11 @@ section BidualIsometry
 
 variable (𝕜 : Type v) [RCLike 𝕜] {E : Type u} [NormedAddCommGroup E] [NormedSpace 𝕜 E]
 
+open Classical in
 /-- If one controls the norm of every `f x`, then one controls the norm of `x`.
     Compare `ContinuousLinearMap.opNorm_le_bound`. -/
 theorem norm_le_dual_bound (x : E) {M : ℝ} (hMp : 0 ≤ M) (hM : ∀ f : Dual 𝕜 E, ‖f x‖ ≤ M * ‖f‖) :
     ‖x‖ ≤ M := by
-  classical
     by_cases h : x = 0
     · simp only [h, hMp, norm_zero]
     · obtain ⟨f, hf₁, hfx⟩ : ∃ f : E →L[𝕜] 𝕜, ‖f‖ = 1 ∧ f x = ‖x‖ := exists_dual_vector 𝕜 x h

@@ -127,12 +127,12 @@ section Fintype
 variable (F : Type*) [Field F] [Fintype F]
 variable {R : Type*} [CommRing R]
 
+open Classical in
 /-- There is a character of order `n` on `F` if `#F ≡ 1 mod n` and the target contains
 a primitive `n`th root of unity. -/
 lemma exists_mulChar_orderOf {n : ℕ} (h : n ∣ Fintype.card F - 1) {ζ : R}
     (hζ : IsPrimitiveRoot ζ n) :
     ∃ χ : MulChar F R, orderOf χ = n := by
-  classical
   have hn₀ : 0 < n
   refine Nat.pos_of_ne_zero fun hn ↦ ?_
   simp only [hn, zero_dvd_iff, Nat.sub_eq_zero_iff_le] at h
@@ -153,9 +153,9 @@ lemma exists_mulChar_orderOf {n : ℕ} (h : n ∣ Fintype.card F - 1) {ζ : R}
     push_cast at h
     exact ((Nat.le_of_dvd hm₀ <| hζ.dvd_of_pow_eq_one _ h).trans_lt hm).false
 
+open Classical in
 /-- If there is a multiplicative character of order `n` on `F`, then `#F ≡ 1 mod n`. -/
 lemma orderOf_dvd_card_sub_one (χ : MulChar F R) : orderOf χ ∣ Fintype.card F - 1 := by
-  classical
   rw [← Fintype.card_units]
   exact orderOf_dvd_of_pow_eq_one χ.pow_card_eq_one
 

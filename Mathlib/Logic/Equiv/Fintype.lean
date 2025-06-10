@@ -89,6 +89,8 @@ namespace Equiv
 
 variable {α β : Type*} [Finite α]
 
+
+open Classical in
 /-- If `e` is an equivalence between two subtypes of a finite type `α`, `e.toCompl`
 is an equivalence between the complement of those subtypes.
 
@@ -98,7 +100,6 @@ noncomputable def toCompl {p q : α → Prop} (e : { x // p x } ≃ { x // q x }
     { x // ¬p x } ≃ { x // ¬q x } := by
   apply Classical.choice
   cases nonempty_fintype α
-  classical
   exact Fintype.card_eq.mp <| Fintype.card_compl_eq_card_compl _ _ <| Fintype.card_congr e
 
 variable {p q : α → Prop} [DecidablePred p] [DecidablePred q]

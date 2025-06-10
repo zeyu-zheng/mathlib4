@@ -287,6 +287,7 @@ instance IsSemisimpleRing.isSemisimpleModule [IsSemisimpleRing R] : IsSemisimple
 instance IsSemisimpleRing.isCoatomic_submodule [IsSemisimpleRing R] : IsCoatomic (Submodule R M) :=
   isCoatomic_of_isAtomic_of_complementedLattice_of_isModular
 
+open Classical in
 open LinearMap in
 /-- A finite product of semisimple rings is semisimple. -/
 instance {ι} [Finite ι] (R : ι → Type*) [∀ i, Ring (R i)] [∀ i, IsSemisimpleRing (R i)] :
@@ -296,7 +297,6 @@ instance {ι} [Finite ι] (R : ι → Type*) [∀ i, Ring (R i)] [∀ i, IsSemis
     { AddMonoidHom.id (R i) with map_smul' := fun _ _ ↦ rfl }
   have (i) : IsSemisimpleModule (∀ i, R i) (R i) :=
     ((e i).isSemisimpleModule_iff_of_bijective Function.bijective_id).mpr inferInstance
-  classical
   exact isSemisimpleModule_of_isSemisimpleModule_submodule' (p := (range <| single ·))
     (fun i ↦ .range _) (by simp_rw [range_eq_map, Submodule.iSup_map_single, Submodule.pi_top])
 

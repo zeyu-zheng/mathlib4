@@ -280,8 +280,8 @@ theorem natDegree_monomial [DecidableEq R] (i : ℕ) (r : R) :
   · simp [hr]
   · rw [← C_mul_X_pow_eq_monomial, natDegree_C_mul_X_pow i r hr]
 
+open Classical in
 theorem natDegree_monomial_le (a : R) {m : ℕ} : (monomial m a).natDegree ≤ m := by
-  classical
   rw [Polynomial.natDegree_monomial]
   split_ifs
   exacts [Nat.zero_le _, le_rfl]
@@ -685,8 +685,8 @@ theorem degree_erase_lt (hp : p ≠ 0) : degree (p.erase (natDegree p)) < degree
   rw [degree_eq_natDegree hp, degree, support_erase]
   exact fun h => not_mem_erase _ _ (mem_of_max h)
 
+open Classical in
 theorem degree_update_le (p : R[X]) (n : ℕ) (a : R) : degree (p.update n a) ≤ max (degree p) n := by
-  classical
   rw [degree, support_update]
   split_ifs
   · exact (Finset.max_mono (erase_subset _ _)).trans (le_max_left _ _)
@@ -726,9 +726,9 @@ theorem degree_pow_le_of_le {a : WithBot ℕ} (b : ℕ) (hp : degree p ≤ a) :
       rw [Nat.cast_succ, add_mul, one_mul, pow_succ]
       exact degree_mul_le_of_le hn hp
 
+open Classical in
 @[simp]
 theorem leadingCoeff_monomial (a : R) (n : ℕ) : leadingCoeff (monomial n a) = a := by
-  classical
   by_cases ha : a = 0
   · simp only [ha, (monomial n).map_zero, leadingCoeff_zero]
   · rw [leadingCoeff, natDegree_monomial, if_neg ha, coeff_monomial]
@@ -874,9 +874,9 @@ theorem leadingCoeff_mul' (h : leadingCoeff p * leadingCoeff q ≠ 0) :
   rw [natDegree_mul' h, coeff_mul_degree_add_degree]
   rfl
 
+open Classical in
 theorem monomial_natDegree_leadingCoeff_eq_self (h : p.support.card ≤ 1) :
     monomial p.natDegree p.leadingCoeff = p := by
-  classical
   rcases card_support_le_one_iff_monomial.1 h with ⟨n, a, rfl⟩
   by_cases ha : a = 0 <;> simp [ha]
 

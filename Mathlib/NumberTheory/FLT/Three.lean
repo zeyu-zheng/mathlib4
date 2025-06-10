@@ -222,9 +222,9 @@ def Solution.multiplicity := S.toSolution'.multiplicity
 `S.c` is less or equal than the multiplicity in `S₁.c`. -/
 def Solution.isMinimal : Prop := ∀ (S₁ : Solution hζ), S.multiplicity ≤ S₁.multiplicity
 
+open Classical in
 /-- If there is a solution then there is a minimal one. -/
 lemma Solution.exists_minimal : ∃ (S₁ : Solution hζ), S₁.isMinimal := by
-  classical
   let T := {n | ∃ (S' : Solution hζ), S'.multiplicity = n}
   rcases Nat.find_spec (⟨S.multiplicity, ⟨S, rfl⟩⟩ : T.Nonempty) with ⟨S₁, hS₁⟩
   exact ⟨S₁, fun S'' ↦ hS₁ ▸ Nat.find_min' _ ⟨S'', rfl⟩⟩
@@ -722,10 +722,10 @@ end eisenstein
 
 end case2
 
+open Classical in
 /-- Fermat's Last Theorem for `n = 3`: if `a b c : ℕ` are all non-zero then
 `a ^ 3 + b ^ 3 ≠ c ^ 3`. -/
 theorem fermatLastTheoremThree : FermatLastTheoremFor 3 := by
-  classical
   let K := CyclotomicField 3 ℚ
   let hζ := IsCyclotomicExtension.zeta_spec 3 ℚ K
   have : NumberField K := IsCyclotomicExtension.numberField {3} ℚ _

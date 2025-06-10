@@ -256,6 +256,7 @@ theorem finsuppTensorFinsupp_single (i : ι) (m : M) (k : κ) (n : N) :
       Finsupp.single (i, k) (m ⊗ₜ n) := by
   simp [finsuppTensorFinsupp]
 
+open Classical in
 @[simp]
 theorem finsuppTensorFinsupp_apply (f : ι →₀ M) (g : κ →₀ N) (i : ι) (k : κ) :
     finsuppTensorFinsupp R S M N ι κ (f ⊗ₜ g) (i, k) = f i ⊗ₜ g k := by
@@ -269,7 +270,6 @@ theorem finsuppTensorFinsupp_apply (f : ι →₀ M) (g : κ →₀ N) (i : ι) 
   · intro g₁ g₂ hg₁ hg₂
     simp [tmul_add, hg₁, hg₂]
   intro k' n
-  classical
   simp_rw [finsuppTensorFinsupp_single, Finsupp.single_apply, Prod.mk.inj_iff, ite_and]
   split_ifs <;> simp
 

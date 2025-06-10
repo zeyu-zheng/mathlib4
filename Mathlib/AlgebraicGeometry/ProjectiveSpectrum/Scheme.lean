@@ -806,13 +806,13 @@ def projIsoSpec (f) {m} (f_deg : f ∈ 𝒜 m) (hm : 0 < m) :
     (Proj| pbo f) ≅ (Spec (A⁰_ f)) :=
   @asIso (f := toSpec 𝒜 f) (isIso_toSpec 𝒜 f f_deg hm)
 
+open Classical in
 /--
 This is the scheme `Proj(A)` for any `ℕ`-graded ring `A`.
 -/
 def «Proj» : Scheme where
   __ := Proj.toLocallyRingedSpace 𝒜
   local_affine (x : Proj.T) := by
-    classical
     obtain ⟨f, m, f_deg, hm, hx⟩ : ∃ (f : A) (m : ℕ) (_ : f ∈ 𝒜 m) (_ : 0 < m), f ∉ x.1 := by
       by_contra!
       refine x.not_irrelevant_le fun z hz ↦ ?_

@@ -76,10 +76,10 @@ above `k` has a finite subset with `sSup` above `k`.  Such an element is also ca
 def IsCompactElement {α : Type*} [CompleteLattice α] (k : α) :=
   ∀ s : Set α, k ≤ sSup s → ∃ t : Finset α, ↑t ⊆ s ∧ k ≤ t.sup id
 
+open Classical in
 theorem isCompactElement_iff.{u} {α : Type u} [CompleteLattice α] (k : α) :
     CompleteLattice.IsCompactElement k ↔
       ∀ (ι : Type u) (s : ι → α), k ≤ iSup s → ∃ t : Finset ι, k ≤ t.sup s := by
-  classical
     constructor
     · intro H ι s hs
       obtain ⟨t, ht, ht'⟩ := H (Set.range s) hs
@@ -100,12 +100,12 @@ theorem isCompactElement_iff.{u} {α : Type u} [CompleteLattice α] (k : α) :
       rw [Finset.sup_le_iff]
       exact fun x hx => @Finset.le_sup _ _ _ _ _ id _ (Finset.mem_image_of_mem Subtype.val hx)
 
+open Classical in
 /-- An element `k` is compact if and only if any directed set with `sSup` above
 `k` already got above `k` at some point in the set. -/
 theorem isCompactElement_iff_le_of_directed_sSup_le (k : α) :
     IsCompactElement k ↔
       ∀ s : Set α, s.Nonempty → DirectedOn (· ≤ ·) s → k ≤ sSup s → ∃ x : α, x ∈ s ∧ k ≤ x := by
-  classical
     constructor
     · intro hk s hne hdir hsup
       obtain ⟨t, ht⟩ := hk s hsup
@@ -143,9 +143,9 @@ theorem isCompactElement_iff_le_of_directed_sSup_le (k : α) :
       use t
       exact ⟨htS, by rwa [← htsup]⟩
 
+open Classical in
 theorem IsCompactElement.exists_finset_of_le_iSup {k : α} (hk : IsCompactElement k) {ι : Type*}
     (f : ι → α) (h : k ≤ ⨆ i, f i) : ∃ s : Finset ι, k ≤ ⨆ i ∈ s, f i := by
-  classical
     let g : Finset ι → α := fun s => ⨆ i ∈ s, f i
     have h1 : DirectedOn (· ≤ ·) (Set.range g)
     rintro - ⟨s, rfl⟩ - ⟨t, rfl⟩
@@ -175,9 +175,9 @@ theorem IsCompactElement.directed_sSup_lt_of_lt {α : Type*} [CompleteLattice α
   obtain hxk := hbelow x hxs
   exact hxk.ne (hxk.le.antisymm hkx)
 
+open Classical in
 theorem isCompactElement_finsetSup {α β : Type*} [CompleteLattice α] {f : β → α} (s : Finset β)
     (h : ∀ x ∈ s, IsCompactElement (f x)) : IsCompactElement (s.sup f) := by
-  classical
     rw [isCompactElement_iff_le_of_directed_sSup_le]
     intro d hemp hdir hsup
     rw [← Function.id_comp f]
@@ -190,13 +190,13 @@ theorem isCompactElement_finsetSup {α β : Type*} [CompleteLattice α] {f : β 
     specialize h d hemp hdir (le_trans (Finset.le_sup hps) hsup)
     simpa only [exists_prop]
 
+open Classical in
 theorem WellFounded.isSupFiniteCompact (h : WellFounded ((· > ·) : α → α → Prop)) :
     IsSupFiniteCompact α := fun s => by
   let S := { x | ∃ t : Finset α, ↑t ⊆ s ∧ t.sup id = x }
   obtain ⟨m, ⟨t, ⟨ht₁, rfl⟩⟩, hm⟩ := h.has_min S ⟨⊥, ∅, by simp⟩
   refine ⟨t, ht₁, (sSup_le _ _ fun y hy => ?_).antisymm ?_⟩
-  · classical
-    rw [eq_of_le_of_not_lt (Finset.sup_mono (t.subset_insert y))
+  · rw [eq_of_le_of_not_lt (Finset.sup_mono (t.subset_insert y))
         (hm _ ⟨insert y t, by simp [Set.insert_subset_iff, hy, ht₁]⟩)]
     simp
   · rw [Finset.sup_id_eq_sSup]
@@ -280,9 +280,9 @@ alias ⟨_, _root_.WellFounded.isSupClosedCompact⟩ := isSupClosedCompact_iff_w
 
 variable {α}
 
+open Classical in
 theorem WellFounded.finite_of_setIndependent (h : WellFounded ((· > ·) : α → α → Prop)) {s : Set α}
     (hs : SetIndependent s) : s.Finite := by
-  classical
     refine Set.not_infinite.mp fun contra => ?_
     obtain ⟨t, ht₁, ht₂⟩ := WellFounded.isSupFiniteCompact α h s
     replace contra : ∃ x : α, x ∈ s ∧ x ≠ ⊥ ∧ x ∉ t := by
@@ -396,6 +396,7 @@ theorem inf_sSup_eq_iSup_inf_sup_finset :
     (iSup_le fun t =>
       iSup_le fun h => inf_le_inf_left _ ((Finset.sup_id_eq_sSup t).symm ▸ sSup_le_sSup h))
 
+open Classical in
 theorem CompleteLattice.setIndependent_iff_finite {s : Set α} :
     CompleteLattice.SetIndependent s ↔
       ∀ t : Finset α, ↑t ⊆ s → CompleteLattice.SetIndependent (↑t : Set α) :=
@@ -404,20 +405,19 @@ theorem CompleteLattice.setIndependent_iff_finite {s : Set α} :
     intro t
     rw [iSup_eq_bot, Finset.sup_id_eq_sSup]
     intro ht
-    classical
-      have h' := (h (insert a t) ?_ (t.mem_insert_self a)).eq_bot
-      · rwa [Finset.coe_insert, Set.insert_diff_self_of_not_mem] at h'
-        exact fun con => ((Set.mem_diff a).1 (ht con)).2 (Set.mem_singleton a)
-      · rw [Finset.coe_insert, Set.insert_subset_iff]
-        exact ⟨ha, Set.Subset.trans ht diff_subset⟩⟩
+    have h' := (h (insert a t) ?_ (t.mem_insert_self a)).eq_bot
+    · rwa [Finset.coe_insert, Set.insert_diff_self_of_not_mem] at h'
+      exact fun con => ((Set.mem_diff a).1 (ht con)).2 (Set.mem_singleton a)
+    · rw [Finset.coe_insert, Set.insert_subset_iff]
+      exact ⟨ha, Set.Subset.trans ht diff_subset⟩⟩
 
+open Classical in
 lemma CompleteLattice.independent_iff_supIndep_of_injOn {ι : Type*} {f : ι → α}
     (hf : InjOn f {i | f i ≠ ⊥}) :
     CompleteLattice.Independent f ↔ ∀ (s : Finset ι), s.SupIndep f := by
   refine ⟨fun h ↦ h.supIndep', fun h ↦ CompleteLattice.independent_def'.mpr fun i ↦ ?_⟩
   simp_rw [disjoint_iff, inf_sSup_eq_iSup_inf_sup_finset, iSup_eq_bot, ← disjoint_iff]
   intro s hs
-  classical
   rw [← Finset.sup_erase_bot]
   set t := s.erase ⊥
   replace hf : InjOn f (f ⁻¹' t) := fun i hi j _ hij ↦ by

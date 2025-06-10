@@ -318,11 +318,11 @@ theorem tangentMapWithin_prod_snd {s : Set (M × M')} {p : TangentBundle (I.prod
 
 variable {I I' I''}
 
+open Classical in
 theorem MDifferentiableAt.mfderiv_prod {f : M → M'} {g : M → M''} {x : M}
     (hf : MDifferentiableAt I I' f x) (hg : MDifferentiableAt I I'' g x) :
     mfderiv I (I'.prod I'') (fun x => (f x, g x)) x =
       (mfderiv I I' f x).prod (mfderiv I I'' g x) := by
-  classical
   simp_rw [mfderiv, if_pos (hf.prod_mk hg), if_pos hf, if_pos hg]
   exact hf.differentiableWithinAt_writtenInExtChartAt.fderivWithin_prod
     hg.differentiableWithinAt_writtenInExtChartAt (I.unique_diff _ (mem_range_self _))

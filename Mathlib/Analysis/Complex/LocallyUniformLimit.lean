@@ -161,13 +161,13 @@ end Weierstrass
 
 section Tsums
 
+open Classical in
 /-- If the terms in the sum `∑' (i : ι), F i` are uniformly bounded on `U` by a
 summable function, and each term in the sum is differentiable on `U`, then so is the sum. -/
 theorem differentiableOn_tsum_of_summable_norm {u : ι → ℝ} (hu : Summable u)
     (hf : ∀ i : ι, DifferentiableOn ℂ (F i) U) (hU : IsOpen U)
     (hF_le : ∀ (i : ι) (w : ℂ), w ∈ U → ‖F i w‖ ≤ u i) :
     DifferentiableOn ℂ (fun w : ℂ => ∑' i : ι, F i w) U := by
-  classical
   have hc := (tendstoUniformlyOn_tsum hu hF_le).tendstoLocallyUniformlyOn
   refine hc.differentiableOn (eventually_of_forall fun s => ?_) hU
   exact DifferentiableOn.sum fun i _ => hf i

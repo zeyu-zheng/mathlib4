@@ -100,20 +100,20 @@ theorem restrict_piecewise_compl (f g : α → β) (s : Set α) [∀ x, Decidabl
     sᶜ.restrict (piecewise s f g) = sᶜ.restrict g :=
   restrict_ite_compl _ _ _
 
+open Classical in
 theorem restrict_extend_range (f : α → β) (g : α → γ) (g' : β → γ) :
     (range f).restrict (extend f g g') = fun x => g x.coe_prop.choose := by
-  classical
   exact restrict_dite _ _
 
+open Classical in
 @[simp]
 theorem restrict_extend_compl_range (f : α → β) (g : α → γ) (g' : β → γ) :
     (range f)ᶜ.restrict (extend f g g') = g' ∘ Subtype.val := by
-  classical
   exact restrict_dite_compl _ _
 
+open Classical in
 theorem range_extend_subset (f : α → β) (g : α → γ) (g' : β → γ) :
     range (extend f g g') ⊆ range g ∪ g' '' (range f)ᶜ := by
-  classical
   rintro _ ⟨y, rfl⟩
   rw [extend_def]
   split_ifs with h

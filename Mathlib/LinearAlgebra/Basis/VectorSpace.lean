@@ -133,8 +133,8 @@ open Fintype
 
 variable (K V)
 
+open Classical in
 theorem VectorSpace.card_fintype [Fintype K] [Fintype V] : ∃ n : ℕ, card V = card K ^ n := by
-  classical
   exact ⟨card (Basis.ofVectorSpaceIndex K V), Module.card_fintype (Basis.ofVectorSpace K V)⟩
 
 section AtomsOfSubmoduleLattice

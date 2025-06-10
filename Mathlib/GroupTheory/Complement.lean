@@ -253,10 +253,10 @@ theorem range_mem_rightTransversals {f : Quotient (QuotientGroup.rightRel H) →
         exact Subtype.ext <| congr_arg f <| ((hf q₁).symm.trans h).trans (hf q₂),
       fun q => ⟨⟨f q, q, rfl⟩, hf q⟩⟩
 
+open Classical in
 @[to_additive]
 lemma exists_left_transversal (H : Subgroup G) (g : G) :
     ∃ S ∈ leftTransversals (H : Set G), g ∈ S := by
-  classical
     refine
       ⟨Set.range (Function.update Quotient.out' _ g), range_mem_leftTransversals fun q => ?_,
         Quotient.mk'' g, Function.update_same (Quotient.mk'' g) g Quotient.out'⟩
@@ -265,10 +265,10 @@ lemma exists_left_transversal (H : Subgroup G) (g : G) :
     · refine (Function.update_noteq ?_ g Quotient.out') ▸ q.out_eq'
       exact hq
 
+open Classical in
 @[to_additive]
 lemma exists_right_transversal (H : Subgroup G) (g : G) :
     ∃ S ∈ rightTransversals (H : Set G), g ∈ S := by
-  classical
     refine
       ⟨Set.range (Function.update Quotient.out' _ g), range_mem_rightTransversals fun q => ?_,
         Quotient.mk'' g, Function.update_same (Quotient.mk'' g) g Quotient.out'⟩

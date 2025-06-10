@@ -188,6 +188,7 @@ instance forget_reflectsIsomorphisms : (forget LightProfinite).ReflectsIsomorphi
   intro A B f hf
   exact LightProfinite.isIso_of_bijective _ ((isIso_iff_bijective f).mp hf)
 
+open Classical in
 theorem epi_iff_surjective {X Y : LightProfinite.{u}} (f : X ⟶ Y) :
     Epi f ↔ Function.Surjective f := by
   constructor
@@ -204,25 +205,24 @@ theorem epi_iff_surjective {X Y : LightProfinite.{u}} (f : X ⟶ Y) :
     exact hy y' hy'
     have hUy : U ∈ 𝓝 y := hC.compl_mem_nhds hyU
     obtain ⟨V, hV, hyV, hVU⟩ := isTopologicalBasis_isClopen.mem_nhds_iff.mp hUy
-    classical
-      let Z := of (ULift.{u} <| Fin 2)
-      let g : Y ⟶ Z := ⟨(LocallyConstant.ofIsClopen hV).map ULift.up, LocallyConstant.continuous _⟩
-      let h : Y ⟶ Z := ⟨fun _ => ⟨1⟩, continuous_const⟩
-      have H : h = g
-      rw [← cancel_epi f]
-      ext x
-      apply ULift.ext
-      dsimp [g, LocallyConstant.ofIsClopen]
-      -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
-      erw [CategoryTheory.comp_apply, ContinuousMap.coe_mk,
-        CategoryTheory.comp_apply, ContinuousMap.coe_mk, Function.comp_apply, if_neg]
-      refine mt (fun α => hVU α) ?_
-      simp only [U, C, Set.mem_range_self, not_true, not_false_iff, Set.mem_compl_iff]
-      apply_fun fun e => (e y).down at H
-      dsimp [g, LocallyConstant.ofIsClopen] at H
-      -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
-      erw [ContinuousMap.coe_mk, ContinuousMap.coe_mk, Function.comp_apply, if_pos hyV] at H
-      exact top_ne_bot H
+    let Z := of (ULift.{u} <| Fin 2)
+    let g : Y ⟶ Z := ⟨(LocallyConstant.ofIsClopen hV).map ULift.up, LocallyConstant.continuous _⟩
+    let h : Y ⟶ Z := ⟨fun _ => ⟨1⟩, continuous_const⟩
+    have H : h = g
+    rw [← cancel_epi f]
+    ext x
+    apply ULift.ext
+    dsimp [g, LocallyConstant.ofIsClopen]
+    -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
+    erw [CategoryTheory.comp_apply, ContinuousMap.coe_mk,
+      CategoryTheory.comp_apply, ContinuousMap.coe_mk, Function.comp_apply, if_neg]
+    refine mt (fun α => hVU α) ?_
+    simp only [U, C, Set.mem_range_self, not_true, not_false_iff, Set.mem_compl_iff]
+    apply_fun fun e => (e y).down at H
+    dsimp [g, LocallyConstant.ofIsClopen] at H
+    -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
+    erw [ContinuousMap.coe_mk, ContinuousMap.coe_mk, Function.comp_apply, if_pos hyV] at H
+    exact top_ne_bot H
   · rw [← CategoryTheory.epi_iff_surjective]
     apply (forget LightProfinite).epi_of_epi_map
 

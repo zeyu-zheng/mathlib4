@@ -745,10 +745,10 @@ instance instLattice [Lattice β] : Lattice (Germ l β) where
 instance instDistribLattice [DistribLattice β] : DistribLattice (Germ l β) where
   le_sup_inf f g h := inductionOn₃ f g h fun _f _g _h ↦ eventually_of_forall fun _ ↦ le_sup_inf
 
+open Classical in
 @[to_additive]
 instance instExistsMulOfLE [Mul β] [LE β] [ExistsMulOfLE β] : ExistsMulOfLE (Germ l β) where
   exists_mul_of_le {x y} := inductionOn₂ x y fun f g (h : f ≤ᶠ[l] g) ↦ by
-    classical
     choose c hc using fun x (hx : f x ≤ g x) ↦ exists_mul_of_le hx
     refine ⟨ofFun fun x ↦ if hx : f x ≤ g x then c x hx else f x, coe_eq.2 ?_⟩
     filter_upwards [h] with x hx

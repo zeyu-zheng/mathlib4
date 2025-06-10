@@ -286,9 +286,9 @@ variable {ι : Type*} {C : Type u} [Category.{v} C] [Preadditive C]
   {c : ComplexShape ι} {K L : HomologicalComplex C c}
   (e : HomotopyEquiv K L) [∀ i, K.HasHomology i] [∀ i, L.HasHomology i]
 
+open Classical in
 instance : QuasiIso e.hom where
   quasiIsoAt n := by
-    classical
     rw [quasiIsoAt_iff_isIso_homologyMap]
     exact (e.toHomologyIso n).isIso_hom
 

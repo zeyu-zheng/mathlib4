@@ -215,9 +215,9 @@ theorem mul_basis_toMatrix [DecidableEq ι] [DecidableEq ι'] (b₁ : Basis ι R
   have := linearMap_toMatrix_mul_basis_toMatrix b₂ b₁ b₃ (Matrix.toLin b₁ b₃ A)
   rwa [LinearMap.toMatrix_toLin] at this
 
+open Classical in
 theorem basis_toMatrix_basisFun_mul (b : Basis ι R (ι → R)) (A : Matrix ι ι R) :
     b.toMatrix (Pi.basisFun R ι) * A = of fun i j => b.repr (Aᵀ j) i := by
-  classical
   simp only [basis_toMatrix_mul _ _ (Pi.basisFun R ι), Matrix.toLin_eq_toLin']
   ext i j
   rw [LinearMap.toMatrix_apply, Matrix.toLin'_apply, Pi.basisFun_apply,

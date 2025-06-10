@@ -1727,9 +1727,9 @@ theorem erase_injOn' (a : α) : { s : Finset α | a ∈ s }.InjOn fun s => erase
 
 end Erase
 
+open Classical in
 lemma Nontrivial.exists_cons_eq {s : Finset α} (hs : s.Nontrivial) :
     ∃ t a ha b hb hab, (cons b t hb).cons a (mem_cons.not.2 <| not_or_intro hab ha) = s := by
-  classical
   obtain ⟨a, ha, b, hb, hab⟩ := hs
   have : b ∈ s.erase a := mem_erase.2 ⟨hab.symm, hb⟩
   refine ⟨(s.erase a).erase b, a, ?_, b, ?_, ?_, ?_⟩ <;>
@@ -2234,8 +2234,8 @@ theorem coe_filter (s : Finset α) : ↑(s.filter p) = ({ x ∈ ↑s | p x } : S
 theorem subset_coe_filter_of_subset_forall (s : Finset α) {t : Set α} (h₁ : t ⊆ s)
     (h₂ : ∀ x ∈ t, p x) : t ⊆ s.filter p := fun x hx => (s.coe_filter p).symm ▸ ⟨h₁ hx, h₂ x hx⟩
 
+open Classical in
 theorem filter_singleton (a : α) : filter p {a} = if p a then {a} else ∅ := by
-  classical
     ext x
     simp only [mem_singleton, forall_eq, mem_filter]
     split_ifs with h <;> by_cases h' : x = a <;> simp [h, h']
@@ -2348,7 +2348,7 @@ theorem sdiff_eq_self (s₁ s₂ : Finset α) : s₁ \ s₂ = s₁ ↔ s₁ ∩ 
 
 theorem subset_union_elim {s : Finset α} {t₁ t₂ : Set α} (h : ↑s ⊆ t₁ ∪ t₂) :
     ∃ s₁ s₂ : Finset α, s₁ ∪ s₂ = s ∧ ↑s₁ ⊆ t₁ ∧ ↑s₂ ⊆ t₂ \ t₁ := by
-  classical
+    classical
     refine ⟨s.filter (· ∈ t₁), s.filter (· ∉ t₁), ?_, ?_, ?_⟩
     · simp [filter_union_right, em]
     · intro x
@@ -2664,8 +2664,8 @@ theorem toFinset_filter (s : Multiset α) (p : α → Prop) [DecidablePred p] :
     Multiset.toFinset (s.filter p) = s.toFinset.filter p := by
   ext; simp
 
+open Classical in
 instance isWellFounded_ssubset : IsWellFounded (Multiset β) (· ⊂ ·) := by
-  classical
   exact Subrelation.isWellFounded (InvImage _ toFinset) toFinset_ssubset.2
 
 end Multiset

@@ -373,12 +373,12 @@ theorem map_matrix_volume_pi_eq_smul_volume_pi [DecidableEq ι] {M : Matrix ι �
     · apply Continuous.measurable
       apply LinearMap.continuous_on_pi
 
+open Classical in
 /-- Any invertible linear map rescales Lebesgue measure through the absolute value of its
 determinant. -/
 theorem map_linearMap_volume_pi_eq_smul_volume_pi {f : (ι → ℝ) →ₗ[ℝ] ι → ℝ}
     (hf : LinearMap.det f ≠ 0) : Measure.map f volume =
       ENNReal.ofReal (abs (LinearMap.det f)⁻¹) • volume := by
-  classical
     -- this is deduced from the matrix case
     let M := LinearMap.toMatrix' f
     have A : LinearMap.det f = det M
@@ -455,10 +455,10 @@ theorem measurableSet_graph (hf : Measurable f) :
     MeasurableSet { p : α × ℝ | p.snd = f p.fst } := by
   simpa using measurableSet_region_between_cc hf hf MeasurableSet.univ
 
+open Classical in
 theorem volume_regionBetween_eq_lintegral' (hf : Measurable f) (hg : Measurable g)
     (hs : MeasurableSet s) :
     μ.prod volume (regionBetween f g s) = ∫⁻ y in s, ENNReal.ofReal ((g - f) y) ∂μ := by
-  classical
     rw [Measure.prod_apply]
     · have h :
         (fun x => volume { a | x ∈ s ∧ a ∈ Ioo (f x) (g x) }) =

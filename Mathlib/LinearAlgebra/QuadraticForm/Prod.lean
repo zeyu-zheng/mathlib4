@@ -301,12 +301,12 @@ theorem Equivalent.pi [Fintype ι] {Q : ∀ i, QuadraticMap R (Mᵢ i) P}
     (pi Q).Equivalent (pi Q') :=
   ⟨IsometryEquiv.pi fun i => Classical.choice (e i)⟩
 
+open Classical in
 /-- If a family is anisotropic then its components must be. The converse is not true. -/
 theorem anisotropic_of_pi [Fintype ι]
     {Q : ∀ i, QuadraticMap R (Mᵢ i) P} (h : (pi Q).Anisotropic) : ∀ i, (Q i).Anisotropic := by
   simp_rw [Anisotropic, pi_apply, Function.funext_iff, Pi.zero_apply] at h
   intro i x hx
-  classical
   have := h (Pi.single i x) ?_ i
   · rw [Pi.single_eq_same] at this
     exact this
@@ -316,13 +316,13 @@ theorem anisotropic_of_pi [Fintype ι]
   · subst hji; rw [Pi.single_eq_same, hx]
   · rw [Pi.single_eq_of_ne hji, map_zero]
 
+open Classical in
 theorem nonneg_pi_iff {P} [Fintype ι] [OrderedAddCommMonoid P] [Module R P]
     {Q : ∀ i, QuadraticMap R (Mᵢ i) P} : (∀ x, 0 ≤ pi Q x) ↔ ∀ i x, 0 ≤ Q i x := by
   simp_rw [pi, sum_apply, comp_apply, LinearMap.proj_apply]
   constructor
   -- TODO: does this generalize to a useful lemma independent of `QuadraticMap`?
   · intro h i x
-    classical
     convert h (Pi.single i x) using 1
     rw [Finset.sum_eq_single_of_mem i (Finset.mem_univ _) fun j _ hji => ?_, Pi.single_eq_same]
     rw [Pi.single_eq_of_ne hji, map_zero]

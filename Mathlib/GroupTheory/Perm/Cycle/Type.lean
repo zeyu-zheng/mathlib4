@@ -316,17 +316,17 @@ theorem card_fixedPoints_modEq [DecidableEq α] {f : Function.End α} {p n : ℕ
     simp only [this]; apply Fintype.card_coe
   simp [σ, Set.ext_iff, IsFixedPt]
 
+open Classical in
 theorem exists_fixed_point_of_prime {p n : ℕ} [hp : Fact p.Prime] (hα : ¬p ∣ Fintype.card α)
     {σ : Perm α} (hσ : σ ^ p ^ n = 1) : ∃ a : α, σ a = a := by
-  classical
     contrapose! hα
     simp_rw [← mem_support, ← Finset.eq_univ_iff_forall] at hα
     exact Nat.modEq_zero_iff_dvd.1 ((congr_arg _ (Finset.card_eq_zero.2 (compl_eq_bot.2 hα))).mp
       (card_compl_support_modEq hσ).symm)
 
+open Classical in
 theorem exists_fixed_point_of_prime' {p n : ℕ} [hp : Fact p.Prime] (hα : p ∣ Fintype.card α)
     {σ : Perm α} (hσ : σ ^ p ^ n = 1) {a : α} (ha : σ a = a) : ∃ b : α, σ b = b ∧ b ≠ a := by
-  classical
     have h : ∀ b : α, b ∈ σ.supportᶜ ↔ σ b = b := fun b => by
       rw [Finset.mem_compl, mem_support, Classical.not_not]
     obtain ⟨b, hb1, hb2⟩ := Finset.exists_ne_of_one_lt_card (hp.out.one_lt.trans_le

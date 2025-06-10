@@ -373,8 +373,8 @@ lemma Quot.desc_toCocone_desc {α : Type u} (f : Quot F → α) (hc : IsColimit 
   obtain ⟨j, y, rfl⟩ := Quot.jointly_surjective x
   simpa using congrFun (hc.fac _ j) y
 
+open Classical in
 theorem isColimit_iff_bijective_desc : Nonempty (IsColimit c) ↔ (Quot.desc c).Bijective := by
-  classical
   refine ⟨?_, ?_⟩
   · refine fun ⟨hc⟩ => ⟨fun x y h => ?_, fun x => ?_⟩
     · let f : Quot F → ULift.{u} Bool := fun z => ULift.up (x = z)

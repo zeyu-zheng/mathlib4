@@ -124,11 +124,11 @@ variable {R : Type*} [CommRing R] {M : Type*} [AddCommGroup M] [Module R M]
 variable (N P : Type*) [AddCommGroup N] [Module R N] [AddCommGroup P] [Module R P]
 variable {ι : Type*}
 
+open Classical in
 /-- The trace of a linear map correspond to the contraction pairing under the isomorphism
  `End(M) ≃ M* ⊗ M`-/
 theorem trace_eq_contract_of_basis [Finite ι] (b : Basis ι R M) :
     LinearMap.trace R M ∘ₗ dualTensorHom R M M = contractLeft R M := by
-  classical
     cases nonempty_fintype ι
     apply Basis.ext (Basis.tensorProduct (Basis.dualBasis b) b)
     rintro ⟨i, j⟩
@@ -266,9 +266,9 @@ lemma trace_comp_cycle' (f : M →ₗ[R] N) (g : N →ₗ[R] P) (h : P →ₗ[R]
     trace R P ((g ∘ₗ f) ∘ₗ h) = trace R M ((h ∘ₗ g) ∘ₗ f) := by
   rw [trace_comp_comm', ← comp_assoc]
 
+open Classical in
 @[simp]
 theorem trace_conj' (f : M →ₗ[R] M) (e : M ≃ₗ[R] N) : trace R N (e.conj f) = trace R M f := by
-  classical
   by_cases hM : ∃ s : Finset M, Nonempty (Basis s R M)
   · obtain ⟨s, ⟨b⟩⟩ := hM
     haveI := Module.Finite.of_basis b

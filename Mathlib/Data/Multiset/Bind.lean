@@ -188,9 +188,9 @@ theorem count_bind [DecidableEq α] {m : Multiset β} {f : β → Multiset α} {
     count a (bind m f) = sum (m.map fun b => count a <| f b) :=
   count_sum
 
+open Classical in
 theorem le_bind {α β : Type*} {f : α → Multiset β} (S : Multiset α) {x : α} (hx : x ∈ S) :
     f x ≤ S.bind f := by
-  classical
   refine le_iff_count.2 fun a ↦ ?_
   obtain ⟨m', hm'⟩ := exists_cons_of_mem $ mem_map_of_mem (fun b ↦ count a (f b)) hx
   rw [count_bind, hm', sum_cons]

@@ -174,9 +174,9 @@ private lemma card_S_lt_card_T : (S).card < (T).card := by
 
 end preparation
 
+open Classical in
 theorem exists_ne_zero_int_vec_norm_le : ∃ t : β → ℤ, t ≠ 0 ∧
     A *ᵥ t = 0 ∧ ‖t‖ ≤ (n * max 1 ‖A‖) ^ ((m : ℝ) / (n - m)) := by
-  classical
   -- Pigeonhole
   rcases Finset.exists_ne_map_eq_of_card_lt_of_maps_to
     (card_S_lt_card_T A hn hm) (image_T_subset_S A)

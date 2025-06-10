@@ -79,6 +79,7 @@ theorem isOpen_iff : IsOpen s ↔ ∀ o ∈ s, IsLimit o → ∃ a < o, Set.Ioo 
     simp only [← Set.Ioo_insert_right ha, Set.insert_subset_iff, ho, true_and]
   · simp [nhds_eq_pure.2 ho', ho, ho']
 
+open Classical in
 open List Set in
 theorem mem_closure_tfae (a : Ordinal.{u}) (s : Set Ordinal) :
     TFAE [a ∈ closure s,
@@ -103,13 +104,12 @@ theorem mem_closure_tfae (a : Ordinal.{u}) (s : Set Ordinal) :
   · rintro ⟨t, hts, hne, hbdd, rfl⟩
     have hlub : IsLUB t (sSup t) := isLUB_csSup hne hbdd
     let ⟨y, hyt⟩ := hne
-    classical
-      refine ⟨succ (sSup t), succ_ne_zero _, fun x _ => if x ∈ t then x else y, fun x _ => ?_, ?_⟩
-      · simp only
-        split_ifs with h <;> exact hts ‹_›
-      · refine le_antisymm (bsup_le fun x _ => ?_) (csSup_le hne fun x hx => ?_)
-        · split_ifs <;> exact hlub.1 ‹_›
-        · refine (if_pos hx).symm.trans_le (le_bsup _ _ <| (hlub.1 hx).trans_lt (lt_succ _))
+    refine ⟨succ (sSup t), succ_ne_zero _, fun x _ => if x ∈ t then x else y, fun x _ => ?_, ?_⟩
+    · simp only
+      split_ifs with h <;> exact hts ‹_›
+    · refine le_antisymm (bsup_le fun x _ => ?_) (csSup_le hne fun x hx => ?_)
+      · split_ifs <;> exact hlub.1 ‹_›
+      · refine (if_pos hx).symm.trans_le (le_bsup _ _ <| (hlub.1 hx).trans_lt (lt_succ _))
   tfae_have 5 → 6
   · rintro ⟨o, h₀, f, hfs, rfl⟩
     exact ⟨_, out_nonempty_iff_ne_zero.2 h₀, familyOfBFamily o f, fun _ => hfs _ _, rfl⟩

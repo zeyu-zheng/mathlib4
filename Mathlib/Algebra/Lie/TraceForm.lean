@@ -212,6 +212,7 @@ open TensorProduct
 
 variable [LieAlgebra.IsNilpotent R L] [IsDomain R] [IsPrincipalIdealRing R]
 
+open Classical in
 lemma traceForm_eq_sum_weightSpaceOf [IsTriangularizable R L M] (z : L) :
     traceForm R L M =
     ∑ χ ∈ (finite_weightSpaceOf_ne_bot R L M z).toFinset, traceForm R L (weightSpaceOf M χ z) := by
@@ -222,7 +223,6 @@ lemma traceForm_eq_sum_weightSpaceOf [IsTriangularizable R L M] (z : L) :
   have hfin : {χ : R | (weightSpaceOf M χ z : Submodule R M) ≠ ⊥}.Finite := by
     convert finite_weightSpaceOf_ne_bot R L M z
     exact LieSubmodule.coeSubmodule_eq_bot_iff (weightSpaceOf M _ _)
-  classical
   have hds := DirectSum.isInternal_submodule_of_independent_of_iSup_eq_top
     (LieSubmodule.independent_iff_coe_toSubmodule.mp <| independent_weightSpaceOf R L M z)
     (IsTriangularizable.iSup_eq_top z)
@@ -393,12 +393,12 @@ namespace LieModule
 variable [Field K] [LieAlgebra K L] [Module K M] [LieModule K L M] [FiniteDimensional K M]
 variable [LieAlgebra.IsNilpotent K L] [LinearWeights K L M] [IsTriangularizable K L M]
 
+open Classical in
 lemma traceForm_eq_sum_finrank_nsmul_mul (x y : L) :
     traceForm K L M x y = ∑ χ : Weight K L M, finrank K (weightSpace M χ) • (χ x * χ y) := by
   have hxy : ∀ χ : Weight K L M, MapsTo (toEnd K L M x ∘ₗ toEnd K L M y)
       (weightSpace M χ) (weightSpace M χ) :=
     fun χ m hm ↦ LieSubmodule.lie_mem _ <| LieSubmodule.lie_mem _ hm
-  classical
   have hds := DirectSum.isInternal_submodule_of_independent_of_iSup_eq_top
     (LieSubmodule.independent_iff_coe_toSubmodule.mp <| independent_weightSpace' K L M)
     (LieSubmodule.iSup_eq_top_iff_coe_toSubmodule.mp <| iSup_weightSpace_eq_top' K L M)

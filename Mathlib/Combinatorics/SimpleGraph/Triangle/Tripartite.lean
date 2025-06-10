@@ -233,8 +233,8 @@ end DecidableEq
 
 variable (t)
 
+open Classical in
 lemma locallyLinear [ExplicitDisjoint t] [NoAccidental t] : (graph t).LocallyLinear := by
-  classical
   refine ⟨?_, fun x y hxy ↦ ?_⟩
   · unfold EdgeDisjointTriangles
     convert map_toTriangle_disjoint t

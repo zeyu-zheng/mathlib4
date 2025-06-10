@@ -45,6 +45,7 @@ namespace Subgroup
 
 variable {G : Type*} [Group G]
 
+open Classical in
 /-- `Finset.noncommProd` is “injective” in `f` if `f` maps into independent subgroups.  This
 generalizes (one direction of) `Subgroup.disjoint_iff_mul_eq_one`. -/
 @[to_additive "`Finset.noncommSum` is “injective” in `f` if `f` maps into independent subgroups.
@@ -52,7 +53,6 @@ This generalizes (one direction of) `AddSubgroup.disjoint_iff_add_eq_zero`. "]
 theorem eq_one_of_noncommProd_eq_one_of_independent {ι : Type*} (s : Finset ι) (f : ι → G) (comm)
     (K : ι → Subgroup G) (hind : CompleteLattice.Independent K) (hmem : ∀ x ∈ s, f x ∈ K x)
     (heq1 : s.noncommProd f comm = 1) : ∀ i ∈ s, f i = 1 := by
-  classical
     revert heq1
     induction' s using Finset.induction_on with i s hnmem ih
     · simp
@@ -97,6 +97,7 @@ variable (f g : ∀ i : ι, N i)
 
 namespace MonoidHom
 
+open Classical in
 /-- The canonical homomorphism from a family of monoids. -/
 @[to_additive "The canonical homomorphism from a family of additive monoids. See also
 `LinearMap.lsum` for a linear version without the commutativity assumption."]
@@ -106,7 +107,6 @@ def noncommPiCoprod : (∀ i : ι, N i) →* M where
     apply (Finset.noncommProd_eq_pow_card _ _ _ _ _).trans (one_pow _)
     simp
   map_mul' f g := by
-    classical
     simp only
     convert @Finset.noncommProd_mul_distrib _ _ _ _ (fun i => ϕ i (f i)) (fun i => ϕ i (g i)) _ _ _
     · exact map_mul _ _ _
@@ -191,12 +191,12 @@ theorem noncommPiCoprod_range
     rintro i x ⟨y, rfl⟩
     exact ⟨Pi.mulSingle i y, noncommPiCoprod_mulSingle _ _ _⟩
 
+open Classical in
 @[to_additive]
 theorem injective_noncommPiCoprod_of_independent
     {hcomm : Pairwise fun i j : ι => ∀ (x : H i) (y : H j), Commute (ϕ i x) (ϕ j y)}
     (hind : CompleteLattice.Independent fun i => (ϕ i).range)
     (hinj : ∀ i, Function.Injective (ϕ i)) : Function.Injective (noncommPiCoprod ϕ hcomm) := by
-  classical
     apply (MonoidHom.ker_eq_bot_iff _).mp
     rw [eq_bot_iff]
     intro f heq1

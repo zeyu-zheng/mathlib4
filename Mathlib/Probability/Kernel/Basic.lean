@@ -312,9 +312,9 @@ instance IsSFiniteKernel.add (κ η : Kernel α β) [IsSFiniteKernel κ] [IsSFin
   refine ⟨⟨fun n => seq κ n + seq η n, fun n => inferInstance, ?_⟩⟩
   rw [sum_add, kernel_sum_seq κ, kernel_sum_seq η]
 
+open Classical in
 theorem IsSFiniteKernel.finset_sum {κs : ι → Kernel α β} (I : Finset ι)
     (h : ∀ i ∈ I, IsSFiniteKernel (κs i)) : IsSFiniteKernel (∑ i ∈ I, κs i) := by
-  classical
   induction' I using Finset.induction with i I hi_nmem_I h_ind h
   · rw [Finset.sum_empty]; infer_instance
   · rw [Finset.sum_insert hi_nmem_I]

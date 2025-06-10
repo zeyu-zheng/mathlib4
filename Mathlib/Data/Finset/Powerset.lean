@@ -284,13 +284,13 @@ theorem powersetCard_sup [DecidableEq α] (u : Finset α) (n : ℕ) (hn : n < u.
     rw [← insert_erase hx, powersetCard_succ_insert (not_mem_erase _ _)]
     exact mem_union_right _ (mem_image_of_mem _ ht)
 
+open Classical in
 theorem powersetCard_map {β : Type*} (f : α ↪ β) (n : ℕ) (s : Finset α) :
     powersetCard n (s.map f) = (powersetCard n s).map (mapEmbedding f).toEmbedding :=
   ext fun t => by
     simp only [card_map, mem_powersetCard, le_eq_subset, gt_iff_lt, mem_map, mapEmbedding_apply]
     constructor
-    · classical
-      intro h
+    · intro h
       have : map f (filter (fun x => (f x ∈ t)) s) = t := by
         ext x
         simp only [mem_map, mem_filter, decide_eq_true_eq]

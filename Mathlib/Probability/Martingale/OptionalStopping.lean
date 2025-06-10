@@ -61,6 +61,7 @@ theorem Submartingale.expected_stoppedValue_mono [SigmaFiniteFiltration μ 𝒢]
   · exact hf.integrable_stoppedValue hπ hbdd
   · exact hf.integrable_stoppedValue hτ fun ω => le_trans (hle ω) (hbdd ω)
 
+open Classical in
 /-- The converse direction of the optional stopping theorem, i.e. an adapted integrable process `f`
 is a submartingale if for all bounded stopping times `τ` and `π` such that `τ ≤ π`, the
 stopped value of `f` at `τ` has expectation smaller than its stopped value at `π`. -/
@@ -69,7 +70,6 @@ theorem submartingale_of_expected_stoppedValue_mono [IsFiniteMeasure μ] (hadp :
       τ ≤ π → (∃ N, ∀ ω, π ω ≤ N) → μ[stoppedValue f τ] ≤ μ[stoppedValue f π]) :
     Submartingale f 𝒢 μ := by
   refine submartingale_of_setIntegral_le hadp hint fun i j hij s hs => ?_
-  classical
   specialize hf (s.piecewise (fun _ => i) fun _ => j) _ (isStoppingTime_piecewise_const hij hs)
     (isStoppingTime_const 𝒢 j) (fun x => (ite_le_sup _ _ (x ∈ s)).trans (max_eq_right hij).le)
     ⟨j, fun _ => le_rfl⟩

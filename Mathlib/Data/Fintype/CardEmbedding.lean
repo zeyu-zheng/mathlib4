@@ -28,6 +28,7 @@ theorem card_embedding_eq_of_unique {α β : Type*} [Unique α] [Fintype β] [Fi
     ‖α ↪ β‖ = ‖β‖ :=
   card_congr Equiv.uniqueEmbeddingEquivResult
 
+open Classical in
 -- Establishes the cardinality of the type of all injections between two finite types.
 -- Porting note: `induction'` is broken so instead we make an ugly refine and `dsimp` a lot.
 @[simp]
@@ -40,8 +41,7 @@ theorem card_embedding_eq {α β : Type*} [Fintype α] [Fintype β] [emb : Finty
     rw [← card_congr (Equiv.embeddingCongr e (Equiv.refl β)), ih, card_congr e]
   · rw [card_pempty, Nat.descFactorial_zero, card_eq_one_iff]
     exact ⟨Embedding.ofIsEmpty, fun x ↦ DFunLike.ext _ _ isEmptyElim⟩
-  · classical
-    dsimp only at ih
+  · dsimp only at ih
     rw [card_option, Nat.descFactorial_succ, card_congr (Embedding.optionEmbeddingEquiv γ β),
         card_sigma, ← ih]
     simp only [Fintype.card_compl_set, Fintype.card_range, Finset.sum_const, Finset.card_univ,

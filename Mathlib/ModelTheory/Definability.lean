@@ -112,16 +112,16 @@ theorem Definable.union {f g : Set (α → M)} (hf : A.Definable L f) (hg : A.De
   ext
   rw [hφ, hθ, mem_setOf_eq, Formula.realize_sup, mem_union, mem_setOf_eq, mem_setOf_eq]
 
+open Classical in
 theorem definable_finset_inf {ι : Type*} {f : ι → Set (α → M)} (hf : ∀ i, A.Definable L (f i))
     (s : Finset ι) : A.Definable L (s.inf f) := by
-  classical
     refine Finset.induction definable_univ (fun i s _ h => ?_) s
     rw [Finset.inf_insert]
     exact (hf i).inter h
 
+open Classical in
 theorem definable_finset_sup {ι : Type*} {f : ι → Set (α → M)} (hf : ∀ i, A.Definable L (f i))
     (s : Finset ι) : A.Definable L (s.sup f) := by
-  classical
     refine Finset.induction definable_empty (fun i s _ h => ?_) s
     rw [Finset.sup_insert]
     exact (hf i).union h
@@ -211,10 +211,10 @@ theorem Definable.image_comp_sum_inl_fin (m : ℕ) {s : Set (Sum α (Fin m) → 
   · rintro ⟨y, hy⟩
     exact ⟨Sum.elim x y, (congr rfl (funext finZeroElim)).mp hy, Sum.elim_comp_inl _ _⟩
 
+open Classical in
 /-- Shows that definability is closed under finite projections. -/
 theorem Definable.image_comp_embedding {s : Set (β → M)} (h : A.Definable L s) (f : α ↪ β)
     [Finite β] : A.Definable L ((fun g : β → M => g ∘ f) '' s) := by
-  classical
     cases nonempty_fintype β
     refine
       (congr rfl (ext fun x => ?_)).mp
@@ -226,10 +226,10 @@ theorem Definable.image_comp_embedding {s : Set (β → M)} (h : A.Definable L s
     refine exists_congr fun y => and_congr_right fun _ => Eq.congr_left (funext fun a => ?_)
     simp
 
+open Classical in
 /-- Shows that definability is closed under finite projections. -/
 theorem Definable.image_comp {s : Set (β → M)} (h : A.Definable L s) (f : α → β) [Finite α]
     [Finite β] : A.Definable L ((fun g : β → M => g ∘ f) '' s) := by
-  classical
     cases nonempty_fintype α
     cases nonempty_fintype β
     have h :=

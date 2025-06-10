@@ -150,10 +150,10 @@ theorem age.jointEmbedding : JointEmbedding (L.age M) := fun _ hN _ hP =>
     ⟨Embedding.comp (inclusion le_sup_left) hN.2.some.equivRange.toEmbedding⟩,
     ⟨Embedding.comp (inclusion le_sup_right) hP.2.some.equivRange.toEmbedding⟩⟩
 
+open Classical in
 /-- The age of a countable structure is essentially countable (has countably many isomorphism
 classes). -/
 theorem age.countable_quotient [h : Countable M] : (Quotient.mk' '' L.age M).Countable := by
-  classical
   refine (congr_arg _ (Set.ext <| Quotient.forall.2 fun N => ?_)).mp
     (countable_range fun s : Finset M => ⟦⟨closure L (s : Set M), inferInstance⟩⟧)
   constructor
@@ -168,12 +168,12 @@ theorem age.countable_quotient [h : Countable M] : (Quotient.mk' '' L.age M).Cou
     rw [← Embedding.coe_toHom, Finset.coe_image, closure_image PM.toHom, hs, ← Hom.range_eq_map]
     exact ⟨PM.equivRange.symm⟩
 
+open Classical in
 /-- The age of a direct limit of structures is the union of the ages of the structures. -/
 -- @[simp] -- Porting note: cannot simplify itself
 theorem age_directLimit {ι : Type w} [Preorder ι] [IsDirected ι (· ≤ ·)] [Nonempty ι]
     (G : ι → Type max w w') [∀ i, L.Structure (G i)] (f : ∀ i j, i ≤ j → G i ↪[L] G j)
     [DirectedSystem G fun i j h => f i j h] : L.age (DirectLimit G f) = ⋃ i : ι, L.age (G i) := by
-  classical
   ext M
   simp only [mem_iUnion]
   constructor

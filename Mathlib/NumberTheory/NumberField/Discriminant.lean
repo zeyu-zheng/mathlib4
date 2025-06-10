@@ -456,6 +456,7 @@ end Rat
 
 variable {ι ι'} (K) [Field K] [DecidableEq ι] [DecidableEq ι'] [Fintype ι] [Fintype ι']
 
+open Classical in
 /-- If `b` and `b'` are `ℚ`-bases of a number field `K` such that
 `∀ i j, IsIntegral ℤ (b.toMatrix b' i j)` and `∀ i j, IsIntegral ℤ (b'.toMatrix b i j)` then
 `discr ℚ b = discr ℚ b'`. -/
@@ -466,7 +467,6 @@ theorem Algebra.discr_eq_discr_of_toMatrix_coeff_isIntegral [NumberField K]
     intro i j
     convert h' i ((b.indexEquiv b').symm j)
     simp [Basis.toMatrix_apply]
-  classical
   rw [← (b.reindex (b.indexEquiv b')).toMatrix_map_vecMul b', discr_of_matrix_vecMul,
     ← one_mul (discr ℚ b), Basis.coe_reindex, discr_reindex]
   congr

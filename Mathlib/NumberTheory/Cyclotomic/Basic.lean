@@ -284,9 +284,9 @@ end Basic
 
 section Fintype
 
+open Classical in
 theorem finite_of_singleton [IsDomain B] [h : IsCyclotomicExtension {n} A B] :
     Module.Finite A B := by
-  classical
   rw [Module.finite_def, ← top_toSubmodule, ← ((iff_adjoin_eq_top _ _ _).1 h).2]
   refine fg_adjoin_of_finite ?_ fun b hb => ?_
   · simp only [mem_singleton_iff, exists_eq_left]
@@ -373,9 +373,9 @@ theorem adjoin_roots_cyclotomic_eq_adjoin_root_cyclotomic {n : ℕ+} [IsDomain B
     simpa only [hx, mem_rootSet', map_cyclotomic, aeval_def, ← eval_map, IsRoot] using
       And.intro (cyclotomic_ne_zero n B) (hζ.isRoot_cyclotomic n.pos)
 
+open Classical in
 theorem adjoin_primitive_root_eq_top {n : ℕ+} [IsDomain B] [h : IsCyclotomicExtension {n} A B]
     {ζ : B} (hζ : IsPrimitiveRoot ζ n) : adjoin A ({ζ} : Set B) = ⊤ := by
-  classical
   rw [← adjoin_roots_cyclotomic_eq_adjoin_root_cyclotomic hζ]
   rw [adjoin_roots_cyclotomic_eq_adjoin_nth_roots hζ]
   exact ((iff_adjoin_eq_top {n} A B).mp h).2

@@ -53,10 +53,10 @@ theorem Basis.finite_ofVectorSpaceIndex_of_rank_lt_aleph0 (h : Module.rank K V <
     (Basis.ofVectorSpaceIndex K V).Finite :=
   finite_def.2 <| (Basis.ofVectorSpace K V).nonempty_fintype_index_of_rank_lt_aleph0 h
 
+open Classical in
 /-- Also see `rank_quotient_add_rank`. -/
 theorem rank_quotient_add_rank_of_divisionRing (p : Submodule K V) :
     Module.rank K (V ⧸ p) + Module.rank K p = Module.rank K V := by
-  classical
     let ⟨f⟩ := quotient_prod_linearEquiv p
     exact rank_prod'.symm.trans f.rank_eq
 
@@ -118,11 +118,11 @@ open FiniteDimensional
 
 variable [DivisionRing K] [AddCommGroup V] [Module K V]
 
+open Classical in
 theorem linearIndependent_of_top_le_span_of_card_eq_finrank {ι : Type*} [Fintype ι] {b : ι → V}
     (spans : ⊤ ≤ span K (Set.range b)) (card_eq : Fintype.card ι = finrank K V) :
     LinearIndependent K b :=
   linearIndependent_iff'.mpr fun s g dependent i i_mem_s => by
-    classical
     by_contra gx_ne_zero
     -- We'll derive a contradiction by showing `b '' (univ \ {i})` of cardinality `n - 1`
     -- spans a vector space of dimension `n`.

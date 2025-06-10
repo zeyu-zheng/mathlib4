@@ -191,8 +191,8 @@ lemma l2_opNNNorm_conjTranspose [DecidableEq m] (A : Matrix m n 𝕜) : ‖Aᴴ�
 
 @[deprecated (since := "2024-02-02")] alias l2_op_nnnorm_conjTranspose := l2_opNNNorm_conjTranspose
 
+open Classical in
 lemma l2_opNorm_conjTranspose_mul_self (A : Matrix m n 𝕜) : ‖Aᴴ * A‖ = ‖A‖ * ‖A‖ := by
-  classical
   rw [l2_opNorm_def, toEuclideanLin_eq_toLin_orthonormal, LinearEquiv.trans_apply,
     Matrix.toLin_mul (v₂ := (EuclideanSpace.basisFun m 𝕜).toBasis), toLin_conjTranspose]
   exact ContinuousLinearMap.norm_adjoint_comp_self _

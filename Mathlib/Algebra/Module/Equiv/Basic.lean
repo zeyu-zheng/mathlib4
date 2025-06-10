@@ -642,9 +642,9 @@ theorem funLeft_comp (f₁ : n → p) (f₂ : m → n) :
     funLeft R M (f₁ ∘ f₂) = (funLeft R M f₂).comp (funLeft R M f₁) :=
   rfl
 
+open Classical in
 theorem funLeft_surjective_of_injective (f : m → n) (hf : Injective f) :
     Surjective (funLeft R M f) := by
-  classical
     intro g
     refine ⟨fun x ↦ if h : ∃ y, f y = x then g h.choose else 0, ?_⟩
     ext

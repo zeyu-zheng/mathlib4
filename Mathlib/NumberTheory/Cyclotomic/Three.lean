@@ -121,9 +121,9 @@ theorem eq_one_or_neg_one_of_unit_of_congruent (hcong : ∃ n : ℤ, λ ^ 2 ∣ 
 
 variable (x : 𝓞 K)
 
+open Classical in
 /-- Let `(x : 𝓞 K)`. Then we have that `λ` divides one amongst `x`, `x - 1` and `x + 1`. -/
 lemma lambda_dvd_or_dvd_sub_one_or_dvd_add_one : λ ∣ x ∨ λ ∣ x - 1 ∨ λ ∣ x + 1 := by
-  classical
   have := hζ.finite_quotient_toInteger_sub_one (by decide)
   let _ := Fintype.ofFinite (𝓞 K ⧸ Ideal.span {λ})
   let _ : Ring (𝓞 K ⧸ Ideal.span {λ}) := CommRing.toRing -- to speed up instance synthesis

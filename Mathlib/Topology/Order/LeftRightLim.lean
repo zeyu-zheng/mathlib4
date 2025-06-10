@@ -40,12 +40,12 @@ section
 
 variable {α β : Type*} [LinearOrder α] [TopologicalSpace β]
 
+open Classical in
 /-- Let `f : α → β` be a function from a linear order `α` to a topological space `β`, and
 let `a : α`. The limit strictly to the left of `f` at `a`, denoted with `leftLim f a`, is defined
 by using the order topology on `α`. If `a` is isolated to its left or the function has no left
 limit, we use `f a` instead to guarantee a good behavior in most cases. -/
 noncomputable def Function.leftLim (f : α → β) (a : α) : β := by
-  classical
   haveI : Nonempty β := ⟨f a⟩
   letI : TopologicalSpace α := Preorder.topology α
   exact if 𝓝[<] a = ⊥ ∨ ¬∃ y, Tendsto f (𝓝[<] a) (𝓝 y) then f a else limUnder (𝓝[<] a) f

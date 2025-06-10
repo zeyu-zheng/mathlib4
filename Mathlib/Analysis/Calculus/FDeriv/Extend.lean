@@ -27,6 +27,7 @@ open Filter Set Metric ContinuousLinearMap
 
 open scoped Topology
 
+open Classical in
 /-- If a function `f` is differentiable in a convex open set and continuous on its closure, and its
 derivative converges to a limit `f'` at a point on the boundary, then `f` is differentiable there
 with derivative `f'`. -/
@@ -35,7 +36,6 @@ theorem hasFDerivWithinAt_closure_of_tendsto_fderiv {f : E → F} {s : Set E} {x
     (f_cont : ∀ y ∈ closure s, ContinuousWithinAt f s y)
     (h : Tendsto (fun y => fderiv ℝ f y) (𝓝[s] x) (𝓝 f')) :
     HasFDerivWithinAt f f' (closure s) x := by
-  classical
     -- one can assume without loss of generality that `x` belongs to the closure of `s`, as the
     -- statement is empty otherwise
     by_cases hx : x ∉ closure s

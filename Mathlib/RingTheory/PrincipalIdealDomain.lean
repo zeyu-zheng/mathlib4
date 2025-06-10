@@ -430,9 +430,9 @@ theorem Irreducible.coprime_pow_of_not_dvd {p a : R} (m : ℕ) (hp : Irreducible
 theorem Irreducible.coprime_or_dvd {p : R} (hp : Irreducible p) (i : R) : IsCoprime p i ∨ p ∣ i :=
   (_root_.em _).imp_right hp.dvd_iff_not_coprime.2
 
+open Classical in
 theorem exists_associated_pow_of_mul_eq_pow' {a b c : R} (hab : IsCoprime a b) {k : ℕ}
     (h : a * b = c ^ k) : ∃ d : R, Associated (d ^ k) a := by
-  classical
   letI := IsBezout.toGCDDomain R
   exact exists_associated_pow_of_mul_eq_pow ((gcd_isUnit_iff _ _).mpr hab) h
 

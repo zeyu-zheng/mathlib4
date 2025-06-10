@@ -26,6 +26,7 @@ theorem summable_iff_summable_compl_and_tsum_mem (f : β → α) :
     Summable f ↔ Summable (toCompl ∘ f) ∧ ∑' i, toCompl (f i) ∈ Set.range toCompl :=
   (denseInducing_toCompl α).summable_iff_tsum_comp_mem_range f
 
+open Classical in
 /-- A function `f` is summable in a uniform additive group `α` if and only if the net of its partial
 sums is Cauchy and its sum in `Completion α` lies in the range of `toCompl : α →+ Completion α`.
 (The condition that the net of partial sums is Cauchy can be checked using
@@ -33,7 +34,6 @@ sums is Cauchy and its sum in `Completion α` lies in the range of `toCompl : α
 theorem summable_iff_cauchySeq_finset_and_tsum_mem (f : β → α) :
     Summable f ↔ CauchySeq (fun s : Finset β ↦ ∑ b in s, f b) ∧
       ∑' i, toCompl (f i) ∈ Set.range toCompl := by
-  classical
   constructor
   · rintro ⟨a, ha⟩
     exact ⟨ha.cauchySeq, ((summable_iff_summable_compl_and_tsum_mem f).mp ⟨a, ha⟩).2⟩

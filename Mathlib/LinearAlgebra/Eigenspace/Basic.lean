@@ -347,9 +347,9 @@ lemma injOn_genEigenspace [NoZeroSMulDivisors R M] (f : End R M) :
   apply hμ₂
   simpa only [hμ₁₂, disjoint_self] using f.disjoint_iSup_genEigenspace contra
 
+open Classical in
 theorem independent_genEigenspace [NoZeroSMulDivisors R M] (f : End R M) :
     CompleteLattice.Independent (fun μ ↦ ⨆ k, f.genEigenspace μ k) := by
-  classical
   suffices ∀ μ (s : Finset R), μ ∉ s → Disjoint (⨆ k, f.genEigenspace μ k)
       (s.sup fun μ ↦ ⨆ k, f.genEigenspace μ k) by
     simp_rw [CompleteLattice.independent_iff_supIndep_of_injOn f.injOn_genEigenspace,

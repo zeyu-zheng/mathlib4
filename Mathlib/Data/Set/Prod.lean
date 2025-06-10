@@ -779,8 +779,8 @@ theorem eval_image_pi_subset (hs : i ∈ s) : eval i '' s.pi t ⊆ t i :=
 theorem eval_image_univ_pi_subset : eval i '' pi univ t ⊆ t i :=
   eval_image_pi_subset (mem_univ i)
 
+open Classical in
 theorem subset_eval_image_pi (ht : (s.pi t).Nonempty) (i : ι) : t i ⊆ eval i '' s.pi t := by
-  classical
   obtain ⟨f, hf⟩ := ht
   refine fun y hy => ⟨update f i y, fun j hj => ?_, update_same _ _ _⟩
   obtain rfl | hji := eq_or_ne j i <;> simp [*, hf _ hj]
@@ -788,9 +788,9 @@ theorem subset_eval_image_pi (ht : (s.pi t).Nonempty) (i : ι) : t i ⊆ eval i 
 theorem eval_image_pi (hs : i ∈ s) (ht : (s.pi t).Nonempty) : eval i '' s.pi t = t i :=
   (eval_image_pi_subset hs).antisymm (subset_eval_image_pi ht i)
 
+open Classical in
 lemma eval_image_pi_of_not_mem [Decidable (s.pi t).Nonempty] (hi : i ∉ s) :
     eval i '' s.pi t = if (s.pi t).Nonempty then univ else ∅ := by
-  classical
   ext xᵢ
   simp only [eval, mem_image, mem_pi, Set.Nonempty, mem_ite_empty_right, mem_univ, and_true]
   constructor

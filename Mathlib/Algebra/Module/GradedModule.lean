@@ -202,6 +202,7 @@ def isModule [DecidableEq ιA] [DecidableEq ιM] [GradedRing 𝓐] : Module A (�
   { Module.compHom _ (DirectSum.decomposeRingEquiv 𝓐 : A ≃+* ⨁ i, 𝓐 i).toRingHom with
     smul := fun a b => DirectSum.decompose 𝓐 a • b }
 
+open Classical in
 /-- `⨁ i, 𝓜 i` and `M` are isomorphic as `A`-modules.
 "The internal version" and "the external version" are isomorphism as `A`-modules.
 -/
@@ -213,7 +214,6 @@ def linearEquiv [DecidableEq ιA] [DecidableEq ιM] [GradedRing 𝓐] [DirectSum
     (DirectSum.decomposeAddEquiv 𝓜).symm.toFun, (DirectSum.decomposeAddEquiv 𝓜).left_inv,
     (DirectSum.decomposeAddEquiv 𝓜).right_inv⟩
   intro x y
-  classical
   rw [AddHom.toFun_eq_coe, ← DirectSum.sum_support_decompose 𝓐 x, map_sum, Finset.sum_smul,
     AddEquiv.coe_toAddHom, map_sum, Finset.sum_smul]
   refine Finset.sum_congr rfl (fun i _hi => ?_)

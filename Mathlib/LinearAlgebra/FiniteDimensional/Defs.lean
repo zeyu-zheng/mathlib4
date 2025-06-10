@@ -576,10 +576,10 @@ theorem ker_comp_eq_of_commute_of_disjoint_ker [FiniteDimensional K V] {f g : V 
   intro x hx
   rw [← comp_apply, ← mul_eq_comp, h.eq, mul_apply, hx, _root_.map_zero]
 
+open Classical in
 theorem ker_noncommProd_eq_of_supIndep_ker [FiniteDimensional K V] {ι : Type*} {f : ι → V →ₗ[K] V}
     (s : Finset ι) (comm) (h : s.SupIndep fun i ↦ ker (f i)) :
     ker (s.noncommProd f comm) = ⨆ i ∈ s, ker (f i) := by
-  classical
   induction' s using Finset.induction_on with i s hi ih
   · set_option tactic.skipAssignedInstances false in
     simpa using LinearMap.ker_id

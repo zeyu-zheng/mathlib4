@@ -891,9 +891,9 @@ theorem Finite.finite_subsets {α : Type u} {a : Set α} (h : a.Finite) : { b | 
 protected theorem Finite.powerset {s : Set α} (h : s.Finite) : (𝒫 s).Finite :=
   h.finite_subsets
 
+open Classical in
 theorem exists_subset_image_finite_and {f : α → β} {s : Set α} {p : Set β → Prop} :
     (∃ t ⊆ f '' s, t.Finite ∧ p t) ↔ ∃ t ⊆ s, t.Finite ∧ p (f '' t) := by
-  classical
   simp_rw [@and_comm (_ ⊆ _), and_assoc, exists_finite_iff_finset, @and_comm (p _),
     Finset.subset_image_iff]
   aesop
@@ -901,13 +901,13 @@ theorem exists_subset_image_finite_and {f : α → β} {s : Set α} {p : Set β 
 section Pi
 variable {ι : Type*} [Finite ι] {κ : ι → Type*} {t : ∀ i, Set (κ i)}
 
+open Classical in
 /-- Finite product of finite sets is finite -/
 theorem Finite.pi (ht : ∀ i, (t i).Finite) : (pi univ t).Finite := by
   cases nonempty_fintype ι
   lift t to ∀ d, Finset (κ d) using ht
-  classical
-    rw [← Fintype.coe_piFinset]
-    apply Finset.finite_toSet
+  rw [← Fintype.coe_piFinset]
+  apply Finset.finite_toSet
 
 /-- Finite product of finite sets is finite. Note this is a variant of `Set.Finite.pi` without the
 extra `i ∈ univ` binder. -/
@@ -1492,10 +1492,10 @@ end Set
 
 namespace Finset
 
+open Classical in
 lemma exists_card_eq [Infinite α] : ∀ n : ℕ, ∃ s : Finset α, s.card = n
   | 0 => ⟨∅, card_empty⟩
   | n + 1 => by
-    classical
     obtain ⟨s, rfl⟩ := exists_card_eq n
     obtain ⟨a, ha⟩ := s.exists_not_mem
     exact ⟨insert a s, card_insert_of_not_mem ha⟩

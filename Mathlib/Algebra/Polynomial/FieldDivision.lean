@@ -325,9 +325,9 @@ instance instEuclideanDomain : EuclideanDomain R[X] :=
     remainder_lt := fun p q hq => remainder_lt_aux _ hq
     mul_left_not_lt := fun p q hq => not_lt_of_ge (degree_le_mul_left _ hq) }
 
+open Classical in
 theorem mod_eq_self_iff (hq0 : q ≠ 0) : p % q = p ↔ degree p < degree q :=
   ⟨fun h => h ▸ EuclideanDomain.mod_lt _ hq0, fun h => by
-    classical
     have : ¬degree (q * C (leadingCoeff q)⁻¹) ≤ degree p :=
       not_le_of_gt <| by rwa [degree_mul_leadingCoeff_inv q hq0]
     rw [mod_def, modByMonic, dif_pos (monic_mul_leadingCoeff_inv hq0)]
@@ -421,17 +421,17 @@ theorem isRoot_gcd_iff_isRoot_left_right [DecidableEq R] {f g : R[X]} {α : R} :
     (EuclideanDomain.gcd f g).IsRoot α ↔ f.IsRoot α ∧ g.IsRoot α :=
   root_gcd_iff_root_left_right
 
+open Classical in
 theorem isCoprime_map [Field k] (f : R →+* k) : IsCoprime (p.map f) (q.map f) ↔ IsCoprime p q := by
-  classical
   rw [← EuclideanDomain.gcd_isUnit_iff, ← EuclideanDomain.gcd_isUnit_iff, gcd_map, isUnit_map]
 
 theorem mem_roots_map [CommRing k] [IsDomain k] {f : R →+* k} {x : k} (hp : p ≠ 0) :
     x ∈ (p.map f).roots ↔ p.eval₂ f x = 0 := by
   rw [mem_roots (map_ne_zero hp), IsRoot, Polynomial.eval_map]
 
+open Classical in
 theorem rootSet_monomial [CommRing S] [IsDomain S] [Algebra R S] {n : ℕ} (hn : n ≠ 0) {a : R}
     (ha : a ≠ 0) : (monomial n a).rootSet S = {0} := by
-  classical
   rw [rootSet, aroots_monomial ha,
     Multiset.toFinset_nsmul _ _ hn, Multiset.toFinset_singleton, Finset.coe_singleton]
 
@@ -444,9 +444,9 @@ theorem rootSet_X_pow [CommRing S] [IsDomain S] [Algebra R S] {n : ℕ} (hn : n 
   rw [← one_mul (X ^ n : R[X]), ← C_1, rootSet_C_mul_X_pow hn]
   exact one_ne_zero
 
+open Classical in
 theorem rootSet_prod [CommRing S] [IsDomain S] [Algebra R S] {ι : Type*} (f : ι → R[X])
     (s : Finset ι) (h : s.prod f ≠ 0) : (s.prod f).rootSet S = ⋃ i ∈ s, (f i).rootSet S := by
-  classical
   simp only [rootSet, aroots, ← Finset.mem_coe]
   rw [Polynomial.map_prod, roots_prod, Finset.bind_toFinset, s.val_toFinset, Finset.coe_biUnion]
   rwa [← Polynomial.map_prod, Ne, map_eq_zero]
@@ -510,19 +510,19 @@ theorem coe_normUnit_of_ne_zero [DecidableEq R] (hp : p ≠ 0) :
 
 theorem normalize_monic [DecidableEq R] (h : Monic p) : normalize p = p := by simp [h]
 
+open Classical in
 theorem map_dvd_map' [Field k] (f : R →+* k) {x y : R[X]} : x.map f ∣ y.map f ↔ x ∣ y := by
   by_cases H : x = 0
   · rw [H, Polynomial.map_zero, zero_dvd_iff, zero_dvd_iff, map_eq_zero]
-  · classical
-    rw [← normalize_dvd_iff, ← @normalize_dvd_iff R[X], normalize_apply, normalize_apply,
+  · rw [← normalize_dvd_iff, ← @normalize_dvd_iff R[X], normalize_apply, normalize_apply,
       coe_normUnit_of_ne_zero H, coe_normUnit_of_ne_zero (mt (map_eq_zero f).1 H),
       leadingCoeff_map, ← map_inv₀ f, ← map_C, ← Polynomial.map_mul,
       map_dvd_map _ f.injective (monic_mul_leadingCoeff_inv H)]
 
 theorem degree_normalize [DecidableEq R] : degree (normalize p) = degree p := by simp
 
+open Classical in
 theorem prime_of_degree_eq_one (hp1 : degree p = 1) : Prime p := by
-  classical
   have : Prime (normalize p) :=
     Monic.prime_of_degree_eq_one (hp1 ▸ degree_normalize)
       (monic_normalize fun hp0 => absurd hp1 (hp0.symm ▸ by simp [degree_zero]))
@@ -570,12 +570,12 @@ theorem X_sub_C_dvd_derivative_of_X_sub_C_dvd_divByMonic {K : Type*} [Field K] (
   rw [← key, hu, ← mul_add (X - C a) u _]
   use (u + derivative ((X - C a) * u))
 
+open Classical in
 /-- If `f` is a polynomial over a field, and `a : K` satisfies `f' a ≠ 0`,
 then `f / (X - a)` is coprime with `X - a`.
 Note that we do not assume `f a = 0`, because `f / (X - a) = (f - f a) / (X - a)`. -/
 theorem isCoprime_of_is_root_of_eval_derivative_ne_zero {K : Type*} [Field K] (f : K[X]) (a : K)
     (hf' : f.derivative.eval a ≠ 0) : IsCoprime (X - C a : K[X]) (f /ₘ (X - C a)) := by
-  classical
   refine Or.resolve_left
       (EuclideanDomain.dvd_or_coprime (X - C a) (f /ₘ (X - C a))
         (irreducible_of_degree_eq_one (Polynomial.degree_X_sub_C a))) ?_

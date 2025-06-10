@@ -635,12 +635,12 @@ lemma injOn_weightSpace [NoZeroSMulDivisors R M] :
   contrapose! hχ₂
   simpa [hχ₁₂] using disjoint_weightSpace R L M hχ₂
 
+open Classical in
 /-- Lie module weight spaces are independent.
 
 See also `LieModule.independent_weightSpace'`. -/
 lemma independent_weightSpace [NoZeroSMulDivisors R M] :
     CompleteLattice.Independent fun (χ : L → R) ↦ weightSpace M χ := by
-  classical
   suffices ∀ χ (s : Finset (L → R)) (_ : χ ∉ s),
       Disjoint (weightSpace M χ) (s.sup fun (χ : L → R) ↦ weightSpace M χ) by
     simpa only [CompleteLattice.independent_iff_supIndep_of_injOn (injOn_weightSpace R L M),

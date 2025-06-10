@@ -33,6 +33,7 @@ section CofilteredLimit
 variable {J : Type v} [SmallCategory J] [IsCofiltered J] (F : J ⥤ TopCat.{max v u}) (C : Cone F)
   (hC : IsLimit C)
 
+open Classical in
 /-- Given a *compatible* collection of topological bases for the factors in a cofiltered limit
 which contain `Set.univ` and are closed under intersections, the induced *naive* collection
 of sets in the limit is, in fact, a topological basis.
@@ -43,7 +44,6 @@ theorem isTopologicalBasis_cofiltered_limit (T : ∀ j, Set (Set (F.obj j)))
     (compat : ∀ (i j : J) (f : i ⟶ j) (V : Set (F.obj j)) (_hV : V ∈ T j), F.map f ⁻¹' V ∈ T i) :
     IsTopologicalBasis
       {U : Set C.pt | ∃ (j : _) (V : Set (F.obj j)), V ∈ T j ∧ U = C.π.app j ⁻¹' V} := by
-  classical
   -- The limit cone for `F` whose topology is defined as an infimum.
   let D := limitConeInfi F
   -- The isomorphism between the cone point of `C` and the cone point of `D`.

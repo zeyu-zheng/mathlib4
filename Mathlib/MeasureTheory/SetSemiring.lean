@@ -69,28 +69,28 @@ noncomputable def diffFinset (hC : IsSetSemiring C) (hs : s ∈ C) (ht : t ∈ C
     Finset (Set α) :=
   (hC.diff_eq_sUnion' s hs t ht).choose \ {∅}
 
+open Classical in
 lemma empty_not_mem_diffFinset (hC : IsSetSemiring C) (hs : s ∈ C) (ht : t ∈ C) :
     ∅ ∉ hC.diffFinset hs ht := by
-  classical
   simp only [diffFinset, mem_sdiff, Finset.mem_singleton, eq_self_iff_true, not_true,
     and_false_iff, not_false_iff]
 
+open Classical in
 lemma diffFinset_subset (hC : IsSetSemiring C) (hs : s ∈ C) (ht : t ∈ C) :
     ↑(hC.diffFinset hs ht) ⊆ C := by
-  classical
   simp only [diffFinset, coe_sdiff, coe_singleton, diff_singleton_subset_iff]
   exact (hC.diff_eq_sUnion' s hs t ht).choose_spec.1.trans (Set.subset_insert _ _)
 
+open Classical in
 lemma pairwiseDisjoint_diffFinset (hC : IsSetSemiring C) (hs : s ∈ C) (ht : t ∈ C) :
     PairwiseDisjoint (hC.diffFinset hs ht : Set (Set α)) id := by
-  classical
   simp only [diffFinset, coe_sdiff, coe_singleton]
   exact Set.PairwiseDisjoint.subset (hC.diff_eq_sUnion' s hs t ht).choose_spec.2.1
       diff_subset
 
+open Classical in
 lemma sUnion_diffFinset (hC : IsSetSemiring C) (hs : s ∈ C) (ht : t ∈ C) :
     ⋃₀ hC.diffFinset hs ht = s \ t := by
-  classical
   rw [(hC.diff_eq_sUnion' s hs t ht).choose_spec.2.2]
   simp only [diffFinset, coe_sdiff, coe_singleton, diff_singleton_subset_iff]
   rw [sUnion_diff_singleton_empty]
@@ -132,13 +132,13 @@ section diffFinset₀
 
 variable {I : Finset (Set α)}
 
+open Classical in
 /-- In a semiring of sets `C`, for all set `s ∈ C` and finite set of sets `I ⊆ C`, there is a
 finite set of sets in `C` whose union is `s \ ⋃₀ I`.
 See `IsSetSemiring.diffFinset₀` for a definition that gives such a set. -/
 lemma exists_disjoint_finset_diff_eq (hC : IsSetSemiring C) (hs : s ∈ C) (hI : ↑I ⊆ C) :
     ∃ J : Finset (Set α), ↑J ⊆ C ∧ PairwiseDisjoint (J : Set (Set α)) id ∧
       s \ ⋃₀ I = ⋃₀ J := by
-  classical
   induction I using Finset.induction with
   | empty =>
     simp only [coe_empty, sUnion_empty, diff_empty, exists_prop]
@@ -206,28 +206,28 @@ open scoped Classical in
 noncomputable def diffFinset₀ (hC : IsSetSemiring C) (hs : s ∈ C) (hI : ↑I ⊆ C) : Finset (Set α) :=
   (hC.exists_disjoint_finset_diff_eq hs hI).choose \ {∅}
 
+open Classical in
 lemma empty_not_mem_diffFinset₀ (hC : IsSetSemiring C) (hs : s ∈ C) (hI : ↑I ⊆ C) :
     ∅ ∉ hC.diffFinset₀ hs hI := by
-  classical
   simp only [diffFinset₀, mem_sdiff, Finset.mem_singleton, eq_self_iff_true, not_true,
     and_false_iff, not_false_iff]
 
+open Classical in
 lemma diffFinset₀_subset (hC : IsSetSemiring C) (hs : s ∈ C) (hI : ↑I ⊆ C) :
     ↑(hC.diffFinset₀ hs hI) ⊆ C := by
-  classical
   simp only [diffFinset₀, coe_sdiff, coe_singleton, diff_singleton_subset_iff]
   exact (hC.exists_disjoint_finset_diff_eq hs hI).choose_spec.1.trans (Set.subset_insert _ _)
 
+open Classical in
 lemma pairwiseDisjoint_diffFinset₀ (hC : IsSetSemiring C) (hs : s ∈ C) (hI : ↑I ⊆ C) :
     PairwiseDisjoint (hC.diffFinset₀ hs hI : Set (Set α)) id := by
-  classical
   simp only [diffFinset₀, coe_sdiff, coe_singleton]
   exact Set.PairwiseDisjoint.subset
     (hC.exists_disjoint_finset_diff_eq hs hI).choose_spec.2.1 diff_subset
 
+open Classical in
 lemma diff_sUnion_eq_sUnion_diffFinset₀ (hC : IsSetSemiring C) (hs : s ∈ C) (hI : ↑I ⊆ C) :
     s \ ⋃₀ I = ⋃₀ hC.diffFinset₀ hs hI := by
-  classical
   rw [(hC.exists_disjoint_finset_diff_eq hs hI).choose_spec.2.2]
   simp only [diffFinset₀, coe_sdiff, coe_singleton, diff_singleton_subset_iff]
   rw [sUnion_diff_singleton_empty]
@@ -300,20 +300,20 @@ lemma isSetSemiring (hC : IsSetRing C) : IsSetSemiring C where
     · simp only [coe_singleton, pairwiseDisjoint_singleton]
     · simp only [coe_singleton, sUnion_singleton]
 
+open Classical in
 lemma biUnion_mem {ι : Type*} (hC : IsSetRing C) {s : ι → Set α}
     (S : Finset ι) (hs : ∀ n ∈ S, s n ∈ C) :
     ⋃ i ∈ S, s i ∈ C := by
-  classical
   induction' S using Finset.induction with i S _ h hs
   · simp [hC.empty_mem]
   · simp_rw [← Finset.mem_coe, Finset.coe_insert, Set.biUnion_insert]
     refine hC.union_mem (hs i (mem_insert_self i S)) ?_
     exact h (fun n hnS ↦ hs n (mem_insert_of_mem hnS))
 
+open Classical in
 lemma biInter_mem {ι : Type*} (hC : IsSetRing C) {s : ι → Set α}
     (S : Finset ι) (hS : S.Nonempty) (hs : ∀ n ∈ S, s n ∈ C) :
     ⋂ i ∈ S, s i ∈ C := by
-  classical
   induction' hS using Finset.Nonempty.cons_induction with _ i S hiS _ h hs
   · simpa using hs
   · simp_rw [← Finset.mem_coe, Finset.coe_cons, Set.biInter_insert]

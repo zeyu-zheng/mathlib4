@@ -141,10 +141,10 @@ def ofTensorProductEquivOfPiFintype :
 
 end DecidableEq
 
+open Classical in
 /-- If `M = R^ι`, `ofTensorProduct` is bijective. -/
 lemma ofTensorProduct_bijective_of_pi_of_fintype [Finite ι] :
     Function.Bijective (ofTensorProduct I (ι → R)) := by
-  classical
   cases nonempty_fintype ι
   exact EquivLike.bijective (ofTensorProductEquivOfPiFintype I ι)
 

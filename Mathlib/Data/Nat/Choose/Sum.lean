@@ -164,9 +164,9 @@ theorem sum_powerset_neg_one_pow_card {α : Type*} [DecidableEq α] {x : Finset 
   rw [sum_powerset_apply_card]
   simp only [nsmul_eq_mul', ← card_eq_zero, Int.alternating_sum_range_choose]
 
+open Classical in
 theorem sum_powerset_neg_one_pow_card_of_nonempty {α : Type*} {x : Finset α} (h0 : x.Nonempty) :
     (∑ m ∈ x.powerset, (-1 : ℤ) ^ m.card) = 0 := by
-  classical
     rw [sum_powerset_neg_one_pow_card, if_neg]
     rw [← Ne, ← nonempty_iff_ne_empty]
     apply h0

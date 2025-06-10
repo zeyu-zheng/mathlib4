@@ -279,10 +279,10 @@ theorem binaryCoproductIso_inr_comp_inv (X Y : Type u) :
 
 open Function (Injective)
 
+open Classical in
 theorem binaryCofan_isColimit_iff {X Y : Type u} (c : BinaryCofan X Y) :
     Nonempty (IsColimit c) ↔
       Injective c.inl ∧ Injective c.inr ∧ IsCompl (Set.range c.inl) (Set.range c.inr) := by
-  classical
     constructor
     · rintro ⟨h⟩
       rw [← show _ = c.inl from

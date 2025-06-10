@@ -46,6 +46,7 @@ theorem TopologicalSpace.Clopens.exists_prod_subset (W : Clopens (X × Y)) {a : 
 
 variable [CompactSpace X]
 
+open Classical in
 /-- Every clopen set in a product of two compact spaces
 is a union of finitely many clopen boxes. -/
 theorem TopologicalSpace.Clopens.exists_finset_eq_sup_prod (W : Clopens (X × Y)) :
@@ -53,7 +54,6 @@ theorem TopologicalSpace.Clopens.exists_finset_eq_sup_prod (W : Clopens (X × Y)
   choose! U hxU V hxV hUV using fun x ↦ W.exists_prod_subset (a := x)
   rcases W.2.1.isCompact.elim_nhds_subcover (fun x ↦ U x ×ˢ V x) (fun x hx ↦
     (U x ×ˢ V x).2.isOpen.mem_nhds ⟨hxU x hx, hxV x hx⟩) with ⟨I, hIW, hWI⟩
-  classical
   use I.image fun x ↦ (U x, V x)
   rw [Finset.sup_image]
   refine le_antisymm (fun x hx ↦ ?_) (Finset.sup_le fun x hx ↦ ?_)

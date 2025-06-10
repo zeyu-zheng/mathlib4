@@ -51,9 +51,9 @@ theorem mem_parallelepiped_iff (v : ι → E) (x : E) :
     x ∈ parallelepiped v ↔ ∃ t ∈ Icc (0 : ι → ℝ) 1, x = ∑ i, t i • v i := by
   simp [parallelepiped, eq_comm]
 
+open Classical in
 theorem parallelepiped_basis_eq (b : Basis ι ℝ E) :
     parallelepiped b = {x | ∀ i, b.repr x i ∈ Set.Icc 0 1} := by
-  classical
   ext x
   simp_rw [mem_parallelepiped_iff, mem_setOf_eq, b.ext_elem_iff, _root_.map_sum,
     _root_.map_smul, Finset.sum_apply', Basis.repr_self, Finsupp.smul_single, smul_eq_mul,

@@ -240,6 +240,7 @@ theorem iSup_lsingle_range : ⨆ a, LinearMap.range (lsingle a : M →ₗ[R] α 
   rw [← sum_single f]
   exact sum_mem fun a _ => Submodule.mem_iSup_of_mem a ⟨_, rfl⟩
 
+open Classical in
 theorem disjoint_lsingle_lsingle (s t : Set α) (hs : Disjoint s t) :
     Disjoint (⨆ a ∈ s, LinearMap.range (lsingle a : M →ₗ[R] α →₀ M))
       (⨆ a ∈ t, LinearMap.range (lsingle a : M →ₗ[R] α →₀ M)) := by
@@ -253,12 +254,11 @@ theorem disjoint_lsingle_lsingle (s t : Set α) (hs : Disjoint s t) :
   · apply disjoint_compl_right
   rw [disjoint_iff_inf_le]
   refine le_trans (le_iInf fun i => ?_) iInf_ker_lapply_le_bot
-  classical
-    by_cases his : i ∈ s
-    · by_cases hit : i ∈ t
-      · exact (hs.le_bot ⟨his, hit⟩).elim
-      exact inf_le_of_right_le (iInf_le_of_le i <| iInf_le _ hit)
-    exact inf_le_of_left_le (iInf_le_of_le i <| iInf_le _ his)
+  by_cases his : i ∈ s
+  · by_cases hit : i ∈ t
+    · exact (hs.le_bot ⟨his, hit⟩).elim
+    exact inf_le_of_right_le (iInf_le_of_le i <| iInf_le _ hit)
+  exact inf_le_of_left_le (iInf_le_of_le i <| iInf_le _ his)
 
 theorem span_single_image (s : Set M) (a : α) :
     Submodule.span R (single a '' s) = (Submodule.span R s).map (lsingle a : M →ₗ[R] α →₀ M) := by
@@ -266,11 +266,11 @@ theorem span_single_image (s : Set M) (a : α) :
 
 variable (M R)
 
+open Classical in
 /-- `Finsupp.supported M R s` is the `R`-submodule of all `p : α →₀ M` such that `p.support ⊆ s`. -/
 def supported (s : Set α) : Submodule R (α →₀ M) where
   carrier := { p | ↑p.support ⊆ s }
   add_mem' {p q} hp hq := by
-    classical
     refine Subset.trans (Subset.trans (Finset.coe_subset.2 support_add) ?_) (union_subset hp hq)
     rw [Finset.coe_union]
   zero_mem' := by
@@ -522,17 +522,17 @@ theorem lmapDomain_comp (f : α → α') (g : α' → α'') :
     lmapDomain M R (g ∘ f) = (lmapDomain M R g).comp (lmapDomain M R f) :=
   LinearMap.ext fun _ => mapDomain_comp
 
+open Classical in
 theorem supported_comap_lmapDomain (f : α → α') (s : Set α') :
     supported M R (f ⁻¹' s) ≤ (supported M R s).comap (lmapDomain M R f) := by
-  classical
   intro l (hl : (l.support : Set α) ⊆ f ⁻¹' s)
   show ↑(mapDomain f l).support ⊆ s
   rw [← Set.image_subset_iff, ← Finset.coe_image] at hl
   exact Set.Subset.trans mapDomain_support hl
 
+open Classical in
 theorem lmapDomain_supported (f : α → α') (s : Set α) :
     (supported M R s).map (lmapDomain M R f) = supported M R (f '' s) := by
-  classical
   cases isEmpty_or_nonempty α
   · simp [s.eq_empty_of_isEmpty]
   refine
@@ -736,10 +736,10 @@ theorem total_option (v : Option α → M) (f : Option α →₀ R) :
       f none • v none + Finsupp.total α M R (v ∘ Option.some) f.some := by
   rw [total_apply, sum_option_index_smul, total_apply]; simp
 
+open Classical in
 theorem total_total {α β : Type*} (A : α → M) (B : β → α →₀ R) (f : β →₀ R) :
     Finsupp.total α M R A (Finsupp.total β (α →₀ R) R B f) =
       Finsupp.total β M R (fun b => Finsupp.total α M R A (B b)) f := by
-  classical
   simp only [total_apply]
   apply induction_linear f
   · simp only [sum_zero_index]
@@ -781,9 +781,9 @@ theorem total_comapDomain (f : α → α') (l : α' →₀ R) (hf : Set.InjOn f 
       (l.support.preimage f hf).sum fun i => l (f i) • v i := by
   rw [Finsupp.total_apply]; rfl
 
+open Classical in
 theorem total_onFinset {s : Finset α} {f : α → R} (g : α → M) (hf : ∀ a, f a ≠ 0 → a ∈ s) :
     Finsupp.total α M R g (Finsupp.onFinset s f hf) = Finset.sum s fun x : α => f x • g x := by
-  classical
   simp only [Finsupp.total_apply, Finsupp.sum, Finsupp.onFinset_apply, Finsupp.support_onFinset]
   rw [Finset.sum_filter_of_ne]
   intro x _ h
@@ -1260,9 +1260,9 @@ def splittingOfFunOnFintypeSurjective [Finite α] (f : M →ₗ[R] α → R) (s 
   (Finsupp.lift _ _ _ fun x : α => (s (Finsupp.single x 1)).choose).comp
     (linearEquivFunOnFinite R R α).symm.toLinearMap
 
+open Classical in
 theorem splittingOfFunOnFintypeSurjective_splits [Finite α] (f : M →ₗ[R] α → R)
     (s : Surjective f) : f.comp (splittingOfFunOnFintypeSurjective f s) = LinearMap.id := by
-  classical
   -- Porting note: `ext` can't find appropriate theorems.
   refine pi_ext' fun x => ext_ring <| funext fun y => ?_
   dsimp [splittingOfFunOnFintypeSurjective]

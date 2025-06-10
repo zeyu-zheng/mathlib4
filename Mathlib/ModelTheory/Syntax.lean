@@ -830,11 +830,11 @@ theorem directed_distinctConstantsTheory :
     Directed (· ⊆ ·) (L.distinctConstantsTheory : Set α → L[[α]].Theory) :=
   Monotone.directed_le monotone_distinctConstantsTheory
 
+open Classical in
 theorem distinctConstantsTheory_eq_iUnion (s : Set α) :
     L.distinctConstantsTheory s =
       ⋃ t : Finset s,
         L.distinctConstantsTheory (t.map (Function.Embedding.subtype fun x => x ∈ s)) := by
-  classical
     simp only [distinctConstantsTheory]
     rw [← image_iUnion, ← iUnion_inter]
     refine congr(_ '' ($(?_) ∩ _))

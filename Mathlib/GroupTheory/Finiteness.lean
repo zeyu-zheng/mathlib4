@@ -116,10 +116,10 @@ instance (priority := 100) Monoid.fg_of_finite [Finite M] : Monoid.FG M := by
 
 end Monoid
 
+open Classical in
 @[to_additive]
 theorem Submonoid.FG.map {M' : Type*} [Monoid M'] {P : Submonoid M} (h : P.FG) (e : M →* M') :
     (P.map e).FG := by
-  classical
     obtain ⟨s, rfl⟩ := h
     exact ⟨s.image e, by rw [Finset.coe_image, MonoidHom.map_mclosure]⟩
 
@@ -140,10 +140,10 @@ theorem Monoid.fg_iff_submonoid_fg (N : Submonoid M) : Monoid.FG N ↔ N.FG := b
   conv_rhs => rw [← N.range_subtype, MonoidHom.mrange_eq_map]
   exact ⟨fun h => h.out.map N.subtype, fun h => ⟨h.map_injective N.subtype Subtype.coe_injective⟩⟩
 
+open Classical in
 @[to_additive]
 theorem Monoid.fg_of_surjective {M' : Type*} [Monoid M'] [Monoid.FG M] (f : M →* M')
     (hf : Function.Surjective f) : Monoid.FG M' := by
-  classical
     obtain ⟨s, hs⟩ := Monoid.fg_def.mp ‹_›
     use s.image f
     rwa [Finset.coe_image, ← MonoidHom.map_mclosure, hs, ← MonoidHom.mrange_eq_map,
@@ -325,10 +325,10 @@ theorem Group.rank_le [h : Group.FG G] {S : Finset G} (hS : Subgroup.closure (S 
 
 variable {G} {G' : Type*} [Group G']
 
+open Classical in
 @[to_additive]
 theorem Group.rank_le_of_surjective [Group.FG G] [Group.FG G'] (f : G →* G')
     (hf : Function.Surjective f) : Group.rank G' ≤ Group.rank G := by
-  classical
     obtain ⟨S, hS1, hS2⟩ := Group.rank_spec G
     trans (S.image f).card
     · apply Group.rank_le
@@ -352,9 +352,9 @@ namespace Subgroup
 theorem rank_congr {H K : Subgroup G} [Group.FG H] [Group.FG K] (h : H = K) :
     Group.rank H = Group.rank K := by subst h; rfl
 
+open Classical in
 @[to_additive]
 theorem rank_closure_finset_le_card (s : Finset G) : Group.rank (closure (s : Set G)) ≤ s.card := by
-  classical
   let t : Finset (closure (s : Set G)) := s.preimage Subtype.val Subtype.coe_injective.injOn
   have ht : closure (t : Set (closure (s : Set G))) = ⊤
   rw [Finset.coe_preimage]

@@ -623,10 +623,10 @@ def Reduced (w : Word G) : Prop :=
 
 variable {φ}
 
+open Classical in
 theorem Reduced.exists_normalWord_prod_eq (d : Transversal φ) {w : Word G} (hw : Reduced φ w) :
     ∃ w' : NormalWord d, w'.prod = ofCoprodI w.prod ∧
       w'.toList.map Sigma.fst = w.toList.map Sigma.fst := by
-  classical
   induction w using Word.consRecOn with
   | h_empty => exact ⟨empty, by simp, rfl⟩
   | h_cons i g w hIdx hg1 ih =>

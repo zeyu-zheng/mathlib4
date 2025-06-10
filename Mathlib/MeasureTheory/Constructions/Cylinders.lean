@@ -61,11 +61,11 @@ theorem squareCylinders_eq_iUnion_image (C : ∀ i, Set (Set (α i))) :
   simp only [squareCylinders, mem_iUnion, mem_image, mem_univ_pi, exists_prop, mem_setOf_eq,
     eq_comm (a := f)]
 
+open Classical in
 theorem isPiSystem_squareCylinders {C : ∀ i, Set (Set (α i))} (hC : ∀ i, IsPiSystem (C i))
     (hC_univ : ∀ i, univ ∈ C i) :
     IsPiSystem (squareCylinders C) := by
   rintro S₁ ⟨s₁, t₁, h₁, rfl⟩ S₂ ⟨s₂, t₂, h₂, rfl⟩ hst_nonempty
-  classical
   let t₁' := s₁.piecewise t₁ (fun i ↦ univ)
   let t₂' := s₂.piecewise t₂ (fun i ↦ univ)
   have h1 : ∀ i ∈ (s₁ : Set ι), t₁ i = t₁' i :=
@@ -105,6 +105,7 @@ theorem isPiSystem_squareCylinders {C : ∀ i, Set (Set (α i))} (hC : ∀ i, Is
         exact hC_univ i
   · rw [Finset.coe_union]
 
+open Classical in
 theorem comap_eval_le_generateFrom_squareCylinders_singleton
     (α : ι → Type*) [m : ∀ i, MeasurableSpace (α i)] (i : ι) :
     MeasurableSpace.comap (Function.eval i) (m i) ≤
@@ -115,7 +116,6 @@ theorem comap_eval_le_generateFrom_squareCylinders_singleton
   refine MeasurableSpace.generateFrom_mono fun S ↦ ?_
   simp only [mem_setOf_eq, mem_image, mem_univ_pi, forall_exists_index, and_imp]
   intro t ht h
-  classical
   refine ⟨fun j ↦ if hji : j = i then by convert t else univ, fun j ↦ ?_, ?_⟩
   · by_cases hji : j = i
     · simp only [hji, eq_self_iff_true, eq_mpr_eq_cast, dif_pos]
@@ -166,6 +166,7 @@ theorem cylinder_empty (s : Finset ι) : cylinder s (∅ : Set (∀ i : s, α i)
 theorem cylinder_univ (s : Finset ι) : cylinder s (univ : Set (∀ i : s, α i)) = univ := by
   rw [cylinder, preimage_univ]
 
+open Classical in
 @[simp]
 theorem cylinder_eq_empty_iff [h_nonempty : Nonempty (∀ i, α i)] (s : Finset ι)
     (S : Set (∀ i : s, α i)) :
@@ -175,7 +176,6 @@ theorem cylinder_eq_empty_iff [h_nonempty : Nonempty (∀ i, α i)] (s : Finset 
   rw [← Ne, ← nonempty_iff_ne_empty] at hS
   let f := hS.some
   have hf : f ∈ S := hS.choose_spec
-  classical
   let f' : ∀ i, α i := fun i ↦ if hi : i ∈ s then f ⟨i, hi⟩ else h_nonempty.some i
   have hf' : f' ∈ cylinder s S
   rw [mem_cylinder]
@@ -215,6 +215,7 @@ theorem diff_cylinder_same (s : Finset ι) (S T : Set (∀ i : s, α i)) :
     cylinder s S \ cylinder s T = cylinder s (S \ T) := by
   ext1 f; simp only [mem_diff, mem_cylinder]
 
+open Classical in
 theorem eq_of_cylinder_eq_of_subset [h_nonempty : Nonempty (∀ i, α i)] {I J : Finset ι}
     {S : Set (∀ i : I, α i)} {T : Set (∀ i : J, α i)} (h_eq : cylinder I S = cylinder J T)
     (hJI : J ⊆ I) :
@@ -223,7 +224,6 @@ theorem eq_of_cylinder_eq_of_subset [h_nonempty : Nonempty (∀ i, α i)] {I J :
   simp only [mem_cylinder] at h_eq
   ext1 f
   simp only [mem_preimage]
-  classical
   specialize h_eq fun i ↦ if hi : i ∈ I then f ⟨i, hi⟩ else h_nonempty.some i
   have h_mem : ∀ j : J, ↑j ∈ I := fun j ↦ hJI j.prop
   simp only [Finset.coe_mem, dite_true, h_mem] at h_eq
@@ -297,13 +297,13 @@ theorem cylinder_mem_measurableCylinders (s : Finset ι) (S : Set (∀ i : s, α
     cylinder s S ∈ measurableCylinders α := by
   rw [mem_measurableCylinders]; exact ⟨s, S, hS, rfl⟩
 
+open Classical in
 theorem inter_mem_measurableCylinders (hs : s ∈ measurableCylinders α)
     (ht : t ∈ measurableCylinders α) :
     s ∩ t ∈ measurableCylinders α := by
   rw [mem_measurableCylinders] at *
   obtain ⟨s₁, S₁, hS₁, rfl⟩ := hs
   obtain ⟨s₂, S₂, hS₂, rfl⟩ := ht
-  classical
   refine ⟨s₁ ∪ s₂,
     (fun f ↦ (fun i ↦ f ⟨i, Finset.mem_union_left s₂ i.prop⟩ : ∀ i : s₁, α i)) ⁻¹' S₁ ∩
       {f | (fun i ↦ f ⟨i, Finset.mem_union_right s₁ i.prop⟩ : ∀ i : s₂, α i) ∈ S₂}, ?_, ?_⟩

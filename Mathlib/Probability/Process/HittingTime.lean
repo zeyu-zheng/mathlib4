@@ -80,9 +80,9 @@ theorem hitting_le {m : ι} (ω : Ω) : hitting u s n m ω ≤ m := by
     exact (csInf_le (BddBelow.inter_of_left bddBelow_Icc) (Set.mem_inter hj₁ hj₂)).trans hj₁.2
   · exact le_rfl
 
+open Classical in
 theorem not_mem_of_lt_hitting {m k : ι} (hk₁ : k < hitting u s n m ω) (hk₂ : n ≤ k) :
     u k ω ∉ s := by
-  classical
   intro h
   have hexists : ∃ j ∈ Set.Icc n m, u j ω ∈ s := ⟨k, ⟨hk₂, le_trans hk₁.le <| hitting_le _⟩, h⟩
   refine not_le.2 hk₁ ?_

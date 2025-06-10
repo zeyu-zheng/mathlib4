@@ -225,10 +225,10 @@ theorem aestronglyMeasurable_exp_mul_add {X Y : Ω → ℝ}
   simp_rw [Pi.add_apply, mul_add, exp_add]
   exact AEStronglyMeasurable.mul h_int_X h_int_Y
 
+open Classical in
 theorem aestronglyMeasurable_exp_mul_sum {X : ι → Ω → ℝ} {s : Finset ι}
     (h_int : ∀ i ∈ s, AEStronglyMeasurable (fun ω => exp (t * X i ω)) μ) :
     AEStronglyMeasurable (fun ω => exp (t * (∑ i ∈ s, X i) ω)) μ := by
-  classical
   induction' s using Finset.induction_on with i s hi_notin_s h_rec h_int
   · simp only [Pi.zero_apply, sum_apply, sum_empty, mul_zero, exp_zero]
     exact aestronglyMeasurable_const
@@ -245,11 +245,11 @@ theorem IndepFun.integrable_exp_mul_add {X Y : Ω → ℝ} (h_indep : IndepFun X
   simp_rw [Pi.add_apply, mul_add, exp_add]
   exact (h_indep.exp_mul t t).integrable_mul h_int_X h_int_Y
 
+open Classical in
 theorem iIndepFun.integrable_exp_mul_sum [IsProbabilityMeasure μ] {X : ι → Ω → ℝ}
     (h_indep : iIndepFun (fun i => inferInstance) X μ) (h_meas : ∀ i, Measurable (X i))
     {s : Finset ι} (h_int : ∀ i ∈ s, Integrable (fun ω => exp (t * X i ω)) μ) :
     Integrable (fun ω => exp (t * (∑ i ∈ s, X i) ω)) μ := by
-  classical
   induction' s using Finset.induction_on with i s hi_notin_s h_rec h_int
   · simp only [Pi.zero_apply, sum_apply, sum_empty, mul_zero, exp_zero]
     exact integrable_const _
@@ -260,10 +260,10 @@ theorem iIndepFun.integrable_exp_mul_sum [IsProbabilityMeasure μ] {X : ι → �
     refine IndepFun.integrable_exp_mul_add ?_ (h_int i (mem_insert_self _ _)) h_rec
     exact (h_indep.indepFun_finset_sum_of_not_mem h_meas hi_notin_s).symm
 
+open Classical in
 theorem iIndepFun.mgf_sum [IsProbabilityMeasure μ] {X : ι → Ω → ℝ}
     (h_indep : iIndepFun (fun i => inferInstance) X μ) (h_meas : ∀ i, Measurable (X i))
     (s : Finset ι) : mgf (∑ i ∈ s, X i) μ t = ∏ i ∈ s, mgf (X i) μ t := by
-  classical
   induction' s using Finset.induction_on with i s hi_notin_s h_rec h_int
   · simp only [sum_empty, mgf_zero_fun, measure_univ, ENNReal.one_toReal, prod_empty]
   · have h_int' : ∀ i : ι, AEStronglyMeasurable (fun ω : Ω => exp (t * X i ω)) μ := fun i =>

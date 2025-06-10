@@ -190,6 +190,7 @@ theorem condexpL2_ae_eq_zero_of_ae_eq_zero (hs : MeasurableSet[m] s) (hμs : μ 
     simp
   · exact (Lp.stronglyMeasurable _).ennnorm
 
+open Classical in
 theorem lintegral_nnnorm_condexpL2_indicator_le_real (hs : MeasurableSet s) (hμs : μ s ≠ ∞)
     (ht : MeasurableSet[m] t) (hμt : μ t ≠ ∞) :
     ∫⁻ a in t, ‖(condexpL2 ℝ ℝ hm (indicatorConstLp 2 hs hμs 1) : α → ℝ) a‖₊ ∂μ ≤ μ (s ∩ t) := by
@@ -201,7 +202,6 @@ theorem lintegral_nnnorm_condexpL2_indicator_le_real (hs : MeasurableSet s) (hμ
     refine (@indicatorConstLp_coeFn _ _ _ 2 _ _ _ hs hμs (1 : ℝ)).mono fun x hx => ?_
     dsimp only
     rw [hx]
-    classical
     simp_rw [Set.indicator_apply]
     split_ifs <;> simp
   rw [h_eq, lintegral_indicator _ hs, lintegral_const, Measure.restrict_restrict hs]

@@ -165,9 +165,9 @@ theorem sum {ι : Type*} (s : Finset ι) (φ : ι → MvPolynomial σ R) (n : �
 theorem mul (hφ : IsHomogeneous φ m) (hψ : IsHomogeneous ψ n) : IsHomogeneous (φ * ψ) (m + n) :=
   homogeneousSubmodule_mul m n <| Submodule.mul_mem_mul hφ hψ
 
+open Classical in
 theorem prod {ι : Type*} (s : Finset ι) (φ : ι → MvPolynomial σ R) (n : ι → ℕ)
     (h : ∀ i ∈ s, IsHomogeneous (φ i) (n i)) : IsHomogeneous (∏ i ∈ s, φ i) (∑ i ∈ s, n i) := by
-  classical
   revert h
   refine Finset.induction_on s ?_ ?_
   · intro

@@ -1221,10 +1221,10 @@ instance [Preorder α] [Preorder β] [DenselyOrdered α] [DenselyOrdered β] : D
     · obtain ⟨c, ha, hb⟩ := exists_between h₂
       exact ⟨(_, c), Or.inr ⟨h₁, ha⟩, Or.inr ⟨le_rfl, hb⟩⟩⟩
 
+open Classical in
 instance [∀ i, Preorder (π i)] [∀ i, DenselyOrdered (π i)] :
     DenselyOrdered (∀ i, π i) :=
   ⟨fun a b ↦ by
-    classical
       simp_rw [Pi.lt_def]
       rintro ⟨hab, i, hi⟩
       obtain ⟨c, ha, hb⟩ := exists_between hi

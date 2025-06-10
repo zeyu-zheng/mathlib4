@@ -519,9 +519,9 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
     (HMul.hMul (β := MonoidAlgebra k G) f (single 1 r)) x = f x * r :=
   f.mul_single_apply_aux fun a => by rw [mul_one]
 
+open Classical in
 theorem mul_single_apply_of_not_exists_mul [Mul G] (r : k) {g g' : G} (x : MonoidAlgebra k G)
     (h : ¬∃ d, g' = d * g) : (x * single g r) g' = 0 := by
-  classical
     rw [mul_apply, Finsupp.sum_comm, Finsupp.sum_single_index]
     swap
     · simp_rw [Finsupp.sum, mul_zero, ite_self, Finset.sum_const_zero]
@@ -547,9 +547,9 @@ theorem single_one_mul_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
     (single (1 : G) r * f) x = r * f x :=
   f.single_mul_apply_aux fun a => by rw [one_mul]
 
+open Classical in
 theorem single_mul_apply_of_not_exists_mul [Mul G] (r : k) {g g' : G} (x : MonoidAlgebra k G)
     (h : ¬∃ d, g' = g * d) : (single g r * x) g' = 0 := by
-  classical
     rw [mul_apply, Finsupp.sum_single_index]
     swap
     · simp_rw [Finsupp.sum, zero_mul, ite_self, Finset.sum_const_zero]
@@ -582,19 +582,20 @@ section NonUnitalNonAssocAlgebra
 
 variable (k) [Semiring k] [DistribSMul R k] [Mul G]
 
+open Classical in
 instance isScalarTower_self [IsScalarTower R k k] :
     IsScalarTower R (MonoidAlgebra k G) (MonoidAlgebra k G) :=
   ⟨fun t a b => by
     -- Porting note: `ext` → `refine Finsupp.ext fun _ => ?_`
     refine Finsupp.ext fun m => ?_
     -- Porting note: `refine` & `rw` are required because `simp` behaves differently.
-    classical
-      simp only [smul_eq_mul, mul_apply]
-      rw [coe_smul]
-      refine Eq.trans (sum_smul_index' (g := a) (b := t) ?_) ?_ <;>
-        simp only [mul_apply, Finsupp.smul_sum, smul_ite, smul_mul_assoc,
-          zero_mul, ite_self, imp_true_iff, sum_zero, Pi.smul_apply, smul_zero]⟩
+    simp only [smul_eq_mul, mul_apply]
+    rw [coe_smul]
+    refine Eq.trans (sum_smul_index' (g := a) (b := t) ?_) ?_ <;>
+      simp only [mul_apply, Finsupp.smul_sum, smul_ite, smul_mul_assoc,
+        zero_mul, ite_self, imp_true_iff, sum_zero, Pi.smul_apply, smul_zero]⟩
 
+open Classical in
 /-- Note that if `k` is a `CommSemiring` then we have `SMulCommClass k k k` and so we can take
 `R = k` in the below. In other words, if the coefficients are commutative amongst themselves, they
 also commute with the algebra multiplication. -/
@@ -604,13 +605,12 @@ instance smulCommClass_self [SMulCommClass R k k] :
     -- Porting note: `ext` → `refine Finsupp.ext fun _ => ?_`
     refine Finsupp.ext fun m => ?_
     -- Porting note: `refine` & `rw` are required because `simp` behaves differently.
-    classical
-      simp only [smul_eq_mul, mul_apply]
-      rw [coe_smul]
-      refine Eq.symm (Eq.trans (congr_arg (sum a)
-        (funext₂ fun a₁ b₁ => sum_smul_index' (g := b) (b := t) ?_)) ?_) <;>
-      simp only [mul_apply, Finsupp.sum, Finset.smul_sum, smul_ite, mul_smul_comm,
-        imp_true_iff, ite_eq_right_iff, Pi.smul_apply, mul_zero, smul_zero]⟩
+    simp only [smul_eq_mul, mul_apply]
+    rw [coe_smul]
+    refine Eq.symm (Eq.trans (congr_arg (sum a)
+      (funext₂ fun a₁ b₁ => sum_smul_index' (g := b) (b := t) ?_)) ?_) <;>
+    simp only [mul_apply, Finsupp.sum, Finset.smul_sum, smul_ite, mul_smul_comm,
+      imp_true_iff, ite_eq_right_iff, Pi.smul_apply, mul_zero, smul_zero]⟩
 
 instance smulCommClass_symm_self [SMulCommClass k R k] :
     SMulCommClass (MonoidAlgebra k G) R (MonoidAlgebra k G) :=

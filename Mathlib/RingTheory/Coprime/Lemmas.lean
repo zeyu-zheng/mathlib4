@@ -55,8 +55,8 @@ theorem ne_zero_or_ne_zero_of_nat_coprime {A : Type u} [CommRing A] [Nontrivial 
   IsCoprime.ne_zero_or_ne_zero (R := A) <| by
     simpa only [map_natCast] using IsCoprime.map (Nat.Coprime.isCoprime h) (Int.castRingHom A)
 
+open Classical in
 theorem IsCoprime.prod_left : (∀ i ∈ t, IsCoprime (s i) x) → IsCoprime (∏ i ∈ t, s i) x := by
-  classical
   refine Finset.induction_on t (fun _ ↦ isCoprime_one_left) fun b t hbt ih H ↦ ?_
   rw [Finset.prod_insert hbt]
   rw [Finset.forall_mem_insert] at H
@@ -65,8 +65,8 @@ theorem IsCoprime.prod_left : (∀ i ∈ t, IsCoprime (s i) x) → IsCoprime (�
 theorem IsCoprime.prod_right : (∀ i ∈ t, IsCoprime x (s i)) → IsCoprime x (∏ i ∈ t, s i) := by
   simpa only [isCoprime_comm] using IsCoprime.prod_left (R := R)
 
+open Classical in
 theorem IsCoprime.prod_left_iff : IsCoprime (∏ i ∈ t, s i) x ↔ ∀ i ∈ t, IsCoprime (s i) x := by
-  classical
   refine Finset.induction_on t (iff_of_true isCoprime_one_left fun _ ↦ by simp) fun b t hbt ih ↦ ?_
   rw [Finset.prod_insert hbt, IsCoprime.mul_left_iff, ih, Finset.forall_mem_insert]
 
@@ -81,10 +81,10 @@ theorem IsCoprime.of_prod_right (H1 : IsCoprime x (∏ i ∈ t, s i)) (i : I) (h
     IsCoprime x (s i) :=
   IsCoprime.prod_right_iff.1 H1 i hit
 
+open Classical in
 -- Porting note: removed names of things due to linter, but they seem helpful
 theorem Finset.prod_dvd_of_coprime :
     (t : Set I).Pairwise (IsCoprime on s) → (∀ i ∈ t, s i ∣ z) → (∏ x ∈ t, s x) ∣ z := by
-  classical
   exact Finset.induction_on t (fun _ _ ↦ one_dvd z)
     (by
       intro a r har ih Hs Hs1
@@ -212,8 +212,8 @@ section RelPrime
 
 variable {α I} [CommMonoid α] [DecompositionMonoid α] {x y z : α} {s : I → α} {t : Finset I}
 
+open Classical in
 theorem IsRelPrime.prod_left : (∀ i ∈ t, IsRelPrime (s i) x) → IsRelPrime (∏ i ∈ t, s i) x := by
-  classical
   refine Finset.induction_on t (fun _ ↦ isRelPrime_one_left) fun b t hbt ih H ↦ ?_
   rw [Finset.prod_insert hbt]
   rw [Finset.forall_mem_insert] at H
@@ -222,8 +222,8 @@ theorem IsRelPrime.prod_left : (∀ i ∈ t, IsRelPrime (s i) x) → IsRelPrime 
 theorem IsRelPrime.prod_right : (∀ i ∈ t, IsRelPrime x (s i)) → IsRelPrime x (∏ i ∈ t, s i) := by
   simpa only [isRelPrime_comm] using IsRelPrime.prod_left (α := α)
 
+open Classical in
 theorem IsRelPrime.prod_left_iff : IsRelPrime (∏ i ∈ t, s i) x ↔ ∀ i ∈ t, IsRelPrime (s i) x := by
-  classical
   refine Finset.induction_on t (iff_of_true isRelPrime_one_left fun _ ↦ by simp) fun b t hbt ih ↦ ?_
   rw [Finset.prod_insert hbt, IsRelPrime.mul_left_iff, ih, Finset.forall_mem_insert]
 
@@ -238,9 +238,9 @@ theorem IsRelPrime.of_prod_right (H1 : IsRelPrime x (∏ i ∈ t, s i)) (i : I) 
     IsRelPrime x (s i) :=
   IsRelPrime.prod_right_iff.1 H1 i hit
 
+open Classical in
 theorem Finset.prod_dvd_of_isRelPrime :
     (t : Set I).Pairwise (IsRelPrime on s) → (∀ i ∈ t, s i ∣ z) → (∏ x ∈ t, s x) ∣ z := by
-  classical
   exact Finset.induction_on t (fun _ _ ↦ one_dvd z)
     (by
       intro a r har ih Hs Hs1

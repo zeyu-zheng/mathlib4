@@ -376,18 +376,18 @@ theorem inf_arrow_factors_left {B : C} (X Y : Subobject B) : X.Factors (X ⊓ Y)
 theorem inf_arrow_factors_right {B : C} (X Y : Subobject B) : Y.Factors (X ⊓ Y).arrow :=
   (factors_iff _ _).mpr ⟨ofLE (X ⊓ Y) Y (inf_le_right X Y), by simp⟩
 
+open Classical in
 @[simp]
 theorem finset_inf_factors {I : Type*} {A B : C} {s : Finset I} {P : I → Subobject B} (f : A ⟶ B) :
     (s.inf P).Factors f ↔ ∀ i ∈ s, (P i).Factors f := by
-  classical
   induction' s using Finset.induction_on with _ _ _ ih
   · simp [top_factors]
   · simp [ih]
 
+open Classical in
 -- `i` is explicit here because often we'd like to defer a proof of `m`
 theorem finset_inf_arrow_factors {I : Type*} {B : C} (s : Finset I) (P : I → Subobject B) (i : I)
     (m : i ∈ s) : (P i).Factors (s.inf P).arrow := by
-  classical
   revert i m
   induction' s using Finset.induction_on with _ _ _ ih
   · rintro _ ⟨⟩
@@ -469,9 +469,9 @@ theorem sup_factors_of_factors_right {A B : C} {X Y : Subobject B} {f : A ⟶ B}
 
 variable [HasInitial C] [InitialMonoClass C]
 
+open Classical in
 theorem finset_sup_factors {I : Type*} {A B : C} {s : Finset I} {P : I → Subobject B} {f : A ⟶ B}
     (h : ∃ i ∈ s, (P i).Factors f) : (s.sup P).Factors f := by
-  classical
   revert h
   induction' s using Finset.induction_on with _ _ _ ih
   · rintro ⟨_, ⟨⟨⟩, _⟩⟩

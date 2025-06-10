@@ -200,11 +200,11 @@ theorem NoetherianSpace.finite_irreducibleComponents [NoetherianSpace α] :
   rcases isIrreducible_iff_sUnion_closed.1 hs.1 S hSc (hSU ▸ Set.subset_univ _) with ⟨t, htS, ht⟩
   rwa [ht.antisymm (hs.2 (hSi _ htS) ht)]
 
+open Classical in
 /-- [Stacks: Lemma 0052 (3)](https://stacks.math.columbia.edu/tag/0052) -/
 theorem NoetherianSpace.exists_open_ne_empty_le_irreducibleComponent [NoetherianSpace α]
     (Z : Set α) (H : Z ∈ irreducibleComponents α) :
     ∃ o : Set α, IsOpen o ∧ o ≠ ∅ ∧ o ≤ Z := by
-  classical
 
   let ι : Set (Set α) := irreducibleComponents α \ {Z}
   have hι : ι.Finite := NoetherianSpace.finite_irreducibleComponents.subset Set.diff_subset

@@ -143,12 +143,12 @@ theorem filter_product_right (q : β → Prop) [DecidablePred q] :
     ((s ×ˢ t).filter fun x : α × β => q x.2) = s ×ˢ t.filter q := by
   simpa using filter_product (fun _ : α => true) q
 
+open Classical in
 theorem filter_product_card (s : Finset α) (t : Finset β) (p : α → Prop) (q : β → Prop)
     [DecidablePred p] [DecidablePred q] :
     ((s ×ˢ t).filter fun x : α × β => (p x.1) = (q x.2)).card =
       (s.filter p).card * (t.filter q).card +
         (s.filter (¬ p ·)).card * (t.filter (¬ q ·)).card := by
-  classical
   rw [← card_product, ← card_product, ← filter_product, ← filter_product, ← card_union_of_disjoint]
   · apply congr_arg
     ext ⟨a, b⟩

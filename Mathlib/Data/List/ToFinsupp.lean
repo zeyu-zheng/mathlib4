@@ -114,11 +114,11 @@ theorem toFinsupp_append {R : Type*} [AddZeroClass R] (l₁ l₂ : List R)
     rw [getD_append_right _ _ _ _ h, Nat.add_sub_cancel_left, getD_eq_default _ _ h, zero_add]
     exact Eq.symm (Finsupp.embDomain_apply _ _ _)
 
+open Classical in
 theorem toFinsupp_cons_eq_single_add_embDomain {R : Type*} [AddZeroClass R] (x : R) (xs : List R)
     [DecidablePred (getD (x::xs) · 0 ≠ 0)] [DecidablePred (getD xs · 0 ≠ 0)] :
     toFinsupp (x::xs) =
       Finsupp.single 0 x + (toFinsupp xs).embDomain ⟨Nat.succ, Nat.succ_injective⟩ := by
-  classical
     convert toFinsupp_append [x] xs using 3
     · exact (toFinsupp_singleton x).symm
     · ext n

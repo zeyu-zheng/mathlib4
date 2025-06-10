@@ -835,12 +835,12 @@ variable {ι₁ : Type*} [Finite ι]
 variable {R' : Type*} {N₁ N₂ : Type*} [CommSemiring R'] [AddCommMonoid N₁] [AddCommMonoid N₂]
 variable [Module R' N₁] [Module R' N₂]
 
+open Classical in
 /-- Two alternating maps indexed by a `Fintype` are equal if they are equal when all arguments
 are distinct basis vectors. -/
 theorem Basis.ext_alternating {f g : N₁ [⋀^ι]→ₗ[R'] N₂} (e : Basis ι₁ R' N₁)
     (h : ∀ v : ι → ι₁, Function.Injective v → (f fun i => e (v i)) = g fun i => e (v i)) :
     f = g := by
-  classical
     refine AlternatingMap.coe_multilinearMap_injective (Basis.ext_multilinear e fun v => ?_)
     by_cases hi : Function.Injective v
     · exact h v hi

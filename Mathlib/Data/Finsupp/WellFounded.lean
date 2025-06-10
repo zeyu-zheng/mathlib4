@@ -30,15 +30,15 @@ namespace Finsupp
 
 variable [Zero N] {r : α → α → Prop} {s : N → N → Prop}
 
+open Classical in
 /-- Transferred from `DFinsupp.Lex.acc`. See the top of that file for an explanation for the
   appearance of the relation `rᶜ ⊓ (≠)`. -/
 theorem Lex.acc (hbot : ∀ ⦃n⦄, ¬s n 0) (hs : WellFounded s) (x : α →₀ N)
     (h : ∀ a ∈ x.support, Acc (rᶜ ⊓ (· ≠ ·)) a) :
     Acc (Finsupp.Lex r s) x := by
   rw [lex_eq_invImage_dfinsupp_lex]
-  classical
-    refine InvImage.accessible toDFinsupp (DFinsupp.Lex.acc (fun _ => hbot) (fun _ => hs) _ ?_)
-    simpa only [toDFinsupp_support] using h
+  refine InvImage.accessible toDFinsupp (DFinsupp.Lex.acc (fun _ => hbot) (fun _ => hs) _ ?_)
+  simpa only [toDFinsupp_support] using h
 
 theorem Lex.wellFounded (hbot : ∀ ⦃n⦄, ¬s n 0) (hs : WellFounded s)
     (hr : WellFounded <| rᶜ ⊓ (· ≠ ·)) : WellFounded (Finsupp.Lex r s) :=

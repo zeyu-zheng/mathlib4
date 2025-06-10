@@ -68,9 +68,9 @@ theorem interedges_mono (hs : s₂ ⊆ s₁) (ht : t₂ ⊆ t₁) : interedges r
 
 variable (r)
 
+open Classical in
 theorem card_interedges_add_card_interedges_compl (s : Finset α) (t : Finset β) :
     (interedges r s t).card + (interedges (fun x y ↦ ¬r x y) s t).card = s.card * t.card := by
-  classical
   rw [← card_product, interedges, interedges, ← card_union_of_disjoint, filter_union_filter_neg_eq]
   exact disjoint_filter.2 fun _ _ ↦ Classical.not_not.2
 
@@ -141,16 +141,16 @@ theorem edgeDensity_empty_left (t : Finset β) : edgeDensity r ∅ t = 0 := by
 theorem edgeDensity_empty_right (s : Finset α) : edgeDensity r s ∅ = 0 := by
   rw [edgeDensity, Finset.card_empty, Nat.cast_zero, mul_zero, div_zero]
 
+open Classical in
 theorem card_interedges_finpartition_left [DecidableEq α] (P : Finpartition s) (t : Finset β) :
     (interedges r s t).card = ∑ a ∈ P.parts, (interedges r a t).card := by
-  classical
   simp_rw [← P.biUnion_parts, interedges_biUnion_left, id]
   rw [card_biUnion]
   exact fun x hx y hy h ↦ interedges_disjoint_left r (P.disjoint hx hy h) _
 
+open Classical in
 theorem card_interedges_finpartition_right [DecidableEq β] (s : Finset α) (P : Finpartition t) :
     (interedges r s t).card = ∑ b ∈ P.parts, (interedges r s b).card := by
-  classical
   simp_rw [← P.biUnion_parts, interedges_biUnion_right, id]
   rw [card_biUnion]
   exact fun x hx y hy h ↦ interedges_disjoint_right r _ (P.disjoint hx hy h)

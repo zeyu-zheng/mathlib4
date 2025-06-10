@@ -175,8 +175,8 @@ theorem sameCycle_extendDomain {p : β → Prop} [DecidablePred p] {f : α ≃ S
 
 alias ⟨_, SameCycle.extendDomain⟩ := sameCycle_extendDomain
 
+open Classical in
 theorem SameCycle.exists_pow_eq' [Finite α] : SameCycle f x y → ∃ i < orderOf f, (f ^ i) x = y := by
-  classical
     rintro ⟨k, rfl⟩
     use (k % orderOf f).natAbs
     have h₀ := Int.natCast_pos.mpr (orderOf_pos f)
@@ -186,9 +186,9 @@ theorem SameCycle.exists_pow_eq' [Finite α] : SameCycle f x y → ∃ i < order
     rw [← Int.ofNat_lt, Int.natAbs_of_nonneg h₁]
     exact Int.emod_lt_of_pos _ h₀
 
+open Classical in
 theorem SameCycle.exists_pow_eq'' [Finite α] (h : SameCycle f x y) :
     ∃ i : ℕ, 0 < i ∧ i ≤ orderOf f ∧ (f ^ i) x = y := by
-  classical
     obtain ⟨_ | i, hi, rfl⟩ := h.exists_pow_eq'
     · refine ⟨orderOf f, orderOf_pos f, le_rfl, ?_⟩
       rw [pow_orderOf_eq_one, pow_zero]
@@ -541,9 +541,9 @@ theorem IsCycle.support_pow_of_pos_of_lt_orderOf (hf : IsCycle f) {n : ℕ} (npo
     (hn : n < orderOf f) : (f ^ n).support = f.support :=
   hf.support_pow_eq_iff.2 <| Nat.not_dvd_of_pos_of_lt npos hn
 
+open Classical in
 theorem IsCycle.pow_iff [Finite β] {f : Perm β} (hf : IsCycle f) {n : ℕ} :
     IsCycle (f ^ n) ↔ n.Coprime (orderOf f) := by
-  classical
     cases nonempty_fintype β
     constructor
     · intro h
@@ -566,10 +566,10 @@ theorem IsCycle.pow_iff [Finite β] {f : Perm β} (hf : IsCycle f) {n : ℕ} :
       rw [hm]
       exact support_pow_le _ n hx
 
+open Classical in
 -- TODO: Define a `Set`-valued support to get rid of the `Finite β` assumption
 theorem IsCycle.pow_eq_one_iff [Finite β] {f : Perm β} (hf : IsCycle f) {n : ℕ} :
     f ^ n = 1 ↔ ∃ x, f x ≠ x ∧ (f ^ n) x = x := by
-  classical
     cases nonempty_fintype β
     constructor
     · intro h
@@ -595,10 +595,10 @@ theorem IsCycle.pow_eq_one_iff'' [Finite β] {f : Perm β} (hf : IsCycle f) {n :
     let ⟨_, hx, _⟩ := id hf
     (hf.pow_eq_one_iff' hx).2 (h _ hx)⟩
 
+open Classical in
 -- TODO: Define a `Set`-valued support to get rid of the `Finite β` assumption
 theorem IsCycle.pow_eq_pow_iff [Finite β] {f : Perm β} (hf : IsCycle f) {a b : ℕ} :
     f ^ a = f ^ b ↔ ∃ x, f x ≠ x ∧ (f ^ a) x = (f ^ b) x := by
-  classical
     cases nonempty_fintype β
     constructor
     · intro h
@@ -619,9 +619,9 @@ theorem IsCycle.pow_eq_pow_iff [Finite β] {f : Perm β} (hf : IsCycle f) {a b :
         rw [not_mem_support, h, Function.Injective.eq_iff (f ^ a).injective] at hfa
         contradiction
 
+open Classical in
 theorem IsCycle.isCycle_pow_pos_of_lt_prime_order [Finite β] {f : Perm β} (hf : IsCycle f)
     (hf' : (orderOf f).Prime) (n : ℕ) (hn : 0 < n) (hn' : n < orderOf f) : IsCycle (f ^ n) := by
-  classical
     cases nonempty_fintype β
     have : n.Coprime (orderOf f)
     refine Nat.Coprime.symm ?_
@@ -771,14 +771,14 @@ protected theorem IsCycleOn.subtypePerm (hf : f.IsCycleOn s) :
   rw [eq_comm, Set.eq_univ_iff_forall]
   exact fun x => ne_of_apply_ne ((↑) : s → α) (hf.apply_ne hs x.2)
 
+open Classical in
 -- TODO: Theory of order of an element under an action
 theorem IsCycleOn.pow_apply_eq {s : Finset α} (hf : f.IsCycleOn s) (ha : a ∈ s) {n : ℕ} :
     (f ^ n) a = a ↔ s.card ∣ n := by
   obtain rfl | hs := Finset.eq_singleton_or_nontrivial ha
   · rw [coe_singleton, isCycleOn_singleton] at hf
     simpa using IsFixedPt.iterate hf n
-  classical
-    have h : ∀ x ∈ s.attach, ¬f ↑x = ↑x := fun x _ => hf.apply_ne hs x.2
+  · have h : ∀ x ∈ s.attach, ¬f ↑x = ↑x := fun x _ => hf.apply_ne hs x.2
     have := (hf.isCycle_subtypePerm hs).orderOf
     simp only [coe_sort_coe, support_subtype_perm, ne_eq, decide_not, Bool.not_eq_true',
       decide_eq_false_iff_not, mem_attach, forall_true_left, Subtype.forall, filter_true_of_mem h,
@@ -812,9 +812,9 @@ theorem IsCycleOn.pow_card_apply {s : Finset α} (hf : f.IsCycleOn s) (ha : a �
     (f ^ s.card) a = a :=
   (hf.pow_apply_eq ha).2 dvd_rfl
 
+open Classical in
 theorem IsCycleOn.exists_pow_eq {s : Finset α} (hf : f.IsCycleOn s) (ha : a ∈ s) (hb : b ∈ s) :
     ∃ n < s.card, (f ^ n) a = b := by
-  classical
     obtain ⟨n, rfl⟩ := hf.2 ha hb
     obtain ⟨k, hk⟩ := (Int.mod_modEq n s.card).symm.dvd
     refine ⟨n.natMod s.card, Int.natMod_lt (Nonempty.card_pos ⟨a, ha⟩).ne', ?_⟩
@@ -899,9 +899,9 @@ namespace Set
 
 variable {f : Perm α} {s : Set α}
 
+open Classical in
 theorem Countable.exists_cycleOn (hs : s.Countable) :
     ∃ f : Perm α, f.IsCycleOn s ∧ { x | f x ≠ x } ⊆ s := by
-  classical
   obtain hs' | hs' := s.finite_or_infinite
   · refine ⟨hs'.toFinset.toList.formPerm, ?_, fun x hx => by
       simpa using List.mem_of_formPerm_apply_ne hx⟩
@@ -933,6 +933,7 @@ namespace Finset
 
 variable {f : Perm α} {s : Finset α}
 
+open Classical in
 theorem product_self_eq_disjiUnion_perm_aux (hf : f.IsCycleOn s) :
     (range s.card : Set ℕ).PairwiseDisjoint fun k =>
       s.map ⟨fun i => (i, (f ^ k) i), fun i j => congr_arg Prod.fst⟩ := by
@@ -940,8 +941,7 @@ theorem product_self_eq_disjiUnion_perm_aux (hf : f.IsCycleOn s) :
   · refine Set.Subsingleton.pairwise ?_ _
     simp_rw [Set.Subsingleton, mem_coe, ← card_le_one] at hs ⊢
     rwa [card_range]
-  classical
-    rintro m hm n hn hmn
+  · rintro m hm n hn hmn
     simp only [disjoint_left, Function.onFun, mem_map, Function.Embedding.coeFn_mk, exists_prop,
       not_exists, not_and, forall_exists_index, and_imp, Prod.forall, Prod.mk.inj_iff]
     rintro _ _ _ - rfl rfl a ha rfl h

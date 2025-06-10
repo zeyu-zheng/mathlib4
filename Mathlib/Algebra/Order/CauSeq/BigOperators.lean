@@ -139,9 +139,9 @@ theorem _root_.cauchy_product (ha : IsCauSeq abs fun m ↦ ∑ n ∈ range m, ab
 
 variable [Archimedean α]
 
+open Classical in
 lemma of_decreasing_bounded (f : ℕ → α) {a : α} {m : ℕ} (ham : ∀ n ≥ m, |f n| ≤ a)
     (hnm : ∀ n ≥ m, f n.succ ≤ f n) : IsCauSeq abs f := fun ε ε0 ↦ by
-  classical
   let ⟨k, hk⟩ := Archimedean.arch a ε0
   have h : ∃ l, ∀ n ≥ m, a - l • ε < f n :=
     ⟨k + k + 1, fun n hnm ↦

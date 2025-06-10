@@ -418,6 +418,7 @@ For a matrix over a field, the norm defined in this section agrees with the oper
 section
 variable [NontriviallyNormedField α] [NormedAlgebra ℝ α]
 
+open Classical in
 lemma linfty_opNNNorm_eq_opNNNorm (A : Matrix m n α) :
     ‖A‖₊ = ‖ContinuousLinearMap.mk (Matrix.mulVecLin A)‖₊ := by
   rw [ContinuousLinearMap.opNNNorm_eq_of_bounds _ (linfty_opNNNorm_mulVec _) fun N hN => ?_]
@@ -425,7 +426,6 @@ lemma linfty_opNNNorm_eq_opNNNorm (A : Matrix m n α) :
   refine Finset.sup_le fun i _ => ?_
   cases isEmpty_or_nonempty n
   · simp
-  classical
   let x : n → α := fun j => unitOf (A i j)
   have hxn : ‖x‖₊ = 1
   simp_rw [x, Pi.nnnorm_def, norm_unitOf, Finset.sup_const Finset.univ_nonempty]

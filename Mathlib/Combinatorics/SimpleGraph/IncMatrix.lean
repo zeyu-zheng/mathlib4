@@ -112,16 +112,16 @@ theorem sum_incMatrix_apply [Fintype (neighborSet G a)] :
     ∑ e, G.incMatrix R a e = G.degree a := by
   classical simp [incMatrix_apply', sum_boole, Set.filter_mem_univ_eq_toFinset]
 
+open Classical in
 theorem incMatrix_mul_transpose_diag [Fintype (neighborSet G a)] :
     (G.incMatrix R * (G.incMatrix R)ᵀ) a a = G.degree a := by
-  classical
   rw [← sum_incMatrix_apply]
   simp only [mul_apply, incMatrix_apply', transpose_apply, mul_ite, mul_one, mul_zero]
   simp_all only [ite_true, sum_boole]
 
+open Classical in
 theorem sum_incMatrix_apply_of_mem_edgeSet [Fintype α] :
     e ∈ G.edgeSet → ∑ a, G.incMatrix R a e = 2 := by
-  classical
     refine e.ind ?_
     intro a b h
     rw [mem_edgeSet] at h
@@ -135,9 +135,9 @@ theorem sum_incMatrix_apply_of_not_mem_edgeSet [Fintype α] (h : e ∉ G.edgeSet
     ∑ a, G.incMatrix R a e = 0 :=
   sum_eq_zero fun _ _ => G.incMatrix_of_not_mem_incidenceSet fun he => h he.1
 
+open Classical in
 theorem incMatrix_transpose_mul_diag [Fintype α] [Decidable (e ∈ G.edgeSet)] :
     ((G.incMatrix R)ᵀ * G.incMatrix R) e e = if e ∈ G.edgeSet then 2 else 0 := by
-  classical
     simp only [Matrix.mul_apply, incMatrix_apply', transpose_apply, ite_zero_mul_ite_zero, one_mul,
       sum_boole, and_self_iff]
     split_ifs with h
@@ -161,9 +161,9 @@ section Semiring
 
 variable [Fintype (Sym2 α)] [Semiring R] {a b : α} {e : Sym2 α}
 
+open Classical in
 theorem incMatrix_mul_transpose_apply_of_adj (h : G.Adj a b) :
     (G.incMatrix R * (G.incMatrix R)ᵀ) a b = (1 : R) := by
-  classical
     simp_rw [Matrix.mul_apply, Matrix.transpose_apply, incMatrix_apply_mul_incMatrix_apply,
       Set.indicator_apply, Pi.one_apply, sum_boole]
     convert @Nat.cast_one R _

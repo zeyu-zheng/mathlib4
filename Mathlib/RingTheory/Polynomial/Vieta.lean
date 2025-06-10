@@ -34,13 +34,13 @@ section Semiring
 
 variable {R : Type*} [CommSemiring R]
 
+open Classical in
 /-- A sum version of **Vieta's formula** for `Multiset`: the product of the linear terms `X + λ`
 where `λ` runs through a multiset `s` is equal to a linear combination of the symmetric functions
 `esymm s` of the `λ`'s . -/
 theorem prod_X_add_C_eq_sum_esymm (s : Multiset R) :
     (s.map fun r => X + C r).prod =
       ∑ j ∈ Finset.range (Multiset.card s + 1), (C (s.esymm j) * X ^ (Multiset.card s - j)) := by
-  classical
     rw [prod_map_add, antidiagonal_eq_map_powerset, map_map, ← bind_powerset_len,
       map_bind, sum_bind, Finset.sum_eq_multiset_sum, Finset.range_val, map_congr (Eq.refl _)]
     intro _ _

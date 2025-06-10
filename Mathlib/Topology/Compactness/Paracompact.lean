@@ -186,6 +186,7 @@ The formalization is based on two [ncatlab](https://ncatlab.org/) proofs:
 See also `refinement_of_locallyCompact_sigmaCompact_of_nhds_basis` for a version of this lemma
 dealing with a covering of the whole space.
 
+open Classical in
 In most cases (namely, if `B c r ∪ B c r'` is again a set of the form `B c r''`) it is possible
 to choose `α = X`. This fact is not yet formalized in `mathlib`. -/
 theorem refinement_of_locallyCompact_sigmaCompact_of_nhds_basis_set [WeaklyLocallyCompactSpace X]
@@ -194,7 +195,6 @@ theorem refinement_of_locallyCompact_sigmaCompact_of_nhds_basis_set [WeaklyLocal
     ∃ (α : Type v) (c : α → X) (r : ∀ a, ι (c a)),
       (∀ a, c a ∈ s ∧ p (c a) (r a)) ∧
         (s ⊆ ⋃ a, B (c a) (r a)) ∧ LocallyFinite fun a ↦ B (c a) (r a) := by
-  classical
     -- For technical reasons we prepend two empty sets to the sequence `CompactExhaustion.choice X`
     set K' : CompactExhaustion X := CompactExhaustion.choice X
     set K : CompactExhaustion X := K'.shiftr.shiftr

@@ -217,10 +217,10 @@ theorem sup_induction {p : α → Prop} (hb : p ⊥) (hp : ∀ a₁, p a₁ → 
     simp only [sup_cons, forall_mem_cons] at hs ⊢
     exact hp _ hs.1 _ (ih hs.2)
 
+open Classical in
 theorem sup_le_of_le_directed {α : Type*} [SemilatticeSup α] [OrderBot α] (s : Set α)
     (hs : s.Nonempty) (hdir : DirectedOn (· ≤ ·) s) (t : Finset α) :
     (∀ x ∈ t, ∃ y ∈ s, x ≤ y) → ∃ x ∈ s, t.sup id ≤ x := by
-  classical
     induction' t using Finset.induction_on with a r _ ih h
     · simpa only [forall_prop_of_true, and_true_iff, forall_prop_of_false, bot_le, not_false_iff,
         sup_empty, forall_true_iff, not_mem_empty]
@@ -1745,11 +1745,11 @@ section Lattice
 
 variable {ι' : Sort*} [CompleteLattice α]
 
+open Classical in
 /-- Supremum of `s i`, `i : ι`, is equal to the supremum over `t : Finset ι` of suprema
 `⨆ i ∈ t, s i`. This version assumes `ι` is a `Type*`. See `iSup_eq_iSup_finset'` for a version
 that works for `ι : Sort*`. -/
 theorem iSup_eq_iSup_finset (s : ι → α) : ⨆ i, s i = ⨆ t : Finset ι, ⨆ i ∈ t, s i := by
-  classical
   refine le_antisymm ?_ ?_
   · exact iSup_le fun b => le_iSup_of_le {b} <| le_iSup_of_le b <| le_iSup_of_le (by simp) <| le_rfl
   · exact iSup_le fun t => iSup_le fun b => iSup_le fun _ => le_iSup _ _

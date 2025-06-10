@@ -148,9 +148,9 @@ lemma finite_of_free_aux (I) [DecidableEq I] (b : Basis I R S)
 
 variable (R S)
 
+open Classical in
 /-- An unramified free algebra is finitely generated. Iversen I.2.8 -/
 lemma finite_of_free [Module.Free R S] : Module.Finite R S := by
-  classical
   let I := Module.Free.ChooseBasisIndex R S
   -- Let `bᵢ` be an `R`-basis of `S`.
   let b : Basis I R S := Module.Free.chooseBasis R S

@@ -118,10 +118,10 @@ theorem hall_hard_inductive_step_A {n : ℕ} (hn : Fintype.card ι = n + 1)
       rw [mem_erase] at hfr
       exact hfr.2
 
+open Classical in
 theorem hall_cond_of_restrict {ι : Type u} {t : ι → Finset α} {s : Finset ι}
     (ht : ∀ s : Finset ι, s.card ≤ (s.biUnion t).card) (s' : Finset (s : Set ι)) :
     s'.card ≤ (s'.biUnion fun a' => t a').card := by
-  classical
     rw [← card_image_of_injective s' Subtype.coe_injective]
     convert ht (s'.image fun z => z.1) using 1
     apply congr_arg

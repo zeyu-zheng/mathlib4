@@ -98,12 +98,12 @@ theorem basis_repr {φ : ι → Type*} (b : ∀ i, Basis (φ i) R M) (g : ι →
     (Finsupp.basis b).repr g ix = (b ix.1).repr (g ix.1) ix.2 :=
   rfl
 
+open Classical in
 @[simp]
 theorem coe_basis {φ : ι → Type*} (b : ∀ i, Basis (φ i) R M) :
     ⇑(Finsupp.basis b) = fun ix : Σi, φ i => single ix.1 (b ix.1 ix.2) :=
   funext fun ⟨i, x⟩ =>
     Basis.apply_eq_iff.mpr <| by
-      classical
       ext ⟨j, y⟩
       by_cases h : i = j
       · cases h

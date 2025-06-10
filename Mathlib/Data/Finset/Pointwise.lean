@@ -1994,9 +1994,9 @@ end MulAction
 section IsCancelMul
 variable [Mul α] [IsCancelMul α] {s t : Set α}
 
+open Classical in
 @[to_additive]
 lemma card_mul_le : Nat.card (s * t) ≤ Nat.card s * Nat.card t := by
-  classical
   obtain h | h := (s * t).infinite_or_finite
   · simp [Set.Infinite.card_eq_zero h]
   obtain ⟨hs, ht⟩ | rfl | rfl := finite_mul.1 h

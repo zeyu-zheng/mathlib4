@@ -636,6 +636,7 @@ lemma iSup_basicOpen_of_span_eq_top {X : Scheme} (U) (s : Set Γ(X, U))
 
 Then `P` holds for every affine open of `X`.
 
+open Classical in
 This is also known as the **Affine communication lemma** in [*The rising sea*][RisingSea]. -/
 @[elab_as_elim]
 theorem of_affine_open_cover {X : Scheme} {P : X.affineOpens → Prop}
@@ -647,7 +648,6 @@ theorem of_affine_open_cover {X : Scheme} {P : X.affineOpens → Prop}
         (_ : Ideal.span (s : Set (Γ(X, U))) = ⊤),
         (∀ f : s, P (X.affineBasicOpen f.1)) → P U)
     (hU : ∀ i, P (U i)) : P V := by
-  classical
   have : ∀ (x : V.1), ∃ f : Γ(X, V), ↑x ∈ X.basicOpen f ∧ P (X.affineBasicOpen f)
   intro x
   obtain ⟨i, hi⟩ := Opens.mem_iSup.mp (show x.1 ∈ (⨆ i, U i : X.Opens) from iSup_U ▸ trivial)

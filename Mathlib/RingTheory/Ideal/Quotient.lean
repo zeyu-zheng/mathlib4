@@ -338,11 +338,11 @@ noncomputable def piQuotEquiv : ((ι → R) ⧸ I.pi ι) ≃ₗ[R ⧸ I] ι → 
     obtain ⟨_, _⟩ := @Quot.exists_rep _ _ (x i)
     convert Quotient.out_eq' (x i)
 
+open Classical in
 /-- If `f : R^n → R^m` is an `R`-linear map and `I ⊆ R` is an ideal, then the image of `I^n` is
     contained in `I^m`. -/
 theorem map_pi {ι : Type*} [Finite ι] {ι' : Type w} (x : ι → R) (hi : ∀ i, x i ∈ I)
     (f : (ι → R) →ₗ[R] ι' → R) (i : ι') : f x i ∈ I := by
-  classical
     cases nonempty_fintype ι
     rw [pi_eq_sum_univ x]
     simp only [Finset.sum_apply, smul_eq_mul, map_sum, Pi.smul_apply, map_smul]

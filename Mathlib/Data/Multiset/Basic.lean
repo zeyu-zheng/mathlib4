@@ -2299,10 +2299,10 @@ theorem addHom_ext [AddZeroClass β] ⦃f g : Multiset α →+ β⦄ (h : ∀ x,
 
 section Embedding
 
+open Classical in
 @[simp]
 theorem map_le_map_iff {f : α → β} (hf : Function.Injective f) {s t : Multiset α} :
     s.map f ≤ t.map f ↔ s ≤ t := by
-  classical
     refine ⟨fun h => le_iff_count.mpr fun a => ?_, map_le_map⟩
     simpa [count_map_eq_count' f _ hf] using le_iff_count.mp h (f a)
 
@@ -2514,11 +2514,11 @@ theorem map_eq_map {f : α → β} (hf : Function.Injective f) {s t : Multiset �
 theorem map_injective {f : α → β} (hf : Function.Injective f) :
     Function.Injective (Multiset.map f) := fun _x _y => (map_eq_map hf).1
 
+open Classical in
 lemma filter_attach' (s : Multiset α) (p : {a // a ∈ s} → Prop) [DecidableEq α]
     [DecidablePred p] :
     s.attach.filter p =
       (s.filter fun x ↦ ∃ h, p ⟨x, h⟩).attach.map (Subtype.map id fun x ↦ mem_of_mem_filter) := by
-  classical
   refine Multiset.map_injective Subtype.val_injective ?_
   rw [map_filter' _ Subtype.val_injective]
   simp only [Function.comp, Subtype.exists, coe_mk, Subtype.map,

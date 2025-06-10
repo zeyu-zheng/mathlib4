@@ -148,8 +148,8 @@ theorem _root_.Decidable.List.Lex.ne_iff [DecidableEq α] {l₁ l₂ : List α}
         exact IH (le_of_succ_le_succ H) (mt (congr_arg _) h)
       · exact rel ab ⟩
 
+open Classical in
 theorem ne_iff {l₁ l₂ : List α} (H : length l₁ ≤ length l₂) : Lex (· ≠ ·) l₁ l₂ ↔ l₁ ≠ l₂ := by
-  classical
   exact Decidable.List.Lex.ne_iff H
 
 end Lex

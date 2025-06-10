@@ -89,11 +89,11 @@ lemma le_traceDual_traceDual {I : Submodule B L} :
 lemma traceDual_bot :
     (⊥ : Submodule B L)ᵛ = ⊤ := by ext; simpa [mem_traceDual, -RingHom.mem_range] using zero_mem _
 
+open Classical in
 open scoped Classical in
 lemma traceDual_top' :
     (⊤ : Submodule B L)ᵛ =
       if ((LinearMap.range (Algebra.trace K L)).restrictScalars A ≤ 1) then ⊤ else ⊥ := by
-  classical
   split_ifs with h
   · rw [_root_.eq_top_iff]
     exact fun _ _ _ _ ↦ h ⟨_, rfl⟩
@@ -197,13 +197,13 @@ open scoped Classical
 
 namespace FractionalIdeal
 
+open Classical in
 /-- The dual of a non-zero fractional ideal is the dual of the submodule under the traceform. -/
 noncomputable
 def dual (I : FractionalIdeal B⁰ L) :
     FractionalIdeal B⁰ L :=
   if hI : I = 0 then 0 else
   ⟨Iᵛ, by
-    classical
     have ⟨s, b, hb⟩ := FiniteDimensional.exists_is_basis_integral A K L
     obtain ⟨x, hx, hx'⟩ := exists_ne_zero_mem_isInteger hI
     have ⟨y, hy⟩ := (IsIntegralClosure.isIntegral_iff (A := B)).mp
@@ -463,13 +463,13 @@ lemma differentialIdeal_le_iff {I : Ideal B} (hI : I ≠ ⊥) [NoZeroSMulDivisor
 
 variable (A K)
 
+open Classical in
 open Pointwise Polynomial in
 lemma traceForm_dualSubmodule_adjoin
     {x : L} (hx : Algebra.adjoin K {x} = ⊤) (hAx : IsIntegral A x) :
     (traceForm K L).dualSubmodule (Subalgebra.toSubmodule (Algebra.adjoin A {x})) =
       (aeval x (derivative <| minpoly K x) : L)⁻¹ •
         (Subalgebra.toSubmodule (Algebra.adjoin A {x})) := by
-  classical
   have hKx : IsIntegral K x := Algebra.IsIntegral.isIntegral x
   let pb := (Algebra.adjoin.powerBasis' hKx).map
     ((Subalgebra.equivOfEq _ _ hx).trans (Subalgebra.topEquiv))
@@ -507,11 +507,11 @@ lemma traceForm_dualSubmodule_adjoin
 
 variable (L)
 
+open Classical in
 open Polynomial Pointwise in
 lemma conductor_mul_differentIdeal [NoZeroSMulDivisors A B]
     (x : B) (hx : Algebra.adjoin K {algebraMap B L x} = ⊤) :
     (conductor A x) * differentIdeal A B = Ideal.span {aeval x (derivative (minpoly A x))} := by
-  classical
   have hAx : IsIntegral A x := IsIntegralClosure.isIntegral A L x
   haveI := IsIntegralClosure.isFractionRing_of_finite_extension A K L B
   apply FractionalIdeal.coeIdeal_injective (K := L)

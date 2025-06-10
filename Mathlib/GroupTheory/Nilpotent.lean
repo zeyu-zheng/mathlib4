@@ -768,34 +768,34 @@ open Group Fintype
 
 variable {G : Type*} [hG : Group G]
 
+open Classical in
 /-- A p-group is nilpotent -/
 theorem IsPGroup.isNilpotent [Finite G] {p : ℕ} [hp : Fact (Nat.Prime p)] (h : IsPGroup p G) :
     IsNilpotent G := by
   cases' nonempty_fintype G
-  classical
-    revert hG
-    apply @Fintype.induction_subsingleton_or_nontrivial _ G _
-    · intro _ _ _ _
-      infer_instance
-    · intro G _ _ ih _ h
-      have hcq : Fintype.card (G ⧸ center G) < Fintype.card G
-      simp only [← Nat.card_eq_fintype_card]
-      rw [card_eq_card_quotient_mul_card_subgroup (center G)]
-      simp only [Nat.card_eq_fintype_card]
-      apply lt_mul_of_one_lt_right
-      · exact Fintype.card_pos_iff.mpr One.instNonempty
-      · simp only [← Nat.card_eq_fintype_card]
-        exact (Subgroup.one_lt_card_iff_ne_bot _).mpr (ne_of_gt h.bot_lt_center)
-      have hnq : IsNilpotent (G ⧸ center G) := ih _ hcq (h.to_quotient (center G))
-      exact of_quotient_center_nilpotent hnq
+  revert hG
+  apply @Fintype.induction_subsingleton_or_nontrivial _ G _
+  · intro _ _ _ _
+    infer_instance
+  · intro G _ _ ih _ h
+    have hcq : Fintype.card (G ⧸ center G) < Fintype.card G
+    simp only [← Nat.card_eq_fintype_card]
+    rw [card_eq_card_quotient_mul_card_subgroup (center G)]
+    simp only [Nat.card_eq_fintype_card]
+    apply lt_mul_of_one_lt_right
+    · exact Fintype.card_pos_iff.mpr One.instNonempty
+    · simp only [← Nat.card_eq_fintype_card]
+      exact (Subgroup.one_lt_card_iff_ne_bot _).mpr (ne_of_gt h.bot_lt_center)
+    have hnq : IsNilpotent (G ⧸ center G) := ih _ hcq (h.to_quotient (center G))
+    exact of_quotient_center_nilpotent hnq
 
 variable [Finite G]
 
+open Classical in
 /-- If a finite group is the direct product of its Sylow groups, it is nilpotent -/
 theorem isNilpotent_of_product_of_sylow_group
     (e : (∀ p : (Nat.card G).primeFactors, ∀ P : Sylow p G, (↑P : Subgroup G)) ≃* G) :
     IsNilpotent G := by
-  classical
     let ps := (Nat.card G).primeFactors
     have : ∀ (p : ps) (P : Sylow p G), IsNilpotent (↑P : Subgroup G)
     intro p P

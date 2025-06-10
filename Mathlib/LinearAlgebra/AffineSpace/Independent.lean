@@ -82,11 +82,11 @@ theorem affineIndependent_iff_of_fintype [Fintype ι] (p : ι → P) :
 
 protected alias ⟨AffineIndependent.of_vadd, AffineIndependent.vadd⟩ := affineIndependent_vadd
 
+open Classical in
 /-- A family is affinely independent if and only if the differences
 from a base point in that family are linearly independent. -/
 theorem affineIndependent_iff_linearIndependent_vsub (p : ι → P) (i1 : ι) :
     AffineIndependent k p ↔ LinearIndependent k fun i : { x // x ≠ i1 } => (p i -ᵥ p i1 : V) := by
-  classical
     constructor
     · intro h
       rw [linearIndependent_iff']
@@ -171,6 +171,7 @@ theorem linearIndependent_set_iff_affineIndependent_vadd_union_singleton {s : Se
   exact Set.diff_singleton_eq_self fun h => hs 0 h rfl
   rw [h]
 
+open Classical in
 /-- A family is affinely independent if and only if any affine
 combinations (with sum of weights 1) that evaluate to the same point
 have equal `Set.indicator`. -/
@@ -181,7 +182,6 @@ theorem affineIndependent_iff_indicator_eq_of_affineCombination_eq (p : ι → P
           ∑ i ∈ s2, w2 i = 1 →
             s1.affineCombination k p w1 = s2.affineCombination k p w2 →
               Set.indicator (↑s1) w1 = Set.indicator (↑s2) w2 := by
-  classical
     constructor
     · intro ha s1 s2 w1 w2 hw1 hw2 heq
       ext i
@@ -273,12 +273,12 @@ protected theorem AffineIndependent.injective [Nontrivial k] {p : ι → P}
   refine ha.ne_zero ⟨i, hij'⟩ (vsub_eq_zero_iff_eq.mpr ?_)
   simp_all only [ne_eq]
 
+open Classical in
 /-- If a family is affinely independent, so is any subfamily given by
 composition of an embedding into index type with the original
 family. -/
 theorem AffineIndependent.comp_embedding {ι2 : Type*} (f : ι2 ↪ ι) {p : ι → P}
     (ha : AffineIndependent k p) : AffineIndependent k (p ∘ f) := by
-  classical
     intro fs w hw hs i0 hi0
     let fs' := fs.map f
     let w' i := if h : ∃ i2, f i2 = i then w h.choose else 0
@@ -441,10 +441,10 @@ theorem AffineIndependent.not_mem_affineSpan_diff [Nontrivial k] {p : ι → P}
     (ha : AffineIndependent k p) (i : ι) (s : Set ι) : p i ∉ affineSpan k (p '' (s \ {i})) := by
   simp [ha]
 
+open Classical in
 theorem exists_nontrivial_relation_sum_zero_of_not_affine_ind {t : Finset V}
     (h : ¬AffineIndependent k ((↑) : t → V)) :
     ∃ f : V → k, ∑ e ∈ t, f e • e = 0 ∧ ∑ e ∈ t, f e = 0 ∧ ∃ x ∈ t, f x ≠ 0 := by
-  classical
     rw [affineIndependent_iff_of_fintype] at h
     simp only [exists_prop, not_forall] at h
     obtain ⟨w, hw, hwt, i, hi⟩ := h
@@ -620,12 +620,12 @@ theorem affineIndependent_of_ne {p₁ p₂ : P} (h : p₁ ≠ p₂) : AffineInde
 
 variable {k}
 
+open Classical in
 /-- If all but one point of a family are affinely independent, and that point does not lie in
 the affine span of that family, the family is affinely independent. -/
 theorem AffineIndependent.affineIndependent_of_not_mem_span {p : ι → P} {i : ι}
     (ha : AffineIndependent k fun x : { y // y ≠ i } => p x)
     (hi : p i ∉ affineSpan k (p '' { x | x ≠ i })) : AffineIndependent k p := by
-  classical
     intro s w hw hs
     let s' : Finset { y // y ≠ i } := s.subtype (· ≠ i)
     let p' : { y // y ≠ i } → P := fun x => p x
@@ -732,6 +732,7 @@ theorem sign_eq_of_affineCombination_mem_affineSpan_pair {p : ι → P} (h : Aff
   rcases hs with ⟨r, hr⟩
   rw [hr i hi, hr j hj, hi0, hj0, add_zero, add_zero, sub_zero, sub_zero, sign_mul, sign_mul, hij]
 
+open Classical in
 /-- Given an affinely independent family of points, suppose that an affine combination lies in
 the span of one point of that family and a combination of another two points of that family given
 by `lineMap` with coefficient between 0 and 1. Then the coefficients of those two points in the
@@ -742,7 +743,6 @@ theorem sign_eq_of_affineCombination_mem_affineSpan_single_lineMap {p : ι → P
     {c : k} (hc0 : 0 < c) (hc1 : c < 1)
     (hs : s.affineCombination k p w ∈ line[k, p i₁, AffineMap.lineMap (p i₂) (p i₃) c]) :
     SignType.sign (w i₂) = SignType.sign (w i₃) := by
-  classical
     rw [← s.affineCombination_affineCombinationSingleWeights k p h₁, ←
       s.affineCombination_affineCombinationLineMapWeights p h₂ h₃ c] at hs
     refine

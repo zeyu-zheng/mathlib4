@@ -1099,6 +1099,7 @@ theorem map_withDensity_abs_det_fderiv_eq_addHaar (hs : MeasurableSet s)
       (fun x hx => (hf' x hx.2).mono inter_subset_right) (hf.mono inter_subset_right),
     image_preimage_inter]
 
+open Classical in
 /-- Change of variable formula for differentiable functions, set version: if a function `f` is
 injective and differentiable on a measurable set `s`, then the pushforward of the measure with
 density `|(f' x).det|` on `s` is the Lebesgue measure on the image set. This version is expressed
@@ -1111,7 +1112,6 @@ theorem restrict_map_withDensity_abs_det_fderiv_eq_addHaar (hs : MeasurableSet s
     Measure.map (s.restrict f) (comap (↑) (μ.withDensity fun x => ENNReal.ofReal |(f' x).det|)) =
       μ.restrict (f '' s) := by
   obtain ⟨u, u_meas, uf⟩ : ∃ u, Measurable u ∧ EqOn u f s := by
-    classical
     refine ⟨piecewise s f 0, ?_, piecewise_eqOn _ _ _⟩
     refine ContinuousOn.measurable_piecewise ?_ continuous_zero.continuousOn hs
     have : DifferentiableOn ℝ f s := fun x hx => (hf' x hx).differentiableWithinAt

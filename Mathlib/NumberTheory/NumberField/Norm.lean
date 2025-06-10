@@ -64,8 +64,8 @@ theorem norm_algebraMap [Algebra.IsSeparable K L] (x : 𝓞 K) :
     RingOfIntegers.algebraMap_norm_algebraMap, Algebra.norm_algebraMap,
     RingOfIntegers.coe_eq_algebraMap, map_pow]
 
+open Classical in
 theorem isUnit_norm_of_isGalois [IsGalois K L] {x : 𝓞 L} : IsUnit (norm K x) ↔ IsUnit x := by
-  classical
   refine ⟨fun hx => ?_, IsUnit.map _⟩
   replace hx : IsUnit (algebraMap (𝓞 K) (𝓞 L) <| norm K x) := hx.map (algebraMap (𝓞 K) <| 𝓞 L)
   refine @isUnit_of_mul_isUnit_right (𝓞 L) _
@@ -79,10 +79,10 @@ theorem isUnit_norm_of_isGalois [IsGalois K L] {x : 𝓞 L} : IsUnit (norm K x) 
       RingOfIntegers.map_mk]
   · rw [prod_sdiff <| subset_univ _, ← norm_eq_prod_automorphisms, coe_algebraMap_norm]
 
+open Classical in
 /-- If `L/K` is a finite Galois extension of fields, then, for all `(x : 𝓞 L)` we have that
 `x ∣ algebraMap (𝓞 K) (𝓞 L) (norm K x)`. -/
 theorem dvd_norm [IsGalois K L] (x : 𝓞 L) : x ∣ algebraMap (𝓞 K) (𝓞 L) (norm K x) := by
-  classical
   have hint :
     IsIntegral ℤ (∏ σ ∈ univ.erase (AlgEquiv.refl : L ≃ₐ[K] L), σ x) :=
     IsIntegral.prod _ (fun σ _ =>

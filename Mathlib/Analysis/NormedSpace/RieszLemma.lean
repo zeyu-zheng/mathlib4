@@ -31,6 +31,7 @@ variable {𝕜 : Type*} [NormedField 𝕜]
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace 𝕜 E]
 variable {F : Type*} [SeminormedAddCommGroup F] [NormedSpace ℝ F]
 
+open Classical in
 /-- Riesz's lemma, which usually states that it is possible to find a
 vector with norm 1 whose distance to a closed proper subspace is
 arbitrarily close to 1. The statement here is in terms of multiples of
@@ -39,7 +40,6 @@ is not guaranteed. For a variant giving an element with norm in `[1, R]`, see
 `riesz_lemma_of_norm_lt`. -/
 theorem riesz_lemma {F : Subspace 𝕜 E} (hFc : IsClosed (F : Set E)) (hF : ∃ x : E, x ∉ F) {r : ℝ}
     (hr : r < 1) : ∃ x₀ : E, x₀ ∉ F ∧ ∀ y ∈ F, r * ‖x₀‖ ≤ ‖x₀ - y‖ := by
-  classical
     obtain ⟨x, hx⟩ : ∃ x : E, x ∉ F := hF
     let d := Metric.infDist x F
     have hFn : (F : Set E).Nonempty := ⟨_, F.zero_mem⟩

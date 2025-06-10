@@ -574,10 +574,10 @@ theorem map_mul_of_coprime {f : ArithmeticFunction R} (hf : f.IsMultiplicative) 
 
 end MonoidWithZero
 
+open Classical in
 theorem map_prod {ι : Type*} [CommMonoidWithZero R] (g : ι → ℕ) {f : ArithmeticFunction R}
     (hf : f.IsMultiplicative) (s : Finset ι) (hs : (s : Set ι).Pairwise (Coprime on g)) :
     f (∏ i ∈ s, g i) = ∏ i ∈ s, f (g i) := by
-  classical
     induction' s using Finset.induction_on with a s has ih hs
     · simp [hf]
     rw [coe_insert, Set.pairwise_insert_of_symmetric (Coprime.symmetric.comap g)] at hs

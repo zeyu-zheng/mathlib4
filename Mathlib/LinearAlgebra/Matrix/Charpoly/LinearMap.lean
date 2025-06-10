@@ -193,6 +193,7 @@ theorem Matrix.isRepresentation.toEnd_surjective :
 
 end
 
+open Classical in
 /-- The **Cayley-Hamilton Theorem** for f.g. modules over arbitrary rings states that for each
 `R`-endomorphism `φ` of an `R`-module `M` such that `φ(M) ≤ I • M` for some ideal `I`, there
 exists some `n` and some `aᵢ ∈ Iⁱ` such that `φⁿ + a₁ φⁿ⁻¹ + ⋯ + aₙ = 0`.
@@ -203,24 +204,23 @@ This is the version found in Eisenbud 4.3, which is slightly weaker than Matsumu
 theorem LinearMap.exists_monic_and_coeff_mem_pow_and_aeval_eq_zero_of_range_le_smul
     [Module.Finite R M] (f : Module.End R M) (I : Ideal R) (hI : LinearMap.range f ≤ I • ⊤) :
     ∃ p : R[X], p.Monic ∧ (∀ k, p.coeff k ∈ I ^ (p.natDegree - k)) ∧ Polynomial.aeval f p = 0 := by
-  classical
-    cases subsingleton_or_nontrivial R
-    · exact ⟨0, Polynomial.monic_of_subsingleton _, by simp⟩
-    obtain ⟨s : Finset M, hs : Submodule.span R (s : Set M) = ⊤⟩ :=
-      Module.Finite.out (R := R) (M := M)
-    -- Porting note: `H` was `rfl`
-    obtain ⟨A, H, h⟩ :=
-      Matrix.isRepresentation.toEnd_exists_mem_ideal R ((↑) : s → M)
-        (by rw [Subtype.range_coe_subtype, Finset.setOf_mem, hs]) f I hI
-    rw [← H]
-    refine ⟨A.1.charpoly, A.1.charpoly_monic, ?_, ?_⟩
-    · rw [A.1.charpoly_natDegree_eq_dim]
-      exact coeff_charpoly_mem_ideal_pow h
-    · rw [Polynomial.aeval_algHom_apply,
-        ← map_zero (Matrix.isRepresentation.toEnd R ((↑) : s → M) _)]
-      congr 1
-      ext1
-      rw [Polynomial.aeval_subalgebra_coe, Matrix.aeval_self_charpoly, Subalgebra.coe_zero]
+  cases subsingleton_or_nontrivial R
+  · exact ⟨0, Polynomial.monic_of_subsingleton _, by simp⟩
+  obtain ⟨s : Finset M, hs : Submodule.span R (s : Set M) = ⊤⟩ :=
+    Module.Finite.out (R := R) (M := M)
+  -- Porting note: `H` was `rfl`
+  obtain ⟨A, H, h⟩ :=
+    Matrix.isRepresentation.toEnd_exists_mem_ideal R ((↑) : s → M)
+      (by rw [Subtype.range_coe_subtype, Finset.setOf_mem, hs]) f I hI
+  rw [← H]
+  refine ⟨A.1.charpoly, A.1.charpoly_monic, ?_, ?_⟩
+  · rw [A.1.charpoly_natDegree_eq_dim]
+    exact coeff_charpoly_mem_ideal_pow h
+  · rw [Polynomial.aeval_algHom_apply,
+      ← map_zero (Matrix.isRepresentation.toEnd R ((↑) : s → M) _)]
+    congr 1
+    ext1
+    rw [Polynomial.aeval_subalgebra_coe, Matrix.aeval_self_charpoly, Subalgebra.coe_zero]
 
 theorem LinearMap.exists_monic_and_aeval_eq_zero [Module.Finite R M] (f : Module.End R M) :
     ∃ p : R[X], p.Monic ∧ Polynomial.aeval f p = 0 :=

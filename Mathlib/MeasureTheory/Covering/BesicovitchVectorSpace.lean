@@ -162,12 +162,12 @@ theorem card_le_multiplicity {s : Finset E} (hs : ∀ c ∈ s, ‖c‖ ≤ 2)
 
 variable (E)
 
+open Classical in
 /-- If `δ` is small enough, a `(1-δ)`-separated set in the ball of radius `2` also has cardinality
 at most `multiplicity E`. -/
 theorem exists_goodδ :
     ∃ δ : ℝ, 0 < δ ∧ δ < 1 ∧ ∀ s : Finset E, (∀ c ∈ s, ‖c‖ ≤ 2) →
       (∀ c ∈ s, ∀ d ∈ s, c ≠ d → 1 - δ ≤ ‖c - d‖) → s.card ≤ multiplicity E := by
-  classical
   /- This follows from a compactness argument: otherwise, one could extract a converging
     subsequence, to obtain a `1`-separated set in the ball of radius `2` with cardinality
     `N = multiplicity E + 1`. To formalize this, we work with functions `Fin N → E`.
@@ -261,9 +261,9 @@ theorem card_le_multiplicity_of_δ {s : Finset E} (hs : ∀ c ∈ s, ‖c‖ ≤
     (h's : ∀ c ∈ s, ∀ d ∈ s, c ≠ d → 1 - goodδ E ≤ ‖c - d‖) : s.card ≤ multiplicity E :=
   (Classical.choose_spec (exists_goodδ E)).2.2 s hs h's
 
+open Classical in
 theorem le_multiplicity_of_δ_of_fin {n : ℕ} (f : Fin n → E) (h : ∀ i, ‖f i‖ ≤ 2)
     (h' : Pairwise fun i j => 1 - goodδ E ≤ ‖f i - f j‖) : n ≤ multiplicity E := by
-  classical
   have finj : Function.Injective f
   intro i j hij
   by_contra h

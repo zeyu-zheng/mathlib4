@@ -1112,13 +1112,13 @@ protected theorem induction {α γ} [MeasurableSpace α] [AddMonoid γ] {P : Sim
     · simp [g, piecewise_eq_of_mem _ _ _ hy, -piecewise_eq_indicator]
     · simp [piecewise_eq_of_not_mem _ _ _ hy, -piecewise_eq_indicator]
 
+open Classical in
 /-- In a topological vector space, the addition of a measurable function and a simple function is
 measurable. -/
 theorem _root_.Measurable.add_simpleFunc
     {E : Type*} {_ : MeasurableSpace α} [MeasurableSpace E] [AddGroup E] [MeasurableAdd E]
     {g : α → E} (hg : Measurable g) (f : SimpleFunc α E) :
     Measurable (g + (f : α → E)) := by
-  classical
   induction' f using SimpleFunc.induction with c s hs f f' hff' hf hf'
   · simp only [SimpleFunc.const_zero, SimpleFunc.coe_piecewise, SimpleFunc.coe_const,
       SimpleFunc.coe_zero]
@@ -1137,13 +1137,13 @@ theorem _root_.Measurable.add_simpleFunc
     rw [this]
     exact Measurable.piecewise f.measurableSet_support hf hf'
 
+open Classical in
 /-- In a topological vector space, the addition of a simple function and a measurable function is
 measurable. -/
 theorem _root_.Measurable.simpleFunc_add
     {E : Type*} {_ : MeasurableSpace α} [MeasurableSpace E] [AddGroup E] [MeasurableAdd E]
     {g : α → E} (hg : Measurable g) (f : SimpleFunc α E) :
     Measurable ((f : α → E) + g) := by
-  classical
   induction' f using SimpleFunc.induction with c s hs f f' hff' hf hf'
   · simp only [SimpleFunc.const_zero, SimpleFunc.coe_piecewise, SimpleFunc.coe_const,
       SimpleFunc.coe_zero]

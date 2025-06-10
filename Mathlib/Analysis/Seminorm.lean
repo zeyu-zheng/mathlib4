@@ -369,8 +369,8 @@ theorem finset_sup_smul (p : ι → Seminorm 𝕜 E) (s : Finset ι) (C : ℝ≥
   symm
   exact congr_arg ((↑) : ℝ≥0 → ℝ) (NNReal.mul_finset_sup C s (fun i ↦ ⟨p i x, apply_nonneg _ _⟩))
 
+open Classical in
 theorem finset_sup_le_sum (p : ι → Seminorm 𝕜 E) (s : Finset ι) : s.sup p ≤ ∑ i ∈ s, p i := by
-  classical
   refine Finset.sup_le_iff.mpr ?_
   intro i hi
   rw [Finset.sum_eq_sum_diff_singleton_add hi, le_add_iff_nonneg_left]

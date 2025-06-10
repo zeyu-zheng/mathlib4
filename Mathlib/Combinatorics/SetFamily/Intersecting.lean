@@ -95,20 +95,20 @@ theorem intersecting_iff_eq_empty_of_subsingleton [Subsingleton α] (s : Set α)
   · rintro rfl
     exact (Set.singleton_nonempty _).ne_empty.symm
 
+open Classical in
 /-- Maximal intersecting families are upper sets. -/
 protected theorem Intersecting.isUpperSet (hs : s.Intersecting)
     (h : ∀ t : Set α, t.Intersecting → s ⊆ t → s = t) : IsUpperSet s := by
-  classical
     rintro a b hab ha
     rw [h (Insert.insert b s) _ (subset_insert _ _)]
     · exact mem_insert _ _
     exact
       hs.insert (mt (eq_bot_mono hab) <| hs.ne_bot ha) fun c hc hbc => hs ha hc <| hbc.mono_left hab
 
+open Classical in
 /-- Maximal intersecting families are upper sets. Finset version. -/
 theorem Intersecting.isUpperSet' {s : Finset α} (hs : (s : Set α).Intersecting)
     (h : ∀ t : Finset α, (t : Set α).Intersecting → s ⊆ t → s = t) : IsUpperSet (s : Set α) := by
-  classical
     rintro a b hab ha
     rw [h (Insert.insert b s) _ (Finset.subset_insert _ _)]
     · exact mem_insert_self _ _
@@ -141,18 +141,18 @@ theorem Intersecting.disjoint_map_compl {s : Finset α} (hs : (s : Set α).Inter
   obtain ⟨x, hx', rfl⟩ := mem_map.mp hxc
   exact hs.not_compl_mem hx' hx
 
+open Classical in
 theorem Intersecting.card_le [Fintype α] {s : Finset α} (hs : (s : Set α).Intersecting) :
     2 * s.card ≤ Fintype.card α := by
-  classical
     refine (s.disjUnion _ hs.disjoint_map_compl).card_le_univ.trans_eq' ?_
     rw [Nat.two_mul, card_disjUnion, card_map]
 
 variable [Nontrivial α] [Fintype α] {s : Finset α}
 
+open Classical in
 -- Note, this lemma is false when `α` has exactly one element and boring when `α` is empty.
 theorem Intersecting.is_max_iff_card_eq (hs : (s : Set α).Intersecting) :
     (∀ t : Finset α, (t : Set α).Intersecting → s ⊆ t → s = t) ↔ 2 * s.card = Fintype.card α := by
-  classical
     refine ⟨fun h ↦ ?_, fun h t ht hst ↦ Finset.eq_of_subset_of_card_le hst <|
       Nat.le_of_mul_le_mul_left (ht.card_le.trans_eq h.symm) Nat.two_pos⟩
     suffices s.disjUnion (s.map ⟨compl, compl_injective⟩) hs.disjoint_map_compl = Finset.univ by

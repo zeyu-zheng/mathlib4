@@ -96,10 +96,10 @@ instance instUniformContinuousConstSMul {M : Type*}
 
 variable [∀ i, ContinuousSMul 𝕜 (E i)] [ContinuousConstSMul 𝕜 F] [CompleteSpace F] [T2Space F]
 
+open Classical in
 open UniformOnFun in
 theorem completeSpace (h : RestrictGenTopology {s : Set (Π i, E i) | IsVonNBounded 𝕜 s}) :
     CompleteSpace (ContinuousMultilinearMap 𝕜 E F) := by
-  classical
   have H : ∀ {m : Π i, E i},
       Continuous fun f : (Π i, E i) →ᵤ[{s | IsVonNBounded 𝕜 s}] F ↦ toFun _ f m :=
     (uniformContinuous_eval (isVonNBounded_covers) _).continuous

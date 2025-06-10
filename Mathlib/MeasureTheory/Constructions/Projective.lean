@@ -58,9 +58,9 @@ lemma measure_univ_eq_of_subset (hP : IsProjectiveMeasureFamily P) (hJI : J ⊆ 
   · rw [hP I J hJI]
   · exact measurable_pi_lambda _ (fun _ ↦ measurable_pi_apply _)
 
+open Classical in
 lemma measure_univ_eq (hP : IsProjectiveMeasureFamily P) (I J : Finset ι) :
     P I univ = P J univ := by
-  classical
   rw [← hP.measure_univ_eq_of_subset I.subset_union_left,
     ← hP.measure_univ_eq_of_subset (I.subset_union_right (s₂ := J))]
 
@@ -85,11 +85,11 @@ lemma congr_cylinder_of_subset (hP : IsProjectiveMeasureFamily P)
     rw [hP I J hJI, Measure.map_apply _ hT, this]
     exact measurable_pi_lambda _ (fun _ ↦ measurable_pi_apply _)
 
+open Classical in
 lemma congr_cylinder (hP : IsProjectiveMeasureFamily P)
     {S : Set (∀ i : I, α i)} {T : Set (∀ i : J, α i)} (hS : MeasurableSet S) (hT : MeasurableSet T)
     (h_eq : cylinder I S = cylinder J T) :
     P I S = P J T := by
-  classical
   let U := (fun f : ∀ i : (I ∪ J : Finset ι), α i
         ↦ fun j : I ↦ f ⟨j, Finset.mem_union_left J j.prop⟩) ⁻¹' S ∩
       (fun f ↦ fun j : J ↦ f ⟨j, Finset.mem_union_right I j.prop⟩) ⁻¹' T

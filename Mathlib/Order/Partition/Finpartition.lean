@@ -330,8 +330,8 @@ theorem exists_le_of_le {a b : α} {P Q : Finpartition a} (h : P ≤ Q) (hb : b 
   simp only [not_exists, not_and] at H
   exact H _ hc hcd
 
+open Classical in
 theorem card_mono {a : α} {P Q : Finpartition a} (h : P ≤ Q) : Q.parts.card ≤ P.parts.card := by
-  classical
     have : ∀ b ∈ Q.parts, ∃ c ∈ P.parts, c ≤ b := fun b ↦ exists_le_of_le h
     choose f hP hf using this
     rw [← card_attach]

@@ -1346,12 +1346,12 @@ theorem continuous_setToFun (hT : DominatedFinMeasAdditive μ T C) :
     Continuous fun f : α →₁[μ] E => setToFun μ T hT f := by
   simp_rw [L1.setToFun_eq_setToL1 hT]; exact ContinuousLinearMap.continuous _
 
+open Classical in
 /-- If `F i → f` in `L1`, then `setToFun μ T hT (F i) → setToFun μ T hT f`. -/
 theorem tendsto_setToFun_of_L1 (hT : DominatedFinMeasAdditive μ T C) {ι} (f : α → E)
     (hfi : Integrable f μ) {fs : ι → α → E} {l : Filter ι} (hfsi : ∀ᶠ i in l, Integrable (fs i) μ)
     (hfs : Tendsto (fun i => ∫⁻ x, ‖fs i x - f x‖₊ ∂μ) l (𝓝 0)) :
     Tendsto (fun i => setToFun μ T hT (fs i)) l (𝓝 <| setToFun μ T hT f) := by
-  classical
     let f_lp := hfi.toL1 f
     let F_lp i := if hFi : Integrable (fs i) μ then hFi.toL1 (fs i) else 0
     have tendsto_L1 : Tendsto F_lp l (𝓝 f_lp)

@@ -285,8 +285,8 @@ theorem chainHeight_insert_of_forall_lt (a : α) (ha : ∀ b ∈ s, b < a) :
   rw [← chainHeight_dual, ← chainHeight_dual s]
   exact chainHeight_insert_of_forall_gt _ ha
 
+open Classical in
 theorem chainHeight_union_le : (s ∪ t).chainHeight ≤ s.chainHeight + t.chainHeight := by
-  classical
     refine iSup₂_le fun l hl ↦ ?_
     let l₁ := l.filter (· ∈ s)
     let l₂ := l.filter (· ∈ t)

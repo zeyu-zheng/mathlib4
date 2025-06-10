@@ -222,9 +222,9 @@ lemma biUnion_nonempty : (s.biUnion t).Nonempty ↔ ∃ x ∈ s, (t x).Nonempty 
 lemma Nonempty.biUnion (hs : s.Nonempty) (ht : ∀ x ∈ s, (t x).Nonempty) :
     (s.biUnion t).Nonempty := biUnion_nonempty.2 <| hs.imp fun x hx ↦ ⟨hx, ht x hx⟩
 
+open Classical in
 lemma disjoint_biUnion_left (s : Finset α) (f : α → Finset β) (t : Finset β) :
     Disjoint (s.biUnion f) t ↔ ∀ i ∈ s, Disjoint (f i) t := by
-  classical
   refine s.induction ?_ ?_
   · simp only [forall_mem_empty_iff, biUnion_empty, disjoint_empty_left]
   · intro i s his ih

@@ -143,6 +143,7 @@ theorem ιSummand_comp_d_comp_πSummand_eq_zero (j k : ℕ) (A : IndexSet (op [j
   rw [← assoc, ← s.comp_PInfty_eq_zero_iff, assoc, ← PInfty.comm j k, s.cofan_inj_eq, assoc,
     degeneracy_comp_PInfty_assoc X j A.e hA, zero_comp, comp_zero]
 
+open Classical in
 /-- If `s` is a splitting of a simplicial object `X` in a preadditive category,
 `s.nondegComplex` is a chain complex which is given in degree `n` by
 the nondegenerate `n`-simplices of `X`. -/
@@ -157,7 +158,6 @@ noncomputable def nondegComplex : ChainComplex C ℕ where
         s.πSummand (IndexSet.id (op [k])) = 0 := by
       erw [id_comp, HomologicalComplex.d_comp_d_assoc, zero_comp]
     rw [s.decomposition_id] at eq
-    classical
     rw [Fintype.sum_eq_add_sum_compl (IndexSet.id (op [j])), add_comp, comp_add, assoc,
       Preadditive.sum_comp, Preadditive.comp_sum, Finset.sum_eq_zero, add_zero] at eq
     swap

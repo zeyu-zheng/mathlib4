@@ -27,6 +27,7 @@ open scoped DirectSum
 variable {ι R S : Type*} [CommRing R] [CommRing S] [Algebra R S]
 variable [IsDomain R] [IsPrincipalIdealRing R] [IsDomain S] [Finite ι]
 
+open Classical in
 /-- We can write the quotient of an ideal over a PID as a product of quotients by principal ideals.
 -/
 noncomputable def quotientEquivPiSpan (I : Ideal S) (b : Basis ι R S) (hI : I ≠ ⊥) :
@@ -71,10 +72,9 @@ noncomputable def quotientEquivPiSpan (I : Ideal S) (b : Basis ι R S) (hI : I �
     (σ₁₂ := RingHom.id R) (σ₃₂ := RingHom.id R) (re₂₃ := inferInstance) (re₃₂ := inferInstance) ?_
   refine (Submodule.Quotient.equiv (I.restrictScalars R) I' b'.equivFun this).trans
     (σ₁₂ := RingHom.id R) (σ₃₂ := RingHom.id R) (re₂₃ := inferInstance) (re₃₂ := inferInstance) ?_
-  classical
-    let this :=
-      Submodule.quotientPi (show _ → Submodule R R from fun i => span ({a i} : Set R))
-    exact this
+  let this :=
+    Submodule.quotientPi (show _ → Submodule R R from fun i => span ({a i} : Set R))
+  exact this
 
 /-- Ideal quotients over a free finite extension of `ℤ` are isomorphic to a direct product of
 `ZMod`. -/

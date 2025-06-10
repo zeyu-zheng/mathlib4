@@ -69,10 +69,10 @@ instance instFunLike : FunLike (M ↪ₑ[L] N) M N where
 instance : CoeFun (M ↪ₑ[L] N) fun _ => M → N :=
   DFunLike.hasCoeToFun
 
+open Classical in
 @[simp]
 theorem map_boundedFormula (f : M ↪ₑ[L] N) {α : Type*} {n : ℕ} (φ : L.BoundedFormula α n)
     (v : α → M) (xs : Fin n → M) : φ.Realize (f ∘ v) (f ∘ xs) ↔ φ.Realize v xs := by
-  classical
     rw [← BoundedFormula.realize_restrictFreeVar Set.Subset.rfl, Set.inclusion_eq_id, iff_eq_eq]
     have h :=
       f.map_formula' ((φ.restrictFreeVar id).toFormula.relabel (Fintype.equivFin _))

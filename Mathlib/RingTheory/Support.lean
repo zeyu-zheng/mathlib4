@@ -128,9 +128,9 @@ lemma Module.support_of_noZeroSMulDivisors [NoZeroSMulDivisors R M] [Nontrivial 
   obtain ⟨x, hx⟩ := exists_ne (0 : M)
   exact fun p ↦ ⟨x, fun r hr ↦ ⟨fun e ↦ hr (e ▸ p.asIdeal.zero_mem), hx⟩⟩
 
+open Classical in
 lemma Module.mem_support_iff_of_finite [Module.Finite R M] :
     p ∈ Module.support R M ↔ Module.annihilator R M ≤ p.asIdeal := by
-  classical
   obtain ⟨s, hs⟩ := ‹Module.Finite R M›
   refine ⟨annihilator_le_of_mem_support, fun H ↦ (mem_support_iff_of_span_eq_top hs).mpr ?_⟩
   simp only [SetLike.le_def, Submodule.mem_annihilator_span_singleton] at H ⊢

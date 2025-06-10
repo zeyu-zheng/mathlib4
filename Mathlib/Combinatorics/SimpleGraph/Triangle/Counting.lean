@@ -32,10 +32,10 @@ namespace SimpleGraph
 private noncomputable def badVertices (ε : ℝ) (s t : Finset α) : Finset α :=
   s.filter fun x ↦ (t.filter $ G.Adj x).card < (G.edgeDensity s t - ε) * t.card
 
+open Classical in
 private lemma card_interedges_badVertices_le :
     (Rel.interedges G.Adj (badVertices G ε s t) t).card ≤
       (badVertices G ε s t).card * t.card * (G.edgeDensity s t - ε) := by
-  classical
   refine (Nat.cast_le.2 $ (card_le_card $ subset_of_eq (Rel.interedges_eq_biUnion _)).trans
     card_biUnion_le).trans ?_
   simp_rw [Nat.cast_sum, card_map, ← nsmul_eq_mul, smul_mul_assoc, mul_comm (t.card : ℝ)]
@@ -95,6 +95,7 @@ private lemma good_vertices_triangle_card [DecidableEq α] (dst : 2 * ε ≤ G.e
     (mul_le_mul_of_nonneg_left (mul_le_mul hY hZ (by positivity) (by positivity)) hε)
   ring
 
+open Classical in
 /-- The **Triangle Counting Lemma**. If `G` is a graph and `s`, `t`, `u` are sets of vertices such
 that each pair is `ε`-uniform and `2 * ε`-dense, then a proportion of at least
 `(1 - 2 * ε) * ε ^ 3` of the triples `(a, b, c) ∈ s × t × u` are triangles. -/
@@ -104,7 +105,6 @@ lemma triangle_counting'
     (dtu : 2 * ε ≤ G.edgeDensity t u) (utu : G.IsUniform ε t u) :
     (1 - 2 * ε) * ε ^ 3 * s.card * t.card * u.card ≤
       ((s ×ˢ t ×ˢ u).filter fun (a, b, c) ↦ G.Adj a b ∧ G.Adj a c ∧ G.Adj b c).card := by
-  classical
   have h₁ : (badVertices G ε s t).card ≤ s.card * ε := G.card_badVertices_le dst hst
   have h₂ : (badVertices G ε s u).card ≤ s.card * ε := G.card_badVertices_le dsu usu
   let X' := s \ (badVertices G ε s t ∪ badVertices G ε s u)

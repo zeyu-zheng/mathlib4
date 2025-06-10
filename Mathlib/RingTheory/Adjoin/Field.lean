@@ -49,12 +49,12 @@ noncomputable def Algebra.adjoin.liftSingleton {S T : Type*}
 
 open Finset
 
+open Classical in
 /-- If `K` and `L` are field extensions of `F` and we have `s : Finset K` such that
 the minimal polynomial of each `x ∈ s` splits in `L` then `Algebra.adjoin F s` embeds in `L`. -/
 theorem Polynomial.lift_of_splits {F K L : Type*} [Field F] [Field K] [Field L] [Algebra F K]
     [Algebra F L] (s : Finset K) : (∀ x ∈ s, IsIntegral F x ∧
       Splits (algebraMap F L) (minpoly F x)) → Nonempty (Algebra.adjoin F (s : Set K) →ₐ[F] L) := by
-  classical
     refine Finset.induction_on s (fun _ ↦ ?_) fun a s _ ih H ↦ ?_
     · rw [coe_empty, Algebra.adjoin_empty]
       exact ⟨(Algebra.ofId F L).comp (Algebra.botEquiv F K)⟩

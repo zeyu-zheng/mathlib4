@@ -116,16 +116,17 @@ lemma eq_finset_univ [Fintype G] [DecidableEq G]
   on_goal 4 => simpa using mul_not_mem_of_exponent_two (by simp) hx hy hxy
   all_goals aesop
 
+open Classical in
 @[to_additive]
 lemma eq_mul_of_ne_all {x y z : G} (hx : x ≠ 1)
     (hy : y ≠ 1) (hxy : x ≠ y) (hz : z ≠ 1) (hzx : z ≠ x) (hzy : z ≠ y) : z = x * y := by
-  classical
   let _ := Fintype.ofFinite G
   apply eq_of_not_mem_of_mem_insert <| (eq_finset_univ hx hy hxy).symm ▸ mem_univ _
   simpa only [mem_singleton, mem_insert, not_or] using ⟨hzx, hzy, hz⟩
 
 variable {G₁ G₂ : Type*} [Group G₁] [Group G₂] [IsKleinFour G₁]
 
+open Classical in
 /-- An equivalence between an `IsKleinFour` group `G₁` and a group `G₂` of exponent two which sends
 `1 : G₁` to `1 : G₂` is in fact an isomorphism. -/
 @[to_additive "An equivalence between an `IsAddKleinFour` group `G₁` and a group `G₂` of exponent
@@ -140,8 +141,7 @@ def mulEquiv' (e : G₁ ≃ G₂) (he : e 1 = 1) (h : Monoid.exponent G₂ = 2) 
     all_goals try simp only [hx, hy, mul_one, one_mul, Equiv.toFun_as_coe, he]
     by_cases hxy : x = y
     · simp [hxy, mul_self, ← pow_two (e y), h ▸ Monoid.pow_exponent_eq_one (e y), he]
-    · classical
-      have univ₂ : {e (x * y), e x, e y, (1 : G₂)} = Finset.univ := by
+    · have univ₂ : {e (x * y), e x, e y, (1 : G₂)} = Finset.univ := by
         simpa [map_univ_equiv e, map_insert, he]
           using congr(Finset.map e.toEmbedding $(eq_finset_univ hx hy hxy))
       rw [← Ne, ← e.injective.ne_iff] at hx hy hxy
@@ -157,10 +157,10 @@ equivalence which sends the identity of one group to the identity of the other."
 def mulEquiv [IsKleinFour G₂] (e : G₁ ≃ G₂) (he : e 1 = 1) : G₁ ≃* G₂ :=
   mulEquiv' e he exponent_two
 
+open Classical in
 /-- Any two `IsKleinFour` groups are isomorphic. -/
 @[to_additive "Any two `IsAddKleinFour` groups are isomorphic."]
 lemma nonempty_mulEquiv [IsKleinFour G₂] : Nonempty (G₁ ≃* G₂) := by
-  classical
   let _inst₁ := Fintype.ofFinite G₁
   let _inst₁ := Fintype.ofFinite G₂
   exact ⟨mulEquiv ((Fintype.equivOfCardEq <| by simp).setValue 1 1) <| by simp⟩

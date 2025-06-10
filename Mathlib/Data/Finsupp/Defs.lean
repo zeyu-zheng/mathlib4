@@ -161,10 +161,10 @@ theorem not_mem_support_iff {f : α →₀ M} {a} : a ∉ f.support ↔ f a = 0 
 @[simp, norm_cast]
 theorem coe_eq_zero {f : α →₀ M} : (f : α → M) = 0 ↔ f = 0 := by rw [← coe_zero, DFunLike.coe_fn_eq]
 
+open Classical in
 theorem ext_iff' {f g : α →₀ M} : f = g ↔ f.support = g.support ∧ ∀ x ∈ f.support, f x = g x :=
   ⟨fun h => h ▸ ⟨rfl, fun _ _ => rfl⟩, fun ⟨h₁, h₂⟩ =>
     ext fun a => by
-      classical
       exact if h : a ∈ f.support then h₂ a h else by
         have hf : f a = 0 := not_mem_support_iff.1 h
         have hg : g a = 0 := by rwa [h₁, not_mem_support_iff] at h
@@ -225,6 +225,7 @@ section Single
 
 variable [Zero M] {a a' : α} {b : M}
 
+open Classical in
 /-- `single a b` is the finitely supported function with value `b` at `a` and zero otherwise. -/
 def single (a : α) (b : M) : α →₀ M where
   support :=
@@ -234,7 +235,6 @@ def single (a : α) (b : M) : α →₀ M where
     haveI := Classical.decEq α
     Pi.single a b
   mem_support_toFun a' := by
-    classical
       obtain rfl | hb := eq_or_ne b 0
       · simp [Pi.single, update]
       rw [if_neg hb, mem_singleton]
@@ -242,16 +242,16 @@ def single (a : α) (b : M) : α →₀ M where
       · simp [hb, Pi.single, update]
       simp [Pi.single_eq_of_ne' ha.symm, ha]
 
+open Classical in
 theorem single_apply [Decidable (a = a')] : single a b a' = if a = a' then b else 0 := by
-  classical
   simp_rw [@eq_comm _ a a']
   convert Pi.single_apply a b a'
 
 theorem single_apply_left {f : α → β} (hf : Function.Injective f) (x z : α) (y : M) :
     single (f x) y (f z) = single x y z := by classical simp only [single_apply, hf.eq_iff]
 
+open Classical in
 theorem single_eq_set_indicator : ⇑(single a b) = Set.indicator {a} fun _ => b := by
-  classical
   ext
   simp [single_apply, Set.indicator, @eq_comm _ a]
 
@@ -275,9 +275,9 @@ theorem single_zero (a : α) : (single a 0 : α →₀ M) = 0 :=
   DFunLike.coe_injective <| by
     classical simpa only [single_eq_update, coe_zero] using Function.update_eq_self a (0 : α → M)
 
+open Classical in
 theorem single_of_single_apply (a a' : α) (b : M) :
     single a ((single a' b) a) = single a' (single a' b) a := by
-  classical
   rw [single_apply, single_apply]
   ext
   split_ifs with h
@@ -370,11 +370,11 @@ theorem unique_single_eq_iff [Unique α] {b' : M} : single a b = single a' b' �
   rw [Finsupp.unique_ext_iff, Unique.eq_default a, Unique.eq_default a', single_eq_same,
     single_eq_same]
 
+open Classical in
 lemma apply_single [AddCommMonoid N] [AddCommMonoid P]
     {F : Type*} [FunLike F N P] [AddMonoidHomClass F N P] (e : F)
     (a : α) (n : N) (b : α) :
     e ((single a n) b) = single a (e n) b := by
-  classical
   simp only [single_apply]
   split_ifs
   · rfl
@@ -471,36 +471,36 @@ theorem coe_update [DecidableEq α] : (f.update a b : α → M) = Function.updat
   dsimp
   split_ifs <;> simp
 
+open Classical in
 @[simp]
 theorem update_self : f.update a (f a) = f := by
-  classical
     ext
     simp
 
+open Classical in
 @[simp]
 theorem zero_update : update 0 a b = single a b := by
-  classical
     ext
     rw [single_eq_update]
     rfl
 
+open Classical in
 theorem support_update [DecidableEq α] [DecidableEq M] :
     support (f.update a b) = if b = 0 then f.support.erase a else insert a f.support := by
-  classical
   dsimp only [update]
   congr!
 
+open Classical in
 @[simp]
 theorem support_update_zero [DecidableEq α] : support (f.update a 0) = f.support.erase a := by
-  classical
   simp only [update, ite_true, mem_support_iff, ne_eq, not_not]
   congr!
 
 variable {b}
 
+open Classical in
 theorem support_update_ne_zero [DecidableEq α] (h : b ≠ 0) :
     support (f.update a b) = insert a f.support := by
-  classical
   simp only [update, h, ite_false, mem_support_iff, ne_eq]
   congr!
 
@@ -530,6 +530,7 @@ section Erase
 
 variable [Zero M]
 
+open Classical in
 /--
 `erase a f` is the finitely supported function equal to `f` except at `a` where it is equal to `0`.
 If `a` is not in the support of `f` then `erase a f = f`.
@@ -542,16 +543,15 @@ def erase (a : α) (f : α →₀ M) : α →₀ M where
     haveI := Classical.decEq α
     if a' = a then 0 else f a'
   mem_support_toFun a' := by
-    classical
     rw [mem_erase, mem_support_iff]; dsimp
     split_ifs with h
     · exact ⟨fun H _ => H.1 h, fun H => (H rfl).elim⟩
     · exact and_iff_right h
 
+open Classical in
 @[simp]
 theorem support_erase [DecidableEq α] {a : α} {f : α →₀ M} :
     (f.erase a).support = f.support.erase a := by
-  classical
   dsimp only [erase]
   congr!
 
@@ -770,18 +770,18 @@ theorem support_embDomain (f : α ↪ β) (v : α →₀ M) : (embDomain f v).su
 theorem embDomain_zero (f : α ↪ β) : (embDomain f 0 : β →₀ M) = 0 :=
   rfl
 
+open Classical in
 @[simp]
 theorem embDomain_apply (f : α ↪ β) (v : α →₀ M) (a : α) : embDomain f v (f a) = v a := by
-  classical
     change dite _ _ _ = _
     split_ifs with h <;> rw [Finset.mem_map' f] at h
     · refine congr_arg (v : α → M) (f.inj' ?_)
       exact Finset.choose_property (fun a₁ => f a₁ = f a) _ _
     · exact (not_mem_support_iff.1 h).symm
 
+open Classical in
 theorem embDomain_notin_range (f : α ↪ β) (v : α →₀ M) (a : β) (h : a ∉ Set.range f) :
     embDomain f v a = 0 := by
-  classical
     refine dif_neg (mt (fun h => ?_) h)
     rcases Finset.mem_map.1 h with ⟨a, _h, rfl⟩
     exact Set.mem_range_self a
@@ -805,9 +805,9 @@ theorem embDomain_mapRange (f : α ↪ β) (g : M → N) (p : α →₀ M) (hg :
     rw [mapRange_apply, embDomain_apply, embDomain_apply, mapRange_apply]
   · rw [mapRange_apply, embDomain_notin_range, embDomain_notin_range, ← hg] <;> assumption
 
+open Classical in
 theorem single_of_embDomain_single (l : α →₀ M) (f : α ↪ β) (a : β) (b : M) (hb : b ≠ 0)
     (h : l.embDomain f = single a b) : ∃ x, l = single x b ∧ f x = a := by
-  classical
     have h_map_support : Finset.map f l.support = {a}
     rw [← support_embDomain, h, support_single_ne_zero _ hb]
     have ha : a ∈ Finset.map f l.support
@@ -824,10 +824,10 @@ theorem single_of_embDomain_single (l : α →₀ M) (f : α ↪ β) (a : β) (b
         exact h_cases (f.injective (hc₂.trans hfd))
     · exact hc₂
 
+open Classical in
 @[simp]
 theorem embDomain_single (f : α ↪ β) (a : α) (m : M) :
     embDomain f (single a m) = single (f a) m := by
-  classical
     ext b
     by_cases h : b ∈ Set.range f
     · rcases h with ⟨a', rfl⟩
@@ -846,6 +846,7 @@ section ZipWith
 
 variable [Zero M] [Zero N] [Zero P]
 
+open Classical in
 /-- Given finitely supported functions `g₁ : α →₀ M` and `g₂ : α →₀ N` and function `f : M → N → P`,
 `Finsupp.zipWith f hf g₁ g₂` is the finitely supported function `α →₀ P` satisfying
 `zipWith f hf g₁ g₂ a = f (g₁ a) (g₂ a)`, which is well-defined when `f 0 0 = 0`. -/
@@ -854,7 +855,6 @@ def zipWith (f : M → N → P) (hf : f 0 0 = 0) (g₁ : α →₀ M) (g₂ : α
     (haveI := Classical.decEq α; g₁.support ∪ g₂.support)
     (fun a => f (g₁ a) (g₂ a))
     fun a (H : f _ _ ≠ 0) => by
-      classical
       rw [mem_union, mem_support_iff, mem_support_iff, ← not_and_or]
       rintro ⟨h₁, h₂⟩; rw [h₁, h₂] at H; exact H hf
 
@@ -966,17 +966,17 @@ noncomputable def coeFnAddHom : (α →₀ M) →+ α → M where
   map_zero' := coe_zero
   map_add' := coe_add
 
+open Classical in
 theorem update_eq_single_add_erase (f : α →₀ M) (a : α) (b : M) :
     f.update a b = single a b + f.erase a := by
-  classical
     ext j
     rcases eq_or_ne a j with (rfl | h)
     · simp
     · simp [Function.update_noteq h.symm, single_apply, h, erase_ne, h.symm]
 
+open Classical in
 theorem update_eq_erase_add_single (f : α →₀ M) (a : α) (b : M) :
     f.update a b = f.erase a + single a b := by
-  classical
     ext j
     rcases eq_or_ne a j with (rfl | h)
     · simp
@@ -1001,6 +1001,7 @@ def eraseAddHom (a : α) : (α →₀ M) →+ α →₀ M where
   map_zero' := erase_zero a
   map_add' := erase_add a
 
+open Classical in
 @[elab_as_elim]
 protected theorem induction {p : (α →₀ M) → Prop} (f : α →₀ M) (h0 : p 0)
     (ha : ∀ (a b) (f : α →₀ M), a ∉ f.support → b ≠ 0 → p f → p (single a b + f)) : p f :=
@@ -1008,29 +1009,28 @@ protected theorem induction {p : (α →₀ M) → Prop} (f : α →₀ M) (h0 :
   fun s =>
   Finset.cons_induction_on s (fun f hf => by rwa [support_eq_empty.1 hf]) fun a s has ih f hf => by
     suffices p (single a (f a) + f.erase a) by rwa [single_add_erase] at this
-    classical
-      apply ha
-      · rw [support_erase, mem_erase]
-        exact fun H => H.1 rfl
-      · rw [← mem_support_iff, hf]
-        exact mem_cons_self _ _
-      · apply ih _ _
-        rw [support_erase, hf, Finset.erase_cons]
+    apply ha
+    · rw [support_erase, mem_erase]
+      exact fun H => H.1 rfl
+    · rw [← mem_support_iff, hf]
+      exact mem_cons_self _ _
+    · apply ih _ _
+      rw [support_erase, hf, Finset.erase_cons]
 
+open Classical in
 theorem induction₂ {p : (α →₀ M) → Prop} (f : α →₀ M) (h0 : p 0)
     (ha : ∀ (a b) (f : α →₀ M), a ∉ f.support → b ≠ 0 → p f → p (f + single a b)) : p f :=
   suffices ∀ (s) (f : α →₀ M), f.support = s → p f from this _ _ rfl
   fun s =>
   Finset.cons_induction_on s (fun f hf => by rwa [support_eq_empty.1 hf]) fun a s has ih f hf => by
     suffices p (f.erase a + single a (f a)) by rwa [erase_add_single] at this
-    classical
-      apply ha
-      · rw [support_erase, mem_erase]
-        exact fun H => H.1 rfl
-      · rw [← mem_support_iff, hf]
-        exact mem_cons_self _ _
-      · apply ih _ _
-        rw [support_erase, hf, Finset.erase_cons]
+    apply ha
+    · rw [support_erase, mem_erase]
+      exact fun H => H.1 rfl
+    · rw [← mem_support_iff, hf]
+      exact mem_cons_self _ _
+    · apply ih _ _
+      rw [support_erase, hf, Finset.erase_cons]
 
 theorem induction_linear {p : (α →₀ M) → Prop} (f : α →₀ M) (h0 : p 0)
     (hadd : ∀ f g : α →₀ M, p f → p g → p (f + g)) (hsingle : ∀ a b, p (single a b)) : p f :=
@@ -1181,11 +1181,11 @@ instance instAddCommGroup [AddCommGroup G] : AddCommGroup (α →₀ G) :=
       fun _ _ => rfl with
     toAddGroup := Finsupp.instAddGroup }
 
+open Classical in
 theorem single_add_single_eq_single_add_single [AddCommMonoid M] {k l m n : α} {u v : M}
     (hu : u ≠ 0) (hv : v ≠ 0) :
     single k u + single l v = single m u + single n v ↔
       (k = m ∧ l = n) ∨ (u = v ∧ k = n ∧ l = m) ∨ (u + v = 0 ∧ k = l ∧ m = n) := by
-  classical
     simp_rw [DFunLike.ext_iff, coe_add, single_eq_pi_single, ← funext_iff]
     exact Pi.single_add_single_eq_single_add_single hu hv
 

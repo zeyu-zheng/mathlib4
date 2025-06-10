@@ -627,6 +627,7 @@ variable {Ω : Type*} [MeasureSpace Ω] [IsProbabilityMeasure (ℙ : Measure Ω)
 
 open Set TopologicalSpace
 
+open Classical in
 /-- Preliminary lemma for the strong law of large numbers for vector-valued random variables:
 the composition of the random variables with a simple function satisfies the strong law of large
 numbers. -/
@@ -636,7 +637,6 @@ lemma strong_law_ae_simpleFunc_comp (X : ℕ → Ω → E) (h' : Measurable (X 0
       Tendsto (fun n : ℕ ↦ (n : ℝ) ⁻¹ • (∑ i ∈ range n, φ (X i ω))) atTop (𝓝 𝔼[φ ∘ (X 0)]) := by
   -- this follows from the one-dimensional version when `φ` takes a single value, and is then
   -- extended to the general case by linearity.
-  classical
   refine SimpleFunc.induction (P := fun ψ ↦ ∀ᵐ ω,
     Tendsto (fun n : ℕ ↦ (n : ℝ) ⁻¹ • (∑ i ∈ range n, ψ (X i ω))) atTop (𝓝 𝔼[ψ ∘ (X 0)])) ?_ ?_ φ
   · intro c s hs

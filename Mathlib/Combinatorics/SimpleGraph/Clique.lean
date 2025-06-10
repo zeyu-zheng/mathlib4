@@ -241,9 +241,9 @@ theorem is3Clique_iff :
 
 end DecidableEq
 
+open Classical in
 theorem is3Clique_iff_exists_cycle_length_three :
     (∃ s : Finset α, G.IsNClique 3 s) ↔ ∃ (u : α) (w : G.Walk u u), w.IsCycle ∧ w.length = 3 := by
-  classical
   simp_rw [is3Clique_iff, isCycle_def]
   exact
     ⟨(fun ⟨_, a, _, _, hab, hac, hbc, _⟩ => ⟨a, cons hab (cons hbc (cons hac.symm nil)), by aesop⟩),
@@ -372,9 +372,9 @@ protected theorem CliqueFree.replaceVertex [DecidableEq α] (h : G.CliqueFree n)
     conv at hφ => enter [a, b]; rw [G.adj_replaceVertex_iff_of_ne _ (mt a) (mt b)]
     exact hφ
 
+open Classical in
 @[simp]
 theorem cliqueFree_two : G.CliqueFree 2 ↔ G = ⊥ := by
-  classical
   constructor
   · simp_rw [← edgeSet_eq_empty, Set.eq_empty_iff_forall_not_mem, Sym2.forall, mem_edgeSet]
     exact fun h a b hab => h _ ⟨by simpa [hab.ne], card_pair hab.ne⟩
@@ -450,10 +450,10 @@ protected theorem CliqueFree.cliqueFreeOn (hG : G.CliqueFree n) : G.CliqueFreeOn
 theorem cliqueFreeOn_of_card_lt {s : Finset α} (h : s.card < n) : G.CliqueFreeOn s n :=
   fun _t hts ht => h.not_le <| ht.2.symm.trans_le <| card_mono hts
 
+open Classical in
 -- TODO: Restate using `SimpleGraph.IndepSet` once we have it
 @[simp]
 theorem cliqueFreeOn_two : G.CliqueFreeOn s 2 ↔ s.Pairwise (G.Adjᶜ) := by
-  classical
   refine ⟨fun h a ha b hb _ hab => h ?_ ⟨by simpa [hab.ne], card_pair hab.ne⟩, ?_⟩
   · push_cast
     exact Set.insert_subset_iff.2 ⟨ha, Set.singleton_subset_iff.2 hb⟩
@@ -462,9 +462,9 @@ theorem cliqueFreeOn_two : G.CliqueFreeOn s 2 ↔ s.Pairwise (G.Adjᶜ) := by
   simp only [coe_insert, coe_singleton, Set.insert_subset_iff, Set.singleton_subset_iff] at hst
   refine h hst.1 hst.2 hab (ht ?_ ?_ hab) <;> simp
 
+open Classical in
 theorem CliqueFreeOn.of_succ (hs : G.CliqueFreeOn s (n + 1)) (ha : a ∈ s) :
     G.CliqueFreeOn (s ∩ G.neighborSet a) n := by
-  classical
   refine fun t hts ht => hs ?_ (ht.insert fun b hb => (hts hb).2)
   push_cast
   exact Set.insert_subset_iff.2 ⟨ha, hts.trans Set.inter_subset_left⟩
@@ -512,6 +512,7 @@ theorem cliqueSet_one (G : SimpleGraph α) : G.cliqueSet 1 = Set.range singleton
 theorem cliqueSet_bot (hn : 1 < n) : (⊥ : SimpleGraph α).cliqueSet n = ∅ :=
   (cliqueFree_bot hn).cliqueSet
 
+open Classical in
 @[simp]
 theorem cliqueSet_map (hn : n ≠ 1) (G : SimpleGraph α) (f : α ↪ β) :
     (G.map f).cliqueSet n = map f '' G.cliqueSet n := by
@@ -519,7 +520,6 @@ theorem cliqueSet_map (hn : n ≠ 1) (G : SimpleGraph α) (f : α ↪ β) :
   constructor
   · rintro ⟨hs, rfl⟩
     have hs' : (s.preimage f f.injective.injOn).map f = s
-    classical
     rw [map_eq_image, image_preimage, filter_true_of_mem]
     rintro a ha
     obtain ⟨b, hb, hba⟩ := exists_mem_ne (hn.lt_of_le' <| Finset.card_pos.2 ⟨a, ha⟩) a

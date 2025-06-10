@@ -64,12 +64,12 @@ theorem exists_eq_pow_of_mul_eq_pow_of_coprime {R : Type*} [CommSemiring R] [IsD
     dvd_add (dvd_mul_of_dvd_right (GCDMonoid.gcd_dvd_left _ _) _)
       (dvd_mul_of_dvd_right (GCDMonoid.gcd_dvd_right _ _) _)
 
+open Classical in
 nonrec
 theorem Finset.exists_eq_pow_of_mul_eq_pow_of_coprime {ι R : Type*} [CommSemiring R] [IsDomain R]
     [GCDMonoid R] [Unique Rˣ] {n : ℕ} {c : R} {s : Finset ι} {f : ι → R}
     (h : ∀ i ∈ s, ∀ j ∈ s, i ≠ j → IsCoprime (f i) (f j))
     (hprod : ∏ i ∈ s, f i = c ^ n) : ∀ i ∈ s, ∃ d : R, f i = d ^ n := by
-  classical
     intro i hi
     rw [← insert_erase hi, prod_insert (not_mem_erase i s)] at hprod
     refine
@@ -118,9 +118,9 @@ theorem card_nthRoots_subgroup_units [Fintype G] [DecidableEq G] (f : G →* R) 
     _ ≤ (nthRoots n (f g₀)).toFinset.card := card_le_card_of_injOn f (by aesop) hf.injOn
     _ ≤ _ := (nthRoots n (f g₀)).toFinset_card_le
 
+open Classical in
 /-- A finite subgroup of the unit group of an integral domain is cyclic. -/
 theorem isCyclic_of_subgroup_isDomain [Finite G] (f : G →* R) (hf : Injective f) : IsCyclic G := by
-  classical
     cases nonempty_fintype G
     apply isCyclic_of_card_pow_eq_one_le
     intro n hn
@@ -176,10 +176,10 @@ variable [Fintype G]
 @[deprecated (since := "2024-06-10")]
 alias card_fiber_eq_of_mem_range := MonoidHom.card_fiber_eq_of_mem_range
 
+open Classical in
 /-- In an integral domain, a sum indexed by a nontrivial homomorphism from a finite group is zero.
 -/
 theorem sum_hom_units_eq_zero (f : G →* R) (hf : f ≠ 1) : ∑ g : G, f g = 0 := by
-  classical
     obtain ⟨x, hx⟩ : ∃ x : MonoidHom.range f.toHomUnits,
         ∀ y : MonoidHom.range f.toHomUnits, y ∈ Submonoid.powers x :=
       IsCyclic.exists_monoid_generator

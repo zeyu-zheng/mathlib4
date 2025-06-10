@@ -86,11 +86,11 @@ lemma addContent_sUnion (h_ss : ↑I ⊆ C)
     m (⋃₀ I) = ∑ u ∈ I, m u :=
   m.sUnion' I h_ss h_dis h_mem
 
+open Classical in
 lemma addContent_union' (hs : s ∈ C) (ht : t ∈ C) (hst : s ∪ t ∈ C) (h_dis : Disjoint s t) :
     m (s ∪ t) = m s + m t := by
   by_cases hs_empty : s = ∅
   · simp only [hs_empty, Set.empty_union, addContent_empty, zero_add]
-  classical
   have h := addContent_sUnion (m := m) (I := {s, t}) ?_ ?_ ?_
   rotate_left
   · simp only [coe_pair, Set.insert_subset_iff, hs, ht, Set.singleton_subset_iff, and_self_iff]
@@ -109,11 +109,11 @@ lemma addContent_union' (hs : s ∈ C) (ht : t ∈ C) (hst : s ∪ t ∈ C) (h_d
 
 section IsSetSemiring
 
+open Classical in
 lemma addContent_eq_add_diffFinset₀_of_subset (hC : IsSetSemiring C)
     (hs : s ∈ C) (hI : ↑I ⊆ C) (hI_ss : ∀ t ∈ I, t ⊆ s)
     (h_dis : PairwiseDisjoint (I : Set (Set α)) id) :
     m s = ∑ i ∈ I, m i + ∑ i ∈ hC.diffFinset₀ hs hI, m i := by
-  classical
   conv_lhs => rw [← hC.sUnion_union_diffFinset₀_of_subset hs hI hI_ss]
   rw [addContent_sUnion]
   · rw [sum_union]
@@ -124,11 +124,11 @@ lemma addContent_eq_add_diffFinset₀_of_subset (hC : IsSetSemiring C)
     exact hC.pairwiseDisjoint_union_diffFinset₀ hs hI h_dis
   · rwa [hC.sUnion_union_diffFinset₀_of_subset hs hI hI_ss]
 
+open Classical in
 lemma sum_addContent_le_of_subset (hC : IsSetSemiring C)
     (h_ss : ↑I ⊆ C) (h_dis : PairwiseDisjoint (I : Set (Set α)) id)
     (ht : t ∈ C) (hJt : ∀ s ∈ I, s ⊆ t) :
     ∑ u ∈ I, m u ≤ m t := by
-  classical
   rw [addContent_eq_add_diffFinset₀_of_subset hC ht h_ss hJt h_dis]
   exact le_add_right le_rfl
 
@@ -157,10 +157,10 @@ lemma addContent_union_le (hC : IsSetRing C) (hs : s ∈ C) (ht : t ∈ C) :
       (addContent_mono hC.isSetSemiring (hC.diff_mem ht hs) ht diff_subset)
   · rw [Set.disjoint_iff_inter_eq_empty, inter_diff_self]
 
+open Classical in
 lemma addContent_biUnion_le {ι : Type*} (hC : IsSetRing C) {s : ι → Set α}
     {S : Finset ι} (hs : ∀ n ∈ S, s n ∈ C) :
     m (⋃ i ∈ S, s i) ≤ ∑ i ∈ S, m (s i) := by
-  classical
   induction' S using Finset.induction with i S hiS h hs
   · simp
   · rw [Finset.sum_insert hiS]

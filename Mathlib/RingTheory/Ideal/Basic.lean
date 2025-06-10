@@ -555,9 +555,9 @@ theorem pow_multiset_sum_mem_span_pow [DecidableEq α] (s : Multiset α) (n : �
     simp_rw [mul_assoc, mul_comm (s.sum ^ (Multiset.card s * n + 1)), ← mul_assoc]
     exact mul_mem_left _ _ hs
 
+open Classical in
 theorem sum_pow_mem_span_pow {ι} (s : Finset ι) (f : ι → α) (n : ℕ) :
     (∑ i ∈ s, f i) ^ (s.card * n + 1) ∈ span ((fun i => f i ^ (n + 1)) '' s) := by
-  classical
   simpa only [Multiset.card_map, Multiset.map_map, comp_apply, Multiset.toFinset_map,
     Finset.coe_image, Finset.val_toFinset] using pow_multiset_sum_mem_span_pow (s.1.map f) n
 

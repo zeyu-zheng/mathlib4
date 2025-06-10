@@ -48,10 +48,10 @@ noncomputable
 def cotangentSpaceBasis : Basis P.vars S P.CotangentSpace :=
   (mvPolynomialBasis _ _).baseChange _
 
+open Classical in
 @[simp]
 lemma cotangentSpaceBasis_repr_tmul (r x i) :
     P.cotangentSpaceBasis.repr (r ⊗ₜ .D _ _ x) i = r * aeval P.val (pderiv i x) := by
-  classical
   simp only [cotangentSpaceBasis, Basis.baseChange_repr_tmul, mvPolynomialBasis_repr_apply,
     Algebra.smul_def, mul_comm r]
   rfl

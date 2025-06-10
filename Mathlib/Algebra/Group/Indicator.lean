@@ -216,10 +216,10 @@ theorem mulIndicator_preimage (s : Set α) (f : α → M) (B : Set M) :
   letI := Classical.decPred (· ∈ s)
   piecewise_preimage s f 1 B
 
+open Classical in
 @[to_additive]
 theorem mulIndicator_one_preimage (s : Set M) :
     t.mulIndicator 1 ⁻¹' s ∈ ({Set.univ, ∅} : Set (Set α)) := by
-  classical
     rw [mulIndicator_one', preimage_one]
     split_ifs <;> simp
 
@@ -230,10 +230,10 @@ theorem mulIndicator_const_preimage_eq_union (U : Set α) (s : Set M) (a : M) [D
   rw [mulIndicator_preimage, preimage_one, preimage_const]
   split_ifs <;> simp [← compl_eq_univ_diff]
 
+open Classical in
 @[to_additive]
 theorem mulIndicator_const_preimage (U : Set α) (s : Set M) (a : M) :
     (U.mulIndicator fun _ => a) ⁻¹' s ∈ ({Set.univ, U, Uᶜ, ∅} : Set (Set α)) := by
-  classical
     rw [mulIndicator_const_preimage_eq_union]
     split_ifs <;> simp
 

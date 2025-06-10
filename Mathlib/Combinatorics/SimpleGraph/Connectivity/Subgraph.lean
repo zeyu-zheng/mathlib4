@@ -343,9 +343,9 @@ lemma induce_sUnion_connected_of_pairwise_not_disjoint {S : Set (Set V)} (Sn : S
   refine ⟨s ∪ t, Set.union_subset (Set.subset_sUnion_of_mem sS) (Set.subset_sUnion_of_mem tS),
           Or.inl vs, Or.inr wt, induce_union_connected (Sc sS) (Sc tS) (Snd sS tS) _ _⟩
 
+open Classical in
 lemma extend_finset_to_connected (Gpc : G.Preconnected) {t : Finset V} (tn : t.Nonempty) :
     ∃ (t' : Finset V), t ⊆ t' ∧ (G.induce (t' : Set V)).Connected := by
-  classical
   obtain ⟨u, ut⟩ := tn
   refine ⟨t.biUnion (fun v => (Gpc u v).some.support.toFinset), fun v vt => ?_, ?_⟩
   · simp only [Finset.mem_biUnion, List.mem_toFinset, exists_prop]

@@ -52,6 +52,7 @@ theorem Prod.associated_iff {M N : Type*} [Monoid M] [Monoid N] {x z : M × N} :
   fun ⟨⟨u₁, h₁⟩, ⟨u₂, h₂⟩⟩ =>
     ⟨MulEquiv.prodUnits.invFun (u₁, u₂), Prod.eq_iff_fst_eq_snd_eq.2 ⟨h₁, h₂⟩⟩⟩
 
+open Classical in
 theorem Associated.prod {M : Type*} [CommMonoid M] {ι : Type*} (s : Finset ι) (f : ι → M)
     (g : ι → M) (h : ∀ i, i ∈ s → (f i) ~ᵤ (g i)) : (∏ i ∈ s, f i) ~ᵤ (∏ i ∈ s, g i) := by
   induction s using Finset.induction with
@@ -59,7 +60,6 @@ theorem Associated.prod {M : Type*} [CommMonoid M] {ι : Type*} (s : Finset ι) 
     simp only [Finset.prod_empty]
     rfl
   | @insert j s hjs IH =>
-    classical
     convert_to (∏ i ∈ insert j s, f i) ~ᵤ (∏ i ∈ insert j s, g i)
     rw [Finset.prod_insert hjs, Finset.prod_insert hjs]
     exact Associated.mul_mul (h j (Finset.mem_insert_self j s))
@@ -95,9 +95,9 @@ theorem Multiset.prod_primes_dvd [CancelCommMonoidWithZero α]
       Multiset.countP_pos] at this
     exact this ⟨b, b_in_s, assoc.symm⟩
 
+open Classical in
 theorem Finset.prod_primes_dvd [CancelCommMonoidWithZero α] [Unique αˣ] {s : Finset α} (n : α)
     (h : ∀ a ∈ s, Prime a) (div : ∀ a ∈ s, a ∣ n) : (∏ p ∈ s, p) ∣ n := by
-  classical
     exact
       Multiset.prod_primes_dvd n (by simpa only [Multiset.map_id', Finset.mem_def] using h)
         (by simpa only [Multiset.map_id', Finset.mem_def] using div)

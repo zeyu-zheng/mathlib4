@@ -98,10 +98,10 @@ theorem lex_fibration [∀ (i) (s : Set ι), Decidable (i ∈ s)] :
 
 variable {r s}
 
+open Classical in
 theorem Lex.acc_of_single_erase [DecidableEq ι] {x : Π₀ i, α i} (i : ι)
     (hs : Acc (DFinsupp.Lex r s) <| single i (x i)) (hu : Acc (DFinsupp.Lex r s) <| x.erase i) :
     Acc (DFinsupp.Lex r s) x := by
-  classical
     convert ← @Acc.of_fibration _ _ _ _ _ (lex_fibration r s) ⟨{i}, _⟩
       (InvImage.accessible snd <| hs.prod_gameAdd hu)
     convert piecewise_single_erase x i
@@ -110,20 +110,21 @@ theorem Lex.acc_of_single_erase [DecidableEq ι] {x : Π₀ i, α i} (i : ι)
 theorem Lex.acc_zero (hbot : ∀ ⦃i a⦄, ¬s i a 0) : Acc (DFinsupp.Lex r s) 0 :=
   Acc.intro 0 fun _ ⟨_, _, h⟩ => (hbot h).elim
 
+open Classical in
 theorem Lex.acc_of_single (hbot : ∀ ⦃i a⦄, ¬s i a 0) [DecidableEq ι]
     [∀ (i) (x : α i), Decidable (x ≠ 0)] (x : Π₀ i, α i) :
     (∀ i ∈ x.support, Acc (DFinsupp.Lex r s) <| single i (x i)) → Acc (DFinsupp.Lex r s) x := by
   generalize ht : x.support = t; revert x
-  classical
-    induction' t using Finset.induction with b t hb ih
-    · intro x ht
-      rw [support_eq_empty.1 ht]
-      exact fun _ => Lex.acc_zero hbot
-    refine fun x ht h => Lex.acc_of_single_erase b (h b <| t.mem_insert_self b) ?_
-    refine ih _ (by rw [support_erase, ht, Finset.erase_insert hb]) fun a ha => ?_
-    rw [erase_ne (ha.ne_of_not_mem hb)]
-    exact h a (Finset.mem_insert_of_mem ha)
+  induction' t using Finset.induction with b t hb ih
+  · intro x ht
+    rw [support_eq_empty.1 ht]
+    exact fun _ => Lex.acc_zero hbot
+  refine fun x ht h => Lex.acc_of_single_erase b (h b <| t.mem_insert_self b) ?_
+  refine ih _ (by rw [support_erase, ht, Finset.erase_insert hb]) fun a ha => ?_
+  rw [erase_ne (ha.ne_of_not_mem hb)]
+  exact h a (Finset.mem_insert_of_mem ha)
 
+open Classical in
 theorem Lex.acc_single (hbot : ∀ ⦃i a⦄, ¬s i a 0) (hs : ∀ i, WellFounded (s i))
     [DecidableEq ι] {i : ι} (hi : Acc (rᶜ ⊓ (· ≠ ·)) i) :
     ∀ a, Acc (DFinsupp.Lex r s) (single i a) := by
@@ -137,14 +138,13 @@ theorem Lex.acc_single (hbot : ∀ ⦃i a⦄, ¬s i a 0) (hs : ∀ i, WellFounde
   swap
   · exact (hbot hs).elim
   subst hik
-  classical
-    refine Lex.acc_of_single hbot x fun j hj ↦ ?_
-    obtain rfl | hij := eq_or_ne i j
-    · exact ha _ hs
-    by_cases h : r j i
-    · rw [hr j h, single_eq_of_ne hij, single_zero]
-      exact Lex.acc_zero hbot
-    · exact ih _ ⟨h, hij.symm⟩ _
+  refine Lex.acc_of_single hbot x fun j hj ↦ ?_
+  obtain rfl | hij := eq_or_ne i j
+  · exact ha _ hs
+  by_cases h : r j i
+  · rw [hr j h, single_eq_of_ne hij, single_zero]
+    exact Lex.acc_zero hbot
+  · exact ih _ ⟨h, hij.symm⟩ _
 
 theorem Lex.acc (hbot : ∀ ⦃i a⦄, ¬s i a 0) (hs : ∀ i, WellFounded (s i))
     [DecidableEq ι] [∀ (i) (x : α i), Decidable (x ≠ 0)] (x : Π₀ i, α i)

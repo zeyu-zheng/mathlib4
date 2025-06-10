@@ -926,11 +926,11 @@ noncomputable def toLinearPMap (g : Submodule R (E × F)) : E →ₗ.[R] F where
 theorem toLinearPMap_domain (g : Submodule R (E × F)) :
     g.toLinearPMap.domain = g.map (LinearMap.fst R E F) := rfl
 
+open Classical in
 theorem toLinearPMap_apply_aux {g : Submodule R (E × F)}
     (hg : ∀ (x : E × F) (_hx : x ∈ g) (_hx' : x.fst = 0), x.snd = 0)
     (x : g.map (LinearMap.fst R E F)) :
     g.toLinearPMap x = valFromGraph hg x.2 := by
-  classical
   change (if hg : _ then g.toLinearPMapAux hg else 0) x = _
   rw [dif_pos]
   · rfl

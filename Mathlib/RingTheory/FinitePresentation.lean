@@ -173,6 +173,7 @@ theorem iff_quotient_mvPolynomial' :
     -- convert Submodule.fg_bot
     -- exact RingHom.ker_coe_equiv equiv.symm.toRingEquiv
 
+open Classical in
 universe v in
 -- Porting note: make universe level explicit to ensure `ι, ι'` has the same universe level
 /-- If `A` is a finitely presented `R`-algebra, then `MvPolynomial (Fin n) A` is finitely presented
@@ -182,7 +183,6 @@ theorem mvPolynomial_of_finitePresentation [FinitePresentation.{w₁, w₂} R A]
     FinitePresentation.{w₁, max v w₂} R (MvPolynomial ι A) := by
   have hfp : FinitePresentation.{w₁, w₂} R A := inferInstance
   rw [iff_quotient_mvPolynomial'] at hfp ⊢
-  classical
   -- Porting note: use the same universe level
   obtain ⟨(ι' : Type v), _, f, hf_surj, hf_ker⟩ := hfp
   let g := (MvPolynomial.mapAlgHom f).comp (MvPolynomial.sumAlgEquiv R ι ι').toAlgHom
@@ -213,12 +213,12 @@ theorem trans [Algebra A B] [IsScalarTower R A B] [FinitePresentation R A]
 
 open MvPolynomial
 
+open Classical in
 -- We follow the proof of https://stacks.math.columbia.edu/tag/0561
 -- TODO: extract out helper lemmas and tidy proof.
 theorem of_restrict_scalars_finitePresentation [Algebra A B] [IsScalarTower R A B]
     [FinitePresentation.{w₁, w₃} R B] [FiniteType R A] :
     FinitePresentation.{w₂, w₃} A B := by
-  classical
   obtain ⟨n, f, hf, s, hs⟩ := FinitePresentation.out (R := R) (A := B)
   letI RX := MvPolynomial (Fin n) R
   letI AX := MvPolynomial (Fin n) A
@@ -302,11 +302,11 @@ theorem of_restrict_scalars_finitePresentation [Algebra A B] [IsScalarTower R A 
 
 variable {R A B}
 
+open Classical in
 -- TODO: extract out helper lemmas and tidy proof.
 /-- This is used to prove the strictly stronger `ker_fg_of_surjective`. Use it instead. -/
 theorem ker_fg_of_mvPolynomial {n : ℕ} (f : MvPolynomial (Fin n) R →ₐ[R] A)
     (hf : Function.Surjective f) [FinitePresentation R A] : f.toRingHom.ker.FG := by
-  classical
     obtain ⟨m, f', hf', s, hs⟩ := FinitePresentation.out (R := R) (A := A)
     let RXn := MvPolynomial (Fin n) R
     let RXm := MvPolynomial (Fin m) R

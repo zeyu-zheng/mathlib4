@@ -360,6 +360,7 @@ section LocallyFinite
 
 variable {ι : Type*} [TopologicalSpace X]
 
+open Classical in
 -- Porting note (#11215): TODO: reformulate for any locally finite family of sets
 /-- If a family of functions `f` has locally-finite multiplicative support, subordinate to a family
 of open sets, then for any point we can find a neighbourhood on which only finitely-many members of
@@ -373,29 +374,28 @@ theorem LocallyFinite.exists_finset_nhd_mulSupport_subset {U : ι → Set X} [On
     ∃ (is : Finset ι), ∃ n, n ∈ 𝓝 x ∧ (n ⊆ ⋂ i ∈ is, U i) ∧
       ∀ z ∈ n, (mulSupport fun i => f i z) ⊆ is := by
   obtain ⟨n, hn, hnf⟩ := hlf x
-  classical
-    let is := hnf.toFinset.filter fun i => x ∈ U i
-    let js := hnf.toFinset.filter fun j => x ∉ U j
-    refine
-      ⟨is, (n ∩ ⋂ j ∈ js, (mulTSupport (f j))ᶜ) ∩ ⋂ i ∈ is, U i, inter_mem (inter_mem hn ?_) ?_,
-        inter_subset_right, fun z hz => ?_⟩
-    · exact (biInter_finset_mem js).mpr fun j hj => IsClosed.compl_mem_nhds (isClosed_mulTSupport _)
-        (Set.not_mem_subset (hso j) (Finset.mem_filter.mp hj).2)
-    · exact (biInter_finset_mem is).mpr fun i hi => (ho i).mem_nhds (Finset.mem_filter.mp hi).2
-    · have hzn : z ∈ n := by
-        rw [inter_assoc] at hz
-        exact mem_of_mem_inter_left hz
-      replace hz := mem_of_mem_inter_right (mem_of_mem_inter_left hz)
-      simp only [js, Finset.mem_filter, Finite.mem_toFinset, mem_setOf_eq, mem_iInter,
-        and_imp] at hz
-      suffices (mulSupport fun i => f i z) ⊆ hnf.toFinset by
-        refine hnf.toFinset.subset_coe_filter_of_subset_forall _ this fun i hi => ?_
-        specialize hz i ⟨z, ⟨hi, hzn⟩⟩
-        contrapose hz
-        simp [hz, subset_mulTSupport (f i) hi]
-      intro i hi
-      simp only [Finite.coe_toFinset, mem_setOf_eq]
-      exact ⟨z, ⟨hi, hzn⟩⟩
+  let is := hnf.toFinset.filter fun i => x ∈ U i
+  let js := hnf.toFinset.filter fun j => x ∉ U j
+  refine
+    ⟨is, (n ∩ ⋂ j ∈ js, (mulTSupport (f j))ᶜ) ∩ ⋂ i ∈ is, U i, inter_mem (inter_mem hn ?_) ?_,
+      inter_subset_right, fun z hz => ?_⟩
+  · exact (biInter_finset_mem js).mpr fun j hj => IsClosed.compl_mem_nhds (isClosed_mulTSupport _)
+      (Set.not_mem_subset (hso j) (Finset.mem_filter.mp hj).2)
+  · exact (biInter_finset_mem is).mpr fun i hi => (ho i).mem_nhds (Finset.mem_filter.mp hi).2
+  · have hzn : z ∈ n := by
+      rw [inter_assoc] at hz
+      exact mem_of_mem_inter_left hz
+    replace hz := mem_of_mem_inter_right (mem_of_mem_inter_left hz)
+    simp only [js, Finset.mem_filter, Finite.mem_toFinset, mem_setOf_eq, mem_iInter,
+      and_imp] at hz
+    suffices (mulSupport fun i => f i z) ⊆ hnf.toFinset by
+      refine hnf.toFinset.subset_coe_filter_of_subset_forall _ this fun i hi => ?_
+      specialize hz i ⟨z, ⟨hi, hzn⟩⟩
+      contrapose hz
+      simp [hz, subset_mulTSupport (f i) hi]
+    intro i hi
+    simp only [Finite.coe_toFinset, mem_setOf_eq]
+    exact ⟨z, ⟨hi, hzn⟩⟩
 
 @[to_additive]
 theorem locallyFinite_mulSupport_iff [CommMonoid M] {f : ι → X → M} :

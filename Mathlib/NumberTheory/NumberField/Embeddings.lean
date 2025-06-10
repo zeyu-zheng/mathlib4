@@ -84,13 +84,13 @@ open FiniteDimensional Polynomial Set
 variable {K : Type*} [Field K] [NumberField K]
 variable {A : Type*} [NormedField A] [IsAlgClosed A] [NormedAlgebra ℚ A]
 
+open Classical in
 theorem coeff_bdd_of_norm_le {B : ℝ} {x : K} (h : ∀ φ : K →+* A, ‖φ x‖ ≤ B) (i : ℕ) :
     ‖(minpoly ℚ x).coeff i‖ ≤ max B 1 ^ finrank ℚ K * (finrank ℚ K).choose (finrank ℚ K / 2) := by
   have hx := Algebra.IsSeparable.isIntegral ℚ x
   rw [← norm_algebraMap' A, ← coeff_map (algebraMap ℚ A)]
   refine coeff_bdd_of_roots_le _ (minpoly.monic hx)
       (IsAlgClosed.splits_codomain _) (minpoly.natDegree_le x) (fun z hz => ?_) i
-  classical
   rw [← Multiset.mem_toFinset] at hz
   obtain ⟨φ, rfl⟩ := (range_eval_eq_rootSet_minpoly K A x).symm.subset hz
   exact h φ

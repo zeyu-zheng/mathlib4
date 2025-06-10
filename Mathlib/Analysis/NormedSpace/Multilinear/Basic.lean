@@ -108,6 +108,7 @@ namespace MultilinearMap
 
 variable (f : MultilinearMap 𝕜 E G)
 
+open Classical in
 /-- If `f` is a continuous multilinear map in finitely many variables on `E` and `m` is an element
 of `∀ i, E i` such that one of the `m i` has norm `0`, then `f m` has norm `0`.
 
@@ -116,7 +117,6 @@ where the domain has zero norm and the codomain has a nonzero norm
 does not satisfy this condition. -/
 lemma norm_map_coord_zero (hf : Continuous f) {m : ∀ i, E i} {i : ι} (hi : ‖m i‖ = 0) :
     ‖f m‖ = 0 := by
-  classical
   rw [← inseparable_zero_iff_norm] at hi ⊢
   have : Inseparable (update m i 0) m := inseparable_pi.2 <|
     (forall_update_iff m fun i a ↦ Inseparable a (m i)).2 ⟨hi.symm, fun _ _ ↦ rfl⟩
@@ -208,6 +208,7 @@ theorem norm_image_sub_le_of_bound' [DecidableEq ι] {C : ℝ} (hC : 0 ≤ C)
   convert A univ
   simp
 
+open Classical in
 /-- If `f` satisfies a boundedness property around `0`, one can deduce a bound on `f m₁ - f m₂`
 using the multilinearity. Here, we give a usable but not very precise version. See
 `norm_image_sub_le_of_bound'` for a more precise but less usable version. The bound is
@@ -215,7 +216,6 @@ using the multilinearity. Here, we give a usable but not very precise version. S
 theorem norm_image_sub_le_of_bound {C : ℝ} (hC : 0 ≤ C) (H : ∀ m, ‖f m‖ ≤ C * ∏ i, ‖m i‖)
     (m₁ m₂ : ∀ i, E i) :
     ‖f m₁ - f m₂‖ ≤ C * Fintype.card ι * max ‖m₁‖ ‖m₂‖ ^ (Fintype.card ι - 1) * ‖m₁ - m₂‖ := by
-  classical
   have A :
     ∀ i : ι,
       ∏ j, (if j = i then ‖m₁ i - m₂ i‖ else max ‖m₁ j‖ ‖m₂ j‖) ≤
@@ -1203,6 +1203,7 @@ theorem compContinuousLinearMapEquivL_apply (g : ContinuousMultilinearMap 𝕜 E
       g.compContinuousLinearMap fun i => (f i : E i →L[𝕜] E₁ i) :=
   rfl
 
+open Classical in
 /-- One of the components of the iterated derivative of a continuous multilinear map. Given a
 bijection `e` between a type `α` (typically `Fin k`) and a subset `s` of `ι`, this component is a
 continuous multilinear map of `k` vectors `v₁, ..., vₖ`, mapping them
@@ -1218,7 +1219,6 @@ noncomputable def iteratedFDerivComponent {α : Type*} [Fintype α]
     simp only [MultilinearMap.iteratedFDerivComponent, MultilinearMap.domDomRestrictₗ,
       MultilinearMap.coe_mk, MultilinearMap.domDomRestrict_apply, coe_coe]
     apply (f.le_opNorm _).trans _
-    classical
     rw [← prod_compl_mul_prod s.toFinset, mul_assoc]
     gcongr
     · apply le_of_eq
@@ -1268,13 +1268,13 @@ protected def iteratedFDeriv (f : ContinuousMultilinearMap 𝕜 E₁ G) (k : ℕ
     ContinuousMultilinearMap 𝕜 (fun (_ : Fin k) ↦ (∀ i, E₁ i)) G :=
   ∑ e : Fin k ↪ ι, iteratedFDerivComponent f e.toEquivRange (Pi.compRightL 𝕜 _ Subtype.val x)
 
+open Classical in
 /-- Controlling the norm of `f.iteratedFDeriv` when `f` is continuous multilinear. For the same
 bound on the iterated derivative of `f` in the calculus sense,
 see `ContinuousMultilinearMap.norm_iteratedFDeriv_le`. -/
 lemma norm_iteratedFDeriv_le' (f : ContinuousMultilinearMap 𝕜 E₁ G) (k : ℕ) (x : (i : ι) → E₁ i) :
     ‖f.iteratedFDeriv k x‖
       ≤ Nat.descFactorial (Fintype.card ι) k * ‖f‖ * ‖x‖ ^ (Fintype.card ι - k) := by
-  classical
   calc ‖f.iteratedFDeriv k x‖
   _ ≤ ∑ e : Fin k ↪ ι, ‖iteratedFDerivComponent f e.toEquivRange (fun i ↦ x i)‖ := norm_sum_le _ _
   _ ≤ ∑ _ : Fin k ↪ ι, ‖f‖ * ‖x‖ ^ (Fintype.card ι - k) := by

@@ -246,11 +246,11 @@ def chainBotCoeff : ℕ := chainTopCoeff (-α) β
 @[simp] lemma chainTopCoeff_zero : chainTopCoeff 0 β = 0 := dif_pos rfl
 @[simp] lemma chainBotCoeff_zero : chainBotCoeff 0 β = 0 := dif_pos neg_zero
 
+open Classical in
 lemma chainTopCoeff_add_one :
     letI := Classical.propDecidable
     chainTopCoeff α β + 1 =
       Nat.find (eventually_weightSpace_smul_add_eq_bot M α β hα).exists := by
-  classical
   rw [chainTopCoeff, dif_neg hα]
   apply Nat.succ_pred_eq_of_pos
   rw [zero_lt_iff]
@@ -260,9 +260,9 @@ lemma chainTopCoeff_add_one :
   exact Nat.find_spec (eventually_weightSpace_smul_add_eq_bot M α β hα).exists
   exact β.weightSpace_ne_bot _ (by simpa only [zero_smul, zero_add] using this)
 
+open Classical in
 lemma weightSpace_chainTopCoeff_add_one_nsmul_add :
     weightSpace M ((chainTopCoeff α β + 1) • α + β : L → R) = ⊥ := by
-  classical
   rw [chainTopCoeff_add_one _ _ hα]
   exact Nat.find_spec (eventually_weightSpace_smul_add_eq_bot M α β hα).exists
 
@@ -271,11 +271,11 @@ lemma weightSpace_chainTopCoeff_add_one_zsmul_add :
   rw [← weightSpace_chainTopCoeff_add_one_nsmul_add α β hα, ← Nat.cast_smul_eq_nsmul ℤ,
     Nat.cast_add, Nat.cast_one]
 
+open Classical in
 lemma weightSpace_nsmul_add_ne_bot_of_le {n} (hn : n ≤ chainTopCoeff α β) :
     weightSpace M (n • α + β : L → R) ≠ ⊥ := by
   by_cases hα : α = 0
   · rw [hα, smul_zero, zero_add]; exact β.weightSpace_ne_bot
-  classical
   rw [← Nat.lt_succ, Nat.succ_eq_add_one, chainTopCoeff_add_one _ _ hα] at hn
   exact Nat.find_min (eventually_weightSpace_smul_add_eq_bot M α β hα).exists hn
 

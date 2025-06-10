@@ -94,9 +94,9 @@ theorem card_mul_eq_card_mul [∀ a b, Decidable (r a b)]
   (card_mul_le_card_mul _ (fun a ha ↦ (hm a ha).ge) fun b hb ↦ (hn b hb).le).antisymm <|
     card_mul_le_card_mul' _ (fun a ha ↦ (hn a ha).ge) fun b hb ↦ (hm b hb).le
 
+open Classical in
 theorem card_le_card_of_forall_subsingleton (hs : ∀ a ∈ s, ∃ b, b ∈ t ∧ r a b)
     (ht : ∀ b ∈ t, ({ a ∈ s | r a b } : Set α).Subsingleton) : s.card ≤ t.card := by
-  classical
     rw [← mul_one s.card, ← mul_one t.card]
     exact card_mul_le_card_mul r
       (fun a h ↦ card_pos.2 (by

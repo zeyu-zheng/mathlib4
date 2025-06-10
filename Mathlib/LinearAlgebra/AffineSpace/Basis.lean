@@ -228,8 +228,8 @@ theorem coe_coord_of_subsingleton_eq_one [Subsingleton ι] (i : ι) : (b.coord i
   simp [eq_iff_true_of_subsingleton]
   rw [Pi.one_apply, hq, b.coord_apply_combination_of_mem hi hw, Function.const_apply]
 
+open Classical in
 theorem surjective_coord [Nontrivial ι] (i : ι) : Function.Surjective <| b.coord i := by
-  classical
     intro x
     obtain ⟨j, hij⟩ := exists_ne i
     let s : Finset ι := {i, j}

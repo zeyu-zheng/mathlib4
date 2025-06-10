@@ -200,12 +200,12 @@ theorem Submartingale.exists_ae_trim_tendsto_of_bdd [IsFiniteMeasure μ] (hf : S
   · exact MeasurableSet.compl <| measurableSet_exists_tendsto
       fun n => (hf.stronglyMeasurable n).measurable.mono (le_sSup ⟨n, rfl⟩) le_rfl
 
+open Classical in
 /-- **Almost everywhere martingale convergence theorem**: An L¹-bounded submartingale converges
 almost everywhere to a `⨆ n, ℱ n`-measurable function. -/
 theorem Submartingale.ae_tendsto_limitProcess [IsFiniteMeasure μ] (hf : Submartingale f ℱ μ)
     (hbdd : ∀ n, eLpNorm (f n) 1 μ ≤ R) :
     ∀ᵐ ω ∂μ, Tendsto (fun n => f n ω) atTop (𝓝 (ℱ.limitProcess f μ ω)) := by
-  classical
   suffices
       ∃ g, StronglyMeasurable[⨆ n, ℱ n] g ∧ ∀ᵐ ω ∂μ, Tendsto (fun n => f n ω) atTop (𝓝 (g ω)) by
     rw [limitProcess, dif_pos this]

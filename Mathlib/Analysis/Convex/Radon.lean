@@ -73,6 +73,7 @@ private lemma helly_theorem_corner {F : ι → Set E} {s : Finset ι}
     (h_inter : ∀ I ⊆ s, I.card ≤ finrank 𝕜 E + 1 → (⋂ i ∈ I, F i).Nonempty) :
     (⋂ i ∈ s, F i).Nonempty := h_inter s (by simp) h_card_small
 
+open Classical in
 /-- **Helly's theorem** for finite families of convex sets.
 
 If `F` is a finite family of convex sets in a vector space of finite dimension `d`, and any
@@ -81,7 +82,6 @@ theorem helly_theorem' {F : ι → Set E} {s : Finset ι}
     (h_convex : ∀ i ∈ s, Convex 𝕜 (F i))
     (h_inter : ∀ I ⊆ s, I.card ≤ finrank 𝕜 E + 1 → (⋂ i ∈ I, F i).Nonempty) :
     (⋂ i ∈ s, F i).Nonempty := by
-  classical
   obtain h_card | h_card := lt_or_le s.card (finrank 𝕜 E + 1)
   · exact helly_theorem_corner (le_of_lt h_card) h_inter
   generalize hn : s.card = n
@@ -180,6 +180,7 @@ theorem helly_theorem_set {F : Finset (Set E)}
   apply Set.Nonempty.mono this
   exact h_inter J hJ_ss (by omega)
 
+open Classical in
 /-- **Helly's theorem** for families of compact convex sets.
 
 If `F` is a family of compact convex sets in a vector space of finite dimension `d`, and any
@@ -188,7 +189,6 @@ theorem helly_theorem_compact' [TopologicalSpace E] [T2Space E] {F : ι → Set 
     (h_convex : ∀ i, Convex 𝕜 (F i)) (h_compact : ∀ i, IsCompact (F i))
     (h_inter : ∀ I : Finset ι, I.card ≤ finrank 𝕜 E + 1 → (⋂ i ∈ I, F i).Nonempty) :
     (⋂ i, F i).Nonempty := by
-  classical
   /- If `ι` is empty the statement is trivial. -/
   cases' isEmpty_or_nonempty ι with _ h_nonempty
   · simp only [iInter_of_empty, Set.univ_nonempty]

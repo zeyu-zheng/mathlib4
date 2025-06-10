@@ -160,16 +160,16 @@ theorem orderOf_eq_zero_iff : orderOf x = 0 ↔ ¬IsOfFinOrder x :=
 theorem orderOf_eq_zero_iff' : orderOf x = 0 ↔ ∀ n : ℕ, 0 < n → x ^ n ≠ 1 := by
   simp_rw [orderOf_eq_zero_iff, isOfFinOrder_iff_pow_eq_one, not_exists, not_and]
 
+open Classical in
 @[to_additive]
 theorem orderOf_eq_iff {n} (h : 0 < n) :
     orderOf x = n ↔ x ^ n = 1 ∧ ∀ m, m < n → 0 < m → x ^ m ≠ 1 := by
   simp_rw [Ne, ← isPeriodicPt_mul_iff_pow_eq_one, orderOf, minimalPeriod]
   split_ifs with h1
-  · classical
-    rw [find_eq_iff]
-    simp only [h, true_and]
-    push_neg
-    rfl
+  rw [find_eq_iff]
+  simp only [h, true_and]
+  push_neg
+  rfl
   · rw [iff_false_left h.ne]
     rintro ⟨h', -⟩
     exact h1 ⟨n, h, h'⟩
@@ -357,10 +357,10 @@ lemma Nat.Coprime.orderOf_pow (h : (orderOf y).Coprime m) : orderOf (y ^ m) = or
   · rw [hg.orderOf_pow y m , h.gcd_eq_one, Nat.div_one]
   · rw [m.coprime_zero_left.1 (orderOf_eq_zero hg ▸ h), pow_one]
 
+open Classical in
 @[to_additive]
 lemma IsOfFinOrder.natCard_powers_le_orderOf (ha : IsOfFinOrder a) :
     Nat.card (powers a : Set G) ≤ orderOf a := by
-  classical
   simpa [ha.powers_eq_image_range_orderOf, Finset.card_range, Nat.Iio_eq_range]
     using Finset.card_image_le (s := Finset.range (orderOf a))
 
@@ -522,10 +522,10 @@ lemma finEquivPowers_symm_apply (x : G) (hx) (n : ℕ) {hn : ∃ m : ℕ, x ^ m 
     (finEquivPowers x hx).symm ⟨x ^ n, hn⟩ = ⟨n % orderOf x, Nat.mod_lt _ hx.orderOf_pos⟩ := by
   rw [Equiv.symm_apply_eq, finEquivPowers_apply, Subtype.mk_eq_mk, ← pow_mod_orderOf, Fin.val_mk]
 
+open Classical in
 /-- See also `orderOf_eq_card_powers`. -/
 @[to_additive "See also `addOrder_eq_card_multiples`."]
 lemma Nat.card_submonoidPowers : Nat.card (powers a) = orderOf a := by
-  classical
   by_cases ha : IsOfFinOrder a
   · exact (Nat.card_congr (finEquivPowers _ ha).symm).trans <| by simp
   · have := (infinite_powers.2 ha).to_subtype
@@ -832,9 +832,9 @@ theorem card_zpowers_le (a : G) {k : ℕ} (k_pos : k ≠ 0)
 open QuotientGroup
 
 
+open Classical in
 @[to_additive]
 theorem orderOf_dvd_card : orderOf x ∣ Fintype.card G := by
-  classical
     have ft_prod : Fintype ((G ⧸ zpowers x) × zpowers x) :=
       Fintype.ofEquiv G groupEquivQuotientProdSubgroup
     have ft_s : Fintype (zpowers x) := @Fintype.prodRight _ _ _ ft_prod _
@@ -985,6 +985,7 @@ def subgroupOfIdempotent {G : Type*} [Group G] [Finite G] (S : Set G) (hS1 : S.N
       rw [← one_mul a⁻¹, ← pow_one a, ← pow_orderOf_eq_one a, ← pow_sub a (orderOf_pos a)]
       exact pow_mem ha (orderOf a - 1) }
 
+open Classical in
 /-- If `S` is a nonempty subset of a finite group `G`, then `S ^ |G|` is a subgroup -/
 @[to_additive (attr := simps!) smulCardAddSubgroup
   "If `S` is a nonempty subset of a finite add group `G`, then `|G| • S` is a subgroup"]
@@ -994,7 +995,6 @@ def powCardSubgroup {G : Type*} [Group G] [Fintype G] (S : Set G) (hS : S.Nonemp
     rw [← pow_card_eq_one]
     exact Set.pow_mem_pow ha (Fintype.card G)
   subgroupOfIdempotent (S ^ Fintype.card G) ⟨1, one_mem⟩ <| by
-    classical
     apply (Set.eq_of_subset_of_card_le (Set.subset_mul_left _ one_mem) (ge_of_eq _)).symm
     simp_rw [← pow_add,
         Group.card_pow_eq_card_pow_card_univ S (Fintype.card G + Fintype.card G) le_add_self]

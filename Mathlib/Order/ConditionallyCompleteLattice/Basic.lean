@@ -973,9 +973,9 @@ lemma sSup_iUnion_Iic (f : ι → α) : sSup (⋃ (i : ι), Iic (f i)) = ⨆ i, 
 lemma sInf_iUnion_Ici (f : ι → α) : sInf (⋃ (i : ι), Ici (f i)) = ⨅ i, f i :=
   sSup_iUnion_Iic (α := αᵒᵈ) f
 
+open Classical in
 theorem cbiSup_eq_of_not_forall {p : ι → Prop} {f : Subtype p → α} (hp : ¬ (∀ i, p i)) :
     ⨆ (i) (h : p i), f ⟨i, h⟩ = iSup f ⊔ sSup ∅ := by
-  classical
   rcases not_forall.1 hp with ⟨i₀, hi₀⟩
   have : Nonempty ι := ⟨i₀⟩
   simp only [ciSup_eq_ite]
@@ -1220,11 +1220,10 @@ theorem isGLB_sInf' {β : Type*} [ConditionallyCompleteLattice β] {s : Set (Wit
         intro b hb
         exact Set.mem_singleton_iff.2 (top_le_iff.1 (ha hb))
       · refine coe_le_coe.2 (le_csInf ?_ ?_)
-        · classical
-            contrapose! h
-            rintro (⟨⟩ | a) ha
-            · exact mem_singleton ⊤
-            · exact (not_nonempty_iff_eq_empty.2 h ⟨a, ha⟩).elim
+        · contrapose! h
+          rintro (⟨⟩ | a) ha
+          · exact mem_singleton ⊤
+          · exact (not_nonempty_iff_eq_empty.2 h ⟨a, ha⟩).elim
         · intro b hb
           rw [← coe_le_coe]
           exact ha hb

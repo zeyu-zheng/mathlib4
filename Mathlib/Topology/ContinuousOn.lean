@@ -1130,9 +1130,9 @@ protected lemma Continuous.mulIndicator (hs : ∀ a ∈ frontier s, f a = 1) (hf
 
 end Indicator
 
+open Classical in
 theorem IsOpen.ite' {s s' t : Set α} (hs : IsOpen s) (hs' : IsOpen s')
     (ht : ∀ x ∈ frontier t, x ∈ s ↔ x ∈ s') : IsOpen (t.ite s s') := by
-  classical
     simp only [isOpen_iff_continuous_mem, Set.ite] at *
     convert continuous_piecewise (fun x hx => propext (ht x hx)) hs.continuousOn hs'.continuousOn
     rename_i x

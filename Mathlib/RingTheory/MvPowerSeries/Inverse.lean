@@ -93,12 +93,13 @@ theorem coeff_invOfUnit [DecidableEq σ] (n : σ →₀ ℕ) (φ : MvPowerSeries
             if x.2 < n then coeff R x.1 φ * coeff R x.2 (invOfUnit φ u) else 0 := by
   convert coeff_inv_aux n (↑u⁻¹) φ
 
+open Classical in
 @[simp]
 theorem constantCoeff_invOfUnit (φ : MvPowerSeries σ R) (u : Rˣ) :
     constantCoeff σ R (invOfUnit φ u) = ↑u⁻¹ := by
-  classical
   rw [← coeff_zero_eq_constantCoeff_apply, coeff_invOfUnit, if_pos rfl]
 
+open Classical in
 @[simp]
 theorem mul_invOfUnit (φ : MvPowerSeries σ R) (u : Rˣ) (h : constantCoeff σ R φ = u) :
     φ * invOfUnit φ u = 1 :=
@@ -108,7 +109,6 @@ theorem mul_invOfUnit (φ : MvPowerSeries σ R) (u : Rˣ) (h : constantCoeff σ 
       rw [H]
       simp [coeff_mul, support_single_ne_zero, h]
     else by
-      classical
       have : ((0 : σ →₀ ℕ), n) ∈ antidiagonal n := by rw [mem_antidiagonal, zero_add]
       rw [coeff_one, if_neg H, coeff_mul, ← Finset.insert_erase this,
         Finset.sum_insert (Finset.not_mem_erase _ _), coeff_zero_eq_constantCoeff_apply, h,
@@ -207,16 +207,16 @@ theorem coeff_inv [DecidableEq σ] (n : σ →₀ ℕ) (φ : MvPowerSeries σ k)
           ∑ x ∈ antidiagonal n, if x.2 < n then coeff k x.1 φ * coeff k x.2 φ⁻¹ else 0 :=
   coeff_inv_aux n _ φ
 
+open Classical in
 @[simp]
 theorem constantCoeff_inv (φ : MvPowerSeries σ k) :
     constantCoeff σ k φ⁻¹ = (constantCoeff σ k φ)⁻¹ := by
-  classical
   rw [← coeff_zero_eq_constantCoeff_apply, coeff_inv, if_pos rfl]
 
+open Classical in
 theorem inv_eq_zero {φ : MvPowerSeries σ k} : φ⁻¹ = 0 ↔ constantCoeff σ k φ = 0 :=
   ⟨fun h => by simpa using congr_arg (constantCoeff σ k) h, fun h =>
     ext fun n => by
-      classical
       rw [coeff_inv]
       split_ifs <;>
         simp only [h, map_zero, zero_mul, inv_zero, neg_zero]⟩

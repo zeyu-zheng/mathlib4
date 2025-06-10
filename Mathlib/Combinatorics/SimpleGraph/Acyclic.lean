@@ -123,9 +123,9 @@ theorem isAcyclic_of_path_unique (h : ∀ (v w : V) (p q : G.Path v w), p = q) :
 theorem isAcyclic_iff_path_unique : G.IsAcyclic ↔ ∀ ⦃v w : V⦄ (p q : G.Path v w), p = q :=
   ⟨IsAcyclic.path_unique, isAcyclic_of_path_unique⟩
 
+open Classical in
 theorem isTree_iff_existsUnique_path :
     G.IsTree ↔ Nonempty V ∧ ∀ v w : V, ∃! p : G.Walk v w, p.IsPath := by
-  classical
   rw [isTree_iff, isAcyclic_iff_path_unique]
   constructor
   · rintro ⟨hc, hu⟩
@@ -148,11 +148,11 @@ theorem isTree_iff_existsUnique_path :
 lemma IsTree.existsUnique_path (hG : G.IsTree) : ∀ v w, ∃! p : G.Walk v w, p.IsPath :=
   (isTree_iff_existsUnique_path.1 hG).2
 
+open Classical in
 lemma IsTree.card_edgeFinset [Fintype V] [Fintype G.edgeSet] (hG : G.IsTree) :
     Finset.card G.edgeFinset + 1 = Fintype.card V := by
   have := hG.isConnected.nonempty
   inhabit V
-  classical
   have : Finset.card ({default} : Finset V)ᶜ + 1 = Fintype.card V
   rw [Finset.card_compl, Finset.card_singleton, Nat.sub_add_cancel Fintype.card_pos]
   rw [← this, add_left_inj]

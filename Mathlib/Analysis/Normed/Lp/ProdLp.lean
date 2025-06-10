@@ -181,22 +181,22 @@ variable [PseudoEMetricSpace α] [PseudoEMetricSpace β]
 
 /-- The distance from one point to itself is always zero.
 
+open Classical in
 This holds independent of `p` and does not require `[Fact (1 ≤ p)]`. We keep it separate
 from `WithLp.instProdPseudoEMetricSpace` so it can be used also for `p < 1`. -/
 theorem prod_edist_self (f : WithLp p (α × β)) : edist f f = 0 := by
   rcases p.trichotomy with (rfl | rfl | h)
-  · classical
-    simp
+  simp
   · simp [prod_edist_eq_sup]
   · simp [prod_edist_eq_add h, ENNReal.zero_rpow_of_pos h,
       ENNReal.zero_rpow_of_pos (inv_pos.2 <| h)]
 
 /-- The distance is symmetric.
 
+open Classical in
 This holds independent of `p` and does not require `[Fact (1 ≤ p)]`. We keep it separate
 from `WithLp.instProdPseudoEMetricSpace` so it can be used also for `p < 1`. -/
 theorem prod_edist_comm (f g : WithLp p (α × β)) : edist f g = edist g f := by
-  classical
   rcases p.trichotomy with (rfl | rfl | h)
   · simp only [prod_edist_eq_card, edist_comm]
   · simp only [prod_edist_eq_sup, edist_comm]

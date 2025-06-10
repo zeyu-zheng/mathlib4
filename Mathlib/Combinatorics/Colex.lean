@@ -98,11 +98,11 @@ variable [PartialOrder α] [PartialOrder β] {f : α → β} {𝒜 𝒜₁ 𝒜�
 instance instLE : LE (Colex α) where
   le s t := ∀ ⦃a⦄, a ∈ ofColex s → a ∉ ofColex t → ∃ b, b ∈ ofColex t ∧ b ∉ ofColex s ∧ a ≤ b
 
+open Classical in
 -- TODO: This lemma is weirdly useful given how strange its statement is.
 -- Is there a nicer statement? Should this lemma be made public?
 private lemma trans_aux (hst : toColex s ≤ toColex t) (htu : toColex t ≤ toColex u)
     (has : a ∈ s) (hat : a ∉ t) : ∃ b, b ∈ u ∧ b ∉ s ∧ a ≤ b := by
-  classical
   let s' : Finset α := s.filter fun b ↦ b ∉ t ∧ a ≤ b
   have ⟨b, hb, hbmax⟩ := exists_maximal s' ⟨a, by simp [s', has, hat]⟩
   simp only [s', mem_filter, and_imp] at hb hbmax
@@ -249,10 +249,10 @@ lemma toColex_sdiff_lt_toColex_sdiff (hus : u ⊆ s) (hut : u ⊆ t) :
 
 end DecidableEq
 
+open Classical in
 @[simp] lemma cons_le_cons (ha hb) : toColex (s.cons a ha) ≤ toColex (s.cons b hb) ↔ a ≤ b := by
   obtain rfl | hab := eq_or_ne a b
   · simp
-  classical
   rw [← toColex_sdiff_le_toColex_sdiff', cons_sdiff_cons hab, cons_sdiff_cons hab.symm,
     singleton_le_singleton]
 
@@ -269,11 +269,11 @@ lemma insert_lt_insert (ha : a ∉ s) (hb : b ∉ s) :
     toColex (insert a s) < toColex (insert b s) ↔ a < b := by
   rw [← cons_eq_insert _ _ ha, ← cons_eq_insert _ _ hb, cons_lt_cons]
 
+open Classical in
 lemma erase_le_erase (ha : a ∈ s) (hb : b ∈ s) :
     toColex (s.erase a) ≤ toColex (s.erase b) ↔ b ≤ a := by
   obtain rfl | hab := eq_or_ne a b
   · simp
-  classical
   rw [← toColex_sdiff_le_toColex_sdiff', erase_sdiff_erase hab hb, erase_sdiff_erase hab.symm ha,
     singleton_le_singleton]
 
@@ -286,9 +286,9 @@ end PartialOrder
 variable [LinearOrder α] [LinearOrder β] {f : α → β} {𝒜 𝒜₁ 𝒜₂ : Finset (Finset α)}
   {s t u : Finset α} {a b : α} {r : ℕ}
 
+open Classical in
 instance instLinearOrder : LinearOrder (Colex α) where
   le_total s t := by
-    classical
     obtain rfl | hts := eq_or_ne t s
     · simp
     have ⟨a, ha, hamax⟩ := exists_max_image _ id (symmDiff_nonempty.2 <| ofColex_ne_ofColex.2 hts)
@@ -440,10 +440,10 @@ def IsInitSeg (𝒜 : Finset (Finset α)) (r : ℕ) : Prop :=
 
 @[simp] lemma isInitSeg_empty : IsInitSeg (∅ : Finset (Finset α)) r := by simp [IsInitSeg]
 
+open Classical in
 /-- Initial segments are nested in some way. In particular, if they're the same size they're equal.
 -/
 lemma IsInitSeg.total (h₁ : IsInitSeg 𝒜₁ r) (h₂ : IsInitSeg 𝒜₂ r) : 𝒜₁ ⊆ 𝒜₂ ∨ 𝒜₂ ⊆ 𝒜₁ := by
-  classical
   simp_rw [← sdiff_eq_empty_iff_subset, ← not_nonempty_iff_eq_empty]
   by_contra! h
   have ⟨⟨s, hs⟩, t, ht⟩ := h

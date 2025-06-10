@@ -64,8 +64,8 @@ theorem supportedEquivMvPolynomial_symm_X (s : Set σ) (i : s) :
 
 variable {s t : Set σ}
 
+open Classical in
 theorem mem_supported : p ∈ supported R s ↔ ↑p.vars ⊆ s := by
-  classical
   rw [supported_eq_range_rename, AlgHom.mem_range]
   constructor
   · rintro ⟨p, rfl⟩

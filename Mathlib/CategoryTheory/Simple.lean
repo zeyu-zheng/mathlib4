@@ -76,9 +76,9 @@ theorem Simple.of_iso {X Y : C} [Simple Y] (i : X ≅ Y) : Simple X :=
 theorem Simple.iff_of_iso {X Y : C} (i : X ≅ Y) : Simple X ↔ Simple Y :=
   ⟨fun _ => Simple.of_iso i.symm, fun _ => Simple.of_iso i⟩
 
+open Classical in
 theorem kernel_zero_of_nonzero_from_simple {X Y : C} [Simple X] {f : X ⟶ Y} [HasKernel f]
     (w : f ≠ 0) : kernel.ι f = 0 := by
-  classical
     by_contra h
     haveI := isIso_of_mono_of_nonzero h
     exact w (eq_zero_of_epi_kernel f)
@@ -93,9 +93,9 @@ theorem epi_of_nonzero_to_simple [HasEqualizers C] {X Y : C} [Simple Y] {f : X �
   haveI : IsIso (image.ι f) := isIso_of_mono_of_nonzero fun h => w (eq_zero_of_image_eq_zero h)
   apply epi_comp
 
+open Classical in
 theorem mono_to_simple_zero_of_not_iso {X Y : C} [Simple Y] {f : X ⟶ Y} [Mono f]
     (w : IsIso f → False) : f = 0 := by
-  classical
     by_contra h
     exact w (isIso_of_mono_of_nonzero h)
 
@@ -129,12 +129,12 @@ section Abelian
 
 variable [Abelian C]
 
+open Classical in
 /-- In an abelian category, an object satisfying the dual of the definition of a simple object is
     simple. -/
 theorem simple_of_cosimple (X : C) (h : ∀ {Z : C} (f : X ⟶ Z) [Epi f], IsIso f ↔ f ≠ 0) :
     Simple X :=
   ⟨fun {Y} f I => by
-    classical
       fconstructor
       · intros
         have hx := cokernel.π_of_epi f
@@ -154,16 +154,16 @@ theorem isIso_of_epi_of_nonzero {X Y : C} [Simple X] {f : X ⟶ Y} [Epi f] (w : 
     Preadditive.mono_of_kernel_zero (mono_to_simple_zero_of_not_iso (kernel_not_iso_of_nonzero w))
   isIso_of_mono_of_epi f
 
+open Classical in
 theorem cokernel_zero_of_nonzero_to_simple {X Y : C} [Simple Y] {f : X ⟶ Y} (w : f ≠ 0) :
     cokernel.π f = 0 := by
-  classical
     by_contra h
     haveI := isIso_of_epi_of_nonzero h
     exact w (eq_zero_of_mono_cokernel f)
 
+open Classical in
 theorem epi_from_simple_zero_of_not_iso {X Y : C} [Simple X] {f : X ⟶ Y} [Epi f]
     (w : IsIso f → False) : f = 0 := by
-  classical
     by_contra h
     exact w (isIso_of_epi_of_nonzero h)
 

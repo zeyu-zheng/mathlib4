@@ -103,8 +103,8 @@ theorem adjoin_monomial_eq_reesAlgebra :
 
 variable {I}
 
+open Classical in
 theorem reesAlgebra.fg (hI : I.FG) : (reesAlgebra I).FG := by
-  classical
     obtain ⟨s, hs⟩ := hI
     rw [← adjoin_monomial_eq_reesAlgebra, ← hs]
     use s.image (monomial 1)

@@ -138,12 +138,12 @@ namespace Submodule
 
 variable {p : Submodule K V} {f : Module.End K V}
 
+open Classical in
 theorem inf_iSup_genEigenspace [FiniteDimensional K V] (h : ∀ x ∈ p, f x ∈ p) :
     p ⊓ ⨆ μ, ⨆ k, f.genEigenspace μ k = ⨆ μ, ⨆ k, p ⊓ f.genEigenspace μ k := by
   simp_rw [← (f.genEigenspace _).mono.directed_le.inf_iSup_eq]
   refine le_antisymm (fun m hm ↦ ?_)
     (le_inf_iff.mpr ⟨iSup_le fun μ ↦ inf_le_left, iSup_mono fun μ ↦ inf_le_right⟩)
-  classical
   obtain ⟨hm₀ : m ∈ p, hm₁ : m ∈ ⨆ μ, ⨆ k, f.genEigenspace μ k⟩ := hm
   obtain ⟨m, hm₂, rfl⟩ := (mem_iSup_iff_exists_finsupp _ _).mp hm₁
   suffices ∀ μ, (m μ : V) ∈ p by

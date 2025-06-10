@@ -346,6 +346,7 @@ but this is nontrivial (see `isClopenable_iff_measurableSet`). -/
 def IsClopenable [t : TopologicalSpace α] (s : Set α) : Prop :=
   ∃ t' : TopologicalSpace α, t' ≤ t ∧ @PolishSpace α t' ∧ IsClosed[t'] s ∧ IsOpen[t'] s
 
+open Classical in
 /-- Given a closed set `s` in a Polish space, one can construct a finer Polish topology for
 which `s` is both open and closed. -/
 theorem _root_.IsClosed.isClopenable [TopologicalSpace α] [PolishSpace α] {s : Set α}
@@ -353,7 +354,6 @@ theorem _root_.IsClosed.isClopenable [TopologicalSpace α] [PolishSpace α] {s :
   /- Both sets `s` and `sᶜ` admit a Polish topology. So does their disjoint union `s ⊕ sᶜ`.
     Pulling back this topology by the canonical bijection with `α` gives the desired Polish
     topology in which `s` is both open and closed. -/
-  classical
   haveI : PolishSpace s := hs.polishSpace
   let t : Set α := sᶜ
   haveI : PolishSpace t := hs.isOpen_compl.polishSpace

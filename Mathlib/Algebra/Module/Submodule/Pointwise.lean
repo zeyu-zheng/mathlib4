@@ -406,6 +406,7 @@ lemma set_smul_inductionOn {motive : (x : M) → (_ : x ∈ s • N) → Prop}
     (fun _ _ mem mem' ↦ ⟨mem_set_smul_of_mem_mem mem mem', smul₀ mem mem'⟩) hx
   h
 
+open Classical in
 -- Implementation note: if `N` is both an `R`-submodule and `S`-submodule and `SMulCommClass R S M`,
 -- this lemma is also true for any `s : Set S`.
 lemma set_smul_eq_map [SMulCommClass R R N] :
@@ -413,7 +414,6 @@ lemma set_smul_eq_map [SMulCommClass R R N] :
     Submodule.map
       (N.subtype.comp (Finsupp.lsum R <| DistribMulAction.toLinearMap _ _))
       (Finsupp.supported N R sR) := by
-  classical
   apply set_smul_eq_of_le
   · intro r n hr hn
     exact ⟨Finsupp.single r ⟨n, hn⟩, Finsupp.single_mem_supported _ _ hr, by simp⟩

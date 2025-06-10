@@ -505,10 +505,10 @@ theorem iInter_ite (f g : ι → Set α) :
 
 end
 
+open Classical in
 theorem image_projection_prod {ι : Type*} {α : ι → Type*} {v : ∀ i : ι, Set (α i)}
     (hv : (pi univ v).Nonempty) (i : ι) :
     ((fun x : ∀ i : ι, α i => x i) '' ⋂ k, (fun x : ∀ j : ι, α j => x k) ⁻¹' v k) = v i := by
-  classical
     apply Subset.antisymm
     · simp [iInter_subset]
     · intro y y_in

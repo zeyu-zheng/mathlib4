@@ -94,6 +94,7 @@ lemma trace_eq_zero_of_mapsTo_ne [IsNoetherian R M]
     diag_toMatrix_directSum_collectedBasis_eq_zero_of_mapsTo_ne h b σ hσ hf (by simp [s]),
     Pi.zero_apply, Finset.sum_const_zero]
 
+open Classical in
 /-- If `f` and `g` are commuting endomorphisms of a finite, free `R`-module `M`, such that `f`
 is triangularizable, then to prove that the trace of `g ∘ f` vanishes, it is sufficient to prove
 that the trace of `g` vanishes on each generalized eigenspace of `f`. -/
@@ -109,7 +110,6 @@ lemma trace_comp_eq_zero_of_commute_of_trace_restrict_eq_zero
     fun μ ↦ (f.mapsTo_iSup_genEigenspace_of_comm h_comm μ).comp
       (f.mapsTo_iSup_genEigenspace_of_comm rfl μ)
   suffices ∀ μ, trace R _ ((g ∘ₗ f).restrict (hfg μ)) = 0 by
-    classical
     have hds := DirectSum.isInternal_submodule_of_independent_of_iSup_eq_top
       f.independent_genEigenspace hf
     have h_fin : {μ | ⨆ k, f.genEigenspace μ k ≠ ⊥}.Finite :=
@@ -131,6 +131,7 @@ lemma mapsTo_biSup_of_mapsTo (s : Set ι) {f : Module.End R M} (hf : ∀ i, Maps
 
 end IsInternal
 
+open Classical in
 /-- The trace of an endomorphism of a direct sum is the sum of the traces on each component.
 
 Note that it is important the statement gives the user definitional control over `p` since the
@@ -142,7 +143,6 @@ lemma trace_eq_sum_trace_restrict_of_eq_biSup
     (p : Submodule R M) (hp : p = ⨆ i ∈ s, N i)
     (hp' : MapsTo f p p := hp ▸ mapsTo_biSup_of_mapsTo (s : Set ι) hf) :
     trace R p (f.restrict hp') = ∑ i ∈ s, trace R (N i) (f.restrict (hf i)) := by
-  classical
   let N' : s → Submodule R p := fun i ↦ (N i).comap p.subtype
   replace h : IsInternal N' := hp ▸ isInternal_biSup_submodule_of_independent (s : Set ι) h
   have hf' : ∀ i, MapsTo (restrict f hp') (N' i) (N' i) := fun i x hx' ↦ by simpa using hf i hx'

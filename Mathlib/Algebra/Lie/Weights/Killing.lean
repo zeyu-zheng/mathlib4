@@ -90,6 +90,7 @@ open Submodule (span subset_span)
 variable [FiniteDimensional K L]
   (H : LieSubalgebra K L) [H.IsCartanSubalgebra] [IsTriangularizable K H L]
 
+open Classical in
 /-- For any `α` and `β`, the corresponding root spaces are orthogonal with respect to the Killing
 form, provided `α + β ≠ 0`. -/
 lemma killingForm_apply_eq_zero_of_mem_rootSpace_of_add_ne_zero {α β : H → K} {x y : L}
@@ -108,7 +109,6 @@ lemma killingForm_apply_eq_zero_of_mem_rootSpace_of_add_ne_zero {α β : H → K
   have hf : ∀ γ, MapsTo f (rootSpace H γ) (rootSpace H (σ γ)) := fun γ ↦
     (mapsTo_toEnd_weightSpace_add_of_mem_rootSpace K L H L α (β + γ) hx).comp <|
       mapsTo_toEnd_weightSpace_add_of_mem_rootSpace K L H L β γ hy
-  classical
   have hds := DirectSum.isInternal_submodule_of_independent_of_iSup_eq_top
     (LieSubmodule.independent_iff_coe_toSubmodule.mp <| independent_weightSpace K H L)
     (LieSubmodule.iSup_eq_top_iff_coe_toSubmodule.mp <| iSup_weightSpace_eq_top K H L)

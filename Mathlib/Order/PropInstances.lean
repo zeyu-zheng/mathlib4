@@ -44,8 +44,8 @@ theorem Prop.top_eq_true : (⊤ : Prop) = True :=
 instance Prop.le_isTotal : IsTotal Prop (· ≤ ·) :=
   ⟨fun p q => by by_cases h : q <;> simp [h]⟩
 
+open Classical in
 noncomputable instance Prop.linearOrder : LinearOrder Prop := by
-  classical
   exact Lattice.toLinearOrder Prop
 
 @[simp]
@@ -60,9 +60,9 @@ namespace Pi
 
 variable {ι : Type*} {α' : ι → Type*} [∀ i, PartialOrder (α' i)]
 
+open Classical in
 theorem disjoint_iff [∀ i, OrderBot (α' i)] {f g : ∀ i, α' i} :
     Disjoint f g ↔ ∀ i, Disjoint (f i) (g i) := by
-  classical
   constructor
   · intro h i x hf hg
     exact (update_le_iff.mp <| h (update_le_iff.mpr ⟨hf, fun _ _ => bot_le⟩)

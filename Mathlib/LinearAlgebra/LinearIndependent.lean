@@ -148,11 +148,11 @@ theorem linearIndependent_iff' :
       Finsupp.ext fun i =>
         _root_.by_contradiction fun hni => hni <| hf _ _ hl _ <| Finsupp.mem_support_iff.2 hni⟩
 
+open Classical in
 theorem linearIndependent_iff'' :
     LinearIndependent R v ↔
       ∀ (s : Finset ι) (g : ι → R), (∀ i ∉ s, g i = 0) →
         ∑ i ∈ s, g i • v i = 0 → ∀ i, g i = 0 := by
-  classical
   exact linearIndependent_iff'.trans
     ⟨fun H s g hg hv i => if his : i ∈ s then H s g hv i his else hg i his, fun H s g hg i hi => by
       convert
@@ -702,13 +702,13 @@ theorem LinearIndependent.total_ne_of_not_mem_support [Nontrivial R] (hv : Linea
   simp only [not_exists, not_and, mem_map] at p -- Porting note: `mem_map` isn't currently triggered
   exact p f (f.mem_supported_support R) rfl
 
+open Classical in
 theorem linearIndependent_sum {v : ι ⊕ ι' → M} :
     LinearIndependent R v ↔
       LinearIndependent R (v ∘ Sum.inl) ∧
         LinearIndependent R (v ∘ Sum.inr) ∧
           Disjoint (Submodule.span R (range (v ∘ Sum.inl)))
             (Submodule.span R (range (v ∘ Sum.inr))) := by
-  classical
   rw [range_comp v, range_comp v]
   refine ⟨?_, ?_⟩
   · intro h
@@ -753,11 +753,11 @@ theorem LinearIndependent.union {s t : Set M} (hs : LinearIndependent R (fun x =
     LinearIndependent R (fun x => x : ↥(s ∪ t) → M) :=
   (hs.sum_type ht <| by simpa).to_subtype_range' <| by simp
 
+open Classical in
 theorem linearIndependent_iUnion_finite_subtype {ι : Type*} {f : ι → Set M}
     (hl : ∀ i, LinearIndependent R (fun x => x : f i → M))
     (hd : ∀ i, ∀ t : Set ι, t.Finite → i ∉ t → Disjoint (span R (f i)) (⨆ i ∈ t, span R (f i))) :
     LinearIndependent R (fun x => x : (⋃ i, f i) → M) := by
-  classical
   rw [iUnion_eq_iUnion_finset f]
   apply linearIndependent_iUnion_of_directed
   · apply directed_of_isDirected_le
@@ -941,11 +941,11 @@ theorem exists_maximal_independent' (s : ι → M) :
       (fun c hc => ⟨⟨⋃ I ∈ c, (I : Set ι), key c hc⟩, fun I => Set.subset_biUnion_of_mem⟩) @trans
   exact ⟨I, hli, fun J hsub hli => Set.Subset.antisymm hsub (hmax ⟨J, hli⟩ hsub)⟩
 
+open Classical in
 theorem exists_maximal_independent (s : ι → M) :
     ∃ I : Set ι,
       (LinearIndependent R fun x : I => s x) ∧
         ∀ i ∉ I, ∃ a : R, a ≠ 0 ∧ a • s i ∈ span R (s '' I) := by
-  classical
     rcases exists_maximal_independent' R s with ⟨I, hIlinind, hImaximal⟩
     use I, hIlinind
     intro i hi
@@ -1247,10 +1247,10 @@ theorem linearIndependent_option {v : Option ι → V} : LinearIndependent K v �
       v none ∉ Submodule.span K (range (v ∘ (↑) : ι → V)) := by
   simp only [← linearIndependent_option', Option.casesOn'_none_coe]
 
+open Classical in
 theorem linearIndependent_insert' {ι} {s : Set ι} {a : ι} {f : ι → V} (has : a ∉ s) :
     (LinearIndependent K fun x : ↥(insert a s) => f x) ↔
       (LinearIndependent K fun x : s => f x) ∧ f a ∉ Submodule.span K (f '' s) := by
-  classical
   rw [← linearIndependent_equiv ((Equiv.optionEquivSumPUnit _).trans (Equiv.Set.insert has).symm),
     linearIndependent_option]
   -- Porting note: `simp [(· ∘ ·), range_comp f]` → `simp [(· ∘ ·)]; erw [range_comp f ..]; simp`
@@ -1388,11 +1388,11 @@ theorem LinearIndependent.linearIndependent_extend (hs : LinearIndependent K (fu
   let ⟨_hbt, _hsb, _htb, hli⟩ := Classical.choose_spec (exists_linearIndependent_extension hs hst)
   hli
 
+open Classical in
 -- TODO(Mario): rewrite?
 theorem exists_of_linearIndependent_of_finite_span {t : Finset V}
     (hs : LinearIndependent K (fun x => x : s → V)) (hst : s ⊆ (span K ↑t : Submodule K V)) :
     ∃ t' : Finset V, ↑t' ⊆ s ∪ ↑t ∧ s ⊆ ↑t' ∧ t'.card = t.card := by
-  classical
   have :
     ∀ t : Finset V,
       ∀ s' : Finset V,

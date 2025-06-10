@@ -102,10 +102,10 @@ theorem Multiset.support_sum_eq [AddCommMonoid M] (s : Multiset (ι →₀ M))
   simp only [Multiset.quot_mk_to_coe'', Multiset.map_coe, Multiset.coe_eq_coe] at hl
   exact hl.symm.pairwise hd fun h ↦ _root_.Disjoint.symm h
 
+open Classical in
 theorem Finset.support_sum_eq [AddCommMonoid M] (s : Finset (ι →₀ M))
     (hs : (s : Set (ι →₀ M)).PairwiseDisjoint Finsupp.support) :
     (s.sum id).support = Finset.sup s Finsupp.support := by
-  classical
   suffices s.1.Pairwise (_root_.Disjoint on Finsupp.support) by
     convert Multiset.support_sum_eq s.1 this
     exact (Finset.sum_val _).symm

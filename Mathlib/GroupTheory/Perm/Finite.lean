@@ -99,15 +99,15 @@ theorem subtypePermOfFintype_one (p : α → Prop) [Finite { x // p x }]
     (h : ∀ x, p x → p ((1 : Perm α) x)) : @subtypePermOfFintype α 1 p _ h = 1 :=
   rfl
 
+open Classical in
 theorem perm_mapsTo_inl_iff_mapsTo_inr {m n : Type*} [Finite m] [Finite n] (σ : Perm (m ⊕ n)) :
     Set.MapsTo σ (Set.range Sum.inl) (Set.range Sum.inl) ↔
       Set.MapsTo σ (Set.range Sum.inr) (Set.range Sum.inr) := by
   constructor <;>
     ( intro h
-      classical
-        rw [← perm_inv_mapsTo_iff_mapsTo] at h
-        intro x
-        cases' hx : σ x with l r)
+      rw [← perm_inv_mapsTo_iff_mapsTo] at h
+      intro x
+      cases' hx : σ x with l r)
   · rintro ⟨a, rfl⟩
     obtain ⟨y, hy⟩ := h ⟨l, rfl⟩
     rw [← hx, σ.inv_apply_self] at hy
@@ -119,10 +119,10 @@ theorem perm_mapsTo_inl_iff_mapsTo_inr {m n : Type*} [Finite m] [Finite n] (σ :
     rw [← hx, σ.inv_apply_self] at hy
     exact absurd hy Sum.inr_ne_inl
 
+open Classical in
 theorem mem_sumCongrHom_range_of_perm_mapsTo_inl {m n : Type*} [Finite m] [Finite n]
     {σ : Perm (m ⊕ n)} (h : Set.MapsTo σ (Set.range Sum.inl) (Set.range Sum.inl)) :
     σ ∈ (sumCongrHom m n).range := by
-  classical
     have h1 : ∀ x : m ⊕ n, (∃ a : m, Sum.inl a = x) → ∃ a : m, Sum.inl a = σ x
     rintro x ⟨a, ha⟩
     apply h
@@ -171,9 +171,9 @@ theorem Disjoint.extendDomain {p : β → Prop} [DecidablePred p] (f : α ≃ Su
   · left
     rw [extendDomain_apply_not_subtype _ _ pb]
 
+open Classical in
 theorem Disjoint.isConj_mul [Finite α] {σ τ π ρ : Perm α} (hc1 : IsConj σ π)
     (hc2 : IsConj τ ρ) (hd1 : Disjoint σ τ) (hd2 : Disjoint π ρ) : IsConj (σ * τ) (π * ρ) := by
-  classical
     cases nonempty_fintype α
     obtain ⟨f, rfl⟩ := isConj_iff.1 hc1
     obtain ⟨g, rfl⟩ := isConj_iff.1 hc2

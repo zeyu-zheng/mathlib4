@@ -184,6 +184,7 @@ protected theorem summable_of_lp (f : lp G 2) : Summable fun i => V i (f i) := b
   · norm_cast
   · norm_num
 
+open Classical in
 /-- A mutually orthogonal family of subspaces of `E` induce a linear isometry from `lp 2` of the
 subspaces into `E`. -/
 protected def linearIsometry : lp G 2 →ₗᵢ[𝕜] E where
@@ -195,7 +196,6 @@ protected def linearIsometry : lp G 2 →ₗᵢ[𝕜] E where
     simpa only [LinearIsometry.map_smul, Pi.smul_apply, lp.coeFn_smul] using
       tsum_const_smul c (hV.summable_of_lp f)
   norm_map' f := by
-    classical
       -- needed for lattice instance on `Finset ι`, for `Filter.atTop_neBot`
       have H : 0 < (2 : ℝ≥0∞).toReal := by norm_num
       suffices ‖∑' i : ι, V i (f i)‖ ^ (2 : ℝ≥0∞).toReal = ‖f‖ ^ (2 : ℝ≥0∞).toReal by
@@ -427,10 +427,10 @@ protected theorem hasSum_repr_symm (b : HilbertBasis ι 𝕜 E) (f : ℓ²(ι, �
 protected theorem hasSum_repr (b : HilbertBasis ι 𝕜 E) (x : E) :
     HasSum (fun i => b.repr x i • b i) x := by simpa using b.hasSum_repr_symm (b.repr x)
 
+open Classical in
 @[simp]
 protected theorem dense_span (b : HilbertBasis ι 𝕜 E) :
     (span 𝕜 (Set.range b)).topologicalClosure = ⊤ := by
-  classical
     rw [eq_top_iff]
     rintro x -
     refine mem_closure_of_tendsto (b.hasSum_repr x) (eventually_of_forall ?_)

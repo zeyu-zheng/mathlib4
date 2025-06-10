@@ -161,18 +161,18 @@ theorem natDegree_modByMonic_lt (p : R[X]) {q : R[X]} (hmq : Monic q) (hq : q �
   · haveI := Nontrivial.of_polynomial_ne hpq
     exact natDegree_lt_natDegree hpq (degree_modByMonic_lt p hmq)
 
+open Classical in
 @[simp]
 theorem zero_modByMonic (p : R[X]) : 0 %ₘ p = 0 := by
-  classical
   unfold modByMonic divModByMonicAux
   dsimp
   by_cases hp : Monic p
   · rw [dif_pos hp, if_neg (mt And.right (not_not_intro rfl))]
   · rw [dif_neg hp]
 
+open Classical in
 @[simp]
 theorem zero_divByMonic (p : R[X]) : 0 /ₘ p = 0 := by
-  classical
   unfold divByMonic divModByMonicAux
   dsimp
   by_cases hp : Monic p
@@ -201,9 +201,9 @@ theorem divByMonic_eq_of_not_monic (p : R[X]) (hq : ¬Monic q) : p /ₘ q = 0 :=
 theorem modByMonic_eq_of_not_monic (p : R[X]) (hq : ¬Monic q) : p %ₘ q = p :=
   dif_neg hq
 
+open Classical in
 theorem modByMonic_eq_self_iff [Nontrivial R] (hq : Monic q) : p %ₘ q = p ↔ degree p < degree q :=
   ⟨fun h => h ▸ degree_modByMonic_lt _ hq, fun h => by
-    classical
     have : ¬degree q ≤ degree p := not_le_of_gt h
     unfold modByMonic divModByMonicAux; dsimp; rw [dif_pos hq, if_neg (mt And.left this)]⟩
 
@@ -242,12 +242,12 @@ theorem modByMonic_eq_sub_mul_div :
 theorem modByMonic_add_div (p : R[X]) {q : R[X]} (hq : Monic q) : p %ₘ q + q * (p /ₘ q) = p :=
   eq_sub_iff_add_eq.1 (modByMonic_eq_sub_mul_div p hq)
 
+open Classical in
 theorem divByMonic_eq_zero_iff [Nontrivial R] (hq : Monic q) : p /ₘ q = 0 ↔ degree p < degree q :=
   ⟨fun h => by
     have := modByMonic_add_div p hq
     rwa [h, mul_zero, add_zero, modByMonic_eq_self_iff hq] at this,
   fun h => by
-    classical
     have : ¬degree q ≤ degree p := not_le_of_gt h
     unfold divByMonic divModByMonicAux; dsimp; rw [dif_pos hq, if_neg (mt And.left this)]⟩
 
@@ -511,11 +511,11 @@ theorem rootMultiplicity_eq_multiplicity [DecidableEq R] [@DecidableRel R[X] (·
 theorem rootMultiplicity_zero {x : R} : rootMultiplicity x 0 = 0 :=
   dif_pos rfl
 
+open Classical in
 @[simp]
 theorem rootMultiplicity_C (r a : R) : rootMultiplicity a (C r) = 0 := by
   cases subsingleton_or_nontrivial R
   · rw [Subsingleton.elim (C r) 0, rootMultiplicity_zero]
-  classical
   rw [rootMultiplicity_eq_multiplicity]
   split_ifs with hr
   · rfl
@@ -524,11 +524,11 @@ theorem rootMultiplicity_C (r a : R) : rootMultiplicity a (C r) = 0 := by
   simp_rw [multiplicity.multiplicity_eq_zero.mpr ((monic_X_sub_C a).not_dvd_of_natDegree_lt hr h),
     PartENat.get_zero]
 
+open Classical in
 theorem pow_rootMultiplicity_dvd (p : R[X]) (a : R) : (X - C a) ^ rootMultiplicity a p ∣ p :=
   letI := Classical.decEq R
   if h : p = 0 then by simp [h]
   else by
-    classical
     rw [rootMultiplicity_eq_multiplicity, dif_neg h]; exact multiplicity.pow_multiplicity_dvd _
 
 theorem pow_mul_divByMonic_rootMultiplicity_eq (p : R[X]) (a : R) :
@@ -539,9 +539,9 @@ theorem pow_mul_divByMonic_rootMultiplicity_eq (p : R[X]) (a : R) :
         (modByMonic_eq_zero_iff_dvd this).2 (pow_rootMultiplicity_dvd _ _)]
   simp
 
+open Classical in
 theorem exists_eq_pow_rootMultiplicity_mul_and_not_dvd (p : R[X]) (hp : p ≠ 0) (a : R) :
     ∃ q : R[X], p = (X - C a) ^ p.rootMultiplicity a * q ∧ ¬ (X - C a) ∣ q := by
-  classical
   rw [rootMultiplicity_eq_multiplicity, dif_neg hp]
   apply multiplicity.exists_eq_pow_mul_and_not_dvd
 
@@ -614,10 +614,10 @@ theorem ker_evalRingHom (x : R) : RingHom.ker (evalRingHom x) = Ideal.span {X - 
   ext y
   simp [Ideal.mem_span_singleton, dvd_iff_isRoot, RingHom.mem_ker]
 
+open Classical in
 @[simp]
 theorem rootMultiplicity_eq_zero_iff {p : R[X]} {x : R} :
     rootMultiplicity x p = 0 ↔ IsRoot p x → p = 0 := by
-  classical
   simp only [rootMultiplicity_eq_multiplicity, dite_eq_left_iff, PartENat.get_eq_iff_eq_coe,
     Nat.cast_zero, multiplicity.multiplicity_eq_zero, dvd_iff_isRoot, not_imp_not]
 
@@ -633,9 +633,9 @@ theorem rootMultiplicity_pos {p : R[X]} (hp : p ≠ 0) {x : R} :
     0 < rootMultiplicity x p ↔ IsRoot p x :=
   rootMultiplicity_pos'.trans (and_iff_right hp)
 
+open Classical in
 theorem eval_divByMonic_pow_rootMultiplicity_ne_zero {p : R[X]} (a : R) (hp : p ≠ 0) :
     eval a (p /ₘ (X - C a) ^ rootMultiplicity a p) ≠ 0 := by
-  classical
   haveI : Nontrivial R := Nontrivial.of_polynomial_ne hp
   rw [Ne, ← IsRoot, ← dvd_iff_isRoot]
   rintro ⟨q, hq⟩

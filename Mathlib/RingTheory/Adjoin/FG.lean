@@ -155,10 +155,10 @@ theorem fg_top (S : Subalgebra R A) : (⊤ : Subalgebra R S).FG ↔ S.FG :=
       rw [Algebra.map_top, range_val]
       exact h⟩
 
+open Classical in
 theorem induction_on_adjoin [IsNoetherian R A] (P : Subalgebra R A → Prop) (base : P ⊥)
     (ih : ∀ (S : Subalgebra R A) (x : A), P S → P (Algebra.adjoin R (insert x S)))
     (S : Subalgebra R A) : P S := by
-  classical
   obtain ⟨t, rfl⟩ := S.fg_of_noetherian
   refine Finset.induction_on t ?_ ?_
   · simpa using base

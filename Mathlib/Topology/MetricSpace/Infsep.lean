@@ -154,9 +154,9 @@ theorem Finset.coe_einfsep [DecidableEq α] {s : Finset α} :
     (s : Set α).einfsep = s.offDiag.inf (uncurry edist) := by
   simp_rw [einfsep_of_fintype, ← Finset.coe_offDiag, Finset.toFinset_coe]
 
+open Classical in
 theorem Nontrivial.einfsep_exists_of_finite [Finite s] (hs : s.Nontrivial) :
     ∃ x ∈ s, ∃ y ∈ s, x ≠ y ∧ s.einfsep = edist x y := by
-  classical
     cases nonempty_fintype s
     simp_rw [einfsep_of_fintype]
     rcases Finset.exists_mem_eq_inf s.offDiag.toFinset (by simpa) (uncurry edist) with ⟨w, hxy, hed⟩
@@ -431,9 +431,9 @@ theorem _root_.Finset.coe_infsep_of_offDiag_empty
   rw [← Finset.not_nonempty_iff_eq_empty] at hs
   rw [Finset.coe_infsep, dif_neg hs]
 
+open Classical in
 theorem Nontrivial.infsep_exists_of_finite [Finite s] (hs : s.Nontrivial) :
     ∃ x ∈ s, ∃ y ∈ s, x ≠ y ∧ s.infsep = dist x y := by
-  classical
     cases nonempty_fintype s
     simp_rw [hs.infsep_of_fintype]
     rcases Finset.exists_mem_eq_inf' (s := s.offDiag.toFinset) (by simpa) (uncurry dist) with

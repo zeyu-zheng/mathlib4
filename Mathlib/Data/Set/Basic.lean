@@ -1555,8 +1555,8 @@ theorem insert_diff_of_mem (s) (h : a ∈ t) : insert a s \ t = s \ t := by
   ext
   constructor <;> simp (config := { contextual := true }) [or_imp, h]
 
+open Classical in
 theorem insert_diff_of_not_mem (s) (h : a ∉ t) : insert a s \ t = insert a (s \ t) := by
-  classical
     ext x
     by_cases h' : x ∈ t
     · have : x ≠ a := by

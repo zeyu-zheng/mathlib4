@@ -96,9 +96,9 @@ protected theorem bijective_iff_injective_and_card [Finite β] (f : α → β) :
   rw [← and_congr_right_iff, ← Bijective,
     card_eq_fintype_card, card_eq_fintype_card, Fintype.bijective_iff_injective_and_card]
 
+open Classical in
 protected theorem bijective_iff_surjective_and_card [Finite α] (f : α → β) :
     Bijective f ↔ Surjective f ∧ Nat.card α = Nat.card β := by
-  classical
   rw [and_comm, Bijective, and_congr_left_iff]
   intro h
   have := Fintype.ofFinite α
@@ -130,8 +130,8 @@ lemma card_mono (ht : t.Finite) (h : s ⊆ t) : Nat.card s ≤ Nat.card t :=
 lemma card_image_le {f : α → β} (hs : s.Finite) : Nat.card (f '' s) ≤ Nat.card s :=
   have := hs.to_subtype; card_le_card_of_surjective (imageFactorization f s) surjective_onto_image
 
+open Classical in
 lemma card_image_of_injOn {f : α → β} (hf : s.InjOn f) : Nat.card (f '' s) = Nat.card s := by
-  classical
   obtain hs | hs := s.finite_or_infinite
   · have := hs.fintype
     have := fintypeImage s f

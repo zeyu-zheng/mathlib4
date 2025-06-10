@@ -103,10 +103,10 @@ def orderEmbeddingOfSet [DecidablePred (· ∈ s)] : ℕ ↪o ℕ :=
     (RelEmbedding.natLT (Nat.Subtype.ofNat s) fun _ => Nat.Subtype.lt_succ_self _)).trans
     (OrderEmbedding.subtype s)
 
+open Classical in
 /-- `Nat.Subtype.ofNat` as an order isomorphism between `ℕ` and an infinite subset. See also
 `Nat.Nth` for a version where the subset may be finite. -/
 noncomputable def Subtype.orderIsoOfNat : ℕ ≃o s := by
-  classical
   exact
     RelIso.ofSurjective
       (RelEmbedding.orderEmbeddingOfLTEmbedding
@@ -135,9 +135,9 @@ theorem orderEmbeddingOfSet_range [DecidablePred (· ∈ s)] :
     Set.range (Nat.orderEmbeddingOfSet s) = s :=
   Subtype.coe_comp_ofNat_range
 
+open Classical in
 theorem exists_subseq_of_forall_mem_union {s t : Set α} (e : ℕ → α) (he : ∀ n, e n ∈ s ∪ t) :
     ∃ g : ℕ ↪o ℕ, (∀ n, e (g n) ∈ s) ∨ ∀ n, e (g n) ∈ t := by
-  classical
     have : Infinite (e ⁻¹' s) ∨ Infinite (e ⁻¹' t)
     simp only [Set.infinite_coe_iff, ← Set.infinite_union, ← Set.preimage_union,
       Set.eq_univ_of_forall fun n => Set.mem_preimage.2 (he n), Set.infinite_univ]
@@ -147,10 +147,10 @@ theorem exists_subseq_of_forall_mem_union {s t : Set α} (e : ℕ → α) (he : 
 
 end Nat
 
+open Classical in
 theorem exists_increasing_or_nonincreasing_subseq' (r : α → α → Prop) (f : ℕ → α) :
     ∃ g : ℕ ↪o ℕ,
       (∀ n : ℕ, r (f (g n)) (f (g (n + 1)))) ∨ ∀ m n : ℕ, m < n → ¬r (f (g m)) (f (g n)) := by
-  classical
     let bad : Set ℕ := { m | ∀ n, m < n → ¬r (f m) (f n) }
     by_cases hbad : Infinite bad
     · haveI := hbad

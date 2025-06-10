@@ -38,13 +38,13 @@ variable {C : Type u} [SmallCategory C] [HasProducts.{u} C]
 
 /-- A small category with products is a thin category.
 
+open Classical in
 in Lean, a preorder category is one where the morphisms are in Prop, which is weaker than the usual
 notion of a preorder/thin category which says that each homset is subsingleton; we show the latter
 rather than providing a `Preorder C` instance.
 -/
 instance (priority := 100) : Quiver.IsThin C := fun X Y =>
   ⟨fun r s => by
-    classical
       by_contra r_ne_s
       have z : (2 : Cardinal) ≤ #(X ⟶ Y) := by
         rw [Cardinal.two_le_iff]
