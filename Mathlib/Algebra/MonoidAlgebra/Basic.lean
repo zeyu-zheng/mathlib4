@@ -531,17 +531,18 @@ theorem mul_single_apply_of_not_exists_mul [Mul G] (r : k) {g g' : G} (x : Monoi
       exfalso
       exact h ⟨_, rfl⟩
 
+open Classical in
 theorem single_mul_apply_aux [Mul G] (f : MonoidAlgebra k G) {r : k} {x y z : G}
     (H : ∀ a, x * a = y ↔ a = z) : (single x r * f) y = r * f z := by
-  classical exact
-      have : (f.sum fun a b => ite (x * a = y) (0 * b) 0) = 0 := by simp
-      calc
-        (HMul.hMul (α := MonoidAlgebra k G) (single x r) f) y =
-            sum f fun a b => ite (x * a = y) (r * b) 0 :=
-          (mul_apply _ _ _).trans <| sum_single_index this
-        _ = f.sum fun a b => ite (a = z) (r * b) 0 := by simp only [H]
-        _ = if z ∈ f.support then r * f z else 0 := f.support.sum_ite_eq' _ _
-        _ = _ := by split_ifs with h <;> simp at h <;> simp [h]
+    have : (f.sum fun a b => ite (x * a = y) (0 * b) 0) = 0
+    simp
+    calc
+      (HMul.hMul (α := MonoidAlgebra k G) (single x r) f) y =
+          sum f fun a b => ite (x * a = y) (r * b) 0 :=
+        (mul_apply _ _ _).trans <| sum_single_index this
+      _ = f.sum fun a b => ite (a = z) (r * b) 0 := by simp only [H]
+      _ = if z ∈ f.support then r * f z else 0 := f.support.sum_ite_eq' _ _
+      _ = _ := by split_ifs with h <;> simp at h <;> simp [h]
 
 theorem single_one_mul_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x : G) :
     (single (1 : G) r * f) x = r * f x :=

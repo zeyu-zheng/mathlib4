@@ -77,12 +77,14 @@ lemma mod_two_of_bodd (n : ℕ) : n % 2 = cond (bodd n) 1 0 := by
   simp? [not] at this says
     simp only [bodd_add, bodd_mul, bodd_succ, not, bodd_zero, Bool.false_and, Bool.bne_false]
       at this
-  have _ : ∀ b, and false b = false := by
-    intro b
-    cases b <;> rfl
-  have _ : ∀ b, bxor b false = b := by
-    intro b
-    cases b <;> rfl
+  have h1 : ∀ b, and false b = false
+  intro b
+  cases b <;> rfl
+  have h2 : ∀ b, bxor b false = b
+  intro b
+  cases b
+  rfl
+  rfl
   rw [← this]
   cases' mod_two_eq_zero_or_one n with h h <;> rw [h] <;> rfl
 

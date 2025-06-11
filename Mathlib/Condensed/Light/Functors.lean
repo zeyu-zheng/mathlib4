@@ -15,7 +15,7 @@ sets.
 
 ## Main definitions
 
-* `lightProfiniteToLightCondSet : LightProfinite.{u} ⥤ LightCondSet.{u}` 
+* `lightProfiniteToLightCondSet : LightProfinite.{u} ⥤ LightCondSet.{u}`
   is the yoneda presheaf functor.
 
 TODO (Dagur):

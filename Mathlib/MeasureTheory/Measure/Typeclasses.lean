@@ -778,18 +778,18 @@ theorem measure_toMeasurable_inter_of_sum {s : Set α} (hs : MeasurableSet s) {t
   -- measurable set `s`. It is built for each measure `mₙ` using `toMeasurable`
   -- (which is well behaved for finite measure sets thanks to `measure_toMeasurable_inter`), and
   -- then taking the intersection over `n`.
-  have A : ∃ t', t' ⊇ t ∧ MeasurableSet t' ∧ ∀ u, MeasurableSet u → μ (t' ∩ u) = μ (t ∩ u) := by
-    let w n := toMeasurable (m n) t
-    have T : t ⊆ ⋂ n, w n
-    apply subset_iInter (fun i ↦ subset_toMeasurable (m i) t)
-    have M : MeasurableSet (⋂ n, w n)
-    apply MeasurableSet.iInter (fun i ↦ measurableSet_toMeasurable (m i) t)
-    refine ⟨⋂ n, w n, T, M, fun u hu ↦ ?_⟩
-    refine le_antisymm ?_ (by gcongr)
-    rw [hμ, sum_apply _ (M.inter hu)]
-    apply le_trans _ (le_sum_apply _ _)
-    apply ENNReal.tsum_le_tsum (fun i ↦ ?_)
-    calc
+  have A : ∃ t', t' ⊇ t ∧ MeasurableSet t' ∧ ∀ u, MeasurableSet u → μ (t' ∩ u) = μ (t ∩ u)
+  let w n := toMeasurable (m n) t
+  have T : t ⊆ ⋂ n, w n
+  apply subset_iInter (fun i ↦ subset_toMeasurable (m i) t)
+  have M : MeasurableSet (⋂ n, w n)
+  apply MeasurableSet.iInter (fun i ↦ measurableSet_toMeasurable (m i) t)
+  refine ⟨⋂ n, w n, T, M, fun u hu ↦ ?_⟩
+  refine le_antisymm ?_ (by gcongr)
+  rw [hμ, sum_apply _ (M.inter hu)]
+  apply le_trans _ (le_sum_apply _ _)
+  apply ENNReal.tsum_le_tsum (fun i ↦ ?_)
+  calc
     m i ((⋂ n, w n) ∩ u) ≤ m i (w i ∩ u) := by gcongr; apply iInter_subset
     _ = m i (t ∩ u) := measure_toMeasurable_inter hu (hv i)
   -- thanks to the definition of `toMeasurable`, the previous property will also be shared

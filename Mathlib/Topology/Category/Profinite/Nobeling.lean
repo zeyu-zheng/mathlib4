@@ -273,7 +273,7 @@ of `e`.
 
 ### Main results
 
-* `Products.evalFacProp` and `Products.evalFacProps` establish the fact that `Products.eval` 
+* `Products.evalFacProp` and `Products.evalFacProps` establish the fact that `Products.eval`
   interacts nicely with the projection maps from the previous section.
 
 * `GoodProducts.span_iff_products`: the good products span `LocallyConstant C ℤ` iff all the
@@ -840,7 +840,7 @@ precomposition with the projections defined in the section `Projections`.
 
 ### Main definitions
 
-* `πs` and `πs'` are the `ℤ`-linear maps corresponding to `ProjRestrict` and `ProjRestricts` 
+* `πs` and `πs'` are the `ℤ`-linear maps corresponding to `ProjRestrict` and `ProjRestricts`
   respectively.
 
 ### Main result
@@ -1153,7 +1153,7 @@ The main results in the section `GoodProducts` are as follows:
   `Linear_CC'`, takes the evaluation of a term of `MaxProducts` to the evaluation of the
   corresponding list with the leading `o` removed.
 
-* `GoodProducts.maxTail_isGood` says that removing the leading `o` from a term of `MaxProducts C` 
+* `GoodProducts.maxTail_isGood` says that removing the leading `o` from a term of `MaxProducts C`
   yields a list which `isGood` with respect to `C'`.
 -/
 
@@ -1702,7 +1702,7 @@ predicate `P I o` holds for all ordinals `o`, and conclude with the main result
 We also define
 
 * `GoodProducts.Basis` which uses `GoodProducts.linearIndependent` and `GoodProducts.span` to
-  define a basis for `LocallyConstant C ℤ` 
+  define a basis for `LocallyConstant C ℤ`
 -/
 
 theorem GoodProducts.P0 : P I 0 := fun _ C _ hsC ↦ by

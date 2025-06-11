@@ -579,10 +579,12 @@ lemma productTriangle_distinguished {J : Type*} (T : J → Triangle C)
   have : IsIso φ'.hom₂
   rw [h₂]; infer_instance
   suffices IsIso φ'.hom₃ by
-    have : IsIso φ' := by
-      apply Triangle.isIso_of_isIsos
-      all_goals infer_instance
-    exact isomorphic_distinguished _ hT' _ (asIso φ').symm
+    have : IsIso φ'
+    apply Triangle.isIso_of_isIsos
+    infer_instance
+    infer_instance
+    infer_instance
+    apply isomorphic_distinguished _ hT' _ (asIso φ').symm
   refine isIso_of_yoneda_map_bijective _ (fun A => ⟨?_, ?_⟩)
   /- the proofs by diagram chase start here -/
   · suffices Mono φ'.hom₃ by
@@ -636,9 +638,11 @@ lemma exists_iso_of_arrow_iso (T₁ T₂ : Triangle C) (hT₁ : T₁ ∈ distTri
   have : IsIso φ.hom₂
   dsimp [φ]; infer_instance
   have : IsIso φ.hom₃ := isIso₃_of_isIso₁₂ φ hT₁ hT₂ inferInstance inferInstance
-  have : IsIso φ := by
-    apply Triangle.isIso_of_isIsos
-    all_goals infer_instance
+  have : IsIso φ
+  apply Triangle.isIso_of_isIsos
+  infer_instance
+  infer_instance
+  infer_instance
   exact ⟨asIso φ, by simp [φ], by simp [φ]⟩
 
 /-- A choice of isomorphism `T₁ ≅ T₂` between two distinguished triangles

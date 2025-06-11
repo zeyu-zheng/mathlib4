@@ -245,10 +245,11 @@ instance types.finitaryExtensive : FinitaryExtensive (Type u) := by
   · intro Z f
     dsimp [Limits.Types.binaryCoproductCocone]
     delta Types.PullbackObj
-    have : ∀ x, f x = Sum.inl PUnit.unit ∨ f x = Sum.inr PUnit.unit := by
-      intro x
-      rcases f x with (⟨⟨⟩⟩ | ⟨⟨⟩⟩)
-      exacts [Or.inl rfl, Or.inr rfl]
+    have : ∀ x, f x = Sum.inl PUnit.unit ∨ f x = Sum.inr PUnit.unit
+    intro x
+    rcases f x with (⟨⟨⟩⟩ | ⟨⟨⟩⟩)
+    apply Or.inl rfl
+    apply Or.inr rfl
     let eX : { p : Z × PUnit // f p.fst = Sum.inl p.snd } ≃ { x : Z // f x = Sum.inl PUnit.unit } :=
       ⟨fun p => ⟨p.1.1, by convert p.2⟩, fun x => ⟨⟨_, _⟩, x.2⟩, fun _ => by ext; rfl,
         fun _ => by ext; rfl⟩

@@ -223,14 +223,14 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul_of_measurable (μ : Measure α)
     rw [intervalIntegral.integral_of_le s_pos.le] at hs
     /- The first integral is infinite, as for `t ∈ [0, s]` one has `μ {a : α | t ≤ f a} = ∞`,
     and moreover the additional integral `g` is not uniformly zero. -/
-    have A : ∫⁻ t in Ioi 0, μ {a : α | t ≤ f a} * ENNReal.ofReal (g t) = ∞ := by
-      rw [eq_top_iff]
-      calc
+    have A : ∫⁻ t in Ioi 0, μ {a : α | t ≤ f a} * ENNReal.ofReal (g t) = ∞
+    rw [eq_top_iff]
+    calc
       ∞ = ∫⁻ t in Ioc 0 s, ∞ * ENNReal.ofReal (g t) := by
-          have I_pos : ∫⁻ (a : ℝ) in Ioc 0 s, ENNReal.ofReal (g a) ≠ 0 := by
-            rw [← ofReal_integral_eq_lintegral_ofReal (g_intble s s_pos).1]
-            · simpa only [not_lt, ne_eq, ENNReal.ofReal_eq_zero, not_le] using hs
-            · filter_upwards [ae_restrict_mem measurableSet_Ioc] with t ht using g_nn _ ht.1
+          have I_pos : ∫⁻ (a : ℝ) in Ioc 0 s, ENNReal.ofReal (g a) ≠ 0
+          rw [← ofReal_integral_eq_lintegral_ofReal (g_intble s s_pos).1]
+          · simpa only [not_lt, ne_eq, ENNReal.ofReal_eq_zero, not_le] using hs
+          · filter_upwards [ae_restrict_mem measurableSet_Ioc] with t ht using g_nn _ ht.1
           rw [lintegral_const_mul, ENNReal.top_mul I_pos]
           exact ENNReal.measurable_ofReal.comp g_mble
       _ ≤ ∫⁻ t in Ioc 0 s, μ {a : α | t ≤ f a} * ENNReal.ofReal (g t) := by
@@ -243,9 +243,9 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul_of_measurable (μ : Measure α)
     /- The second integral is infinite, as one integrates amont other things on those `ω` where
     `f ω > s`: this is an infinite measure set, and on it the integrand is bounded below
     by `∫ t in 0..s, g t` which is positive. -/
-    have B : ∫⁻ ω, ENNReal.ofReal (∫ t in (0)..f ω, g t) ∂μ = ∞ := by
-      rw [eq_top_iff]
-      calc
+    have B : ∫⁻ ω, ENNReal.ofReal (∫ t in (0)..f ω, g t) ∂μ = ∞
+    rw [eq_top_iff]
+    calc
       ∞ = ∫⁻ _ in {a | s < f a}, ENNReal.ofReal (∫ t in (0)..s, g t) ∂μ := by
           simp only [lintegral_const, MeasurableSet.univ, Measure.restrict_apply, univ_inter,
             h's, ne_eq, ENNReal.ofReal_eq_zero, not_le]

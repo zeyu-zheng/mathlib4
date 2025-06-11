@@ -46,7 +46,7 @@ This structure encodes the data required for a morphism to be an effective epimo
 structure EffectiveEpiStruct {X Y : C} (f : Y ⟶ X) where
   /--
   For every `W` with a morphism `e : Y ⟶ W` that coequalizes every pair of morphisms
-  `g₁ g₂ : Z ⟶ Y` which `f` coequalizes, `desc e h` is a morphism `X ⟶ W`... 
+  `g₁ g₂ : Z ⟶ Y` which `f` coequalizes, `desc e h` is a morphism `X ⟶ W`...
   -/
   desc : ∀ {W : C} (e : Y ⟶ W),
     (∀ {Z : C} (g₁ g₂ : Z ⟶ Y), g₁ ≫ f = g₂ ≫ f → g₁ ≫ e = g₂ ≫ e) → (X ⟶ W)
@@ -108,7 +108,7 @@ structure EffectiveEpiFamilyStruct {B : C} {α : Type*}
   /--
   For every `W` with a family of morphisms `e a : Y a ⟶ W` that coequalizes every pair of morphisms
   `g₁ : Z ⟶ Y a₁`, `g₂ : Z ⟶ Y a₂` which the family `π` coequalizes, `desc e h` is a morphism
-  `X ⟶ W`... 
+  `X ⟶ W`...
   -/
   desc : ∀ {W} (e : (a : α) → (X a ⟶ W)),
           (∀ {Z : C} (a₁ a₂ : α) (g₁ : Z ⟶ X a₁) (g₂ : Z ⟶ X a₂),

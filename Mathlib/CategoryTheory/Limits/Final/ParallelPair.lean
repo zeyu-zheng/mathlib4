@@ -9,7 +9,7 @@ import Mathlib.CategoryTheory.Limits.Final
 
 # Conditions for `parallelPair` to be initial
 
-In this file we give sufficient conditions on a category `C` and parallel morphisms `f g : X ⟶ Y` 
+In this file we give sufficient conditions on a category `C` and parallel morphisms `f g : X ⟶ Y`
 in `C` so that `parallelPair f g` becomes an initial functor.
 
 The conditions are that there is a morphism out of `X` to every object of `C` and that any two

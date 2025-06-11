@@ -142,8 +142,8 @@ lemma mulRingNorm_eq_one_of_not_dvd {m : ℕ} (hpm : ¬ p ∣ m) : f m = 1 := by
     apply IsCoprime.pow (Nat.Coprime.isCoprime _)
     exact (Nat.Prime.coprime_iff_not_dvd
       (is_prime_of_minimal_nat_zero_lt_mulRingNorm_lt_one hp0 hp1 hmin)).2 hpm
-  have le_half {x} (hx0 : 0 < x) (hx1 : x < 1) (hxM : x ≤ M) : x ^ k < 1 / 2 := by
-    calc
+  have le_half {x} (hx0 : 0 < x) (hx1 : x < 1) (hxM : x ≤ M) : x ^ k < 1 / 2
+  calc
     x ^ k = x ^ (k : ℝ) := (rpow_natCast x k).symm
     _ < x ^ M.logb (1 / 2) := by
       apply rpow_lt_rpow_of_exponent_gt hx0 hx1

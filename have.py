@@ -78,7 +78,7 @@ def parse_have_components(line: str) -> Optional[Tuple[str, str, str, str]]:
     colon_pos = colon_match.start()
 
     # Check if := is followed by 'by' (with any amount of whitespace)
-    by_match = re.match(r'\s*by\s+(.*)', after_assign)
+    by_match = re.match(r'\s*by\s*(.*)', after_assign)
     if not by_match:
         return None
 

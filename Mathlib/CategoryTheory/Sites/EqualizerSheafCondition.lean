@@ -253,7 +253,7 @@ open Presieve
 
 variable {B : C} {I : Type} (X : I → C) (π : (i : I) → X i ⟶ B)
     [(Presieve.ofArrows X π).hasPullbacks]
--- TODO: allow `I : Type w` 
+-- TODO: allow `I : Type w`
 
 /--
 The middle object of the fork diagram of <https://stacks.math.columbia.edu/tag/00VM>.

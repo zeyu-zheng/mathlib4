@@ -274,9 +274,10 @@ lemma add_hom (α β : Ext X Y n) : (α + β).hom = α.hom + β.hom := by
   let β' : Ext (X ⊞ X) Y n := (mk₀ biprod.snd).comp β (zero_add n)
   have eq₁ : α + β = (mk₀ (biprod.lift (𝟙 X) (𝟙 X))).comp (α' + β') (zero_add n)
   simp [α', β']
-  have eq₂ : α' + β' = homEquiv.symm (α'.hom + β'.hom) := by
-    apply biprod_ext
-    all_goals ext; simp [α', β', ← Functor.map_comp]
+  have eq₂ : α' + β' = homEquiv.symm (α'.hom + β'.hom)
+  apply biprod_ext
+  ext; simp [α', β', ← Functor.map_comp]
+  ext; simp [α', β', ← Functor.map_comp]
   simp only [eq₁, eq₂, comp_hom, Equiv.apply_symm_apply, ShiftedHom.comp_add]
   congr
   · dsimp [α']

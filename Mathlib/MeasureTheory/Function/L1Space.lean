@@ -304,10 +304,10 @@ theorem tendsto_lintegral_norm_of_dominated_convergence {F : ℕ → α → β} 
     _ ≤ ENNReal.ofReal (bound a) + ENNReal.ofReal (bound a) := add_le_add h₁ h₂
     _ = b a := by rw [← two_mul]
   -- On the other hand, `F n a --> f a` implies that `‖F n a - f a‖ --> 0`
-  have h : ∀ᵐ a ∂μ, Tendsto (fun n => ENNReal.ofReal ‖F n a - f a‖) atTop (𝓝 0) := by
-    rw [← ENNReal.ofReal_zero]
-    refine h_lim.mono fun a h => (continuous_ofReal.tendsto _).comp ?_
-    rwa [← tendsto_iff_norm_sub_tendsto_zero]
+  have h : ∀ᵐ a ∂μ, Tendsto (fun n => ENNReal.ofReal ‖F n a - f a‖) atTop (𝓝 0)
+  rw [← ENNReal.ofReal_zero]
+  refine h_lim.mono fun a h => (continuous_ofReal.tendsto _).comp ?_
+  rwa [← tendsto_iff_norm_sub_tendsto_zero]
   /- Therefore, by the dominated convergence theorem for nonnegative integration, have
     ` ∫ ‖f a - F n a‖ --> 0 ` -/
   suffices Tendsto (fun n => ∫⁻ a, ENNReal.ofReal ‖F n a - f a‖ ∂μ) atTop (𝓝 (∫⁻ _ : α, 0 ∂μ)) by
